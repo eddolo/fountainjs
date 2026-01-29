@@ -576,4 +576,4 @@ const markdown = MarkdownExporter.export(editorState);
 
 ## Support
 
-For export-related issues, see [GitHub Issues](https://github.com/paolino/fountainjs/issues).
+For export-related issues, see [GitHub Issues](https://github.com/eddolo/fountainjs/issues).

@@ -385,9 +385,9 @@ Contributions welcome! Please see our [GitHub repository](https://github.com/pao
 
 ## 🆘 Support
 
-- 📚 [Documentation](https://github.com/paolino/fountainjs/wiki)
-- 🐛 [Issue Tracker](https://github.com/paolino/fountainjs/issues)
-- 💬 [Discussions](https://github.com/paolino/fountainjs/discussions)
+- 📚 [Documentation](https://github.com/eddolo/fountainjs/wiki)
+- 🐛 [Issue Tracker](https://github.com/eddolo/fountainjs/issues)
+- 💬 [Discussions](https://github.com/eddolo/fountainjs/discussions)
 
 ## 🎯 Roadmap
 

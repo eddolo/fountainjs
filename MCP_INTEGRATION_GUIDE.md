@@ -457,4 +457,4 @@ const mcp = new MCPIntegration('http://localhost:3000', {
 
 ## Support
 
-For MCP integration issues, see the [GitHub Issues](https://github.com/paolino/fountainjs/issues).
+For MCP integration issues, see the [GitHub Issues](https://github.com/eddolo/fountainjs/issues).

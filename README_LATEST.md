@@ -128,7 +128,7 @@ const spanish = await mcp.transformContent(editor.state, 'translate', {
 - [📖 Full README](README_V020.md) - Complete feature documentation
 - [🤖 MCP Integration Guide](MCP_INTEGRATION_GUIDE.md) - Setup AI with any provider
 - [📤 Export Formats Guide](EXPORTERS_GUIDE.md) - HTML, Markdown, JSON, Fountain
-- [GitHub Repository](https://github.com/paolino/fountainjs) - Source code & issues
+- [GitHub Repository](https://github.com/eddolo/fountainjs) - Source code & issues
 - [Examples](Test1/) - Full working portfolio site using FountainJS v0.2.0
 
 ## 🚀 Use Cases

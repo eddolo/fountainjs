@@ -236,7 +236,7 @@ Added (v0.2.0 features): 13.06 kB
 
 ## 🤝 Community
 
-- 📚 **GitHub**: https://github.com/paolino/fountainjs
+- 📚 **GitHub**: https://github.com/eddolo/fountainjs
 - 🐛 **Issues**: Report bugs and feature requests
 - 💬 **Discussions**: Ask questions and share ideas
 - 🤝 **Contributing**: All contributions welcome!
