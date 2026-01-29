@@ -1,0 +1,76 @@
+{
+  "name": "@fountainjs/editor",
+  "version": "0.1.0",
+  "description": "A modular, extensible rich text editor library for React and other frameworks",
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/fountainjs.cjs",
+  "module": "./dist/fountainjs.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/fountainjs.js",
+      "require": "./dist/fountainjs.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/fountainjs-react.js",
+      "require": "./dist/fountainjs-react.cjs",
+      "types": "./dist/react/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/fountainjs.git"
+  },
+  "homepage": "https://github.com/yourusername/fountainjs#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/fountainjs/issues"
+  },
+  "keywords": [
+    "editor",
+    "text-editor",
+    "rich-text",
+    "wysiwyg",
+    "react",
+    "modular",
+    "typescript"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build -c vite.lib.config.ts && tsc --declaration --emitDeclarationOnly --outDir dist",
+    "build:lib": "vite build -c vite.lib.config.ts",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.3.9",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}
