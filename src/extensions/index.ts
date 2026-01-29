@@ -10,6 +10,7 @@ import { tableRow } from './nodes/table-row';
 import { tableCell } from './nodes/table-cell';
 import { bulletList } from './nodes/bullet-list';
 import { listItem } from './nodes/list-item';
+import { codeBlock } from './nodes/code-block';
 
 // All Mark imports
 import { strong } from './marks/strong';
@@ -18,6 +19,8 @@ import { em } from './marks/em';
 // All Plugin imports
 import { historyPlugin } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
+import { SyntaxHighlightPlugin } from './plugins/syntax-highlight';
+import { MCPIntegration } from './plugins/mcp-integration';
 
 // Core imports for defining the schema
 import { SchemaSpec } from '../core';
@@ -34,12 +37,15 @@ export { tableRow } from './nodes/table-row';
 export { tableCell } from './nodes/table-cell';
 export { bulletList } from './nodes/bullet-list';
 export { listItem } from './nodes/list-item';
+export { codeBlock } from './nodes/code-block';
 
 export { strong } from './marks/strong';
 export { em } from './marks/em';
 
 export { historyPlugin, undo, redo } from './plugins/history';
 export { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
+export { SyntaxHighlightPlugin } from './plugins/syntax-highlight';
+export { MCPIntegration, type ContentTransformRequest, type MCPTool, generateContentWithAI } from './plugins/mcp-integration';
 
 
 // --- Define and Export the Core Schema Spec (ONCE) ---
@@ -56,6 +62,7 @@ export const CoreSchemaSpec: SchemaSpec = {
     table_cell: tableCell,
     bullet_list: bulletList,
     list_item: listItem,
+    code_block: codeBlock,
   },
   marks: {
     strong,

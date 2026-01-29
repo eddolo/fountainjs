@@ -1,5 +1,5 @@
 {
-  "name": "@fountainjs/editor",
+  "name": "fountainjs-editor",
   "version": "0.1.0",
   "description": "A modular, extensible rich text editor library for React and other frameworks",
   "author": "Your Name <your.email@example.com>",
