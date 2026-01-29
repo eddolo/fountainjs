@@ -1,8 +1,8 @@
 {
   "name": "fountainjs-editor",
   "version": "0.2.0",
-  "description": "A modular, extensible rich text editor library for React and other frameworks",
-  "author": "Your Name <your.email@example.com>",
+  "description": "Universal AI-agnostic rich text editor with code blocks, multi-format export, and Model Context Protocol (MCP) integration",
+  "author": "Paolo Cappuccini",
   "license": "MIT",
   "type": "module",
   "main": "./dist/fountainjs.cjs",
@@ -24,24 +24,41 @@
     "dist",
     "src",
     "README.md",
+    "README_LATEST.md",
+    "README_V020.md",
+    "MCP_INTEGRATION_GUIDE.md",
+    "EXPORTERS_GUIDE.md",
+    "FEATURES_V2.md",
     "LICENSE"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/fountainjs.git"
+    "url": "https://github.com/paolino/fountainjs.git"
   },
-  "homepage": "https://github.com/yourusername/fountainjs#readme",
+  "homepage": "https://github.com/paolino/fountainjs#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/fountainjs/issues"
+    "url": "https://github.com/paolino/fountainjs/issues"
   },
   "keywords": [
     "editor",
     "text-editor",
     "rich-text",
+    "code-blocks",
+    "syntax-highlighting",
+    "markdown",
+    "html",
+    "json",
+    "export",
+    "ai",
+    "mcp",
+    "model-context-protocol",
+    "openai",
+    "claude",
+    "gemini",
     "wysiwyg",
     "react",
-    "modular",
-    "typescript"
+    "typescript",
+    "production-ready"
   ],
   "scripts": {
     "dev": "vite",
