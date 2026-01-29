@@ -1,6 +1,6 @@
 {
   "name": "fountainjs-editor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Universal AI-agnostic rich text editor with code blocks, multi-format export, and Model Context Protocol (MCP) integration",
   "author": "Paolo Cappuccini",
   "license": "MIT",
