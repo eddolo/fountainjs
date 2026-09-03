@@ -18,6 +18,57 @@ test('edits through real beforeinput events and undoes a Markdown input rule', a
   await expect(editor.locator('[data-fountain-path="2"]')).toHaveText('# ');
 });
 
+test('groups adjacent browser typing and respects explicit undo boundaries', async ({ page }) => {
+  const first = page.locator('[data-fountain-path="0"]');
+  await first.click();
+  await page.keyboard.press('Home');
+  await page.keyboard.type('abc');
+  const firstText = () => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).textContent);
+  await expect.poll(firstText).toBe('abcAlpha Beta');
+  await page.keyboard.press('Control+z');
+  await expect.poll(firstText).toBe('Alpha Beta');
+
+  await page.keyboard.type('x');
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.closeHistory());
+  await page.keyboard.type('y');
+  await page.keyboard.press('Control+z');
+  await expect.poll(firstText).toBe('xAlpha Beta');
+  await page.keyboard.press('Control+z');
+  await expect.poll(firstText).toBe('Alpha Beta');
+});
+
+test('commits cross-browser composition sequences once and supports replacement input', async ({ page }) => {
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([0, 0], 0, 5));
+  await page.waitForTimeout(0);
+  const result = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    editor.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    editor.dispatchEvent(new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertCompositionText', data: '東', isComposing: true,
+    }));
+    editor.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東京' }));
+    const commit = new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertCompositionText', data: '東京',
+    });
+    editor.dispatchEvent(commit);
+    return { commitPrevented: commit.defaultPrevented };
+  });
+  expect(result).toEqual({ commitPrevented: true });
+  const firstText = () => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).textContent);
+  await expect.poll(firstText).toBe('東京 Beta');
+
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([0, 0], 0, 2));
+  await page.waitForTimeout(0);
+  const replacementPrevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const replacement = new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertReplacementText', data: '京都',
+    });
+    editor.dispatchEvent(replacement);
+    return replacement.defaultPrevented;
+  });
+  expect(replacementPrevented).toBe(true);
+  await expect.poll(firstText).toBe('京都 Beta');
+});
+
 test('maps decorations through typing without persisting widget content', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   expect(await editor.locator('.tested-range').allTextContents()).toEqual(['Alp', 'ha']);
@@ -68,6 +119,70 @@ test('applies every configured paste-rule match through a browser paste event', 
   });
   expect(prevented).toBe(true);
   await expect(page.locator('[data-fountain-path="1"]')).toContainText('Second paragraph one — two —');
+});
+
+test('preserves structured rich HTML from a real browser clipboard event', async ({ page }) => {
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([1, 0], 16));
+  await page.waitForTimeout(0);
+  const prevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', {
+      value: {
+        files: [],
+        getData: (type: string) => type === 'text/html'
+          ? '<h2>Imported heading</h2><p>A <strong>rich</strong> fragment</p>'
+          : 'Imported heading\nA rich fragment',
+      },
+    });
+    editor.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(prevented).toBe(true);
+  await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('h2')).toHaveText('Imported heading');
+  await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('strong')).toHaveText('rich');
+});
+
+test('edits bidirectional and deeply nested text by logical document positions', async ({ page }) => {
+  await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const { schema } = editor.state;
+    const bidi = schema.node('paragraph', {}, [schema.text('שלום world مرحبا')]);
+    const quote = schema.node('blockquote', {}, [schema.node('paragraph', {}, [schema.text('Nested text')])]);
+    editor.dispatch(editor.state.createTransaction().replace(editor.state.doc.childCount, editor.state.doc.childCount, [bidi, quote]));
+  });
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([3, 0], 0, 4);
+    contract.view.focus();
+  });
+  await page.keyboard.type('Hello');
+  await expect(page.locator('[data-fountain-path="3"]')).toHaveText('Hello world مرحبا');
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([4, 0, 0], 11);
+    contract.view.focus();
+  });
+  await page.keyboard.type('!');
+  await expect(page.locator('[data-fountain-path="4.0"]')).toHaveText('Nested text!');
+});
+
+test('moves a selected top-level block through native drag data', async ({ page }) => {
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectNode([0]));
+  const first = page.locator('[data-fountain-path="0"]');
+  const second = page.locator('[data-fountain-path="1"]');
+  await expect(first).toHaveAttribute('draggable', 'true');
+  const targetBox = await second.boundingBox();
+  await first.dragTo(second, { targetPosition: { x: 8, y: Math.max(1, (targetBox?.height ?? 2) - 1) } });
+
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent)
+  ))).toEqual(['Second paragraph', 'Alpha Beta', '']);
+  await page.keyboard.press('Control+z');
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent)
+  ))).toEqual(['Alpha Beta', 'Second paragraph', '']);
 });
 
 test('replaces a DOM selection that crosses block boundaries', async ({ page }) => {

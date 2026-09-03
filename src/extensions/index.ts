@@ -36,7 +36,7 @@ import { subscript } from './marks/subscript';
 import { superscript } from './marks/superscript';
 import { textColor } from './marks/text-color';
 import { underline } from './marks/underline';
-import { canRedo, canUndo, historyPlugin, redo, undo } from './plugins/history';
+import { canRedo, canUndo, closeHistory, historyPlugin, redo, undo } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
 import { composeExtensions, defineExtension } from './extension';
 
@@ -95,7 +95,7 @@ export const CoreExtension = defineExtension({
 
 export const CoreSchemaSpec: SchemaSpec = composeExtensions([CoreExtension]).schema;
 
-export const HistoryExtension = defineExtension({ name: 'history', plugins: [historyPlugin], commands: { undo, redo, canUndo, canRedo } });
+export const HistoryExtension = defineExtension({ name: 'history', plugins: [historyPlugin], commands: { undo, redo, canUndo, canRedo, closeHistory } });
 export const MarkdownShortcutsExtension = defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] });
 export const MarkdownFormatExtension = defineExtension({
   name: 'markdown-format',

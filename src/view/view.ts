@@ -251,6 +251,7 @@ export class EditorView {
         'data-fountain-selected-node',
         'data-fountain-selected-cell',
         'data-fountain-gap',
+        'draggable',
       ].includes(mutation.attributeName ?? '')) continue;
       const entry = [...this.nodeViews]
         .sort((left, right) => right.path.length - left.path.length)

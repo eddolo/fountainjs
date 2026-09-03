@@ -104,6 +104,7 @@ export class SelectionHandler {
       const element = this.nodeElement(selection.nodePath) ?? this.textElement(selection.nodePath);
       if (!element) return this.finishSync();
       element.dataset.fountainSelectedNode = 'true';
+      if (selection.nodePath.length === 1) element.draggable = true;
       range.selectNode(element);
       this.applyDOMSelection(domSelection, range);
       return;
@@ -239,11 +240,12 @@ export class SelectionHandler {
   }
 
   private clearSemanticSelectionMarkers(): void {
-    this.dom.querySelectorAll<HTMLElement>('[data-fountain-selected-node], [data-fountain-selected-cell], [data-fountain-gap]')
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-selected-node], [data-fountain-selected-cell], [data-fountain-gap], [draggable="true"]')
       .forEach((element) => {
         delete element.dataset.fountainSelectedNode;
         delete element.dataset.fountainSelectedCell;
         delete element.dataset.fountainGap;
+        element.removeAttribute('draggable');
       });
   }
 

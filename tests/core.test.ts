@@ -20,6 +20,7 @@ import {
   SelectionBookmark,
   StepMap,
   createEditor,
+  createHistoryPlugin,
   historyPlugin,
   indentListItem,
   insertImage,
@@ -93,6 +94,20 @@ describe('document model and transactions', () => {
     expect(redo(editor)).toBe(true);
     expect(MarkdownExporter.export(editor.state)).toBe('Make it **flow**');
     expect(update).toHaveBeenCalled();
+  });
+
+  it('validates configurable history limits and enforces the retained depth', () => {
+    expect(() => createHistoryPlugin({ depth: 0 })).toThrow('positive integer');
+    expect(() => createHistoryPlugin({ newGroupDelay: -1 })).toThrow('zero or greater');
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin({ depth: 2 })] });
+    insertText(editor, 'a');
+    insertText(editor, 'b');
+    insertText(editor, 'c');
+    expect(undo(editor)).toBe(true);
+    expect(editor.getText()).toBe('ab');
+    expect(undo(editor)).toBe(true);
+    expect(editor.getText()).toBe('a');
+    expect(undo(editor)).toBe(false);
   });
 
   it('maps selections through repeated-character edits and structural insertions', () => {

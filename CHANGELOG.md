@@ -4,6 +4,14 @@
 
 ### Added
 
+- Configurable local history depth and grouping delay, adjacent browser
+  typing/composition/deletion groups, explicit `closeHistory` boundaries,
+  browser history-input support, and focused undo contracts.
+- Cross-engine input contracts for alternate IME commit ordering, mobile
+  replacement input, rich structured paste, mixed RTL/LTR and nested text, and
+  native undoable drag-move of selected top-level blocks.
+- Pixel/Chromium and iPhone/WebKit emulation projects covering virtual-keyboard
+  input types and public-site mobile overflow alongside the desktop matrix.
 - Production NodeView reconciliation with transaction-mapped identity, live path
   accessors, update/recreate and cleanup contracts, model-owned `contentDOM`,
   semantic selection hooks, embedded-control event isolation, mutation recovery,

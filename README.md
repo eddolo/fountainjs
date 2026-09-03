@@ -187,7 +187,8 @@ the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME
 input; configurable input/paste rules; multiline and rich-HTML paste; image
-paste/drop/upload; find/replace; Markdown shortcuts; and 100-step undo/redo.
+paste/drop/upload; selected-block drag-move; find/replace; Markdown shortcuts;
+and configurable undo/redo that groups adjacent browser input.
 JSON is the lossless source of truth; Markdown, safe HTML, and plain text are
 interoperability boundaries.
 
@@ -240,7 +241,7 @@ FountainJS is not the first framework-neutral or extensible editor.
 | [BlockNote](https://www.blocknotejs.org/docs) | Polished React block editor with an out-of-the-box Notion-like experience | Shipping a strong block UI quickly |
 | **FountainJS** | DOM-first editor platform, Web Component, React adapter, and explicit extension composition | Owning a modular editor platform and keeping framework/data boundaries open |
 
-Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need real-time collaboration, comprehensive IME/mobile hardening, a large plugin market, or commercial support.
+Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need real-time collaboration, physical-device IME/mobile certification, a large plugin market, or commercial support.
 
 ## React exports
 
@@ -262,7 +263,8 @@ pnpm pack:check
 
 Generated bundles and dependencies are not committed. CI runs type checks,
 behavioural tests, production and package builds, plus Playwright contracts in
-Chromium, Firefox, and WebKit. Failed browser runs retain traces and screenshots.
+Chromium, Firefox, WebKit, emulated Pixel Chrome, and emulated iPhone Safari.
+Failed browser runs retain traces and screenshots.
 
 The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes.
 
@@ -273,7 +275,8 @@ gap, all-document, and rectangular cell selections; formatting across marked
 and nested text; block splitting and joining; attributed text and alignment;
 find/replace; rich content insertion; image URL/upload/paste/drop workflows;
 reusable input and paste rules; links, lists, tasks, code, tables, local history,
-interactive NodeViews, browser-event plugin hooks, extensible schema composition,
+interactive NodeViews, grouped browser input, structured clipboard and selected-
+block drag-move, browser-event plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
 proposals, and MCP transport.
 

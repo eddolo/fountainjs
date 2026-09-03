@@ -12,15 +12,19 @@ import {
   PluginKey,
   Decoration,
   DecorationSet,
+  closeHistory,
   composeExtensions,
+  createHistoryPlugin,
   createEditor,
   defineExtension,
   insertImageFile,
   insertText,
   registerFountainElement,
+  redo,
   selectNode,
   selectText,
   setNodeAttributes,
+  undo,
 } from '../src';
 
 describe('EditorView', () => {
@@ -536,6 +540,73 @@ describe('EditorView', () => {
     expect(editor.getText()).toBe('東京');
     expect(update).toHaveBeenCalledTimes(1);
     expect(editor.state.selection.eq(EditorSelection.cursor([0, 0], 2))).toBe(true);
+    view.destroy();
+  });
+
+  it('groups adjacent browser typing and respects explicit and timed history boundaries', () => {
+    vi.useFakeTimers();
+    try {
+      const editor = createEditor({
+        schema: CoreSchemaSpec,
+        plugins: [createHistoryPlugin({ depth: 10, newGroupDelay: 500 })],
+      });
+      const mount = document.createElement('div');
+      document.body.appendChild(mount);
+      const view = new EditorView(mount, editor);
+      const type = (value: string) => view.dom.dispatchEvent(new InputEvent('beforeinput', {
+        bubbles: true, cancelable: true, inputType: 'insertText', data: value,
+      }));
+
+      type('a');
+      vi.advanceTimersByTime(100);
+      type('b');
+      expect(editor.getText()).toBe('ab');
+      expect(undo(editor)).toBe(true);
+      expect(editor.getText()).toBe('');
+      expect(redo(editor)).toBe(true);
+      expect(editor.getText()).toBe('ab');
+
+      closeHistory(editor);
+      type('c');
+      vi.advanceTimersByTime(501);
+      type('d');
+      expect(editor.getText()).toBe('abcd');
+      expect(undo(editor)).toBe(true);
+      expect(editor.getText()).toBe('abc');
+      expect(undo(editor)).toBe(true);
+      expect(editor.getText()).toBe('ab');
+      view.destroy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('accepts composition commit ordering and mobile beforeinput variants exactly once', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin()] });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    view.dom.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    view.dom.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東京' }));
+    view.dom.dispatchEvent(new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertFromComposition', data: '東京',
+    }));
+    expect(editor.getText()).toBe('東京');
+
+    editor.dispatch(editor.state.createTransaction().setSelection(new EditorSelection([0, 0], 0, 2)));
+    const replacement = new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertReplacementText', data: '京都',
+    });
+    view.dom.dispatchEvent(replacement);
+    expect(replacement.defaultPrevented).toBe(true);
+    expect(editor.getText()).toBe('京都');
+
+    const undoEvent = new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'historyUndo',
+    });
+    view.dom.dispatchEvent(undoEvent);
+    expect(undoEvent.defaultPrevented).toBe(true);
+    expect(editor.getText()).toBe('東京');
     view.destroy();
   });
 

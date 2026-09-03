@@ -239,7 +239,7 @@ Commands return whether they handled the operation:
 - `setTextAlignment`, `splitBlock`, `joinBackward`, and `joinForward`
 - `setNodeAttributes`, `removeNode`, `moveBlock`, `toggleTaskItem`, `indentListItem`, and `outdentListItem`
 - `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, and `moveTableCell`
-- `undo`, `redo`, `canUndo`, and `canRedo`
+- `undo`, `redo`, `canUndo`, `canRedo`, and `closeHistory`
 
 Bind any extension registry once to get immediate, chained, and dry-run command
 surfaces:
@@ -274,6 +274,29 @@ focused.
 ## Plugins
 
 A `Plugin` can own immutable state, contribute a `DecorationSet`, and intercept `keydown`, `beforeinput`, text input, paste, drop, and click events. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
+
+### History
+
+`historyPlugin` uses a 100-group, 500ms default. Browser typing,
+composition commits, and repeated backward/forward deletion are grouped only
+while the selection remains adjacent. Moving the selection, switching input
+kind, waiting beyond the delay, or calling `closeHistory(editor)` starts a new
+undo group. Chains and multiline paste already arrive as one transaction.
+
+```ts
+const history = createHistoryPlugin({
+  depth: 250,
+  newGroupDelay: 750,
+})
+
+const editor = createEditor({ schema, plugins: [history] })
+closeHistory(editor) // the next edit starts its own group
+```
+
+`addToHistory: false` excludes a transaction. The current history stores local
+document snapshots; it is not yet safe for concurrent remote changes. The
+collaboration adapter will supply rebased, origin-aware undo rather than
+silently treating remote edits as local history.
 
 ### Input rules
 
@@ -324,6 +347,15 @@ return its own transaction or document for more specialized structures.
 ## DOM view
 
 `new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+
+The controlled `beforeinput` path covers normal/replacement text, composition
+commit orderings, paragraph and line breaks, forward/backward deletion,
+cut/drag deletion, browser history undo/redo, and native formatting input types.
+Rich HTML paste is parsed into validated nodes rather than flattened to text.
+Logical model offsets remain stable for bidirectional and nested content.
+Selecting a top-level block makes it natively draggable; dropping before or
+after another block calls the same undoable `moveBlock` command available as a
+keyboard-accessible host control.
 
 Selection input is available without a framework: Ctrl/Cmd+A creates an
 `AllSelection`; clicking an atomic node selects it; Left/Right at an adjacent

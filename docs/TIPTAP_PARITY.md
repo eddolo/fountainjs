@@ -53,8 +53,8 @@ A row may move to **Delivered** only when all applicable gates pass:
 | CORE-06 | Configurable input and paste rules | Delivered | Ordered input and paste rule plugins expose custom transaction handlers, immediate input undo, text/mark/wrapping helpers, repeated-match processing, and real-browser coverage. |
 | CORE-07 | View-only inline, node, and widget decorations | Delivered | Immutable inline/node/widget sets, transaction mapping, plugin delivery, safe DOM rendering, overlapping-range segmentation, and browser contracts are implemented. |
 | CORE-08 | Custom interactive node views | Delivered | Framework-neutral NodeViews have mapped reuse, live paths, update/recreate and cleanup contracts, contentDOM refresh, semantic selection hooks, event isolation, mutation recovery, reversible decorations, a separate React adapter, a live public demo, and unit/real-browser coverage. |
-| CORE-09 | Predictable keyboard, IME, clipboard, and drag input | Partial | Add real-browser composition, bidi, mobile, rich clipboard, drag-move, and nested-content coverage. |
-| CORE-10 | Configurable undo/redo | Partial | Group adjacent input, support explicit history boundaries, and add collaboration-aware undo. |
+| CORE-09 | Predictable keyboard, IME, clipboard, and drag input | Delivered | Controlled input covers alternate composition commits without duplication, replacement/mobile input, rich structured paste, logical bidi and nested positions, selected-block native drag-move, semantic keyboard behavior, and desktop plus emulated-mobile browser contracts. |
+| CORE-10 | Configurable undo/redo | Partial | Configurable depth/delay, adjacent typing/composition/deletion groups, explicit boundaries, semantic selection restoration, redo invalidation, and browser-history input are delivered; replace local snapshots with origin-aware rebased undo when collaboration lands. |
 
 ### Document capabilities
 
@@ -67,7 +67,9 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-05 | Production table editing | Partial | Add merge/split, resize, header toggles, whole-row/column selection, rectangular clipboard distribution, and table repair. |
 | DOC-06 | Images with upload, paste, drop, captions, and dimensions | Partial | Add progress, cancellation, resize handles, alignment, inline mode, error/retry, and responsive metadata. |
 | DOC-07 | Video, audio, files, and configurable embeds | Missing | Supply first-party nodes, upload contracts, safe rendering, and accessible controls. |
-| DOC-08 | Mentions, emoji, mathematics, typography, and character count | Missing | Add independent extensions and UI primitives. |
+| DOC-08 | Mentions, emoji, typography, and character count | Missing | Add independent extensions and UI primitives. |
+| DOC-09 | Native inline and display mathematics from LaTeX | Missing | Ship framework-neutral math nodes, editable TeX source, input/paste rules, safe optional rendering, accessible speech/text fallbacks, format round trips, and a public demo. |
+| DOC-10 | Lean 4 source and interactive proof workflows | Missing | First ship portable Lean code blocks, Unicode input, highlighting, and diagnostics; then define a host-owned Lean language-server contract plus optional goals, expected-type, completion, hover, and InfoView surfaces without coupling the editor core to Lean or React. |
 
 ### Product UI
 
@@ -76,7 +78,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | UI-01 | Usable toolbar and starter editor | Partial | Replace text-symbol controls with accessible, responsive, customizable primitives. |
 | UI-02 | Bubble and floating menus | Missing | Add framework-neutral positioning/state plus React renderers. |
 | UI-03 | Slash-command menu | Missing | Add filtered command source, keyboard navigation, async results, and extension registration. |
-| UI-04 | Drag handles and block reordering | Missing | Add mapped node targeting, keyboard alternative, drop indicators, and nested-block support. |
+| UI-04 | Drag handles and block reordering | Partial | Selected top-level blocks support native undoable drag-move and the public `moveBlock` command is the keyboard alternative; add visible handles, drop indicators, touch affordances, and nested-block support. |
 | UI-05 | Search and replace | Delivered | Add regex/whole-word options only if justified by product evidence. |
 
 ### Collaboration and review
@@ -121,9 +123,9 @@ A row may move to **Delivered** only when all applicable gates pass:
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
 | PROD-01 | Cross-browser desktop confidence | Partial | A Chromium/Firefox/WebKit Playwright lane now covers core input, cross-block and semantic selections, mapped decorations, input-rule undo, and the React playground; expand it across every editing capability. |
-| PROD-02 | Mobile and IME confidence | Missing | Test iOS Safari, Android Chrome, composition, autocorrect, and virtual keyboards. |
+| PROD-02 | Mobile and IME confidence | Partial | Cross-engine composition order, replacement input, deletion, history, and responsive-layout contracts run in Pixel/Chromium and iPhone/WebKit emulation; add physical iOS/Android device-farm runs for real virtual keyboards and autocorrect. |
 | PROD-03 | Accessibility conformance | Partial | Establish WCAG 2.2 AA targets, automated checks, manual screen-reader scripts, and fixes. |
-| PROD-04 | RTL and localization | Missing | Add direction-aware editing plus translatable UI strings and locale packages. |
+| PROD-04 | RTL and localization | Partial | Logical replacement inside mixed Hebrew/Latin/Arabic content is covered across browsers; add explicit block direction, bidi-aware visual navigation checks, translatable UI strings, and locale packages. |
 | PROD-05 | Performance and memory budgets | Missing | Benchmark large documents, transaction latency, rerenders, startup size, and teardown leaks. |
 | PROD-06 | Extension authoring and compatibility tooling | Missing | Add a scaffold, conformance suite, manifest metadata, examples, and compatibility policy. |
 | PROD-07 | Stable releases and migrations | Partial | Publish API stability levels, deprecations, migrations, security policy, and release evidence. |

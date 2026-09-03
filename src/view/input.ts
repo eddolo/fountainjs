@@ -1,6 +1,7 @@
 import {
   deleteBackward,
   deleteForward,
+  deleteSelection,
   extendCellSelection,
   insertPlainText,
   insertHardBreak,
@@ -9,6 +10,7 @@ import {
   indentListItem,
   isInsideNode,
   moveTableCell,
+  moveBlock,
   outdentListItem,
   selectAdjacentNode,
   selectAll,
@@ -17,12 +19,16 @@ import {
   toggleMark,
   type Editor,
   type AnySelection,
+  NodeSelection,
   Selection,
 } from '../core';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { getNodeAtPath } from '../core/transaction/path';
+import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import { insertImageFile, type ImageUploadHandler } from './media';
 import type { SelectionHandler } from './selection-handler';
+
+const BLOCK_DRAG_TYPE = 'application/x-fountain-block';
 
 function sameMarks(left: readonly import('../core').Mark[], right: readonly import('../core').Mark[]): boolean {
   return left.length === right.length && left.every((mark) => right.some((candidate) => candidate.eq(mark)));
@@ -37,7 +43,10 @@ export interface InputManagerOptions {
 
 export class InputManager {
   private compositionSelection?: AnySelection;
+  private compositionHandled = false;
   private composingValue = false;
+  private draggedBlockIndex?: number;
+  private suppressNativeDragDeleteUntil = 0;
 
   get composing(): boolean { return this.composingValue; }
 
@@ -51,6 +60,8 @@ export class InputManager {
     dom.addEventListener('keydown', this.onKeyDown);
     dom.addEventListener('paste', this.onPaste);
     dom.addEventListener('dragover', this.onDragOver);
+    dom.addEventListener('dragstart', this.onDragStart);
+    dom.addEventListener('dragend', this.onDragEnd);
     dom.addEventListener('drop', this.onDrop);
     dom.addEventListener('compositionstart', this.onCompositionStart);
     dom.addEventListener('compositionend', this.onCompositionEnd);
@@ -61,10 +72,15 @@ export class InputManager {
   destroy(): void {
     this.composingValue = false;
     this.compositionSelection = undefined;
+    this.compositionHandled = false;
+    this.draggedBlockIndex = undefined;
+    this.suppressNativeDragDeleteUntil = 0;
     this.dom.removeEventListener('beforeinput', this.onBeforeInput);
     this.dom.removeEventListener('keydown', this.onKeyDown);
     this.dom.removeEventListener('paste', this.onPaste);
     this.dom.removeEventListener('dragover', this.onDragOver);
+    this.dom.removeEventListener('dragstart', this.onDragStart);
+    this.dom.removeEventListener('dragend', this.onDragEnd);
     this.dom.removeEventListener('drop', this.onDrop);
     this.dom.removeEventListener('compositionstart', this.onCompositionStart);
     this.dom.removeEventListener('compositionend', this.onCompositionEnd);
@@ -116,7 +132,14 @@ export class InputManager {
 
   private onBeforeInput = (event: InputEvent): void => {
     if (this.options.shouldStopEvent?.(event)) return;
-    if (!this.editor.editable || event.isComposing) return;
+    if (!this.editor.editable) return;
+    if (event.inputType === 'insertCompositionText' && event.isComposing) return;
+    if (event.inputType === 'insertFromComposition' || event.inputType === 'insertCompositionText') {
+      event.preventDefault();
+      this.commitComposition(event.data ?? '');
+      return;
+    }
+    if (event.isComposing) return;
     this.selections.capture();
     const { state } = this.editor;
     const selection = state.selection;
@@ -127,7 +150,7 @@ export class InputManager {
       }
     }
 
-    if (event.inputType === 'insertText' && event.data) {
+    if ((event.inputType === 'insertText' || event.inputType === 'insertReplacementText') && event.data !== null) {
       for (const plugin of state.plugins) {
         if (plugin.spec.props?.handleTextInput?.(this.editor, selection.from, selection.to, event.data)) {
           event.preventDefault();
@@ -135,7 +158,7 @@ export class InputManager {
         }
       }
       event.preventDefault();
-      insertText(this.editor, event.data);
+      this.runGroupedInput('typing', () => event.data ? insertText(this.editor, event.data) : deleteSelection(this.editor));
       return;
     }
 
@@ -159,10 +182,34 @@ export class InputManager {
       return;
     }
 
-    if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
+    const backwardDeletes = new Set(['deleteContentBackward']);
+    const forwardDeletes = new Set(['deleteContentForward']);
+    if (backwardDeletes.has(event.inputType) || forwardDeletes.has(event.inputType)) {
       event.preventDefault();
-      if (event.inputType === 'deleteContentBackward') deleteBackward(this.editor);
-      else deleteForward(this.editor);
+      if (backwardDeletes.has(event.inputType)) this.runGroupedInput('delete-backward', () => deleteBackward(this.editor));
+      else this.runGroupedInput('delete-forward', () => deleteForward(this.editor));
+      return;
+    }
+
+    if (event.inputType === 'deleteByDrag' && Date.now() <= this.suppressNativeDragDeleteUntil) {
+      // WebKit can emit its native source deletion during an internal block drag.
+      // The model transaction owns the move, so accepting that deletion as well
+      // would either remove the source before drop or delete it a second time.
+      event.preventDefault();
+      this.suppressNativeDragDeleteUntil = 0;
+      return;
+    }
+
+    if (event.inputType === 'deleteByCut' || event.inputType === 'deleteByDrag') {
+      event.preventDefault();
+      this.runGroupedInput(event.inputType, () => deleteSelection(this.editor));
+      return;
+    }
+
+    if (event.inputType === 'historyUndo' || event.inputType === 'historyRedo') {
+      event.preventDefault();
+      if (event.inputType === 'historyUndo') undo(this.editor);
+      else redo(this.editor);
       return;
     }
 
@@ -209,6 +256,7 @@ export class InputManager {
   private onCompositionStart = (event: CompositionEvent): void => {
     if (this.options.shouldStopEvent?.(event)) return;
     this.composingValue = true;
+    this.compositionHandled = false;
     this.selections.capture();
     this.compositionSelection = this.editor.state.selection;
   };
@@ -217,35 +265,57 @@ export class InputManager {
     this.composingValue = false;
     if (this.options.shouldStopEvent?.(event)) {
       this.compositionSelection = undefined;
+      this.compositionHandled = false;
       return;
     }
+    this.commitComposition(event.data);
+  };
+
+  private commitComposition(data: string): boolean {
     const selection = this.compositionSelection;
-    this.compositionSelection = undefined;
-    if (!selection || !event.data) return;
+    if (this.compositionHandled || !selection || !data) return false;
     if (selection.kind !== 'text') {
-      insertText(this.editor, event.data);
-      return;
+      const inserted = this.runGroupedInput('composition', () => insertText(this.editor, data));
+      if (inserted) {
+        this.compositionHandled = true;
+        this.compositionSelection = undefined;
+      }
+      return inserted;
     }
     const { state } = this.editor;
     const transaction = state.createTransaction();
     const target = getNodeAtPath(state.doc, selection.path);
     let landingPath = selection.path;
-    let landingOffset = selection.from + event.data.length;
+    let landingOffset = selection.from + data.length;
     if (selection.isCollapsed && target.isText && !sameMarks(target.marks, state.storedMarks)) {
       const value = target.text ?? '';
       const index = selection.path.at(-1) as number;
       landingPath = [...selection.path.slice(0, -1), index + (selection.from > 0 ? 1 : 0)];
-      landingOffset = event.data.length;
+      landingOffset = data.length;
       transaction.replaceNode(selection.path, [
         ...(selection.from ? [target.withText(value.slice(0, selection.from))] : []),
-        state.schema.text(event.data, state.storedMarks),
+        state.schema.text(data, state.storedMarks),
         ...(selection.from < value.length ? [target.withText(value.slice(selection.from))] : []),
       ]);
-    } else if (selection.isSingleText) transaction.replaceText(selection.path, selection.from, selection.to, event.data);
-    else transaction.replaceTextRange(selection.path, selection.from, selection.endPath, selection.to, event.data);
+    } else if (selection.isSingleText) transaction.replaceText(selection.path, selection.from, selection.to, data);
+    else transaction.replaceTextRange(selection.path, selection.from, selection.endPath, selection.to, data);
+    setHistoryGroup(transaction, 'composition');
     transaction.setStoredMarks(state.storedMarks).setSelection(Selection.cursor(landingPath, landingOffset));
     this.editor.dispatch(transaction);
-  };
+    this.compositionHandled = true;
+    this.compositionSelection = undefined;
+    return true;
+  }
+
+  private runGroupedInput(group: string, command: () => boolean): boolean {
+    return this.editor.runCommandBatch(() => {
+      if (!command()) return false;
+      const marker = this.editor.state.createTransaction().setMeta('force', true);
+      setHistoryGroup(marker, group);
+      this.editor.dispatch(marker);
+      return true;
+    });
+  }
 
   private onChange = (event: Event): void => {
     if (this.options.shouldStopEvent?.(event)) return;
@@ -270,10 +340,35 @@ export class InputManager {
 
   private onDragOver = (event: DragEvent): void => {
     if (this.options.shouldStopEvent?.(event)) return;
-    if (this.editor.editable && Array.from(event.dataTransfer?.items ?? []).some((item) => item.kind === 'file' && item.type.startsWith('image/'))) {
+    const internal = this.draggedBlockIndex !== undefined
+      || Array.from(event.dataTransfer?.types ?? []).includes(BLOCK_DRAG_TYPE);
+    const image = Array.from(event.dataTransfer?.items ?? []).some((item) => item.kind === 'file' && item.type.startsWith('image/'));
+    if (this.editor.editable && (internal || image)) {
       event.preventDefault();
-      if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+      if (event.dataTransfer) event.dataTransfer.dropEffect = internal ? 'move' : 'copy';
     }
+  };
+
+  private onDragStart = (event: DragEvent): void => {
+    if (this.options.shouldStopEvent?.(event) || !this.editor.editable || !event.dataTransfer) return;
+    const selection = this.editor.state.selection;
+    if (!(selection instanceof NodeSelection) || selection.nodePath.length !== 1) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const selected = this.dom.querySelector<HTMLElement>(`[data-fountain-path="${selection.nodePath[0]}"]`);
+    if (!target || !selected || !(selected === target || selected.contains(target))) return;
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData(BLOCK_DRAG_TYPE, String(selection.nodePath[0]));
+    event.dataTransfer.setData('text/plain', getNodeAtPath(this.editor.state.doc, selection.nodePath).textContent);
+    this.draggedBlockIndex = selection.nodePath[0];
+    this.suppressNativeDragDeleteUntil = Date.now() + 5_000;
+    selected.dataset.fountainDragging = 'true';
+  };
+
+  private onDragEnd = (): void => {
+    this.draggedBlockIndex = undefined;
+    this.suppressNativeDragDeleteUntil = Math.min(this.suppressNativeDragDeleteUntil, Date.now() + 1_000);
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-dragging]')
+      .forEach((element) => { delete element.dataset.fountainDragging; });
   };
 
   private onDrop = (event: DragEvent): void => {
@@ -284,6 +379,29 @@ export class InputManager {
         event.preventDefault();
         return;
       }
+    }
+    const internalSource = event.dataTransfer?.getData(BLOCK_DRAG_TYPE)
+      || (this.draggedBlockIndex === undefined ? '' : String(this.draggedBlockIndex));
+    if (internalSource && /^\d+$/.test(internalSource)) {
+      event.preventDefault();
+      const target = event.target instanceof Element
+        ? event.target.closest<HTMLElement>('[data-fountain-path]')
+        : null;
+      const targetIndex = Number((target?.dataset.fountainPath ?? '').split('.')[0]);
+      const sourceIndex = Number(internalSource);
+      if (Number.isInteger(targetIndex) && Number.isInteger(sourceIndex)) {
+        this.suppressNativeDragDeleteUntil = Date.now() + 1_000;
+        const topLevel = this.dom.querySelector<HTMLElement>(`[data-fountain-path="${targetIndex}"]`);
+        const bounds = topLevel?.getBoundingClientRect();
+        const boundary = targetIndex + (bounds && event.clientY >= bounds.top + bounds.height / 2 ? 1 : 0);
+        const destination = Math.max(0, Math.min(
+          this.editor.state.doc.childCount - 1,
+          boundary - (sourceIndex < boundary ? 1 : 0),
+        ));
+        moveBlock(this.editor, sourceIndex, destination);
+      }
+      this.onDragEnd();
+      return;
     }
     const images = Array.from(event.dataTransfer?.files ?? []).filter((file) => file.type.startsWith('image/'));
     if (!images.length) return;

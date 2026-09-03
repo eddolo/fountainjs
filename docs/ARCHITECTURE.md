@@ -186,7 +186,14 @@ The renderer segments text at every inline-range and widget boundary, then nests
 all active decorations for that segment. This supports crossing ranges without
 duplicating or persisting text, including after transaction mapping.
 
-History demonstrates this design. It is a normal stateful plugin holding `done` and `undone` snapshots. It observes document-changing transactions, honors `addToHistory: false`, caps history at 100 entries, and restores document plus selection through another transaction.
+History demonstrates this design. It is a normal stateful plugin holding `done`
+and `undone` snapshots. `createHistoryPlugin` validates configurable depth and
+group delay values. Input transactions carry an internal kind/time marker, so
+adjacent typing, composition, or deletion shares the earliest snapshot while a
+selection move, delay, kind change, or `closeHistory` ends the group. It honors
+`addToHistory: false` and restores document plus semantic selection through
+another transaction. Snapshot history is deliberately classified as local-only
+until collaboration introduces mapped, origin-aware undo.
 
 ## Commands
 
@@ -241,7 +248,16 @@ the default rich-HTML/plain-text import path and the first handled rule wins.
   plus non-colour visual markers;
 - `input.ts` normalizes browser events into commands and transactions.
 
-The input manager handles `beforeinput`, keyboard shortcuts, IME composition, multiline/plain/rich paste, image paste/drop, list indentation, code indentation, table navigation, and task checkbox changes. It captures the browser selection before running commands. Ctrl/Cmd+A, atomic-node boundary arrows, Shift-pointer cell extension, and Alt+Shift+Arrow cell extension dispatch semantic selections instead of flattening them into text ranges.
+The input manager handles `beforeinput`, keyboard shortcuts, alternate IME
+commit orderings, mobile replacement input, multiline/plain/rich paste, image
+paste/drop, internal selected-block drag/drop, list indentation, code
+indentation, table navigation, and task checkbox changes. It captures the
+browser selection before running commands. Ctrl/Cmd+A, atomic-node boundary
+arrows, Shift-pointer cell extension, and Alt+Shift+Arrow cell extension
+dispatch semantic selections instead of flattening them into text ranges.
+Input is exercised at logical offsets in bidirectional and deeply nested text.
+Mobile Chromium and WebKit emulation run focused virtual-keyboard and responsive
+layout contracts; physical-device coverage remains a separate production gate.
 
 Rendered text is wrapped with `data-fountain-text-path`; block DOM carries node type and path attributes. These anchors let selection synchronization survive marks and nested DOM wrappers. The document—not browser-generated HTML—still decides the resulting state.
 

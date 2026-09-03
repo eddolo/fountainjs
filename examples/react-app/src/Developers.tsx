@@ -254,13 +254,13 @@ function Developers() {
               <li><b>View</b><span>Renders changed documents and synchronizes the browser selection.</span></li>
             </ol>
             <Code>{transactionExample}</Code>
-            <p>History is a plugin rather than hidden editor behavior. It records eligible document transactions, ignores history-generated transactions, caps the stack, and restores both document and selection on undo or redo.</p>
+            <p>History is a plugin rather than hidden editor behavior. Its depth and adjacent-input delay are configurable; typing, composition, and repeated deletion form natural groups; <code>closeHistory</code> creates an explicit boundary; and undo/redo restores both document and semantic selection. This snapshot implementation is local-only until collaboration adds origin-aware rebasing.</p>
           </section>
 
           <section className="dev-section" id="input-view">
             <p className="dev-label">06 · INPUT & RENDERING</p>
             <h2>The browser is an interface, not the source of truth.</h2>
-            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles <code>beforeinput</code>, keyboard shortcuts, IME composition, paste, drop, task toggles, list indentation, table navigation, and image files. <code>SelectionHandler</code> converts DOM ranges to document paths and back, then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
+            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles desktop and mobile <code>beforeinput</code> variants, alternate IME commit order, structured paste, image and selected-block drop, task toggles, list indentation, table navigation, and history input. <code>SelectionHandler</code> converts DOM ranges to logical document paths and back—including nested and bidirectional text—then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
             <p>Ctrl/Cmd+A selects the document. Clicking an atomic node or pressing Left/Right at its neighboring text boundary creates a node selection. Shift-click extends a table-cell rectangle; Alt+Shift+Arrow does the same from the keyboard. Public selection commands expose the identical behavior to plain DOM, Web Components, React, or another adapter.</p>
             <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. URL attributes and tag names pass safety checks before reaching the DOM.</p>
             <h3>Interactive NodeViews keep identity without owning the document</h3>

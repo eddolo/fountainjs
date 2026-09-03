@@ -20,8 +20,10 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'chromium', testMatch: '**/editor.spec.ts', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', testMatch: '**/editor.spec.ts', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', testMatch: '**/editor.spec.ts', use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile-chrome', testMatch: '**/mobile.spec.ts', use: { ...devices['Pixel 7'] } },
+    { name: 'mobile-safari', testMatch: '**/mobile.spec.ts', use: { ...devices['iPhone 15'] } },
   ],
 });
