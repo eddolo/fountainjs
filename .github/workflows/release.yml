@@ -3,6 +3,7 @@ name: Publish npm
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,7 +27,12 @@ jobs:
       - run: pnpm check
       - run: pnpm dlx publint@0.3.24
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./react
+      - name: Verify npm trusted publisher
+        if: github.event_name == 'workflow_dispatch'
+        run: node scripts/verify-npm-trusted-publisher.mjs
       # npm trusted publishing exchanges GitHub's OIDC identity for a
       # short-lived, stage-only credential and attaches provenance automatically.
       # A maintainer must still inspect and approve the stage with npm 2FA.
-      - run: npm stage publish . --access public
+      - name: Stage package on npm
+        if: github.event_name == 'release'
+        run: npm stage publish . --access public
