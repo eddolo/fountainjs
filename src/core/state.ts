@@ -1,5 +1,13 @@
 import { Plugin, PluginKey } from './plugin';
-import { Selection } from './selection';
+import {
+  AllSelection,
+  CellSelection,
+  GapSelection,
+  NodeSelection,
+  Selection,
+  isTextSelection,
+  type AnySelection,
+} from './selection';
 import { Mark, Node, Schema } from './schema';
 import { getNodeAtPath } from './transaction/path';
 import { Transaction } from './transaction';
@@ -7,7 +15,7 @@ import { Transaction } from './transaction';
 export interface EditorStateConfig {
   schema: Schema;
   doc?: Node;
-  selection?: Selection;
+  selection?: AnySelection;
   plugins?: readonly Plugin<any>[];
   pluginStates?: ReadonlyMap<Plugin<any>, unknown>;
   storedMarks?: readonly Mark[];
@@ -25,8 +33,12 @@ function firstTextPath(doc: Node): number[] {
   return found ?? [];
 }
 
-function normalizeSelection(doc: Node, selection: Selection): Selection {
+function normalizeSelection(doc: Node, selection: AnySelection): AnySelection {
   try {
+    if (selection instanceof NodeSelection) return new NodeSelection(doc, selection.nodePath);
+    if (selection instanceof GapSelection) return new GapSelection(doc, selection.position, selection.association);
+    if (selection instanceof AllSelection) return new AllSelection(doc);
+    if (selection instanceof CellSelection) return new CellSelection(doc, selection.anchorCellPath, selection.headCellPath);
     const start = getNodeAtPath(doc, selection.path);
     const end = getNodeAtPath(doc, selection.endPath);
     if (!start.isText || !end.isText) throw new Error('Selection is not inside text.');
@@ -45,7 +57,7 @@ function normalizeSelection(doc: Node, selection: Selection): Selection {
 export class EditorState {
   readonly schema: Schema;
   readonly doc: Node;
-  readonly selection: Selection;
+  readonly selection: AnySelection;
   readonly plugins: readonly Plugin<any>[];
   readonly storedMarks: readonly Mark[];
   private readonly pluginStates: ReadonlyMap<Plugin<any>, unknown>;
@@ -56,7 +68,7 @@ export class EditorState {
     this.schema.validate(this.doc);
     this.selection = normalizeSelection(this.doc, config.selection ?? Selection.cursor(firstTextPath(this.doc), 0));
     this.plugins = Object.freeze([...(config.plugins ?? [])]);
-    const initialMarks = config.storedMarks ?? (this.selection.isCollapsed
+    const initialMarks = config.storedMarks ?? (isTextSelection(this.selection) && this.selection.isCollapsed
       ? getNodeAtPath(this.doc, this.selection.path).marks
       : []);
     this.storedMarks = Object.freeze([...initialMarks]);
@@ -81,7 +93,7 @@ export class EditorState {
     const nextSelection = normalizeSelection(nextDoc, transaction.selection);
     let nextStoredMarks = transaction.storedMarksSet ? transaction.storedMarks : this.storedMarks;
     if (transaction.selectionSet && !transaction.storedMarksSet) {
-      if (nextSelection.isCollapsed) {
+      if (isTextSelection(nextSelection) && nextSelection.isCollapsed) {
         try { nextStoredMarks = getNodeAtPath(nextDoc, nextSelection.path).marks; }
         catch { nextStoredMarks = []; }
       } else nextStoredMarks = [];

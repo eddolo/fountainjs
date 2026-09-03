@@ -108,6 +108,80 @@ test('replaces a DOM selection that crosses block boundaries', async ({ page }) 
   await expect(editor.locator('[data-fountain-widget="remote"]')).toHaveCount(1);
 });
 
+test('uses Ctrl+A as an explicit all-document selection and replaces the document', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await editor.click();
+  await page.keyboard.press('ControlOrMeta+a');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('all');
+  expect(await page.evaluate(() => document.getSelection()?.toString())).toContain('Alpha');
+
+  await page.keyboard.type('Replacement');
+  await expect(editor).toHaveText('Replacement');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('text');
+});
+
+test('selects and deletes an atomic image through real pointer and keyboard input', async ({ page }) => {
+  const inserted = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.commands.insertImage({ src: 'https://example.com/selected.png', alt: 'Selected image' });
+  });
+  expect(inserted).toBe(true);
+  const image = page.locator('[data-fountain-node="image_super"]');
+  await page.locator('[data-fountain-path="0"]').click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('ArrowRight');
+  await expect(image).toHaveAttribute('data-fountain-selected-node', 'true');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
+
+  await page.locator('[data-fountain-path="0"]').click();
+  await image.click();
+  await expect(image).toHaveAttribute('data-fountain-selected-node', 'true');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
+
+  await page.keyboard.press('Backspace');
+  await expect(image).toHaveCount(0);
+});
+
+test('extends and replaces a rectangular cell selection through real pointer input', async ({ page }) => {
+  const inserted = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const didInsert = contract.commands.commands.insertTable({ rows: 2, columns: 2, headerRow: true });
+    contract.commands.commands.selectText([1, 0, 0, 0, 0], 0);
+    return didInsert;
+  });
+  expect(inserted).toBe(true);
+  await page.locator('[data-fountain-path="1.1.1"]').click({ modifiers: ['Shift'] });
+  await expect(page.locator('[data-fountain-selected-cell="true"]')).toHaveCount(4);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('cell');
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([1, 0, 0, 0, 0], 0);
+    contract.view.focus();
+  });
+  await page.keyboard.press('Alt+Shift+ArrowRight');
+  await page.keyboard.press('Alt+Shift+ArrowDown');
+  await expect(page.locator('[data-fountain-selected-cell="true"]')).toHaveCount(4);
+
+  await page.keyboard.type('First cell only');
+  await expect(page.locator('[data-fountain-path="1.0.0"]')).toHaveText('First cell only');
+  await expect(page.locator('[data-fountain-path="1.0.1"]')).toHaveText('');
+  await expect(page.locator('[data-fountain-path="1.1.0"]')).toHaveText('');
+  await expect(page.locator('[data-fountain-path="1.1.1"]')).toHaveText('');
+});
+
+test('renders and types into a structural gap as a new block', async ({ page }) => {
+  const selected = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.commands.selectGap(12);
+  });
+  expect(selected).toBe(true);
+  await expect(page.locator('[data-fountain-path="1"]')).toHaveAttribute('data-fountain-gap', 'before');
+  await page.keyboard.type('Between');
+  await expect(page.locator('[data-fountain-path="1"]')).toHaveText('Between');
+  await expect(page.locator('[data-fountain-path="2"]')).toContainText('Second paragraph');
+});
+
 test('loads the public React playground without console or page errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -116,4 +190,21 @@ test('loads the public React playground without console or page errors', async (
   await expect(page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
   expect(errors).toEqual([]);
+});
+
+test('publishes semantic selection controls and table interaction in the demo gallery', async ({ page }) => {
+  await page.goto('/demos/svelte-report.html');
+  await expect(page.getByRole('heading', { name: 'Structured data report' })).toBeVisible();
+  await expect(page.getByText('Rectangular cell selection', { exact: true })).toBeVisible();
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await expect(editor).toContainText('Quarterly service report');
+
+  await page.locator('[data-fountain-path="2.0.0"]').click();
+  await page.locator('[data-fountain-path="2.1.2"]').click({ modifiers: ['Shift'] });
+  await expect(page.locator('[data-fountain-selected-cell="true"]')).toHaveCount(6);
+
+  await page.getByRole('button', { name: 'Gap after first' }).click();
+  await expect(page.locator('[data-fountain-path="1"]')).toHaveAttribute('data-fountain-gap', 'before');
+  await page.getByRole('button', { name: 'Select all' }).click();
+  await expect.poll(() => page.evaluate(() => document.getSelection()?.toString() ?? '')).toContain('Quarterly service report');
 });

@@ -48,13 +48,13 @@ A row may move to **Delivered** only when all applicable gates pass:
 | CORE-01 | Typed tree document with schema validation | Delivered | Continue compatibility and malformed-input coverage. |
 | CORE-02 | Immutable state and explicit transactions | Delivered | Preserve as the collaboration layer is introduced. |
 | CORE-03 | Positions survive multi-step document changes | Delivered | Step maps, mapping composition/inversion, automatic transaction-selection mapping, path/position conversion, and recoverable mapped selection bookmarks are implemented and tested. |
-| CORE-04 | Text, node, gap, and table-cell selections | Partial | Text ranges exist; add node, gap, all-document, and rectangular cell selections. |
+| CORE-04 | Text, node, gap, all-document, and table-cell selections | Delivered | Immutable selection variants map through steps and history; semantic typing/deletion/formatting, atomic pointer and arrow navigation, Ctrl/Cmd+A, exact block gaps, rectangular Shift-pointer and Alt+Shift+Arrow cell selection, DOM markers, public demos, and cross-browser contracts are included. |
 | CORE-05 | Chained, dry-run-capable commands | Delivered | Typed immediate, atomic chained, and non-mutating `can()` surfaces compose every extension command with rollback, one-step history, reserved-name fallback, and a view-aware focus command covered in real browsers. |
 | CORE-06 | Configurable input and paste rules | Delivered | Ordered input and paste rule plugins expose custom transaction handlers, immediate input undo, text/mark/wrapping helpers, repeated-match processing, and real-browser coverage. |
 | CORE-07 | View-only inline, node, and widget decorations | Delivered | Immutable inline/node/widget sets, transaction mapping, plugin delivery, safe DOM rendering, overlapping-range segmentation, and browser contracts are implemented. |
 | CORE-08 | Custom interactive node views | Partial | Add selection hooks, event isolation, mutation handling, content updates, and framework adapters. |
 | CORE-09 | Predictable keyboard, IME, clipboard, and drag input | Partial | Add real-browser composition, bidi, mobile, rich clipboard, drag-move, and nested-content coverage. |
-| CORE-10 | Configurable undo/redo | Partial | Map selections, group adjacent input, support history boundaries, and add collaboration-aware undo. |
+| CORE-10 | Configurable undo/redo | Partial | Group adjacent input, support explicit history boundaries, and add collaboration-aware undo. |
 
 ### Document capabilities
 
@@ -64,7 +64,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-02 | Links with safe editing UI | Partial | Add autolink, link-on-paste, validation hooks, preview, and open/edit/remove UX. |
 | DOC-03 | Bullet, ordered, nested, and task lists | Partial | Harden mixed nesting, multi-item transforms, paste, joins, lifting, and keyboard edge cases. |
 | DOC-04 | Code blocks with language-aware highlighting | Partial | Integrate highlighting as an editor decoration/node view and add language selection. |
-| DOC-05 | Production table editing | Partial | Add cell selection, merge/split, resize, header toggles, row/column selection, clipboard, and table repair. |
+| DOC-05 | Production table editing | Partial | Add merge/split, resize, header toggles, whole-row/column selection, rectangular clipboard distribution, and table repair. |
 | DOC-06 | Images with upload, paste, drop, captions, and dimensions | Partial | Add progress, cancellation, resize handles, alignment, inline mode, error/retry, and responsive metadata. |
 | DOC-07 | Video, audio, files, and configurable embeds | Missing | Supply first-party nodes, upload contracts, safe rendering, and accessible controls. |
 | DOC-08 | Mentions, emoji, mathematics, typography, and character count | Missing | Add independent extensions and UI primitives. |
@@ -120,7 +120,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
-| PROD-01 | Cross-browser desktop confidence | Partial | A Chromium/Firefox/WebKit Playwright lane now covers core input, cross-block selection, mapped decorations, input-rule undo, and the React playground; expand it across every editing capability. |
+| PROD-01 | Cross-browser desktop confidence | Partial | A Chromium/Firefox/WebKit Playwright lane now covers core input, cross-block and semantic selections, mapped decorations, input-rule undo, and the React playground; expand it across every editing capability. |
 | PROD-02 | Mobile and IME confidence | Missing | Test iOS Safari, Android Chrome, composition, autocorrect, and virtual keyboards. |
 | PROD-03 | Accessibility conformance | Partial | Establish WCAG 2.2 AA targets, automated checks, manual screen-reader scripts, and fixes. |
 | PROD-04 | RTL and localization | Missing | Add direction-aware editing plus translatable UI strings and locale packages. |

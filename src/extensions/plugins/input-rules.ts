@@ -6,6 +6,7 @@ import {
   type Editor,
   type EditorState,
   type Mark,
+  type AnySelection,
   type Transaction,
 } from '../../core';
 import { getNodeAtPath } from '../../core/transaction/path';
@@ -43,7 +44,7 @@ export class InputRule {
 
 interface InputRuleSnapshot {
   readonly doc: Node;
-  readonly selection: Selection;
+  readonly selection: AnySelection;
   readonly storedMarks: readonly Mark[];
 }
 

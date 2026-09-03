@@ -1,4 +1,11 @@
-import { Selection } from '../selection';
+import {
+  AllSelection,
+  CellSelection,
+  GapSelection,
+  NodeSelection,
+  Selection,
+  type AnySelection,
+} from '../selection';
 import { Node } from '../schema';
 import { getNodeAtPath } from './path';
 
@@ -304,8 +311,49 @@ export function positionToTextPoint(doc: Node, position: number, association: Ma
   return { path: next.path, offset: Math.max(0, Math.min(position - next.from, next.to - next.from)) };
 }
 
-/** Maps a text selection from one document version into the next. */
-export function mapSelection(selection: Selection, before: Node, after: Node, map: StepMap): Selection {
+/** Maps any supported selection from one document version into the next. */
+function findMappedNodePath(
+  doc: Node,
+  from: number,
+  to: number | undefined,
+  names: readonly string[],
+): readonly number[] | null {
+  let found: readonly number[] | null = null;
+  doc.descendants((node, path) => {
+    if (found || !names.includes(node.type.name)) return !found;
+    const range = nodeRangeAtPath(doc, path);
+    if (range.from === from && (to === undefined || range.to === to)) {
+      found = Object.freeze([...path]);
+      return false;
+    }
+    return true;
+  });
+  return found;
+}
+
+export function mapSelection(selection: AnySelection, before: Node, after: Node, map: StepMap): AnySelection {
+  if (selection instanceof AllSelection) return new AllSelection(after);
+  if (selection instanceof GapSelection) {
+    return new GapSelection(after, map.map(selection.position, selection.association), selection.association);
+  }
+  if (selection instanceof NodeSelection) {
+    const from = map.map(selection.structuralFrom, 1);
+    const to = map.map(selection.structuralTo, -1);
+    const path = from < to ? findMappedNodePath(after, from, to, [selection.nodeType]) : null;
+    return path ? new NodeSelection(after, path) : new GapSelection(after, from, 1);
+  }
+  if (selection instanceof CellSelection) {
+    const anchorFrom = nodeRangeAtPath(before, selection.anchorCellPath).from;
+    const headFrom = nodeRangeAtPath(before, selection.headCellPath).from;
+    const cellNames = ['table_cell', 'table_header'];
+    const anchor = findMappedNodePath(after, map.map(anchorFrom, 1), undefined, cellNames);
+    const head = findMappedNodePath(after, map.map(headFrom, 1), undefined, cellNames);
+    if (anchor && head) {
+      try { return new CellSelection(after, anchor, head); }
+      catch { /* Fall through to a recoverable gap. */ }
+    }
+    return new GapSelection(after, map.map(anchorFrom, 1), 1);
+  }
   const start = textPointToPosition(before, selection.path, selection.from);
   if (selection.isCollapsed) {
     const mapped = positionToTextPoint(after, map.map(start, 1), 1);

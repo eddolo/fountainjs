@@ -31,6 +31,11 @@
 .fountain-editor > :first-child { margin-top: 0; }
 .fountain-editor > :last-child { margin-bottom: 0; }
 .fountain-editor [data-fountain-text-path] { white-space: pre-wrap; }
+.fountain-editor [data-fountain-selected-node="true"] { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 72%, transparent); outline-offset: 3px; }
+.fountain-editor [data-fountain-selected-cell="true"] { position: relative; background: color-mix(in srgb, var(--fountain-accent) 16%, transparent); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fountain-accent) 68%, transparent); }
+.fountain-editor [data-fountain-gap="before"] { box-shadow: 0 -3px 0 var(--fountain-accent); }
+.fountain-editor [data-fountain-gap="after"] { box-shadow: 0 3px 0 var(--fountain-accent); }
+.fountain-editor [data-fountain-gap="inside"] { min-height: 1.5em; outline: 2px dashed color-mix(in srgb, var(--fountain-accent) 55%, transparent); outline-offset: 2px; }
 .fountain-editor h1 { font-size: 2.25em; line-height: 1.15; letter-spacing: -.03em; }
 .fountain-editor h2 { font-size: 1.65em; line-height: 1.2; letter-spacing: -.02em; }
 .fountain-editor blockquote { padding: 4px 0 4px 18px; color: var(--fountain-muted); border-left: 3px solid var(--fountain-accent); }

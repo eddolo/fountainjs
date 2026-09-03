@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   AIController,
+  AllSelection,
   CoreSchemaSpec,
   Selection,
   createAIAdapter,
@@ -73,6 +74,16 @@ describe('AI review controller', () => {
     const request = controller.inspectRequest({ action: 'improve', includeDocumentContext: true });
     expect(request.context?.documentText).toBe('Private draft');
     expect(request.privacy.includesDocumentContext).toBe(true);
+  });
+
+  it('rejects semantic document selections instead of flattening them through a text proposal', () => {
+    const editor = makeEditor('Structured draft');
+    editor.dispatch(editor.state.createTransaction().setSelection(new AllSelection(editor.state.doc)));
+    const transform = vi.fn(async () => 'Result');
+    const controller = new AIController(editor, createAIAdapter(transform));
+    expect(() => controller.inspectRequest({ action: 'improve' })).toThrow('requires a text selection');
+    expect(transform).not.toHaveBeenCalled();
+    expect(editor.getText()).toBe('Structured draft');
   });
 
   it('reviews a selection that crosses inline mark boundaries', async () => {

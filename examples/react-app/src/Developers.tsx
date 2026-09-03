@@ -189,7 +189,7 @@ function Developers() {
             <h2>Typed nodes, inline marks, stable paths.</h2>
             <p>A document is a tree of <code>Node</code> objects. Blocks such as paragraphs, tables, lists, images, and custom callouts are nodes. Formatting such as strong, links, colour, or inline code is represented by marks on text nodes. Arrays and attributes are frozen on construction; transformations return new branches instead of mutating existing state.</p>
             <div className="dev-two-column">
-              <div><h3>Addressing</h3><p>Paths are child indexes from the root: <code>[2, 0, 1]</code>. A selection stores a start path/offset and an end path/offset, so it can cross marks, paragraphs, list items, and other nested content.</p></div>
+              <div><h3>Addressing and selection</h3><p>Paths are child indexes from the root: <code>[2, 0, 1]</code>. The selection hierarchy distinguishes text ranges, complete nodes, structural gaps, the whole document, and rectangular table-cell regions. Every kind maps through transaction steps without pretending that its text projection is the user’s actual intent.</p></div>
               <div><h3>Portable boundary</h3><p><code>node.toJSON()</code> emits only type names, attributes, content, text, and mark data. There are no DOM nodes, React values, or class instances in persisted content.</p></div>
             </div>
             <Code>{`{
@@ -230,7 +230,8 @@ function Developers() {
           <section className="dev-section" id="input-view">
             <p className="dev-label">06 · INPUT & RENDERING</p>
             <h2>The browser is an interface, not the source of truth.</h2>
-            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles <code>beforeinput</code>, keyboard shortcuts, IME composition, paste, drop, task toggles, list indentation, table navigation, and image files. <code>SelectionHandler</code> converts DOM ranges to document paths and back.</p>
+            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles <code>beforeinput</code>, keyboard shortcuts, IME composition, paste, drop, task toggles, list indentation, table navigation, and image files. <code>SelectionHandler</code> converts DOM ranges to document paths and back, then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
+            <p>Ctrl/Cmd+A selects the document. Clicking an atomic node or pressing Left/Right at its neighboring text boundary creates a node selection. Shift-click extends a table-cell rectangle; Alt+Shift+Arrow does the same from the keyboard. Public selection commands expose the identical behavior to plain DOM, Web Components, React, or another adapter.</p>
             <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. Custom NodeViews can provide interactive DOM plus a <code>contentDOM</code> hole and lifecycle cleanup. URL attributes and tag names pass safety checks before reaching the DOM.</p>
             <div className="dev-callout dev-callout--mint"><b>Why controlled input?</b><span>Commands—not browser-generated HTML—decide the resulting document. That keeps undo, schema validation, portable output, cross-block selection, and multiple UI surfaces consistent.</span></div>
           </section>

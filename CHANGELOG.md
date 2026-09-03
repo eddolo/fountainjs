@@ -4,6 +4,11 @@
 
 ### Added
 
+- A mapped selection hierarchy for text, node, structural-gap, all-document,
+  and rectangular table-cell selections, including semantic command behavior,
+  undo restoration, native DOM synchronization, pointer interaction, keyboard
+  navigation, non-colour visual states, public demos, and cross-browser tests.
+
 - Structural `StepMap` and composable `Mapping` primitives with inversion and
   deletion metadata.
 - Automatic transaction-selection mapping through text edits, block changes,

@@ -45,7 +45,7 @@ export const demoDefinitions: readonly DemoDefinition[] = [
     runtime: 'react',
     summary: 'A long-form publishing surface with rich marks, headings, quotes, lists, links, history, and live portable output.',
     boundary: 'React owns layout and controls; FountainJS owns document state and editing.',
-    capabilities: ['Cross-block selection', 'Rich formatting', 'Lists and quotes', 'Live JSON/HTML/Markdown'],
+    capabilities: ['Text, block, and document selection', 'Rich formatting', 'Lists and quotes', 'Live JSON/HTML/Markdown'],
     content: doc(
       heading(1, 'The city designed around shade'),
       paragraph(text('A newsroom can compose '), text('structured stories', [{ type: 'strong' }]), text(' without making React the document model. Select across these paragraphs and use the full toolbar.')),
@@ -178,7 +178,7 @@ const save = (event: CustomEvent) => api.save(event.detail.value)
     runtime: 'element',
     summary: 'A report editor where tables, prose, and format exports coexist in one document instead of separate widgets.',
     boundary: 'Svelte mounts the standards-based element and stores its JSON change detail.',
-    capabilities: ['Editable tables', 'Row/column commands', 'Svelte-compatible event', 'HTML and Markdown export'],
+    capabilities: ['Rectangular cell selection', 'Row/column commands', 'Svelte-compatible event', 'HTML and Markdown export'],
     content: doc(
       heading(1, 'Quarterly service report'),
       paragraph(text('Move through cells with Tab, edit values, or add rows and columns from the toolbar.')),
@@ -207,7 +207,7 @@ const save = (event: CustomEvent) => api.save(event.detail.value)
     runtime: 'element',
     summary: 'A campaign editor mixing media, captions, accessible alt text, headings, links, and rich narrative blocks.',
     boundary: 'Angular enables custom elements; FountainJS receives an upload adapter owned by the application.',
-    capabilities: ['Images and captions', 'Upload adapter boundary', 'Accessible metadata', 'Angular custom events'],
+    capabilities: ['Atomic image selection', 'Upload adapter boundary', 'Accessible metadata', 'Angular custom events'],
     content: doc(
       heading(1, 'A launch story with real media'),
       paragraph(text('Images are typed block nodes with source, alt text, title, caption, and width metadata.')),

@@ -46,13 +46,41 @@ chains; most applications should use `createCommandManager()` instead.
 
 ## Selections and transactions
 
-`Selection` addresses text with document paths and character offsets:
+FountainJS exposes an immutable selection hierarchy. Every selection has a
+`kind` discriminator and a text projection (`path`, `from`, `endPath`, `to`)
+for integrations that need readable content:
+
+- `Selection` (`kind: 'text'`) is a caret or ordered text range.
+- `NodeSelection` (`'node'`) owns one complete non-text node and its structural range.
+- `GapSelection` (`'gap'`) is an exact insertion point between block nodes.
+- `AllSelection` (`'all'`) owns the complete document.
+- `CellSelection` (`'cell'`) owns a rectangular set of table cells in one table.
+
+Text selections use document paths and character offsets:
 
 ```ts
 new Selection([2, 0], 3, 8);
 Selection.cursor([2, 0], 8);
 Selection.range([2, 0], 3, [2, 2], 4);
 ```
+
+Semantic selections are resolved against a document when they are created:
+
+```ts
+const node = new NodeSelection(editor.state.doc, [2]);
+const gap = new GapSelection(editor.state.doc, topLevelPosition(editor.state.doc, 3));
+const everything = new AllSelection(editor.state.doc);
+const cells = new CellSelection(editor.state.doc, [4, 0, 1], [4, 2, 3]);
+
+editor.dispatch(editor.createTransaction().setSelection(cells));
+```
+
+Constructors reject stale paths, inline gap positions, text-node targets, and
+cell rectangles that leave their table. Transactions map all five kinds after
+every step. A deleted node or cell selection recovers to a valid structural gap;
+history restores the original semantic kind. Typing replaces node/all/cell
+selections and inserts a new paragraph at a gap. Mark commands apply to the
+selected node, document, or exact cell rectangle while retaining its selection.
 
 Version `0.3` supports ordered ranges inside one text fragment, across differently marked inline fragments, across top-level text blocks, and through nested text leaves. Top-level paragraph replacement joins the surviving prefix and suffix into one block; nested custom structures preserve their topology while transforming the selected text leaves.
 
@@ -125,6 +153,10 @@ nested only for the shared segment; mapping preserves both ranges across edits.
 
 `AISuggestOptions` accepts `action`, optional `instructions`, `scope`, and `includeDocumentContext`. Scope defaults to `auto`: selected text when a range exists, otherwise the current text node. Document context is disabled by default.
 
+AI review deliberately accepts only `Selection` text carets/ranges. Node, gap,
+all-document, and cell selections must be converted by an explicit host tool;
+the controller refuses them rather than silently flattening structured content.
+
 An `AIAdapter` implements one method:
 
 ```ts
@@ -147,7 +179,8 @@ interface AIAdapter {
 
 Commands return whether they handled the operation:
 
-- `insertText`, `insertPlainText`, `insertHardBreak`, `deleteSelection`, `deleteBackward`, `deleteForward`, and `selectText`
+- `insertText`, `insertPlainText`, `insertHardBreak`, `deleteSelection`, `deleteBackward`, and `deleteForward`
+- `selectText`, `selectNode`, `selectGap`, `selectAll`, `selectCells`, `selectAdjacentNode`, and `extendCellSelection`
 - `setContent`, `setBlockType`, and `insertBlock`
 - `insertNode`, `insertImage`, `insertQuote`, `insertList`, and `insertTable`
 - `isMarkActive`, `toggleMark`, `setMark`, `unsetMark`, `setLink`, and `unsetLink`
@@ -239,6 +272,16 @@ return its own transaction or document for more specialized structures.
 ## DOM view
 
 `new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+
+Selection input is available without a framework: Ctrl/Cmd+A creates an
+`AllSelection`; clicking an atomic node selects it; Left/Right at an adjacent
+text boundary enters and leaves an atomic `NodeSelection`; Shift-click extends
+a cell rectangle from the current cell; and Alt+Shift+Arrow extends the same
+rectangle using only the keyboard. Node, cell, and gap states use outlines,
+inset borders, or insertion rules in addition to colour. The view mirrors each
+state into a native DOM range while the model selection remains authoritative.
+Hosts can add their own labelled controls around `selectNode`, `selectGap`, or
+`selectCells` when a product needs a more explicit screen-reader workflow.
 
 `registerFountainElement(options?)` registers `<fountain-editor>` as a standards-based Custom Element. Configure a schema and plugins once, assign document JSON through its `value` property, and listen for the bubbling `fountain-change` event. Event detail includes `state`, `transaction`, and portable `value` JSON.
 

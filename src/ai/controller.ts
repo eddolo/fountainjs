@@ -82,6 +82,9 @@ export class AIController {
   inspectRequest(options: AISuggestOptions): AIRequestEnvelope {
     const { state } = this.editor;
     const selection = state.selection;
+    if (selection.kind !== 'text') {
+      throw new Error('AI text review requires a text selection. Place a caret or select text first.');
+    }
     const node = getNodeAtPath(state.doc, selection.path);
     if (!node.isText) throw new Error('AI requests must target text. Place the cursor inside a text fragment first.');
     const endNode = getNodeAtPath(state.doc, selection.endPath);

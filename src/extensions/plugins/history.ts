@@ -1,8 +1,8 @@
-import { Editor, Node, Plugin, PluginKey, Selection } from '../../core';
+import { Editor, Node, Plugin, PluginKey, type AnySelection } from '../../core';
 
 export interface HistorySnapshot {
   doc: Node;
-  selection: Selection;
+  selection: AnySelection;
 }
 
 export interface HistoryState {

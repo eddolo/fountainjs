@@ -1,22 +1,22 @@
 import { Mark, Node } from '../schema';
-import { Selection } from '../selection';
+import { Selection, type AnySelection } from '../selection';
 import { Transform } from './transform';
 import { mapSelection, type StepMap } from './mapping';
 
 export class Transaction extends Transform {
-  selection: Selection;
+  selection: AnySelection;
   selectionSet = false;
   storedMarks: readonly Mark[];
   storedMarksSet = false;
   private readonly metadata = new Map<string, unknown>();
 
-  constructor(doc: Node, selection: Selection = Selection.cursor([], 0), storedMarks: readonly Mark[] = []) {
+  constructor(doc: Node, selection: AnySelection = Selection.cursor([], 0), storedMarks: readonly Mark[] = []) {
     super(doc);
     this.selection = selection;
     this.storedMarks = Object.freeze([...storedMarks]);
   }
 
-  setSelection(selection: Selection): this {
+  setSelection(selection: AnySelection): this {
     this.selection = selection;
     this.selectionSet = true;
     return this;

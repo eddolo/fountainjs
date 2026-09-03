@@ -100,12 +100,23 @@ Validation occurs when JSON enters a schema and whenever `EditorState` is constr
 
 ## Selection model
 
-`Selection` stores:
+The shared `BaseSelection` contract has five immutable variants:
+
+- `Selection` for a text caret or ordered text range;
+- `NodeSelection` for one complete non-text node;
+- `GapSelection` for a block boundary;
+- `AllSelection` for the full document;
+- `CellSelection` for one rectangular region in a table.
+
+Every variant exposes a text projection for read-only integrations. Semantic
+identity lives in variant-specific fields such as `nodePath`, `position`, or
+`cellPaths`; commands must branch on `kind` instead of treating that projection
+as user intent. `Selection` itself stores:
 
 - `path` and `from` for the start text position;
 - `endPath` and `to` for the end text position.
 
-Ranges must be document ordered. A collapsed selection has the same path and offset on both ends. Because endpoints are independent, one selection can cross inline mark fragments, paragraphs, list items, table cells, and other nested structures.
+Ranges must be document ordered. A collapsed selection has the same path and offset on both ends. Because endpoints are independent, one selection can cross inline mark fragments, paragraphs, list items, table cells, and other nested structures. Cell rectangles are resolved in row-major order and never cross table boundaries. Gap positions are valid only between block children, never inside inline content.
 
 `storedMarks` live on `EditorState`. At a collapsed cursor they describe marks for subsequently typed text. This avoids needing a non-empty selection to turn bold, colour, or another inline style on.
 
@@ -127,7 +138,9 @@ the opening/closing boundaries represented by `Node.nodeSize`, which allows a
 path-based selection to be converted to a structural position, mapped through
 one or many changes, and resolved back to the correct text path. Transactions
 map their current selection after every step—even when marks split one text
-leaf into several leaves. `MapResult` reports whether surrounding content was
+leaf into several leaves. Node and cell selections map their structural ranges
+back to typed nodes; deletion recovers as a gap, while an all-document selection
+continues to cover the resulting document. `MapResult` reports whether surrounding content was
 deleted, and maps can be inverted for rebasing and review infrastructure.
 
 `SelectionBookmark` separates capture from resolution: it stores structural
@@ -223,10 +236,12 @@ the default rich-HTML/plain-text import path and the first handled rule wins.
 `EditorView` mounts an accessible multiline `contenteditable`. It owns three bridges:
 
 - `dom-renderer.ts` projects the document tree into DOM;
-- `selection-handler.ts` translates DOM ranges to path selections and back;
+- `selection-handler.ts` translates DOM ranges to path selections and back, and
+  projects node, gap, all-document, and cell selections into native DOM ranges
+  plus non-colour visual markers;
 - `input.ts` normalizes browser events into commands and transactions.
 
-The input manager handles `beforeinput`, keyboard shortcuts, IME composition, multiline/plain/rich paste, image paste/drop, list indentation, code indentation, table navigation, and task checkbox changes. It captures the browser selection before running commands.
+The input manager handles `beforeinput`, keyboard shortcuts, IME composition, multiline/plain/rich paste, image paste/drop, list indentation, code indentation, table navigation, and task checkbox changes. It captures the browser selection before running commands. Ctrl/Cmd+A, atomic-node boundary arrows, Shift-pointer cell extension, and Alt+Shift+Arrow cell extension dispatch semantic selections instead of flattening them into text ranges.
 
 Rendered text is wrapped with `data-fountain-text-path`; block DOM carries node type and path attributes. These anchors let selection synchronization survive marks and nested DOM wrappers. The document—not browser-generated HTML—still decides the resulting state.
 

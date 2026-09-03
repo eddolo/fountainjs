@@ -15,7 +15,10 @@ import {
   insertTable,
   redo,
   registerFountainElement,
+  selectAll,
+  selectGap,
   setTextAlignment,
+  topLevelPosition,
   toggleMark,
   undo,
   type Editor,
@@ -72,6 +75,8 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor} onClick={() => editor && toggleMark(editor, 'strong')}>Bold</button>
     <button disabled={!editor} onClick={() => editor && toggleMark(editor, 'highlight')}>Highlight</button>
     <button disabled={!editor} onClick={() => editor && setTextAlignment(editor, 'center')}>Centre</button>
+    <button disabled={!editor} onClick={() => editor && selectAll(editor)}>Select all</button>
+    <button disabled={!editor || editor.state.doc.childCount < 2} onClick={() => editor && selectGap(editor, topLevelPosition(editor.state.doc, 1))}>Gap after first</button>
     <button disabled={!editor} onClick={() => editor && insertList(editor, 'task', ['A new task'])}>+ Task</button>
     <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: 2, columns: 2, headerRow: true })}>+ Table</button>
     <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableRow)}>+ Row</button>
@@ -83,7 +88,7 @@ function ReactRuntime({ demo }: { demo: DemoDefinition }) {
   const editor = useFountain({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: demo.content });
   const state = useFountainState(editor);
   return <div className="demo-workspace">
-    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>Try selection, typing, formatting, paste, tasks, tables, and history.</i></div><FountainComposer editor={editor} placeholder="Start writing…" /></section>
+    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>Try Ctrl/Cmd+A, click an image, Shift-click table cells, or use the explicit gap control.</i></div><DemoControls editor={editor} /><FountainComposer editor={editor} placeholder="Start writing…" /></section>
     <OutputPanel document={state?.doc} />
   </div>;
 }

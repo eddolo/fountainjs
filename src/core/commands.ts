@@ -1,5 +1,12 @@
 import type { Editor } from './editor';
-import { Selection } from './selection';
+import {
+  AllSelection,
+  CellSelection,
+  GapSelection,
+  NodeSelection,
+  Selection,
+  type AnySelection,
+} from './selection';
 import { Mark, Node, type Attributes } from './schema';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
@@ -33,8 +40,220 @@ function sameMarks(left: readonly Mark[], right: readonly Mark[]): boolean {
   return left.length === right.length && left.every((mark) => right.some((candidate) => candidate.eq(mark)));
 }
 
+function paragraphWithText(editor: Editor, text: string): Node | null {
+  const paragraph = editor.state.schema.nodes.paragraph;
+  if (!paragraph) return null;
+  try { return paragraph.create({}, [editor.state.schema.text(text)]); }
+  catch { return null; }
+}
+
+function dispatchIfValid(editor: Editor, transaction: ReturnType<Editor['createTransaction']>): boolean {
+  try { editor.state.schema.validate(transaction.doc); }
+  catch { return false; }
+  editor.dispatch(transaction);
+  return true;
+}
+
+function replaceAllSelection(editor: Editor, text: string): boolean {
+  const paragraph = paragraphWithText(editor, text);
+  if (!paragraph) return false;
+  const transaction = editor.state.createTransaction()
+    .replace(0, editor.state.doc.childCount, [paragraph])
+    .setSelection(Selection.cursor([0, 0], text.length));
+  return dispatchIfValid(editor, transaction);
+}
+
+function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: string): boolean {
+  const replacement = text === undefined ? [] : [paragraphWithText(editor, text)].filter((node): node is Node => Boolean(node));
+  if (text !== undefined && !replacement.length) return false;
+  let transaction: ReturnType<Editor['createTransaction']>;
+  try { transaction = editor.state.createTransaction().replaceNode(selection.nodePath, replacement); }
+  catch {
+    if (text !== undefined) return false;
+    const paragraph = paragraphWithText(editor, '');
+    if (!paragraph) return false;
+    try {
+      transaction = editor.state.createTransaction()
+        .replaceNode(selection.nodePath, [paragraph])
+        .setSelection(Selection.cursor([...selection.nodePath, 0], 0));
+    } catch { return false; }
+    return dispatchIfValid(editor, transaction);
+  }
+  if (text !== undefined) transaction = transaction.setSelection(Selection.cursor([...selection.nodePath, 0], text.length));
+  if (dispatchIfValid(editor, transaction)) return true;
+  if (text !== undefined) return false;
+  const paragraph = paragraphWithText(editor, '');
+  if (!paragraph) return false;
+  transaction = editor.state.createTransaction()
+    .replaceNode(selection.nodePath, [paragraph])
+    .setSelection(Selection.cursor([...selection.nodePath, 0], 0));
+  return dispatchIfValid(editor, transaction);
+}
+
+function replaceCellSelection(editor: Editor, selection: CellSelection, text?: string): boolean {
+  const paragraph = editor.state.schema.nodes.paragraph;
+  const firstPath = selection.cellPaths[0];
+  if (!paragraph || !firstPath) return false;
+  const transaction = editor.state.createTransaction();
+  try {
+    selection.cellPaths.forEach((path, index) => {
+      const cell = getNodeAtPath(transaction.doc, path);
+      const value = text !== undefined && index === 0 ? text : '';
+      transaction.replaceNode(path, [cell.copy([paragraph.create({}, [editor.state.schema.text(value)])])]);
+    });
+    if (text === undefined) {
+      transaction.setSelection(new CellSelection(transaction.doc, selection.anchorCellPath, selection.headCellPath));
+    } else {
+      transaction.setSelection(Selection.cursor([...firstPath, 0, 0], text.length));
+    }
+  } catch {
+    return false;
+  }
+  return dispatchIfValid(editor, transaction);
+}
+
+function insertTextAtGap(editor: Editor, selection: GapSelection, text: string): boolean {
+  const paragraph = paragraphWithText(editor, text);
+  if (!paragraph) return false;
+  const { parentPath, index } = selection;
+  const transaction = editor.state.createTransaction();
+  if (!parentPath.length) transaction.replace(index, index, [paragraph]);
+  else {
+    const parent = getNodeAtPath(editor.state.doc, parentPath);
+    transaction.replaceNode(parentPath, [parent.copy([
+      ...parent.content.slice(0, index),
+      paragraph,
+      ...parent.content.slice(index),
+    ])]);
+  }
+  transaction.setSelection(Selection.cursor([...parentPath, index, 0], text.length));
+  return dispatchIfValid(editor, transaction);
+}
+
+function replaceSemanticSelection(editor: Editor, selection: AnySelection, text?: string): boolean {
+  if (selection instanceof AllSelection) return replaceAllSelection(editor, text ?? '');
+  if (selection instanceof NodeSelection) return replaceNodeSelection(editor, selection, text);
+  if (selection instanceof CellSelection) return replaceCellSelection(editor, selection, text);
+  if (selection instanceof GapSelection) return text === undefined ? false : insertTextAtGap(editor, selection, text);
+  return false;
+}
+
+function setSelectionAfterInserted(
+  transaction: ReturnType<Editor['createTransaction']>,
+  parentPath: readonly number[],
+  index: number,
+  content: readonly Node[],
+): void {
+  const selectedIndex = index + content.length - 1;
+  const selectedPath = [...parentPath, selectedIndex];
+  const selectedNode = getNodeAtPath(transaction.doc, selectedPath);
+  const leaf = getTextLeaves(selectedNode).at(-1);
+  if (leaf) transaction.setSelection(Selection.cursor([...selectedPath, ...leaf.path], leaf.node.text?.length ?? 0));
+  else transaction.setSelection(new NodeSelection(transaction.doc, selectedPath));
+}
+
+function replaceSemanticSelectionWithDocument(editor: Editor, selection: Exclude<AnySelection, Selection>, document: Node): boolean {
+  const content = [...document.content];
+  if (!content.length) return false;
+  const transaction = editor.state.createTransaction();
+  try {
+    if (selection instanceof AllSelection) {
+      transaction.replace(0, editor.state.doc.childCount, content);
+      setSelectionAfterInserted(transaction, [], 0, content);
+    } else if (selection instanceof NodeSelection) {
+      const parentPath = selection.nodePath.slice(0, -1);
+      const index = selection.nodePath.at(-1) as number;
+      transaction.replaceNode(selection.nodePath, content);
+      setSelectionAfterInserted(transaction, parentPath, index, content);
+    } else if (selection instanceof GapSelection) {
+      const { parentPath, index } = selection;
+      if (!parentPath.length) transaction.replace(index, index, content);
+      else {
+        const parent = getNodeAtPath(editor.state.doc, parentPath);
+        transaction.replaceNode(parentPath, [parent.copy([
+          ...parent.content.slice(0, index),
+          ...content,
+          ...parent.content.slice(index),
+        ])]);
+      }
+      setSelectionAfterInserted(transaction, parentPath, index, content);
+    } else {
+      const paragraph = editor.state.schema.nodes.paragraph;
+      if (!paragraph) return false;
+      const firstPath = selection.cellPaths[0] as readonly number[];
+      [...selection.cellPaths].reverse().forEach((path) => {
+        const cell = getNodeAtPath(transaction.doc, path);
+        const cellContent = comparePaths(path, firstPath) === 0
+          ? content
+          : [paragraph.create({}, [editor.state.schema.text('')])];
+        transaction.replaceNode(path, [cell.copy(cellContent)]);
+      });
+      const firstCell = getNodeAtPath(transaction.doc, firstPath);
+      const leaf = getTextLeaves(firstCell).at(-1);
+      if (leaf) transaction.setSelection(Selection.cursor([...firstPath, ...leaf.path], leaf.node.text?.length ?? 0));
+      else transaction.setSelection(new NodeSelection(transaction.doc, [...firstPath, firstCell.childCount - 1]));
+    }
+  } catch {
+    return false;
+  }
+  return dispatchIfValid(editor, transaction);
+}
+
+function textRangeForNode(doc: Node, path: readonly number[]): Selection | null {
+  const leaves = getTextLeaves(getNodeAtPath(doc, path));
+  const first = leaves[0];
+  const last = leaves.at(-1);
+  if (!first || !last) return null;
+  return Selection.range(
+    [...path, ...first.path],
+    0,
+    [...path, ...last.path],
+    last.node.text?.length ?? 0,
+  );
+}
+
+function selectedTextRanges(doc: Node, selection: AnySelection): readonly Selection[] {
+  if (selection instanceof GapSelection) return [];
+  if (selection instanceof CellSelection) {
+    return selection.cellPaths
+      .map((path) => textRangeForNode(doc, path))
+      .filter((range): range is Selection => Boolean(range));
+  }
+  if (selection instanceof NodeSelection) {
+    const range = textRangeForNode(doc, selection.nodePath);
+    return range ? [range] : [];
+  }
+  if (selection instanceof AllSelection) {
+    const leaves = getTextLeaves(doc);
+    const first = leaves[0];
+    const last = leaves.at(-1);
+    return first && last
+      ? [Selection.range(first.path, 0, last.path, last.node.text?.length ?? 0)]
+      : [];
+  }
+  return selection.isCollapsed ? [] : [selection];
+}
+
+function selectedTextSegments(doc: Node, selection: AnySelection) {
+  return selectedTextRanges(doc, selection).flatMap(({ path, endPath, from, to }) => (
+    getTextRangeSegments(doc, path, from, endPath, to).filter((segment) => segment.to > segment.from)
+  ));
+}
+
+function preserveTextSelectionAfterMark(
+  transaction: ReturnType<Editor['createTransaction']>,
+  selection: AnySelection,
+  mapped: ReturnType<typeof mapMarkRangeSelection>,
+): void {
+  if (selection.kind === 'text' && mapped) {
+    transaction.setSelection(Selection.range(mapped.startPath, 0, mapped.endPath, mapped.endOffset));
+  }
+}
+
 export function insertText(editor: Editor, text: string): boolean {
-  if (!editor.editable || !text) return false;
+  if (!editor.editable) return false;
+  if (editor.state.selection.kind !== 'text') return replaceSemanticSelection(editor, editor.state.selection, text);
+  if (!text) return false;
   const { state } = editor;
   const { path, endPath, from, to } = state.selection;
   const target = getNodeAtPath(state.doc, path);
@@ -80,7 +299,9 @@ export function insertPlainText(editor: Editor, text: string): boolean {
 }
 
 export function deleteSelection(editor: Editor): boolean {
+  if (!editor.editable) return false;
   const { state } = editor;
+  if (state.selection.kind !== 'text') return replaceSemanticSelection(editor, state.selection);
   const { path, endPath, from, to } = state.selection;
   if (state.selection.isCollapsed) return false;
   const transaction = state.createTransaction();
@@ -92,6 +313,11 @@ export function deleteSelection(editor: Editor): boolean {
 export function deleteBackward(editor: Editor): boolean {
   if (!editor.editable) return false;
   if (!editor.state.selection.isCollapsed) return deleteSelection(editor);
+  if (editor.state.selection instanceof GapSelection) {
+    const { parentPath, index } = editor.state.selection;
+    if (index === 0) return false;
+    return replaceNodeSelection(editor, new NodeSelection(editor.state.doc, [...parentPath, index - 1]));
+  }
   const { state } = editor;
   const { path, from } = state.selection;
   if (from > 0) {
@@ -120,6 +346,12 @@ export function deleteBackward(editor: Editor): boolean {
 export function deleteForward(editor: Editor): boolean {
   if (!editor.editable) return false;
   if (!editor.state.selection.isCollapsed) return deleteSelection(editor);
+  if (editor.state.selection instanceof GapSelection) {
+    const { parentPath, index } = editor.state.selection;
+    const parent = getNodeAtPath(editor.state.doc, parentPath);
+    if (index >= parent.childCount) return false;
+    return replaceNodeSelection(editor, new NodeSelection(editor.state.doc, [...parentPath, index]));
+  }
   const { state } = editor;
   const { path, from } = state.selection;
   const target = getNodeAtPath(state.doc, path);
@@ -158,6 +390,9 @@ export function setContent(editor: Editor, content: Node): boolean {
 /** Inserts a parsed document fragment while preserving inline marks and block structure. */
 export function insertDocument(editor: Editor, document: Node): boolean {
   if (!editor.editable || document.type !== editor.state.schema.topNodeType || !document.childCount) return false;
+  if (editor.state.selection.kind !== 'text') {
+    return replaceSemanticSelectionWithDocument(editor, editor.state.selection, document);
+  }
   if (!editor.state.selection.isCollapsed && !deleteSelection(editor)) return false;
   const { state } = editor;
   const { path, from } = state.selection;
@@ -227,6 +462,10 @@ function firstTextPath(node: Node): number[] | null {
 /** Inserts any schema-owned block after the block containing the current selection. */
 export function insertNode(editor: Editor, node: Node): boolean {
   if (!editor.editable || node.type.schema !== editor.state.schema || !node.isBlock) return false;
+  if (editor.state.selection.kind !== 'text') {
+    const document = editor.state.schema.topNodeType.create({}, [node]);
+    return replaceSemanticSelectionWithDocument(editor, editor.state.selection, document);
+  }
   const index = (editor.state.selection.endPath[0] ?? editor.state.doc.childCount - 1) + 1;
   const relativeTextPath = firstTextPath(node);
   const needsTrailingTextBlock = !relativeTextPath && Boolean(editor.state.schema.nodes.paragraph);
@@ -245,12 +484,123 @@ export function selectText(editor: Editor, path: readonly number[], from: number
   return true;
 }
 
+export function selectNode(editor: Editor, path: readonly number[]): boolean {
+  try { editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path))); }
+  catch { return false; }
+  return true;
+}
+
+export function selectGap(editor: Editor, position: number, association: -1 | 1 = 1): boolean {
+  try { editor.dispatch(editor.state.createTransaction().setSelection(new GapSelection(editor.state.doc, position, association))); }
+  catch { return false; }
+  return true;
+}
+
+export function selectAll(editor: Editor): boolean {
+  editor.dispatch(editor.state.createTransaction().setSelection(new AllSelection(editor.state.doc)));
+  return true;
+}
+
+export function selectCells(editor: Editor, anchorCellPath: readonly number[], headCellPath: readonly number[] = anchorCellPath): boolean {
+  try {
+    editor.dispatch(editor.state.createTransaction().setSelection(new CellSelection(editor.state.doc, anchorCellPath, headCellPath)));
+  } catch {
+    return false;
+  }
+  return true;
+}
+
+export type SelectionDirection = 'backward' | 'forward';
+export type CellSelectionDirection = 'left' | 'right' | 'up' | 'down';
+
+function moveToNodeEdge(editor: Editor, path: readonly number[], direction: SelectionDirection): boolean {
+  const node = getNodeAtPath(editor.state.doc, path);
+  const leaves = getTextLeaves(node);
+  const leaf = direction === 'backward' ? leaves.at(-1) : leaves[0];
+  if (!leaf) {
+    editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path)));
+    return true;
+  }
+  const offset = direction === 'backward' ? leaf.node.text?.length ?? 0 : 0;
+  editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([...path, ...leaf.path], offset)));
+  return true;
+}
+
+/** Moves between a text boundary, an adjacent atomic node, a node selection, and a gap. */
+export function selectAdjacentNode(editor: Editor, direction: SelectionDirection): boolean {
+  const { state } = editor;
+  const selection = state.selection;
+  if (selection instanceof GapSelection) {
+    const parent = getNodeAtPath(state.doc, selection.parentPath);
+    const index = direction === 'backward' ? selection.index - 1 : selection.index;
+    if (index < 0 || index >= parent.childCount) return false;
+    editor.dispatch(state.createTransaction().setSelection(new NodeSelection(state.doc, [...selection.parentPath, index])));
+    return true;
+  }
+  if (selection instanceof NodeSelection) {
+    const parentPath = selection.nodePath.slice(0, -1);
+    const parent = getNodeAtPath(state.doc, parentPath);
+    const index = selection.nodePath.at(-1) as number;
+    const nextIndex = direction === 'backward' ? index - 1 : index + 1;
+    if (nextIndex >= 0 && nextIndex < parent.childCount) {
+      return moveToNodeEdge(editor, [...parentPath, nextIndex], direction);
+    }
+    return selectGap(editor, direction === 'backward' ? selection.structuralFrom : selection.structuralTo, direction === 'backward' ? -1 : 1);
+  }
+  if (selection.kind !== 'text' || !selection.isCollapsed || selection.path.length < 2) return false;
+  const blockPath = [selection.path[0] as number];
+  const block = getNodeAtPath(state.doc, blockPath);
+  const leaves = getTextLeaves(block);
+  const edge = direction === 'backward' ? leaves[0] : leaves.at(-1);
+  if (!edge || comparePaths(selection.path, [...blockPath, ...edge.path]) !== 0) return false;
+  const atBoundary = direction === 'backward'
+    ? selection.from === 0
+    : selection.to === (edge.node.text?.length ?? 0);
+  if (!atBoundary) return false;
+  const blockIndex = blockPath[0] as number;
+  const candidateIndex = direction === 'backward' ? blockIndex - 1 : blockIndex + 1;
+  if (candidateIndex < 0 || candidateIndex >= state.doc.childCount) return false;
+  const candidate = state.doc.child(candidateIndex);
+  if (!candidate.type.spec.atom) return false;
+  editor.dispatch(state.createTransaction().setSelection(new NodeSelection(state.doc, [candidateIndex])));
+  return true;
+}
+
+function currentCellPath(editor: Editor): readonly number[] | null {
+  const selection = editor.state.selection;
+  if (selection instanceof CellSelection) return selection.headCellPath;
+  for (let length = selection.path.length; length > 0; length -= 1) {
+    const path = selection.path.slice(0, length);
+    if (['table_cell', 'table_header'].includes(getNodeAtPath(editor.state.doc, path).type.name)) return path;
+  }
+  return null;
+}
+
+/** Extends a rectangular cell selection from its stable anchor. */
+export function extendCellSelection(editor: Editor, direction: CellSelectionDirection): boolean {
+  const head = currentCellPath(editor);
+  if (!head || head.length < 3) return false;
+  const tablePath = head.slice(0, -2);
+  const table = getNodeAtPath(editor.state.doc, tablePath);
+  const row = head.at(-2) as number;
+  const column = head.at(-1) as number;
+  const nextRow = row + (direction === 'up' ? -1 : direction === 'down' ? 1 : 0);
+  const nextColumn = column + (direction === 'left' ? -1 : direction === 'right' ? 1 : 0);
+  if (nextRow < 0 || nextRow >= table.childCount) return false;
+  const targetRow = table.child(nextRow);
+  if (nextColumn < 0 || nextColumn >= targetRow.childCount) return false;
+  const anchor = editor.state.selection instanceof CellSelection
+    ? editor.state.selection.anchorCellPath
+    : head;
+  return selectCells(editor, anchor, [...tablePath, nextRow, nextColumn]);
+}
+
 export function isMarkActive(editor: Editor, markName: string): boolean {
   try {
     const { state } = editor;
+    if (state.selection instanceof GapSelection) return false;
     if (state.selection.isCollapsed) return state.storedMarks.some((mark) => mark.type.name === markName);
-    const { path, endPath, from, to } = state.selection;
-    const segments = getTextRangeSegments(state.doc, path, from, endPath, to).filter((segment) => segment.to > segment.from);
+    const segments = selectedTextSegments(state.doc, state.selection);
     return segments.length > 0 && segments.every((segment) => segment.node.marks.some((mark) => mark.type.name === markName));
   } catch {
     return false;
@@ -264,12 +614,15 @@ export function setLink(editor: Editor, href: string, attrs: Omit<Attributes, 'h
   const { state } = editor;
   const markType = state.schema.marks.link;
   if (!markType) return false;
-  const { path, endPath, from, to } = state.selection;
-  const mapped = mapMarkRangeSelection(state.doc, path, from, endPath, to);
-  if (!mapped) return false;
-  const transaction = state.createTransaction()
-    .addMarkRange(path, from, endPath, to, markType.create({ href: value, title: '', target: '_blank', ...attrs }))
-    .setSelection(Selection.range(mapped.startPath, 0, mapped.endPath, mapped.endOffset));
+  const ranges = selectedTextRanges(state.doc, state.selection);
+  if (!ranges.length) return false;
+  const primary = ranges[0] as Selection;
+  const mapped = mapMarkRangeSelection(state.doc, primary.path, primary.from, primary.endPath, primary.to);
+  const transaction = state.createTransaction();
+  [...ranges].reverse().forEach(({ path, endPath, from, to }) => {
+    transaction.addMarkRange(path, from, endPath, to, markType.create({ href: value, title: '', target: '_blank', ...attrs }));
+  });
+  preserveTextSelectionAfterMark(transaction, state.selection, mapped);
   editor.dispatch(transaction);
   return true;
 }
@@ -279,12 +632,15 @@ export function unsetLink(editor: Editor): boolean {
   const { state } = editor;
   const markType = state.schema.marks.link;
   if (!markType) return false;
-  const { path, endPath, from, to } = state.selection;
-  const mapped = mapMarkRangeSelection(state.doc, path, from, endPath, to);
-  if (!mapped) return false;
-  const transaction = state.createTransaction()
-    .removeMarkRange(path, from, endPath, to, markType)
-    .setSelection(Selection.range(mapped.startPath, 0, mapped.endPath, mapped.endOffset));
+  const ranges = selectedTextRanges(state.doc, state.selection);
+  if (!ranges.length) return false;
+  const primary = ranges[0] as Selection;
+  const mapped = mapMarkRangeSelection(state.doc, primary.path, primary.from, primary.endPath, primary.to);
+  const transaction = state.createTransaction();
+  [...ranges].reverse().forEach(({ path, endPath, from, to }) => {
+    transaction.removeMarkRange(path, from, endPath, to, markType);
+  });
+  preserveTextSelectionAfterMark(transaction, state.selection, mapped);
   editor.dispatch(transaction);
   return true;
 }
@@ -292,12 +648,10 @@ export function unsetLink(editor: Editor): boolean {
 export function toggleMark(editor: Editor, markName: string): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
-  const { path, from, to } = state.selection;
-  const target = getNodeAtPath(state.doc, path);
-  if (!target.isText) return false;
   const markType = state.schema.marks[markName];
   if (!markType) return false;
   if (state.selection.isCollapsed) {
+    if (state.selection.kind !== 'text') return false;
     const active = state.storedMarks.some((mark) => mark.type === markType);
     const marks = active
       ? state.storedMarks.filter((mark) => mark.type !== markType)
@@ -305,17 +659,18 @@ export function toggleMark(editor: Editor, markName: string): boolean {
     editor.dispatch(state.createTransaction().setStoredMarks(marks));
     return true;
   }
-  const { endPath } = state.selection;
-  const segments = getTextRangeSegments(state.doc, path, from, endPath, to)
-    .filter((segment) => segment.to > segment.from);
+  const ranges = selectedTextRanges(state.doc, state.selection);
+  const segments = selectedTextSegments(state.doc, state.selection);
   if (!segments.length) return false;
   const activeAcrossRange = segments.every((segment) => segment.node.marks.some((mark) => mark.type === markType));
-  const mapped = mapMarkRangeSelection(state.doc, path, from, endPath, to);
-  if (!mapped) return false;
+  const primary = ranges[0] as Selection;
+  const mapped = mapMarkRangeSelection(state.doc, primary.path, primary.from, primary.endPath, primary.to);
   const transaction = state.createTransaction();
-  if (activeAcrossRange) transaction.removeMarkRange(path, from, endPath, to, markType);
-  else transaction.addMarkRange(path, from, endPath, to, markType.create());
-  transaction.setSelection(Selection.range(mapped.startPath, 0, mapped.endPath, mapped.endOffset));
+  [...ranges].reverse().forEach(({ path, endPath, from, to }) => {
+    if (activeAcrossRange) transaction.removeMarkRange(path, from, endPath, to, markType);
+    else transaction.addMarkRange(path, from, endPath, to, markType.create());
+  });
+  preserveTextSelectionAfterMark(transaction, state.selection, mapped);
   editor.dispatch(transaction);
   return true;
 }
@@ -330,18 +685,21 @@ export function setMark(editor: Editor, markName: string, attrs: Attributes = {}
   try { mark = markType.create(attrs); }
   catch { return false; }
   if (state.selection.isCollapsed) {
+    if (state.selection.kind !== 'text') return false;
     editor.dispatch(state.createTransaction().setStoredMarks([
       ...state.storedMarks.filter((existing) => existing.type !== markType),
       mark,
     ]));
     return true;
   }
-  const { path, endPath, from, to } = state.selection;
-  const mapped = mapMarkRangeSelection(state.doc, path, from, endPath, to);
-  if (!mapped) return false;
-  editor.dispatch(state.createTransaction()
-    .addMarkRange(path, from, endPath, to, mark)
-    .setSelection(Selection.range(mapped.startPath, 0, mapped.endPath, mapped.endOffset)));
+  const ranges = selectedTextRanges(state.doc, state.selection);
+  if (!ranges.length) return false;
+  const primary = ranges[0] as Selection;
+  const mapped = mapMarkRangeSelection(state.doc, primary.path, primary.from, primary.endPath, primary.to);
+  const transaction = state.createTransaction();
+  [...ranges].reverse().forEach(({ path, endPath, from, to }) => transaction.addMarkRange(path, from, endPath, to, mark));
+  preserveTextSelectionAfterMark(transaction, state.selection, mapped);
+  editor.dispatch(transaction);
   return true;
 }
 
@@ -351,21 +709,27 @@ export function unsetMark(editor: Editor, markName: string): boolean {
   const markType = state.schema.marks[markName];
   if (!markType) return false;
   if (state.selection.isCollapsed) {
+    if (state.selection.kind !== 'text') return false;
     editor.dispatch(state.createTransaction().setStoredMarks(state.storedMarks.filter((mark) => mark.type !== markType)));
     return true;
   }
-  const { path, endPath, from, to } = state.selection;
-  const mapped = mapMarkRangeSelection(state.doc, path, from, endPath, to);
-  if (!mapped) return false;
-  editor.dispatch(state.createTransaction()
-    .removeMarkRange(path, from, endPath, to, markType)
-    .setSelection(Selection.range(mapped.startPath, 0, mapped.endPath, mapped.endOffset)));
+  const ranges = selectedTextRanges(state.doc, state.selection);
+  if (!ranges.length) return false;
+  const primary = ranges[0] as Selection;
+  const mapped = mapMarkRangeSelection(state.doc, primary.path, primary.from, primary.endPath, primary.to);
+  const transaction = state.createTransaction();
+  [...ranges].reverse().forEach(({ path, endPath, from, to }) => transaction.removeMarkRange(path, from, endPath, to, markType));
+  preserveTextSelectionAfterMark(transaction, state.selection, mapped);
+  editor.dispatch(transaction);
   return true;
 }
 
 export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'right' | 'justify'): boolean {
   if (!editor.editable) return false;
-  const path = editor.state.selection.path.slice(0, -1);
+  if (editor.state.selection.kind !== 'text' && !(editor.state.selection instanceof NodeSelection)) return false;
+  const path = editor.state.selection instanceof NodeSelection
+    ? editor.state.selection.nodePath
+    : editor.state.selection.path.slice(0, -1);
   const block = getNodeAtPath(editor.state.doc, path);
   if (!['paragraph', 'heading'].includes(block.type.name)) return false;
   try { block.type.create({ ...block.attrs, align }, block.content); }
@@ -377,6 +741,7 @@ export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'rig
 /** Inserts a semantic hard-break node and leaves an editable text cursor after it. */
 export function insertHardBreak(editor: Editor): boolean {
   if (!editor.editable) return false;
+  if (editor.state.selection instanceof GapSelection) return false;
   if (!editor.state.selection.isCollapsed && !deleteSelection(editor)) return false;
   const { state } = editor;
   const { path, from } = state.selection;
@@ -403,7 +768,10 @@ export function insertHardBreak(editor: Editor): boolean {
 export function setBlockType(editor: Editor, typeName: string, attrs: Attributes = {}): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
-  const blockPath = state.selection.path.slice(0, -1);
+  if (state.selection.kind !== 'text' && !(state.selection instanceof NodeSelection)) return false;
+  const blockPath = state.selection instanceof NodeSelection
+    ? state.selection.nodePath
+    : state.selection.path.slice(0, -1);
   const block = getNodeAtPath(state.doc, blockPath);
   const type = state.schema.nodes[typeName];
   if (!block || !type || !type.isBlock) return false;
@@ -411,6 +779,7 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
   try { replacement = type.create(attrs, block.content); }
   catch { return false; }
   const transaction = state.createTransaction().replaceNode(blockPath, [replacement]);
+  if (state.selection instanceof NodeSelection) transaction.setSelection(new NodeSelection(transaction.doc, blockPath));
   try { state.schema.validate(transaction.doc); }
   catch { return false; }
   editor.dispatch(transaction);
@@ -488,6 +857,7 @@ export function insertTable(editor: Editor, options: TableOptions = {}): boolean
 export function splitBlock(editor: Editor): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
+  if (state.selection.kind !== 'text') return false;
   const { path, from, to } = state.selection;
   if (path.length < 2 || !state.selection.isSingleText) return false;
   const blockPath = path.slice(0, -1);
@@ -528,6 +898,7 @@ export function splitBlock(editor: Editor): boolean {
 export function joinBackward(editor: Editor): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
+  if (state.selection.kind !== 'text') return false;
   const { path, from, to } = state.selection;
   if (path.length < 2 || !state.selection.isCollapsed || from !== 0 || to !== 0) return false;
   const currentPath = path.slice(0, -1);
@@ -590,6 +961,7 @@ export function joinBackward(editor: Editor): boolean {
 export function joinForward(editor: Editor): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
+  if (state.selection.kind !== 'text') return false;
   const { path, from } = state.selection;
   if (path.length < 2 || !state.selection.isCollapsed) return false;
   const target = getNodeAtPath(state.doc, path);

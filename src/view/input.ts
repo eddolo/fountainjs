@@ -1,6 +1,7 @@
 import {
   deleteBackward,
   deleteForward,
+  extendCellSelection,
   insertPlainText,
   insertHardBreak,
   insertDocument,
@@ -9,10 +10,13 @@ import {
   isInsideNode,
   moveTableCell,
   outdentListItem,
+  selectAdjacentNode,
+  selectAll,
   setNodeAttributes,
   splitBlock,
   toggleMark,
   type Editor,
+  type AnySelection,
   Selection,
 } from '../core';
 import { HTMLImporter } from '../core/importers/html-importer';
@@ -31,7 +35,7 @@ export interface InputManagerOptions {
 }
 
 export class InputManager {
-  private compositionSelection?: Selection;
+  private compositionSelection?: AnySelection;
 
   constructor(
     private readonly editor: Editor,
@@ -75,7 +79,16 @@ export class InputManager {
     const mark = modifier && !event.altKey
       ? key === 'b' ? 'strong' : key === 'i' ? 'em' : key === 'u' ? 'underline' : null
       : null;
-    if (mark) {
+    if (modifier && !event.altKey && key === 'a') {
+      event.preventDefault();
+      selectAll(this.editor);
+    } else if (event.altKey && event.shiftKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(key)) {
+      const direction = key.replace('arrow', '') as 'left' | 'right' | 'up' | 'down';
+      if (extendCellSelection(this.editor, direction)) event.preventDefault();
+    } else if (!modifier && !event.altKey && !event.shiftKey && (key === 'arrowleft' || key === 'arrowright')) {
+      const direction = key === 'arrowleft' ? 'backward' : 'forward';
+      if (selectAdjacentNode(this.editor, direction)) event.preventDefault();
+    } else if (mark) {
       event.preventDefault();
       toggleMark(this.editor, mark);
     } else if (event.key === 'Tab' && (isInsideNode(this.editor, 'table_cell') || isInsideNode(this.editor, 'table_header'))) {
@@ -120,6 +133,10 @@ export class InputManager {
 
     if (event.inputType === 'insertParagraph') {
       event.preventDefault();
+      if (selection.kind !== 'text') {
+        insertText(this.editor, '');
+        return;
+      }
       const textBlock = getNodeAtPath(state.doc, selection.path.slice(0, -1));
       if (textBlock.type.spec.code) insertText(this.editor, '\n');
       else splitBlock(this.editor);
@@ -189,6 +206,10 @@ export class InputManager {
     const selection = this.compositionSelection;
     this.compositionSelection = undefined;
     if (!selection || !event.data) return;
+    if (selection.kind !== 'text') {
+      insertText(this.editor, event.data);
+      return;
+    }
     const { state } = this.editor;
     const transaction = state.createTransaction();
     const target = getNodeAtPath(state.doc, selection.path);
