@@ -1,8 +1,4 @@
-import type { Node } from '../core';
+import type { NodeViewLike } from '../core';
 
-export interface NodeView {
-  dom: HTMLElement;
-  contentDOM?: HTMLElement;
-  update?(node: Node): boolean;
-  destroy?(): void;
-}
+/** Public view-layer alias for the schema's framework-neutral NodeView contract. */
+export interface NodeView extends NodeViewLike {}

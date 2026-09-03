@@ -18,6 +18,9 @@ import {
   insertImageFile,
   insertText,
   registerFountainElement,
+  selectNode,
+  selectText,
+  setNodeAttributes,
 } from '../src';
 
 describe('EditorView', () => {
@@ -224,6 +227,220 @@ describe('EditorView', () => {
     expect((view.dom.querySelector('[data-fountain-node="poll"]') as HTMLElement | null)?.contentEditable).toBe('false');
     view.destroy();
     expect(destroyed).toBe(true);
+  });
+
+  it('updates and remaps NodeViews with selection, event, and mutation contracts', async () => {
+    let instances = 0;
+    let updates = 0;
+    let destroyed = 0;
+    let selected = 0;
+    let deselected = 0;
+    let currentPath: number[] = [];
+    let pluginClicks = 0;
+
+    class CounterNodeView {
+      dom = document.createElement('section');
+      button = document.createElement('button');
+
+      constructor(node: import('../src').Node, _view: unknown, getPath: () => number[]) {
+        instances += 1;
+        this.dom.dataset.counterView = '';
+        this.button.dataset.counterButton = '';
+        this.dom.appendChild(this.button);
+        this.render(node);
+        currentPath = getPath();
+        this.button.addEventListener('click', () => { currentPath = getPath(); });
+      }
+
+      update(node: import('../src').Node): boolean {
+        updates += 1;
+        this.render(node);
+        return true;
+      }
+
+      selectNode(): void {
+        selected += 1;
+        this.dom.dataset.hookSelected = 'true';
+      }
+
+      deselectNode(): void {
+        deselected += 1;
+        delete this.dom.dataset.hookSelected;
+      }
+
+      stopEvent(event: Event): boolean { return this.button.contains(event.target as globalThis.Node); }
+      ignoreMutation(mutation: MutationRecord): boolean {
+        return mutation.target === this.button || this.button.contains(mutation.target);
+      }
+      destroy(): void { destroyed += 1; }
+
+      private render(node: import('../src').Node): void {
+        this.button.textContent = `Count ${String(node.attrs.count)}`;
+      }
+    }
+
+    const clickPlugin = new Plugin({ props: { handleClick: () => { pluginClicks += 1; return true; } } });
+    const visualPlugin = new Plugin({
+      props: {
+        decorations: (state) => state.doc.child(0).type.name === 'counter' && state.doc.child(0).attrs.count === 0
+          ? [Decoration.node(0, state.doc.child(0).nodeSize, {
+            class: 'counter-pending',
+            'data-counter-state': 'pending',
+            style: 'outline-color: red',
+          }, { key: 'counter-state' })]
+          : [],
+      },
+    });
+    const kit = composeExtensions([CoreExtension, defineExtension({
+      name: 'counter-node',
+      nodes: {
+        counter: {
+          group: 'block',
+          atom: true,
+          attrs: { count: { default: 0, validate: (value) => Number.isInteger(value) } },
+          nodeView: CounterNodeView,
+        },
+      },
+      plugins: [clickPlugin, visualPlugin],
+    })]);
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: {
+        type: 'doc',
+        content: [{ type: 'counter', attrs: { count: 0 } }, { type: 'paragraph', content: [{ type: 'text', text: 'After' }] }],
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const original = view.dom.querySelector<HTMLElement>('[data-counter-view]');
+    const button = original?.querySelector<HTMLButtonElement>('[data-counter-button]');
+    expect(instances).toBe(1);
+    expect(original?.classList.contains('counter-pending')).toBe(true);
+    expect(original?.dataset.counterState).toBe('pending');
+
+    button?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    expect(pluginClicks).toBe(0);
+    expect(currentPath).toEqual([0]);
+
+    expect(selectNode(editor, [0])).toBe(true);
+    await new Promise<void>((resolve) => queueMicrotask(resolve));
+    expect(selected).toBe(1);
+    expect(original?.dataset.hookSelected).toBe('true');
+
+    expect(setNodeAttributes(editor, [0], { count: 1 })).toBe(true);
+    expect(view.dom.querySelector('[data-counter-view]')).toBe(original);
+    expect(button?.textContent).toBe('Count 1');
+    expect(updates).toBe(1);
+    expect(original?.classList.contains('counter-pending')).toBe(false);
+    expect(original?.dataset.counterState).toBeUndefined();
+    expect(original?.style.outlineColor).toBe('');
+
+    const leading = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Before')]);
+    editor.dispatch(editor.state.createTransaction().replace(0, 0, [leading]));
+    expect(view.dom.querySelector('[data-counter-view]')).toBe(original);
+    button?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(currentPath).toEqual([1]);
+
+    expect(selectText(editor, [0, 0], 0)).toBe(true);
+    expect(deselected).toBe(1);
+    expect(original?.dataset.hookSelected).toBeUndefined();
+
+    if (button) button.dataset.localState = 'kept';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(view.dom.querySelector('[data-counter-view]')).toBe(original);
+
+    const rogue = document.createElement('span');
+    rogue.dataset.rogue = '';
+    original?.appendChild(rogue);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(view.dom.querySelector('[data-rogue]')).toBeNull();
+    expect(view.dom.querySelector('[data-counter-view]')).not.toBe(original);
+    expect(instances).toBe(2);
+    expect(destroyed).toBe(1);
+
+    view.destroy();
+    expect(destroyed).toBe(2);
+  });
+
+  it('recreates and destroys a NodeView when its update hook declines a changed node', () => {
+    let instances = 0;
+    let destroyed = 0;
+    class StrictNodeView {
+      dom = document.createElement('div');
+      constructor(node: import('../src').Node) {
+        instances += 1;
+        this.dom.dataset.strictView = String(node.attrs.version);
+      }
+      update(): boolean { return false; }
+      destroy(): void { destroyed += 1; }
+    }
+    const kit = composeExtensions([CoreExtension, defineExtension({
+      name: 'strict-node',
+      nodes: {
+        strict: {
+          group: 'block', atom: true,
+          attrs: { version: { default: 1, validate: (value) => Number.isInteger(value) } },
+          nodeView: StrictNodeView,
+        },
+      },
+    })]);
+    const editor = createEditor({
+      schema: kit.schema,
+      content: { type: 'doc', content: [{ type: 'strict', attrs: { version: 1 } }] },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const first = view.dom.querySelector('[data-strict-view]');
+
+    expect(setNodeAttributes(editor, [0], { version: 2 })).toBe(true);
+    const second = view.dom.querySelector('[data-strict-view]');
+    expect(second).not.toBe(first);
+    expect(second?.getAttribute('data-strict-view')).toBe('2');
+    expect(instances).toBe(2);
+    expect(destroyed).toBe(1);
+
+    view.destroy();
+    expect(destroyed).toBe(2);
+  });
+
+  it('reuses a NodeView contentDOM while refreshing its model-owned children', () => {
+    let updates = 0;
+    class CalloutNodeView {
+      dom = document.createElement('aside');
+      contentDOM = document.createElement('div');
+      constructor() {
+        this.dom.dataset.calloutView = '';
+        this.contentDOM.dataset.calloutContent = '';
+        this.dom.appendChild(this.contentDOM);
+      }
+      update(): boolean { updates += 1; return true; }
+      stopEvent(event: Event): boolean { return !this.contentDOM.contains(event.target as globalThis.Node); }
+    }
+    const kit = composeExtensions([CoreExtension, defineExtension({
+      name: 'callout-node',
+      nodes: { callout: { group: 'block', content: 'block+', nodeView: CalloutNodeView } },
+    })]);
+    const editor = createEditor({
+      schema: kit.schema,
+      content: {
+        type: 'doc',
+        content: [{ type: 'callout', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Inside' }] }] }],
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const original = view.dom.querySelector('[data-callout-view]');
+
+    expect(insertText(editor, '!')).toBe(true);
+    expect(view.dom.querySelector('[data-callout-view]')).toBe(original);
+    expect(view.dom.querySelector('[data-callout-content]')?.textContent).toBe('!Inside');
+    expect(view.dom.querySelectorAll('[data-fountain-node="paragraph"]')).toHaveLength(1);
+    expect(updates).toBe(1);
+    view.destroy();
   });
 
   it('lets plugins intercept browser input, paste, drop, and click events', () => {

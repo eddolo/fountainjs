@@ -12,8 +12,18 @@ export interface NodeViewLike {
   dom: HTMLElement;
   contentDOM?: HTMLElement;
   update?(node: Node): boolean;
+  selectNode?(): void;
+  deselectNode?(): void;
+  stopEvent?(event: Event): boolean;
+  ignoreMutation?(mutation: MutationRecord): boolean;
   destroy?(): void;
 }
+
+export type NodeViewConstructor = new (
+  node: Node,
+  view: unknown,
+  getPath: () => number[],
+) => NodeViewLike;
 
 export interface NodeSpec {
   content?: string;
@@ -23,5 +33,5 @@ export interface NodeSpec {
   atom?: boolean;
   code?: boolean;
   toDOM?: (node: Node) => DOMOutputSpec;
-  nodeView?: new (node: Node, view: unknown, getPath: () => number[]) => NodeViewLike;
+  nodeView?: NodeViewConstructor;
 }

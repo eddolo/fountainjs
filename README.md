@@ -168,6 +168,18 @@ export function WritingRoom() {
 
 The React entry is separate, so the framework-neutral root does not load React. A new framework binding only needs to create an editor, subscribe to its immutable state, and mount or replace its view.
 
+### Build interactive nodes
+
+An extension node can provide a plain DOM `nodeView` for polls, diagrams,
+mentions, embeds, or any product-owned widget. FountainJS keeps its instance and
+live path across mapped edits, calls `update` when model data changes, mirrors
+semantic node selection, isolates embedded controls with `stopEvent`, restores
+unapproved DOM mutations, refreshes optional editable `contentDOM`, and calls
+`destroy` on replacement or removal. React products can adapt a component with
+`createReactNodeView` from `fountainjs-editor/react`; React remains absent from
+the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
+[working plain-DOM demo](https://eddolo.github.io/fountainjs/demos/plain-dom-notes.html).
+
 ## Included document capabilities
 
 `CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`.
@@ -236,6 +248,7 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
+- `createReactNodeView` and `ReactNodeViewProps`
 
 ## Development
 

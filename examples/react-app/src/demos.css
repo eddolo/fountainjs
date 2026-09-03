@@ -73,6 +73,9 @@
 .bare-editor, .element-editor { overflow: hidden; background: white; border-radius: 12px; box-shadow: 0 12px 30px rgb(39 32 66 / 10%); }
 .bare-editor > .fountain-editor, .element-editor .fountain-editor { border: 0; border-radius: 0; }
 .element-editor fountain-demo-editor { display: block; }
+.demo-status-node { display: block; width: 100%; padding: 14px 16px; margin: 15px 0; color: #15533f; text-align: left; background: #e3f8ec; border: 1px solid #82c9a7; border-radius: 9px; font: 700 12px 'DM Mono', monospace; cursor: pointer; }
+.demo-status-node:hover, .demo-status-node:focus-visible { color: white; background: #196c55; outline: 3px solid rgb(25 108 85 / 24%); outline-offset: 2px; }
+.demo-status-node[data-selected='true'] { box-shadow: 0 0 0 3px #6d4aff; }
 .demo-controls { display: flex; flex-wrap: wrap; gap: 6px; padding: 9px; margin-bottom: 8px; background: #f8f7fb; border: 1px solid #ddd9e8; border-radius: 9px; }
 .demo-controls button { padding: 6px 9px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font-size: 10px; font-weight: 700; }
 .demo-controls button:hover:not(:disabled) { color: white; background: var(--demo-accent); }

@@ -182,6 +182,43 @@ test('renders and types into a structural gap as a new block', async ({ page }) 
   await expect(page.locator('[data-fountain-path="2"]')).toContainText('Second paragraph');
 });
 
+test('keeps custom NodeViews live across updates and mapped moves while containing their DOM', async ({ page }) => {
+  const counter = page.locator('[data-browser-counter]');
+  await expect(counter).toHaveText('Count 0');
+  await counter.click();
+  await expect(counter).toHaveText('Count 1');
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return { ...contract.nodeViewMetrics, selection: contract.editor.state.selection.kind };
+  })).toEqual({ created: 1, destroyed: 0, updates: 1, selection: 'text' });
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectNode([2]);
+  });
+  await expect(counter).toHaveAttribute('data-selection-hook', 'selected');
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const paragraph = contract.editor.state.schema.node('paragraph', {}, [contract.editor.state.schema.text('Leading')]);
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, 0, [paragraph]));
+  });
+  expect(await page.evaluate(() => {
+    const selection = (globalThis as any).fountainBrowserTest.editor.state.selection;
+    return { kind: selection.kind, path: selection.nodePath };
+  })).toEqual({ kind: 'node', path: [3] });
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.nodeViewMetrics.created)).toBe(1);
+  await counter.click();
+  await expect(counter).toHaveText('Count 2');
+
+  await counter.evaluate((element) => { (element as HTMLElement).dataset.localState = 'kept'; });
+  await expect(counter).toHaveAttribute('data-local-state', 'kept');
+  await counter.evaluate((element) => { element.textContent = 'Tampered'; });
+  await expect(counter).toHaveText('Count 2');
+  expect(await page.evaluate(() => ({ ...(globalThis as any).fountainBrowserTest.nodeViewMetrics })))
+    .toEqual({ created: 2, destroyed: 1, updates: 2 });
+});
+
 test('loads the public React playground without console or page errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -189,6 +226,22 @@ test('loads the public React playground without console or page errors', async (
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
+  expect(errors).toEqual([]);
+});
+
+test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/demos/plain-dom-notes.html');
+  await expect(page.getByRole('heading', { name: 'Knowledge-base notes' })).toBeVisible();
+  await expect(page.getByText('Custom interactive NodeView', { exact: true })).toBeVisible();
+
+  const status = page.getByRole('button', { name: 'Incident status · Investigating' });
+  await expect(status).toBeVisible();
+  await status.click();
+  await expect(page.getByRole('button', { name: 'Incident status · Resolved' })).toBeVisible();
+  await expect(page.locator('.demo-output pre')).toContainText('"status": "Resolved"');
   expect(errors).toEqual([]);
 });
 

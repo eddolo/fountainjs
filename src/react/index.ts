@@ -5,3 +5,4 @@ export * from './FountainComposer';
 export * from './Navigator';
 export * from './useNavigatorState';
 export * from './FountainAIReview';
+export * from './ReactNodeView';

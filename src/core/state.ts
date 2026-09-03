@@ -21,7 +21,7 @@ export interface EditorStateConfig {
   storedMarks?: readonly Mark[];
 }
 
-function firstTextPath(doc: Node): number[] {
+function firstTextPath(doc: Node): number[] | undefined {
   let found: number[] | undefined;
   doc.descendants((node, path) => {
     if (found) return false;
@@ -30,7 +30,15 @@ function firstTextPath(doc: Node): number[] {
       return false;
     }
   });
-  return found ?? [];
+  return found;
+}
+
+function defaultSelection(doc: Node): AnySelection {
+  const textPath = firstTextPath(doc);
+  if (textPath) return Selection.cursor(textPath, 0);
+  const firstNode = doc.content.findIndex((node) => !node.isText);
+  if (firstNode >= 0) return new NodeSelection(doc, [firstNode]);
+  return new AllSelection(doc);
 }
 
 function normalizeSelection(doc: Node, selection: AnySelection): AnySelection {
@@ -49,8 +57,7 @@ function normalizeSelection(doc: Node, selection: AnySelection): AnySelection {
       selection.endPath,
     );
   } catch {
-    const path = firstTextPath(doc);
-    return Selection.cursor(path, 0);
+    return defaultSelection(doc);
   }
 }
 
@@ -66,7 +73,7 @@ export class EditorState {
     this.schema = config.schema;
     this.doc = config.doc ?? this.createDefaultDoc();
     this.schema.validate(this.doc);
-    this.selection = normalizeSelection(this.doc, config.selection ?? Selection.cursor(firstTextPath(this.doc), 0));
+    this.selection = normalizeSelection(this.doc, config.selection ?? defaultSelection(this.doc));
     this.plugins = Object.freeze([...(config.plugins ?? [])]);
     const initialMarks = config.storedMarks ?? (isTextSelection(this.selection) && this.selection.isCollapsed
       ? getNodeAtPath(this.doc, this.selection.path).marks

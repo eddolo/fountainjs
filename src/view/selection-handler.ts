@@ -47,7 +47,11 @@ export class SelectionHandler {
   private syncing = false;
   private pointerSelectionHandled = false;
 
-  constructor(private readonly editor: Editor, private readonly dom: HTMLElement) {
+  constructor(
+    private readonly editor: Editor,
+    private readonly dom: HTMLElement,
+    private readonly shouldStopEvent?: (event: Event) => boolean,
+  ) {
     document.addEventListener('selectionchange', this.onSelectionChange);
     dom.addEventListener('pointerdown', this.onPointerDown);
     dom.addEventListener('pointerup', this.onSelectionInteraction);
@@ -169,7 +173,8 @@ export class SelectionHandler {
     if (!this.syncing) this.capture();
   };
 
-  private onSelectionInteraction = (): void => {
+  private onSelectionInteraction = (event: Event): void => {
+    if (this.shouldStopEvent?.(event)) return;
     if (this.pointerSelectionHandled) {
       this.pointerSelectionHandled = false;
       return;
@@ -178,6 +183,7 @@ export class SelectionHandler {
   };
 
   private onPointerDown = (event: PointerEvent): void => {
+    if (this.shouldStopEvent?.(event)) return;
     const target = event.target instanceof Element ? event.target : null;
     if (!target || !this.dom.contains(target)) return;
 

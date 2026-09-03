@@ -10,13 +10,16 @@ import {
   EditorView,
   addTableColumn,
   addTableRow,
+  composeExtensions,
   createEditor,
+  defineExtension,
   insertList,
   insertTable,
   redo,
   registerFountainElement,
   selectAll,
   selectGap,
+  setNodeAttributes,
   setTextAlignment,
   topLevelPosition,
   toggleMark,
@@ -29,6 +32,44 @@ import { FountainComposer, useFountain, useFountainState } from '../../../src/re
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
 
 type OutputFormat = 'json' | 'markdown' | 'html';
+
+class DemoStatusNodeView {
+  dom = document.createElement('button');
+  constructor(node: Node, view: unknown, getPath: () => number[]) {
+    this.dom.type = 'button';
+    this.dom.className = 'demo-status-node';
+    this.dom.addEventListener('click', () => {
+      const editor = (view as EditorView).editor;
+      const path = getPath();
+      let current = editor.state.doc;
+      for (const index of path) current = current.child(index);
+      setNodeAttributes(editor, path, { status: current.attrs.status === 'Resolved' ? 'Investigating' : 'Resolved' });
+    });
+    this.update(node);
+  }
+  update(node: Node): boolean {
+    this.dom.textContent = `Incident status · ${String(node.attrs.status)}`;
+    return true;
+  }
+  selectNode(): void { this.dom.dataset.selected = 'true'; }
+  deselectNode(): void { delete this.dom.dataset.selected; }
+  stopEvent(event: Event): boolean {
+    return event.target instanceof globalThis.Node && this.dom.contains(event.target);
+  }
+}
+
+const demoStatusExtension = defineExtension({
+  name: 'demo-status-node',
+  nodes: {
+    status_panel: {
+      group: 'block',
+      atom: true,
+      attrs: { status: { default: 'Investigating', validate: (value) => ['Investigating', 'Resolved'].includes(String(value)) } },
+      nodeView: DemoStatusNodeView,
+    },
+  },
+});
+const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {
   if (!document) return '';
@@ -100,7 +141,8 @@ function DOMRuntime({ demo }: { demo: DemoDefinition }) {
 
   useEffect(() => {
     if (!mount.current) return;
-    const nextEditor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: demo.content });
+    const kit = demo.slug === 'plain-dom-notes' ? statusDemoKit : StarterKit;
+    const nextEditor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: demo.content });
     const view = new EditorView(mount.current, nextEditor, { placeholder: 'Edit this document…' });
     const unsubscribe = nextEditor.subscribe((state) => setCurrentDocument(state.doc));
     setEditor(nextEditor);

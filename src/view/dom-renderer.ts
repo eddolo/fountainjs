@@ -2,9 +2,27 @@ import { DecorationSet, Node, type Attributes, type Decoration, type DOMOutputSp
 
 export interface DOMRenderContext {
   view?: unknown;
-  nodeViews?: NodeViewLike[];
+  nodeViews?: MountedNodeView[];
+  reusableNodeViews?: ReadonlyMap<string, MountedNodeView>;
   decorations?: DecorationSet;
 }
+
+export interface MountedNodeView {
+  readonly nodeView: NodeViewLike;
+  readonly node: Node;
+  readonly path: readonly number[];
+  readonly pathReference: { current: number[] };
+}
+
+function pathKey(path: readonly number[]): string { return path.join('.'); }
+
+interface AppliedDecorationState {
+  readonly attributes: Map<string, string | null>;
+  readonly classes: Map<string, boolean>;
+  readonly styles: Map<string, { value: string; priority: string }>;
+}
+
+const appliedDecorations = new WeakMap<HTMLElement, AppliedDecorationState>();
 
 const SAFE_PROTOCOL = /^(https?:|mailto:|tel:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
 
@@ -44,16 +62,59 @@ function renderSpec(spec: DOMOutputSpec): { dom: HTMLElement; contentDOM?: HTMLE
 
 function applyDecorationAttributes(element: HTMLElement, decoration: Decoration): void {
   const { class: className, className: alternateClassName, style, ...attrs } = decoration.attrs;
+  let applied = appliedDecorations.get(element);
+  if (!applied) {
+    applied = { attributes: new Map(), classes: new Map(), styles: new Map() };
+    appliedDecorations.set(element, applied);
+  }
+  Object.keys(attrs).forEach((rawName) => {
+    const name = rawName === 'className' ? 'class' : rawName;
+    if (!applied!.attributes.has(name)) applied!.attributes.set(name, element.getAttribute(name));
+  });
   applyAttributes(element, attrs);
   String(className ?? alternateClassName ?? '').split(/\s+/).filter(Boolean)
-    .forEach((token) => element.classList.add(token));
+    .forEach((token) => {
+      if (!applied!.classes.has(token)) applied!.classes.set(token, element.classList.contains(token));
+      element.classList.add(token);
+    });
   if (typeof style === 'string' && style.trim()) {
-    element.style.cssText += `${element.style.cssText.trim().endsWith(';') || !element.style.cssText ? '' : ';'}${style}`;
+    const probe = document.createElement('span');
+    probe.style.cssText = style;
+    for (const property of probe.style) {
+      if (!applied.styles.has(property)) {
+        applied.styles.set(property, {
+          value: element.style.getPropertyValue(property),
+          priority: element.style.getPropertyPriority(property),
+        });
+      }
+      element.style.setProperty(property, probe.style.getPropertyValue(property), probe.style.getPropertyPriority(property));
+    }
   }
   const identity = decoration.spec.key ?? decoration.type;
+  if (!applied.attributes.has('data-fountain-decoration')) {
+    applied.attributes.set('data-fountain-decoration', element.getAttribute('data-fountain-decoration'));
+  }
   const identities = new Set((element.dataset.fountainDecoration ?? '').split(' ').filter(Boolean));
   identities.add(identity);
   element.dataset.fountainDecoration = [...identities].join(' ');
+}
+
+function clearDecorationAttributes(element: HTMLElement): void {
+  const applied = appliedDecorations.get(element);
+  if (!applied) return;
+  applied.attributes.forEach((value, name) => {
+    if (value === null) element.removeAttribute(name);
+    else element.setAttribute(name, value);
+  });
+  applied.classes.forEach((present, name) => {
+    if (present) element.classList.add(name);
+    else element.classList.remove(name);
+  });
+  applied.styles.forEach(({ value, priority }, property) => {
+    if (value) element.style.setProperty(property, value, priority);
+    else element.style.removeProperty(property);
+  });
+  appliedDecorations.delete(element);
 }
 
 function renderMarkedText(node: Node, text: string): globalThis.Node {
@@ -137,8 +198,35 @@ function renderText(node: Node, path: readonly number[], position: number, conte
 export function renderNode(node: Node, path: readonly number[] = [], context: DOMRenderContext = {}, position = 0): globalThis.Node {
   if (node.isText) return renderText(node, path, position, context);
   const NodeView = node.type.spec.nodeView;
-  const custom = NodeView ? new NodeView(node, context.view, () => [...path]) : undefined;
-  if (custom) context.nodeViews?.push(custom);
+  let custom: NodeViewLike | undefined;
+  let pathReference: { current: number[] } | undefined;
+  if (NodeView) {
+    const reusable = context.reusableNodeViews?.get(pathKey(path));
+    if (reusable && reusable.node.type === node.type) {
+      clearDecorationAttributes(reusable.nodeView.dom);
+      let accepted = reusable.node.eq(node);
+      if (!accepted && reusable.nodeView.update) {
+        try { accepted = reusable.nodeView.update(node); }
+        catch { accepted = false; }
+      }
+      if (accepted) {
+        custom = reusable.nodeView;
+        pathReference = reusable.pathReference;
+        pathReference.current = [...path];
+      }
+    }
+    if (!custom) {
+      pathReference = { current: [...path] };
+      custom = new NodeView(node, context.view, () => [...pathReference!.current]);
+    }
+    if (!pathReference) throw new Error('A mounted NodeView requires a live path reference.');
+    context.nodeViews?.push({
+      nodeView: custom,
+      node,
+      path: Object.freeze([...path]),
+      pathReference,
+    });
+  }
   const rendered = custom ?? renderSpec(node.type.spec.toDOM?.(node) ?? ['div', 0]);
   const { dom, contentDOM } = rendered;
   dom.dataset.fountainNode = node.type.name;
@@ -148,6 +236,7 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
     decoration.type === 'node' && decoration.from === position && decoration.to === position + node.nodeSize
   )).forEach((decoration) => applyDecorationAttributes(dom, decoration));
   const target = contentDOM ?? dom;
+  if (custom && contentDOM) target.replaceChildren();
   let childPosition = position + 1;
   node.content.forEach((child, index) => {
     if (!child.isText) appendWidgets(target, childPosition, context);

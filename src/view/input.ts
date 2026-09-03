@@ -32,10 +32,14 @@ export interface InputManagerOptions {
   imageUpload?: ImageUploadHandler;
   maxInlineImageBytes?: number;
   onError?: (error: unknown) => void;
+  shouldStopEvent?: (event: Event) => boolean;
 }
 
 export class InputManager {
   private compositionSelection?: AnySelection;
+  private composingValue = false;
+
+  get composing(): boolean { return this.composingValue; }
 
   constructor(
     private readonly editor: Editor,
@@ -55,6 +59,8 @@ export class InputManager {
   }
 
   destroy(): void {
+    this.composingValue = false;
+    this.compositionSelection = undefined;
     this.dom.removeEventListener('beforeinput', this.onBeforeInput);
     this.dom.removeEventListener('keydown', this.onKeyDown);
     this.dom.removeEventListener('paste', this.onPaste);
@@ -67,6 +73,7 @@ export class InputManager {
   }
 
   private onKeyDown = (event: KeyboardEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     this.selections.capture();
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleKeyDown?.(this.editor, event)) {
@@ -108,6 +115,7 @@ export class InputManager {
   };
 
   private onBeforeInput = (event: InputEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable || event.isComposing) return;
     this.selections.capture();
     const { state } = this.editor;
@@ -167,6 +175,7 @@ export class InputManager {
   };
 
   private onPaste = (event: ClipboardEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
     this.selections.capture();
     for (const plugin of this.editor.state.plugins) {
@@ -197,12 +206,19 @@ export class InputManager {
     this.editor.runCommandBatch(() => insertPlainText(this.editor, text));
   };
 
-  private onCompositionStart = (): void => {
+  private onCompositionStart = (event: CompositionEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
+    this.composingValue = true;
     this.selections.capture();
     this.compositionSelection = this.editor.state.selection;
   };
 
   private onCompositionEnd = (event: CompositionEvent): void => {
+    this.composingValue = false;
+    if (this.options.shouldStopEvent?.(event)) {
+      this.compositionSelection = undefined;
+      return;
+    }
     const selection = this.compositionSelection;
     this.compositionSelection = undefined;
     if (!selection || !event.data) return;
@@ -232,6 +248,7 @@ export class InputManager {
   };
 
   private onChange = (event: Event): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     const input = event.target instanceof HTMLInputElement
       ? event.target.closest<HTMLInputElement>('input[data-fountain-task-toggle]')
       : null;
@@ -242,6 +259,7 @@ export class InputManager {
   };
 
   private onClick = (event: MouseEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleClick?.(this.editor, event)) {
         event.preventDefault();
@@ -251,6 +269,7 @@ export class InputManager {
   };
 
   private onDragOver = (event: DragEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     if (this.editor.editable && Array.from(event.dataTransfer?.items ?? []).some((item) => item.kind === 'file' && item.type.startsWith('image/'))) {
       event.preventDefault();
       if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
@@ -258,6 +277,7 @@ export class InputManager {
   };
 
   private onDrop = (event: DragEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleDrop?.(this.editor, event)) {

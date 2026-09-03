@@ -78,19 +78,45 @@ function ArticleEditor({ value, save }) {
     runtime: 'dom',
     summary: 'A dependency-free browser integration for teams that do not want a UI framework around the editor.',
     boundary: 'An HTMLElement mount, commands, and one subscription are the complete integration.',
-    capabilities: ['Zero framework imports', 'Keyboard and IME input', 'Undo/redo', 'Host-owned controls'],
+    capabilities: ['Custom interactive NodeView', 'Keyboard and IME input', 'Mapped lifecycle updates', 'Host-owned controls'],
     content: doc(
       heading(1, 'Incident response notes'),
       paragraph(text('Keep operational knowledge in a portable tree, not framework component state.')),
+      { type: 'status_panel', attrs: { status: 'Investigating' } },
       heading(2, 'First checks'),
       { type: 'ordered_list', attrs: { start: 1 }, content: [listItem('Confirm the affected service and region'), listItem('Link the active incident channel'), listItem('Record decisions as they happen')] },
       paragraph(text('The plain DOM surface still supports the same schema, commands, formats, media, and plugins.')),
     ),
-    code: `import { EditorView, StarterKit, createEditor, toggleMark } from 'fountainjs-editor'
+    code: `import {
+  CoreExtension, EditorView, HistoryExtension,
+  composeExtensions, createEditor, defineExtension, setNodeAttributes, toggleMark,
+} from 'fountainjs-editor'
+
+class StatusView {
+  dom = document.createElement('button')
+  constructor(node, view, getPath) {
+    this.update(node)
+    this.dom.onclick = () => setNodeAttributes(view.editor, getPath(), { status: 'Resolved' })
+  }
+  update(node) { this.dom.textContent = node.attrs.status; return true }
+  stopEvent(event) { return this.dom.contains(event.target) }
+}
+
+const status = defineExtension({
+  name: 'status',
+  nodes: {
+    status_panel: {
+      group: 'block', atom: true,
+      attrs: { status: { default: 'Investigating' } },
+      nodeView: StatusView,
+    },
+  },
+})
+const kit = composeExtensions([CoreExtension, HistoryExtension, status])
 
 const editor = createEditor({
-  schema: StarterKit.schema,
-  plugins: StarterKit.plugins,
+  schema: kit.schema,
+  plugins: kit.plugins,
   content: savedJSON,
   onUpdate: state => save(state.doc.toJSON()),
 })

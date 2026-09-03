@@ -5,9 +5,13 @@ import {
   Plugin,
   PluginKey,
   StarterKit,
+  composeExtensions,
   createEditor,
+  defineExtension,
   pasteRulesPlugin,
+  setNodeAttributes,
   textPasteRule,
+  type Node,
 } from '../../../src';
 import '../../../src/styles.css';
 
@@ -36,14 +40,59 @@ const pasteRules = pasteRulesPlugin({
   rules: [textPasteRule({ find: /--/g, replace: '—', name: 'browser-em-dashes' })],
 });
 
+const nodeViewMetrics = { created: 0, destroyed: 0, updates: 0 };
+class BrowserCounterNodeView {
+  dom = document.createElement('button');
+  constructor(node: Node, view: unknown, getPath: () => number[]) {
+    nodeViewMetrics.created += 1;
+    this.dom.type = 'button';
+    this.dom.dataset.browserCounter = '';
+    this.render(node);
+    this.dom.addEventListener('click', () => {
+      const editorView = view as EditorView;
+      const current = editorView.editor.state.doc;
+      let target = current;
+      for (const index of getPath()) target = target.child(index);
+      setNodeAttributes(editorView.editor, getPath(), { count: Number(target.attrs.count) + 1 });
+    });
+  }
+  update(node: Node): boolean {
+    nodeViewMetrics.updates += 1;
+    this.render(node);
+    return true;
+  }
+  selectNode(): void { this.dom.dataset.selectionHook = 'selected'; }
+  deselectNode(): void { delete this.dom.dataset.selectionHook; }
+  stopEvent(): boolean { return true; }
+  ignoreMutation(mutation: MutationRecord): boolean {
+    return mutation.type === 'attributes' && mutation.attributeName === 'data-local-state';
+  }
+  destroy(): void { nodeViewMetrics.destroyed += 1; }
+  private render(node: Node): void { this.dom.textContent = `Count ${String(node.attrs.count)}`; }
+}
+
+const browserNodeView = defineExtension({
+  name: 'browser-node-view',
+  nodes: {
+    browser_counter: {
+      group: 'block',
+      atom: true,
+      attrs: { count: { default: 0, validate: (value) => Number.isInteger(value) } },
+      nodeView: BrowserCounterNodeView,
+    },
+  },
+});
+const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView]);
+
 const editor = createEditor({
-  schema: StarterKit.schema,
-  plugins: [...StarterKit.plugins, decorations, pasteRules],
+  schema: browserKit.schema,
+  plugins: [...browserKit.plugins, decorations, pasteRules],
   content: {
     type: 'doc',
     content: [
       { type: 'paragraph', content: [{ type: 'text', text: 'Alpha Beta' }] },
       { type: 'paragraph', content: [{ type: 'text', text: 'Second paragraph' }] },
+      { type: 'browser_counter', attrs: { count: 0 } },
     ],
   },
 });
@@ -53,9 +102,9 @@ const output = document.querySelector<HTMLOutputElement>('#document-json');
 if (!mount || !output) throw new Error('Browser contract fixture failed to mount.');
 
 const view = new EditorView(mount, editor, { ariaLabel: 'Browser contract editor' });
-const commands = view.commandManager(StarterKit.commands);
+const commands = view.commandManager(browserKit.commands);
 const updateOutput = () => { output.value = JSON.stringify(editor.getJSON()); };
 updateOutput();
 editor.subscribe(updateOutput);
 
-Object.assign(globalThis, { fountainBrowserTest: { commands, editor, view } });
+Object.assign(globalThis, { fountainBrowserTest: { commands, editor, view, nodeViewMetrics } });

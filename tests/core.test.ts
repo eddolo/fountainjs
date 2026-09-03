@@ -11,6 +11,7 @@ import {
   MarkdownExporter,
   MarkdownImporter,
   Node,
+  NodeSelection,
   Schema,
   Selection,
   Decoration,
@@ -113,6 +114,20 @@ describe('document model and transactions', () => {
     const paragraph = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Inserted')]);
     editor.dispatch(editor.state.createTransaction().replace(0, 0, [paragraph]));
     expect(editor.state.selection.eq(Selection.cursor([2, 0], 3))).toBe(true);
+  });
+
+  it('starts atom-only documents with a valid semantic selection', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [{ type: 'image_super', attrs: { src: '/cover.jpg', alt: 'Cover' } }],
+      },
+    });
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+    expect((editor.state.selection as NodeSelection).nodePath).toEqual([0]);
+    expect(setNodeAttributes(editor, [0], { title: 'Updated cover' })).toBe(true);
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
   });
 
   it('maps selections through mark-created text fragments without changing offsets', () => {

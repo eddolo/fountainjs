@@ -249,7 +249,32 @@ DOM output specs accept a tag, safe attributes, nested specs, and one `0` conten
 
 ### NodeViews
 
-A node spec may supply a custom NodeView constructor. A NodeView returns its own `dom`, optional `contentDOM`, optional `update`, and optional `destroy`. Use it for interactive product nodes that cannot be represented by a static DOM tuple. The renderer still owns child rendering into `contentDOM` and calls `destroy` during rerender/unmount.
+A node spec may supply a framework-neutral NodeView constructor. It receives the
+current node, the view boundary, and a live path accessor, and returns its own
+`dom` plus optional `contentDOM`. Use it for interactive product nodes that
+cannot be represented by a static DOM tuple.
+
+Rerendering maps each mounted NodeView's old structural range through the
+transaction. A same-type node at the mapped range is offered to `update`; an
+unchanged node is reused without a hook call. Returning `true` retains DOM and
+the mutable path reference, while returning `false` recreates the instance.
+Removed and replaced instances receive `destroy`. For a retained non-atomic
+view, the renderer replaces only its model-owned `contentDOM` children, leaving
+the surrounding interactive DOM and subscriptions intact. Renderer-owned node
+decorations are removed before update and reapplied from current plugin state.
+
+`selectNode` and `deselectNode` follow semantic `NodeSelection` changes.
+`stopEvent` isolates embedded controls from editor input, plugin, and selection
+handling. A subtree `MutationObserver` asks the innermost NodeView's
+`ignoreMutation` hook about local UI changes; unignored mutations are restored
+from immutable editor state. Observer work is suspended during renderer and
+selection hooks and deferred through IME composition. These rules keep the
+document authoritative without destroying framework components on every edit.
+
+The optional React entry exposes `createReactNodeView`. Its React root lives in
+a dedicated container beside optional `contentDOM`, so React never reconciles
+the model-owned editable subtree. React-originated mutations are ignored by
+default; callers can override event and mutation policies.
 
 ## Extension composition
 
@@ -278,7 +303,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -300,7 +325,8 @@ The suites are organized by boundary:
 
 - `tests/core.test.ts`: schemas, selections, steps, commands, structures, search, formats, and history;
 - `tests/extensions.test.ts`: composition, conflicts, and built-in kits;
-- `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeViews, and Web Component behavior in JSDOM;
+- `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
+- `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
 - `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against

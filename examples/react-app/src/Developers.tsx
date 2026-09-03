@@ -79,6 +79,36 @@ const revisionPlugin = new Plugin({
   },
 })`;
 
+const nodeViewExample = `class StatusNodeView {
+  dom = document.createElement('button')
+
+  constructor(node, view, getPath) {
+    this.render(node)
+    this.dom.onclick = () => setNodeAttributes(
+      view.editor,
+      getPath(), // live after inserts, moves, and deletes before this node
+      { status: 'resolved' },
+    )
+  }
+
+  update(node) { this.render(node); return true }
+  selectNode() { this.dom.dataset.selected = 'true' }
+  deselectNode() { delete this.dom.dataset.selected }
+  stopEvent(event) { return this.dom.contains(event.target) }
+  ignoreMutation(record) { return record.attributeName === 'aria-expanded' }
+  destroy() { this.unsubscribe?.() }
+}
+
+const statusExtension = defineExtension({
+  name: 'status-node',
+  nodes: {
+    status_panel: { group: 'block', atom: true, nodeView: StatusNodeView },
+  },
+})
+
+// React stays optional and is imported only from fountainjs-editor/react:
+const ReactStatusView = createReactNodeView(StatusComponent)`;
+
 const surfacesExample = `// Plain DOM
 new EditorView(document.querySelector('#editor'), editor)
 
@@ -232,7 +262,11 @@ function Developers() {
             <h2>The browser is an interface, not the source of truth.</h2>
             <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles <code>beforeinput</code>, keyboard shortcuts, IME composition, paste, drop, task toggles, list indentation, table navigation, and image files. <code>SelectionHandler</code> converts DOM ranges to document paths and back, then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
             <p>Ctrl/Cmd+A selects the document. Clicking an atomic node or pressing Left/Right at its neighboring text boundary creates a node selection. Shift-click extends a table-cell rectangle; Alt+Shift+Arrow does the same from the keyboard. Public selection commands expose the identical behavior to plain DOM, Web Components, React, or another adapter.</p>
-            <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. Custom NodeViews can provide interactive DOM plus a <code>contentDOM</code> hole and lifecycle cleanup. URL attributes and tag names pass safety checks before reaching the DOM.</p>
+            <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. URL attributes and tag names pass safety checks before reaching the DOM.</p>
+            <h3>Interactive NodeViews keep identity without owning the document</h3>
+            <p>A custom NodeView owns its surrounding UI while FountainJS still owns model content. Its path accessor follows transaction mapping; <code>update</code> chooses reuse or recreation; selection hooks mirror node selection; <code>stopEvent</code> protects embedded controls; and <code>ignoreMutation</code> identifies intentional local UI state. Unapproved DOM changes are restored from the document, and <code>destroy</code> releases resources exactly when the instance leaves the view.</p>
+            <Code>{nodeViewExample}</Code>
+            <p>For nodes with editable children, return a <code>contentDOM</code> element and leave its descendants to FountainJS. The React adapter uses separate sibling containers for React-owned controls and model-owned content, so neither renderer rewrites the other’s subtree. The live <a href="./demos/plain-dom-notes.html">plain-DOM demo</a> exercises a mapped interactive status node.</p>
             <div className="dev-callout dev-callout--mint"><b>Why controlled input?</b><span>Commands—not browser-generated HTML—decide the resulting document. That keeps undo, schema validation, portable output, cross-block selection, and multiple UI surfaces consistent.</span></div>
           </section>
 

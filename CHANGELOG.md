@@ -4,6 +4,13 @@
 
 ### Added
 
+- Production NodeView reconciliation with transaction-mapped identity, live path
+  accessors, update/recreate and cleanup contracts, model-owned `contentDOM`,
+  semantic selection hooks, embedded-control event isolation, mutation recovery,
+  reversible decorations, and real-browser coverage.
+- An optional `createReactNodeView` adapter with typed component props, attribute
+  and deletion helpers, selection state, separate React/model DOM ownership,
+  mapped reuse, cleanup tests, and a live custom-node demo.
 - A mapped selection hierarchy for text, node, structural-gap, all-document,
   and rectangular table-cell selections, including semantic command behavior,
   undo restoration, native DOM synchronization, pointer interaction, keyboard

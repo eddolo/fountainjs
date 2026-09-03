@@ -8,7 +8,7 @@
 
 ## Extension composition
 
-`defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class with `dom`, optional `contentDOM`, and `destroy()` to mount interactive widgets without depending on React.
+`defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class to mount interactive product UI without depending on React.
 
 `composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, and the HTML/Markdown/JSON/text format modules.
 
@@ -27,6 +27,58 @@ const poll = defineExtension({
   },
 });
 ```
+
+### Custom NodeViews
+
+A NodeView constructor receives the current model `node`, the owning
+`EditorView` (typed as `unknown` at the schema boundary), and a live `getPath()`
+function. Never cache the returned path: it changes when transactions insert or
+remove content before the node.
+
+```ts
+class PollView {
+  readonly dom = document.createElement('section')
+
+  constructor(node, view, getPath) {
+    this.render(node)
+    this.dom.onclick = event => {
+      if (!(event.target instanceof HTMLButtonElement)) return
+      setNodeAttributes(view.editor, getPath(), { voted: true })
+    }
+  }
+
+  update(node) { this.render(node); return true }
+  selectNode() { this.dom.dataset.selected = 'true' }
+  deselectNode() { delete this.dom.dataset.selected }
+  stopEvent(event) { return event.target instanceof Node && this.dom.contains(event.target) }
+  ignoreMutation(mutation) { return mutation.target instanceof Node && this.dom.contains(mutation.target) }
+  destroy() { /* remove non-DOM subscriptions or resources */ }
+}
+```
+
+The framework-neutral `NodeViewLike` lifecycle is:
+
+- `dom` is the required outer element. Atomic node DOM is made non-editable.
+- `contentDOM`, when present, is where FountainJS renders the node's model-owned
+  children. Do not render another framework into that element.
+- `update(nextNode)` returns `true` to keep the instance or `false` to recreate
+  it. FountainJS reuses unchanged instances automatically and refreshes
+  `contentDOM` without duplicating children.
+- `selectNode()` and `deselectNode()` mirror a semantic `NodeSelection` into
+  product UI. The editor still supplies its own non-colour selection marker.
+- `stopEvent(event)` returning `true` keeps controls inside the NodeView out of
+  the editor input, plugin, and selection pipelines. It does not cancel the
+  control's own DOM listener.
+- `ignoreMutation(record)` returning `true` declares a DOM mutation to be local
+  UI state. Other mutations inside a NodeView are replaced from the immutable
+  document so DOM cannot silently become persisted content.
+- `destroy()` runs exactly when an instance is replaced, its node is deleted,
+  or the editor view is destroyed.
+
+NodeViews retain identity while mapped transactions move them. Node decorations
+are reversible across reuse, and hook-generated DOM changes are excluded from
+mutation recovery. During IME composition the observer waits for controlled
+input to commit before reconciling the document.
 
 ## Editor and state
 
@@ -297,3 +349,22 @@ Import React bindings from `fountainjs-editor/react`:
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
+- `createReactNodeView(Component, options?)` and `ReactNodeViewProps`
+
+`createReactNodeView` adapts a React component without importing React from the
+framework-neutral package root. Components receive the current `node`, semantic
+`selected` state, the `editor`, live `getPath()`, `updateAttributes()`, and
+`deleteNode()` helpers. Pass `contentDOMTagName` for a non-atomic node; the
+adapter renders React-owned controls and model-owned editable children into
+separate sibling containers.
+
+```tsx
+const CounterView = createReactNodeView(({ node, selected, updateAttributes }) => (
+  <button
+    aria-pressed={selected}
+    onClick={() => updateAttributes({ count: Number(node.attrs.count) + 1 })}
+  >
+    Count {String(node.attrs.count)}
+  </button>
+), { tagName: 'section', className: 'counter-node' })
+```
