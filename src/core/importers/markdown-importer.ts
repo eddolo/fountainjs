@@ -3,7 +3,7 @@ import { isSafeURL } from '../url';
 
 function inline(text: string, schema: Schema): Node[] {
   const result: Node[] = [];
-  const pattern = /(\$(?!\$)(?!\s)(?:\\.|[^$\\\n])*(?<!\s)\$|\*\*[^*]+\*\*|~~[^~]+~~|==[^=]+==|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
+  const pattern = /(!\[[^\]]*\]\(\S+?(?:\s+["'][^"']*["'])?\)|\$(?!\$)(?!\s)(?:\\.|[^$\\\n])*(?<!\s)\$|\*\*[^*]+\*\*|~~[^~]+~~|==[^=]+==|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
   let cursor = 0;
   for (const match of text.matchAll(pattern)) {
     const index = match.index ?? 0;
@@ -11,6 +11,15 @@ function inline(text: string, schema: Schema): Node[] {
     const token = match[0];
     let value = token;
     let mark: Mark | undefined;
+    if (token.startsWith('![') && schema.nodes.inline_image) {
+      const image = /^!\[([^\]]*)\]\((\S+?)(?:\s+["']([^"']*)["'])?\)$/.exec(token);
+      if (image && isSafeURL(image[2], { allowDataImage: true })) {
+        try { result.push(schema.node('inline_image', { src: image[2], alt: image[1], title: image[3] ?? '' })); }
+        catch { result.push(schema.text(token)); }
+      } else result.push(schema.text(token));
+      cursor = index + token.length;
+      continue;
+    }
     if (token.startsWith('$') && schema.nodes.inline_math) {
       const latex = token.slice(1, -1);
       try { result.push(schema.node('inline_math', { latex, ariaLabel: '' })); }

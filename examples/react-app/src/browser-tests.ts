@@ -14,6 +14,7 @@ import {
   defineExtension,
   getClipboardHistoryState,
   pasteRulesPlugin,
+  startImageUpload,
   setNodeAttributes,
   textPasteRule,
   type Node,
@@ -131,5 +132,6 @@ Object.assign(globalThis, {
     leanController,
     nodeViewMetrics,
     clipboardHistory: () => getClipboardHistoryState(editor),
+    startImageUpload,
   },
 });

@@ -484,6 +484,12 @@ export class InputManager {
         await insertImageFile(this.editor, file, {
           upload: this.options.imageUpload,
           maxInlineBytes: this.options.maxInlineImageBytes,
+          onStatusChange: (snapshot, task) => {
+            this.dom.dispatchEvent(new CustomEvent('fountain-image-upload', {
+              bubbles: true,
+              detail: { snapshot, task },
+            }));
+          },
         });
       }
     } catch (error) {

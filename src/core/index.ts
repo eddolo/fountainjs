@@ -6,6 +6,7 @@ export * from './decoration';
 export * from './state';
 export * from './editor';
 export * from './commands';
+export * from './image';
 export * from './structure-commands';
 export * from './table-map';
 export * from './table-commands';

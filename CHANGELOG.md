@@ -4,6 +4,10 @@
 
 ### Added
 
+- Production block and inline images with mapped progress/cancel/retry uploads,
+  safe replacement, editable captions, alignment, load recovery, accessible
+  pointer/touch/keyboard resizing, responsive metadata, expanded interchange,
+  framework-neutral commands, and complete React controls.
 - Opt-in, editor-local clipboard history with bounded deduplicated slots,
   unchanged native copy/paste behavior, a Mod-Alt-V command, explicit host
   persistence, framework-neutral state/commands, and a searchable React picker

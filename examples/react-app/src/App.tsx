@@ -190,7 +190,7 @@ function App() {
         <div className="capabilities__grid">
           <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, bold, italic, underline, strike, highlight, sub/superscript, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, nested document structures, tables, and custom block types.</p></article>
-          <article><b>03</b><h3>Images & media</h3><p>Insert from URL, upload through your own storage adapter, embed local images, and paste or drop image files with alt text, captions, and width metadata.</p></article>
+          <article><b>03</b><h3>Production images</h3><p>Use block or inline images, editable captions, alt text, alignment, responsive sources, replacement, and accessible resizing. Upload tasks map through edits and expose progress, cancel, retry, and errors while storage remains yours.</p></article>
           <article><b>04</b><h3>Portable formats</h3><p>Lossless JSON plus Markdown, safe HTML, and plain-text boundaries for storage, APIs, publishing pipelines, search, and any backend language.</p></article>
           <article><b>05</b><h3>Any interface</h3><p>Use plain DOM, the standards-based Web Component, React bindings, or create another framework adapter over the same editor and immutable state.</p></article>
           <article><b>06</b><h3>Open extension contract</h3><p>Add nodes, marks, commands, plugins, formats, UI, collaboration providers, analytics, AI, or application services without forking the core.</p></article>

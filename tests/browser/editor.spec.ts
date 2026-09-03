@@ -363,12 +363,114 @@ test('selects and deletes an atomic image through real pointer and keyboard inpu
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
 
   await page.locator('[data-fountain-path="0"]').click();
-  await image.click();
+  await image.locator('img').click();
   await expect(image).toHaveAttribute('data-fountain-selected-node', 'true');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
 
   await page.keyboard.press('Backspace');
   await expect(image).toHaveCount(0);
+});
+
+test('edits, aligns, resizes, and undoes a production image through accessible controls', async ({ page }) => {
+  const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+  expect(await page.evaluate((src) => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.commands.insertImage({
+      src,
+      alt: 'Resizable image',
+      caption: 'Initial caption',
+      width: '360px',
+      align: 'center',
+    });
+  }, dataURL)).toBe(true);
+
+  const figure = page.locator('.fountain-image');
+  await expect(figure).toHaveAttribute('role', 'figure');
+  await figure.click();
+  await expect(figure).toHaveAttribute('data-fountain-image-selected', 'true');
+  const caption = figure.getByRole('textbox', { name: 'Image caption' });
+  await caption.fill('A caption edited in the node view');
+  await caption.press('ControlOrMeta+Enter');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.caption))
+    .toBe('A caption edited in the node view');
+
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.setImageAlignment('right'))).toBe(true);
+  await expect(figure).toHaveAttribute('data-align', 'right');
+
+  const handle = figure.getByRole('slider', { name: 'Resize image from right' });
+  await handle.focus();
+  await handle.press('ArrowRight');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.width)).toBe('370px');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.width)).toBe('360px');
+
+  await figure.hover();
+  const box = await handle.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) / 2, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+  await page.mouse.down();
+  await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) / 2 + 55, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+  await page.mouse.up();
+  const resized = await page.evaluate(() => String((globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.width));
+  expect(Number.parseInt(resized, 10)).toBeGreaterThanOrEqual(410);
+});
+
+test('inserts and removes a true inline image without breaking surrounding text', async ({ page }) => {
+  const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+  expect(await page.evaluate((src) => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([0, 0], 5);
+    return contract.commands.commands.insertInlineImage({ src, alt: 'Inline status', width: '1em', height: '1em' });
+  }, dataURL)).toBe(true);
+  const inline = page.locator('[data-fountain-node="inline_image"]');
+  await expect(inline).toHaveAttribute('data-fountain-inline-image', 'true');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).content.map((node: any) => node.type.name)))
+    .toEqual(['text', 'inline_image', 'text']);
+  await inline.click();
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
+  await page.keyboard.press('Delete');
+  await expect(inline).toHaveCount(0);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).textContent)).toBe('Alpha Beta');
+});
+
+test('tracks and cancels browser-native image upload tasks', async ({ page }) => {
+  const started = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const task = contract.startImageUpload(
+      contract.editor,
+      new File(['image'], 'browser.png', { type: 'image/png' }),
+      {
+        upload: async (_file: File, context: any) => {
+          context.reportProgress(.4);
+          await new Promise((resolve) => setTimeout(resolve, 40));
+          return { src: 'https://cdn.example.com/browser.png', alt: 'Browser upload' };
+        },
+      },
+    );
+    (globalThis as any).browserImageUpload = task;
+    return { status: task.snapshot.status, progress: task.snapshot.progress };
+  });
+  expect(started).toEqual({ status: 'uploading', progress: .4 });
+  await expect.poll(() => page.evaluate(() => (globalThis as any).browserImageUpload.snapshot.status)).toBe('succeeded');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.some((node: any) => node.attrs.src === 'https://cdn.example.com/browser.png'))).toBe(true);
+
+  const cancelled = await page.evaluate(async () => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const task = contract.startImageUpload(
+      contract.editor,
+      new File(['image'], 'cancel.png', { type: 'image/png' }),
+      {
+        upload: (_file: File, context: any) => new Promise((_resolve, reject) => {
+          context.signal.addEventListener('abort', () => reject(new DOMException('cancelled', 'AbortError')), { once: true });
+        }),
+      },
+    );
+    task.completion.catch(() => undefined);
+    task.cancel();
+    await Promise.resolve();
+    return task.snapshot.status;
+  });
+  expect(cancelled).toBe('cancelled');
 });
 
 test('extends and replaces a rectangular cell selection through real pointer input', async ({ page }) => {
@@ -604,6 +706,43 @@ test('loads the public React playground without console or page errors', async (
   expect(errors).toEqual([]);
 });
 
+test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
+  await page.goto('/');
+  const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+  const insertButton = page.getByRole('button', { name: 'Insert image from URL' });
+  await insertButton.focus();
+  await insertButton.press('Enter');
+  await page.getByLabel('Image URL').fill(dataURL);
+  await page.getByLabel('Alternative text').fill('Public workflow image');
+  await page.getByLabel('Image title').fill('Portable image metadata');
+  await page.getByLabel('Image caption').fill('Caption from the toolbar');
+  await page.getByLabel('Image width').fill('420px');
+  await page.getByText('Responsive sources', { exact: true }).click();
+  await page.getByLabel('Image source set').fill('https://cdn.example.com/small.png 480w, https://cdn.example.com/large.png 1200w');
+  await page.getByLabel('Image sizes').fill('(max-width: 600px) 100vw, 420px');
+  await page.getByRole('button', { name: 'Insert URL' }).click();
+
+  const figure = page.locator('.fountain-image').last();
+  await expect(figure).toHaveAttribute('aria-label', '[Image: Public workflow image]');
+  await expect(figure).toHaveCSS('width', '420px');
+  await figure.locator('img').click();
+  await page.getByRole('button', { name: 'Edit selected image' }).click();
+  const imageForm = page.locator('form.is-image');
+  await imageForm.getByLabel('Image caption').fill('Edited from the public React controls');
+  await imageForm.getByLabel('Image alignment').selectOption('right');
+  await imageForm.getByRole('button', { name: 'Save image' }).click();
+  await expect(figure).toHaveAttribute('data-align', 'right');
+  await expect(figure.getByRole('textbox', { name: 'Image caption' })).toHaveValue('Edited from the public React controls');
+
+  await page.locator('input[type="file"][accept="image/*"]').setInputFiles({
+    name: 'replacement.gif',
+    mimeType: 'image/gif',
+    buffer: Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64'),
+  });
+  await expect(page.locator('form.is-image').getByRole('status')).toContainText('replacement.gif inserted');
+  await expect(figure.locator('img')).toHaveAttribute('src', /^data:image\/gif;base64,/);
+});
+
 test('creates and edits a link through the public React toolbar', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
@@ -750,4 +889,35 @@ test('publishes semantic selection controls and table interaction in the demo ga
   await expect(page.locator('[data-fountain-path="1"]')).toHaveAttribute('data-fountain-gap', 'before');
   await page.getByRole('button', { name: 'Select all' }).click();
   await expect.poll(() => page.evaluate(() => document.getSelection()?.toString() ?? '')).toContain('Quarterly service report');
+});
+
+test('runs production images and host-owned uploads through the public Custom Element', async ({ page }) => {
+  await page.goto('/demos/angular-media.html');
+  await expect(page.getByRole('heading', { name: 'Media-rich campaign story' })).toBeVisible();
+
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await expect(editor.locator('[data-fountain-node="inline_image"]')).toHaveCount(1);
+  const figure = editor.locator('.fountain-image');
+  await expect(figure).toHaveCount(1);
+  await expect(figure.getByRole('textbox', { name: 'Image caption' })).toHaveValue(/Select me to edit/);
+  await expect(figure.getByRole('slider', { name: 'Resize image from right' })).toBeVisible();
+
+  await editor.evaluate((element) => {
+    const transfer = new DataTransfer();
+    transfer.items.add(new File(['framework-neutral upload'], 'portable.png', { type: 'image/png' }));
+    element.dispatchEvent(new DragEvent('drop', {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer: transfer,
+      clientX: 20,
+      clientY: 20,
+    }));
+  });
+
+  const status = page.getByRole('status');
+  await expect(status).toContainText('Uploading portable.png');
+  await expect(status).toContainText('portable.png: succeeded');
+  await expect(editor.locator('.fountain-image')).toHaveCount(2);
+  await expect(editor.locator('.fountain-image img[alt="portable"]')).toBeVisible();
+  await expect(page.locator('.demo-output pre')).toContainText('Uploaded through the demo host adapter.');
 });

@@ -9,19 +9,12 @@ import {
 } from './selection';
 import { Mark, Node, type Attributes } from './schema';
 import { TableMap } from './table-map';
+import { createImageNode, getActiveImage, type ImageAttributes } from './image';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
 
 export type Command = (editor: Editor) => boolean;
-
-export interface ImageAttributes extends Attributes {
-  src: string;
-  alt?: string;
-  title?: string;
-  caption?: string;
-  width?: string;
-}
 
 export interface TableOptions {
   rows?: number;
@@ -818,17 +811,80 @@ export function insertBlock(editor: Editor, typeName: string, attrs: Attributes 
 }
 
 export function insertImage(editor: Editor, attrs: ImageAttributes): boolean {
-  const source = attrs.src.trim();
-  if (!source || !SAFE_CONTENT_URL.test(source)) return false;
-  const type = editor.state.schema.nodes.image_super;
-  if (!type) return false;
-  return insertNode(editor, type.create({
-    src: source,
-    alt: attrs.alt ?? '',
-    title: attrs.title ?? '',
-    caption: attrs.caption ?? '',
-    width: attrs.width ?? '100%',
-  }));
+  const image = createImageNode(editor, attrs);
+  return image ? insertNode(editor, image) : false;
+}
+
+/** Inserts an atomic image between text fragments without changing the surrounding block. */
+export function insertInlineImage(
+  editor: Editor,
+  attrs: ImageAttributes,
+  selection?: Selection,
+  selectInserted = true,
+): boolean {
+  const targetSelection = selection ?? (editor.state.selection instanceof Selection ? editor.state.selection : null);
+  if (!editor.editable || !targetSelection?.isSingleText || !targetSelection.path.length) return false;
+  const image = createImageNode(editor, attrs, true);
+  if (!image) return false;
+  let target: Node;
+  try { target = getNodeAtPath(editor.state.doc, targetSelection.path); }
+  catch { return false; }
+  if (!target.isText) return false;
+  const value = target.text ?? '';
+  if (targetSelection.to > value.length) return false;
+  const index = targetSelection.path.at(-1) as number;
+  const before = value.slice(0, targetSelection.from);
+  const after = value.slice(targetSelection.to);
+  const replacement = [
+    ...(before ? [target.withText(before)] : []),
+    image,
+    target.withText(after),
+  ];
+  const imagePath = [...targetSelection.path.slice(0, -1), index + (before ? 1 : 0)];
+  try {
+    const transaction = editor.state.createTransaction().replaceNode(targetSelection.path, replacement);
+    if (selectInserted) transaction.setSelection(new NodeSelection(transaction.doc, imagePath));
+    editor.state.schema.validate(transaction.doc);
+    editor.dispatch(transaction);
+    return true;
+  } catch { return false; }
+}
+
+/** Validates and updates portable metadata on a block or inline image. */
+export function setImageAttributes(
+  editor: Editor,
+  attrs: Partial<ImageAttributes>,
+  path?: readonly number[],
+  selectUpdated = true,
+): boolean {
+  if (!editor.editable) return false;
+  const active = getActiveImage(editor, path);
+  if (!active) return false;
+  const next = { ...active.node.attrs, ...attrs };
+  if (typeof next.src !== 'string' || !next.src.trim() || !SAFE_CONTENT_URL.test(next.src.trim())) return false;
+  next.src = next.src.trim();
+  if (active.inline) delete next.caption;
+  try {
+    active.node.type.create(next);
+    const transaction = editor.state.createTransaction().setNodeAttrs(active.path, next);
+    if (selectUpdated) transaction.setSelection(new NodeSelection(transaction.doc, active.path));
+    editor.dispatch(transaction);
+    return true;
+  } catch { return false; }
+}
+
+export function setImageAlignment(editor: Editor, align: 'left' | 'center' | 'right', path?: readonly number[]): boolean {
+  return setImageAttributes(editor, { align }, path);
+}
+
+export function deleteImage(editor: Editor, path?: readonly number[]): boolean {
+  const active = getActiveImage(editor, path);
+  if (!active || !editor.editable) return false;
+  if (!path && editor.state.selection instanceof NodeSelection) return deleteSelection(editor);
+  try {
+    editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, active.path)));
+    return deleteSelection(editor);
+  } catch { return false; }
 }
 
 export function insertQuote(editor: Editor, text = ''): boolean {

@@ -340,7 +340,13 @@ export function mapSelection(selection: AnySelection, before: Node, after: Node,
     const from = map.map(selection.structuralFrom, 1);
     const to = map.map(selection.structuralTo, -1);
     const path = from < to ? findMappedNodePath(after, from, to, [selection.nodeType]) : null;
-    return path ? new NodeSelection(after, path) : new GapSelection(after, from, 1);
+    if (path) return new NodeSelection(after, path);
+    const selectedNode = getNodeAtPath(before, selection.nodePath);
+    if (selectedNode.type.isInline) {
+      const point = positionToTextPoint(after, from, 1);
+      return Selection.cursor(point.path, point.offset);
+    }
+    return new GapSelection(after, from, 1);
   }
   if (selection instanceof CellSelection) {
     const anchorFrom = nodeRangeAtPath(before, selection.anchorCellPath).from;

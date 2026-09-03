@@ -178,8 +178,10 @@ A `Plugin` may define state plus event/lifecycle props:
 
 `appendTransaction(transactions, oldState, newState)` may return a validated
 follow-up transaction. Dispatch applies follow-ups to a fixed point with a
-20-pass loop guard, then notifies subscribers once with the final state. Table
-repair uses this hook and tags its transaction as non-historical.
+20-pass loop guard, then notifies subscribers once with the final state and one
+composed transaction containing every applied step/map. Async anchors, views,
+and host subscribers therefore observe the complete change. Table repair uses
+this hook and tags its transaction as non-historical.
 
 Event hooks return `true` when they handled an event. The input manager then prevents the browser default. `PluginKey` provides stable access to a plugin's private state.
 
@@ -369,7 +371,22 @@ A new framework adapter needs four operations: create an editor, subscribe to st
 
 Formats are parser/serializer objects owned by extensions. The supplied JSON, Markdown, HTML, and text modules share the schema document as their boundary. HTML import/export and DOM rendering apply protocol and escaping rules; see [FORMATS.md](FORMATS.md).
 
-Media insertion accepts remote URLs or browser `File` objects. Without an upload handler, files become size-limited data URLs. An `ImageUploadHandler` can upload to any storage provider and return a URL plus metadata. Storage credentials and persistence remain host responsibilities.
+Media insertion accepts remote URLs or browser `File` objects. Block images use
+an accessible NodeView for editable captions, load recovery, alignment, and
+pointer/touch/keyboard resize; a separate inline image node can live inside any
+`inline*` container. Both persist only portable, schema-validated source,
+alternative text, dimensions, responsive source, loading, and presentation
+metadata.
+
+Without an upload handler, files become size-limited, cancellable data URLs. An
+`ImageUploadHandler` can upload to any storage provider and returns a URL plus
+metadata while reporting normalized progress. `ImageUploadTask` keeps status,
+errors, cancellation, and retry outside the document. It captures the intended
+insertion, inline-selection, or replacement target and maps that target through
+every transaction until completion. A deleted replacement target fails closed;
+a slow response cannot overwrite a different node that later occupies the same
+path. Paste, drop, React controls, and direct API use share this path. Storage
+credentials, network transport, and persistence remain host responsibilities.
 
 ## Optional AI and MCP
 
@@ -391,6 +408,9 @@ The suites are organized by boundary:
   editing/removal, and safe host-owned activation;
 - `tests/list.test.ts`: multi-range wrapping/conversion, mixed nesting,
   hierarchy-preserving indent/lift/join, and nested HTML/Markdown interchange;
+- `tests/image.test.ts`: block and inline nodes, responsive metadata, mapped
+  uploads, progress/cancellation/retry, stale replacement protection, caption
+  editing, load recovery, and accessible resizing;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;

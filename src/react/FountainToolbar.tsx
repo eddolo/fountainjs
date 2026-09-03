@@ -1,13 +1,15 @@
-import { useId, useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from 'react';
 import {
   addTableColumn,
   addTableRow,
   deleteTableColumn,
   deleteTableRow,
   getActiveTableCell,
+  getActiveImage,
   insertBlock,
   insertHardBreak,
   insertImage,
+  insertInlineImage,
   insertQuote,
   insertTable,
   indentListItem,
@@ -20,6 +22,9 @@ import {
   setBlockType,
   setMark,
   setTextAlignment,
+  setImageAlignment,
+  setImageAttributes,
+  deleteImage,
   mergeTableCells,
   resizeTableColumn,
   selectTableColumn,
@@ -43,7 +48,12 @@ import {
   setCodeBlockLanguage,
   toggleCodeBlockLineNumbers,
 } from '../extensions/plugins/syntax-highlight';
-import { insertImageFile, type ImageUploadHandler } from '../view/media';
+import {
+  startImageUpload,
+  type ImageUploadHandler,
+  type ImageUploadSnapshot,
+  type ImageUploadTask,
+} from '../view/media';
 import { useFountainState } from './useFountain';
 import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
 
@@ -64,7 +74,12 @@ interface ToolButtonProps {
 }
 
 function ToolButton({ label, title, active, disabled, onAction }: ToolButtonProps) {
-  const run = (event: MouseEvent<HTMLButtonElement>) => {
+  const runPointerAction = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    onAction();
+  };
+  const runKeyboardAction = (event: MouseEvent<HTMLButtonElement>) => {
+    if (event.detail !== 0) return;
     event.preventDefault();
     onAction();
   };
@@ -76,7 +91,8 @@ function ToolButton({ label, title, active, disabled, onAction }: ToolButtonProp
       aria-pressed={active}
       title={title}
       disabled={disabled}
-      onMouseDown={run}
+      onMouseDown={runPointerAction}
+      onClick={runKeyboardAction}
     >{label}</button>
   );
 }
@@ -91,16 +107,27 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const [linkText, setLinkText] = useState('');
   const [linkTarget, setLinkTarget] = useState<'_blank' | '_self'>('_blank');
   const [alt, setAlt] = useState('');
+  const [imageTitle, setImageTitle] = useState('');
   const [caption, setCaption] = useState('');
+  const [imageWidth, setImageWidth] = useState('100%');
+  const [imageHeight, setImageHeight] = useState('auto');
+  const [imageAlign, setImageAlign] = useState<'left' | 'center' | 'right'>('center');
+  const [imagePlacement, setImagePlacement] = useState<'block' | 'inline'>('block');
+  const [imageSrcset, setImageSrcset] = useState('');
+  const [imageSizes, setImageSizes] = useState('');
+  const [imageTask, setImageTask] = useState<ImageUploadTask | null>(null);
+  const [uploadSnapshot, setUploadSnapshot] = useState<ImageUploadSnapshot | null>(null);
   const [query, setQuery] = useState('');
   const [replacement, setReplacement] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('text');
   const [tableWidth, setTableWidth] = useState('120');
+  useEffect(() => imageTask?.subscribe(setUploadSnapshot), [imageTask]);
   if (!editor) return null;
   const mark = (name: string) => () => toggleMark(editor, name);
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
   const activeTable = getActiveTableCell(editor);
+  const activeImage = getActiveImage(editor);
   const clipboardHistory = getClipboardHistoryState(editor);
 
   const toggleLinkPanel = () => {
@@ -128,12 +155,48 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
 
   const submitImage = (event: FormEvent) => {
     event.preventDefault();
-    if (insertImage(editor, { src: url, alt, caption })) {
+    const attrs = {
+      src: url,
+      alt,
+      title: imageTitle,
+      caption,
+      width: imageWidth,
+      height: imageHeight,
+      align: imageAlign,
+      srcset: imageSrcset,
+      sizes: imageSizes,
+    };
+    const accepted = activeImage
+      ? setImageAttributes(editor, attrs)
+      : imagePlacement === 'inline'
+        ? insertInlineImage(editor, attrs)
+        : insertImage(editor, attrs);
+    if (accepted) {
       setURL('');
       setAlt('');
+      setImageTitle('');
       setCaption('');
       setPanel(null);
     }
+  };
+
+  const toggleImagePanel = () => {
+    if (panel === 'image') {
+      setPanel(null);
+      return;
+    }
+    const attrs = activeImage?.node.attrs;
+    setURL(String(attrs?.src ?? ''));
+    setAlt(String(attrs?.alt ?? ''));
+    setImageTitle(String(attrs?.title ?? ''));
+    setCaption(String(attrs?.caption ?? ''));
+    setImageWidth(String(attrs?.width ?? '100%'));
+    setImageHeight(String(attrs?.height ?? 'auto'));
+    setImageAlign((attrs?.align as 'left' | 'center' | 'right' | undefined) ?? 'center');
+    setImagePlacement(activeImage?.inline ? 'inline' : 'block');
+    setImageSrcset(String(attrs?.srcset ?? ''));
+    setImageSizes(String(attrs?.sizes ?? ''));
+    setPanel('image');
   };
 
   const toggleCodePanel = () => {
@@ -159,8 +222,24 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
 
   const chooseImage = async (file?: File) => {
     if (!file) return;
-    try { await insertImageFile(editor, file, { upload: imageUpload }); }
-    catch (error) { onError?.(error); }
+    try {
+      const task = startImageUpload(editor, file, {
+        upload: imageUpload,
+        replacePath: activeImage?.path,
+        placement: activeImage ? undefined : imagePlacement,
+        alt: alt || undefined,
+        title: imageTitle || undefined,
+        caption: caption || undefined,
+        width: imageWidth,
+        height: imageHeight,
+        align: imageAlign,
+        srcset: imageSrcset,
+        sizes: imageSizes,
+      });
+      setImageTask(task);
+      setPanel('image');
+      void task.completion.catch((error) => onError?.(error));
+    } catch (error) { onError?.(error); }
     if (fileInput.current) fileInput.current.value = '';
   };
 
@@ -195,9 +274,9 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="A×" title="Remove text color" disabled={!isMarkActive(editor, 'text_color')} onAction={() => unsetMark(editor, 'text_color')} />
         </div>
         <div className="fountain-toolbar__group" aria-label="Alignment">
-          <ToolButton label="≡←" title="Align left" onAction={() => setTextAlignment(editor, 'left')} />
-          <ToolButton label="≡" title="Align center" onAction={() => setTextAlignment(editor, 'center')} />
-          <ToolButton label="→≡" title="Align right" onAction={() => setTextAlignment(editor, 'right')} />
+          <ToolButton label="≡←" title="Align left" active={activeImage?.node.attrs.align === 'left'} onAction={() => activeImage ? setImageAlignment(editor, 'left') : setTextAlignment(editor, 'left')} />
+          <ToolButton label="≡" title="Align center" active={activeImage?.node.attrs.align === 'center'} onAction={() => activeImage ? setImageAlignment(editor, 'center') : setTextAlignment(editor, 'center')} />
+          <ToolButton label="→≡" title="Align right" active={activeImage?.node.attrs.align === 'right'} onAction={() => activeImage ? setImageAlignment(editor, 'right') : setTextAlignment(editor, 'right')} />
           <ToolButton label="☰" title="Justify" onAction={() => setTextAlignment(editor, 'justify')} />
         </div>
         <div className="fountain-toolbar__group" aria-label="Insert blocks">
@@ -209,8 +288,8 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="⇥" title="Indent list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => indentListItem(editor)} />
           <ToolButton label="{ }" title="Code block and language" active={Boolean(activeCodeBlock)} onAction={toggleCodePanel} />
           <ToolButton label="▦" title="Insert 3 by 3 table" onAction={() => insertTable(editor)} />
-          <ToolButton label="IMG" title="Insert image from URL" onAction={() => setPanel(panel === 'image' ? null : 'image')} />
-          <ToolButton label="↑IMG" title="Upload image" onAction={() => fileInput.current?.click()} />
+          <ToolButton label="IMG" title={activeImage ? 'Edit selected image' : 'Insert image from URL'} active={Boolean(activeImage)} onAction={toggleImagePanel} />
+          <ToolButton label="↑IMG" title={activeImage ? 'Replace selected image' : 'Upload image'} onAction={() => fileInput.current?.click()} />
           <ToolButton label="—" title="Divider" onAction={() => insertBlock(editor, 'horizontal_rule')} />
           <ToolButton label="↵" title="Line break" onAction={() => insertHardBreak(editor)} />
         </div>
@@ -250,12 +329,52 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
       {panel === 'image' && <form className="fountain-toolbar__popover is-image" onSubmit={submitImage}>
-        <strong>Insert an image</strong>
-        <input aria-label="Image URL" required type="url" placeholder="https://example.com/image.jpg" value={url} onChange={(event) => setURL(event.target.value)} />
+        <strong>{activeImage ? 'Edit image' : 'Add image'}</strong>
+        {!activeImage && <select aria-label="Image placement" value={imagePlacement} onChange={(event) => {
+          const placement = event.target.value as 'block' | 'inline';
+          setImagePlacement(placement);
+          setImageWidth(placement === 'inline' ? 'auto' : '100%');
+          setImageHeight(placement === 'inline' ? '1em' : 'auto');
+        }}>
+          <option value="block">Block image</option>
+          <option value="inline">Inline with text</option>
+        </select>}
+        <input aria-label="Image URL" required inputMode="url" placeholder="https://example.com/image.jpg" value={url} onChange={(event) => setURL(event.target.value)} />
         <input aria-label="Alternative text" placeholder="Alternative text" value={alt} onChange={(event) => setAlt(event.target.value)} />
-        <input aria-label="Image caption" placeholder="Caption (optional)" value={caption} onChange={(event) => setCaption(event.target.value)} />
-        <button type="submit">Insert image</button>
-        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+        <input aria-label="Image title" placeholder="Title (optional)" value={imageTitle} onChange={(event) => setImageTitle(event.target.value)} />
+        {!activeImage?.inline && imagePlacement === 'block' && <textarea aria-label="Image caption" placeholder="Caption (optional)" value={caption} onChange={(event) => setCaption(event.target.value)} />}
+        <label>Width <input aria-label="Image width" required placeholder="100% or 640px" value={imageWidth} onChange={(event) => setImageWidth(event.target.value)} /></label>
+        <label>Height <input aria-label="Image height" required placeholder="auto" value={imageHeight} onChange={(event) => setImageHeight(event.target.value)} /></label>
+        {!activeImage?.inline && imagePlacement === 'block' && <select aria-label="Image alignment" value={imageAlign} onChange={(event) => setImageAlign(event.target.value as 'left' | 'center' | 'right')}>
+          <option value="left">Align left</option>
+          <option value="center">Align center</option>
+          <option value="right">Align right</option>
+        </select>}
+        <details>
+          <summary>Responsive sources</summary>
+          <input aria-label="Image source set" placeholder="small.jpg 480w, large.jpg 1200w" value={imageSrcset} onChange={(event) => setImageSrcset(event.target.value)} />
+          <input aria-label="Image sizes" placeholder="(max-width: 600px) 100vw, 600px" value={imageSizes} onChange={(event) => setImageSizes(event.target.value)} />
+        </details>
+        <div className="fountain-toolbar__image-actions">
+          <button type="submit">{activeImage ? 'Save image' : 'Insert URL'}</button>
+          <button type="button" onClick={() => fileInput.current?.click()}>{activeImage ? 'Replace file' : 'Choose file'}</button>
+          {activeImage && <button type="button" onClick={() => { deleteImage(editor); setPanel(null); }}>Delete image</button>}
+          <button type="button" onClick={() => setPanel(null)}>Close</button>
+        </div>
+        {uploadSnapshot && <div className="fountain-image-upload" role="status" aria-live="polite">
+          <span>{uploadSnapshot.status === 'uploading'
+            ? `Uploading ${uploadSnapshot.fileName}: ${Math.round(uploadSnapshot.progress * 100)}%`
+            : uploadSnapshot.status === 'succeeded'
+              ? `${uploadSnapshot.fileName} inserted`
+              : uploadSnapshot.status === 'cancelled'
+                ? `${uploadSnapshot.fileName} cancelled`
+                : `Upload failed: ${uploadSnapshot.error instanceof Error ? uploadSnapshot.error.message : 'Unknown error'}`}</span>
+          {uploadSnapshot.status === 'uploading' && <>
+            <progress max="1" value={uploadSnapshot.progress} />
+            <button type="button" onClick={() => imageTask?.cancel()}>Cancel upload</button>
+          </>}
+          {uploadSnapshot.status === 'failed' && <button type="button" onClick={() => void imageTask?.retry().catch((error) => onError?.(error))}>Retry upload</button>}
+        </div>}
       </form>}
       {panel === 'code' && <form className="fountain-toolbar__popover is-code" onSubmit={submitCodeLanguage}>
         <strong>Code block</strong>

@@ -17,6 +17,7 @@ import { hardBreak } from './nodes/hard-break';
 import { heading } from './nodes/heading';
 import { horizontalRule } from './nodes/horizontal-rule';
 import { imageSuper } from './nodes/image-super';
+import { inlineImage } from './nodes/inline-image';
 import { listItem } from './nodes/list-item';
 import { orderedList } from './nodes/ordered-list';
 import { paragraph } from './nodes/paragraph';
@@ -60,6 +61,9 @@ export * from './nodes/hard-break';
 export * from './nodes/heading';
 export * from './nodes/horizontal-rule';
 export * from './nodes/image-super';
+export * from './nodes/image-attributes';
+export * from './nodes/image-node-view';
+export * from './nodes/inline-image';
 export * from './nodes/list-item';
 export * from './nodes/ordered-list';
 export * from './nodes/paragraph';
@@ -95,7 +99,7 @@ export const CoreExtension = defineExtension({
     bullet_list: bulletList, ordered_list: orderedList, list_item: listItem,
     task_list: taskList, task_item: taskItem,
     code_block: codeBlock, horizontal_rule: horizontalRule, hard_break: hardBreak,
-    image_super: imageSuper, figcaption,
+    image_super: imageSuper, inline_image: inlineImage, figcaption,
     table, table_row: tableRow, table_header: tableHeader, table_cell: tableCell,
   },
   marks: { strong, em, underline, strike, code, highlight, link, text_color: textColor, subscript, superscript },

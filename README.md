@@ -203,11 +203,14 @@ const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
 const view = new EditorView(document.querySelector('#editor')!, editor, {
   placeholder: 'Start writing…',
   ariaLabel: 'Article body',
-  imageUpload: async (file) => {
+  imageUpload: async (file, { signal, reportProgress }) => {
     const body = new FormData();
     body.append('file', file);
-    const response = await fetch('/api/media', { method: 'POST', body });
-    return response.json(); // { src, alt?, title?, caption?, width? }
+    const response = await uploadWithProgress('/api/media', body, {
+      signal,
+      onProgress: reportProgress,
+    });
+    return response.json(); // { src, alt?, caption?, width?, srcset?, sizes? }
   },
 });
 
@@ -218,6 +221,37 @@ stopSaving();
 view.destroy();
 editor.destroy();
 ```
+
+### Production images
+
+Block images support editable captions, alternative text, titles, left/centre/
+right alignment, responsive `srcset`/`sizes`, safe load settings, explicit width
+and height, load-error recovery, and mouse, touch, or keyboard resizing. Use
+`insertInlineImage` when the image must live between text fragments. Both forms
+remain typed, selectable nodes and round-trip through JSON and HTML; standard
+Markdown image syntax covers their portable subset.
+
+`startImageUpload` returns an observable task. Its insertion or replacement
+target maps through edits made while the upload is running, so a slow response
+cannot silently overwrite the wrong image. The host owns the transport and can
+report progress; FountainJS supplies cancellation, retry state, validation, and
+safe insertion:
+
+```ts
+const task = startImageUpload(editor, file, {
+  placement: 'block', // or 'inline'
+  upload: async (file, { signal, reportProgress }) =>
+    myAssets.upload(file, { signal, onProgress: reportProgress }),
+})
+
+const unsubscribe = task.subscribe(snapshot => renderUpload(snapshot))
+task.cancel()
+await task.retry() // available after a failed attempt
+```
+
+Pass `replacePath` to replace an existing block or inline image without losing
+its metadata. Upload state is transient and local; credentials, files, and
+progress never enter document JSON.
 
 ### Web Component
 

@@ -43,5 +43,9 @@ test('keeps the public editor usable without horizontal overflow at a phone view
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toBeVisible();
+  await page.getByRole('button', { name: 'Insert image from URL' }).click();
+  await expect(page.getByLabel('Image URL')).toBeVisible();
+  await page.getByText('Responsive sources', { exact: true }).click();
+  await expect(page.getByLabel('Image source set')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

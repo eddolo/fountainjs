@@ -231,14 +231,14 @@ const save = (event: CustomEvent) => api.save(event.detail.value)
     host: 'Angular',
     surface: 'Angular → Web Component',
     runtime: 'element',
-    summary: 'A campaign editor mixing media, captions, accessible alt text, headings, links, and rich narrative blocks.',
-    boundary: 'Angular enables custom elements; FountainJS receives an upload adapter owned by the application.',
-    capabilities: ['Atomic image selection', 'Upload adapter boundary', 'Accessible metadata', 'Angular custom events'],
+    summary: 'A campaign editor mixing block and inline media, editable captions, responsive metadata, accessible resizing, and rich narrative blocks.',
+    boundary: 'Angular enables custom elements; FountainJS receives an observable upload adapter owned by the application.',
+    capabilities: ['Block and inline images', 'Progress/cancel/retry upload boundary', 'Caption, alignment, and responsive metadata', 'Pointer and keyboard resizing'],
     content: doc(
       heading(1, 'A launch story with real media'),
-      paragraph(text('Images are typed block nodes with source, alt text, title, caption, and width metadata.')),
-      { type: 'image_super', attrs: { src: '../demo-media.svg', alt: 'Abstract purple and mint shapes representing composable content', title: 'Composable content', caption: 'Media remains portable metadata; storage stays host-owned.', width: '100%' } },
-      paragraph(text('Paste or drop another image to exercise the same media path used by the React and DOM surfaces.')),
+      paragraph(text('Images are typed nodes with source, alt text, title, caption, layout, and responsive metadata. This '), { type: 'inline_image', attrs: { src: '../demo-media.svg', alt: 'inline media example', width: '1.5em', height: '1.5em' } }, text(' image lives inside the sentence.')),
+      { type: 'image_super', attrs: { src: '../demo-media.svg', alt: 'Abstract purple and mint shapes representing composable content', title: 'Composable content', caption: 'Select me to edit the caption or resize from either side.', width: '100%', align: 'center', srcset: '../demo-media.svg 800w', sizes: '100vw' } },
+      paragraph(text('Paste or drop another image to exercise mapped progress, cancellation, retry, and replacement through the same host-owned media boundary.')),
     ),
     code: `import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { StarterKit, registerFountainElement } from 'fountainjs-editor'
@@ -255,7 +255,8 @@ export class CampaignEditor {
     registerFountainElement({
       schema: StarterKit.schema,
       plugins: StarterKit.plugins,
-      imageUpload: file => this.assets.upload(file),
+      imageUpload: (file, { signal, reportProgress }) =>
+        this.assets.upload(file, { signal, onProgress: reportProgress }),
     })
   }
 }`,

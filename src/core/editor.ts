@@ -23,6 +23,18 @@ interface CommandBatch {
   transactions: Transaction[];
 }
 
+function composeAppliedTransactions(initialState: EditorState, transactions: readonly Transaction[]): Transaction {
+  if (transactions.length === 1) return transactions[0] as Transaction;
+  const combined = initialState.createTransaction();
+  transactions.forEach((transaction) => {
+    transaction.steps.forEach((step) => combined.step(step));
+    if (transaction.selectionSet) combined.setSelection(transaction.selection);
+    if (transaction.storedMarksSet) combined.setStoredMarks(transaction.storedMarks);
+    transaction.getMetaEntries().forEach(([key, value]) => combined.setMeta(key, value));
+  });
+  return combined;
+}
+
 export class Editor {
   private currentState: EditorState;
   private readonly subscribers = new Set<StateChangeCallback>();
@@ -68,8 +80,9 @@ export class Editor {
       if (!appended) break;
       if (pass === 19) throw new Error('Plugin appendTransaction loop exceeded 20 passes.');
     }
-    this.subscribers.forEach((callback) => callback(this.currentState, transaction));
-    this.onUpdate?.(this.currentState, transaction);
+    const notification = composeAppliedTransactions(oldState, applied);
+    this.subscribers.forEach((callback) => callback(this.currentState, notification));
+    this.onUpdate?.(this.currentState, notification);
   }
 
   /**

@@ -17,6 +17,35 @@ function safeURL(value: unknown, allowDataImage = false): string {
   return isSafeURL(url, { allowDataImage }) ? escapeHTML(url) : '';
 }
 
+function safeSrcset(value: unknown): string {
+  const source = String(value ?? '').trim();
+  if (!source) return '';
+  const valid = source.split(',').every((candidate) => {
+    const [url, descriptor, ...rest] = candidate.trim().split(/\s+/);
+    return rest.length === 0
+      && isSafeURL(url)
+      && (descriptor === undefined || /^(?:\d+w|\d+(?:\.\d+)?x)$/.test(descriptor));
+  });
+  return valid ? escapeHTML(source) : '';
+}
+
+function imageAttributes(node: Node): string {
+  const src = safeURL(node.attrs.src, true);
+  if (!src) return '';
+  const title = node.attrs.title ? ` title="${escapeHTML(node.attrs.title)}"` : '';
+  const sourceSet = safeSrcset(node.attrs.srcset);
+  const srcset = sourceSet ? ` srcset="${sourceSet}"` : '';
+  const sizes = node.attrs.sizes ? ` sizes="${escapeHTML(node.attrs.sizes)}"` : '';
+  const loading = node.attrs.loading === 'eager' ? 'eager' : 'lazy';
+  const decoding = ['auto', 'sync', 'async'].includes(String(node.attrs.decoding)) ? node.attrs.decoding : 'async';
+  return `src="${src}" alt="${escapeHTML(node.attrs.alt)}"${title}${srcset}${sizes} loading="${loading}" decoding="${decoding}"`;
+}
+
+function imageSize(value: unknown, fallback: string): string {
+  const size = String(value ?? '');
+  return /^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw|vh))$/.test(size) ? size : fallback;
+}
+
 function tableCellSizeAttributes(node: Node): string {
   const colspan = Number(node.attrs.colspan) || 1;
   const widths = Array.isArray(node.attrs.colwidth) ? node.attrs.colwidth.map(Number) : [];
@@ -65,12 +94,21 @@ function renderNode(node: Node): string {
     case 'hard_break': return '<br>';
     case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
     case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
+    case 'inline_image': {
+      const attributes = imageAttributes(node);
+      if (!attributes) return '';
+      const width = imageSize(node.attrs.width, 'auto');
+      const height = imageSize(node.attrs.height, '1em');
+      return `<img ${attributes} data-fountain-inline-image="true" style="width:${escapeHTML(width)};height:${escapeHTML(height)}">`;
+    }
     case 'image_super': {
-      const src = safeURL(node.attrs.src, true);
-      if (!src) return '';
+      const attributes = imageAttributes(node);
+      if (!attributes) return '';
       const caption = escapeHTML(node.attrs.caption);
-      const width = /^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw))$/.test(String(node.attrs.width)) ? String(node.attrs.width) : '100%';
-      return `<figure style="max-width:${escapeHTML(width)}"><img src="${src}" alt="${escapeHTML(node.attrs.alt)}"${node.attrs.title ? ` title="${escapeHTML(node.attrs.title)}"` : ''} loading="lazy">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+      const width = imageSize(node.attrs.width, '100%');
+      const height = imageSize(node.attrs.height, 'auto');
+      const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
+      return `<figure data-align="${align}" style="width:${escapeHTML(width)};max-width:100%"><img ${attributes} style="width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
     }
     case 'figcaption': return `<figcaption>${children()}</figcaption>`;
     case 'table': return `<table><tbody>${children()}</tbody></table>`;

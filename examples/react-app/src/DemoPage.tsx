@@ -186,11 +186,29 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
   const mount = useRef<HTMLDivElement>(null);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentDocument, setCurrentDocument] = useState<Node>();
+  const [uploadStatus, setUploadStatus] = useState('');
 
   useEffect(() => {
     if (!mount.current) return;
     const tagName = 'fountain-demo-editor';
-    registerFountainElement({ tagName, schema: StarterKit.schema, plugins: StarterKit.plugins, placeholder: 'Edit through the Custom Element…' });
+    registerFountainElement({
+      tagName,
+      schema: StarterKit.schema,
+      plugins: StarterKit.plugins,
+      placeholder: 'Edit through the Custom Element…',
+      imageUpload: demo.slug === 'angular-media' ? async (file, { signal, reportProgress }) => {
+        reportProgress(.25);
+        await new Promise<void>((resolve, reject) => {
+          const timer = window.setTimeout(resolve, 220);
+          signal.addEventListener('abort', () => {
+            window.clearTimeout(timer);
+            reject(new DOMException('Upload cancelled', 'AbortError'));
+          }, { once: true });
+        });
+        reportProgress(1);
+        return { src: '../demo-media.svg', alt: file.name.replace(/\.[^.]+$/, ''), caption: 'Uploaded through the demo host adapter.' };
+      } : undefined,
+    });
     const element = document.createElement(tagName) as FountainEditorElement;
     element.value = demo.content;
     const onChange = (event: Event) => {
@@ -198,19 +216,27 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
       setCurrentDocument(detail.state.doc);
       setEditor(element.editor ?? null);
     };
+    const onUpload = (event: Event) => {
+      const snapshot = (event as CustomEvent<{ snapshot: { fileName: string; status: string; progress: number } }>).detail.snapshot;
+      setUploadStatus(snapshot.status === 'uploading'
+        ? `Uploading ${snapshot.fileName}: ${Math.round(snapshot.progress * 100)}%`
+        : `${snapshot.fileName}: ${snapshot.status}`);
+    };
     element.addEventListener('fountain-change', onChange);
+    element.addEventListener('fountain-image-upload', onUpload);
     mount.current.appendChild(element);
     setEditor(element.editor ?? null);
     setCurrentDocument(element.editor?.state.doc);
     return () => {
       element.removeEventListener('fountain-change', onChange);
+      element.removeEventListener('fountain-image-upload', onUpload);
       element.remove();
       setEditor(null);
     };
   }, [demo]);
 
   return <div className="demo-workspace">
-    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>The editable region below is a registered &lt;fountain-demo-editor&gt;.</i></div><DemoControls editor={editor} /><div className="element-editor" ref={mount} /></section>
+    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>The editable region below is a registered &lt;fountain-demo-editor&gt;.</i></div><DemoControls editor={editor} /><div className="element-editor" ref={mount} />{demo.slug === 'angular-media' && <p className="headless-status" role="status">{uploadStatus || 'Paste or drop an image to run the host upload adapter.'}</p>}</section>
     <OutputPanel document={currentDocument} />
   </div>;
 }

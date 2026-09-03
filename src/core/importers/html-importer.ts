@@ -11,6 +11,11 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     if (!(child instanceof HTMLElement)) return;
     const tag = child.tagName.toLowerCase();
     if (tag === 'br' && schema.nodes.hard_break) { result.push(schema.node('hard_break')); return; }
+    if (tag === 'img' && schema.nodes.inline_image) {
+      const image = imageNode(child as HTMLImageElement, schema, 'inline_image');
+      if (image) result.push(image);
+      return;
+    }
     if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
       const latex = child.getAttribute('data-latex') ?? child.textContent ?? '';
       const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
@@ -31,6 +36,44 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     result.push(...inlineChildren(child, schema, nextMarks));
   });
   return result;
+}
+
+function imageSize(value: string, fallback: string): string {
+  const normalized = value.trim();
+  if (/^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw|vh))$/.test(normalized)) return normalized;
+  if (/^\d+(?:\.\d+)?$/.test(normalized) && Number(normalized) > 0) return `${normalized}px`;
+  return fallback;
+}
+
+function imageNode(
+  image: HTMLImageElement,
+  schema: Schema,
+  type: 'image_super' | 'inline_image',
+  container?: HTMLElement,
+): FountainNode | null {
+  const src = image.getAttribute('src') ?? '';
+  if (!isSafeURL(src, { allowDataImage: true }) || !schema.nodes[type]) return null;
+  const block = type === 'image_super';
+  const width = imageSize(
+    container?.style.width || container?.style.maxWidth || image.style.width || image.getAttribute('width') || '',
+    block ? '100%' : 'auto',
+  );
+  const height = imageSize(image.style.height || image.getAttribute('height') || '', block ? 'auto' : '1em');
+  try {
+    return schema.node(type, {
+      src,
+      alt: image.alt,
+      title: image.title,
+      width,
+      height,
+      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
+      srcset: image.getAttribute('srcset') ?? '',
+      sizes: image.getAttribute('sizes') ?? '',
+      loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
+      decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '') ? image.getAttribute('decoding') : 'async',
+      ...(block ? { caption: container?.querySelector(':scope > figcaption')?.textContent ?? '' } : {}),
+    });
+  } catch { return null; }
 }
 
 function alignment(element: Element): 'left' | 'center' | 'right' | 'justify' {
@@ -115,12 +158,14 @@ function block(element: Element, schema: Schema): FountainNode[] {
     return [schema.node(listType, tag === 'ol' ? { start: Number(element.getAttribute('start')) || 1 } : {}, items)];
   }
   if (tag === 'figure') {
-    const image = element.querySelector('img');
-    const src = image?.getAttribute('src') ?? '';
-    if (!image || !isSafeURL(src, { allowDataImage: true })) return [];
-    return [schema.node('image_super', {
-      src, alt: image.alt, title: image.title, width: '100%', caption: element.querySelector('figcaption')?.textContent ?? '',
-    })];
+    const images = Array.from(element.querySelectorAll(':scope > img'));
+    if (images.length !== 1) {
+      return Array.from(element.querySelectorAll('img'))
+        .map((candidate) => imageNode(candidate as HTMLImageElement, schema, 'image_super'))
+        .filter((candidate): candidate is FountainNode => Boolean(candidate));
+    }
+    const image = imageNode(images[0] as HTMLImageElement, schema, 'image_super', element as HTMLElement);
+    return image ? [image] : [];
   }
   if (tag === 'table') {
     const rows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tr')).map((row) => schema.node('table_row', {},
@@ -142,8 +187,8 @@ function block(element: Element, schema: Schema): FountainNode[] {
     return rows.length ? [schema.node('table', {}, rows)] : [];
   }
   if (tag === 'img') {
-    const src = element.getAttribute('src') ?? '';
-    return isSafeURL(src, { allowDataImage: true }) ? [schema.node('image_super', { src, alt: element.getAttribute('alt') ?? '', title: element.getAttribute('title') ?? '', width: '100%', caption: '' })] : [];
+    const image = imageNode(element as HTMLImageElement, schema, 'image_super');
+    return image ? [image] : [];
   }
   const nested = Array.from(element.children).flatMap((child) => block(child, schema));
   return nested.length ? nested : [paragraph(element, schema)];

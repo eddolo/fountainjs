@@ -479,9 +479,10 @@ Commands return whether they handled the operation:
 - `insertText`, `insertPlainText`, `insertHardBreak`, `deleteSelection`, `deleteBackward`, and `deleteForward`
 - `selectText`, `selectTextRange`, `selectNode`, `selectGap`, `selectAll`, `selectCells`, `selectAdjacentNode`, and `extendCellSelection`
 - `setContent`, `setBlockType`, and `insertBlock`
-- `insertNode`, `insertImage`, `insertQuote`, `insertList`, and `insertTable`
+- `insertNode`, `insertImage`, `insertInlineImage`, `insertQuote`, `insertList`, and `insertTable`
 - `isMarkActive`, `toggleMark`, `setMark`, `unsetMark`, `setLink`, and `unsetLink`
 - `setTextAlignment`, `splitBlock`, `joinBackward`, and `joinForward`
+- `getActiveImage`, `setImageAttributes`, `setImageAlignment`, and `deleteImage`
 - `setNodeAttributes`, `removeNode`, `moveBlock`, `toggleTaskItem`, `toggleList`, `indentListItem`, and `outdentListItem`
 - `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, and `moveTableCell`
 - `undo`, `redo`, `canUndo`, `canRedo`, and `closeHistory`
@@ -518,7 +519,7 @@ focused.
 
 ## Plugins
 
-A `Plugin` can own immutable state, contribute a `DecorationSet`, intercept `keydown`, `beforeinput`, text input, copy, cut, paste, drop, and click events, and append a follow-up transaction after a state update. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
+A `Plugin` can own immutable state, contribute a `DecorationSet`, intercept `keydown`, `beforeinput`, text input, copy, cut, paste, drop, and click events, and append a follow-up transaction after a state update. It can also receive editor create/destroy lifecycle callbacks. Dispatch reaches a guarded fixed point, then subscribers receive the final state and one transaction composed from the original plus every follow-up map. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
 
 ### History
 
@@ -596,6 +597,38 @@ return its own transaction or document for more specialized structures.
 ## DOM view
 
 `new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+
+### Images and uploads
+
+`image_super` is the captioned block image; `inline_image` is an atomic inline
+node for icons, badges, and images between text. Shared attributes are `src`,
+`alt`, `title`, `width`, `height`, `align`, `srcset`, `sizes`, `loading`, and
+`decoding`; block images also carry `caption`. URL, CSS-size, responsive-source,
+and enum values are schema-validated. `createImageNode` creates a node without
+dispatching, while `insertImage` and `insertInlineImage` use the active
+selection. `setImageAttributes`, `setImageAlignment`, and `deleteImage` operate
+on a selected image or an explicit live path.
+
+The block-image NodeView supplies a multiline caption field, selection state,
+load-error status and retry, and two resize sliders. Drag either handle with a
+pointer/touch input, or focus it and use Left/Right (10 px), Shift+Left/Right
+(50 px), Home (minimum), or End (maximum). Captions and controls disappear
+safely in read-only mode while populated caption text remains visible.
+
+`startImageUpload(editor, file, options)` returns an `ImageUploadTask` with
+`snapshot`, `completion`, `subscribe(listener)`, `cancel()`, and `retry()`.
+Snapshots contain `status`, normalized `progress`, `attempt`, and any error.
+The injected `ImageUploadHandler` receives `{ editor, signal, reportProgress }`
+and returns a URL or `ImageAttributes`. `placement: 'inline'` inserts inline;
+`replacePath` safely replaces a mapped existing image. Upload targets map through
+transactions while work is pending, and deletion makes a replacement fail
+instead of applying to an unrelated node. Without a handler, `FileReader`
+creates a size-limited data URL and honors cancellation.
+
+Paste and drop use the same task path and emit bubbling
+`fountain-image-upload` events whose detail contains `{ snapshot, task }`.
+Upload state is deliberately absent from document JSON. Hosts own file storage,
+authentication, retry policy beyond a task, and persistence.
 
 The controlled `beforeinput` path covers normal/replacement text, composition
 commit orderings, paragraph and line breaks, forward/backward deletion,

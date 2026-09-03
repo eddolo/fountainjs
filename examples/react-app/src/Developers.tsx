@@ -25,6 +25,20 @@ const view = new EditorView(mount, editor, {
   imageUpload: file => uploadToMyStorage(file),
 })`;
 
+const mediaExample = `const task = startImageUpload(editor, file, {
+  placement: 'block', // or 'inline'
+  // Use replacePath to update an existing image safely.
+  upload: async (file, { signal, reportProgress }) =>
+    assets.upload(file, { signal, onProgress: reportProgress }),
+})
+
+task.subscribe(({ status, progress, error }) => {
+  renderUploadState({ status, progress, error })
+})
+
+task.cancel()       // abort signal reaches the host adapter
+await task.retry()  // retries the same mapped destination after failure`;
+
 const extensionExample = `import { defineExtension, insertNode } from 'fountainjs-editor'
 
 export const callout = defineExtension({
@@ -286,7 +300,7 @@ function Developers() {
             <p><code>LeanExtension</code> is equally optional and works source-only: portable Lean blocks, Unicode shortcuts, highlighting, and a clear <code>LeanInfoView</code> do not require a server. An injected <code>LeanProvider</code> may add mapped diagnostics, goals, hover, and completion through a local, self-hosted, managed, or one-shot service. FountainJS chooses no endpoint and stores no credentials; see the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/LEAN.md">Lean provider and security guide</a>.</p>
             <h3>Stateful behavior belongs in plugins</h3>
             <Code>{pluginExample}</Code>
-            <p>Plugins can intercept keyboard, before-input, text-input, copy, cut, paste, drop, and click events, run editor create/destroy lifecycle hooks, and append validated follow-up transactions. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
+            <p>Plugins can intercept keyboard, before-input, text-input, copy, cut, paste, drop, and click events, run editor create/destroy lifecycle hooks, and append validated follow-up transactions. Dispatch resolves those follow-ups first; subscribers receive one complete mapped transaction and the final state. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
           </section>
 
           <section className="dev-section" id="surfaces">
@@ -306,7 +320,9 @@ function Developers() {
             <h2>Storage and uploads stay outside the core.</h2>
             <p>JSON is lossless and is the recommended persistence format. Markdown, HTML, and text are modular boundaries for publishing and interchange. A product-specific format is just a parser/serializer pair contributed by an extension.</p>
             <Code>{formatExample}</Code>
-            <p>Images support safe URLs, data URLs, captions, alt text, titles, and width metadata. By default local files become data URLs with a size limit. Pass an <code>imageUpload(file, context)</code> handler to store files anywhere and return the permanent URL/metadata. FountainJS never assumes a vendor or backend.</p>
+            <p>Block images support editable captions, alt text, titles, alignment, responsive source sets, explicit dimensions, load recovery, and pointer, touch, or keyboard resizing. <code>inline_image</code> is a separate typed node that can sit between text. Both are selectable and portable through JSON and HTML.</p>
+            <Code>{mediaExample}</Code>
+            <p>Upload progress, errors, cancellation, and retry stay transient. The intended insertion or replacement target maps through edits made during the upload; if a replacement image is deleted, the response fails closed instead of overwriting another node. By default local files become size-limited data URLs. A host can pass <code>imageUpload(file, context)</code> for any storage provider; credentials and files never enter FountainJS configuration or document state.</p>
           </section>
 
           <section className="dev-section" id="ai-mcp">

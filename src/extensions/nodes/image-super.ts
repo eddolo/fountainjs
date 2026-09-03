@@ -1,14 +1,19 @@
-import { isSafeURL, type NodeSpec } from '../../core';
+import type { NodeSpec } from '../../core';
+import { ImageNodeView } from './image-node-view';
+import { imageAttributes, imageDOMAttributes, imageText } from './image-attributes';
+
 export const imageSuper: NodeSpec = {
   group: 'block', atom: true,
   attrs: {
-    src: { default: '', validate: (value) => isSafeURL(value, { allowDataImage: true }) },
-    alt: { default: '', validate: (value) => typeof value === 'string' },
-    title: { default: '', validate: (value) => typeof value === 'string' },
-    width: { default: '100%', validate: (value) => typeof value === 'string' && /^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw))$/.test(value) },
-    caption: { default: '', validate: (value) => typeof value === 'string' },
+    ...imageAttributes,
+    caption: { default: '', validate: (value: unknown) => typeof value === 'string' && value.length <= 20_000 },
   },
-  toDOM: (node) => ['figure', { style: `max-width:${String(node.attrs.width)}` },
-    ['img', { src: node.attrs.src, alt: node.attrs.alt, title: node.attrs.title, loading: 'lazy' }],
+  toText: (node) => imageText(node.attrs),
+  toDOM: (node) => ['figure', {
+    'data-align': node.attrs.align,
+    style: `width:${String(node.attrs.width)};max-width:100%`,
+  },
+    ['img', { ...imageDOMAttributes(node.attrs), style: `width:100%;height:${String(node.attrs.height)}` }],
     ['figcaption', String(node.attrs.caption ?? '')]],
+  nodeView: ImageNodeView,
 };
