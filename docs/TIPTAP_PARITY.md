@@ -120,7 +120,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
-| PROD-01 | Cross-browser desktop confidence | Missing | Run behavioural suites in current Chromium, Firefox, and WebKit. |
+| PROD-01 | Cross-browser desktop confidence | Partial | A Chromium/Firefox/WebKit Playwright lane now covers core input, cross-block selection, mapped decorations, input-rule undo, and the React playground; expand it across every editing capability. |
 | PROD-02 | Mobile and IME confidence | Missing | Test iOS Safari, Android Chrome, composition, autocorrect, and virtual keyboards. |
 | PROD-03 | Accessibility conformance | Partial | Establish WCAG 2.2 AA targets, automated checks, manual screen-reader scripts, and fixes. |
 | PROD-04 | RTL and localization | Missing | Add direction-aware editing plus translatable UI strings and locale packages. |

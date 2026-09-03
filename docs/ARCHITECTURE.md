@@ -260,8 +260,10 @@ The suites are organized by boundary:
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeViews, and Web Component behavior in JSDOM;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
 - `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle.
+- `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
+  a Vite-served editor and the public React playground.
 
-Before a release, run `pnpm check`, build the production example, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
+Before a release, run `pnpm check` and `pnpm test:browser`, build the production example, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
 ## Source map
 

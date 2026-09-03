@@ -85,6 +85,8 @@
     "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:browser": "playwright test",
+    "test:browser:chromium": "playwright test --project=chromium",
     "test:watch": "vitest",
     "check": "pnpm typecheck && pnpm test && pnpm build",
     "pack:check": "pnpm pack --dry-run",
@@ -103,6 +105,7 @@
     }
   },
   "devDependencies": {
+    "@playwright/test": "1.62.1",
     "@types/node": "^26.4.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

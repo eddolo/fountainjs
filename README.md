@@ -226,10 +226,13 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 pnpm install
 pnpm dev
 pnpm check
+pnpm test:browser
 pnpm pack:check
 ```
 
-Generated bundles and dependencies are not committed. CI runs type checks, behavioral tests, a production build, and a package dry run.
+Generated bundles and dependencies are not committed. CI runs type checks,
+behavioural tests, production and package builds, plus Playwright contracts in
+Chromium, Firefox, and WebKit. Failed browser runs retain traces and screenshots.
 
 The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes.
 

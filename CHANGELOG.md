@@ -18,6 +18,9 @@
   handlers, a text-replacement helper, and immediate Backspace undo.
 - Markdown shortcuts rebuilt on the public input-rule API, including optional
   language names in fenced-code triggers.
+- Playwright browser contracts for real input events, cross-block selection,
+  mapped decorations, input-rule undo, and the public React playground across
+  Chromium, Firefox, and WebKit, with CI traces retained on failure.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 
