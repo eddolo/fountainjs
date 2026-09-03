@@ -316,6 +316,14 @@ returning renderer, while `createKaTeXRenderer` adapts a host-installed KaTeX
 instance with trust disabled. Rendered markup is view state and never enters
 the document JSON.
 
+Lean follows the same inversion of control. `LeanExtension` stores source in a
+normal language-tagged code block and owns Unicode entry commands. The separate
+`LeanController` extracts one explicit block and talks only to an injected
+`LeanProvider`. Source-only mode is the default; provider descriptors make
+execution location and data destination inspectable. Diagnostics and proof
+state remain transient controller state, and stale provider responses are
+discarded rather than attached to changed content. See [LEAN.md](LEAN.md).
+
 ## Framework surfaces
 
 ### Plain DOM
@@ -352,6 +360,8 @@ The suites are organized by boundary:
 - `tests/extensions.test.ts`: composition, conflicts, and built-in kits;
 - `tests/math.test.ts`: math commands, semantic selections, delimiter rules,
   renderer isolation, validation, safe interchange, and source fallback;
+- `tests/lean.test.ts`: source-only behavior, portable blocks, Unicode entry,
+  provider trust validation, cancellation/staleness, and proof-service results;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
@@ -376,6 +386,7 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 | `src/extensions/` | Composition contract and supplied capabilities |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
+| `src/lean/` | Optional provider-neutral Lean requests and proof state |
 | `tests/` | Behavioral contracts by subsystem |
 
 ## Contribution checklist

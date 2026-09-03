@@ -2,6 +2,7 @@ import {
   Decoration,
   DecorationSet,
   EditorView,
+  LeanExtension,
   Plugin,
   PluginKey,
   StarterKit,
@@ -82,7 +83,7 @@ const browserNodeView = defineExtension({
     },
   },
 });
-const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView]);
+const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView, LeanExtension]);
 
 const editor = createEditor({
   schema: browserKit.schema,

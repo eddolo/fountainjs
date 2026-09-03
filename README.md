@@ -128,6 +128,27 @@ runtime dependency: applications choose their renderer/version and may provide
 another `MathRenderer` that returns a DOM node. Renderer errors keep the source
 visible and editable through `setMathSource`.
 
+## Lean 4 without mandatory hosting
+
+`LeanExtension` is also opt-in. With no provider it supplies portable Lean code
+blocks, insertion/update commands, Unicode backslash shortcuts, highlighting,
+and an explicit source-only controller; no source leaves the editor and no
+verification is claimed. Applications may attach a named local, remote,
+managed, or one-shot provider for diagnostics, goals, hover, and completion.
+There is no built-in endpoint or credential storage.
+
+```ts
+const kit = composeExtensions([...StarterKit.extensions, LeanExtension])
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
+kit.commands.insertLeanBlock(editor, 'example : True := by trivial')
+
+const lean = kit.services.lean.createController(editor)
+await lean.check() // explicit `not-checked` result in source-only mode
+```
+
+See [Lean integration and trust boundaries](docs/LEAN.md) for local bridge and
+provider examples.
+
 ## Use any UI surface
 
 ### Plain DOM

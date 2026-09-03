@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   HTMLExporter,
   JSONExporter,
+  LeanExtension,
   MarkdownExporter,
   MarkdownImporter,
   MathExtension,
@@ -73,6 +74,7 @@ const demoStatusExtension = defineExtension({
 });
 const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
 const mathDemoKit = composeExtensions([...StarterKit.extensions, MathExtension]);
+const headlessDemoKit = composeExtensions([...StarterKit.extensions, MathExtension, LeanExtension]);
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {
   if (!document) return '';
@@ -202,7 +204,7 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
 
 function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const schema = useMemo(() => new Schema(
-    demo.slug === 'node-markdown' ? mathDemoKit.schema : StarterKit.schema,
+    demo.slug === 'node-markdown' ? headlessDemoKit.schema : StarterKit.schema,
   ), [demo.slug]);
   const [source, setSource] = useState(demo.markdown ?? '');
   const parsed = useMemo(() => {

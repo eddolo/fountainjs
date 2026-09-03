@@ -10,9 +10,10 @@ const KEYWORDS: Record<string, string[]> = {
   python: ['and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'False', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'None', 'not', 'or', 'pass', 'raise', 'return', 'True', 'try', 'while', 'with', 'yield'],
   sql: ['alter', 'and', 'as', 'asc', 'by', 'case', 'create', 'delete', 'desc', 'distinct', 'drop', 'else', 'end', 'from', 'group', 'having', 'in', 'insert', 'into', 'join', 'limit', 'not', 'null', 'on', 'or', 'order', 'select', 'set', 'table', 'then', 'union', 'update', 'values', 'when', 'where'],
   css: ['@media', '@supports', 'calc', 'color', 'display', 'font', 'gap', 'grid', 'height', 'margin', 'padding', 'position', 'var', 'width'],
+  lean: ['abbrev', 'axiom', 'by', 'class', 'def', 'deriving', 'do', 'else', 'end', 'example', 'exists', 'export', 'extends', 'false', 'for', 'forall', 'from', 'fun', 'if', 'import', 'in', 'inductive', 'instance', 'let', 'match', 'namespace', 'open', 'opaque', 'partial', 'private', 'protected', 'return', 'section', 'structure', 'syntax', 'theorem', 'then', 'true', 'universe', 'variable', 'where', 'with'],
 };
 
-const ALIASES: Record<string, string> = { js: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript', py: 'python' };
+const ALIASES: Record<string, string> = { js: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript', py: 'python', lean4: 'lean' };
 
 function escapeHTML(value: string): string {
   return value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);

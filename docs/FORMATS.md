@@ -16,6 +16,11 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 The Markdown boundary supports headings, paragraphs, quotes, fenced code, lists, tables, media, dividers, links, strong/emphasis/strike/code marks, highlight extension syntax, and `$...$`/`$$...$$` math when `MathExtension` is present.
 
+Lean source uses the ordinary `code_block` with `language: "lean"`, so JSON,
+HTML, Markdown fenced code, and plain text remain portable even when no Lean
+provider is configured. Provider descriptors and proof results are view/runtime
+state and are never serialized with the document.
+
 Markdown cannot represent every custom schema attribute. Use JSON when lossless round-tripping is required.
 
 ## Plain text

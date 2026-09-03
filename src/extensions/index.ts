@@ -43,6 +43,7 @@ import { composeExtensions, defineExtension } from './extension';
 export * from './extension';
 export * from './command-manager';
 export * from './math';
+export * from './lean';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';

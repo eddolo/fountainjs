@@ -297,6 +297,26 @@ test('renders and types into a structural gap as a new block', async ({ page }) 
   await expect(page.locator('[data-fountain-path="2"]')).toContainText('Second paragraph');
 });
 
+test('edits source-only Lean and expands Unicode without a language server', async ({ page }) => {
+  const inserted = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const result = contract.commands.commands.insertLeanBlock('example : \\forall');
+    contract.view.focus();
+    return result;
+  });
+  expect(inserted).toBe(true);
+  const lean = page.locator('pre[data-language="lean"]');
+  await expect(lean).toContainText('example : \\forall');
+  await page.keyboard.press('Tab');
+  await expect(lean).toContainText('example : ∀');
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.editor.state.doc.content.some((node: any) => (
+      node.attrs.language === 'lean' && node.textContent === 'example : ∀'
+    ));
+  })).toBe(true);
+});
+
 test('keeps custom NodeViews live across updates and mapped moves while containing their DOM', async ({ page }) => {
   const counter = page.locator('[data-browser-counter]');
   await expect(counter).toHaveText('Count 0');
@@ -364,10 +384,11 @@ test('runs the public headless Markdown and LaTeX pipeline', async ({ page }) =>
   await page.goto('/demos/node-markdown.html');
   const source = page.getByLabel('Markdown input');
   await expect(source).toContainText('$E=mc^2$');
-  await expect(page.getByText('Valid document · 5 top-level blocks')).toBeVisible();
+  await expect(page.getByText('Valid document · 6 top-level blocks')).toBeVisible();
   const output = page.locator('.demo-output pre');
   await expect(output).toContainText('inline_math');
   await expect(output).toContainText('math_block');
+  await expect(output).toContainText('"language": "lean"');
   await source.fill('# Formula\n\n$\\alpha+\\beta$');
   await expect(page.getByText('Valid document · 2 top-level blocks')).toBeVisible();
   await page.getByRole('button', { name: 'markdown' }).click();

@@ -268,17 +268,19 @@ export class CampaignEditor {
     host: 'Node.js',
     surface: 'Headless core + formats',
     runtime: 'headless',
-    summary: 'A DOM-free conversion route from Markdown and native LaTeX nodes to validated FountainJS JSON, HTML, and text.',
+    summary: 'A DOM-free conversion route from Markdown, native LaTeX, and source-only Lean to validated FountainJS JSON, HTML, and text.',
     boundary: 'Only the document/schema/format modules run; no editor view or frontend framework is required.',
-    capabilities: ['Headless schema', 'Inline/display LaTeX', 'Safe HTML export', 'JSON round trip'],
-    markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$ in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n> The portable document stays in the middle.',
+    capabilities: ['Headless schema', 'Inline/display LaTeX', 'Source-only Lean', 'JSON round trip'],
+    markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$ and Lean source in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n```lean\nexample : 1 = 1 := rfl\n```\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n> The portable document stays in the middle.',
     content: doc(paragraph(text('Headless Markdown content'))),
     code: `import {
   MarkdownImporter, MarkdownExporter, HTMLExporter,
-  MathExtension, Schema, StarterKit, composeExtensions,
+  LeanExtension, MathExtension, Schema, StarterKit, composeExtensions,
 } from 'fountainjs-editor'
 
-const kit = composeExtensions([...StarterKit.extensions, MathExtension])
+const kit = composeExtensions([
+  ...StarterKit.extensions, MathExtension, LeanExtension,
+])
 const schema = new Schema(kit.schema)
 const document = MarkdownImporter.parse(markdownSource, schema)
 

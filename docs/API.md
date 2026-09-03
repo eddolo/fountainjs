@@ -131,6 +131,27 @@ Set `inputRules: false` or `pasteRules: false` when the host wants commands
 without delimiter conversion. `MAX_MATH_SOURCE_LENGTH` exposes the validation
 limit.
 
+### Lean extension and controller
+
+`LeanExtension` composes with `StarterKit` without adding a network or process
+dependency. Lean source uses the existing portable `code_block` node with
+`language: "lean"`. It contributes `insertLeanBlock`, `setLeanSource`, and
+`replaceLeanUnicode`; the last operation is also bound to unmodified Tab after
+a recognized backslash abbreviation inside a Lean block. Pass
+`unicodeInput: false` to `createLeanExtension` to disable that key behavior.
+
+The composed `lean` service exposes `mode`, the selected provider when present,
+and `createController(editor)`. A provider is optional. `LeanController` has
+`inspectRequest`, `check`, `goals`, `hover`, `complete`, `cancel`, `dispose`,
+`subscribe`, and `getSnapshot`. Requests contain only the current Lean block,
+position, version, path, and a host-overridable URI.
+
+`createLeanProvider` validates provider trust metadata and optional operations.
+Its descriptor declares `local`, `remote`, `managed`, or `one-shot` mode and a
+`device`, `self-hosted`, or `third-party` data destination. Source-only mode is
+represented by the absence of a provider. See [LEAN.md](LEAN.md) for provider
+examples, endpoint constraints, stale-result handling, and loopback security.
+
 ## Editor and state
 
 `createEditor(config)` accepts:
