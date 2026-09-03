@@ -52,7 +52,22 @@ export class Editor {
       this.commandBatch.transactions.push(transaction);
       return;
     }
+    const oldState = this.currentState;
     this.currentState = this.currentState.apply(transaction);
+    const applied: Transaction[] = [transaction];
+    for (let pass = 0; pass < 20; pass += 1) {
+      let appended = false;
+      for (const plugin of this.currentState.plugins) {
+        const followUp = plugin.spec.appendTransaction?.(Object.freeze([...applied]), oldState, this.currentState);
+        if (!followUp) continue;
+        if (!followUp.docChanged && !followUp.selectionSet && !followUp.storedMarksSet && followUp.getMeta('force') !== true) continue;
+        this.currentState = this.currentState.apply(followUp);
+        applied.push(followUp);
+        appended = true;
+      }
+      if (!appended) break;
+      if (pass === 19) throw new Error('Plugin appendTransaction loop exceeded 20 passes.');
+    }
     this.subscribers.forEach((callback) => callback(this.currentState, transaction));
     this.onUpdate?.(this.currentState, transaction);
   }

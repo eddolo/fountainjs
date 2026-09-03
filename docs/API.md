@@ -16,7 +16,7 @@ context extraction without persisting view DOM. Math nodes use it to expose TeX;
 custom atoms should return the text users would expect search or assistive tools
 to read.
 
-`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, and the HTML/Markdown/JSON/text format modules.
+`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, and the HTML/Markdown/JSON/text format modules.
 
 ```ts
 const poll = defineExtension({
@@ -131,6 +131,66 @@ const kit = composeExtensions([
 HTML string. Its optional `highlighter` callback is explicitly trusted HTML and
 is not used by the live editor; prefer the range tokenizer for editable or
 untrusted content.
+
+### Tables
+
+`TableMap.create(table, tablePath?)` calculates logical table geometry across
+`rowspan` and `colspan`. It exposes `width`, `height`, unique `cells`, geometry
+`problems`, `cellAt()`, `cellInfo()`, `cellsInRect()`,
+`rectangleBetween()`, and `columnWidth()`. A `CellSelection` uses this map and
+expands automatically rather than cutting through a merged cell.
+
+The public commands are `addTableRow`, `deleteTableRow`, `addTableColumn`,
+`deleteTableColumn`, `moveTableCell`, `mergeTableCells`, `splitTableCell`,
+`toggleTableHeaderRow`, `toggleTableHeaderColumn`, `toggleTableHeaderCell`,
+`selectTableRow`, `selectTableColumn`, `resizeTableColumn`, and `repairTable`.
+All structural commands operate on logical coordinates and preserve valid spans.
+`TableEditingExtension`, included by `StarterKit`, appends a non-historical repair
+transaction when an arbitrary host transaction leaves missing or overflowing
+geometry.
+
+`pasteTableCells(editor, text)` distributes a tab/newline matrix from the
+selection's top-left cell, or repeats a smaller matrix across a larger selected
+rectangle. It rejects out-of-bounds targets and cells that would be split.
+`serializeTableSelection(doc, selection)` returns `{ text, html }`; the DOM input
+layer uses it for native copy/cut. Cells store optional per-logical-column
+`colwidth` values from 40 through 2,000 pixels. The default cell NodeView exposes
+a labelled separator handle: Left/Right resizes by 5 px and Shift modifies by
+25 px; dragging previews locally and commits one undoable transaction on release.
+
+### Clipboard history
+
+`ClipboardHistoryExtension` is opt-in and memory-only. Compose it after the
+starter extensions, or call `createClipboardHistoryExtension(options)` to set
+`maxEntries`, `maxEntryLength`, a shortcut string/custom matcher, and an optional explicit
+host `persistence` adapter. Only non-empty text copied or cut inside the editor
+is captured; an over-limit entry is ignored and identical text is deduplicated.
+No browser-wide clipboard history is read.
+
+`getClipboardHistoryState(editor)` returns immutable `{ entries, open }` state.
+Each entry has `id`, `text`, and `copiedAt`. Commands include
+`openClipboardHistory`, `closeClipboardHistory`,
+`pasteClipboardHistoryEntry`, `removeClipboardHistoryEntry`, and
+`clearClipboardHistory`. The optional React `ClipboardHistoryMenu` searches,
+expands, pastes, removes, and clears entries; `FountainToolbar` displays its
+button only when the extension is installed. Non-React hosts subscribe to the
+same plugin state and render their own picker.
+
+Persistence is deliberately synchronous and host-owned:
+
+```ts
+const clipboard = createClipboardHistoryExtension({
+  maxEntries: 25,
+  persistence: {
+    load: () => JSON.parse(localStorage.getItem('my-copies') ?? '[]'),
+    save: entries => localStorage.setItem('my-copies', JSON.stringify(entries)),
+  },
+})
+const kit = composeExtensions([...StarterKit.extensions, clipboard])
+```
+
+FountainJS does not choose localStorage, a database, a network destination, or
+an encryption policy on behalf of the application.
 
 ### Custom NodeViews
 
@@ -458,7 +518,7 @@ focused.
 
 ## Plugins
 
-A `Plugin` can own immutable state, contribute a `DecorationSet`, and intercept `keydown`, `beforeinput`, text input, paste, drop, and click events. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
+A `Plugin` can own immutable state, contribute a `DecorationSet`, intercept `keydown`, `beforeinput`, text input, copy, cut, paste, drop, and click events, and append a follow-up transaction after a state update. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
 
 ### History
 
@@ -568,6 +628,7 @@ Import React bindings from `fountainjs-editor/react`:
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
 - `createReactNodeView(Component, options?)` and `ReactNodeViewProps`

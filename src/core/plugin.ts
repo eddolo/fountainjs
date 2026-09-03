@@ -27,6 +27,8 @@ export interface PluginProps {
   handleKeyDown?: (editor: Editor, event: KeyboardEvent) => boolean;
   handleBeforeInput?: (editor: Editor, event: InputEvent) => boolean;
   handleTextInput?: (editor: Editor, from: number, to: number, text: string) => boolean;
+  handleCopy?: (editor: Editor, event: ClipboardEvent) => boolean;
+  handleCut?: (editor: Editor, event: ClipboardEvent) => boolean;
   handlePaste?: (editor: Editor, event: ClipboardEvent) => boolean;
   handleDrop?: (editor: Editor, event: DragEvent) => boolean;
   handleClick?: (editor: Editor, event: MouseEvent) => boolean;
@@ -38,6 +40,12 @@ export interface PluginSpec<T = unknown> {
   key?: PluginKey<T>;
   state?: PluginStateSpec<T>;
   props?: PluginProps;
+  /** May return a follow-up transaction after a state update (for example, structural repair). */
+  appendTransaction?: (
+    transactions: readonly Transaction[],
+    oldState: EditorState,
+    newState: EditorState,
+  ) => Transaction | null | undefined;
 }
 
 export class Plugin<T = unknown> {

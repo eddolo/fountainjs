@@ -17,6 +17,13 @@ function safeURL(value: unknown, allowDataImage = false): string {
   return isSafeURL(url, { allowDataImage }) ? escapeHTML(url) : '';
 }
 
+function tableCellSizeAttributes(node: Node): string {
+  const colspan = Number(node.attrs.colspan) || 1;
+  const widths = Array.isArray(node.attrs.colwidth) ? node.attrs.colwidth.map(Number) : [];
+  const valid = widths.length === colspan && widths.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000);
+  return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}" style="width:${widths.reduce((sum, width) => sum + width, 0)}px"` : ''}`;
+}
+
 function renderText(node: Node): string {
   let content = escapeHTML(node.text);
   for (const mark of node.marks) {
@@ -68,8 +75,8 @@ function renderNode(node: Node): string {
     case 'figcaption': return `<figcaption>${children()}</figcaption>`;
     case 'table': return `<table><tbody>${children()}</tbody></table>`;
     case 'table_row': return `<tr>${children()}</tr>`;
-    case 'table_header': return `<th colspan="${Number(node.attrs.colspan) || 1}" rowspan="${Number(node.attrs.rowspan) || 1}" scope="${escapeHTML(node.attrs.scope || 'col')}">${children()}</th>`;
-    case 'table_cell': return `<td colspan="${Number(node.attrs.colspan) || 1}" rowspan="${Number(node.attrs.rowspan) || 1}">${children()}</td>`;
+    case 'table_header': return `<th${tableCellSizeAttributes(node)} scope="${escapeHTML(node.attrs.scope || 'col')}">${children()}</th>`;
+    case 'table_cell': return `<td${tableCellSizeAttributes(node)}>${children()}</td>`;
     default: return children();
   }
 }

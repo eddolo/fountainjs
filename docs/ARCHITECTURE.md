@@ -116,7 +116,7 @@ as user intent. `Selection` itself stores:
 - `path` and `from` for the start text position;
 - `endPath` and `to` for the end text position.
 
-Ranges must be document ordered. A collapsed selection has the same path and offset on both ends. Because endpoints are independent, one selection can cross inline mark fragments, paragraphs, list items, table cells, and other nested structures. Cell rectangles are resolved in row-major order and never cross table boundaries. Gap positions are valid only between block children, never inside inline content.
+Ranges must be document ordered. A collapsed selection has the same path and offset on both ends. Because endpoints are independent, one selection can cross inline mark fragments, paragraphs, list items, table cells, and other nested structures. `TableMap` resolves cell rectangles in logical row-major order across `rowspan` and `colspan`, expanding a rectangle when necessary so a merged cell is never cut. Cell selections never cross table boundaries. Gap positions are valid only between block children, never inside inline content.
 
 `storedMarks` live on `EditorState`. At a collapsed cursor they describe marks for subsequently typed text. This avoids needing a non-empty selection to turn bold, colour, or another inline style on.
 
@@ -168,11 +168,18 @@ A `Plugin` may define state plus event/lifecycle props:
 - `handleKeyDown`
 - `handleBeforeInput`
 - `handleTextInput`
+- `handleCopy`
+- `handleCut`
 - `handlePaste`
 - `handleDrop`
 - `handleClick`
 - `onCreate`
 - `onDestroy`
+
+`appendTransaction(transactions, oldState, newState)` may return a validated
+follow-up transaction. Dispatch applies follow-ups to a fixed point with a
+20-pass loop guard, then notifies subscribers once with the final state. Table
+repair uses this hook and tags its transaction as non-historical.
 
 Event hooks return `true` when they handled an event. The input manager then prevents the browser default. `PluginKey` provides stable access to a plugin's private state.
 
@@ -250,7 +257,7 @@ the default rich-HTML/plain-text import path and the first handled rule wins.
 
 The input manager handles `beforeinput`, keyboard shortcuts, alternate IME
 commit orderings, mobile replacement input, multiline/plain/rich paste, image
-paste/drop, internal selected-block drag/drop, list indentation, code
+paste/drop, rectangular TSV/HTML table copy/cut/paste, internal selected-block drag/drop, list indentation, code
 indentation, table navigation, and task checkbox changes. It captures the
 browser selection before running commands. Ctrl/Cmd+A, atomic-node boundary
 arrows, Shift-pointer cell extension, and Alt+Shift+Arrow cell extension
@@ -260,6 +267,13 @@ Mobile Chromium and WebKit emulation run focused virtual-keyboard and responsive
 layout contracts; physical-device coverage remains a separate production gate.
 
 Rendered text is wrapped with `data-fountain-text-path`; block DOM carries node type and path attributes. These anchors let selection synchronization survive marks and nested DOM wrappers. The document—not browser-generated HTML—still decides the resulting state.
+
+The optional clipboard-history plugin listens at the editor copy/cut boundary,
+captures the model selection, and schedules its state-only transaction after
+the native clipboard event completes so a rerender cannot disturb native copy.
+History is bounded, deduplicated, editor-local, memory-only by default, and never
+part of document JSON. A host must explicitly inject persistence; the React
+picker and any custom UI consume the same immutable plugin state.
 
 DOM output specs accept a tag, safe attributes, nested specs, and one `0` content hole. The renderer rejects unsafe tag names, event attributes, and unsupported URL schemes.
 
@@ -347,7 +361,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -394,6 +408,8 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 | `src/core/transaction/` | Steps, transforms, paths, and transactions |
 | `src/core/commands.ts` | Text, marks, content, and document commands |
 | `src/core/structure-commands.ts` | Lists, tables, nested blocks, and structural editing |
+| `src/core/table-map.ts` | Span-aware logical table geometry |
+| `src/core/table-commands.ts` | Merge/split, headers, selection, resize, repair, and grid clipboard operations |
 | `src/core/search.ts` | Cross-fragment search and replacement |
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |

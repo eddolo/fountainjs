@@ -1,6 +1,7 @@
 export * from './useFountain';
 export * from './FountainEditor';
 export * from './FountainToolbar';
+export * from './ClipboardHistoryMenu';
 export * from './FountainComposer';
 export * from './Navigator';
 export * from './useNavigatorState';

@@ -8,6 +8,7 @@ import {
   type AnySelection,
 } from './selection';
 import { Mark, Node, type Attributes } from './schema';
+import { TableMap } from './table-map';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
@@ -594,17 +595,18 @@ export function extendCellSelection(editor: Editor, direction: CellSelectionDire
   if (!head || head.length < 3) return false;
   const tablePath = head.slice(0, -2);
   const table = getNodeAtPath(editor.state.doc, tablePath);
-  const row = head.at(-2) as number;
-  const column = head.at(-1) as number;
-  const nextRow = row + (direction === 'up' ? -1 : direction === 'down' ? 1 : 0);
-  const nextColumn = column + (direction === 'left' ? -1 : direction === 'right' ? 1 : 0);
-  if (nextRow < 0 || nextRow >= table.childCount) return false;
-  const targetRow = table.child(nextRow);
-  if (nextColumn < 0 || nextColumn >= targetRow.childCount) return false;
+  if (table.type.name !== 'table') return false;
+  const map = TableMap.create(table, tablePath);
+  const current = map.cellInfo(head);
+  if (!current) return false;
+  const nextRow = current.row + (direction === 'up' ? -1 : direction === 'down' ? current.rowspan : 0);
+  const nextColumn = current.column + (direction === 'left' ? -1 : direction === 'right' ? current.colspan : 0);
+  const target = map.cellAt(nextRow, nextColumn);
+  if (!target) return false;
   const anchor = editor.state.selection instanceof CellSelection
     ? editor.state.selection.anchorCellPath
     : head;
-  return selectCells(editor, anchor, [...tablePath, nextRow, nextColumn]);
+  return selectCells(editor, anchor, target.path);
 }
 
 export function isMarkActive(editor: Editor, markName: string): boolean {

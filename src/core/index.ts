@@ -7,5 +7,7 @@ export * from './state';
 export * from './editor';
 export * from './commands';
 export * from './structure-commands';
+export * from './table-map';
+export * from './table-commands';
 export * from './search';
 export * from './url';

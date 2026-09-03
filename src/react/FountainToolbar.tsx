@@ -4,6 +4,7 @@ import {
   addTableRow,
   deleteTableColumn,
   deleteTableRow,
+  getActiveTableCell,
   insertBlock,
   insertHardBreak,
   insertImage,
@@ -19,11 +20,21 @@ import {
   setBlockType,
   setMark,
   setTextAlignment,
+  mergeTableCells,
+  resizeTableColumn,
+  selectTableColumn,
+  selectTableRow,
+  splitTableCell,
+  toggleTableHeaderCell,
+  toggleTableHeaderColumn,
+  toggleTableHeaderRow,
   toggleMark,
   toggleList,
   unsetMark,
   type Editor,
+  CellSelection,
 } from '../core';
+import { getClipboardHistoryState, openClipboardHistory } from '../extensions/clipboard-history';
 import { canRedo, canUndo, redo, undo } from '../extensions/plugins/history';
 import { editLink, getActiveLink, removeLink } from '../extensions/link-behavior';
 import {
@@ -34,6 +45,7 @@ import {
 } from '../extensions/plugins/syntax-highlight';
 import { insertImageFile, type ImageUploadHandler } from '../view/media';
 import { useFountainState } from './useFountain';
+import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
 
 export interface FountainToolbarProps {
   editor: Editor | null;
@@ -73,7 +85,7 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const fileInput = useRef<HTMLInputElement>(null);
   const languageListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'search' | 'code' | null>(null);
+  const [panel, setPanel] = useState<'link' | 'image' | 'search' | 'code' | 'table' | null>(null);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -83,10 +95,13 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const [query, setQuery] = useState('');
   const [replacement, setReplacement] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('text');
+  const [tableWidth, setTableWidth] = useState('120');
   if (!editor) return null;
   const mark = (name: string) => () => toggleMark(editor, name);
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
+  const activeTable = getActiveTableCell(editor);
+  const clipboardHistory = getClipboardHistoryState(editor);
 
   const toggleLinkPanel = () => {
     if (panel === 'link') {
@@ -156,6 +171,7 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="↶" title="Undo" disabled={!canUndo(editor)} onAction={() => undo(editor)} />
           <ToolButton label="↷" title="Redo" disabled={!canRedo(editor)} onAction={() => redo(editor)} />
           <ToolButton label="⌕" title="Find and replace" onAction={() => setPanel(panel === 'search' ? null : 'search')} />
+          {clipboardHistory && <ToolButton label="Clip" title="Clipboard history (Ctrl/Command+Alt+V)" active={clipboardHistory.open} onAction={() => openClipboardHistory(editor)} />}
         </div>
         <div className="fountain-toolbar__group" aria-label="Text styles">
           <ToolButton label="P" title="Paragraph" onAction={() => setBlockType(editor, 'paragraph')} />
@@ -203,6 +219,18 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="−Row" title="Delete table row" disabled={!isInsideNode(editor, 'table')} onAction={() => deleteTableRow(editor)} />
           <ToolButton label="+Col" title="Add table column" disabled={!isInsideNode(editor, 'table')} onAction={() => addTableColumn(editor)} />
           <ToolButton label="−Col" title="Delete table column" disabled={!isInsideNode(editor, 'table')} onAction={() => deleteTableColumn(editor)} />
+          <ToolButton label="Merge" title="Merge selected table cells" disabled={!(editor.state.selection instanceof CellSelection) || editor.state.selection.cellPaths.length < 2} onAction={() => mergeTableCells(editor)} />
+          <ToolButton label="Split" title="Split merged table cell" disabled={!activeTable || (activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1)} onAction={() => splitTableCell(editor)} />
+          <ToolButton label="H·Row" title="Toggle header row" disabled={!activeTable} onAction={() => toggleTableHeaderRow(editor)} />
+          <ToolButton label="H·Col" title="Toggle header column" disabled={!activeTable} onAction={() => toggleTableHeaderColumn(editor)} />
+          <ToolButton label="H·Cell" title="Toggle header cell" disabled={!activeTable} onAction={() => toggleTableHeaderCell(editor)} />
+          <ToolButton label="Sel Row" title="Select table row" disabled={!activeTable} onAction={() => selectTableRow(editor)} />
+          <ToolButton label="Sel Col" title="Select table column" disabled={!activeTable} onAction={() => selectTableColumn(editor)} />
+          <ToolButton label="↔" title="Set table column width" disabled={!activeTable} onAction={() => {
+            const width = activeTable?.map.columnWidth(activeTable.cell.column) ?? 120;
+            setTableWidth(String(width));
+            setPanel(panel === 'table' ? null : 'table');
+          }} />
         </div>
         {extraActions}
         <input ref={fileInput} className="fountain-toolbar__file" type="file" accept="image/*" onChange={(event) => void chooseImage(event.target.files?.[0])} />
@@ -256,6 +284,16 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         <button type="submit">Apply</button>
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
+      {panel === 'table' && <form className="fountain-toolbar__popover is-table" onSubmit={(event) => {
+        event.preventDefault();
+        if (resizeTableColumn(editor, Number(tableWidth))) setPanel(null);
+      }}>
+        <strong>Column width</strong>
+        <input aria-label="Table column width" required type="number" min="40" max="2000" step="1" value={tableWidth} onChange={(event) => setTableWidth(event.target.value)} />
+        <span>px</span>
+        <button type="submit">Apply</button>
+        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+      </form>}
       {panel === 'search' && <form className="fountain-toolbar__popover is-search" onSubmit={(event) => { event.preventDefault(); selectNextMatch(editor, query); }}>
         <strong>{query ? `${findText(state?.doc ?? editor.state.doc, query).length} matches` : 'Find in document'}</strong>
         <input aria-label="Find text" required placeholder="Find" value={query} onChange={(event) => setQuery(event.target.value)} />
@@ -264,6 +302,7 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         <button type="button" onClick={() => replaceAllText(editor, query, replacement)}>Replace all</button>
         <button type="button" onClick={() => setPanel(null)}>Close</button>
       </form>}
+      <ClipboardHistoryMenu editor={editor} />
     </div>
   );
 }

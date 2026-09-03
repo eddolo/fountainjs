@@ -4,6 +4,14 @@
 
 ### Added
 
+- Opt-in, editor-local clipboard history with bounded deduplicated slots,
+  unchanged native copy/paste behavior, a Mod-Alt-V command, explicit host
+  persistence, framework-neutral state/commands, and a searchable React picker
+  with full-value expansion, paste, remove, and clear controls.
+- Span-aware production tables with geometry repair, merged-cell-safe row and
+  column transforms, merge/split, scoped header toggles, full-row/column
+  selection, accessible pointer/keyboard resizing, persisted column widths,
+  and TSV plus HTML clipboard exchange.
 - Live language-aware code blocks with safe token decorations, non-persisted
   line numbers, canonical language aliases, host tokenizer injection, public
   settings commands, React language/line-number UI, and real-browser editing.

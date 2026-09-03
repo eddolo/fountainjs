@@ -1,7 +1,7 @@
 {
   "name": "fountainjs-editor",
   "version": "0.3.0",
-  "description": "A modular, framework-neutral rich-text editor engine with portable JSON, DOM and Web Component APIs, React bindings, and optional AI review.",
+  "description": "Universal, framework-independent, modular rich-text editor for building any document experience.",
   "author": "Paolo Cappuccini",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   HTMLExporter,
+  ClipboardHistoryExtension,
   JSONExporter,
   LeanExtension,
   LeanInfoView,
@@ -76,6 +77,7 @@ const demoStatusExtension = defineExtension({
 });
 const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
 const docsDemoKit = composeExtensions([...StarterKit.extensions, MathExtension, LeanExtension]);
+const reactDemoKit = composeExtensions([...StarterKit.extensions, ClipboardHistoryExtension]);
 const headlessDemoKit = docsDemoKit;
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {
@@ -134,7 +136,7 @@ function DemoControls({ editor }: { editor: Editor | null }) {
 }
 
 function ReactRuntime({ demo }: { demo: DemoDefinition }) {
-  const editor = useFountain({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: demo.content });
+  const editor = useFountain({ schema: reactDemoKit.schema, plugins: reactDemoKit.plugins, content: demo.content });
   const state = useFountainState(editor);
   return <div className="demo-workspace">
     <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>Try Ctrl/Cmd+A, click an image, Shift-click table cells, or use the explicit gap control.</i></div><DemoControls editor={editor} /><FountainComposer editor={editor} placeholder="Start writing…" /></section>

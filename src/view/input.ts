@@ -17,9 +17,12 @@ import {
   setNodeAttributes,
   splitBlock,
   toggleMark,
+  pasteTableCells,
+  serializeTableSelection,
   type Editor,
   type AnySelection,
   NodeSelection,
+  CellSelection,
   Selection,
 } from '../core';
 import { HTMLImporter } from '../core/importers/html-importer';
@@ -59,6 +62,8 @@ export class InputManager {
     dom.addEventListener('beforeinput', this.onBeforeInput);
     dom.addEventListener('keydown', this.onKeyDown);
     dom.addEventListener('paste', this.onPaste);
+    dom.addEventListener('copy', this.onCopy);
+    dom.addEventListener('cut', this.onCut);
     dom.addEventListener('dragover', this.onDragOver);
     dom.addEventListener('dragstart', this.onDragStart);
     dom.addEventListener('dragend', this.onDragEnd);
@@ -78,6 +83,8 @@ export class InputManager {
     this.dom.removeEventListener('beforeinput', this.onBeforeInput);
     this.dom.removeEventListener('keydown', this.onKeyDown);
     this.dom.removeEventListener('paste', this.onPaste);
+    this.dom.removeEventListener('copy', this.onCopy);
+    this.dom.removeEventListener('cut', this.onCut);
     this.dom.removeEventListener('dragover', this.onDragOver);
     this.dom.removeEventListener('dragstart', this.onDragStart);
     this.dom.removeEventListener('dragend', this.onDragEnd);
@@ -237,6 +244,11 @@ export class InputManager {
         return;
       }
     }
+    const text = event.clipboardData?.getData('text/plain');
+    if (this.editor.state.selection instanceof CellSelection && text !== undefined && pasteTableCells(this.editor, text)) {
+      event.preventDefault();
+      return;
+    }
     const images = Array.from(event.clipboardData?.files ?? []).filter((file) => file.type.startsWith('image/'));
     if (images.length) {
       event.preventDefault();
@@ -253,10 +265,42 @@ export class InputManager {
         this.options.onError?.(error);
       }
     }
-    const text = event.clipboardData?.getData('text/plain');
     if (text === undefined) return;
     event.preventDefault();
     this.editor.runCommandBatch(() => insertPlainText(this.editor, text));
+  };
+
+  private writeCellSelection(event: ClipboardEvent): boolean {
+    const selection = this.editor.state.selection;
+    if (!(selection instanceof CellSelection) || !event.clipboardData) return false;
+    const serialized = serializeTableSelection(this.editor.state.doc, selection);
+    if (!serialized) return false;
+    event.clipboardData.setData('text/plain', serialized.text);
+    event.clipboardData.setData('text/html', serialized.html);
+    event.preventDefault();
+    return true;
+  }
+
+  private onCopy = (event: ClipboardEvent): void => {
+    if (this.options.shouldStopEvent?.(event)) return;
+    for (const plugin of this.editor.state.plugins) {
+      if (plugin.spec.props?.handleCopy?.(this.editor, event)) {
+        event.preventDefault();
+        return;
+      }
+    }
+    this.writeCellSelection(event);
+  };
+
+  private onCut = (event: ClipboardEvent): void => {
+    if (this.options.shouldStopEvent?.(event) || !this.editor.editable) return;
+    for (const plugin of this.editor.state.plugins) {
+      if (plugin.spec.props?.handleCut?.(this.editor, event)) {
+        event.preventDefault();
+        return;
+      }
+    }
+    if (this.writeCellSelection(event)) deleteSelection(this.editor);
   };
 
   private onCompositionStart = (event: CompositionEvent): void => {

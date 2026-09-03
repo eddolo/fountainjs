@@ -1,6 +1,8 @@
 import type { Editor } from './editor';
 import { Selection } from './selection';
 import { Node, type Attributes } from './schema';
+import { getActiveTableCell } from './table-commands';
+import { TableMap } from './table-map';
 import { getNodeAtPath, getTextLeaves } from './transaction/path';
 
 function ancestorPath(editor: Editor, names: readonly string[]): number[] | null {
@@ -348,83 +350,138 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
 
 export function addTableRow(editor: Editor, position: 'before' | 'after' = 'after'): boolean {
   if (!editor.editable) return false;
-  const rowPath = ancestorPath(editor, ['table_row']);
-  if (!rowPath) return false;
-  const tablePath = rowPath.slice(0, -1);
-  const table = getNodeAtPath(editor.state.doc, tablePath);
-  const row = getNodeAtPath(editor.state.doc, rowPath);
-  const rowIndex = rowPath.at(-1) as number;
-  const insertionIndex = rowIndex + (position === 'after' ? 1 : 0);
-  const cells = row.content.map((cell) => editor.state.schema.node(
-    cell.type.name === 'table_header' && insertionIndex === 0 ? 'table_header' : 'table_cell',
-    {},
-    [emptyParagraph(editor)],
-  ));
+  const context = getActiveTableCell(editor);
+  if (!context) return false;
+  const { tablePath, table, map, cell: active } = context;
+  const insertionIndex = active.row + (position === 'after' ? 1 : 0);
+  const crossing = new Set(map.cells
+    .filter((cell) => cell.row < insertionIndex && cell.row + cell.rowspan > insertionIndex)
+    .map((cell) => cell.path.join('.')));
+  const rows = table.content.map((row, rowIndex) => row.copy(row.content.map((cell, cellIndex) => {
+    const path = [...tablePath, rowIndex, cellIndex];
+    return crossing.has(path.join('.')) ? cell.withAttrs({ ...cell.attrs, rowspan: Number(cell.attrs.rowspan) + 1 }) : cell;
+  })));
+  const cells: Node[] = [];
+  for (let column = 0; column < map.width; column += 1) {
+    const covered = map.cells.some((cell) => crossing.has(cell.path.join('.'))
+      && column >= cell.column && column < cell.column + cell.colspan);
+    if (covered) continue;
+    const reference = map.cellAt(Math.min(insertionIndex, map.height - 1), column)
+      ?? map.cellAt(Math.max(0, insertionIndex - 1), column)
+      ?? map.cells[0];
+    const typeName = insertionIndex === 0 && reference?.node.type.name === 'table_header' ? 'table_header' : 'table_cell';
+    const width = map.columnWidth(column);
+    cells.push(editor.state.schema.node(typeName, {
+      ...(typeName === 'table_header' ? { scope: 'col' } : {}),
+      colwidth: width ? [width] : null,
+    }, [emptyParagraph(editor)]));
+  }
   const next = table.copy([
-    ...table.content.slice(0, insertionIndex),
+    ...rows.slice(0, insertionIndex),
     editor.state.schema.node('table_row', {}, cells),
-    ...table.content.slice(insertionIndex),
+    ...rows.slice(insertionIndex),
   ]);
   const transaction = editor.state.createTransaction().replaceNode(tablePath, [next]);
-  selectFirstText(transaction, next.child(insertionIndex), [...tablePath, insertionIndex]);
+  const nextMap = TableMap.create(next, tablePath);
+  const selected = nextMap.cellAt(insertionIndex, 0);
+  if (selected) selectFirstText(transaction, selected.node, selected.path);
   editor.dispatch(transaction);
   return true;
 }
 
 export function deleteTableRow(editor: Editor): boolean {
   if (!editor.editable) return false;
-  const rowPath = ancestorPath(editor, ['table_row']);
-  if (!rowPath) return false;
-  const tablePath = rowPath.slice(0, -1);
-  const table = getNodeAtPath(editor.state.doc, tablePath);
+  const context = getActiveTableCell(editor);
+  if (!context) return false;
+  const { tablePath, table, map, cell: active } = context;
   if (table.childCount <= 1) return removeNode(editor, tablePath);
-  const rowIndex = rowPath.at(-1) as number;
-  const next = table.copy(table.content.filter((_, index) => index !== rowIndex));
+  const rowIndex = active.row;
+  const moved = map.cells
+    .filter((cell) => cell.row === rowIndex && cell.rowspan > 1)
+    .map((cell) => ({ column: cell.column, node: cell.node.withAttrs({ ...cell.node.attrs, rowspan: cell.rowspan - 1 }) }));
+  const rows: Node[] = [];
+  table.content.forEach((row, oldRowIndex) => {
+    if (oldRowIndex === rowIndex) return;
+    const own = row.content.map((cell, cellIndex) => {
+      const info = map.cellInfo([...tablePath, oldRowIndex, cellIndex]);
+      const crossesDeleted = Boolean(info && info.row < rowIndex && info.row + info.rowspan > rowIndex);
+      return {
+        column: info?.column ?? cellIndex,
+        node: crossesDeleted ? cell.withAttrs({ ...cell.attrs, rowspan: Number(cell.attrs.rowspan) - 1 }) : cell,
+      };
+    });
+    if (oldRowIndex === rowIndex + 1) own.push(...moved);
+    own.sort((left, right) => left.column - right.column);
+    rows.push(row.copy(own.map(({ node }) => node)));
+  });
+  const next = table.copy(rows);
   const selectedRow = Math.min(rowIndex, next.childCount - 1);
   const transaction = editor.state.createTransaction().replaceNode(tablePath, [next]);
-  selectFirstText(transaction, next.child(selectedRow), [...tablePath, selectedRow]);
+  const nextMap = TableMap.create(next, tablePath);
+  const selected = nextMap.cellAt(selectedRow, Math.min(active.column, nextMap.width - 1));
+  if (selected) selectFirstText(transaction, selected.node, selected.path);
   editor.dispatch(transaction);
   return true;
 }
 
 export function addTableColumn(editor: Editor, position: 'before' | 'after' = 'after'): boolean {
   if (!editor.editable) return false;
-  const rowPath = ancestorPath(editor, ['table_row']);
-  if (!rowPath) return false;
-  const tablePath = rowPath.slice(0, -1);
-  const rowIndex = rowPath.at(-1) as number;
-  const cellIndex = editor.state.selection.path[tablePath.length + 1];
-  if (!Number.isInteger(cellIndex)) return false;
-  const insertionIndex = (cellIndex as number) + (position === 'after' ? 1 : 0);
-  const table = getNodeAtPath(editor.state.doc, tablePath);
-  const rows = table.content.map((row) => {
-    const reference = row.content[Math.min(cellIndex as number, row.childCount - 1)];
-    const cellType = reference?.type.name === 'table_header' ? 'table_header' : 'table_cell';
-    const cell = editor.state.schema.node(cellType, {}, [emptyParagraph(editor)]);
+  const context = getActiveTableCell(editor);
+  if (!context) return false;
+  const { tablePath, table, map, cell: active } = context;
+  const insertionColumn = position === 'after' ? active.column + active.colspan : active.column;
+  const rows = table.content.map((row, rowIndex) => {
+    const left = insertionColumn > 0 ? map.cellAt(rowIndex, insertionColumn - 1) : null;
+    const right = insertionColumn < map.width ? map.cellAt(rowIndex, insertionColumn) : null;
+    if (left && right && left.path.join('.') === right.path.join('.')) {
+      return row.copy(row.content.map((cell, cellIndex) => {
+        const info = map.cellInfo([...tablePath, rowIndex, cellIndex]);
+        if (!info || info.path.join('.') !== left.path.join('.')) return cell;
+        const widths = Array.isArray(cell.attrs.colwidth) ? [...cell.attrs.colwidth] : Array(info.colspan).fill(0);
+        widths.splice(insertionColumn - info.column, 0, 0);
+        return cell.withAttrs({ ...cell.attrs, colspan: info.colspan + 1, colwidth: widths.some(Boolean) ? widths : null });
+      }));
+    }
+    const anchors = map.cells.filter((cell) => cell.row === rowIndex).sort((a, b) => a.column - b.column);
+    const insertionIndex = anchors.filter((cell) => cell.column < insertionColumn).length;
+    const reference = right ?? left ?? anchors[0];
+    const cellType = reference?.node.type.name === 'table_header' ? 'table_header' : 'table_cell';
+    const width = map.columnWidth(Math.min(insertionColumn, map.width - 1));
+    const cell = editor.state.schema.node(cellType, {
+      ...(cellType === 'table_header' ? { scope: reference?.node.attrs.scope ?? 'col' } : {}),
+      colwidth: width ? [width] : null,
+    }, [emptyParagraph(editor)]);
     return row.copy([...row.content.slice(0, insertionIndex), cell, ...row.content.slice(insertionIndex)]);
   });
   const next = table.copy(rows);
   const transaction = editor.state.createTransaction().replaceNode(tablePath, [next]);
-  selectFirstText(transaction, next.child(rowIndex).child(insertionIndex), [...tablePath, rowIndex, insertionIndex]);
+  const nextMap = TableMap.create(next, tablePath);
+  const selected = nextMap.cellAt(active.row, insertionColumn);
+  if (selected) selectFirstText(transaction, selected.node, selected.path);
   editor.dispatch(transaction);
   return true;
 }
 
 export function deleteTableColumn(editor: Editor): boolean {
   if (!editor.editable) return false;
-  const rowPath = ancestorPath(editor, ['table_row']);
-  if (!rowPath) return false;
-  const tablePath = rowPath.slice(0, -1);
-  const rowIndex = rowPath.at(-1) as number;
-  const cellIndex = editor.state.selection.path[tablePath.length + 1];
-  if (!Number.isInteger(cellIndex)) return false;
-  const table = getNodeAtPath(editor.state.doc, tablePath);
-  if (table.content.every((row) => row.childCount <= 1)) return removeNode(editor, tablePath);
-  const rows = table.content.map((row) => row.copy(row.content.filter((_, index) => index !== cellIndex)));
+  const context = getActiveTableCell(editor);
+  if (!context) return false;
+  const { tablePath, table, map, cell: active } = context;
+  const column = active.column;
+  if (map.width <= 1) return removeNode(editor, tablePath);
+  const rows = table.content.map((row, rowIndex) => row.copy(row.content.flatMap((cell, cellIndex) => {
+    const info = map.cellInfo([...tablePath, rowIndex, cellIndex]);
+    if (!info || column < info.column || column >= info.column + info.colspan) return [cell];
+    if (info.colspan === 1) return [];
+    const widths = Array.isArray(cell.attrs.colwidth) ? [...cell.attrs.colwidth] : Array(info.colspan).fill(0);
+    widths.splice(column - info.column, 1);
+    return [cell.withAttrs({ ...cell.attrs, colspan: info.colspan - 1, colwidth: widths.some(Boolean) ? widths : null })];
+  })));
   const next = table.copy(rows);
-  const selectedCell = Math.min(cellIndex as number, next.child(rowIndex).childCount - 1);
   const transaction = editor.state.createTransaction().replaceNode(tablePath, [next]);
-  selectFirstText(transaction, next.child(rowIndex).child(selectedCell), [...tablePath, rowIndex, selectedCell]);
+  const nextMap = TableMap.create(next, tablePath);
+  const selected = nextMap.cellAt(active.row, Math.min(column, nextMap.width - 1));
+  if (selected) selectFirstText(transaction, selected.node, selected.path);
   editor.dispatch(transaction);
   return true;
 }
@@ -432,27 +489,15 @@ export function deleteTableColumn(editor: Editor): boolean {
 /** Moves through table cells with spreadsheet-style Tab navigation. */
 export function moveTableCell(editor: Editor, direction: 'next' | 'previous' = 'next'): boolean {
   if (!editor.editable) return false;
-  const cellPath = ancestorPath(editor, ['table_cell', 'table_header']);
-  if (!cellPath) return false;
-  const rowPath = cellPath.slice(0, -1);
-  const tablePath = rowPath.slice(0, -1);
-  const table = getNodeAtPath(editor.state.doc, tablePath);
-  const rowIndex = rowPath.at(-1) as number;
-  const cellIndex = cellPath.at(-1) as number;
-  let targetRow = rowIndex;
-  let targetCell = cellIndex + (direction === 'next' ? 1 : -1);
-  if (direction === 'next' && targetCell >= table.child(rowIndex).childCount) {
-    targetRow += 1;
-    targetCell = 0;
-  } else if (direction === 'previous' && targetCell < 0) {
-    targetRow -= 1;
-    targetCell = targetRow >= 0 ? table.child(targetRow).childCount - 1 : -1;
-  }
-  if (direction === 'next' && targetRow >= table.childCount) return addTableRow(editor, 'after');
-  if (targetRow < 0 || targetCell < 0) return false;
-  const target = table.child(targetRow).child(targetCell);
+  const context = getActiveTableCell(editor);
+  if (!context) return false;
+  const cells = [...context.map.cells].sort((left, right) => left.row - right.row || left.column - right.column);
+  const index = cells.findIndex((cell) => cell.path.join('.') === context.cell.path.join('.'));
+  const target = cells[index + (direction === 'next' ? 1 : -1)];
+  if (!target && direction === 'next') return addTableRow(editor, 'after');
+  if (!target) return false;
   const transaction = editor.state.createTransaction();
-  selectFirstText(transaction, target, [...tablePath, targetRow, targetCell]);
+  selectFirstText(transaction, target.node, target.path);
   editor.dispatch(transaction);
   return true;
 }

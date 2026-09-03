@@ -94,7 +94,12 @@
 .fountain-editor .fjs-highlight--light .fjs-token--tag, .fountain-editor .fjs-highlight--light .fjs-token--symbol { color: #086c8e; }
 .fountain-editor :not(pre) > code { padding: .15em .35em; color: #5b21b6; background: #f3f0ff; border-radius: 5px; }
 .fountain-editor table { width: 100%; margin-block: 1.25em; border-spacing: 0; border-collapse: separate; border: 1px solid var(--fountain-border); border-radius: 10px; }
-.fountain-editor td, .fountain-editor th { padding: 9px 12px; text-align: start; border-right: 1px solid var(--fountain-border); border-bottom: 1px solid var(--fountain-border); }
+.fountain-editor td, .fountain-editor th { position: relative; min-width: 40px; padding: 0; text-align: start; border-right: 1px solid var(--fountain-border); border-bottom: 1px solid var(--fountain-border); }
+.fountain-table-cell__content { min-height: 1.5em; padding: 9px 12px; }
+.fountain-table-cell__content > :first-child { margin-top: 0; }
+.fountain-table-cell__content > :last-child { margin-bottom: 0; }
+.fountain-table-cell__resize-handle { position: absolute; z-index: 2; inset-block: 0; inset-inline-end: -4px; width: 8px; cursor: col-resize; touch-action: none; }
+.fountain-table-cell__resize-handle:hover, .fountain-table-cell__resize-handle:focus-visible, [data-fountain-resizing="true"] > .fountain-table-cell__resize-handle { background: color-mix(in srgb, var(--fountain-accent) 45%, transparent); outline: 0; }
 .fountain-editor tr:last-child > * { border-bottom: 0; }
 .fountain-editor tr > *:last-child { border-right: 0; }
 .fountain-editor figure { margin: 1.5em auto; }
@@ -114,6 +119,21 @@
 
 .fountain-toolbar__check { display: inline-flex; gap: 6px; align-items: center; color: var(--fountain-muted); font: 700 12px/1.2 system-ui, sans-serif; white-space: nowrap; }
 .fountain-toolbar__check input { min-width: 0; accent-color: var(--fountain-accent); }
+
+.fountain-clipboard-history { position: absolute; z-index: 30; inset-block-start: calc(100% + 8px); inset-inline-end: 12px; display: grid; gap: 10px; width: min(520px, calc(100vw - 32px)); max-height: min(620px, 75vh); padding: 14px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 14px; box-shadow: 0 20px 50px rgb(23 25 35 / 18%); font: 14px/1.4 system-ui, sans-serif; }
+.fountain-clipboard-history header, .fountain-clipboard-history footer, .fountain-clipboard-history__actions { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.fountain-clipboard-history header > div { display: grid; }
+.fountain-clipboard-history small, .fountain-clipboard-history time, .fountain-clipboard-history footer { color: var(--fountain-muted); font-size: 12px; }
+.fountain-clipboard-history > input { width: 100%; padding: 9px 11px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 8px; }
+.fountain-clipboard-history__entries { display: grid; gap: 8px; overflow: auto; }
+.fountain-clipboard-history__entry { display: grid; gap: 7px; padding: 10px; background: #fafafa; border: 1px solid var(--fountain-border); border-radius: 9px; }
+.fountain-clipboard-history summary { overflow-wrap: anywhere; cursor: pointer; }
+.fountain-clipboard-history summary:hover { color: var(--fountain-accent); }
+.fountain-clipboard-history pre { max-height: 220px; margin: 8px 0 0; padding: 9px; overflow: auto; color: var(--fountain-ink); white-space: pre-wrap; overflow-wrap: anywhere; background: #fff; border-radius: 7px; }
+.fountain-clipboard-history button { padding: 6px 9px; color: var(--fountain-ink); background: #f5f3ff; border: 1px solid var(--fountain-border); border-radius: 7px; cursor: pointer; }
+.fountain-clipboard-history__actions { justify-content: flex-end; }
+.fountain-clipboard-history__actions time { margin-inline-end: auto; }
+.fountain-clipboard-history__empty { margin: 8px; color: var(--fountain-muted); text-align: center; }
 
 .fountain-ai-review { padding: 18px; color: var(--fountain-ink); font: 14px/1.5 ui-sans-serif, system-ui, sans-serif; background: var(--fountain-surface); border: 1px solid var(--fountain-border); border-radius: 14px; }
 .fountain-ai-review__head { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }

@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import {
   AIController,
+  ClipboardHistoryExtension,
   CoreExtension,
   HTMLExporter,
   JSONExporter,
   MarkdownExporter,
   SyntaxHighlightExtension,
+  TableEditingExtension,
   composeExtensions,
   createAIAdapter,
   defineExtension,
@@ -74,6 +76,8 @@ const demoKit = composeExtensions([
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
   SyntaxHighlightExtension,
+  TableEditingExtension,
+  ClipboardHistoryExtension,
   calloutExtension,
   defineExtension({ name: 'ai-review', services: { adapter: demoAdapter } }),
 ]);
@@ -155,7 +159,11 @@ function App() {
 
       <section className="hero" id="top">
         <div className="hero__eyebrow"><i /> Open source · early beta</div>
-        <h1>One editor core. Any framework.<br /><em>Yours to extend.</em></h1>
+        <h1>
+          <span>One editor core.</span>
+          <span>Any framework.</span>
+          <em>Yours to extend.</em>
+        </h1>
         <p>FountainJS is a modular rich-text engine for the browser. Use its DOM API, Web Component, or React bindings; add your own nodes, marks, commands, formats, and services; keep portable JSON on any backend.</p>
         <div className="hero__actions"><a className="primary" href="#playground">Try the workflow ↓</a><a className="secondary" href="https://github.com/eddolo/fountainjs">Read the source</a></div>
         <div className="promise-strip"><span>Framework neutral</span><span>Composable modules</span><span>Portable JSON</span><span>Web Component</span><span>MIT licensed</span></div>

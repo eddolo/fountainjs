@@ -1,5 +1,6 @@
 import {
   Decoration,
+  ClipboardHistoryExtension,
   DecorationSet,
   EditorView,
   LeanExtension,
@@ -11,6 +12,7 @@ import {
   createEditor,
   createLeanProvider,
   defineExtension,
+  getClipboardHistoryState,
   pasteRulesPlugin,
   setNodeAttributes,
   textPasteRule,
@@ -85,7 +87,7 @@ const browserNodeView = defineExtension({
     },
   },
 });
-const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView, LeanExtension]);
+const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView, LeanExtension, ClipboardHistoryExtension]);
 
 const editor = createEditor({
   schema: browserKit.schema,
@@ -121,4 +123,13 @@ const updateOutput = () => { output.value = JSON.stringify(editor.getJSON()); };
 updateOutput();
 editor.subscribe(updateOutput);
 
-Object.assign(globalThis, { fountainBrowserTest: { commands, editor, view, leanController, nodeViewMetrics } });
+Object.assign(globalThis, {
+  fountainBrowserTest: {
+    commands,
+    editor,
+    view,
+    leanController,
+    nodeViewMetrics,
+    clipboardHistory: () => getClipboardHistoryState(editor),
+  },
+});

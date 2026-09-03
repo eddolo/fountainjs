@@ -43,6 +43,19 @@ function paragraph(element: Element, schema: Schema): FountainNode {
   return schema.node('paragraph', { align: alignment(element) }, content.length ? content : [schema.text('')]);
 }
 
+function tableCellWidths(cell: Element, colspan: number): number[] | null {
+  const declared = (cell.getAttribute('data-colwidth') ?? '')
+    .split(',')
+    .filter(Boolean)
+    .map(Number);
+  if (declared.length === colspan && declared.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000)) {
+    return declared;
+  }
+  const styleWidth = Math.round(Number.parseFloat((cell as HTMLElement).style.width));
+  if (colspan === 1 && Number.isInteger(styleWidth) && styleWidth >= 40 && styleWidth <= 2_000) return [styleWidth];
+  return null;
+}
+
 const LIST_BLOCK_TAGS = new Set(['p', 'div', 'blockquote', 'pre', 'ul', 'ol', 'table', 'figure', 'img', 'hr']);
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
@@ -111,11 +124,20 @@ function block(element: Element, schema: Schema): FountainNode[] {
   }
   if (tag === 'table') {
     const rows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tr')).map((row) => schema.node('table_row', {},
-      Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => schema.node(
-        cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
-        { colspan: Number(cell.getAttribute('colspan')) || 1, rowspan: Number(cell.getAttribute('rowspan')) || 1 },
-        [paragraph(cell, schema)],
-      )),
+      Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
+        const colspan = Math.max(1, Math.min(100, Number(cell.getAttribute('colspan')) || 1));
+        const rowspan = Math.max(1, Math.min(100, Number(cell.getAttribute('rowspan')) || 1));
+        return schema.node(
+          cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
+          {
+            colspan,
+            rowspan,
+            colwidth: tableCellWidths(cell, colspan),
+            ...(cell.tagName.toLowerCase() === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
+          },
+          [paragraph(cell, schema)],
+        );
+      }),
     ));
     return rows.length ? [schema.node('table', {}, rows)] : [];
   }

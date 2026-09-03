@@ -1,4 +1,5 @@
 import type { Node } from './schema';
+import { TableMap } from './table-map';
 import { comparePaths, getNodeAtPath, getTextLeaves } from './transaction/path';
 
 export type SelectionKind = 'text' | 'node' | 'gap' | 'all' | 'cell';
@@ -254,6 +255,10 @@ interface CellSelectionData {
   readonly paths: readonly (readonly number[])[];
   readonly start: TextPoint;
   readonly end: TextPoint;
+  readonly rowFrom: number;
+  readonly rowTo: number;
+  readonly columnFrom: number;
+  readonly columnTo: number;
 }
 
 function cellSelectionData(doc: Node, anchorPath: readonly number[], headPath: readonly number[]): CellSelectionData {
@@ -272,30 +277,17 @@ function cellSelectionData(doc: Node, anchorPath: readonly number[], headPath: r
   }
   const table = getNodeAtPath(doc, tablePath);
   if (table.type.name !== 'table') throw new Error('Cell selections require a table ancestor.');
-  const anchorRow = anchorPath.at(-2) as number;
-  const anchorColumn = anchorPath.at(-1) as number;
-  const headRow = headPath.at(-2) as number;
-  const headColumn = headPath.at(-1) as number;
-  const rowFrom = Math.min(anchorRow, headRow);
-  const rowTo = Math.max(anchorRow, headRow);
-  const columnFrom = Math.min(anchorColumn, headColumn);
-  const columnTo = Math.max(anchorColumn, headColumn);
-  const paths: number[][] = [];
-  for (let row = rowFrom; row <= rowTo; row += 1) {
-    const tableRow = table.child(row);
-    for (let column = columnFrom; column <= columnTo; column += 1) {
-      if (column >= tableRow.childCount) throw new Error('Cell selection rectangle exceeds a table row.');
-      const path = [...tablePath, row, column];
-      if (!cellNames.has(getNodeAtPath(doc, path).type.name)) throw new Error('Cell selection rectangle contains a non-cell node.');
-      paths.push(path);
-    }
-  }
+  const map = TableMap.create(table, tablePath);
+  const rect = map.rectangleBetween(anchorPath, headPath);
+  const paths = map.cellsInRect(rect).map((cell) => cell.path);
+  if (!paths.length) throw new Error('Cell selection rectangle is empty.');
   const firstProjection = projectionForNode(doc, paths[0] as readonly number[]);
   const lastProjection = projectionForNode(doc, paths.at(-1) as readonly number[]);
   return {
     paths: Object.freeze(paths.map((path) => Object.freeze(path))),
     start: firstProjection.start,
     end: lastProjection.end,
+    ...rect,
   };
 }
 
@@ -305,6 +297,10 @@ export class CellSelection extends BaseSelection {
   readonly anchorCellPath: readonly number[];
   readonly headCellPath: readonly number[];
   readonly cellPaths: readonly (readonly number[])[];
+  readonly rowFrom: number;
+  readonly rowTo: number;
+  readonly columnFrom: number;
+  readonly columnTo: number;
 
   constructor(doc: Node, anchorCellPath: readonly number[], headCellPath: readonly number[] = anchorCellPath) {
     const data = cellSelectionData(doc, anchorCellPath, headCellPath);
@@ -312,6 +308,10 @@ export class CellSelection extends BaseSelection {
     this.anchorCellPath = Object.freeze([...anchorCellPath]);
     this.headCellPath = Object.freeze([...headCellPath]);
     this.cellPaths = data.paths;
+    this.rowFrom = data.rowFrom;
+    this.rowTo = data.rowTo;
+    this.columnFrom = data.columnFrom;
+    this.columnTo = data.columnTo;
   }
 
   eq(other: BaseSelection): boolean {

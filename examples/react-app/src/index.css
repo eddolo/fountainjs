@@ -23,6 +23,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .hero__eyebrow, .section-heading span, .definition span, .capabilities span, .flow__title > span, .comparison__intro > span, .architecture > div > span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
 .hero__eyebrow i { display: inline-block; width: 7px; height: 7px; margin-right: 8px; background: #41c985; border-radius: 50%; box-shadow: 0 0 0 5px rgb(65 201 133 / 12%); }
 .hero h1 { max-width: 1180px; margin: 36px auto 28px; font-size: clamp(52px, 7.4vw, 104px); font-weight: 700; line-height: .98; letter-spacing: -.067em; }
+.hero h1 > span, .hero h1 > em { display: block; }
 .hero h1 em { color: #6d4aff; font-family: Georgia, serif; font-weight: 400; }
 .hero > p { max-width: 800px; margin: 0 auto; color: #5c586b; font-size: clamp(17px, 2vw, 21px); line-height: 1.65; }
 .hero__actions { display: flex; gap: 12px; justify-content: center; margin-top: 38px; }

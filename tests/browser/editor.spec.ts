@@ -399,6 +399,118 @@ test('extends and replaces a rectangular cell selection through real pointer inp
   await expect(page.locator('[data-fountain-path="1.1.1"]')).toHaveText('');
 });
 
+test('edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids', async ({ page }) => {
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { editor, commands } = contract;
+    const { schema } = editor.state;
+    const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const cell = (text: string) => schema.node('table_cell', {}, [paragraph(text)]);
+    const table = schema.node('table', {}, [
+      schema.node('table_row', {}, [cell('A'), cell('B')]),
+      schema.node('table_row', {}, [cell('C'), cell('D')]),
+    ]);
+    editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, [table]));
+    commands.commands.selectCells([0, 0, 0], [0, 1, 1]);
+    return commands.commands.mergeTableCells();
+  })).toBe(true);
+  const merged = page.locator('[data-fountain-path="0.0.0"]');
+  await expect(merged).toHaveAttribute('colspan', '2');
+  await expect(merged).toHaveAttribute('rowspan', '2');
+  await expect(merged).toContainText('ABCD');
+
+  const resize = merged.locator('.fountain-table-cell__resize-handle');
+  await expect(resize).toHaveAttribute('role', 'separator');
+  await resize.press('ArrowRight');
+  const width = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).child(0).child(0).attrs.colwidth
+  ));
+  expect(width).toHaveLength(2);
+  expect(width[1]).toBeGreaterThanOrEqual(40);
+
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.commands.splitTableCell();
+  })).toBe(true);
+  await expect(page.locator('[data-fountain-node="table_cell"]')).toHaveCount(4);
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([0, 0, 0, 0, 0], 0);
+    return contract.commands.commands.toggleTableHeaderRow();
+  })).toBe(true);
+  await expect(page.locator('th')).toHaveCount(2);
+
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.commands.selectCells([0, 0, 0], [0, 1, 1]);
+  })).toBe(true);
+  const copied = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const values: Record<string, string> = {};
+    const event = new Event('copy', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => values[type] ?? '',
+      setData: (type: string, value: string) => { values[type] = value; },
+    } });
+    editor.dispatchEvent(event);
+    return { prevented: event.defaultPrevented, values };
+  });
+  expect(copied.prevented).toBe(true);
+  expect(copied.values['text/plain']).toContain('\t');
+  expect(copied.values['text/html']).toContain('<table>');
+
+  const pasted = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/plain' ? '1\t2\n3\t4' : '',
+    } });
+    editor.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(pasted).toBe(true);
+  await expect(page.locator('[data-fountain-node="table_cell"], [data-fountain-node="table_header"]')).toHaveText(['1', '2', '3', '4']);
+});
+
+test('keeps normal paste while offering bounded editor-local clipboard slots', async ({ page }) => {
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([0, 0], 0, 5);
+  });
+  await page.waitForTimeout(0);
+  const prevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const event = new Event('copy', { bubbles: true, cancelable: true });
+    editor.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(prevented).toBe(false);
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.clipboardHistory()?.entries[0]?.text
+  ))).toBe('Alpha');
+
+  await page.getByRole('textbox', { name: 'Browser contract editor' }).press('Control+Alt+v');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.clipboardHistory()?.open)).toBe(true);
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([1, 0], 16);
+    const id = contract.clipboardHistory().entries[0].id;
+    return contract.commands.commands.pasteClipboardHistoryEntry(id);
+  })).toBe(true);
+  await expect(page.locator('[data-fountain-path="1"]')).toHaveText('Second paragraphAlpha');
+
+  const normalPaste = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/plain' ? '!' : '',
+    } });
+    editor.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(normalPaste).toBe(true);
+  await expect(page.locator('[data-fountain-path="1"]')).toHaveText('Second paragraphAlpha!');
+});
+
 test('renders and types into a structural gap as a new block', async ({ page }) => {
   const selected = await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
@@ -480,7 +592,14 @@ test('loads the public React playground without console or page errors', async (
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' })).toBeVisible();
+  const heading = page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' });
+  await expect(heading).toBeVisible();
+  const heroLines = await heading.locator(':scope > *').evaluateAll((lines) =>
+    lines.map((line) => line.getBoundingClientRect().top),
+  );
+  expect(heroLines).toHaveLength(3);
+  expect(heroLines[1]).toBeGreaterThan(heroLines[0]);
+  expect(heroLines[2]).toBeGreaterThan(heroLines[1]);
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
   expect(errors).toEqual([]);
 });
@@ -546,6 +665,30 @@ test('edits code language and line numbers through the public React toolbar', as
 
   await expect(block).toHaveAttribute('data-language', 'javascript');
   await expect(block.locator('.fjs-code-line-number')).toHaveCount(0);
+});
+
+test('opens the searchable clipboard-history picker in the public React toolbar', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await paragraph.click();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Shift+End');
+  await page.keyboard.press('ControlOrMeta+c');
+  await expect.poll(async () => page.getByRole('button', { name: /Clipboard history/ }).isEnabled()).toBe(true);
+  await page.keyboard.press('End');
+  await page.getByRole('button', { name: /Clipboard history/ }).click();
+
+  const picker = page.getByRole('dialog', { name: 'Clipboard history' });
+  await expect(picker).toBeVisible();
+  await expect(picker.getByText('Copied in this editor · stored in memory')).toBeVisible();
+  await expect(picker.locator('summary')).toContainText('document types, behavior, formats');
+  await expect(picker.locator('summary')).toHaveAttribute('title', /document types, behavior, formats/);
+  await picker.getByLabel('Search clipboard history').fill('document types');
+  await expect(picker.locator('[role="listitem"]')).toHaveCount(1);
+  await picker.getByRole('button', { name: 'Paste' }).click();
+  await expect(picker).toHaveCount(0);
+  await expect(paragraph).toContainText('document types, behavior, formats');
 });
 
 test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {

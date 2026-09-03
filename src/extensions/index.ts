@@ -1,6 +1,7 @@
 import type { SchemaSpec } from '../core';
 import * as coreCommands from '../core/commands';
 import * as structureCommands from '../core/structure-commands';
+import * as tableCommands from '../core/table-commands';
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { JSONExporter } from '../core/exporters/json-exporter';
 import { MarkdownExporter } from '../core/exporters/markdown-exporter';
@@ -39,6 +40,7 @@ import { underline } from './marks/underline';
 import { canRedo, canUndo, closeHistory, historyPlugin, redo, undo } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
 import { SyntaxHighlightExtension } from './plugins/syntax-highlight';
+import { TableEditingExtension } from './plugins/table-editing';
 import { LinkBehaviorExtension } from './link-behavior';
 import { composeExtensions, defineExtension } from './extension';
 
@@ -47,6 +49,7 @@ export * from './command-manager';
 export * from './math';
 export * from './lean';
 export * from './link-behavior';
+export * from './clipboard-history';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';
@@ -82,6 +85,7 @@ export * from './plugins/input-rules';
 export * from './plugins/paste-rules';
 export * from './plugins/markdown-shortcuts';
 export * from './plugins/syntax-highlight';
+export * from './plugins/table-editing';
 export * from './plugins/mcp-integration';
 
 export const CoreExtension = defineExtension({
@@ -95,7 +99,20 @@ export const CoreExtension = defineExtension({
     table, table_row: tableRow, table_header: tableHeader, table_cell: tableCell,
   },
   marks: { strong, em, underline, strike, code, highlight, link, text_color: textColor, subscript, superscript },
-  commands: { ...coreCommands, ...structureCommands },
+  commands: {
+    ...coreCommands,
+    ...structureCommands,
+    mergeTableCells: tableCommands.mergeTableCells,
+    splitTableCell: tableCommands.splitTableCell,
+    toggleTableHeaderRow: tableCommands.toggleTableHeaderRow,
+    toggleTableHeaderColumn: tableCommands.toggleTableHeaderColumn,
+    toggleTableHeaderCell: tableCommands.toggleTableHeaderCell,
+    selectTableRow: tableCommands.selectTableRow,
+    selectTableColumn: tableCommands.selectTableColumn,
+    resizeTableColumn: tableCommands.resizeTableColumn,
+    repairTable: tableCommands.repairTable,
+    pasteTableCells: tableCommands.pasteTableCells,
+  },
 });
 
 export const CoreSchemaSpec: SchemaSpec = composeExtensions([CoreExtension]).schema;
@@ -125,6 +142,7 @@ export const StarterKit = composeExtensions([
   MarkdownShortcutsExtension,
   LinkBehaviorExtension,
   SyntaxHighlightExtension,
+  TableEditingExtension,
   MarkdownFormatExtension,
   HTMLFormatExtension,
   JSONFormatExtension,

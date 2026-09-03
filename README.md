@@ -101,6 +101,49 @@ An extension can contribute:
 - `formats` with parse/serialize boundaries
 - open-ended `services` interpreted by the host application
 
+## Production table editing
+
+Tables use a span-aware `TableMap`, so logical rows and columns remain correct
+through `rowspan` and `colspan`. The public command set covers row/column
+insertion and deletion, merge/split, row/column/cell header toggles, whole-row
+and whole-column selection, exact column widths, repair, and spreadsheet-style
+TSV paste. Rectangular copy writes both plain TSV and an HTML table. Resizing is
+available from an accessible pointer/keyboard handle and the React toolbar.
+Column widths round-trip through JSON and safe HTML.
+
+```ts
+selectCells(editor, [0, 0, 0], [0, 1, 1])
+mergeTableCells(editor)
+splitTableCell(editor)
+resizeTableColumn(editor, 180)
+toggleTableHeaderRow(editor)
+```
+
+`TableEditingExtension` is part of `StarterKit`; it repairs non-rectangular
+geometry after arbitrary host transactions without adding repair steps to local
+undo history.
+
+## Optional clipboard history
+
+`ClipboardHistoryExtension` adds a bounded, searchable list of text copied
+inside an editor. Normal Ctrl/Cmd+C, Ctrl/Cmd+X, and Ctrl/Cmd+V keep their native
+behavior. Ctrl/Cmd+Alt+V (or `openClipboardHistory`) opens the supplied React
+picker when it is mounted. Every shortened preview has the complete value in a
+hover title and can be expanded to read the full text before pasting.
+
+```ts
+const kit = composeExtensions([
+  ...StarterKit.extensions,
+  createClipboardHistoryExtension({ maxEntries: 25 }),
+])
+```
+
+History is memory-only by default, belongs to that editor instance, and never
+uploads anything. Persistence happens only when an application explicitly
+passes its own synchronous `{ load, save }` adapter. Commands are available for
+open, close, paste, remove, and clear, so non-React products can render the same
+immutable state in any interface.
+
 ## Native LaTeX mathematics
 
 `MathExtension` is a first-party but opt-in module. It adds portable
@@ -232,7 +275,7 @@ the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
 
 ## Included document capabilities
 
-`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. Lists support multi-block wrapping, selected-range type conversion, mixed nesting, multi-item indent/lift, ordered starts, task state, boundary joins, and nested HTML/Markdown interchange; the React controls toggle types and expose lift/indent actions. `StarterKit` also adds safe link behavior and live language-aware code highlighting. Code tokens and optional line numbers are view-only decorations, language metadata round-trips through JSON/Markdown/HTML, the React toolbar edits language and line-number settings, and `createSyntaxHighlightExtension` accepts any host tokenizer through validated ranges. Link behavior includes normalization and validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, host-owned activation, and complete React add/preview/edit/remove controls.
+`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. Lists support multi-block wrapping, selected-range type conversion, mixed nesting, multi-item indent/lift, ordered starts, task state, boundary joins, and nested HTML/Markdown interchange; the React controls toggle types and expose lift/indent actions. Tables support span-aware merge/split, structural repair, header scopes, full-row/column selections, column resizing, and TSV/HTML clipboard exchange. `StarterKit` also adds safe link behavior, live language-aware code highlighting, and automatic table repair. Code tokens and optional line numbers are view-only decorations, language metadata round-trips through JSON/Markdown/HTML, the React toolbar edits language and line-number settings, and `createSyntaxHighlightExtension` accepts any host tokenizer through validated ranges. Link behavior includes normalization and validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, host-owned activation, and complete React add/preview/edit/remove controls.
 
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME
@@ -297,6 +340,7 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
 - `createReactNodeView` and `ReactNodeViewProps`
