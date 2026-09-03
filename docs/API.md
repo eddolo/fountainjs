@@ -150,6 +150,26 @@ Commands return whether they handled the operation:
 
 A `Plugin` can own immutable state, contribute a `DecorationSet`, and intercept `keydown`, `beforeinput`, text input, paste, drop, and click events. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
 
+### Input rules
+
+`inputRulesPlugin({ rules })` turns typed patterns into extension-owned
+transactions. Rules run in order and the first handler returning a transaction
+wins. The literal text that triggered a transformation is retained so an
+immediate Backspace, or `undoInputRule(editor)`, restores what the user typed.
+
+```ts
+const punctuation = inputRulesPlugin({
+  rules: [
+    textInputRule({ find: /-- $/, replace: '—', name: 'em-dash' }),
+  ],
+});
+```
+
+`InputRule` supports custom transaction handlers. `textInputRule` is the
+convenience helper for textual replacements. The supplied Markdown rules are
+built with the same public API and cover headings, bullet/ordered/task lists,
+quotes, and language-labelled fenced code blocks.
+
 ## DOM view
 
 `new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus()` and `destroy()` on the view as needed.

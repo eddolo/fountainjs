@@ -183,6 +183,13 @@ Commands receive an `Editor`, check their preconditions, dispatch a transaction,
 
 Commands are exported as functions and contributed by `CoreExtension`, so a composed kit can invoke the same operations through `kit.commands`.
 
+Typing transformations use the public `InputRule` contract. The input-rules
+plugin matches text including the pending browser input, asks a rule for a
+transaction, and stores the natural untransformed input as an undo snapshot.
+The shipped Markdown shortcuts are consumers of this API rather than special
+cases in the DOM input manager. Extensions can therefore add or replace typing
+behaviour without modifying the view.
+
 ## DOM view and input pipeline
 
 `EditorView` mounts an accessible multiline `contenteditable`. It owns three bridges:

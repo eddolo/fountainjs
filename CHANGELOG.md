@@ -14,6 +14,10 @@
   through transactions without entering document JSON.
 - DOM rendering for overlapping decorated text and non-editable widgets, with
   widget content excluded from selection offset calculations.
+- Public, extension-owned input rules with ordered matching, transaction
+  handlers, a text-replacement helper, and immediate Backspace undo.
+- Markdown shortcuts rebuilt on the public input-rule API, including optional
+  language names in fenced-code triggers.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 

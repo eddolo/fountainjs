@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   CoreExtension,
   CoreSchemaSpec,
+  StarterKit,
   EditorView,
   HTMLExporter,
   Selection as EditorSelection,
@@ -283,6 +284,23 @@ describe('EditorView', () => {
     view.dom.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東京' }));
     expect(editor.getText()).toBe('東京');
     expect(update).toHaveBeenCalledTimes(1);
+    expect(editor.state.selection.eq(EditorSelection.cursor([0, 0], 2))).toBe(true);
+    view.destroy();
+  });
+
+  it('applies Markdown input rules and restores their literal trigger on Backspace', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: '#' }));
+    view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: ' ' }));
+    expect(editor.state.doc.child(0).type.name).toBe('heading');
+    expect(editor.getText()).toBe('');
+
+    view.dom.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Backspace' }));
+    expect(editor.state.doc.child(0).type.name).toBe('paragraph');
+    expect(editor.getText()).toBe('# ');
     expect(editor.state.selection.eq(EditorSelection.cursor([0, 0], 2))).toBe(true);
     view.destroy();
   });

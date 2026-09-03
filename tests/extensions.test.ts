@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   CoreExtension,
+  CoreSchemaSpec,
   StarterKit,
   composeExtensions,
   createEditor,
   defineExtension,
+  inputRulesPlugin,
+  insertText,
+  textInputRule,
+  undoInputRule,
 } from '../src';
 
 describe('modular extension composition', () => {
@@ -51,5 +56,18 @@ describe('modular extension composition', () => {
     expect(StarterKit.commands.toggleMark?.(editor, 'strong')).toBe(true);
     expect(StarterKit.commands.undo?.(editor)).toBe(true);
     expect(editor.getText()).toBe('');
+  });
+
+  it('lets extensions add reusable text input rules and undo the automatic replacement', () => {
+    const rules = inputRulesPlugin({ rules: [
+      textInputRule({ find: /-- $/, replace: '—', name: 'em-dash' }),
+    ] });
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [rules] });
+    insertText(editor, '--');
+    const handled = rules.spec.props?.handleTextInput?.(editor, 2, 2, ' ');
+    expect(handled).toBe(true);
+    expect(editor.getText()).toBe('—');
+    expect(undoInputRule(editor)).toBe(true);
+    expect(editor.getText()).toBe('-- ');
   });
 });
