@@ -13,6 +13,8 @@ import {
   Node,
   Schema,
   Selection,
+  Mapping,
+  StepMap,
   createEditor,
   historyPlugin,
   indentListItem,
@@ -87,6 +89,52 @@ describe('document model and transactions', () => {
     expect(redo(editor)).toBe(true);
     expect(MarkdownExporter.export(editor.state)).toBe('Make it **flow**');
     expect(update).toHaveBeenCalled();
+  });
+
+  it('maps selections through repeated-character edits and structural insertions', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'aaaa' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Second' }] },
+        ],
+      },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    editor.dispatch(editor.state.createTransaction().insertText([0, 0], 0, 'a'));
+    expect(editor.state.selection.eq(Selection.cursor([0, 0], 3))).toBe(true);
+
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([1, 0], 3)));
+    const paragraph = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Inserted')]);
+    editor.dispatch(editor.state.createTransaction().replace(0, 0, [paragraph]));
+    expect(editor.state.selection.eq(Selection.cursor([2, 0], 3))).toBe(true);
+  });
+
+  it('maps selections through mark-created text fragments without changing offsets', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    insertText(editor, 'abcd');
+    editor.dispatch(editor.state.createTransaction().setSelection(new Selection([0, 0], 1, 3)));
+    const transaction = editor.state.createTransaction().addMark(
+      [0, 0],
+      1,
+      3,
+      editor.state.schema.mark('strong'),
+    );
+    editor.dispatch(transaction);
+    expect(editor.state.selection.eq(Selection.range([0, 1], 0, [0, 1], 2))).toBe(true);
+  });
+
+  it('composes and inverts public step maps', () => {
+    const insertion = new StepMap([2, 0, 3]);
+    const deletion = new StepMap([7, 2, 0]);
+    const mapping = new Mapping([insertion, deletion]);
+    expect(insertion.map(2, -1)).toBe(2);
+    expect(insertion.map(2, 1)).toBe(5);
+    expect(mapping.map(6)).toBe(7);
+    expect(deletion.mapResult(8).deleted).toBe(true);
+    expect(insertion.invert().map(5, -1)).toBe(2);
   });
 
   it('stores formatting at a caret and applies it to text typed next', () => {

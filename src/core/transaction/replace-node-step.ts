@@ -1,5 +1,6 @@
 import { Node } from '../schema';
 import { getNodeAtPath, replaceNodeAtPath } from './path';
+import { nodeRangeAtPath, StepMap } from './mapping';
 import { Step } from './step';
 
 /** Replaces one node with zero or more siblings at any depth in the document. */
@@ -20,5 +21,11 @@ export class ReplaceNodeStep extends Step {
       ...this.content,
       ...parent.content.slice(index + 1),
     ]));
+  }
+
+  override getMap(doc: Node): StepMap {
+    const range = nodeRangeAtPath(doc, this.path);
+    const insertedSize = this.content.reduce((size, node) => size + node.nodeSize, 0);
+    return new StepMap([range.from, range.to - range.from, insertedSize]);
   }
 }

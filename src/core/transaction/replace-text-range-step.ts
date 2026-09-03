@@ -1,6 +1,7 @@
 import { Node } from '../schema';
 import { assertTextRange, getNodeAtPath, getTextRangeSegments, replaceNodeAtPath } from './path';
 import { ReplaceTextStep } from './replace-text-step';
+import { StepMap, textPointToPosition } from './mapping';
 import { Step } from './step';
 
 function samePath(left: readonly number[], right: readonly number[]): boolean {
@@ -112,5 +113,11 @@ export class ReplaceTextRangeStep extends Step {
       ...parent.content.slice(endIndex + 1),
     ];
     return replaceNodeAtPath(doc, startParentPath, parent.copy(content));
+  }
+
+  override getMap(doc: Node): StepMap {
+    const start = textPointToPosition(doc, this.startPath, this.from);
+    const end = textPointToPosition(doc, this.endPath, this.to);
+    return new StepMap([start, end - start, this.text.length]);
   }
 }

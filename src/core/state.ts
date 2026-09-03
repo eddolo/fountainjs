@@ -78,7 +78,7 @@ export class EditorState {
 
   apply(transaction: Transaction): EditorState {
     const nextDoc = transaction.doc;
-    const nextSelection = normalizeSelection(nextDoc, transaction.selectionSet ? transaction.selection : this.selection);
+    const nextSelection = normalizeSelection(nextDoc, transaction.selection);
     let nextStoredMarks = transaction.storedMarksSet ? transaction.storedMarks : this.storedMarks;
     if (transaction.selectionSet && !transaction.storedMarksSet) {
       if (nextSelection.isCollapsed) {

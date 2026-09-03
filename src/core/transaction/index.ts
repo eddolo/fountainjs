@@ -1,4 +1,5 @@
 export * from './step';
+export * from './mapping';
 export * from './replace-step';
 export * from './replace-node-step';
 export * from './insert-text-step';

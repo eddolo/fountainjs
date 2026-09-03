@@ -1,6 +1,7 @@
 import { Mark, Node } from '../schema';
 import { Selection } from '../selection';
 import { Transform } from './transform';
+import { mapSelection, type StepMap } from './mapping';
 
 export class Transaction extends Transform {
   selection: Selection;
@@ -34,5 +35,9 @@ export class Transaction extends Transform {
 
   getMeta<T = unknown>(key: string): T | undefined {
     return this.metadata.get(key) as T | undefined;
+  }
+
+  protected override onStepApplied(before: Node, after: Node, map: StepMap): void {
+    this.selection = mapSelection(this.selection, before, after, map);
   }
 }

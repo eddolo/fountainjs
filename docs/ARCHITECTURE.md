@@ -122,6 +122,14 @@ Included step types cover:
 - mark add/remove over one text node or a cross-node range;
 - node attribute updates.
 
+Each applied step also emits a `StepMap`. Positions count text characters and
+the opening/closing boundaries represented by `Node.nodeSize`, which allows a
+path-based selection to be converted to a structural position, mapped through
+one or many changes, and resolved back to the correct text path. Transactions
+map their current selection after every step—even when marks split one text
+leaf into several leaves. `MapResult` reports whether surrounding content was
+deleted, and maps can be inverted for rebasing and review infrastructure.
+
 A transaction can also set the next selection, stored marks, and arbitrary metadata. Commands use metadata for concerns such as history and host provenance.
 
 `Editor.dispatch()` ignores empty transactions. Otherwise it applies the transaction, replaces the current state, notifies subscribers, and calls the host `onUpdate` callback.

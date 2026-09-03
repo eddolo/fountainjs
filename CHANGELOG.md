@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Structural `StepMap` and composable `Mapping` primitives with inversion and
+  deletion metadata.
+- Automatic transaction-selection mapping through text edits, block changes,
+  and mark-created text fragments.
+- Public conversion helpers between path-based text points and structural
+  document positions.
+- A release-gated Tiptap parity programme that distinguishes delivered,
+  partial, and missing capabilities.
+
 ## 0.3.0 — Rebuilt as a modular editor engine
 
 This release replaces the `0.2.x` proof of concept.

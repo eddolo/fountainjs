@@ -64,6 +64,19 @@ editor.dispatch(transaction);
 
 Transforms include `replace`, `replaceNode`, `insertText`, `replaceText`, `replaceTextRange`, `addMark`, `removeMark`, and `setNodeAttrs`.
 
+Every document-changing step contributes a `StepMap` to
+`transaction.mapping`. A map describes changed structural ranges as
+`start, oldSize, newSize` triples and exposes `map()`, `mapResult()`, and
+`invert()`. `Mapping` composes multiple step maps. FountainJS automatically
+maps the transaction selection after every applied step, including path
+changes caused by inserted blocks or text-fragment splits.
+
+Use `textPointToPosition()` and `positionToTextPoint()` at integration
+boundaries that need stable structural positions. `nodeRangeAtPath()` returns
+the structural range occupied by a node. These APIs are the foundation for
+decorations, collaborative cursors, tracked changes, and proposal rebasing;
+they do not by themselves provide collaboration.
+
 ## AI review
 
 `AIController(editor, adapter)` controls the propose/review/apply lifecycle.
