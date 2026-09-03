@@ -114,13 +114,19 @@ export class InputManager {
     } else if (mark) {
       event.preventDefault();
       toggleMark(this.editor, mark);
+    } else if (!modifier && !event.altKey && !event.isComposing && (key === 'backspace' || key === 'delete')) {
+      const backward = key === 'backspace';
+      const handled = this.runGroupedInput(
+        backward ? 'delete-backward' : 'delete-forward',
+        () => backward ? deleteBackward(this.editor) : deleteForward(this.editor),
+      );
+      if (handled) event.preventDefault();
     } else if (event.key === 'Tab' && (isInsideNode(this.editor, 'table_cell') || isInsideNode(this.editor, 'table_header'))) {
       event.preventDefault();
       moveTableCell(this.editor, event.shiftKey ? 'previous' : 'next');
     } else if (event.key === 'Tab' && (isInsideNode(this.editor, 'list_item') || isInsideNode(this.editor, 'task_item'))) {
-      event.preventDefault();
-      if (event.shiftKey) outdentListItem(this.editor);
-      else indentListItem(this.editor);
+      const handled = event.shiftKey ? outdentListItem(this.editor) : indentListItem(this.editor);
+      if (handled) event.preventDefault();
     } else if (event.key === 'Tab' && getNodeAtPath(this.editor.state.doc, this.editor.state.selection.path).type.name === 'text') {
       const block = this.editor.state.doc.content[this.editor.state.selection.path[0]];
       if (block?.type.name === 'code_block') {

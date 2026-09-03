@@ -43,6 +43,71 @@ function tableCells(line: string): string[] {
   return line.trim().replace(/^\||\|$/g, '').split('|').map((cell) => cell.trim().replace(/\\\|/g, '|'));
 }
 
+interface ListMarker {
+  readonly indent: number;
+  readonly kind: 'bullet' | 'ordered' | 'task';
+  readonly value: string;
+  readonly checked: boolean;
+  readonly start: number;
+}
+
+function listMarker(line: string): ListMarker | null {
+  const normalized = line.replace(/^\t+/, (tabs) => '  '.repeat(tabs.length));
+  const match = /^(\s*)(?:(?:[-*])\s+\[([ xX])\]\s+|([-*])\s+|(\d+)[.)]\s+)(.*)$/.exec(normalized);
+  if (!match) return null;
+  return {
+    indent: match[1].length,
+    kind: match[2] !== undefined ? 'task' : match[3] ? 'bullet' : 'ordered',
+    value: match[5],
+    checked: match[2]?.toLowerCase() === 'x',
+    start: Number(match[4] ?? 1),
+  };
+}
+
+function parseList(
+  lines: readonly string[],
+  startIndex: number,
+  indent: number,
+  schema: Schema,
+): { node: Node; nextIndex: number } {
+  const first = listMarker(lines[startIndex]) as ListMarker;
+  const listName = first.kind === 'bullet' ? 'bullet_list' : first.kind === 'ordered' ? 'ordered_list' : 'task_list';
+  const itemName = first.kind === 'task' ? 'task_item' : 'list_item';
+  const items: Node[] = [];
+  let index = startIndex;
+  while (index < lines.length) {
+    const marker = listMarker(lines[index]);
+    if (!marker || marker.indent !== indent || marker.kind !== first.kind) break;
+    const content: Node[] = [paragraph(schema, marker.value)];
+    index += 1;
+    while (index < lines.length) {
+      const next = listMarker(lines[index]);
+      if (next && next.indent > indent) {
+        const nested = parseList(lines, index, next.indent, schema);
+        content.push(nested.node);
+        index = nested.nextIndex;
+        continue;
+      }
+      if (next || !lines[index].trim()) break;
+      const leading = /^\s*/.exec(lines[index])?.[0].length ?? 0;
+      if (leading <= indent) break;
+      const continuation = lines[index].trim();
+      const last = content.at(-1);
+      if (last?.type.name === 'paragraph') {
+        content[content.length - 1] = paragraph(schema, `${last.textContent} ${continuation}`);
+      } else {
+        content.push(paragraph(schema, continuation));
+      }
+      index += 1;
+    }
+    items.push(schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content));
+  }
+  return {
+    node: schema.node(listName, listName === 'ordered_list' ? { start: first.start } : {}, items),
+    nextIndex: index,
+  };
+}
+
 export class MarkdownImporter {
   parse(markdown: string, schema: Schema): Node {
     const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
@@ -106,31 +171,11 @@ export class MarkdownImporter {
         blocks.push(schema.node('blockquote', {}, [paragraph(schema, quote.join('\n'))]));
         continue;
       }
-      if (/^[-*]\s+\[[ xX]\]\s+/.test(line)) {
-        const items: Node[] = [];
-        while (index < lines.length && /^[-*]\s+\[[ xX]\]\s+/.test(lines[index])) {
-          const match = /^[-*]\s+\[([ xX])\]\s+(.*)$/.exec(lines[index++]);
-          items.push(schema.node('task_item', { checked: match?.[1].toLowerCase() === 'x' }, [paragraph(schema, match?.[2] ?? '')]));
-        }
-        blocks.push(schema.node('task_list', {}, items));
-        continue;
-      }
-      if (/^[-*]\s+/.test(line)) {
-        const items: Node[] = [];
-        while (index < lines.length && /^[-*]\s+/.test(lines[index])) {
-          const value = lines[index++].replace(/^[-*]\s+/, '');
-          items.push(schema.node('list_item', {}, [paragraph(schema, value)]));
-        }
-        blocks.push(schema.node('bullet_list', {}, items));
-        continue;
-      }
-      if (/^\d+[.)]\s+/.test(line)) {
-        const start = Number(/^\d+/.exec(line)?.[0] ?? 1);
-        const items: Node[] = [];
-        while (index < lines.length && /^\d+[.)]\s+/.test(lines[index])) {
-          items.push(schema.node('list_item', {}, [paragraph(schema, lines[index++].replace(/^\d+[.)]\s+/, ''))]));
-        }
-        blocks.push(schema.node('ordered_list', { start }, items));
+      const marker = listMarker(line);
+      if (marker?.indent === 0) {
+        const parsed = parseList(lines, index, 0, schema);
+        blocks.push(parsed.node);
+        index = parsed.nextIndex;
         continue;
       }
       const paragraphLines = [line];

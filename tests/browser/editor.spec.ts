@@ -173,6 +173,59 @@ test('preserves structured rich HTML from a real browser clipboard event', async
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('strong')).toHaveText('rich');
 });
 
+test('pastes mixed nested HTML lists without flattening their hierarchy', async ({ page }) => {
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([1, 0], 16));
+  const prevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', {
+      value: {
+        files: [],
+        getData: (type: string) => type === 'text/html'
+          ? '<ul><li>Parent <strong>bold</strong><ol start="3"><li>Nested</li></ol></li><li>Sibling</li></ul>'
+          : 'Parent bold\nNested\nSibling',
+      },
+    });
+    editor.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(prevented).toBe(true);
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await expect(editor.locator('ul > li')).toHaveCount(2);
+  await expect(editor.locator('ul > li').first().locator('strong')).toHaveText('bold');
+  await expect(editor.locator('ul > li').first().locator('ol')).toHaveAttribute('start', '3');
+  await expect(editor.locator('ul > li').first().locator('ol > li')).toHaveText('Nested');
+});
+
+test('wraps, indents, lifts, and exits lists through browser-visible commands and keys', async ({ page }) => {
+  expect(await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectTextRange([0, 0], 0, [1, 0], 6);
+    return contract.commands.commands.toggleList('ordered');
+  })).toBe(true);
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await expect(editor.locator('ol').first().locator(':scope > li')).toHaveCount(2);
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([0, 1, 0, 0], 0);
+    contract.view.focus();
+  });
+  await page.keyboard.press('Tab');
+  await expect(editor.locator('ol ol')).toHaveCount(1);
+  await expect(editor.locator('ol ol > li')).toContainText('Second paragraph');
+  await page.keyboard.press('Shift+Tab');
+  await expect(editor.locator('ol ol')).toHaveCount(0);
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([0, 0, 0, 0], 0);
+    contract.view.focus();
+  });
+  await page.keyboard.press('Backspace');
+  await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+  await expect(editor.locator(':scope > ol > li')).toHaveCount(1);
+});
+
 test('edits bidirectional and deeply nested text by logical document positions', async ({ page }) => {
   await page.evaluate(() => {
     const { editor } = (globalThis as any).fountainBrowserTest;
@@ -429,6 +482,21 @@ test('creates and edits a link through the public React toolbar', async ({ page 
   await expect(link).toHaveAttribute('href', '/internal');
   await page.getByRole('button', { name: 'Remove link' }).click();
   await expect(editor.getByRole('link')).toHaveCount(0);
+});
+
+test('toggles a selected block through the public React list controls', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  const text = await paragraph.textContent();
+  await paragraph.click();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Shift+End');
+  await page.getByRole('button', { name: 'Bullet list' }).click();
+  await expect(editor.locator('ul > li').first()).toHaveText(text ?? '');
+  await page.getByRole('button', { name: 'Bullet list' }).click();
+  await expect(editor.locator('ul > li').filter({ hasText: text ?? '' })).toHaveCount(0);
+  await expect(editor.locator('[data-fountain-node="paragraph"]').filter({ hasText: text ?? '' })).toHaveCount(1);
 });
 
 test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {

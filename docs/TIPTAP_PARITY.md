@@ -62,7 +62,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | --- | --- | --- | --- |
 | DOC-01 | Paragraphs, headings, quotes, breaks, dividers, and common marks | Delivered | Expand interoperability and browser coverage. |
 | DOC-02 | Links with safe editing UI | Delivered | Safe normalization and host validation hooks, typed web/email autolinking, selection/caret link-on-paste, whole-link edit/remove, host-owned activation, React add/preview/title/target UI, and unit plus real-browser coverage are delivered. |
-| DOC-03 | Bullet, ordered, nested, and task lists | Partial | Harden mixed nesting, multi-item transforms, paste, joins, lifting, and keyboard edge cases. |
+| DOC-03 | Bullet, ordered, nested, and task lists | Delivered | Multi-block wrapping, range-only conversion, mixed nesting, multi-item indent/lift, ordered-start preservation, task state, hierarchy-preserving boundary joins, nested HTML/Markdown round trips, keyboard behavior, React controls, and real-browser coverage are delivered. |
 | DOC-04 | Code blocks with language-aware highlighting | Partial | Integrate highlighting as an editor decoration/node view and add language selection. |
 | DOC-05 | Production table editing | Partial | Add merge/split, resize, header toggles, whole-row/column selection, rectangular clipboard distribution, and table repair. |
 | DOC-06 | Images with upload, paste, drop, captions, and dimensions | Partial | Add progress, cancellation, resize handles, alignment, inline mode, error/retry, and responsive metadata. |

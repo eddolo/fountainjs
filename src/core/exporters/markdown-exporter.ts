@@ -31,7 +31,11 @@ function render(node: Node, depth = 0): string {
     case 'bullet_list': return node.content.map((child) => `${'  '.repeat(depth)}- ${render(child, depth + 1)}`).join('\n');
     case 'ordered_list': return node.content.map((child, index) => `${'  '.repeat(depth)}${(Number(node.attrs.start) || 1) + index}. ${render(child, depth + 1)}`).join('\n');
     case 'task_list': return node.content.map((child) => `${'  '.repeat(depth)}- [${child.attrs.checked ? 'x' : ' '}] ${render(child, depth + 1)}`).join('\n');
-    case 'list_item': case 'task_item': return node.content.map((child) => render(child, depth)).join('\n');
+    case 'list_item': case 'task_item': return node.content.map((child, index) => {
+      const value = render(child, depth);
+      const nestedList = ['bullet_list', 'ordered_list', 'task_list'].includes(child.type.name);
+      return index > 0 && !nestedList ? `${'  '.repeat(depth)}${value}` : value;
+    }).join('\n');
     case 'code_block': return `\`\`\`${String(node.attrs.language ?? '')}\n${node.textContent}\n\`\`\``;
     case 'horizontal_rule': return '---';
     case 'hard_break': return '  \n';

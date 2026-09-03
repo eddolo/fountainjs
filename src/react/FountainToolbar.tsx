@@ -7,18 +7,20 @@ import {
   insertBlock,
   insertHardBreak,
   insertImage,
-  insertList,
   insertQuote,
   insertTable,
+  indentListItem,
   isInsideNode,
   isMarkActive,
   findText,
+  outdentListItem,
   replaceAllText,
   selectNextMatch,
   setBlockType,
   setMark,
   setTextAlignment,
   toggleMark,
+  toggleList,
   unsetMark,
   type Editor,
 } from '../core';
@@ -154,9 +156,11 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         </div>
         <div className="fountain-toolbar__group" aria-label="Insert blocks">
           <ToolButton label="❝" title="Quote" onAction={() => insertQuote(editor)} />
-          <ToolButton label="• List" title="Bullet list" onAction={() => insertList(editor, 'bullet')} />
-          <ToolButton label="1. List" title="Numbered list" onAction={() => insertList(editor, 'ordered')} />
-          <ToolButton label="☑" title="Task list" onAction={() => insertList(editor, 'task')} />
+          <ToolButton label="• List" title="Bullet list" active={isInsideNode(editor, 'bullet_list')} onAction={() => toggleList(editor, 'bullet')} />
+          <ToolButton label="1. List" title="Numbered list" active={isInsideNode(editor, 'ordered_list')} onAction={() => toggleList(editor, 'ordered')} />
+          <ToolButton label="☑" title="Task list" active={isInsideNode(editor, 'task_list')} onAction={() => toggleList(editor, 'task')} />
+          <ToolButton label="⇤" title="Lift list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => outdentListItem(editor)} />
+          <ToolButton label="⇥" title="Indent list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => indentListItem(editor)} />
           <ToolButton label="{ }" title="Code block" onAction={() => insertBlock(editor, 'code_block', { language: 'text', lineNumbers: true })} />
           <ToolButton label="▦" title="Insert 3 by 3 table" onAction={() => insertTable(editor)} />
           <ToolButton label="IMG" title="Insert image from URL" onAction={() => setPanel(panel === 'image' ? null : 'image')} />

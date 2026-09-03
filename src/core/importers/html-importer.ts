@@ -43,6 +43,32 @@ function paragraph(element: Element, schema: Schema): FountainNode {
   return schema.node('paragraph', { align: alignment(element) }, content.length ? content : [schema.text('')]);
 }
 
+const LIST_BLOCK_TAGS = new Set(['p', 'div', 'blockquote', 'pre', 'ul', 'ol', 'table', 'figure', 'img', 'hr']);
+
+function listItemContent(element: Element, schema: Schema): FountainNode[] {
+  const result: FountainNode[] = [];
+  let inlineFragment = element.ownerDocument.createDocumentFragment();
+  const flushInline = () => {
+    const content = inlineChildren(inlineFragment, schema);
+    if (content.length) result.push(schema.node('paragraph', {}, content));
+    inlineFragment = element.ownerDocument.createDocumentFragment();
+  };
+  element.childNodes.forEach((child) => {
+    if (child instanceof HTMLInputElement && child.type === 'checkbox') return;
+    if (child instanceof HTMLElement && LIST_BLOCK_TAGS.has(child.tagName.toLowerCase())) {
+      flushInline();
+      result.push(...block(child, schema));
+      return;
+    }
+    inlineFragment.appendChild(child.cloneNode(true));
+  });
+  flushInline();
+  if (!result.length || result[0]?.type.name !== 'paragraph') {
+    result.unshift(schema.node('paragraph', {}, [schema.text('')]));
+  }
+  return result;
+}
+
 function block(element: Element, schema: Schema): FountainNode[] {
   const tag = element.tagName.toLowerCase();
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
@@ -66,9 +92,11 @@ function block(element: Element, schema: Schema): FountainNode[] {
     const isTask = element.getAttribute('data-type') === 'task-list';
     const itemType = isTask ? 'task_item' : 'list_item';
     const items = Array.from(element.children).filter((child) => child.tagName.toLowerCase() === 'li').map((item) => {
-      const children = Array.from(item.children).filter((child) => child.tagName.toLowerCase() !== 'input').flatMap((child) => block(child, schema));
-      const content = children.length ? children : [paragraph(item, schema)];
-      return schema.node(itemType, isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}, content);
+      return schema.node(
+        itemType,
+        isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {},
+        listItemContent(item, schema),
+      );
     });
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
     return [schema.node(listType, tag === 'ol' ? { start: Number(element.getAttribute('start')) || 1 } : {}, items)];

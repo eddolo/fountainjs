@@ -4,6 +4,10 @@
 
 ### Added
 
+- Professional bullet, ordered, and task-list transforms with multi-block
+  wrapping, range conversion, mixed nesting, multi-item indent/lift, correct
+  ordered starts after splits, boundary joins, React controls, and nested
+  HTML/Markdown round trips.
 - Starter link behavior with safe normalization and validation hooks, typed
   web/email autolinking, selection/caret link-on-paste, whole-link editing and
   removal, host-owned activation events, and a complete React link popover.

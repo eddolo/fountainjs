@@ -67,6 +67,28 @@ const links = createLinkBehaviorExtension({
 const kit = composeExtensions([CoreExtension, links])
 ```
 
+### Lists
+
+`toggleList(editor, kind)` wraps a top-level paragraph/heading selection as a
+`bullet`, `ordered`, or `task` list. On an existing list range it converts only
+the selected items and preserves the list segments on either side; invoking the
+active kind lifts the range out. Ordered segments retain their correct numeric
+start after a split.
+
+`indentListItem(editor, nestedKind?)` and `outdentListItem(editor)` transform
+every selected item when both endpoints share a list. Passing `nestedKind`
+creates mixed hierarchy such as an ordered list inside a bullet item. Lifting a
+middle nested range keeps earlier children under the parent and reparents later
+children under the final lifted item, preserving document order. Tab and
+Shift+Tab use the same commands, and an impossible Tab is not trapped. Enter
+splits an item (or exits an empty one); Backspace and Delete join item/list
+boundaries, including adjacent top-level lists and following paragraphs.
+
+HTML and Markdown importers preserve direct item text, inline marks, ordered
+starts, task checks, continuation paragraphs, and mixed nested list types. The
+Markdown exporter emits matching indentation, so supported nested documents
+round-trip through the format adapter.
+
 ### Custom NodeViews
 
 A NodeView constructor receives the current model `node`, the owning
@@ -352,12 +374,12 @@ interface AIAdapter {
 Commands return whether they handled the operation:
 
 - `insertText`, `insertPlainText`, `insertHardBreak`, `deleteSelection`, `deleteBackward`, and `deleteForward`
-- `selectText`, `selectNode`, `selectGap`, `selectAll`, `selectCells`, `selectAdjacentNode`, and `extendCellSelection`
+- `selectText`, `selectTextRange`, `selectNode`, `selectGap`, `selectAll`, `selectCells`, `selectAdjacentNode`, and `extendCellSelection`
 - `setContent`, `setBlockType`, and `insertBlock`
 - `insertNode`, `insertImage`, `insertQuote`, `insertList`, and `insertTable`
 - `isMarkActive`, `toggleMark`, `setMark`, `unsetMark`, `setLink`, and `unsetLink`
 - `setTextAlignment`, `splitBlock`, `joinBackward`, and `joinForward`
-- `setNodeAttributes`, `removeNode`, `moveBlock`, `toggleTaskItem`, `indentListItem`, and `outdentListItem`
+- `setNodeAttributes`, `removeNode`, `moveBlock`, `toggleTaskItem`, `toggleList`, `indentListItem`, and `outdentListItem`
 - `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, and `moveTableCell`
 - `undo`, `redo`, `canUndo`, `canRedo`, and `closeHistory`
 
