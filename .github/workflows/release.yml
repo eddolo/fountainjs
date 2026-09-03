@@ -12,19 +12,21 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
         with:
           version: 11.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-          cache: pnpm
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm dlx publint@0.3.24
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./react
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # npm trusted publishing exchanges GitHub's OIDC identity for a
+      # short-lived, stage-only credential and attaches provenance automatically.
+      # A maintainer must still inspect and approve the stage with npm 2FA.
+      - run: npm stage publish . --access public
