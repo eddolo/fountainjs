@@ -2,7 +2,7 @@ import type { NodeJSON, Plugin, SchemaSpec, Transaction } from '../core';
 import { createEditor, setContent, type Editor, type EditorState } from '../core';
 import { CoreSchemaSpec } from '../extensions';
 import type { ImageUploadHandler } from './media';
-import { EditorView } from './view';
+import { EditorView, type EditorFocusPosition } from './view';
 
 export interface FountainElementChangeDetail {
   state: EditorState;
@@ -13,7 +13,7 @@ export interface FountainElementChangeDetail {
 export interface FountainEditorElement extends HTMLElement {
   readonly editor?: Editor;
   value: NodeJSON | undefined;
-  focusEditor(position?: 'start' | 'end'): void;
+  focusEditor(position?: EditorFocusPosition): void;
 }
 
 export interface RegisterFountainElementOptions {
@@ -99,7 +99,7 @@ export function registerFountainElement(
       this.currentEditor = undefined;
     }
 
-    focusEditor(position: 'start' | 'end' = 'end'): void {
+    focusEditor(position: EditorFocusPosition = 'current'): void {
       this.view?.focus(position);
     }
   }

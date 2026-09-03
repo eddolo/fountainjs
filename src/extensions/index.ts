@@ -41,6 +41,7 @@ import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
 import { composeExtensions, defineExtension } from './extension';
 
 export * from './extension';
+export * from './command-manager';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';

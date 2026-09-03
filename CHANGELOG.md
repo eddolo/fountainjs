@@ -21,6 +21,10 @@
 - Playwright browser contracts for real input events, cross-block selection,
   mapped decorations, input-rule undo, and the public React playground across
   Chromium, Firefox, and WebKit, with CI traces retained on failure.
+- Typed command managers with immediate commands, atomic fluent chains,
+  short-circuit rollback, one-step history, and non-mutating `can()` checks.
+- View-aware focus commands for current, start, and end positions, including
+  side-effect-free capability checks and real-browser chained-edit coverage.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 

@@ -37,6 +37,37 @@ describe('EditorView', () => {
     expect(mount.childElementCount).toBe(0);
   });
 
+  it('adds focus to atomic chains while keeping capability checks side-effect free', () => {
+    const updates: string[] = [];
+    const editor = createEditor({
+      schema: StarterKit.schema,
+      plugins: StarterKit.plugins,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'First' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Second' }] },
+        ],
+      },
+      onUpdate: (state) => updates.push(state.doc.textContent),
+    });
+    const initialSelection = editor.state.selection;
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const commands = view.commandManager(StarterKit.commands);
+
+    expect(commands.can().focus('end')).toBe(true);
+    expect(editor.state.selection.eq(initialSelection)).toBe(true);
+    expect(document.activeElement).not.toBe(view.dom);
+
+    expect(commands.chain().focus('end').insertText('!').run()).toBe(true);
+    expect(editor.getText()).toBe('First\nSecond!');
+    expect(document.activeElement).toBe(view.dom);
+    expect(updates).toEqual(['FirstSecond!']);
+    view.destroy();
+  });
+
   it('captures and replaces a selection across differently marked text fragments', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,

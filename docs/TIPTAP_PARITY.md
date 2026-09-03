@@ -49,7 +49,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | CORE-02 | Immutable state and explicit transactions | Delivered | Preserve as the collaboration layer is introduced. |
 | CORE-03 | Positions survive multi-step document changes | Partial | Add step maps, mapping composition, selection mapping, and recoverable bookmarks. |
 | CORE-04 | Text, node, gap, and table-cell selections | Partial | Text ranges exist; add node, gap, all-document, and rectangular cell selections. |
-| CORE-05 | Chained, dry-run-capable commands | Missing | Add `can()`, command chaining, focus-aware chains, and command result composition. |
+| CORE-05 | Chained, dry-run-capable commands | Delivered | Typed immediate, atomic chained, and non-mutating `can()` surfaces compose every extension command with rollback, one-step history, reserved-name fallback, and a view-aware focus command covered in real browsers. |
 | CORE-06 | Configurable input and paste rules | Partial | Composable input rules and immediate undo exist; add paste rules, mark/wrapping helpers, multi-fragment matching, and real-browser coverage. |
 | CORE-07 | View-only inline, node, and widget decorations | Partial | Core sets, mapping, plugin delivery, and DOM rendering exist; add overlap stress tests and the real-browser matrix. |
 | CORE-08 | Custom interactive node views | Partial | Add selection hooks, event isolation, mutation handling, content updates, and framework adapters. |

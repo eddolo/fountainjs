@@ -46,8 +46,9 @@ const output = document.querySelector<HTMLOutputElement>('#document-json');
 if (!mount || !output) throw new Error('Browser contract fixture failed to mount.');
 
 const view = new EditorView(mount, editor, { ariaLabel: 'Browser contract editor' });
+const commands = view.commandManager(StarterKit.commands);
 const updateOutput = () => { output.value = JSON.stringify(editor.getJSON()); };
 updateOutput();
 editor.subscribe(updateOutput);
 
-Object.assign(globalThis, { fountainBrowserTest: { editor, view } });
+Object.assign(globalThis, { fountainBrowserTest: { commands, editor, view } });

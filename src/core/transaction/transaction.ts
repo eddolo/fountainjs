@@ -37,6 +37,11 @@ export class Transaction extends Transform {
     return this.metadata.get(key) as T | undefined;
   }
 
+  /** Returns an immutable snapshot used when several transactions are composed. */
+  getMetaEntries(): readonly (readonly [string, unknown])[] {
+    return Object.freeze([...this.metadata.entries()].map(([key, value]) => Object.freeze([key, value] as const)));
+  }
+
   protected override onStepApplied(before: Node, after: Node, map: StepMap): void {
     this.selection = mapSelection(this.selection, before, after, map);
   }

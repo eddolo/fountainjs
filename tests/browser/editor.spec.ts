@@ -31,6 +31,25 @@ test('maps decorations through typing without persisting widget content', async 
   await expect(page.getByLabel('Document JSON')).not.toContainText('Remote');
 });
 
+test('runs a view-focused chain and checks it without preview side effects', async ({ page }) => {
+  const output = page.getByLabel('Document JSON');
+  const before = await output.textContent();
+  const canRun = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.can().chain().focus('end').insertText(' chained').run();
+  });
+  expect(canRun).toBe(true);
+  await expect(output).toHaveText(before ?? '');
+
+  const ran = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    return contract.commands.chain().focus('end').insertText(' chained').run();
+  });
+  expect(ran).toBe(true);
+  await expect(page.getByRole('textbox', { name: 'Browser contract editor' })).toBeFocused();
+  await expect(page.locator('[data-fountain-path="1"]')).toContainText('Second paragraph chained');
+});
+
 test('replaces a DOM selection that crosses block boundaries', async ({ page }) => {
   await page.evaluate(() => {
     const wrappers = document.querySelectorAll<HTMLElement>('[data-fountain-text-path]');

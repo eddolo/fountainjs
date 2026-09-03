@@ -1,4 +1,11 @@
-import { DecorationSet, setBlockType, toggleMark, type Decoration, type Editor, type EditorState, type NodeViewLike } from '../core';
+import { DecorationSet, Selection, setBlockType, toggleMark, type Decoration, type Editor, type EditorState, type NodeViewLike } from '../core';
+import {
+  createCommandManager,
+  type CommandChecks,
+  type CommandManager,
+  type CommandRegistry,
+} from '../extensions/command-manager';
+import { getTextLeaves } from '../core/transaction/path';
 import { renderDocument } from './dom-renderer';
 import { InputManager } from './input';
 import type { ImageUploadHandler } from './media';
@@ -14,6 +21,14 @@ export interface EditorViewOptions {
   onError?: (error: unknown) => void;
 }
 
+export type EditorFocusPosition = 'current' | 'start' | 'end';
+
+type ViewFocusCommands = {
+  focus: (editor: Editor, position?: EditorFocusPosition) => boolean;
+};
+
+export type ViewCommandRegistry<Commands extends CommandRegistry> = Omit<Commands, 'focus'> & ViewFocusCommands;
+
 export class EditorView {
   readonly dom: HTMLDivElement;
   private readonly selections: SelectionHandler;
@@ -27,6 +42,7 @@ export class EditorView {
     this.dom = document.createElement('div');
     this.dom.className = ['fountain-editor', options.className].filter(Boolean).join(' ');
     this.dom.contentEditable = editor.editable ? 'true' : 'false';
+    this.dom.tabIndex = 0;
     this.dom.setAttribute('role', 'textbox');
     this.dom.setAttribute('aria-multiline', 'true');
     this.dom.setAttribute('aria-label', options.ariaLabel ?? 'Rich text editor');
@@ -47,9 +63,31 @@ export class EditorView {
     this.unsubscribe = editor.subscribe(this.onStateChange);
   }
 
-  focus(position: 'start' | 'end' = 'end'): void {
+  focus(position: EditorFocusPosition = 'current'): void {
+    if (this.destroyed) return;
+    this.moveSelection(position);
     this.dom.focus();
-    if (position === 'end') this.selections.sync(this.editor.state.selection);
+    this.selections.sync(this.editor.state.selection);
+  }
+
+  /** Adds a view-aware `focus()` command to any framework-neutral registry. */
+  commandManager<Commands extends CommandRegistry>(commands: Commands): CommandManager<ViewCommandRegistry<Commands>> {
+    if (Object.prototype.hasOwnProperty.call(commands, 'focus')) {
+      throw new Error('EditorView reserves the focus command name.');
+    }
+    const focus = (editor: Editor, position: EditorFocusPosition = 'current'): boolean => {
+      if (this.destroyed || editor !== this.editor) return false;
+      this.focus(position);
+      return true;
+    };
+    const checkFocus = (editor: Editor, position: EditorFocusPosition = 'current'): boolean => {
+      if (this.destroyed || editor !== this.editor) return false;
+      this.moveSelection(position);
+      return true;
+    };
+    const viewCommands = { ...commands, focus } as ViewCommandRegistry<Commands>;
+    const checks = { focus: checkFocus } as CommandChecks<ViewCommandRegistry<Commands>>;
+    return createCommandManager(this.editor, viewCommands, { checks });
   }
 
   execCommand(command: string, value?: string): boolean {
@@ -93,6 +131,15 @@ export class EditorView {
       else if (provided) decorations.push(...provided);
     });
     return DecorationSet.create(state.doc, decorations);
+  }
+
+  private moveSelection(position: EditorFocusPosition): void {
+    if (position === 'current') return;
+    const leaves = getTextLeaves(this.editor.state.doc);
+    const target = position === 'start' ? leaves[0] : leaves.at(-1);
+    if (!target) return;
+    const offset = position === 'start' ? 0 : target.node.text?.length ?? 0;
+    this.editor.dispatch(this.editor.state.createTransaction().setSelection(Selection.cursor(target.path, offset)));
   }
 
   private destroyNodeViews(): void {

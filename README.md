@@ -76,8 +76,20 @@ const kit = composeExtensions([
 
 const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
 const view = new EditorView(document.querySelector('#editor')!, editor);
-kit.commands.insertCallout(editor, 'This command came from an extension.');
+const commands = view.commandManager(kit.commands);
+
+commands.commands.insertCallout('This command came from an extension.');
+commands.chain().focus('end').insertText('Atomic ').toggleMark('strong').run();
+commands.can().insertImage({ src: '/cover.jpg', alt: 'Cover' });
 ```
+
+Chains stop and roll back when any command returns `false` or throws. A successful
+chain is dispatched once, so subscribers and history see one atomic edit. `can()`
+runs the same command logic against temporary state without changing the editor.
+`EditorView.commandManager()` adds a view-aware `focus('current' | 'start' | 'end')`
+command; use `createCommandManager()` when there is no DOM view.
+Use `.command(name, ...args)` for an extension command named `run`, `command`, or
+`chain`, since those names are reserved by the fluent API.
 
 Composition rejects duplicate extension names and conflicting node, mark, command, format, or service names by default. Use `{ onConflict: 'replace' }` only for an intentional override.
 

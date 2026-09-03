@@ -4,6 +4,7 @@ import {
   CoreSchemaSpec,
   StarterKit,
   composeExtensions,
+  createCommandManager,
   createEditor,
   defineExtension,
   inputRulesPlugin,
@@ -69,5 +70,62 @@ describe('modular extension composition', () => {
     expect(editor.getText()).toBe('—');
     expect(undoInputRule(editor)).toBe(true);
     expect(editor.getText()).toBe('-- ');
+  });
+
+  it('commits a successful command chain atomically as one history event', () => {
+    const updates: string[] = [];
+    const editor = createEditor({
+      schema: StarterKit.schema,
+      plugins: StarterKit.plugins,
+      onUpdate: (state) => updates.push(state.doc.textContent),
+    });
+    const manager = createCommandManager(editor, StarterKit.commands);
+
+    expect(manager.chain().insertText('Hello').insertText(' world').run()).toBe(true);
+    expect(editor.getText()).toBe('Hello world');
+    expect(updates).toEqual(['Hello world']);
+    expect(StarterKit.commands.undo?.(editor)).toBe(true);
+    expect(editor.getText()).toBe('');
+  });
+
+  it('rolls back a chain when a command refuses and supports a named fallback', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    const manager = createCommandManager(editor, {
+      insertText,
+      refuse: () => false,
+    });
+
+    expect(manager.chain().insertText('temporary').command('refuse').run()).toBe(false);
+    expect(editor.getText()).toBe('');
+  });
+
+  it('checks individual commands and whole chains without changing editor state', () => {
+    const updates: string[] = [];
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      onUpdate: (state) => updates.push(state.doc.textContent),
+    });
+    const manager = createCommandManager(editor, { insertText, refuse: () => false });
+
+    expect(manager.can().insertText('preview')).toBe(true);
+    expect(manager.can().chain().insertText('preview').run()).toBe(true);
+    expect(manager.can().chain().insertText('preview').refuse().run()).toBe(false);
+    expect(editor.getText()).toBe('');
+    expect(updates).toEqual([]);
+  });
+
+  it('restores state when a command chain throws and supports reserved command names', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    const manager = createCommandManager(editor, {
+      insertText,
+      chain: () => true,
+      run: () => true,
+      explode: () => { throw new Error('broken extension command'); },
+    });
+
+    expect(manager.can().command('chain')).toBe(true);
+    expect(manager.chain().command('run').run()).toBe(true);
+    expect(() => manager.chain().insertText('temporary').explode().run()).toThrow('broken extension command');
+    expect(editor.getText()).toBe('');
   });
 });

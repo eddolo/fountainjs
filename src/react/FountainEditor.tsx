@@ -1,10 +1,10 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { Editor } from '../core';
-import { EditorView, type EditorViewOptions } from '../view';
+import { EditorView, type EditorFocusPosition, type EditorViewOptions } from '../view';
 
 export interface FountainEditorHandle {
   view: EditorView | null;
-  focus: () => void;
+  focus: (position?: EditorFocusPosition) => void;
 }
 
 export interface FountainEditorProps extends EditorViewOptions {
@@ -21,7 +21,7 @@ export const FountainEditor = forwardRef<FountainEditorHandle, FountainEditorPro
 
   useImperativeHandle(ref, () => ({
     get view() { return viewRef.current; },
-    focus: () => viewRef.current?.focus(),
+    focus: (position) => viewRef.current?.focus(position),
   }), [editor]);
 
   useEffect(() => {

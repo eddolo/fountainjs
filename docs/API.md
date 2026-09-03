@@ -39,7 +39,10 @@ const poll = defineExtension({
 - `editable`: defaults to `true`.
 - `onUpdate(state, transaction)`: called after a dispatched state change.
 
-`Editor` exposes `state`, `editable`, `createTransaction()`, `dispatch()`, `subscribe()`, `getJSON()`, `getText()`, and `destroy()`.
+`Editor` exposes `state`, `editable`, `createTransaction()`, `dispatch()`,
+`runCommandBatch()`, `subscribe()`, `getJSON()`, `getText()`, and `destroy()`.
+`runCommandBatch()` is the low-level atomic transaction boundary used by command
+chains; most applications should use `createCommandManager()` instead.
 
 ## Selections and transactions
 
@@ -144,6 +147,34 @@ Commands return whether they handled the operation:
 - `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, and `moveTableCell`
 - `undo`, `redo`, `canUndo`, and `canRedo`
 
+Bind any extension registry once to get immediate, chained, and dry-run command
+surfaces:
+
+```ts
+const manager = createCommandManager(editor, kit.commands);
+
+manager.commands.insertText('Now');
+manager.chain().insertText(' one').toggleMark('strong').run();
+
+if (manager.can().insertImage({ src: '/cover.jpg' })) {
+  manager.commands.insertImage({ src: '/cover.jpg' });
+}
+```
+
+A chain runs against temporary state. Every queued command sees the preceding
+command's result; a `false` result or exception restores the starting state. A
+successful chain is recomposed into one transaction, producing one subscriber
+notification and one history entry. `can()` uses the same mechanism in permanent
+dry-run mode and emits no update. Extension commands must keep effects inside
+editor transactions for dry runs to be side-effect-free. For commands named
+`run`, `command`, or `chain`, use the named `.command(name, ...args)` fallback.
+
+`view.commandManager(kit.commands)` returns the same manager plus a view-aware
+`focus('current' | 'start' | 'end')` command. In a `can()` check, focus positions
+are evaluated against temporary selection state without focusing the DOM. A live
+focus chain commits its selection and edits atomically, then keeps the DOM view
+focused.
+
 `findText(document, query, options?)` returns model ranges even when a match crosses marked text fragments. `selectNextMatch()` wraps through matches, and `replaceAllText()` changes all matches in one undoable transaction.
 
 ## Plugins
@@ -172,7 +203,7 @@ quotes, and language-labelled fenced code blocks.
 
 ## DOM view
 
-`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus()` and `destroy()` on the view as needed.
+`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
 
 `registerFountainElement(options?)` registers `<fountain-editor>` as a standards-based Custom Element. Configure a schema and plugins once, assign document JSON through its `value` property, and listen for the bubbling `fountain-change` event. Event detail includes `state`, `transaction`, and portable `value` JSON.
 

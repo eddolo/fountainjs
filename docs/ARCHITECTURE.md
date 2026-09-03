@@ -183,6 +183,19 @@ Commands receive an `Editor`, check their preconditions, dispatch a transaction,
 
 Commands are exported as functions and contributed by `CoreExtension`, so a composed kit can invoke the same operations through `kit.commands`.
 
+`createCommandManager` binds that registry to one editor. Immediate commands use
+the editor normally; fluent chains run against temporary state and then compose
+their steps, final selection, stored marks, and metadata into one dispatch. A
+rejected or throwing command restores the original state. The `can()` surface
+uses the same temporary execution path but never commits or notifies. Extension
+commands must therefore express editor effects through transactions rather than
+performing irreversible host side effects inside the command body.
+
+The core manager has no DOM dependency. `EditorView.commandManager` composes one
+additional `focus` command whose start/end selection movement joins the same
+transaction batch. Its dry-run equivalent moves only temporary selection state,
+so capability checks never steal browser focus.
+
 Typing transformations use the public `InputRule` contract. The input-rules
 plugin matches text including the pending browser input, asks a rule for a
 transaction, and stores the natural untransformed input as an undo snapshot.

@@ -14,10 +14,20 @@ export interface EditorConfig {
 
 export type StateChangeCallback = (state: EditorState, transaction: Transaction) => void;
 
+export interface CommandBatchOptions {
+  /** Evaluate the commands against temporary state and always restore the editor. */
+  dryRun?: boolean;
+}
+
+interface CommandBatch {
+  transactions: Transaction[];
+}
+
 export class Editor {
   private currentState: EditorState;
   private readonly subscribers = new Set<StateChangeCallback>();
   private destroyed = false;
+  private commandBatch?: CommandBatch;
   readonly editable: boolean;
 
   constructor(state: EditorState, private readonly onUpdate?: EditorConfig['onUpdate'], editable = true) {
@@ -37,9 +47,46 @@ export class Editor {
   dispatch(transaction: Transaction): void {
     this.assertAlive();
     if (!transaction.docChanged && !transaction.selectionSet && !transaction.storedMarksSet && transaction.getMeta('force') !== true) return;
+    if (this.commandBatch) {
+      this.currentState = this.currentState.apply(transaction);
+      this.commandBatch.transactions.push(transaction);
+      return;
+    }
     this.currentState = this.currentState.apply(transaction);
     this.subscribers.forEach((callback) => callback(this.currentState, transaction));
     this.onUpdate?.(this.currentState, transaction);
+  }
+
+  /**
+   * Runs command functions against a temporary state and commits their work as one
+   * transaction. A false result or thrown error restores the original state.
+   */
+  runCommandBatch(execute: () => boolean, options: CommandBatchOptions = {}): boolean {
+    this.assertAlive();
+    if (this.commandBatch) throw new Error('FountainJS command batches cannot be nested.');
+    const initialState = this.currentState;
+    const batch: CommandBatch = { transactions: [] };
+    this.commandBatch = batch;
+    try {
+      const accepted = execute();
+      if (!accepted || options.dryRun) return accepted;
+      const combined = initialState.createTransaction();
+      batch.transactions.forEach((transaction) => {
+        transaction.steps.forEach((step) => combined.step(step));
+        if (transaction.selectionSet) combined.setSelection(transaction.selection);
+        if (transaction.storedMarksSet) combined.setStoredMarks(transaction.storedMarks);
+        transaction.getMetaEntries().forEach(([key, value]) => combined.setMeta(key, value));
+      });
+      this.currentState = initialState;
+      this.commandBatch = undefined;
+      this.dispatch(combined);
+      return true;
+    } finally {
+      if (this.commandBatch === batch) {
+        this.currentState = initialState;
+        this.commandBatch = undefined;
+      }
+    }
   }
 
   subscribe(callback: StateChangeCallback): () => void {
