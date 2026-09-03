@@ -272,6 +272,7 @@ describe('EditorView', () => {
         init: (_config, state) => DecorationSet.create(state.doc, [
           Decoration.node(0, 12, { class: 'reviewed-block' }, { key: 'reviewed' }),
           Decoration.inline(1, 6, { class: 'search-match' }, { key: 'search' }),
+          Decoration.inline(4, 10, { class: 'comment-range' }, { key: 'comment' }),
           Decoration.widget(6, caret, { key: 'remote-caret', side: 1 }),
         ]),
         apply: (transaction, value, _oldState, newState) => value.map(transaction.mapping, newState.doc),
@@ -288,12 +289,14 @@ describe('EditorView', () => {
     document.body.appendChild(mount);
     const view = new EditorView(mount, editor);
     expect(view.dom.querySelector('.reviewed-block')?.textContent).toContain('Alpha');
-    expect(view.dom.querySelector('.search-match')?.textContent).toBe('Alpha');
+    expect([...view.dom.querySelectorAll('.search-match')].map((node) => node.textContent)).toEqual(['Alp', 'ha']);
+    expect([...view.dom.querySelectorAll('.comment-range')].map((node) => node.textContent)).toEqual(['ha', ' Bet']);
     expect(view.dom.querySelector('[data-fountain-widget="remote-caret"]')?.textContent).toBe('Remote');
     expect(editor.getJSON()).toEqual(before);
 
     insertText(editor, '!');
-    expect(view.dom.querySelector('.search-match')?.textContent).toBe('Alpha');
+    expect([...view.dom.querySelectorAll('.search-match')].map((node) => node.textContent)).toEqual(['Alp', 'ha']);
+    expect([...view.dom.querySelectorAll('.comment-range')].map((node) => node.textContent)).toEqual(['ha', ' Bet']);
     expect(view.dom.textContent).toContain('!AlphaRemote Beta');
     expect(editor.getText()).toBe('!Alpha Beta');
     view.destroy();

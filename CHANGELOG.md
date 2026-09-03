@@ -29,6 +29,8 @@
   match processing, and reusable text, mark, and block-wrapping helpers.
 - Atomic multiline plain-text paste, so one clipboard action creates one history
   entry even when it inserts several document blocks.
+- Deterministic segmentation for partially overlapping inline decorations,
+  verified while mapping alongside node and widget decorations in real browsers.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 

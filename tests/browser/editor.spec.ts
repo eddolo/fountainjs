@@ -20,13 +20,15 @@ test('edits through real beforeinput events and undoes a Markdown input rule', a
 
 test('maps decorations through typing without persisting widget content', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
-  await expect(editor.locator('.tested-range')).toHaveText('Alpha');
+  expect(await editor.locator('.tested-range').allTextContents()).toEqual(['Alp', 'ha']);
+  expect(await editor.locator('.tested-overlap').allTextContents()).toEqual(['ha', ' Bet']);
   await expect(editor.locator('[data-fountain-widget="remote"]')).toHaveText('Remote');
 
   await page.locator('[data-fountain-path="0"]').click();
   await page.keyboard.press('Home');
   await page.keyboard.type('!');
-  await expect(editor.locator('.tested-range')).toHaveText('Alpha');
+  expect(await editor.locator('.tested-range').allTextContents()).toEqual(['Alp', 'ha']);
+  expect(await editor.locator('.tested-overlap').allTextContents()).toEqual(['ha', ' Bet']);
   await expect(editor).toContainText('!AlphaRemote Beta');
   await expect(page.getByLabel('Document JSON')).not.toContainText('Remote');
 });

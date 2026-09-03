@@ -18,6 +18,7 @@ const decorations = new Plugin<DecorationSet>({
     init: (_config, state) => DecorationSet.create(state.doc, [
       Decoration.node(0, 12, { class: 'tested-paragraph' }, { key: 'paragraph' }),
       Decoration.inline(1, 6, { class: 'tested-range' }, { key: 'range' }),
+      Decoration.inline(4, 10, { class: 'tested-overlap' }, { key: 'overlap' }),
       Decoration.widget(6, () => {
         const caret = document.createElement('span');
         caret.className = 'tested-caret';

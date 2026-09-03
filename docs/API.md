@@ -102,6 +102,8 @@ const reviewDecorations = DecorationSet.create(editor.state.doc, [
 `transaction.mapping` and returns it from `props.decorations`. Inline and node
 decoration attributes pass through the DOM renderer's attribute safety rules.
 Widget contents are non-editable and ignored by selection-offset calculation.
+Partially overlapping inline ranges are split at deterministic boundaries and
+nested only for the shared segment; mapping preserves both ranges across edits.
 
 ## AI review
 

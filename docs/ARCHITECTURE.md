@@ -164,6 +164,9 @@ non-editable DOM node at a mapped position. Decorations never enter the schema
 or persisted JSON. Their immutable sets map through the same transaction maps
 used by selections, which makes them suitable for search results, comments,
 remote carets, diagnostics, and pending review UI.
+The renderer segments text at every inline-range and widget boundary, then nests
+all active decorations for that segment. This supports crossing ranges without
+duplicating or persisting text, including after transaction mapping.
 
 History demonstrates this design. It is a normal stateful plugin holding `done` and `undone` snapshots. It observes document-changing transactions, honors `addToHistory: false`, caps history at 100 entries, and restores document plus selection through another transaction.
 
