@@ -3,11 +3,13 @@ import {
   DecorationSet,
   EditorView,
   LeanExtension,
+  LeanController,
   Plugin,
   PluginKey,
   StarterKit,
   composeExtensions,
   createEditor,
+  createLeanProvider,
   defineExtension,
   pasteRulesPlugin,
   setNodeAttributes,
@@ -104,8 +106,19 @@ if (!mount || !output) throw new Error('Browser contract fixture failed to mount
 
 const view = new EditorView(mount, editor, { ariaLabel: 'Browser contract editor' });
 const commands = view.commandManager(browserKit.commands);
+const leanController = new LeanController(editor, createLeanProvider({
+  descriptor: { id: 'browser-one-shot', label: 'Browser one-shot checker', mode: 'one-shot', dataDestination: 'device' },
+  check: async () => ({
+    status: 'errors',
+    diagnostics: [{
+      range: { start: { line: 0, character: 0 }, end: { line: 0, character: 7 } },
+      severity: 'error',
+      message: 'Browser fixture diagnostic',
+    }],
+  }),
+}));
 const updateOutput = () => { output.value = JSON.stringify(editor.getJSON()); };
 updateOutput();
 editor.subscribe(updateOutput);
 
-Object.assign(globalThis, { fountainBrowserTest: { commands, editor, view, nodeViewMetrics } });
+Object.assign(globalThis, { fountainBrowserTest: { commands, editor, view, leanController, nodeViewMetrics } });

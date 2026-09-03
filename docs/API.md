@@ -142,9 +142,24 @@ a recognized backslash abbreviation inside a Lean block. Pass
 
 The composed `lean` service exposes `mode`, the selected provider when present,
 and `createController(editor)`. A provider is optional. `LeanController` has
-`inspectRequest`, `check`, `goals`, `hover`, `complete`, `cancel`, `dispose`,
+`inspectRequest`, `check`, `goals`, `hover`, `expectedType`, `complete`, `cancel`, `dispose`,
 `subscribe`, and `getSnapshot`. Requests contain only the current Lean block,
 position, version, path, and a host-overridable URI.
+
+When the extension's diagnostics plugin is present, successful checks publish
+validated ranges as accessible, view-only decorations. They map when unrelated
+content moves the Lean block, clear as soon as its source changes, and never
+enter JSON or history. `getLeanDiagnostics(state)` reads that transient state;
+`clearLeanDiagnostics(editor)` clears it; `selectLeanDiagnostic` selects a
+current diagnostic range.
+
+`new LeanInfoView(mount, controller, options?)` supplies a framework-neutral
+panel with provider disclosure, explicit check/goals/hover/expected-type/completion actions,
+diagnostics, proof goals, safe text-only hover output, cancellation, diagnostic
+selection, and completion insertion. Destroying the view removes its
+subscription and DOM without assuming ownership of the controller or provider.
+Pass `onConfigureProvider` to expose a host-owned trusted-provider picker from
+source-only mode.
 
 `createLeanProvider` validates provider trust metadata and optional operations.
 Its descriptor declares `local`, `remote`, `managed`, or `one-shot` mode and a

@@ -8,7 +8,13 @@ import {
   type Editor,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
-import { LeanController, MAX_LEAN_SOURCE_LENGTH, createLeanProvider, type LeanProvider } from '../lean';
+import {
+  LeanController,
+  MAX_LEAN_SOURCE_LENGTH,
+  createLeanProvider,
+  leanDiagnosticsPlugin,
+  type LeanProvider,
+} from '../lean';
 import { defineExtension, type FountainExtension } from './extension';
 
 export const LEAN_UNICODE_SHORTCUTS = Object.freeze({
@@ -141,7 +147,9 @@ export function createLeanExtension(options: LeanExtensionOptions = {}): Fountai
   });
   return defineExtension({
     name: 'lean',
-    plugins: options.unicodeInput === false ? [] : [leanUnicodePlugin],
+    plugins: options.unicodeInput === false
+      ? [leanDiagnosticsPlugin]
+      : [leanUnicodePlugin, leanDiagnosticsPlugin],
     commands: { insertLeanBlock, setLeanSource, replaceLeanUnicode },
     services: { lean: service },
   });

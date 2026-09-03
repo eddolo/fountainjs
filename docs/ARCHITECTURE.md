@@ -322,7 +322,9 @@ normal language-tagged code block and owns Unicode entry commands. The separate
 `LeanProvider`. Source-only mode is the default; provider descriptors make
 execution location and data destination inspectable. Diagnostics and proof
 state remain transient controller state, and stale provider responses are
-discarded rather than attached to changed content. See [LEAN.md](LEAN.md).
+discarded rather than attached to changed content. Valid diagnostics enter a
+plugin only as mapped decorations; `LeanInfoView` subscribes to the same
+controller without putting a framework dependency in core. See [LEAN.md](LEAN.md).
 
 ## Framework surfaces
 

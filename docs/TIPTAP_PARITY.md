@@ -69,7 +69,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-07 | Video, audio, files, and configurable embeds | Missing | Supply first-party nodes, upload contracts, safe rendering, and accessible controls. |
 | DOC-08 | Mentions, emoji, typography, and character count | Missing | Add independent extensions and UI primitives. |
 | DOC-09 | Native inline and display mathematics from LaTeX | Delivered | Opt-in framework-neutral math nodes store editable TeX and labels; commands, isolated input/paste rules with literal undo, safe source fallback, caller-owned DOM renderers, a trust-disabled KaTeX adapter, JSON/HTML/Markdown/text round trips, unit tests, and the public headless demo are delivered. |
-| DOC-10 | Lean 4 source and interactive proof workflows | Partial | Portable Lean blocks, Tab-expanded Unicode abbreviations, static highlighting, source-only operation, and a validated provider-neutral controller for local/remote/managed/one-shot checks, diagnostics, goals, hover, and completion are delivered. Add mapped diagnostic decorations, expected-type/InfoView UI, a hardened reference loopback bridge, and real Lean integration tests before marking delivered. |
+| DOC-10 | Lean 4 source and interactive proof workflows | Partial | Portable Lean blocks, Unicode entry/highlighting, source-only operation, validated local/remote/managed/one-shot provider contracts, mapped transient diagnostics, exact-range selection, and a framework-neutral InfoView for checks, goals, hover, expected types, and completion are delivered. Add a hardened reference loopback bridge and real Lean integration tests before marking delivered. |
 
 ### Product UI
 

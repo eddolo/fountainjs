@@ -43,6 +43,11 @@ export interface LeanHover {
   readonly range?: LeanRange;
 }
 
+export interface LeanExpectedType {
+  readonly markdown: string;
+  readonly range?: LeanRange;
+}
+
 export interface LeanCompletion {
   readonly label: string;
   readonly insertText?: string;
@@ -80,6 +85,7 @@ export interface LeanProvider {
   check?: (request: LeanRequest, context: LeanProviderContext) => Promise<LeanCheckResult>;
   goals?: (request: LeanRequest, context: LeanProviderContext) => Promise<readonly LeanGoal[]>;
   hover?: (request: LeanRequest, context: LeanProviderContext) => Promise<LeanHover | null>;
+  expectedType?: (request: LeanRequest, context: LeanProviderContext) => Promise<LeanExpectedType | null>;
   complete?: (request: LeanRequest, context: LeanProviderContext) => Promise<readonly LeanCompletion[]>;
   dispose?: () => void | Promise<void>;
 }
@@ -93,6 +99,7 @@ export interface LeanControllerSnapshot {
   readonly check?: LeanCheckResult;
   readonly goals?: readonly LeanGoal[];
   readonly hover?: LeanHover | null;
+  readonly expectedType?: LeanExpectedType | null;
   readonly completions?: readonly LeanCompletion[];
   readonly error?: string;
 }

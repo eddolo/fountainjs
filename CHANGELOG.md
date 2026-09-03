@@ -7,7 +7,8 @@
 - Opt-in Lean 4 foundation with portable source blocks, Unicode shortcut entry,
   highlighting, zero-provider source-only mode, explicit provider trust
   metadata, and cancellable/stale-safe check, diagnostic, goal, hover, and
-  completion contracts.
+  completion contracts, plus mapped transient diagnostics and a safe
+  framework-neutral InfoView.
 - Opt-in native mathematics extension with inline/display TeX nodes, insertion
   and source-update commands, isolated input/paste rules, accessible source
   fallback, caller-owned DOM rendering, a safe KaTeX adapter, format round

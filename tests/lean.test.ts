@@ -4,6 +4,7 @@ import {
   EditorView,
   LeanController,
   LeanExtension,
+  LeanInfoView,
   MarkdownExporter,
   MarkdownImporter,
   Schema,
@@ -14,6 +15,7 @@ import {
   createEditor,
   createLeanExtension,
   createLeanProvider,
+  getLeanDiagnostics,
   insertLeanBlock,
   replaceLeanUnicode,
   setLeanSource,
@@ -85,6 +87,17 @@ describe('first-party Lean foundation', () => {
     }));
     expect(controller.getSnapshot().status).toBe('source-only');
     await expect(controller.goals()).resolves.toEqual([]);
+    const mount = document.createElement('div');
+    const info = new LeanInfoView(mount, controller);
+    expect(info.dom.textContent).toContain('No checker is configured');
+    expect(info.dom.querySelector('button')).toBeNull();
+    info.destroy();
+    expect(mount.childElementCount).toBe(0);
+    const configure = vi.fn();
+    const configurable = new LeanInfoView(mount, controller, { onConfigureProvider: configure });
+    (configurable.dom.querySelector('button') as HTMLButtonElement).click();
+    expect(configure).toHaveBeenCalledOnce();
+    configurable.destroy();
   });
 
   it('requires explicit, inspectable provider trust metadata', () => {
@@ -155,6 +168,101 @@ describe('first-party Lean foundation', () => {
     expect(result.diagnostics[0]?.message).toBe('Check file:///Main.lean');
     expect(check).toHaveBeenCalledOnce();
     expect(controller.getSnapshot()).toEqual(expect.objectContaining({ status: 'ready', provider: provider.descriptor }));
+  });
+
+  it('renders transient diagnostics, maps them with the block, and clears them on source edits', async () => {
+    const provider = createLeanProvider({
+      descriptor: { id: 'diagnostics', label: 'Diagnostic checker', mode: 'one-shot', dataDestination: 'device' },
+      check: async () => ({
+        status: 'errors',
+        diagnostics: [{
+          range: { start: { line: 0, character: 0 }, end: { line: 0, character: 7 } },
+          severity: 'error',
+          message: 'Unresolved theorem',
+        }],
+      }),
+    });
+    const kit = leanKit(createLeanExtension({ provider }));
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: {
+        type: 'doc',
+        content: [{
+          type: 'code_block',
+          attrs: { language: 'lean', lineNumbers: true },
+          content: [{ type: 'text', text: 'theorem t : True := by trivial' }],
+        }],
+      },
+    });
+    const mount = document.createElement('div');
+    const view = new EditorView(mount, editor);
+    const controller = new LeanController(editor, provider);
+    await controller.check();
+    expect(getLeanDiagnostics(editor.state)?.result?.diagnostics).toHaveLength(1);
+    expect(mount.querySelector('[data-fountain-lean-diagnostic="error"]')?.textContent).toBe('theorem');
+    expect(JSON.stringify(editor.getJSON())).not.toContain('Unresolved theorem');
+
+    const paragraph = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Before')]);
+    editor.dispatch(editor.state.createTransaction().replace(0, 0, [paragraph]));
+    expect(getLeanDiagnostics(editor.state)?.blockPath).toEqual([1]);
+    expect(mount.querySelector('[data-fountain-lean-diagnostic="error"]')?.textContent).toBe('theorem');
+
+    editor.dispatch(editor.state.createTransaction().insertText([1, 0], 0, 'x'));
+    expect(getLeanDiagnostics(editor.state)?.decorations.decorations).toHaveLength(0);
+    expect(mount.querySelector('[data-fountain-lean-diagnostic]')).toBeNull();
+    view.destroy();
+  });
+
+  it('renders a safe, interactive framework-neutral InfoView', async () => {
+    const provider = createLeanProvider({
+      descriptor: { id: 'info', label: 'Visible local Lean', mode: 'local', dataDestination: 'device', endpoint: 'http://localhost:32100' },
+      check: async () => ({
+        status: 'errors',
+        diagnostics: [{
+          range: { start: { line: 0, character: 0 }, end: { line: 0, character: 7 } },
+          severity: 'error',
+          message: 'Choose this diagnostic',
+        }],
+      }),
+      goals: async () => [{ id: 'g', hypotheses: ['p : Prop'], target: 'p → p' }],
+      hover: async () => ({ markdown: '<img src=x onerror=alert(1)> **Prop**' }),
+      expectedType: async () => ({ markdown: 'Nat' }),
+      complete: async () => [{ label: 'exact', insertText: 'exact ', detail: 'close the goal' }],
+    });
+    const kit = leanKit(createLeanExtension({ provider }));
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: { type: 'doc', content: [{ type: 'code_block', attrs: { language: 'lean', lineNumbers: true }, content: [{ type: 'text', text: 'theorem t : True := by trivial' }] }] },
+    });
+    const controller = new LeanController(editor, provider);
+    const mount = document.createElement('div');
+    const info = new LeanInfoView(mount, controller);
+    expect(info.dom.textContent).toContain('Visible local Lean');
+    expect(info.dom.textContent).toContain('local · device');
+
+    await controller.check();
+    const diagnostic = [...info.dom.querySelectorAll('button')].find((button) => button.textContent?.includes('Choose this diagnostic'));
+    diagnostic?.click();
+    expect(editor.state.selection.kind).toBe('text');
+    expect(editor.state.selection.from).toBe(0);
+    expect(editor.state.selection.to).toBe(7);
+
+    await controller.goals();
+    expect(info.dom.textContent).toContain('p : Prop');
+    expect(info.dom.textContent).toContain('⊢ p → p');
+    await controller.hover();
+    expect(info.dom.textContent).toContain('<img src=x onerror=alert(1)> **Prop**');
+    expect(info.dom.querySelector('img')).toBeNull();
+    await controller.expectedType();
+    expect(info.dom.textContent).toContain('Expected type');
+    expect(info.dom.textContent).toContain('Nat');
+    await controller.complete();
+    const completion = [...info.dom.querySelectorAll('button')].find((button) => button.textContent?.startsWith('exact'));
+    completion?.click();
+    expect(editor.state.doc.child(0).textContent).toBe('exact  t : True := by trivial');
+    info.destroy();
   });
 
   it('rejects stale provider responses and supports goals, hover, and completion', async () => {

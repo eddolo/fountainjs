@@ -135,6 +135,8 @@ blocks, insertion/update commands, Unicode backslash shortcuts, highlighting,
 and an explicit source-only controller; no source leaves the editor and no
 verification is claimed. Applications may attach a named local, remote,
 managed, or one-shot provider for diagnostics, goals, hover, and completion.
+Provider diagnostics render as mapped, transient decorations, and the optional
+plain-DOM `LeanInfoView` exposes source-only/provider state plus proof results.
 There is no built-in endpoint or credential storage.
 
 ```ts

@@ -297,7 +297,7 @@ test('renders and types into a structural gap as a new block', async ({ page }) 
   await expect(page.locator('[data-fountain-path="2"]')).toContainText('Second paragraph');
 });
 
-test('edits source-only Lean and expands Unicode without a language server', async ({ page }) => {
+test('edits Lean without a mandatory server and renders transient provider diagnostics', async ({ page }) => {
   const inserted = await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
     const result = contract.commands.commands.insertLeanBlock('example : \\forall');
@@ -309,10 +309,17 @@ test('edits source-only Lean and expands Unicode without a language server', asy
   await expect(lean).toContainText('example : \\forall');
   await page.keyboard.press('Tab');
   await expect(lean).toContainText('example : ∀');
+  await page.evaluate(async () => {
+    await (globalThis as any).fountainBrowserTest.leanController.check();
+  });
+  await expect(page.locator('[data-fountain-lean-diagnostic="error"]')).toHaveText('example');
+  await expect(page.locator('#document-json')).not.toContainText('Browser fixture diagnostic');
+  await page.keyboard.type(' ');
+  await expect(page.locator('[data-fountain-lean-diagnostic]')).toHaveCount(0);
   expect(await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
     return contract.editor.state.doc.content.some((node: any) => (
-      node.attrs.language === 'lean' && node.textContent === 'example : ∀'
+      node.attrs.language === 'lean' && node.textContent === 'example : ∀ '
     ));
   })).toBe(true);
 });
@@ -401,6 +408,8 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   await expect(math).toHaveCount(2);
   await expect(math.filter({ hasText: 'T(n)=O(n \\log n)' })).toHaveAttribute('role', 'math');
   await expect(math.filter({ hasText: '\\sum_{i=1}^{n} i' })).toHaveAttribute('aria-label', 'Sum of the first n integers');
+  await expect(page.locator('pre[data-language="lean"]')).toContainText('example : 1 = 1 := rfl');
+  await expect(page.getByText('Source-only mode. No checker is configured and no source leaves this editor.')).toBeVisible();
   await page.getByRole('button', { name: '+ Math' }).click();
   await expect(math).toHaveCount(3);
   await expect(page.locator('.demo-output pre')).toContainText('a^2 + b^2 = c^2');

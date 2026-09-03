@@ -8,6 +8,7 @@ import type {
   LeanControllerOptions,
   LeanControllerSnapshot,
   LeanDiagnostic,
+  LeanExpectedType,
   LeanGoal,
   LeanHover,
   LeanPosition,
@@ -17,6 +18,7 @@ import type {
   LeanRequest,
   LeanRequestOptions,
 } from './types';
+import { clearLeanDiagnostics, publishLeanDiagnostics } from './diagnostics';
 
 export const MAX_LEAN_SOURCE_LENGTH = 1_000_000;
 const MAX_PROVIDER_ITEMS = 5_000;
@@ -64,7 +66,7 @@ function freezeDescriptor(input: LeanProviderDescriptor): LeanProviderDescriptor
 /** Validates and freezes a host-supplied provider; it never connects by itself. */
 export function createLeanProvider(provider: LeanProvider): LeanProvider {
   if (!provider || typeof provider !== 'object') throw new TypeError('A Lean provider object is required.');
-  const operations = ['check', 'goals', 'hover', 'complete'] as const;
+  const operations = ['check', 'goals', 'hover', 'expectedType', 'complete'] as const;
   if (!operations.some((name) => typeof provider[name] === 'function')) {
     throw new TypeError('A Lean provider must implement at least one operation.');
   }
@@ -78,6 +80,7 @@ export function createLeanProvider(provider: LeanProvider): LeanProvider {
     ...(provider.check ? { check: provider.check.bind(provider) } : {}),
     ...(provider.goals ? { goals: provider.goals.bind(provider) } : {}),
     ...(provider.hover ? { hover: provider.hover.bind(provider) } : {}),
+    ...(provider.expectedType ? { expectedType: provider.expectedType.bind(provider) } : {}),
     ...(provider.complete ? { complete: provider.complete.bind(provider) } : {}),
     ...(provider.dispose ? { dispose: provider.dispose.bind(provider) } : {}),
   });
@@ -173,6 +176,14 @@ function normalizeHover(value: LeanHover | null, source: string): LeanHover | nu
   });
 }
 
+function normalizeExpectedType(value: LeanExpectedType | null, source: string): LeanExpectedType | null {
+  if (value === null) return null;
+  return Object.freeze({
+    markdown: nonEmpty(value.markdown, 'Lean expected type', 100_000),
+    ...(value.range ? { range: freezeRange(value.range, source) } : {}),
+  });
+}
+
 function normalizeCompletions(values: readonly LeanCompletion[]): readonly LeanCompletion[] {
   if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Lean completions must be a bounded array.');
   return Object.freeze(values.map((value) => Object.freeze({
@@ -244,10 +255,15 @@ export class LeanController {
         diagnostics: Object.freeze([]) as readonly LeanDiagnostic[],
         message: 'No Lean provider is configured; source-only editing remains available.',
       });
+      clearLeanDiagnostics(this.editor);
       this.update({ status: 'source-only', check: result });
       return result;
     }
-    return this.run('check', options, this.provider.check, normalizeCheck);
+    clearLeanDiagnostics(this.editor);
+    const result = await this.run('check', options, this.provider.check, normalizeCheck);
+    const request = this.snapshot.activeRequest;
+    if (request) publishLeanDiagnostics(this.editor, request, result);
+    return result;
   }
 
   async goals(options: LeanRequestOptions = {}): Promise<readonly LeanGoal[]> {
@@ -258,6 +274,11 @@ export class LeanController {
   async hover(options: LeanRequestOptions = {}): Promise<LeanHover | null> {
     if (!this.provider?.hover) return this.sourceOnly('hover', null);
     return this.run('hover', options, this.provider.hover, normalizeHover);
+  }
+
+  async expectedType(options: LeanRequestOptions = {}): Promise<LeanExpectedType | null> {
+    if (!this.provider?.expectedType) return this.sourceOnly('expectedType', null);
+    return this.run('expectedType', options, this.provider.expectedType, normalizeExpectedType);
   }
 
   async complete(options: LeanRequestOptions = {}): Promise<readonly LeanCompletion[]> {
@@ -278,7 +299,7 @@ export class LeanController {
   }
 
   private async run<T, R>(
-    field: 'check' | 'goals' | 'hover' | 'completions',
+    field: 'check' | 'goals' | 'hover' | 'expectedType' | 'completions',
     options: LeanRequestOptions,
     operation: (request: LeanRequest, context: { signal: AbortSignal }) => Promise<T>,
     normalize: (value: T, source: string) => R,
@@ -298,7 +319,7 @@ export class LeanController {
       }
       const value = normalize(raw, request.source);
       this.activeAbort = undefined;
-      this.update({ status: 'ready', provider: this.provider?.descriptor, [field]: value });
+      this.update({ status: 'ready', provider: this.provider?.descriptor, activeRequest: request, [field]: value });
       return value;
     } catch (error) {
       if (this.activeAbort === abort) {
@@ -310,13 +331,13 @@ export class LeanController {
     }
   }
 
-  private sourceOnly<T>(field: 'goals' | 'hover' | 'completions', value: T): T {
+  private sourceOnly<T>(field: 'goals' | 'hover' | 'expectedType' | 'completions', value: T): T {
     this.update({ status: 'source-only', [field]: value });
     return value;
   }
 
   private update(value: LeanControllerSnapshot): void {
-    this.snapshot = Object.freeze(value);
+    this.snapshot = Object.freeze({ ...this.snapshot, ...value });
     this.listeners.forEach((listener) => listener());
   }
 }

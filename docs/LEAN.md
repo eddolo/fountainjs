@@ -14,6 +14,7 @@ Source-only mode is the default. It provides:
 - backslash Unicode expansion on Tab inside Lean blocks, including `\forall`,
   `\exists`, `\to`, `\Nat`, and common Greek letters;
 - Lean/Lean 4 support in the supplied static syntax highlighter;
+- a framework-neutral `LeanInfoView` that clearly displays source-only mode;
 - JSON, Markdown fenced-code, HTML, and plain-text interchange;
 - a `LeanController` whose no-provider checks return an explicit `not-checked`
   result rather than pretending the proof was verified.
@@ -60,7 +61,7 @@ and [installation guide](https://lean-lang.org/install/).
 ## Attaching a provider
 
 `createLeanProvider` accepts a host adapter with visible trust metadata and any
-subset of check, goals, hover, and completion operations. `LeanController`
+subset of check, goals, hover, expected-type, and completion operations. `LeanController`
 builds a frozen request containing only the chosen Lean block, its position,
 URI, and version. Line and character positions use JavaScript/Language Server
 Protocol UTF-16 code units; adapters for other encodings normalize at this
@@ -80,6 +81,7 @@ const provider = createLeanProvider({
   check: (request, { signal }) => localBridge.check(request, { signal }),
   goals: (request, { signal }) => localBridge.goals(request, { signal }),
   hover: (request, { signal }) => localBridge.hover(request, { signal }),
+  expectedType: (request, { signal }) => localBridge.expectedType(request, { signal }),
   complete: (request, { signal }) => localBridge.complete(request, { signal }),
 })
 
@@ -91,6 +93,11 @@ are rejected. Starting another request aborts the earlier one, and a response
 is rejected as stale if its block moved or its source changed. Diagnostics,
 goals, hover text, completions, endpoint details, and credentials never become
 document JSON.
+
+Validated diagnostics are rendered as view-only squiggle/point decorations.
+They map when edits move an unchanged block and disappear immediately when its
+source changes. Selecting a diagnostic in `LeanInfoView` selects the exact
+current source range. These updates do not enter undo history.
 
 ## Trust and credentials
 
@@ -116,11 +123,20 @@ its [architecture and limitations](https://github.com/leanprover-community/lean4
 
 ## Product UI contract
 
-`LeanController.subscribe()` and `getSnapshot()` are framework-neutral. A host
-can render provider state, diagnostics, goals, hover, and completions in React,
-Vue, Svelte, Angular, a Web Component, or plain DOM. Calling `dispose()` aborts
-work and removes listeners. Providers are host-owned and reusable by default;
-pass `{ disposeProvider: true }` as the controller's third constructor argument
-only for a controller-owned provider. Applications can build or replace the
-presentation today without forking the editor engine; the parity programme
-tracks supplied diagnostic and InfoView primitives separately from this API.
+`LeanController.subscribe()` and `getSnapshot()` are framework-neutral.
+`LeanInfoView` is the supplied plain-DOM presentation: it renders provider
+identity and data destination, check status, diagnostics, goals, safe hover
+and expected-type text, completion actions, and cancellation. It never invokes a provider until
+the user chooses an action. A host can use it directly or replace it in React,
+Vue, Svelte, Angular, or a Web Component.
+
+In source-only mode, pass `onConfigureProvider` to show “Choose a Lean checker”
+and open the host's allowlisted provider picker. The callback does not grant
+trust by itself: the host still constructs the selected `LeanProvider`, shows
+its disclosure, and creates the replacement controller.
+
+Calling `LeanInfoView.destroy()` removes its subscription and DOM. Calling
+`LeanController.dispose()` aborts work and removes controller listeners.
+Providers are host-owned and reusable by default; pass `{ disposeProvider:
+true }` as the controller's third constructor argument only for a
+controller-owned provider.

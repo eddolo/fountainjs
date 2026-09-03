@@ -3,6 +3,7 @@ import {
   HTMLExporter,
   JSONExporter,
   LeanExtension,
+  LeanInfoView,
   MarkdownExporter,
   MarkdownImporter,
   MathExtension,
@@ -29,6 +30,7 @@ import {
   undo,
   type Editor,
   type FountainEditorElement,
+  type LeanService,
   type Node,
 } from '../../../src';
 import { FountainComposer, useFountain, useFountainState } from '../../../src/react';
@@ -73,8 +75,8 @@ const demoStatusExtension = defineExtension({
   },
 });
 const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
-const mathDemoKit = composeExtensions([...StarterKit.extensions, MathExtension]);
-const headlessDemoKit = composeExtensions([...StarterKit.extensions, MathExtension, LeanExtension]);
+const docsDemoKit = composeExtensions([...StarterKit.extensions, MathExtension, LeanExtension]);
+const headlessDemoKit = docsDemoKit;
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {
   if (!document) return '';
@@ -142,6 +144,7 @@ function ReactRuntime({ demo }: { demo: DemoDefinition }) {
 
 function DOMRuntime({ demo }: { demo: DemoDefinition }) {
   const mount = useRef<HTMLDivElement>(null);
+  const leanMount = useRef<HTMLDivElement>(null);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentDocument, setCurrentDocument] = useState<Node>();
 
@@ -149,13 +152,21 @@ function DOMRuntime({ demo }: { demo: DemoDefinition }) {
     if (!mount.current) return;
     const kit = demo.slug === 'plain-dom-notes'
       ? statusDemoKit
-      : demo.slug === 'go-docs-service' ? mathDemoKit : StarterKit;
+      : demo.slug === 'go-docs-service' ? docsDemoKit : StarterKit;
     const nextEditor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: demo.content });
     const view = new EditorView(mount.current, nextEditor, { placeholder: 'Edit this document…' });
     const unsubscribe = nextEditor.subscribe((state) => setCurrentDocument(state.doc));
     setEditor(nextEditor);
     setCurrentDocument(nextEditor.state.doc);
+    const leanController = demo.slug === 'go-docs-service'
+      ? (kit.services.lean as LeanService).createController(nextEditor)
+      : undefined;
+    const leanInfo = leanController && leanMount.current
+      ? new LeanInfoView(leanMount.current, leanController)
+      : undefined;
     return () => {
+      leanInfo?.destroy();
+      void leanController?.dispose();
       unsubscribe();
       view.destroy();
       nextEditor.destroy();
@@ -164,7 +175,7 @@ function DOMRuntime({ demo }: { demo: DemoDefinition }) {
   }, [demo]);
 
   return <div className="demo-workspace">
-    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>No React editor components are used inside this mount.</i></div><DemoControls editor={editor} /><div className="bare-editor" ref={mount} /></section>
+    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>No React editor components are used inside this mount.</i></div><DemoControls editor={editor} /><div className="bare-editor" ref={mount} />{demo.slug === 'go-docs-service' && <div className="lean-demo-info" ref={leanMount} />}</section>
     <OutputPanel document={currentDocument} />
   </div>;
 }
