@@ -172,7 +172,7 @@ The React entry is separate, so the framework-neutral root does not load React. 
 
 `CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`.
 
-The editing core provides immutable state, path-based selections across inline fragments and document blocks, typed transactions, keyboard and IME input, multiline and rich-HTML paste, image paste/drop/upload, find/replace, Markdown shortcuts, and 100-step undo/redo. JSON is the lossless source of truth; Markdown, safe HTML, and plain text are interoperability boundaries.
+The editing core provides immutable state, path-based selections across inline fragments and document blocks, typed transactions, keyboard and IME input, configurable input/paste rules, multiline and rich-HTML paste, image paste/drop/upload, find/replace, Markdown shortcuts, and 100-step undo/redo. JSON is the lossless source of truth; Markdown, safe HTML, and plain text are interoperability boundaries.
 
 ```ts
 const schema = new Schema(CoreSchemaSpec);
@@ -250,7 +250,7 @@ The website includes [a ten-demo integration gallery](https://eddolo.github.io/f
 
 ## Project status
 
-The tested release supports multi-paragraph and cross-block selections, formatting across marked and nested text, block splitting and joining, attributed text and alignment, find/replace, rich content insertion, image URL/upload/paste/drop workflows, links, lists, tasks, code, tables, local history, interactive NodeViews, browser-event plugin hooks, extensible schema composition, safe format serialization, DOM/Web Component/React surfaces, optional AI proposals, and MCP transport.
+The tested release supports multi-paragraph and cross-block selections, formatting across marked and nested text, block splitting and joining, attributed text and alignment, find/replace, rich content insertion, image URL/upload/paste/drop workflows, reusable input and paste rules, links, lists, tasks, code, tables, local history, interactive NodeViews, browser-event plugin hooks, extensible schema composition, safe format serialization, DOM/Web Component/React surfaces, optional AI proposals, and MCP transport.
 
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 

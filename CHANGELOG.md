@@ -25,6 +25,10 @@
   short-circuit rollback, one-step history, and non-mutating `can()` checks.
 - View-aware focus commands for current, start, and end positions, including
   side-effect-free capability checks and real-browser chained-edit coverage.
+- Extension-owned paste rules with transaction/document/text results, repeated-
+  match processing, and reusable text, mark, and block-wrapping helpers.
+- Atomic multiline plain-text paste, so one clipboard action creates one history
+  entry even when it inserts several document blocks.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 

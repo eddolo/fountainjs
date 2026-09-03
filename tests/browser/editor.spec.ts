@@ -50,6 +50,24 @@ test('runs a view-focused chain and checks it without preview side effects', asy
   await expect(page.locator('[data-fountain-path="1"]')).toContainText('Second paragraph chained');
 });
 
+test('applies every configured paste-rule match through a browser paste event', async ({ page }) => {
+  await page.locator('[data-fountain-path="1"]').click();
+  await page.keyboard.press('End');
+  const prevented = await page.locator('[data-fountain-path="1"]').evaluate((target) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', {
+      value: {
+        files: [],
+        getData: (type: string) => type === 'text/plain' ? ' one -- two --' : '',
+      },
+    });
+    target.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(prevented).toBe(true);
+  await expect(page.locator('[data-fountain-path="1"]')).toContainText('Second paragraph one — two —');
+});
+
 test('replaces a DOM selection that crosses block boundaries', async ({ page }) => {
   await page.evaluate(() => {
     const wrappers = document.querySelectorAll<HTMLElement>('[data-fountain-text-path]');

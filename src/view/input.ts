@@ -177,7 +177,7 @@ export class InputManager {
     const text = event.clipboardData?.getData('text/plain');
     if (text === undefined) return;
     event.preventDefault();
-    insertPlainText(this.editor, text);
+    this.editor.runCommandBatch(() => insertPlainText(this.editor, text));
   };
 
   private onCompositionStart = (): void => {

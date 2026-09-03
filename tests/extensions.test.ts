@@ -9,9 +9,21 @@ import {
   defineExtension,
   inputRulesPlugin,
   insertText,
+  markPasteRule,
+  pasteRulesPlugin,
   textInputRule,
+  textPasteRule,
   undoInputRule,
+  wrappingPasteRule,
 } from '../src';
+
+function clipboardEvent(text: string, html = ''): ClipboardEvent {
+  return {
+    clipboardData: {
+      getData: (type: string) => type === 'text/plain' ? text : type === 'text/html' ? html : '',
+    },
+  } as ClipboardEvent;
+}
 
 describe('modular extension composition', () => {
   it('combines custom nodes, commands, formats, and host services', () => {
@@ -127,5 +139,40 @@ describe('modular extension composition', () => {
     expect(manager.chain().command('run').run()).toBe(true);
     expect(() => manager.chain().insertText('temporary').explode().run()).toThrow('broken extension command');
     expect(editor.getText()).toBe('');
+  });
+
+  it('applies every text paste-rule match across multiple pasted blocks', () => {
+    const plugin = pasteRulesPlugin({ rules: [
+      textPasteRule({ find: /--/g, replace: '—', name: 'em-dashes' }),
+    ] });
+    const editor = createEditor({ schema: StarterKit.schema, plugins: [...StarterKit.plugins, plugin] });
+
+    expect(plugin.spec.props?.handlePaste?.(editor, clipboardEvent('one -- two --\nthree --'))).toBe(true);
+    expect(editor.getText()).toBe('one — two —\nthree —');
+    expect(StarterKit.commands.undo?.(editor)).toBe(true);
+    expect(editor.getText()).toBe('');
+  });
+
+  it('creates marked fragments for every delimiter match in pasted text', () => {
+    const plugin = pasteRulesPlugin({ rules: [
+      markPasteRule({ find: /\*\*([^*]+)\*\*/g, mark: 'strong', name: 'strong-paste' }),
+    ] });
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [plugin] });
+
+    expect(plugin.spec.props?.handlePaste?.(editor, clipboardEvent('**one** and **two**'))).toBe(true);
+    const inserted = editor.state.doc.child(0);
+    expect(inserted.textContent).toBe('one and two');
+    expect(inserted.content.filter((node) => node.marks.some((mark) => mark.type.name === 'strong')).map((node) => node.text)).toEqual(['one', 'two']);
+  });
+
+  it('wraps matching multiline paste through schema validation', () => {
+    const plugin = pasteRulesPlugin({ rules: [
+      wrappingPasteRule({ find: /^> /m, node: 'blockquote', name: 'quoted-paste' }),
+    ] });
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [plugin] });
+
+    expect(plugin.spec.props?.handlePaste?.(editor, clipboardEvent('> first\nsecond'))).toBe(true);
+    expect(editor.state.doc.child(1).type.name).toBe('blockquote');
+    expect(editor.state.doc.child(1).textContent).toBe('> firstsecond');
   });
 });

@@ -6,6 +6,8 @@ import {
   PluginKey,
   StarterKit,
   createEditor,
+  pasteRulesPlugin,
+  textPasteRule,
 } from '../../../src';
 import '../../../src/styles.css';
 
@@ -29,9 +31,13 @@ const decorations = new Plugin<DecorationSet>({
   props: { decorations: (state) => decorationKey.get(state) },
 });
 
+const pasteRules = pasteRulesPlugin({
+  rules: [textPasteRule({ find: /--/g, replace: '—', name: 'browser-em-dashes' })],
+});
+
 const editor = createEditor({
   schema: StarterKit.schema,
-  plugins: [...StarterKit.plugins, decorations],
+  plugins: [...StarterKit.plugins, decorations, pasteRules],
   content: {
     type: 'doc',
     content: [

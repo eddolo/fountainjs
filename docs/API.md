@@ -201,6 +201,32 @@ convenience helper for textual replacements. The supplied Markdown rules are
 built with the same public API and cover headings, bullet/ordered/task lists,
 quotes, and language-labelled fenced code blocks.
 
+### Paste rules
+
+`pasteRulesPlugin({ rules })` evaluates rules in registration order before the
+view's normal HTML/plain-text importer. Each `PasteRule` receives the complete
+plain text, HTML, clipboard event, current editor state, and every regular-
+expression match. Its handler may return a `Transaction`, schema `Node`,
+transformed string, `true` after handling directly, or `false`/`null` to let the
+next rule try.
+
+```ts
+const pasteBehaviour = pasteRulesPlugin({
+  rules: [
+    textPasteRule({ find: /--/g, replace: '—' }),
+    markPasteRule({ find: /\*\*([^*]+)\*\*/g, mark: 'strong' }),
+    wrappingPasteRule({ find: /^> /m, node: 'blockquote' }),
+  ],
+});
+```
+
+The text helper replaces every match across the complete paste. The mark helper
+removes delimiters and marks every matched fragment on every line; `contentGroup`
+selects the captured content and `getAttributes` supplies mark attributes. The
+wrapping helper builds paragraphs and asks the schema to validate the requested
+container, returning `false` when the node cannot contain them. A custom rule can
+return its own transaction or document for more specialized structures.
+
 ## DOM view
 
 `new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.

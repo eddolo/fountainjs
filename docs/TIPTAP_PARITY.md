@@ -50,7 +50,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | CORE-03 | Positions survive multi-step document changes | Partial | Add step maps, mapping composition, selection mapping, and recoverable bookmarks. |
 | CORE-04 | Text, node, gap, and table-cell selections | Partial | Text ranges exist; add node, gap, all-document, and rectangular cell selections. |
 | CORE-05 | Chained, dry-run-capable commands | Delivered | Typed immediate, atomic chained, and non-mutating `can()` surfaces compose every extension command with rollback, one-step history, reserved-name fallback, and a view-aware focus command covered in real browsers. |
-| CORE-06 | Configurable input and paste rules | Partial | Composable input rules and immediate undo exist; add paste rules, mark/wrapping helpers, multi-fragment matching, and real-browser coverage. |
+| CORE-06 | Configurable input and paste rules | Delivered | Ordered input and paste rule plugins expose custom transaction handlers, immediate input undo, text/mark/wrapping helpers, repeated-match processing, and real-browser coverage. |
 | CORE-07 | View-only inline, node, and widget decorations | Partial | Core sets, mapping, plugin delivery, and DOM rendering exist; add overlap stress tests and the real-browser matrix. |
 | CORE-08 | Custom interactive node views | Partial | Add selection hooks, event isolation, mutation handling, content updates, and framework adapters. |
 | CORE-09 | Predictable keyboard, IME, clipboard, and drag input | Partial | Add real-browser composition, bidi, mobile, rich clipboard, drag-move, and nested-content coverage. |

@@ -74,6 +74,7 @@ export * from './marks/text-color';
 export * from './marks/underline';
 export * from './plugins/history';
 export * from './plugins/input-rules';
+export * from './plugins/paste-rules';
 export * from './plugins/markdown-shortcuts';
 export * from './plugins/syntax-highlight';
 export * from './plugins/mcp-integration';

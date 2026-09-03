@@ -203,6 +203,13 @@ The shipped Markdown shortcuts are consumers of this API rather than special
 cases in the DOM input manager. Extensions can therefore add or replace typing
 behaviour without modifying the view.
 
+Paste transformations use the parallel `PasteRule` contract. The plugin scans
+the clipboard's complete plain-text form, preserves every match for the handler,
+and accepts a transaction, schema document, or transformed text as its result.
+Text, mark, and wrapping helpers cover the common cases; schema construction and
+the normal insertion commands remain the enforcement boundary. Rules run before
+the default rich-HTML/plain-text import path and the first handled rule wins.
+
 ## DOM view and input pipeline
 
 `EditorView` mounts an accessible multiline `contenteditable`. It owns three bridges:
