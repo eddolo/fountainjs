@@ -1,6 +1,7 @@
 import type { Editor } from './editor';
 import type { EditorState } from './state';
 import type { Transaction } from './transaction';
+import type { Decoration, DecorationSet } from './decoration';
 
 let pluginId = 0;
 
@@ -22,6 +23,7 @@ export interface PluginStateSpec<T> {
 }
 
 export interface PluginProps {
+  decorations?: (state: EditorState) => DecorationSet | readonly Decoration[] | null | undefined;
   handleKeyDown?: (editor: Editor, event: KeyboardEvent) => boolean;
   handleBeforeInput?: (editor: Editor, event: InputEvent) => boolean;
   handleTextInput?: (editor: Editor, from: number, to: number, text: string) => boolean;

@@ -8,11 +8,17 @@ function textOffsetWithin(root: HTMLElement, node: globalThis.Node, offset: numb
   const range = document.createRange();
   range.selectNodeContents(root);
   try { range.setEnd(node, offset); } catch { return 0; }
-  return range.toString().length;
+  const fragment = range.cloneContents();
+  fragment.querySelectorAll?.('[data-fountain-widget]').forEach((widget) => widget.remove());
+  return fragment.textContent?.length ?? 0;
 }
 
 function locateOffset(root: HTMLElement, target: number): { node: globalThis.Node; offset: number } | null {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => (node.parentElement?.closest('[data-fountain-widget]')
+      ? NodeFilter.FILTER_REJECT
+      : NodeFilter.FILTER_ACCEPT),
+  });
   let remaining = target;
   let current = walker.nextNode();
   while (current) {

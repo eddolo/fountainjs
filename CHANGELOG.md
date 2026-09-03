@@ -10,6 +10,10 @@
   and mark-created text fragments.
 - Public conversion helpers between path-based text points and structural
   document positions.
+- Immutable inline, node, and widget decorations supplied by plugins and mapped
+  through transactions without entering document JSON.
+- DOM rendering for overlapping decorated text and non-editable widgets, with
+  widget content excluded from selection offset calculations.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 

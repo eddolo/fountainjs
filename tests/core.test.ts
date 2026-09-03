@@ -13,6 +13,8 @@ import {
   Node,
   Schema,
   Selection,
+  Decoration,
+  DecorationSet,
   Mapping,
   StepMap,
   createEditor,
@@ -135,6 +137,26 @@ describe('document model and transactions', () => {
     expect(mapping.map(6)).toBe(7);
     expect(deletion.mapResult(8).deleted).toBe(true);
     expect(insertion.invert().map(5, -1)).toBe(2);
+  });
+
+  it('maps immutable inline, node, and widget decorations through transactions', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    insertText(editor, 'abcd');
+    const widget = () => document.createElement('span');
+    const decorations = DecorationSet.create(editor.state.doc, [
+      Decoration.node(0, 6, { class: 'paragraph' }, { key: 'block' }),
+      Decoration.inline(2, 4, { class: 'match' }, { key: 'match' }),
+      Decoration.widget(4, widget, { key: 'caret' }),
+    ]);
+    const transaction = editor.state.createTransaction().insertText([0, 0], 0, '!');
+    const mapped = decorations.map(transaction.mapping, transaction.doc);
+    expect(mapped.decorations.map(({ type, from, to }) => ({ type, from, to }))).toEqual([
+      { type: 'node', from: 0, to: 7 },
+      { type: 'inline', from: 3, to: 5 },
+      { type: 'widget', from: 5, to: 5 },
+    ]);
+    expect(mapped.find(3, 5, (decoration) => decoration.type === 'inline')).toHaveLength(1);
+    expect(mapped.remove([mapped.decorations[1] as Decoration]).decorations).toHaveLength(2);
   });
 
   it('stores formatting at a caret and applies it to text typed next', () => {

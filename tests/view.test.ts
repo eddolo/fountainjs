@@ -8,6 +8,9 @@ import {
   HTMLExporter,
   Selection as EditorSelection,
   Plugin,
+  PluginKey,
+  Decoration,
+  DecorationSet,
   composeExtensions,
   createEditor,
   defineExtension,
@@ -220,6 +223,47 @@ describe('EditorView', () => {
     expect(editor.getText()).toBe('extension');
     expect(calls).toEqual(['beforeinput:insertText', 'paste', 'drop', 'click']);
     expect([beforeInput, paste, drop, click].every((event) => event.defaultPrevented)).toBe(true);
+    view.destroy();
+  });
+
+  it('renders mapped inline, node, and widget decorations without changing document JSON', () => {
+    const decorationKey = new PluginKey<DecorationSet>('decorations');
+    const caret = () => {
+      const element = document.createElement('span');
+      element.textContent = 'Remote';
+      element.setAttribute('aria-label', 'Remote collaborator');
+      return element;
+    };
+    const plugin = new Plugin<DecorationSet>({
+      key: decorationKey,
+      state: {
+        init: (_config, state) => DecorationSet.create(state.doc, [
+          Decoration.node(0, 12, { class: 'reviewed-block' }, { key: 'reviewed' }),
+          Decoration.inline(1, 6, { class: 'search-match' }, { key: 'search' }),
+          Decoration.widget(6, caret, { key: 'remote-caret', side: 1 }),
+        ]),
+        apply: (transaction, value, _oldState, newState) => value.map(transaction.mapping, newState.doc),
+      },
+      props: { decorations: (state) => decorationKey.get(state) },
+    });
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      plugins: [plugin],
+      content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha Beta' }] }] },
+    });
+    const before = editor.getJSON();
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    expect(view.dom.querySelector('.reviewed-block')?.textContent).toContain('Alpha');
+    expect(view.dom.querySelector('.search-match')?.textContent).toBe('Alpha');
+    expect(view.dom.querySelector('[data-fountain-widget="remote-caret"]')?.textContent).toBe('Remote');
+    expect(editor.getJSON()).toEqual(before);
+
+    insertText(editor, '!');
+    expect(view.dom.querySelector('.search-match')?.textContent).toBe('Alpha');
+    expect(view.dom.textContent).toContain('!AlphaRemote Beta');
+    expect(editor.getText()).toBe('!Alpha Beta');
     view.destroy();
   });
 

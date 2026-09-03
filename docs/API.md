@@ -77,6 +77,29 @@ the structural range occupied by a node. These APIs are the foundation for
 decorations, collaborative cursors, tracked changes, and proposal rebasing;
 they do not by themselves provide collaboration.
 
+## Decorations
+
+Decorations add view-only presentation without changing document JSON:
+
+```ts
+const reviewDecorations = DecorationSet.create(editor.state.doc, [
+  Decoration.inline(4, 12, { class: 'review-range' }, { key: 'review' }),
+  Decoration.node(0, 18, { 'data-reviewed': true }, { key: 'reviewed-block' }),
+  Decoration.widget(12, () => {
+    const caret = document.createElement('span');
+    caret.className = 'remote-caret';
+    caret.setAttribute('aria-label', 'Ada\'s cursor');
+    return caret;
+  }, { key: 'ada', side: 1 }),
+]);
+```
+
+`DecorationSet` is immutable and exposes `create`, `find`, `map`, `add`,
+`remove`, and `eq`. A stateful plugin normally maps its set through
+`transaction.mapping` and returns it from `props.decorations`. Inline and node
+decoration attributes pass through the DOM renderer's attribute safety rules.
+Widget contents are non-editable and ignored by selection-offset calculation.
+
 ## AI review
 
 `AIController(editor, adapter)` controls the propose/review/apply lifecycle.
@@ -125,7 +148,7 @@ Commands return whether they handled the operation:
 
 ## Plugins
 
-A `Plugin` can own immutable state and intercept `keydown`, `beforeinput`, text input, paste, drop, and click events. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
+A `Plugin` can own immutable state, contribute a `DecorationSet`, and intercept `keydown`, `beforeinput`, text input, paste, drop, and click events. It can also receive editor create/destroy lifecycle callbacks. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
 
 ## DOM view
 

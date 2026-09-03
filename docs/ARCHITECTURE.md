@@ -158,6 +158,13 @@ A `Plugin` may define state plus event/lifecycle props:
 
 Event hooks return `true` when they handled an event. The input manager then prevents the browser default. `PluginKey` provides stable access to a plugin's private state.
 
+Plugins may also expose a `DecorationSet`. Inline decorations wrap text ranges,
+node decorations annotate an exact node range, and widget decorations render a
+non-editable DOM node at a mapped position. Decorations never enter the schema
+or persisted JSON. Their immutable sets map through the same transaction maps
+used by selections, which makes them suitable for search results, comments,
+remote carets, diagnostics, and pending review UI.
+
 History demonstrates this design. It is a normal stateful plugin holding `done` and `undone` snapshots. It observes document-changing transactions, honors `addToHistory: false`, caps history at 100 entries, and restores document plus selection through another transaction.
 
 ## Commands

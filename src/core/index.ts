@@ -2,6 +2,7 @@ export * from './schema';
 export * from './transaction';
 export * from './selection';
 export * from './plugin';
+export * from './decoration';
 export * from './state';
 export * from './editor';
 export * from './commands';

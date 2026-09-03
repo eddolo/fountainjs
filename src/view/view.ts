@@ -1,4 +1,4 @@
-import { setBlockType, toggleMark, type Editor, type EditorState, type NodeViewLike } from '../core';
+import { DecorationSet, setBlockType, toggleMark, type Decoration, type Editor, type EditorState, type NodeViewLike } from '../core';
 import { renderDocument } from './dom-renderer';
 import { InputManager } from './input';
 import type { ImageUploadHandler } from './media';
@@ -20,6 +20,7 @@ export class EditorView {
   private readonly input: InputManager;
   private readonly unsubscribe: () => void;
   private nodeViews: NodeViewLike[] = [];
+  private decorations = DecorationSet.empty;
   private destroyed = false;
 
   constructor(public readonly mount: HTMLElement, public readonly editor: Editor, options: EditorViewOptions = {}) {
@@ -35,7 +36,8 @@ export class EditorView {
       if (!/^on/i.test(name)) this.dom.setAttribute(name, value);
     });
     mount.appendChild(this.dom);
-    this.render(editor.state.doc);
+    this.decorations = this.collectDecorations(editor.state);
+    this.render(editor.state.doc, this.decorations);
     this.selections = new SelectionHandler(editor, this.dom);
     this.input = new InputManager(editor, this.dom, this.selections, {
       imageUpload: options.imageUpload,
@@ -70,15 +72,27 @@ export class EditorView {
 
   private onStateChange = (state: EditorState, transaction: import('../core').Transaction): void => {
     if (this.destroyed) return;
-    if (transaction.docChanged) this.render(state.doc);
+    const decorations = this.collectDecorations(state);
+    if (transaction.docChanged || !decorations.eq(this.decorations)) this.render(state.doc, decorations);
+    this.decorations = decorations;
     queueMicrotask(() => this.selections.sync(state.selection));
   };
 
-  private render(document: import('../core').Node): void {
+  private render(document: import('../core').Node, decorations: DecorationSet): void {
     this.destroyNodeViews();
     const nodeViews: NodeViewLike[] = [];
-    renderDocument(this.dom, document, { view: this, nodeViews });
+    renderDocument(this.dom, document, { view: this, nodeViews, decorations });
     this.nodeViews = nodeViews;
+  }
+
+  private collectDecorations(state: EditorState): DecorationSet {
+    const decorations: Decoration[] = [];
+    state.plugins.forEach((plugin) => {
+      const provided = plugin.spec.props?.decorations?.(state);
+      if (provided instanceof DecorationSet) decorations.push(...provided.decorations);
+      else if (provided) decorations.push(...provided);
+    });
+    return DecorationSet.create(state.doc, decorations);
   }
 
   private destroyNodeViews(): void {

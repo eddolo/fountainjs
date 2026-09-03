@@ -51,7 +51,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | CORE-04 | Text, node, gap, and table-cell selections | Partial | Text ranges exist; add node, gap, all-document, and rectangular cell selections. |
 | CORE-05 | Chained, dry-run-capable commands | Missing | Add `can()`, command chaining, focus-aware chains, and command result composition. |
 | CORE-06 | Configurable input and paste rules | Partial | Generalize Markdown shortcuts into composable input/paste rules with undo. |
-| CORE-07 | View-only inline, node, and widget decorations | Missing | Add mapped decoration sets and plugin-provided decorations. |
+| CORE-07 | View-only inline, node, and widget decorations | Partial | Core sets, mapping, plugin delivery, and DOM rendering exist; add overlap stress tests and the real-browser matrix. |
 | CORE-08 | Custom interactive node views | Partial | Add selection hooks, event isolation, mutation handling, content updates, and framework adapters. |
 | CORE-09 | Predictable keyboard, IME, clipboard, and drag input | Partial | Add real-browser composition, bidi, mobile, rich clipboard, drag-move, and nested-content coverage. |
 | CORE-10 | Configurable undo/redo | Partial | Map selections, group adjacent input, support history boundaries, and add collaboration-aware undo. |
