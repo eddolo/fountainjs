@@ -8,11 +8,11 @@ export interface FountainComposerProps extends Omit<FountainEditorProps, 'editor
   showToolbar?: boolean;
 }
 
-export function FountainComposer({ editor, className, showToolbar = true, ...editorProps }: FountainComposerProps) {
+export function FountainComposer({ editor, className, showToolbar = true, imageUpload, onError, ...editorProps }: FountainComposerProps) {
   return (
     <section className={['fountain-composer', className].filter(Boolean).join(' ')}>
-      {showToolbar && <FountainToolbar editor={editor} />}
-      <FountainEditor editor={editor} {...editorProps} />
+      {showToolbar && <FountainToolbar editor={editor} imageUpload={imageUpload} onError={onError} />}
+      <FountainEditor editor={editor} imageUpload={imageUpload} onError={onError} {...editorProps} />
     </section>
   );
 }

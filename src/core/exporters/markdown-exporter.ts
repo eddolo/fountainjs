@@ -4,7 +4,7 @@ import type { Node } from '../schema';
 function escapeInline(text: string): string { return text.replace(/([\\`*_[\]<>])/g, '\\$1'); }
 
 function inline(node: Node): string {
-  if (!node.isText) return node.content.map(inline).join('');
+  if (!node.isText) return node.type.name === 'hard_break' ? '  \n' : node.content.map(inline).join('');
   let text = node.marks.some((mark) => mark.type.name === 'code') ? `\`${(node.text ?? '').replace(/`/g, '\\`')}\`` : escapeInline(node.text ?? '');
   for (const mark of node.marks.filter((item) => item.type.name !== 'code')) {
     if (mark.type.name === 'strong') text = `**${text}**`;
@@ -34,7 +34,7 @@ function render(node: Node, depth = 0): string {
     case 'image_super': return `![${String(node.attrs.alt ?? '')}](${String(node.attrs.src ?? '')}${node.attrs.title ? ` "${String(node.attrs.title)}"` : ''})${node.attrs.caption ? `\n_${String(node.attrs.caption)}_` : ''}`;
     case 'table': {
       return node.content.map((row, rowIndex) => {
-        const cells = row.content.map((cell) => cell.textContent.replace(/\|/g, '\\|'));
+        const cells = row.content.map((cell) => cell.content.map((child) => render(child, depth)).join(' ').replace(/\|/g, '\\|'));
         return `| ${cells.join(' | ')} |${rowIndex === 0 ? `\n| ${cells.map(() => '---').join(' | ')} |` : ''}`;
       }).join('\n');
     }

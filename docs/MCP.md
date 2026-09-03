@@ -28,6 +28,8 @@ The included browser-and-Node client implements the Model Context Protocol `2025
 
 The client does not pretend that every model provider is an MCP server. Point it at a compatible endpoint or your own bridge.
 
+The test suite also starts a real loopback HTTP server and exercises the complete lifecycle—initialize, session propagation, initialized notification, tool discovery, tool call, accepted editor change, and DELETE cleanup. Protocol tests therefore verify live request/response behavior in addition to mocked edge cases.
+
 ## Review workflow over MCP
 
 ```ts

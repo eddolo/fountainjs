@@ -1,6 +1,6 @@
 import { Mark, MarkType, Node } from '../schema';
 import { AddMarkStep } from './add-mark-step';
-import { assertTextRange, getNodeAtPath, replaceNodeAtPath } from './path';
+import { getTextRangeSegments } from './path';
 import { RemoveMarkStep } from './remove-mark-step';
 import { Step } from './step';
 
@@ -16,31 +16,64 @@ function transformRange(
   to: number,
   transform: (node: Node) => Node,
 ): Node {
-  const parentPath = startPath.slice(0, -1);
-  if (!startPath.length || !samePath(parentPath, endPath.slice(0, -1))) {
-    throw new Error('Cross-fragment mark ranges must share one parent.');
+  const segments = getTextRangeSegments(doc, startPath, from, endPath, to);
+  const byPath = new Map(segments.map((segment) => [segment.path.join('.'), segment]));
+
+  const rewrite = (node: Node, path: readonly number[]): readonly Node[] => {
+    if (node.isText) {
+      const segment = byPath.get(path.join('.'));
+      if (!segment || segment.from === segment.to) return [node];
+      const value = node.text ?? '';
+      return [
+        ...(segment.from ? [node.withText(value.slice(0, segment.from))] : []),
+        transform(node.withText(value.slice(segment.from, segment.to))),
+        ...(segment.to < value.length ? [node.withText(value.slice(segment.to))] : []),
+      ];
+    }
+    return [node.copy(node.content.flatMap((child, index) => rewrite(child, [...path, index])))];
+  };
+
+  return rewrite(doc, [])[0] as Node;
+}
+
+export interface MappedTextSelection {
+  readonly startPath: readonly number[];
+  readonly endPath: readonly number[];
+  readonly endOffset: number;
+}
+
+/** Maps a selected text range through the fragment splits made by a mark step. */
+export function mapMarkRangeSelection(
+  doc: Node,
+  startPath: readonly number[],
+  from: number,
+  endPath: readonly number[],
+  to: number,
+): MappedTextSelection | null {
+  const segments = getTextRangeSegments(doc, startPath, from, endPath, to);
+  const shifts = new Map<string, number>();
+  let selectedStart: readonly number[] | undefined;
+  let selectedEnd: readonly number[] | undefined;
+  let selectedEndOffset = 0;
+
+  for (const segment of segments) {
+    const length = segment.node.text?.length ?? 0;
+    const parentPath = segment.path.slice(0, -1);
+    const key = parentPath.join('.');
+    const shift = shifts.get(key) ?? 0;
+    const index = segment.path.at(-1) as number;
+    if (segment.to <= segment.from) continue;
+    const mapped = Object.freeze([...parentPath, index + shift + (segment.from > 0 ? 1 : 0)]);
+    selectedStart ??= mapped;
+    selectedEnd = mapped;
+    selectedEndOffset = segment.to - segment.from;
+    const fragmentCount = (segment.from > 0 ? 1 : 0) + 1 + (segment.to < length ? 1 : 0);
+    shifts.set(key, shift + fragmentCount - 1);
   }
-  const startIndex = startPath.at(-1) as number;
-  const endIndex = endPath.at(-1) as number;
-  if (startIndex >= endIndex) throw new Error('Cross-fragment mark ranges must be ordered from start to end.');
-  const parent = getNodeAtPath(doc, parentPath);
-  const replacement: Node[] = [];
 
-  parent.content.slice(startIndex, endIndex + 1).forEach((node, relativeIndex, selected) => {
-    const nodeFrom = relativeIndex === 0 ? from : 0;
-    const nodeTo = relativeIndex === selected.length - 1 ? to : node.text?.length ?? 0;
-    assertTextRange(node, nodeFrom, nodeTo);
-    const value = node.text ?? '';
-    if (nodeFrom) replacement.push(node.withText(value.slice(0, nodeFrom)));
-    if (nodeTo > nodeFrom) replacement.push(transform(node.withText(value.slice(nodeFrom, nodeTo))));
-    if (nodeTo < value.length) replacement.push(node.withText(value.slice(nodeTo)));
-  });
-
-  return replaceNodeAtPath(doc, parentPath, parent.copy([
-    ...parent.content.slice(0, startIndex),
-    ...replacement,
-    ...parent.content.slice(endIndex + 1),
-  ]));
+  return selectedStart && selectedEnd
+    ? { startPath: selectedStart, endPath: selectedEnd, endOffset: selectedEndOffset }
+    : null;
 }
 
 export class AddMarkRangeStep extends Step {

@@ -44,6 +44,7 @@ import {
   createEditor,
   defineExtension,
   historyPlugin,
+  insertNode,
 } from 'fountainjs-editor';
 
 const callout = defineExtension({
@@ -57,13 +58,13 @@ const callout = defineExtension({
     },
   },
   commands: {
-    insertCallout: (editor) => {
-      // A host-owned command can dispatch any valid transaction.
-      return true;
+    insertCallout: (editor, text = 'A useful callout') => {
+      const { schema } = editor.state;
+      return insertNode(editor, schema.node('callout', { tone: 'info' }, [schema.text(text)]));
     },
   },
   services: {
-    analytics: yourAnalyticsAdapter,
+    analytics: { track: (event) => console.info('editor event', event) },
   },
 });
 
@@ -75,6 +76,7 @@ const kit = composeExtensions([
 
 const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
 const view = new EditorView(document.querySelector('#editor')!, editor);
+kit.commands.insertCallout(editor, 'This command came from an extension.');
 ```
 
 Composition rejects duplicate extension names and conflicting node, mark, command, format, or service names by default. Use `{ onConflict: 'replace' }` only for an intentional override.
@@ -96,6 +98,12 @@ const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
 const view = new EditorView(document.querySelector('#editor')!, editor, {
   placeholder: 'Start writing…',
   ariaLabel: 'Article body',
+  imageUpload: async (file) => {
+    const body = new FormData();
+    body.append('file', file);
+    const response = await fetch('/api/media', { method: 'POST', body });
+    return response.json(); // { src, alt?, title?, caption?, width? }
+  },
 });
 
 const stopSaving = editor.subscribe((state) => saveDraft(state.doc.toJSON()));
@@ -150,9 +158,9 @@ The React entry is separate, so the framework-neutral root does not load React. 
 
 ## Included document capabilities
 
-`CoreExtension` supplies paragraphs, six heading levels, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, hard breaks, links, highlights, and common text marks.
+`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`.
 
-The editing core provides immutable state, path-based selections, inline cross-mark selection, typed transactions, keyboard input, Markdown shortcuts, and 100-step undo/redo. JSON is the lossless source of truth; Markdown, safe HTML, and plain text are interoperability boundaries.
+The editing core provides immutable state, path-based selections across inline fragments and document blocks, typed transactions, keyboard and IME input, multiline and rich-HTML paste, image paste/drop/upload, find/replace, Markdown shortcuts, and 100-step undo/redo. JSON is the lossless source of truth; Markdown, safe HTML, and plain text are interoperability boundaries.
 
 ```ts
 const schema = new Schema(CoreSchemaSpec);
@@ -201,7 +209,7 @@ FountainJS is not the first framework-neutral or extensible editor.
 | [Tiptap](https://tiptap.dev/docs/editor/getting-started/overview) | Mature ProseMirror platform with multiple framework integrations and a large extension ecosystem | Collaboration, ecosystem depth, and commercial support |
 | [Plate](https://platejs.org/docs) | Powerful React/Slate framework with a broad plugin catalog | A React-first product with many polished capabilities ready now |
 | [BlockNote](https://www.blocknotejs.org/docs) | Polished React block editor with an out-of-the-box Notion-like experience | Shipping a strong block UI quickly |
-| **FountainJS** | Early-beta DOM-first engine, Web Component, React adapter, and explicit extension composition | Owning a compact modular stack and keeping framework/data boundaries open |
+| **FountainJS** | DOM-first editor platform, Web Component, React adapter, and explicit extension composition | Owning a modular editor platform and keeping framework/data boundaries open |
 
 Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need real-time collaboration, comprehensive IME/mobile hardening, a large plugin market, or commercial support.
 
@@ -223,10 +231,16 @@ pnpm pack:check
 
 Generated bundles and dependencies are not committed. CI runs type checks, behavioral tests, a production build, and a package dry run.
 
+The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes.
+
 ## Project status
 
-The tested beta supports one-block inline selections (including ranges across mark boundaries), local history, extensible schema composition, safe format serialization, DOM/Web Component/React surfaces, optional AI proposals, and MCP transport. Cross-block selections, real-time collaboration, streaming AI output, and comprehensive IME/mobile hardening remain roadmap work.
+The tested release supports multi-paragraph and cross-block selections, formatting across marked and nested text, block splitting and joining, attributed text and alignment, find/replace, rich content insertion, image URL/upload/paste/drop workflows, links, lists, tasks, code, tables, local history, interactive NodeViews, browser-event plugin hooks, extensible schema composition, safe format serialization, DOM/Web Component/React surfaces, optional AI proposals, and MCP transport.
 
+FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
+
+- [Architecture and internals](docs/ARCHITECTURE.md)
+- [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)
 - [Optional AI and MCP](docs/MCP.md)

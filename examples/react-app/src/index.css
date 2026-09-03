@@ -20,7 +20,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .hero::before, .hero::after { position: absolute; width: 360px; height: 360px; content: ''; border: 1px solid rgb(109 74 255 / 15%); border-radius: 48% 52% 62% 38%; transform: rotate(28deg); }
 .hero::before { top: 170px; left: -240px; }
 .hero::after { top: 60px; right: -240px; }
-.hero__eyebrow, .section-heading span, .definition span, .flow__title > span, .comparison__intro > span, .architecture > div > span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
+.hero__eyebrow, .section-heading span, .definition span, .capabilities span, .flow__title > span, .comparison__intro > span, .architecture > div > span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
 .hero__eyebrow i { display: inline-block; width: 7px; height: 7px; margin-right: 8px; background: #41c985; border-radius: 50%; box-shadow: 0 0 0 5px rgb(65 201 133 / 12%); }
 .hero h1 { max-width: 1180px; margin: 36px auto 28px; font-size: clamp(52px, 7.4vw, 104px); font-weight: 700; line-height: .98; letter-spacing: -.067em; }
 .hero h1 em { color: #6d4aff; font-family: Georgia, serif; font-weight: 400; }
@@ -42,14 +42,25 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .definition__parts h3 { margin: 56px 0 10px; font-size: 18px; }
 .definition__parts p { margin: 0; color: #6d6877; font-size: 13px; line-height: 1.7; }
 
+.capabilities { padding: 115px clamp(24px, 7vw, 118px); color: #f5f3ff; background: #222033; }
+.capabilities__heading { display: grid; grid-template-columns: .55fr 1fr .75fr; gap: 5vw; align-items: start; }
+.capabilities__heading h2 { margin: 0; font-size: clamp(38px, 5vw, 68px); line-height: 1.02; letter-spacing: -.055em; }
+.capabilities__heading p { margin: 0; color: #aaa5bb; font-size: 16px; line-height: 1.8; }
+.capabilities__grid { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 62px; border-top: 1px solid #45405a; border-left: 1px solid #45405a; }
+.capabilities__grid article { min-height: 260px; padding: 26px; border-right: 1px solid #45405a; border-bottom: 1px solid #45405a; }
+.capabilities__grid b { display: block; color: #9af0c0; font: 11px DM Mono, monospace; }
+.capabilities__grid h3 { margin: 65px 0 12px; font-size: 21px; }
+.capabilities__grid p { margin: 0; color: #aaa5bb; font-size: 13px; line-height: 1.75; }
+
 .flow { padding: 110px clamp(24px, 5vw, 80px); color: #f5f3ff; background: #17152a; }
 .flow__title { display: flex; align-items: end; justify-content: space-between; max-width: 1500px; margin: auto; }
+.flow__title > span { flex: none; white-space: nowrap; }
 .flow__title h2 { margin: 0; font-size: clamp(36px, 5vw, 64px); letter-spacing: -.055em; }
 .flow ol { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 1500px; padding: 0; margin: 62px auto 0; list-style: none; border-top: 1px solid #39354e; border-left: 1px solid #39354e; }
-.flow li { display: flex; min-height: 260px; padding: 24px; flex-direction: column; border-right: 1px solid #39354e; border-bottom: 1px solid #39354e; }
+.flow li { display: grid; grid-template-rows: 29px 88px auto 1fr; min-height: 280px; padding: 24px; border-right: 1px solid #39354e; border-bottom: 1px solid #39354e; }
 .flow li b { display: grid; width: 29px; height: 29px; color: #17152a; background: #9af0c0; border-radius: 50%; font: 500 11px DM Mono, monospace; place-items: center; }
-.flow li strong { margin-top: auto; font-size: 17px; }
-.flow li span { margin-top: 10px; color: #aaa5bb; font-size: 12px; line-height: 1.65; }
+.flow li strong { grid-row: 3; font-size: 17px; }
+.flow li span { grid-row: 4; margin-top: 10px; color: #aaa5bb; font-size: 12px; line-height: 1.65; }
 
 .playground { padding: 100px clamp(14px, 4vw, 64px) 120px; background: #222033; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; max-width: 1500px; margin: 0 auto 28px; color: white; }
@@ -59,6 +70,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .demo-note b, .demo-note strong { color: #b6a7ff; }
 .studio { display: grid; grid-template-columns: 180px minmax(480px, 1fr) minmax(330px, .68fr); max-width: 1500px; min-height: 720px; margin: auto; overflow: hidden; background: #eeecf4; border: 1px solid #46415b; border-radius: 18px; box-shadow: 0 35px 90px rgb(0 0 0 / 35%); }
 .studio__outline { padding: 22px 14px; background: #f8f7fb; border-right: 1px solid #ddd9e8; }
+.studio__outline .fountain-navigator { max-height: 430px; padding-right: 4px; overflow-y: auto; }
 .studio__outline .fountain-navigator__title { padding: 0 8px 9px; color: #918b9f; font: 11px DM Mono, monospace; text-transform: uppercase; }
 .outline-tip { padding: 14px 8px; margin-top: 30px; color: #918b9f; font-size: 11px; line-height: 2; border-top: 1px solid #e6e2ec; }
 kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px; font: 10px DM Mono, monospace; }
@@ -74,6 +86,9 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .module-stack > div { display: flex; flex-wrap: wrap; gap: 5px; }
 .module-stack code { padding: 4px 6px; color: #d9d2ff; background: #373149; border-radius: 5px; font: 9px DM Mono, monospace; }
 .studio__tools .fountain-ai-review { --fountain-accent: #6d4aff; }
+.optional-ai { color: #c9c5d6; background: #282438; border: 1px solid #3b364d; border-radius: 12px; }
+.optional-ai summary { padding: 14px; color: #c9c1fa; font: 600 11px DM Mono, monospace; cursor: pointer; }
+.optional-ai .fountain-ai-review { border: 0; border-top: 1px solid #3b364d; border-radius: 0 0 12px 12px; }
 .studio__export { display: flex; min-width: 0; min-height: 300px; max-height: 365px; flex-direction: column; overflow: hidden; color: #d8d4e4; background: #282438; border: 1px solid #3b364d; border-radius: 14px; }
 .export-head { display: flex; align-items: center; justify-content: space-between; padding: 15px; }
 .export-head strong { font-size: 12px; }
@@ -112,6 +127,8 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .closing p { font: 11px DM Mono, monospace; text-transform: uppercase; letter-spacing: .08em; }
 .closing h2 { margin: 28px auto 40px; font-size: clamp(40px, 6vw, 78px); line-height: 1; letter-spacing: -.06em; }
 .closing a { display: inline-block; padding: 14px 20px; color: #17152a; background: white; border-radius: 10px; font-size: 14px; font-weight: 800; }
+.closing__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.closing__actions a + a { color: white; background: transparent; border: 1px solid rgb(255 255 255 / 45%); }
 footer { display: flex; justify-content: space-between; padding: 24px clamp(20px, 5vw, 72px); color: #8c8798; background: #17152a; font: 10px DM Mono, monospace; }
 
 @media (max-width: 1200px) {
@@ -123,6 +140,8 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .comparison__intro > span { grid-column: 1 / -1; }
   .architecture { grid-template-columns: 1fr 1fr; }
   .architecture ul { grid-column: 1 / -1; }
+  .capabilities__heading { grid-template-columns: 1fr 1fr; }
+  .capabilities__heading > span { grid-column: 1 / -1; }
 }
 
 @media (max-width: 780px) {
@@ -130,15 +149,14 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .site-header nav { display: none; }
   .install-pill { font-size: 9px; }
   .hero { min-height: 650px; padding-top: 80px; }
-  .hero h1 br { display: none; }
   .hero__actions { flex-direction: column; }
-  .definition, .comparison, .architecture { padding-block: 85px; }
+  .definition, .capabilities, .comparison, .architecture { padding-block: 85px; }
   .definition__parts, .truth-cards { grid-template-columns: 1fr; }
   .definition__parts article { min-height: 210px; }
   .flow__title, .section-heading { display: block; }
   .flow__title h2 { margin-top: 16px; }
   .flow ol { grid-template-columns: 1fr; }
-  .flow li { min-height: 190px; }
+  .flow li { grid-template-rows: 29px 36px auto 1fr; min-height: 190px; }
   .studio { grid-template-columns: 1fr; }
   .studio__canvas { padding: 10px; }
   .studio__canvas .fountain-editor { height: 500px; padding: 24px; }
@@ -147,6 +165,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .comparison__row { gap: 10px; padding: 24px 6px; }
   .comparison__row i { position: absolute; top: 26px; right: 8px; }
   .architecture ul { grid-column: auto; }
+  .capabilities__heading, .capabilities__grid { grid-template-columns: 1fr; }
   footer { gap: 12px; flex-direction: column; }
 }
 

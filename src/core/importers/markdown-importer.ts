@@ -1,8 +1,10 @@
 import { Mark, Node, type Schema } from '../schema';
 
+const SAFE_LINK = /^(https?:|mailto:|tel:|\/|#|\.)/i;
+
 function inline(text: string, schema: Schema): Node[] {
   const result: Node[] = [];
-  const pattern = /(\*\*[^*]+\*\*|~~[^~]+~~|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
+  const pattern = /(\*\*[^*]+\*\*|~~[^~]+~~|==[^=]+==|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
   let cursor = 0;
   for (const match of text.matchAll(pattern)) {
     const index = match.index ?? 0;
@@ -13,10 +15,14 @@ function inline(text: string, schema: Schema): Node[] {
     if (token.startsWith('**')) { value = token.slice(2, -2); mark = schema.marks.strong?.create(); }
     else if (token.startsWith('~~')) { value = token.slice(2, -2); mark = schema.marks.strike?.create(); }
     else if (token.startsWith('`')) { value = token.slice(1, -1); mark = schema.marks.code?.create(); }
+    else if (token.startsWith('==')) { value = token.slice(2, -2); mark = schema.marks.highlight?.create(); }
     else if (token.startsWith('_')) { value = token.slice(1, -1); mark = schema.marks.em?.create(); }
     else {
       const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
-      if (link) { value = link[1]; mark = schema.marks.link?.create({ href: link[2] }); }
+      if (link) {
+        value = link[1];
+        if (SAFE_LINK.test(link[2].trim())) mark = schema.marks.link?.create({ href: link[2].trim() });
+      }
     }
     result.push(schema.text(value, mark ? [mark] : []));
     cursor = index + token.length;
@@ -26,6 +32,10 @@ function inline(text: string, schema: Schema): Node[] {
 }
 
 function paragraph(schema: Schema, value: string): Node { return schema.node('paragraph', {}, inline(value, schema)); }
+
+function tableCells(line: string): string[] {
+  return line.trim().replace(/^\||\|$/g, '').split('|').map((cell) => cell.trim().replace(/\\\|/g, '|'));
+}
 
 export class MarkdownImporter {
   parse(markdown: string, schema: Schema): Node {
@@ -45,10 +55,39 @@ export class MarkdownImporter {
       const heading = /^(#{1,6})\s+(.+)$/.exec(line);
       if (heading) { blocks.push(schema.node('heading', { level: heading[1].length }, inline(heading[2], schema))); index++; continue; }
       if (/^(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)) { blocks.push(schema.node('horizontal_rule')); index++; continue; }
+      const image = /^!\[([^\]]*)\]\((\S+?)(?:\s+["']([^"']*)["'])?\)\s*$/.exec(line);
+      if (image && /^(https?:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|\.|#)/i.test(image[2])) {
+        blocks.push(schema.node('image_super', {
+          src: image[2], alt: image[1], title: image[3] ?? '', width: '100%', caption: '',
+        }));
+        index++;
+        continue;
+      }
+      if (/^\|?.+\|.+\|?\s*$/.test(line) && index + 1 < lines.length && /^\|?\s*:?-{3,}/.test(lines[index + 1])) {
+        const rows: Node[] = [];
+        const headers = tableCells(line);
+        rows.push(schema.node('table_row', {}, headers.map((value) => schema.node('table_header', {}, [paragraph(schema, value)]))));
+        index += 2;
+        while (index < lines.length && /^\|?.+\|.+\|?\s*$/.test(lines[index])) {
+          rows.push(schema.node('table_row', {}, tableCells(lines[index]).map((value) => schema.node('table_cell', {}, [paragraph(schema, value)]))));
+          index++;
+        }
+        blocks.push(schema.node('table', {}, rows));
+        continue;
+      }
       if (/^>\s?/.test(line)) {
         const quote: string[] = [];
         while (index < lines.length && /^>\s?/.test(lines[index])) quote.push(lines[index++].replace(/^>\s?/, ''));
         blocks.push(schema.node('blockquote', {}, [paragraph(schema, quote.join('\n'))]));
+        continue;
+      }
+      if (/^[-*]\s+\[[ xX]\]\s+/.test(line)) {
+        const items: Node[] = [];
+        while (index < lines.length && /^[-*]\s+\[[ xX]\]\s+/.test(lines[index])) {
+          const match = /^[-*]\s+\[([ xX])\]\s+(.*)$/.exec(lines[index++]);
+          items.push(schema.node('task_item', { checked: match?.[1].toLowerCase() === 'x' }, [paragraph(schema, match?.[2] ?? '')]));
+        }
+        blocks.push(schema.node('task_list', {}, items));
         continue;
       }
       if (/^[-*]\s+/.test(line)) {

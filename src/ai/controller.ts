@@ -1,6 +1,6 @@
 import type { Editor } from '../core/editor';
 import { Selection } from '../core/selection';
-import { getNodeAtPath } from '../core/transaction/path';
+import { getNodeAtPath, getTextRangeSegments } from '../core/transaction/path';
 import type {
   AIAdapter,
   AIControllerListener,
@@ -23,19 +23,19 @@ function samePath(left: readonly number[], right: readonly number[]): boolean {
 }
 
 function textForTarget(editor: Editor, target: AIRequestEnvelope['target']): string {
-  const start = getNodeAtPath(editor.state.doc, target.path);
-  if (samePath(target.path, target.endPath)) return (start.text ?? '').slice(target.from, target.to);
-  const startParent = target.path.slice(0, -1);
-  const endParent = target.endPath.slice(0, -1);
-  if (!samePath(startParent, endParent)) throw new Error('AI selections cannot cross block boundaries yet.');
-  const startIndex = target.path.at(-1) as number;
-  const endIndex = target.endPath.at(-1) as number;
-  const parent = getNodeAtPath(editor.state.doc, startParent);
-  return parent.content.slice(startIndex, endIndex + 1).map((node, index, selected) => {
-    const value = node.text ?? '';
-    if (index === 0) return value.slice(target.from);
-    if (index === selected.length - 1) return value.slice(0, target.to);
-    return value;
+  const segments = getTextRangeSegments(
+    editor.state.doc,
+    target.path,
+    target.from,
+    target.endPath,
+    target.to,
+  );
+  let previousParent: string | undefined;
+  return segments.map((segment) => {
+    const parent = segment.path.slice(0, -1).join('.');
+    const separator = previousParent !== undefined && parent !== previousParent ? '\n' : '';
+    previousParent = parent;
+    return separator + (segment.node.text ?? '').slice(segment.from, segment.to);
   }).join('');
 }
 

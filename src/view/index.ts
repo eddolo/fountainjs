@@ -3,3 +3,4 @@ export * from './node-view';
 export * from './dom-renderer';
 export * from './selection-handler';
 export * from './web-component';
+export * from './media';

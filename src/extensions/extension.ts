@@ -1,5 +1,5 @@
 import type {
-  Command,
+  Editor,
   MarkSpec,
   Node,
   NodeSpec,
@@ -7,6 +7,9 @@ import type {
   Schema,
   SchemaSpec,
 } from '../core';
+
+/** A host-callable command may expose any typed arguments after the editor. */
+export type ExtensionCommand = (editor: Editor, ...args: any[]) => boolean;
 
 export interface FountainFormat {
   parse?: (source: string, schema: Schema) => Node;
@@ -19,7 +22,7 @@ export interface FountainExtension {
   nodes?: Readonly<Record<string, NodeSpec>>;
   marks?: Readonly<Record<string, MarkSpec>>;
   plugins?: readonly Plugin<any>[];
-  commands?: Readonly<Record<string, Command>>;
+  commands?: Readonly<Record<string, ExtensionCommand>>;
   formats?: Readonly<Record<string, FountainFormat>>;
   /** Open-ended integration points owned and interpreted by the host app. */
   services?: Readonly<Record<string, unknown>>;
@@ -28,7 +31,7 @@ export interface FountainExtension {
 export interface FountainKit {
   schema: SchemaSpec;
   plugins: readonly Plugin<any>[];
-  commands: Readonly<Record<string, Command>>;
+  commands: Readonly<Record<string, ExtensionCommand>>;
   formats: Readonly<Record<string, FountainFormat>>;
   services: Readonly<Record<string, unknown>>;
   extensions: readonly FountainExtension[];
@@ -69,7 +72,7 @@ export function composeExtensions(
   const names = new Set<string>();
   const nodes: Record<string, NodeSpec> = {};
   const marks: Record<string, MarkSpec> = {};
-  const commands: Record<string, Command> = {};
+  const commands: Record<string, ExtensionCommand> = {};
   const formats: Record<string, FountainFormat> = {};
   const services: Record<string, unknown> = {};
   const plugins: Plugin<any>[] = [];

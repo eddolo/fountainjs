@@ -26,6 +26,9 @@ function renderText(node: Node): string {
       case 'strike': content = `<s>${content}</s>`; break;
       case 'code': content = `<code>${content}</code>`; break;
       case 'highlight': content = `<mark style="background-color:${escapeHTML(mark.attrs.color)}">${content}</mark>`; break;
+      case 'text_color': content = `<span style="color:${escapeHTML(mark.attrs.color)}">${content}</span>`; break;
+      case 'subscript': content = `<sub>${content}</sub>`; break;
+      case 'superscript': content = `<sup>${content}</sup>`; break;
       case 'link': {
         const href = safeURL(mark.attrs.href);
         content = href ? `<a href="${href}" rel="noopener noreferrer nofollow">${content}</a>` : content;
@@ -41,8 +44,8 @@ function renderNode(node: Node): string {
   const children = () => node.content.map(renderNode).join('');
   switch (node.type.name) {
     case 'doc': return node.content.map(renderNode).join('\n');
-    case 'paragraph': return `<p>${children()}</p>`;
-    case 'heading': return `<h${Number(node.attrs.level) || 1}>${children()}</h${Number(node.attrs.level) || 1}>`;
+    case 'paragraph': return `<p${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</p>`;
+    case 'heading': return `<h${Number(node.attrs.level) || 1}${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</h${Number(node.attrs.level) || 1}>`;
     case 'blockquote': return `<blockquote>${children()}</blockquote>`;
     case 'bullet_list': return `<ul>${children()}</ul>`;
     case 'ordered_list': return `<ol${Number(node.attrs.start) !== 1 ? ` start="${Number(node.attrs.start) || 1}"` : ''}>${children()}</ol>`;

@@ -36,7 +36,7 @@ export class Editor {
 
   dispatch(transaction: Transaction): void {
     this.assertAlive();
-    if (!transaction.docChanged && !transaction.selectionSet && transaction.getMeta('force') !== true) return;
+    if (!transaction.docChanged && !transaction.selectionSet && !transaction.storedMarksSet && transaction.getMeta('force') !== true) return;
     this.currentState = this.currentState.apply(transaction);
     this.subscribers.forEach((callback) => callback(this.currentState, transaction));
     this.onUpdate?.(this.currentState, transaction);

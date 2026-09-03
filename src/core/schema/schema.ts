@@ -2,6 +2,7 @@ import { Mark, type MarkJSON } from './mark';
 import { Node, type NodeJSON } from './node';
 import type { Attributes, NodeSpec } from './node-spec';
 import type { MarkSpec } from './mark-spec';
+import { matchesContentExpression } from './content-expression';
 
 export interface SchemaSpec {
   nodes: Record<string, NodeSpec>;
@@ -98,10 +99,39 @@ export class Schema {
   }
 
   nodeFromJSON(json: NodeJSON): Node {
-    return Node.fromJSON(this, json);
+    const node = Node.fromJSON(this, json);
+    this.validate(node);
+    return node;
   }
 
   markFromJSON(json: MarkJSON): Mark {
     return Mark.fromJSON(this, json);
+  }
+
+  validate(node: Node): void {
+    const visit = (current: Node, path: readonly number[]): void => {
+      if (current.type.schema !== this) throw new Error(`Node at ${path.join('.') || 'root'} belongs to another schema.`);
+      computeAttrs(current.type.spec.attrs, current.attrs);
+      current.marks.forEach((mark) => {
+        if (mark.type.schema !== this) throw new Error(`Mark on ${path.join('.') || 'root'} belongs to another schema.`);
+        computeAttrs(mark.type.spec.attrs, mark.attrs);
+      });
+      if (current.isText) {
+        if (current.content.length) throw new Error(`Text node at ${path.join('.')} cannot contain children.`);
+        return;
+      }
+      if (current.marks.length) throw new Error(`Only text nodes may carry marks (${path.join('.') || 'root'}).`);
+      if (current.type.spec.atom && current.content.length) throw new Error(`Atom node ${current.type.name} cannot contain children.`);
+      const expression = current.type.spec.content;
+      if (expression) {
+        if (!matchesContentExpression(current.content, expression)) {
+          throw new Error(`Content of ${current.type.name} at ${path.join('.') || 'root'} does not match "${expression}".`);
+        }
+      } else if (current.content.length) {
+        throw new Error(`Node ${current.type.name} does not allow child content.`);
+      }
+      current.content.forEach((child, index) => visit(child, [...path, index]));
+    };
+    visit(node, []);
   }
 }

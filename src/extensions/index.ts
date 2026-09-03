@@ -1,4 +1,6 @@
 import type { SchemaSpec } from '../core';
+import * as coreCommands from '../core/commands';
+import * as structureCommands from '../core/structure-commands';
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { JSONExporter } from '../core/exporters/json-exporter';
 import { MarkdownExporter } from '../core/exporters/markdown-exporter';
@@ -30,8 +32,11 @@ import { highlight } from './marks/highlight';
 import { link } from './marks/link';
 import { strike } from './marks/strike';
 import { strong } from './marks/strong';
+import { subscript } from './marks/subscript';
+import { superscript } from './marks/superscript';
+import { textColor } from './marks/text-color';
 import { underline } from './marks/underline';
-import { historyPlugin } from './plugins/history';
+import { canRedo, canUndo, historyPlugin, redo, undo } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
 import { composeExtensions, defineExtension } from './extension';
 
@@ -62,6 +67,9 @@ export * from './marks/highlight';
 export * from './marks/link';
 export * from './marks/strike';
 export * from './marks/strong';
+export * from './marks/subscript';
+export * from './marks/superscript';
+export * from './marks/text-color';
 export * from './marks/underline';
 export * from './plugins/history';
 export * from './plugins/markdown-shortcuts';
@@ -78,12 +86,13 @@ export const CoreExtension = defineExtension({
     image_super: imageSuper, figcaption,
     table, table_row: tableRow, table_header: tableHeader, table_cell: tableCell,
   },
-  marks: { strong, em, underline, strike, code, highlight, link },
+  marks: { strong, em, underline, strike, code, highlight, link, text_color: textColor, subscript, superscript },
+  commands: { ...coreCommands, ...structureCommands },
 });
 
 export const CoreSchemaSpec: SchemaSpec = composeExtensions([CoreExtension]).schema;
 
-export const HistoryExtension = defineExtension({ name: 'history', plugins: [historyPlugin] });
+export const HistoryExtension = defineExtension({ name: 'history', plugins: [historyPlugin], commands: { undo, redo, canUndo, canRedo } });
 export const MarkdownShortcutsExtension = defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] });
 export const MarkdownFormatExtension = defineExtension({
   name: 'markdown-format',

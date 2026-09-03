@@ -1,6 +1,6 @@
 import { Plugin, PluginKey } from './plugin';
 import { Selection } from './selection';
-import { Node, Schema } from './schema';
+import { Mark, Node, Schema } from './schema';
 import { getNodeAtPath } from './transaction/path';
 import { Transaction } from './transaction';
 
@@ -10,6 +10,7 @@ export interface EditorStateConfig {
   selection?: Selection;
   plugins?: readonly Plugin<any>[];
   pluginStates?: ReadonlyMap<Plugin<any>, unknown>;
+  storedMarks?: readonly Mark[];
 }
 
 function firstTextPath(doc: Node): number[] {
@@ -46,13 +47,19 @@ export class EditorState {
   readonly doc: Node;
   readonly selection: Selection;
   readonly plugins: readonly Plugin<any>[];
+  readonly storedMarks: readonly Mark[];
   private readonly pluginStates: ReadonlyMap<Plugin<any>, unknown>;
 
   constructor(config: EditorStateConfig) {
     this.schema = config.schema;
     this.doc = config.doc ?? this.createDefaultDoc();
+    this.schema.validate(this.doc);
     this.selection = normalizeSelection(this.doc, config.selection ?? Selection.cursor(firstTextPath(this.doc), 0));
     this.plugins = Object.freeze([...(config.plugins ?? [])]);
+    const initialMarks = config.storedMarks ?? (this.selection.isCollapsed
+      ? getNodeAtPath(this.doc, this.selection.path).marks
+      : []);
+    this.storedMarks = Object.freeze([...initialMarks]);
 
     if (config.pluginStates) {
       this.pluginStates = config.pluginStates;
@@ -72,12 +79,20 @@ export class EditorState {
   apply(transaction: Transaction): EditorState {
     const nextDoc = transaction.doc;
     const nextSelection = normalizeSelection(nextDoc, transaction.selectionSet ? transaction.selection : this.selection);
+    let nextStoredMarks = transaction.storedMarksSet ? transaction.storedMarks : this.storedMarks;
+    if (transaction.selectionSet && !transaction.storedMarksSet) {
+      if (nextSelection.isCollapsed) {
+        try { nextStoredMarks = getNodeAtPath(nextDoc, nextSelection.path).marks; }
+        catch { nextStoredMarks = []; }
+      } else nextStoredMarks = [];
+    }
     const interim = new EditorState({
       schema: this.schema,
       doc: nextDoc,
       selection: nextSelection,
       plugins: this.plugins,
       pluginStates: this.pluginStates,
+      storedMarks: nextStoredMarks,
     });
     const states = new Map<Plugin<any>, unknown>();
     this.plugins.forEach((plugin) => {
@@ -93,11 +108,12 @@ export class EditorState {
       selection: nextSelection,
       plugins: this.plugins,
       pluginStates: states,
+      storedMarks: nextStoredMarks,
     });
   }
 
   createTransaction(): Transaction {
-    return new Transaction(this.doc, this.selection);
+    return new Transaction(this.doc, this.selection, this.storedMarks);
   }
 
   getPluginState<T>(pluginOrKey: Plugin<T> | PluginKey<T>): T | undefined {

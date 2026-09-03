@@ -13,26 +13,28 @@ export interface FountainEditorProps extends EditorViewOptions {
 }
 
 export const FountainEditor = forwardRef<FountainEditorHandle, FountainEditorProps>(function FountainEditor(
-  { editor, containerClassName, ...options },
+  { editor, containerClassName, ariaLabel, className, placeholder, attributes, imageUpload, maxInlineImageBytes, onError },
   ref,
 ) {
   const mountRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
 
   useImperativeHandle(ref, () => ({
-    view: viewRef.current,
+    get view() { return viewRef.current; },
     focus: () => viewRef.current?.focus(),
-  }), []);
+  }), [editor]);
 
   useEffect(() => {
     if (!editor || !mountRef.current) return;
-    const view = new EditorView(mountRef.current, editor, options);
+    const view = new EditorView(mountRef.current, editor, {
+      ariaLabel, className, placeholder, attributes, imageUpload, maxInlineImageBytes, onError,
+    });
     viewRef.current = view;
     return () => {
       view.destroy();
       viewRef.current = null;
     };
-  }, [editor]);
+  }, [editor, ariaLabel, className, placeholder, attributes, imageUpload, maxInlineImageBytes, onError]);
 
   return <div className={containerClassName} data-fountain-root ref={mountRef} />;
 });

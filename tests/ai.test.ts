@@ -96,4 +96,37 @@ describe('AI review controller', () => {
     controller.accept(proposal);
     expect(editor.getText()).toBe('A clean version');
   });
+
+  it('reviews and replaces a selection across document blocks', async () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'First draft' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Second pass' }] },
+        ],
+      },
+      plugins: [historyPlugin],
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.range([0, 0], 6, [1, 0], 6)));
+    const controller = new AIController(editor, createAIAdapter(async () => 'final'));
+    const proposal = await controller.suggest({ action: 'improve' });
+    expect(proposal.original).toBe('draft\nSecond');
+    controller.accept(proposal);
+    expect(editor.getText()).toBe('First final pass');
+  });
+
+  it('separates selected list items in the adapter request', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: { type: 'doc', content: [{ type: 'bullet_list', content: [
+        { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'First' }] }] },
+        { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Second' }] }] },
+      ] }] },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.range([0, 0, 0, 0], 0, [0, 1, 0, 0], 6)));
+    const controller = new AIController(editor, createAIAdapter(async () => 'Result'));
+    expect(controller.inspectRequest({ action: 'improve' }).input).toBe('First\nSecond');
+  });
 });

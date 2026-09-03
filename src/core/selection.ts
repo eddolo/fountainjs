@@ -1,3 +1,11 @@
+function comparePaths(left: readonly number[], right: readonly number[]): number {
+  const length = Math.min(left.length, right.length);
+  for (let index = 0; index < length; index += 1) {
+    if (left[index] !== right[index]) return (left[index] as number) - (right[index] as number);
+  }
+  return left.length - right.length;
+}
+
 export class Selection {
   readonly path: readonly number[];
   readonly endPath: readonly number[];
@@ -8,7 +16,8 @@ export class Selection {
     if (!path.every((part) => Number.isInteger(part) && part >= 0)) throw new RangeError('Selection paths must contain non-negative integers.');
     if (!endPath.every((part) => Number.isInteger(part) && part >= 0)) throw new RangeError('Selection paths must contain non-negative integers.');
     if (!Number.isInteger(from) || !Number.isInteger(to) || from < 0 || to < 0) throw new RangeError('Invalid selection range.');
-    if (path.length === endPath.length && path.every((part, index) => part === endPath[index]) && to < from) throw new RangeError('Invalid selection range.');
+    const order = comparePaths(path, endPath);
+    if (order > 0 || (order === 0 && to < from)) throw new RangeError('Selection ranges must be ordered from start to end.');
     this.path = Object.freeze([...path]);
     this.endPath = Object.freeze([...endPath]);
     this.from = from;

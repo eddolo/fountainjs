@@ -13,8 +13,10 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     const tag = child.tagName.toLowerCase();
     if (tag === 'br' && schema.nodes.hard_break) { result.push(schema.node('hard_break')); return; }
     let nextMarks = [...marks];
-    const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight' } as Record<string, string>)[tag];
+    const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript' } as Record<string, string>)[tag];
     if (markName && schema.marks[markName]) nextMarks.push(schema.mark(markName));
+    const color = /(?:^|;)\s*color\s*:\s*(#[\da-f]{6})(?:\s*;|$)/i.exec(child.getAttribute('style') ?? '')?.[1];
+    if (color && schema.marks.text_color && /^#[\da-f]{6}$/i.test(color)) nextMarks.push(schema.mark('text_color', { color }));
     if (tag === 'a' && schema.marks.link) {
       const href = child.getAttribute('href') ?? '';
       const anchor = child as HTMLAnchorElement;
@@ -25,14 +27,19 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
   return result;
 }
 
+function alignment(element: Element): 'left' | 'center' | 'right' | 'justify' {
+  const value = (element as HTMLElement).style.textAlign || element.getAttribute('align') || 'left';
+  return ['left', 'center', 'right', 'justify'].includes(value) ? value as 'left' | 'center' | 'right' | 'justify' : 'left';
+}
+
 function paragraph(element: Element, schema: Schema): FountainNode {
   const content = inlineChildren(element, schema);
-  return schema.node('paragraph', {}, content.length ? content : [schema.text('')]);
+  return schema.node('paragraph', { align: alignment(element) }, content.length ? content : [schema.text('')]);
 }
 
 function block(element: Element, schema: Schema): FountainNode[] {
   const tag = element.tagName.toLowerCase();
-  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]) }, inlineChildren(element, schema))];
+  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element) }, inlineChildren(element, schema))];
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
     const children = Array.from(element.children).flatMap((child) => block(child, schema));

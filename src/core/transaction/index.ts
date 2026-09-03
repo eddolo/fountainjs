@@ -1,5 +1,6 @@
 export * from './step';
 export * from './replace-step';
+export * from './replace-node-step';
 export * from './insert-text-step';
 export * from './replace-text-step'
 export * from './replace-text-range-step';

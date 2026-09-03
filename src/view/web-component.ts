@@ -1,6 +1,7 @@
 import type { NodeJSON, Plugin, SchemaSpec, Transaction } from '../core';
 import { createEditor, setContent, type Editor, type EditorState } from '../core';
 import { CoreSchemaSpec } from '../extensions';
+import type { ImageUploadHandler } from './media';
 import { EditorView } from './view';
 
 export interface FountainElementChangeDetail {
@@ -21,6 +22,9 @@ export interface RegisterFountainElementOptions {
   plugins?: readonly Plugin<any>[];
   placeholder?: string;
   ariaLabel?: string;
+  imageUpload?: ImageUploadHandler;
+  maxInlineImageBytes?: number;
+  onError?: (error: unknown) => void;
 }
 
 /**
@@ -71,6 +75,9 @@ export function registerFountainElement(
       this.view = new EditorView(this, this.currentEditor, {
         placeholder: this.getAttribute('placeholder') ?? options.placeholder,
         ariaLabel: this.getAttribute('aria-label') ?? options.ariaLabel ?? 'Rich text editor',
+        imageUpload: options.imageUpload,
+        maxInlineImageBytes: options.maxInlineImageBytes,
+        onError: options.onError,
       });
       this.unsubscribe = this.currentEditor.subscribe((state, transaction) => {
         this.pendingValue = state.doc.toJSON();

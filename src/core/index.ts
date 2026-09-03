@@ -5,3 +5,5 @@ export * from './plugin';
 export * from './state';
 export * from './editor';
 export * from './commands';
+export * from './structure-commands';
+export * from './search';

@@ -1,6 +1,11 @@
-import { Node, type Attributes, type DOMOutputSpec } from '../core';
+import { Node, type Attributes, type DOMOutputSpec, type NodeViewLike } from '../core';
 
-const SAFE_PROTOCOL = /^(https?:|mailto:|tel:|data:image\/(?:png|gif|jpe?g|webp|svg\+xml);base64,|\/|#|\.)/i;
+export interface DOMRenderContext {
+  view?: unknown;
+  nodeViews?: NodeViewLike[];
+}
+
+const SAFE_PROTOCOL = /^(https?:|mailto:|tel:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
 
 function applyAttributes(element: HTMLElement, attrs: Attributes): void {
   Object.entries(attrs).forEach(([rawName, value]) => {
@@ -51,20 +56,23 @@ function renderText(node: Node, path: readonly number[]): HTMLElement {
   return wrapper;
 }
 
-export function renderNode(node: Node, path: readonly number[] = []): globalThis.Node {
+export function renderNode(node: Node, path: readonly number[] = [], context: DOMRenderContext = {}): globalThis.Node {
   if (node.isText) return renderText(node, path);
-  const spec = node.type.spec.toDOM?.(node) ?? ['div', 0];
-  const { dom, contentDOM } = renderSpec(spec);
+  const NodeView = node.type.spec.nodeView;
+  const custom = NodeView ? new NodeView(node, context.view, () => [...path]) : undefined;
+  if (custom) context.nodeViews?.push(custom);
+  const rendered = custom ?? renderSpec(node.type.spec.toDOM?.(node) ?? ['div', 0]);
+  const { dom, contentDOM } = rendered;
   dom.dataset.fountainNode = node.type.name;
   dom.dataset.fountainPath = path.join('.');
   if (node.type.spec.atom) dom.contentEditable = 'false';
   const target = contentDOM ?? dom;
-  node.content.forEach((child, index) => target.appendChild(renderNode(child, [...path, index])));
+  node.content.forEach((child, index) => target.appendChild(renderNode(child, [...path, index], context)));
   return dom;
 }
 
-export function renderDocument(root: HTMLElement, doc: Node): void {
+export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderContext = {}): void {
   const fragment = document.createDocumentFragment();
-  doc.content.forEach((child, index) => fragment.appendChild(renderNode(child, [index])));
+  doc.content.forEach((child, index) => fragment.appendChild(renderNode(child, [index], context)));
   root.replaceChildren(fragment);
 }

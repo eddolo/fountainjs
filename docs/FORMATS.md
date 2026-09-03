@@ -8,7 +8,7 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 ## HTML
 
-`HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only HTTP(S), email, telephone, relative, fragment, and supported image-data URLs survive link and image serialization.
+`HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only HTTP(S), email, telephone, relative, fragment, and supported image-data URLs survive link and image serialization. Alignment, text colour, subscript, superscript, semantic hard breaks, tasks, tables, and images retain their HTML meaning.
 
 `HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, tables, dividers, line breaks, and common inline marks. It uses `DOMParser`, so a DOM shim is required in Node.js.
 

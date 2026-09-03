@@ -23,7 +23,11 @@ export interface PluginStateSpec<T> {
 
 export interface PluginProps {
   handleKeyDown?: (editor: Editor, event: KeyboardEvent) => boolean;
+  handleBeforeInput?: (editor: Editor, event: InputEvent) => boolean;
   handleTextInput?: (editor: Editor, from: number, to: number, text: string) => boolean;
+  handlePaste?: (editor: Editor, event: ClipboardEvent) => boolean;
+  handleDrop?: (editor: Editor, event: DragEvent) => boolean;
+  handleClick?: (editor: Editor, event: MouseEvent) => boolean;
   onCreate?: (editor: Editor) => void;
   onDestroy?: (editor: Editor) => void;
 }

@@ -1,6 +1,7 @@
-import { setBlockType, toggleMark, type Editor, type EditorState } from '../core';
+import { setBlockType, toggleMark, type Editor, type EditorState, type NodeViewLike } from '../core';
 import { renderDocument } from './dom-renderer';
 import { InputManager } from './input';
+import type { ImageUploadHandler } from './media';
 import { SelectionHandler } from './selection-handler';
 
 export interface EditorViewOptions {
@@ -8,6 +9,9 @@ export interface EditorViewOptions {
   className?: string;
   placeholder?: string;
   attributes?: Record<string, string>;
+  imageUpload?: ImageUploadHandler;
+  maxInlineImageBytes?: number;
+  onError?: (error: unknown) => void;
 }
 
 export class EditorView {
@@ -15,6 +19,7 @@ export class EditorView {
   private readonly selections: SelectionHandler;
   private readonly input: InputManager;
   private readonly unsubscribe: () => void;
+  private nodeViews: NodeViewLike[] = [];
   private destroyed = false;
 
   constructor(public readonly mount: HTMLElement, public readonly editor: Editor, options: EditorViewOptions = {}) {
@@ -30,9 +35,13 @@ export class EditorView {
       if (!/^on/i.test(name)) this.dom.setAttribute(name, value);
     });
     mount.appendChild(this.dom);
-    renderDocument(this.dom, editor.state.doc);
+    this.render(editor.state.doc);
     this.selections = new SelectionHandler(editor, this.dom);
-    this.input = new InputManager(editor, this.dom, this.selections);
+    this.input = new InputManager(editor, this.dom, this.selections, {
+      imageUpload: options.imageUpload,
+      maxInlineImageBytes: options.maxInlineImageBytes,
+      onError: options.onError,
+    });
     this.unsubscribe = editor.subscribe(this.onStateChange);
   }
 
@@ -55,12 +64,25 @@ export class EditorView {
     this.unsubscribe();
     this.input.destroy();
     this.selections.destroy();
+    this.destroyNodeViews();
     this.dom.remove();
   }
 
   private onStateChange = (state: EditorState, transaction: import('../core').Transaction): void => {
     if (this.destroyed) return;
-    if (transaction.docChanged) renderDocument(this.dom, state.doc);
+    if (transaction.docChanged) this.render(state.doc);
     queueMicrotask(() => this.selections.sync(state.selection));
   };
+
+  private render(document: import('../core').Node): void {
+    this.destroyNodeViews();
+    const nodeViews: NodeViewLike[] = [];
+    renderDocument(this.dom, document, { view: this, nodeViews });
+    this.nodeViews = nodeViews;
+  }
+
+  private destroyNodeViews(): void {
+    this.nodeViews.forEach((nodeView) => nodeView.destroy?.());
+    this.nodeViews = [];
+  }
 }

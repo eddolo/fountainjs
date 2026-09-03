@@ -4,12 +4,6 @@ function parsePath(element: HTMLElement): number[] {
   return (element.dataset.fountainTextPath ?? '').split('.').filter(Boolean).map(Number);
 }
 
-function sameParent(left: readonly number[], right: readonly number[]): boolean {
-  return left.length === right.length
-    && left.length > 0
-    && left.slice(0, -1).every((part, index) => part === right[index]);
-}
-
 function textOffsetWithin(root: HTMLElement, node: globalThis.Node, offset: number): number {
   const range = document.createRange();
   range.selectNodeContents(root);
@@ -54,7 +48,6 @@ export class SelectionHandler {
     if (anchorElement === focusElement) {
       return new Selection(anchorPath, Math.min(anchor, focus), Math.max(anchor, focus));
     }
-    if (!sameParent(anchorPath, focusPath)) return null;
     const anchorComesFirst = Boolean(anchorElement.compareDocumentPosition(focusElement) & Node.DOCUMENT_POSITION_FOLLOWING);
     return anchorComesFirst
       ? Selection.range(anchorPath, anchor, focusPath, focus)

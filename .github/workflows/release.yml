@@ -23,6 +23,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - run: pnpm dlx publint@0.3.24
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./react
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

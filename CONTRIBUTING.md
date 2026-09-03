@@ -21,10 +21,11 @@ The playground imports the source directly, so changes appear immediately.
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm exec vite build
 pnpm pack:check
 ```
 
-Add or update tests for behavioral changes. Keep public APIs typed and document new nodes, marks, commands, formats, or MCP behaviors. Do not commit `node_modules`, `dist`, coverage output, credentials, or local environment files.
+CI also runs Publint and Are the Types Wrong against the packed root and React entry points. Add or update tests for behavioral changes. Read [the architecture guide](docs/ARCHITECTURE.md) before changing core invariants. Keep public APIs typed and document new nodes, marks, commands, formats, or MCP behaviors. Do not commit `node_modules`, `dist`, coverage output, credentials, or local environment files.
 
 ## Design principles
 

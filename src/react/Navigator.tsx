@@ -24,7 +24,7 @@ export function Navigator({ editor, className }: NavigatorProps) {
     <nav className={['fountain-navigator', className].filter(Boolean).join(' ')} aria-label="Document outline">
       <div className="fountain-navigator__title">Outline</div>
       {outline.length === 0 ? <p className="fountain-navigator__empty">Add a heading to build an outline.</p> : outline.map((item) => (
-        <button key={item.id} type="button" style={{ paddingInlineStart: `${(item.level - 1) * 12 + 8}px` }} onClick={() => select(item.path)}>
+        <button key={item.id} type="button" title={item.text} style={{ paddingInlineStart: `${(item.level - 1) * 12 + 8}px` }} onClick={() => select(item.path)}>
           {item.text}
         </button>
       ))}
