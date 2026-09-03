@@ -1,33 +1,19 @@
-import { Step } from './step';
 import { Node } from '../schema';
+import { assertTextRange, getNodeAtPath, replaceNodeAtPath } from './path';
+import { Step } from './step';
 
 export class ReplaceTextStep extends Step {
   constructor(
-    public readonly path: number[],
+    public readonly path: readonly number[],
     public readonly from: number,
     public readonly to: number,
     public readonly text: string,
-  ) {
-    super();
-  }
+  ) { super(); }
 
   apply(doc: Node): Node {
-    let node = doc; let parents: Node[] = [];
-    for (const index of this.path) { parents.push(node); node = node.content[index]; }
-
-    if (!node || !node.isText) throw new Error('Target for ReplaceTextStep is not a text node.');
-    
-    const oldText = node.text || '';
-    const newTextContent = oldText.slice(0, this.from) + this.text + oldText.slice(this.to);
-    const newTextNode = node.withText(newTextContent);
-
-    let newDoc: Node = newTextNode;
-    for (let i = parents.length - 1; i >= 0; i--) {
-      const parent = parents[i];
-      const newContent = [...parent.content];
-      newContent[this.path[i]] = newDoc;
-      newDoc = new Node(parent.type, parent.attrs, newContent, parent.text, parent.marks);
-    }
-    return newDoc;
+    const node = getNodeAtPath(doc, this.path);
+    assertTextRange(node, this.from, this.to);
+    const oldText = node.text ?? '';
+    return replaceNodeAtPath(doc, this.path, node.withText(oldText.slice(0, this.from) + this.text + oldText.slice(this.to)));
   }
 }

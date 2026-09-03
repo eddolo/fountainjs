@@ -1,0 +1,17 @@
+name: Feature idea
+description: Propose a focused improvement to FountainJS
+title: "[Idea]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What creative or developer problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would a great solution feel like?
+    validations:
+      required: true

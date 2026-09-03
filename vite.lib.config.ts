@@ -1,39 +1,25 @@
-import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import path from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
-  resolve: {
-    alias: {
-      'fountainjs': path.resolve(__dirname, 'src'),
-    },
-  },
+  plugins: [react()],
   build: {
     lib: {
       entry: {
-        index: path.resolve(__dirname, 'src/index.ts'),
-        react: path.resolve(__dirname, 'src/react/index.ts'),
+        index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+        react: fileURLToPath(new URL('./src/react/index.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
-      fileName: (format, entryName) => {
-        if (entryName === 'index') {
-          return `fountainjs.${format === 'es' ? 'js' : 'cjs'}`;
-        }
-        return `fountainjs-${entryName}.${format === 'es' ? 'js' : 'cjs'}`;
-      },
+      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
+        globals: { react: 'React', 'react-dom': 'ReactDOM', 'react/jsx-runtime': 'ReactJSXRuntime' },
       },
     },
-    outDir: path.resolve(__dirname, 'dist'),
+    sourcemap: true,
     emptyOutDir: true,
   },
 });

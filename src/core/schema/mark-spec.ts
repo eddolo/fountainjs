@@ -1,5 +1,7 @@
-import { DOMOutputSpec } from './node-spec';
+import type { Mark } from './mark';
+import type { AttributeSpec, DOMOutputSpec } from './node-spec';
+
 export interface MarkSpec {
-  attrs?: { [name: string]: any };
-  toDOM?: (mark: any) => DOMOutputSpec;
+  attrs?: Record<string, AttributeSpec>;
+  toDOM?: (mark: Mark) => DOMOutputSpec;
 }

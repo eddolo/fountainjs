@@ -1,460 +1,239 @@
-# FountainJS Editor
+# FountainJS
 
-A modern, modular, and extensible rich text editor library built with TypeScript. Use it in React, Vue, Angular, or vanilla JavaScript projects.
+[![npm version](https://img.shields.io/npm/v/fountainjs-editor?color=6d4aff)](https://www.npmjs.com/package/fountainjs-editor)
+[![CI](https://github.com/eddolo/fountainjs/actions/workflows/ci.yml/badge.svg)](https://github.com/eddolo/fountainjs/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/fountainjs-editor)](LICENSE)
 
-## Features
+**One editor core. Any framework. Yours to extend.**
 
-✨ **Modular Architecture** - Built from the ground up to be composable and extensible  
-📝 **Multiple Content Types** - Headings, paragraphs, tables, lists, images, and more  
-⌨️ **Keyboard Shortcuts** - Built-in support for Ctrl+B (bold), Ctrl+I (italic), and more  
-🎨 **Flexible Styling** - Customize the editor appearance with CSS  
-🔌 **Plugin System** - Extend functionality with plugins (history, markdown shortcuts, etc.)  
-🎯 **Type-Safe** - Full TypeScript support with comprehensive type definitions  
-📱 **Responsive** - Works great on desktop and mobile devices  
+FountainJS is a modular rich-text engine for building editors inside web products. The core owns a typed document model, selections, transactions, plugins, history, and a plain DOM view. Everything else—including React controls, a Web Component, format adapters, and AI review—is a replaceable surface or module.
 
-## Installation
+> `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
 
-### Via npm
+## What “language agnostic” means
 
-```bash
-npm install @fountainjs/editor
-```
+The editor runtime is JavaScript/TypeScript because it edits a browser DOM. FountainJS does not pretend an npm package executes natively in Python or Go.
 
-### Via pnpm
+Its boundaries are language and framework agnostic:
 
-```bash
-pnpm add @fountainjs/editor
-```
+- Use the DOM API directly from any frontend framework.
+- Register the standards-based `<fountain-editor>` Web Component in React, Vue, Svelte, Angular, plain HTML, or any Custom-Element-capable environment.
+- Use the first-party React package when React-specific hooks and components are useful.
+- Persist stable JSON that any backend language can store, validate, index, or transform.
+- Add nodes, marks, plugins, commands, formats, and host services through one extension contract.
 
-### Via yarn
+React is an adapter, not the architecture. AI is an optional module, not the product identity.
+
+## Install
 
 ```bash
-yarn add @fountainjs/editor
+npm install fountainjs-editor
 ```
 
-## Quick Start - React
+React is an optional peer dependency. Install `react` and `react-dom` only when importing `fountainjs-editor/react`.
 
-### Basic Editor
+## Compose an editor
 
-```tsx
-import React from 'react';
-import { useFountain, FountainEditor, CoreSchemaSpec, historyPlugin } from '@fountainjs/editor/react';
+Use the supplied rich-document extension, add behavior, and define your own capability:
 
-function MyEditor() {
-  const editor = useFountain({
-    schema: CoreSchemaSpec,
-    plugins: [historyPlugin],
-  });
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <FountainEditor editor={editor} />
-    </div>
-  );
-}
-
-export default MyEditor;
-```
-
-### With Toolbar
-
-```tsx
-import React from 'react';
-import { Node, useFountain, FountainEditor, CoreSchemaSpec, historyPlugin } from '@fountainjs/editor/react';
-
-function Editor() {
-  const editor = useFountain({
-    schema: CoreSchemaSpec,
-    plugins: [historyPlugin],
-  });
-
-  const insertHeading = (level: 1 | 2 | 3) => {
-    if (!editor) return;
-    const { state } = editor;
-    const text = new Node(state.schema.nodes.text, {}, [], 'Heading');
-    const heading = new Node(state.schema.nodes.heading, { level }, [text]);
-    const tr = state.createTransaction().replace(
-      state.doc.content.length,
-      state.doc.content.length,
-      [heading]
-    );
-    editor.dispatch(tr);
-  };
-
-  return (
-    <div>
-      <div style={{ marginBottom: '1rem' }}>
-        <button onClick={() => insertHeading(1)}>H1</button>
-        <button onClick={() => insertHeading(2)}>H2</button>
-        <button onClick={() => insertHeading(3)}>H3</button>
-      </div>
-      <FountainEditor editor={editor} />
-    </div>
-  );
-}
-
-export default Editor;
-```
-
-## Quick Start - Vanilla JavaScript
-
-```typescript
+```ts
 import {
-  createEditor,
+  CoreExtension,
   EditorView,
-  CoreSchemaSpec,
+  composeExtensions,
+  createEditor,
+  defineExtension,
   historyPlugin,
-} from '@fountainjs/editor';
+} from 'fountainjs-editor';
 
-// Create an editor
-const editor = createEditor({
-  schema: CoreSchemaSpec,
-  plugins: [historyPlugin],
+const callout = defineExtension({
+  name: 'callout',
+  nodes: {
+    callout: {
+      group: 'block',
+      content: 'inline*',
+      attrs: { tone: { default: 'info' } },
+      toDOM: (node) => ['aside', { 'data-tone': node.attrs.tone }, 0],
+    },
+  },
+  commands: {
+    insertCallout: (editor) => {
+      // A host-owned command can dispatch any valid transaction.
+      return true;
+    },
+  },
+  services: {
+    analytics: yourAnalyticsAdapter,
+  },
 });
 
-// Mount it to a DOM element
-const container = document.getElementById('editor');
-const view = new EditorView(container, editor);
+const kit = composeExtensions([
+  CoreExtension,
+  defineExtension({ name: 'history', plugins: [historyPlugin] }),
+  callout,
+]);
 
-// Subscribe to changes
-editor.subscribe((newState) => {
-  console.log('Editor state changed:', newState);
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+const view = new EditorView(document.querySelector('#editor')!, editor);
+```
+
+Composition rejects duplicate extension names and conflicting node, mark, command, format, or service names by default. Use `{ onConflict: 'replace' }` only for an intentional override.
+
+An extension can contribute:
+
+- `nodes` and `marks` to the schema
+- stateful `plugins`
+- reusable `commands`
+- `formats` with parse/serialize boundaries
+- open-ended `services` interpreted by the host application
+
+## Use any UI surface
+
+### Plain DOM
+
+```ts
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+const view = new EditorView(document.querySelector('#editor')!, editor, {
+  placeholder: 'Start writing…',
+  ariaLabel: 'Article body',
 });
-```
 
-## API Documentation
+const stopSaving = editor.subscribe((state) => saveDraft(state.doc.toJSON()));
 
-### Core Components
-
-#### `useFountain(config)`
-
-Hook to create and manage a FountainJS editor instance in React.
-
-**Parameters:**
-
-```typescript
-interface EditorConfig {
-  schema: SchemaSpec;
-  state?: EditorState;
-  plugins?: Plugin[];
-}
-```
-
-**Returns:** `Editor | null`
-
-**Example:**
-
-```tsx
-const editor = useFountain({
-  schema: CoreSchemaSpec,
-  plugins: [historyPlugin],
-});
-```
-
----
-
-#### `FountainEditor`
-
-React component that renders the editor.
-
-**Props:**
-
-```typescript
-interface FountainEditorProps {
-  editor: Editor | null;
-}
-```
-
-**Example:**
-
-```tsx
-<FountainEditor editor={editor} />
-```
-
----
-
-#### `Navigator`
-
-React component that displays the document structure.
-
-**Props:**
-
-```typescript
-interface NavigatorProps {
-  editor: Editor | null;
-}
-```
-
-**Example:**
-
-```tsx
-<Navigator editor={editor} />
-```
-
----
-
-#### `createEditor(config)`
-
-Creates a new editor instance (vanilla JS).
-
-**Parameters:**
-
-```typescript
-interface EditorConfig {
-  schema: SchemaSpec;
-  state?: EditorState;
-  plugins?: Plugin[];
-}
-```
-
-**Returns:** `Editor`
-
-**Example:**
-
-```typescript
-const editor = createEditor({
-  schema: CoreSchemaSpec,
-  plugins: [historyPlugin],
-});
-```
-
----
-
-#### `EditorView`
-
-Mounts an editor to a DOM element and manages rendering.
-
-**Constructor:**
-
-```typescript
-new EditorView(mount: HTMLElement, editor: Editor)
-```
-
-**Methods:**
-
-- `execCommand(command: string, value?: string): boolean` - Execute a browser command
-- `destroy(): void` - Cleanup and remove the editor
-
-**Example:**
-
-```typescript
-const view = new EditorView(document.getElementById('editor'), editor);
-
-// Later...
+// Cleanup:
+stopSaving();
 view.destroy();
+editor.destroy();
 ```
 
----
+### Web Component
 
-### Built-in Schemas
+```ts
+import { registerFountainElement } from 'fountainjs-editor';
 
-#### `CoreSchemaSpec`
-
-A comprehensive schema that includes:
-
-- **Nodes:** doc, paragraph, heading, bullet_list, list_item, table, table_row, table_cell, image_super, figcaption, text
-- **Marks:** strong (bold), em (italic)
-
-**Usage:**
-
-```typescript
-import { CoreSchemaSpec } from '@fountainjs/editor';
-
-const editor = useFountain({
-  schema: CoreSchemaSpec,
+registerFountainElement({
+  schema: kit.schema,
+  plugins: kit.plugins,
 });
 ```
 
----
+```html
+<fountain-editor placeholder="Start writing…"></fountain-editor>
 
-### Plugins
+<script>
+  const element = document.querySelector('fountain-editor');
+  element.value = savedDocumentJSON;
+  element.addEventListener('fountain-change', (event) => {
+    save(event.detail.value);
+  });
+</script>
+```
 
-#### `historyPlugin`
+### React
 
-Provides undo/redo functionality.
+```tsx
+import { FountainComposer, useFountain } from 'fountainjs-editor/react';
+import 'fountainjs-editor/styles.css';
 
-**Usage:**
+export function WritingRoom() {
+  const editor = useFountain({
+    schema: kit.schema,
+    plugins: kit.plugins,
+    onUpdate: (state) => saveDraft(state.doc.toJSON()),
+  });
 
-```typescript
-import { historyPlugin } from '@fountainjs/editor';
+  return <FountainComposer editor={editor} placeholder="Start writing…" />;
+}
+```
 
-const editor = useFountain({
-  schema: CoreSchemaSpec,
-  plugins: [historyPlugin],
+The React entry is separate, so the framework-neutral root does not load React. A new framework binding only needs to create an editor, subscribe to its immutable state, and mount or replace its view.
+
+## Included document capabilities
+
+`CoreExtension` supplies paragraphs, six heading levels, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, hard breaks, links, highlights, and common text marks.
+
+The editing core provides immutable state, path-based selections, inline cross-mark selection, typed transactions, keyboard input, Markdown shortcuts, and 100-step undo/redo. JSON is the lossless source of truth; Markdown, safe HTML, and plain text are interoperability boundaries.
+
+```ts
+const schema = new Schema(CoreSchemaSpec);
+const document = MarkdownImporter.parse('# Hello\n\nA **bold** beginning.', schema);
+
+MarkdownExporter.export(document);
+HTMLExporter.export(document, { document: false });
+JSONExporter.export(document);
+```
+
+HTML export escapes text and attributes and rejects unsafe URL protocols. JSON import validates node and mark names through the receiving schema.
+
+## Optional AI review module
+
+AI is one example of a host service. FountainJS does not provide a model account or require a Fountain cloud. The optional `AIController` lets an application inspect exactly what will be sent, request a text proposal from any adapter, show a before/after review, accept or reject, block stale proposals, and undo acceptance.
+
+```ts
+const adapter = createAIAdapter(async (request, { signal }) => {
+  const response = await fetch('/api/rewrite', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(request),
+    signal,
+  });
+  return response.json(); // { replacement, explanation?, model?, metadata? }
 });
+
+const ai = new AIController(editor, adapter);
+const disclosure = ai.inspectRequest({ action: 'improve' });
+const proposal = await ai.suggest({ action: 'improve' });
+
+ai.accept(proposal); // one undoable editor transaction
+// or: ai.reject(proposal);
 ```
 
----
+Full-document context is off by default. The included `MCPAIAdapter` connects the same workflow to a compatible MCP Streamable HTTP tool; MCP is a transport option, not the AI itself. Never ship permanent provider credentials in browser code.
 
-### Schema Types
+React applications can render the optional workflow with `<FountainAIReview controller={ai} />`.
 
-#### `SchemaSpec`
+## Honest comparison
 
-Define custom node and mark types.
+FountainJS is not the first framework-neutral or extensible editor.
 
-```typescript
-interface SchemaSpec {
-  nodes: { [name: string]: NodeSpec };
-  marks?: { [name: string]: MarkSpec };
-}
+| Project | Architecture and maturity | Practical reason to choose it |
+| --- | --- | --- |
+| [Tiptap](https://tiptap.dev/docs/editor/getting-started/overview) | Mature ProseMirror platform with multiple framework integrations and a large extension ecosystem | Collaboration, ecosystem depth, and commercial support |
+| [Plate](https://platejs.org/docs) | Powerful React/Slate framework with a broad plugin catalog | A React-first product with many polished capabilities ready now |
+| [BlockNote](https://www.blocknotejs.org/docs) | Polished React block editor with an out-of-the-box Notion-like experience | Shipping a strong block UI quickly |
+| **FountainJS** | Early-beta DOM-first engine, Web Component, React adapter, and explicit extension composition | Owning a compact modular stack and keeping framework/data boundaries open |
+
+Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need real-time collaboration, comprehensive IME/mobile hardening, a large plugin market, or commercial support.
+
+## React exports
+
+- `useFountain` and `useFountainState`
+- `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `Navigator` and `useNavigatorState`
+- `FountainAIReview` and `useAIControllerState`
+
+## Development
+
+```bash
+pnpm install
+pnpm dev
+pnpm check
+pnpm pack:check
 ```
 
-**Example:**
+Generated bundles and dependencies are not committed. CI runs type checks, behavioral tests, a production build, and a package dry run.
 
-```typescript
-const mySchema: SchemaSpec = {
-  nodes: {
-    doc: {
-      content: 'block+',
-    },
-    paragraph: {
-      content: 'inline*',
-      parseDOM: [{ tag: 'p' }],
-      toDOM: () => ['p', 0],
-    },
-    text: {
-      inline: true,
-    },
-  },
-  marks: {
-    bold: {
-      parseDOM: [{ tag: 'strong' }],
-      toDOM: () => ['strong', 0],
-    },
-  },
-};
-```
+## Project status
 
----
+The tested beta supports one-block inline selections (including ranges across mark boundaries), local history, extensible schema composition, safe format serialization, DOM/Web Component/React surfaces, optional AI proposals, and MCP transport. Cross-block selections, real-time collaboration, streaming AI output, and comprehensive IME/mobile hardening remain roadmap work.
 
-#### `Node`
-
-Represents a node in the document tree.
-
-```typescript
-new Node(
-  type: NodeType,
-  attrs: Record<string, any>,
-  content: Node[],
-  text?: string
-)
-```
-
-**Properties:**
-
-- `type: NodeType` - The node type
-- `attrs: Record<string, any>` - Attributes like `{ level: 2 }` for headings
-- `content: Node[]` - Child nodes
-- `text?: string` - For text nodes, the text content
-
-**Example:**
-
-```typescript
-const heading = new Node(
-  schema.nodes.heading,
-  { level: 1 },
-  [
-    new Node(schema.nodes.text, {}, [], 'Hello World')
-  ]
-);
-```
-
----
-
-### Keyboard Shortcuts
-
-By default, FountainJS supports:
-
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl+B` / `Cmd+B` | Toggle bold |
-| `Ctrl+I` / `Cmd+I` | Toggle italic |
-| `Ctrl+Z` / `Cmd+Z` | Undo (requires history plugin) |
-
----
-
-## Customization
-
-### Custom Styling
-
-The editor renders semantic HTML, so you can style it with CSS:
-
-```css
-[role="textbox"] {
-  padding: 12px;
-  font-size: 16px;
-  line-height: 1.6;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-[role="textbox"] h1 {
-  font-size: 32px;
-  font-weight: bold;
-  margin: 1em 0 0.5em 0;
-}
-
-[role="textbox"] h2 {
-  font-size: 24px;
-  margin: 0.8em 0 0.4em 0;
-}
-```
-
-### Custom Schema
-
-Define your own schema for specific use cases:
-
-```typescript
-import { SchemaSpec, useFountain, CoreSchemaSpec } from '@fountainjs/editor/react';
-
-const customSchema: SchemaSpec = {
-  ...CoreSchemaSpec,
-  nodes: {
-    ...CoreSchemaSpec.nodes,
-    // Override or add custom nodes
-    customNode: {
-      content: 'inline*',
-      parseDOM: [{ tag: 'div', class: 'custom' }],
-      toDOM: () => ['div', { class: 'custom' }, 0],
-    },
-  },
-};
-
-const editor = useFountain({
-  schema: customSchema,
-});
-```
-
----
-
-## Browser Support
-
-- Chrome/Edge 88+
-- Firefox 87+
-- Safari 14+
-- iOS Safari 14+
-- Chrome for Android 88+
-
----
+- [API guide](docs/API.md)
+- [Format boundaries](docs/FORMATS.md)
+- [Optional AI and MCP](docs/MCP.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
+- [Changelog](CHANGELOG.md)
 
 ## License
 
-MIT - See LICENSE file for details
-
----
-
-## Contributing
-
-Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
-
----
-
-## Support
-
-- 📖 [Documentation](https://fountainjs.dev)
-- 🐛 [Issues](https://github.com/yourusername/fountainjs/issues)
-- 💬 [Discussions](https://github.com/yourusername/fountainjs/discussions)
-
----
-
-**Made with ❤️ for developers who want a powerful, flexible text editor**
+[MIT](LICENSE) © Paolo Cappuccini.

@@ -1,30 +1,12 @@
+import { Node, type Attributes } from '../schema';
+import { getNodeAtPath, replaceNodeAtPath } from './path';
 import { Step } from './step';
-import { Node } from '../schema';
 
 export class SetNodeAttrsStep extends Step {
-  constructor(
-    public readonly path: number[],
-    public readonly attrs: { [key: string]: any },
-  ) {
-    super();
-  }
+  constructor(public readonly path: readonly number[], public readonly attrs: Attributes) { super(); }
 
   apply(doc: Node): Node {
-    let node = doc; let parents: Node[] = [];
-    for (const index of this.path) { parents.push(node); node = node.content[index]; }
-
-    if (!node) throw new Error('No node found at path');
-
-    const newAttrs = { ...node.attrs, ...this.attrs };
-    const updatedNode = new Node(node.type, newAttrs, node.content, node.text, node.marks);
-
-    let newDoc: Node = updatedNode;
-    for (let i = parents.length - 1; i >= 0; i--) {
-      const parent = parents[i];
-      const newContent = [...parent.content];
-      newContent[this.path[i]] = newDoc;
-      newDoc = new Node(parent.type, parent.attrs, newContent, parent.text, parent.marks);
-    }
-    return newDoc;
+    const node = getNodeAtPath(doc, this.path);
+    return replaceNodeAtPath(doc, this.path, node.withAttrs({ ...node.attrs, ...this.attrs }));
   }
 }

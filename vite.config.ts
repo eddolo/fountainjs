@@ -1,14 +1,9 @@
-import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import path from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: path.resolve(__dirname, 'examples/react-app'),
-  plugins: [react(), tsconfigPaths()],
-  resolve: {
-    alias: {
-      'fountainjs': path.resolve(__dirname, 'src'),
-    },
-  },
+  root: fileURLToPath(new URL('./examples/react-app', import.meta.url)),
+  plugins: [react()],
+  server: { port: 5173, open: true },
 });

@@ -1,2 +1,2 @@
-import { NodeSpec } from '../../core';
-export const tableRow: NodeSpec = { content: 'table_cell+', toDOM() { return ['tr', 0]; }, };
+import type { NodeSpec } from '../../core';
+export const tableRow: NodeSpec = { content: '(table_header | table_cell)+', toDOM: () => ['tr', 0] };

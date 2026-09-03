@@ -1,76 +1,106 @@
 import { Editor, Selection } from '../core';
 
+function parsePath(element: HTMLElement): number[] {
+  return (element.dataset.fountainTextPath ?? '').split('.').filter(Boolean).map(Number);
+}
+
+function sameParent(left: readonly number[], right: readonly number[]): boolean {
+  return left.length === right.length
+    && left.length > 0
+    && left.slice(0, -1).every((part, index) => part === right[index]);
+}
+
+function textOffsetWithin(root: HTMLElement, node: globalThis.Node, offset: number): number {
+  const range = document.createRange();
+  range.selectNodeContents(root);
+  try { range.setEnd(node, offset); } catch { return 0; }
+  return range.toString().length;
+}
+
+function locateOffset(root: HTMLElement, target: number): { node: globalThis.Node; offset: number } | null {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let remaining = target;
+  let current = walker.nextNode();
+  while (current) {
+    const length = current.textContent?.length ?? 0;
+    if (remaining <= length) return { node: current, offset: remaining };
+    remaining -= length;
+    current = walker.nextNode();
+  }
+  return root.firstChild ? { node: root.firstChild, offset: 0 } : null;
+}
+
 export class SelectionHandler {
-  constructor(private editor: Editor, private dom: HTMLElement) {
+  private syncing = false;
+
+  constructor(private readonly editor: Editor, private readonly dom: HTMLElement) {
     document.addEventListener('selectionchange', this.onSelectionChange);
+    dom.addEventListener('pointerup', this.onSelectionInteraction);
+    dom.addEventListener('keyup', this.onSelectionInteraction);
+  }
+
+  read(): Selection | null {
+    const domSelection = document.getSelection();
+    if (!domSelection?.anchorNode || !domSelection.focusNode || !this.dom.contains(domSelection.anchorNode)) return null;
+    const anchorElement = (domSelection.anchorNode.nodeType === 1 ? domSelection.anchorNode as Element : domSelection.anchorNode.parentElement)
+      ?.closest<HTMLElement>('[data-fountain-text-path]');
+    const focusElement = (domSelection.focusNode.nodeType === 1 ? domSelection.focusNode as Element : domSelection.focusNode.parentElement)
+      ?.closest<HTMLElement>('[data-fountain-text-path]');
+    if (!anchorElement || !focusElement) return null;
+    const anchor = textOffsetWithin(anchorElement, domSelection.anchorNode, domSelection.anchorOffset);
+    const focus = textOffsetWithin(focusElement, domSelection.focusNode, domSelection.focusOffset);
+    const anchorPath = parsePath(anchorElement);
+    const focusPath = parsePath(focusElement);
+    if (anchorElement === focusElement) {
+      return new Selection(anchorPath, Math.min(anchor, focus), Math.max(anchor, focus));
+    }
+    if (!sameParent(anchorPath, focusPath)) return null;
+    const anchorComesFirst = Boolean(anchorElement.compareDocumentPosition(focusElement) & Node.DOCUMENT_POSITION_FOLLOWING);
+    return anchorComesFirst
+      ? Selection.range(anchorPath, anchor, focusPath, focus)
+      : Selection.range(focusPath, focus, anchorPath, anchor);
+  }
+
+  capture(): Selection | null {
+    const selection = this.read();
+    if (selection && !selection.eq(this.editor.state.selection)) {
+      this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
+    }
+    return selection;
+  }
+
+  sync(selection: Selection): void {
+    const path = selection.path.join('.');
+    const wrappers = Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-text-path]'));
+    const wrapper = wrappers
+      .find((element) => element.dataset.fountainTextPath === path);
+    const endPath = selection.endPath.join('.');
+    const endWrapper = wrappers.find((element) => element.dataset.fountainTextPath === endPath);
+    if (!wrapper || !endWrapper) return;
+    const start = locateOffset(wrapper, selection.from);
+    const end = locateOffset(endWrapper, selection.to);
+    const domSelection = document.getSelection();
+    if (!start || !end || !domSelection) return;
+    this.syncing = true;
+    const range = document.createRange();
+    range.setStart(start.node, start.offset);
+    range.setEnd(end.node, end.offset);
+    domSelection.removeAllRanges();
+    domSelection.addRange(range);
+    queueMicrotask(() => { this.syncing = false; });
+  }
+
+  destroy(): void {
+    document.removeEventListener('selectionchange', this.onSelectionChange);
+    this.dom.removeEventListener('pointerup', this.onSelectionInteraction);
+    this.dom.removeEventListener('keyup', this.onSelectionInteraction);
   }
 
   private onSelectionChange = (): void => {
-    const domSel = document.getSelection();
-    if (!domSel || !domSel.anchorNode || !this.dom.contains(domSel.anchorNode)) {
-      return;
-    }
-
-    // --- NEW, MORE ROBUST PATH/OFFSET FINDING ---
-    const { anchorNode, anchorOffset, focusNode, focusOffset } = domSel;
-
-    const start = this.findPosition(anchorNode, anchorOffset);
-    const end = this.findPosition(focusNode, focusOffset);
-    
-    // If we can't map the DOM selection to our model, do nothing.
-    if (start === null || end === null) {
-      return;
-    }
-
-    // Create a new selection. For simplicity, we only support ranges within the same paragraph.
-    const newSelection = new Selection(start.path, start.offset, end.offset);
-
-    // Only dispatch a transaction if the selection has actually changed.
-    if (JSON.stringify(this.editor.state.selection) !== JSON.stringify(newSelection)) {
-      this.editor.dispatch(this.editor.createTransaction().setSelection(newSelection));
-    }
+    if (!this.syncing) this.capture();
   };
 
-  // This is the hard part: mapping a DOM node + offset to our model's path + offset.
-  private findPosition(domNode: globalThis.Node | null, domOffset: number): { path: number[], offset: number } | null {
-    if (!domNode) return null;
-
-    let textNode: globalThis.Node | null = null;
-    let textOffset = 0;
-
-    // If the selection is directly on a text node, use it.
-    if (domNode.nodeType === Node.TEXT_NODE) {
-      textNode = domNode;
-      textOffset = domOffset;
-    } else { // If it's on an element (like a <p>), find the text node inside.
-      textNode = domNode.firstChild;
-      textOffset = domOffset;
-    }
-
-    if (!textNode) return null;
-
-    // Find the parent paragraph to get its index.
-    let parentParagraph = textNode.parentNode;
-    while (parentParagraph && parentParagraph.nodeName !== 'P') {
-      parentParagraph = parentParagraph.parentNode;
-    }
-
-    if (!parentParagraph || !this.dom.contains(parentParagraph)) return null;
-
-    const blockIndex = Array.from(this.dom.childNodes).indexOf(parentParagraph as any);
-    if (blockIndex === -1) return null;
-    
-    // Our simplified path is [paragraphIndex, textNodeIndex (always 0 for now)]
-    return { path: [blockIndex, 0], offset: textOffset };
-  }
-
-
-  public syncSelectionToDOM(selection: Selection): void {
-    // This part is also very complex. For now, we will let the browser lead.
-    // The onSelectionChange handler will keep our state in sync with the browser.
-  }
-
-  public destroy(): void {
-    document.removeEventListener('selectionchange', this.onSelectionChange);
-  }
+  private onSelectionInteraction = (): void => {
+    if (!this.syncing) this.capture();
+  };
 }

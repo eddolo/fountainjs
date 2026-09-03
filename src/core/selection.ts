@@ -1,17 +1,44 @@
 export class Selection {
-  // A selection is defined by a single path and a start/end offset within that path's node.
-  constructor(
-    public readonly path: number[],
-    public readonly from: number,
-    public readonly to: number,
-  ) {}
+  readonly path: readonly number[];
+  readonly endPath: readonly number[];
+  readonly from: number;
+  readonly to: number;
 
-  // A collapsed selection (cursor)
-  static createCursor(path: number[], offset: number): Selection {
+  constructor(path: readonly number[], from: number, to: number = from, endPath: readonly number[] = path) {
+    if (!path.every((part) => Number.isInteger(part) && part >= 0)) throw new RangeError('Selection paths must contain non-negative integers.');
+    if (!endPath.every((part) => Number.isInteger(part) && part >= 0)) throw new RangeError('Selection paths must contain non-negative integers.');
+    if (!Number.isInteger(from) || !Number.isInteger(to) || from < 0 || to < 0) throw new RangeError('Invalid selection range.');
+    if (path.length === endPath.length && path.every((part, index) => part === endPath[index]) && to < from) throw new RangeError('Invalid selection range.');
+    this.path = Object.freeze([...path]);
+    this.endPath = Object.freeze([...endPath]);
+    this.from = from;
+    this.to = to;
+  }
+
+  static cursor(path: readonly number[], offset: number): Selection {
     return new Selection(path, offset, offset);
   }
 
-  get isCollapsed(): boolean {
-    return this.from === this.to;
+  static createCursor(path: readonly number[], offset: number): Selection {
+    return Selection.cursor(path, offset);
+  }
+
+  static range(startPath: readonly number[], from: number, endPath: readonly number[], to: number): Selection {
+    return new Selection(startPath, from, to, endPath);
+  }
+
+  get isSingleText(): boolean {
+    return this.path.length === this.endPath.length
+      && this.path.every((part, index) => part === this.endPath[index]);
+  }
+
+  get isCollapsed(): boolean { return this.isSingleText && this.from === this.to; }
+
+  eq(other: Selection): boolean {
+    return this.from === other.from && this.to === other.to
+      && this.path.length === other.path.length
+      && this.path.every((part, index) => part === other.path[index])
+      && this.endPath.length === other.endPath.length
+      && this.endPath.every((part, index) => part === other.endPath[index]);
   }
 }

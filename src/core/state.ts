@@ -1,13 +1,115 @@
-import { Schema, Node } from './schema';
-import { Transaction } from './transaction';
+import { Plugin, PluginKey } from './plugin';
 import { Selection } from './selection';
-import { Plugin } from './plugin';
-export interface EditorStateConfig { schema: Schema; doc?: Node; selection?: Selection; plugins?: Plugin[]; pluginStates?: any[]; }
+import { Node, Schema } from './schema';
+import { getNodeAtPath } from './transaction/path';
+import { Transaction } from './transaction';
+
+export interface EditorStateConfig {
+  schema: Schema;
+  doc?: Node;
+  selection?: Selection;
+  plugins?: readonly Plugin<any>[];
+  pluginStates?: ReadonlyMap<Plugin<any>, unknown>;
+}
+
+function firstTextPath(doc: Node): number[] {
+  let found: number[] | undefined;
+  doc.descendants((node, path) => {
+    if (found) return false;
+    if (node.isText) {
+      found = path;
+      return false;
+    }
+  });
+  return found ?? [];
+}
+
+function normalizeSelection(doc: Node, selection: Selection): Selection {
+  try {
+    const start = getNodeAtPath(doc, selection.path);
+    const end = getNodeAtPath(doc, selection.endPath);
+    if (!start.isText || !end.isText) throw new Error('Selection is not inside text.');
+    return new Selection(
+      selection.path,
+      Math.min(selection.from, start.text?.length ?? 0),
+      Math.min(selection.to, end.text?.length ?? 0),
+      selection.endPath,
+    );
+  } catch {
+    const path = firstTextPath(doc);
+    return Selection.cursor(path, 0);
+  }
+}
+
 export class EditorState {
-  public readonly schema: Schema; public readonly doc: Node; public readonly selection: Selection; public readonly plugins: Plugin[]; public readonly pluginStates: any[];
-  constructor(config: EditorStateConfig) { this.schema = config.schema; this.doc = config.doc || this.createDefaultDoc(config.schema); this.selection = config.selection || Selection.createCursor([0, 0], 19); this.plugins = config.plugins || []; if (config.pluginStates) { this.pluginStates = config.pluginStates; } else { this.pluginStates = this.plugins.map(p => p.spec.state?.init({}, this)); } }
-  static create(config: { schema: Schema; plugins?: Plugin[] }): EditorState { return new EditorState(config); }
-  apply(tr: Transaction): EditorState { const newPluginStates = this.plugins.map((plugin, i) => { const stateSpec = plugin.spec.state; return stateSpec ? stateSpec.apply(tr, this.pluginStates[i], this) : this.pluginStates[i]; }); const newDoc = tr.doc; const newSelection = tr.selectionSet ? tr.selection : this.selection; return new EditorState({ schema: this.schema, doc: newDoc, selection: newSelection, plugins: this.plugins, pluginStates: newPluginStates, }); }
-  createTransaction(): Transaction { return new Transaction(this.doc); }
-  private createDefaultDoc(schema: Schema): Node { const docType = schema.nodes.doc; const paraType = schema.nodes.paragraph; const textType = schema.nodes.text; if (!docType || !paraType || !textType) throw new Error('Schema is missing core nodes.'); const textNode = new Node(textType, {}, [], 'Start typing here...'); const paragraphNode = new Node(paraType, {}, [textNode]); return new Node(docType, {}, [paragraphNode]); }
+  readonly schema: Schema;
+  readonly doc: Node;
+  readonly selection: Selection;
+  readonly plugins: readonly Plugin<any>[];
+  private readonly pluginStates: ReadonlyMap<Plugin<any>, unknown>;
+
+  constructor(config: EditorStateConfig) {
+    this.schema = config.schema;
+    this.doc = config.doc ?? this.createDefaultDoc();
+    this.selection = normalizeSelection(this.doc, config.selection ?? Selection.cursor(firstTextPath(this.doc), 0));
+    this.plugins = Object.freeze([...(config.plugins ?? [])]);
+
+    if (config.pluginStates) {
+      this.pluginStates = config.pluginStates;
+    } else {
+      const states = new Map<Plugin<any>, unknown>();
+      this.pluginStates = states;
+      this.plugins.forEach((plugin) => {
+        if (plugin.spec.state) states.set(plugin, plugin.spec.state.init({}, this));
+      });
+    }
+  }
+
+  static create(config: EditorStateConfig): EditorState {
+    return new EditorState(config);
+  }
+
+  apply(transaction: Transaction): EditorState {
+    const nextDoc = transaction.doc;
+    const nextSelection = normalizeSelection(nextDoc, transaction.selectionSet ? transaction.selection : this.selection);
+    const interim = new EditorState({
+      schema: this.schema,
+      doc: nextDoc,
+      selection: nextSelection,
+      plugins: this.plugins,
+      pluginStates: this.pluginStates,
+    });
+    const states = new Map<Plugin<any>, unknown>();
+    this.plugins.forEach((plugin) => {
+      const previous = this.pluginStates.get(plugin);
+      const next = plugin.spec.state
+        ? plugin.spec.state.apply(transaction, previous, this, interim)
+        : previous;
+      states.set(plugin, next);
+    });
+    return new EditorState({
+      schema: this.schema,
+      doc: nextDoc,
+      selection: nextSelection,
+      plugins: this.plugins,
+      pluginStates: states,
+    });
+  }
+
+  createTransaction(): Transaction {
+    return new Transaction(this.doc, this.selection);
+  }
+
+  getPluginState<T>(pluginOrKey: Plugin<T> | PluginKey<T>): T | undefined {
+    const plugin = pluginOrKey instanceof Plugin
+      ? pluginOrKey
+      : this.plugins.find((candidate) => candidate.key === pluginOrKey);
+    return plugin ? this.pluginStates.get(plugin) as T | undefined : undefined;
+  }
+
+  private createDefaultDoc(): Node {
+    const paragraph = this.schema.nodes.paragraph;
+    if (!paragraph) throw new Error('The schema must provide a paragraph node or an initial document.');
+    return this.schema.topNodeType.create({}, [paragraph.create({}, [this.schema.text('')])]);
+  }
 }

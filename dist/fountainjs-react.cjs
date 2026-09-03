@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const t=require("./index-cafd8e26.cjs");require("react");exports.FountainEditor=t.FountainEditor;exports.Navigator=t.Navigator;exports.useFountain=t.useFountain;exports.useNavigatorState=t.useNavigatorState;

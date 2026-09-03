@@ -1,74 +1,118 @@
-import { Editor, Selection } from '../core';
+import {
+  deleteSelection,
+  insertText,
+  joinBackward,
+  splitBlock,
+  toggleMark,
+  type Editor,
+  Selection,
+} from '../core';
+import { getNodeAtPath } from '../core/transaction/path';
+import type { SelectionHandler } from './selection-handler';
 
 export class InputManager {
-  constructor(private editor: Editor, private dom: HTMLElement) {
-    this.dom.addEventListener('beforeinput', this.onBeforeInput);
+  constructor(
+    private readonly editor: Editor,
+    private readonly dom: HTMLElement,
+    private readonly selections: SelectionHandler,
+  ) {
+    dom.addEventListener('beforeinput', this.onBeforeInput);
+    dom.addEventListener('keydown', this.onKeyDown);
+    dom.addEventListener('paste', this.onPaste);
   }
 
-  private onBeforeInput = (event: InputEvent): void => {
-    // Let the browser handle complex inputs for now
-    if (event.inputType.startsWith('format')) return;
+  destroy(): void {
+    this.dom.removeEventListener('beforeinput', this.onBeforeInput);
+    this.dom.removeEventListener('keydown', this.onKeyDown);
+    this.dom.removeEventListener('paste', this.onPaste);
+  }
 
-    const { state } = this.editor;
-    const { selection } = state;
-
-    // If our selection isn't set, we can't do anything.
-    if (!selection || !selection.path) {
-      // Allow browser to handle it, but log a warning.
-      console.warn("Fountain.js: No selection found, letting browser handle input.");
-      return;
+  private onKeyDown = (event: KeyboardEvent): void => {
+    this.selections.capture();
+    for (const plugin of this.editor.state.plugins) {
+      if (plugin.spec.props?.handleKeyDown?.(this.editor, event)) return;
     }
-
-    event.preventDefault();
-    let tr = state.createTransaction();
-
-    switch (event.inputType) {
-      case 'insertText':
-        if (event.data) {
-          tr.replaceText(selection.path, selection.from, selection.to, event.data);
-          tr.setSelection(Selection.createCursor(selection.path, selection.from + event.data.length));
-        }
-        break;
-
-      case 'deleteContentBackward': // Backspace
-        if (selection.isCollapsed) {
-          if (selection.from > 0) {
-            tr.replaceText(selection.path, selection.from - 1, selection.from, '');
-            tr.setSelection(Selection.createCursor(selection.path, selection.from - 1));
-          }
-        } else {
-          // If there's a range selection, delete the whole range.
-          tr.replaceText(selection.path, selection.from, selection.to, '');
-          tr.setSelection(Selection.createCursor(selection.path, selection.from));
-        }
-        break;
-      
-      case 'deleteContentForward': // Delete key
-         if (selection.isCollapsed) {
-            tr.replaceText(selection.path, selection.from, selection.from + 1, '');
-            tr.setSelection(Selection.createCursor(selection.path, selection.from));
-        } else {
-            tr.replaceText(selection.path, selection.from, selection.to, '');
-            tr.setSelection(Selection.createCursor(selection.path, selection.from));
-        }
-        break;
-      
-      case 'insertParagraph': // Enter key
-        console.log("Enter key pressed - not implemented yet.");
-        break;
-
-      default:
-        // For any other input type, do nothing and let the browser be prevented.
-        console.log(`Unhandled inputType: ${event.inputType}`);
-        break;
-    }
-
-    if (tr.steps.length > 0) {
-      this.editor.dispatch(tr);
+    const modifier = event.ctrlKey || event.metaKey;
+    const key = event.key.toLowerCase();
+    const mark = modifier && !event.altKey
+      ? key === 'b' ? 'strong' : key === 'i' ? 'em' : key === 'u' ? 'underline' : null
+      : null;
+    if (mark) {
+      event.preventDefault();
+      toggleMark(this.editor, mark);
+    } else if (event.key === 'Tab' && getNodeAtPath(this.editor.state.doc, this.editor.state.selection.path).type.name === 'text') {
+      const block = this.editor.state.doc.content[this.editor.state.selection.path[0]];
+      if (block?.type.name === 'code_block') {
+        event.preventDefault();
+        insertText(this.editor, '  ');
+      }
     }
   };
 
-  public destroy(): void {
-    this.dom.removeEventListener('beforeinput', this.onBeforeInput);
-  }
+  private onBeforeInput = (event: InputEvent): void => {
+    if (!this.editor.editable || event.isComposing) return;
+    this.selections.capture();
+    const { state } = this.editor;
+    const selection = state.selection;
+
+    if (event.inputType === 'insertText' && event.data) {
+      for (const plugin of state.plugins) {
+        if (plugin.spec.props?.handleTextInput?.(this.editor, selection.from, selection.to, event.data)) {
+          event.preventDefault();
+          return;
+        }
+      }
+      event.preventDefault();
+      insertText(this.editor, event.data);
+      return;
+    }
+
+    if (event.inputType === 'insertParagraph') {
+      event.preventDefault();
+      splitBlock(this.editor);
+      return;
+    }
+
+    if (event.inputType === 'insertLineBreak') {
+      event.preventDefault();
+      insertText(this.editor, '\n');
+      return;
+    }
+
+    if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
+      event.preventDefault();
+      if (deleteSelection(this.editor)) return;
+      const target = getNodeAtPath(state.doc, selection.path);
+      const length = target.text?.length ?? 0;
+      if (event.inputType === 'deleteContentBackward') {
+        if (selection.from === 0) { joinBackward(this.editor); return; }
+        const transaction = state.createTransaction()
+          .replaceText(selection.path, selection.from - 1, selection.from, '')
+          .setSelection(Selection.cursor(selection.path, selection.from - 1));
+        this.editor.dispatch(transaction);
+      } else if (selection.from < length) {
+        const transaction = state.createTransaction()
+          .replaceText(selection.path, selection.from, selection.from + 1, '')
+          .setSelection(Selection.cursor(selection.path, selection.from));
+        this.editor.dispatch(transaction);
+      }
+      return;
+    }
+
+    const formatMap: Record<string, string> = { formatBold: 'strong', formatItalic: 'em', formatUnderline: 'underline', formatStrikeThrough: 'strike' };
+    const mark = formatMap[event.inputType];
+    if (mark) {
+      event.preventDefault();
+      toggleMark(this.editor, mark);
+    }
+  };
+
+  private onPaste = (event: ClipboardEvent): void => {
+    if (!this.editor.editable) return;
+    const text = event.clipboardData?.getData('text/plain');
+    if (text === undefined) return;
+    event.preventDefault();
+    this.selections.capture();
+    insertText(this.editor, text.replace(/\r\n?/g, '\n'));
+  };
 }

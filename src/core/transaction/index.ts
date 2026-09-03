@@ -2,8 +2,10 @@ export * from './step';
 export * from './replace-step';
 export * from './insert-text-step';
 export * from './replace-text-step'
+export * from './replace-text-range-step';
 export * from './add-mark-step';
 export * from './remove-mark-step';
+export * from './mark-range-step';
 export * from './set-node-attrs-step';
 export * from './transform';
 export * from './transaction';

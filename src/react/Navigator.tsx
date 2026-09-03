@@ -1,36 +1,33 @@
-import React from 'react';
-import { Editor, Selection } from '../core';
+import { Selection, type Editor } from '../core';
 import { useNavigatorState } from './useNavigatorState';
 
-interface NavigatorProps {
-  editor: Editor | null;
+export interface NavigatorProps { editor: Editor | null; className?: string; }
+
+function firstTextPath(editor: Editor, blockPath: readonly number[]): number[] {
+  let result = [...blockPath];
+  let node = editor.state.doc;
+  blockPath.forEach((index) => { node = node.child(index); });
+  while (!node.isText && node.childCount) {
+    result.push(0);
+    node = node.child(0);
+  }
+  return result;
 }
 
-export const Navigator: React.FC<NavigatorProps> = ({ editor }) => {
+export function Navigator({ editor, className }: NavigatorProps) {
   const outline = useNavigatorState(editor);
   if (!editor) return null;
-
-  const handleClick = (path: number[]) => {
-    const selection = Selection.createCursor(path, 0);
-    const tr = editor.createTransaction().setSelection(selection);
-    editor.dispatch(tr);
+  const select = (path: readonly number[]) => {
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor(firstTextPath(editor, path), 0)));
   };
-
   return (
-    <div style={{ padding: '1rem', border: '1px solid #eee', background: '#fcfcfc' }}>
-      <h3 style={{ marginTop: 0 }}>Navigator</h3>
-      {outline.length === 0 && <p style={{ color: '#999' }}>No headings yet.</p>}
-      <ul>
-        {outline.map(item => (
-          <li
-            key={item.id}
-            onClick={() => handleClick(item.path)}
-            style={{ listStyle: 'none', paddingLeft: `${(item.level - 1) * 20}px`, cursor: 'pointer', marginBottom: '0.5rem', }}
-          >
-            {item.text}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <nav className={['fountain-navigator', className].filter(Boolean).join(' ')} aria-label="Document outline">
+      <div className="fountain-navigator__title">Outline</div>
+      {outline.length === 0 ? <p className="fountain-navigator__empty">Add a heading to build an outline.</p> : outline.map((item) => (
+        <button key={item.id} type="button" style={{ paddingInlineStart: `${(item.level - 1) * 12 + 8}px` }} onClick={() => select(item.path)}>
+          {item.text}
+        </button>
+      ))}
+    </nav>
   );
-};
+}

@@ -1,4 +1,43 @@
-import { EditorState } from './state';
-import { Transaction } from './transaction';
-export interface PluginSpec { state?: { init: (config: any, state: EditorState) => any; apply: (tr: Transaction, value: any, oldState: EditorState) => any; }; }
-export class Plugin { public readonly spec: PluginSpec; constructor(spec: PluginSpec) { this.spec = spec; } }
+import type { Editor } from './editor';
+import type { EditorState } from './state';
+import type { Transaction } from './transaction';
+
+let pluginId = 0;
+
+export class PluginKey<T = unknown> {
+  readonly id: string;
+
+  constructor(name = 'plugin') {
+    this.id = `${name}$${pluginId++}`;
+  }
+
+  get(state: EditorState): T | undefined {
+    return state.getPluginState(this);
+  }
+}
+
+export interface PluginStateSpec<T> {
+  init: (config: unknown, state: EditorState) => T;
+  apply: (transaction: Transaction, value: T, oldState: EditorState, newState: EditorState) => T;
+}
+
+export interface PluginProps {
+  handleKeyDown?: (editor: Editor, event: KeyboardEvent) => boolean;
+  handleTextInput?: (editor: Editor, from: number, to: number, text: string) => boolean;
+  onCreate?: (editor: Editor) => void;
+  onDestroy?: (editor: Editor) => void;
+}
+
+export interface PluginSpec<T = unknown> {
+  key?: PluginKey<T>;
+  state?: PluginStateSpec<T>;
+  props?: PluginProps;
+}
+
+export class Plugin<T = unknown> {
+  readonly key: PluginKey<T>;
+
+  constructor(public readonly spec: PluginSpec<T>) {
+    this.key = spec.key ?? new PluginKey<T>();
+  }
+}

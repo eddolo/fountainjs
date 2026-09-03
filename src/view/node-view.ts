@@ -1,5 +1,4 @@
-import { Node } from '../core/schema/node';
-import { EditorView } from './view';
+import type { Node } from '../core';
 
 export interface NodeView {
   dom: HTMLElement;

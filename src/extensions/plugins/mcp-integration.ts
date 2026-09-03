@@ -1,267 +1,238 @@
-/**
- * MCP (Model Context Protocol) Integration
- * 
- * Allows FountainJS to work with ANY AI system that supports MCP
- * AI-agnostic, language-agnostic, and framework-agnostic
- * 
- * Example MCP servers:
- * - OpenAI (via MCP bridges)
- * - Anthropic Claude
- * - Google Gemini
- * - Open source LLMs
- * - Custom enterprise LLMs
- */
+export const MCP_PROTOCOL_VERSION = '2025-11-25';
 
-export interface MCPToolInput {
-  [key: string]: string | number | boolean;
-}
+export type MCPArguments = Record<string, unknown>;
 
 export interface MCPTool {
   name: string;
-  description: string;
-  inputSchema?: {
-    type: 'object';
-    properties: { [key: string]: any };
-    required: string[];
-  };
+  title?: string;
+  description?: string;
+  inputSchema: Record<string, unknown>;
+  outputSchema?: Record<string, unknown>;
 }
 
-export interface MCPContentBlock {
-  type: 'text' | 'tool_use';
-  text?: string;
-  id?: string;
-  name?: string;
-  input?: MCPToolInput;
+export interface MCPTextContent { type: 'text'; text: string; }
+export interface MCPImageContent { type: 'image'; data: string; mimeType: string; }
+export interface MCPResourceContent { type: 'resource'; resource: Record<string, unknown>; }
+export type MCPContent = MCPTextContent | MCPImageContent | MCPResourceContent | Record<string, unknown>;
+
+export interface MCPToolResult {
+  content: MCPContent[];
+  structuredContent?: Record<string, unknown>;
+  isError?: boolean;
 }
 
-export interface MCPRequest {
-  content: string;
-  tools?: MCPTool[];
-  systemPrompt?: string;
+interface JSONRPCResponse<T> {
+  jsonrpc: '2.0';
+  id: number | string;
+  result?: T;
+  error?: { code: number; message: string; data?: unknown };
 }
 
-export interface MCPResponse {
-  content: MCPContentBlock[];
-  stopReason: string;
+export interface MCPClientOptions {
+  headers?: Record<string, string>;
+  protocolVersion?: string;
+  timeoutMs?: number;
+  fetch?: typeof fetch;
+  clientInfo?: { name: string; version: string };
 }
 
-/**
- * AI-agnostic content transformation request
- * Send this to any MCP server, get back improved content
- */
+export class MCPError extends Error {
+  constructor(message: string, public readonly code?: number, public readonly data?: unknown) {
+    super(message);
+    this.name = 'MCPError';
+  }
+}
+
+async function parseResponse<T>(response: Response, requestId?: number): Promise<T | undefined> {
+  const text = await response.text();
+  if (!text.trim()) return undefined;
+  const contentType = response.headers.get('content-type') ?? '';
+  let payload: JSONRPCResponse<T> | undefined;
+  if (contentType.includes('text/event-stream')) {
+    const events = text.split(/\r?\n\r?\n/);
+    for (const event of events) {
+      const data = event.split(/\r?\n/).filter((line) => line.startsWith('data:')).map((line) => line.slice(5).trim()).join('\n');
+      if (!data) continue;
+      const candidate = JSON.parse(data) as JSONRPCResponse<T>;
+      if (requestId === undefined || candidate.id === requestId) { payload = candidate; break; }
+    }
+  } else {
+    payload = JSON.parse(text) as JSONRPCResponse<T>;
+  }
+  if (!payload) throw new MCPError('The MCP server returned no matching JSON-RPC response.');
+  if (payload.error) throw new MCPError(payload.error.message, payload.error.code, payload.error.data);
+  return payload.result;
+}
+
+export class MCPClient {
+  private requestId = 0;
+  private sessionId?: string;
+  private negotiatedVersion?: string;
+  private connected = false;
+  private readonly fetcher: typeof fetch;
+  private readonly options: Required<Pick<MCPClientOptions, 'protocolVersion' | 'timeoutMs' | 'clientInfo'>> & MCPClientOptions;
+
+  constructor(public readonly endpoint: string, options: MCPClientOptions = {}) {
+    const url = new URL(endpoint);
+    if (!['http:', 'https:'].includes(url.protocol)) throw new Error('MCP Streamable HTTP endpoints must use http or https.');
+    this.fetcher = options.fetch ?? globalThis.fetch;
+    if (!this.fetcher) throw new Error('No fetch implementation is available.');
+    this.options = {
+      protocolVersion: MCP_PROTOCOL_VERSION,
+      timeoutMs: 30_000,
+      clientInfo: { name: 'fountainjs-editor', version: '0.3.0' },
+      ...options,
+    };
+  }
+
+  get isConnected(): boolean { return this.connected; }
+
+  async connect(): Promise<void> {
+    const result = await this.request<{ protocolVersion: string }>('initialize', {
+      protocolVersion: this.options.protocolVersion,
+      capabilities: {},
+      clientInfo: this.options.clientInfo,
+    }, false);
+    if (!result?.protocolVersion) throw new MCPError('The MCP server did not negotiate a protocol version.');
+    this.negotiatedVersion = result.protocolVersion;
+    await this.notify('notifications/initialized');
+    this.connected = true;
+  }
+
+  async listTools(): Promise<MCPTool[]> {
+    this.assertConnected();
+    const tools: MCPTool[] = [];
+    let cursor: string | undefined;
+    do {
+      const result = await this.request<{ tools: MCPTool[]; nextCursor?: string }>('tools/list', cursor ? { cursor } : {});
+      tools.push(...(result?.tools ?? []));
+      cursor = result?.nextCursor;
+    } while (cursor);
+    return tools;
+  }
+
+  async callTool(name: string, args: MCPArguments = {}): Promise<MCPToolResult> {
+    this.assertConnected();
+    const result = await this.request<MCPToolResult>('tools/call', { name, arguments: args });
+    if (!result) throw new MCPError(`Tool ${name} returned no result.`);
+    return result;
+  }
+
+  async close(): Promise<void> {
+    if (this.sessionId) {
+      await this.fetcher(this.endpoint, { method: 'DELETE', headers: this.headers() }).catch(() => undefined);
+    }
+    this.connected = false;
+    this.sessionId = undefined;
+  }
+
+  private assertConnected(): void {
+    if (!this.connected) throw new MCPError('MCP client is not connected. Call connect() first.');
+  }
+
+  private headers(method?: string, name?: string): Record<string, string> {
+    return {
+      Accept: 'application/json, text/event-stream',
+      'Content-Type': 'application/json',
+      ...(this.negotiatedVersion ? { 'MCP-Protocol-Version': this.negotiatedVersion } : {}),
+      ...(this.sessionId ? { 'MCP-Session-Id': this.sessionId } : {}),
+      ...(method ? { 'MCP-Method': method } : {}),
+      ...(name ? { 'MCP-Name': name } : {}),
+      ...this.options.headers,
+    };
+  }
+
+  private async post(body: Record<string, unknown>, requestId?: number): Promise<Response> {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), this.options.timeoutMs);
+    const method = String(body.method ?? '');
+    const params = body.params as { name?: string } | undefined;
+    try {
+      const response = await this.fetcher(this.endpoint, {
+        method: 'POST',
+        headers: this.headers(method, params?.name),
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new MCPError(`MCP HTTP ${response.status}: ${response.statusText}`, response.status);
+      const session = response.headers.get('mcp-session-id');
+      if (session) this.sessionId = session;
+      return response;
+    } catch (error) {
+      if ((error as Error).name === 'AbortError') throw new MCPError(`MCP request timed out after ${this.options.timeoutMs}ms.`);
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  private async request<T>(method: string, params: Record<string, unknown>, includeVersion = true): Promise<T | undefined> {
+    const id = ++this.requestId;
+    const response = await this.post({ jsonrpc: '2.0', id, method, params }, id);
+    const result = await parseResponse<T>(response, id);
+    if (includeVersion && !this.negotiatedVersion) throw new MCPError('MCP lifecycle has not been initialized.');
+    return result;
+  }
+
+  private async notify(method: string, params: Record<string, unknown> = {}): Promise<void> {
+    await this.post({ jsonrpc: '2.0', method, params });
+  }
+}
+
 export interface ContentTransformRequest {
   content: string;
-  contentType: 'markdown' | 'json' | 'html' | 'fountain';
-  operation: 'generate' | 'improve' | 'transform' | 'summarize' | 'expand';
+  contentType: 'text' | 'markdown' | 'json' | 'html';
+  operation: 'generate' | 'improve' | 'transform' | 'summarize' | 'expand' | 'translate';
   context?: string;
   language?: string;
+  instructions?: string;
 }
 
-/**
- * MCP Integration Plugin
- * Works with any AI service that supports Model Context Protocol
- */
+export interface MCPIntegrationOptions extends MCPClientOptions {
+  toolName?: string;
+}
+
 export class MCPIntegration {
-  private mcpServerUrl?: string;
-  private tools: MCPTool[] = [];
+  private client?: MCPClient;
+  private endpoint?: string;
+  private readonly options: MCPIntegrationOptions;
 
-  constructor(mcpServerUrl?: string) {
-    this.mcpServerUrl = mcpServerUrl;
-    this.registerDefaultTools();
+  constructor(endpoint?: string, options: MCPIntegrationOptions = {}) {
+    this.endpoint = endpoint;
+    this.options = options;
   }
 
-  private registerDefaultTools(): void {
-    this.tools = [
-      {
-        name: 'generate_content',
-        description: 'Generate new content in specified format',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            prompt: {
-              type: 'string',
-              description: 'What to generate',
-            },
-            format: {
-              type: 'string',
-              enum: ['markdown', 'html', 'json', 'fountain'],
-              description: 'Output format',
-            },
-            language: {
-              type: 'string',
-              description: 'Programming language (if code)',
-            },
-          },
-          required: ['prompt', 'format'],
-        },
-      },
-      {
-        name: 'improve_content',
-        description: 'Improve existing content',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            content: {
-              type: 'string',
-              description: 'Content to improve',
-            },
-            aspect: {
-              type: 'string',
-              enum: ['clarity', 'grammar', 'tone', 'structure'],
-              description: 'What to improve',
-            },
-          },
-          required: ['content', 'aspect'],
-        },
-      },
-      {
-        name: 'transform_format',
-        description: 'Transform content between formats',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            content: {
-              type: 'string',
-              description: 'Content to transform',
-            },
-            fromFormat: {
-              type: 'string',
-              enum: ['markdown', 'html', 'json', 'fountain', 'text'],
-            },
-            toFormat: {
-              type: 'string',
-              enum: ['markdown', 'html', 'json', 'fountain'],
-            },
-          },
-          required: ['content', 'fromFormat', 'toFormat'],
-        },
-      },
-    ];
+  async connectToMCPServer(endpoint = this.endpoint): Promise<void> {
+    if (!endpoint) throw new MCPError('An MCP endpoint is required.');
+    this.endpoint = endpoint;
+    this.client = new MCPClient(endpoint, this.options);
+    await this.client.connect();
   }
 
-  /**
-   * Connect to an MCP server
-   * Server can be hosted anywhere - local, cloud, enterprise
-   */
-  async connectToMCPServer(url: string): Promise<void> {
-    this.mcpServerUrl = url;
-    // In real implementation, establish WebSocket/HTTP connection
-    console.log(`Connected to MCP server: ${url}`);
+  async listTools(): Promise<MCPTool[]> {
+    if (!this.client) throw new MCPError('MCP server is not configured.');
+    return this.client.listTools();
   }
 
-  /**
-   * Register custom tools for specific AI use cases
-   */
-  registerTool(tool: MCPTool): void {
-    this.tools.push(tool);
-  }
-
-  /**
-   * Get available tools for this AI
-   */
-  getAvailableTools(): MCPTool[] {
-    return this.tools;
-  }
-
-  /**
-   * Transform content using AI through MCP
-   * Works with ANY MCP-compatible AI service
-   */
   async transformContent(request: ContentTransformRequest): Promise<string> {
-    if (!this.mcpServerUrl) {
-      throw new Error('MCP server not configured. Call connectToMCPServer() first.');
-    }
-
-    const systemPrompt = this.buildSystemPrompt(request);
-    const userPrompt = this.buildUserPrompt(request);
-
-    const mcpRequest: MCPRequest = {
-      content: userPrompt,
-      systemPrompt,
-      tools: this.tools,
-    };
-
-    // Send to MCP server (implementation depends on server)
-    const response = await this.sendToMCP(mcpRequest);
-
-    // Extract content from MCP response
-    return this.extractContent(response);
+    if (!this.client) throw new MCPError('MCP server is not configured. Call connectToMCPServer() first.');
+    const toolName = this.options.toolName ?? 'transform_content';
+    const result = await this.client.callTool(toolName, { ...request });
+    const text = result.content
+      .filter((block): block is MCPTextContent => block.type === 'text' && typeof block.text === 'string')
+      .map((block) => block.text)
+      .join('\n');
+    if (result.isError) throw new MCPError(text || `MCP tool ${toolName} reported an error.`);
+    return text || (result.structuredContent ? JSON.stringify(result.structuredContent) : '');
   }
 
-  private buildSystemPrompt(request: ContentTransformRequest): string {
-    return `You are a helpful content transformation AI.
-The user has content in ${request.contentType} format.
-Help them ${request.operation} their content.
-${request.language ? `Programming language: ${request.language}` : ''}
-${request.context ? `Context: ${request.context}` : ''}`;
-  }
-
-  private buildUserPrompt(request: ContentTransformRequest): string {
-    switch (request.operation) {
-      case 'generate':
-        return `Generate new content: ${request.content}`;
-      case 'improve':
-        return `Improve this content:\n${request.content}`;
-      case 'transform':
-        return `Transform this content to a better format:\n${request.content}`;
-      case 'summarize':
-        return `Summarize this content:\n${request.content}`;
-      case 'expand':
-        return `Expand on this content:\n${request.content}`;
-      default:
-        return request.content;
-    }
-  }
-
-  private async sendToMCP(request: MCPRequest): Promise<MCPResponse> {
-    // This is a placeholder - real implementation would:
-    // 1. Connect to MCP server (WebSocket or HTTP)
-    // 2. Send request in MCP format
-    // 3. Wait for response
-    // 4. Handle tool calls if needed
-
-    if (!this.mcpServerUrl) {
-      throw new Error('MCP server URL not set');
-    }
-
-    try {
-      const response = await fetch(`${this.mcpServerUrl}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-      });
-
-      if (!response.ok) {
-        throw new Error(`MCP server error: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('MCP request failed:', error);
-      throw error;
-    }
-  }
-
-  private extractContent(response: MCPResponse): string {
-    const textBlocks = response.content.filter((block) => block.type === 'text');
-    return textBlocks.map((block) => block.text || '').join('\n');
-  }
+  async close(): Promise<void> { await this.client?.close(); }
 }
 
-/**
- * AI-agnostic content generation
- * Can be used with any MCP-compatible service
- */
 export async function generateContentWithAI(
   prompt: string,
-  mcpServer: MCPIntegration,
-  outputFormat: 'markdown' | 'json' | 'html' = 'markdown'
+  integration: MCPIntegration,
+  outputFormat: ContentTransformRequest['contentType'] = 'markdown',
 ): Promise<string> {
-  const request: ContentTransformRequest = {
-    content: prompt,
-    contentType: outputFormat,
-    operation: 'generate',
-  };
-
-  return mcpServer.transformContent(request);
+  return integration.transformContent({ content: prompt, contentType: outputFormat, operation: 'generate' });
 }

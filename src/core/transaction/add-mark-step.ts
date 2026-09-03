@@ -1,19 +1,29 @@
+import { Mark, Node } from '../schema';
+import { assertTextRange, getNodeAtPath, replaceNodeWithNodes } from './path';
 import { Step } from './step';
-import { Node, Mark } from '../schema';
+
 export class AddMarkStep extends Step {
-  constructor(public readonly path: number[], public readonly mark: Mark) { super(); }
+  constructor(
+    public readonly path: readonly number[],
+    public readonly from: number,
+    public readonly to: number,
+    public readonly mark: Mark,
+  ) { super(); }
+
   apply(doc: Node): Node {
-    let node = doc; let parents: Node[] = [];
-    for (const index of this.path) { parents.push(node); node = node.content[index]; }
-    if (!node || !node.isText) return doc;
-    const newMarks = [this.mark, ...node.marks.filter(existing => existing.type !== this.mark.type)];
-    const newTextNode = new Node(node.type, node.attrs, [], node.text, newMarks);
-    let newDoc: Node = newTextNode;
-    for (let i = parents.length - 1; i >= 0; i--) {
-      const parent = parents[i]; const newContent = [...parent.content];
-      newContent[this.path[i]] = newDoc;
-      newDoc = new Node(parent.type, parent.attrs, newContent, parent.text, parent.marks);
-    }
-    return newDoc;
+    const node = getNodeAtPath(doc, this.path);
+    assertTextRange(node, this.from, this.to);
+    if (this.from === this.to) return doc;
+    const text = node.text ?? '';
+    const marked = node.withText(text.slice(this.from, this.to)).withMarks([
+      ...node.marks.filter((existing) => existing.type !== this.mark.type),
+      this.mark,
+    ]);
+    const nodes = [
+      ...(this.from ? [node.withText(text.slice(0, this.from))] : []),
+      marked,
+      ...(this.to < text.length ? [node.withText(text.slice(this.to))] : []),
+    ];
+    return replaceNodeWithNodes(doc, this.path, nodes);
   }
 }

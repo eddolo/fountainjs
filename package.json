@@ -1,93 +1,95 @@
 {
   "name": "fountainjs-editor",
-  "version": "0.2.1",
-  "description": "Universal AI-agnostic rich text editor with code blocks, multi-format export, and Model Context Protocol (MCP) integration",
+  "version": "0.3.0",
+  "description": "A modular, framework-neutral rich-text editor engine with portable JSON, DOM and Web Component APIs, React bindings, and optional AI review.",
   "author": "Paolo Cappuccini",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/fountainjs.cjs",
-  "module": "./dist/fountainjs.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fountainjs.js",
-      "require": "./dist/fountainjs.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./react": {
-      "import": "./dist/fountainjs-react.js",
-      "require": "./dist/fountainjs-react.cjs",
-      "types": "./dist/react/index.d.ts"
-    }
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
-    "src",
     "README.md",
-    "README_LATEST.md",
-    "README_V020.md",
-    "MCP_INTEGRATION_GUIDE.md",
-    "EXPORTERS_GUIDE.md",
-    "FEATURES_V2.md",
+    "CHANGELOG.md",
     "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/eddolo/fountainjs.git"
+    "url": "git+https://github.com/eddolo/fountainjs.git"
   },
-  "homepage": "https://github.com/eddolo/fountainjs#readme",
+  "homepage": "https://eddolo.github.io/fountainjs/",
   "bugs": {
     "url": "https://github.com/eddolo/fountainjs/issues"
   },
   "keywords": [
     "editor",
-    "text-editor",
     "rich-text",
-    "code-blocks",
-    "syntax-highlighting",
+    "wysiwyg",
+    "typescript",
+    "react",
+    "web-components",
+    "framework-agnostic",
+    "extensible",
+    "contenteditable",
     "markdown",
     "html",
-    "json",
-    "export",
-    "ai",
     "mcp",
-    "model-context-protocol",
-    "openai",
-    "claude",
-    "gemini",
-    "wysiwyg",
-    "react",
-    "typescript",
-    "production-ready"
+    "ai",
+    "ai-editor",
+    "human-in-the-loop",
+    "bring-your-own-model",
+    "headless",
+    "accessible"
   ],
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.19.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build -c vite.lib.config.ts && tsc --declaration --emitDeclarationOnly --outDir dist",
-    "build:lib": "vite build -c vite.lib.config.ts",
-    "preview": "vite preview",
-    "lint": "tsc --noEmit",
-    "type-check": "tsc --noEmit"
+    "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "pack:check": "pnpm pack --dry-run",
+    "prepublishOnly": "pnpm check"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
-    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    "react": ">=18 <21",
+    "react-dom": ">=18 <21"
   },
   "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.0",
-    "vite": "^4.3.9",
-    "vite-tsconfig-paths": "^5.1.4"
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^30.0.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
   }
 }

@@ -1,52 +1,49 @@
-import { Plugin, Node, EditorState, Transaction } from '../../core';
+import { Node, Plugin, Selection } from '../../core';
+import { getNodeAtPath } from '../../core/transaction/path';
 
-export interface InputRule {
-  pattern: RegExp;
-  handler: (props: { state: EditorState; match: RegExpMatchArray; from: number; to: number }) => Transaction | null;
+function paragraph(schema: import('../../core').Schema, text = ''): Node {
+  return schema.node('paragraph', {}, [schema.text(text)]);
 }
 
-export const markdownShortcutsPlugin = new Plugin({});
+export const markdownShortcutsPlugin = new Plugin({
+  props: {
+    handleTextInput: (editor, from, to, input) => {
+      if (input !== ' ' || from !== to) return false;
+      const { state } = editor;
+      const path = state.selection.path;
+      const blockIndex = path[0];
+      const target = getNodeAtPath(state.doc, path);
+      const prefix = (target.text ?? '').slice(0, from) + input;
+      const headingMatch = /^(#{1,6}) $/.exec(prefix);
+      let replacement: Node | undefined;
+      let selectionPath: number[] = [blockIndex, 0];
 
-// --- Define our rules with more robust handlers ---
+      if (headingMatch) {
+        replacement = state.schema.node('heading', { level: headingMatch[1].length }, [state.schema.text('')]);
+      } else if (/^[-*] $/.test(prefix)) {
+        replacement = state.schema.node('bullet_list', {}, [state.schema.node('list_item', {}, [paragraph(state.schema)])]);
+        selectionPath = [blockIndex, 0, 0, 0];
+      } else if (/^1\. $/.test(prefix)) {
+        replacement = state.schema.node('ordered_list', { start: 1 }, [state.schema.node('list_item', {}, [paragraph(state.schema)])]);
+        selectionPath = [blockIndex, 0, 0, 0];
+      } else if (/^\[[ xX]\] $/.test(prefix)) {
+        replacement = state.schema.node('task_list', {}, [
+          state.schema.node('task_item', { checked: /[xX]/.test(prefix) }, [paragraph(state.schema)]),
+        ]);
+        selectionPath = [blockIndex, 0, 0, 0];
+      } else if (/^> $/.test(prefix)) {
+        replacement = state.schema.node('blockquote', {}, [paragraph(state.schema)]);
+        selectionPath = [blockIndex, 0, 0];
+      } else if (/^``` $/.test(prefix)) {
+        replacement = state.schema.node('code_block', { language: 'text', lineNumbers: true }, [state.schema.text('')]);
+      }
 
-export const headingRule: InputRule = {
-  // Matches '## ' at the start of a string.
-  pattern: /^(##\s)$/,
-  handler: ({ state, from, to }) => {
-    // Find the path to the start of the current text block
-    const selectionPath = state.selection.path;
-    if (selectionPath.length < 2) return null; // Must be inside a paragraph
-    const blockPath = selectionPath.slice(0, -1);
-    
-    // Create a new heading node
-    const { heading } = state.schema.nodes;
-    if (!heading) return null;
-    const newHeading = new Node(heading, { level: 2 });
-    
-    // This is a simplified transaction that replaces the entire parent paragraph
-    const tr = state.createTransaction().replace(blockPath[0], blockPath[0] + 1, [newHeading]);
-    return tr;
+      if (!replacement) return false;
+      const transaction = state.createTransaction()
+        .replace(blockIndex, blockIndex + 1, [replacement])
+        .setSelection(Selection.cursor(selectionPath, 0));
+      editor.dispatch(transaction);
+      return true;
+    },
   },
-};
-
-export const bulletListRule: InputRule = {
-  // Matches '* ' at the start of a string.
-  pattern: /^(\*\s)$/,
-  handler: ({ state, from, to }) => {
-    const selectionPath = state.selection.path;
-    if (selectionPath.length < 2) return null; // Must be inside a paragraph
-    const blockPath = selectionPath.slice(0, -1);
-
-    const { list_item, bullet_list, paragraph } = state.schema.nodes;
-    if (!list_item || !bullet_list || !paragraph) return null;
-
-    // Create a new bullet list with one item containing an empty paragraph
-    const newListItem = new Node(list_item, {}, [new Node(paragraph, {})]);
-    const newList = new Node(bullet_list, {}, [newListItem]);
-
-    const tr = state.createTransaction().replace(blockPath[0], blockPath[0] + 1, [newList]);
-    return tr;
-  },
-};
-
-export const markdownRules = [headingRule, bulletListRule];
+});

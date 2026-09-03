@@ -1,7 +1,28 @@
+import type { Attributes } from './node-spec';
 import type { MarkType, Schema } from './schema';
+
+export interface MarkJSON {
+  type: string;
+  attrs?: Attributes;
+}
+
 export class Mark {
-  public readonly type: MarkType;
-  public readonly attrs: { [name: string]: any };
-  constructor(type: MarkType, attrs: { [name: string]: any }) { this.type = type; this.attrs = attrs; }
-  static fromJSON(schema: Schema, json: any): Mark { const type = schema.marks[json.type]; if (!type) throw new Error(`Unknown mark type: ${json.type}`); return new Mark(type, { ...json.attrs }); }
+  readonly attrs: Readonly<Attributes>;
+
+  constructor(public readonly type: MarkType, attrs: Attributes = {}) {
+    this.attrs = Object.freeze({ ...attrs });
+  }
+
+  eq(other: Mark): boolean {
+    return this.type === other.type && JSON.stringify(this.attrs) === JSON.stringify(other.attrs);
+  }
+
+  toJSON(): MarkJSON {
+    return Object.keys(this.attrs).length ? { type: this.type.name, attrs: { ...this.attrs } } : { type: this.type.name };
+  }
+
+  static fromJSON(schema: Schema, json: MarkJSON): Mark {
+    if (!json || typeof json.type !== 'string') throw new TypeError('Invalid mark JSON.');
+    return schema.mark(json.type, json.attrs ?? {});
+  }
 }

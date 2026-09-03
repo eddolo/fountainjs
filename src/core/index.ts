@@ -4,3 +4,4 @@ export * from './selection';
 export * from './plugin';
 export * from './state';
 export * from './editor';
+export * from './commands';
