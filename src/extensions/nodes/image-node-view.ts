@@ -198,6 +198,8 @@ export class ImageNodeView implements NodeViewLike {
   private startResize(event: PointerEvent, direction: -1 | 1): void {
     if (!this.editable || event.button !== 0) return;
     event.preventDefault();
+    try { (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId); }
+    catch { /* Pointer capture is an enhancement; the window listeners remain authoritative. */ }
     selectNode(this.editor as Editor, this.getPath());
     this.dragging = true;
     this.dragDirection = direction;
@@ -208,18 +210,29 @@ export class ImageNodeView implements NodeViewLike {
     window.addEventListener('pointermove', this.onPointerMove);
     window.addEventListener('pointerup', this.onPointerUp, { once: true });
     window.addEventListener('pointercancel', this.onPointerCancel, { once: true });
+    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mouseup', this.onMouseUp, { once: true });
   }
 
   private onPointerMove = (event: PointerEvent): void => {
+    this.previewResize(event.clientX);
+  };
+
+  private onMouseMove = (event: MouseEvent): void => {
+    this.previewResize(event.clientX);
+  };
+
+  private previewResize(clientX: number): void {
     if (!this.dragging) return;
-    const delta = (event.clientX - this.startX) * this.dragDirection;
+    const delta = (clientX - this.startX) * this.dragDirection;
     this.previewWidth = Math.max(MIN_IMAGE_WIDTH, Math.min(MAX_IMAGE_WIDTH, Math.round(this.startWidth + delta)));
     this.dom.style.width = `${this.previewWidth}px`;
     [this.leftHandle, this.rightHandle].forEach((handle) => handle.setAttribute('aria-valuenow', String(this.previewWidth)));
-  };
+  }
 
   private onPointerUp = (): void => { this.finishResize(true); };
   private onPointerCancel = (): void => { this.finishResize(false); };
+  private onMouseUp = (): void => { this.finishResize(true); };
 
   private finishResize(commit: boolean): void {
     if (!this.dragging) return;
@@ -227,6 +240,8 @@ export class ImageNodeView implements NodeViewLike {
     window.removeEventListener('pointermove', this.onPointerMove);
     window.removeEventListener('pointerup', this.onPointerUp);
     window.removeEventListener('pointercancel', this.onPointerCancel);
+    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mouseup', this.onMouseUp);
     delete this.dom.dataset.fountainImageResizing;
     if (commit) this.commitAttrs({ width: `${this.previewWidth}px` });
     else this.render();
