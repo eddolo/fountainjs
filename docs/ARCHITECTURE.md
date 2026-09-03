@@ -307,6 +307,15 @@ default; callers can override event and mutation policies.
 
 Services are deliberately open-ended. A host can use them for analytics, collaboration, persistence, feature flags, upload clients, or product-specific dependencies without teaching the editor core about those systems.
 
+Syntax highlighting demonstrates the decoration boundary. A code block persists
+source and presentation-neutral language metadata. `SyntaxHighlightExtension`
+tokenizes that source into validated ranges, then supplies inline tokens,
+line-number widgets, and a block theme through the ordinary plugin decoration
+contract. No highlighted DOM enters JSON, history, Markdown, HTML export, or
+selection offsets. The dependency-free tokenizer is a useful default; hosts
+can replace only that extension with a full grammar tokenizer while keeping the
+node, commands, formats, toolbar, and document shape unchanged.
+
 The first-party mathematics module demonstrates this boundary. Its inline and
 display nodes persist only validated TeX source and an optional accessible
 label. Commands and independent input/paste rule plugins create those nodes;

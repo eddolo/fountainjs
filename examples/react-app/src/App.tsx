@@ -5,6 +5,7 @@ import {
   HTMLExporter,
   JSONExporter,
   MarkdownExporter,
+  SyntaxHighlightExtension,
   composeExtensions,
   createAIAdapter,
   defineExtension,
@@ -72,6 +73,7 @@ const demoKit = composeExtensions([
   CoreExtension,
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
+  SyntaxHighlightExtension,
   calloutExtension,
   defineExtension({ name: 'ai-review', services: { adapter: demoAdapter } }),
 ]);

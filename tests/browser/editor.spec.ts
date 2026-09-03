@@ -84,6 +84,36 @@ test('maps decorations through typing without persisting widget content', async 
   await expect(page.getByLabel('Document JSON')).not.toContainText('Remote');
 });
 
+test('highlights editable code and updates language metadata through public commands', async ({ page }) => {
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { editor, commands } = contract;
+    const source = 'const answer = 42;\n// editable';
+    const block = editor.state.schema.node('code_block', { language: 'ts', lineNumbers: true }, [editor.state.schema.text(source)]);
+    editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, [block]));
+    commands.commands.selectText([0, 0], source.length);
+    contract.view.focus();
+  });
+
+  const block = page.locator('pre.fjs-code-block');
+  await expect(block).toBeVisible();
+  await expect(block).toHaveAttribute('data-language', 'typescript');
+  await expect(block.locator('.fjs-token--keyword')).toHaveText('const');
+  await expect(block.locator('.fjs-token--number')).toHaveText('42');
+  await expect(block.locator('.fjs-token--comment')).toHaveText('// editable');
+  await expect(block.locator('.fjs-code-line-number')).toHaveCount(2);
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('return answer;');
+  await expect(block.locator('.fjs-token--keyword')).toHaveText(['const', 'return']);
+  await expect(block.locator('.fjs-code-line-number')).toHaveCount(3);
+
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.setCodeBlockLanguage('PY'))).toBe(true);
+  await expect(block).toHaveAttribute('data-language', 'python');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.toggleCodeBlockLineNumbers(false))).toBe(true);
+  await expect(block.locator('.fjs-code-line-number')).toHaveCount(0);
+});
+
 test('runs a view-focused chain and checks it without preview side effects', async ({ page }) => {
   const output = page.getByLabel('Document JSON');
   const before = await output.textContent();
@@ -497,6 +527,25 @@ test('toggles a selected block through the public React list controls', async ({
   await page.getByRole('button', { name: 'Bullet list' }).click();
   await expect(editor.locator('ul > li').filter({ hasText: text ?? '' })).toHaveCount(0);
   await expect(editor.locator('[data-fountain-node="paragraph"]').filter({ hasText: text ?? '' })).toHaveCount(1);
+});
+
+test('edits code language and line numbers through the public React toolbar', async ({ page }) => {
+  await page.goto('/');
+  const block = page.locator('pre.fjs-code-block');
+  await expect(block).toBeVisible();
+  await expect(block).toHaveAttribute('data-language', 'typescript');
+  await expect(block.locator('.fjs-token--keyword').first()).toHaveText('const');
+  await block.click();
+  await page.getByRole('button', { name: 'Code block and language' }).click();
+
+  const language = page.getByLabel('Code language');
+  await expect(language).toHaveValue('typescript');
+  await language.fill('js');
+  await page.getByLabel('Show code line numbers').uncheck();
+  await page.getByRole('button', { name: 'Apply' }).click();
+
+  await expect(block).toHaveAttribute('data-language', 'javascript');
+  await expect(block.locator('.fjs-code-line-number')).toHaveCount(0);
 });
 
 test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {

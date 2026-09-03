@@ -16,7 +16,7 @@ context extraction without persisting view DOM. Math nodes use it to expose TeX;
 custom atoms should return the text users would expect search or assistive tools
 to read.
 
-`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, and the HTML/Markdown/JSON/text format modules.
+`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, and the HTML/Markdown/JSON/text format modules.
 
 ```ts
 const poll = defineExtension({
@@ -88,6 +88,49 @@ HTML and Markdown importers preserve direct item text, inline marks, ordered
 starts, task checks, continuation paragraphs, and mixed nested list types. The
 Markdown exporter emits matching indentation, so supported nested documents
 round-trip through the format adapter.
+
+### Code blocks and syntax highlighting
+
+The `code_block` node stores only portable source plus `language` and
+`lineNumbers` attributes. `StarterKit` adds `SyntaxHighlightExtension`, which
+turns token ranges and line starts into view decorations. Highlight spans and
+line-number widgets update after every edit, remain outside document JSON and
+exports, and are ignored when DOM selections are converted back to model
+offsets. The default tokenizer covers common syntax in JavaScript/TypeScript,
+HTML, CSS, JSON, Python, SQL, shell, Lean, Rust, Go, Java, C, and C++ without a
+runtime dependency. Unknown language names remain valid portable metadata and
+render safely as plain code.
+
+`getActiveCodeBlock(editor)`, `setCodeBlockLanguage(editor, language)`, and
+`toggleCodeBlockLineNumbers(editor, visible?)` power both custom controls and
+the supplied React toolbar. Common aliases such as `js`, `ts`, `py`, `sh`, and
+`lean4` normalize to canonical values. The toolbar accepts a custom language
+name as well as its suggested list.
+
+For a full grammar engine, replace the starter syntax extension with
+`createSyntaxHighlightExtension({ tokenizer })`. A tokenizer returns validated
+`{ from, to, type }` ranges; it never returns DOM or HTML, so an invalid class,
+out-of-bounds range, or overlap is discarded before rendering. A tokenizer
+failure calls `onTokenizeError` and falls back to the built-in tokenizer.
+`maxCodeLength` (200,000 by default) and `maxLineNumbers` (10,000 by default)
+bound decoration work for pathological blocks; both limits are configurable.
+
+```ts
+const syntax = createSyntaxHighlightExtension({
+  theme: 'light',
+  tokenizer: (code, language) => grammar.tokenizeRanges(code, language),
+})
+
+const kit = composeExtensions([
+  ...StarterKit.extensions.filter(extension => extension.name !== 'syntax-highlight'),
+  syntax,
+])
+```
+
+`SyntaxHighlighter` remains available for rendering a standalone highlighted
+HTML string. Its optional `highlighter` callback is explicitly trusted HTML and
+is not used by the live editor; prefer the range tokenizer for editable or
+untrusted content.
 
 ### Custom NodeViews
 

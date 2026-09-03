@@ -38,6 +38,7 @@ import { textColor } from './marks/text-color';
 import { underline } from './marks/underline';
 import { canRedo, canUndo, closeHistory, historyPlugin, redo, undo } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
+import { SyntaxHighlightExtension } from './plugins/syntax-highlight';
 import { LinkBehaviorExtension } from './link-behavior';
 import { composeExtensions, defineExtension } from './extension';
 
@@ -123,6 +124,7 @@ export const StarterKit = composeExtensions([
   HistoryExtension,
   MarkdownShortcutsExtension,
   LinkBehaviorExtension,
+  SyntaxHighlightExtension,
   MarkdownFormatExtension,
   HTMLFormatExtension,
   JSONFormatExtension,

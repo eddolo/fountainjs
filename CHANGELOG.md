@@ -4,6 +4,9 @@
 
 ### Added
 
+- Live language-aware code blocks with safe token decorations, non-persisted
+  line numbers, canonical language aliases, host tokenizer injection, public
+  settings commands, React language/line-number UI, and real-browser editing.
 - Professional bullet, ordered, and task-list transforms with multi-block
   wrapping, range conversion, mixed nesting, multi-item indent/lift, correct
   ordered starts after splits, boundary joins, React controls, and nested

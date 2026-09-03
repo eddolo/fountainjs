@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from 'react';
+import { useId, useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from 'react';
 import {
   addTableColumn,
   addTableRow,
@@ -26,6 +26,12 @@ import {
 } from '../core';
 import { canRedo, canUndo, redo, undo } from '../extensions/plugins/history';
 import { editLink, getActiveLink, removeLink } from '../extensions/link-behavior';
+import {
+  CODE_BLOCK_LANGUAGES,
+  getActiveCodeBlock,
+  setCodeBlockLanguage,
+  toggleCodeBlockLineNumbers,
+} from '../extensions/plugins/syntax-highlight';
 import { insertImageFile, type ImageUploadHandler } from '../view/media';
 import { useFountainState } from './useFountain';
 
@@ -65,8 +71,9 @@ function ToolButton({ label, title, active, disabled, onAction }: ToolButtonProp
 
 export function FountainToolbar({ editor, className, extraActions, imageUpload, onError }: FountainToolbarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
+  const languageListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'search' | null>(null);
+  const [panel, setPanel] = useState<'link' | 'image' | 'search' | 'code' | null>(null);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -75,9 +82,11 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const [caption, setCaption] = useState('');
   const [query, setQuery] = useState('');
   const [replacement, setReplacement] = useState('');
+  const [codeLanguage, setCodeLanguage] = useState('text');
   if (!editor) return null;
   const mark = (name: string) => () => toggleMark(editor, name);
   const activeLink = getActiveLink(editor);
+  const activeCodeBlock = getActiveCodeBlock(editor);
 
   const toggleLinkPanel = () => {
     if (panel === 'link') {
@@ -110,6 +119,27 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
       setCaption('');
       setPanel(null);
     }
+  };
+
+  const toggleCodePanel = () => {
+    if (panel === 'code') {
+      setPanel(null);
+      return;
+    }
+    if (activeCodeBlock) {
+      setCodeLanguage(activeCodeBlock.language);
+      setPanel('code');
+      return;
+    }
+    if (insertBlock(editor, 'code_block', { language: 'text', lineNumbers: true })) {
+      setCodeLanguage('text');
+      setPanel('code');
+    }
+  };
+
+  const submitCodeLanguage = (event: FormEvent) => {
+    event.preventDefault();
+    if (setCodeBlockLanguage(editor, codeLanguage)) setPanel(null);
   };
 
   const chooseImage = async (file?: File) => {
@@ -161,7 +191,7 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="☑" title="Task list" active={isInsideNode(editor, 'task_list')} onAction={() => toggleList(editor, 'task')} />
           <ToolButton label="⇤" title="Lift list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => outdentListItem(editor)} />
           <ToolButton label="⇥" title="Indent list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => indentListItem(editor)} />
-          <ToolButton label="{ }" title="Code block" onAction={() => insertBlock(editor, 'code_block', { language: 'text', lineNumbers: true })} />
+          <ToolButton label="{ }" title="Code block and language" active={Boolean(activeCodeBlock)} onAction={toggleCodePanel} />
           <ToolButton label="▦" title="Insert 3 by 3 table" onAction={() => insertTable(editor)} />
           <ToolButton label="IMG" title="Insert image from URL" onAction={() => setPanel(panel === 'image' ? null : 'image')} />
           <ToolButton label="↑IMG" title="Upload image" onAction={() => fileInput.current?.click()} />
@@ -197,6 +227,33 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         <input aria-label="Alternative text" placeholder="Alternative text" value={alt} onChange={(event) => setAlt(event.target.value)} />
         <input aria-label="Image caption" placeholder="Caption (optional)" value={caption} onChange={(event) => setCaption(event.target.value)} />
         <button type="submit">Insert image</button>
+        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+      </form>}
+      {panel === 'code' && <form className="fountain-toolbar__popover is-code" onSubmit={submitCodeLanguage}>
+        <strong>Code block</strong>
+        <input
+          aria-label="Code language"
+          required
+          list={languageListId}
+          maxLength={50}
+          pattern="[A-Za-z0-9_.+#-]+"
+          placeholder="Language, for example typescript"
+          value={codeLanguage}
+          onChange={(event) => setCodeLanguage(event.target.value)}
+        />
+        <datalist id={languageListId}>
+          {CODE_BLOCK_LANGUAGES.map((language) => <option key={language} value={language} />)}
+        </datalist>
+        <label className="fountain-toolbar__check">
+          <input
+            aria-label="Show code line numbers"
+            type="checkbox"
+            checked={activeCodeBlock?.lineNumbers ?? true}
+            onChange={(event) => toggleCodeBlockLineNumbers(editor, event.target.checked)}
+          />
+          Line numbers
+        </label>
+        <button type="submit">Apply</button>
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
       {panel === 'search' && <form className="fountain-toolbar__popover is-search" onSubmit={(event) => { event.preventDefault(); selectNextMatch(editor, query); }}>
