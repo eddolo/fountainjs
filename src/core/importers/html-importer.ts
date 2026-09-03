@@ -12,6 +12,13 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     if (!(child instanceof HTMLElement)) return;
     const tag = child.tagName.toLowerCase();
     if (tag === 'br' && schema.nodes.hard_break) { result.push(schema.node('hard_break')); return; }
+    if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
+      const latex = child.getAttribute('data-latex') ?? child.textContent ?? '';
+      const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
+      try { result.push(schema.node('inline_math', { latex, ariaLabel })); }
+      catch { if (latex) result.push(schema.text(latex, marks)); }
+      return;
+    }
     let nextMarks = [...marks];
     const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript' } as Record<string, string>)[tag];
     if (markName && schema.marks[markName]) nextMarks.push(schema.mark(markName));
@@ -39,6 +46,12 @@ function paragraph(element: Element, schema: Schema): FountainNode {
 
 function block(element: Element, schema: Schema): FountainNode[] {
   const tag = element.tagName.toLowerCase();
+  if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
+    const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
+    const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
+    try { return [schema.node('math_block', { latex, ariaLabel })]; }
+    catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
+  }
   if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element) }, inlineChildren(element, schema))];
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {

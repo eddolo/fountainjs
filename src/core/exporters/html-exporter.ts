@@ -55,6 +55,8 @@ function renderNode(node: Node): string {
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"><code class="language-${escapeHTML(node.attrs.language)}">${escapeHTML(node.textContent)}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';
+    case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
+    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'image_super': {
       const src = safeURL(node.attrs.src);
       if (!src) return '';
@@ -71,7 +73,7 @@ function renderNode(node: Node): string {
   }
 }
 
-const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img{max-width:100%;height:auto}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}`;
+const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img{max-width:100%;height:auto}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:1em;text-align:center;background:#f6f7fa;border-radius:8px}`;
 
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {

@@ -68,8 +68,8 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-06 | Images with upload, paste, drop, captions, and dimensions | Partial | Add progress, cancellation, resize handles, alignment, inline mode, error/retry, and responsive metadata. |
 | DOC-07 | Video, audio, files, and configurable embeds | Missing | Supply first-party nodes, upload contracts, safe rendering, and accessible controls. |
 | DOC-08 | Mentions, emoji, typography, and character count | Missing | Add independent extensions and UI primitives. |
-| DOC-09 | Native inline and display mathematics from LaTeX | Missing | Ship framework-neutral math nodes, editable TeX source, input/paste rules, safe optional rendering, accessible speech/text fallbacks, format round trips, and a public demo. |
-| DOC-10 | Lean 4 source and interactive proof workflows | Missing | First ship portable Lean code blocks, Unicode input, highlighting, and diagnostics; then define a host-owned Lean language-server contract plus optional goals, expected-type, completion, hover, and InfoView surfaces without coupling the editor core to Lean or React. |
+| DOC-09 | Native inline and display mathematics from LaTeX | Delivered | Opt-in framework-neutral math nodes store editable TeX and labels; commands, isolated input/paste rules with literal undo, safe source fallback, caller-owned DOM renderers, a trust-disabled KaTeX adapter, JSON/HTML/Markdown/text round trips, unit tests, and the public headless demo are delivered. |
+| DOC-10 | Lean 4 source and interactive proof workflows | Missing | Ship portable Lean nodes, Unicode input, highlighting, and diagnostics, then a provider-neutral engine contract with explicit source-only, authenticated local `lake env lean --server`, host/user-approved remote, managed, and one-shot check modes. Add goals, expected types, completion, hover, and InfoView without coupling core to Lean, React, a random endpoint, or mandatory FountainJS-hosted infrastructure. |
 
 ### Product UI
 

@@ -4,7 +4,7 @@ const SAFE_LINK = /^(https?:|mailto:|tel:|\/|#|\.)/i;
 
 function inline(text: string, schema: Schema): Node[] {
   const result: Node[] = [];
-  const pattern = /(\*\*[^*]+\*\*|~~[^~]+~~|==[^=]+==|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
+  const pattern = /(\$(?!\$)(?!\s)(?:\\.|[^$\\\n])*(?<!\s)\$|\*\*[^*]+\*\*|~~[^~]+~~|==[^=]+==|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
   let cursor = 0;
   for (const match of text.matchAll(pattern)) {
     const index = match.index ?? 0;
@@ -12,6 +12,13 @@ function inline(text: string, schema: Schema): Node[] {
     const token = match[0];
     let value = token;
     let mark: Mark | undefined;
+    if (token.startsWith('$') && schema.nodes.inline_math) {
+      const latex = token.slice(1, -1);
+      try { result.push(schema.node('inline_math', { latex, ariaLabel: '' })); }
+      catch { result.push(schema.text(token)); }
+      cursor = index + token.length;
+      continue;
+    }
     if (token.startsWith('**')) { value = token.slice(2, -2); mark = schema.marks.strong?.create(); }
     else if (token.startsWith('~~')) { value = token.slice(2, -2); mark = schema.marks.strike?.create(); }
     else if (token.startsWith('`')) { value = token.slice(1, -1); mark = schema.marks.code?.create(); }
@@ -51,6 +58,25 @@ export class MarkdownImporter {
         index++;
         blocks.push(schema.node('code_block', { language: fence[1] || 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
         continue;
+      }
+      if (schema.nodes.math_block && /^\$\$/.test(line)) {
+        const singleLine = /^\$\$(.+)\$\$$/.exec(line);
+        if (singleLine) {
+          blocks.push(schema.node('math_block', { latex: singleLine[1], ariaLabel: '' }));
+          index++;
+          continue;
+        }
+        if (/^\$\$\s*$/.test(line)) {
+          const closing = lines.findIndex((candidate, candidateIndex) => (
+            candidateIndex > index && /^\$\$\s*$/.test(candidate)
+          ));
+          if (closing > index) {
+            const latex = lines.slice(index + 1, closing).join('\n');
+            blocks.push(schema.node('math_block', { latex, ariaLabel: '' }));
+            index = closing + 1;
+            continue;
+          }
+        }
       }
       const heading = /^(#{1,6})\s+(.+)$/.exec(line);
       if (heading) { blocks.push(schema.node('heading', { level: heading[1].length }, inline(heading[2], schema))); index++; continue; }

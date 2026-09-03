@@ -10,6 +10,12 @@
 
 `defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class to mount interactive product UI without depending on React.
 
+Non-text nodes may implement `toText(node)`. That projection feeds
+`Node.textContent`, `Editor.getText()`, plain-text export, previews, and explicit
+context extraction without persisting view DOM. Math nodes use it to expose TeX;
+custom atoms should return the text users would expect search or assistive tools
+to read.
+
 `composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, and the HTML/Markdown/JSON/text format modules.
 
 ```ts
@@ -79,6 +85,51 @@ NodeViews retain identity while mapped transactions move them. Node decorations
 are reversible across reuse, and hook-generated DOM changes are excluded from
 mutation recovery. During IME composition the observer waits for controlled
 input to commit before reconciling the document.
+
+### Mathematics extension
+
+`MathExtension` is opt-in and does not change `StarterKit`. Compose it with the
+starter extensions to add `inline_math` and `math_block` atom nodes:
+
+```ts
+const kit = composeExtensions([...StarterKit.extensions, MathExtension])
+```
+
+Both nodes store `{ latex, ariaLabel }`; TeX is capped at 20,000 characters and
+remains the lossless source of truth. The commands are:
+
+- `insertInlineMath(editor, latex?, ariaLabel?)`, which can use the current
+  single-text selection when `latex` is omitted;
+- `insertMathBlock(editor, latex, ariaLabel?)`;
+- `setMathSource(editor, latex, ariaLabel?)` for a selected math node.
+
+Typing `$...$` or `$$...$$` creates a semantic node, and immediate Backspace
+restores the literal delimiters. Pasted math Markdown is parsed through an
+independent paste rule. JSON is lossless; Markdown, safe HTML, and text
+import/export preserve TeX source. HTML carries a separate stored label so the
+computed accessible fallback does not change JSON on round trip.
+
+Without a renderer, the NodeView exposes source in a `<code>` fallback with
+`role="math"`, an accessible label, full-source hover text, and selection/error
+states. `createMathExtension({ renderer, onRenderError })` accepts any
+framework-neutral `MathRenderer`; the renderer must return a DOM `Node`, never
+an HTML string. `createKaTeXRenderer(katex, options?)` adapts a caller-owned
+[KaTeX installation](https://katex.org/docs/api) with combined HTML/MathML
+output and `trust: false`. KaTeX is not loaded by the FountainJS core.
+
+```ts
+import katex from 'katex'
+
+const math = createMathExtension({
+  renderer: createKaTeXRenderer(katex),
+  onRenderError: (error, latex) => report(error, { latex }),
+})
+const kit = composeExtensions([...StarterKit.extensions, math])
+```
+
+Set `inputRules: false` or `pasteRules: false` when the host wants commands
+without delimiter conversion. `MAX_MATH_SOURCE_LENGTH` exposes the validation
+limit.
 
 ## Editor and state
 
@@ -304,6 +355,10 @@ silently treating remote edits as local history.
 transactions. Rules run in order and the first handler returning a transaction
 wins. The literal text that triggered a transformation is retained so an
 immediate Backspace, or `undoInputRule(editor)`, restores what the user typed.
+Pass a dedicated `PluginKey<InputRulesState>` as `key` when independently
+packaged rule sets coexist; their snapshots and Backspace undo then remain
+isolated. `undoInputRule(editor, key?)` can target either set. `MathExtension`
+uses this path alongside the starter Markdown shortcuts.
 
 ```ts
 const punctuation = inputRulesPlugin({

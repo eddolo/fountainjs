@@ -101,6 +101,33 @@ An extension can contribute:
 - `formats` with parse/serialize boundaries
 - open-ended `services` interpreted by the host application
 
+## Native LaTeX mathematics
+
+`MathExtension` is a first-party but opt-in module. It adds portable
+`inline_math` and `math_block` nodes, `$...$` / `$$...$$` typing and paste
+rules, insertion/update commands, accessible source fallback, and lossless
+JSON plus HTML/Markdown/text interchange.
+
+```ts
+import katex from 'katex'
+import {
+  MathExtension, StarterKit, composeExtensions,
+  createKaTeXRenderer, createMathExtension,
+} from 'fountainjs-editor'
+
+// Source-only fallback (no rendering dependency):
+const portable = composeExtensions([...StarterKit.extensions, MathExtension])
+
+// Or pass a caller-owned renderer:
+const math = createMathExtension({ renderer: createKaTeXRenderer(katex) })
+const rendered = composeExtensions([...StarterKit.extensions, math])
+```
+
+The editor stores TeX source—not renderer HTML. KaTeX is deliberately not a
+runtime dependency: applications choose their renderer/version and may provide
+another `MathRenderer` that returns a DOM node. Renderer errors keep the source
+visible and editable through `setMathSource`.
+
 ## Use any UI surface
 
 ### Plain DOM

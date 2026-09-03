@@ -307,6 +307,15 @@ default; callers can override event and mutation policies.
 
 Services are deliberately open-ended. A host can use them for analytics, collaboration, persistence, feature flags, upload clients, or product-specific dependencies without teaching the editor core about those systems.
 
+The first-party mathematics module demonstrates this boundary. Its inline and
+display nodes persist only validated TeX source and an optional accessible
+label. Commands and independent input/paste rule plugins create those nodes;
+format adapters round-trip their source. The default NodeView renders an
+accessible source fallback. `createMathExtension` can instead receive a DOM-
+returning renderer, while `createKaTeXRenderer` adapts a host-installed KaTeX
+instance with trust disabled. Rendered markup is view state and never enters
+the document JSON.
+
 ## Framework surfaces
 
 ### Plain DOM
@@ -341,6 +350,8 @@ The suites are organized by boundary:
 
 - `tests/core.test.ts`: schemas, selections, steps, commands, structures, search, formats, and history;
 - `tests/extensions.test.ts`: composition, conflicts, and built-in kits;
+- `tests/math.test.ts`: math commands, semantic selections, delimiter rules,
+  renderer isolation, validation, safe interchange, and source fallback;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;

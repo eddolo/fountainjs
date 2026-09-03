@@ -32,6 +32,8 @@ export interface NodeSpec {
   inline?: boolean;
   atom?: boolean;
   code?: boolean;
+  /** Optional plain-text projection for atoms or other non-text content. */
+  toText?: (node: Node) => string;
   toDOM?: (node: Node) => DOMOutputSpec;
   nodeView?: NodeViewConstructor;
 }

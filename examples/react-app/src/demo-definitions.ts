@@ -268,17 +268,18 @@ export class CampaignEditor {
     host: 'Node.js',
     surface: 'Headless core + formats',
     runtime: 'headless',
-    summary: 'A DOM-free conversion route from Markdown to validated FountainJS JSON, HTML, and text.',
+    summary: 'A DOM-free conversion route from Markdown and native LaTeX nodes to validated FountainJS JSON, HTML, and text.',
     boundary: 'Only the document/schema/format modules run; no editor view or frontend framework is required.',
-    capabilities: ['Headless schema', 'Markdown import', 'Safe HTML export', 'JSON round trip'],
-    markdown: '# Release notes\n\nFountainJS can run its **document model** and Markdown pipeline without mounting a view.\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n> The portable document stays in the middle.',
+    capabilities: ['Headless schema', 'Inline/display LaTeX', 'Safe HTML export', 'JSON round trip'],
+    markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$ in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n> The portable document stays in the middle.',
     content: doc(paragraph(text('Headless Markdown content'))),
     code: `import {
   MarkdownImporter, MarkdownExporter, HTMLExporter,
-  Schema, StarterKit,
+  MathExtension, Schema, StarterKit, composeExtensions,
 } from 'fountainjs-editor'
 
-const schema = new Schema(StarterKit.schema)
+const kit = composeExtensions([...StarterKit.extensions, MathExtension])
+const schema = new Schema(kit.schema)
 const document = MarkdownImporter.parse(markdownSource, schema)
 
 await database.save(document.toJSON())
@@ -327,13 +328,14 @@ def save_document(document_id: str, document: Document):
     host: 'Go',
     surface: 'Plain DOM editor ↔ JSON service',
     runtime: 'dom',
-    summary: 'Technical documentation with code, tables, and headings stored behind a typed Go HTTP boundary.',
+    summary: 'Technical documentation with code, native LaTeX, tables, and headings stored behind a typed Go HTTP boundary.',
     boundary: 'Go treats extension attributes as JSON while preserving the stable node/content shape.',
-    capabilities: ['Code blocks', 'Structured tables', 'Go JSON structs', 'Framework-free frontend'],
+    capabilities: ['Code and native LaTeX', 'Structured tables', 'Go JSON structs', 'Framework-free frontend'],
     content: doc(
       heading(1, 'Create an API client'),
-      paragraph(text('Technical prose and runnable-looking examples live in one structured document.')),
+      paragraph(text('Technical prose, equations such as '), { type: 'inline_math', attrs: { latex: 'T(n)=O(n \\log n)', ariaLabel: 'T of n is order n log n' } }, text(', and runnable-looking examples live in one structured document.')),
       { type: 'code_block', attrs: { language: 'typescript', lineNumbers: true }, content: [text("const client = createClient({ baseURL: '/api' });\nawait client.documents.list();")] },
+      { type: 'math_block', attrs: { latex: '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}', ariaLabel: 'Sum of the first n integers' } },
       heading(2, 'Response fields'),
       { type: 'table', content: [row(cell('Field', true), cell('Type', true)), row(cell('items'), cell('Document[]')), row(cell('cursor'), cell('string | null'))] },
     ),

@@ -34,6 +34,12 @@
 .fountain-editor [data-fountain-selected-node="true"] { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 72%, transparent); outline-offset: 3px; }
 .fountain-editor [data-fountain-selected-node="true"][draggable="true"] { cursor: grab; }
 .fountain-editor [data-fountain-dragging="true"] { cursor: grabbing; opacity: .62; }
+.fountain-editor .fountain-math { border-radius: .38rem; color: inherit; background: color-mix(in srgb, var(--fountain-accent) 8%, transparent); }
+.fountain-editor .fountain-math--inline { display: inline-block; margin: 0 .12em; padding: .08em .32em; vertical-align: baseline; }
+.fountain-editor .fountain-math--display { display: block; margin: 1rem 0; padding: 1rem; overflow-x: auto; text-align: center; }
+.fountain-editor .fountain-math code { color: inherit; background: transparent; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.fountain-editor [data-fountain-math-selected="true"] { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 72%, transparent); outline-offset: 3px; }
+.fountain-editor [data-fountain-math-error="true"] { text-decoration: underline wavy #c43d54; text-underline-offset: .2em; }
 .fountain-editor [data-fountain-selected-cell="true"] { position: relative; background: color-mix(in srgb, var(--fountain-accent) 16%, transparent); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fountain-accent) 68%, transparent); }
 .fountain-editor [data-fountain-gap="before"] { box-shadow: 0 -3px 0 var(--fountain-accent); }
 .fountain-editor [data-fountain-gap="after"] { box-shadow: 0 3px 0 var(--fountain-accent); }

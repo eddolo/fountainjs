@@ -4,6 +4,10 @@
 
 ### Added
 
+- Opt-in native mathematics extension with inline/display TeX nodes, insertion
+  and source-update commands, isolated input/paste rules, accessible source
+  fallback, caller-owned DOM rendering, a safe KaTeX adapter, format round
+  trips, tests, and a live headless demo.
 - Configurable local history depth and grouping delay, adjacent browser
   typing/composition/deletion groups, explicit `closeHistory` boundaries,
   browser history-input support, and focused undo contracts.

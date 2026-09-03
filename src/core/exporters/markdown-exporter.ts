@@ -4,7 +4,11 @@ import type { Node } from '../schema';
 function escapeInline(text: string): string { return text.replace(/([\\`*_[\]<>])/g, '\\$1'); }
 
 function inline(node: Node): string {
-  if (!node.isText) return node.type.name === 'hard_break' ? '  \n' : node.content.map(inline).join('');
+  if (!node.isText) {
+    if (node.type.name === 'hard_break') return '  \n';
+    if (node.type.name === 'inline_math') return `$${String(node.attrs.latex ?? '')}$`;
+    return node.content.map(inline).join('');
+  }
   let text = node.marks.some((mark) => mark.type.name === 'code') ? `\`${(node.text ?? '').replace(/`/g, '\\`')}\`` : escapeInline(node.text ?? '');
   for (const mark of node.marks.filter((item) => item.type.name !== 'code')) {
     if (mark.type.name === 'strong') text = `**${text}**`;
@@ -31,6 +35,7 @@ function render(node: Node, depth = 0): string {
     case 'code_block': return `\`\`\`${String(node.attrs.language ?? '')}\n${node.textContent}\n\`\`\``;
     case 'horizontal_rule': return '---';
     case 'hard_break': return '  \n';
+    case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;
     case 'image_super': return `![${String(node.attrs.alt ?? '')}](${String(node.attrs.src ?? '')}${node.attrs.title ? ` "${String(node.attrs.title)}"` : ''})${node.attrs.caption ? `\n_${String(node.attrs.caption)}_` : ''}`;
     case 'table': {
       return node.content.map((row, rowIndex) => {

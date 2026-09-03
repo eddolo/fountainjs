@@ -275,6 +275,8 @@ function Developers() {
             <h2>One composition contract for product code.</h2>
             <p>An extension may contribute <b>nodes</b>, <b>marks</b>, <b>plugins</b>, <b>commands</b>, <b>formats</b>, and arbitrary <b>services</b>. The composed kit exposes all contributions and its extension list. Duplicate extension names or contribution names throw by default; intentional replacement must be opted into.</p>
             <Code>{extensionExample}</Code>
+            <h3>First-party modules remain opt-in</h3>
+            <p><code>MathExtension</code> adds inline and display TeX nodes, commands, isolated typing/paste rules, and format round trips without changing <code>StarterKit</code>. Its default NodeView keeps accessible source visible; <code>createMathExtension</code> accepts a host-owned DOM renderer, and <code>createKaTeXRenderer</code> adapts KaTeX without coupling FountainJS to that dependency. Try the complete source-to-JSON route in the <a href="./demos/node-markdown.html">headless Markdown and LaTeX demo</a>.</p>
             <h3>Stateful behavior belongs in plugins</h3>
             <Code>{pluginExample}</Code>
             <p>Plugins can intercept keyboard, before-input, text-input, paste, drop, and click events, and can run editor create/destroy lifecycle hooks. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
@@ -317,6 +319,7 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/core/commands.ts"><code>src/core/commands.ts</code><span>Text, marks, blocks, selection, document insertion, table and list commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, and plugins.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/math.ts"><code>src/extensions/math.ts</code><span>Opt-in TeX nodes, commands, input/paste rules, NodeViews, and renderer adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/react"><code>src/react/</code><span>Optional React hooks and product-ready interface components.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/ai"><code>src/ai/</code><span>Provider-neutral review controller and MCP adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/tests"><code>tests/</code><span>Core, extension, view, AI, and live loopback MCP behavior.</span></a>

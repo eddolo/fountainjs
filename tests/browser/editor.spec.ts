@@ -360,6 +360,31 @@ test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test('runs the public headless Markdown and LaTeX pipeline', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  const source = page.getByLabel('Markdown input');
+  await expect(source).toContainText('$E=mc^2$');
+  await expect(page.getByText('Valid document · 5 top-level blocks')).toBeVisible();
+  const output = page.locator('.demo-output pre');
+  await expect(output).toContainText('inline_math');
+  await expect(output).toContainText('math_block');
+  await source.fill('# Formula\n\n$\\alpha+\\beta$');
+  await expect(page.getByText('Valid document · 2 top-level blocks')).toBeVisible();
+  await page.getByRole('button', { name: 'markdown' }).click();
+  await expect(output).toContainText('$\\alpha+\\beta$');
+});
+
+test('renders and inserts native math in the public DOM integration', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const math = page.locator('[data-fountain-math]');
+  await expect(math).toHaveCount(2);
+  await expect(math.filter({ hasText: 'T(n)=O(n \\log n)' })).toHaveAttribute('role', 'math');
+  await expect(math.filter({ hasText: '\\sum_{i=1}^{n} i' })).toHaveAttribute('aria-label', 'Sum of the first n integers');
+  await page.getByRole('button', { name: '+ Math' }).click();
+  await expect(math).toHaveCount(3);
+  await expect(page.locator('.demo-output pre')).toContainText('a^2 + b^2 = c^2');
+});
+
 test('publishes semantic selection controls and table interaction in the demo gallery', async ({ page }) => {
   await page.goto('/demos/svelte-report.html');
   await expect(page.getByRole('heading', { name: 'Structured data report' })).toBeVisible();

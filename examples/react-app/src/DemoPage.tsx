@@ -4,6 +4,7 @@ import {
   JSONExporter,
   MarkdownExporter,
   MarkdownImporter,
+  MathExtension,
   Schema,
   Selection,
   StarterKit,
@@ -14,6 +15,7 @@ import {
   createEditor,
   defineExtension,
   insertList,
+  insertMathBlock,
   insertTable,
   redo,
   registerFountainElement,
@@ -70,6 +72,7 @@ const demoStatusExtension = defineExtension({
   },
 });
 const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
+const mathDemoKit = composeExtensions([...StarterKit.extensions, MathExtension]);
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {
   if (!document) return '';
@@ -120,6 +123,7 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor || editor.state.doc.childCount < 2} onClick={() => editor && selectGap(editor, topLevelPosition(editor.state.doc, 1))}>Gap after first</button>
     <button disabled={!editor} onClick={() => editor && insertList(editor, 'task', ['A new task'])}>+ Task</button>
     <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: 2, columns: 2, headerRow: true })}>+ Table</button>
+    <button disabled={!editor?.state.schema.nodes.math_block} onClick={() => editor && insertMathBlock(editor, 'a^2 + b^2 = c^2', 'Pythagorean theorem')}>+ Math</button>
     <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableRow)}>+ Row</button>
     <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableColumn)}>+ Column</button>
   </div>;
@@ -141,7 +145,9 @@ function DOMRuntime({ demo }: { demo: DemoDefinition }) {
 
   useEffect(() => {
     if (!mount.current) return;
-    const kit = demo.slug === 'plain-dom-notes' ? statusDemoKit : StarterKit;
+    const kit = demo.slug === 'plain-dom-notes'
+      ? statusDemoKit
+      : demo.slug === 'go-docs-service' ? mathDemoKit : StarterKit;
     const nextEditor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: demo.content });
     const view = new EditorView(mount.current, nextEditor, { placeholder: 'Edit this document…' });
     const unsubscribe = nextEditor.subscribe((state) => setCurrentDocument(state.doc));
@@ -195,7 +201,9 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
 }
 
 function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
-  const schema = useMemo(() => new Schema(StarterKit.schema), []);
+  const schema = useMemo(() => new Schema(
+    demo.slug === 'node-markdown' ? mathDemoKit.schema : StarterKit.schema,
+  ), [demo.slug]);
   const [source, setSource] = useState(demo.markdown ?? '');
   const parsed = useMemo(() => {
     try { return { document: MarkdownImporter.parse(source, schema), error: '' }; }

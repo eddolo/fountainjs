@@ -10,17 +10,17 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 `HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only HTTP(S), email, telephone, relative, fragment, and supported image-data URLs survive link and image serialization. Alignment, text colour, subscript, superscript, semantic hard breaks, tasks, tables, and images retain their HTML meaning.
 
-`HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, tables, dividers, line breaks, and common inline marks. It uses `DOMParser`, so a DOM shim is required in Node.js.
+`HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, tables, dividers, line breaks, common inline marks, and math nodes when the receiving schema includes `MathExtension`. Math HTML stores TeX separately from its computed accessible label, so import does not persist renderer markup or mutate JSON. It uses `DOMParser`, so a DOM shim is required in Node.js.
 
 ## Markdown
 
-The Markdown boundary supports headings, paragraphs, quotes, fenced code, lists, tables, media, dividers, links, strong/emphasis/strike/code marks, and highlight extension syntax.
+The Markdown boundary supports headings, paragraphs, quotes, fenced code, lists, tables, media, dividers, links, strong/emphasis/strike/code marks, highlight extension syntax, and `$...$`/`$$...$$` math when `MathExtension` is present.
 
 Markdown cannot represent every custom schema attribute. Use JSON when lossless round-tripping is required.
 
 ## Plain text
 
-`TextExporter` joins block text with configurable separators. It intentionally discards marks and structure and is suitable for search indexing, previews, and explicit AI context.
+`TextExporter` joins block text with configurable separators. It intentionally discards marks and structure, but preserves math as its TeX source, and is suitable for search indexing, previews, and explicit AI context.
 
 ## Security boundary
 

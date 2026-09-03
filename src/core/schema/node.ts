@@ -35,7 +35,10 @@ export class Node {
   get isText(): boolean { return this.type.name === 'text'; }
   get isBlock(): boolean { return this.type.isBlock; }
   get childCount(): number { return this.content.length; }
-  get textContent(): string { return this.isText ? this.text ?? '' : this.content.map((child) => child.textContent).join(''); }
+  get textContent(): string {
+    if (this.isText) return this.text ?? '';
+    return this.type.spec.toText?.(this) ?? this.content.map((child) => child.textContent).join('');
+  }
   get nodeSize(): number { return this.isText ? (this.text?.length ?? 0) : 2 + this.content.reduce((size, child) => size + child.nodeSize, 0); }
 
   child(index: number): Node {

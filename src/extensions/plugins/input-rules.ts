@@ -57,6 +57,8 @@ export interface InputRulesState {
 export interface InputRulesConfig {
   readonly rules: readonly InputRule[];
   readonly undoOnBackspace?: boolean;
+  /** Use a separate key when several independently packaged rule sets coexist. */
+  readonly key?: PluginKey<InputRulesState>;
 }
 
 export const inputRulesKey = new PluginKey<InputRulesState>('input-rules');
@@ -78,8 +80,8 @@ function naturalInputSnapshot(state: EditorState, path: readonly number[], from:
 }
 
 /** Restores the literal text that triggered the most recent input rule. */
-export function undoInputRule(editor: Editor): boolean {
-  const value = inputRulesKey.get(editor.state);
+export function undoInputRule(editor: Editor, key: PluginKey<InputRulesState> = inputRulesKey): boolean {
+  const value = key.get(editor.state);
   const before = value?.before;
   const after = value?.after;
   if (!before || !after || !editor.state.doc.eq(after.doc) || !editor.state.selection.eq(after.selection)) return false;
@@ -96,8 +98,9 @@ export function undoInputRule(editor: Editor): boolean {
 /** Creates a plugin that applies the first matching rule after typed input. */
 export function inputRulesPlugin(config: InputRulesConfig): Plugin<InputRulesState> {
   const rules = Object.freeze([...config.rules]);
+  const key = config.key ?? inputRulesKey;
   return new Plugin<InputRulesState>({
-    key: inputRulesKey,
+    key,
     state: {
       init: () => ({}),
       apply: (transaction, value, _oldState, newState) => {
@@ -134,7 +137,7 @@ export function inputRulesPlugin(config: InputRulesConfig): Plugin<InputRulesSta
       },
       handleKeyDown: (editor, event) => {
         if (config.undoOnBackspace === false || event.key !== 'Backspace' || event.ctrlKey || event.metaKey || event.altKey) return false;
-        return undoInputRule(editor);
+        return undoInputRule(editor, key);
       },
     },
   });
