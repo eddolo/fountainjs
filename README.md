@@ -232,7 +232,7 @@ the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
 
 ## Included document capabilities
 
-`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`.
+`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. `StarterKit` adds `LinkBehaviorExtension`: safe URL normalization, host validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, and an activation event that lets the host decide whether to navigate. The React toolbar exposes add, preview, edit, target, title, and remove controls.
 
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME

@@ -121,6 +121,37 @@ test('applies every configured paste-rule match through a browser paste event', 
   await expect(page.locator('[data-fountain-path="1"]')).toContainText('Second paragraph one — two —');
 });
 
+test('autolinks, safely activates, edits, and removes links in a real browser', async ({ page }) => {
+  await page.locator('[data-fountain-path="1"]').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Visit https://example.com. ');
+  const link = page.getByRole('textbox', { name: 'Browser contract editor' }).getByRole('link', { name: 'https://example.com' });
+  await expect(link).toHaveAttribute('href', 'https://example.com');
+  await expect(page.locator('[data-fountain-path="1"]')).toContainText('https://example.com.');
+
+  const activation = await link.evaluate((anchor) => {
+    let detail: unknown;
+    anchor.closest('[role="textbox"]')?.addEventListener('fountain-link-activate', (event) => {
+      detail = (event as CustomEvent).detail;
+    }, { once: true });
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    anchor.dispatchEvent(click);
+    return { prevented: click.defaultPrevented, detail };
+  });
+  expect(activation).toEqual({ prevented: true, detail: expect.objectContaining({ href: 'https://example.com' }) });
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([1, 1], 3);
+    contract.commands.commands.editLink('/docs', { title: 'Documentation', target: '_self' });
+  });
+  await expect(link).toHaveAttribute('href', '/docs');
+  await expect(link).toHaveAttribute('title', 'Documentation');
+  await expect(link).toHaveAttribute('target', '_self');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.removeLink())).toBe(true);
+  await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).getByRole('link')).toHaveCount(0);
+});
+
 test('preserves structured rich HTML from a real browser clipboard event', async ({ page }) => {
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([1, 0], 16));
   await page.waitForTimeout(0);
@@ -369,6 +400,35 @@ test('loads the public React playground without console or page errors', async (
   await expect(page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
   expect(errors).toEqual([]);
+});
+
+test('creates and edits a link through the public React toolbar', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstParagraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await firstParagraph.click();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Shift+End');
+  await page.getByRole('button', { name: 'Add or edit link' }).click();
+  await page.getByLabel('Link URL').fill('www.example.com');
+  await page.getByLabel('Link title').fill('Example website');
+  await page.getByLabel('Link destination').selectOption('_self');
+  await page.getByRole('button', { name: 'Apply link' }).click();
+
+  const link = editor.getByRole('link').first();
+  await expect(link).toHaveAttribute('href', 'https://www.example.com');
+  await expect(link).toHaveAttribute('title', 'Example website');
+  await expect(link).toHaveAttribute('target', '_self');
+
+  await link.click();
+  await page.getByRole('button', { name: 'Add or edit link' }).click();
+  await expect(page.getByLabel('Link URL')).toHaveValue('https://www.example.com');
+  await expect(page.getByRole('link', { name: 'Open current link' })).toHaveAttribute('href', 'https://www.example.com');
+  await page.getByLabel('Link URL').fill('/internal');
+  await page.getByRole('button', { name: 'Save link' }).click();
+  await expect(link).toHaveAttribute('href', '/internal');
+  await page.getByRole('button', { name: 'Remove link' }).click();
+  await expect(editor.getByRole('link')).toHaveCount(0);
 });
 
 test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {

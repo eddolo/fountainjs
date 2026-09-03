@@ -34,6 +34,39 @@ const poll = defineExtension({
 });
 ```
 
+### Link behavior
+
+`StarterKit` includes `LinkBehaviorExtension` alongside the core `link` mark.
+It recognizes complete web and email addresses as the user types, links a text
+selection when a URL is pasted, inserts linked text when a URL is pasted at a
+caret, and keeps trailing punctuation outside the link. It accepts `https`,
+`http`, `mailto`, `tel`, root-relative, hash, and dot-relative destinations;
+unsafe schemes, NUL characters, invalid attributes, and overlong URLs are
+rejected.
+
+Use `createLinkBehaviorExtension(options)` when a product needs to disable
+`autolink` or `linkOnPaste`, choose the default target, add a normalization or
+validation policy, or handle activation. Editor-surface clicks never navigate
+implicitly: they call `onActivate` and emit a bubbling, composed
+`fountain-link-activate` event with an `ActiveLink`. The host can show a card,
+open a trusted destination, or do nothing.
+
+`getActiveLink(editor)` returns the complete contiguous link surrounding a
+caret or selection start. `editLink` applies a link to selected text, edits that
+complete active link, or inserts caller-supplied visible text at an empty caret.
+`removeLink` likewise handles both a selection and a collapsed caret. The React
+toolbar uses these same public functions for add, preview, title, target, edit,
+and remove UI.
+
+```ts
+const links = createLinkBehaviorExtension({
+  defaultTarget: '_self',
+  validate: (href, context) => context.source !== 'paste' || !href.includes('blocked.example'),
+  onActivate: ({ href }) => showLinkPreview(href),
+})
+const kit = composeExtensions([CoreExtension, links])
+```
+
 ### Custom NodeViews
 
 A NodeView constructor receives the current model `node`, the owning

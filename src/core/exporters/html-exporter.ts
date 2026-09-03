@@ -1,5 +1,6 @@
 import type { EditorState } from '../state';
 import type { Node } from '../schema';
+import { isSafeURL } from '../url';
 
 export interface HTMLExportOptions {
   document?: boolean;
@@ -11,9 +12,9 @@ function escapeHTML(value: unknown): string {
   return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 }
 
-function safeURL(value: unknown): string {
+function safeURL(value: unknown, allowDataImage = false): string {
   const url = String(value ?? '').trim();
-  return /^(https?:|mailto:|tel:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i.test(url) ? escapeHTML(url) : '';
+  return isSafeURL(url, { allowDataImage }) ? escapeHTML(url) : '';
 }
 
 function renderText(node: Node): string {
@@ -58,7 +59,7 @@ function renderNode(node: Node): string {
     case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
     case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'image_super': {
-      const src = safeURL(node.attrs.src);
+      const src = safeURL(node.attrs.src, true);
       if (!src) return '';
       const caption = escapeHTML(node.attrs.caption);
       const width = /^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw))$/.test(String(node.attrs.width)) ? String(node.attrs.width) : '100%';

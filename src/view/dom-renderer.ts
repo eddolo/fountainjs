@@ -1,4 +1,4 @@
-import { DecorationSet, Node, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
+import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
 
 export interface DOMRenderContext {
   view?: unknown;
@@ -24,13 +24,12 @@ interface AppliedDecorationState {
 
 const appliedDecorations = new WeakMap<HTMLElement, AppliedDecorationState>();
 
-const SAFE_PROTOCOL = /^(https?:|mailto:|tel:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
-
 function applyAttributes(element: HTMLElement, attrs: Attributes): void {
   Object.entries(attrs).forEach(([rawName, value]) => {
     const name = rawName === 'className' ? 'class' : rawName;
     if (value === undefined || value === null || value === false || /^on/i.test(name)) return;
-    if ((name === 'href' || name === 'src') && !SAFE_PROTOCOL.test(String(value))) return;
+    if (name === 'href' && !isSafeURL(value)) return;
+    if (name === 'src' && !isSafeURL(value, { allowDataImage: true })) return;
     element.setAttribute(name, value === true ? '' : String(value));
   });
 }

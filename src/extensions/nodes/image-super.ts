@@ -1,8 +1,8 @@
-import type { NodeSpec } from '../../core';
+import { isSafeURL, type NodeSpec } from '../../core';
 export const imageSuper: NodeSpec = {
   group: 'block', atom: true,
   attrs: {
-    src: { default: '', validate: (value) => typeof value === 'string' && /^(https?:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i.test(value.trim()) },
+    src: { default: '', validate: (value) => isSafeURL(value, { allowDataImage: true }) },
     alt: { default: '', validate: (value) => typeof value === 'string' },
     title: { default: '', validate: (value) => typeof value === 'string' },
     width: { default: '100%', validate: (value) => typeof value === 'string' && /^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw))$/.test(value) },

@@ -22,9 +22,11 @@
 .fountain-toolbar__file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .fountain-toolbar__popover { display: flex; gap: 7px; align-items: center; padding: 10px; color: var(--fountain-ink); background: #fff; border-top: 1px solid var(--fountain-border); box-shadow: 0 10px 24px rgb(23 25 35 / 8%); }
 .fountain-toolbar__popover strong { margin-right: 4px; font: 700 12px/1.2 system-ui, sans-serif; }
-.fountain-toolbar__popover input { min-width: min(300px, 42vw); padding: 8px 10px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 7px; }
+.fountain-toolbar__popover input,
+.fountain-toolbar__popover select { min-width: min(300px, 42vw); padding: 8px 10px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 7px; }
 .fountain-toolbar__popover button { padding: 8px 10px; color: var(--fountain-ink); font: 700 12px/1 system-ui, sans-serif; background: #f5f3ff; border: 1px solid var(--fountain-border); border-radius: 7px; }
 .fountain-toolbar__popover button[type="submit"] { color: #fff; background: var(--fountain-accent); border-color: var(--fountain-accent); }
+.fountain-toolbar__link-preview { padding: 7px 4px; color: var(--fountain-accent); font: 700 12px/1.2 system-ui, sans-serif; white-space: nowrap; }
 .fountain-editor { min-height: 280px; padding: clamp(20px, 4vw, 44px); color: var(--fountain-ink); font: 16px/1.7 ui-sans-serif, system-ui, sans-serif; caret-color: var(--fountain-accent); outline: none; }
 .fountain-editor:focus { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--fountain-accent) 25%, transparent); }
 .fountain-editor:empty::before { color: var(--fountain-muted); content: attr(data-placeholder); pointer-events: none; }
@@ -132,5 +134,6 @@
   .fountain-toolbar { flex-wrap: nowrap; overflow-x: auto; }
   .fountain-toolbar__group { flex: none; }
   .fountain-toolbar__popover { align-items: stretch; flex-direction: column; }
-  .fountain-toolbar__popover input { width: 100%; min-width: 0; }
+  .fountain-toolbar__popover input,
+  .fountain-toolbar__popover select { width: 100%; min-width: 0; }
 }

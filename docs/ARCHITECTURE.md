@@ -364,6 +364,8 @@ The suites are organized by boundary:
   renderer isolation, validation, safe interchange, and source fallback;
 - `tests/lean.test.ts`: source-only behavior, portable blocks, Unicode entry,
   provider trust validation, cancellation/staleness, and proof-service results;
+- `tests/link.test.ts`: URL policy, typed/pasted link creation, complete-link
+  editing/removal, and safe host-owned activation;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;

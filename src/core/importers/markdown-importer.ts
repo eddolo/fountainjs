@@ -1,6 +1,5 @@
 import { Mark, Node, type Schema } from '../schema';
-
-const SAFE_LINK = /^(https?:|mailto:|tel:|\/|#|\.)/i;
+import { isSafeURL } from '../url';
 
 function inline(text: string, schema: Schema): Node[] {
   const result: Node[] = [];
@@ -28,7 +27,7 @@ function inline(text: string, schema: Schema): Node[] {
       const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
       if (link) {
         value = link[1];
-        if (SAFE_LINK.test(link[2].trim())) mark = schema.marks.link?.create({ href: link[2].trim() });
+        if (isSafeURL(link[2].trim())) mark = schema.marks.link?.create({ href: link[2].trim() });
       }
     }
     result.push(schema.text(value, mark ? [mark] : []));

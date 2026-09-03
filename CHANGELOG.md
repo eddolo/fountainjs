@@ -4,6 +4,9 @@
 
 ### Added
 
+- Starter link behavior with safe normalization and validation hooks, typed
+  web/email autolinking, selection/caret link-on-paste, whole-link editing and
+  removal, host-owned activation events, and a complete React link popover.
 - Opt-in Lean 4 foundation with portable source blocks, Unicode shortcut entry,
   highlighting, zero-provider source-only mode, explicit provider trust
   metadata, and cancellable/stale-safe check, diagnostic, goal, hover, and

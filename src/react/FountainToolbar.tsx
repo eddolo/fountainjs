@@ -16,15 +16,14 @@ import {
   replaceAllText,
   selectNextMatch,
   setBlockType,
-  setLink,
   setMark,
   setTextAlignment,
   toggleMark,
-  unsetLink,
   unsetMark,
   type Editor,
 } from '../core';
 import { canRedo, canUndo, redo, undo } from '../extensions/plugins/history';
+import { editLink, getActiveLink, removeLink } from '../extensions/link-behavior';
 import { insertImageFile, type ImageUploadHandler } from '../view/media';
 import { useFountainState } from './useFountain';
 
@@ -67,17 +66,36 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const state = useFountainState(editor);
   const [panel, setPanel] = useState<'link' | 'image' | 'search' | null>(null);
   const [url, setURL] = useState('');
+  const [linkTitle, setLinkTitle] = useState('');
+  const [linkText, setLinkText] = useState('');
+  const [linkTarget, setLinkTarget] = useState<'_blank' | '_self'>('_blank');
   const [alt, setAlt] = useState('');
   const [caption, setCaption] = useState('');
   const [query, setQuery] = useState('');
   const [replacement, setReplacement] = useState('');
   if (!editor) return null;
   const mark = (name: string) => () => toggleMark(editor, name);
+  const activeLink = getActiveLink(editor);
+
+  const toggleLinkPanel = () => {
+    if (panel === 'link') {
+      setPanel(null);
+      return;
+    }
+    setURL(activeLink?.href ?? '');
+    setLinkTitle(activeLink?.title ?? '');
+    setLinkText(activeLink?.text ?? '');
+    setLinkTarget(activeLink?.target ?? '_blank');
+    setPanel('link');
+  };
 
   const submitLink = (event: FormEvent) => {
     event.preventDefault();
-    if (setLink(editor, url)) {
+    if (editLink(editor, url, { title: linkTitle, target: linkTarget, text: linkText })) {
       setURL('');
+      setLinkTitle('');
+      setLinkText('');
+      setLinkTarget('_blank');
       setPanel(null);
     }
   };
@@ -120,8 +138,8 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="HL" title="Highlight" active={isMarkActive(editor, 'highlight')} onAction={mark('highlight')} />
           <ToolButton label="X₂" title="Subscript" active={isMarkActive(editor, 'subscript')} onAction={mark('subscript')} />
           <ToolButton label="X²" title="Superscript" active={isMarkActive(editor, 'superscript')} onAction={mark('superscript')} />
-          <ToolButton label="↗" title="Add or edit link" active={isMarkActive(editor, 'link')} onAction={() => setPanel(panel === 'link' ? null : 'link')} />
-          <ToolButton label="×↗" title="Remove link" disabled={!isMarkActive(editor, 'link')} onAction={() => unsetLink(editor)} />
+          <ToolButton label="↗" title="Add or edit link" active={Boolean(activeLink) || isMarkActive(editor, 'link')} onAction={toggleLinkPanel} />
+          <ToolButton label="×↗" title="Remove link" disabled={!activeLink && !isMarkActive(editor, 'link')} onAction={() => removeLink(editor)} />
           <label className="fountain-toolbar__color" title="Text color">
             <span>A</span>
             <input aria-label="Text color" type="color" defaultValue="#171923" onChange={(event) => setMark(editor, 'text_color', { color: event.target.value })} />
@@ -155,10 +173,18 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         {extraActions}
         <input ref={fileInput} className="fountain-toolbar__file" type="file" accept="image/*" onChange={(event) => void chooseImage(event.target.files?.[0])} />
       </div>
-      {panel === 'link' && <form className="fountain-toolbar__popover" onSubmit={submitLink}>
-        <strong>Add link to the selection</strong>
-        <input aria-label="Link URL" required type="url" placeholder="https://example.com" value={url} onChange={(event) => setURL(event.target.value)} />
-        <button type="submit">Apply link</button>
+      {panel === 'link' && <form className="fountain-toolbar__popover is-link" onSubmit={submitLink}>
+        <strong>{activeLink ? 'Edit link' : 'Add link'}</strong>
+        <input aria-label="Link URL" required inputMode="url" placeholder="https://example.com, /page, or mail@example.com" value={url} onChange={(event) => setURL(event.target.value)} />
+        {!activeLink && editor.state.selection.isCollapsed && <input aria-label="Link text" required placeholder="Visible link text" value={linkText} onChange={(event) => setLinkText(event.target.value)} />}
+        <input aria-label="Link title" placeholder="Title (optional)" value={linkTitle} onChange={(event) => setLinkTitle(event.target.value)} />
+        <select aria-label="Link destination" value={linkTarget} onChange={(event) => setLinkTarget(event.target.value as '_blank' | '_self')}>
+          <option value="_blank">Open in a new tab</option>
+          <option value="_self">Open in this tab</option>
+        </select>
+        {activeLink && <a className="fountain-toolbar__link-preview" href={activeLink.href} target={activeLink.target} rel={activeLink.target === '_blank' ? 'noopener noreferrer' : undefined}>Open current link</a>}
+        <button type="submit">{activeLink ? 'Save link' : 'Apply link'}</button>
+        {activeLink && <button type="button" onClick={() => { removeLink(editor); setPanel(null); }}>Remove link</button>}
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
       {panel === 'image' && <form className="fountain-toolbar__popover is-image" onSubmit={submitImage}>

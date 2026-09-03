@@ -38,12 +38,14 @@ import { textColor } from './marks/text-color';
 import { underline } from './marks/underline';
 import { canRedo, canUndo, closeHistory, historyPlugin, redo, undo } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
+import { LinkBehaviorExtension } from './link-behavior';
 import { composeExtensions, defineExtension } from './extension';
 
 export * from './extension';
 export * from './command-manager';
 export * from './math';
 export * from './lean';
+export * from './link-behavior';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';
@@ -120,6 +122,7 @@ export const StarterKit = composeExtensions([
   CoreExtension,
   HistoryExtension,
   MarkdownShortcutsExtension,
+  LinkBehaviorExtension,
   MarkdownFormatExtension,
   HTMLFormatExtension,
   JSONFormatExtension,

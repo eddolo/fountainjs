@@ -8,3 +8,4 @@ export * from './editor';
 export * from './commands';
 export * from './structure-commands';
 export * from './search';
+export * from './url';

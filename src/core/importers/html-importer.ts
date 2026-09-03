@@ -1,6 +1,5 @@
 import { Mark, Node as FountainNode, type Schema } from '../schema';
-
-const SAFE_URL = /^(https?:|mailto:|tel:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
+import { isSafeURL } from '../url';
 
 function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = []): FountainNode[] {
   const result: FountainNode[] = [];
@@ -27,7 +26,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     if (tag === 'a' && schema.marks.link) {
       const href = child.getAttribute('href') ?? '';
       const anchor = child as HTMLAnchorElement;
-      if (SAFE_URL.test(href)) nextMarks.push(schema.mark('link', { href, title: anchor.title, target: anchor.target || '_blank' }));
+      if (isSafeURL(href)) nextMarks.push(schema.mark('link', { href, title: anchor.title, target: anchor.target === '_self' ? '_self' : '_blank' }));
     }
     result.push(...inlineChildren(child, schema, nextMarks));
   });
@@ -77,7 +76,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
   if (tag === 'figure') {
     const image = element.querySelector('img');
     const src = image?.getAttribute('src') ?? '';
-    if (!image || !SAFE_URL.test(src)) return [];
+    if (!image || !isSafeURL(src, { allowDataImage: true })) return [];
     return [schema.node('image_super', {
       src, alt: image.alt, title: image.title, width: '100%', caption: element.querySelector('figcaption')?.textContent ?? '',
     })];
@@ -94,7 +93,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
   }
   if (tag === 'img') {
     const src = element.getAttribute('src') ?? '';
-    return SAFE_URL.test(src) ? [schema.node('image_super', { src, alt: element.getAttribute('alt') ?? '', title: element.getAttribute('title') ?? '', width: '100%', caption: '' })] : [];
+    return isSafeURL(src, { allowDataImage: true }) ? [schema.node('image_super', { src, alt: element.getAttribute('alt') ?? '', title: element.getAttribute('title') ?? '', width: '100%', caption: '' })] : [];
   }
   const nested = Array.from(element.children).flatMap((child) => block(child, schema));
   return nested.length ? nested : [paragraph(element, schema)];
