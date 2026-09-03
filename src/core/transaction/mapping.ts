@@ -151,6 +151,79 @@ export class Mapping {
   }
 }
 
+export interface PositionMapper {
+  map(position: number, association?: MapAssociation): number;
+}
+
+/**
+ * A document-independent selection snapshot that can be mapped before it is
+ * resolved against a later document version.
+ */
+export class SelectionBookmark {
+  private constructor(
+    public readonly from: number,
+    public readonly to: number,
+    public readonly collapsedAssociation: MapAssociation = 1,
+  ) {
+    validatePosition(from);
+    validatePosition(to);
+    if (to < from) throw new RangeError('Selection bookmark ranges must be ordered.');
+  }
+
+  static fromSelection(doc: Node, selection: Selection, collapsedAssociation: MapAssociation = 1): SelectionBookmark {
+    const from = textPointToPosition(doc, selection.path, selection.from);
+    const to = selection.isCollapsed
+      ? from
+      : textPointToPosition(doc, selection.endPath, selection.to);
+    return new SelectionBookmark(from, to, collapsedAssociation);
+  }
+
+  static cursor(position: number, association: MapAssociation = 1): SelectionBookmark {
+    return new SelectionBookmark(position, position, association);
+  }
+
+  get isCollapsed(): boolean { return this.from === this.to; }
+
+  map(mapping: PositionMapper): SelectionBookmark {
+    if (this.isCollapsed) {
+      return SelectionBookmark.cursor(mapping.map(this.from, this.collapsedAssociation), this.collapsedAssociation);
+    }
+    const from = mapping.map(this.from, 1);
+    const to = mapping.map(this.to, -1);
+    return from >= to
+      ? SelectionBookmark.cursor(from, this.collapsedAssociation)
+      : new SelectionBookmark(from, to, this.collapsedAssociation);
+  }
+
+  resolve(doc: Node): Selection {
+    if (this.isCollapsed) {
+      const point = positionToTextPoint(doc, this.from, this.collapsedAssociation);
+      return Selection.cursor(point.path, point.offset);
+    }
+    const start = positionToTextPoint(doc, this.from, 1);
+    const end = positionToTextPoint(doc, this.to, -1);
+    const order = compareTextPoints(start, end);
+    return order >= 0
+      ? Selection.cursor(start.path, start.offset)
+      : Selection.range(start.path, start.offset, end.path, end.offset);
+  }
+
+  eq(other: SelectionBookmark): boolean {
+    return this.from === other.from
+      && this.to === other.to
+      && this.collapsedAssociation === other.collapsedAssociation;
+  }
+}
+
+function compareTextPoints(left: TextPoint, right: TextPoint): number {
+  const length = Math.min(left.path.length, right.path.length);
+  for (let index = 0; index < length; index += 1) {
+    const difference = (left.path[index] as number) - (right.path[index] as number);
+    if (difference) return difference;
+  }
+  return left.path.length - right.path.length || left.offset - right.offset;
+}
+
 /** Converts a path/offset text point into a structural document position. */
 export function textPointToPosition(doc: Node, path: readonly number[], offset: number): number {
   const target = getNodeAtPath(doc, path);

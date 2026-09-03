@@ -80,6 +80,13 @@ the structural range occupied by a node. These APIs are the foundation for
 decorations, collaborative cursors, tracked changes, and proposal rebasing;
 they do not by themselves provide collaboration.
 
+`SelectionBookmark.fromSelection(document, selection)` captures structural
+positions without retaining document paths. Call `.map(stepMapOrMapping)` as
+changes arrive and `.resolve(laterDocument)` when the selection is needed again.
+If the original range or block was deleted, resolution returns the nearest valid
+cursor instead of a stale path. `SelectionBookmark.cursor(position, association)`
+is available when an integration already owns a structural position.
+
 ## Decorations
 
 Decorations add view-only presentation without changing document JSON:

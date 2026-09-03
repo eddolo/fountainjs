@@ -130,6 +130,11 @@ map their current selection after every step—even when marks split one text
 leaf into several leaves. `MapResult` reports whether surrounding content was
 deleted, and maps can be inverted for rebasing and review infrastructure.
 
+`SelectionBookmark` separates capture from resolution: it stores structural
+positions, maps through any number of steps, and resolves against a later tree.
+When both ends are deleted or collapse together it recovers to the nearest valid
+text cursor, avoiding stale path failures in delayed UI and async integrations.
+
 A transaction can also set the next selection, stored marks, and arbitrary metadata. Commands use metadata for concerns such as history and host provenance.
 
 `Editor.dispatch()` ignores empty transactions. Otherwise it applies the transaction, replaces the current state, notifies subscribers, and calls the host `onUpdate` callback.

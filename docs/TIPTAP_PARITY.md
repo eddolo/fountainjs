@@ -47,7 +47,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | --- | --- | --- | --- |
 | CORE-01 | Typed tree document with schema validation | Delivered | Continue compatibility and malformed-input coverage. |
 | CORE-02 | Immutable state and explicit transactions | Delivered | Preserve as the collaboration layer is introduced. |
-| CORE-03 | Positions survive multi-step document changes | Partial | Add step maps, mapping composition, selection mapping, and recoverable bookmarks. |
+| CORE-03 | Positions survive multi-step document changes | Delivered | Step maps, mapping composition/inversion, automatic transaction-selection mapping, path/position conversion, and recoverable mapped selection bookmarks are implemented and tested. |
 | CORE-04 | Text, node, gap, and table-cell selections | Partial | Text ranges exist; add node, gap, all-document, and rectangular cell selections. |
 | CORE-05 | Chained, dry-run-capable commands | Delivered | Typed immediate, atomic chained, and non-mutating `can()` surfaces compose every extension command with rollback, one-step history, reserved-name fallback, and a view-aware focus command covered in real browsers. |
 | CORE-06 | Configurable input and paste rules | Delivered | Ordered input and paste rule plugins expose custom transaction handlers, immediate input undo, text/mark/wrapping helpers, repeated-match processing, and real-browser coverage. |

@@ -16,6 +16,7 @@ import {
   Decoration,
   DecorationSet,
   Mapping,
+  SelectionBookmark,
   StepMap,
   createEditor,
   historyPlugin,
@@ -137,6 +138,60 @@ describe('document model and transactions', () => {
     expect(mapping.map(6)).toBe(7);
     expect(deletion.mapResult(8).deleted).toBe(true);
     expect(insertion.invert().map(5, -1)).toBe(2);
+  });
+
+  it('maps selection bookmarks through composed document changes', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Beta' }] },
+        ],
+      },
+    });
+    const bookmark = SelectionBookmark.fromSelection(
+      editor.state.doc,
+      Selection.range([1, 0], 1, [1, 0], 3),
+    );
+    const first = editor.state.createTransaction().insertText([0, 0], 0, '!');
+    editor.dispatch(first);
+    const second = editor.state.createTransaction().insertText([1, 0], 0, '?');
+    editor.dispatch(second);
+    const mapped = bookmark.map(new Mapping([...first.mapping.maps, ...second.mapping.maps]));
+
+    expect(mapped.resolve(editor.state.doc).eq(Selection.range([1, 0], 2, [1, 0], 4))).toBe(true);
+  });
+
+  it('recovers a bookmark as a nearby cursor when its range is deleted', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    insertText(editor, 'abcdef');
+    const bookmark = SelectionBookmark.fromSelection(editor.state.doc, new Selection([0, 0], 1, 5));
+    const deletion = editor.state.createTransaction().replaceText([0, 0], 1, 5, '');
+    editor.dispatch(deletion);
+
+    const recovered = bookmark.map(deletion.mapping).resolve(editor.state.doc);
+    expect(recovered.eq(Selection.cursor([0, 0], 1))).toBe(true);
+    expect(editor.getText()).toBe('af');
+  });
+
+  it('recovers a cursor bookmark when its original block is removed', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'Removed' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Survives' }] },
+        ],
+      },
+    });
+    const bookmark = SelectionBookmark.fromSelection(editor.state.doc, Selection.cursor([0, 0], 4));
+    const deletion = editor.state.createTransaction().replace(0, 1, []);
+    editor.dispatch(deletion);
+
+    expect(bookmark.map(deletion.mapping).resolve(editor.state.doc).eq(Selection.cursor([0, 0], 0))).toBe(true);
   });
 
   it('maps immutable inline, node, and widget decorations through transactions', () => {

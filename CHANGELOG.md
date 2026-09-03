@@ -31,6 +31,8 @@
   entry even when it inserts several document blocks.
 - Deterministic segmentation for partially overlapping inline decorations,
   verified while mapping alongside node and widget decorations in real browsers.
+- Immutable selection bookmarks that map through composed changes and recover
+  to valid text cursors when their original ranges or blocks are deleted.
 - A release-gated Tiptap parity programme that distinguishes delivered,
   partial, and missing capabilities.
 
