@@ -161,6 +161,27 @@ for keyboard and touch users. Hosts can filter candidates and replace every
 label, or call the same commands from wholly custom UI. See the
 [block-reordering guide](docs/BLOCK_REORDERING.md).
 
+## Collapsible details
+
+`DetailsExtension` adds native, editable `<details>` / `<summary>` disclosures
+without changing `StarterKit`. The summary supports inline formatting and the
+body accepts any blocks in the composed schema, including lists, tables, media,
+and nested disclosures.
+
+```ts
+import { DetailsExtension, insertDetails } from 'fountainjs-editor/details'
+import { StarterKit, composeExtensions } from 'fountainjs-editor'
+
+const kit = composeExtensions([...StarterKit.extensions, DetailsExtension])
+insertDetails(editor, { summary: 'Deployment notes', open: true })
+```
+
+Clicking the native marker persists the `open` state. Enter in a summary creates
+the first body paragraph, Backspace at the start of that paragraph returns to
+the summary, and Ctrl/Cmd+Enter toggles it. JSON is lossless; safe HTML,
+Markdown, and text interchange are supported; generic Yjs collaboration carries
+the structure and state. See the [collapsible-details guide](docs/DETAILS.md).
+
 ## Optional clipboard history
 
 `ClipboardHistoryExtension` adds a bounded, searchable list of text copied
@@ -797,6 +818,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)
 - [Toolbar composition and stable action IDs](docs/TOOLBAR.md)
 - [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
+- [Collapsible details, commands, interchange, and accessibility](docs/DETAILS.md)
 - [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
 - [Threaded comments, anchors, adapters, permissions, and React UI](docs/COMMENTS.md)
 - [Tracked changes, suggestion mode, review decisions, and React UI](docs/TRACKED_CHANGES.md)

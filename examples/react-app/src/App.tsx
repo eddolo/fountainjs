@@ -75,20 +75,25 @@ import {
 import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes';
 import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
 import { FountainVersions } from 'fountainjs-editor/react/versions';
+import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
   type: 'doc',
   content: [
-    { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Build an editor that fits your product.' }] },
+    { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Try FountainJS in this document.' }] },
     { type: 'paragraph', content: [
-      { type: 'text', text: 'FountainJS is a ' },
-      { type: 'text', text: 'modular rich-text engine', marks: [{ type: 'strong' }] },
-      { type: 'text', text: '. Compose only the document types, behavior, formats, UI bindings, and integrations your product needs.' },
+      { type: 'text', text: 'Select text, type across paragraphs, and use the toolbar. This is the ' },
+      { type: 'text', text: 'real npm package', marks: [{ type: 'strong' }] },
+      { type: 'text', text: ', not a picture or a scripted mock-up.' },
     ] },
-    { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Try the composed modules' }] },
-    { type: 'paragraph', content: [{ type: 'text', text: 'Edit text, use Markdown shortcuts, insert a custom callout, switch export formats, or try the optional AI review panel.' }] },
-    { type: 'blockquote', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'One document model. Any interface. Your extensions.' }] }] },
+    { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'What you can test here' }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Insert lists, tables, images, media, callouts, and collapsible sections. Then switch between Markdown, HTML, and JSON output on the right.' }] },
+    { type: 'blockquote', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'The editor stores your document as portable JSON on the backend you choose.' }] }] },
+    { type: 'details', attrs: { open: false }, content: [
+      { type: 'details_summary', content: [{ type: 'text', text: 'Open this collapsible section' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Its summary and body are editable document content, not a pasted widget.' }] },
+    ] },
     { type: 'code_block', attrs: { language: 'typescript', lineNumbers: true }, content: [{ type: 'text', text: "const kit = composeExtensions([\n  CoreExtension, history, callout, myIntegration\n]);\nconst editor = createEditor({ schema: kit.schema, plugins: kit.plugins });" }] },
   ],
 } as const;
@@ -102,8 +107,8 @@ const demoAdapter = createAIAdapter(async (request, { signal }) => {
       ? `${source.replace(/[.!?]$/, '')}—with clearer intent, stronger structure, and no loss of the author’s voice.`
       : request.action === 'fix-grammar'
         ? `${source.charAt(0).toUpperCase()}${source.slice(1).replace(/\s+/g, ' ').replace(/[.!?]?$/, '.')}`
-        : source === 'Build an editor that fits your product.'
-          ? 'Shape one editor core around the product you are building.'
+        : source === 'Try FountainJS in this document.'
+          ? 'Edit this document to test FountainJS directly in your browser.'
           : `Make it unmistakably clear: ${source.charAt(0).toLowerCase()}${source.slice(1)}`;
   return {
     replacement,
@@ -215,6 +220,7 @@ const demoKit = composeExtensions([
   SyntaxHighlightExtension,
   TableEditingExtension,
   ClipboardHistoryExtension,
+  DetailsExtension,
   calloutExtension,
   defineExtension({ name: 'ai-review', services: { adapter: demoAdapter } }),
 ]);
@@ -565,8 +571,9 @@ function App() {
   const words = characterCount.words(editor);
   const blocks = state?.doc.childCount ?? 0;
 
-  const addBlock = (kind: 'quote' | 'task' | 'table' | 'callout') => {
+  const addBlock = (kind: 'quote' | 'task' | 'table' | 'details' | 'callout') => {
     if (kind === 'callout') demoKit.commands.insertCallout?.(editor);
+    else if (kind === 'details') insertDetails(editor, { summary: 'Click to edit this summary', open: true });
     else if (kind === 'quote') demoKit.commands.insertQuote?.(editor, 'A thought worth keeping…');
     else if (kind === 'task') demoKit.commands.insertList?.(editor, 'task', ['Review the document', 'Publish when ready']);
     else demoKit.commands.insertTable?.(editor, { rows: 3, columns: 2, headerRow: true });
@@ -618,7 +625,7 @@ function App() {
         <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public MIT package. Use the modules you need; there is no paid add-on tier.</p></div>
         <div className="capabilities__grid">
           <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
-          <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, nested document structures, tables, and custom block types.</p></article>
+          <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, collapsible details, nested document structures, tables, and custom block types.</p></article>
           <article><b>03</b><h3>Production images</h3><p>Use block or inline images, editable captions, alt text, alignment, responsive sources, replacement, and accessible resizing. Upload tasks map through edits and expose progress, cancel, retry, and errors while storage remains yours.</p></article>
           <article><b>04</b><h3>Portable formats</h3><p>Lossless JSON plus Markdown, safe HTML, and plain-text boundaries for storage, APIs, publishing pipelines, search, and any backend language.</p></article>
           <article><b>05</b><h3>Any interface</h3><p>Use plain DOM, the standards-based Web Component, React bindings, or create another framework adapter over the same editor and immutable state.</p></article>
@@ -640,8 +647,8 @@ function App() {
       </section>
 
       <section className="playground" id="playground">
-        <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>The package running in this page.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> hover or tap a block for drag, move-up, and move-down controls; nested blocks move too. Select text for the bubble toolbar, or press Enter at a paragraph end for the empty-block toolbar. Start an empty line with <kbd>/</kbd> for grouped commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
+        <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>Try the actual package in your browser.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
+        <div className="demo-note"><b>Try it:</b> edit or select text, insert a collapsible section, and use the toolbar. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -650,6 +657,7 @@ function App() {
               <button onClick={() => addBlock('quote')}>❝ Quote</button>
               <button onClick={() => addBlock('task')}>☑ Tasks</button>
               <button onClick={() => addBlock('table')}>▦ Table</button>
+              <button onClick={() => addBlock('details')}>▸ Details</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
               <button
                 className="toolbar-profile"

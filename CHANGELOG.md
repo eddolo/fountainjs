@@ -10,6 +10,12 @@
 
 ### Added
 
+- An isolated `fountainjs-editor/details` module with semantic, editable native
+  details/summary nodes; arbitrary and nested block bodies; public
+  insert/wrap/unwrap/open commands; persisted disclosure state; summary/body
+  keyboard transitions; JSON, safe HTML, Markdown, and text interchange; generic
+  Yjs synchronization; package budgets; documentation; and desktop/mobile
+  browser contracts.
 - Isolated public MIT named-version entries with replaceable bounded providers,
   manual and debounced automatic checkpoints, optimistic heads and exact
   idempotency, immutable structural/text/format comparison, non-destructive

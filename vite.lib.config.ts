@@ -18,6 +18,7 @@ export default defineConfig({
         'react-tracked-changes': fileURLToPath(new URL('./src/react/tracked-changes.ts', import.meta.url)),
         versions: fileURLToPath(new URL('./src/versions/index.ts', import.meta.url)),
         'react-versions': fileURLToPath(new URL('./src/react/versions.ts', import.meta.url)),
+        details: fileURLToPath(new URL('./src/details/index.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,

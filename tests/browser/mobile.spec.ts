@@ -94,6 +94,21 @@ test('keeps complete version names and guarded restore touch-operable on a phone
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
+test('keeps native collapsible details readable and touch-operable on a phone', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const disclosure = editor.locator('details').first();
+  const summary = disclosure.locator('summary');
+  await expect(summary).toHaveText('Open this collapsible section');
+  const target = await summary.boundingBox();
+  expect(target).not.toBeNull();
+  expect(target?.height ?? 0).toBeGreaterThanOrEqual(44);
+  await summary.tap();
+  await expect(disclosure).toHaveAttribute('open', '');
+  await expect(disclosure).toContainText('editable document content');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('keeps the suggestion picker visible and touch-selectable on a phone viewport', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
@@ -225,7 +240,7 @@ test('exposes touch-sized block movement controls without page overflow', async 
   expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
   expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
   await moveAfter.tap();
-  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('FountainJS is a');
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('Select text, type across paragraphs');
   await expect(controls).toHaveAttribute('data-fountain-block-path', '1');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

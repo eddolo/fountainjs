@@ -107,6 +107,42 @@ starts, task checks, continuation paragraphs, and mixed nested list types. The
 Markdown exporter emits matching indentation, so supported nested documents
 round-trip through the format adapter.
 
+### Collapsible details
+
+The optional `fountainjs-editor/details` entry exports `DetailsExtension`.
+Compose it alongside `StarterKit` to add a block `details` node with one required
+`details_summary` followed by one or more body blocks. The summary accepts marked
+inline content; the body accepts every block in the composed schema.
+
+```ts
+import {
+  DetailsExtension,
+  insertDetails,
+  wrapInDetails,
+} from 'fountainjs-editor/details'
+
+const kit = composeExtensions([...StarterKit.extensions, DetailsExtension])
+insertDetails(editor, { summary: 'Deployment notes', open: true })
+wrapInDetails(editor, { summary: 'Background' })
+```
+
+The complete command set is `insertDetails`, `wrapInDetails`, `unwrapDetails`,
+`toggleDetails`, `setDetailsOpen`, and `toggleDetailsOpen`.
+`getActiveDetails(editor)` returns the containing disclosure and current model
+path. Commands are also registered on `kit.commands`.
+
+`wrapInDetails` operates on top-level block selections and rejects nested-range
+ambiguity. Enter in the editable summary moves trailing inline content into a
+new first body paragraph; Backspace at the start of the first body paragraph
+returns the caret to the summary; Ctrl/Cmd+Enter toggles `open`.
+
+`DetailsNodeView` renders a native `<details>` element. A click or tap persists
+its open state in editable documents; in read-only views readers can disclose
+content locally without mutating the document. JSON, safe HTML, Markdown, and
+text interchange are supported, including nested details and inline summary
+marks. See [DETAILS.md](DETAILS.md) for the schema, collaboration behavior,
+security boundary, and integration contract.
+
 ### Code blocks and syntax highlighting
 
 The `code_block` node stores only portable source plus `language` and

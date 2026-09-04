@@ -81,6 +81,30 @@ test('runs package-backed named versions, exact comparison, preview, and guarded
   await expect(panel).toContainText('4 loaded · Current version saved');
 });
 
+test('edits and persists package-backed collapsible details in the public playground', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const disclosure = editor.locator('details').first();
+  const summary = disclosure.locator('summary');
+  await expect(summary).toHaveText('Open this collapsible section');
+  await expect(disclosure).not.toHaveAttribute('open', '');
+
+  await summary.click();
+  await expect(disclosure).toHaveAttribute('open', '');
+  await expect(disclosure).toContainText('editable document content');
+  await page.locator('.format-tabs').getByRole('button', { name: 'json' }).click();
+  await expect(page.locator('.studio__export pre')).toContainText('"type": "details"');
+  await expect(page.locator('.studio__export pre')).toContainText('"open": true');
+
+  await page.getByRole('button', { name: '▸ Details' }).click();
+  await expect(editor.locator('details')).toHaveCount(2);
+  const inserted = editor.locator('details').last();
+  await expect(inserted).toHaveAttribute('open', '');
+  await expect(inserted.locator('summary')).toHaveText('Click to edit this summary');
+  await inserted.locator('summary').click();
+  await expect(inserted).not.toHaveAttribute('open', '');
+});
+
 test('converges live and offline Yjs edits and keeps collaborative undo author-local', async ({ page }) => {
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
   const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
@@ -945,7 +969,7 @@ test('loads the public React playground without console or page errors', async (
   expect(heroLines.every(({ visualLines }) => visualLines === 1)).toBe(true);
   expect(heroLines[1].top).toBeGreaterThan(heroLines[0].top);
   expect(heroLines[2].top).toBeGreaterThan(heroLines[1].top);
-  await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
+  await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Try FountainJS in this document');
   expect(errors).toEqual([]);
 });
 
@@ -1185,7 +1209,7 @@ test('runs accessible bubble and floating menus in the public React playground',
   await expect(bubble).toBeVisible();
   await expect(bubble.getByRole('button')).toHaveCount(4);
   await bubble.getByRole('button', { name: 'Bold selection' }).click();
-  await expect(editor.locator('strong').first()).toContainText('Build an e');
+  await expect(editor.locator('strong').first()).toContainText('Try Founta');
 
   const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
   await paragraph.click();
@@ -1240,7 +1264,7 @@ test('composes and keyboard-navigates the public toolbar by stable group and act
     document.dispatchEvent(new Event('selectionchange'));
   });
   await strong.click();
-  await expect(page.getByRole('textbox', { name: 'Rich text editor' }).locator('strong').first()).toContainText('Build');
+  await expect(page.getByRole('textbox', { name: 'Rich text editor' }).locator('strong').first()).toContainText('Try F');
 });
 
 test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
@@ -1358,13 +1382,13 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   const picker = page.getByRole('dialog', { name: 'Clipboard history' });
   await expect(picker).toBeVisible();
   await expect(picker.getByText('Copied in this editor · stored in memory')).toBeVisible();
-  await expect(picker.locator('summary')).toContainText('document types, behavior, formats');
-  await expect(picker.locator('summary')).toHaveAttribute('title', /document types, behavior, formats/);
-  await picker.getByLabel('Search clipboard history').fill('document types');
+  await expect(picker.locator('summary')).toContainText('the real npm package, not a picture');
+  await expect(picker.locator('summary')).toHaveAttribute('title', /the real npm package, not a picture/);
+  await picker.getByLabel('Search clipboard history').fill('real npm package');
   await expect(picker.locator('[role="listitem"]')).toHaveCount(1);
   await picker.getByRole('button', { name: 'Paste' }).click();
   await expect(picker).toHaveCount(0);
-  await expect(paragraph).toContainText('document types, behavior, formats');
+  await expect(paragraph).toContainText('the real npm package, not a picture');
 });
 
 test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {
@@ -1510,7 +1534,7 @@ test('uses the public React media workflow for native playback, provider-gated e
   await page.keyboard.press('ControlOrMeta+z');
   await expect(editor.locator('.fountain-media--audio')).toHaveAttribute('aria-label', '[Audio: Edited podcast]');
 
-  await editor.locator('p').last().click();
+  await editor.locator(':scope > [data-fountain-node="paragraph"]').last().click();
   await page.getByRole('button', { name: 'Insert audio, video, file, or embed' }).click();
   await page.getByLabel('Media type').selectOption('embed');
   await page.getByLabel('Media URL').fill('https://untrusted.example/embed/42');

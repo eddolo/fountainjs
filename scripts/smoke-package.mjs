@@ -28,6 +28,7 @@ const trackedChangesNames = ['createTrackedChangesExtension', 'acceptTrackedSugg
 const reactTrackedChangesNames = ['FountainTrackedChanges'];
 const versionsNames = ['InMemoryVersionProvider', 'VersionController', 'compareVersionDocuments', 'versionContentFingerprint'];
 const reactVersionsNames = ['FountainVersions'];
+const detailsNames = ['DetailsExtension', 'insertDetails', 'wrapInDetails', 'unwrapDetails', 'toggleDetailsOpen'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
@@ -42,6 +43,7 @@ assertExports(await import('fountainjs-editor/tracked-changes'), trackedChangesN
 assertExports(await import('fountainjs-editor/react/tracked-changes'), reactTrackedChangesNames, 'ESM React tracked changes entry');
 assertExports(await import('fountainjs-editor/versions'), versionsNames, 'ESM versions entry');
 assertExports(await import('fountainjs-editor/react/versions'), reactVersionsNames, 'ESM React versions entry');
+assertExports(await import('fountainjs-editor/details'), detailsNames, 'ESM details entry');
 assertExports(require('fountainjs-editor'), coreNames, 'CommonJS package root');
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
@@ -54,6 +56,7 @@ assertExports(require('fountainjs-editor/tracked-changes'), trackedChangesNames,
 assertExports(require('fountainjs-editor/react/tracked-changes'), reactTrackedChangesNames, 'CommonJS React tracked changes entry');
 assertExports(require('fountainjs-editor/versions'), versionsNames, 'CommonJS versions entry');
 assertExports(require('fountainjs-editor/react/versions'), reactVersionsNames, 'CommonJS React versions entry');
+assertExports(require('fountainjs-editor/details'), detailsNames, 'CommonJS details entry');
 // Loading Yjs' ESM and CommonJS builds in one process creates two constructor
 // universes. Exercise the second module system in an isolated consumer process.
 execFileSync(process.execPath, ['-e', `
@@ -62,4 +65,4 @@ execFileSync(process.execPath, ['-e', `
   if (missing.length) throw new Error('CommonJS Yjs entry is missing: ' + missing.join(', '));
 `], { stdio: 'inherit' });
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, Yjs, and Web Component package exports loaded successfully.');

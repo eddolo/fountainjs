@@ -355,7 +355,24 @@ function blockImage(line: string, references: References): LinkToken | null {
   return parsed?.image && parsed.end === line.length ? parsed : null;
 }
 
-function startsBlock(lines: readonly string[], index: number, references: References): boolean {
+function detailsStart(line: string): { open: boolean } | null {
+  const match = /^\s*<details(?:\s+(open)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)?\s*>\s*$/i.exec(line);
+  return match ? { open: Boolean(match[1]) } : null;
+}
+
+function detailsEnd(lines: readonly string[], start: number): number {
+  let depth = 0;
+  for (let index = start; index < lines.length; index += 1) {
+    if (detailsStart(lines[index])) depth += 1;
+    if (/^\s*<\/details>\s*$/i.test(lines[index])) {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
+function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
   return /^```[^`]*$/.test(line)
     || /^\$\$/.test(line)
@@ -364,7 +381,8 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
     || /^>\s?/.test(line)
     || listMarker(line)?.indent === 0
     || Boolean(tableStart(lines, index))
-    || Boolean(blockImage(line, references));
+    || Boolean(blockImage(line, references))
+    || Boolean(schema.nodes.details && schema.nodes.details_summary && detailsStart(line));
 }
 
 function parseBlocks(lines: readonly string[], schema: Schema, references: References): Node[] {
@@ -372,6 +390,27 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
   for (let index = 0; index < lines.length;) {
     const line = lines[index];
     if (!line.trim()) { index++; continue; }
+    const disclosure = detailsStart(line);
+    if (disclosure && schema.nodes.details && schema.nodes.details_summary) {
+      const closing = detailsEnd(lines, index);
+      let summaryIndex = index + 1;
+      while (summaryIndex < closing && !lines[summaryIndex].trim()) summaryIndex += 1;
+      const summary = closing > summaryIndex
+        ? /^\s*<summary>(.*)<\/summary>\s*$/i.exec(lines[summaryIndex])
+        : null;
+      if (summary) {
+        const body = parseBlocks(lines.slice(summaryIndex + 1, closing), schema, references);
+        const fallback = schema.nodes.paragraph?.create({}, [schema.text('')]);
+        try {
+          blocks.push(schema.node('details', { open: disclosure.open }, [
+            schema.node('details_summary', {}, inline(summary[1], schema, references)),
+            ...(body.length ? body : fallback ? [fallback] : []),
+          ]));
+          index = closing + 1;
+          continue;
+        } catch { /* Preserve malformed disclosure source as ordinary text. */ }
+      }
+    }
     const fence = /^```([^\s]*)\s*$/.exec(line);
     if (fence) {
       const code: string[] = [];
@@ -449,7 +488,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       continue;
     }
     const paragraphLines = [line];
-    for (index++; index < lines.length && lines[index].trim() && !startsBlock(lines, index, references); index++) paragraphLines.push(lines[index]);
+    for (index++; index < lines.length && lines[index].trim() && !startsBlock(lines, index, references, schema); index++) paragraphLines.push(lines[index]);
     const joined = paragraphLines.reduce((value, current) => value.endsWith('  ') ? `${value}\n${current}` : `${value} ${current}`);
     blocks.push(paragraph(schema, joined, references));
   }

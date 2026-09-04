@@ -215,6 +215,19 @@ function render(
       .split('\n')
       .map((line) => `> ${line}`)
       .join('\n');
+    case 'details': {
+      const summary = node.content[0];
+      const label = summary
+        ? render(summary, context, [...path, 0], depth).replace(/\s*\n\s*/g, ' ')
+        : 'Details';
+      const body = node.content.slice(1)
+        .map((child, index) => render(child, context, [...path, index + 1], depth))
+        .join('\n\n');
+      return `<details${node.attrs.open ? ' open' : ''}>\n<summary>${label}</summary>\n\n${body}\n</details>`;
+    }
+    case 'details_summary': return node.content
+      .map((child, index) => inline(child, context, [...path, index]))
+      .join('');
     case 'bullet_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'ordered_list': return node.content.map((child, index) => `${'  '.repeat(depth)}${(Number(node.attrs.start) || 1) + index}. ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'task_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- [${child.attrs.checked ? 'x' : ' '}] ${render(child, context, [...path, index], depth + 1)}`).join('\n');

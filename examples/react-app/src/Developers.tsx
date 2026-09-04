@@ -294,6 +294,23 @@ new EditorView(mount, editor, {
 // React forwards exactly the same view option:
 <FountainComposer editor={editor} blockHandles />`;
 
+const detailsExample = `import {
+  DetailsExtension,
+  insertDetails,
+  wrapInDetails,
+} from 'fountainjs-editor/details'
+import { StarterKit, composeExtensions } from 'fountainjs-editor'
+
+const kit = composeExtensions([...StarterKit.extensions, DetailsExtension])
+
+insertDetails(editor, {
+  summary: 'Deployment notes',
+  open: true,
+})
+
+// Or wrap the selected top-level blocks in one disclosure.
+wrapInDetails(editor, { summary: 'Background' })`;
+
 const formatExample = `const portableFormat = {
   parse(source, schema) {
     return decodeMyFormat(source, schema)
@@ -550,6 +567,10 @@ function Developers() {
             <p><code>StarterKit</code> composes the link mark with <code>LinkBehaviorExtension</code>. It safely normalizes and validates destinations, autolinks typed web and email addresses, links selections on paste, edits or removes the complete link around a caret, and emits <code>fountain-link-activate</code> instead of forcing navigation. Replace it with <code>createLinkBehaviorExtension</code> to supply product validation and activation policies; the React toolbar uses the same public contract for add, preview, title, target, edit, and remove controls.</p>
             <p>It also composes <code>SyntaxHighlightExtension</code>. Code source, language, and the line-number preference stay portable; live tokens and number gutters are decorations that never enter JSON or model text. The included tokenizer covers common languages, while <code>createSyntaxHighlightExtension</code> accepts validated ranges from any host grammar engine. Public language and line-number commands drive the same settings shown in the React toolbar.</p>
             <p><code>TableEditingExtension</code> keeps logical grid geometry valid across rowspans and colspans. Public commands merge and split cells, toggle scoped headers, select full logical rows or columns, resize through pointer or keyboard controls, and exchange rectangular TSV/HTML clipboard data. A non-historical append transaction repairs malformed host changes before subscribers receive the final state.</p>
+            <h3>Details are document content, not hidden UI state</h3>
+            <p>The isolated <code>fountainjs-editor/details</code> entry adds semantic <code>details</code> and <code>details_summary</code> nodes without changing <code>StarterKit</code>. The editable summary supports inline marks; the body accepts any configured block, including nested disclosures. Native click or tap, Ctrl/Cmd+Enter, and public commands persist the open state in the portable document. Read-only readers can still open it locally without causing an edit.</p>
+            <Code>{detailsExample}</Code>
+            <p>Insert, top-level wrap, unwrap, and explicit open-state commands each dispatch one validated transaction, so history, subscriptions, tracked changes, and generic Yjs synchronization keep working. JSON is exact; safe HTML uses native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code>; Markdown uses the same semantic HTML form; text keeps summary and body readable. See the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md">complete schema, keyboard, interchange, and accessibility guide</a>.</p>
             <h3>First-party modules remain opt-in</h3>
             <p>Mentions, emoji, typography, character limits, and slash commands live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention, emoji, and slash queries use one headless, abortable suggestion controller with stale-result protection; React menus are merely renderers over that state. <code>EmojiExtension</code> keeps a curated catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
             <Code>{documentUtilitiesExample}</Code>
@@ -633,6 +654,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/view/block-handles.ts"><code>src/view/block-handles.ts</code><span>Optional contextual controls, nested path targeting, schema-valid indicators, and touch/keyboard movement.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/details"><code>src/details/</code><span>Optional details/summary schema, commands, native NodeView, keyboard behavior, and interchange contract.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md"><code>docs/DETAILS.md</code><span>Composition, document shape, commands, accessibility, collaboration, safety, and current boundaries.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/collaboration.ts"><code>src/extensions/collaboration.ts</code><span>Provider-neutral lifecycle, validated remote changes, presence decorations, and collaboration commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/yjs"><code>src/yjs/</code><span>Optional CRDT tree conversion, relative positions, and origin-aware undo.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COLLABORATION.md"><code>docs/COLLABORATION.md</code><span>Provider, authentication, persistence, awareness, security, and shared-state contracts.</span></a>
@@ -656,7 +679,7 @@ function Developers() {
           <section className="dev-section" id="contributing">
             <p className="dev-label">12 · TESTING & CONTRIBUTING</p>
             <h2>Change behavior with evidence.</h2>
-            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; version tests cover provider conflicts, idempotency, exact comparison, preview, backup-first restore, autosave, permissions, and complete React rendering; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
+            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; details tests cover schema constraints, commands, nested interchange, native/read-only behavior, keyboard transitions, history, and Yjs; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; version tests cover provider conflicts, idempotency, exact comparison, preview, backup-first restore, autosave, permissions, and complete React rendering; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
             <Code>{`pnpm install
 pnpm dev          # live website and playground
 pnpm typecheck    # public and internal TypeScript contracts

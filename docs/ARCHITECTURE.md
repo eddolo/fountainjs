@@ -581,6 +581,9 @@ The suites are organized by boundary:
   editing/removal, and safe host-owned activation;
 - `tests/list.test.ts`: multi-range wrapping/conversion, mixed nesting,
   hierarchy-preserving indent/lift/join, and nested HTML/Markdown interchange;
+- `tests/details.test.ts`: disclosure schema invariants, commands, keyboard
+  transitions, native/read-only behavior, nested HTML/Markdown round trips,
+  history, and generic Yjs synchronization;
 - `tests/image.test.ts`: block and inline nodes, responsive metadata, mapped
   uploads, progress/cancellation/retry, stale replacement protection, caption
   editing, load recovery, and accessible resizing;
@@ -637,13 +640,13 @@ The suites are organized by boundary:
 
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
-`pnpm test:budget` enforces raw production ceilings of 102 KiB for the ESM root,
-85 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
+`pnpm test:budget` enforces raw production ceilings of 105 KiB for the ESM root,
+87 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
 optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
-54 KiB for CSS, and 610/515 KiB for all emitted
+10/8 KiB for collapsible details, 54 KiB for CSS, and 605/507 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -679,6 +682,7 @@ tracked separately as `PROD-05`.
 | `src/react/FountainTrackedChanges.tsx` | Optional accessible React review panel over the framework-neutral tracked-changes API |
 | `src/versions/` | Optional snapshot model, provider boundary, controller, exact comparison, preview, and backup-first restoration |
 | `src/react/FountainVersions.tsx` | Optional accessible React history, preview, comparison, and restoration panel |
+| `src/details/` | Optional semantic details/summary schema, commands, keyboard behavior, native NodeView, and interchange support |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

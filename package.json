@@ -39,6 +39,9 @@
       ],
       "react/versions": [
         "dist/react/versions.d.ts"
+      ],
+      "details": [
+        "dist/details/index.d.ts"
       ]
     }
   },
@@ -153,6 +156,16 @@
         "default": "./dist/react-versions.cjs"
       }
     },
+    "./details": {
+      "import": {
+        "types": "./dist/details/index.d.ts",
+        "default": "./dist/details.js"
+      },
+      "require": {
+        "types": "./dist/details/index.d.cts",
+        "default": "./dist/details.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -205,6 +218,8 @@
     "review-workflow",
     "version-history",
     "document-versions",
+    "collapsible-content",
+    "details-summary",
     "accessible"
   ],
   "engines": {

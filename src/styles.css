@@ -116,6 +116,12 @@
 .fountain-editor h1 { font-size: 2.25em; line-height: 1.15; letter-spacing: -.03em; }
 .fountain-editor h2 { font-size: 1.65em; line-height: 1.2; letter-spacing: -.02em; }
 .fountain-editor blockquote { padding: 4px 0 4px 18px; color: var(--fountain-muted); border-left: 3px solid var(--fountain-accent); }
+.fountain-editor .fountain-details { margin: 1em 0; overflow: clip; border: 1px solid var(--fountain-border); border-radius: 10px; }
+.fountain-editor .fountain-details__summary { min-height: 44px; padding: 12px 14px; font-weight: 750; cursor: pointer; background: var(--fountain-surface-muted); }
+.fountain-editor .fountain-details__summary::marker { color: var(--fountain-accent); }
+.fountain-editor .fountain-details[open] > .fountain-details__summary { border-bottom: 1px solid var(--fountain-border); }
+.fountain-editor .fountain-details > :not(.fountain-details__summary) { margin-inline: 14px; }
+.fountain-editor .fountain-details__summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 28%, transparent); outline-offset: -3px; }
 .fountain-editor pre { overflow-x: auto; padding: 18px; color: #e7e9ee; background: #151823; border-radius: 12px; }
 .fountain-editor code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 .fountain-editor pre.fjs-code-block { position: relative; padding-top: 42px; tab-size: 2; }
