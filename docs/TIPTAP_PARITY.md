@@ -77,7 +77,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | --- | --- | --- | --- |
 | UI-01 | Usable toolbar and starter editor | Partial | Replace text-symbol controls with accessible, responsive, customizable primitives. |
 | UI-02 | Bubble and floating menus | Missing | Add framework-neutral positioning/state plus React renderers. |
-| UI-03 | Slash-command menu | Partial | A framework-neutral live registry, eleven schema-aware defaults, stable grouped filtering, cancellable async sources, atomic execution/rollback, keyboard/touch control, accessible React UI, and package-backed desktop/mobile demos are implemented. Require the complete release gate and all-engine CI before marking delivered. |
+| UI-03 | Slash-command menu | Delivered | A framework-neutral live registry, eleven schema-aware defaults, stable grouped filtering, cancellable async sources, atomic execution/rollback, keyboard/touch control, accessible React UI, and package-backed desktop/mobile demos are covered by the complete release gate, all-engine CI, and deployed-site verification. |
 | UI-04 | Drag handles and block reordering | Partial | Selected top-level blocks support native undoable drag-move and the public `moveBlock` command is the keyboard alternative; add visible handles, drop indicators, touch affordances, and nested-block support. |
 | UI-05 | Search and replace | Delivered | Add regex/whole-word options only if justified by product evidence. |
 
