@@ -20,9 +20,10 @@ const limits = Object.freeze({
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
   // roughly 7 KiB across emitted shared chunks; individual entry ceilings stay
-  // unchanged so no consumer-facing entry can hide that growth.
-  'all ESM runtime code': 432 * kibibyte,
-  'all CommonJS runtime code': 364 * kibibyte,
+  // unchanged so no consumer-facing entry can hide that growth. Schema-owned
+  // custom HTML parsing and hardened output add another roughly 4.6/3.8 KiB.
+  'all ESM runtime code': 440 * kibibyte,
+  'all CommonJS runtime code': 372 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

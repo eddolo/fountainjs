@@ -10,6 +10,11 @@
 
 ### Added
 
+- Schema-owned `parseDOM` rules for extension-defined block/inline nodes and
+  marks, nested `contentElement` parsing, complete imported-tree validation,
+  custom-mark export, broader common CSS/link preservation, and hardened
+  generic HTML tag/attribute/style serialization with real-browser paste
+  coverage.
 - Schema-safe `canMoveNode` / `moveNode` commands for same-parent and
   cross-parent nested moves, plus optional framework-neutral drag handles,
   before/after indicators, accessible move buttons, host candidate/label

@@ -12,6 +12,43 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 `HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, audio, video, files, approved embeds, tables, dividers, line breaks, common inline marks, and optional math, mention, and emoji nodes when their receiving schema includes the corresponding extension. Media is reconstructed through schema validation: an iframe is discarded unless the configured `MediaExtension` recognizes its canonical HTTPS provider URL and accepts every permission/sandbox attribute. Math HTML stores TeX separately from its computed accessible label, so import does not persist renderer markup or mutate JSON. Mention identity and safe links round-trip through typed data attributes. Emoji name, Unicode value, and safe fallback metadata likewise round-trip; raw Unicode emoji in ordinary imported text becomes an emoji node when that schema supports it. The importer uses `DOMParser`, so a DOM shim is required in Node.js.
 
+Custom nodes and marks own their HTML import contract through ordered
+`parseDOM` rules on `NodeSpec` / `MarkSpec`. A rule supplies a CSS `tag`
+selector, optional `priority`, optional `getAttrs(element)`, and an optional
+`contentElement` selector for wrapped content. Return `false` to decline a
+match. Exceptions, malformed selectors, invalid attributes, and content that
+does not satisfy the node's schema are contained; normal readable fallback
+parsing continues. The complete imported document passes `schema.validate()`
+before it is returned.
+
+```ts
+const callout = {
+  group: 'block',
+  content: 'block+',
+  attrs: { tone: { default: 'info' } },
+  parseDOM: [{
+    tag: 'aside[data-callout]',
+    contentElement: '[data-callout-content]',
+    getAttrs: element => ({ tone: element.dataset.tone ?? 'info' }),
+  }],
+  toDOM: node => ['aside',
+    { 'data-callout': '', 'data-tone': node.attrs.tone },
+    ['div', { 'data-callout-content': '' }, 0],
+  ],
+}
+```
+
+The same `toDOM` contract serializes extension-defined nodes and marks.
+Generic extension output is restricted to non-executable semantic HTML tags;
+event handlers, `srcdoc`, URL-bearing attributes with unsafe protocols,
+dangerous CSS URL/expression forms, and malformed names are removed. Built-in
+provider-approved embeds use their stricter dedicated serializer. Common
+external inline CSS for bold, italic, underline, strike, text colour, and
+highlight is normalized into typed marks, and link title/target metadata is
+preserved. HTML mark-wrapper order is presentation-only; the set, types, and
+attributes of marks round-trip, while JSON remains the byte-stable source of
+truth.
+
 ## Markdown
 
 The Markdown boundary supports headings, paragraphs, quotes, fenced code, lists, tables, images, dividers, links, strong/emphasis/strike/code marks, highlight extension syntax, and `$...$`/`$$...$$` math when `MathExtension` is present. Mentions and emoji export as their readable text projections; this deliberately loses mention identity/kind and emoji fallback metadata because CommonMark has no portable typed representation for either. Raw Unicode emoji imported into an emoji-enabled schema becomes an emoji node. Audio, video, file, and embed nodes likewise export as readable destination links plus optional caption text; re-import therefore produces links, not media nodes. Use validated JSON or supported HTML when extension type and attributes must round-trip.

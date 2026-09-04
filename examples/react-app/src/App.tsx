@@ -120,7 +120,15 @@ const calloutExtension = defineExtension({
       group: 'block',
       content: 'inline*',
       attrs: { tone: { default: 'idea' } },
-      toDOM: (node) => ['aside', { className: 'demo-callout', 'data-tone': node.attrs.tone }, 0],
+      parseDOM: [{
+        tag: 'aside[data-fountain-callout]',
+        getAttrs: (element) => ({ tone: element.dataset.tone ?? 'idea' }),
+      }],
+      toDOM: (node) => ['aside', {
+        className: 'demo-callout',
+        'data-fountain-callout': '',
+        'data-tone': node.attrs.tone,
+      }, 0],
     },
   },
   commands: {

@@ -54,7 +54,14 @@ const callout = defineExtension({
       group: 'block',
       content: 'inline*',
       attrs: { tone: { default: 'info' } },
-      toDOM: (node) => ['aside', { 'data-tone': node.attrs.tone }, 0],
+      parseDOM: [{
+        tag: 'aside[data-fountain-callout]',
+        getAttrs: (element) => ({ tone: element.dataset.tone ?? 'info' }),
+      }],
+      toDOM: (node) => ['aside', {
+        'data-fountain-callout': '',
+        'data-tone': node.attrs.tone,
+      }, 0],
     },
   },
   commands: {
@@ -518,7 +525,13 @@ HTMLExporter.export(document, { document: false });
 JSONExporter.export(document);
 ```
 
-HTML export escapes text and attributes and rejects unsafe URL protocols. JSON import validates node and mark names through the receiving schema.
+HTML export escapes text and attributes, rejects unsafe URL protocols, and
+restricts generic extension output to non-executable semantic markup. Custom
+nodes and marks pair `toDOM` with schema-owned `parseDOM` selector/attribute
+rules, so configured extension content can survive HTML paste and round trips
+without hard-coding the extension into FountainJS. Every imported document is
+validated by the receiving schema. JSON remains the exact persistence format;
+see the [format-boundary guide](docs/FORMATS.md).
 
 ## Optional AI review module
 

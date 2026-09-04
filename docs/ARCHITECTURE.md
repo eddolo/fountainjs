@@ -418,7 +418,16 @@ A new framework adapter needs four operations: create an editor, subscribe to st
 
 ## Formats and media
 
-Formats are parser/serializer objects owned by extensions. The supplied JSON, Markdown, HTML, and text modules share the schema document as their boundary. HTML import/export and DOM rendering apply protocol and escaping rules; see [FORMATS.md](FORMATS.md).
+Formats are parser/serializer objects owned by extensions. The supplied JSON,
+Markdown, HTML, and text modules share the schema document as their boundary.
+HTML is schema-extensible: node and mark specs contribute declarative
+`parseDOM` selectors/attribute readers, while `toDOM` serializes both custom
+nodes and marks. Import rules are priority-ordered, callback failures are
+contained, candidate content is checked against its content expression, and the
+complete result is validated before it crosses into editor state. Generic
+export output is escaped and restricted to non-executable semantic tags,
+attributes, protocols, and CSS; privileged built-in media uses narrower
+provider-specific paths. See [FORMATS.md](FORMATS.md).
 
 Media insertion accepts remote URLs or browser `File` objects. Block images use
 an accessible NodeView for editable captions, load recovery, alignment, and
@@ -481,6 +490,9 @@ The suites are organized by boundary:
 - `tests/block-reordering.test.ts`: same-parent and cross-parent path moves,
   schema/cycle/no-op/read-only rejection, selection, undo, accessible controls,
   host filtering, labels, and teardown;
+- `tests/html-format.test.ts`: schema-owned custom node/mark round trips,
+  wrapped content, CSS/link semantics, invalid-rule fallback, complete-tree
+  validation, and executable generic-output rejection;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -505,7 +517,7 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 `pnpm test:budget` enforces raw production ceilings of 100 KiB for the ESM root,
 84 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 34 KiB for CSS,
-and 432/364 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
+and 440/372 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
 emoji data. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on

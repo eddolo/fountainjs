@@ -203,6 +203,31 @@ test('preserves structured rich HTML from a real browser clipboard event', async
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('strong')).toHaveText('rich');
 });
 
+test('imports an extension-defined HTML node through the schema contract', async ({ page }) => {
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectNode([2]));
+  await page.waitForTimeout(0);
+  const prevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', {
+      value: {
+        files: [],
+        getData: (type: string) => type === 'text/html'
+          ? '<section data-browser-counter-html data-count="7"></section>'
+          : 'Counter 7',
+      },
+    });
+    editor.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(prevented).toBe(true);
+  await expect(page.getByRole('button', { name: 'Count 7' })).toBeVisible();
+  expect(await page.evaluate(() => {
+    const document = (globalThis as any).fountainBrowserTest.editor.state.doc;
+    const counter = document.content.find((node: any) => node.type.name === 'browser_counter');
+    return counter?.attrs.count;
+  })).toBe(7);
+});
+
 test('pastes mixed nested HTML lists without flattening their hierarchy', async ({ page }) => {
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([1, 0], 16));
   const prevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {

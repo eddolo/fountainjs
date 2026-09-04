@@ -23,6 +23,17 @@ context extraction without persisting view DOM. Math nodes use it to expose TeX;
 custom atoms should return the text users would expect search or assistive tools
 to read.
 
+`NodeSpec` and `MarkSpec` may provide ordered `parseDOM` rules for safe HTML
+import. Each `DOMParseRule` has a CSS `tag` selector, optional numeric
+`priority`, optional `getAttrs(element)`, and—for nodes—an optional
+`contentElement` selector. `getAttrs` returns portable attributes, `null` for
+defaults, or `false` to decline the match. Selectors and callbacks are contained
+at the format boundary; created values pass normal attribute, node-invariant,
+content-expression, and full-document validation. `toDOM` is the matching
+export contract for both nodes and marks. Generic output accepts semantic HTML
+but strips executable tags, event/srcdoc attributes, unsafe URL protocols, and
+dangerous CSS URL/expression forms. See [FORMATS.md](FORMATS.md#html).
+
 `composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, and the HTML/Markdown/JSON/text format modules.
 
 ```ts

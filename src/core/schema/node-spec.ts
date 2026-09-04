@@ -28,6 +28,22 @@ export interface AttributeSpec {
   validate?: (value: unknown) => boolean;
 }
 
+/**
+ * Declarative, schema-owned rule for reconstructing a node or mark from HTML.
+ * Returning `false` from `getAttrs` declines the rule. Parsed attributes still
+ * pass through the normal schema validators before a node enters a document.
+ */
+export interface DOMParseRule {
+  /** CSS selector matched against the candidate element. */
+  tag: string;
+  /** Higher-priority rules are tried first. Defaults to 50. */
+  priority?: number;
+  /** Extract portable attributes, use defaults, or decline this match. */
+  getAttrs?: (element: HTMLElement) => Attributes | null | false;
+  /** Optional descendant selector whose children provide the node content. */
+  contentElement?: string;
+}
+
 export interface NodeViewLike {
   dom: HTMLElement;
   contentDOM?: HTMLElement;
@@ -56,6 +72,8 @@ export interface NodeSpec {
   toText?: (node: Node) => string;
   /** Optional whole-node invariant for relationships between attributes. */
   validate?: (node: Node) => boolean;
+  /** Safe HTML-import rules owned by this node extension. */
+  parseDOM?: readonly DOMParseRule[];
   toDOM?: (node: Node) => DOMOutputSpec;
   nodeView?: NodeViewConstructor;
 }

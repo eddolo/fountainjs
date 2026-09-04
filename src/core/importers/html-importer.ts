@@ -1,4 +1,13 @@
-import { Mark, Node as FountainNode, type Schema } from '../schema';
+import {
+  Mark,
+  Node as FountainNode,
+  type Attributes,
+  type DOMParseRule,
+  type MarkType,
+  type NodeType,
+  type Schema,
+} from '../schema';
+import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
@@ -28,6 +37,110 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[]): Fount
   return result;
 }
 
+function parseRulePriority(rule: DOMParseRule): number {
+  return Number.isFinite(rule.priority) ? Number(rule.priority) : 50;
+}
+
+function matchesRule(element: Element, rule: DOMParseRule): boolean {
+  try { return Boolean(rule.tag) && element.matches(rule.tag); }
+  catch { return false; }
+}
+
+function attrsFromRule(element: HTMLElement, rule: DOMParseRule): Attributes | false {
+  try {
+    const value = rule.getAttrs?.(element) ?? {};
+    if (value === false) return false;
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+    const prototype = Object.getPrototypeOf(value);
+    return prototype === Object.prototype || prototype === null ? value : false;
+  } catch { return false; }
+}
+
+function ruleContentElement(element: HTMLElement, rule: DOMParseRule): HTMLElement | null {
+  if (!rule.contentElement) return element;
+  try { return element.querySelector<HTMLElement>(rule.contentElement); }
+  catch { return null; }
+}
+
+function addMark(marks: Mark[], mark: Mark): void {
+  if (!marks.some((candidate) => candidate.type === mark.type)) marks.push(mark);
+}
+
+function addSchemaMark(marks: Mark[], schema: Schema, name: string, attrs: Attributes = {}): void {
+  const type = schema.marks[name];
+  if (!type || marks.some((mark) => mark.type === type)) return;
+  try { marks.push(type.create(attrs)); }
+  catch { /* Invalid imported attributes leave the content unmarked. */ }
+}
+
+function configuredMarks(element: HTMLElement, schema: Schema): Mark[] {
+  const matches: Array<{ type: MarkType; rule: DOMParseRule; order: number }> = [];
+  Object.values(schema.marks).forEach((type, order) => {
+    type.spec.parseDOM?.forEach((rule) => {
+      if (matchesRule(element, rule)) matches.push({ type, rule, order });
+    });
+  });
+  matches.sort((left, right) => parseRulePriority(right.rule) - parseRulePriority(left.rule) || left.order - right.order);
+  const result: Mark[] = [];
+  matches.forEach(({ type, rule }) => {
+    if (result.some((mark) => mark.type === type)) return;
+    const attrs = attrsFromRule(element, rule);
+    if (attrs === false) return;
+    try { result.push(type.create(attrs)); }
+    catch { /* Invalid extension attributes decline this rule. */ }
+  });
+  return result;
+}
+
+function colorValue(value: string): string | null {
+  const normalized = value.trim().toLowerCase();
+  const hex = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(normalized)?.[1];
+  if (hex) return `#${hex.length === 3 ? Array.from(hex, (part) => `${part}${part}`).join('') : hex}`;
+  const rgb = /^rgba?\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})(?:\s*[,/]\s*(?:1(?:\.0+)?|100%))?\s*\)$/i.exec(normalized);
+  if (!rgb) return null;
+  const values = rgb.slice(1, 4).map(Number);
+  if (values.some((part) => part < 0 || part > 255)) return null;
+  return `#${values.map((part) => part.toString(16).padStart(2, '0')).join('')}`;
+}
+
+function configuredNode(
+  element: HTMLElement,
+  schema: Schema,
+  inline: boolean,
+  inheritedMarks: readonly Mark[] = [],
+): FountainNode | null {
+  const matches: Array<{ type: NodeType; rule: DOMParseRule; order: number }> = [];
+  Object.values(schema.nodes).forEach((type, order) => {
+    if (type.name === 'doc' || type.name === 'text' || type.isInline !== inline) return;
+    type.spec.parseDOM?.forEach((rule) => {
+      if (matchesRule(element, rule)) matches.push({ type, rule, order });
+    });
+  });
+  matches.sort((left, right) => parseRulePriority(right.rule) - parseRulePriority(left.rule) || left.order - right.order);
+
+  for (const { type, rule } of matches) {
+    const attrs = attrsFromRule(element, rule);
+    const contentRoot = ruleContentElement(element, rule);
+    if (attrs === false || !contentRoot) continue;
+    const expression = type.spec.content;
+    const candidates: FountainNode[][] = type.spec.atom || !expression
+      ? [[]]
+      : [
+          inlineChildren(contentRoot, schema, inheritedMarks),
+          blockChildren(contentRoot, schema),
+        ];
+    for (const content of candidates) {
+      if (expression && !matchesContentExpression(content, expression)) continue;
+      try {
+        const node = type.create(attrs, content);
+        schema.validate(node);
+        return node;
+      } catch { /* Try the next content shape or parse rule. */ }
+    }
+  }
+  return null;
+}
+
 function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = []): FountainNode[] {
   const result: FountainNode[] = [];
   parent.childNodes.forEach((child) => {
@@ -37,6 +150,8 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     }
     if (!(child instanceof HTMLElement)) return;
     const tag = child.tagName.toLowerCase();
+    const customNode = configuredNode(child, schema, true, marks);
+    if (customNode) { result.push(customNode); return; }
     if (tag === 'br' && schema.nodes.hard_break) { result.push(schema.node('hard_break')); return; }
     if (tag === 'img' && schema.nodes.inline_image) {
       const image = imageNode(child as HTMLImageElement, schema, 'inline_image');
@@ -78,15 +193,27 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
       } catch { result.push(...textNodes(emoji || child.textContent || '', schema, marks)); }
       return;
     }
-    let nextMarks = [...marks];
+    const nextMarks = [...marks];
+    configuredMarks(child, schema).forEach((mark) => addMark(nextMarks, mark));
     const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript' } as Record<string, string>)[tag];
-    if (markName && schema.marks[markName]) nextMarks.push(schema.mark(markName));
-    const color = /(?:^|;)\s*color\s*:\s*(#[\da-f]{6})(?:\s*;|$)/i.exec(child.getAttribute('style') ?? '')?.[1];
-    if (color && schema.marks.text_color && /^#[\da-f]{6}$/i.test(color)) nextMarks.push(schema.mark('text_color', { color }));
+    if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
+      color: colorValue(child.style.backgroundColor) ?? '#fff3a3',
+    });
+    else if (markName) addSchemaMark(nextMarks, schema, markName);
+    const weight = child.style.fontWeight.toLowerCase();
+    if (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500) addSchemaMark(nextMarks, schema, 'strong');
+    if (child.style.fontStyle.toLowerCase() === 'italic') addSchemaMark(nextMarks, schema, 'em');
+    const decoration = `${child.style.textDecoration} ${child.style.textDecorationLine}`.toLowerCase();
+    if (decoration.includes('underline')) addSchemaMark(nextMarks, schema, 'underline');
+    if (decoration.includes('line-through')) addSchemaMark(nextMarks, schema, 'strike');
+    const color = colorValue(child.style.color);
+    if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
+    const background = colorValue(child.style.backgroundColor);
+    if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
     if (tag === 'a' && schema.marks.link) {
       const href = child.getAttribute('href') ?? '';
       const anchor = child as HTMLAnchorElement;
-      if (isSafeURL(href)) nextMarks.push(schema.mark('link', { href, title: anchor.title, target: anchor.target === '_self' ? '_self' : '_blank' }));
+      if (isSafeURL(href)) addSchemaMark(nextMarks, schema, 'link', { href, title: anchor.title, target: anchor.target === '_self' ? '_self' : '_blank' });
     }
     result.push(...inlineChildren(child, schema, nextMarks));
   });
@@ -243,7 +370,39 @@ function tableCellWidths(cell: Element, colspan: number): number[] | null {
   return null;
 }
 
-const LIST_BLOCK_TAGS = new Set(['p', 'div', 'blockquote', 'pre', 'ul', 'ol', 'table', 'figure', 'img', 'audio', 'video', 'iframe', 'hr']);
+const BLOCK_TAGS = new Set([
+  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset',
+  'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'header', 'hr', 'img', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'summary',
+  'table', 'ul', 'audio', 'video', 'iframe',
+]);
+
+function hasConfiguredBlockRule(element: HTMLElement, schema: Schema): boolean {
+  return Object.values(schema.nodes).some((type) => type.isBlock && type.name !== 'doc'
+    && type.spec.parseDOM?.some((rule) => matchesRule(element, rule)));
+}
+
+function blockChildren(element: HTMLElement, schema: Schema): FountainNode[] {
+  const result: FountainNode[] = [];
+  let inlineFragment = element.ownerDocument.createDocumentFragment();
+  const flushInline = () => {
+    const content = inlineChildren(inlineFragment, schema);
+    if (content.length && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
+    inlineFragment = element.ownerDocument.createDocumentFragment();
+  };
+  element.childNodes.forEach((child) => {
+    const structural = child instanceof HTMLElement
+      && (BLOCK_TAGS.has(child.tagName.toLowerCase()) || hasConfiguredBlockRule(child, schema));
+    if (structural) {
+      flushInline();
+      result.push(...block(child as HTMLElement, schema));
+    } else {
+      inlineFragment.appendChild(child.cloneNode(true));
+    }
+  });
+  flushInline();
+  return result;
+}
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
   const result: FountainNode[] = [];
@@ -255,7 +414,7 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   };
   element.childNodes.forEach((child) => {
     if (child instanceof HTMLInputElement && child.type === 'checkbox') return;
-    if (child instanceof HTMLElement && LIST_BLOCK_TAGS.has(child.tagName.toLowerCase())) {
+    if (child instanceof HTMLElement && (BLOCK_TAGS.has(child.tagName.toLowerCase()) || hasConfiguredBlockRule(child, schema))) {
       flushInline();
       result.push(...block(child, schema));
       return;
@@ -271,6 +430,8 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
 
 function block(element: Element, schema: Schema): FountainNode[] {
   const tag = element.tagName.toLowerCase();
+  const customNode = configuredNode(element as HTMLElement, schema, false);
+  if (customNode) return [customNode];
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
     const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
@@ -280,7 +441,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
   if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element) }, inlineChildren(element, schema))];
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
-    const children = Array.from(element.children).flatMap((child) => block(child, schema));
+    const children = blockChildren(element as HTMLElement, schema);
     return [schema.node('blockquote', {}, children.length ? children : [paragraph(element, schema)])];
   }
   if (tag === 'pre') return [schema.node('code_block', {
@@ -367,7 +528,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
     const embed = embedNode(element as HTMLIFrameElement, schema);
     return embed ? [embed] : [];
   }
-  const nested = Array.from(element.children).flatMap((child) => block(child, schema));
+  const nested = blockChildren(element as HTMLElement, schema);
   return nested.length ? nested : [paragraph(element, schema)];
 }
 
@@ -377,7 +538,9 @@ export class HTMLImporter {
     const body = new DOMParser().parseFromString(html, 'text/html').body;
     const blocks = Array.from(body.children).flatMap((element) => block(element, schema));
     if (!blocks.length && body.textContent) blocks.push(schema.node('paragraph', {}, [schema.text(body.textContent)]));
-    return schema.topNodeType.create({}, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
+    const document = schema.topNodeType.create({}, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
+    schema.validate(document);
+    return document;
   }
 
   static parse(html: string, schema: Schema): FountainNode { return new HTMLImporter().parse(html, schema); }

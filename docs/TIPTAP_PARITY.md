@@ -108,7 +108,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
 | FORMAT-01 | Lossless, validated JSON | Delivered | Add a versioned migration contract and published JSON Schema. |
-| FORMAT-02 | Safe HTML import/export | Partial | Expand DOM coverage, preserve configured custom content, and validate round trips. |
+| FORMAT-02 | Safe HTML import/export | Partial | Schema-owned custom node/mark rules, wrapped content, custom-mark output, common CSS/link semantics, generic output hardening, complete-tree validation, unit contracts, and local Chromium/WebKit paste coverage are implemented; promote only after the exact all-engine CI and deployed developer-guide evidence pass. |
 | FORMAT-03 | Markdown import/export | Partial | Add reference links, nested edge cases, richer tables, and explicit extension loss reporting. |
 | FORMAT-04 | Plain-text projection | Delivered | Preserve as a deliberately lossy boundary. |
 | FORMAT-05 | DOCX, PDF, ODT, and EPUB workflows | Missing | Define open conversion adapters and ship at least DOCX import/export plus print-quality PDF. |

@@ -57,9 +57,13 @@ export const callout = defineExtension({
       group: 'block',
       content: 'inline*',
       attrs: { tone: { default: 'info' } },
+      parseDOM: [{
+        tag: 'aside[data-callout]',
+        getAttrs: element => ({ tone: element.dataset.tone ?? 'info' }),
+      }],
       toDOM: node => [
         'aside',
-        { className: 'callout', 'data-tone': node.attrs.tone },
+        { className: 'callout', 'data-callout': '', 'data-tone': node.attrs.tone },
         0,
       ],
     },
@@ -489,6 +493,7 @@ function Developers() {
             <p className="dev-label">09 · FORMATS & MEDIA</p>
             <h2>Storage and uploads stay outside the core.</h2>
             <p>JSON is lossless and is the recommended persistence format. Markdown, HTML, and text are modular boundaries for publishing and interchange. A product-specific format is just a parser/serializer pair contributed by an extension.</p>
+            <p>HTML is extension-aware rather than a fixed built-in switch. A node or mark can pair its safe <code>toDOM</code> output with priority-ordered <code>parseDOM</code> rules that match a CSS selector, recover validated attributes, and optionally identify a nested content element. Invalid selectors, callback failures, unsafe attributes, executable output tags, and schema-invalid content fail closed; the complete imported tree is validated before paste or API callers receive it. This lets configured custom nodes and marks survive HTML interchange while JSON remains the exact persistence boundary.</p>
             <Code>{formatExample}</Code>
             <p>Block images support editable captions, alt text, titles, alignment, responsive source sets, explicit dimensions, load recovery, and pointer, touch, or keyboard resizing. <code>inline_image</code> is a separate typed node that can sit between text. Both are selectable and portable through JSON and HTML.</p>
             <Code>{mediaExample}</Code>

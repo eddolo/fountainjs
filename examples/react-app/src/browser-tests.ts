@@ -84,6 +84,11 @@ const browserNodeView = defineExtension({
       group: 'block',
       atom: true,
       attrs: { count: { default: 0, validate: (value) => Number.isInteger(value) } },
+      parseDOM: [{
+        tag: '[data-browser-counter-html]',
+        getAttrs: (element) => ({ count: Number(element.dataset.count) }),
+      }],
+      toDOM: (node) => ['div', { 'data-browser-counter-html': '', 'data-count': node.attrs.count }],
       nodeView: BrowserCounterNodeView,
     },
   },

@@ -17,12 +17,40 @@ function safeURL(value: unknown, allowDataImage = false): string {
   return isSafeURL(url, { allowDataImage }) ? escapeHTML(url) : '';
 }
 
+const SAFE_CUSTOM_TAGS = new Set([
+  'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo',
+  'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'data',
+  'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption',
+  'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr',
+  'i', 'img', 'ins', 'kbd', 'li', 'main', 'mark', 'nav', 'ol', 'p',
+  'picture', 'pre', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section',
+  'small', 'source', 'span', 'strong', 'sub', 'summary', 'sup', 'table',
+  'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'u', 'ul',
+  'var', 'video', 'wbr',
+]);
+
+function safeStyle(value: unknown): string {
+  const style = String(value ?? '').trim();
+  if (!style || /[<>\\@\u0000-\u001f]|\/\*|(?:url|image-set|expression)\s*\(|-moz-binding|behavior\s*:/i.test(style)) return '';
+  return style;
+}
+
 function renderDOMAttributes(attrs: Attributes): string {
   return Object.entries(attrs).map(([rawName, value]) => {
-    const name = rawName === 'className' ? 'class' : rawName;
+    const name = (rawName === 'className' ? 'class' : rawName).toLowerCase();
     if (!/^[a-z_:][a-z0-9:._-]*$/i.test(name) || /^on/i.test(name) || value === undefined || value === null || value === false) return '';
-    if (name === 'href' && !isSafeURL(value)) return '';
-    if (name === 'src' && !isSafeURL(value, { allowDataImage: true })) return '';
+    if (['srcdoc', 'ping', 'xlink:href'].includes(name)) return '';
+    if (['href', 'cite', 'action', 'formaction'].includes(name) && !isSafeURL(value)) return '';
+    if (['src', 'poster'].includes(name) && !isSafeURL(value, { allowDataImage: true })) return '';
+    if (name === 'srcset') {
+      const sourceSet = safeSrcset(value);
+      return sourceSet ? ` srcset="${sourceSet}"` : '';
+    }
+    if (name === 'style') {
+      const style = safeStyle(value);
+      return style ? ` style="${escapeHTML(style)}"` : '';
+    }
+    if (name === 'target' && !['_blank', '_self', '_parent', '_top'].includes(String(value))) return '';
     return value === true ? ` ${name}` : ` ${name}="${escapeHTML(value)}"`;
   }).join('');
 }
@@ -30,16 +58,18 @@ function renderDOMAttributes(attrs: Attributes): string {
 function renderDOMOutputSpec(spec: DOMOutputSpec, content = ''): string {
   const tuple = typeof spec === 'string' ? [spec] : spec;
   const [tagName] = tuple;
-  if (!/^[a-z][a-z0-9-]*$/i.test(tagName)) return content;
+  if (typeof tagName !== 'string') return content;
+  const normalizedTag = tagName.toLowerCase();
+  if (!/^[a-z][a-z0-9-]*$/i.test(tagName) || !SAFE_CUSTOM_TAGS.has(normalizedTag)) return content;
   const possibleAttrs = tuple[1];
   const hasAttrs = possibleAttrs && typeof possibleAttrs === 'object' && !Array.isArray(possibleAttrs);
   const children = tuple.slice(hasAttrs ? 2 : 1).map((child) => {
     if (child === 0) return content;
     if (typeof child === 'string') return escapeHTML(child);
-    return Array.isArray(child) ? renderDOMOutputSpec(child) : '';
+    return Array.isArray(child) ? renderDOMOutputSpec(child, content) : '';
   }).join('');
   const opening = `<${tagName}${hasAttrs ? renderDOMAttributes(possibleAttrs as Attributes) : ''}>`;
-  return new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']).has(tagName.toLowerCase())
+  return new Set(['br', 'col', 'hr', 'img', 'source', 'track', 'wbr']).has(normalizedTag)
     ? opening
     : `${opening}${children}</${tagName}>`;
 }
@@ -122,8 +152,13 @@ function renderText(node: Node): string {
       case 'superscript': content = `<sup>${content}</sup>`; break;
       case 'link': {
         const href = safeURL(mark.attrs.href);
-        content = href ? `<a href="${href}" rel="noopener noreferrer nofollow">${content}</a>` : content;
+        const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
+        const target = mark.attrs.target === '_self' ? '_self' : '_blank';
+        content = href ? `<a href="${href}"${title} target="${target}" rel="noopener noreferrer nofollow">${content}</a>` : content;
         break;
+      }
+      default: {
+        if (mark.type.spec.toDOM) content = renderDOMOutputSpec(mark.type.spec.toDOM(mark), content);
       }
     }
   }
