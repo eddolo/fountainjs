@@ -27,6 +27,16 @@ function computeAttrs(
   return result;
 }
 
+function isDeeplyImmutable(value: unknown, ancestors = new Set<object>()): boolean {
+  if (value === null || ['string', 'number', 'boolean', 'undefined'].includes(typeof value)) return true;
+  if (typeof value !== 'object' || ancestors.has(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) return false;
+  if (!Object.isFrozen(value)) return false;
+  const nextAncestors = new Set(ancestors).add(value);
+  return Object.values(value).every((entry) => isDeeplyImmutable(entry, nextAncestors));
+}
+
 export class NodeType {
   readonly isInline: boolean;
   readonly isBlock: boolean;
@@ -63,6 +73,7 @@ export class Schema {
   readonly nodes: Record<string, NodeType>;
   readonly marks: Record<string, MarkType>;
   readonly topNodeType: NodeType;
+  private readonly validatedNodes = new WeakSet<Node>();
 
   constructor(public readonly spec: SchemaSpec) {
     this.nodes = Object.fromEntries(
@@ -111,7 +122,11 @@ export class Schema {
   }
 
   validate(node: Node): void {
-    const visit = (current: Node, path: readonly number[]): void => {
+    const visit = (current: Node, path: readonly number[]): boolean => {
+      // Nodes, their content arrays, marks, and portable attributes are immutable.
+      // A structurally shared subtree that passed this schema once cannot become
+      // invalid, so transactions only need to revisit their newly-created path.
+      if (this.validatedNodes.has(current)) return true;
       if (current.type.schema !== this) throw new Error(`Node at ${path.join('.') || 'root'} belongs to another schema.`);
       computeAttrs(current.type.spec.attrs, current.attrs);
       if (current.type.spec.validate && !current.type.spec.validate(current)) {
@@ -123,7 +138,10 @@ export class Schema {
       });
       if (current.isText) {
         if (current.content.length) throw new Error(`Text node at ${path.join('.')} cannot contain children.`);
-        return;
+        const cacheable = isDeeplyImmutable(current.attrs)
+          && current.marks.every((mark) => isDeeplyImmutable(mark.attrs));
+        if (cacheable) this.validatedNodes.add(current);
+        return cacheable;
       }
       if (current.marks.length) throw new Error(`Only text nodes may carry marks (${path.join('.') || 'root'}).`);
       if (current.type.spec.atom && current.content.length) throw new Error(`Atom node ${current.type.name} cannot contain children.`);
@@ -135,7 +153,12 @@ export class Schema {
       } else if (current.content.length) {
         throw new Error(`Node ${current.type.name} does not allow child content.`);
       }
-      current.content.forEach((child, index) => visit(child, [...path, index]));
+      const childrenCacheable = current.content
+        .map((child, index) => visit(child, [...path, index]))
+        .every(Boolean);
+      const cacheable = childrenCacheable && isDeeplyImmutable(current.attrs);
+      if (cacheable) this.validatedNodes.add(current);
+      return cacheable;
     };
     visit(node, []);
   }

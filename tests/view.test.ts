@@ -45,6 +45,33 @@ describe('EditorView', () => {
     expect(mount.childElementCount).toBe(0);
   });
 
+  it('reconciles a small edit without replacing unrelated block DOM', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: Array.from({ length: 100 }, (_, index) => ({
+          type: 'paragraph',
+          content: [{ type: 'text', text: `Line ${index}` }],
+        })),
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const before = [...view.dom.children];
+
+    expect(editor.dispatch(editor.state.createTransaction().insertText([50, 0], 7, '!'))).toBe(true);
+    const after = [...view.dom.children];
+    expect(after[0]).toBe(before[0]);
+    expect(after[49]).toBe(before[49]);
+    expect(after[50]).not.toBe(before[50]);
+    expect(after[51]).toBe(before[51]);
+    expect(after[99]).toBe(before[99]);
+    expect(after[50]?.textContent).toBe('Line 50!');
+    view.destroy();
+  });
+
   it('adds focus to atomic chains while keeping capability checks side-effect free', () => {
     const updates: string[] = [];
     const editor = createEditor({

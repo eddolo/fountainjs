@@ -668,6 +668,9 @@ any synchronization engine. `options.adapter(editor)` must return a fresh
 `CollaborationAdapterContext` on `connect`:
 
 - `editor` is the editor instance owned by this integration;
+- `applyRemoteTransaction(transaction, options)` validates a transaction that
+  starts from the current editor document and applies it without converting the
+  complete document to JSON; stale transactions fail closed;
 - `applyRemoteDocument(document, options)` validates a `Node` or `NodeJSON`,
   applies it as a non-local-history transaction, optionally restores an
   adapter-resolved selection, and returns whether the transaction was accepted;

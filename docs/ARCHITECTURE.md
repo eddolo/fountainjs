@@ -698,18 +698,22 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 
 `pnpm test:budget` enforces raw production ceilings of 111 KiB for the ESM root,
 93 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
-the isolated full emoji data, 69/52 KiB for the React entries, 16/14 KiB for the
+the isolated full emoji data, 69/52 KiB for the React entries, 19/16 KiB for the
 optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
-the text-style facade, 54 KiB for CSS, and 632/530 KiB for all emitted
+the text-style facade, 54 KiB for CSS, and 636/532 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
-destruction. The broader large-document latency and teardown benchmark work is
-tracked separately as `PROD-05`.
+destruction. `pnpm test:performance` additionally enforces local, incremental
+remote, and full-JSON document-size curves through 10,000 blocks, a 2,000-edit
+live-session heap ceiling, and destroyed-editor retained-memory bounds. The
+desktop browser matrix enforces 1,000-block input-to-paint, DOM mutation, and
+identity-preserving reconciliation, while React tests prevent unrelated
+NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 
 ## Source map
 

@@ -10,6 +10,7 @@ import {
   MarkdownImporter,
   Plugin,
   PluginKey,
+  Selection,
   StarterKit,
   composeExtensions,
   createEditor,
@@ -214,6 +215,49 @@ const inspectMarkdown = (source: string) => {
   };
 };
 
+const runPerformanceBudget = async () => {
+  const kit = composeExtensions([CoreExtension]);
+  const content = {
+    type: 'doc',
+    content: Array.from({ length: 1_000 }, (_, index) => ({
+      type: 'paragraph',
+      content: [{ type: 'text', text: `Line ${index}` }],
+    })),
+  };
+  const performanceEditor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+  const mount = document.createElement('div');
+  document.body.appendChild(mount);
+  const performanceView = new EditorView(mount, performanceEditor);
+  const before = [...performanceView.dom.children];
+  performanceEditor.dispatch(performanceEditor.state.createTransaction().setSelection(Selection.cursor([500, 0], 8)));
+  let added = 0;
+  let removed = 0;
+  const observer = new MutationObserver((records) => records.forEach((record) => {
+    added += record.addedNodes.length;
+    removed += record.removedNodes.length;
+  }));
+  observer.observe(performanceView.dom, { childList: true, subtree: true });
+
+  const started = performance.now();
+  performanceView.dom.dispatchEvent(new InputEvent('beforeinput', {
+    bubbles: true,
+    cancelable: true,
+    inputType: 'insertText',
+    data: '!',
+  }));
+  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  const inputToPaint = performance.now() - started;
+  observer.disconnect();
+  const after = [...performanceView.dom.children];
+  const retainedBlocks = after.filter((node, index) => node === before[index]).length;
+  const text = performanceEditor.state.doc.child(500).textContent;
+  performanceView.destroy();
+  performanceEditor.destroy();
+  const remainingDOM = mount.childElementCount;
+  mount.remove();
+  return { inputToPaint, added, removed, retainedBlocks, text, remainingDOM };
+};
+
 Object.assign(globalThis, {
   fountainBrowserTest: {
     commands,
@@ -224,6 +268,7 @@ Object.assign(globalThis, {
     clipboardHistory: () => getClipboardHistoryState(editor),
     inspectMarkdown,
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
+    performanceBudget: runPerformanceBudget,
     startImageUpload,
     collaboration: {
       leftEditor,

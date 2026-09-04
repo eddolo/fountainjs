@@ -104,6 +104,50 @@ describe('document model and transactions', () => {
     expect(() => schema.nodeFromJSON({ type: 'doc', content: [{ type: 'image_super', attrs: { src: 'javascript:alert(1)' } }] })).toThrow('Invalid value for attribute: src');
   });
 
+  it('validates only newly-created paths when immutable subtrees are shared', () => {
+    let validations = 0;
+    const schema = {
+      nodes: {
+        doc: { content: 'block+', validate: () => { validations += 1; return true; } },
+        paragraph: { group: 'block', content: 'text*', validate: () => { validations += 1; return true; } },
+        text: { group: 'inline', inline: true },
+      },
+    } as const;
+    const content = {
+      type: 'doc',
+      content: Array.from({ length: 1_000 }, (_, index) => ({
+        type: 'paragraph',
+        content: [{ type: 'text', text: `Line ${index}` }],
+      })),
+    } as const;
+    const editor = createEditor({ schema, content });
+    validations = 0;
+
+    expect(editor.dispatch(editor.state.createTransaction().insertText([999, 0], 8, '!'))).toBe(true);
+    expect(editor.state.doc.child(999).textContent).toBe('Line 999!');
+    expect(validations).toBe(2);
+  });
+
+  it('does not cache mutable non-portable attribute objects', () => {
+    class MutableFlag { valid = true; }
+    const schema = new Schema({
+      nodes: {
+        doc: { content: 'widget' },
+        widget: {
+          attrs: { state: { validate: (value) => value instanceof MutableFlag } },
+          validate: (node) => (node.attrs.state as MutableFlag).valid,
+        },
+        text: { inline: true },
+      },
+    });
+    const state = new MutableFlag();
+    const node = schema.node('doc', {}, [schema.node('widget', { state })]);
+    schema.validate(node);
+    state.valid = false;
+
+    expect(() => schema.validate(node)).toThrow('Invalid node invariant: widget');
+  });
+
   it('edits, formats, splits, undoes, and redoes without mutating old states', () => {
     const update = vi.fn();
     const editor = createEditor({ schema: CoreSchemaSpec, plugins: [historyPlugin], onUpdate: update });

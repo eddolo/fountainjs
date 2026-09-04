@@ -118,6 +118,22 @@ describe('optional Yjs collaboration adapter', () => {
     expect(left.getText()).toContain('Y');
   });
 
+  it('applies text-only remote deltas without rebuilding the full JSON tree', () => {
+    const leftDocument = new Y.Doc();
+    const left = createCollaborativeEditor(leftDocument, ada, document(...Array.from({ length: 250 }, (_, index) => `Line ${index}`)));
+    const rightDocument = new Y.Doc();
+    Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument), 'initial-sync');
+    const right = createCollaborativeEditor(rightDocument, linus, left.getJSON());
+    const rebuild = vi.spyOn(right.state.schema, 'nodeFromJSON');
+
+    left.dispatch(left.state.createTransaction().setSelection(Selection.cursor([249, 0], 8)));
+    expect(insertText(left, '!')).toBe(true);
+    Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument), 'text-peer');
+
+    expect(right.state.doc.child(249).textContent).toBe('Line 249!');
+    expect(rebuild).not.toHaveBeenCalled();
+  });
+
   it('deterministically repairs simultaneous empty-document initialization', () => {
     const leftDocument = new Y.Doc();
     const left = createCollaborativeEditor(leftDocument, ada, document('Left seed'));

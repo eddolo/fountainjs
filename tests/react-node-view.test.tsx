@@ -119,4 +119,45 @@ describe('React NodeView adapter', () => {
 
     await act(async () => { view!.destroy(); });
   });
+
+  it('does not rerender unchanged React NodeViews for an unrelated text edit', async () => {
+    let renders = 0;
+    function StableCounter({ node }: ReactNodeViewProps) {
+      renders += 1;
+      return <output>{String(node.attrs.count)}</output>;
+    }
+    const kit = composeExtensions([CoreExtension, defineExtension({
+      name: 'stable-react-counter',
+      nodes: {
+        stable_react_counter: {
+          group: 'block',
+          atom: true,
+          attrs: { count: { default: 0 } },
+          nodeView: createReactNodeView(StableCounter),
+        },
+      },
+    })]);
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: {
+        type: 'doc',
+        content: [
+          ...Array.from({ length: 50 }, (_, count) => ({ type: 'stable_react_counter', attrs: { count } })),
+          { type: 'paragraph', content: [{ type: 'text', text: 'Editable' }] },
+        ],
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    let view: EditorView;
+    await act(async () => { view = new EditorView(mount, editor); });
+    const afterMount = renders;
+
+    await act(async () => { editor.dispatch(editor.state.createTransaction().insertText([50, 0], 8, '!')); });
+    expect(renders).toBe(afterMount);
+    expect(view!.dom.querySelectorAll('[data-fountain-react-node-view]')).toHaveLength(50);
+
+    await act(async () => { view!.destroy(); });
+  });
 });

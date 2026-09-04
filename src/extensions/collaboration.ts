@@ -57,6 +57,8 @@ export interface RemoteDocumentOptions {
 
 export interface CollaborationAdapterContext {
   readonly editor: Editor;
+  /** Applies a validated, current-state transaction without serializing the document. */
+  applyRemoteTransaction(transaction: Transaction, options?: RemoteDocumentOptions): boolean;
   applyRemoteDocument(document: Node | NodeJSON, options?: RemoteDocumentOptions): boolean;
   setPresences(presences: readonly CollaborationPresence[]): void;
   setStatus(status: CollaborationStatus, error?: CollaborationError | string): void;
@@ -244,6 +246,37 @@ function applyRemoteDocument(
   }
 }
 
+function applyRemoteTransaction(
+  runtime: CollaborationRuntime,
+  context: CollaborationAdapterContext,
+  transaction: Transaction,
+  options: RemoteDocumentOptions = {},
+): boolean {
+  if (runtime.destroyed || runtime.editor.isDestroyed) return false;
+  try {
+    const editor = runtime.editor;
+    if (transaction.originalDoc !== editor.state.doc) {
+      throw new Error('A remote transaction must start from the editor current document.');
+    }
+    editor.state.schema.validate(transaction.doc);
+    if (transaction.doc.type !== editor.state.schema.topNodeType) {
+      throw new Error('A collaborative transaction must retain the configured top node type.');
+    }
+    if (options.selection) transaction.setSelection(options.selection);
+    transaction
+      .setMeta(COLLABORATION_REMOTE_META, true)
+      .setMeta(COLLABORATION_ORIGIN_META, options.origin)
+      .setMeta('addToHistory', false);
+    return editor.dispatch(transaction);
+  } catch (error) {
+    context.setStatus('error', {
+      message: error instanceof Error ? error.message : String(error),
+      recoverable: true,
+    });
+    return false;
+  }
+}
+
 function reportRuntimeError(runtime: CollaborationRuntime, error: unknown, generation: number): void {
   if (runtime.destroyed || runtime.editor.isDestroyed || runtime.generation !== generation) return;
   const current = collaborationKey.get(runtime.editor.state) ?? initialState();
@@ -292,6 +325,9 @@ function createContext(
     && runtime.context === context;
   context = Object.freeze({
     editor: runtime.editor,
+    applyRemoteTransaction: (transaction: Transaction, options?: RemoteDocumentOptions) => (
+      active() ? applyRemoteTransaction(runtime, context, transaction, options) : false
+    ),
     applyRemoteDocument: (document: Node | NodeJSON, options?: RemoteDocumentOptions) => (
       active() ? applyRemoteDocument(runtime, context, document, options) : false
     ),

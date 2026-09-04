@@ -888,6 +888,7 @@ restoration, and replaceable persistence.
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 
 - [Architecture and internals](docs/ARCHITECTURE.md)
+- [Performance, memory, reconciliation, and bundle budgets](docs/PERFORMANCE.md)
 - [Mentions, emoji, typography, and character count](docs/DOCUMENT_UTILITIES.md)
 - [Slash commands and runtime registrations](docs/SLASH_COMMANDS.md)
 - [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)

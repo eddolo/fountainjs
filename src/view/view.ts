@@ -20,7 +20,12 @@ import {
   type CommandRegistry,
 } from '../extensions/command-manager';
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
-import { renderDocument, type MountedNodeView } from './dom-renderer';
+import {
+  reconcileDocument,
+  renderDocument,
+  type MountedDocumentNode,
+  type MountedNodeView,
+} from './dom-renderer';
 import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
@@ -54,6 +59,7 @@ export class EditorView {
   private readonly blockHandles?: BlockHandleManager;
   private readonly unsubscribe: () => void;
   private nodeViews: MountedNodeView[] = [];
+  private documentNodes: MountedDocumentNode[] = [];
   private selectedNodeView?: NodeViewLike;
   private mutationObserver?: MutationObserver;
   private decorations = DecorationSet.empty;
@@ -162,7 +168,26 @@ export class EditorView {
     const reusableNodeViews = allowReuse ? this.reusableNodeViewMap(document, transaction) : new Map<string, MountedNodeView>();
     this.mutationObserver?.disconnect();
     const mounted: MountedNodeView[] = [];
-    renderDocument(this.dom, document, { view: this, nodeViews: mounted, reusableNodeViews, decorations });
+    const context = { view: this, nodeViews: mounted, reusableNodeViews, decorations };
+    const canReconcile = allowReuse
+      && this.documentNodes.length > 0
+      && this.decorations.decorations.length === 0
+      && decorations.decorations.length === 0;
+    if (canReconcile) {
+      const nodeViewsByTopLevel = new Map<number, MountedNodeView[]>();
+      previous.forEach((entry) => {
+        const index = entry.path[0];
+        if (index === undefined) return;
+        const entries = nodeViewsByTopLevel.get(index) ?? [];
+        entries.push(entry);
+        nodeViewsByTopLevel.set(index, entries);
+      });
+      this.documentNodes = reconcileDocument(this.dom, document, this.documentNodes, context, (index) => {
+        mounted.push(...(nodeViewsByTopLevel.get(index) ?? []));
+      });
+    } else {
+      this.documentNodes = renderDocument(this.dom, document, context);
+    }
     const retained = new Set(mounted.map((entry) => entry.nodeView));
     previous.forEach((entry) => {
       if (retained.has(entry.nodeView)) return;
@@ -209,6 +234,11 @@ export class EditorView {
     this.nodeViews.forEach((entry) => {
       try {
         let path: readonly number[] | null = entry.path;
+        const samePathNode = getNodeAtPath(document, entry.path);
+        if (samePathNode === entry.node) {
+          reusable.set(path.join('.'), entry);
+          return;
+        }
         if (transaction) {
           const range = nodeRangeAtPath(transaction.originalDoc, entry.path);
           const from = transaction.mapping.map(range.from, 1);

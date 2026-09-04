@@ -54,6 +54,11 @@ describe('provider-independent collaboration boundary', () => {
     expect(updates).toHaveLength(1);
     expect(adapter.onLocalSelection).toHaveBeenCalled();
 
+    const incremental = editor.state.createTransaction().insertText([0, 0], 6, ' delta');
+    expect(context.applyRemoteTransaction(incremental, { origin: 'peer-8' })).toBe(true);
+    expect(editor.state.doc.textContent).toBe('Remote delta document');
+    expect(updates).toHaveLength(1);
+
     expect(disconnectCollaboration(editor)).toBe(true);
     expect(getCollaborationState(editor)?.status).toBe('disconnected');
     expect(connectCollaboration(editor)).toBe(true);
@@ -89,6 +94,23 @@ describe('provider-independent collaboration boundary', () => {
     await Promise.resolve();
     expect(getCollaborationState(editor)?.error?.message).toBe('transport failed');
     expect(editor.state.doc.textContent).toBe('!Safe');
+  });
+
+  it('rejects stale remote transactions instead of applying them to a newer state', () => {
+    let context!: CollaborationAdapterContext;
+    const extension = createCollaborationExtension({
+      adapter: () => ({ connect: (value) => { context = value; } }),
+    });
+    const kit = composeExtensions([CoreExtension, extension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [paragraph('Safe')],
+    } });
+    const stale = editor.state.createTransaction().insertText([0, 0], 0, 'Stale ');
+    expect(insertText(editor, 'Current ')).toBe(true);
+
+    expect(context.applyRemoteTransaction(stale)).toBe(false);
+    expect(editor.getText()).toBe('Current Safe');
+    expect(getCollaborationState(editor)).toMatchObject({ status: 'error', error: { recoverable: true } });
   });
 
   it('normalizes untrusted presence and renders accessible range and caret decorations', () => {

@@ -1705,3 +1705,24 @@ test('uses the public React media workflow for native playback, provider-gated e
   await expect(page.getByRole('status').filter({ hasText: 'voice.mp3 inserted' })).toBeVisible();
   await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
 });
+
+test('keeps a 1,000-block input update local and paints within budget', async ({ page }) => {
+  await page.goto('/browser-tests.html');
+  const metrics = await page.evaluate(() => (globalThis as typeof globalThis & {
+    fountainBrowserTest: { performanceBudget(): Promise<{
+      inputToPaint: number;
+      added: number;
+      removed: number;
+      retainedBlocks: number;
+      text: string;
+      remainingDOM: number;
+    }> };
+  }).fountainBrowserTest.performanceBudget());
+
+  expect(metrics.text).toBe('Line 500!');
+  expect(metrics.retainedBlocks).toBe(999);
+  expect(metrics.added).toBeLessThanOrEqual(3);
+  expect(metrics.removed).toBeLessThanOrEqual(3);
+  expect(metrics.inputToPaint).toBeLessThan(250);
+  expect(metrics.remainingDOM).toBe(0);
+});

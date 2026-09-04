@@ -7,6 +7,7 @@ import {
   type AnySelection,
   type Node,
   type NodeJSON,
+  type Transaction as FountainTransaction,
 } from '../core';
 import {
   createCollaborationExtension,
@@ -431,10 +432,46 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private presenceTimer?: ReturnType<typeof setTimeout>;
   private lastPresenceAt = Number.NEGATIVE_INFINITY;
 
-  private readonly onSharedChange = (_events: readonly unknown[], transaction: Y.Transaction): void => {
+  private textTransactionFromEvents(events: readonly Y.YEvent<any>[]): FountainTransaction | null {
+    if (!this.context || events.length === 0 || events.some((event) => !(event instanceof Y.YTextEvent))) return null;
+    const transaction = this.context.editor.state.createTransaction();
+    for (const event of events as readonly Y.YTextEvent[]) {
+      if (event.keysChanged.size > 0) return null;
+      const sharedPath = event.path;
+      if (sharedPath.length < 3
+        || sharedPath[0] !== 0
+        || sharedPath.at(-1) !== 0
+        || sharedPath.some((part) => !Number.isInteger(part))) return null;
+      const path = sharedPath.slice(1, -1) as number[];
+      let offset = 0;
+      for (const operation of event.delta) {
+        if (operation.attributes || (operation.insert !== undefined && typeof operation.insert !== 'string')) return null;
+        if (operation.retain !== undefined) offset += operation.retain;
+        if (operation.delete !== undefined) transaction.replaceText(path, offset, offset + operation.delete, '');
+        if (typeof operation.insert === 'string') {
+          transaction.insertText(path, offset, operation.insert);
+          offset += operation.insert.length;
+        }
+      }
+    }
+    return transaction.docChanged ? transaction : null;
+  }
+
+  private readonly onSharedChange = (events: readonly Y.YEvent<any>[], transaction: Y.Transaction): void => {
     if (!this.context || transaction.origin === this.localOrigin) return;
     try {
       this.normalizeRoots();
+      const incremental = this.textTransactionFromEvents(events);
+      if (incremental) {
+        const relativeSelection = this.pendingRestoredSelection ?? this.localSelection;
+        const selection = relativeSelection
+          ? this.resolveRelativeSelection(relativeSelection, incremental.doc)
+          : undefined;
+        this.context.applyRemoteTransaction(incremental, { selection, origin: transaction.origin });
+        this.context.setStatus('connected');
+        this.publishPresences();
+        return;
+      }
       const document = this.context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
       const relativeSelection = this.pendingRestoredSelection ?? this.localSelection;
       const selection = relativeSelection

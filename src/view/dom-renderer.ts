@@ -14,6 +14,11 @@ export interface MountedNodeView {
   readonly pathReference: { current: number[] };
 }
 
+export interface MountedDocumentNode {
+  readonly node: Node;
+  readonly dom: globalThis.Node;
+}
+
 function pathKey(path: readonly number[]): string { return path.join('.'); }
 
 interface AppliedDecorationState {
@@ -247,14 +252,57 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   return dom;
 }
 
-export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderContext = {}): void {
+export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderContext = {}): MountedDocumentNode[] {
   const fragment = document.createDocumentFragment();
+  const mounted: MountedDocumentNode[] = [];
   let position = 0;
   doc.content.forEach((child, index) => {
     if (!child.isText) appendWidgets(fragment, position, context);
-    fragment.appendChild(renderNode(child, [index], context, position));
+    const dom = renderNode(child, [index], context, position);
+    fragment.appendChild(dom);
+    mounted.push({ node: child, dom });
     position += child.nodeSize;
   });
   appendWidgets(fragment, position, context);
   root.replaceChildren(fragment);
+  return mounted;
+}
+
+/**
+ * Reconciles an undecorated document at its top-level immutable-node boundary.
+ * Unchanged blocks keep their DOM identity; changed blocks are rendered in
+ * place. Decorated documents use the full renderer because absolute decoration
+ * positions may alter otherwise shared nodes after an earlier edit.
+ */
+export function reconcileDocument(
+  root: HTMLElement,
+  doc: Node,
+  previous: readonly MountedDocumentNode[],
+  context: DOMRenderContext = {},
+  onReuse?: (index: number) => void,
+): MountedDocumentNode[] {
+  const mounted: MountedDocumentNode[] = [];
+  let position = 0;
+
+  doc.content.forEach((child, index) => {
+    const prior = previous[index];
+    const currentDOM = root.childNodes[index];
+    if (prior?.node === child && prior.dom === currentDOM) {
+      mounted.push(prior);
+      onReuse?.(index);
+      position += child.nodeSize;
+      return;
+    }
+
+    const dom = renderNode(child, [index], context, position);
+    if (currentDOM !== dom) {
+      if (currentDOM) currentDOM.replaceWith(dom);
+      else root.appendChild(dom);
+    }
+    mounted.push({ node: child, dom });
+    position += child.nodeSize;
+  });
+
+  while (root.childNodes.length > doc.childCount) root.lastChild?.remove();
+  return mounted;
 }

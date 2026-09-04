@@ -95,7 +95,7 @@ function match(expression: Expression, content: readonly Node[], start: number):
     });
     if (!next.size) break;
     positions = next;
-    if (count >= expression.min) accepted = new Set([...accepted, ...positions]);
+    if (count >= expression.min) positions.forEach((position) => accepted.add(position));
   }
   return accepted;
 }

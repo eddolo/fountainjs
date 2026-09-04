@@ -214,6 +214,8 @@ const collaboration = createCollaborationExtension({
   adapter: () => ({
     connect(context) {
       // Subscribe to remote state, then call:
+      // context.applyRemoteTransaction(currentStateTransaction, { selection, origin })
+      // for provider deltas, or:
       // context.applyRemoteDocument(validatedDocument, { selection, origin })
       // context.setPresences(remoteUsers)
       // context.setStatus('connected')
@@ -234,6 +236,9 @@ Remote transactions are marked `fountain$collaborationRemote`, excluded from
 local history, validated by the schema, and never echoed through
 `onLocalUpdate`. `fountain$collaborationOrigin` carries adapter provenance for
 host policy or observability. Normal editor transaction filters still run.
+`applyRemoteTransaction` requires exact current-document identity and is the
+efficient route for CRDT/provider deltas. `applyRemoteDocument` is the correct
+route for snapshots and other untrusted whole documents.
 
 ## Current scope
 
@@ -247,14 +252,17 @@ Delivered today:
 - schema validation, hostile-input containment, reconnect, and cleanup;
 - live adapter/`Y.Doc`/provider replacement with stale-session isolation;
 - duplicate-free Strict Mode lifecycle and bounded presence publishing;
+- incremental Yjs text deltas without whole-document JSON reconstruction;
+- enforced large-document, memory, build-size, DOM-reconciliation, and
+  cross-browser input-to-paint budgets;
 - ESM/CommonJS package boundaries and a real two-editor browser demo.
 
 Threaded comments and general tracked-change suggestion mode now ship as
 separate optional modules. Named version storage/comparison/restoration also
 ships as a separate provider-backed module; it is not stored in Yjs, while its
-one normal restore transaction can propagate through Yjs. Large-document
-performance certification remains a roadmap item; none of those product
-capabilities is implied merely by the presence of Yjs.
+one normal restore transaction can propagate through Yjs. The exact performance
+methodology and limits are published in [the performance contract](PERFORMANCE.md);
+none of those product capabilities is implied merely by the presence of Yjs.
 
 ## Upstream references
 
