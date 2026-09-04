@@ -1,7 +1,7 @@
 {
   "name": "fountainjs-editor",
   "version": "0.3.0",
-  "description": "Free modular rich-text editor library for React, Vue, Svelte, Angular, Web Components, and plain JavaScript.",
+  "description": "Open-source modular rich-text editor library for React, Vue, Svelte, Angular, Web Components, and plain JavaScript.",
   "author": "Paolo Cappuccini",
   "license": "MIT",
   "type": "module",

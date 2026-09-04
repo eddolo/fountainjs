@@ -229,6 +229,13 @@ type ExportFormat = 'markdown' | 'html' | 'json';
 
 const competitors = [
   {
+    name: 'ProseMirror',
+    maturity: 'Battle-tested low-level editor engine and the foundation beneath Tiptap.',
+    architecture: 'Schema, state, transforms, plugins, and a DOM view assembled as separate modules.',
+    fit: 'Choose it for maximum low-level control and the deepest production track record.',
+    href: 'https://prosemirror.net/docs/guide/',
+  },
+  {
     name: 'Tiptap',
     maturity: 'Mature ProseMirror-based platform with a large extension ecosystem.',
     architecture: 'Framework-agnostic core with official integrations across major frontend stacks.',
@@ -253,7 +260,7 @@ const competitors = [
     name: 'FountainJS',
     maturity: 'Early-beta TypeScript editor library with working DOM, Web Component, and React interfaces.',
     architecture: 'Ready-made editing, review, collaboration, and versioning modules with one public extension API.',
-    fit: 'Choose it when you want the capabilities in one free MIT package and control over framework, storage, and services.',
+    fit: 'Choose it when you want the capabilities in one public MIT package and control over framework, storage, and services.',
     href: 'https://github.com/eddolo/fountainjs',
   },
 ] as const;
@@ -535,7 +542,7 @@ function VersionHistoryDemo() {
       </article>
       <aside><FountainVersions controller={controller} title="Saved versions" onError={(error) => console.error(error)} /></aside>
     </div>
-    <div className="versions-demo__boundary"><code>fountainjs-editor/versions</code><span>Free MIT module</span><span>Your storage provider</span><span>Exact comparison</span><span>Backup-first restore</span></div>
+    <div className="versions-demo__boundary"><code>fountainjs-editor/versions</code><span>Public MIT module</span><span>Your storage provider</span><span>Exact comparison</span><span>Backup-first restore</span></div>
   </section>;
 }
 
@@ -594,15 +601,15 @@ function App() {
       </header>
 
       <section className="hero" id="top">
-        <div className="hero__eyebrow"><i /> Free and open source · early beta</div>
+        <div className="hero__eyebrow"><i /> Open source · MIT · early beta</div>
         <h1>
           <span>Build a rich-text editor.</span>
           <span>Use any framework.</span>
-          <em>All features are free.</em>
+          <em>Extend every layer.</em>
         </h1>
-        <p>FountainJS is a free TypeScript library for adding a full-featured editor to a website or web app. It already includes rich text, images, tables, comments, tracked changes, collaboration, and version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component; store the document JSON on any backend.</p>
+        <p>FountainJS is a TypeScript library for adding a full-featured editor to a website or web app. It already includes rich text, images, tables, comments, tracked changes, collaboration, and version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component; store the document JSON on any backend.</p>
         <div className="hero__actions"><a className="primary" href="#playground">Edit the live demo ↓</a><a className="secondary" href="https://www.npmjs.com/package/fountainjs-editor">Install from npm</a></div>
-        <div className="promise-strip"><span>All features free</span><span>React, Vue, Svelte, Angular</span><span>Portable JSON</span><span>No required cloud</span><span>MIT licensed</span></div>
+        <div className="promise-strip"><span>One npm package</span><span>React, Vue, Svelte, Angular</span><span>Portable JSON</span><span>No required cloud</span><span>MIT licensed</span></div>
       </section>
 
       <section className="definition" id="what">
@@ -622,7 +629,7 @@ function App() {
       </section>
 
       <section className="capabilities">
-        <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public MIT package. Use the modules you need; there is no paid add-on tier.</p></div>
+        <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public npm package. Import only the modules you need.</p></div>
         <div className="capabilities__grid">
           <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, collapsible details, nested document structures, tables, and custom block types.</p></article>
@@ -737,7 +744,7 @@ function App() {
       <VersionHistoryDemo />
 
       <section className="comparison" id="compare">
-        <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Where FountainJS is different—and where it is still younger.</h2><p>Tiptap has a much larger community, hosted services, and commercial support. FountainJS is earlier, but its goal is simple: ship the editing and review capabilities together in one free MIT package, work across frameworks, and let the application own its data and providers.</p></div>
+        <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Where FountainJS is different—and where it is still younger.</h2><p>ProseMirror is the low-level engine beneath Tiptap; FountainJS is an independent implementation, not a ProseMirror wrapper. ProseMirror and Tiptap have much larger communities and longer production histories. FountainJS aims to ship editing and review capabilities together in one public MIT package while letting the application own its framework, data, and providers.</p></div>
         <div className="comparison__table" role="table" aria-label="Rich text editor comparison">
           {competitors.map((item) => <a key={item.name} href={item.href} className="comparison__row" role="row">
             <strong role="cell">{item.name}</strong><span role="cell">{item.maturity}</span><span role="cell">{item.architecture}</span><span role="cell">{item.fit}</span><i aria-hidden="true">↗</i>
@@ -747,6 +754,7 @@ function App() {
           <article className="is-good"><span>FountainJS is a fit when…</span><p>You need a capable editor across multiple frontend surfaces, want extensions to stay host-controlled, and prefer portable JSON, open interfaces, and MIT licensing.</p></article>
           <article><span>Choose a mature alternative when…</span><p>You need a much larger extension market, years of physical-device deployment evidence, or commercial support today.</p></article>
         </div>
+        <p className="comparison__detail"><a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md">Read the engine-level ProseMirror comparison →</a></p>
       </section>
 
       <section className="architecture">

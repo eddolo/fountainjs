@@ -6,7 +6,7 @@
 
 **A full-featured rich-text editor for any web app or frontend framework.**
 
-FountainJS is a free TypeScript library you add to a website or web app. It includes rich text, images, tables, comments, tracked changes, collaboration, and named version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component, and store its portable document JSON on any backend.
+FountainJS is an open-source TypeScript library you add to a website or web app. It includes rich text, images, tables, comments, tracked changes, collaboration, and named version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component, and store its portable document JSON on any backend.
 
 Underneath those ready-made features is a modular editing engine: a typed document model, selections, transactions, plugins, history, and a plain DOM view. The interfaces and optional capabilities are replaceable, so a product can add or change content types, commands, formats, UI, storage, collaboration, and services without forking the core.
 
@@ -749,12 +749,18 @@ FountainJS is not the first framework-neutral or extensible editor.
 
 | Project | Architecture and maturity | Practical reason to choose it |
 | --- | --- | --- |
+| [ProseMirror](https://prosemirror.net/docs/guide/) | Battle-tested low-level schema, transaction, plugin, and DOM-view toolkit; it is the foundation beneath Tiptap | Maximum engine-level control and the deepest production history |
 | [Tiptap](https://tiptap.dev/docs/editor/getting-started/overview) | Mature ProseMirror platform with multiple framework integrations and a large extension ecosystem | Ecosystem depth, hosted collaboration services, and commercial support |
 | [Plate](https://platejs.org/docs) | Powerful React/Slate framework with a broad plugin catalog | A React-first product with many polished capabilities ready now |
 | [BlockNote](https://www.blocknotejs.org/docs) | Polished React block editor with an out-of-the-box Notion-like experience | Shipping a strong block UI quickly |
 | **FountainJS** | DOM-first editor platform, Web Component, React adapter, and explicit extension composition | Owning a modular editor platform and keeping framework/data boundaries open |
 
 Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need years of physical-device IME/mobile certification, a large plugin market, hosted collaboration administration, or commercial support.
+
+Tiptap wraps ProseMirror. FountainJS does not: it independently implements its
+own schema, path-based positions, transactions, plugins, view, and extension
+contract, so ProseMirror and Tiptap extensions are not drop-in compatible. Read
+the [engine-level ProseMirror comparison](docs/PROSEMIRROR_COMPARISON.md).
 
 ## React exports
 
@@ -824,6 +830,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Tracked changes, suggestion mode, review decisions, and React UI](docs/TRACKED_CHANGES.md)
 - [Named versions, comparison, restoration, providers, and React UI](docs/VERSIONS.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
+- [ProseMirror engine comparison and relationship to Tiptap](docs/PROSEMIRROR_COMPARISON.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)

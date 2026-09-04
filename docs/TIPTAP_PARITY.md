@@ -20,11 +20,24 @@ Primary comparison references:
 - [Tiptap collaboration](https://tiptap.dev/docs/collaboration/getting-started/overview)
 - [Tiptap AI Toolkit](https://tiptap.dev/docs/ai/ai-toolkit/overview)
 - [Tiptap conversion](https://tiptap.dev/docs/conversion/getting-started/overview)
+- [ProseMirror guide](https://prosemirror.net/docs/guide/)
+- [ProseMirror reference manual](https://prosemirror.net/docs/ref/)
 
 The public Tiptap catalogue was last re-audited on **2026-09-04**. Catalogue
 labels such as Open Source, Start, Team, and Add-on are availability boundaries,
 not quality scores; a paid/cloud outcome still counts as a product capability
 that FountainJS must either deliver or identify as a deliberate host boundary.
+
+## Where ProseMirror fits
+
+ProseMirror is the low-level editor engine beneath Tiptap. Tiptap wraps its
+document, state, transaction, plugin, and view APIs with a higher-level extension
+and product layer. FountainJS does not depend on ProseMirror and is not API-
+compatible with it; FountainJS independently implements both an editor engine
+and higher-level first-party modules. This programme therefore compares product
+outcomes with Tiptap, while ProseMirror remains the separate benchmark for
+engine correctness, maturity, browser behavior, transforms, and performance.
+See the [one-to-one engine comparison](PROSEMIRROR_COMPARISON.md).
 
 ## Status language
 
@@ -82,7 +95,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-08 | Mentions, emoji, typography, and character count | Delivered | Independent framework-neutral extensions, cancellable/stale-safe multi-trigger suggestions, safe mention/emoji atoms and interchange, curated plus isolated complete RGI emoji catalogues, configurable RTL-aware typography with literal undo, enforced custom counting/limits, accessible React UI, package-backed demos, unit coverage, and green Chromium/Firefox/WebKit plus mobile browser contracts are live. |
 | DOC-09 | Native inline and display mathematics from LaTeX | Delivered | Opt-in framework-neutral math nodes store editable TeX and labels; commands, isolated input/paste rules with literal undo, safe source fallback, caller-owned DOM renderers, a trust-disabled KaTeX adapter, JSON/HTML/Markdown/text round trips, unit tests, and the public headless demo are delivered. |
 | DOC-10 | Lean 4 source and interactive proof workflows | Partial | Portable Lean blocks, Unicode entry/highlighting, source-only operation, validated local/remote/managed/one-shot provider contracts, mapped transient diagnostics, exact-range selection, and a framework-neutral InfoView for checks, goals, hover, expected types, and completion are delivered. Add a hardened reference loopback bridge and real Lean integration tests before marking delivered. |
-| DOC-11 | Collapsible details/summary content | Delivered | The isolated free `details` entry provides schema-valid details/summary nodes, arbitrary and nested body blocks, public insert/wrap/unwrap/open commands, native accessible disclosure rendering, persisted open state, summary/body keyboard transitions, undo, JSON/HTML/Markdown/text interchange, Yjs synchronization, a live playground route, and dedicated unit/mobile coverage. The complete 171-test Chromium/Firefox/WebKit/mobile [CI run for `12ca04c`](https://github.com/eddolo/fountainjs/actions/runs/33908273099) and successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33908273179) are green. |
+| DOC-11 | Collapsible details/summary content | Delivered | The isolated public `details` entry provides schema-valid details/summary nodes, arbitrary and nested body blocks, public insert/wrap/unwrap/open commands, native accessible disclosure rendering, persisted open state, summary/body keyboard transitions, undo, JSON/HTML/Markdown/text interchange, Yjs synchronization, a live playground route, and dedicated unit/mobile coverage. The complete 171-test Chromium/Firefox/WebKit/mobile [CI run for `12ca04c`](https://github.com/eddolo/fountainjs/actions/runs/33908273099) and successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33908273179) are green. |
 | DOC-12 | Ruby annotations | Missing | Add portable ruby/base/annotation structure with safe HTML and plain-text fallbacks. |
 | DOC-13 | Text style suite: foreground/background colour, font family, font size, and line height | Partial | Foreground colour and attributed background highlighting are delivered. Add validated font-family, font-size, and line-height marks/attributes, controls, interchange, and sanitization. |
 | DOC-14 | Page layout, margins, page breaks, headers, and footers | Missing | Add a composable page model and print layout without coupling the document schema to one renderer. |

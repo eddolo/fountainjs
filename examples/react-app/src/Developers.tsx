@@ -474,6 +474,7 @@ function Developers() {
             <p className="dev-label">01 · MENTAL MODEL</p>
             <h2>A document engine with adapters around it.</h2>
             <p className="dev-lead">FountainJS is not a React component that happens to save HTML. The central object is an immutable, schema-owned document tree. Commands create transactions that transform that tree. Views render state and translate user input back into commands.</p>
+            <p>ProseMirror solves the same class of low-level problems and is the engine beneath Tiptap. FountainJS is an independent implementation with its own path-based positions, model classes, steps, mappings, plugins, and extension contract; ProseMirror and Tiptap extensions are not drop-in compatible. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md">engine comparison</a> separates genuine architectural similarities from current maturity gaps.</p>
             <div className="dev-principles">
               <article><b>Model first</b><span>Content exists independently of the DOM, React, a database, or an AI provider.</span></article>
               <article><b>Explicit change</b><span>Every edit is a transaction made of inspectable steps and metadata.</span></article>
@@ -656,6 +657,7 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/details"><code>src/details/</code><span>Optional details/summary schema, commands, native NodeView, keyboard behavior, and interchange contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md"><code>docs/DETAILS.md</code><span>Composition, document shape, commands, accessibility, collaboration, safety, and current boundaries.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md"><code>docs/PROSEMIRROR_COMPARISON.md</code><span>Engine relationship, one-to-one architecture comparison, compatibility boundaries, strengths, and maturity gaps.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/collaboration.ts"><code>src/extensions/collaboration.ts</code><span>Provider-neutral lifecycle, validated remote changes, presence decorations, and collaboration commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/yjs"><code>src/yjs/</code><span>Optional CRDT tree conversion, relative positions, and origin-aware undo.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COLLABORATION.md"><code>docs/COLLABORATION.md</code><span>Provider, authentication, persistence, awareness, security, and shared-state contracts.</span></a>

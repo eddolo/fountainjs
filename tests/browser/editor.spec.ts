@@ -953,7 +953,7 @@ test('loads the public React playground without console or page errors', async (
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  const heading = page.getByRole('heading', { name: 'Build a rich-text editor. Use any framework. All features are free.' });
+  const heading = page.getByRole('heading', { name: 'Build a rich-text editor. Use any framework. Extend every layer.' });
   await expect(heading).toBeVisible();
   const heroLines = await heading.locator(':scope > *').evaluateAll((lines) =>
     lines.map((line) => {
