@@ -71,6 +71,18 @@ import {
   type ImageUploadSnapshot,
   type ImageUploadTask,
 } from '../view/media';
+import {
+  getActiveTextStyle,
+  setBackgroundColor,
+  setFontFamily,
+  setFontSize,
+  setLineHeight,
+  setTextColor,
+  unsetBackgroundColor,
+  unsetFontFamily,
+  unsetFontSize,
+  unsetLineHeight,
+} from '../text-style';
 import { useFountainState } from './useFountain';
 import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
 import {
@@ -127,8 +139,9 @@ export function FountainToolbar({
   const fileInput = useRef<HTMLInputElement>(null);
   const assetInput = useRef<HTMLInputElement>(null);
   const languageListId = useId();
+  const fontFamilyListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'table' | null>(null);
+  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'table' | 'text-style' | null>(null);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -169,6 +182,12 @@ export function FountainToolbar({
   const [replacement, setReplacement] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('text');
   const [tableWidth, setTableWidth] = useState('120');
+  const [fontFamilyValue, setFontFamilyValue] = useState('');
+  const [fontSizeValue, setFontSizeValue] = useState('');
+  const [lineHeightValue, setLineHeightValue] = useState('');
+  const [styleColor, setStyleColor] = useState('#171923');
+  const [styleBackground, setStyleBackground] = useState('#fff3a3');
+  const [textStyleError, setTextStyleError] = useState('');
   useEffect(() => {
     if (!imageTask) return;
     return imageTask.subscribe(setUploadSnapshot);
@@ -189,6 +208,26 @@ export function FountainToolbar({
   const activeImage = getActiveImage(editor);
   const activeMedia = getActiveMedia(editor);
   const clipboardHistory = getClipboardHistoryState(editor);
+  const activeTextStyle = getActiveTextStyle(editor);
+
+  const toggleTextStylePanel = () => {
+    if (panel === 'text-style') {
+      setPanel(null);
+      return;
+    }
+    setFontFamilyValue(activeTextStyle.fontFamily ?? '');
+    setFontSizeValue(activeTextStyle.fontSize ?? '');
+    setLineHeightValue(activeTextStyle.lineHeight ?? '');
+    setStyleColor(activeTextStyle.color ?? '#171923');
+    setStyleBackground(activeTextStyle.backgroundColor ?? '#fff3a3');
+    setTextStyleError('');
+    setPanel('text-style');
+  };
+
+  const applyTextStyle = (label: string, apply: () => boolean) => {
+    if (apply()) setTextStyleError('');
+    else setTextStyleError(`${label} is invalid for this selection.`);
+  };
 
   const toggleLinkPanel = () => {
     if (panel === 'link') {
@@ -526,6 +565,9 @@ export function FountainToolbar({
       entry('unlink', tool('unlink', 'Remove link', () => removeLink(editor), { disabled: !activeLink && !isMarkActive(editor, 'link') })),
       entry('text-color', colorControl),
       entry('clear-text-color', tool('clear-text-color', 'Remove text color', () => unsetMark(editor, 'text_color'), { disabled: !isMarkActive(editor, 'text_color') })),
+      entry('text-style', tool('text-style', 'Text styles', toggleTextStylePanel, {
+        active: panel === 'text-style' || Boolean(activeTextStyle.color || activeTextStyle.backgroundColor || activeTextStyle.fontFamily || activeTextStyle.fontSize || activeTextStyle.lineHeight),
+      })),
     ]),
     alignment: () => toolbarGroup('alignment', [
       entry('align-left', tool('align-left', 'Align left', () => activeImage ? setImageAlignment(editor, 'left') : setTextAlignment(editor, 'left'), { active: activeImage?.node.attrs.align === 'left' })),
@@ -591,6 +633,63 @@ export function FountainToolbar({
         <button type="submit">{activeLink ? 'Save link' : 'Apply link'}</button>
         {activeLink && <button type="button" onClick={() => { removeLink(editor); setPanel(null); }}>Remove link</button>}
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+      </form>}
+      {panel === 'text-style' && <form className="fountain-toolbar__popover is-text-style" onSubmit={(event) => event.preventDefault()}>
+        <strong>Text styles</strong>
+        <p className="fountain-toolbar__hint">Apply one property at a time. Blank values mean unset or mixed text.</p>
+        <fieldset className="fountain-toolbar__style-field">
+          <label>Font family
+            <input
+              aria-label="Font family"
+              list={fontFamilyListId}
+              maxLength={320}
+              placeholder={activeTextStyle.mixed.includes('fontFamily') ? 'Mixed fonts' : 'For example Inter, sans-serif'}
+              value={fontFamilyValue}
+              onChange={(event) => setFontFamilyValue(event.target.value)}
+            />
+          </label>
+          <div className="fountain-toolbar__style-actions">
+            <button type="button" disabled={!fontFamilyValue.trim()} onClick={() => applyTextStyle('Font family', () => setFontFamily(editor, fontFamilyValue))}>Apply font</button>
+            <button type="button" onClick={() => { unsetFontFamily(editor); setFontFamilyValue(''); setTextStyleError(''); }}>Remove font</button>
+          </div>
+        </fieldset>
+        <datalist id={fontFamilyListId}>
+          {['system-ui', 'Inter, sans-serif', 'Arial, sans-serif', 'Georgia, serif', 'Courier New, monospace', 'Noto Sans JP, sans-serif'].map((family) => <option key={family} value={family} />)}
+        </datalist>
+        <fieldset className="fountain-toolbar__style-field">
+          <label>Font size
+            <input aria-label="Font size" placeholder={activeTextStyle.mixed.includes('fontSize') ? 'Mixed sizes' : '16px, 12pt, 1rem, or 100%'} value={fontSizeValue} onChange={(event) => setFontSizeValue(event.target.value)} />
+          </label>
+          <div className="fountain-toolbar__style-actions">
+            <button type="button" disabled={!fontSizeValue.trim()} onClick={() => applyTextStyle('Font size', () => setFontSize(editor, fontSizeValue))}>Apply size</button>
+            <button type="button" onClick={() => { unsetFontSize(editor); setFontSizeValue(''); setTextStyleError(''); }}>Remove size</button>
+          </div>
+        </fieldset>
+        <fieldset className="fountain-toolbar__style-field">
+          <label>Line height
+            <input aria-label="Line height" placeholder={activeTextStyle.mixed.includes('lineHeight') ? 'Mixed line heights' : '1.5, 24px, or 150%'} value={lineHeightValue} onChange={(event) => setLineHeightValue(event.target.value)} />
+          </label>
+          <div className="fountain-toolbar__style-actions">
+            <button type="button" disabled={!lineHeightValue.trim()} onClick={() => applyTextStyle('Line height', () => setLineHeight(editor, lineHeightValue))}>Apply line height</button>
+            <button type="button" onClick={() => { unsetLineHeight(editor); setLineHeightValue(''); setTextStyleError(''); }}>Remove line height</button>
+          </div>
+        </fieldset>
+        <fieldset className="fountain-toolbar__style-field">
+          <label>Text colour <input aria-label="Text colour" type="color" value={styleColor} onChange={(event) => setStyleColor(event.target.value)} /></label>
+          <div className="fountain-toolbar__style-actions">
+            <button type="button" onClick={() => applyTextStyle('Text colour', () => setTextColor(editor, styleColor))}>Apply colour</button>
+            <button type="button" onClick={() => { unsetMark(editor, 'text_color'); setTextStyleError(''); }}>Remove colour</button>
+          </div>
+        </fieldset>
+        <fieldset className="fountain-toolbar__style-field">
+          <label>Background colour <input aria-label="Background colour" type="color" value={styleBackground} onChange={(event) => setStyleBackground(event.target.value)} /></label>
+          <div className="fountain-toolbar__style-actions">
+            <button type="button" onClick={() => applyTextStyle('Background colour', () => setBackgroundColor(editor, styleBackground))}>Apply background</button>
+            <button type="button" onClick={() => { unsetBackgroundColor(editor); setTextStyleError(''); }}>Remove background</button>
+          </div>
+        </fieldset>
+        {textStyleError && <p className="fountain-toolbar__error" role="alert">{textStyleError}</p>}
+        <button type="button" onClick={() => setPanel(null)}>Close</button>
       </form>}
       {panel === 'image' && <form className="fountain-toolbar__popover is-image" onSubmit={submitImage}>
         <strong>{activeImage ? 'Edit image' : 'Add image'}</strong>

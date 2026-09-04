@@ -1297,6 +1297,57 @@ test('composes and keyboard-navigates the public toolbar by stable group and act
   await expect(page.getByRole('textbox', { name: 'Rich text editor' }).locator('strong').first()).toContainText('Try F');
 });
 
+test('applies the complete text-style suite through the public React toolbar', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstText = editor.locator('[data-fountain-text-path]').first();
+  await firstText.evaluate((wrapper) => {
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT);
+    const first = walker.nextNode();
+    if (!first) throw new Error('Expected editor text.');
+    const range = document.createRange();
+    range.setStart(first, 0);
+    range.setEnd(first, Math.min(6, first.textContent?.length ?? 0));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+
+  await page.getByRole('button', { name: 'Text styles' }).click();
+  await page.getByLabel('Font family').fill('Atkinson Hyperlegible, sans-serif');
+  await page.getByRole('button', { name: 'Apply font' }).click();
+  await page.getByLabel('Font size').fill('20px');
+  await page.getByRole('button', { name: 'Apply size' }).click();
+  await page.getByLabel('Line height').fill('1.8');
+  await page.getByRole('button', { name: 'Apply line height' }).click();
+  await page.getByLabel('Text colour').fill('#123456');
+  await page.getByRole('button', { name: 'Apply colour' }).click();
+  await page.getByLabel('Background colour').fill('#fedcba');
+  await page.getByRole('button', { name: 'Apply background' }).click();
+
+  await expect(editor.locator('[style*="font-family"]').first()).toBeVisible();
+  await expect(editor.locator('[style*="font-size: 20px"], [style*="font-size:20px"]').first()).toBeVisible();
+  await expect(editor.locator('[style*="line-height: 1.8"], [style*="line-height:1.8"]').first()).toBeVisible();
+  await page.locator('.format-tabs').getByRole('button', { name: 'json' }).click();
+  const json = JSON.parse(await page.locator('.studio__export pre code').textContent() ?? '{}');
+  const leaves: Array<{ text?: string; marks?: Array<{ type: string; attrs?: Record<string, unknown> }> }> = [];
+  const visit = (node: { content?: unknown[]; text?: string; marks?: Array<{ type: string; attrs?: Record<string, unknown> }> }) => {
+    if (node.text !== undefined) leaves.push(node);
+    (node.content ?? []).forEach((child) => visit(child as typeof node));
+  };
+  visit(json);
+  const styled = leaves.find((leaf) => leaf.marks?.some((mark) => mark.type === 'font_family'));
+  expect(styled?.text).toBe('Try Fo');
+  expect(Object.fromEntries((styled?.marks ?? []).map((mark) => [mark.type, mark.attrs]))).toMatchObject({
+    text_color: { color: '#123456' },
+    highlight: { color: '#fedcba' },
+    font_family: { family: 'Atkinson Hyperlegible, sans-serif' },
+    font_size: { size: '20px' },
+    line_height: { lineHeight: '1.8' },
+  });
+});
+
 test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
   await page.goto('/');
   const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';

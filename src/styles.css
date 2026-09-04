@@ -30,6 +30,16 @@
 .fountain-toolbar__popover textarea { min-width: min(300px, 42vw); padding: 8px 10px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 7px; }
 .fountain-toolbar__popover button { padding: 8px 10px; color: var(--fountain-ink); font: 700 12px/1 system-ui, sans-serif; background: #f5f3ff; border: 1px solid var(--fountain-border); border-radius: 7px; }
 .fountain-toolbar__popover button[type="submit"] { color: #fff; background: var(--fountain-accent); border-color: var(--fountain-accent); }
+.fountain-toolbar__popover button:not(:disabled) { cursor: pointer; }
+.fountain-toolbar__popover button:disabled { cursor: not-allowed; opacity: .45; }
+.fountain-toolbar__popover.is-text-style { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+.fountain-toolbar__popover.is-text-style > strong, .fountain-toolbar__popover.is-text-style > .fountain-toolbar__hint, .fountain-toolbar__popover.is-text-style > .fountain-toolbar__error { grid-column: 1 / -1; }
+.fountain-toolbar__style-field { display: grid; gap: 6px; min-width: 0; padding: 0; margin: 0; border: 0; }
+.fountain-toolbar__style-field label { display: grid; gap: 4px; color: var(--fountain-muted); font: 700 11px/1.2 system-ui, sans-serif; }
+.fountain-toolbar__popover.is-text-style input { box-sizing: border-box; width: 100%; min-width: 0; }
+.fountain-toolbar__popover.is-text-style input[type="color"] { min-height: 36px; padding: 3px; }
+.fountain-toolbar__style-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+.fountain-toolbar__error { margin: 0; color: #b42318; font: 700 11px/1.4 system-ui, sans-serif; }
 .fountain-toolbar__link-preview { padding: 7px 4px; color: var(--fountain-accent); font: 700 12px/1.2 system-ui, sans-serif; white-space: nowrap; }
 .fountain-toolbar__popover.is-image { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); align-items: end; }
 .fountain-toolbar__popover.is-image > strong { grid-column: 1 / -1; }
@@ -443,4 +453,6 @@
   .fountain-toolbar__popover.is-image details[open] { grid-template-columns: 1fr; }
   .fountain-toolbar__popover.is-media { grid-template-columns: 1fr; }
   .fountain-toolbar__popover.is-media > *, .fountain-toolbar__popover.is-media > details, .fountain-toolbar__popover.is-media > .fountain-toolbar__hint { grid-column: 1; }
+  .fountain-toolbar__popover.is-text-style { grid-template-columns: 1fr; }
+  .fountain-toolbar__popover.is-text-style > * { grid-column: 1; }
 }

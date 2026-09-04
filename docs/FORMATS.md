@@ -8,7 +8,7 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 ## HTML
 
-`HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only approved protocols survive link and media serialization. Alignment, text colour, subscript, superscript, semantic hard breaks, tasks, tables, images, native audio/video with tracks, downloadable file metadata, and provider-approved embeds retain their HTML meaning.
+`HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only approved protocols survive link and media serialization. Alignment, foreground/background colour, font family, font size, line height, subscript, superscript, semantic hard breaks, tasks, tables, images, native audio/video with tracks, downloadable file metadata, and provider-approved embeds retain their HTML meaning.
 
 `HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, audio, video, files, approved embeds, tables, dividers, line breaks, common inline marks, and optional math, mention, and emoji nodes when their receiving schema includes the corresponding extension. Media is reconstructed through schema validation: an iframe is discarded unless the configured `MediaExtension` recognizes its canonical HTTPS provider URL and accepts every permission/sandbox attribute. Math HTML stores TeX separately from its computed accessible label, so import does not persist renderer markup or mutate JSON. Mention identity and safe links round-trip through typed data attributes. Emoji name, Unicode value, and safe fallback metadata likewise round-trip; raw Unicode emoji in ordinary imported text becomes an emoji node when that schema supports it. The importer uses `DOMParser`, so a DOM shim is required in Node.js.
 
@@ -43,11 +43,12 @@ Generic extension output is restricted to non-executable semantic HTML tags;
 event handlers, `srcdoc`, URL-bearing attributes with unsafe protocols,
 dangerous CSS URL/expression forms, and malformed names are removed. Built-in
 provider-approved embeds use their stricter dedicated serializer. Common
-external inline CSS for bold, italic, underline, strike, text colour, and
-highlight is normalized into typed marks, and link title/target metadata is
-preserved. HTML mark-wrapper order is presentation-only; the set, types, and
-attributes of marks round-trip, while JSON remains the byte-stable source of
-truth.
+external inline CSS for bold, italic, underline, strike, foreground and
+background colour, font family, font size, and line height is normalized into
+typed marks, and link title/target metadata is preserved. Style values pass the
+same bounded validators used by commands and JSON import. HTML mark-wrapper
+order is presentation-only; the set, types, and attributes of marks round-trip,
+while JSON remains the byte-stable source of truth.
 
 ## Markdown
 
@@ -58,6 +59,14 @@ syntax, and `$...$`/`$$...$$` math when `MathExtension` is present. Pipe tables
 retain left/centre/right column alignment, do not split escaped pipes, and pad
 short rows to the header width. Imported documents are validated against the
 complete receiving schema before they are returned.
+
+The default background highlight uses `==highlight==`. Foreground/background
+colour, custom highlight values, font family, font size, and line height use a
+deterministic `<span data-fountain-text-style="true">` form when ordinary
+Markdown cannot express them. FountainJS parses that small generated subset in
+both browsers and headless Node.js, preserves supported semantic marks nested
+inside it, and validates every recovered style or link before it enters the
+document. Other Markdown consumers still receive readable inline HTML.
 
 Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
 (`[id][]`), and shortcut (`[id]`) reference links and reference images resolve
@@ -77,7 +86,7 @@ Every loss entry has a `kind` (`node`, `mark`, or `attribute`), the affected
 type, an immutable document `path`, and a human-readable `detail`. The report
 records unsupported extension nodes/marks and built-in attributes Markdown
 cannot reconstruct, including non-table alignment, merged-cell geometry,
-custom highlight colours, non-default image layout, and typed media metadata.
+non-default image layout, and typed media metadata.
 An `onLoss` callback is observational: its exception is contained and cannot
 break otherwise valid serialization. `MarkdownExporter.export(...)` remains
 the convenient string-only API and accepts the same options.

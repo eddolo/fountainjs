@@ -311,6 +311,25 @@ insertDetails(editor, {
 // Or wrap the selected top-level blocks in one disclosure.
 wrapInDetails(editor, { summary: 'Background' })`;
 
+const textStyleExample = `import {
+  getActiveTextStyle,
+  setBackgroundColor,
+  setFontFamily,
+  setFontSize,
+  setLineHeight,
+  setTextColor,
+} from 'fountainjs-editor/text-style'
+
+// Commands work with React, Web Components, or any custom surface.
+setFontFamily(editor, 'Atkinson Hyperlegible, sans-serif')
+setFontSize(editor, '18px')
+setLineHeight(editor, 1.7)
+setTextColor(editor, '#17231e')
+setBackgroundColor(editor, '#dff8eb')
+
+// Common values are returned; differing values are listed in mixed.
+const selectionStyle = getActiveTextStyle(editor)`;
+
 const formatExample = `const portableFormat = {
   parse(source, schema) {
     return decodeMyFormat(source, schema)
@@ -572,6 +591,10 @@ function Developers() {
             <p>The isolated <code>fountainjs-editor/details</code> entry adds semantic <code>details</code> and <code>details_summary</code> nodes without changing <code>StarterKit</code>. The editable summary supports inline marks; the body accepts any configured block, including nested disclosures. Native click or tap, Ctrl/Cmd+Enter, and public commands persist the open state in the portable document. Read-only readers can still open it locally without causing an edit.</p>
             <Code>{detailsExample}</Code>
             <p>Insert, top-level wrap, unwrap, and explicit open-state commands each dispatch one validated transaction, so history, subscriptions, tracked changes, and generic Yjs synchronization keep working. JSON is exact; safe HTML uses native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code>; Markdown uses the same semantic HTML form; text keeps summary and body readable. See the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md">complete schema, keyboard, interchange, and accessibility guide</a>.</p>
+            <h3>Complete text styles are typed document data</h3>
+            <p><code>CoreExtension</code> and <code>StarterKit</code> include independent marks for foreground colour, background colour, font family, font size, and line height. The <code>fountainjs-editor/text-style</code> entry exposes the same validated specs plus framework-neutral setters, removers, normalizers, and mixed-selection inspection for custom kits and interfaces.</p>
+            <Code>{textStyleExample}</Code>
+            <p>Each command follows the ordinary selection and transaction path, including multi-paragraph, node, cell, and all-document selections, stored marks at a caret, history, and generic Yjs synchronization. Values are canonical and bounded before entering JSON or CSS. JSON is exact; safe HTML and Fountain Markdown round-trip every style in browsers and headless Node.js; plain text deliberately keeps only readable characters. The supplied React panel is one optional consumer of this API. See the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TEXT_STYLE.md">complete text-style contract</a>.</p>
             <h3>First-party modules remain opt-in</h3>
             <p>Mentions, emoji, typography, character limits, and slash commands live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention, emoji, and slash queries use one headless, abortable suggestion controller with stale-result protection; React menus are merely renderers over that state. <code>EmojiExtension</code> keeps a curated catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
             <Code>{documentUtilitiesExample}</Code>
@@ -655,6 +678,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/view/block-handles.ts"><code>src/view/block-handles.ts</code><span>Optional contextual controls, nested path targeting, schema-valid indicators, and touch/keyboard movement.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/text-style"><code>src/text-style/</code><span>Validated style values, selection inspection, and framework-neutral set/unset commands.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TEXT_STYLE.md"><code>docs/TEXT_STYLE.md</code><span>Schema, commands, controls, sanitization, interchange, frameworks, and collaboration contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/details"><code>src/details/</code><span>Optional details/summary schema, commands, native NodeView, keyboard behavior, and interchange contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DETAILS.md"><code>docs/DETAILS.md</code><span>Composition, document shape, commands, accessibility, collaboration, safety, and current boundaries.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md"><code>docs/PROSEMIRROR_COMPARISON.md</code><span>Engine relationship, one-to-one architecture comparison, compatibility boundaries, strengths, and maturity gaps.</span></a>
@@ -681,7 +706,7 @@ function Developers() {
           <section className="dev-section" id="contributing">
             <p className="dev-label">12 · TESTING & CONTRIBUTING</p>
             <h2>Change behavior with evidence.</h2>
-            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; details tests cover schema constraints, commands, nested interchange, native/read-only behavior, keyboard transitions, history, and Yjs; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; version tests cover provider conflicts, idempotency, exact comparison, preview, backup-first restore, autosave, permissions, and complete React rendering; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
+            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; text-style tests cover validation, mixed and cross-block selection, history, safe browser/headless interchange, React controls, and Yjs; details tests cover schema constraints, commands, nested interchange, native/read-only behavior, keyboard transitions, history, and Yjs; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; version tests cover provider conflicts, idempotency, exact comparison, preview, backup-first restore, autosave, permissions, and complete React rendering; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
             <Code>{`pnpm install
 pnpm dev          # live website and playground
 pnpm typecheck    # public and internal TypeScript contracts

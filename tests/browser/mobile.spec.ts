@@ -249,6 +249,28 @@ test('keeps a composed icon toolbar reachable and touch-operable on a phone view
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
+test('keeps the complete text-style panel usable without mobile page overflow', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await editor.locator('[data-fountain-text-path]').first().tap();
+  const styles = page.getByRole('button', { name: 'Text styles' });
+  await styles.scrollIntoViewIfNeeded();
+  await styles.tap();
+  const panel = page.locator('.fountain-toolbar__popover.is-text-style');
+  await expect(panel).toBeVisible();
+  await expect(page.getByLabel('Font family')).toBeVisible();
+  await expect(page.getByLabel('Font size')).toBeVisible();
+  await expect(page.getByLabel('Line height')).toBeVisible();
+  await page.getByLabel('Line height').fill('1.7');
+  await page.getByRole('button', { name: 'Apply line height' }).tap();
+  const viewport = page.viewportSize();
+  const box = await panel.boundingBox();
+  expect(box).not.toBeNull();
+  expect((box?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('exposes touch-sized block movement controls without page overflow', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

@@ -54,7 +54,7 @@ outside the built-in registry.
 | --- | --- |
 | `history` | `undo`, `redo`, `search`, `clipboard-history` |
 | `block-types` | `paragraph`, `heading-1`, `heading-2`, `heading-3` |
-| `marks` | `bold`, `italic`, `underline`, `strike`, `inline-code`, `highlight`, `subscript`, `superscript`, `link`, `unlink`, `text-color`, `clear-text-color` |
+| `marks` | `bold`, `italic`, `underline`, `strike`, `inline-code`, `highlight`, `subscript`, `superscript`, `link`, `unlink`, `text-color`, `clear-text-color`, `text-style` |
 | `alignment` | `align-left`, `align-center`, `align-right`, `justify` |
 | `insert` | `quote`, `bullet-list`, `ordered-list`, `task-list`, `outdent-list`, `indent-list`, `code-block`, `insert-table`, `image`, `upload-image`, `media`, `upload-asset`, `divider`, `hard-break` |
 | `table` | `add-table-row`, `delete-table-row`, `add-table-column`, `delete-table-column`, `merge-cells`, `split-cell`, `toggle-header-row`, `toggle-header-column`, `toggle-header-cell`, `select-row`, `select-column`, `column-width` |
@@ -135,6 +135,7 @@ The packaged stylesheet uses these intentional hooks:
 
 - `.fountain-toolbar`, `.fountain-toolbar__group`, `.fountain-toolbar__button`
 - `.fountain-toolbar__color`, `.fountain-toolbar__popover`
+- `.fountain-toolbar__style-field`, `.fountain-toolbar__style-actions`
 - `[data-fountain-toolbar-group="…"]`
 - `[data-fountain-toolbar-action="…"]`
 

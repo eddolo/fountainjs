@@ -215,6 +215,32 @@ semantic HTML and Markdown round-trip; plain text reads `東京 (とうきょう
 and generic Yjs collaboration carries both base edits and reading changes. See
 the [ruby-annotation guide](docs/RUBY.md).
 
+## Complete text styles
+
+`CoreExtension` and `StarterKit` include validated foreground/background
+colour, font-family, font-size, and line-height marks. The isolated
+`fountainjs-editor/text-style` entry exposes framework-neutral commands and
+selection inspection for both the supplied UI and custom controls:
+
+```ts
+import {
+  getActiveTextStyle,
+  setFontFamily,
+  setFontSize,
+  setLineHeight,
+} from 'fountainjs-editor/text-style'
+
+setFontFamily(editor, 'Atkinson Hyperlegible, sans-serif')
+setFontSize(editor, '18px')
+setLineHeight(editor, 1.7)
+console.log(getActiveTextStyle(editor))
+```
+
+Values are normalized and bounded before entering portable JSON. Safe HTML and
+Fountain Markdown round-trip the complete suite, generic Yjs synchronization
+carries the marks unchanged, and the React toolbar supplies a responsive
+`Text styles` panel. See the [text-style guide](docs/TEXT_STYLE.md).
+
 ## Optional clipboard history
 
 `ClipboardHistoryExtension` adds a bounded, searchable list of text copied
@@ -859,6 +885,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
 - [Collapsible details, commands, interchange, and accessibility](docs/DETAILS.md)
 - [Ruby/furigana annotations, commands, interchange, and custom UI](docs/RUBY.md)
+- [Validated font, size, line-height, foreground, and background styles](docs/TEXT_STYLE.md)
 - [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
 - [Threaded comments, anchors, adapters, permissions, and React UI](docs/COMMENTS.md)
 - [Tracked changes, suggestion mode, review decisions, and React UI](docs/TRACKED_CHANGES.md)

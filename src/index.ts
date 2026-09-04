@@ -9,3 +9,4 @@ export * from './core/importers/markdown-importer';
 export * from './core/importers/html-importer';
 export * from './ai';
 export * from './lean';
+export * from './text-style';

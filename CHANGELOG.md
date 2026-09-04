@@ -10,6 +10,13 @@
 
 ### Added
 
+- A complete validated text-style suite in `CoreExtension` and `StarterKit`,
+  with foreground/background colour, font family, font size, and line height;
+  framework-neutral commands and mixed-selection inspection through the
+  isolated `fountainjs-editor/text-style` entry; safe HTML and lossless
+  Fountain Markdown interchange in browsers and headless Node.js; generic Yjs
+  synchronization; a responsive React toolbar panel; documentation, package
+  budgets, and desktop/mobile browser contracts.
 - An isolated `fountainjs-editor/ruby` module for semantic furigana and other
   pronunciation guides, with marked editable base text, validated readings,
   set/update/unset/toggle commands, accessible and IME-safe replaceable editing

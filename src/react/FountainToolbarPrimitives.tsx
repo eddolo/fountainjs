@@ -26,6 +26,7 @@ export type FountainToolbarActionId =
   | 'paragraph' | 'heading-1' | 'heading-2' | 'heading-3'
   | 'bold' | 'italic' | 'underline' | 'strike' | 'inline-code' | 'highlight'
   | 'subscript' | 'superscript' | 'link' | 'unlink' | 'text-color' | 'clear-text-color'
+  | 'text-style'
   | 'align-left' | 'align-center' | 'align-right' | 'justify'
   | 'quote' | 'bullet-list' | 'ordered-list' | 'task-list' | 'outdent-list' | 'indent-list'
   | 'code-block' | 'insert-table' | 'image' | 'upload-image' | 'media' | 'upload-asset'
@@ -66,6 +67,7 @@ export function FountainToolbarIcon({ name, ...props }: FountainToolbarIconProps
   else if (name === 'subscript' || name === 'superscript') content = <><path d="m5 6 8 12M13 6 5 18" /><text x="18" y={name === 'subscript' ? '20' : '9'} textAnchor="middle" stroke="none" fill="currentColor" fontSize="7" fontWeight="700">2</text></>;
   else if (name === 'link' || name === 'unlink') content = <><path d="M9 15 7 17a4 4 0 0 1-6-6l3-3a4 4 0 0 1 6 0M15 9l2-2a4 4 0 0 1 6 6l-3 3a4 4 0 0 1-6 0M8 12h8" />{name === 'unlink' && <path d="M3 3l18 18" />}</>;
   else if (name === 'text-color' || name === 'clear-text-color') content = <><path d="m6 18 6-14 6 14M8 14h8M5 21h14" />{name === 'clear-text-color' && <path d="M4 4l16 16" />}</>;
+  else if (name === 'text-style') content = <><text x="8" y="16" textAnchor="middle" stroke="none" fill="currentColor" fontSize="12" fontWeight="700">A</text><path d="M15 6h6M15 12h6M15 18h6" /></>;
   else if (name.startsWith('align-')) content = lines(name.slice(6) as 'left' | 'center' | 'right');
   else if (name === 'justify') content = lines('justify');
   else if (name === 'quote') content = <><path d="M5 6h6v6H7a5 5 0 0 1-3 5M14 6h6v6h-4a5 5 0 0 1-3 5" /></>;

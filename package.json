@@ -45,6 +45,9 @@
       ],
       "ruby": [
         "dist/ruby/index.d.ts"
+      ],
+      "text-style": [
+        "dist/text-style/index.d.ts"
       ]
     }
   },
@@ -179,6 +182,16 @@
         "default": "./dist/ruby.cjs"
       }
     },
+    "./text-style": {
+      "import": {
+        "types": "./dist/text-style/index.d.ts",
+        "default": "./dist/text-style.js"
+      },
+      "require": {
+        "types": "./dist/text-style/index.d.cts",
+        "default": "./dist/text-style.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -235,6 +248,10 @@
     "details-summary",
     "ruby-annotation",
     "furigana",
+    "font-family",
+    "font-size",
+    "line-height",
+    "text-style",
     "accessible"
   ],
   "engines": {

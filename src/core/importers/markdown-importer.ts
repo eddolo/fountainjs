@@ -109,6 +109,11 @@ interface RubyToken {
   readonly end: number;
 }
 
+interface StyledTextToken {
+  readonly nodes: readonly Node[];
+  readonly end: number;
+}
+
 function mergeTextMarks(node: Node, inheritedMarks: readonly Mark[]): Node {
   if (node.isText) {
     return node.withMarks([
@@ -128,6 +133,65 @@ function decodeHTMLEntities(value: string): string {
     .replace(/&gt;/gi, '>')
     .replace(/&lt;/gi, '<')
     .replace(/&amp;/gi, '&');
+}
+
+function generatedAttribute(source: string, name: string): string {
+  const match = new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i').exec(source);
+  return decodeHTMLEntities(match?.[1] ?? match?.[2] ?? '');
+}
+
+/**
+ * Parses only the small semantic subset emitted by `textStyleHTML`. This keeps
+ * server-side Markdown import dependency-free without treating arbitrary HTML
+ * as document structure.
+ */
+function generatedStyledNodes(
+  source: string,
+  schema: Schema,
+  baseMarks: readonly Mark[],
+): readonly Node[] {
+  const nodes: Node[] = [];
+  const stack: Array<{ readonly tag: string; readonly marks: readonly Mark[] }> = [
+    { tag: '', marks: baseMarks },
+  ];
+  const tagPattern = /<\/?(?:strong|em|u|s|code|sub|sup|a)(?:\s[^>]*)?>/gi;
+  const markNames: Readonly<Record<string, string>> = {
+    strong: 'strong', em: 'em', u: 'underline', s: 'strike', code: 'code', sub: 'subscript', sup: 'superscript',
+  };
+  let cursor = 0;
+  const appendText = (value: string) => {
+    if (value) nodes.push(...textNodes(decodeHTMLEntities(value), schema, stack.at(-1)?.marks ?? baseMarks));
+  };
+
+  for (const match of source.matchAll(tagPattern)) {
+    const offset = match.index ?? 0;
+    appendText(source.slice(cursor, offset));
+    const token = match[0];
+    const closing = /^<\//u.test(token);
+    const tag = /^<\/?([a-z]+)/iu.exec(token)?.[1]?.toLowerCase() ?? '';
+    if (closing) {
+      const openingIndex = stack.findLastIndex((entry) => entry.tag === tag);
+      if (openingIndex > 0) stack.splice(openingIndex);
+    } else {
+      const current = stack.at(-1)?.marks ?? baseMarks;
+      const type = schema.marks[tag === 'a' ? 'link' : markNames[tag] ?? ''];
+      let next = current;
+      if (type && !current.some((mark) => mark.type === type)) {
+        try {
+          const attrs = tag === 'a' ? {
+            href: generatedAttribute(token, 'href'),
+            title: generatedAttribute(token, 'title'),
+            target: generatedAttribute(token, 'target') === '_self' ? '_self' : '_blank',
+          } : {};
+          next = [...current, type.create(attrs)];
+        } catch { /* Invalid or unsafe link attributes degrade to readable text. */ }
+      }
+      stack.push({ tag, marks: next });
+    }
+    cursor = offset + token.length;
+  }
+  appendText(source.slice(cursor));
+  return nodes;
 }
 
 function rubyToken(
@@ -162,6 +226,52 @@ function rubyToken(
     if (!base || !rt) return null;
     return { node: schema.node('ruby', { rt }, [schema.text(base, inheritedMarks)]), end };
   } catch { return null; }
+}
+
+function styledTextToken(
+  value: string,
+  start: number,
+  schema: Schema,
+  inheritedMarks: readonly Mark[],
+): StyledTextToken | null {
+  const opening = /^<span\s+data-fountain-text-style="true"\s+style="([^"]*)">/i.exec(value.slice(start));
+  if (!opening) return null;
+  const contentStart = start + opening[0].length;
+  const closing = /<\/span\s*>/i.exec(value.slice(contentStart));
+  if (!closing) return null;
+  const end = contentStart + closing.index + closing[0].length;
+  const source = value.slice(start, end);
+
+  if (typeof DOMParser !== 'undefined') {
+    try {
+      const document = HTMLImporter.parse(`<p>${source}</p>`, schema);
+      const nodes = document.content[0]?.content.map((node) => mergeTextMarks(node, inheritedMarks)) ?? [];
+      if (nodes.length) return { nodes, end };
+    } catch { /* Fall through to the dependency-free style parser. */ }
+  }
+
+  const style = decodeHTMLEntities(opening[1]);
+  const marks = [...inheritedMarks];
+  const add = (name: string, attrs: Record<string, unknown>) => {
+    const type = schema.marks[name];
+    if (!type || marks.some((mark) => mark.type === type)) return;
+    try { marks.push(type.create(attrs)); }
+    catch { /* Invalid style declarations are ignored. */ }
+  };
+  style.split(';').forEach((declaration) => {
+    const separator = declaration.indexOf(':');
+    if (separator < 1) return;
+    const property = declaration.slice(0, separator).trim().toLowerCase();
+    const styleValue = declaration.slice(separator + 1).trim();
+    if (property === 'color') add('text_color', { color: styleValue });
+    else if (property === 'background-color') add('highlight', { color: styleValue });
+    else if (property === 'font-family') add('font_family', { family: styleValue.replace(/["']/g, '').replace(/,/g, ', ') });
+    else if (property === 'font-size') add('font_size', { size: styleValue });
+    else if (property === 'line-height') add('line_height', { lineHeight: styleValue });
+  });
+  const body = value.slice(contentStart, contentStart + closing.index);
+  const nodes = generatedStyledNodes(body, schema, marks);
+  return nodes.length ? { nodes, end } : null;
 }
 
 function linkToken(value: string, start: number, references: References): LinkToken | null {
@@ -203,6 +313,13 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       continue;
     }
     if (text[index] === '<') {
+      const styled = styledTextToken(text, index, schema, inheritedMarks);
+      if (styled) {
+        flush();
+        result.push(...styled.nodes);
+        index = styled.end;
+        continue;
+      }
       const parsed = rubyToken(text, index, schema, inheritedMarks);
       if (parsed) {
         flush();

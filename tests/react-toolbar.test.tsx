@@ -103,6 +103,47 @@ describe('React toolbar primitives', () => {
 });
 
 describe('supplied React toolbar composition', () => {
+  it('applies the complete text-style suite through one accessible panel', async () => {
+    const kit = composeExtensions([CoreExtension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    insertText(editor, 'Style this text');
+    selectText(editor, [0, 0], 0, 10);
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const root = createRoot(mount);
+    await act(async () => root.render(<FountainToolbar editor={editor} groups={['marks']} />));
+
+    const styles = mount.querySelector<HTMLButtonElement>('[aria-label="Text styles"]')!;
+    await act(async () => styles.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    expect(styles.getAttribute('aria-pressed')).toBe('true');
+    expect(mount.querySelector('.is-text-style strong')?.textContent).toBe('Text styles');
+    expect(mount.querySelector<HTMLInputElement>('[aria-label="Text colour"]')?.type).toBe('color');
+    expect(mount.querySelector<HTMLInputElement>('[aria-label="Background colour"]')?.type).toBe('color');
+
+    const family = mount.querySelector<HTMLInputElement>('[aria-label="Font family"]')!;
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+      setter?.call(family, 'Atkinson Hyperlegible, sans-serif');
+      family.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const applyFont = [...mount.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === 'Apply font')!;
+    expect(applyFont.disabled).toBe(false);
+    await act(async () => applyFont.click());
+    const marks = editor.state.doc.child(0).content.flatMap((node) => node.marks);
+    expect(marks.find((mark) => mark.type.name === 'font_family')?.attrs.family).toBe('Atkinson Hyperlegible, sans-serif');
+    expect(editor.state.selection.path).toEqual([0, 0]);
+    expect(editor.state.selection.from).toBe(0);
+    expect(editor.state.selection.to).toBe(10);
+
+    const removeFont = [...mount.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === 'Remove font')!;
+    await act(async () => removeFont.click());
+    expect(editor.state.doc.child(0).content.flatMap((node) => node.marks).some((mark) => mark.type.name === 'font_family')).toBe(false);
+
+    await act(async () => root.unmount());
+    editor.destroy();
+    mount.remove();
+  });
+
   it('configures group/action order, visibility, labels, icons, and rendering by stable IDs', async () => {
     const kit = composeExtensions([CoreExtension]);
     const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });

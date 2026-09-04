@@ -11,8 +11,10 @@ const limits = Object.freeze({
   // compresses to roughly 31 KiB over the network.
   'dist/emoji-data.js': 340 * kibibyte,
   'dist/emoji-data.cjs': 280 * kibibyte,
-  'dist/react.js': 64 * kibibyte,
-  'dist/react.cjs': 48 * kibibyte,
+  // The supplied text-style panel adds five validated controls without
+  // changing the framework-neutral command surface.
+  'dist/react.js': 69 * kibibyte,
+  'dist/react.cjs': 52 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
   // adapter remains a separately loaded peer-backed entry.
   'dist/yjs.js': 16 * kibibyte,
@@ -44,6 +46,10 @@ const limits = Object.freeze({
   // remain isolated from applications that do not compose the module.
   'dist/ruby.js': 12 * kibibyte,
   'dist/ruby.cjs': 10 * kibibyte,
+  // The direct entry is a small facade over shared style schema and commands;
+  // aggregate budgets below account for the shared implementation exactly once.
+  'dist/text-style.js': 2 * kibibyte,
+  'dist/text-style.cjs': 2 * kibibyte,
   // Accessible block handles and visible drop states add roughly 1.8 KiB while
   // leaving every JavaScript entry ceiling unchanged.
   'dist/styles.css': 54 * kibibyte,
@@ -61,8 +67,10 @@ const limits = Object.freeze({
   // roughly 37/28 KiB without changing the core or standard React boundaries.
   // Tracked changes add about 35/28 KiB across their two independently loaded
   // entries and shared chunks. Keep only a small regression allowance above it.
-  'all ESM runtime code': 620 * kibibyte,
-  'all CommonJS runtime code': 520 * kibibyte,
+  // Complete text styles, including headless interchange, add roughly 6.4/3.9
+  // KiB across shared ESM/CJS chunks and 2.5/1.6 KiB to React.
+  'all ESM runtime code': 632 * kibibyte,
+  'all CommonJS runtime code': 530 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -70,7 +78,7 @@ const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.end
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

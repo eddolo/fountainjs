@@ -52,7 +52,10 @@ Paths identify a node by child indexes from the root. `[3, 0, 1]` means root chi
 
 ### Marks
 
-Marks annotate text without becoming container nodes. Strong, emphasis, underline, strike, link, highlight, inline code, text colour, subscript, and superscript use this mechanism. Mark equality includes both the stable type and attributes.
+Marks annotate text without becoming container nodes. Strong, emphasis,
+underline, strike, link, highlight, inline code, text colour, font family, font
+size, line height, subscript, and superscript use this mechanism. Mark equality
+includes both the stable type and attributes.
 
 ### JSON
 
@@ -498,6 +501,17 @@ special mutation channel. The HTML importer accepts explicit `rb` or direct-base
 ruby, discards presentation-only `rp`, and degrades malformed input to readable
 base text. See [RUBY.md](RUBY.md).
 
+The text-style subsystem demonstrates a feature that crosses the complete
+Fountain-owned pipeline without introducing a framework dependency.
+`src/text-style/values.ts` canonicalizes bounded colour, family, size, and
+line-height values. Independent marks store each property, ordinary mark steps
+apply them across structural selections, the DOM renderer consumes their
+declarative output specs, HTML/Markdown adapters preserve them, and the generic
+Yjs adapter synchronizes them without a style-specific protocol. The React
+toolbar is only one client of the same public commands. A mixed-selection query
+checks every selected leaf instead of reporting the first leaf as representative.
+See [TEXT_STYLE.md](TEXT_STYLE.md).
+
 Lean follows the same inversion of control. `LeanExtension` stores source in a
 normal language-tagged code block and owns Unicode entry commands. The separate
 `LeanController` extracts one explicit block and talks only to an injected
@@ -596,6 +610,11 @@ The suites are organized by boundary:
 - `tests/ruby.test.ts`: ruby schema invariants, marked multi-leaf commands,
   history, semantic HTML/Markdown/text interchange, accessible IME-safe default
   and custom editors, read-only behavior, and generic Yjs synchronization;
+- `tests/text-style.test.ts` and `tests/text-style-node.test.ts`: value
+  normalization and hostile CSS rejection, multi-block commands,
+  mixed-selection inspection, history, safe HTML and lossless browser/headless
+  Markdown interchange, semantic-mark retention, read-only behavior, and Yjs
+  synchronization;
 - `tests/image.test.ts`: block and inline nodes, responsive metadata, mapped
   uploads, progress/cancellation/retry, stale replacement protection, caption
   editing, load recovery, and accessible resizing;
@@ -654,12 +673,12 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 
 `pnpm test:budget` enforces raw production ceilings of 111 KiB for the ESM root,
 93 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
-the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
+the isolated full emoji data, 69/52 KiB for the React entries, 16/14 KiB for the
 optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
-10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 54 KiB for CSS,
-and 620/520 KiB for all emitted
+10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
+the text-style facade, 54 KiB for CSS, and 632/530 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -697,6 +716,7 @@ tracked separately as `PROD-05`.
 | `src/react/FountainVersions.tsx` | Optional accessible React history, preview, comparison, and restoration panel |
 | `src/details/` | Optional semantic details/summary schema, commands, keyboard behavior, native NodeView, and interchange support |
 | `src/ruby/` | Optional semantic ruby/furigana schema, commands, accessible annotation NodeView, and interchange support |
+| `src/text-style/` | Validated font, size, line-height, foreground/background commands, inspection, and custom-kit extension |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

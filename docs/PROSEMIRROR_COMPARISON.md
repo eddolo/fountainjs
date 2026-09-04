@@ -39,6 +39,25 @@ Primary sources:
 - [Tiptap extension model](https://tiptap.dev/docs/editor/core-concepts/extensions)
 - [FountainJS architecture](ARCHITECTURE.md)
 
+## Community friction translated into engineering requirements
+
+Issue counts are not a quality score, and a single report is not proof that all
+users experience a defect. They are still valuable when they expose a concrete
+failure mode that FountainJS can reproduce and prevent. The following signals
+come from maintainer documentation, project forums, or upstream issue trackers
+rather than comparison marketing:
+
+| Verified signal | FountainJS requirement | Current evidence |
+| --- | --- | --- |
+| ProseMirror's maintainer describes the system as necessarily complicated, and its forum records repeated requests for practical end-to-end examples ([documentation discussion](https://discuss.prosemirror.net/t/planning-new-documentation/861), [tutorial discussion](https://discuss.prosemirror.net/t/is-there-a-tutorial/1592), [examples discussion](https://discuss.prosemirror.net/t/where-examples-can-be-found/2689)) | A developer must be able to begin with a complete editor, learn one mental model, and follow working code from input through state, extensions, and persistence | The developer guide, source tour, API guide, ten package-backed demos, and extension examples exist; independent onboarding/time-to-first-extension testing remains open |
+| Tiptap's own performance guide says React over-rendering is its most common integration problem and documents special subscription/render controls ([performance guide](https://tiptap.dev/docs/guides/performance), [React changelog](https://tiptap.dev/docs/resources/changelog/react)) | Core transactions must not require framework rerenders; framework hooks must subscribe narrowly, survive Strict Mode, and release each view exactly once | FountainJS keeps the DOM view outside React rendering and uses `useSyncExternalStore`; ordinary mount/unmount cleanup is tested, but repeated Strict-Mode and changing-provider stress tests remain open |
+| Upstream reports document a collaboration extension retaining a destroyed `Y.Doc` after React lifecycle changes and excessive presence traffic under Strict Mode ([#6882](https://github.com/ueberdosis/tiptap/issues/6882), [#4482](https://github.com/ueberdosis/tiptap/issues/4482)) | Collaboration ownership and replacement must be explicit; reconnect/remount must not retain a stale document, duplicate listeners, or multiply presence messages | Provider connect/disconnect, teardown, presence cleanup, and reconnect are tested; dynamic document/provider replacement and message-rate tests remain open |
+| Upstream reports describe large-document typing and React NodeView costs ([#4491](https://github.com/ueberdosis/tiptap/issues/4491), [#4492](https://github.com/ueberdosis/tiptap/issues/4492)); a 2026 discussion reports full-document collaboration validation on each Yjs transaction at roughly 500,000 words ([#8013](https://github.com/ueberdosis/tiptap/discussions/8013)) | Publish reproducible local/remote edit, render, memory, and teardown curves; prove a one-character edit does not accidentally perform avoidable full-document conversion or validation | Bundle ceilings exist, but the large-document benchmark harness and complexity budgets are not delivered; `PROD-05` remains Missing |
+
+This evidence does not make FountainJS faster or easier by declaration. It
+defines adversarial acceptance tests. FountainJS should claim an advantage only
+after those tests are public, repeatable, and kept as release gates.
+
 ## One-to-one full-stack comparison
 
 | Concern | ProseMirror + Tiptap | FountainJS today | Honest verdict |

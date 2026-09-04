@@ -1,5 +1,6 @@
 import type { EditorState } from '../state';
 import type { Node } from '../schema';
+import { fontFamilyCSS } from '../../text-style/values';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -36,6 +37,7 @@ interface RenderContext {
 }
 
 const SUPPORTED_MARKS = new Set(['code', 'strong', 'em', 'strike', 'link', 'highlight']);
+const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'font_size', 'line_height']);
 const LIST_TYPES = new Set(['bullet_list', 'ordered_list', 'task_list']);
 
 function escapeInline(text: string): string {
@@ -156,6 +158,9 @@ function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[
     else if (name === 'superscript') value = `<sup>${value}</sup>`;
     else if (name === 'highlight') value = `<mark style="background-color:${escapeHTML(mark.attrs.color)}">${value}</mark>`;
     else if (name === 'text_color') value = `<span style="color:${escapeHTML(mark.attrs.color)}">${value}</span>`;
+    else if (name === 'font_family') value = `<span style="font-family:${escapeHTML(fontFamilyCSS(mark.attrs.family))}">${value}</span>`;
+    else if (name === 'font_size') value = `<span style="font-size:${escapeHTML(mark.attrs.size)}">${value}</span>`;
+    else if (name === 'line_height') value = `<span style="line-height:${escapeHTML(mark.attrs.lineHeight)}">${value}</span>`;
     else if (name === 'link') {
       const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
       const target = mark.attrs.target === '_self' ? '_self' : '_blank';
@@ -163,6 +168,41 @@ function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[
     } else report(context, 'mark', name, path, 'This custom mark cannot be represented inside semantic ruby HTML and is omitted.');
   }
   return value;
+}
+
+function needsTextStyleHTML(node: Node): boolean {
+  return node.marks.some((mark) => (
+    ['text_color', 'font_family', 'font_size', 'line_height'].includes(mark.type.name)
+      || (mark.type.name === 'highlight' && mark.attrs.color !== '#fff3a3')
+  ));
+}
+
+function textStyleHTML(node: Node, context: RenderContext, path: readonly number[]): string {
+  const styles: string[] = [];
+  node.marks.forEach((mark) => {
+    if (mark.type.name === 'text_color') styles.push(`color:${String(mark.attrs.color)}`);
+    else if (mark.type.name === 'highlight') styles.push(`background-color:${String(mark.attrs.color)}`);
+    else if (mark.type.name === 'font_family') styles.push(`font-family:${fontFamilyCSS(mark.attrs.family)}`);
+    else if (mark.type.name === 'font_size') styles.push(`font-size:${String(mark.attrs.size)}`);
+    else if (mark.type.name === 'line_height') styles.push(`line-height:${String(mark.attrs.lineHeight)}`);
+  });
+  let value = escapeHTML(node.text ?? '');
+  for (const mark of [...node.marks].reverse().filter((mark) => !TEXT_STYLE_MARKS.has(mark.type.name))) {
+    const name = mark.type.name;
+    if (name === 'strong') value = `<strong>${value}</strong>`;
+    else if (name === 'em') value = `<em>${value}</em>`;
+    else if (name === 'underline') value = `<u>${value}</u>`;
+    else if (name === 'strike') value = `<s>${value}</s>`;
+    else if (name === 'code') value = `<code>${value}</code>`;
+    else if (name === 'subscript') value = `<sub>${value}</sub>`;
+    else if (name === 'superscript') value = `<sup>${value}</sup>`;
+    else if (name === 'link') {
+      const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
+      const target = mark.attrs.target === '_self' ? '_self' : '_blank';
+      value = `<a href="${escapeHTML(mark.attrs.href)}"${title} target="${target}">${value}</a>`;
+    } else report(context, 'mark', name, path, 'This custom mark cannot be represented inside lossless text-style HTML and is omitted.');
+  }
+  return `<span data-fountain-text-style="true" style="${escapeHTML(styles.join(';'))}">${value}</span>`;
 }
 
 function inline(node: Node, context: RenderContext, path: readonly number[]): string {
@@ -190,6 +230,8 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
       ? node.content.map((child, index) => inline(child, context, [...path, index])).join('')
       : escapeInline(node.textContent);
   }
+
+  if (needsTextStyleHTML(node)) return textStyleHTML(node, context, path);
 
   node.marks.forEach((mark) => {
     if (!SUPPORTED_MARKS.has(mark.type.name)) {

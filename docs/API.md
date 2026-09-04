@@ -179,6 +179,42 @@ editing controls in read-only documents. JSON, safe HTML, semantic inline HTML
 in Markdown, readable text, and generic Yjs synchronization are supported. See
 [RUBY.md](RUBY.md) for the complete schema and interoperability contract.
 
+### Text styles
+
+`CoreExtension` and `StarterKit` include the complete text-style schema:
+`text_color`, `highlight`, `font_family`, `font_size`, and `line_height`.
+Framework-neutral commands and normalizers are available from the isolated
+`fountainjs-editor/text-style` entry:
+
+```ts
+import {
+  getActiveTextStyle,
+  setBackgroundColor,
+  setFontFamily,
+  setFontSize,
+  setLineHeight,
+  setTextColor,
+  unsetFontFamily,
+} from 'fountainjs-editor/text-style'
+
+setFontFamily(editor, 'Noto Sans JP, sans-serif')
+setFontSize(editor, '18px')
+setLineHeight(editor, 1.75)
+```
+
+Every setter normalizes and bounds its value before calling the ordinary mark
+transaction path. Each property has a corresponding `unset…` command.
+`getActiveTextStyle(editor)` returns common values across the complete selection
+and lists differing properties in `mixed`. `TextStyleExtension` exposes all five
+mark specs and named commands for a custom schema that does not use
+`CoreExtension`; composing both intentionally triggers the duplicate-mark guard.
+
+FountainJSON is lossless. Safe HTML reconstructs supported inline CSS, and the
+Markdown adapter uses deterministic inline HTML when Markdown syntax cannot
+represent a style. The React toolbar action id is `text-style`; other framework
+surfaces call the same module directly. See [TEXT_STYLE.md](TEXT_STYLE.md) for
+the value grammar, interchange, UI, collaboration, and security contract.
+
 ### Code blocks and syntax highlighting
 
 The `code_block` node stores only portable source plus `language` and

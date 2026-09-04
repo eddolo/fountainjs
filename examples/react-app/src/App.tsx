@@ -642,7 +642,7 @@ function App() {
       <section className="capabilities">
         <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public npm package. Import only the modules you need.</p></div>
         <div className="capabilities__grid">
-          <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
+          <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, foreground/background colour, font family, font size, line height, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, collapsible details, nested document structures, tables, and custom block types.</p></article>
           <article><b>03</b><h3>Production images</h3><p>Use block or inline images, editable captions, alt text, alignment, responsive sources, replacement, and accessible resizing. Upload tasks map through edits and expose progress, cancel, retry, and errors while storage remains yours.</p></article>
           <article><b>04</b><h3>Portable formats</h3><p>Lossless JSON plus Markdown, safe HTML, and plain-text boundaries for storage, APIs, publishing pipelines, search, and any backend language.</p></article>
@@ -666,7 +666,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>Try the actual package in your browser.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> edit or select text, insert a collapsible section, and use the toolbar. Click the reading above <strong>東京</strong> to edit its ruby annotation, or select text and press Ruby. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
+        <div className="demo-note"><b>Try it:</b> select text and open <strong>Text styles</strong> to change its family, size, line height, foreground, and background. Insert a collapsible section, or click the reading above <strong>東京</strong> to edit its ruby annotation. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">

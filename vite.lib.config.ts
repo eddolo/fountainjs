@@ -20,6 +20,7 @@ export default defineConfig({
         'react-versions': fileURLToPath(new URL('./src/react/versions.ts', import.meta.url)),
         details: fileURLToPath(new URL('./src/details/index.ts', import.meta.url)),
         ruby: fileURLToPath(new URL('./src/ruby/index.ts', import.meta.url)),
+        'text-style': fileURLToPath(new URL('./src/text-style/index.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,

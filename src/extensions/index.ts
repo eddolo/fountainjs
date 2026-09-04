@@ -30,13 +30,11 @@ import { taskList } from './nodes/task-list';
 import { text } from './nodes/text';
 import { code } from './marks/code';
 import { em } from './marks/em';
-import { highlight } from './marks/highlight';
 import { link } from './marks/link';
 import { strike } from './marks/strike';
 import { strong } from './marks/strong';
 import { subscript } from './marks/subscript';
 import { superscript } from './marks/superscript';
-import { textColor } from './marks/text-color';
 import { underline } from './marks/underline';
 import { canRedo, canUndo, closeHistory, historyPlugin, redo, undo } from './plugins/history';
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
@@ -45,6 +43,7 @@ import { TableEditingExtension } from './plugins/table-editing';
 import { LinkBehaviorExtension } from './link-behavior';
 import { MediaExtension } from './media';
 import { composeExtensions, defineExtension } from './extension';
+import { TextStyleExtension } from '../text-style';
 
 export * from './extension';
 export * from './command-manager';
@@ -80,7 +79,10 @@ export * from './nodes/task-list';
 export * from './nodes/text';
 export * from './marks/code';
 export * from './marks/em';
+export * from './marks/font-family';
+export * from './marks/font-size';
 export * from './marks/highlight';
+export * from './marks/line-height';
 export * from './marks/link';
 export * from './marks/strike';
 export * from './marks/strong';
@@ -106,10 +108,14 @@ export const CoreExtension = defineExtension({
     image_super: imageSuper, inline_image: inlineImage, figcaption,
     table, table_row: tableRow, table_header: tableHeader, table_cell: tableCell,
   },
-  marks: { strong, em, underline, strike, code, highlight, link, text_color: textColor, subscript, superscript },
+  marks: {
+    strong, em, underline, strike, code, link, subscript, superscript,
+    ...(TextStyleExtension.marks ?? {}),
+  },
   commands: {
     ...coreCommands,
     ...structureCommands,
+    ...(TextStyleExtension.commands ?? {}),
     mergeTableCells: tableCommands.mergeTableCells,
     splitTableCell: tableCommands.splitTableCell,
     toggleTableHeaderRow: tableCommands.toggleTableHeaderRow,
