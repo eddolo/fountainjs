@@ -22,6 +22,7 @@ import {
   isMarkActive,
   insertNode as demoInsertNode,
   markdownShortcutsPlugin,
+  selectText,
   setBlockType,
   toggleMark,
   type AssetUploadHandler,
@@ -31,6 +32,12 @@ import {
   createYjsCollaborationExtension,
   type YjsAwareness,
 } from 'fountainjs-editor/yjs';
+import {
+  InMemoryCommentsStore,
+  createCommentThread,
+  createCommentsExtension,
+  getCommentsState,
+} from 'fountainjs-editor/comments';
 import {
   EmojiExtension,
   TypographyExtension,
@@ -57,6 +64,7 @@ import {
   useFountainState,
   type FountainEditorHandle,
 } from 'fountainjs-editor/react';
+import { FountainComments } from 'fountainjs-editor/react/comments';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
@@ -270,6 +278,7 @@ function CollaborationDemo() {
     const leftDocument = new Y.Doc();
     const rightDocument = new Y.Doc();
     const awareness = new DemoAwarenessHub();
+    const comments = new InMemoryCommentsStore();
     const leftExtension = createYjsCollaborationExtension({
       document: leftDocument,
       awareness: awareness.create(leftDocument.clientID),
@@ -280,11 +289,19 @@ function CollaborationDemo() {
       awareness: awareness.create(rightDocument.clientID),
       user: { id: 'grace', name: 'Grace', color: '#d23877' },
     });
+    const leftComments = createCommentsExtension({
+      adapter: () => comments.createAdapter(),
+      user: { id: 'ada', name: 'Ada' },
+    });
+    const rightComments = createCommentsExtension({
+      adapter: () => comments.createAdapter(),
+      user: { id: 'grace', name: 'Grace' },
+    });
     return {
       leftDocument,
       rightDocument,
-      leftKit: composeExtensions([CoreExtension, leftExtension]),
-      rightKit: composeExtensions([CoreExtension, rightExtension]),
+      leftKit: composeExtensions([CoreExtension, leftExtension, leftComments]),
+      rightKit: composeExtensions([CoreExtension, rightExtension, rightComments]),
     };
   }, []);
   const collaborativeContent = useMemo(() => ({
@@ -326,8 +343,22 @@ function CollaborationDemo() {
     };
   }, [room]);
 
+  const seededComment = useRef(false);
+  useEffect(() => {
+    if (seededComment.current) return;
+    seededComment.current = true;
+    selectText(right, [1, 0], 0, 16);
+    void createCommentThread(right, {
+      threadId: 'demo-thread-review',
+      commentId: 'demo-comment-grace',
+      content: 'Could we make the provider boundary even clearer?',
+    });
+  }, [right]);
+
   const leftCollaboration = getCollaborationState(left);
   const rightCollaboration = getCollaborationState(right);
+  const leftComments = getCommentsState(left);
+  const rightComments = getCommentsState(right);
   return (
     <section className="collaboration-demo" id="collaboration">
       <div className="collaboration-demo__intro">
@@ -343,7 +374,7 @@ function CollaborationDemo() {
           <header><span><i style={{ background: '#6d4aff' }} />Ada</span><code>{leftCollaboration?.status ?? 'connecting'}</code></header>
           <FountainComposer editor={left} showToolbar={false} ariaLabel="Ada collaborative editor" placeholder="Ada writes here…" />
           <div className="collaboration-demo__editor-footer">
-            <span>{leftState?.doc.textContent.length ?? 0} characters · {leftCollaboration?.presences.length ?? 0} peer</span>
+            <span>{leftState?.doc.textContent.length ?? 0} characters · {leftCollaboration?.presences.length ?? 0} peer · {leftComments?.threads.length ?? 0} threads</span>
             <div><button disabled={!canUndoCollaboration(left)} onClick={() => room.leftKit.commands.undoCollaboration?.(left)}>Undo Ada</button><button disabled={!canRedoCollaboration(left)} onClick={() => room.leftKit.commands.redoCollaboration?.(left)}>Redo</button></div>
           </div>
         </article>
@@ -351,14 +382,25 @@ function CollaborationDemo() {
           <header><span><i style={{ background: '#d23877' }} />Grace</span><code>{rightCollaboration?.status ?? 'connecting'}</code></header>
           <FountainComposer editor={right} showToolbar={false} ariaLabel="Grace collaborative editor" placeholder="Grace writes here…" />
           <div className="collaboration-demo__editor-footer">
-            <span>{rightState?.doc.textContent.length ?? 0} characters · {rightCollaboration?.presences.length ?? 0} peer</span>
+            <span>{rightState?.doc.textContent.length ?? 0} characters · {rightCollaboration?.presences.length ?? 0} peer · {rightComments?.threads.length ?? 0} threads</span>
             <div><button disabled={!canUndoCollaboration(right)} onClick={() => room.rightKit.commands.undoCollaboration?.(right)}>Undo Grace</button><button disabled={!canRedoCollaboration(right)} onClick={() => room.rightKit.commands.redoCollaboration?.(right)}>Redo</button></div>
           </div>
         </article>
       </div>
+      <div className="collaboration-demo__comments">
+        <div>
+          <span>THREADED COMMENTS</span>
+          <h3>Discussion is portable too.</h3>
+          <p>The document, comment store, and interface are separate modules. This demo shares the same thread across both editors; select content to add an inline or block thread, reply, react, resolve, archive, or reattach an orphan.</p>
+          <p>The included in-memory adapter powers this page. Production apps replace it with REST, a database, a CRDT, or another authenticated store—and enforce permissions there.</p>
+        </div>
+        <FountainComments editor={left} title="Shared review" onError={(error) => console.error(error)} />
+      </div>
       <div className="collaboration-demo__boundary">
         <code>fountainjs-editor/yjs</code>
         <span>CRDT document + relative positions + local-origin undo</span>
+        <code>fountainjs-editor/comments</code>
+        <span>Mapped anchors + storage operations + permissions</span>
         <span>Your provider</span>
         <span>Your auth and storage</span>
       </div>

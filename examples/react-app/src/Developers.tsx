@@ -44,6 +44,33 @@ const kit = composeExtensions([CoreExtension, collaboration])
 kit.commands.undoCollaboration(editor)
 kit.commands.redoCollaboration(editor)`;
 
+const commentsExample = `import {
+  createCommentThread,
+  createCommentsExtension,
+  getCommentsState,
+} from 'fountainjs-editor/comments'
+import { FountainComments } from 'fountainjs-editor/react/comments'
+
+const comments = createCommentsExtension({
+  adapter: () => myAuthenticatedCommentStore.createAdapter(room.id),
+  user: { id: session.user.id, name: session.user.name },
+  permissions: {
+    deleteThread: ({ user }) => user.role === 'owner',
+  },
+})
+
+// Compose it beside core, Yjs, or any other extension.
+const kit = composeExtensions([CoreExtension, collaboration, comments])
+
+const thread = await createCommentThread(editor, {
+  content: 'Can we cite this?',
+  type: 'inline', // point, range, cross-block; also block or document
+})
+const state = getCommentsState(editor)
+
+// Optional React surface; every operation above is framework-neutral.
+<FountainComments editor={editor} title="Document review" />`;
+
 const mediaExample = `const task = startImageUpload(editor, file, {
   placement: 'block', // or 'inline'
   // Use replacePath to update an existing image safely.
@@ -497,6 +524,10 @@ function Developers() {
             <p><code>createCollaborationExtension</code> owns validated remote application, status, no-echo lifecycle, normalized presence, and accessible caret/range decorations without choosing a transport. The optional <code>fountainjs-editor/yjs</code> entry maps generic Fountain nodes onto shared XML elements, character-level shared text, relative selections, and a local-origin undo manager. The application supplies a WebSocket, WebRTC, managed, custom, or no provider; it also owns authentication, room authorization, offline persistence, and retention.</p>
             <Code>{collaborationExample}</Code>
             <p>Incoming shared trees must validate against the complete local schema before they replace editor state. Custom node types therefore work generically when every client composes the same extension, while an incompatible or hostile client fails closed. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COLLABORATION.md">collaboration guide</a> documents the shared representation, provider contract, security rules, simultaneous-room initialization, relative presence, and undo behavior.</p>
+            <h3>Comments are document-aware, but storage-neutral</h3>
+            <p>The isolated <code>fountainjs-editor/comments</code> entry keeps thread records outside the document while mapping inline, cross-block, point, block, and document anchors through accepted transactions. Overlapping annotations are normal decorations. If replacement content removes an anchor, deterministic quote/context or block-fingerprint recovery runs; an unsafe match stays visibly orphaned until a reviewer reattaches it.</p>
+            <Code>{commentsExample}</Code>
+            <p>Every reply, edit, reaction, resolve, archive, delete, and anchor update waits for an authoritative <code>CommentsAdapter</code> result. A REST API, database, CRDT map, local store, or another service can implement that small boundary. <code>InMemoryCommentsStore</code> is supplied for local products and tests. Browser permission predicates keep the interface consistent, but the authenticated adapter service must authorize operations, validate payloads, deduplicate operation IDs, and resolve revisions. The optional <code>fountainjs-editor/react/comments</code> panel is one accessible renderer, not a requirement. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COMMENTS.md">comments architecture and security guide</a>.</p>
             <h3>Stateful behavior belongs in plugins</h3>
             <Code>{pluginExample}</Code>
             <p>Plugins can intercept keyboard, before-input, text-input, copy, cut, paste, drop, and click events, run editor create/destroy lifecycle hooks, refuse complete transactions with <code>filterTransaction</code>, and append validated follow-up transactions. Dispatch resolves accepted follow-ups first; subscribers receive one complete mapped transaction and the final state. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
@@ -509,7 +540,7 @@ function Developers() {
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>
               <div><h3>Web Component</h3><p>A standards boundary with a <code>value</code> property, <code>fountain-change</code> event, and configurable schema/plugins.</p></div>
-              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
+              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>. Threaded review is further isolated in <code>fountainjs-editor/react/comments</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
             <h3>The supplied toolbar is composable, not mandatory</h3>
@@ -555,6 +586,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/collaboration.ts"><code>src/extensions/collaboration.ts</code><span>Provider-neutral lifecycle, validated remote changes, presence decorations, and collaboration commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/yjs"><code>src/yjs/</code><span>Optional CRDT tree conversion, relative positions, and origin-aware undo.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COLLABORATION.md"><code>docs/COLLABORATION.md</code><span>Provider, authentication, persistence, awareness, security, and shared-state contracts.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/comments"><code>src/comments/</code><span>Optional thread data, mapped anchors, provider operations, permissions, lifecycle, and in-memory adapter.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COMMENTS.md"><code>docs/COMMENTS.md</code><span>Production storage, security, anchor recovery, rich content, framework UI, and Yjs composition.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/suggestion.ts"><code>src/extensions/suggestion.ts</code><span>Headless trigger matching, cancellable providers, stale-result protection, selection, and query decorations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCUMENT_UTILITIES.md"><code>docs/DOCUMENT_UTILITIES.md</code><span>Complete mention, emoji, typography, counting, React accessibility, and interchange contracts.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/SLASH_COMMANDS.md"><code>docs/SLASH_COMMANDS.md</code><span>Runtime registrations, async sources, filtering, atomic execution, UI, and lifecycle contracts.</span></a>
@@ -569,7 +602,7 @@ function Developers() {
           <section className="dev-section" id="contributing">
             <p className="dev-label">12 · TESTING & CONTRIBUTING</p>
             <h2>Change behavior with evidence.</h2>
-            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
+            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy, and drive the accessible React panel; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
             <Code>{`pnpm install
 pnpm dev          # live website and playground
 pnpm typecheck    # public and internal TypeScript contracts

@@ -17,9 +17,15 @@ const limits = Object.freeze({
   // adapter remains a separately loaded peer-backed entry.
   'dist/yjs.js': 16 * kibibyte,
   'dist/yjs.cjs': 14 * kibibyte,
+  // Thread state, mapped anchors, storage operations, and the optional React
+  // discussion panel remain isolated from the root and React entry points.
+  'dist/comments.js': 30 * kibibyte,
+  'dist/comments.cjs': 25 * kibibyte,
+  'dist/react-comments.js': 11 * kibibyte,
+  'dist/react-comments.cjs': 8 * kibibyte,
   // Accessible block handles and visible drop states add roughly 1.8 KiB while
   // leaving every JavaScript entry ceiling unchanged.
-  'dist/styles.css': 34 * kibibyte,
+  'dist/styles.css': 40 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -30,8 +36,10 @@ const limits = Object.freeze({
   // add roughly 5.3/2.6 KiB, including about 1 KiB in the ESM root entry.
   // Collaboration lifecycle plus the optional Yjs adapter add roughly
   // 23/20 KiB while keeping Yjs itself external to every FountainJS bundle.
-  'all ESM runtime code': 473 * kibibyte,
-  'all CommonJS runtime code': 400 * kibibyte,
+  // Provider-neutral threaded comments and their optional React surface add
+  // roughly 37/28 KiB without changing the core or standard React boundaries.
+  'all ESM runtime code': 512 * kibibyte,
+  'all CommonJS runtime code': 431 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -39,7 +47,7 @@ const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.end
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

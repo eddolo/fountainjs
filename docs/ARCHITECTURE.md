@@ -407,6 +407,37 @@ work and restores the local cursor.
 offline databases, encryption, comments, and version archives are host
 boundaries. See [COLLABORATION.md](COLLABORATION.md).
 
+## Review boundary
+
+Threaded comments follow the same inversion of control while remaining separate
+from document synchronization. `src/comments/` is an optional package entry
+that defines immutable thread records, inline/block/document anchors, atomic
+operations, permission predicates, events, lifecycle, and a storage adapter.
+It imports the public core and extension contracts; the root entry does not
+import comments.
+
+Anchors use structural positions rather than document marks. The comments
+plugin maps them through every accepted transaction, derives safe quote/context
+or block fingerprints, attempts deterministic recovery after replacement, and
+retains unresolved records as orphaned threads. Overlapping and point anchors
+are projected through ordinary decorations and remain absent from document
+JSON, history, and format output. Local anchor changes are persisted as normal
+adapter operations; collaboration-origin changes do not echo the originating
+store update.
+
+`CommentsAdapter` is authoritative. Mutations enter pending state, cross the
+adapter once as immutable operations, and update plugin state only from the
+returned result or subscribed snapshot. The operation ID supports idempotent
+retry; the thread revision lets a service serialize or reject conflicts.
+`InMemoryCommentsStore` is a synchronous reference implementation and shared
+test/demo transport, not a hosted or durable backend.
+
+Local permission predicates keep custom and supplied interfaces consistent,
+but cannot be a security boundary. Identity, authorization, room access,
+storage validation, retention, notifications, and audit remain adapter/server
+responsibilities. `src/react/FountainComments.tsx` is an isolated optional
+renderer over the same API. See [COMMENTS.md](COMMENTS.md).
+
 Syntax highlighting demonstrates the decoration boundary. A code block persists
 source and presentation-neutral language metadata. `SyntaxHighlightExtension`
 tokenizes that source into validated ranges, then supplies inline tokens,
@@ -447,7 +478,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Threaded review UI is further isolated in `fountainjs-editor/react/comments`, so products that need React editing controls do not automatically load comments. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -537,6 +568,11 @@ The suites are organized by boundary:
 - `tests/yjs-collaboration.test.ts`: offline text/structure convergence,
   simultaneous seed repair, awareness-relative selections, origin-aware undo,
   provider lifecycle, and hostile shared trees;
+- `tests/comments.test.ts`: shared CRUD, rich bodies, local permissions,
+  non-optimistic persistence, cross-block/overlapping/point/block/document
+  anchors, mapping, recovery, orphan reattachment, lifecycle, and hostile data;
+- `tests/react-comments.test.tsx`: accessible discussion rendering and complete
+  reply/reaction/resolution interaction over the public comments APIs;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -561,7 +597,8 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 `pnpm test:budget` enforces raw production ceilings of 102 KiB for the ESM root,
 85 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
-optional Yjs adapter, 34 KiB for CSS, and 473/400 KiB for all emitted
+optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
+its optional React panel, 40 KiB for CSS, and 512/431 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -591,6 +628,8 @@ tracked separately as `PROD-05`.
 | `src/extensions/media.ts` | Native media nodes, embed providers, policy, commands, and NodeViews |
 | `src/extensions/collaboration.ts` | Provider-neutral lifecycle, remote transactions, presence, decorations, and collaborative history commands |
 | `src/yjs/` | Optional Yjs tree reconciliation, awareness-relative selections, and origin-aware undo |
+| `src/comments/` | Optional thread model, mapped anchors, operations, adapter lifecycle, permissions, and in-memory store |
+| `src/react/FountainComments.tsx` | Optional accessible React discussion panel over the framework-neutral comments API |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

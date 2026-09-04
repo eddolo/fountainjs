@@ -10,6 +10,13 @@
 
 ### Added
 
+- An isolated, provider-independent threaded-comments engine with overlapping
+  inline/cross-block, point, block, and document anchors; mapped movement,
+  deterministic recovery and orphan reattachment; text or rich-JSON replies,
+  editing, reactions, resolution, archival, deletion, immutable events and
+  permission hooks; authoritative adapter operations and a shared in-memory
+  store; plus an isolated accessible React panel, package gates, tests, public
+  demo, and production integration/security guidance.
 - A provider-independent collaboration extension plus optional
   `fountainjs-editor/yjs` adapter with conflict-free text/structure,
   deterministic simultaneous-room initialization, relative remote selections,

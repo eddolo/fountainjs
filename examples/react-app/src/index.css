@@ -126,6 +126,12 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .collaboration-demo__editor-footer > div { display: flex; gap: 5px; }
 .collaboration-demo__editor-footer button { padding: 6px 9px; color: #5641b8; background: white; border: 1px solid #d7d1f0; border-radius: 6px; font: 600 10px Manrope, sans-serif; }
 .collaboration-demo__editor-footer button:disabled { color: #aaa5b5; cursor: not-allowed; opacity: .6; }
+.collaboration-demo__comments { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 480px); gap: clamp(28px, 6vw, 90px); align-items: start; max-width: 1400px; margin: 52px auto 0; }
+.collaboration-demo__comments > div:first-child { max-width: 650px; padding-top: 12px; }
+.collaboration-demo__comments > div > span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
+.collaboration-demo__comments h3 { margin: 12px 0 18px; font-size: clamp(34px, 4vw, 56px); line-height: 1; letter-spacing: -.05em; }
+.collaboration-demo__comments p { color: #5f5a6b; line-height: 1.75; }
+.collaboration-demo__comments .fountain-comments { width: 100%; max-height: 620px; box-shadow: 0 18px 50px rgb(70 56 135 / 10%); }
 .collaboration-demo__boundary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; max-width: 1400px; margin: 14px auto 0; }
 .collaboration-demo__boundary > * { padding: 7px 10px; color: #655f73; background: rgb(255 255 255 / 55%); border: 1px solid #d4cdf6; border-radius: 99px; font: 10px DM Mono, monospace; }
 .collaboration-demo__boundary code { color: #fff; background: #6d4aff; border-color: #6d4aff; }
@@ -199,7 +205,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .comparison__row i { position: absolute; top: 26px; right: 8px; }
   .architecture ul { grid-column: auto; }
   .capabilities__heading, .capabilities__grid { grid-template-columns: 1fr; }
-  .collaboration-demo__intro, .collaboration-demo__editors { grid-template-columns: 1fr; }
+  .collaboration-demo__intro, .collaboration-demo__editors, .collaboration-demo__comments { grid-template-columns: 1fr; }
   .collaboration-demo__editor-footer { align-items: flex-start; gap: 8px; flex-direction: column; }
   footer { gap: 12px; flex-direction: column; }
 }

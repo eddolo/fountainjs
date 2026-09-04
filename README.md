@@ -575,6 +575,48 @@ credential. Authentication, authorization, persistence, and provider trust
 remain explicit application boundaries. See the
 [collaboration and Yjs guide](docs/COLLABORATION.md).
 
+## Optional threaded comments
+
+`fountainjs-editor/comments` adds provider-independent review without putting
+comment records into the document or choosing a hosted service. Inline ranges
+(including cross-block selections), points, blocks, and the whole document can
+carry overlapping threads. Anchors map through edits, recover from uniquely
+matched replacement content, become visibly orphaned when recovery is unsafe,
+and can be deliberately reattached.
+
+```ts
+import {
+  InMemoryCommentsStore,
+  createCommentThread,
+  createCommentsExtension,
+} from 'fountainjs-editor/comments'
+
+const store = new InMemoryCommentsStore()
+const comments = createCommentsExtension({
+  adapter: () => store.createAdapter(),
+  user: { id: session.user.id, name: session.user.name },
+})
+const kit = composeExtensions([CoreExtension, comments])
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
+
+const thread = await createCommentThread(editor, {
+  content: 'Can we verify this statement?',
+})
+```
+
+Replies, editable text or rich-JSON bodies, reactions, resolve/reopen,
+archive/restore, deletion, selection/hover events, and connection lifecycle are
+available from the framework-neutral entry. The in-memory store is for local
+use, prototypes, and tests. Production applications replace it with an adapter
+for their REST, database, CRDT, or other authenticated store. Local permission
+predicates control UI availability; the backend must independently authenticate
+and authorize every operation.
+
+React applications may add the optional accessible discussion panel from
+`fountainjs-editor/react/comments`. See the [threaded-comments guide](docs/COMMENTS.md)
+for anchors, storage operations, idempotency, permissions, security, and the
+complete public workflow.
+
 ## Optional AI review module
 
 AI is one example of a host service. FountainJS does not provide a model account or require a Fountain cloud. The optional `AIController` lets an application inspect exactly what will be sent, request a text proposal from any adapter, show a before/after review, accept or reject, block stale proposals, and undo acceptance.
@@ -622,6 +664,7 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
   `FountainToolbarRoot` / `Group` / `Button` / `Icon` primitives
 - `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
   `FountainFloatingMenu`, and `FountainCharacterCount`
+- `FountainComments` from the isolated `fountainjs-editor/react/comments` entry
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
@@ -657,7 +700,9 @@ slash-command registry, framework-neutral bubble/floating menus, browser-event
 plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
 proposals, MCP transport, and optional provider-independent Yjs collaboration
-with relative presence and origin-aware undo.
+with relative presence and origin-aware undo; plus optional provider-independent
+threaded comments with mapped inline/block/document anchors and a replaceable
+storage adapter.
 
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 
@@ -668,6 +713,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Toolbar composition and stable action IDs](docs/TOOLBAR.md)
 - [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
 - [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
+- [Threaded comments, anchors, adapters, permissions, and React UI](docs/COMMENTS.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

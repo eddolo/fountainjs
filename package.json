@@ -21,6 +21,12 @@
       ],
       "yjs": [
         "dist/yjs/index.d.ts"
+      ],
+      "comments": [
+        "dist/comments/index.d.ts"
+      ],
+      "react/comments": [
+        "dist/react/comments.d.ts"
       ]
     }
   },
@@ -75,11 +81,32 @@
         "default": "./dist/yjs.cjs"
       }
     },
+    "./comments": {
+      "import": {
+        "types": "./dist/comments/index.d.ts",
+        "default": "./dist/comments.js"
+      },
+      "require": {
+        "types": "./dist/comments/index.d.cts",
+        "default": "./dist/comments.cjs"
+      }
+    },
+    "./react/comments": {
+      "import": {
+        "types": "./dist/react/comments.d.ts",
+        "default": "./dist/react-comments.js"
+      },
+      "require": {
+        "types": "./dist/react/comments.d.cts",
+        "default": "./dist/react-comments.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
+    "docs",
     "scripts/smoke-package.mjs",
     "scripts/check-build-budgets.mjs",
     "README.md",
@@ -119,6 +146,8 @@
     "collaboration",
     "crdt",
     "yjs",
+    "comments",
+    "annotations",
     "accessible"
   ],
   "engines": {

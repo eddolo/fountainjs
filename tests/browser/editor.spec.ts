@@ -881,7 +881,13 @@ test('runs the public two-editor collaboration demo with presence and author-loc
 
   const leftParagraph = left.locator('[data-fountain-node="paragraph"]').first();
   await leftParagraph.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
-    const text = wrapper.firstChild;
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('.fountain-collaboration-caret, .fountain-comment-thread--point')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    let text = walker.nextNode();
+    for (let next = walker.nextNode(); next; next = walker.nextNode()) text = next;
     if (!text) throw new Error('Expected collaboration text.');
     const range = document.createRange();
     range.setStart(text, text.textContent?.length ?? 0);
@@ -895,11 +901,30 @@ test('runs the public two-editor collaboration demo with presence and author-loc
   await expect(right).toContainText('author-aware. LIVE');
 
   await leftParagraph.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
-    const text = wrapper.firstChild;
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('.fountain-collaboration-caret, .fountain-comment-thread--point')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    const nodes: Node[] = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node);
+    const text = nodes[0];
     if (!text) throw new Error('Expected collaboration text.');
+    let remaining = 4;
+    let end = text;
+    let endOffset = 0;
+    for (const node of nodes) {
+      const length = node.textContent?.length ?? 0;
+      if (remaining <= length) {
+        end = node;
+        endOffset = remaining;
+        break;
+      }
+      remaining -= length;
+    }
     const range = document.createRange();
     range.setStart(text, 0);
-    range.setEnd(text, Math.min(4, text.textContent?.length ?? 0));
+    range.setEnd(end, endOffset);
     const selection = document.getSelection();
     selection?.removeAllRanges();
     selection?.addRange(range);
@@ -911,6 +936,63 @@ test('runs the public two-editor collaboration demo with presence and author-loc
   await page.getByRole('button', { name: 'Undo Ada' }).click();
   await expect(right).not.toContainText(' LIVE');
   await expect(left).not.toContainText(' LIVE');
+});
+
+test('runs shared threaded comments through the public provider-neutral review panel', async ({ page }) => {
+  await page.goto('/');
+  const panel = page.getByLabel('Shared review');
+  const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const right = page.getByRole('textbox', { name: 'Grace collaborative editor' });
+  await expect(panel).toContainText('1 thread · connected');
+  await expect(panel).toContainText('Could we make the provider boundary even clearer?');
+  await expect(left.locator('[data-fountain-comment-thread="demo-thread-review"]').first()).toBeVisible();
+  await expect(right.locator('[data-fountain-comment-thread="demo-thread-review"]').first()).toBeVisible();
+
+  await panel.locator('[data-thread-id="demo-thread-review"] .fountain-comment-thread-card__anchor').click();
+  await panel.getByLabel('Reply to thread by Grace').fill('Yes — the host owns authentication and storage.');
+  await panel.getByRole('button', { name: 'Reply', exact: true }).click();
+  await expect(panel).toContainText('Yes — the host owns authentication and storage.');
+  await panel.getByRole('button', { name: 'React 👍 to comment by Grace' }).click();
+  await expect(panel.getByRole('button', { name: 'React 👍 to comment by Grace' })).toHaveText('👍 1');
+  await panel.getByRole('button', { name: 'Resolve', exact: true }).click();
+  await expect(panel.getByRole('button', { name: 'Reopen', exact: true })).toBeVisible();
+
+  const leftParagraph = left.locator('[data-fountain-node="paragraph"]').first();
+  await leftParagraph.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('.fountain-collaboration-caret, .fountain-comment-thread--point')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    const nodes: Node[] = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) nodes.push(node);
+    const text = nodes[0];
+    if (!text) throw new Error('Expected collaboration text.');
+    let remaining = 4;
+    let end = text;
+    let endOffset = 0;
+    for (const node of nodes) {
+      const length = node.textContent?.length ?? 0;
+      if (remaining <= length) {
+        end = node;
+        endOffset = remaining;
+        break;
+      }
+      remaining -= length;
+    }
+    const range = document.createRange();
+    range.setStart(text, 0);
+    range.setEnd(end, endOffset);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await panel.getByRole('button', { name: 'New comment' }).click();
+  await panel.getByLabel('New comment').fill('A second overlapping review thread.');
+  await panel.getByRole('button', { name: 'Create thread' }).click();
+  await expect(panel).toContainText('2 threads · connected');
+  expect(await right.locator('[data-fountain-comment-thread]').count()).toBeGreaterThanOrEqual(2);
 });
 
 test('uses package-backed mentions, emoji, typography, and live counting in the public React playground', async ({ page }) => {

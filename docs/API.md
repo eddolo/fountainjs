@@ -620,6 +620,81 @@ collaborative history commands instead of snapshot `HistoryExtension` for a
 shared editor. See [COLLABORATION.md](COLLABORATION.md) for provider,
 authentication, persistence, shared-tree, trust, and lifecycle rules.
 
+## Threaded comments
+
+The isolated `fountainjs-editor/comments` entry provides comment state and
+commands without adding a storage vendor, network dependency, or framework to
+the root package. Compose `createCommentsExtension({ adapter, user })` with any
+compatible kit. The adapter factory receives the editor and returns a fresh
+`CommentsAdapter` whose `connect(context)` loads/subscribes to snapshots and
+whose `apply(operation)` returns an authoritative `thread` or
+`removedThreadId`.
+
+```ts
+const store = new InMemoryCommentsStore()
+const comments = createCommentsExtension({
+  adapter: () => store.createAdapter(),
+  user: { id: 'user-42', name: 'Ada' },
+})
+const kit = composeExtensions([CoreExtension, comments])
+
+selectText(editor, [0, 0], 3, 12)
+const thread = await createCommentThread(editor, {
+  content: 'Review this claim.',
+})
+await addComment(editor, thread.id, { content: 'Verified.' })
+await toggleCommentReaction(editor, thread.id, thread.comments[0].id, '✅')
+await setCommentThreadResolved(editor, thread.id, true)
+```
+
+`CreateCommentThreadInput.type` accepts `inline`, `block`, or `document` and
+defaults to inline unless the current selection is a `NodeSelection`. An inline
+caret becomes a point anchor; a range may cross text blocks. `CommentContent`
+is either text or portable `NodeJSON`. Thread/comment custom data must be JSON
+serializable.
+
+The complete mutation API is `createCommentThread`, `addComment`,
+`updateComment`, `removeComment`, `setCommentThreadResolved`,
+`setCommentThreadArchived`, `removeCommentThread`, `reattachCommentThread`, and
+`toggleCommentReaction`. These functions are asynchronous because storage is
+authoritative. Pending operations appear in `CommentsState.pendingThreadIds`;
+no thread is changed optimistically.
+
+`getCommentsState` returns immutable status, threads, selected/hovered IDs,
+pending IDs, and the last contained adapter error. `selectCommentThread`,
+`unselectCommentThread`, and `hoverCommentThreads` coordinate custom surfaces.
+`subscribeCommentEvents` reports thread, selection, hover, anchor, and error
+events. `canComment` evaluates the current local permission policy.
+`connectComments`, `disconnectComments`, and `reconnectComments` control an
+explicit lifecycle and are also registered as extension commands.
+
+Inline/block anchors store structural positions, quote context, and for blocks
+a node fingerprint. Every accepted document transaction maps them. If a
+replacement removes the mapped range, unique context recovery is attempted;
+otherwise the anchor remains as `orphaned` until explicitly reattached. Comment
+annotations are overlapping-safe decorations and never enter the document or
+its normal format exports.
+
+`CommentPermissions` accepts predicates for thread creation, reply, comment
+edit/delete, resolution, archive, thread deletion, reattachment, and reaction.
+Defaults are author-aware, but this browser policy is only presentation. A
+production adapter must authenticate the caller, authorize each operation,
+deduplicate `operationId`, resolve revision conflicts, validate all payloads,
+and return the authoritative result.
+
+`reduceCommentOperation` is a pure reference reducer for trusted adapters and
+tests. `InMemoryCommentsStore` connects multiple editors, applies operations
+idempotently, and broadcasts snapshots, but intentionally has no durable
+persistence. `commentsKey` exposes direct plugin-state access where necessary.
+
+The separate `fountainjs-editor/react/comments` entry exports
+`FountainComments`, an accessible replaceable discussion panel. It covers new
+inline/block/document threads, replies, editing, deletion, reactions,
+resolution, archival, orphan reattachment, pending state, and errors without
+adding React to either the root or comments entry. See [COMMENTS.md](COMMENTS.md)
+for adapter examples, security rules, rich content, Yjs composition, and test
+guidance.
+
 ## AI review
 
 `AIController(editor, adapter)` controls the propose/review/apply lifecycle.
