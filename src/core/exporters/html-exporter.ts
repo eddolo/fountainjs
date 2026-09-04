@@ -1,5 +1,5 @@
 import type { EditorState } from '../state';
-import type { Node } from '../schema';
+import type { Attributes, DOMOutputSpec, Node } from '../schema';
 import { isSafeURL } from '../url';
 
 export interface HTMLExportOptions {
@@ -15,6 +15,33 @@ function escapeHTML(value: unknown): string {
 function safeURL(value: unknown, allowDataImage = false): string {
   const url = String(value ?? '').trim();
   return isSafeURL(url, { allowDataImage }) ? escapeHTML(url) : '';
+}
+
+function renderDOMAttributes(attrs: Attributes): string {
+  return Object.entries(attrs).map(([rawName, value]) => {
+    const name = rawName === 'className' ? 'class' : rawName;
+    if (!/^[a-z_:][a-z0-9:._-]*$/i.test(name) || /^on/i.test(name) || value === undefined || value === null || value === false) return '';
+    if (name === 'href' && !isSafeURL(value)) return '';
+    if (name === 'src' && !isSafeURL(value, { allowDataImage: true })) return '';
+    return value === true ? ` ${name}` : ` ${name}="${escapeHTML(value)}"`;
+  }).join('');
+}
+
+function renderDOMOutputSpec(spec: DOMOutputSpec, content = ''): string {
+  const tuple = typeof spec === 'string' ? [spec] : spec;
+  const [tagName] = tuple;
+  if (!/^[a-z][a-z0-9-]*$/i.test(tagName)) return content;
+  const possibleAttrs = tuple[1];
+  const hasAttrs = possibleAttrs && typeof possibleAttrs === 'object' && !Array.isArray(possibleAttrs);
+  const children = tuple.slice(hasAttrs ? 2 : 1).map((child) => {
+    if (child === 0) return content;
+    if (typeof child === 'string') return escapeHTML(child);
+    return Array.isArray(child) ? renderDOMOutputSpec(child) : '';
+  }).join('');
+  const opening = `<${tagName}${hasAttrs ? renderDOMAttributes(possibleAttrs as Attributes) : ''}>`;
+  return new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']).has(tagName.toLowerCase())
+    ? opening
+    : `${opening}${children}</${tagName}>`;
 }
 
 function safeSrcset(value: unknown): string {
@@ -120,6 +147,9 @@ function renderNode(node: Node): string {
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';
     case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
+    case 'mention': case 'emoji': return node.type.spec.toDOM
+      ? renderDOMOutputSpec(node.type.spec.toDOM(node), children())
+      : escapeHTML(node.textContent);
     case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'inline_image': {
       const attributes = imageAttributes(node);
@@ -175,7 +205,7 @@ function renderNode(node: Node): string {
     case 'table_row': return `<tr>${children()}</tr>`;
     case 'table_header': return `<th${tableCellSizeAttributes(node)} scope="${escapeHTML(node.attrs.scope || 'col')}">${children()}</th>`;
     case 'table_cell': return `<td${tableCellSizeAttributes(node)}>${children()}</td>`;
-    default: return children();
+    default: return node.type.spec.toDOM ? renderDOMOutputSpec(node.type.spec.toDOM(node), children()) : children();
   }
 }
 

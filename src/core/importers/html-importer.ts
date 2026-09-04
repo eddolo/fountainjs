@@ -1,11 +1,38 @@
 import { Mark, Node as FountainNode, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 
+const HAS_EMOJI = /\p{Extended_Pictographic}/u;
+
+function unicodeEmojiName(value: string): string {
+  return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
+}
+
+function textNodes(value: string, schema: Schema, marks: readonly Mark[]): FountainNode[] {
+  if (!value || !schema.nodes.emoji || !HAS_EMOJI.test(value)) return value ? [schema.text(value, marks)] : [];
+  const segments = typeof Intl.Segmenter === 'function'
+    ? Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(value), (part) => part.segment)
+    : Array.from(value);
+  const result: FountainNode[] = [];
+  let pending = '';
+  const flush = () => {
+    if (pending) result.push(schema.text(pending, marks));
+    pending = '';
+  };
+  segments.forEach((segment) => {
+    if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
+    flush();
+    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment })); }
+    catch { result.push(schema.text(segment, marks)); }
+  });
+  flush();
+  return result;
+}
+
 function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = []): FountainNode[] {
   const result: FountainNode[] = [];
   parent.childNodes.forEach((child) => {
     if (child.nodeType === globalThis.Node.TEXT_NODE) {
-      if (child.textContent) result.push(schema.text(child.textContent, marks));
+      if (child.textContent) result.push(...textNodes(child.textContent, schema, marks));
       return;
     }
     if (!(child instanceof HTMLElement)) return;
@@ -21,6 +48,34 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
       const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
       try { result.push(schema.node('inline_math', { latex, ariaLabel })); }
       catch { if (latex) result.push(schema.text(latex, marks)); }
+      return;
+    }
+    if (child.hasAttribute('data-fountain-mention') && schema.nodes.mention) {
+      const id = child.getAttribute('data-id') ?? '';
+      const href = child.getAttribute('href') ?? '';
+      try {
+        result.push(schema.node('mention', {
+          id,
+          label: child.getAttribute('data-label') ?? '',
+          trigger: child.getAttribute('data-trigger') ?? '@',
+          kind: child.getAttribute('data-kind') ?? 'mention',
+          href: href && isSafeURL(href) ? href : '',
+        }));
+      } catch { result.push(...textNodes(child.textContent ?? '', schema, marks)); }
+      return;
+    }
+    if (child.hasAttribute('data-fountain-emoji') && schema.nodes.emoji) {
+      const emoji = child.getAttribute('data-emoji') ?? '';
+      const fallback = child.getAttribute('data-fallback-image')
+        ?? child.querySelector('img')?.getAttribute('src')
+        ?? '';
+      try {
+        result.push(schema.node('emoji', {
+          name: child.getAttribute('data-name') ?? unicodeEmojiName(emoji),
+          emoji,
+          fallbackImage: fallback && isSafeURL(fallback, { allowDataImage: true }) ? fallback : '',
+        }));
+      } catch { result.push(...textNodes(emoji || child.textContent || '', schema, marks)); }
       return;
     }
     let nextMarks = [...marks];

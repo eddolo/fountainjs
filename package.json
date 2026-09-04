@@ -10,6 +10,12 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
+      "document-utilities": [
+        "dist/document-utilities.d.ts"
+      ],
+      "emoji-data": [
+        "dist/emoji-data.d.ts"
+      ],
       "react": [
         "dist/react/index.d.ts"
       ]
@@ -24,6 +30,26 @@
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
+      }
+    },
+    "./document-utilities": {
+      "import": {
+        "types": "./dist/document-utilities.d.ts",
+        "default": "./dist/document-utilities.js"
+      },
+      "require": {
+        "types": "./dist/document-utilities.d.cts",
+        "default": "./dist/document-utilities.cjs"
+      }
+    },
+    "./emoji-data": {
+      "import": {
+        "types": "./dist/emoji-data.d.ts",
+        "default": "./dist/emoji-data.js"
+      },
+      "require": {
+        "types": "./dist/emoji-data.d.cts",
+        "default": "./dist/emoji-data.cjs"
       }
     },
     "./react": {
@@ -45,6 +71,7 @@
     "scripts/check-build-budgets.mjs",
     "README.md",
     "CHANGELOG.md",
+    "THIRD_PARTY_NOTICES.md",
     "LICENSE"
   ],
   "sideEffects": [
@@ -119,6 +146,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "^7.0.2",
+    "unicode-emoji-json": "0.9.0",
     "vite": "^8.2.2",
     "vitest": "^5.0.0"
   }

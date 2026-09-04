@@ -56,15 +56,16 @@ export class Editor {
     return this.currentState.createTransaction();
   }
 
-  dispatch(transaction: Transaction): void {
+  dispatch(transaction: Transaction): boolean {
     this.assertAlive();
-    if (!transaction.docChanged && !transaction.selectionSet && !transaction.storedMarksSet && transaction.getMeta('force') !== true) return;
+    if (!transaction.docChanged && !transaction.selectionSet && !transaction.storedMarksSet && transaction.getMeta('force') !== true) return false;
     if (this.commandBatch) {
       this.currentState = this.currentState.apply(transaction);
       this.commandBatch.transactions.push(transaction);
-      return;
+      return true;
     }
     const oldState = this.currentState;
+    if (oldState.plugins.some((plugin) => plugin.spec.filterTransaction?.(transaction, oldState) === false)) return false;
     this.currentState = this.currentState.apply(transaction);
     const applied: Transaction[] = [transaction];
     for (let pass = 0; pass < 20; pass += 1) {
@@ -73,6 +74,7 @@ export class Editor {
         const followUp = plugin.spec.appendTransaction?.(Object.freeze([...applied]), oldState, this.currentState);
         if (!followUp) continue;
         if (!followUp.docChanged && !followUp.selectionSet && !followUp.storedMarksSet && followUp.getMeta('force') !== true) continue;
+        if (this.currentState.plugins.some((candidate) => candidate.spec.filterTransaction?.(followUp, this.currentState) === false)) continue;
         this.currentState = this.currentState.apply(followUp);
         applied.push(followUp);
         appended = true;
@@ -83,6 +85,7 @@ export class Editor {
     const notification = composeAppliedTransactions(oldState, applied);
     this.subscribers.forEach((callback) => callback(this.currentState, notification));
     this.onUpdate?.(this.currentState, notification);
+    return true;
   }
 
   /**
@@ -98,6 +101,11 @@ export class Editor {
     try {
       const accepted = execute();
       if (!accepted || options.dryRun) return accepted;
+      if (!batch.transactions.length) {
+        this.currentState = initialState;
+        this.commandBatch = undefined;
+        return true;
+      }
       const combined = initialState.createTransaction();
       batch.transactions.forEach((transaction) => {
         transaction.steps.forEach((step) => combined.step(step));
@@ -107,8 +115,7 @@ export class Editor {
       });
       this.currentState = initialState;
       this.commandBatch = undefined;
-      this.dispatch(combined);
-      return true;
+      return this.dispatch(combined);
     } finally {
       if (this.commandBatch === batch) {
         this.currentState = initialState;

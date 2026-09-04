@@ -1,5 +1,6 @@
+import { forwardRef } from 'react';
 import type { Editor } from '../core';
-import { FountainEditor, type FountainEditorProps } from './FountainEditor';
+import { FountainEditor, type FountainEditorHandle, type FountainEditorProps } from './FountainEditor';
 import { FountainToolbar } from './FountainToolbar';
 
 export interface FountainComposerProps extends Omit<FountainEditorProps, 'editor'> {
@@ -8,11 +9,14 @@ export interface FountainComposerProps extends Omit<FountainEditorProps, 'editor
   showToolbar?: boolean;
 }
 
-export function FountainComposer({ editor, className, showToolbar = true, imageUpload, assetUpload, onError, ...editorProps }: FountainComposerProps) {
+export const FountainComposer = forwardRef<FountainEditorHandle, FountainComposerProps>(function FountainComposer(
+  { editor, className, showToolbar = true, imageUpload, assetUpload, onError, ...editorProps },
+  ref,
+) {
   return (
     <section className={['fountain-composer', className].filter(Boolean).join(' ')}>
       {showToolbar && <FountainToolbar editor={editor} imageUpload={imageUpload} assetUpload={assetUpload} onError={onError} />}
-      <FountainEditor editor={editor} imageUpload={imageUpload} assetUpload={assetUpload} onError={onError} {...editorProps} />
+      <FountainEditor ref={ref} editor={editor} imageUpload={imageUpload} assetUpload={assetUpload} onError={onError} {...editorProps} />
     </section>
   );
-}
+});

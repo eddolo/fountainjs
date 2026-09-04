@@ -715,6 +715,67 @@ test('loads the public React playground without console or page errors', async (
   expect(errors).toEqual([]);
 });
 
+test('uses package-backed mentions, emoji, typography, and live counting in the public React playground', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const count = page.locator('.fountain-character-count');
+  await expect(count).toBeVisible();
+  await expect(count).toHaveAttribute('aria-live', 'polite');
+  const before = Number((await count.textContent())?.match(/\d+/)?.[0] ?? 0);
+
+  const firstParagraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await firstParagraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('@a');
+
+  const mentionMenu = page.locator('.fountain-suggestion-menu[aria-label="Mention a person or topic"]');
+  await expect(mentionMenu).toBeVisible();
+  await expect(editor.locator('[data-fountain-suggestion-query="@"]')).toHaveText('@a');
+  await expect(mentionMenu.getByRole('option')).toHaveCount(3);
+  const mentionListboxId = await mentionMenu.getByRole('listbox').getAttribute('id') ?? '';
+  await expect(editor).toHaveAttribute('aria-expanded', 'true');
+  await expect(editor).toHaveAttribute('aria-haspopup', 'listbox');
+  await expect(editor).toHaveAttribute('aria-controls', mentionListboxId);
+  await expect(mentionMenu.getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+  await expect(editor).toHaveAttribute('aria-activedescendant', await mentionMenu.getByRole('option').first().getAttribute('id') ?? '');
+  await page.keyboard.press('ArrowDown');
+  await expect(mentionMenu.getByRole('option').nth(1)).toHaveAttribute('aria-selected', 'true');
+  await expect(editor).toHaveAttribute('aria-activedescendant', await mentionMenu.getByRole('option').nth(1).getAttribute('id') ?? '');
+  await page.keyboard.press('Enter');
+  await expect(mentionMenu).toHaveCount(0);
+  await expect(editor).not.toHaveAttribute('aria-expanded');
+  await expect(editor).not.toHaveAttribute('aria-controls');
+  const mention = editor.locator('[data-fountain-mention="true"]').last();
+  await expect(mention).toHaveText('@Grace Hopper');
+  await expect(mention).toHaveAttribute('data-id', 'grace');
+  await expect(mention).toHaveAttribute('data-kind', 'person');
+
+  await page.keyboard.type(':rock');
+  const emojiMenu = page.locator('.fountain-suggestion-menu[aria-label="Choose an emoji"]');
+  await expect(emojiMenu).toBeVisible();
+  await expect(editor.locator('[data-fountain-suggestion-query=":"]')).toHaveText(':rock');
+  await expect(emojiMenu.getByRole('option')).toHaveCount(1);
+  await expect(emojiMenu.getByRole('option')).toContainText('rocket');
+  const menuBounds = await emojiMenu.boundingBox();
+  const viewport = page.viewportSize();
+  expect(menuBounds).not.toBeNull();
+  expect(viewport).not.toBeNull();
+  expect((menuBounds?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((menuBounds?.x ?? 0) + (menuBounds?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  expect((menuBounds?.y ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((menuBounds?.y ?? 0) + (menuBounds?.height ?? 0)).toBeLessThanOrEqual((viewport?.height ?? 0) + 1);
+  await page.keyboard.press('Enter');
+  const emoji = editor.locator('[data-fountain-emoji="true"]').last();
+  await expect(emoji).toContainText('🚀');
+  await expect(emoji).toHaveAttribute('data-name', 'rocket');
+
+  await page.keyboard.type('--');
+  const createdParagraph = editor.locator('[data-fountain-node="paragraph"]').nth(1);
+  await expect(createdParagraph).toContainText('@Grace Hopper 🚀 —');
+  await expect.poll(async () => Number((await count.textContent())?.match(/\d+/)?.[0] ?? 0)).toBeGreaterThan(before);
+});
+
 test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
   await page.goto('/');
   const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';

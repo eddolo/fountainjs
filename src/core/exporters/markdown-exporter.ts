@@ -8,6 +8,7 @@ function inline(node: Node): string {
     if (node.type.name === 'hard_break') return '  \n';
     if (node.type.name === 'inline_math') return `$${String(node.attrs.latex ?? '')}$`;
     if (node.type.name === 'inline_image') return `![${String(node.attrs.alt ?? '')}](${String(node.attrs.src ?? '')}${node.attrs.title ? ` "${String(node.attrs.title)}"` : ''})`;
+    if (node.type.name === 'mention' || node.type.name === 'emoji') return escapeInline(node.textContent);
     return node.content.map(inline).join('');
   }
   let text = node.marks.some((mark) => mark.type.name === 'code') ? `\`${(node.text ?? '').replace(/`/g, '\\`')}\`` : escapeInline(node.text ?? '');

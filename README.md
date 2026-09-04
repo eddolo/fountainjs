@@ -144,6 +144,38 @@ passes its own synchronous `{ load, save }` adapter. Commands are available for
 open, close, paste, remove, and clear, so non-React products can render the same
 immutable state in any interface.
 
+## Optional document utilities
+
+Mentions, emoji, typography, and character/word limits are independent modules
+from `fountainjs-editor/document-utilities`; none is imposed by `StarterKit`.
+Mention and emoji suggestions share an abortable, stale-safe headless
+controller that any framework can render. The React entry includes an
+accessible positioned listbox and live count.
+
+```ts
+import {
+  EmojiExtension,
+  TypographyExtension,
+  createCharacterCountExtension,
+  createMentionExtension,
+} from 'fountainjs-editor/document-utilities'
+
+const kit = composeExtensions([
+  ...StarterKit.extensions,
+  createMentionExtension({ suggestions: [{ char: '@', items: findPeople }] }),
+  EmojiExtension,
+  TypographyExtension,
+  createCharacterCountExtension({ limit: 5_000 }),
+])
+```
+
+The default emoji module keeps a curated common search catalogue while converting
+any typed or pasted Unicode emoji. Applications that want the complete
+searchable RGI catalogue can import `UnicodeEmojiExtension` or `unicodeEmojis`
+from the isolated `fountainjs-editor/emoji-data` entry. See the
+[document-utilities guide](docs/DOCUMENT_UTILITIES.md) for every option,
+headless UI contracts, accessibility, persistence, and interchange behavior.
+
 ## Native LaTeX mathematics
 
 `MathExtension` is a first-party but opt-in module. It adds portable
@@ -451,6 +483,7 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `FountainSuggestionMenu` and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
@@ -481,13 +514,15 @@ and nested text; block splitting and joining; attributed text and alignment;
 find/replace; rich content insertion; image URL/upload/paste/drop workflows;
 reusable input and paste rules; links, lists, tasks, code, tables, local history,
 interactive NodeViews, grouped browser input, structured clipboard and selected-
-block drag-move, browser-event plugin hooks, extensible schema composition,
+block drag-move, mentions, emoji, typography, character limits, browser-event
+plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
 proposals, and MCP transport.
 
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 
 - [Architecture and internals](docs/ARCHITECTURE.md)
+- [Mentions, emoji, typography, and character count](docs/DOCUMENT_UTILITIES.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
@@ -499,4 +534,5 @@ FountainJS is open about integration boundaries: host applications choose their 
 
 ## License
 
-[MIT](LICENSE) © Paolo Cappuccini.
+[MIT](LICENSE) © Paolo Cappuccini. Optional bundled data attribution is listed
+in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

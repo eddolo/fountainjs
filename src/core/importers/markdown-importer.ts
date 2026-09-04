@@ -1,13 +1,40 @@
 import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 
+const HAS_EMOJI = /\p{Extended_Pictographic}/u;
+
+function unicodeEmojiName(value: string): string {
+  return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
+}
+
+function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): Node[] {
+  if (!value || !schema.nodes.emoji || !HAS_EMOJI.test(value)) return [schema.text(value, marks)];
+  const segments = typeof Intl.Segmenter === 'function'
+    ? Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(value), (part) => part.segment)
+    : Array.from(value);
+  const result: Node[] = [];
+  let pending = '';
+  const flush = () => {
+    if (pending) result.push(schema.text(pending, marks));
+    pending = '';
+  };
+  segments.forEach((segment) => {
+    if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
+    flush();
+    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment })); }
+    catch { result.push(schema.text(segment, marks)); }
+  });
+  flush();
+  return result.length ? result : [schema.text('', marks)];
+}
+
 function inline(text: string, schema: Schema): Node[] {
   const result: Node[] = [];
   const pattern = /(!\[[^\]]*\]\(\S+?(?:\s+["'][^"']*["'])?\)|\$(?!\$)(?!\s)(?:\\.|[^$\\\n])*(?<!\s)\$|\*\*[^*]+\*\*|~~[^~]+~~|==[^=]+==|`[^`]+`|\[[^\]]+\]\([^)]+\)|_[^_]+_)/g;
   let cursor = 0;
   for (const match of text.matchAll(pattern)) {
     const index = match.index ?? 0;
-    if (index > cursor) result.push(schema.text(text.slice(cursor, index)));
+    if (index > cursor) result.push(...textNodes(text.slice(cursor, index), schema));
     const token = match[0];
     let value = token;
     let mark: Mark | undefined;
@@ -39,10 +66,10 @@ function inline(text: string, schema: Schema): Node[] {
         if (isSafeURL(link[2].trim())) mark = schema.marks.link?.create({ href: link[2].trim() });
       }
     }
-    result.push(schema.text(value, mark ? [mark] : []));
+    result.push(...textNodes(value, schema, mark ? [mark] : []));
     cursor = index + token.length;
   }
-  if (cursor < text.length) result.push(schema.text(text.slice(cursor)));
+  if (cursor < text.length) result.push(...textNodes(text.slice(cursor), schema));
   return result.length ? result : [schema.text('')];
 }
 

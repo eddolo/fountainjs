@@ -158,6 +158,33 @@ const extension = defineExtension({
   formats: { portable: portableFormat },
 })`;
 
+const documentUtilitiesExample = `import {
+  EmojiExtension,
+  TypographyExtension,
+  createCharacterCountExtension,
+  createMentionExtension,
+} from 'fountainjs-editor/document-utilities'
+import { UnicodeEmojiExtension } from 'fountainjs-editor/emoji-data'
+
+const mentions = createMentionExtension({
+  suggestions: [{
+    char: '@',
+    kind: 'person',
+    items: ({ query, signal }) => people.search(query, { signal }),
+  }],
+})
+
+const kit = composeExtensions([
+  CoreExtension,
+  mentions,
+  UnicodeEmojiExtension, // or compact EmojiExtension
+  TypographyExtension,
+  createCharacterCountExtension({ limit: 5_000 }),
+])
+
+// Controllers are headless; React renders the optional listbox.
+const mentionsUI = kit.services.mentions.getController(editor)`;
+
 const toc = [
   ['mental-model', 'Mental model'],
   ['system-map', 'System map'],
@@ -233,7 +260,7 @@ function Developers() {
               <i>parse / serialize ↕</i>
               <div className="system-map__boundaries"><span>JSON</span><span>Markdown</span><span>HTML</span><span>Text</span><span>Host services</span></div>
             </div>
-            <p>The dependency direction is deliberate: core modules never import React. The DOM view depends on core; React wraps the DOM view; the Web Component registers the same editor/view pair as a browser standard. A future adapter only needs to subscribe to <code>Editor</code> and dispatch transactions or commands.</p>
+            <p>The dependency direction is deliberate: core modules never import React. The DOM view depends on core; React wraps the DOM view; the Web Component registers the same editor/view pair as a browser standard. An adapter for any other framework only needs to subscribe to <code>Editor</code> and dispatch transactions or commands.</p>
           </section>
 
           <section className="dev-section" id="document-model">
@@ -270,6 +297,7 @@ function Developers() {
             <ol className="dev-pipeline">
               <li><b>Command</b><span>Checks whether the operation is valid for the current state.</span></li>
               <li><b>Transaction</b><span>Collects document steps, next selection, stored marks, and host metadata.</span></li>
+              <li><b>Filter</b><span>Every plugin may refuse the complete change before state, history, or subscribers observe it.</span></li>
               <li><b>Transform</b><span>Applies immutable replace, mark, node-attribute, or structure steps in order.</span></li>
               <li><b>State</b><span>Validates the result and lets every plugin calculate its next state.</span></li>
               <li><b>Editor</b><span>Notifies subscribers and the host <code>onUpdate</code> callback.</span></li>
@@ -303,12 +331,14 @@ function Developers() {
             <p>It also composes <code>SyntaxHighlightExtension</code>. Code source, language, and the line-number preference stay portable; live tokens and number gutters are decorations that never enter JSON or model text. The included tokenizer covers common languages, while <code>createSyntaxHighlightExtension</code> accepts validated ranges from any host grammar engine. Public language and line-number commands drive the same settings shown in the React toolbar.</p>
             <p><code>TableEditingExtension</code> keeps logical grid geometry valid across rowspans and colspans. Public commands merge and split cells, toggle scoped headers, select full logical rows or columns, resize through pointer or keyboard controls, and exchange rectangular TSV/HTML clipboard data. A non-historical append transaction repairs malformed host changes before subscribers receive the final state.</p>
             <h3>First-party modules remain opt-in</h3>
+            <p>Mentions, emoji, typography, and character limits live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention and emoji queries use one headless, abortable suggestion controller with stale-result protection; the React menu is merely a renderer over that state. <code>EmojiExtension</code> keeps a compact catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
+            <Code>{documentUtilitiesExample}</Code>
             <p><code>ClipboardHistoryExtension</code> records a bounded, deduplicated list only when copy or cut originates inside that editor. Native copy/paste remains unchanged; Ctrl/Cmd+Alt+V or a public command opens the optional searchable React picker. Its default is per-editor memory, with no upload and no browser-wide clipboard access. Applications must deliberately inject any persistence adapter, and non-React surfaces can render the same immutable plugin state.</p>
             <p><code>MathExtension</code> adds inline and display TeX nodes, commands, isolated typing/paste rules, and format round trips without changing <code>StarterKit</code>. Its default NodeView keeps accessible source visible; <code>createMathExtension</code> accepts a host-owned DOM renderer, and <code>createKaTeXRenderer</code> adapts KaTeX without coupling FountainJS to that dependency. Try the complete source-to-JSON route in the <a href="./demos/node-markdown.html">headless Markdown and LaTeX demo</a>.</p>
             <p><code>LeanExtension</code> is equally optional and works source-only: portable Lean blocks, Unicode shortcuts, highlighting, and a clear <code>LeanInfoView</code> do not require a server. An injected <code>LeanProvider</code> may add mapped diagnostics, goals, hover, and completion through a local, self-hosted, managed, or one-shot service. FountainJS chooses no endpoint and stores no credentials; see the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/LEAN.md">Lean provider and security guide</a>.</p>
             <h3>Stateful behavior belongs in plugins</h3>
             <Code>{pluginExample}</Code>
-            <p>Plugins can intercept keyboard, before-input, text-input, copy, cut, paste, drop, and click events, run editor create/destroy lifecycle hooks, and append validated follow-up transactions. Dispatch resolves those follow-ups first; subscribers receive one complete mapped transaction and the final state. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
+            <p>Plugins can intercept keyboard, before-input, text-input, copy, cut, paste, drop, and click events, run editor create/destroy lifecycle hooks, refuse complete transactions with <code>filterTransaction</code>, and append validated follow-up transactions. Dispatch resolves accepted follow-ups first; subscribers receive one complete mapped transaction and the final state. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
           </section>
 
           <section className="dev-section" id="surfaces">
@@ -318,7 +348,7 @@ function Developers() {
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>
               <div><h3>Web Component</h3><p>A standards boundary with a <code>value</code> property, <code>fountain-change</code> event, and configurable schema/plugins.</p></div>
-              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, and optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
+              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion menu and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
           </section>
@@ -351,6 +381,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/core/commands.ts"><code>src/core/commands.ts</code><span>Text, marks, blocks, selection, document insertion, table and list commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/suggestion.ts"><code>src/extensions/suggestion.ts</code><span>Headless trigger matching, cancellable providers, stale-result protection, selection, and query decorations.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCUMENT_UTILITIES.md"><code>docs/DOCUMENT_UTILITIES.md</code><span>Complete mention, emoji, typography, counting, React accessibility, and interchange contracts.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/math.ts"><code>src/extensions/math.ts</code><span>Opt-in TeX nodes, commands, input/paste rules, NodeViews, and renderer adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/lean"><code>src/lean/</code><span>Provider-neutral Lean requests, proof-service results, validation, and stale protection.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/react"><code>src/react/</code><span>Optional React hooks and product-ready interface components.</span></a>

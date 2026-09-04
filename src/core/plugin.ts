@@ -40,6 +40,8 @@ export interface PluginSpec<T = unknown> {
   key?: PluginKey<T>;
   state?: PluginStateSpec<T>;
   props?: PluginProps;
+  /** Return false to reject a transaction before it changes editor state. */
+  filterTransaction?: (transaction: Transaction, state: EditorState) => boolean;
   /** May return a follow-up transaction after a state update (for example, structural repair). */
   appendTransaction?: (
     transactions: readonly Transaction[],

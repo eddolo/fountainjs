@@ -199,6 +199,49 @@ const kit = composeExtensions([...StarterKit.extensions, clipboard])
 FountainJS does not choose localStorage, a database, a network destination, or
 an encryption policy on behalf of the application.
 
+### Mentions, emoji, typography, and character count
+
+These opt-in modules are exported from
+`fountainjs-editor/document-utilities`, keeping the core package entry free of
+suggestion policy and extra nodes.
+
+`createMentionExtension(options)` adds an atomic inline `mention` with `id`,
+`label`, `trigger`, `kind`, and safe optional `href` attributes. It accepts
+multiple unique trigger configurations with synchronous or asynchronous item
+providers. `createEmojiExtension(options)` adds an atomic inline `emoji`,
+custom catalogues, `:shortcode:` input, optional emoticons, Unicode typing and
+paste conversion, and safe fallback images. Both expose a
+`SuggestionController` through their composed service. Obsolete async requests
+are aborted and ignored; snapshots expose status, match, items, selected item,
+and errors without depending on a UI framework.
+
+`EmojiExtension` uses a compact common catalogue. Import `unicodeEmojis` or the
+ready-to-compose `UnicodeEmojiExtension` from the isolated
+`fountainjs-editor/emoji-data` entry for the complete searchable RGI base
+catalogue. The data entry is not loaded by the package root, React, or the
+compact document-utilities path.
+
+`TypographyExtension` supplies independently configurable input rules for
+smart quotes, em dashes, ellipsis, arrows, symbols, fractions,
+multiplication, and superscript two/three. Each result can be overridden or
+disabled, quote pairs can be selected for LTR/RTL, and immediate Backspace
+restores literal input.
+
+`createCharacterCountExtension(options)` provides `characters`, `words`,
+`snapshot`, and `trim` services. It supports `textSize`/`nodeSize`, custom text
+and word counters, an optional limit, and initial/programmatic auto-trimming.
+Transactions above a limit are refused while reductions from preserved
+over-limit content remain possible. `trimDocumentToCharacterLimit` is the pure
+schema-valid trimming helper.
+
+React hosts can pass the headless controller to `FountainSuggestionMenu` and
+the counting service to `FountainCharacterCount`. The suggestion component
+positions against the decorated query, keeps editor focus, exposes listbox and
+option semantics, and links the contenteditable through `aria-controls`,
+`aria-expanded`, `aria-haspopup`, `aria-autocomplete`, and
+`aria-activedescendant`. See [DOCUMENT_UTILITIES.md](DOCUMENT_UTILITIES.md) for
+the complete options, lifecycle, format, and accessibility contracts.
+
 ### Custom NodeViews
 
 A NodeView constructor receives the current model `node`, the owning
@@ -345,6 +388,8 @@ examples, endpoint constraints, stale-result handling, and loopback security.
 
 `Editor` exposes `state`, `editable`, `createTransaction()`, `dispatch()`,
 `runCommandBatch()`, `subscribe()`, `getJSON()`, `getText()`, and `destroy()`.
+`dispatch()` returns `true` only when a transaction is accepted and applied;
+empty or plugin-filtered transactions return `false`.
 `runCommandBatch()` is the low-level atomic transaction boundary used by command
 chains; most applications should use `createCommandManager()` instead.
 
@@ -526,7 +571,7 @@ focused.
 
 ## Plugins
 
-A `Plugin` can own immutable state, contribute a `DecorationSet`, intercept `keydown`, `beforeinput`, text input, copy, cut, paste, drop, and click events, and append a follow-up transaction after a state update. It can also receive editor create/destroy lifecycle callbacks. Dispatch reaches a guarded fixed point, then subscribers receive the final state and one transaction composed from the original plus every follow-up map. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
+A `Plugin` can own immutable state, contribute a `DecorationSet`, intercept `keydown`, `beforeinput`, text input, copy, cut, paste, drop, and click events, filter a transaction before it changes state, and append a follow-up transaction after a state update. It can also receive editor create/destroy lifecycle callbacks. `filterTransaction(transaction, state)` returns `false` to refuse the original or an appended transaction; character limits use this public boundary. Dispatch reaches a guarded fixed point, then subscribers receive the final state and one transaction composed from the original plus every accepted follow-up map. Returning `true` from an input hook tells the DOM view that the extension handled the event. Use `PluginKey.get(editor.state)` to read plugin state. `historyPlugin` and `markdownShortcutsPlugin` are included.
 
 ### History
 

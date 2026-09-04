@@ -150,7 +150,10 @@ text cursor, avoiding stale path failures in delayed UI and async integrations.
 
 A transaction can also set the next selection, stored marks, and arbitrary metadata. Commands use metadata for concerns such as history and host provenance.
 
-`Editor.dispatch()` ignores empty transactions. Otherwise it applies the transaction, replaces the current state, notifies subscribers, and calls the host `onUpdate` callback.
+`Editor.dispatch()` returns `false` for an empty or plugin-filtered transaction.
+For an accepted transaction it applies the change, resolves accepted plugin
+follow-ups, replaces the current state, notifies subscribers, calls the host
+`onUpdate` callback, and returns `true`.
 
 ## EditorState and plugins
 
@@ -176,6 +179,15 @@ A `Plugin` may define state plus event/lifecycle props:
 - `onCreate`
 - `onDestroy`
 
+`filterTransaction(transaction, state)` runs before the initial transaction
+changes state and before each appended transaction. Returning `false` is a
+hard refusal: state, history, subscribers, and the view do not observe that
+transaction. The character-count extension uses this boundary to enforce a
+limit without teaching core commands about product policy. Atomic command
+batches still execute against temporary state, then apply every filter to the
+one composed transaction; a rejected batch restores its initial state and
+reports `false` to the caller.
+
 `appendTransaction(transactions, oldState, newState)` may return a validated
 follow-up transaction. Dispatch applies follow-ups to a fixed point with a
 20-pass loop guard, then notifies subscribers once with the final state and one
@@ -194,6 +206,16 @@ remote carets, diagnostics, and pending review UI.
 The renderer segments text at every inline-range and widget boundary, then nests
 all active decorations for that segment. This supports crossing ranges without
 duplicating or persisting text, including after transaction mapping.
+
+The mention and emoji modules build on this separation. Their shared
+suggestion state derives a literal trigger/query from the collapsed text
+selection and exposes a view-only query decoration. A framework-neutral
+`SuggestionController` subscribes to that state, aborts superseded providers,
+rejects stale results, and owns menu selection—but it does not own DOM. On
+acceptance, one normal transaction replaces the literal query with a validated
+inline atom. React's optional menu only subscribes to the controller and
+positions against the decoration. Destroying the editor destroys its
+controller and aborts pending work.
 
 History demonstrates this design. It is a normal stateful plugin holding `done`
 and `undone` snapshots. `createHistoryPlugin` validates configurable depth and

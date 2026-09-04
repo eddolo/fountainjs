@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   AIController,
   ClipboardHistoryExtension,
@@ -17,7 +17,27 @@ import {
   markdownShortcutsPlugin,
   type AssetUploadHandler,
 } from 'fountainjs-editor';
-import { FountainAIReview, FountainComposer, Navigator, useFountain, useFountainState } from 'fountainjs-editor/react';
+import {
+  EmojiExtension,
+  TypographyExtension,
+  createCharacterCountExtension,
+  createMentionExtension,
+  type CharacterCountService,
+  type EmojiItem,
+  type EmojiService,
+  type MentionItem,
+  type MentionService,
+} from 'fountainjs-editor/document-utilities';
+import {
+  FountainAIReview,
+  FountainCharacterCount,
+  FountainComposer,
+  FountainSuggestionMenu,
+  Navigator,
+  useFountain,
+  useFountainState,
+  type FountainEditorHandle,
+} from 'fountainjs-editor/react';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
@@ -100,9 +120,37 @@ const calloutExtension = defineExtension({
   },
 });
 
+const mentionExtension = createMentionExtension({
+  suggestions: [
+    {
+      char: '@',
+      kind: 'person',
+      items: ({ query }) => [
+        { id: 'ada', label: 'Ada Lovelace', kind: 'person' },
+        { id: 'grace', label: 'Grace Hopper', kind: 'person' },
+        { id: 'margaret', label: 'Margaret Hamilton', kind: 'person' },
+      ].filter((item) => item.label.toLowerCase().includes(query.toLowerCase())),
+    },
+    {
+      char: '#',
+      kind: 'topic',
+      items: ({ query }) => [
+        { id: 'editor-platform', label: 'editor-platform', kind: 'topic' },
+        { id: 'release', label: 'release', kind: 'topic' },
+      ].filter((item) => item.label.includes(query.toLowerCase())),
+    },
+  ],
+});
+
+const characterCountExtension = createCharacterCountExtension({ limit: 5_000 });
+
 const demoKit = composeExtensions([
   CoreExtension,
   MediaExtension,
+  mentionExtension,
+  EmojiExtension,
+  characterCountExtension,
+  TypographyExtension,
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
   SyntaxHighlightExtension,
@@ -152,7 +200,16 @@ function App() {
     plugins: demoKit.plugins,
   });
   const state = useFountainState(editor);
+  const editorHandle = useRef<FountainEditorHandle>(null);
   const aiController = useMemo(() => new AIController(editor, demoAdapter), [editor]);
+  const mentionController = useMemo(
+    () => (demoKit.services.mentions as MentionService).getController(editor),
+    [editor],
+  );
+  const emojiController = useMemo(
+    () => (demoKit.services.emoji as EmojiService).getController(editor),
+    [editor],
+  );
   const [format, setFormat] = useState<ExportFormat>('markdown');
   const [copied, setCopied] = useState(false);
 
@@ -163,7 +220,8 @@ function App() {
     return MarkdownExporter.export(state);
   }, [format, state]);
 
-  const words = state?.doc.textContent.trim().split(/\s+/).filter(Boolean).length ?? 0;
+  const characterCount = demoKit.services.characterCount as CharacterCountService;
+  const words = characterCount.words(editor);
   const blocks = state?.doc.childCount ?? 0;
 
   const addBlock = (kind: 'quote' | 'task' | 'table' | 'callout') => {
@@ -218,7 +276,7 @@ function App() {
       <section className="capabilities">
         <div className="capabilities__heading"><span>BUILT IN TODAY</span><h2>Real document editing—not an AI wrapper.</h2><p>FountainJS ships the capabilities people expect from a serious editor, while keeping every layer replaceable.</p></div>
         <div className="capabilities__grid">
-          <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, bold, italic, underline, strike, highlight, sub/superscript, find/replace, undo/redo, paste, and IME input.</p></article>
+          <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, nested document structures, tables, and custom block types.</p></article>
           <article><b>03</b><h3>Production images</h3><p>Use block or inline images, editable captions, alt text, alignment, responsive sources, replacement, and accessible resizing. Upload tasks map through edits and expose progress, cancel, retry, and errors while storage remains yours.</p></article>
           <article><b>04</b><h3>Portable formats</h3><p>Lossless JSON plus Markdown, safe HTML, and plain-text boundaries for storage, APIs, publishing pipelines, search, and any backend language.</p></article>
@@ -240,7 +298,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>The package running in this page.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> select across paragraphs, format or align text, find and replace, upload or paste an image, edit a table, tick tasks, insert the custom <strong>Callout</strong> node, and inspect live output. The AI review example is optional.</div>
+        <div className="demo-note"><b>Try it:</b> type <kbd>@a</kbd> for a person, <kbd>#re</kbd> for a topic, or <kbd>:rock</kbd> for emoji; use ↑/↓ and Enter. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type. Everything else remains available too.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -251,7 +309,20 @@ function App() {
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
             </div>
-            <FountainComposer editor={editor} placeholder="Start writing…" assetUpload={demoAssetUpload} />
+            <FountainComposer ref={editorHandle} editor={editor} placeholder="Start writing…" assetUpload={demoAssetUpload} />
+            <FountainSuggestionMenu<MentionItem>
+              controller={mentionController}
+              label="Mention a person or topic"
+              anchorElement={editorHandle.current?.view?.dom}
+              renderItem={(item) => <><b>{item.label}</b><small>{item.kind}</small></>}
+            />
+            <FountainSuggestionMenu<EmojiItem>
+              controller={emojiController}
+              label="Choose an emoji"
+              anchorElement={editorHandle.current?.view?.dom}
+              renderItem={(item) => <><b className="suggestion-emoji">{item.emoji}</b><span>{item.label}</span></>}
+            />
+            <FountainCharacterCount editor={editor} service={characterCount} />
           </div>
           <aside className="studio__tools">
             <div className="module-stack"><span>COMPOSED FOR THIS DEMO</span><div>{demoKit.extensions.map((extension) => <code key={extension.name}>{extension.name}</code>)}</div></div>

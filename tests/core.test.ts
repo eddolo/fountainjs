@@ -12,6 +12,7 @@ import {
   MarkdownImporter,
   Node,
   NodeSelection,
+  Plugin,
   Schema,
   Selection,
   Decoration,
@@ -52,6 +53,32 @@ import {
 } from '../src';
 
 describe('document model and transactions', () => {
+  it('rejects filtered transactions and atomically rolls back filtered command batches', () => {
+    const update = vi.fn();
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      plugins: [new Plugin({
+        filterTransaction: (transaction) => transaction.doc.textContent.length <= 3,
+      })],
+      onUpdate: update,
+    });
+
+    expect(editor.dispatch(editor.state.createTransaction())).toBe(false);
+    expect(insertText(editor, 'abc')).toBe(true);
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(insertText(editor, 'd')).toBe(false);
+    expect(editor.getText()).toBe('abc');
+    expect(update).toHaveBeenCalledTimes(1);
+
+    expect(editor.runCommandBatch(() => {
+      editor.dispatch(editor.state.createTransaction().replaceText([0, 0], 0, 3, 'ab'));
+      editor.dispatch(editor.state.createTransaction().insertText([0, 0], 2, 'cd'));
+      return true;
+    })).toBe(false);
+    expect(editor.getText()).toBe('abc');
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
   it('creates immutable, JSON-round-trippable documents', () => {
     const schema = new Schema(CoreSchemaSpec);
     const doc = schema.node('doc', {}, [

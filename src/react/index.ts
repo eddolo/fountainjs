@@ -7,3 +7,5 @@ export * from './Navigator';
 export * from './useNavigatorState';
 export * from './FountainAIReview';
 export * from './ReactNodeView';
+export * from './FountainSuggestionMenu';
+export * from './FountainCharacterCount';

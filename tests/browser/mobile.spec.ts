@@ -56,3 +56,34 @@ test('keeps the public editor usable without horizontal overflow at a phone view
   await expect(page.getByLabel('Image source set')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
+
+test('keeps the suggestion picker visible and touch-selectable on a phone viewport', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstParagraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await firstParagraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type(':');
+
+  const menu = page.locator('.fountain-suggestion-menu[aria-label="Choose an emoji"]');
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole('option')).toHaveCount(24);
+  const menuBox = await menu.boundingBox();
+  const viewport = page.viewportSize();
+  expect(menuBox).not.toBeNull();
+  expect(viewport).not.toBeNull();
+  expect((menuBox?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((menuBox?.x ?? 0) + (menuBox?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  expect((menuBox?.y ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((menuBox?.y ?? 0) + (menuBox?.height ?? 0)).toBeLessThanOrEqual((viewport?.height ?? 0) + 1);
+
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.type(':rock');
+  await expect(menu.getByRole('option')).toHaveCount(1);
+  await menu.getByRole('option').click();
+  await expect(menu).toHaveCount(0);
+  await expect(editor.locator('[data-fountain-emoji="true"]').last()).toContainText('🚀');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});

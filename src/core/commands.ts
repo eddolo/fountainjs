@@ -26,8 +26,7 @@ const SAFE_CONTENT_URL = /^(https?:|data:image\/(?:png|gif|jpe?g|webp);base64,|\
 
 function dispatchTextSelection(editor: Editor, transaction: ReturnType<Editor['createTransaction']>, path: readonly number[], from: number, to: number): boolean {
   transaction.setSelection(new Selection(path, from, to));
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 function sameMarks(left: readonly Mark[], right: readonly Mark[]): boolean {

@@ -81,6 +81,10 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .quick-insert button { padding: 7px 10px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 7px; font-size: 11px; font-weight: 700; }
 .studio__canvas .fountain-composer { border: 0; border-radius: 12px; box-shadow: 0 12px 30px rgb(39 32 66 / 10%); }
 .studio__canvas .fountain-editor { height: 635px; min-height: 0; overflow-y: auto; }
+.studio__canvas > .fountain-character-count { justify-content: flex-end; }
+.studio__canvas .fountain-suggestion-menu [role="option"] { display: flex; gap: 10px; align-items: center; }
+.studio__canvas .fountain-suggestion-menu [role="option"] small { margin-inline-start: auto; color: #8c8798; font: 10px DM Mono, monospace; text-transform: uppercase; }
+.studio__canvas .suggestion-emoji { width: 28px; font-size: 21px; text-align: center; }
 .studio__tools { display: grid; min-width: 0; padding: 14px; align-content: start; gap: 12px; background: #1d1a2b; border-left: 1px solid #38344c; }
 .module-stack { padding: 14px; color: #bcb7ca; background: #282438; border: 1px solid #3b364d; border-radius: 12px; }
 .module-stack > span { display: block; margin-bottom: 10px; color: #9f92e5; font: 500 9px DM Mono, monospace; letter-spacing: .1em; }

@@ -10,6 +10,11 @@
 
 ### Added
 
+- Independent mention, emoji, typography, and character-count extensions; a
+  framework-neutral cancellable suggestion controller; accessible React
+  suggestion/count UI; an isolated complete RGI emoji-data entry; enforced
+  transaction filtering; safe interchange; package-backed desktop/mobile
+  demos; and behavioral, packaging, accessibility, and browser contracts.
 - A framework-neutral `MediaExtension`, included by `StarterKit`, with typed
   native audio/video and WebVTT tracks, file attachments, provider-gated
   sandboxed embeds, safe HTML/text/Markdown boundaries, mapped observable asset
