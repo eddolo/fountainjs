@@ -23,7 +23,7 @@ const SAFE_CUSTOM_TAGS = new Set([
   'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption',
   'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr',
   'i', 'img', 'ins', 'kbd', 'li', 'main', 'mark', 'nav', 'ol', 'p',
-  'picture', 'pre', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section',
+  'picture', 'pre', 'q', 'rb', 'rp', 'rt', 'ruby', 's', 'samp', 'section',
   'small', 'source', 'span', 'strong', 'sub', 'summary', 'sup', 'table',
   'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'u', 'ul',
   'var', 'video', 'wbr',

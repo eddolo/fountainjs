@@ -143,6 +143,42 @@ text interchange are supported, including nested details and inline summary
 marks. See [DETAILS.md](DETAILS.md) for the schema, collaboration behavior,
 security boundary, and integration contract.
 
+### Ruby annotations
+
+The optional `fountainjs-editor/ruby` entry exports `RubyExtension` and
+`createRubyExtension(options)`. Compose it to add an inline `ruby` node whose
+text children are the editable base and whose required `rt` attribute is the
+reading/pronunciation.
+
+```ts
+import {
+  RubyExtension,
+  getActiveRuby,
+  setRuby,
+  toggleRuby,
+  unsetRuby,
+  updateRuby,
+} from 'fountainjs-editor/ruby'
+
+const kit = composeExtensions([...StarterKit.extensions, RubyExtension])
+setRuby(editor, { annotation: 'とうきょう' })
+```
+
+`setRuby` requires a non-empty text selection within one inline parent and
+retains the selected text leaves and marks. `updateRuby` changes only the
+reading; `unsetRuby` unwraps the base; `toggleRuby` selects between those
+operations; and `getActiveRuby` returns `{ path, node }`. Explicit paths let
+custom NodeViews address a ruby node after mapped document changes. The command
+aliases ending in `RubyText` accept the same arguments.
+
+`createRubyExtension` accepts `allowClickToEdit` and a framework-neutral
+`renderAnnotationEditor(context)` hook. The default semantic NodeView opens an
+accessible floating form from click, Enter, or Space, blocks accidental submit
+during IME composition, supports Escape/Cancel and Remove, and does not expose
+editing controls in read-only documents. JSON, safe HTML, semantic inline HTML
+in Markdown, readable text, and generic Yjs synchronization are supported. See
+[RUBY.md](RUBY.md) for the complete schema and interoperability contract.
+
 ### Code blocks and syntax highlighting
 
 The `code_block` node stores only portable source plus `language` and

@@ -42,6 +42,15 @@ function escapeInline(text: string): string {
   return text.replace(/([\\`*_[\]<>])/g, '\\$1');
 }
 
+function escapeHTML(text: unknown): string {
+  return String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function escapeTitle(value: unknown): string {
   return String(value ?? '').replace(/([\\"])/g, '\\$1').replace(/[\r\n]+/g, ' ');
 }
@@ -134,6 +143,28 @@ function reportNodeAttributes(
   }
 }
 
+function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[]): string {
+  let value = escapeHTML(node.text ?? '');
+  for (const mark of [...node.marks].reverse()) {
+    const name = mark.type.name;
+    if (name === 'strong') value = `<strong>${value}</strong>`;
+    else if (name === 'em') value = `<em>${value}</em>`;
+    else if (name === 'underline') value = `<u>${value}</u>`;
+    else if (name === 'strike') value = `<s>${value}</s>`;
+    else if (name === 'code') value = `<code>${value}</code>`;
+    else if (name === 'subscript') value = `<sub>${value}</sub>`;
+    else if (name === 'superscript') value = `<sup>${value}</sup>`;
+    else if (name === 'highlight') value = `<mark style="background-color:${escapeHTML(mark.attrs.color)}">${value}</mark>`;
+    else if (name === 'text_color') value = `<span style="color:${escapeHTML(mark.attrs.color)}">${value}</span>`;
+    else if (name === 'link') {
+      const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
+      const target = mark.attrs.target === '_self' ? '_self' : '_blank';
+      value = `<a href="${escapeHTML(mark.attrs.href)}"${title} target="${target}">${value}</a>`;
+    } else report(context, 'mark', name, path, 'This custom mark cannot be represented inside semantic ruby HTML and is omitted.');
+  }
+  return value;
+}
+
 function inline(node: Node, context: RenderContext, path: readonly number[]): string {
   reportNodeAttributes(node, context, path);
   if (!node.isText) {
@@ -141,6 +172,12 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
     if (node.type.name === 'inline_math') return `$${String(node.attrs.latex ?? '')}$`;
     if (node.type.name === 'inline_image') {
       return link(escapeInline(String(node.attrs.alt ?? '')), node.attrs.src, node.attrs.title, context, true);
+    }
+    if (node.type.name === 'ruby') {
+      const base = node.content
+        .map((child, index) => rubyBaseHTML(child, context, [...path, index]))
+        .join('');
+      return `<ruby data-fountain-ruby="true"><rb>${base}</rb><rp>(</rp><rt>${escapeHTML(node.attrs.rt)}</rt><rp>)</rp></ruby>`;
     }
     if (node.type.name === 'mention' || node.type.name === 'emoji') {
       report(context, 'node', node.type.name, path, 'Typed identity and fallback metadata are projected to readable text.');

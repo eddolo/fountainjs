@@ -42,6 +42,9 @@
       ],
       "details": [
         "dist/details/index.d.ts"
+      ],
+      "ruby": [
+        "dist/ruby/index.d.ts"
       ]
     }
   },
@@ -166,6 +169,16 @@
         "default": "./dist/details.cjs"
       }
     },
+    "./ruby": {
+      "import": {
+        "types": "./dist/ruby/index.d.ts",
+        "default": "./dist/ruby.js"
+      },
+      "require": {
+        "types": "./dist/ruby/index.d.cts",
+        "default": "./dist/ruby.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -220,6 +233,8 @@
     "document-versions",
     "collapsible-content",
     "details-summary",
+    "ruby-annotation",
+    "furigana",
     "accessible"
   ],
   "engines": {

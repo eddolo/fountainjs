@@ -109,6 +109,27 @@ test('keeps native collapsible details readable and touch-operable on a phone', 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
+test('keeps ruby annotation editing touch-operable and inside the phone viewport', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const annotation = editor.locator('ruby rt').first();
+  const target = await annotation.boundingBox();
+  expect(target).not.toBeNull();
+  expect(target?.width ?? 0).toBeGreaterThanOrEqual(24);
+  await annotation.tap();
+
+  const dialog = page.getByRole('dialog', { name: 'Edit ruby annotation' });
+  await expect(dialog).toBeVisible();
+  const input = dialog.getByRole('textbox', { name: 'Ruby annotation' });
+  await input.fill('Tokyo');
+  const save = dialog.getByRole('button', { name: 'Save' });
+  const saveTarget = await save.boundingBox();
+  expect(saveTarget?.height ?? 0).toBeGreaterThanOrEqual(44);
+  await save.tap();
+  await expect(editor.locator('ruby rt').first()).toHaveText('Tokyo');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('keeps the suggestion picker visible and touch-selectable on a phone viewport', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

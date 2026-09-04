@@ -26,10 +26,22 @@ Its boundaries are language and framework agnostic:
 
 React is an adapter, not the architecture. AI is an optional module, not the product identity.
 
-Every shipped editor capability and add-on is in this public MIT-licensed
-package. FountainJS has no paid extension tier, private feature registry, or
-mandatory hosted service. Optional entry points keep that complete surface
-modular so applications only load what they use.
+## What “open source” means
+
+Every capability counted as shipped has public source, types, tests, and
+documentation and belongs in this public MIT-licensed package. The MIT license
+allows commercial use, modification, forks, redistribution, and private
+application code. FountainJS has no paid editor tier, private feature registry,
+license-key unlock, or mandatory Fountain-hosted service. Optional entry points
+keep the surface modular so applications only load what they use.
+
+This does not promise costless infrastructure. Your application may pay its
+chosen database, file storage, server, conversion service, collaboration host,
+or model provider. Those systems stay behind replaceable interfaces: you may
+self-host, use local implementations, or choose a third party without changing
+the document engine. A practical test is that FountainJS continues to work
+without a Fountain account and can be maintained from a fork if this project
+disappears.
 
 ## Install
 
@@ -181,6 +193,27 @@ the first body paragraph, Backspace at the start of that paragraph returns to
 the summary, and Ctrl/Cmd+Enter toggles it. JSON is lossless; safe HTML,
 Markdown, and text interchange are supported; generic Yjs collaboration carries
 the structure and state. See the [collapsible-details guide](docs/DETAILS.md).
+
+## Ruby pronunciation annotations
+
+The optional `fountainjs-editor/ruby` entry adds semantic, editable reading
+guides such as Japanese furigana. It is unrelated to the Ruby programming
+language. The selected base text and all of its marks stay in the document,
+while the reading is stored as validated `rt` metadata.
+
+```ts
+import { RubyExtension, setRuby } from 'fountainjs-editor/ruby'
+import { StarterKit, composeExtensions } from 'fountainjs-editor'
+
+const kit = composeExtensions([...StarterKit.extensions, RubyExtension])
+setRuby(editor, { annotation: 'とうきょう' }) // selected 東京
+```
+
+The native NodeView renders `<ruby>/<rb>/<rt>/<rp>` and supplies an accessible,
+IME-safe click/keyboard editor that a host may replace. JSON is lossless;
+semantic HTML and Markdown round-trip; plain text reads `東京 (とうきょう)`;
+and generic Yjs collaboration carries both base edits and reading changes. See
+the [ruby-annotation guide](docs/RUBY.md).
 
 ## Optional clipboard history
 
@@ -749,18 +782,18 @@ FountainJS is not the first framework-neutral or extensible editor.
 
 | Project | Architecture and maturity | Practical reason to choose it |
 | --- | --- | --- |
-| [ProseMirror](https://prosemirror.net/docs/guide/) | Battle-tested low-level schema, transaction, plugin, and DOM-view toolkit; it is the foundation beneath Tiptap | Maximum engine-level control and the deepest production history |
-| [Tiptap](https://tiptap.dev/docs/editor/getting-started/overview) | Mature ProseMirror platform with multiple framework integrations and a large extension ecosystem | Ecosystem depth, hosted collaboration services, and commercial support |
+| [ProseMirror + Tiptap](docs/PROSEMIRROR_COMPARISON.md) | Battle-tested ProseMirror engine plus Tiptap's mature extension, framework, UI, and optional service layer | Deep production history, ecosystem breadth, hosted services, and commercial support |
 | [Plate](https://platejs.org/docs) | Powerful React/Slate framework with a broad plugin catalog | A React-first product with many polished capabilities ready now |
 | [BlockNote](https://www.blocknotejs.org/docs) | Polished React block editor with an out-of-the-box Notion-like experience | Shipping a strong block UI quickly |
 | **FountainJS** | DOM-first editor platform, Web Component, React adapter, and explicit extension composition | Owning a modular editor platform and keeping framework/data boundaries open |
 
 Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need years of physical-device IME/mobile certification, a large plugin market, hosted collaboration administration, or commercial support.
 
-Tiptap wraps ProseMirror. FountainJS does not: it independently implements its
-own schema, path-based positions, transactions, plugins, view, and extension
-contract, so ProseMirror and Tiptap extensions are not drop-in compatible. Read
-the [engine-level ProseMirror comparison](docs/PROSEMIRROR_COMPARISON.md).
+Tiptap wraps ProseMirror. FountainJS independently implements the responsibilities
+of both layers: its own engine plus one native extension and product-module
+contract. The primary comparison is therefore FountainJS versus the combined
+ProseMirror + Tiptap stack. Read the [one-to-one full-stack
+comparison](docs/PROSEMIRROR_COMPARISON.md).
 
 ## React exports
 
@@ -825,12 +858,13 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Toolbar composition and stable action IDs](docs/TOOLBAR.md)
 - [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
 - [Collapsible details, commands, interchange, and accessibility](docs/DETAILS.md)
+- [Ruby/furigana annotations, commands, interchange, and custom UI](docs/RUBY.md)
 - [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
 - [Threaded comments, anchors, adapters, permissions, and React UI](docs/COMMENTS.md)
 - [Tracked changes, suggestion mode, review decisions, and React UI](docs/TRACKED_CHANGES.md)
 - [Named versions, comparison, restoration, providers, and React UI](docs/VERSIONS.md)
-- [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
-- [ProseMirror engine comparison and relationship to Tiptap](docs/PROSEMIRROR_COMPARISON.md)
+- [ProseMirror + Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
+- [One-to-one full-stack comparison with ProseMirror + Tiptap](docs/PROSEMIRROR_COMPARISON.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)

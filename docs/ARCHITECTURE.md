@@ -489,6 +489,15 @@ returning renderer, while `createKaTeXRenderer` adapts a host-installed KaTeX
 instance with trust disabled. Rendered markup is view state and never enters
 the document JSON.
 
+Ruby annotations apply the same model/view separation to pronunciation guides.
+`src/ruby/` persists an inline base-text subtree plus one validated `rt`
+attribute. The NodeView projects that state into native ruby elements and keeps
+its floating editor outside the document model. Public set/update/unset/toggle
+commands use ordinary transactions, so history, mapping, and Yjs observe no
+special mutation channel. The HTML importer accepts explicit `rb` or direct-base
+ruby, discards presentation-only `rp`, and degrades malformed input to readable
+base text. See [RUBY.md](RUBY.md).
+
 Lean follows the same inversion of control. `LeanExtension` stores source in a
 normal language-tagged code block and owns Unicode entry commands. The separate
 `LeanController` extracts one explicit block and talks only to an injected
@@ -584,6 +593,9 @@ The suites are organized by boundary:
 - `tests/details.test.ts`: disclosure schema invariants, commands, keyboard
   transitions, native/read-only behavior, nested HTML/Markdown round trips,
   history, and generic Yjs synchronization;
+- `tests/ruby.test.ts`: ruby schema invariants, marked multi-leaf commands,
+  history, semantic HTML/Markdown/text interchange, accessible IME-safe default
+  and custom editors, read-only behavior, and generic Yjs synchronization;
 - `tests/image.test.ts`: block and inline nodes, responsive metadata, mapped
   uploads, progress/cancellation/retry, stale replacement protection, caption
   editing, load recovery, and accessible resizing;
@@ -640,13 +652,14 @@ The suites are organized by boundary:
 
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
-`pnpm test:budget` enforces raw production ceilings of 105 KiB for the ESM root,
-87 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
+`pnpm test:budget` enforces raw production ceilings of 111 KiB for the ESM root,
+93 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
 optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
-10/8 KiB for collapsible details, 54 KiB for CSS, and 605/507 KiB for all emitted
+10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 54 KiB for CSS,
+and 620/520 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -683,6 +696,7 @@ tracked separately as `PROD-05`.
 | `src/versions/` | Optional snapshot model, provider boundary, controller, exact comparison, preview, and backup-first restoration |
 | `src/react/FountainVersions.tsx` | Optional accessible React history, preview, comparison, and restoration panel |
 | `src/details/` | Optional semantic details/summary schema, commands, keyboard behavior, native NodeView, and interchange support |
+| `src/ruby/` | Optional semantic ruby/furigana schema, commands, accessible annotation NodeView, and interchange support |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

@@ -76,6 +76,7 @@ import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes'
 import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
+import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
@@ -89,6 +90,11 @@ const initialContent = {
     ] },
     { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'What you can test here' }] },
     { type: 'paragraph', content: [{ type: 'text', text: 'Insert lists, tables, images, media, callouts, and collapsible sections. Then switch between Markdown, HTML, and JSON output on the right.' }] },
+    { type: 'paragraph', content: [
+      { type: 'text', text: 'Ruby pronunciation is document data: ' },
+      { type: 'ruby', attrs: { rt: 'とうきょう' }, content: [{ type: 'text', text: '東京', marks: [{ type: 'strong' }] }] },
+      { type: 'text', text: '. Click or focus the reading above the word to edit it.' },
+    ] },
     { type: 'blockquote', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'The editor stores your document as portable JSON on the backend you choose.' }] }] },
     { type: 'details', attrs: { open: false }, content: [
       { type: 'details_summary', content: [{ type: 'text', text: 'Open this collapsible section' }] },
@@ -221,6 +227,7 @@ const demoKit = composeExtensions([
   TableEditingExtension,
   ClipboardHistoryExtension,
   DetailsExtension,
+  RubyExtension,
   calloutExtension,
   defineExtension({ name: 'ai-review', services: { adapter: demoAdapter } }),
 ]);
@@ -229,18 +236,11 @@ type ExportFormat = 'markdown' | 'html' | 'json';
 
 const competitors = [
   {
-    name: 'ProseMirror',
-    maturity: 'Battle-tested low-level editor engine and the foundation beneath Tiptap.',
-    architecture: 'Schema, state, transforms, plugins, and a DOM view assembled as separate modules.',
-    fit: 'Choose it for maximum low-level control and the deepest production track record.',
-    href: 'https://prosemirror.net/docs/guide/',
-  },
-  {
-    name: 'Tiptap',
-    maturity: 'Mature ProseMirror-based platform with a large extension ecosystem.',
-    architecture: 'Framework-agnostic core with official integrations across major frontend stacks.',
-    fit: 'Choose it for ecosystem depth, hosted collaboration services, and commercial support.',
-    href: 'https://tiptap.dev/docs/editor/getting-started/install',
+    name: 'ProseMirror + Tiptap',
+    maturity: 'Battle-tested ProseMirror engine plus Tiptap’s mature product and developer layer.',
+    architecture: 'Low-level schema, transactions, plugins, and DOM view with extensions, framework bindings, UI, and optional services above them.',
+    fit: 'Choose the combined stack for its production history, ecosystem depth, hosted services, and commercial support.',
+    href: 'https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md',
   },
   {
     name: 'Plate',
@@ -596,7 +596,7 @@ function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="#review">Review</a><a href="#versions">Versions</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
+        <nav><a href="#what">What it is</a><a href="#open-source">Open source</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="#review">Review</a><a href="#versions">Versions</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 
@@ -628,6 +628,17 @@ function App() {
         </div>
       </section>
 
+      <section className="open-source" id="open-source">
+        <div className="open-source__lead"><span>WHAT OPEN SOURCE MEANS HERE</span><h2>The editor belongs in your product—not behind ours.</h2><p>“Open source” describes what you can inspect, own, change, and run. It does not pretend that databases, servers, storage, or third-party models cost nothing.</p></div>
+        <div className="open-source__grid">
+          <article><b>01</b><h3>Public source and MIT terms</h3><p>The engine, optional modules, types, tests, and documentation are public. The MIT license allows commercial use, modification, forks, redistribution, and private product code.</p></article>
+          <article><b>02</b><h3>No Fountain feature paywall</h3><p>A capability only counts in this project when it ships through the public package. There is no private extension registry, paid editor tier, or license key that unlocks document features.</p></article>
+          <article><b>03</b><h3>No required Fountain cloud</h3><p>Use the editor locally and connect your own database, files, authentication, collaboration transport, conversion service, or AI provider through replaceable interfaces.</p></article>
+          <article><b>04</b><h3>You choose infrastructure costs</h3><p>Your hosting or chosen third-party services may charge you. Those are application decisions, not hidden requirements imposed by FountainJS; local and self-hosted implementations remain valid.</p></article>
+        </div>
+        <p className="open-source__boundary"><strong>Practical test:</strong> you can install the package, inspect every counted capability, run it without a Fountain account, replace external providers, and continue from a fork if this project disappears.</p>
+      </section>
+
       <section className="capabilities">
         <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public npm package. Import only the modules you need.</p></div>
         <div className="capabilities__grid">
@@ -655,7 +666,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>Try the actual package in your browser.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> edit or select text, insert a collapsible section, and use the toolbar. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
+        <div className="demo-note"><b>Try it:</b> edit or select text, insert a collapsible section, and use the toolbar. Click the reading above <strong>東京</strong> to edit its ruby annotation, or select text and press Ruby. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -665,6 +676,7 @@ function App() {
               <button onClick={() => addBlock('task')}>☑ Tasks</button>
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('details')}>▸ Details</button>
+              <button onClick={() => setRuby(editor, 'reading')}>あ Ruby</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
               <button
                 className="toolbar-profile"
@@ -744,7 +756,7 @@ function App() {
       <VersionHistoryDemo />
 
       <section className="comparison" id="compare">
-        <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Where FountainJS is different—and where it is still younger.</h2><p>ProseMirror is the low-level engine beneath Tiptap; FountainJS is an independent implementation, not a ProseMirror wrapper. ProseMirror and Tiptap have much larger communities and longer production histories. FountainJS aims to ship editing and review capabilities together in one public MIT package while letting the application own its framework, data, and providers.</p></div>
+        <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>FountainJS versus the complete ProseMirror + Tiptap stack.</h2><p>ProseMirror supplies Tiptap’s engine; Tiptap supplies the higher-level developer and product layer. FountainJS independently builds both responsibilities into one open-source project: its own engine plus native editing, review, collaboration, format, and UI modules. The older stack still has much greater production history and ecosystem scale.</p></div>
         <div className="comparison__table" role="table" aria-label="Rich text editor comparison">
           {competitors.map((item) => <a key={item.name} href={item.href} className="comparison__row" role="row">
             <strong role="cell">{item.name}</strong><span role="cell">{item.maturity}</span><span role="cell">{item.architecture}</span><span role="cell">{item.fit}</span><i aria-hidden="true">↗</i>
@@ -754,7 +766,7 @@ function App() {
           <article className="is-good"><span>FountainJS is a fit when…</span><p>You need a capable editor across multiple frontend surfaces, want extensions to stay host-controlled, and prefer portable JSON, open interfaces, and MIT licensing.</p></article>
           <article><span>Choose a mature alternative when…</span><p>You need a much larger extension market, years of physical-device deployment evidence, or commercial support today.</p></article>
         </div>
-        <p className="comparison__detail"><a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md">Read the engine-level ProseMirror comparison →</a></p>
+        <p className="comparison__detail"><a href="https://github.com/eddolo/fountainjs/blob/master/docs/PROSEMIRROR_COMPARISON.md">Read the one-to-one full-stack comparison →</a></p>
       </section>
 
       <section className="architecture">

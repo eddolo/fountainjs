@@ -122,6 +122,18 @@
 .fountain-editor .fountain-details[open] > .fountain-details__summary { border-bottom: 1px solid var(--fountain-border); }
 .fountain-editor .fountain-details > :not(.fountain-details__summary) { margin-inline: 14px; }
 .fountain-editor .fountain-details__summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 28%, transparent); outline-offset: -3px; }
+.fountain-editor .fountain-ruby { ruby-align: center; ruby-position: over; }
+.fountain-editor .fountain-ruby__annotation[role="button"] { min-width: 24px; min-height: 20px; border-radius: 4px; color: var(--fountain-accent); cursor: pointer; }
+.fountain-editor .fountain-ruby__annotation[role="button"]:hover { background: color-mix(in srgb, var(--fountain-accent) 12%, transparent); }
+.fountain-editor .fountain-ruby__annotation:focus-visible { outline: 2px solid var(--fountain-accent); outline-offset: 2px; }
+.fountain-ruby-editor { z-index: 1000; display: grid; min-width: min(300px, calc(100vw - 16px)); max-width: calc(100vw - 16px); gap: 10px; padding: 12px; border: 1px solid var(--fountain-border, #d7d4e8); border-radius: 10px; color: var(--fountain-ink, #18152b); background: var(--fountain-surface, #fff); box-shadow: 0 12px 36px rgb(24 21 43 / 18%); font: 600 13px/1.4 system-ui, sans-serif; }
+.fountain-ruby-editor__label { display: grid; gap: 6px; }
+.fountain-ruby-editor__input { box-sizing: border-box; width: 100%; min-height: 44px; padding: 9px 11px; border: 1px solid var(--fountain-border, #d7d4e8); border-radius: 7px; color: inherit; background: var(--fountain-surface, #fff); font: inherit; }
+.fountain-ruby-editor__input:focus-visible { outline: 3px solid color-mix(in srgb, var(--fountain-accent, #6547ff) 25%, transparent); border-color: var(--fountain-accent, #6547ff); }
+.fountain-ruby-editor__actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.fountain-ruby-editor__actions button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--fountain-border, #d7d4e8); border-radius: 7px; color: var(--fountain-ink, #18152b); background: var(--fountain-surface-muted, #f5f3fb); cursor: pointer; font: inherit; }
+.fountain-ruby-editor__actions button[type="submit"] { border-color: var(--fountain-accent, #6547ff); color: #fff; background: var(--fountain-accent, #6547ff); }
+.fountain-ruby-editor__actions button:hover { filter: brightness(.96); }
 .fountain-editor pre { overflow-x: auto; padding: 18px; color: #e7e9ee; background: #151823; border-radius: 12px; }
 .fountain-editor code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 .fountain-editor pre.fjs-code-block { position: relative; padding-top: 42px; tab-size: 2; }

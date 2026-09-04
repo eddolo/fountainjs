@@ -141,6 +141,47 @@ function configuredNode(
   return null;
 }
 
+function directChild(element: HTMLElement, tagName: string): HTMLElement | null {
+  return Array.from(element.children).find((child): child is HTMLElement => (
+    child instanceof HTMLElement && child.tagName.toLowerCase() === tagName
+  )) ?? null;
+}
+
+/**
+ * Ruby accepts both WHATWG shapes used in the wild:
+ * `<ruby><rb>base</rb><rt>reading</rt></ruby>` and
+ * `<ruby>base<rt>reading</rt></ruby>`. Presentation-only `<rp>` fallbacks are
+ * never persisted. Malformed ruby degrades to its readable base content.
+ */
+function configuredRuby(
+  element: HTMLElement,
+  schema: Schema,
+  inheritedMarks: readonly Mark[],
+): FountainNode[] | null {
+  const type = schema.nodes.ruby;
+  if (!type || element.tagName.toLowerCase() !== 'ruby') return null;
+  const annotationElement = directChild(element, 'rt');
+  const annotation = annotationElement?.textContent?.trim() ?? '';
+  const explicitBase = directChild(element, 'rb');
+  let baseRoot: globalThis.Node;
+  if (explicitBase) baseRoot = explicitBase;
+  else {
+    const fragment = element.ownerDocument.createElement('span');
+    element.childNodes.forEach((child) => {
+      if (child instanceof HTMLElement && ['rt', 'rp'].includes(child.tagName.toLowerCase())) return;
+      fragment.appendChild(child.cloneNode(true));
+    });
+    baseRoot = fragment;
+  }
+  const base = inlineChildren(baseRoot, schema, inheritedMarks);
+  if (!annotation || !base.length || base.some((node) => !node.isText)) return base;
+  try {
+    const ruby = type.create({ rt: annotation }, base);
+    schema.validate(ruby);
+    return [ruby];
+  } catch { return base; }
+}
+
 function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = []): FountainNode[] {
   const result: FountainNode[] = [];
   parent.childNodes.forEach((child) => {
@@ -150,6 +191,8 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     }
     if (!(child instanceof HTMLElement)) return;
     const tag = child.tagName.toLowerCase();
+    const ruby = configuredRuby(child, schema, marks);
+    if (ruby) { result.push(...ruby); return; }
     const customNode = configuredNode(child, schema, true, marks);
     if (customNode) { result.push(customNode); return; }
     if (tag === 'br' && schema.nodes.hard_break) { result.push(schema.node('hard_break')); return; }

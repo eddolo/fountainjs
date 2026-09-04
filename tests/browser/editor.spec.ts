@@ -105,6 +105,36 @@ test('edits and persists package-backed collapsible details in the public playgr
   await expect(inserted).not.toHaveAttribute('open', '');
 });
 
+test('edits semantic ruby annotations through the package-backed public playground', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const ruby = editor.locator('ruby').first();
+  await expect(ruby.locator('rb')).toHaveText('東京');
+  const annotation = ruby.getByRole('button', { name: /Edit pronunciation/ });
+  await expect(annotation).toHaveText('とうきょう');
+  await annotation.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Edit ruby annotation' });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('textbox', { name: 'Ruby annotation' }).fill('トウキョウ');
+  await dialog.getByRole('button', { name: 'Save' }).click();
+  await expect(ruby.locator('rt')).toHaveText('トウキョウ');
+  await expect(dialog).toBeHidden();
+
+  await page.locator('.format-tabs').getByRole('button', { name: 'json' }).click();
+  await expect(page.locator('.studio__export pre')).toContainText('"type": "ruby"');
+  await expect(page.locator('.studio__export pre')).toContainText('"rt": "トウキョウ"');
+  await page.locator('.format-tabs').getByRole('button', { name: 'html' }).click();
+  await expect(page.locator('.studio__export pre')).toContainText('<ruby');
+  await expect(page.locator('.studio__export pre')).toContainText('<rt');
+
+  await ruby.locator('rt').focus();
+  await page.keyboard.press('Space');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(dialog).toBeHidden();
+});
+
 test('converges live and offline Yjs edits and keeps collaborative undo author-local', async ({ page }) => {
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
   const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
@@ -1371,9 +1401,18 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
-  await paragraph.click();
-  await page.keyboard.press('Home');
-  await page.keyboard.press('Shift+End');
+  await paragraph.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const leaves: Text[] = [];
+    for (let current = walker.nextNode(); current; current = walker.nextNode()) leaves.push(current as Text);
+    const range = document.createRange();
+    range.setStart(leaves[0], 0);
+    range.setEnd(leaves.at(-1)!, leaves.at(-1)!.data.length);
+    const selection = getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
   await page.keyboard.press('ControlOrMeta+c');
   await expect.poll(async () => page.getByRole('button', { name: /Clipboard history/ }).isEnabled()).toBe(true);
   await page.keyboard.press('End');

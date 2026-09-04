@@ -10,6 +10,11 @@
 
 ### Added
 
+- An isolated `fountainjs-editor/ruby` module for semantic furigana and other
+  pronunciation guides, with marked editable base text, validated readings,
+  set/update/unset/toggle commands, accessible and IME-safe replaceable editing
+  UI, JSON/HTML/Markdown/text interchange, generic Yjs synchronization, package
+  budgets, documentation, and browser contracts.
 - An isolated `fountainjs-editor/details` module with semantic, editable native
   details/summary nodes; arbitrary and nested block bodies; public
   insert/wrap/unwrap/open commands; persisted disclosure state; summary/body
