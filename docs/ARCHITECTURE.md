@@ -1,6 +1,6 @@
 # FountainJS architecture
 
-This document explains the implementation behind FountainJS. Read it before changing core behavior, building a substantial extension, or creating another framework adapter. The public API surface is listed separately in [API.md](API.md).
+This document explains the implementation behind FountainJS. Read it before changing core behavior, building a substantial extension, or creating another framework adapter. The public API surface is listed separately in [API.md](API.md). The evidence-backed [portability audit](PORTABILITY_AUDIT.md) distinguishes today's runtime-neutral engine behavior from the DOM contracts that still cross the nominal core boundary.
 
 ## Design goals
 
