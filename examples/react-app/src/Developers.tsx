@@ -133,10 +133,19 @@ const assetTask = startAssetUpload(editor, mediaFile, {
     assets.upload(file, { kind, signal, onProgress: reportProgress }),
 })`;
 
-const extensionExample = `import { defineExtension, insertNode } from 'fountainjs-editor'
+const extensionExample = `import {
+  FOUNTAIN_EXTENSION_API_VERSION,
+  defineExtension,
+  insertNode,
+} from 'fountainjs-editor'
 
 export const callout = defineExtension({
   name: 'product-callout',
+  manifest: {
+    version: '1.0.0',
+    apiVersion: FOUNTAIN_EXTENSION_API_VERSION,
+    requires: ['fountain-core'],
+  },
   nodes: {
     callout: {
       group: 'block',
@@ -162,6 +171,26 @@ export const callout = defineExtension({
     },
   },
   services: { telemetry: myTelemetryClient },
+})`;
+
+const extensionToolingExample = `# Generate a package without overwriting existing work
+npx fountainjs-editor create-extension ./product-callout --name product-callout
+
+# Validate the whole ordered installation before startup
+npx fountainjs-editor doctor ./fountain.extensions.mjs
+
+# The generated test imports this framework-neutral API
+import { assertExtensionConformance } from 'fountainjs-editor/testing'
+
+assertExtensionConformance(callout, {
+  documents: [{ name: 'callout', document: fixture }],
+  commands: [{
+    name: 'insertCallout',
+    args: ['Verified'],
+    document: fixture,
+    expectAccepted: true,
+    expectDocumentChange: true,
+  }],
 })`;
 
 const transactionExample = `const transaction = editor.createTransaction()
@@ -582,6 +611,9 @@ function Developers() {
             <h2>One composition contract for product code.</h2>
             <p>An extension may contribute <b>nodes</b>, <b>marks</b>, <b>plugins</b>, <b>commands</b>, <b>formats</b>, and arbitrary <b>services</b>. The composed kit exposes all contributions and its extension list. Duplicate extension names or contribution names throw by default; intentional replacement must be opted into.</p>
             <Code>{extensionExample}</Code>
+            <h3>Generate it, test it, diagnose the complete installation</h3>
+            <p>Published extensions carry a SemVer manifest, an exact Fountain extension API version, and ordered runtime requirements. The generator creates a typed package and refuses non-empty destinations. The isolated conformance entry verifies real schema round-trips, non-mutating command dry-runs, executable behavior, and teardown without React. <code>doctor</code> then checks the whole ordered set and reports every invalid manifest, missing dependency, duplicate name, and contribution collision before an editor starts. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md">complete authoring, compatibility, migration, and publishing contract</a>.</p>
+            <Code>{extensionToolingExample}</Code>
             <h3>Behavior is modular too</h3>
             <p>List structure uses public commands too. <code>toggleList</code> wraps multiple blocks or converts only the selected item range; <code>indentListItem</code> and <code>outdentListItem</code> handle multi-item and mixed-type nesting while preserving trailing hierarchy and ordered starts. Nested HTML and Markdown use the same model, and the toolbar plus Tab/Shift+Tab routes call those commands directly.</p>
             <p><code>StarterKit</code> composes the link mark with <code>LinkBehaviorExtension</code>. It safely normalizes and validates destinations, autolinks typed web and email addresses, links selections on paste, edits or removes the complete link around a caret, and emits <code>fountain-link-activate</code> instead of forcing navigation. Replace it with <code>createLinkBehaviorExtension</code> to supply product validation and activation policies; the React toolbar uses the same public contract for add, preview, title, target, edit, and remove controls.</p>
@@ -680,6 +712,9 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/view/block-handles.ts"><code>src/view/block-handles.ts</code><span>Optional contextual controls, nested path targeting, schema-valid indicators, and touch/keyboard movement.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/testing"><code>src/testing/</code><span>Framework-neutral extension conformance and whole-installation compatibility diagnostics.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md"><code>docs/EXTENSIONS.md</code><span>Scaffold, manifests, requirements, fixtures, doctor, compatibility, migrations, and publishing contract.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/ROADMAP.md"><code>docs/ROADMAP.md</code><span>Prioritized opportunities, current baselines, required proof, and unverified research leads.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/text-style"><code>src/text-style/</code><span>Validated style values, selection inspection, and framework-neutral set/unset commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TEXT_STYLE.md"><code>docs/TEXT_STYLE.md</code><span>Schema, commands, controls, sanitization, interchange, frameworks, and collaboration contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/details"><code>src/details/</code><span>Optional details/summary schema, commands, native NodeView, keyboard behavior, and interchange contract.</span></a>

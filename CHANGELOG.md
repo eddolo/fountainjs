@@ -10,6 +10,11 @@
 
 ### Added
 
+- Versioned extension manifests, deterministic ordered requirements, a safe
+  package scaffold command, a framework-neutral checked example, and an
+  isolated `fountainjs-editor/testing` conformance entry covering composition,
+  document round-trips, command dry-runs/execution, whole-installation doctor diagnostics, packaging,
+  compatibility, and author guidance.
 - A complete validated text-style suite in `CoreExtension` and `StarterKit`,
   with foreground/background colour, font family, font size, and line height;
   framework-neutral commands and mixed-selection inspection through the

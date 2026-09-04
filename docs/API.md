@@ -8,7 +8,7 @@
 
 ## Extension composition
 
-`defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class to mount interactive product UI without depending on React.
+`defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class to mount interactive product UI without depending on React. Independently published extensions declare a `manifest` with their SemVer package version, `FOUNTAIN_EXTENSION_API_VERSION`, optional descriptive metadata, and ordered runtime dependencies in `requires`. Invalid metadata and unsupported API versions fail before the extension can enter a kit.
 
 Node and mark attribute arrays/plain objects are cloned and recursively frozen
 at construction, so callers cannot mutate a document through a retained nested
@@ -34,7 +34,20 @@ export contract for both nodes and marks. Generic output accepts semantic HTML
 but strips executable tags, event/srcdoc attributes, unsafe URL protocols, and
 dangerous CSS URL/expression forms. See [FORMATS.md](FORMATS.md#html).
 
-`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, and the HTML/Markdown/JSON/text format modules.
+`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Manifest requirements must already appear earlier in the list. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, and the HTML/Markdown/JSON/text format modules.
+
+The isolated `fountainjs-editor/testing` entry exports
+`checkExtensionConformance()` and `assertExtensionConformance()`. They verify
+manifest/API compatibility, immutable definitions, composition, fixture
+round-trips, command dry-run isolation, expected executable behavior, and
+teardown without mounting a framework or DOM view.
+`checkExtensionCompatibility()` and `assertExtensionCompatibility()` inspect an
+ordered installation and aggregate all manifest, dependency, duplicate-name,
+and contribution-collision problems; the same inspection is available through
+`npx fountainjs-editor doctor <extensions-module>`. Generate a complete package
+with `npx fountainjs-editor create-extension <directory>`, and see the
+[extension authoring and compatibility guide](EXTENSIONS.md) for the manifest,
+fixture, framework, versioning, migration, failure, and publishing contracts.
 
 ```ts
 const poll = defineExtension({

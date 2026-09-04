@@ -362,7 +362,12 @@ default; callers can override event and mutation policies.
 
 ## Extension composition
 
-`defineExtension` creates a named, frozen extension description. An extension may contribute:
+`defineExtension` creates a named, frozen extension description. A public
+manifest binds an independently published extension to a SemVer package version,
+the integer Fountain extension API version, bounded descriptive metadata, and
+ordered runtime dependencies. `composeExtensions` repeats manifest validation
+at the third-party boundary, even if a plain object bypassed `defineExtension`.
+An extension may contribute:
 
 - `nodes`
 - `marks`
@@ -371,7 +376,21 @@ default; callers can override event and mutation policies.
 - `formats`
 - `services`
 
-`composeExtensions` merges these into a `FountainKit`. Duplicate extension names always fail. Duplicate named contributions fail by default; `onConflict: 'replace'` must be explicit for intentional overrides. The kit exposes the schema spec, plugins, commands, formats, services, ordered extensions, and `getExtension`.
+`composeExtensions` merges these into a `FountainKit`. Required runtime names
+must already appear in the list, making initialization deterministic and missing
+dependencies actionable. Duplicate extension names always fail. Duplicate named
+contributions fail by default; `onConflict: 'replace'` must be explicit for
+intentional overrides. The kit exposes the schema spec, plugins, commands,
+formats, services, ordered extensions, and `getExtension`.
+
+The separately loadable `src/testing/` entry exercises extension definitions in
+headless Node.js. It composes the real kit, validates supplied document fixtures,
+round-trips portable JSON, runs command fixtures through the same temporary
+batch used by `can()`, optionally executes them, observes update isolation, and
+destroys every editor. The scaffold command emits a package using this contract
+and refuses destructive overwrites. This conformance layer is an authoring gate,
+not a substitute for view, accessibility, format, collaboration, or performance
+tests. The complete policy is in [EXTENSIONS.md](EXTENSIONS.md).
 
 Services are deliberately open-ended. A host can use them for analytics, collaboration, persistence, feature flags, upload clients, or product-specific dependencies without teaching the editor core about those systems.
 

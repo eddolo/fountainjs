@@ -1,5 +1,8 @@
 import { createRequire } from 'node:module';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const require = createRequire(import.meta.url);
 
@@ -33,6 +36,7 @@ const reactVersionsNames = ['FountainVersions'];
 const detailsNames = ['DetailsExtension', 'insertDetails', 'wrapInDetails', 'unwrapDetails', 'toggleDetailsOpen'];
 const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRuby', 'unsetRuby', 'toggleRuby'];
 const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'getActiveTextStyle'];
+const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
@@ -50,6 +54,7 @@ assertExports(await import('fountainjs-editor/react/versions'), reactVersionsNam
 assertExports(await import('fountainjs-editor/details'), detailsNames, 'ESM details entry');
 assertExports(await import('fountainjs-editor/ruby'), rubyNames, 'ESM ruby entry');
 assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM text style entry');
+assertExports(await import('fountainjs-editor/testing'), testingNames, 'ESM extension testing entry');
 assertExports(require('fountainjs-editor'), coreNames, 'CommonJS package root');
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
@@ -65,6 +70,7 @@ assertExports(require('fountainjs-editor/react/versions'), reactVersionsNames, '
 assertExports(require('fountainjs-editor/details'), detailsNames, 'CommonJS details entry');
 assertExports(require('fountainjs-editor/ruby'), rubyNames, 'CommonJS ruby entry');
 assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS text style entry');
+assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS extension testing entry');
 // Loading Yjs' ESM and CommonJS builds in one process creates two constructor
 // universes. Exercise the second module system in an isolated consumer process.
 execFileSync(process.execPath, ['-e', `
@@ -73,4 +79,27 @@ execFileSync(process.execPath, ['-e', `
   if (missing.length) throw new Error('CommonJS Yjs entry is missing: ' + missing.join(', '));
 `], { stdio: 'inherit' });
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, Yjs, and Web Component package exports loaded successfully.');
+const doctorDirectory = mkdtempSync(join(tmpdir(), 'fountain-doctor-'));
+try {
+  const validConfig = join(doctorDirectory, 'valid.mjs');
+  writeFileSync(validConfig, `export default [Object.freeze({
+    name: 'package-smoke',
+    manifest: Object.freeze({ version: '1.0.0', apiVersion: 1, requires: Object.freeze(['fountain-core']) }),
+  })];\n`);
+  const doctorOutput = execFileSync(process.execPath, ['scripts/create-extension.mjs', 'doctor', validConfig], { encoding: 'utf8' });
+  if (!doctorOutput.includes('PASS')) throw new Error('Packed doctor did not report success.');
+
+  const invalidConfig = join(doctorDirectory, 'invalid.mjs');
+  writeFileSync(invalidConfig, `export default [
+    Object.freeze({ name: 'package-smoke', manifest: Object.freeze({ version: '1.0.0', apiVersion: 1 }), commands: Object.freeze({ clash: () => true }) }),
+    Object.freeze({ name: 'package-smoke-two', manifest: Object.freeze({ version: '1.0.0', apiVersion: 1 }), commands: Object.freeze({ clash: () => true }) }),
+  ];\n`);
+  const invalidDoctor = spawnSync(process.execPath, ['scripts/create-extension.mjs', 'doctor', invalidConfig], { encoding: 'utf8' });
+  if (invalidDoctor.status !== 1 || !invalidDoctor.stdout.includes('contribution-conflict')) {
+    throw new Error('Packed doctor did not reject a contribution collision.');
+  }
+} finally {
+  rmSync(doctorDirectory, { recursive: true, force: true });
+}
+
+console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, Yjs, and Web Component package exports loaded successfully.');

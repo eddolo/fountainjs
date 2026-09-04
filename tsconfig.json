@@ -15,5 +15,5 @@
     "noEmit": true,
     "types": ["vitest/globals", "node"]
   },
-  "include": ["src", "tests", "examples/react-app/src"]
+  "include": ["src", "tests", "examples/react-app/src", "examples/extensions"]
 }

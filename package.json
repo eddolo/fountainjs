@@ -8,6 +8,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "fountainjs-editor": "./scripts/create-extension.mjs"
+  },
   "typesVersions": {
     "*": {
       "document-utilities": [
@@ -48,6 +51,9 @@
       ],
       "text-style": [
         "dist/text-style/index.d.ts"
+      ],
+      "testing": [
+        "dist/testing/index.d.ts"
       ]
     }
   },
@@ -192,6 +198,16 @@
         "default": "./dist/text-style.cjs"
       }
     },
+    "./testing": {
+      "import": {
+        "types": "./dist/testing/index.d.ts",
+        "default": "./dist/testing.js"
+      },
+      "require": {
+        "types": "./dist/testing/index.d.cts",
+        "default": "./dist/testing.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -201,6 +217,7 @@
     "scripts/smoke-package.mjs",
     "scripts/check-build-budgets.mjs",
     "scripts/check-performance-budgets.mjs",
+    "scripts/create-extension.mjs",
     "README.md",
     "CHANGELOG.md",
     "THIRD_PARTY_NOTICES.md",

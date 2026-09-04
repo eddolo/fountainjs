@@ -131,6 +131,28 @@ An extension can contribute:
 - `formats` with parse/serialize boundaries
 - open-ended `services` interpreted by the host application
 
+## Create and verify an extension
+
+FountainJS ships an extension generator rather than leaving every author to
+invent package, type, test, and compatibility setup:
+
+```bash
+npx fountainjs-editor create-extension ./fountain-callout --name callout
+cd fountain-callout
+npm install
+npm run check
+```
+
+The generated framework-neutral package includes versioned manifest metadata,
+an ordered dependency declaration, a typed example node/command, and fixtures
+for `assertExtensionConformance` from `fountainjs-editor/testing`. The test entry
+checks schema/JSON round-trips and guarantees command dry-runs do not mutate or
+notify. Its `npm run doctor` command checks the complete ordered installation
+for manifest, dependency, duplicate-name, and contribution conflicts before an
+editor starts. The generator previews with `--dry-run` and refuses to overwrite a
+non-empty directory. Read the [complete extension authoring and compatibility
+policy](docs/EXTENSIONS.md) before publishing or changing stored node data.
+
 ## Production table editing
 
 Tables use a span-aware `TableMap`, so logical rows and columns remain correct

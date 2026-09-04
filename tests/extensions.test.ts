@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  FOUNTAIN_EXTENSION_API_VERSION,
   CoreExtension,
   CoreSchemaSpec,
   StarterKit,
@@ -16,6 +17,12 @@ import {
   undoInputRule,
   wrappingPasteRule,
 } from '../src';
+import {
+  assertExtensionCompatibility,
+  assertExtensionConformance,
+  checkExtensionCompatibility,
+  checkExtensionConformance,
+} from '../src/testing';
 
 function clipboardEvent(text: string, html = ''): ClipboardEvent {
   return {
@@ -26,6 +33,99 @@ function clipboardEvent(text: string, html = ''): ClipboardEvent {
 }
 
 describe('modular extension composition', () => {
+  it('validates versioned manifests and ordered extension requirements', () => {
+    const base = defineExtension({
+      name: 'example-base',
+      manifest: { version: '1.2.0', apiVersion: FOUNTAIN_EXTENSION_API_VERSION },
+    });
+    const dependent = defineExtension({
+      name: 'example-dependent',
+      manifest: {
+        version: '2.0.0-beta.1',
+        apiVersion: FOUNTAIN_EXTENSION_API_VERSION,
+        homepage: 'https://example.com/extensions/dependent',
+        requires: ['example-base'],
+      },
+    });
+
+    expect(composeExtensions([CoreExtension, base, dependent]).getExtension('example-dependent')).toBe(dependent);
+    expect(() => composeExtensions([CoreExtension, dependent])).toThrow('requires earlier extension');
+    expect(() => defineExtension({
+      name: 'bad-version',
+      manifest: { version: 'latest', apiVersion: FOUNTAIN_EXTENSION_API_VERSION },
+    })).toThrow('semantic version');
+    expect(() => defineExtension({
+      name: 'leading-zero-version',
+      manifest: { version: '01.0.0', apiVersion: FOUNTAIN_EXTENSION_API_VERSION },
+    })).toThrow('semantic version');
+  });
+
+  it('runs distributable extensions through the framework-neutral conformance contract', () => {
+    const extension = defineExtension({
+      name: 'callout-conformance',
+      manifest: {
+        version: '1.0.0',
+        apiVersion: FOUNTAIN_EXTENSION_API_VERSION,
+        requires: ['fountain-core'],
+      },
+      nodes: {
+        callout_conformance: { group: 'block', content: 'inline*', toDOM: () => ['aside', 0] },
+      },
+      commands: {
+        appendBang: (editor) => insertText(editor, '!'),
+      },
+    });
+    const document = {
+      type: 'doc',
+      content: [{ type: 'callout_conformance', content: [{ type: 'text', text: 'Hello' }] }],
+    } as const;
+    const report = assertExtensionConformance(extension, {
+      documents: [{ name: 'callout', document }],
+      commands: [{ name: 'appendBang', document, expectAccepted: true, expectDocumentChange: true }],
+    });
+
+    expect(report.passed).toBe(true);
+    expect(report.inventory.nodes).toEqual(['callout_conformance']);
+    expect(report.checks.every((check) => check.status === 'passed')).toBe(true);
+  });
+
+  it('reports all actionable extension conformance failures', () => {
+    const report = checkExtensionConformance({ name: 'unfrozen-extension' });
+    expect(report.passed).toBe(false);
+    expect(report.checks.filter((check) => check.status === 'failed').map((check) => check.id)).toEqual([
+      'manifest',
+      'definition',
+    ]);
+    expect(() => assertExtensionConformance({ name: 'unfrozen-extension' })).toThrow('Use defineExtension');
+  });
+
+  it('diagnoses every problem in an ordered third-party extension installation', () => {
+    const first = defineExtension({
+      name: 'doctor-one',
+      manifest: { version: '1.0.0', apiVersion: FOUNTAIN_EXTENSION_API_VERSION },
+      commands: { sharedDoctorCommand: () => true },
+    });
+    const second = defineExtension({
+      name: 'doctor-two',
+      manifest: {
+        version: '1.0.0',
+        apiVersion: FOUNTAIN_EXTENSION_API_VERSION,
+        requires: ['not-installed'],
+      },
+      commands: { sharedDoctorCommand: () => true },
+    });
+    const report = checkExtensionCompatibility([first, second, first]);
+
+    expect(report.passed).toBe(false);
+    expect(report.issues.map((issue) => issue.code)).toEqual([
+      'missing-requirement',
+      'contribution-conflict',
+      'duplicate-extension',
+      'contribution-conflict',
+    ]);
+    expect(() => assertExtensionCompatibility([first, second, first])).toThrow('not-installed');
+  });
+
   it('combines custom nodes, commands, formats, and host services', () => {
     const callout = defineExtension({
       name: 'callout',

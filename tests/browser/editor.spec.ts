@@ -1003,6 +1003,24 @@ test('loads the public React playground without console or page errors', async (
   expect(errors).toEqual([]);
 });
 
+test('publishes actionable extension authoring, conformance, and doctor guidance', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/developers.html#extensions');
+
+  await expect(page.getByRole('heading', { name: 'Generate it, test it, diagnose the complete installation' })).toBeVisible();
+  await expect(page.locator('pre').filter({ hasText: 'fountainjs-editor create-extension' })).toContainText('fountainjs-editor doctor');
+  await expect(page.locator('pre').filter({ hasText: 'assertExtensionConformance' })).toContainText('expectDocumentChange: true');
+  await expect(page.getByRole('link', { name: /complete authoring, compatibility, migration, and publishing contract/ }))
+    .toHaveAttribute('href', 'https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md');
+  await expect(page.getByRole('link', { name: /docs\/ROADMAP\.md/ })).toHaveAttribute(
+    'href',
+    'https://github.com/eddolo/fountainjs/blob/master/docs/ROADMAP.md',
+  );
+  expect(errors).toEqual([]);
+});
+
 test('runs the public two-editor collaboration demo with presence and author-local undo', async ({ page }) => {
   await page.goto('/');
   const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
