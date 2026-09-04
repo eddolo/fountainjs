@@ -39,12 +39,20 @@ completion of that contract, not a separate speculative feature. That outcome
 is now certified in [TIPTAP_PARITY.md](TIPTAP_PARITY.md) and documented for
 extension authors in [EXTENSIONS.md](EXTENSIONS.md).
 
-## Active now: stable releases and migrations
+## Delivered foundation: stable releases and migrations
 
 PROD-07 owns explicit API-stability levels, deprecation windows, document and
 extension migration contracts, release evidence, security-support policy, and
-repeatable release gates. Existing release automation is a starting point, not
-proof that early-beta documents and extensions can move safely between versions.
+repeatable release gates. That outcome is now implemented and publicly
+certified in [TIPTAP_PARITY.md](TIPTAP_PARITY.md); the operational contracts are
+in [MIGRATIONS.md](MIGRATIONS.md) and [RELEASES.md](RELEASES.md).
+
+## Active now: print-aware pages and pagination
+
+DOC-14 owns the first post-foundation capability. It must begin with a measured
+layout/persistence architecture and fixtures for pages, headers, footers,
+footnotes, tables, lists, media, manual breaks, and continuous accessibility.
+CSS page-shaped boxes or destructive document splitting do not qualify.
 
 ## Prioritized after release foundations
 

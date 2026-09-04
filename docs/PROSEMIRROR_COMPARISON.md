@@ -76,7 +76,7 @@ after those tests are public, repeatable, and kept as release gates.
 | Framework surfaces | Tiptap provides official bindings above ProseMirror for its supported frontend frameworks | Official plain DOM, Web Component, and React entries; Vue, Svelte, and Angular use the DOM/Web Component contract today | FountainJS is framework-neutral but still lacks dedicated native packages for several frameworks |
 | Ready-made writing | Tiptap StarterKit plus its extension catalogue supply the common editor surface | FountainJS StarterKit supplies writing, lists, tables, links, media, history, rules, and highlighting | Comparable intention; the live capability ledger records exact gaps rather than assuming parity |
 | Rich modules | Large Tiptap first-party/community catalogue over ProseMirror, with some outcomes in paid, add-on, or hosted products | First-party public modules for media, details, math, Lean, mentions, emoji, menus, clipboard history, comments, tracked changes, versions, and more | FountainJS aims to include more outcomes as public MIT modules; the ProseMirror/Tiptap ecosystem remains much broader |
-| Formats | ProseMirror schema-aware DOM/JSON foundations, community tooling, and Tiptap conversion products | Validated JSON, safe schema-aware HTML, Markdown with explicit loss reports, and readable text | FountainJS has one explicit in-package format contract; major office/ebook conversion gaps remain |
+| Formats | ProseMirror schema-aware DOM/JSON foundations, community tooling, and Tiptap conversion products | Validated and independently versioned JSON with sequential migrations plus safe schema-aware HTML, Markdown with explicit loss reports, and readable text | FountainJS has one explicit in-package format and migration contract; major office/ebook conversion gaps remain |
 | Collaboration | ProseMirror step collaboration, ecosystem Yjs bindings, and Tiptap collaboration/cloud products | Provider-neutral lifecycle plus optional generic Yjs tree adapter, relative presence, and author-local undo | FountainJS provides an open provider boundary; ProseMirror/Tiptap has deeper deployment and administration maturity |
 | Review and history | Tiptap offers collaboration comments, tracked changes, and version-history products above ProseMirror | Public provider-neutral comments, tracked changes, versions, diff, restore, and optional React panels | FountainJS includes these as MIT package modules; production scale and independent adoption are still unproven |
 | UI | Tiptap UI components, templates, and application kits over its headless editor | Optional React toolbar, menus, navigator, comments, review, and version panels; headless APIs remain usable anywhere | Both can supply product UI; most Fountain rich UI is currently React |
@@ -86,6 +86,7 @@ after those tests are public, repeatable, and kept as release gates.
 | Performance evidence | Mature engine used across many products, with years of real-world tuning | Reproducible built-package latency curves, long-session/teardown heap gates, bundle ceilings, DOM mutation/identity checks, and browser input-to-paint gates run in public CI | ProseMirror + Tiptap still wins on accumulated production evidence; FountainJS now has an inspectable, enforced regression contract rather than an unmeasured claim |
 | Ecosystem | Large combined package, integration, tutorial, contributor, and production ecosystem | Small new community and a growing first-party package | ProseMirror + Tiptap wins decisively on adoption; FountainJS can compete on included capability, coherence, and openness |
 | Compatibility | Native use of ProseMirror packages and Tiptap extensions | FountainJS packages and extension API only | No drop-in compatibility; extensions must be ported intentionally |
+| Releases and stored-data evolution | Separate mature upstream packages use SemVer; application schemas and their persisted-data evolution remain application concerns | Public API/deprecation levels, a reviewed declaration snapshot, versioned document envelope and migration runner, JSON Schema, exact release metadata, package/browser gates, rollback rules, and OIDC provenance live in one repository contract | FountainJS makes the release and document-upgrade path unusually explicit; ProseMirror + Tiptap still has far more real upgrade history |
 
 ## Why ProseMirror still receives its own engineering checks
 
@@ -131,11 +132,11 @@ remains open source even when the application chooses a paid external service.
 The [capability programme](TIPTAP_PARITY.md) compares visible outcomes with the
 combined stack. Its largest open risks are production maturity, transform and
 rebase depth, browser/IME edge cases, performance on very large documents,
-native framework adapters, office conversion, migration guarantees, extension
-porting guidance, and independent products exercising the API.
+native framework adapters, office conversion, real-world upgrade history,
+extension porting guidance, and independent products exercising the API.
 
 FountainJS should not claim full-stack parity until fuzz/property testing,
-long-running collaboration and browser soaks, physical-device input, migration
-tests, independent production traces, and the remaining capability rows are
-complete. The objective is to exceed the combined stack's included product
+long-running collaboration and browser soaks, physical-device input, real-world
+migration history, independent production traces, and the remaining capability
+rows are complete. The objective is to exceed the combined stack's included product
 capability while earning—not declaring—the same confidence in the engine.
