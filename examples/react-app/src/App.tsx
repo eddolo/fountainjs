@@ -22,6 +22,7 @@ import {
   isMarkActive,
   insertNode as demoInsertNode,
   markdownShortcutsPlugin,
+  replaceCollaborationAdapter,
   selectText,
   setBlockType,
   toggleMark,
@@ -29,6 +30,7 @@ import {
   type FountainMenuService,
 } from 'fountainjs-editor';
 import {
+  YjsCollaborationAdapter,
   createYjsCollaborationExtension,
   type YjsAwareness,
 } from 'fountainjs-editor/yjs';
@@ -267,11 +269,11 @@ const competitors = [
 
 class DemoAwarenessHub {
   readonly states = new Map<number, Record<string, unknown>>();
-  readonly clients = new Set<DemoAwareness>();
+  readonly clients = new Map<number, DemoAwareness>();
 
   create(clientID: number): DemoAwareness {
     const awareness = new DemoAwareness(this, clientID);
-    this.clients.add(awareness);
+    this.clients.set(clientID, awareness);
     this.states.set(clientID, {});
     return awareness;
   }
@@ -298,18 +300,51 @@ class DemoAwareness implements YjsAwareness {
 
 function CollaborationDemo() {
   const room = useMemo(() => {
-    const leftDocument = new Y.Doc();
-    const rightDocument = new Y.Doc();
-    const awareness = new DemoAwarenessHub();
+    const createSession = () => {
+      const leftDocument = new Y.Doc();
+      const rightDocument = new Y.Doc();
+      const sendLeft = (update: Uint8Array, origin: unknown) => {
+        if (origin !== rightDocument) Y.applyUpdate(rightDocument, update, leftDocument);
+      };
+      const sendRight = (update: Uint8Array, origin: unknown) => {
+        if (origin !== leftDocument) Y.applyUpdate(leftDocument, update, rightDocument);
+      };
+      let connected = false;
+      const connectTransport = () => {
+        if (connected) return;
+        connected = true;
+        leftDocument.on('update', sendLeft);
+        rightDocument.on('update', sendRight);
+      };
+      const destroyTransport = () => {
+        if (!connected) return;
+        connected = false;
+        leftDocument.off('update', sendLeft);
+        rightDocument.off('update', sendRight);
+      };
+      connectTransport();
+      return {
+        leftDocument,
+        rightDocument,
+        awareness: new DemoAwarenessHub(),
+        connectTransport,
+        destroyTransport,
+      };
+    };
+    const sessions = {
+      launch: createSession(),
+      planning: createSession(),
+    } as const;
+    const initial = sessions.launch;
     const comments = new InMemoryCommentsStore();
     const leftExtension = createYjsCollaborationExtension({
-      document: leftDocument,
-      awareness: awareness.create(leftDocument.clientID),
+      document: initial.leftDocument,
+      awareness: initial.awareness.create(initial.leftDocument.clientID),
       user: { id: 'ada', name: 'Ada', color: '#6d4aff' },
     });
     const rightExtension = createYjsCollaborationExtension({
-      document: rightDocument,
-      awareness: awareness.create(rightDocument.clientID),
+      document: initial.rightDocument,
+      awareness: initial.awareness.create(initial.rightDocument.clientID),
       user: { id: 'grace', name: 'Grace', color: '#d23877' },
     });
     const leftComments = createCommentsExtension({
@@ -321,12 +356,12 @@ function CollaborationDemo() {
       user: { id: 'grace', name: 'Grace' },
     });
     return {
-      leftDocument,
-      rightDocument,
+      sessions,
       leftKit: composeExtensions([CoreExtension, leftExtension, leftComments]),
       rightKit: composeExtensions([CoreExtension, rightExtension, rightComments]),
     };
   }, []);
+  const [activeRoom, setActiveRoom] = useState<keyof typeof room.sessions>('launch');
   const collaborativeContent = useMemo(() => ({
     type: 'doc',
     content: [
@@ -348,23 +383,29 @@ function CollaborationDemo() {
   const rightState = useFountainState(right);
 
   useEffect(() => {
-    const sendLeft = (update: Uint8Array, origin: unknown) => {
-      if (origin !== room.rightDocument) Y.applyUpdate(room.rightDocument, update, room.leftDocument);
-    };
-    const sendRight = (update: Uint8Array, origin: unknown) => {
-      if (origin !== room.leftDocument) Y.applyUpdate(room.leftDocument, update, room.rightDocument);
-    };
-    room.leftDocument.on('update', sendLeft);
-    room.rightDocument.on('update', sendRight);
-    const leftSnapshot = Y.encodeStateAsUpdate(room.leftDocument);
-    const rightSnapshot = Y.encodeStateAsUpdate(room.rightDocument);
-    Y.applyUpdate(room.leftDocument, rightSnapshot, room.rightDocument);
-    Y.applyUpdate(room.rightDocument, leftSnapshot, room.leftDocument);
+    room.sessions.launch.connectTransport();
+    room.sessions.planning.connectTransport();
     return () => {
-      room.leftDocument.off('update', sendLeft);
-      room.rightDocument.off('update', sendRight);
+      room.sessions.launch.destroyTransport();
+      room.sessions.planning.destroyTransport();
     };
   }, [room]);
+
+  const switchRoom = () => {
+    const nextRoom = activeRoom === 'launch' ? 'planning' : 'launch';
+    const session = room.sessions[nextRoom];
+    replaceCollaborationAdapter(left, new YjsCollaborationAdapter({
+      document: session.leftDocument,
+      awareness: session.awareness.create(session.leftDocument.clientID),
+      user: { id: 'ada', name: 'Ada', color: '#6d4aff' },
+    }));
+    replaceCollaborationAdapter(right, new YjsCollaborationAdapter({
+      document: session.rightDocument,
+      awareness: session.awareness.create(session.rightDocument.clientID),
+      user: { id: 'grace', name: 'Grace', color: '#d23877' },
+    }));
+    setActiveRoom(nextRoom);
+  };
 
   const seededComment = useRef(false);
   useEffect(() => {
@@ -391,7 +432,11 @@ function CollaborationDemo() {
           <p><strong>No FountainJS server or account is required.</strong> Transport, authentication, room access, and persistence stay replaceable.</p>
         </div>
       </div>
-      <div className="collaboration-demo__note"><b>Try it:</b> edit both documents, select a phrase to reveal the peer cursor, then use each author’s undo. Undo only affects that author’s collaborative history.</div>
+      <div className="collaboration-demo__note">
+        <span><b>Try it:</b> edit both documents, select a phrase to reveal the peer cursor, then use each author’s undo.</span>
+        <span className="collaboration-demo__room"><strong>Room: {activeRoom === 'launch' ? 'Launch' : 'Planning'}</strong><button onClick={switchRoom}>Switch both editors to {activeRoom === 'launch' ? 'Planning' : 'Launch'} room</button></span>
+        <small>The editor views stay mounted while both Yjs documents and provider sessions are replaced.</small>
+      </div>
       <div className="collaboration-demo__editors">
         <article data-collaboration-editor="ada">
           <header><span><i style={{ background: '#6d4aff' }} />Ada</span><code>{leftCollaboration?.status ?? 'connecting'}</code></header>

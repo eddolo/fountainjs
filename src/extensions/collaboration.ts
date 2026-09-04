@@ -94,14 +94,20 @@ export interface CollaborationExtensionOptions {
   autoConnect?: boolean;
 }
 
+export interface ReplaceCollaborationAdapterOptions {
+  /** Connect the replacement. Defaults to preserving the current connection intent. */
+  readonly connect?: boolean;
+}
+
 interface CollaborationRuntime {
   readonly editor: Editor;
-  readonly adapter: CollaborationAdapter;
-  readonly context: CollaborationAdapterContext;
+  adapter: CollaborationAdapter;
+  context?: CollaborationAdapterContext;
   unsubscribe: () => void;
   generation: number;
   connected: boolean;
   destroyed: boolean;
+  readonly destroyedAdapters: WeakSet<CollaborationAdapter>;
 }
 
 const STATE_META = 'fountain$collaborationState';
@@ -202,6 +208,7 @@ function preserveTextSelection(editor: Editor, next: Node): AnySelection | undef
 
 function applyRemoteDocument(
   runtime: CollaborationRuntime,
+  context: CollaborationAdapterContext,
   document: Node | NodeJSON,
   options: RemoteDocumentOptions = {},
 ): boolean {
@@ -229,7 +236,7 @@ function applyRemoteDocument(
     if (selection) transaction.setSelection(selection);
     return runtime.editor.dispatch(transaction);
   } catch (error) {
-    runtime.context.setStatus('error', {
+    context.setStatus('error', {
       message: error instanceof Error ? error.message : String(error),
       recoverable: true,
     });
@@ -237,50 +244,119 @@ function applyRemoteDocument(
   }
 }
 
-function contain(runtime: CollaborationRuntime, operation: () => void | Promise<void>): void {
+function reportRuntimeError(runtime: CollaborationRuntime, error: unknown, generation: number): void {
+  if (runtime.destroyed || runtime.editor.isDestroyed || runtime.generation !== generation) return;
+  const current = collaborationKey.get(runtime.editor.state) ?? initialState();
+  setState(runtime.editor, snapshot('error', current.presences, immutableError({
+    message: error instanceof Error ? error.message : String(error), recoverable: true,
+  })));
+}
+
+function contain(
+  runtime: CollaborationRuntime,
+  operation: () => void | Promise<void>,
+  generation = runtime.generation,
+): void {
   try {
     const result = operation();
     if (result && typeof result.then === 'function') {
-      void result.catch((error) => runtime.context.setStatus('error', {
-        message: error instanceof Error ? error.message : String(error), recoverable: true,
-      }));
+      void result.catch((error) => reportRuntimeError(runtime, error, generation));
     }
   } catch (error) {
-    runtime.context.setStatus('error', {
-      message: error instanceof Error ? error.message : String(error), recoverable: true,
-    });
+    reportRuntimeError(runtime, error, generation);
   }
+}
+
+function adapterFrom(
+  editor: Editor,
+  source: CollaborationAdapter | ((editor: Editor) => CollaborationAdapter),
+): CollaborationAdapter {
+  const adapter = typeof source === 'function' ? source(editor) : source;
+  if (!adapter || typeof adapter !== 'object' || typeof adapter.connect !== 'function') {
+    throw new TypeError('A collaboration adapter must provide connect(context).');
+  }
+  return adapter;
+}
+
+function createContext(
+  runtime: CollaborationRuntime,
+  adapter: CollaborationAdapter,
+  generation: number,
+): CollaborationAdapterContext {
+  let context!: CollaborationAdapterContext;
+  const active = () => !runtime.destroyed
+    && !runtime.editor.isDestroyed
+    && runtime.connected
+    && runtime.generation === generation
+    && runtime.adapter === adapter
+    && runtime.context === context;
+  context = Object.freeze({
+    editor: runtime.editor,
+    applyRemoteDocument: (document: Node | NodeJSON, options?: RemoteDocumentOptions) => (
+      active() ? applyRemoteDocument(runtime, context, document, options) : false
+    ),
+    setPresences: (presences: readonly CollaborationPresence[]) => {
+      if (!active()) return;
+      const current = collaborationKey.get(runtime.editor.state) ?? initialState();
+      setState(runtime.editor, snapshot(
+        current.status,
+        normalizePresences(presences, runtime.editor.state.doc),
+        current.error,
+      ));
+    },
+    setStatus: (status: CollaborationStatus, error?: CollaborationError | string) => {
+      if (!active()) return;
+      const current = collaborationKey.get(runtime.editor.state) ?? initialState();
+      setState(runtime.editor, snapshot(status, current.presences, immutableError(error)));
+    },
+  });
+  return context;
+}
+
+function destroyAdapter(runtime: CollaborationRuntime, adapter: CollaborationAdapter): void {
+  if (runtime.destroyedAdapters.has(adapter)) return;
+  runtime.destroyedAdapters.add(adapter);
+  contain(runtime, () => adapter.destroy?.());
 }
 
 function start(runtime: CollaborationRuntime, reconnecting = false): boolean {
   if (runtime.destroyed || runtime.connected) return false;
   runtime.connected = true;
   const generation = ++runtime.generation;
-  runtime.context.setStatus(reconnecting ? 'reconnecting' : 'connecting');
+  const adapter = runtime.adapter;
+  const context = createContext(runtime, adapter, generation);
+  runtime.context = context;
+  context.setStatus(reconnecting ? 'reconnecting' : 'connecting');
   try {
-    const result = runtime.adapter.connect(runtime.context);
+    const result = adapter.connect(context);
     if (result && typeof result.then === 'function') {
       void result.then(() => {
         if (!runtime.destroyed && runtime.connected && runtime.generation === generation
-          && collaborationKey.get(runtime.editor.state)?.status !== 'error') runtime.context.setStatus('connected');
+          && runtime.adapter === adapter && runtime.context === context
+          && collaborationKey.get(runtime.editor.state)?.status !== 'error') context.setStatus('connected');
       }).catch((error) => {
-        if (runtime.generation === generation) {
+        if (!runtime.destroyed && runtime.generation === generation
+          && runtime.adapter === adapter && runtime.context === context) {
           runtime.connected = false;
-          contain(runtime, () => runtime.adapter.disconnect?.());
-          runtime.context.setStatus('error', {
+          runtime.context = undefined;
+          contain(runtime, () => adapter.disconnect?.(), generation);
+          const current = collaborationKey.get(runtime.editor.state) ?? initialState();
+          setState(runtime.editor, snapshot('error', current.presences, immutableError({
             message: error instanceof Error ? error.message : String(error), recoverable: true,
-          });
+          })));
         }
       });
-    } else if (collaborationKey.get(runtime.editor.state)?.status !== 'error') runtime.context.setStatus('connected');
-    contain(runtime, () => runtime.adapter.onLocalSelection?.(runtime.editor.state.doc, runtime.editor.state.selection));
+    } else if (collaborationKey.get(runtime.editor.state)?.status !== 'error') context.setStatus('connected');
+    contain(runtime, () => adapter.onLocalSelection?.(runtime.editor.state.doc, runtime.editor.state.selection), generation);
     return true;
   } catch (error) {
     runtime.connected = false;
-    contain(runtime, () => runtime.adapter.disconnect?.());
-    runtime.context.setStatus('error', {
+    runtime.context = undefined;
+    contain(runtime, () => adapter.disconnect?.(), generation);
+    const current = collaborationKey.get(runtime.editor.state) ?? initialState();
+    setState(runtime.editor, snapshot('error', current.presences, immutableError({
       message: error instanceof Error ? error.message : String(error), recoverable: true,
-    });
+    })));
     return false;
   }
 }
@@ -288,9 +364,11 @@ function start(runtime: CollaborationRuntime, reconnecting = false): boolean {
 function stop(runtime: CollaborationRuntime, destroyed = false): boolean {
   if (!runtime.connected && !destroyed) return false;
   runtime.connected = false;
-  runtime.generation++;
-  contain(runtime, () => runtime.adapter.disconnect?.());
+  const generation = ++runtime.generation;
+  const adapter = runtime.adapter;
+  runtime.context = undefined;
   if (!destroyed) setState(runtime.editor, snapshot('disconnected', Object.freeze([])));
+  contain(runtime, () => adapter.disconnect?.(), generation);
   return true;
 }
 
@@ -371,6 +449,45 @@ export function closeCollaborationHistory(editor: Editor): boolean {
   return true;
 }
 
+export function getCollaborationAdapter(editor: Editor): CollaborationAdapter | undefined {
+  return runtimes.get(editor)?.adapter;
+}
+
+/**
+ * Atomically retires the current adapter and binds a fresh document/provider
+ * session to the same editor. Callbacks retained by the old adapter become
+ * inert before its disconnect and destroy hooks run.
+ */
+export function replaceCollaborationAdapter(
+  editor: Editor,
+  source: CollaborationAdapter | ((editor: Editor) => CollaborationAdapter),
+  options: ReplaceCollaborationAdapterOptions = {},
+): boolean {
+  const runtime = runtimes.get(editor);
+  if (!runtime || runtime.destroyed) return false;
+  let replacement: CollaborationAdapter;
+  try { replacement = adapterFrom(editor, source); }
+  catch (error) {
+    reportRuntimeError(runtime, error, runtime.generation);
+    return false;
+  }
+  if (replacement === runtime.adapter) {
+    return options.connect === true && !runtime.connected ? start(runtime) : false;
+  }
+  const shouldConnect = options.connect ?? runtime.connected;
+  const wasConnected = runtime.connected;
+  const previous = runtime.adapter;
+  if (runtime.connected) stop(runtime);
+  else {
+    runtime.generation++;
+    runtime.context = undefined;
+    setState(runtime.editor, snapshot('disconnected', Object.freeze([])));
+  }
+  destroyAdapter(runtime, previous);
+  runtime.adapter = replacement;
+  return shouldConnect ? start(runtime, wasConnected) : true;
+}
+
 export function createCollaborationExtension(options: CollaborationExtensionOptions): FountainExtension {
   if (typeof options?.adapter !== 'function') throw new TypeError('Collaboration requires an adapter factory.');
   const plugin = new Plugin<CollaborationState>({
@@ -388,44 +505,37 @@ export function createCollaborationExtension(options: CollaborationExtensionOpti
       decorations: (state) => collaboratorDecorations(collaborationKey.get(state) ?? initialState(), state.doc),
       onCreate: (editor) => {
         let adapter: CollaborationAdapter;
-        try { adapter = options.adapter(editor); }
+        try { adapter = adapterFrom(editor, options.adapter); }
         catch (error) {
           setState(editor, snapshot('error', Object.freeze([]), immutableError({
             message: error instanceof Error ? error.message : String(error), recoverable: false,
           })));
           return;
         }
-        let runtime: CollaborationRuntime;
-        const context: CollaborationAdapterContext = {
+        const runtime: CollaborationRuntime = {
           editor,
-          applyRemoteDocument: (document, remoteOptions) => applyRemoteDocument(runtime, document, remoteOptions),
-          setPresences: (presences) => {
-            if (runtime.destroyed) return;
-            const current = collaborationKey.get(editor.state) ?? initialState();
-            setState(editor, snapshot(current.status, normalizePresences(presences, editor.state.doc), current.error));
-          },
-          setStatus: (status, error) => {
-            if (runtime.destroyed) return;
-            const current = collaborationKey.get(editor.state) ?? initialState();
-            setState(editor, snapshot(status, current.presences, immutableError(error)));
-          },
-        };
-        runtime = {
-          editor, adapter, context, unsubscribe: () => {}, generation: 0, connected: false, destroyed: false,
+          adapter,
+          unsubscribe: () => {},
+          generation: 0,
+          connected: false,
+          destroyed: false,
+          destroyedAdapters: new WeakSet(),
         };
         runtime.unsubscribe = editor.subscribe((state, transaction) => {
           if (transaction.getMeta(STATE_META)) return;
+          const activeAdapter = runtime.adapter;
+          const generation = runtime.generation;
           if (runtime.connected && transaction.docChanged && transaction.getMeta(COLLABORATION_REMOTE_META) !== true) {
-            contain(runtime, () => adapter.onLocalUpdate?.({
+            contain(runtime, () => activeAdapter.onLocalUpdate?.({
               before: transaction.originalDoc,
               document: state.doc,
               beforeSelection: transaction.originalSelection,
               selection: state.selection,
               transaction,
-            }));
+            }), generation);
           }
           if (runtime.connected && (transaction.docChanged || transaction.selectionSet)) {
-            contain(runtime, () => adapter.onLocalSelection?.(state.doc, state.selection));
+            contain(runtime, () => activeAdapter.onLocalSelection?.(state.doc, state.selection), generation);
           }
         });
         runtimes.set(editor, runtime);
@@ -437,7 +547,7 @@ export function createCollaborationExtension(options: CollaborationExtensionOpti
         runtime.unsubscribe();
         runtime.destroyed = true;
         stop(runtime, true);
-        contain(runtime, () => runtime.adapter.destroy?.());
+        destroyAdapter(runtime, runtime.adapter);
         runtimes.delete(editor);
       },
     },
@@ -454,6 +564,7 @@ export function createCollaborationExtension(options: CollaborationExtensionOpti
       canUndoCollaboration,
       canRedoCollaboration,
       closeCollaborationHistory,
+      replaceCollaborationAdapter,
     },
     services: { collaboration: Object.freeze({ key: collaborationKey }) },
   });

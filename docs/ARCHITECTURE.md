@@ -391,6 +391,13 @@ status and recoverable errors are immutable plugin state. Disconnect and final
 destroy are separate lifecycle stages so reconnectable transports and terminal
 resources can be handled correctly.
 
+Each connection receives a generation-scoped context. Replacing an adapter
+invalidates that context before retiring the old session, so a late remote
+document, presence event, status, connection completion, or rejection cannot
+cross into the replacement. Editor subscriptions resolve the active adapter at
+dispatch time instead of retaining the constructor adapter. Destroy hooks are
+idempotent per adapter.
+
 The optional `src/yjs/` entry maps each Fountain node to a `Y.XmlElement`.
 Each attribute gets an independent shared key, text lives in `Y.XmlText`, and
 container children remain a shared sequence. Local transaction pairs drive
@@ -404,6 +411,18 @@ the adapter converts valid remote values into generic collaboration presence.
 `Y.UndoManager` tracks only the adapter's local origin and stores relative
 before/after selections on stack items, so collaborative undo preserves remote
 work and restores the local cursor.
+
+Outgoing Yjs awareness is signature-deduplicated and leading/trailing
+throttled. Pending presence is cancelled during disconnect before the local
+awareness field is cleared. Reconnect cycles remove and restore one deep
+document observer, one awareness listener, and one provider-status listener.
+
+Each `EditorView` also owns only its own browser selection. Local input and
+explicit local selection transactions synchronize the model selection into the
+DOM; an unfocused view receiving a remote collaboration transaction updates its
+document and presence decorations without moving the active view's native
+selection. This matters in split views because browsers expose one document
+selection shared by every contenteditable on the page.
 
 `yjs` is externalized from the build and available only through the optional
 `fountainjs-editor/yjs` package path. Providers, authentication, authorization,
@@ -534,7 +553,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`; and version-history UI is isolated in `fountainjs-editor/react/versions`. Products that need ordinary React editing controls do not automatically load these review surfaces. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. `useFountain` shares one pending editor across React Strict Mode's duplicate initializer probe, releases an abandoned render, and destroys a committed editor once after its final unmount. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`; and version-history UI is isolated in `fountainjs-editor/react/versions`. Products that need ordinary React editing controls do not automatically load these review surfaces. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -631,10 +650,16 @@ The suites are organized by boundary:
   loose multi-block lists, unsafe URLs, and explicit extension-loss reports;
 - `tests/collaboration.test.ts`: provider-neutral lifecycle, no-echo remote
   application, status/error containment, presence hardening, decorations,
-  filters, reconnect, and selection-only updates;
+  filters, reconnect, live adapter replacement, stale-context isolation, and
+  selection-only updates;
 - `tests/yjs-collaboration.test.ts`: offline text/structure convergence,
   simultaneous seed repair, awareness-relative selections, origin-aware undo,
-  provider lifecycle, and hostile shared trees;
+  live document/provider replacement, presence-rate coalescing, repeated
+  reconnect listener counts, provider lifecycle, and hostile shared trees;
+- `tests/react-lifecycle.test.tsx`: repeated Strict Mode render/effect/unmount
+  cycles, single editor construction, and exact adapter cleanup;
+- `tests/view.test.ts`: among other DOM contracts, two-editor selection
+  ownership during an unfocused document update;
 - `tests/comments.test.ts`: shared CRUD, rich bodies, local permissions,
   non-optimistic persistence, cross-block/overlapping/point/block/document
   anchors, mapping, recovery, orphan reattachment, lifecycle, and hostile data;

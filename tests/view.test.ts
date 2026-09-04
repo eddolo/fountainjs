@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   CoreExtension,
   CoreSchemaSpec,
+  COLLABORATION_REMOTE_META,
   StarterKit,
   EditorView,
   HTMLExporter,
@@ -73,6 +74,40 @@ describe('EditorView', () => {
     expect(document.activeElement).toBe(view.dom);
     expect(updates).toEqual(['FirstSecond!']);
     view.destroy();
+  });
+
+  it('does not let an unfocused editor update steal another editor DOM selection', async () => {
+    const content = {
+      type: 'doc',
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared' }] }],
+    } as const;
+    const first = createEditor({ schema: CoreSchemaSpec, content });
+    const second = createEditor({ schema: CoreSchemaSpec, content });
+    const firstMount = document.createElement('div');
+    const secondMount = document.createElement('div');
+    document.body.append(firstMount, secondMount);
+    const firstView = new EditorView(firstMount, first);
+    const secondView = new EditorView(secondMount, second);
+
+    firstView.focus('end');
+    expect(document.activeElement).toBe(firstView.dom);
+    expect(firstView.dom.contains(document.getSelection()?.anchorNode ?? null)).toBe(true);
+
+    second.dispatch(second.state.createTransaction()
+      .insertText([0, 0], 0, 'Remote ')
+      .setSelection(EditorSelection.cursor([0, 0], 7))
+      .setMeta(COLLABORATION_REMOTE_META, true));
+    await Promise.resolve();
+    expect(document.activeElement).toBe(firstView.dom);
+    expect(firstView.dom.contains(document.getSelection()?.anchorNode ?? null)).toBe(true);
+
+    firstView.dom.dispatchEvent(new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertText', data: '!',
+    }));
+    expect(first.getText()).toBe('Shared!');
+
+    firstView.destroy();
+    secondView.destroy();
   });
 
   it('captures and replaces a selection across differently marked text fragments', () => {

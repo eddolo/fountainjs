@@ -655,6 +655,16 @@ const collaboration = createYjsCollaborationExtension({
 const kit = composeExtensions([CoreExtension, collaboration])
 ```
 
+Switching rooms does not require rebuilding the editor. Pass a fresh
+`YjsCollaborationAdapter` to `replaceCollaborationAdapter(editor, adapter)`;
+late updates from the retired document/provider are ignored and the previous
+adapter is disconnected and destroyed once. Local cursor awareness is
+deduplicated and throttled to a 32 ms cadence by default. React's `useFountain`
+also creates only one editor across Strict Mode's duplicate development render.
+
+See the [collaboration and Yjs guide](docs/COLLABORATION.md) for lifecycle,
+provider, security, offline, and replacement examples.
+
 The provider is optional. An app may transport Yjs updates itself, add offline
 persistence to the same `Y.Doc`, select a managed provider, or leave
 collaboration out. FountainJS hosts no room service and receives no document or

@@ -16,9 +16,10 @@ const limits = Object.freeze({
   'dist/react.js': 69 * kibibyte,
   'dist/react.cjs': 52 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
-  // adapter remains a separately loaded peer-backed entry.
-  'dist/yjs.js': 16 * kibibyte,
-  'dist/yjs.cjs': 14 * kibibyte,
+  // adapter remains a separately loaded peer-backed entry. Its explicit
+  // provider replacement and bounded presence scheduler add about 1.3 KiB.
+  'dist/yjs.js': 18 * kibibyte,
+  'dist/yjs.cjs': 16 * kibibyte,
   // Thread state, mapped anchors, storage operations, and the optional React
   // discussion panel remain isolated from the root and React entry points.
   'dist/comments.js': 30 * kibibyte,
@@ -69,6 +70,8 @@ const limits = Object.freeze({
   // entries and shared chunks. Keep only a small regression allowance above it.
   // Complete text styles, including headless interchange, add roughly 6.4/3.9
   // KiB across shared ESM/CJS chunks and 2.5/1.6 KiB to React.
+  // Lifecycle-safe adapter replacement, Yjs presence coalescing, and React
+  // Strict Mode ownership add roughly 2.8/2.4 KiB across shared chunks.
   'all ESM runtime code': 632 * kibibyte,
   'all CommonJS runtime code': 530 * kibibyte,
 });

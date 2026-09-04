@@ -1011,6 +1011,7 @@ test('runs the public two-editor collaboration demo with presence and author-loc
   await expect(right).toContainText('Edit either side');
 
   const leftParagraph = left.locator('[data-fountain-node="paragraph"]').first();
+  await left.focus();
   await leftParagraph.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
     const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
       acceptNode: (node) => node.parentElement?.closest('.fountain-collaboration-caret, .fountain-comment-thread--point')
@@ -1067,6 +1068,60 @@ test('runs the public two-editor collaboration demo with presence and author-loc
   await page.getByRole('button', { name: 'Undo Ada' }).click();
   await expect(right).not.toContainText(' LIVE');
   await expect(left).not.toContainText(' LIVE');
+});
+
+test('replaces both live collaboration documents without remounting the public editors', async ({ page }) => {
+  await page.goto('/');
+  const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const right = page.getByRole('textbox', { name: 'Grace collaborative editor' });
+  const documentText = (target: typeof left) => target.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('.fountain-collaboration-caret')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    let value = '';
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) value += node.textContent ?? '';
+    return value;
+  });
+  const switchToPlanning = page.getByRole('button', { name: 'Switch both editors to Planning room' });
+  await expect(switchToPlanning).toBeVisible();
+  await left.evaluate((element) => { (globalThis as any).__fountainLeftRoot = element.closest('[data-fountain-root]'); });
+
+  await switchToPlanning.click();
+  await expect(page.getByText('Room: Planning', { exact: true })).toBeVisible();
+  await expect(right).toContainText('Edit either side');
+  await left.focus();
+  await left.locator('[data-fountain-node="paragraph"]').last().locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('.fountain-collaboration-caret')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    let text = walker.nextNode();
+    for (let next = walker.nextNode(); next; next = walker.nextNode()) text = next;
+    if (!text) throw new Error('Expected collaboration text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.type(' PLANNING');
+  await expect.poll(() => documentText(right)).toContain('PLANNING');
+
+  await page.getByRole('button', { name: 'Switch both editors to Launch room' }).click();
+  await expect(page.getByText('Room: Launch', { exact: true })).toBeVisible();
+  await expect.poll(() => documentText(left)).not.toContain('PLANNING');
+  await expect.poll(() => documentText(right)).not.toContain('PLANNING');
+  expect(await left.evaluate((element) => element.closest('[data-fountain-root]') === (globalThis as any).__fountainLeftRoot)).toBe(true);
+
+  await page.getByRole('button', { name: 'Switch both editors to Planning room' }).click();
+  await expect.poll(() => documentText(left)).toContain('PLANNING');
+  await expect.poll(() => documentText(right)).toContain('PLANNING');
+  expect(await left.evaluate((element) => element.closest('[data-fountain-root]') === (globalThis as any).__fountainLeftRoot)).toBe(true);
 });
 
 test('runs shared threaded comments through the public provider-neutral review panel', async ({ page }) => {

@@ -77,6 +77,37 @@ in browser bundles, document JSON, awareness state, or repository settings.
 Use short-lived, room-scoped credentials and enforce document permissions on
 the relay/service—not in the editor UI.
 
+### Switch documents or providers without recreating the editor
+
+Room, account, and transport changes are explicit runtime operations. Create a
+fresh adapter and replace the current session:
+
+```ts
+import { replaceCollaborationAdapter } from 'fountainjs-editor'
+import { YjsCollaborationAdapter } from 'fountainjs-editor/yjs'
+
+replaceCollaborationAdapter(editor, new YjsCollaborationAdapter({
+  document: nextYDoc,
+  provider: nextProvider,
+  user: { id: currentUser.id, name: currentUser.name, color: '#196c55' },
+}))
+```
+
+Connection intent is preserved: a connected editor connects the replacement;
+an intentionally disconnected editor stays disconnected. `{ connect: true }`
+or `{ connect: false }` overrides that rule. FountainJS first invalidates the
+old context, then disconnects and destroys the old adapter exactly once. Late
+documents, presence, statuses, connection completions, or errors retained by
+the retired provider cannot mutate the new session. The host still owns the
+provider and `Y.Doc` themselves; adapter destruction removes FountainJS
+listeners and history resources rather than destroying shared application data.
+
+In React, `useFountain` treats its config as constructor input. Keep the editor
+instance and call `replaceCollaborationAdapter` when a room, `Y.Doc`, provider,
+or account prop changes. The hook coalesces React Strict Mode's duplicate
+development render probe into one editor and destroys abandoned or unmounted
+instances exactly once.
+
 For offline persistence, bind a persistence provider such as an IndexedDB
 adapter to the same `Y.Doc`. A persistence binding normally has its own
 lifecycle and no awareness channel, so the application should create and
@@ -134,6 +165,13 @@ a text selection encoded as Yjs relative positions. Relative positions remain
 attached to the shared text as concurrent changes arrive. Remote positions are
 resolved into Fountain structural positions, normalized, and rendered as
 view-only range and caret decorations.
+
+Identical local selections are not republished. Changed selections use a
+leading/trailing throttle of 32 ms by default, so a synchronous transaction
+burst produces at most one immediate and one trailing awareness write. Set
+`presenceThrottleMs` between `0` and `1000` when constructing the adapter; `0`
+is available for deterministic low-level integrations, while the bounded
+default is appropriate for interactive cursors.
 
 Remote names are inserted with `textContent`, not HTML. IDs, names, six-digit
 colours, selection bounds, and optional avatar URLs pass validation. Avatar
@@ -207,6 +245,8 @@ Delivered today:
 - relative text selections and accessible collaborator decorations;
 - origin-aware undo/redo with selection restoration;
 - schema validation, hostile-input containment, reconnect, and cleanup;
+- live adapter/`Y.Doc`/provider replacement with stale-session isolation;
+- duplicate-free Strict Mode lifecycle and bounded presence publishing;
 - ESM/CommonJS package boundaries and a real two-editor browser demo.
 
 Threaded comments and general tracked-change suggestion mode now ship as

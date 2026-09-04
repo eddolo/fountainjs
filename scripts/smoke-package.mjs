@@ -12,12 +12,14 @@ const coreNames = [
   'MediaExtension', 'startAssetUpload', 'registerFountainElement', 'BubbleMenuExtension',
   'FloatingMenuExtension', 'getEditorMenuAnchorRect', 'moveNode', 'canMoveNode',
   'BlockHandleManager', 'FOUNTAIN_NODE_DRAG_TYPE',
+  'getCollaborationAdapter', 'replaceCollaborationAdapter',
 ];
 const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
   'defaultFountainToolbarGroups', 'FountainSlashCommandMenu', 'FountainBubbleMenu',
   'FountainFloatingMenu',
+  'useFountain',
 ];
 const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];

@@ -54,6 +54,12 @@
   accessible presence decorations, local-origin undo/redo, validated remote
   state, host-owned provider/persistence boundaries, package checks, detailed
   integration guidance, and real-browser two-editor coverage.
+- Lifecycle-safe collaboration replacement with generation-scoped adapter
+  contexts, stale document/provider isolation, one-time retirement, bounded
+  Yjs presence publishing, duplicate-listener reconnect tests, and a
+  Strict-Mode-safe React editor constructor lifecycle. Multi-editor DOM
+  selection ownership now prevents an unfocused remote view from stealing the
+  active editor's browser selection.
 - Markdown full/collapsed/shortcut reference links and images with titles,
   deterministic deduplicated reference export, recursive quote and loose-list
   parsing, aligned tables with escaped pipes and row normalization, complete

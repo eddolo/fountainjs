@@ -692,12 +692,22 @@ getCollaborationState(editor)
 connectCollaboration(editor)
 disconnectCollaboration(editor)
 reconnectCollaboration(editor)
+getCollaborationAdapter(editor)
+replaceCollaborationAdapter(editor, nextAdapterOrFactory)
 undoCollaboration(editor)
 redoCollaboration(editor)
 canUndoCollaboration(editor)
 canRedoCollaboration(editor)
 closeCollaborationHistory(editor)
 ```
+
+`replaceCollaborationAdapter` invalidates the old session context before it
+disconnects and destroys that adapter, then connects the replacement when the
+old session was connected. Pass `{ connect: true | false }` to override that
+default. Late documents, presences, statuses, promise resolutions, and failures
+from the retired adapter are ignored. The same API switches a live editor to a
+different Yjs document, room, provider, or synchronization engine without
+recreating its view.
 
 The immutable plugin state contains `status`, normalized `presences`, and an
 optional bounded error. `collaborationKey` allows direct plugin-state access.
@@ -709,8 +719,11 @@ The optional `fountainjs-editor/yjs` entry exports
 `YjsCollaborationAdapter`, `createYjsCollaborationExtension`,
 `YjsCollaborationAdapterOptions`, `YjsProvider`, and `YjsAwareness`. Supply a
 `Y.Doc`, local `CollaborationUser`, and optional fragment, provider, awareness,
-field name, or undo `captureTimeout`. `yjs` is an external optional peer; the
-root and React entries do not load it.
+field name, undo `captureTimeout`, or `presenceThrottleMs`. Presence writes are
+deduplicated and use a 32 ms leading/trailing throttle by default so selection
+bursts cannot multiply awareness traffic; set `0` only when an integration
+requires synchronous unthrottled presence. `yjs` is an external optional peer;
+the root and React entries do not load it.
 
 ```ts
 const ydoc = new Y.Doc()
@@ -1232,6 +1245,13 @@ Import React bindings from `fountainjs-editor/react`:
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
 - `createReactNodeView(Component, options?)` and `ReactNodeViewProps`
+
+`useFountain(config)` creates one editor for the component lifetime. Its config
+is constructor input rather than reactive props. In development Strict Mode,
+duplicate render probes share that one pending editor; abandoned renders and
+the final unmount destroy it exactly once. To switch a live collaboration room,
+document, or provider, keep the editor and call `replaceCollaborationAdapter`
+instead of expecting a changed config object to reconstruct the hook.
 
 `createReactNodeView` adapts a React component without importing React from the
 framework-neutral package root. Components receive the current `node`, semantic

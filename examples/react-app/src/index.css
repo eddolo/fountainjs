@@ -125,8 +125,12 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .collaboration-demo__intro h2 { max-width: 760px; margin: 16px 0 0; font-size: clamp(42px, 5.7vw, 76px); line-height: 1; letter-spacing: -.06em; }
 .collaboration-demo__intro p { margin: 0 0 18px; color: #5f5a6b; font-size: 15px; line-height: 1.8; }
 .collaboration-demo__intro strong { color: #31285e; }
-.collaboration-demo__note { max-width: 1400px; padding: 13px 16px; margin: 48px auto 12px; color: #514a69; background: rgb(255 255 255 / 58%); border: 1px solid #d0c9f8; border-radius: 10px; font-size: 12px; }
+.collaboration-demo__note { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; max-width: 1400px; padding: 13px 16px; margin: 48px auto 12px; color: #514a69; background: rgb(255 255 255 / 58%); border: 1px solid #d0c9f8; border-radius: 10px; font-size: 12px; }
 .collaboration-demo__note b { color: #5e43cc; }
+.collaboration-demo__note small { flex-basis: 100%; color: #746d86; }
+.collaboration-demo__room { display: flex; gap: 10px; align-items: center; }
+.collaboration-demo__room button { min-height: 36px; padding: 7px 11px; color: #fff; background: #5e43cc; border: 1px solid #5e43cc; border-radius: 7px; font: 700 11px Manrope, sans-serif; }
+.collaboration-demo__room button:hover { color: #fff; background: #4932ad; border-color: #4932ad; }
 .collaboration-demo__editors { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 1400px; margin: auto; }
 .collaboration-demo__editors > article { overflow: hidden; background: white; border: 1px solid #cbc4ef; border-radius: 15px; box-shadow: 0 18px 50px rgb(70 56 135 / 10%); }
 .collaboration-demo__editors article > header { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid #e5e1f4; }
@@ -263,6 +267,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .capabilities__heading, .capabilities__grid { grid-template-columns: 1fr; }
   .collaboration-demo__intro, .collaboration-demo__editors, .collaboration-demo__comments, .tracked-demo__intro, .tracked-demo__workspace, .versions-demo__intro, .versions-demo__workspace { grid-template-columns: 1fr; }
   .collaboration-demo__editor-footer { align-items: flex-start; gap: 8px; flex-direction: column; }
+  .collaboration-demo__room { width: 100%; align-items: flex-start; flex-direction: column; }
   .versions-demo .fountain-version-card footer { flex-direction: row; }
   footer { gap: 12px; flex-direction: column; }
   .hero h1 > span, .hero h1 > em { white-space: normal; }

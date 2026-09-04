@@ -61,6 +61,8 @@ export interface YjsCollaborationAdapterOptions {
   readonly provider?: YjsProvider;
   readonly awarenessField?: string;
   readonly captureTimeout?: number;
+  /** Minimum milliseconds between outgoing awareness writes. Defaults to 32. Set 0 to disable throttling. */
+  readonly presenceThrottleMs?: number;
 }
 
 export interface YjsCollaborationExtensionOptions extends YjsCollaborationAdapterOptions {
@@ -416,6 +418,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private readonly localOrigin = Object.freeze({ fountain: 'local' });
   private readonly repairOrigin = Object.freeze({ fountain: 'repair' });
   private readonly captureTimeout: number;
+  private readonly presenceThrottleMs: number;
   private context?: CollaborationAdapterContext;
   private undoManager?: Y.UndoManager;
   private observing = false;
@@ -423,6 +426,10 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private pendingHistory?: PendingHistorySelection;
   private pendingRestoredSelection?: RelativeSelectionJSON;
   private localSelection?: RelativeSelectionJSON;
+  private publishedPresenceSignature?: string;
+  private pendingPresence?: { readonly value: Readonly<Record<string, unknown>>; readonly signature: string };
+  private presenceTimer?: ReturnType<typeof setTimeout>;
+  private lastPresenceAt = Number.NEGATIVE_INFINITY;
 
   private readonly onSharedChange = (_events: readonly unknown[], transaction: Y.Transaction): void => {
     if (!this.context || transaction.origin === this.localOrigin) return;
@@ -488,6 +495,13 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         || options.captureTimeout < 0)) {
       throw new TypeError('The Yjs undo capture timeout must be a finite non-negative number.');
     }
+    if (options.presenceThrottleMs !== undefined
+      && (typeof options.presenceThrottleMs !== 'number'
+        || !Number.isFinite(options.presenceThrottleMs)
+        || options.presenceThrottleMs < 0
+        || options.presenceThrottleMs > 1_000)) {
+      throw new TypeError('The Yjs presence throttle must be between 0 and 1000 milliseconds.');
+    }
     this.document = options.document;
     this.fragment = options.fragment ?? options.document.getXmlFragment(options.fragmentName ?? 'fountain');
     this.user = normalizeLocalUser(options.user);
@@ -495,6 +509,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.awareness = options.awareness ?? options.provider?.awareness;
     this.awarenessField = options.awarenessField ?? 'fountain';
     this.captureTimeout = Math.max(0, options.captureTimeout ?? 500);
+    this.presenceThrottleMs = Math.max(0, options.presenceThrottleMs ?? 32);
   }
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {
@@ -535,6 +550,11 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
       this.provider?.off?.('status', this.onProviderStatus);
       this.observing = false;
     }
+    if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
+    this.presenceTimer = undefined;
+    this.pendingPresence = undefined;
+    this.publishedPresenceSignature = undefined;
+    this.lastPresenceAt = Number.NEGATIVE_INFINITY;
     this.awareness?.setLocalStateField(this.awarenessField, null);
     this.context = undefined;
     if (!this.providerActive) return undefined;
@@ -638,11 +658,39 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     const relative = this.relativeSelection(selection);
     this.localSelection = relative;
     if (!this.awareness) return;
-    this.awareness.setLocalStateField(this.awarenessField, Object.freeze({
+    const value = Object.freeze({
       user: this.user,
       ...(relative ? { selection: relative } : {}),
-    }));
+    });
+    const signature = JSON.stringify(value);
+    if (signature === this.publishedPresenceSignature) {
+      if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
+      this.presenceTimer = undefined;
+      this.pendingPresence = undefined;
+    } else if (signature !== this.pendingPresence?.signature) {
+      const elapsed = Date.now() - this.lastPresenceAt;
+      if (this.presenceThrottleMs === 0 || elapsed >= this.presenceThrottleMs) {
+        this.writeLocalPresence(value, signature);
+      } else {
+        this.pendingPresence = { value, signature };
+        if (this.presenceTimer === undefined) {
+          this.presenceTimer = setTimeout(() => {
+            this.presenceTimer = undefined;
+            const pending = this.pendingPresence;
+            this.pendingPresence = undefined;
+            if (pending && this.context) this.writeLocalPresence(pending.value, pending.signature);
+          }, Math.max(0, this.presenceThrottleMs - elapsed));
+        }
+      }
+    }
     this.publishPresences(document);
+  }
+
+  private writeLocalPresence(value: Readonly<Record<string, unknown>>, signature: string): void {
+    if (!this.awareness || !this.context) return;
+    this.awareness.setLocalStateField(this.awarenessField, value);
+    this.publishedPresenceSignature = signature;
+    this.lastPresenceAt = Date.now();
   }
 
   private publishPresences(document = this.context?.editor.state.doc): void {

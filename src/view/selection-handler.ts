@@ -46,6 +46,7 @@ function locateOffset(root: HTMLElement, target: number): { node: globalThis.Nod
 export class SelectionHandler {
   private syncing = false;
   private pointerSelectionHandled = false;
+  private domSyncRequested = false;
 
   constructor(
     private readonly editor: Editor,
@@ -87,14 +88,32 @@ export class SelectionHandler {
     return selection;
   }
 
-  sync(selection: AnySelection): void {
+  ownsDOMSelection(): boolean {
+    const selection = document.getSelection();
+    return Boolean(selection?.anchorNode && selection.focusNode
+      && this.dom.contains(selection.anchorNode) && this.dom.contains(selection.focusNode));
+  }
+
+  requestDOMSync(): void {
+    this.domSyncRequested = true;
+    queueMicrotask(() => { this.domSyncRequested = false; });
+  }
+
+  consumeDOMSyncRequest(): boolean {
+    const requested = this.domSyncRequested;
+    this.domSyncRequested = false;
+    return requested;
+  }
+
+  sync(selection: AnySelection, applyDOM = true): void {
     this.clearSemanticSelectionMarkers();
     const domSelection = document.getSelection();
     if (!domSelection) return;
-    this.syncing = true;
+    this.syncing = applyDOM;
     const range = document.createRange();
 
     if (selection instanceof AllSelection) {
+      if (!applyDOM) return this.finishSync();
       range.selectNodeContents(this.dom);
       this.applyDOMSelection(domSelection, range);
       return;
@@ -105,6 +124,7 @@ export class SelectionHandler {
       if (!element) return this.finishSync();
       element.dataset.fountainSelectedNode = 'true';
       if (selection.nodePath.length === 1) element.draggable = true;
+      if (!applyDOM) return this.finishSync();
       range.selectNode(element);
       this.applyDOMSelection(domSelection, range);
       return;
@@ -118,6 +138,7 @@ export class SelectionHandler {
       const first = cells[0];
       const last = cells.at(-1);
       if (!first || !last) return this.finishSync();
+      if (!applyDOM) return this.finishSync();
       range.setStartBefore(first);
       range.setEndAfter(last);
       this.applyDOMSelection(domSelection, range);
@@ -138,16 +159,19 @@ export class SelectionHandler {
         range.setStartAfter(previous);
       } else if (parent) {
         parent.dataset.fountainGap = 'inside';
+        if (!applyDOM) return this.finishSync();
         range.selectNodeContents(parent);
         range.collapse(false);
         this.applyDOMSelection(domSelection, range);
         return;
       } else return this.finishSync();
+      if (!applyDOM) return this.finishSync();
       range.collapse(true);
       this.applyDOMSelection(domSelection, range);
       return;
     }
 
+    if (!applyDOM) return this.finishSync();
     const path = selection.path.join('.');
     const wrappers = Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-text-path]'));
     const wrapper = wrappers
@@ -187,6 +211,7 @@ export class SelectionHandler {
     if (this.shouldStopEvent?.(event)) return;
     const target = event.target instanceof Element ? event.target : null;
     if (!target || !this.dom.contains(target)) return;
+    this.requestDOMSync();
 
     const cell = target.closest<HTMLElement>('td[data-fountain-path], th[data-fountain-path]');
     if (cell && event.shiftKey) {

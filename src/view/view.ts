@@ -93,7 +93,7 @@ export class EditorView {
     }
     this.unsubscribe = editor.subscribe(this.onStateChange);
     this.syncNodeViewSelection(editor.state.selection);
-    queueMicrotask(() => this.selections.sync(editor.state.selection));
+    queueMicrotask(() => this.selections.sync(editor.state.selection, false));
   }
 
   focus(position: EditorFocusPosition = 'current'): void {
@@ -145,12 +145,16 @@ export class EditorView {
 
   private onStateChange = (state: EditorState, transaction: import('../core').Transaction): void => {
     if (this.destroyed) return;
+    const ownsDOMSelection = this.selections.consumeDOMSyncRequest()
+      || this.selections.ownsDOMSelection()
+      || this.dom === document.activeElement
+      || (transaction.selectionSet && transaction.getMeta('fountain$collaborationRemote') !== true);
     const decorations = this.collectDecorations(state);
     if (transaction.docChanged || !decorations.eq(this.decorations)) this.render(state.doc, decorations, transaction);
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
-    queueMicrotask(() => this.selections.sync(state.selection));
+    queueMicrotask(() => this.selections.sync(state.selection, ownsDOMSelection));
   };
 
   private render(document: Node, decorations: DecorationSet, transaction?: Transaction, allowReuse = true): void {
@@ -276,9 +280,10 @@ export class EditorView {
       try {
         if (entry.nodeView.ignoreMutation?.(mutation)) continue;
       } catch { /* Restore the model-owned DOM after a failing hook. */ }
+      const ownsDOMSelection = this.selections.ownsDOMSelection() || this.dom === document.activeElement;
       this.render(this.editor.state.doc, this.decorations, undefined, false);
       this.syncNodeViewSelection(this.editor.state.selection);
-      queueMicrotask(() => this.selections.sync(this.editor.state.selection));
+      queueMicrotask(() => this.selections.sync(this.editor.state.selection, ownsDOMSelection));
       return;
     }
   };

@@ -12,8 +12,10 @@ import {
   createEditor,
   disconnectCollaboration,
   getCollaborationState,
+  getCollaborationAdapter,
   insertText,
   reconnectCollaboration,
+  replaceCollaborationAdapter,
   type CollaborationAdapter,
   type CollaborationAdapterContext,
   type CollaborationLocalUpdate,
@@ -190,5 +192,80 @@ describe('provider-independent collaboration boundary', () => {
     expect(connectCollaboration(editor)).toBe(true);
     await Promise.resolve();
     expect(getCollaborationState(editor)?.status).toBe('connected');
+  });
+
+  it('replaces a live adapter without retaining stale contexts or update listeners', async () => {
+    let firstContext!: CollaborationAdapterContext;
+    let rejectFirst!: (error: Error) => void;
+    const firstConnect = new Promise<void>((_resolve, reject) => { rejectFirst = reject; });
+    const first: CollaborationAdapter = {
+      connect: vi.fn((context) => { firstContext = context; return firstConnect; }),
+      disconnect: vi.fn(),
+      destroy: vi.fn(),
+      onLocalUpdate: vi.fn(),
+      onLocalSelection: vi.fn(),
+    };
+    let secondContext!: CollaborationAdapterContext;
+    const second: CollaborationAdapter = {
+      connect: vi.fn((context) => { secondContext = context; }),
+      disconnect: vi.fn(),
+      destroy: vi.fn(),
+      onLocalUpdate: vi.fn(),
+      onLocalSelection: vi.fn(),
+    };
+    const extension = createCollaborationExtension({ adapter: () => first });
+    const kit = composeExtensions([CoreExtension, extension]);
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: { type: 'doc', content: [paragraph('Initial')] },
+    });
+
+    expect(getCollaborationState(editor)?.status).toBe('connecting');
+    expect(replaceCollaborationAdapter(editor, () => second)).toBe(true);
+    expect(getCollaborationAdapter(editor)).toBe(second);
+    expect(first.disconnect).toHaveBeenCalledTimes(1);
+    expect(first.destroy).toHaveBeenCalledTimes(1);
+    expect(second.connect).toHaveBeenCalledTimes(1);
+    expect(getCollaborationState(editor)?.status).toBe('connected');
+
+    expect(firstContext.applyRemoteDocument({ type: 'doc', content: [paragraph('Stale')] })).toBe(false);
+    firstContext.setStatus('error', 'stale provider');
+    firstContext.setPresences([{
+      clientId: 'stale', user: { id: 'stale', name: 'Stale', color: '#123456' },
+    }]);
+    expect(editor.state.doc.textContent).toBe('Initial');
+    expect(getCollaborationState(editor)).toMatchObject({ status: 'connected', presences: [] });
+
+    expect(secondContext.applyRemoteDocument({ type: 'doc', content: [paragraph('Current')] })).toBe(true);
+    expect(insertText(editor, '!')).toBe(true);
+    expect(first.onLocalUpdate).not.toHaveBeenCalled();
+    expect(second.onLocalUpdate).toHaveBeenCalledTimes(1);
+
+    rejectFirst(new Error('late failure from retired provider'));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(getCollaborationState(editor)?.status).toBe('connected');
+    expect(second.disconnect).not.toHaveBeenCalled();
+
+    editor.destroy();
+    expect(first.destroy).toHaveBeenCalledTimes(1);
+    expect(second.disconnect).toHaveBeenCalledTimes(1);
+    expect(second.destroy).toHaveBeenCalledTimes(1);
+  });
+
+  it('can replace an intentionally disconnected adapter without connecting it', () => {
+    const first: CollaborationAdapter = { connect: vi.fn(), destroy: vi.fn() };
+    const second: CollaborationAdapter = { connect: vi.fn(), destroy: vi.fn() };
+    const extension = createCollaborationExtension({ autoConnect: false, adapter: () => first });
+    const kit = composeExtensions([CoreExtension, extension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+
+    expect(replaceCollaborationAdapter(editor, second)).toBe(true);
+    expect(first.destroy).toHaveBeenCalledTimes(1);
+    expect(second.connect).not.toHaveBeenCalled();
+    expect(connectCollaboration(editor)).toBe(true);
+    expect(second.connect).toHaveBeenCalledTimes(1);
+    editor.destroy();
   });
 });

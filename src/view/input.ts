@@ -107,6 +107,7 @@ export class InputManager {
 
   private onKeyDown = (event: KeyboardEvent): void => {
     if (this.options.shouldStopEvent?.(event)) return;
+    this.selections.requestDOMSync();
     this.selections.capture();
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleKeyDown?.(this.editor, event)) {
@@ -156,6 +157,7 @@ export class InputManager {
   private onBeforeInput = (event: InputEvent): void => {
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
+    this.selections.requestDOMSync();
     if (event.inputType === 'insertCompositionText' && event.isComposing) return;
     if (event.inputType === 'insertFromComposition' || event.inputType === 'insertCompositionText') {
       event.preventDefault();
@@ -245,6 +247,7 @@ export class InputManager {
   };
 
   private onPaste = (event: ClipboardEvent): void => {
+    this.selections.requestDOMSync();
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
     this.selections.capture();
@@ -304,6 +307,7 @@ export class InputManager {
   };
 
   private onCut = (event: ClipboardEvent): void => {
+    this.selections.requestDOMSync();
     if (this.options.shouldStopEvent?.(event) || !this.editor.editable) return;
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleCut?.(this.editor, event)) {
@@ -323,6 +327,7 @@ export class InputManager {
   };
 
   private onCompositionEnd = (event: CompositionEvent): void => {
+    this.selections.requestDOMSync();
     this.composingValue = false;
     if (this.options.shouldStopEvent?.(event)) {
       this.compositionSelection = undefined;
@@ -441,6 +446,7 @@ export class InputManager {
   };
 
   private onDrop = (event: DragEvent): void => {
+    this.selections.requestDOMSync();
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
     for (const plugin of this.editor.state.plugins) {
