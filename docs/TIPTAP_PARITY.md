@@ -108,7 +108,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
 | FORMAT-01 | Lossless, validated JSON | Delivered | Add a versioned migration contract and published JSON Schema. |
-| FORMAT-02 | Safe HTML import/export | Partial | Schema-owned custom node/mark rules, wrapped content, custom-mark output, common CSS/link semantics, generic output hardening, complete-tree validation, unit contracts, and local Chromium/WebKit paste coverage are implemented; promote only after the exact all-engine CI and deployed developer-guide evidence pass. |
+| FORMAT-02 | Safe HTML import/export | Delivered | Schema-owned custom node/mark rules, wrapped content, priority and failure fallback, custom-mark output, common CSS/link semantics, generic executable-output hardening, and complete-tree validation are covered by 223 behavioral tests, the complete 141-test Chromium/Firefox/WebKit/mobile [CI run for `0275e49`](https://github.com/eddolo/fountainjs/actions/runs/33883485597), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33883485439), and a clean live-site custom-callout HTML paste with attribute preservation. |
 | FORMAT-03 | Markdown import/export | Partial | Add reference links, nested edge cases, richer tables, and explicit extension loss reporting. |
 | FORMAT-04 | Plain-text projection | Delivered | Preserve as a deliberately lossy boundary. |
 | FORMAT-05 | DOCX, PDF, ODT, and EPUB workflows | Missing | Define open conversion adapters and ship at least DOCX import/export plus print-quality PDF. |
