@@ -56,7 +56,7 @@ const initialContent = {
   content: [
     { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Build an editor that fits your product.' }] },
     { type: 'paragraph', content: [
-      { type: 'text', text: 'FountainJS is an ' },
+      { type: 'text', text: 'FountainJS is a ' },
       { type: 'text', text: 'modular rich-text engine', marks: [{ type: 'strong' }] },
       { type: 'text', text: '. Compose only the document types, behavior, formats, UI bindings, and integrations your product needs.' },
     ] },

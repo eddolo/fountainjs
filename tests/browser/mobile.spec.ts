@@ -188,7 +188,7 @@ test('exposes touch-sized block movement controls without page overflow', async 
   expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
   expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
   await moveAfter.tap();
-  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('FountainJS is an');
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('FountainJS is a');
   await expect(controls).toHaveAttribute('data-fountain-block-path', '1');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
