@@ -9,3 +9,4 @@ export * from './FountainAIReview';
 export * from './ReactNodeView';
 export * from './FountainSuggestionMenu';
 export * from './FountainCharacterCount';
+export * from './FountainSlashCommandMenu';

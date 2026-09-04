@@ -263,3 +263,7 @@ Suggestion requests and plugin state are transient. They never enter JSON or
 exported HTML. Destroying an editor aborts requests, unsubscribes controllers,
 and clears their listeners. Full emoji data is generated at build time from
 `unicode-emoji-json`; attribution is included in `THIRD_PARTY_NOTICES.md`.
+
+The same suggestion primitive also powers the independently registered `/`
+command workflow. See [SLASH_COMMANDS.md](SLASH_COMMANDS.md) for its built-in
+actions, runtime registry, async sources, atomic execution, and React renderer.

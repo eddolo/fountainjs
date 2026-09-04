@@ -176,6 +176,29 @@ from the isolated `fountainjs-editor/emoji-data` entry. See the
 [document-utilities guide](docs/DOCUMENT_UTILITIES.md) for every option,
 headless UI contracts, accessibility, persistence, and interchange behavior.
 
+### Slash command registry
+
+`createSlashCommandExtension()` adds a headless `/` command menu without adding
+any UI-framework dependency. Its live `SlashCommandRegistry` combines built-in,
+product-owned, and asynchronous sources; performs stable multi-term filtering;
+aborts stale searches; and executes the selected command atomically. A failed
+command restores the literal query and the complete previous document.
+
+```ts
+import {
+  SlashCommandRegistry,
+  createSlashCommandExtension,
+} from 'fountainjs-editor/document-utilities'
+
+const registry = new SlashCommandRegistry()
+registry.registerItems('product', [myCalloutCommand, myTemplateCommand])
+const slash = createSlashCommandExtension({ registry })
+```
+
+Any surface can render `kit.services.slashCommands.getController(editor)`.
+React applications can use the grouped, viewport-aware
+`FountainSlashCommandMenu`. See the complete [slash-command guide](docs/SLASH_COMMANDS.md).
+
 ## Native LaTeX mathematics
 
 `MathExtension` is a first-party but opt-in module. It adds portable
@@ -483,7 +506,7 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
-- `FountainSuggestionMenu` and `FountainCharacterCount`
+- `FountainSuggestionMenu`, `FountainSlashCommandMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
@@ -514,7 +537,8 @@ and nested text; block splitting and joining; attributed text and alignment;
 find/replace; rich content insertion; image URL/upload/paste/drop workflows;
 reusable input and paste rules; links, lists, tasks, code, tables, local history,
 interactive NodeViews, grouped browser input, structured clipboard and selected-
-block drag-move, mentions, emoji, typography, character limits, browser-event
+block drag-move, mentions, emoji, typography, character limits, a live extensible
+slash-command registry, browser-event
 plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
 proposals, and MCP transport.
@@ -523,6 +547,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 
 - [Architecture and internals](docs/ARCHITECTURE.md)
 - [Mentions, emoji, typography, and character count](docs/DOCUMENT_UTILITIES.md)
+- [Slash commands and runtime registrations](docs/SLASH_COMMANDS.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

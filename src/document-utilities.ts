@@ -5,3 +5,4 @@ export * from './extensions/mention';
 export * from './extensions/emoji';
 export * from './extensions/typography';
 export * from './extensions/character-count';
+export * from './extensions/slash-command';

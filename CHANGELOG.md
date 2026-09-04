@@ -10,6 +10,10 @@
 
 ### Added
 
+- A framework-neutral slash-command extension with ranked multi-term filtering,
+  cancellable async sources, live runtime registrations, atomic rollback,
+  eleven schema-aware defaults, an accessible React renderer, and package-backed
+  desktop/mobile demo coverage.
 - Independent mention, emoji, typography, and character-count extensions; a
   framework-neutral cancellable suggestion controller; accessible React
   suggestion/count UI; an isolated complete RGI emoji-data entry; enforced

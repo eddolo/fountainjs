@@ -8,8 +8,8 @@ function assertExports(module, names, surface) {
 }
 
 const coreNames = ['MediaExtension', 'startAssetUpload', 'registerFountainElement'];
-const reactNames = ['FountainComposer', 'FountainEditor', 'FountainToolbar'];
-const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SuggestionController'];
+const reactNames = ['FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainSlashCommandMenu'];
+const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');

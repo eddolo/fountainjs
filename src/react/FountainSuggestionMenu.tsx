@@ -12,6 +12,7 @@ export interface FountainSuggestionMenuProps<Item extends SuggestionItemBase> {
   emptyMessage?: string;
   /** Editor DOM used to position the menu next to the decorated query. */
   anchorElement?: HTMLElement | null;
+  groupBy?: (item: Item) => string | undefined;
   renderItem?: (item: Item, snapshot: SuggestionSnapshot<Item>) => ReactNode;
 }
 
@@ -48,6 +49,7 @@ export function FountainSuggestionMenu<Item extends SuggestionItemBase>({
   className,
   emptyMessage = 'No matching suggestions.',
   anchorElement,
+  groupBy,
   renderItem,
 }: FountainSuggestionMenuProps<Item>) {
   const snapshot = useSuggestionSnapshot(controller);
@@ -89,6 +91,32 @@ export function FountainSuggestionMenu<Item extends SuggestionItemBase>({
   }, [anchorElement, listboxId, snapshot.open, snapshot.selectedIndex]);
 
   if (!snapshot.open) return null;
+  const indexedItems = snapshot.items.map((item, index) => ({ item, index }));
+  const groups = groupBy ? indexedItems.reduce<Array<{
+    label: string;
+    entries: typeof indexedItems;
+  }>>((result, entry) => {
+    const label = groupBy(entry.item) ?? '';
+    const existing = result.at(-1);
+    if (existing?.label === label) existing.entries.push(entry);
+    else result.push({ label, entries: [entry] });
+    return result;
+  }, []) : [{ label: '', entries: indexedItems }];
+  const option = (item: Item, index: number) => <button
+    id={`${listboxId}-option-${index}`}
+    type="button"
+    role="option"
+    aria-selected={snapshot.selectedIndex === index}
+    aria-disabled={item.disabled || undefined}
+    disabled={item.disabled}
+    tabIndex={-1}
+    key={`${item.id}:${index}`}
+    onMouseDown={(event) => event.preventDefault()}
+    onMouseEnter={() => controller.select(index)}
+    onClick={() => controller.accept(index)}
+  >
+    {renderItem?.(item, snapshot) ?? item.label}
+  </button>;
   return (
     <section
       className={['fountain-suggestion-menu', className].filter(Boolean).join(' ')}
@@ -104,21 +132,15 @@ export function FountainSuggestionMenu<Item extends SuggestionItemBase>({
       {snapshot.status === 'error' && <p role="alert">{snapshot.error}</p>}
       {snapshot.status === 'ready' && !snapshot.items.length && <p role="status">{emptyMessage}</p>}
       <div id={listboxId} role="listbox" aria-label={label} aria-busy={snapshot.status === 'loading' || undefined}>
-        {snapshot.items.map((item, index) => <button
-          id={`${listboxId}-option-${index}`}
-          type="button"
-          role="option"
-          aria-selected={snapshot.selectedIndex === index}
-          aria-disabled={item.disabled || undefined}
-          disabled={item.disabled}
-          tabIndex={-1}
-          key={`${item.id}:${index}`}
-          onMouseDown={(event) => event.preventDefault()}
-          onMouseEnter={() => controller.select(index)}
-          onClick={() => controller.accept(index)}
+        {groups.map((group, groupIndex) => groupBy ? <div
+          role="group"
+          aria-labelledby={group.label ? `${listboxId}-group-${groupIndex}` : undefined}
+          className="fountain-suggestion-menu__group"
+          key={`${group.label}:${groupIndex}`}
         >
-          {renderItem?.(item, snapshot) ?? item.label}
-        </button>)}
+          {group.label && <div id={`${listboxId}-group-${groupIndex}`} className="fountain-suggestion-menu__group-label">{group.label}</div>}
+          {group.entries.map(({ item, index }) => option(item, index))}
+        </div> : group.entries.map(({ item, index }) => option(item, index)))}
       </div>
     </section>
   );

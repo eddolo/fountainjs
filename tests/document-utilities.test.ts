@@ -17,11 +17,16 @@ import {
   CharacterCountExtension,
   EmojiExtension,
   MentionExtension,
+  SlashCommandExtension,
+  SlashCommandRegistry,
   TypographyExtension,
   createCharacterCountExtension,
   createEmojiExtension,
   createMentionExtension,
+  createSlashCommandExtension,
   createTypographyExtension,
+  defaultSlashCommandItems,
+  filterSlashCommandItems,
   getActiveEmoji,
   getActiveMention,
   insertEmojiText,
@@ -29,6 +34,8 @@ import {
   type CharacterCountService,
   type EmojiService,
   type MentionService,
+  type SlashCommandItem,
+  type SlashCommandService,
 } from '../src/document-utilities';
 
 function kitWith(...extensions: Parameters<typeof composeExtensions>[0]) {
@@ -40,6 +47,8 @@ function keyboard(key: string): KeyboardEvent {
 }
 
 async function settle(): Promise<void> {
+  await Promise.resolve();
+  await Promise.resolve();
   await Promise.resolve();
   await Promise.resolve();
 }
@@ -308,5 +317,127 @@ describe('enforced character and word counting', () => {
     const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
     expect(insertText(editor, 'No implicit product limit')).toBe(true);
     expect((kit.services.characterCount as CharacterCountService).snapshot(editor).limit).toBeNull();
+  });
+});
+
+describe('headless slash command registry', () => {
+  it('filters multi-word aliases, ranks matches, and supports runtime registration', async () => {
+    const registry = new SlashCommandRegistry();
+    const extension = createSlashCommandExtension({ registry, includeDefaultItems: false });
+    const kit = kitWith(extension);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const service = kit.services.slashCommands as SlashCommandService;
+    const controller = service.getController(editor);
+    const unregister = registry.registerItems('product-blocks', [
+      {
+        id: 'callout', label: 'Callout', description: 'Insert a product notice.',
+        aliases: ['notice box'], group: 'Product', run: () => true,
+      },
+      {
+        id: 'code-review', label: 'Code review', description: 'Review source changes.',
+        aliases: ['inspect patch'], group: 'Product', priority: 10, run: () => true,
+      },
+    ]);
+
+    expect(filterSlashCommandItems(defaultSlashCommandItems(), 'numbered').map((item) => item.id)).toEqual(['ordered-list']);
+    expect(filterSlashCommandItems(defaultSlashCommandItems(), 'horizontal sep').map((item) => item.id)).toEqual(['divider']);
+    expect(insertText(editor, '/notice')).toBe(true);
+    await settle();
+    expect(controller.getSnapshot().items.map((item) => item.id)).toEqual(['callout']);
+
+    registry.registerItems('live-module', [{
+      id: 'notice-inline', label: 'Inline notice', aliases: ['notice'], group: 'Product', run: () => true,
+    }]);
+    await settle();
+    expect(controller.getSnapshot().items.map((item) => item.id)).toEqual(['notice-inline', 'callout']);
+    unregister();
+    await settle();
+    expect(controller.getSnapshot().items.map((item) => item.id)).toEqual(['notice-inline']);
+    expect(() => registry.registerItems('live-module', [])).toThrow('Duplicate slash command source');
+    editor.destroy();
+  });
+
+  it('aborts stale async sources and rolls back a command that refuses to run', async () => {
+    const requests: Array<{
+      query: string;
+      signal: AbortSignal;
+      resolve: (items: readonly SlashCommandItem[]) => void;
+    }> = [];
+    const extension = createSlashCommandExtension({
+      includeDefaultItems: false,
+      sources: [{
+        id: 'remote',
+        source: ({ query, signal }) => new Promise((resolve) => requests.push({ query, signal, resolve })),
+      }],
+    });
+    const kit = kitWith(extension);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const controller = (kit.services.slashCommands as SlashCommandService).getController(editor);
+
+    insertText(editor, '/a');
+    insertText(editor, 'b');
+    expect(requests.map((request) => request.query)).toEqual(['a', 'ab']);
+    expect(requests[0]?.signal.aborted).toBe(true);
+    requests[0]?.resolve([{ id: 'stale', label: 'Stale', run: () => true }]);
+    requests[1]?.resolve([{ id: 'abort', label: 'Abort action', aliases: ['ab'], run: () => false }]);
+    await settle();
+    expect(controller.getSnapshot().items.map((item) => item.id)).toEqual(['abort']);
+    expect(controller.accept()).toBe(false);
+    expect(editor.getText()).toBe('/ab');
+    expect(extension.plugins?.[0]?.spec.props?.handleKeyDown?.(editor, keyboard('Tab'))).toBe(true);
+    expect(controller.getSnapshot().open).toBe(false);
+    expect(editor.getText()).toBe('/ab');
+    editor.destroy();
+  });
+
+  it('rejects malformed and colliding runtime contributions', async () => {
+    const kit = kitWith();
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const context = {
+      editor,
+      query: '',
+      signal: new AbortController().signal,
+      match: {
+        trigger: '/', query: '', text: '/',
+        range: { path: [0, 0], from: 0, to: 1 },
+      },
+    } as const;
+    const malformed = new SlashCommandRegistry();
+    malformed.registerItems('malformed', [{
+      id: 'bad', label: 'Bad', aliases: 'not-an-array' as unknown as readonly string[], run: () => true,
+    }]);
+    await expect(malformed.getItems(context)).rejects.toThrow('returned an invalid item');
+
+    const colliding = new SlashCommandRegistry();
+    colliding.registerItems('one', [{ id: 'same', label: 'One', run: () => true }]);
+    colliding.registerItems('two', [{ id: 'same', label: 'Two', run: () => true }]);
+    await expect(colliding.getItems(context)).rejects.toThrow('Duplicate slash command item: same');
+    editor.destroy();
+  });
+
+  it.each([
+    ['heading 2', 'heading', 1],
+    ['bullet', 'bullet_list', 1],
+    ['quote', 'blockquote', 1],
+    ['divider', 'horizontal_rule', 2],
+    ['table', 'table', 2],
+  ])('runs the default %s command atomically', async (query, expectedType, expectedBlocks) => {
+    const kit = kitWith(createSlashCommandExtension());
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const service = kit.services.slashCommands as SlashCommandService;
+    const controller = service.getController(editor);
+    insertText(editor, `/${query}`);
+    await settle();
+    expect(controller.getSnapshot().items).toHaveLength(1);
+    expect(controller.accept()).toBe(true);
+    expect(editor.state.doc.child(0).type.name).toBe(expectedType);
+    expect(editor.state.doc.childCount).toBe(expectedBlocks);
+    expect(editor.getText()).not.toContain('/');
+    editor.destroy();
+  });
+
+  it('ships independently from StarterKit', () => {
+    expect(SlashCommandExtension.name).toBe('slash-command');
+    expect(defaultSlashCommandItems().map((item) => item.id)).toHaveLength(11);
   });
 });

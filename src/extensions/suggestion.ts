@@ -226,6 +226,15 @@ export class SuggestionController<Item extends SuggestionItemBase> {
     return true;
   }
 
+  /** Re-runs the active provider, for example after a runtime registry changes. */
+  invalidate(): boolean {
+    if (this.destroyed || !this.snapshot.open) return false;
+    this.currentIdentity = '';
+    this.dismissedIdentity = '';
+    this.refresh();
+    return true;
+  }
+
   destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
@@ -297,5 +306,6 @@ export function handleSuggestionKeyDown<Item extends SuggestionItemBase>(
   if (event.key === 'ArrowUp') return controller.move(-1);
   if (event.key === 'Enter') return controller.accept();
   if (event.key === 'Escape') return controller.dismiss();
+  if (event.key === 'Tab') return controller.dismiss();
   return false;
 }

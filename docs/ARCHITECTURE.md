@@ -217,6 +217,14 @@ inline atom. React's optional menu only subscribes to the controller and
 positions against the decoration. Destroying the editor destroys its
 controller and aborts pending work.
 
+The slash-command extension reuses the same trigger, decoration, cancellation,
+and keyboard machinery but replaces the query with an atomic command batch.
+Its independent `SlashCommandRegistry` combines built-in, product, and async
+sources and invalidates an open controller when a module registers or
+unregisters. The query deletion and selected command commit together; any
+failed command or plugin-filtered result rolls the temporary state back. The
+registry and menu therefore add no slash-specific state to the document model.
+
 History demonstrates this design. It is a normal stateful plugin holding `done`
 and `undone` snapshots. `createHistoryPlugin` validates configurable depth and
 group delay values. Input transactions carry an internal kind/time marker, so
@@ -385,7 +393,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -453,6 +461,11 @@ The suites are organized by boundary:
   safe interchange, mapped asset uploads, undo, selection, and load recovery;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
+- `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
+  counting, async suggestion state, slash registration/filtering, and atomic
+  command rollback;
+- `tests/react-document-utilities.test.tsx`: accessible suggestion, grouped
+  slash, and live count renderers;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
 - `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
@@ -461,8 +474,10 @@ The suites are organized by boundary:
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
 `pnpm test:budget` enforces raw production ceilings of 100 KiB for the ESM root,
-84 KiB for the CommonJS root, 64/48 KiB for the React entries, 32 KiB for CSS,
-and 384/320 KiB for all emitted ESM/CommonJS runtime chunks. Source maps are
+84 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
+the isolated full emoji data, 64/48 KiB for the React entries, 32 KiB for CSS,
+and 412/344 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
+emoji data. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
 destruction. The broader large-document latency and teardown benchmark work is
@@ -483,6 +498,8 @@ tracked separately as `PROD-05`.
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/view/` | DOM projection, input, selection, media, Custom Element |
 | `src/extensions/` | Composition contract and supplied capabilities |
+| `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |
+| `src/emoji-data.ts` | Optional complete searchable RGI emoji catalogue |
 | `src/extensions/media.ts` | Native media nodes, embed providers, policy, commands, and NodeViews |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |

@@ -14,8 +14,10 @@ const limits = Object.freeze({
   'dist/react.js': 64 * kibibyte,
   'dist/react.cjs': 48 * kibibyte,
   'dist/styles.css': 32 * kibibyte,
-  'all ESM runtime code': 400 * kibibyte,
-  'all CommonJS runtime code': 336 * kibibyte,
+  // The aggregate includes every independently loadable surface; adding the
+  // optional slash registry raised it by about 10 KiB without changing root.
+  'all ESM runtime code': 412 * kibibyte,
+  'all CommonJS runtime code': 344 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

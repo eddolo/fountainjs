@@ -22,16 +22,19 @@ import {
   TypographyExtension,
   createCharacterCountExtension,
   createMentionExtension,
+  createSlashCommandExtension,
   type CharacterCountService,
   type EmojiItem,
   type EmojiService,
   type MentionItem,
   type MentionService,
+  type SlashCommandService,
 } from 'fountainjs-editor/document-utilities';
 import {
   FountainAIReview,
   FountainCharacterCount,
   FountainComposer,
+  FountainSlashCommandMenu,
   FountainSuggestionMenu,
   Navigator,
   useFountain,
@@ -143,6 +146,17 @@ const mentionExtension = createMentionExtension({
 });
 
 const characterCountExtension = createCharacterCountExtension({ limit: 5_000 });
+const slashCommandExtension = createSlashCommandExtension({
+  items: [{
+    id: 'callout',
+    label: 'Callout',
+    description: 'Insert the custom block supplied by this demo extension.',
+    aliases: ['notice', 'aside'],
+    icon: '✦',
+    group: 'Product',
+    run: ({ editor }) => calloutExtension.commands?.insertCallout?.(editor) ?? false,
+  }],
+});
 
 const demoKit = composeExtensions([
   CoreExtension,
@@ -151,6 +165,7 @@ const demoKit = composeExtensions([
   EmojiExtension,
   characterCountExtension,
   TypographyExtension,
+  slashCommandExtension,
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
   SyntaxHighlightExtension,
@@ -276,7 +291,7 @@ function App() {
       <section className="capabilities">
         <div className="capabilities__heading"><span>BUILT IN TODAY</span><h2>Real document editing—not an AI wrapper.</h2><p>FountainJS ships the capabilities people expect from a serious editor, while keeping every layer replaceable.</p></div>
         <div className="capabilities__grid">
-          <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, find/replace, undo/redo, paste, and IME input.</p></article>
+          <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, nested document structures, tables, and custom block types.</p></article>
           <article><b>03</b><h3>Production images</h3><p>Use block or inline images, editable captions, alt text, alignment, responsive sources, replacement, and accessible resizing. Upload tasks map through edits and expose progress, cancel, retry, and errors while storage remains yours.</p></article>
           <article><b>04</b><h3>Portable formats</h3><p>Lossless JSON plus Markdown, safe HTML, and plain-text boundaries for storage, APIs, publishing pipelines, search, and any backend language.</p></article>
@@ -298,7 +313,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>The package running in this page.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> type <kbd>@a</kbd> for a person, <kbd>#re</kbd> for a topic, or <kbd>:rock</kbd> for emoji; use ↑/↓ and Enter. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type. Everything else remains available too.</div>
+        <div className="demo-note"><b>Try it:</b> start an empty line with <kbd>/</kbd> for the grouped command menu; type <kbd>@a</kbd> for a person, <kbd>#re</kbd> for a topic, or <kbd>:rock</kbd> for emoji; use ↑/↓ and Enter. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type. Everything else remains available too.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -310,6 +325,11 @@ function App() {
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
             </div>
             <FountainComposer ref={editorHandle} editor={editor} placeholder="Start writing…" assetUpload={demoAssetUpload} />
+            <FountainSlashCommandMenu
+              editor={editor}
+              service={demoKit.services.slashCommands as SlashCommandService}
+              anchorElement={editorHandle.current?.view?.dom}
+            />
             <FountainSuggestionMenu<MentionItem>
               controller={mentionController}
               label="Mention a person or topic"

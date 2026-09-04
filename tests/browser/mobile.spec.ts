@@ -85,5 +85,21 @@ test('keeps the suggestion picker visible and touch-selectable on a phone viewpo
   await menu.getByRole('option').click();
   await expect(menu).toHaveCount(0);
   await expect(editor.locator('[data-fountain-emoji="true"]').last()).toContainText('🚀');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('/');
+  const slashMenu = page.locator('.fountain-slash-command-menu');
+  await expect(slashMenu).toBeVisible();
+  await expect(slashMenu.getByRole('option')).toHaveCount(12);
+  await expect(slashMenu.getByRole('group')).toHaveCount(5);
+  const slashBox = await slashMenu.boundingBox();
+  expect(slashBox).not.toBeNull();
+  expect((slashBox?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((slashBox?.x ?? 0) + (slashBox?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  expect((slashBox?.y ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((slashBox?.y ?? 0) + (slashBox?.height ?? 0)).toBeLessThanOrEqual((viewport?.height ?? 0) + 1);
+  await page.keyboard.type('callout');
+  await slashMenu.getByRole('option').click();
+  await expect(editor.locator('.demo-callout').last()).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

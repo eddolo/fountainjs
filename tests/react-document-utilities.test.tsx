@@ -7,11 +7,13 @@ import { CoreExtension, EditorView, composeExtensions, createEditor, insertText 
 import {
   createCharacterCountExtension,
   createMentionExtension,
+  createSlashCommandExtension,
   type CharacterCountService,
   type MentionItem,
   type MentionService,
+  type SlashCommandService,
 } from '../src/document-utilities';
-import { FountainCharacterCount, FountainSuggestionMenu } from '../src/react';
+import { FountainCharacterCount, FountainSlashCommandMenu, FountainSuggestionMenu } from '../src/react';
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -83,6 +85,43 @@ describe('React document utility primitives', () => {
     expect(view.dom.hasAttribute('aria-expanded')).toBe(false);
     expect(view.dom.hasAttribute('aria-controls')).toBe(false);
     expect(view.dom.hasAttribute('aria-activedescendant')).toBe(false);
+
+    await act(async () => root.unmount());
+    view.destroy();
+    editor.destroy();
+    editorMount.remove();
+    reactMount.remove();
+  });
+
+  it('renders the slash registry as accessible labelled groups', async () => {
+    const slash = createSlashCommandExtension();
+    const kit = composeExtensions([CoreExtension, slash]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const editorMount = document.createElement('div');
+    const reactMount = document.createElement('div');
+    document.body.append(editorMount, reactMount);
+    const view = new EditorView(editorMount, editor);
+    const service = kit.services.slashCommands as SlashCommandService;
+    const root = createRoot(reactMount);
+
+    await act(async () => {
+      root.render(<FountainSlashCommandMenu editor={editor} service={service} anchorElement={view.dom} />);
+      insertText(editor, '/');
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(reactMount.querySelectorAll('[role="option"]')).toHaveLength(11);
+    const labelledGroups = [...reactMount.querySelectorAll('[role="group"]')]
+      .map((group) => group.getAttribute('aria-labelledby'));
+    expect(labelledGroups).toHaveLength(4);
+    expect(labelledGroups.every(Boolean)).toBe(true);
+    expect([...reactMount.querySelectorAll('.fountain-suggestion-menu__group-label')].map((label) => label.textContent)).toEqual([
+      'Text', 'Lists', 'Blocks', 'Insert',
+    ]);
+    expect(reactMount.querySelector('.fountain-slash-command-menu__copy')?.textContent).toContain('Write ordinary body text.');
+    expect(view.dom.getAttribute('aria-controls')).toBe(reactMount.querySelector('[role="listbox"]')?.id);
 
     await act(async () => root.unmount());
     view.destroy();

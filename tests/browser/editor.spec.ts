@@ -776,6 +776,37 @@ test('uses package-backed mentions, emoji, typography, and live counting in the 
   await expect.poll(async () => Number((await count.textContent())?.match(/\d+/)?.[0] ?? 0)).toBeGreaterThan(before);
 });
 
+test('runs grouped default and product slash commands in the public React playground', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstParagraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await firstParagraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('/heading 2');
+
+  const menu = page.locator('.fountain-slash-command-menu');
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole('option')).toHaveCount(1);
+  await expect(menu.getByRole('option')).toContainText('Heading 2');
+  await expect(editor).toHaveAttribute('aria-controls', await menu.getByRole('listbox').getAttribute('id') ?? 'missing');
+  await page.keyboard.press('Enter');
+  await expect(menu).toHaveCount(0);
+  await expect(editor.locator('h2').last()).toBeAttached();
+
+  await page.reload();
+  const freshEditor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const freshParagraph = freshEditor.locator('[data-fountain-node="paragraph"]').first();
+  await freshParagraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('/callout');
+  await expect(menu.getByRole('option')).toHaveCount(1);
+  await expect(menu.getByText('Product', { exact: true })).toBeVisible();
+  await menu.getByRole('option').click();
+  await expect(freshEditor.locator('.demo-callout').last()).toContainText('A custom node supplied by the demo extension.');
+});
+
 test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
   await page.goto('/');
   const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';

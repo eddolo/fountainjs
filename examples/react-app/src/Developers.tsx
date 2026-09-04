@@ -177,13 +177,41 @@ const mentions = createMentionExtension({
 const kit = composeExtensions([
   CoreExtension,
   mentions,
-  UnicodeEmojiExtension, // or compact EmojiExtension
+  UnicodeEmojiExtension, // or the curated EmojiExtension
   TypographyExtension,
   createCharacterCountExtension({ limit: 5_000 }),
 ])
 
 // Controllers are headless; React renders the optional listbox.
 const mentionsUI = kit.services.mentions.getController(editor)`;
+
+const slashCommandExample = `import {
+  StarterKit,
+  composeExtensions,
+  createEditor,
+} from 'fountainjs-editor'
+import {
+  SlashCommandRegistry,
+  createSlashCommandExtension,
+} from 'fountainjs-editor/document-utilities'
+
+const slashCommands = new SlashCommandRegistry()
+
+// Any product module can register and later remove its own source.
+const unregister = slashCommands.registerItems('product-blocks', [{
+  id: 'callout',
+  label: 'Callout',
+  aliases: ['notice', 'aside'],
+  group: 'Product',
+  run: ({ editor }) => insertCallout(editor),
+}])
+
+const slash = createSlashCommandExtension({ registry: slashCommands })
+const kit = composeExtensions([...StarterKit.extensions, productBlocks, slash])
+const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
+
+// React is optional; every surface can subscribe to this controller.
+const controller = kit.services.slashCommands.getController(editor)`;
 
 const toc = [
   ['mental-model', 'Mental model'],
@@ -331,8 +359,11 @@ function Developers() {
             <p>It also composes <code>SyntaxHighlightExtension</code>. Code source, language, and the line-number preference stay portable; live tokens and number gutters are decorations that never enter JSON or model text. The included tokenizer covers common languages, while <code>createSyntaxHighlightExtension</code> accepts validated ranges from any host grammar engine. Public language and line-number commands drive the same settings shown in the React toolbar.</p>
             <p><code>TableEditingExtension</code> keeps logical grid geometry valid across rowspans and colspans. Public commands merge and split cells, toggle scoped headers, select full logical rows or columns, resize through pointer or keyboard controls, and exchange rectangular TSV/HTML clipboard data. A non-historical append transaction repairs malformed host changes before subscribers receive the final state.</p>
             <h3>First-party modules remain opt-in</h3>
-            <p>Mentions, emoji, typography, and character limits live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention and emoji queries use one headless, abortable suggestion controller with stale-result protection; the React menu is merely a renderer over that state. <code>EmojiExtension</code> keeps a compact catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
+            <p>Mentions, emoji, typography, character limits, and slash commands live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention, emoji, and slash queries use one headless, abortable suggestion controller with stale-result protection; React menus are merely renderers over that state. <code>EmojiExtension</code> keeps a curated catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
             <Code>{documentUtilitiesExample}</Code>
+            <h3>Slash commands are a live extension point</h3>
+            <p><code>SlashCommandRegistry</code> combines the eleven supplied block actions with static product items or cancellable asynchronous sources. Search ranks exact aliases, prefixes, and multi-term matches while preserving stable source order. Registering or removing a module refreshes an open menu. Acceptance removes the literal query and runs the action in one command batch, so failure or a transaction filter restores the complete previous state.</p>
+            <Code>{slashCommandExample}</Code>
             <p><code>ClipboardHistoryExtension</code> records a bounded, deduplicated list only when copy or cut originates inside that editor. Native copy/paste remains unchanged; Ctrl/Cmd+Alt+V or a public command opens the optional searchable React picker. Its default is per-editor memory, with no upload and no browser-wide clipboard access. Applications must deliberately inject any persistence adapter, and non-React surfaces can render the same immutable plugin state.</p>
             <p><code>MathExtension</code> adds inline and display TeX nodes, commands, isolated typing/paste rules, and format round trips without changing <code>StarterKit</code>. Its default NodeView keeps accessible source visible; <code>createMathExtension</code> accepts a host-owned DOM renderer, and <code>createKaTeXRenderer</code> adapts KaTeX without coupling FountainJS to that dependency. Try the complete source-to-JSON route in the <a href="./demos/node-markdown.html">headless Markdown and LaTeX demo</a>.</p>
             <p><code>LeanExtension</code> is equally optional and works source-only: portable Lean blocks, Unicode shortcuts, highlighting, and a clear <code>LeanInfoView</code> do not require a server. An injected <code>LeanProvider</code> may add mapped diagnostics, goals, hover, and completion through a local, self-hosted, managed, or one-shot service. FountainJS chooses no endpoint and stores no credentials; see the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/LEAN.md">Lean provider and security guide</a>.</p>
@@ -348,7 +379,7 @@ function Developers() {
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>
               <div><h3>Web Component</h3><p>A standards boundary with a <code>value</code> property, <code>fountain-change</code> event, and configurable schema/plugins.</p></div>
-              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion menu and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
+              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
           </section>
@@ -383,6 +414,7 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/suggestion.ts"><code>src/extensions/suggestion.ts</code><span>Headless trigger matching, cancellable providers, stale-result protection, selection, and query decorations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCUMENT_UTILITIES.md"><code>docs/DOCUMENT_UTILITIES.md</code><span>Complete mention, emoji, typography, counting, React accessibility, and interchange contracts.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/SLASH_COMMANDS.md"><code>docs/SLASH_COMMANDS.md</code><span>Runtime registrations, async sources, filtering, atomic execution, UI, and lifecycle contracts.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/math.ts"><code>src/extensions/math.ts</code><span>Opt-in TeX nodes, commands, input/paste rules, NodeViews, and renderer adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/lean"><code>src/lean/</code><span>Provider-neutral Lean requests, proof-service results, validation, and stale protection.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/react"><code>src/react/</code><span>Optional React hooks and product-ready interface components.</span></a>

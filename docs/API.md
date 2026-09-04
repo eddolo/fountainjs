@@ -242,6 +242,34 @@ option semantics, and links the contenteditable through `aria-controls`,
 `aria-activedescendant`. See [DOCUMENT_UTILITIES.md](DOCUMENT_UTILITIES.md) for
 the complete options, lifecycle, format, and accessibility contracts.
 
+### Slash commands
+
+`createSlashCommandExtension(options)` is an opt-in module from
+`fountainjs-editor/document-utilities`. By default `/` opens at the start of a
+line and searches 11 schema-aware text, heading, list, quote, code, divider, and
+table actions. Trigger, line/prefix/space policy, maximum results, built-ins,
+static items, async sources, and the registry itself are configurable.
+
+`SlashCommandRegistry.register(id, source)` adds a synchronous or asynchronous
+source and returns an unregister function. `registerItems(id, items)` is the
+static convenience form. Sources receive `{ editor, match, query, signal }`;
+runtime registration changes refresh an open controller. Duplicate source or
+item IDs fail explicitly. `filterSlashCommandItems(items, query, editor?)`
+exposes the same stable exact/prefix/multi-term ranking used by the extension.
+
+Each `SlashCommandItem` has `id`, `label`, and `run({ editor, match })`, with
+optional description, group, aliases, icon, priority, disabled state, and a
+dynamic `isAvailable(editor)` predicate. Acceptance removes the literal query
+and runs the command in one batch. Failure, exception, or transaction-filter
+refusal restores the entire prior state.
+
+The `slashCommands` service exposes its `key`, `registry`, and
+`getController(editor)`. Non-React hosts render that headless controller;
+React hosts can use `FountainSlashCommandMenu`, which supplies labelled groups
+over the shared accessible suggestion listbox. See
+[SLASH_COMMANDS.md](SLASH_COMMANDS.md) for the full registration, execution,
+accessibility, and lifecycle contracts.
+
 ### Custom NodeViews
 
 A NodeView constructor receives the current model `node`, the owning
@@ -774,6 +802,7 @@ Import React bindings from `fountainjs-editor/react`:
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `FountainSuggestionMenu`, `FountainSlashCommandMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
