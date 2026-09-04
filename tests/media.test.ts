@@ -200,6 +200,7 @@ describe('first-party production media extension', () => {
       schema: StarterKit.schema,
       content: { type: 'doc', content: [
         { type: 'audio', attrs: { src: 'https://cdn.example.com/audio.mp3', title: 'Accessible audio', caption: 'Transcript available', controls: true } },
+        { type: 'video', attrs: { src: 'https://cdn.example.com/video.mp4', title: 'Inline video', controls: true, playsInline: true } },
         { type: 'file_attachment', attrs: { src: 'https://cdn.example.com/report.pdf', name: 'Report.pdf', mimeType: 'application/pdf', size: 2048 } },
       ] },
     });
@@ -210,6 +211,7 @@ describe('first-party production media extension', () => {
     const audio = figure?.querySelector('audio');
     expect(figure?.getAttribute('aria-label')).toBe('[Audio: Accessible audio]');
     expect(audio?.controls).toBe(true);
+    expect(view.dom.querySelector('.fountain-media--video video')?.hasAttribute('playsinline')).toBe(true);
     expect(figure?.textContent).toContain('Transcript available');
     audio?.dispatchEvent(new Event('error'));
     expect(figure?.dataset.fountainMediaError).toBe('true');

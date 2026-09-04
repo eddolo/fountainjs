@@ -424,7 +424,8 @@ class MediaNodeView implements NodeViewLike {
     if (attrs.disableRemotePlayback) element.setAttribute('disableremoteplayback', '');
     if (element instanceof HTMLVideoElement) {
       element.poster = String(attrs.poster || '');
-      element.playsInline = attrs.playsInline !== false;
+      if (attrs.playsInline !== false) element.setAttribute('playsinline', '');
+      else element.removeAttribute('playsinline');
       element.style.width = '100%';
       element.style.height = String(attrs.height || 'auto');
     }
