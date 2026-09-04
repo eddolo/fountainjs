@@ -29,15 +29,24 @@ back into a “future” list:
 Their current limitations remain in [TIPTAP_PARITY.md](TIPTAP_PARITY.md); “has
 an implementation” never means “has a decade of production evidence.”
 
-## Active now: extension trust and authoring
+## Delivered foundation: extension trust and authoring
 
 PROD-06 owns manifests, exact extension API compatibility, deterministic
 requirements, hard duplicate/contribution conflicts, framework-neutral
 conformance tests, a safe package generator, and installation-wide diagnostics.
 The `fountainjs-editor doctor` command is included here because it is the direct
-completion of that contract, not a separate speculative feature.
+completion of that contract, not a separate speculative feature. That outcome
+is now certified in [TIPTAP_PARITY.md](TIPTAP_PARITY.md) and documented for
+extension authors in [EXTENSIONS.md](EXTENSIONS.md).
 
-## Prioritized after PROD-06
+## Active now: stable releases and migrations
+
+PROD-07 owns explicit API-stability levels, deprecation windows, document and
+extension migration contracts, release evidence, security-support policy, and
+repeatable release gates. Existing release automation is a starting point, not
+proof that early-beta documents and extensions can move safely between versions.
+
+## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
