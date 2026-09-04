@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 const kibibyte = 1024;
 const limits = Object.freeze({
-  'dist/index.js': 100 * kibibyte,
+  'dist/index.js': 102 * kibibyte,
   'dist/index.cjs': 84 * kibibyte,
   'dist/document-utilities.js': 36 * kibibyte,
   'dist/document-utilities.cjs': 30 * kibibyte,
@@ -22,8 +22,10 @@ const limits = Object.freeze({
   // roughly 7 KiB across emitted shared chunks; individual entry ceilings stay
   // unchanged so no consumer-facing entry can hide that growth. Schema-owned
   // custom HTML parsing and hardened output add another roughly 4.6/3.8 KiB.
-  'all ESM runtime code': 440 * kibibyte,
-  'all CommonJS runtime code': 372 * kibibyte,
+  // Reference-aware nested Markdown parsing and explicit projection reports
+  // add roughly 5.3/2.6 KiB, including about 1 KiB in the ESM root entry.
+  'all ESM runtime code': 448 * kibibyte,
+  'all CommonJS runtime code': 377 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

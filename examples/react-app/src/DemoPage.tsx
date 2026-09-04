@@ -275,12 +275,16 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   ), [demo.slug]);
   const [source, setSource] = useState(demo.markdown ?? '');
   const parsed = useMemo(() => {
-    try { return { document: MarkdownImporter.parse(source, schema), error: '' }; }
-    catch (error) { return { document: undefined, error: error instanceof Error ? error.message : String(error) }; }
+    try {
+      const document = MarkdownImporter.parse(source, schema);
+      return { document, losses: MarkdownExporter.exportWithReport(document).losses, error: '' };
+    } catch (error) {
+      return { document: undefined, losses: [], error: error instanceof Error ? error.message : String(error) };
+    }
   }, [schema, source]);
 
   return <div className="demo-workspace">
-    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><label htmlFor="markdown-source">Markdown input</label><textarea id="markdown-source" value={source} onChange={(event) => setSource(event.target.value)} /><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks`}</p></section>
+    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><label htmlFor="markdown-source">Markdown input</label><textarea id="markdown-source" value={source} onChange={(event) => setSource(event.target.value)} /><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${parsed.losses.length ? `${parsed.losses.length} projected Markdown detail${parsed.losses.length === 1 ? '' : 's'}` : 'no reported Markdown losses'}`}</p></section>
     <OutputPanel document={parsed.document} />
   </div>;
 }

@@ -277,8 +277,8 @@ export class CampaignEditor {
     runtime: 'headless',
     summary: 'A DOM-free conversion route from Markdown, native LaTeX, and source-only Lean to validated FountainJS JSON, HTML, and text.',
     boundary: 'Only the document/schema/format modules run; no editor view or frontend framework is required.',
-    capabilities: ['Headless schema', 'Inline/display LaTeX', 'Source-only Lean', 'JSON round trip'],
-    markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$ and Lean source in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n```lean\nexample : 1 = 1 := rfl\n```\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n> The portable document stays in the middle.',
+    capabilities: ['Headless schema', 'Reference links + titles', 'Aligned tables + escaped pipes', 'Recursive block structure', 'Explicit loss report'],
+    markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$, [reference links][formats], and Lean source in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n```lean\nexample : 1 = 1 := rfl\n```\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n| Boundary | Behavior |\n| :--- | :---: |\n| Markdown \\| text | Portable |\n\n> The portable document stays in the middle.\n>\n> - Nested structure stays nested.\n> - Reference titles survive.\n\n[formats]: https://github.com/eddolo/fountainjs/blob/master/docs/FORMATS.md "Format boundary guide"',
     content: doc(paragraph(text('Headless Markdown content'))),
     code: `import {
   MarkdownImporter, MarkdownExporter, HTMLExporter,
@@ -292,7 +292,10 @@ const schema = new Schema(kit.schema)
 const document = MarkdownImporter.parse(markdownSource, schema)
 
 await database.save(document.toJSON())
-const markdown = MarkdownExporter.export(document)
+const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
+  linkStyle: 'reference',
+  onLoss: detail => telemetry.record('markdown-projection', detail),
+})
 const html = HTMLExporter.export(document, { document: true })`,
     accent: '#4385be',
   },

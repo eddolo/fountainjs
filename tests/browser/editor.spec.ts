@@ -4,6 +4,31 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
 });
 
+test('runs reference links, recursive blocks, rich tables, and loss reports in a real browser', async ({ page }) => {
+  const result = await page.evaluate(() => (globalThis as any).fountainBrowserTest.inspectMarkdown([
+    '> First paragraph.',
+    '>',
+    '> - Nested item',
+    '',
+    '| Path \\| label | State |',
+    '| --- | :---: |',
+    '| C:\\\\tmp | [Ready][status] |',
+    '',
+    '[status]: https://example.com/status "Status page"',
+  ].join('\n')));
+
+  expect(result.document).toEqual(result.roundTrip);
+  expect(result.document.content.map((node: any) => node.type)).toEqual(['blockquote', 'table']);
+  expect(result.markdown).toContain('[Ready][ref-1]');
+  expect(result.markdown).toContain('[ref-1]: https://example.com/status "Status page"');
+  expect(result.losses).toEqual([]);
+
+  const losses = await page.evaluate(() => (globalThis as any).fountainBrowserTest.markdownLosses());
+  expect(losses).toEqual(expect.arrayContaining([
+    expect.objectContaining({ kind: 'node', type: 'browser_counter', path: [2] }),
+  ]));
+});
+
 test('edits through real beforeinput events and undoes a Markdown input rule', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await expect(editor).toContainText('Second paragraph');
@@ -1130,11 +1155,14 @@ test('runs the public headless Markdown and LaTeX pipeline', async ({ page }) =>
   await page.goto('/demos/node-markdown.html');
   const source = page.getByLabel('Markdown input');
   await expect(source).toContainText('$E=mc^2$');
-  await expect(page.getByText('Valid document · 6 top-level blocks')).toBeVisible();
+  await expect(source).toContainText('[reference links][formats]');
+  await expect(page.getByText('Valid document · 7 top-level blocks · no reported Markdown losses')).toBeVisible();
   const output = page.locator('.demo-output pre');
   await expect(output).toContainText('inline_math');
   await expect(output).toContainText('math_block');
   await expect(output).toContainText('"language": "lean"');
+  await expect(output).toContainText('table');
+  await expect(output).toContainText('Format boundary guide');
   await source.fill('# Formula\n\n$\\alpha+\\beta$');
   await expect(page.getByText('Valid document · 2 top-level blocks')).toBeVisible();
   await page.getByRole('button', { name: 'markdown' }).click();

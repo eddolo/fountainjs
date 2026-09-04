@@ -5,6 +5,8 @@ import {
   EditorView,
   LeanExtension,
   LeanController,
+  MarkdownExporter,
+  MarkdownImporter,
   Plugin,
   PluginKey,
   StarterKit,
@@ -129,6 +131,17 @@ const updateOutput = () => { output.value = JSON.stringify(editor.getJSON()); };
 updateOutput();
 editor.subscribe(updateOutput);
 
+const inspectMarkdown = (source: string) => {
+  const document = MarkdownImporter.parse(source, editor.state.schema);
+  const exported = MarkdownExporter.exportWithReport(document, { linkStyle: 'reference' });
+  return {
+    document: document.toJSON(),
+    markdown: exported.markdown,
+    losses: exported.losses,
+    roundTrip: MarkdownImporter.parse(exported.markdown, editor.state.schema).toJSON(),
+  };
+};
+
 Object.assign(globalThis, {
   fountainBrowserTest: {
     commands,
@@ -137,6 +150,8 @@ Object.assign(globalThis, {
     leanController,
     nodeViewMetrics,
     clipboardHistory: () => getClipboardHistoryState(editor),
+    inspectMarkdown,
+    markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     startImageUpload,
   },
 });

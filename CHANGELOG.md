@@ -10,6 +10,11 @@
 
 ### Added
 
+- Markdown full/collapsed/shortcut reference links and images with titles,
+  deterministic deduplicated reference export, recursive quote and loose-list
+  parsing, aligned tables with escaped pipes and row normalization, complete
+  schema validation, and immutable path-based loss reports for unsupported
+  nodes, marks, and attributes.
 - Schema-owned `parseDOM` rules for extension-defined block/inline nodes and
   marks, nested `contentElement` parsing, complete imported-tree validation,
   custom-mark export, broader common CSS/link preservation, and hardened

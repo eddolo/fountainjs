@@ -493,6 +493,9 @@ The suites are organized by boundary:
 - `tests/html-format.test.ts`: schema-owned custom node/mark round trips,
   wrapped content, CSS/link semantics, invalid-rule fallback, complete-tree
   validation, and executable generic-output rejection;
+- `tests/markdown-format.test.ts`: titled inline/reference destinations,
+  deterministic definitions, escaped/aligned tables, recursive blockquotes,
+  loose multi-block lists, unsafe URLs, and explicit extension-loss reports;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -514,10 +517,10 @@ The suites are organized by boundary:
 
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
-`pnpm test:budget` enforces raw production ceilings of 100 KiB for the ESM root,
+`pnpm test:budget` enforces raw production ceilings of 102 KiB for the ESM root,
 84 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 34 KiB for CSS,
-and 440/372 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
+and 448/377 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
 emoji data. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
@@ -536,6 +539,7 @@ tracked separately as `PROD-05`.
 | `src/core/table-map.ts` | Span-aware logical table geometry |
 | `src/core/table-commands.ts` | Merge/split, headers, selection, resize, repair, and grid clipboard operations |
 | `src/core/search.ts` | Cross-fragment search and replacement |
+| `src/core/importers/` and `src/core/exporters/` | Validated interchange plus explicit lossy-boundary reporting |
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |

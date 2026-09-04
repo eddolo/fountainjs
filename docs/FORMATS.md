@@ -51,14 +51,54 @@ truth.
 
 ## Markdown
 
-The Markdown boundary supports headings, paragraphs, quotes, fenced code, lists, tables, images, dividers, links, strong/emphasis/strike/code marks, highlight extension syntax, and `$...$`/`$$...$$` math when `MathExtension` is present. Mentions and emoji export as their readable text projections; this deliberately loses mention identity/kind and emoji fallback metadata because CommonMark has no portable typed representation for either. Raw Unicode emoji imported into an emoji-enabled schema becomes an emoji node. Audio, video, file, and embed nodes likewise export as readable destination links plus optional caption text; re-import therefore produces links, not media nodes. Use validated JSON or supported HTML when extension type and attributes must round-trip.
+The Markdown boundary supports headings, paragraphs, recursive blockquotes,
+fenced code, tight and loose nested lists, aligned pipe tables, block and inline
+images, dividers, links, strong/emphasis/strike/code marks, highlight extension
+syntax, and `$...$`/`$$...$$` math when `MathExtension` is present. Pipe tables
+retain left/centre/right column alignment, do not split escaped pipes, and pad
+short rows to the header width. Imported documents are validated against the
+complete receiving schema before they are returned.
+
+Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
+(`[id][]`), and shortcut (`[id]`) reference links and reference images resolve
+case-insensitively. Unsafe destination protocols are never turned into links or
+images. Export can emit ordinary inline links or deterministic, deduplicated
+reference definitions:
+
+```ts
+const document = MarkdownImporter.parse(source, schema)
+const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
+  linkStyle: 'reference', // default: 'inline'
+  onLoss: detail => telemetry.record('markdown-projection', detail),
+})
+```
+
+Every loss entry has a `kind` (`node`, `mark`, or `attribute`), the affected
+type, an immutable document `path`, and a human-readable `detail`. The report
+records unsupported extension nodes/marks and built-in attributes Markdown
+cannot reconstruct, including non-table alignment, merged-cell geometry,
+custom highlight colours, non-default image layout, and typed media metadata.
+An `onLoss` callback is observational: its exception is contained and cannot
+break otherwise valid serialization. `MarkdownExporter.export(...)` remains
+the convenient string-only API and accepts the same options.
+
+Mentions and emoji export as their readable text projections; the report makes
+the lost mention identity/kind and emoji fallback metadata explicit because
+CommonMark has no portable typed representation for either. Raw Unicode emoji
+imported into an emoji-enabled schema becomes an emoji node. Audio, video,
+file, and embed nodes likewise export as readable destination links plus
+optional caption text and produce a loss entry; re-import therefore produces
+links, not media nodes. Use validated JSON or supported extension-aware HTML
+when extension type and attributes must round-trip.
 
 Lean source uses the ordinary `code_block` with `language: "lean"`, so JSON,
 HTML, Markdown fenced code, and plain text remain portable even when no Lean
 provider is configured. Provider descriptors and proof results are view/runtime
 state and are never serialized with the document.
 
-Markdown cannot represent every custom schema attribute. Use JSON when lossless round-tripping is required.
+Markdown cannot represent every custom schema attribute. Inspect the loss
+report at publishing boundaries and use JSON when lossless round-tripping is
+required.
 
 ## Plain text
 

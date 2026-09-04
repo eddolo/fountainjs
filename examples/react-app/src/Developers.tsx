@@ -223,6 +223,17 @@ const extension = defineExtension({
   formats: { portable: portableFormat },
 })`;
 
+const markdownBoundaryExample = `const document = MarkdownImporter.parse(source, schema)
+
+const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
+  // Stable, deduplicated definitions instead of inline destinations.
+  linkStyle: 'reference',
+  onLoss: detail => telemetry.record('markdown-projection', detail),
+})
+
+// Each immutable loss names its kind, schema type, document path, and detail.
+// Persist document.toJSON() when exact extension data must survive.`;
+
 const documentUtilitiesExample = `import {
   EmojiExtension,
   TypographyExtension,
@@ -494,6 +505,8 @@ function Developers() {
             <h2>Storage and uploads stay outside the core.</h2>
             <p>JSON is lossless and is the recommended persistence format. Markdown, HTML, and text are modular boundaries for publishing and interchange. A product-specific format is just a parser/serializer pair contributed by an extension.</p>
             <p>HTML is extension-aware rather than a fixed built-in switch. A node or mark can pair its safe <code>toDOM</code> output with priority-ordered <code>parseDOM</code> rules that match a CSS selector, recover validated attributes, and optionally identify a nested content element. Invalid selectors, callback failures, unsafe attributes, executable output tags, and schema-invalid content fail closed; the complete imported tree is validated before paste or API callers receive it. This lets configured custom nodes and marks survive HTML interchange while JSON remains the exact persistence boundary.</p>
+            <p>Markdown accepts titled inline links and full, collapsed, or shortcut references; recursive quotes; loose nested lists; and aligned tables with escaped pipes. Reference export is stable and deduplicated. Because Markdown cannot encode every schema, <code>exportWithReport</code> returns path-based losses for projected nodes, marks, and attributes instead of silently pretending the conversion is exact. The callback is observational and cannot break serialization.</p>
+            <Code>{markdownBoundaryExample}</Code>
             <Code>{formatExample}</Code>
             <p>Block images support editable captions, alt text, titles, alignment, responsive source sets, explicit dimensions, load recovery, and pointer, touch, or keyboard resizing. <code>inline_image</code> is a separate typed node that can sit between text. Both are selectable and portable through JSON and HTML.</p>
             <Code>{mediaExample}</Code>

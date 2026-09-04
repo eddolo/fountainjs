@@ -520,7 +520,9 @@ interoperability boundaries.
 const schema = new Schema(CoreSchemaSpec);
 const document = MarkdownImporter.parse('# Hello\n\nA **bold** beginning.', schema);
 
-MarkdownExporter.export(document);
+const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
+  linkStyle: 'reference',
+});
 HTMLExporter.export(document, { document: false });
 JSONExporter.export(document);
 ```
@@ -532,6 +534,12 @@ rules, so configured extension content can survive HTML paste and round trips
 without hard-coding the extension into FountainJS. Every imported document is
 validated by the receiving schema. JSON remains the exact persistence format;
 see the [format-boundary guide](docs/FORMATS.md).
+
+Markdown import supports titled inline and reference links/images, recursive
+quotes, loose nested lists, and aligned tables with escaped pipes. Export can
+emit deterministic deduplicated references; `exportWithReport` identifies
+every unsupported node, mark, or attribute projection by document path so a
+publishing pipeline never has to guess what Markdown omitted.
 
 ## Optional AI review module
 

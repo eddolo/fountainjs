@@ -852,6 +852,24 @@ Hosts can add their own labelled controls around `selectNode`, `selectGap`, or
 
 The root package exports `HTMLImporter`, `MarkdownImporter`, `HTMLExporter`, `MarkdownExporter`, `JSONExporter`, and `TextExporter`. Importers receive a `Schema`; exporters accept an `EditorState` or `Node`.
 
+`MarkdownImporter.parse(source, schema)` recognizes inline links with titles;
+full, collapsed, and shortcut reference links/images; recursive quotes; loose
+multi-block nested lists; aligned tables with escaped pipes; and the remaining
+built-in Markdown projections. Reference identifiers are normalized without
+changing their displayed label, unsafe URLs remain ordinary text, short table
+rows are padded, and the final tree passes `schema.validate()`.
+
+`MarkdownExporter.export(stateOrNode, options?)` returns a string. Set
+`options.linkStyle` to `"reference"` for stable `ref-1`, `ref-2`, … definitions
+deduplicated by destination and title. The default is `"inline"`.
+
+`MarkdownExporter.exportWithReport(stateOrNode, options?)` returns
+`{ markdown, losses }`. Each immutable `MarkdownExportLoss` contains `kind`,
+`type`, `path`, and `detail`; it identifies a node, mark, or attribute that the
+Markdown projection cannot reconstruct. `options.onLoss` receives each entry
+but is observational—callback failures are contained. This is the release-safe
+choice when publishing documents composed from third-party extensions.
+
 ## React
 
 Import React bindings from `fountainjs-editor/react`:
