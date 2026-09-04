@@ -210,9 +210,11 @@ Delivered today:
 - ESM/CommonJS package boundaries and a real two-editor browser demo.
 
 Threaded comments and general tracked-change suggestion mode now ship as
-separate optional modules. Named version storage/comparison and large-document
-performance certification remain roadmap items; none of those product
-capabilities is implied by the presence of Yjs.
+separate optional modules. Named version storage/comparison/restoration also
+ships as a separate provider-backed module; it is not stored in Yjs, while its
+one normal restore transaction can propagate through Yjs. Large-document
+performance certification remains a roadmap item; none of those product
+capabilities is implied merely by the presence of Yjs.
 
 ## Upstream references
 

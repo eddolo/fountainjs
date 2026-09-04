@@ -745,6 +745,53 @@ filters, selection/hover state, individual and filtered batch decisions, mode
 control, and an optional discussion callback. It does not add React to the core
 or tracking entry. See [TRACKED_CHANGES.md](TRACKED_CHANGES.md).
 
+## Named versions
+
+The isolated `fountainjs-editor/versions` entry exports `VersionController`,
+`InMemoryVersionProvider`, normalization helpers, content fingerprint/equality,
+and structural comparison types/functions. It has no React or storage-service
+dependency.
+
+```ts
+const versions = new VersionController({
+  editor,
+  documentId: 'document-42',
+  user: { id: 'user-7', name: 'Ada' },
+  provider,
+  pageSize: 50,
+  autoSave: { delayMs: 2_000 },
+})
+
+const release = await versions.save({ name: 'Release candidate' })
+await versions.preview(release.id)
+await versions.compare(release.id) // saved state to current editor
+await versions.compare(release.id, anotherVersionId)
+await versions.restore(release.id)
+```
+
+`VersionProvider` defines paginated `list`, exact `load`, authoritative `save`,
+and optional `remove`/`destroy` methods. Save input includes a stable id,
+idempotent operation id, optional expected head, kind (`manual`, `automatic`,
+`backup`, or `restore`), author, time, portable JSON, fingerprint, and optional
+application data. Providers assign monotonically increasing revisions.
+`VersionConflictError` represents stale heads or reused mutation identities;
+`VersionNotFoundError` represents a missing requested version.
+
+`VersionController` exposes external-store `subscribe`/`getSnapshot`, lifecycle
+events through `on`, `refresh`, `loadMore`, `save`, `saveAutomatic`, `preview`,
+`closePreview`, `compare`, `clearComparison`, `restore`, `remove`, `can`,
+`setAutoSave`, and `destroy`. Restore defaults to backup-first, applies one
+undoable document transaction, bypasses tracked-change attribution, and saves a
+new linked head. Provider output and schema content are validated at every read
+boundary.
+
+`compareVersionDocuments` reports exact inserted/deleted/replaced nodes and text,
+mark changes, and attribute changes with immutable paths and before/after values.
+The separate `fountainjs-editor/react/versions` entry exports the optional
+`FountainVersions` history, preview, comparison, autosave, pagination, and
+confirmation UI. See [VERSIONS.md](VERSIONS.md) for consistency, adapters,
+security, failure semantics, and framework-neutral integration.
+
 ## AI review
 
 `AIController(editor, adapter)` controls the propose/review/apply lifecycle.

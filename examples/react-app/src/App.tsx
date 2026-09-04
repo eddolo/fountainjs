@@ -73,6 +73,8 @@ import {
   setTrackedChangesUser,
 } from 'fountainjs-editor/tracked-changes';
 import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes';
+import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
+import { FountainVersions } from 'fountainjs-editor/react/versions';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
@@ -243,9 +245,9 @@ const competitors = [
   },
   {
     name: 'FountainJS',
-    maturity: 'TypeScript editor platform with a DOM view, Web Component, and React bindings.',
-    architecture: 'Explicit extension composition for schema, behavior, formats, UI surfaces, and services.',
-    fit: 'Choose it to own a modular editor platform and keep framework and data boundaries open.',
+    maturity: 'Early-beta TypeScript editor library with working DOM, Web Component, and React interfaces.',
+    architecture: 'Ready-made editing, review, collaboration, and versioning modules with one public extension API.',
+    fit: 'Choose it when you want the capabilities in one free MIT package and control over framework, storage, and services.',
     href: 'https://github.com/eddolo/fountainjs',
   },
 ] as const;
@@ -465,6 +467,72 @@ function TrackedChangesDemo() {
   </section>;
 }
 
+function VersionHistoryDemo() {
+  const kit = useMemo(() => composeExtensions([
+    CoreExtension,
+    defineExtension({ name: 'version-demo-history', plugins: [historyPlugin] }),
+  ]), []);
+  const content = useMemo(() => ({
+    type: 'doc',
+    content: [
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Launch brief' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'The first complete draft explains the launch in plain language.' }] },
+    ],
+  } as const), []);
+  const editor = useFountain({ schema: kit.schema, plugins: kit.plugins, content });
+  const provider = useMemo(() => new InMemoryVersionProvider(), []);
+  const controller = useMemo(() => {
+    let identifier = 0;
+    return new VersionController({
+      editor,
+      provider,
+      documentId: 'live-version-demo',
+      user: { id: 'you', name: 'You' },
+      idFactory: (kind) => `live-${kind}-${++identifier}`,
+      autoLoad: false,
+    });
+  }, [editor, provider]);
+  const seeded = useRef(false);
+
+  useEffect(() => {
+    if (seeded.current) return;
+    seeded.current = true;
+    void (async () => {
+      await controller.save({ name: 'First complete draft — nothing hidden after an ellipsis' });
+      editor.dispatch(editor.state.createTransaction()
+        .replaceText([1, 0], 0, editor.state.doc.child(1).textContent.length, 'The reviewed draft explains the launch, audience, and release decision in plain language.')
+        .replace(editor.state.doc.childCount, editor.state.doc.childCount, [
+          editor.state.schema.node('paragraph', {}, [editor.state.schema.text('The final checklist is included for everyone.')]),
+        ]));
+      await controller.save({ name: 'Team review with the complete descriptive name visible' });
+      editor.dispatch(editor.state.createTransaction().replaceText(
+        [1, 0],
+        4,
+        12,
+        'current working',
+      ));
+    })().catch((error) => console.error(error));
+  }, [controller, editor]);
+
+  return <section className="versions-demo" id="versions">
+    <div className="versions-demo__intro">
+      <div><span>VERSION HISTORY</span><h2>Save a draft.<br />Keep working.<br />Restore safely.</h2></div>
+      <div>
+        <p>Name important document states, compare any two versions, preview the exact saved JSON, and restore an older draft.</p>
+        <p><strong>Try it:</strong> edit the document, compare a saved version with the current text, preview it, or press Restore twice to confirm. FountainJS saves the current work as a backup before replacing it.</p>
+      </div>
+    </div>
+    <div className="versions-demo__workspace">
+      <article className="versions-demo__editor">
+        <header><span>Current document</span><code>edit this text</code></header>
+        <FountainComposer editor={editor} showToolbar={false} ariaLabel="Version history demo editor" placeholder="Write here…" />
+      </article>
+      <aside><FountainVersions controller={controller} title="Saved versions" onError={(error) => console.error(error)} /></aside>
+    </div>
+    <div className="versions-demo__boundary"><code>fountainjs-editor/versions</code><span>Free MIT module</span><span>Your storage provider</span><span>Exact comparison</span><span>Backup-first restore</span></div>
+  </section>;
+}
+
 function App() {
   const editor = useFountain({
     schema: demoKit.schema,
@@ -514,40 +582,40 @@ function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="#review">Review</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
+        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="#review">Review</a><a href="#versions">Versions</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 
       <section className="hero" id="top">
-        <div className="hero__eyebrow"><i /> Open source · early beta</div>
+        <div className="hero__eyebrow"><i /> Free and open source · early beta</div>
         <h1>
-          <span>One editor core.</span>
-          <span>Any framework.</span>
-          <em>Yours to extend.</em>
+          <span>Build a rich-text editor.</span>
+          <span>Use any framework.</span>
+          <em>All features are free.</em>
         </h1>
-        <p>FountainJS is a modular rich-text engine for the browser. Use its DOM API, Web Component, or React bindings; add your own nodes, marks, commands, formats, and services; keep portable JSON on any backend.</p>
-        <div className="hero__actions"><a className="primary" href="#playground">Try the workflow ↓</a><a className="secondary" href="https://github.com/eddolo/fountainjs">Read the source</a></div>
-        <div className="promise-strip"><span>Framework neutral</span><span>Composable modules</span><span>Portable JSON</span><span>Web Component</span><span>MIT licensed</span></div>
+        <p>FountainJS is a free TypeScript library for adding a full-featured editor to a website or web app. It already includes rich text, images, tables, comments, tracked changes, collaboration, and version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component; store the document JSON on any backend.</p>
+        <div className="hero__actions"><a className="primary" href="#playground">Edit the live demo ↓</a><a className="secondary" href="https://www.npmjs.com/package/fountainjs-editor">Install from npm</a></div>
+        <div className="promise-strip"><span>All features free</span><span>React, Vue, Svelte, Angular</span><span>Portable JSON</span><span>No required cloud</span><span>MIT licensed</span></div>
       </section>
 
       <section className="definition" id="what">
         <div className="definition__lead">
           <span>PLAIN ENGLISH</span>
-          <h2>It is a foundation, not a fixed editor product.</h2>
+          <h2>It is code you add to your app—not another writing app.</h2>
         </div>
         <div className="definition__answer">
-          <p className="big-answer">React is one adapter. AI is one optional module. Neither one defines FountainJS.</p>
-          <p>The runtime is JavaScript/TypeScript because it edits inside a browser. Its boundaries are language and framework agnostic: plain DOM and Custom Elements work across frontend stacks, while stable JSON can be stored or transformed by Python, Go, Ruby, PHP, Java, or anything else.</p>
+          <p className="big-answer">Your users get a familiar document editor. Your developers get the library, source code, and extension points needed to fit it into a real product.</p>
+          <p>FountainJS runs in the browser. Choose the plain DOM API, Web Component, or React components; Vue, Svelte, Angular, and other frameworks can use the same Web Component or DOM API. Documents are portable JSON, so a backend written in Python, Go, Ruby, PHP, Java, or another language can store and process them.</p>
           <div className="definition__parts">
-            <article><b>01</b><h3>Complete editing engine</h3><p>Schema, immutable document tree, multi-block selections, transactions, history, and a DOM view with no UI framework dependency.</p></article>
-            <article><b>02</b><h3>Extension kit</h3><p>Compose nodes, marks, plugins, commands, formats, and arbitrary host services. Conflicts are explicit.</p></article>
-            <article><b>03</b><h3>Choice of surface</h3><p>Use plain DOM, register a Web Component, use the React package, or build another binding over the same editor store.</p></article>
+            <article><b>01</b><h3>Working features included</h3><p>Start with normal writing, media, tables, export, collaboration, comments, change review, and versions instead of rebuilding basics.</p></article>
+            <article><b>02</b><h3>Use your current stack</h3><p>Embed it in React or use the DOM/Web Component interfaces from Vue, Svelte, Angular, plain JavaScript, and other frontend tools.</p></article>
+            <article><b>03</b><h3>Change what your product needs</h3><p>Add a block, command, format, toolbar, storage provider, or service without maintaining a fork of the editor.</p></article>
           </div>
         </div>
       </section>
 
       <section className="capabilities">
-        <div className="capabilities__heading"><span>BUILT IN TODAY</span><h2>Real document editing—not an AI wrapper.</h2><p>FountainJS ships the capabilities people expect from a serious editor, while keeping every layer replaceable.</p></div>
+        <div className="capabilities__heading"><span>IN THE PACKAGE TODAY</span><h2>The features people expect from a serious editor.</h2><p>These capabilities work now and ship in the public MIT package. Use the modules you need; there is no paid add-on tier.</p></div>
         <div className="capabilities__grid">
           <article><b>01</b><h3>Rich writing</h3><p>Multi-paragraph and cross-block selection, headings, alignment, links, colour, marks, mentions, emoji, smart typography, live counts, slash commands, find/replace, undo/redo, paste, and IME input.</p></article>
           <article><b>02</b><h3>Structured blocks</h3><p>Bullet and numbered lists, task lists, code blocks, dividers, nested document structures, tables, and custom block types.</p></article>
@@ -556,17 +624,18 @@ function App() {
           <article><b>05</b><h3>Any interface</h3><p>Use plain DOM, the standards-based Web Component, React bindings, or create another framework adapter over the same editor and immutable state.</p></article>
           <article><b>06</b><h3>Open extension contract</h3><p>Add nodes, marks, commands, plugins, formats, UI, collaboration providers, analytics, AI, or application services without forking the core.</p></article>
           <article><b>07</b><h3>Collaboration and review</h3><p>Optional Yjs synchronization, relative presence, author-local undo, threaded comments, and tracked changes with portable metadata and explicit decisions.</p></article>
+          <article><b>08</b><h3>Named version history</h3><p>Save manual or automatic versions, preview exact content, compare text, structure, formatting, and attributes, then restore with a backup of current work.</p></article>
         </div>
       </section>
 
       <section className="flow" id="modularity">
-        <div className="flow__title"><span>HOW MODULARITY WORKS</span><h2>Compose the platform your product needs.</h2></div>
+        <div className="flow__title"><span>HOW MODULARITY WORKS</span><h2>Start with a working editor. Change only what you need.</h2></div>
         <ol>
-          <li><b>1</b><strong>Choose a core</strong><span>Begin with the supplied rich-document module or define a schema from scratch.</span></li>
-          <li><b>2</b><strong>Add capabilities</strong><span>Install or write extensions for nodes, marks, commands, history, formats, or services.</span></li>
-          <li><b>3</b><strong>Compose safely</strong><span>The kit merges named contributions and reports accidental conflicts instead of silently overriding them.</span></li>
-          <li><b>4</b><strong>Pick a surface</strong><span>DOM, Web Component, React, or another adapter all subscribe to the same framework-neutral editor.</span></li>
-          <li><b>5</b><strong>Own boundaries</strong><span>Persist portable JSON anywhere. Add Markdown, HTML, AI, analytics, or your own format as modules.</span></li>
+          <li><b>1</b><strong>Install it</strong><span>Start with the supplied editor and a document that already supports common rich content.</span></li>
+          <li><b>2</b><strong>Choose features</strong><span>Import collaboration, comments, tracked changes, versions, AI, or other optional modules only when you use them.</span></li>
+          <li><b>3</b><strong>Customize behavior</strong><span>Add your own content blocks, commands, keyboard rules, formats, or product services through the same extension API.</span></li>
+          <li><b>4</b><strong>Connect your interface</strong><span>Use React components, the Web Component, plain DOM controls, or build a small adapter for another framework.</span></li>
+          <li><b>5</b><strong>Store it anywhere</strong><span>Keep portable JSON in your database and connect your own media, authentication, collaboration, or AI providers.</span></li>
         </ol>
       </section>
 
@@ -657,8 +726,10 @@ function App() {
 
       <TrackedChangesDemo />
 
+      <VersionHistoryDemo />
+
       <section className="comparison" id="compare">
-        <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Framework-neutral is not a claim that nobody else can make.</h2><p>Tiptap supports several frameworks; Plate and BlockNote are strong React choices. FountainJS focuses on a modular DOM-first engine, a standards-based Custom Element, explicit extension composition, and portable data.</p></div>
+        <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Where FountainJS is different—and where it is still younger.</h2><p>Tiptap has a much larger community, hosted services, and commercial support. FountainJS is earlier, but its goal is simple: ship the editing and review capabilities together in one free MIT package, work across frameworks, and let the application own its data and providers.</p></div>
         <div className="comparison__table" role="table" aria-label="Rich text editor comparison">
           {competitors.map((item) => <a key={item.name} href={item.href} className="comparison__row" role="row">
             <strong role="cell">{item.name}</strong><span role="cell">{item.maturity}</span><span role="cell">{item.architecture}</span><span role="cell">{item.fit}</span><i aria-hidden="true">↗</i>

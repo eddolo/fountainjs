@@ -1,7 +1,7 @@
 {
   "name": "fountainjs-editor",
   "version": "0.3.0",
-  "description": "Universal, framework-independent, modular rich-text editor for building any document experience.",
+  "description": "Free modular rich-text editor library for React, Vue, Svelte, Angular, Web Components, and plain JavaScript.",
   "author": "Paolo Cappuccini",
   "license": "MIT",
   "type": "module",
@@ -33,6 +33,12 @@
       ],
       "react/tracked-changes": [
         "dist/react/tracked-changes.d.ts"
+      ],
+      "versions": [
+        "dist/versions/index.d.ts"
+      ],
+      "react/versions": [
+        "dist/react/versions.d.ts"
       ]
     }
   },
@@ -127,6 +133,26 @@
         "default": "./dist/react-tracked-changes.cjs"
       }
     },
+    "./versions": {
+      "import": {
+        "types": "./dist/versions/index.d.ts",
+        "default": "./dist/versions.js"
+      },
+      "require": {
+        "types": "./dist/versions/index.d.cts",
+        "default": "./dist/versions.cjs"
+      }
+    },
+    "./react/versions": {
+      "import": {
+        "types": "./dist/react/versions.d.ts",
+        "default": "./dist/react-versions.js"
+      },
+      "require": {
+        "types": "./dist/react/versions.d.cts",
+        "default": "./dist/react-versions.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -177,6 +203,8 @@
     "tracked-changes",
     "suggestion-mode",
     "review-workflow",
+    "version-history",
+    "document-versions",
     "accessible"
   ],
   "engines": {

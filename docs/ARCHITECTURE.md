@@ -455,6 +455,22 @@ origin-tagged remote transactions bypass local attribution. Comments remain a
 separate provider boundary, with only an optional thread id linking records.
 See [TRACKED_CHANGES.md](TRACKED_CHANGES.md).
 
+Named versions form another isolated persistence boundary. `src/versions/`
+does not enter the editor schema and the root entry does not import it.
+`VersionController` snapshots portable `NodeJSON`, tracks dirty state by a stable
+key-order-independent fingerprint, coordinates cancellable reads and serialized
+mutations, and accepts a host-owned `VersionProvider`. Provider results are
+normalized, bounded, fingerprint-checked, and schema-validated before use.
+
+Comparison recursively reports text, marks, attributes, and structural node
+changes with immutable document paths. Preview only exposes a validated saved
+record. Restore first creates an optional recovery snapshot, replaces the
+document in one ordinary history transaction, and optionally creates a linked
+restore head. That transaction bypasses suggestion attribution but remains
+visible to normal collaboration adapters. `src/react/FountainVersions.tsx` is a
+replaceable renderer over the external-store controller. See
+[VERSIONS.md](VERSIONS.md).
+
 Syntax highlighting demonstrates the decoration boundary. A code block persists
 source and presentation-neutral language metadata. `SyntaxHighlightExtension`
 tokenizes that source into validated ranges, then supplies inline tokens,
@@ -495,7 +511,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`. Products that need ordinary React editing controls do not automatically load either review surface. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`; and version-history UI is isolated in `fountainjs-editor/react/versions`. Products that need ordinary React editing controls do not automatically load these review surfaces. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -595,6 +611,11 @@ The suites are organized by boundary:
   comments, batching, author controls, and real Yjs propagation;
 - `tests/react-tracked-changes.test.tsx`: complete text/identity rendering,
   selection, discussion callback, and decisions through the public review UI;
+- `tests/versions.test.ts`: stable content identities, pagination, optimistic
+  conflicts, idempotency, exact comparison, preview, backup-first restore,
+  history, tracked-change bypass, autosave, permissions, and hostile providers;
+- `tests/react-versions.test.tsx`: complete names and change values,
+  non-destructive preview, comparison, and confirmed restoration;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -621,7 +642,8 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
 optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
-review panel, 45 KiB for CSS, and 548/460 KiB for all emitted
+review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
+54 KiB for CSS, and 610/515 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -655,6 +677,8 @@ tracked separately as `PROD-05`.
 | `src/react/FountainComments.tsx` | Optional accessible React discussion panel over the framework-neutral comments API |
 | `src/tracked-changes/` | Optional portable suggestion model, transaction transform, queries, decisions, events, and Yjs-compatible metadata |
 | `src/react/FountainTrackedChanges.tsx` | Optional accessible React review panel over the framework-neutral tracked-changes API |
+| `src/versions/` | Optional snapshot model, provider boundary, controller, exact comparison, preview, and backup-first restoration |
+| `src/react/FountainVersions.tsx` | Optional accessible React history, preview, comparison, and restoration panel |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

@@ -26,7 +26,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm dlx publint@0.3.24
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions
       - name: Verify npm trusted publisher
         if: github.event_name == 'workflow_dispatch'
         run: node scripts/verify-npm-trusted-publisher.mjs

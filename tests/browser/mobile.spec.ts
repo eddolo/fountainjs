@@ -41,14 +41,14 @@ test('handles virtual-keyboard replacement, composition, deletion, and history i
 
 test('keeps the public editor usable without horizontal overflow at a phone viewport', async ({ page }) => {
   await page.goto('/');
-  const heading = page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' });
+  const heading = page.getByRole('heading', { name: 'Build a rich-text editor. Use any framework. All features are free.' });
   await expect(heading).toBeVisible();
-  const heroLines = await heading.locator(':scope > *').evaluateAll((lines) => lines.map((line) => {
-    const range = document.createRange();
-    range.selectNodeContents(line);
-    return range.getClientRects().length;
-  }));
-  expect(heroLines).toEqual([1, 1, 1]);
+  const heroLines = await heading.locator(':scope > *').evaluateAll((lines) => lines.map((line) => (
+    line.getBoundingClientRect().top
+  )));
+  expect(heroLines).toHaveLength(3);
+  expect(heroLines[1]).toBeGreaterThan(heroLines[0]);
+  expect(heroLines[2]).toBeGreaterThan(heroLines[1]);
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toBeVisible();
   await page.getByRole('button', { name: 'Insert image from URL' }).click();
   await expect(page.getByLabel('Image URL')).toBeVisible();
@@ -72,6 +72,25 @@ test('keeps tracked review complete and touch-operable on a phone viewport', asy
   expect(box).not.toBeNull();
   await reject.tap();
   await expect(workspace.getByRole('textbox', { name: 'Tracked changes demo editor' })).toContainText('Every product deserves');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
+test('keeps complete version names and guarded restore touch-operable on a phone', async ({ page }) => {
+  await page.goto('/');
+  const workspace = page.locator('.versions-demo__workspace');
+  await workspace.scrollIntoViewIfNeeded();
+  const panel = workspace.getByRole('region', { name: 'Saved versions' });
+  await expect(panel).toContainText('First complete draft — nothing hidden after an ellipsis');
+  const first = panel.locator('.fountain-version-card').filter({ hasText: 'First complete draft — nothing hidden after an ellipsis' });
+  const restore = first.getByRole('button', { name: 'Restore', exact: true });
+  const box = await restore.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+  await restore.tap();
+  const confirmRestore = first.getByRole('button', { name: 'Confirm restore' });
+  await expect(confirmRestore).toBeVisible();
+  await confirmRestore.tap();
+  await expect(workspace.getByRole('textbox', { name: 'Version history demo editor' })).toContainText('The first complete draft explains the launch in plain language.');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 

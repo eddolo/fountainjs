@@ -4,9 +4,11 @@
 [![CI](https://github.com/eddolo/fountainjs/actions/workflows/ci.yml/badge.svg)](https://github.com/eddolo/fountainjs/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/fountainjs-editor)](LICENSE)
 
-**One editor core. Any framework. Yours to extend.**
+**A full-featured rich-text editor for any web app or frontend framework.**
 
-FountainJS is a modular rich-text engine for building editors inside web products. The core owns a typed document model, selections, transactions, plugins, history, and a plain DOM view. Everything else—including React controls, a Web Component, format adapters, and AI review—is a replaceable surface or module.
+FountainJS is a free TypeScript library you add to a website or web app. It includes rich text, images, tables, comments, tracked changes, collaboration, and named version history. Use it with React, Vue, Svelte, Angular, plain JavaScript, or a Web Component, and store its portable document JSON on any backend.
+
+Underneath those ready-made features is a modular editing engine: a typed document model, selections, transactions, plugins, history, and a plain DOM view. The interfaces and optional capabilities are replaceable, so a product can add or change content types, commands, formats, UI, storage, collaboration, and services without forking the core.
 
 > `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
 
@@ -23,6 +25,11 @@ Its boundaries are language and framework agnostic:
 - Add nodes, marks, plugins, commands, formats, and host services through one extension contract.
 
 React is an adapter, not the architecture. AI is an optional module, not the product identity.
+
+Every shipped editor capability and add-on is in this public MIT-licensed
+package. FountainJS has no paid extension tier, private feature registry, or
+mandatory hosted service. Optional entry points keep that complete surface
+modular so applications only load what they use.
 
 ## Install
 
@@ -652,6 +659,42 @@ to the same headless state and commands. See the
 [tracked-changes guide](docs/TRACKED_CHANGES.md) for representation, comments,
 collaboration, APIs, and production security.
 
+## Optional named versions
+
+`fountainjs-editor/versions` provides durable named snapshots without choosing
+a database or cloud. It includes paginated provider contracts, optimistic-head
+conflicts, idempotent operations, manual and debounced automatic versions,
+non-destructive preview, exact text/structure/format comparison, and safe
+restoration. By default restoration first saves unsaved work as a backup,
+applies one undoable editor transaction, and creates a new head linked to the
+source version.
+
+```ts
+import {
+  InMemoryVersionProvider,
+  VersionController,
+} from 'fountainjs-editor/versions'
+
+const versions = new VersionController({
+  editor,
+  documentId: 'article-42',
+  user: { id: session.user.id, name: session.user.name },
+  provider: new InMemoryVersionProvider(),
+})
+
+const saved = await versions.save({ name: 'Ready for review' })
+const comparison = await versions.compare(saved.id) // saved → current
+await versions.restore(saved.id) // backup → restore → new linked head
+```
+
+The memory provider is for local use, demos, and tests; production apps replace
+it with an authenticated provider for their own storage. React apps can import
+the accessible, confirmation-gated `FountainVersions` panel from
+`fountainjs-editor/react/versions`. Every other framework uses the same
+controller store and methods. See the [named-versions guide](docs/VERSIONS.md)
+for the provider contract, REST adapter, consistency rules, security, failure
+behavior, and full UI workflow.
+
 ## Optional AI review module
 
 AI is one example of a host service. FountainJS does not provide a model account or require a Fountain cloud. The optional `AIController` lets an application inspect exactly what will be sent, request a text proposal from any adapter, show a before/after review, accept or reject, block stale proposals, and undo acceptance.
@@ -702,6 +745,7 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 - `FountainComments` from the isolated `fountainjs-editor/react/comments` entry
 - `FountainTrackedChanges` from the isolated
   `fountainjs-editor/react/tracked-changes` entry
+- `FountainVersions` from the isolated `fountainjs-editor/react/versions` entry
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
@@ -741,7 +785,9 @@ with relative presence and origin-aware undo; plus optional provider-independent
 threaded comments with mapped inline/block/document anchors and a replaceable
 storage adapter; plus optional provider-independent tracked insertion,
 deletion, replacement, formatting, attribute, and structural suggestions with
-author metadata and individual, range, author, or batch decisions.
+author metadata and individual, range, author, or batch decisions; plus optional
+named manual/automatic versions with exact comparison, preview, backup-first
+restoration, and replaceable persistence.
 
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 
@@ -754,6 +800,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
 - [Threaded comments, anchors, adapters, permissions, and React UI](docs/COMMENTS.md)
 - [Tracked changes, suggestion mode, review decisions, and React UI](docs/TRACKED_CHANGES.md)
+- [Named versions, comparison, restoration, providers, and React UI](docs/VERSIONS.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

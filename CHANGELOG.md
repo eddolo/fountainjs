@@ -10,6 +10,12 @@
 
 ### Added
 
+- Isolated public MIT named-version entries with replaceable bounded providers,
+  manual and debounced automatic checkpoints, optimistic heads and exact
+  idempotency, immutable structural/text/format comparison, non-destructive
+  preview, permission hooks, backup-first one-transaction restoration,
+  tracked-change compatibility, an accessible confirmation-gated React panel,
+  package budgets, tests, and production integration/security guidance.
 - An isolated, provider-independent tracked-changes engine for text insertion,
   deletion, exact replacement, mark changes, node attributes, atoms, tables,
   and structural edits; portable author/time/reason/comment metadata;

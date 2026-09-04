@@ -51,6 +51,36 @@ test('runs the package-backed full-text tracked review panel', async ({ page }) 
   await expect(workspace.getByRole('textbox', { name: 'Tracked changes demo editor' })).toContainText('Every team deserves');
 });
 
+test('runs package-backed named versions, exact comparison, preview, and guarded restoration', async ({ page }) => {
+  await page.goto('/');
+  const workspace = page.locator('.versions-demo__workspace');
+  const panel = workspace.getByRole('region', { name: 'Saved versions' });
+  const editor = workspace.getByRole('textbox', { name: 'Version history demo editor' });
+  await expect(panel).toContainText('2 loaded · Unsaved changes');
+  await expect(panel).toContainText('First complete draft — nothing hidden after an ellipsis');
+  await expect(panel).toContainText('Team review with the complete descriptive name visible');
+  await expect(editor).toContainText('The current working draft');
+
+  const review = panel.locator('.fountain-version-card').filter({ hasText: 'Team review with the complete descriptive name visible' });
+  await review.getByRole('button', { name: 'Compare to current' }).click();
+  const comparison = panel.getByRole('region', { name: 'Version comparison' });
+  await expect(comparison).toContainText('reviewed');
+  await expect(comparison).toContainText('current working');
+
+  const first = panel.locator('.fountain-version-card').filter({ hasText: 'First complete draft — nothing hidden after an ellipsis' });
+  await first.getByRole('button', { name: 'Preview' }).click();
+  await expect(panel.getByRole('region', { name: /Preview of First complete draft/ })).toContainText('The first complete draft explains the launch in plain language.');
+
+  const restore = first.getByRole('button', { name: 'Restore', exact: true });
+  await restore.click();
+  const confirmRestore = first.getByRole('button', { name: 'Confirm restore' });
+  await expect(confirmRestore).toBeVisible();
+  await expect(editor).toContainText('The current working draft');
+  await confirmRestore.click();
+  await expect(editor).toContainText('The first complete draft explains the launch in plain language.');
+  await expect(panel).toContainText('4 loaded · Current version saved');
+});
+
 test('converges live and offline Yjs edits and keeps collaborative undo author-local', async ({ page }) => {
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
   const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
@@ -899,7 +929,7 @@ test('loads the public React playground without console or page errors', async (
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  const heading = page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' });
+  const heading = page.getByRole('heading', { name: 'Build a rich-text editor. Use any framework. All features are free.' });
   await expect(heading).toBeVisible();
   const heroLines = await heading.locator(':scope > *').evaluateAll((lines) =>
     lines.map((line) => {

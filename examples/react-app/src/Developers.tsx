@@ -91,6 +91,28 @@ rejectTrackedSuggestion(editor, anotherSuggestion.id)
 // Optional UI. Vue, Svelte, Angular, and DOM hosts use the same state/functions.
 <FountainTrackedChanges editor={editor} title="Editorial review" />`;
 
+const versionsExample = `import {
+  VersionController,
+  type VersionProvider,
+} from 'fountainjs-editor/versions'
+import { FountainVersions } from 'fountainjs-editor/react/versions'
+
+const versions = new VersionController({
+  editor,
+  documentId: document.id,
+  user: { id: session.user.id, name: session.user.name },
+  provider: myAuthenticatedVersionProvider satisfies VersionProvider,
+  autoSave: { delayMs: 2_000 },
+})
+
+const release = await versions.save({ name: 'Release candidate' })
+await versions.preview(release.id)       // does not edit the document
+await versions.compare(release.id)       // saved state → current state
+await versions.restore(release.id)       // backup → restore → linked head
+
+// Optional UI; every controller operation above is framework-neutral.
+<FountainVersions controller={versions} title="Document versions" />`;
+
 const mediaExample = `const task = startImageUpload(editor, file, {
   placement: 'block', // or 'inline'
   // Use replacePath to update an existing image safely.
@@ -552,6 +574,10 @@ function Developers() {
             <p>The isolated <code>fountainjs-editor/tracked-changes</code> entry transforms any normal schema-valid transaction into bounded portable review metadata. Insertions, retained deletions, exact replacements, mark changes, node attributes, atoms, tables, and structural changes share one resolver. Author, timestamps, an optional reason, and an optional discussion id travel in FountainJSON and through Yjs; receiving peers never re-author remote work.</p>
             <Code>{trackedChangesExample}</Code>
             <p>A transaction filter prepares and validates the complete review document before the raw edit enters state. The appended representation preserves the logical selection and normal history group. Accept/reject is a pure document rewrite and can target one id, a range, an author, a filter, or everything. The optional React panel shows complete wrapping/scrollable text and full identities rather than hiding the decision behind ellipses. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TRACKED_CHANGES.md">representation, API, collaboration, and security guide</a>.</p>
+            <h3>Named versions are durable checkpoints, not undo history</h3>
+            <p>The isolated <code>fountainjs-editor/versions</code> entry stores no data by itself. <code>VersionController</code> sends bounded portable JSON to a replaceable <code>VersionProvider</code>, validates everything returned, detects stale heads through optimistic concurrency, and makes repeated operation IDs exactly idempotent. Manual and debounced automatic versions share one model; list reads are paginated and cancellable.</p>
+            <Code>{versionsExample}</Code>
+            <p>Preview never mutates the editor. Comparison returns exact text, mark, attribute, and structural node changes. Default restoration saves dirty current work as a backup, replaces the document in one undoable transaction, and writes a new head linked to the source. It bypasses tracked-change attribution while remaining a normal collaboration-visible edit. The optional React panel wraps complete names and values and requires a second explicit click before restore or delete. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/VERSIONS.md">provider, failure, consistency, and security guide</a>.</p>
             <h3>Stateful behavior belongs in plugins</h3>
             <Code>{pluginExample}</Code>
             <p>Plugins can intercept keyboard, before-input, text-input, copy, cut, paste, drop, and click events, run editor create/destroy lifecycle hooks, refuse complete transactions with <code>filterTransaction</code>, and append validated follow-up transactions. Dispatch resolves accepted follow-ups first; subscribers receive one complete mapped transaction and the final state. Returning <code>true</code> tells the view the event was handled and prevents the browser default.</p>
@@ -564,7 +590,7 @@ function Developers() {
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>
               <div><h3>Web Component</h3><p>A standards boundary with a <code>value</code> property, <code>fountain-change</code> event, and configurable schema/plugins.</p></div>
-              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>. Discussions and tracked review are isolated in <code>fountainjs-editor/react/comments</code> and <code>fountainjs-editor/react/tracked-changes</code>.</p></div>
+              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>. Discussions, tracked review, and versions are isolated in <code>fountainjs-editor/react/comments</code>, <code>fountainjs-editor/react/tracked-changes</code>, and <code>fountainjs-editor/react/versions</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
             <h3>The supplied toolbar is composable, not mandatory</h3>
@@ -614,6 +640,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COMMENTS.md"><code>docs/COMMENTS.md</code><span>Production storage, security, anchor recovery, rich content, framework UI, and Yjs composition.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/tracked-changes"><code>src/tracked-changes/</code><span>Portable suggestion records, preflight diffing, accept/reject resolution, queries, events, and collaboration-safe metadata.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TRACKED_CHANGES.md"><code>docs/TRACKED_CHANGES.md</code><span>Review representation, commands, UI, comments/Yjs composition, validation, and production authorization.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/versions"><code>src/versions/</code><span>Named snapshot records, provider consistency, exact comparison, preview, autosave, permissions, and safe restore.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/VERSIONS.md"><code>docs/VERSIONS.md</code><span>Complete provider, UI, framework, restoration, failure, and production security contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/suggestion.ts"><code>src/extensions/suggestion.ts</code><span>Headless trigger matching, cancellable providers, stale-result protection, selection, and query decorations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCUMENT_UTILITIES.md"><code>docs/DOCUMENT_UTILITIES.md</code><span>Complete mention, emoji, typography, counting, React accessibility, and interchange contracts.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/SLASH_COMMANDS.md"><code>docs/SLASH_COMMANDS.md</code><span>Runtime registrations, async sources, filtering, atomic execution, UI, and lifecycle contracts.</span></a>
@@ -628,7 +656,7 @@ function Developers() {
           <section className="dev-section" id="contributing">
             <p className="dev-label">12 · TESTING & CONTRIBUTING</p>
             <h2>Change behavior with evidence.</h2>
-            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
+            <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; version tests cover provider conflicts, idempotency, exact comparison, preview, backup-first restore, autosave, permissions, and complete React rendering; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
             <Code>{`pnpm install
 pnpm dev          # live website and playground
 pnpm typecheck    # public and internal TypeScript contracts

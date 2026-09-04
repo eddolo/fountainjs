@@ -12,7 +12,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .site-header { position: sticky; z-index: 20; top: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 72px; padding: 0 clamp(20px, 4vw, 64px); background: rgb(247 245 240 / 88%); border-bottom: 1px solid rgb(23 21 42 / 10%); backdrop-filter: blur(18px); }
 .brand { display: flex; gap: 10px; align-items: center; font-weight: 800; letter-spacing: -.03em; }
 .brand span { display: grid; width: 30px; height: 30px; color: white; background: #6d4aff; border-radius: 9px 9px 9px 2px; place-items: center; }
-.site-header nav { display: flex; gap: 28px; color: #5c586b; font-size: 13px; font-weight: 600; }
+.site-header nav { display: flex; gap: clamp(12px, 1.8vw, 28px); color: #5c586b; font-size: clamp(11px, 1vw, 13px); font-weight: 600; }
 .site-header nav a:hover { color: #6d4aff; }
 .install-pill { justify-self: end; padding: 9px 13px; color: #f3f0ff; background: #17152a; border-radius: 8px; font: 12px DM Mono, monospace; }
 
@@ -54,7 +54,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .capabilities__grid p { margin: 0; color: #aaa5bb; font-size: 13px; line-height: 1.75; }
 
 .flow { padding: 110px clamp(24px, 5vw, 80px); color: #f5f3ff; background: #17152a; }
-.flow__title { display: flex; align-items: end; justify-content: space-between; max-width: 1500px; margin: auto; }
+.flow__title { display: grid; grid-template-columns: .35fr 1fr; gap: 5vw; align-items: start; max-width: 1500px; margin: auto; }
+.flow__title > span { padding-top: 10px; }
 .flow__title > span { flex: none; white-space: nowrap; }
 .flow__title h2 { margin: 0; font-size: clamp(36px, 5vw, 64px); letter-spacing: -.055em; }
 .flow ol { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 1500px; padding: 0; margin: 62px auto 0; list-style: none; border-top: 1px solid #39354e; border-left: 1px solid #39354e; }
@@ -156,6 +157,26 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .tracked-demo__boundary code { color: #17152a; background: #9af0c0; border-color: #9af0c0; }
 .tracked-demo__boundary span + span::before { margin-right: 8px; color: #9af0c0; content: '+'; }
 
+.versions-demo { padding: 115px clamp(24px, 7vw, 118px); color: #17152a; background: #dff8eb; }
+.versions-demo__intro { display: grid; grid-template-columns: 1fr .82fr; gap: 8vw; max-width: 1400px; margin: auto; }
+.versions-demo__intro span { color: #187a50; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
+.versions-demo__intro h2 { margin: 16px 0 0; font-size: clamp(42px, 5.7vw, 76px); line-height: 1; letter-spacing: -.06em; }
+.versions-demo__intro p { margin: 0 0 18px; color: #4f665b; font-size: 15px; line-height: 1.8; }
+.versions-demo__intro strong { color: #174c36; }
+.versions-demo__workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr); gap: 14px; max-width: 1400px; margin: 50px auto 0; }
+.versions-demo__editor, .versions-demo__workspace > aside { overflow: hidden; background: #fff; border: 1px solid #b8ddc9; border-radius: 15px; box-shadow: 0 24px 65px rgb(31 107 75 / 12%); }
+.versions-demo__editor > header { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid #d8eadf; font-size: 12px; font-weight: 800; }
+.versions-demo__editor > header code { color: #187a50; font: 10px DM Mono, monospace; }
+.versions-demo__editor .fountain-composer { border: 0; border-radius: 0; box-shadow: none; }
+.versions-demo__editor .fountain-editor { min-height: 510px; padding: 36px; }
+.versions-demo__workspace > aside { max-height: 720px; padding: 16px; overflow: auto; }
+.versions-demo__workspace .fountain-versions { --fountain-accent: #187a50; --fountain-ink: #17231e; --fountain-muted: #60756a; --fountain-surface: #fff; --fountain-surface-muted: #f0f8f4; --fountain-border: #cee3d7; }
+.versions-demo .fountain-version-card footer { gap: 6px; padding: 0; color: inherit; background: transparent; font: inherit; }
+.versions-demo__boundary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; max-width: 1400px; margin: 15px auto 0; }
+.versions-demo__boundary > * { padding: 7px 10px; color: #486357; background: rgb(255 255 255 / 58%); border: 1px solid #add6c0; border-radius: 99px; font: 10px DM Mono, monospace; }
+.versions-demo__boundary code { color: #fff; background: #187a50; border-color: #187a50; }
+.versions-demo__boundary span + span::before { margin-right: 8px; color: #187a50; content: '+'; }
+
 .comparison { padding: 125px clamp(24px, 7vw, 118px); background: #f7f5f0; }
 .comparison__intro { display: grid; grid-template-columns: .55fr 1fr .9fr; gap: 5vw; align-items: start; }
 .comparison__intro h2 { margin: 0; font-size: clamp(38px, 5vw, 68px); line-height: 1.02; letter-spacing: -.055em; }
@@ -208,7 +229,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .hero { min-height: 650px; padding-top: 80px; }
   .hero h1 { font-size: clamp(36px, 11vw, 52px); }
   .hero__actions { flex-direction: column; }
-  .definition, .capabilities, .comparison, .architecture, .collaboration-demo, .tracked-demo { padding-block: 85px; }
+  .definition, .capabilities, .comparison, .architecture, .collaboration-demo, .tracked-demo, .versions-demo { padding-block: 85px; }
   .definition__parts, .truth-cards { grid-template-columns: 1fr; }
   .definition__parts article { min-height: 210px; }
   .flow__title, .section-heading { display: block; }
@@ -224,9 +245,11 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .comparison__row i { position: absolute; top: 26px; right: 8px; }
   .architecture ul { grid-column: auto; }
   .capabilities__heading, .capabilities__grid { grid-template-columns: 1fr; }
-  .collaboration-demo__intro, .collaboration-demo__editors, .collaboration-demo__comments, .tracked-demo__intro, .tracked-demo__workspace { grid-template-columns: 1fr; }
+  .collaboration-demo__intro, .collaboration-demo__editors, .collaboration-demo__comments, .tracked-demo__intro, .tracked-demo__workspace, .versions-demo__intro, .versions-demo__workspace { grid-template-columns: 1fr; }
   .collaboration-demo__editor-footer { align-items: flex-start; gap: 8px; flex-direction: column; }
+  .versions-demo .fountain-version-card footer { flex-direction: row; }
   footer { gap: 12px; flex-direction: column; }
+  .hero h1 > span, .hero h1 > em { white-space: normal; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
