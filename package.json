@@ -27,6 +27,12 @@
       ],
       "react/comments": [
         "dist/react/comments.d.ts"
+      ],
+      "tracked-changes": [
+        "dist/tracked-changes/index.d.ts"
+      ],
+      "react/tracked-changes": [
+        "dist/react/tracked-changes.d.ts"
       ]
     }
   },
@@ -101,6 +107,26 @@
         "default": "./dist/react-comments.cjs"
       }
     },
+    "./tracked-changes": {
+      "import": {
+        "types": "./dist/tracked-changes/index.d.ts",
+        "default": "./dist/tracked-changes.js"
+      },
+      "require": {
+        "types": "./dist/tracked-changes/index.d.cts",
+        "default": "./dist/tracked-changes.cjs"
+      }
+    },
+    "./react/tracked-changes": {
+      "import": {
+        "types": "./dist/react/tracked-changes.d.ts",
+        "default": "./dist/react-tracked-changes.js"
+      },
+      "require": {
+        "types": "./dist/react/tracked-changes.d.cts",
+        "default": "./dist/react-tracked-changes.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -148,6 +174,9 @@
     "yjs",
     "comments",
     "annotations",
+    "tracked-changes",
+    "suggestion-mode",
+    "review-workflow",
     "accessible"
   ],
   "engines": {

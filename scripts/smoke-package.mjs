@@ -24,6 +24,8 @@ const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
 const yjsNames = ['YjsCollaborationAdapter', 'createYjsCollaborationExtension'];
 const commentsNames = ['InMemoryCommentsStore', 'createCommentsExtension', 'createCommentThread'];
 const reactCommentsNames = ['FountainComments'];
+const trackedChangesNames = ['createTrackedChangesExtension', 'acceptTrackedSuggestion', 'rejectTrackedSuggestion'];
+const reactTrackedChangesNames = ['FountainTrackedChanges'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
@@ -34,6 +36,8 @@ assertExports(await import('fountainjs-editor/react'), reactNames, 'ESM React en
 assertExports(await import('fountainjs-editor/yjs'), yjsNames, 'ESM Yjs entry');
 assertExports(await import('fountainjs-editor/comments'), commentsNames, 'ESM comments entry');
 assertExports(await import('fountainjs-editor/react/comments'), reactCommentsNames, 'ESM React comments entry');
+assertExports(await import('fountainjs-editor/tracked-changes'), trackedChangesNames, 'ESM tracked changes entry');
+assertExports(await import('fountainjs-editor/react/tracked-changes'), reactTrackedChangesNames, 'ESM React tracked changes entry');
 assertExports(require('fountainjs-editor'), coreNames, 'CommonJS package root');
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
@@ -42,6 +46,8 @@ if (cjsEmojiData.unicodeEmojis.length < 1_900) throw new Error('CommonJS Unicode
 assertExports(require('fountainjs-editor/react'), reactNames, 'CommonJS React entry');
 assertExports(require('fountainjs-editor/comments'), commentsNames, 'CommonJS comments entry');
 assertExports(require('fountainjs-editor/react/comments'), reactCommentsNames, 'CommonJS React comments entry');
+assertExports(require('fountainjs-editor/tracked-changes'), trackedChangesNames, 'CommonJS tracked changes entry');
+assertExports(require('fountainjs-editor/react/tracked-changes'), reactTrackedChangesNames, 'CommonJS React tracked changes entry');
 // Loading Yjs' ESM and CommonJS builds in one process creates two constructor
 // universes. Exercise the second module system in an isolated consumer process.
 execFileSync(process.execPath, ['-e', `
@@ -50,4 +56,4 @@ execFileSync(process.execPath, ['-e', `
   if (missing.length) throw new Error('CommonJS Yjs entry is missing: ' + missing.join(', '));
 `], { stdio: 'inherit' });
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, Yjs, and Web Component package exports loaded successfully.');

@@ -10,6 +10,13 @@
 
 ### Added
 
+- An isolated, provider-independent tracked-changes engine for text insertion,
+  deletion, exact replacement, mark changes, node attributes, atoms, tables,
+  and structural edits; portable author/time/reason/comment metadata;
+  individual/range/author/filtered batch accept or reject; selection/hover and
+  lifecycle events; programmatic proposals; history and Yjs integration;
+  accessible full-text React review UI; package/bundle gates; documentation;
+  and browser/unit contracts.
 - An isolated, provider-independent threaded-comments engine with overlapping
   inline/cross-block, point, block, and document anchors; mapped movement,
   deterministic recovery and orphan reattachment; text or rich-JSON replies,

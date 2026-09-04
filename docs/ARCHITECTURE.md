@@ -438,6 +438,23 @@ storage validation, retention, notifications, and audit remain adapter/server
 responsibilities. `src/react/FountainComments.tsx` is an isolated optional
 renderer over the same API. See [COMMENTS.md](COMMENTS.md).
 
+Tracked changes are the document-resident half of review.
+`src/tracked-changes/` contributes one validated text mark and uses the reserved
+`fountainTrackedChanges` node attribute for structural and attribute records.
+A transaction filter precomputes and validates the complete review document
+before the original edit can enter state. An append transaction then replaces
+the proposed document with that prepared representation while preserving the
+user selection and open history group. Deleted content remains available, and
+subscribers receive only the final tracked result.
+
+Acceptance and rejection are pure tree rewrites over a suggestion id. Text,
+mark, attribute, and node components under that id resolve together, so splits,
+joins, lift/sink operations, atoms, and replacements reconstruct in either
+direction. Bounded JSON metadata passes through the existing Yjs tree mapping;
+origin-tagged remote transactions bypass local attribution. Comments remain a
+separate provider boundary, with only an optional thread id linking records.
+See [TRACKED_CHANGES.md](TRACKED_CHANGES.md).
+
 Syntax highlighting demonstrates the decoration boundary. A code block persists
 source and presentation-neutral language metadata. `SyntaxHighlightExtension`
 tokenizes that source into validated ranges, then supplies inline tokens,
@@ -478,7 +495,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Threaded review UI is further isolated in `fountainjs-editor/react/comments`, so products that need React editing controls do not automatically load comments. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`. Products that need ordinary React editing controls do not automatically load either review surface. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -573,6 +590,11 @@ The suites are organized by boundary:
   anchors, mapping, recovery, orphan reattachment, lifecycle, and hostile data;
 - `tests/react-comments.test.tsx`: accessible discussion rendering and complete
   reply/reaction/resolution interaction over the public comments APIs;
+- `tests/tracked-changes.test.ts`: insertion, deletion, exact replacement,
+  marks, attributes, structure, UTF-16 mapping, history, security, events,
+  comments, batching, author controls, and real Yjs propagation;
+- `tests/react-tracked-changes.test.tsx`: complete text/identity rendering,
+  selection, discussion callback, and decisions through the public review UI;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -598,7 +620,8 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 85 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
 optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
-its optional React panel, 40 KiB for CSS, and 512/431 KiB for all emitted
+its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
+review panel, 45 KiB for CSS, and 548/460 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -630,6 +653,8 @@ tracked separately as `PROD-05`.
 | `src/yjs/` | Optional Yjs tree reconciliation, awareness-relative selections, and origin-aware undo |
 | `src/comments/` | Optional thread model, mapped anchors, operations, adapter lifecycle, permissions, and in-memory store |
 | `src/react/FountainComments.tsx` | Optional accessible React discussion panel over the framework-neutral comments API |
+| `src/tracked-changes/` | Optional portable suggestion model, transaction transform, queries, decisions, events, and Yjs-compatible metadata |
+| `src/react/FountainTrackedChanges.tsx` | Optional accessible React review panel over the framework-neutral tracked-changes API |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

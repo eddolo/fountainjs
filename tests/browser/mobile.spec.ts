@@ -57,6 +57,24 @@ test('keeps the public editor usable without horizontal overflow at a phone view
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
+test('keeps tracked review complete and touch-operable on a phone viewport', async ({ page }) => {
+  await page.goto('/');
+  const workspace = page.locator('.tracked-demo__workspace');
+  await workspace.scrollIntoViewIfNeeded();
+  const panel = workspace.getByRole('region', { name: 'Review suggestions' });
+  await expect(panel).toBeVisible();
+  const replacement = panel.locator('.fountain-tracked-change-card').filter({ hasText: 'Replacement' });
+  await expect(replacement.locator('.fountain-tracked-change-card__summary')).toContainText('product → team');
+  await replacement.locator('.fountain-tracked-change-card__focus').tap();
+  await expect(replacement).toHaveClass(/is-selected/);
+  const reject = replacement.getByRole('button', { name: 'Reject', exact: true });
+  const box = await reject.boundingBox();
+  expect(box).not.toBeNull();
+  await reject.tap();
+  await expect(workspace.getByRole('textbox', { name: 'Tracked changes demo editor' })).toContainText('Every product deserves');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('keeps the suggestion picker visible and touch-selectable on a phone viewport', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

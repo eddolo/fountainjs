@@ -65,6 +65,14 @@ import {
   type FountainEditorHandle,
 } from 'fountainjs-editor/react';
 import { FountainComments } from 'fountainjs-editor/react/comments';
+import {
+  addTrackedNodeAttributeChange,
+  addTrackedReplacement,
+  createTrackedChangesExtension,
+  dispatchTrackedTransaction,
+  setTrackedChangesUser,
+} from 'fountainjs-editor/tracked-changes';
+import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
@@ -408,6 +416,55 @@ function CollaborationDemo() {
   );
 }
 
+function TrackedChangesDemo() {
+  const kit = useMemo(() => {
+    let identifier = 0;
+    const tracked = createTrackedChangesExtension({
+      user: { id: 'ada', name: 'Ada Lovelace', color: '#6d4aff' },
+      idFactory: () => `live-review-${++identifier}`,
+    });
+    return composeExtensions([CoreExtension, tracked]);
+  }, []);
+  const content = useMemo(() => ({
+    type: 'doc',
+    content: [
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'A review workflow people can trust' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Every product deserves editing tools that reveal intent clearly.' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Try typing, replacing, formatting, or deleting anything in this document.' }] },
+    ],
+  } as const), []);
+  const editor = useFountain({ schema: kit.schema, plugins: kit.plugins, content });
+  const seeded = useRef(false);
+
+  useEffect(() => {
+    if (seeded.current) return;
+    seeded.current = true;
+    addTrackedNodeAttributeChange(editor, [0], { level: 2, align: 'center' }, 'Center the review heading');
+    addTrackedReplacement(editor, [1, 0], 6, 13, 'team', 'Make the audience more specific');
+    setTrackedChangesUser(editor, { id: 'grace', name: 'Grace Hopper', color: '#d23877' });
+    const note = editor.state.schema.node('blockquote', {}, [
+      editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Portable suggestions travel with the document; the host still owns access control.')]),
+    ]);
+    dispatchTrackedTransaction(editor, (transaction) => transaction.replace(editor.state.doc.childCount, editor.state.doc.childCount, [note]), 'Add the architecture boundary');
+    setTrackedChangesUser(editor, { id: 'you', name: 'You', color: '#187a50' });
+  }, [editor]);
+
+  return <section className="tracked-demo" id="review">
+    <div className="tracked-demo__intro">
+      <div><span>TRACKED CHANGES</span><h2>Edit freely.<br />Decide explicitly.</h2></div>
+      <div><p>This is the real optional tracking module. Suggested text, formatting, attributes, atoms, tables, and structural edits keep their author and can be accepted or rejected individually, by range, by author, or in batches.</p><p><strong>Try it now:</strong> type or delete in the document, select a review card, filter the list, and make a decision. The complete text stays inspectable.</p></div>
+    </div>
+    <div className="tracked-demo__workspace">
+      <article className="tracked-demo__editor">
+        <header><span>Review document</span><code>portable FountainJSON</code></header>
+        <FountainComposer editor={editor} showToolbar={false} ariaLabel="Tracked changes demo editor" placeholder="Write a suggestion…" />
+      </article>
+      <aside><FountainTrackedChanges editor={editor} title="Review suggestions" onError={(error) => console.error(error)} /></aside>
+    </div>
+    <div className="tracked-demo__boundary"><code>fountainjs-editor/tracked-changes</code><span>Framework-neutral state + decisions</span><code>fountainjs-editor/react/tracked-changes</code><span>Optional review panel</span><span>Yjs-compatible</span><span>No hosted service required</span></div>
+  </section>;
+}
+
 function App() {
   const editor = useFountain({
     schema: demoKit.schema,
@@ -457,7 +514,7 @@ function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
+        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="#review">Review</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 
@@ -498,6 +555,7 @@ function App() {
           <article><b>04</b><h3>Portable formats</h3><p>Lossless JSON plus Markdown, safe HTML, and plain-text boundaries for storage, APIs, publishing pipelines, search, and any backend language.</p></article>
           <article><b>05</b><h3>Any interface</h3><p>Use plain DOM, the standards-based Web Component, React bindings, or create another framework adapter over the same editor and immutable state.</p></article>
           <article><b>06</b><h3>Open extension contract</h3><p>Add nodes, marks, commands, plugins, formats, UI, collaboration providers, analytics, AI, or application services without forking the core.</p></article>
+          <article><b>07</b><h3>Collaboration and review</h3><p>Optional Yjs synchronization, relative presence, author-local undo, threaded comments, and tracked changes with portable metadata and explicit decisions.</p></article>
         </div>
       </section>
 
@@ -596,6 +654,8 @@ function App() {
       </section>
 
       <CollaborationDemo />
+
+      <TrackedChangesDemo />
 
       <section className="comparison" id="compare">
         <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Framework-neutral is not a claim that nobody else can make.</h2><p>Tiptap supports several frameworks; Plate and BlockNote are strong React choices. FountainJS focuses on a modular DOM-first engine, a standards-based Custom Element, explicit extension composition, and portable data.</p></div>

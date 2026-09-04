@@ -695,6 +695,56 @@ adding React to either the root or comments entry. See [COMMENTS.md](COMMENTS.md
 for adapter examples, security rules, rich content, Yjs composition, and test
 guidance.
 
+## Tracked changes
+
+The isolated `fountainjs-editor/tracked-changes` entry contributes the
+`tracked_change` mark, provider-independent review state, decorations, commands,
+pure document resolvers, and framework-neutral events.
+
+```ts
+const tracked = createTrackedChangesExtension({
+  user: { id: 'user-42', name: 'Ada', color: '#6d4aff' },
+  enabled: true,
+  idFactory: () => crypto.randomUUID(),
+  now: () => new Date(),
+})
+const kit = composeExtensions([CoreExtension, tracked])
+```
+
+`TrackedChangesState` contains `enabled`, the current `user`, immutable
+`suggestions`, an optional `selectedSuggestionId`, and
+`hoveredSuggestionIds`. Read it with `getTrackedChangesState`; use
+`trackedChangesKey` when direct plugin-key access is useful.
+
+Document queries and pure transforms are `findTrackedSuggestions`,
+`findTrackedSuggestionById`, `validateTrackedDocument`,
+`createTrackedDocument`, `resolveTrackedSuggestion`,
+`resolveAllTrackedSuggestions`, `resolveTrackedDocument`, and
+`mapSelectionToTrackedDocument`. `SuggestionFilter` accepts `id`, `type`,
+`userId`, `from`, and `to`.
+
+Editor review operations are `acceptTrackedSuggestion`,
+`rejectTrackedSuggestion`, `acceptAllTrackedSuggestions`,
+`rejectAllTrackedSuggestions`, `acceptTrackedSuggestionsInRange`,
+`rejectTrackedSuggestionsInRange`, `acceptTrackedSuggestionsByUser`, and
+`rejectTrackedSuggestionsByUser`. `selectTrackedSuggestion` and
+`hoverTrackedSuggestions` coordinate product UI. `enableTrackedChanges`,
+`disableTrackedChanges`, `toggleTrackedChanges`, and
+`setTrackedChangesUser` control later edits without rewriting existing records.
+
+`dispatchTrackedTransaction(editor, edit, reason?)` tracks arbitrary valid
+steps. Convenience functions cover text insertion/deletion/replacement, mark
+changes, and node attributes. `linkTrackedSuggestionToComment` stores or clears
+a safe comment-thread id while leaving the discussion service independent.
+`subscribeTrackedChanges` reports created/updated/accepted/rejected suggestions,
+mode changes, and selected-suggestion changes.
+
+The separate `fountainjs-editor/react/tracked-changes` entry exports
+`FountainTrackedChanges`. It renders complete text, author, reason, time,
+filters, selection/hover state, individual and filtered batch decisions, mode
+control, and an optional discussion callback. It does not add React to the core
+or tracking entry. See [TRACKED_CHANGES.md](TRACKED_CHANGES.md).
+
 ## AI review
 
 `AIController(editor, adapter)` controls the propose/review/apply lifecycle.

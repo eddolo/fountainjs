@@ -4,6 +4,53 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
 });
 
+test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
+  await editor.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('!');
+  await expect(editor.locator('ins')).toHaveText('!');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.tracked.state().suggestions[0])).toMatchObject({
+    type: 'insert', text: '!', user: { id: 'browser-author', name: 'Browser author with a complete name' },
+  });
+
+  const insertionId = await page.evaluate(() => (globalThis as any).fountainBrowserTest.tracked.state().suggestions[0].id);
+  expect(await page.evaluate((id) => (globalThis as any).fountainBrowserTest.tracked.reject(id), insertionId)).toBe(true);
+  await expect(editor).toHaveText('Alpha review');
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest.tracked;
+    contract.commands.commands.selectText([0, 0], 0, 5);
+    contract.view.focus();
+  });
+  await page.keyboard.type('Beta');
+  await expect(editor.locator('del')).toHaveText('Alpha');
+  await expect(editor.locator('ins')).toHaveText('Beta');
+  const replacement = await page.evaluate(() => (globalThis as any).fountainBrowserTest.tracked.state().suggestions[0]);
+  expect(replacement).toMatchObject({ type: 'replace', text: 'Beta', replacedText: 'Alpha' });
+  expect(await page.evaluate((id) => (globalThis as any).fountainBrowserTest.tracked.accept(id), replacement.id)).toBe(true);
+  await expect(editor).toHaveText('Beta review');
+  await expect(editor.locator('ins, del')).toHaveCount(0);
+});
+
+test('runs the package-backed full-text tracked review panel', async ({ page }) => {
+  await page.goto('/');
+  const workspace = page.locator('.tracked-demo__workspace');
+  await expect(workspace.getByRole('textbox', { name: 'Tracked changes demo editor' })).toBeVisible();
+  await expect(workspace.getByRole('heading', { name: 'Review suggestions' })).toBeVisible();
+  await expect(workspace.locator('.fountain-tracked-change-card')).toHaveCount(3);
+  await expect(workspace.locator('.fountain-tracked-change-card__author')).toContainText(['Ada Lovelace', 'Ada Lovelace', 'Grace Hopper']);
+  const summaries = workspace.locator('.fountain-tracked-change-card__summary');
+  await expect(summaries.filter({ hasText: 'product → team' })).toBeVisible();
+  await expect(summaries.filter({ hasText: 'Portable suggestions travel with the document' })).toBeVisible();
+
+  const replacement = workspace.locator('.fountain-tracked-change-card').filter({ hasText: 'Replacement' });
+  await replacement.locator('.fountain-tracked-change-card__focus').click();
+  await expect(replacement).toHaveClass(/is-selected/);
+  await replacement.getByRole('button', { name: 'Accept', exact: true }).click();
+  await expect(workspace.getByRole('textbox', { name: 'Tracked changes demo editor' })).toContainText('Every team deserves');
+});
+
 test('converges live and offline Yjs edits and keeps collaborative undo author-local', async ({ page }) => {
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
   const right = page.getByRole('textbox', { name: 'Collaborative editor right' });

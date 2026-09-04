@@ -137,6 +137,25 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .collaboration-demo__boundary code { color: #fff; background: #6d4aff; border-color: #6d4aff; }
 .collaboration-demo__boundary span + span::before { margin-right: 8px; color: #8d7ee0; content: '+'; }
 
+.tracked-demo { padding: 115px clamp(24px, 7vw, 118px); color: #eeeaff; background: #17152a; }
+.tracked-demo__intro { display: grid; grid-template-columns: 1fr .82fr; gap: 8vw; max-width: 1400px; margin: auto; }
+.tracked-demo__intro span { color: #9af0c0; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
+.tracked-demo__intro h2 { margin: 16px 0 0; font-size: clamp(42px, 5.7vw, 76px); line-height: 1; letter-spacing: -.06em; }
+.tracked-demo__intro p { margin: 0 0 18px; color: #b2adbf; font-size: 15px; line-height: 1.8; }
+.tracked-demo__intro strong { color: #f2efff; }
+.tracked-demo__workspace { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(330px, .65fr); gap: 14px; max-width: 1400px; margin: 50px auto 0; }
+.tracked-demo__editor, .tracked-demo__workspace > aside { overflow: hidden; background: #f9f8fc; border: 1px solid #3d3851; border-radius: 15px; box-shadow: 0 24px 65px rgb(0 0 0 / 23%); }
+.tracked-demo__editor > header { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; color: #282438; border-bottom: 1px solid #ded9ea; font-size: 12px; font-weight: 800; }
+.tracked-demo__editor > header code { color: #187a50; font: 10px DM Mono, monospace; }
+.tracked-demo__editor .fountain-composer { border: 0; border-radius: 0; }
+.tracked-demo__editor .fountain-editor { min-height: 480px; }
+.tracked-demo__workspace > aside { padding: 16px; color: #282438; }
+.tracked-demo__workspace .fountain-tracked-changes-panel { --fountain-ink: #171923; --fountain-muted: #746e80; --fountain-surface: #fff; --fountain-surface-muted: #f3f0f8; --fountain-border: #ddd8e8; }
+.tracked-demo__boundary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; max-width: 1400px; margin: 15px auto 0; }
+.tracked-demo__boundary > * { padding: 7px 10px; color: #aaa5bb; background: #232033; border: 1px solid #3b354e; border-radius: 99px; font: 10px DM Mono, monospace; }
+.tracked-demo__boundary code { color: #17152a; background: #9af0c0; border-color: #9af0c0; }
+.tracked-demo__boundary span + span::before { margin-right: 8px; color: #9af0c0; content: '+'; }
+
 .comparison { padding: 125px clamp(24px, 7vw, 118px); background: #f7f5f0; }
 .comparison__intro { display: grid; grid-template-columns: .55fr 1fr .9fr; gap: 5vw; align-items: start; }
 .comparison__intro h2 { margin: 0; font-size: clamp(38px, 5vw, 68px); line-height: 1.02; letter-spacing: -.055em; }
@@ -189,7 +208,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .hero { min-height: 650px; padding-top: 80px; }
   .hero h1 { font-size: clamp(36px, 11vw, 52px); }
   .hero__actions { flex-direction: column; }
-  .definition, .capabilities, .comparison, .architecture, .collaboration-demo { padding-block: 85px; }
+  .definition, .capabilities, .comparison, .architecture, .collaboration-demo, .tracked-demo { padding-block: 85px; }
   .definition__parts, .truth-cards { grid-template-columns: 1fr; }
   .definition__parts article { min-height: 210px; }
   .flow__title, .section-heading { display: block; }
@@ -205,7 +224,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .comparison__row i { position: absolute; top: 26px; right: 8px; }
   .architecture ul { grid-column: auto; }
   .capabilities__heading, .capabilities__grid { grid-template-columns: 1fr; }
-  .collaboration-demo__intro, .collaboration-demo__editors, .collaboration-demo__comments { grid-template-columns: 1fr; }
+  .collaboration-demo__intro, .collaboration-demo__editors, .collaboration-demo__comments, .tracked-demo__intro, .tracked-demo__workspace { grid-template-columns: 1fr; }
   .collaboration-demo__editor-footer { align-items: flex-start; gap: 8px; flex-direction: column; }
   footer { gap: 12px; flex-direction: column; }
 }

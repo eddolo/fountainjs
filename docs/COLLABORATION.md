@@ -209,10 +209,10 @@ Delivered today:
 - schema validation, hostile-input containment, reconnect, and cleanup;
 - ESM/CommonJS package boundaries and a real two-editor browser demo.
 
-Separate roadmap items remain for threaded comments, general tracked-change
-suggestion mode, named version storage/comparison, and large-document
-performance certification. Those capabilities are not implied by the presence
-of Yjs.
+Threaded comments and general tracked-change suggestion mode now ship as
+separate optional modules. Named version storage/comparison and large-document
+performance certification remain roadmap items; none of those product
+capabilities is implied by the presence of Yjs.
 
 ## Upstream references
 

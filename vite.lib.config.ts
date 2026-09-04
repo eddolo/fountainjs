@@ -14,6 +14,8 @@ export default defineConfig({
         yjs: fileURLToPath(new URL('./src/yjs/index.ts', import.meta.url)),
         comments: fileURLToPath(new URL('./src/comments/index.ts', import.meta.url)),
         'react-comments': fileURLToPath(new URL('./src/react/comments.ts', import.meta.url)),
+        'tracked-changes': fileURLToPath(new URL('./src/tracked-changes/index.ts', import.meta.url)),
+        'react-tracked-changes': fileURLToPath(new URL('./src/react/tracked-changes.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,

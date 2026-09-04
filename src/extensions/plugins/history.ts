@@ -24,6 +24,7 @@ const HISTORY_ACTION = 'fountain$historyAction';
 const HISTORY_GROUP = 'fountain$historyGroup';
 const HISTORY_TIME = 'fountain$historyTime';
 const CLOSE_HISTORY = 'fountain$closeHistory';
+const PRESERVE_HISTORY_GROUP = 'fountain$preserveHistoryGroup';
 export const historyKey = new PluginKey<HistoryState>('history');
 
 function withoutOpenGroup(value: HistoryState): HistoryState {
@@ -47,6 +48,7 @@ export function createHistoryPlugin(options: HistoryOptions = {}): Plugin<Histor
         if (action === 'undo') return { done: value.done.slice(0, -1), undone: [...value.undone, current] };
         if (action === 'redo') return { done: [...value.done, current].slice(-depth), undone: value.undone.slice(0, -1) };
         if (transaction.getMeta(CLOSE_HISTORY) === true) return withoutOpenGroup(value);
+        if (transaction.getMeta(PRESERVE_HISTORY_GROUP) === true) return value;
         if (!transaction.docChanged || transaction.getMeta('addToHistory') === false) {
           return transaction.selectionSet || transaction.docChanged ? withoutOpenGroup(value) : value;
         }

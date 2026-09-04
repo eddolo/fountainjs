@@ -617,6 +617,41 @@ React applications may add the optional accessible discussion panel from
 for anchors, storage operations, idempotency, permissions, security, and the
 complete public workflow.
 
+## Optional tracked changes
+
+`fountainjs-editor/tracked-changes` turns normal schema-valid transactions into
+portable review suggestions. It covers text insertion, deletion, exact
+replacement, formatting, node attributes, atoms, tables, and structural edits;
+each suggestion carries a stable id, author, timestamps, optional reason, and
+optional comment-thread link.
+
+```ts
+import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import {
+  createTrackedChangesExtension,
+  acceptTrackedSuggestion,
+  rejectTrackedSuggestion,
+} from 'fountainjs-editor/tracked-changes'
+
+const tracked = createTrackedChangesExtension({
+  user: { id: session.user.id, name: session.user.name, color: '#6d4aff' },
+})
+const kit = composeExtensions([CoreExtension, tracked])
+
+acceptTrackedSuggestion(editor, suggestionId)
+rejectTrackedSuggestion(editor, anotherSuggestionId)
+```
+
+Deleted and replaced content remains inspectable until review. Accept/reject
+can target one suggestion, a range, an author, a filtered set, or everything;
+decisions are undoable. Metadata lives in FountainJSON and synchronizes through
+the optional Yjs adapter without a Fountain server. React applications can add
+the accessible, full-text `FountainTrackedChanges` panel from
+`fountainjs-editor/react/tracked-changes`; every other framework can subscribe
+to the same headless state and commands. See the
+[tracked-changes guide](docs/TRACKED_CHANGES.md) for representation, comments,
+collaboration, APIs, and production security.
+
 ## Optional AI review module
 
 AI is one example of a host service. FountainJS does not provide a model account or require a Fountain cloud. The optional `AIController` lets an application inspect exactly what will be sent, request a text proposal from any adapter, show a before/after review, accept or reject, block stale proposals, and undo acceptance.
@@ -665,6 +700,8 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 - `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
   `FountainFloatingMenu`, and `FountainCharacterCount`
 - `FountainComments` from the isolated `fountainjs-editor/react/comments` entry
+- `FountainTrackedChanges` from the isolated
+  `fountainjs-editor/react/tracked-changes` entry
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
@@ -702,7 +739,9 @@ safe format serialization, DOM/Web Component/React surfaces, optional AI
 proposals, MCP transport, and optional provider-independent Yjs collaboration
 with relative presence and origin-aware undo; plus optional provider-independent
 threaded comments with mapped inline/block/document anchors and a replaceable
-storage adapter.
+storage adapter; plus optional provider-independent tracked insertion,
+deletion, replacement, formatting, attribute, and structural suggestions with
+author metadata and individual, range, author, or batch decisions.
 
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 
@@ -714,6 +753,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
 - [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
 - [Threaded comments, anchors, adapters, permissions, and React UI](docs/COMMENTS.md)
+- [Tracked changes, suggestion mode, review decisions, and React UI](docs/TRACKED_CHANGES.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

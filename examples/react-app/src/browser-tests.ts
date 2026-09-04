@@ -24,6 +24,12 @@ import {
 } from '../../../src';
 import * as Y from 'yjs';
 import { createYjsCollaborationExtension } from '../../../src/yjs';
+import {
+  acceptTrackedSuggestion,
+  createTrackedChangesExtension,
+  getTrackedChangesState,
+  rejectTrackedSuggestion,
+} from '../../../src/tracked-changes';
 import '../../../src/styles.css';
 
 const decorationKey = new PluginKey<DecorationSet>('browser-contract');
@@ -172,6 +178,23 @@ if (!leftCollaborationMount || !rightCollaborationMount) throw new Error('Collab
 const leftCollaborationView = new EditorView(leftCollaborationMount, leftEditor, { ariaLabel: 'Collaborative editor left' });
 const rightCollaborationView = new EditorView(rightCollaborationMount, rightEditor, { ariaLabel: 'Collaborative editor right' });
 
+let trackedIdentifier = 0;
+const trackedExtension = createTrackedChangesExtension({
+  user: { id: 'browser-author', name: 'Browser author with a complete name', color: '#6d4aff' },
+  idFactory: () => `browser-review-${++trackedIdentifier}`,
+  now: () => '2026-09-04T12:00:00.000Z',
+});
+const trackedKit = composeExtensions([CoreExtension, trackedExtension]);
+const trackedEditor = createEditor({
+  schema: trackedKit.schema,
+  plugins: trackedKit.plugins,
+  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha review' }] }] },
+});
+const trackedMount = document.querySelector<HTMLElement>('#tracked-editor');
+if (!trackedMount) throw new Error('Tracked changes fixture failed to mount.');
+const trackedView = new EditorView(trackedMount, trackedEditor, { ariaLabel: 'Tracked changes contract editor' });
+const trackedCommands = trackedView.commandManager(trackedKit.commands);
+
 const resumeCollaboration = () => {
   const leftUpdate = Y.encodeStateAsUpdate(leftYDocument);
   const rightUpdate = Y.encodeStateAsUpdate(rightYDocument);
@@ -211,6 +234,14 @@ Object.assign(globalThis, {
       resume: resumeCollaboration,
       closeLeftHistory: () => leftKit.commands.closeCollaborationHistory?.(leftEditor),
       undoLeft: () => leftKit.commands.undoCollaboration?.(leftEditor),
+    },
+    tracked: {
+      editor: trackedEditor,
+      view: trackedView,
+      commands: trackedCommands,
+      state: () => getTrackedChangesState(trackedEditor),
+      accept: (id: string) => acceptTrackedSuggestion(trackedEditor, id),
+      reject: (id: string) => rejectTrackedSuggestion(trackedEditor, id),
     },
   },
 });
