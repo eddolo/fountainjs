@@ -17,6 +17,10 @@ entry rather than TypeScript source. The browser suite measures the real input,
 state, reconciliation, selection, and next-animation-frame path in Chromium,
 Firefox, and WebKit.
 
+The complete contract is certified by the public 312-test package gate and
+187-test Chromium/Firefox/WebKit/mobile matrix in [CI run
+`4b2990a`](https://github.com/eddolo/fountainjs/actions/runs/33923645172).
+
 ## Recorded baseline
 
 This development baseline was recorded on 2026-09-04 with Node 24.19 on
