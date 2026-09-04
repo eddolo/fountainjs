@@ -21,10 +21,10 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test
       - run: pnpm build
       - run: pnpm test:package
+      - run: pnpm typecheck
+      - run: pnpm test
       - run: pnpm dlx publint@0.3.24
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./react
       - run: pnpm exec vite build --base /fountainjs/

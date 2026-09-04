@@ -16,9 +16,9 @@ import {
   insertNode as demoInsertNode,
   markdownShortcutsPlugin,
   type AssetUploadHandler,
-} from '../../../src';
-import { FountainAIReview, FountainComposer, Navigator, useFountain, useFountainState } from '../../../src/react';
-import '../../../src/styles.css';
+} from 'fountainjs-editor';
+import { FountainAIReview, FountainComposer, Navigator, useFountain, useFountainState } from 'fountainjs-editor/react';
+import 'fountainjs-editor/styles.css';
 
 const initialContent = {
   type: 'doc',

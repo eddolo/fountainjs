@@ -14,7 +14,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: `pnpm exec vite --host 127.0.0.1 --port ${port} --strictPort`,
+    command: `pnpm build && pnpm exec vite --host 127.0.0.1 --port ${port} --strictPort`,
     url: `http://127.0.0.1:${port}/browser-tests.html`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

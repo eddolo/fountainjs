@@ -1,4 +1,4 @@
-import type { MarkJSON, NodeJSON } from '../../../src';
+import type { MarkJSON, NodeJSON } from 'fountainjs-editor';
 
 export type DemoRuntime = 'react' | 'dom' | 'element' | 'headless';
 

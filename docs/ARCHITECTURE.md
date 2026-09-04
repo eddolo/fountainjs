@@ -436,7 +436,7 @@ The suites are organized by boundary:
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
-Before a release, run `pnpm check` and `pnpm test:browser`, build the production example, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
+Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
 ## Source map
 

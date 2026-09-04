@@ -33,8 +33,8 @@ import {
   type FountainEditorElement,
   type LeanService,
   type Node,
-} from '../../../src';
-import { FountainComposer, useFountain, useFountainState } from '../../../src/react';
+} from 'fountainjs-editor';
+import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
 
 type OutputFormat = 'json' | 'markdown' | 'html';

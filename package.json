@@ -82,6 +82,7 @@
   },
   "packageManager": "pnpm@11.19.0",
   "scripts": {
+    "predev": "pnpm build",
     "dev": "vite",
     "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "typecheck": "tsc --noEmit",
@@ -90,7 +91,7 @@
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "test:watch": "vitest",
-    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm test:package",
+    "check": "pnpm build && pnpm test:package && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",
     "prepublishOnly": "pnpm check"
   },
