@@ -22,6 +22,7 @@ export default defineConfig({
         ruby: fileURLToPath(new URL('./src/ruby/index.ts', import.meta.url)),
         'text-style': fileURLToPath(new URL('./src/text-style/index.ts', import.meta.url)),
         testing: fileURLToPath(new URL('./src/testing/index.ts', import.meta.url)),
+        migrations: fileURLToPath(new URL('./src/migrations/index.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,

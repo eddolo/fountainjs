@@ -54,6 +54,10 @@ const limits = Object.freeze({
   // Author-only conformance diagnostics are isolated from every editor runtime.
   'dist/testing.js': 7 * kibibyte,
   'dist/testing.cjs': 6 * kibibyte,
+  // The immutable migration runner is isolated for server consumers and keeps
+  // schema validation host-owned.
+  'dist/migrations.js': 8 * kibibyte,
+  'dist/migrations.cjs': 7 * kibibyte,
   // Accessible block handles and visible drop states add roughly 1.8 KiB while
   // leaving every JavaScript entry ceiling unchanged.
   'dist/styles.css': 54 * kibibyte,
@@ -78,8 +82,10 @@ const limits = Object.freeze({
   // The isolated extension conformance surface and manifest validation add
   // roughly 9.5/10.5 KiB across entry points and shared ESM/CJS chunks,
   // including the whole-installation doctor. Keep a small allowance above it.
-  'all ESM runtime code': 648 * kibibyte,
-  'all CommonJS runtime code': 546 * kibibyte,
+  // Versioned document envelopes and the isolated migration runner add about
+  // 7/6 KiB respectively. The schema is data and is not counted as runtime JS.
+  'all ESM runtime code': 657 * kibibyte,
+  'all CommonJS runtime code': 554 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -87,7 +93,7 @@ const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.end
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

@@ -646,6 +646,24 @@ without hard-coding the extension into FountainJS. Every imported document is
 validated by the receiving schema. JSON remains the exact persistence format;
 see the [format-boundary guide](docs/FORMATS.md).
 
+Persisted documents can use an explicit, independently versioned envelope.
+The migration runner accepts historical bare `NodeJSON` as format version 1,
+applies only an application-owned sequential chain, rejects unknown future
+versions, and validates the result with the receiving schema. It has no DOM
+dependency and is also available from the isolated
+`fountainjs-editor/migrations` entry.
+
+```ts
+const stored = encodeFountainDocument(editor.getJSON(), { validate })
+const loaded = migrateFountainDocument(await database.read(id), { validate })
+setContent(editor, schema.nodeFromJSON(loaded.envelope.document))
+```
+
+The structural envelope schema is published as
+`fountainjs-editor/schema/document.json`. See the
+[document migration contract](docs/MIGRATIONS.md) before changing persisted
+nodes, marks, attributes, or content invariants.
+
 Markdown import supports titled inline and reference links/images, recursive
 quotes, loose nested lists, and aligned tables with escaped pipes. Export can
 emit deterministic deduplicated references; `exportWithReport` identifies
@@ -928,6 +946,9 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)
+- [Document versions and migrations](docs/MIGRATIONS.md)
+- [Release and API stability policy](docs/RELEASES.md)
+- [Platform-portability audit](docs/PORTABILITY_AUDIT.md)
 - [Optional AI and MCP](docs/MCP.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

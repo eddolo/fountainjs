@@ -384,6 +384,20 @@ const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
 // Each immutable loss names its kind, schema type, document path, and detail.
 // Persist document.toJSON() when exact extension data must survive.`;
 
+const migrationExample = `import { CoreSchemaSpec, Schema, createEditor } from 'fountainjs-editor'
+import { encodeFountainDocument, migrateFountainDocument } from 'fountainjs-editor/migrations'
+
+const schema = new Schema(CoreSchemaSpec)
+const validate = document => { schema.nodeFromJSON(document) }
+const editor = createEditor({ schema: CoreSchemaSpec })
+
+// New writes carry a format version independent of npm package SemVer.
+await database.write(id, encodeFountainDocument(editor.getJSON(), { validate }))
+
+// Reads accept the envelope or historical bare NodeJSON, then fail closed.
+const loaded = migrateFountainDocument(await database.read(id), { validate })
+const reopened = createEditor({ schema: CoreSchemaSpec, content: loaded.envelope.document })`;
+
 const documentUtilitiesExample = `import {
   EmojiExtension,
   TypographyExtension,
@@ -477,6 +491,7 @@ const toc = [
   ['extensions', 'Extensions'],
   ['surfaces', 'Framework surfaces'],
   ['formats-media', 'Formats & media'],
+  ['persistence-releases', 'Persistence & releases'],
   ['ai-mcp', 'Optional AI & MCP'],
   ['source-tour', 'Source tour'],
   ['contributing', 'Testing & contributing'],
@@ -694,8 +709,19 @@ function Developers() {
             <p>Upload progress, errors, cancellation, and retry stay transient. The intended insertion or replacement target maps through edits made during the upload; if a replacement node is deleted, the response fails closed instead of overwriting another node. By default only small local images become size-limited data URLs. Audio, video, and files require <code>assetUpload(file, context)</code>, so the host keeps responsibility for storage, authorization, malware scanning, content types, and URL lifetime. Credentials and <code>File</code> objects never enter FountainJS configuration or document state.</p>
           </section>
 
+          <section className="dev-section" id="persistence-releases">
+            <p className="dev-label">10 · PERSISTENCE & RELEASES</p>
+            <h2>Stored documents have their own explicit lifetime.</h2>
+            <p>npm package versions, the Fountain extension API integer, and the persisted document format version answer different questions. New records use a small <code>{'{ format, version, document }'}</code> envelope. Historical bare <code>NodeJSON</code> remains readable as format version 1, unknown future versions are rejected, and every format change must advance through one deterministic application-owned step per version.</p>
+            <Code>{migrationExample}</Code>
+            <p>The migration entry is DOM-independent and has no global registry. It clones and freezes portable input, bounds depth and size, rejects ambiguous or invalid values, and asks the receiving application schema to validate the final document. Extensions may export pure migration helpers, but the application composes the one authoritative chain so ordering cannot depend on package discovery. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/MIGRATIONS.md">complete migration and safe-deployment contract</a>.</p>
+            <h3>Compatibility is checked before publication</h3>
+            <p>The release gate compares every declaration reachable from every public package entry against the reviewed API snapshot, checks the exact package-version/tag/changelog relationship, imports the packed ESM and CommonJS package, validates every export with publint and Are the Types Wrong, enforces bundle/performance budgets, and runs Node plus real Chromium, Firefox, WebKit, Pixel, and iPhone contracts. npm uses trusted-publisher OIDC and provenance; there is no long-lived npm token in GitHub. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/RELEASES.md">release policy</a> defines deprecations, rollback, and security support.</p>
+            <div className="dev-callout"><b>Portability status</b><span>The model, schema, logical selection, transactions, history, extension composition, serialization, and Yjs synchronization run in pure Node today. The public type/package boundary still exposes some DOM contracts, and arbitrary HTML import still needs <code>DOMParser</code>. The evidence-backed <a href="https://github.com/eddolo/fountainjs/blob/master/docs/PORTABILITY_AUDIT.md">portability audit</a> lists every dependency and the smallest boundary changes; native renderers are not claimed today.</span></div>
+          </section>
+
           <section className="dev-section" id="ai-mcp">
-            <p className="dev-label">10 · OPTIONAL AI & MCP</p>
+            <p className="dev-label">11 · OPTIONAL AI & MCP</p>
             <h2>AI proposes. The transaction system decides.</h2>
             <p>The core editor has no model dependency. <code>AIController</code> reads the current selection, sends a provider-neutral request to an adapter, and creates a before/after proposal. Accept applies a normal undoable transaction; reject changes nothing; stale proposals are refused if their target text has changed.</p>
             <p><code>MCPAIAdapter</code> is one adapter. It negotiates an MCP Streamable HTTP session, discovers tools, calls the selected tool, handles JSON or server-sent-event responses, and closes the session. Your product can instead provide a local function, HTTP service, worker, or any model SDK.</p>
@@ -703,7 +729,7 @@ function Developers() {
           </section>
 
           <section className="dev-section" id="source-tour">
-            <p className="dev-label">11 · SOURCE TOUR</p>
+            <p className="dev-label">12 · SOURCE TOUR</p>
             <h2>Where to read and where to add code.</h2>
             <div className="source-list">
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/core/schema"><code>src/core/schema/</code><span>Node, mark, schema, attributes, content-expression validation.</span></a>
@@ -713,7 +739,11 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/view/block-handles.ts"><code>src/view/block-handles.ts</code><span>Optional contextual controls, nested path targeting, schema-valid indicators, and touch/keyboard movement.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/testing"><code>src/testing/</code><span>Framework-neutral extension conformance and whole-installation compatibility diagnostics.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/migrations"><code>src/migrations/</code><span>DOM-independent document envelopes, bounded portable input, and deterministic sequential migrations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md"><code>docs/EXTENSIONS.md</code><span>Scaffold, manifests, requirements, fixtures, doctor, compatibility, migrations, and publishing contract.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/MIGRATIONS.md"><code>docs/MIGRATIONS.md</code><span>Document versions, extension helpers, schema validation, and safe deployment order.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/RELEASES.md"><code>docs/RELEASES.md</code><span>API stability, deprecation, evidence, trusted publishing, rollback, and security support.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/PORTABILITY_AUDIT.md"><code>docs/PORTABILITY_AUDIT.md</code><span>Every browser dependency, owning layer, pure-Node probe, platform matrix, and minimum neutral-core boundary.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/ROADMAP.md"><code>docs/ROADMAP.md</code><span>Prioritized opportunities, current baselines, required proof, and unverified research leads.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/text-style"><code>src/text-style/</code><span>Validated style values, selection inspection, and framework-neutral set/unset commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TEXT_STYLE.md"><code>docs/TEXT_STYLE.md</code><span>Schema, commands, controls, sanitization, interchange, frameworks, and collaboration contract.</span></a>
@@ -741,12 +771,13 @@ function Developers() {
           </section>
 
           <section className="dev-section" id="contributing">
-            <p className="dev-label">12 · TESTING & CONTRIBUTING</p>
+            <p className="dev-label">13 · TESTING & CONTRIBUTING</p>
             <h2>Change behavior with evidence.</h2>
             <p>Start with a failing behavior test in the closest suite. Core tests cover immutable transforms and selection semantics; view tests run the real DOM input layer in JSDOM; text-style tests cover validation, mixed and cross-block selection, history, safe browser/headless interchange, React controls, and Yjs; details tests cover schema constraints, commands, nested interchange, native/read-only behavior, keyboard transitions, history, and Yjs; collaboration tests exchange actual Yjs updates, disconnect peers, resolve relative cursors, and exercise local-origin undo; comments tests connect multiple editors, map and recover anchors, exercise authoritative operations and permission policy; tracked-change tests prove both review outcomes across text, formatting, attributes, structure, Yjs, and the accessible React panel; version tests cover provider conflicts, idempotency, exact comparison, preview, backup-first restore, autosave, permissions, and complete React rendering; MCP tests include a local HTTP server through the entire connect/discover/call/apply/close lifecycle.</p>
             <Code>{`pnpm install
 pnpm dev          # live website and playground
 pnpm typecheck    # public and internal TypeScript contracts
+pnpm test:api     # reviewed public declaration surface
 pnpm test         # all behavioral suites
 pnpm build        # ESM, CJS, declarations, CSS
 pnpm pack:check   # inspect the npm artifact

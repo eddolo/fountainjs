@@ -1247,6 +1247,31 @@ Markdown projection cannot reconstruct. `options.onLoss` receives each entry
 but is observational—callback failures are contained. This is the release-safe
 choice when publishing documents composed from third-party extensions.
 
+## Document versions and migrations
+
+`encodeFountainDocument(document, options?)` writes the current `NodeJSON` in
+an explicit `{ format: "fountainjs", version, document }` envelope.
+`migrateFountainDocument(input, options?)` accepts that envelope or historical
+bare `NodeJSON`, rejects unknown future versions, applies each required
+sequential migration, and returns the immutable envelope plus source/target
+metadata. Supply `options.validate` to validate the final document against the
+application's composed `Schema`.
+
+For a future format, create an isolated runner with
+`createFountainDocumentMigrator({ currentVersion, migrations, validate })`.
+Every `defineFountainDocumentMigration(...)` step must advance exactly one
+positive integer version. Duplicate source steps, gaps, invalid JSON values,
+oversized/deep data, circular input, and failed transformations produce a typed
+`FountainDocumentMigrationError`. The host owns the complete chain; FountainJS
+does not keep a process-global migration registry.
+
+The constants `FOUNTAIN_DOCUMENT_FORMAT` and `FOUNTAIN_DOCUMENT_VERSION`, all
+migration types, and the runner are exported from both the root and the
+DOM-independent `fountainjs-editor/migrations` entry. The transport-level JSON
+Schema is available as `fountainjs-editor/schema/document.json`. See
+[MIGRATIONS.md](MIGRATIONS.md) for extension-version separation and safe
+deployment order.
+
 ## React
 
 Import React bindings from `fountainjs-editor/react`:

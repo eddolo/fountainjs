@@ -54,6 +54,9 @@
       ],
       "testing": [
         "dist/testing/index.d.ts"
+      ],
+      "migrations": [
+        "dist/migrations/index.d.ts"
       ]
     }
   },
@@ -208,16 +211,31 @@
         "default": "./dist/testing.cjs"
       }
     },
+    "./migrations": {
+      "import": {
+        "types": "./dist/migrations/index.d.ts",
+        "default": "./dist/migrations.js"
+      },
+      "require": {
+        "types": "./dist/migrations/index.d.cts",
+        "default": "./dist/migrations.cjs"
+      }
+    },
+    "./schema/document.json": "./schemas/fountain-document.schema.json",
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "docs",
+    "schemas",
     "scripts/smoke-package.mjs",
     "scripts/check-build-budgets.mjs",
     "scripts/check-performance-budgets.mjs",
+    "scripts/check-api-surface.mjs",
     "scripts/create-extension.mjs",
+    "scripts/check-release.mjs",
+    "api-surface.json",
     "README.md",
     "CHANGELOG.md",
     "THIRD_PARTY_NOTICES.md",
@@ -283,12 +301,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:package": "node scripts/smoke-package.mjs",
+    "test:api": "node scripts/check-api-surface.mjs",
     "test:budget": "node scripts/check-build-budgets.mjs",
     "test:performance": "node --expose-gc scripts/check-performance-budgets.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "test:watch": "vitest",
-    "check": "pnpm build && pnpm test:package && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
+    "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",
     "prepublishOnly": "pnpm check"
   },

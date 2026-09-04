@@ -10,6 +10,14 @@
 
 ### Added
 
+- A DOM-independent versioned document envelope and deterministic sequential
+  migration runner, historical bare-JSON compatibility, typed fail-closed
+  diagnostics, a published structural JSON Schema, schema-validation hooks,
+  isolated ESM/CommonJS exports, package tests, and deployment guidance.
+- A written API-stability, deprecation, security-support, release, and rollback
+  contract plus a machine-checked package-version/tag/changelog gate and
+  reviewed public-declaration snapshot, complete trusted-publisher package-entry
+  verification, and intended-file dry-run.
 - Versioned extension manifests, deterministic ordered requirements, a safe
   package scaffold command, a framework-neutral checked example, and an
   isolated `fountainjs-editor/testing` conformance entry covering composition,

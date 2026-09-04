@@ -628,6 +628,30 @@ AI is downstream from the transaction system. `AIController` extracts the curren
 
 `MCPAIAdapter` implements an adapter over MCP Streamable HTTP: initialization, session headers, tool pagination/discovery, tool calls, JSON/SSE decoding, timeout/error handling, and close. The full route is tested against a real local HTTP server. See [MCP.md](MCP.md).
 
+## Persistence and release boundaries
+
+Package SemVer, the extension API integer, and the persisted document format
+version are independent contracts. `src/migrations/` owns the DOM-free document
+envelope and deterministic sequential runner. It accepts a transport value,
+clones and bounds portable JSON, rejects future or ambiguous versions, runs one
+host-owned step per integer version, and validates the final `NodeJSON` through
+an injected schema callback. It does not import an editor view, register global
+state, discover extensions, or rewrite storage by itself.
+
+The published `schemas/fountain-document.schema.json` validates only the
+transport structure. The receiving application's composed `Schema` remains the
+authority for node names, marks, attributes, and content expressions. This
+separation lets Node.js workers migrate and validate documents without a fake
+DOM while preventing a generic schema from claiming product-specific safety.
+
+Release automation treats metadata as a correctness boundary. A release tag
+must exactly match `package.json`; the matching changelog heading must exist;
+tagged releases cannot contain pending `Unreleased` entries; every exported
+entry must pass packed ESM/CommonJS/type checks; and npm publication uses
+trusted-publisher OIDC plus provenance. The complete compatibility and rollback
+rules are in [RELEASES.md](RELEASES.md), and document deployment order is in
+[MIGRATIONS.md](MIGRATIONS.md).
+
 ## Test strategy
 
 The suites are organized by boundary:
@@ -709,7 +733,10 @@ The suites are organized by boundary:
   labels/icons/rendering, selection-preserving activation, touch de-duplication,
   RTL keyboard traversal, and composer passthrough;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
-- `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle.
+- `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle;
+- `tests/migrations.test.ts`: envelope encoding, legacy reads, deterministic
+  sequential migration, schema validation, immutability, and hostile input;
+- `tests/release.test.ts`: version/tag/changelog release-metadata contracts.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
@@ -722,7 +749,8 @@ optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
-the text-style facade, 54 KiB for CSS, and 636/532 KiB for all emitted
+the text-style facade, 8/7 KiB for document migrations, 54 KiB for CSS, and
+657/554 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -749,6 +777,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/importers/` and `src/core/exporters/` | Validated interchange plus explicit lossy-boundary reporting |
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
+| `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |

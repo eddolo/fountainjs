@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/eddolo/fountainjs/master/schemas/fountain-document.schema.json",
+  "title": "FountainJS versioned document",
+  "description": "Portable persisted envelope for a FountainJS document. Schema-specific node names, content expressions, attributes, and marks must also be validated by the receiving FountainJS schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "document"],
+  "properties": {
+    "format": { "const": "fountainjs" },
+    "version": { "type": "integer", "minimum": 1 },
+    "document": { "$ref": "#/$defs/node" }
+  },
+  "$defs": {
+    "jsonValue": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonValue" } },
+        { "type": "object", "additionalProperties": { "$ref": "#/$defs/jsonValue" } }
+      ]
+    },
+    "mark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "attrs": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "attrs": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/jsonValue" }
+        },
+        "text": { "type": "string" },
+        "marks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/mark" }
+        },
+        "content": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/node" }
+        }
+      }
+    }
+  }
+}
