@@ -880,8 +880,17 @@ test('runs the public two-editor collaboration demo with presence and author-loc
   await expect(right).toContainText('Edit either side');
 
   const leftParagraph = left.locator('[data-fountain-node="paragraph"]').first();
-  await leftParagraph.click();
-  await page.keyboard.press('End');
+  await leftParagraph.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text) throw new Error('Expected collaboration text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
   await page.keyboard.type(' LIVE');
   await expect(right).toContainText('author-aware. LIVE');
 
