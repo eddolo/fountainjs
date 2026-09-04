@@ -42,6 +42,7 @@
   "files": [
     "dist",
     "scripts/smoke-package.mjs",
+    "scripts/check-build-budgets.mjs",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -88,10 +89,11 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:package": "node scripts/smoke-package.mjs",
+    "test:budget": "node scripts/check-build-budgets.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "test:watch": "vitest",
-    "check": "pnpm build && pnpm test:package && pnpm typecheck && pnpm test",
+    "check": "pnpm build && pnpm test:package && pnpm test:budget && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",
     "prepublishOnly": "pnpm check"
   },

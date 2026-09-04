@@ -4,8 +4,9 @@
 
 ### Fixed
 
-- The ESM React entry now keeps `react-dom/client` external and has a package
-  smoke gate, preventing an embedded CommonJS runtime from breaking ESM import.
+- The ESM React entry now keeps `react-dom/client` external and has package
+  import and build-budget gates, preventing an embedded CommonJS runtime from
+  breaking ESM import or silently inflating release assets.
 
 ### Added
 

@@ -438,6 +438,14 @@ The suites are organized by boundary:
 
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
+`pnpm test:budget` enforces raw production ceilings of 100 KiB for the ESM root,
+84 KiB for the CommonJS root, 64/48 KiB for the React entries, 32 KiB for CSS,
+and 384/320 KiB for all emitted ESM/CommonJS runtime chunks. Source maps are
+excluded. Media lifecycle tests also assert that cancelled or discarded upload
+tasks release their editor subscription and that NodeViews detach resources on
+destruction. The broader large-document latency and teardown benchmark work is
+tracked separately as `PROD-05`.
+
 ## Source map
 
 | Path | Responsibility |
