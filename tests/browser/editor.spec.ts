@@ -698,11 +698,19 @@ test('loads the public React playground without console or page errors', async (
   const heading = page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' });
   await expect(heading).toBeVisible();
   const heroLines = await heading.locator(':scope > *').evaluateAll((lines) =>
-    lines.map((line) => line.getBoundingClientRect().top),
+    lines.map((line) => {
+      const range = document.createRange();
+      range.selectNodeContents(line);
+      return {
+        top: line.getBoundingClientRect().top,
+        visualLines: range.getClientRects().length,
+      };
+    }),
   );
   expect(heroLines).toHaveLength(3);
-  expect(heroLines[1]).toBeGreaterThan(heroLines[0]);
-  expect(heroLines[2]).toBeGreaterThan(heroLines[1]);
+  expect(heroLines.every(({ visualLines }) => visualLines === 1)).toBe(true);
+  expect(heroLines[1].top).toBeGreaterThan(heroLines[0].top);
+  expect(heroLines[2].top).toBeGreaterThan(heroLines[1].top);
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
   expect(errors).toEqual([]);
 });

@@ -41,7 +41,14 @@ test('handles virtual-keyboard replacement, composition, deletion, and history i
 
 test('keeps the public editor usable without horizontal overflow at a phone viewport', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' })).toBeVisible();
+  const heading = page.getByRole('heading', { name: 'One editor core. Any framework. Yours to extend.' });
+  await expect(heading).toBeVisible();
+  const heroLines = await heading.locator(':scope > *').evaluateAll((lines) => lines.map((line) => {
+    const range = document.createRange();
+    range.selectNodeContents(line);
+    return range.getClientRects().length;
+  }));
+  expect(heroLines).toEqual([1, 1, 1]);
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toBeVisible();
   await page.getByRole('button', { name: 'Insert image from URL' }).click();
   await expect(page.getByLabel('Image URL')).toBeVisible();
