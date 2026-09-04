@@ -42,6 +42,10 @@ function render(node: Node, depth = 0): string {
     case 'hard_break': return '  \n';
     case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;
     case 'image_super': return `![${String(node.attrs.alt ?? '')}](${String(node.attrs.src ?? '')}${node.attrs.title ? ` "${String(node.attrs.title)}"` : ''})${node.attrs.caption ? `\n_${String(node.attrs.caption)}_` : ''}`;
+    case 'audio': return `[Audio${node.attrs.title ? `: ${escapeInline(String(node.attrs.title))}` : ''}](${String(node.attrs.src ?? '')})${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
+    case 'video': return `[Video${node.attrs.title ? `: ${escapeInline(String(node.attrs.title))}` : ''}](${String(node.attrs.src ?? '')})${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
+    case 'file_attachment': return `[${escapeInline(String(node.attrs.name || 'Download file'))}](${String(node.attrs.src ?? '')})${node.attrs.description ? `\n_${escapeInline(String(node.attrs.description))}_` : ''}`;
+    case 'embed': return `[Embedded content: ${escapeInline(String(node.attrs.title || node.attrs.provider || 'Open'))}](${String(node.attrs.src ?? '')})${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
     case 'table': {
       return node.content.map((row, rowIndex) => {
         const cells = row.content.map((cell) => cell.content.map((child) => render(child, depth)).join(' ').replace(/\|/g, '\\|'));

@@ -6,6 +6,7 @@ import {
   HTMLExporter,
   JSONExporter,
   MarkdownExporter,
+  MediaExtension,
   SyntaxHighlightExtension,
   TableEditingExtension,
   composeExtensions,
@@ -14,6 +15,7 @@ import {
   historyPlugin,
   insertNode as demoInsertNode,
   markdownShortcutsPlugin,
+  type AssetUploadHandler,
 } from '../../../src';
 import { FountainAIReview, FountainComposer, Navigator, useFountain, useFountainState } from '../../../src/react';
 import '../../../src/styles.css';
@@ -53,6 +55,33 @@ const demoAdapter = createAIAdapter(async (request, { signal }) => {
   };
 });
 
+const demoAssetUpload: AssetUploadHandler = async (file, { kind, signal, reportProgress }) => {
+  reportProgress(.25);
+  await new Promise<void>((resolve, reject) => {
+    const timer = window.setTimeout(resolve, 260);
+    signal.addEventListener('abort', () => {
+      window.clearTimeout(timer);
+      reject(new DOMException('Upload cancelled', 'AbortError'));
+    }, { once: true });
+  });
+  reportProgress(1);
+  if (kind === 'audio') return {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+    title: file.name.replace(/\.[^.]+$/, ''),
+    caption: 'Uploaded through the local demo adapter.',
+  };
+  if (kind === 'video') return {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    title: file.name.replace(/\.[^.]+$/, ''),
+    caption: 'Uploaded through the local demo adapter.',
+  };
+  return {
+    src: './demo-media.svg',
+    name: file.name,
+    description: 'Uploaded through the local demo adapter.',
+  };
+};
+
 const calloutExtension = defineExtension({
   name: 'callout',
   nodes: {
@@ -73,6 +102,7 @@ const calloutExtension = defineExtension({
 
 const demoKit = composeExtensions([
   CoreExtension,
+  MediaExtension,
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
   SyntaxHighlightExtension,
@@ -221,7 +251,7 @@ function App() {
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
             </div>
-            <FountainComposer editor={editor} placeholder="Start writing…" />
+            <FountainComposer editor={editor} placeholder="Start writing…" assetUpload={demoAssetUpload} />
           </div>
           <aside className="studio__tools">
             <div className="module-stack"><span>COMPOSED FOR THIS DEMO</span><div>{demoKit.extensions.map((extension) => <code key={extension.name}>{extension.name}</code>)}</div></div>

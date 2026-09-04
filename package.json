@@ -41,6 +41,7 @@
   },
   "files": [
     "dist",
+    "scripts/smoke-package.mjs",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -85,10 +86,11 @@
     "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:package": "node scripts/smoke-package.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "test:watch": "vitest",
-    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm test:package",
     "pack:check": "pnpm pack --dry-run",
     "prepublishOnly": "pnpm check"
   },

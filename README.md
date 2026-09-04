@@ -212,6 +212,10 @@ const view = new EditorView(document.querySelector('#editor')!, editor, {
     });
     return response.json(); // { src, alt?, caption?, width?, srcset?, sizes? }
   },
+  assetUpload: async (file, { kind, signal, reportProgress }) => {
+    return myAssets.upload(file, { kind, signal, onProgress: reportProgress });
+    // Returns a URL or typed audio/video/file attributes.
+  },
 });
 
 const stopSaving = editor.subscribe((state) => saveDraft(state.doc.toJSON()));
@@ -252,6 +256,79 @@ await task.retry() // available after a failed attempt
 Pass `replacePath` to replace an existing block or inline image without losing
 its metadata. Upload state is transient and local; credentials, files, and
 progress never enter document JSON.
+
+### Native audio, video, files, and safe embeds
+
+`StarterKit` includes the independently composable `MediaExtension`. It adds
+typed `audio`, `video`, `file_attachment`, and `embed` nodes without depending
+on React. Native playback attributes include controls, autoplay, loop, mute,
+preload, remote-playback policy, CORS mode, captions/subtitle tracks, video
+posters, inline mobile playback, dimensions, alignment, titles, and captions.
+File nodes retain a safe URL, visible name, MIME type, byte size, description,
+and optional download name.
+
+```ts
+insertAudio(editor, {
+  src: 'https://cdn.example.com/episode.mp3',
+  title: 'Episode 12',
+  controls: true,
+  tracks: [{
+    src: 'https://cdn.example.com/episode-en.vtt',
+    kind: 'captions', srclang: 'en', label: 'English', default: true,
+  }],
+})
+
+insertVideo(editor, {
+  src: 'https://cdn.example.com/launch.mp4',
+  poster: 'https://cdn.example.com/launch.webp',
+  title: 'Launch film', width: '720px', controls: true, playsInline: true,
+})
+
+insertFileAttachment(editor, {
+  src: 'https://cdn.example.com/brief.pdf',
+  name: 'Project brief.pdf', mimeType: 'application/pdf', size: 125_000,
+})
+```
+
+Embeds are fail-closed. The default module canonicalizes approved YouTube URLs
+to `youtube-nocookie.com` and Vimeo URLs to `player.vimeo.com`, then renders a
+titled, lazy, referrer-limited, sandboxed iframe. An arbitrary iframe URL is
+rejected at command, JSON-import, attribute-update, and HTML-import boundaries.
+Replace the entire allowlist when your product trusts another provider:
+
+```ts
+const media = createMediaExtension({
+  embedProviders: [{
+    name: 'acme-video',
+    sandbox: 'allow-scripts allow-same-origin',
+    allow: 'fullscreen; picture-in-picture',
+    resolve(url) {
+      const match = url.hostname === 'video.acme.test'
+        ? url.pathname.match(/^\/(?:watch|embed)\/(\d+)$/)
+        : null
+      return match ? `https://video.acme.test/embed/${match[1]}` : null
+    },
+  }],
+})
+
+const kit = composeExtensions([
+  ...StarterKit.extensions.filter(extension => extension.name !== 'media'),
+  media,
+])
+```
+
+A provider resolver must recognize both its public input URLs and its own
+canonical output URL. Persisted `allow`, `sandbox`, and fullscreen capabilities
+may only narrow the provider's declared policy, so imported HTML cannot widen
+the provider's permissions.
+
+`startAssetUpload` supplies the same observable, mapped, cancel/retry and
+fail-closed replacement behavior as image uploads. Audio and video are inferred
+from MIME type; other files become attachments. Unlike small local images,
+arbitrary assets are never embedded automatically: the application must pass an
+`assetUpload` handler and remains responsible for storage, authorization,
+malware scanning, quotas, and URL lifetime. Paste/drop emits the composed
+`fountain-asset-upload` event for non-React hosts.
 
 ### Web Component
 
@@ -309,12 +386,12 @@ the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
 
 ## Included document capabilities
 
-`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, media, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. Lists support multi-block wrapping, selected-range type conversion, mixed nesting, multi-item indent/lift, ordered starts, task state, boundary joins, and nested HTML/Markdown interchange; the React controls toggle types and expose lift/indent actions. Tables support span-aware merge/split, structural repair, header scopes, full-row/column selections, column resizing, and TSV/HTML clipboard exchange. `StarterKit` also adds safe link behavior, live language-aware code highlighting, and automatic table repair. Code tokens and optional line numbers are view-only decorations, language metadata round-trips through JSON/Markdown/HTML, the React toolbar edits language and line-number settings, and `createSyntaxHighlightExtension` accepts any host tokenizer through validated ranges. Link behavior includes normalization and validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, host-owned activation, and complete React add/preview/edit/remove controls.
+`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, block/inline images, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. Lists support multi-block wrapping, selected-range type conversion, mixed nesting, multi-item indent/lift, ordered starts, task state, boundary joins, and nested HTML/Markdown interchange; the React controls toggle types and expose lift/indent actions. Tables support span-aware merge/split, structural repair, header scopes, full-row/column selections, column resizing, and TSV/HTML clipboard exchange. `StarterKit` also adds `MediaExtension`, safe link behavior, live language-aware code highlighting, and automatic table repair. Code tokens and optional line numbers are view-only decorations, language metadata round-trips through JSON/Markdown/HTML, the React toolbar edits language and line-number settings, and `createSyntaxHighlightExtension` accepts any host tokenizer through validated ranges. Link behavior includes normalization and validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, host-owned activation, and complete React add/preview/edit/remove controls.
 
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME
-input; configurable input/paste rules; multiline and rich-HTML paste; image
-paste/drop/upload; selected-block drag-move; find/replace; Markdown shortcuts;
+input; configurable input/paste rules; multiline and rich-HTML paste; image and
+asset paste/drop/upload; selected-block drag-move; find/replace; Markdown shortcuts;
 and configurable undo/redo that groups adjacent browser input.
 JSON is the lossless source of truth; Markdown, safe HTML, and plain text are
 interoperability boundaries.

@@ -892,7 +892,7 @@ test('publishes semantic selection controls and table interaction in the demo ga
   await expect.poll(() => page.evaluate(() => document.getSelection()?.toString() ?? '')).toContain('Quarterly service report');
 });
 
-test('runs production images and host-owned uploads through the public Custom Element', async ({ page }) => {
+test('runs production images, native media, safe embeds, and host-owned uploads through the public Custom Element', async ({ page }) => {
   await page.goto('/demos/angular-media.html');
   await expect(page.getByRole('heading', { name: 'Media-rich campaign story' })).toBeVisible();
 
@@ -921,4 +921,73 @@ test('runs production images and host-owned uploads through the public Custom El
   await expect(editor.locator('.fountain-image')).toHaveCount(2);
   await expect(editor.locator('.fountain-image img[alt="portable"]')).toBeVisible();
   await expect(page.locator('.demo-output pre')).toContainText('Uploaded through the demo host adapter.');
+
+  await expect(editor.locator('.fountain-media--audio audio[controls]')).toHaveCount(1);
+  await expect(editor.locator('.fountain-media--video video[controls][playsinline]')).toHaveCount(1);
+  await expect(editor.locator('.fountain-media--file .fountain-file')).toContainText('campaign-artwork.svg');
+  const embed = editor.locator('.fountain-media--embed iframe');
+  await expect(embed).toHaveAttribute('src', /youtube-nocookie\.com\/embed/);
+  await expect(embed).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+  await expect(embed).toHaveAttribute('title', 'Approved campaign embed');
+
+  await editor.evaluate((element) => {
+    const transfer = new DataTransfer();
+    transfer.items.add(new File(['framework-neutral audio'], 'voice.mp3', { type: 'audio/mpeg' }));
+    element.dispatchEvent(new DragEvent('drop', {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer: transfer,
+      clientX: 20,
+      clientY: 20,
+    }));
+  });
+  await expect(status).toContainText('Uploading voice.mp3');
+  await expect(status).toContainText('voice.mp3: succeeded');
+  await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
+  await expect(page.locator('.demo-output pre')).toContainText('Audio uploaded through the Angular-owned adapter.');
+});
+
+test('uses the public React media workflow for native playback, provider-gated embeds, and asset uploads', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Insert audio, video, file, or embed' }).click();
+  await page.getByLabel('Media URL').fill('https://cdn.example.com/podcast.mp3');
+  await page.getByLabel('Media title').fill('Product podcast');
+  await page.getByLabel('Media caption').fill('A framework-neutral audio node.');
+  await page.getByRole('button', { name: 'Insert URL' }).click();
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await expect(editor.locator('.fountain-media--audio audio[controls]')).toHaveCount(1);
+  await expect(editor.locator('.fountain-media--audio')).toContainText('A framework-neutral audio node.');
+
+  await editor.locator('.fountain-media--audio figcaption').click();
+  await page.getByRole('button', { name: 'Edit selected media' }).click();
+  await expect(page.getByLabel('Media type')).toBeDisabled();
+  await page.getByLabel('Media title').fill('Edited podcast');
+  await page.getByRole('button', { name: 'Save media' }).click();
+  await expect(editor.locator('.fountain-media--audio')).toHaveAttribute('aria-label', '[Audio: Edited podcast]');
+
+  await editor.locator('.fountain-media--audio figcaption').click();
+  await page.keyboard.press('Delete');
+  await expect(editor.locator('.fountain-media--audio')).toHaveCount(0);
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(editor.locator('.fountain-media--audio')).toHaveAttribute('aria-label', '[Audio: Edited podcast]');
+
+  await editor.locator('p').last().click();
+  await page.getByRole('button', { name: 'Insert audio, video, file, or embed' }).click();
+  await page.getByLabel('Media type').selectOption('embed');
+  await page.getByLabel('Media URL').fill('https://untrusted.example/embed/42');
+  await page.getByLabel('Media title').fill('Rejected iframe');
+  await page.getByRole('button', { name: 'Insert URL' }).click();
+  await expect(page.getByLabel('Media URL')).toBeVisible();
+  await expect(editor.locator('iframe')).toHaveCount(0);
+  await page.getByLabel('Media URL').fill('https://vimeo.com/12345678');
+  await page.getByLabel('Media title').fill('Approved Vimeo demo');
+  await page.getByRole('button', { name: 'Insert URL' }).click();
+  await expect(editor.locator('.fountain-media--embed iframe')).toHaveAttribute('src', 'https://player.vimeo.com/video/12345678');
+  await expect(editor.locator('.fountain-media--embed iframe')).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+
+  const upload = page.locator('input[type="file"][accept^="audio/"]');
+  await upload.setInputFiles({ name: 'voice.mp3', mimeType: 'audio/mpeg', buffer: Buffer.from('demo audio') });
+  await expect(page.getByRole('status').filter({ hasText: 'Uploading voice.mp3' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'voice.mp3 inserted' })).toBeVisible();
+  await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
 });

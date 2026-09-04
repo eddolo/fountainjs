@@ -23,6 +23,8 @@ const editor = createEditor({
 
 const view = new EditorView(mount, editor, {
   imageUpload: file => uploadToMyStorage(file),
+  assetUpload: (file, { kind, signal, reportProgress }) =>
+    uploadAsset(file, { kind, signal, onProgress: reportProgress }),
 })`;
 
 const mediaExample = `const task = startImageUpload(editor, file, {
@@ -37,7 +39,13 @@ task.subscribe(({ status, progress, error }) => {
 })
 
 task.cancel()       // abort signal reaches the host adapter
-await task.retry()  // retries the same mapped destination after failure`;
+await task.retry()  // retries the same mapped destination after failure
+
+const assetTask = startAssetUpload(editor, mediaFile, {
+  // MIME type infers audio, video, or a downloadable file.
+  upload: (file, { kind, signal, reportProgress }) =>
+    assets.upload(file, { kind, signal, onProgress: reportProgress }),
+})`;
 
 const extensionExample = `import { defineExtension, insertNode } from 'fountainjs-editor'
 
@@ -274,7 +282,7 @@ function Developers() {
           <section className="dev-section" id="input-view">
             <p className="dev-label">06 · INPUT & RENDERING</p>
             <h2>The browser is an interface, not the source of truth.</h2>
-            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles desktop and mobile <code>beforeinput</code> variants, alternate IME commit order, structured paste, image and selected-block drop, task toggles, list indentation, table navigation, and history input. <code>SelectionHandler</code> converts DOM ranges to logical document paths and back—including nested and bidirectional text—then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
+            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles desktop and mobile <code>beforeinput</code> variants, alternate IME commit order, structured paste, image/asset and selected-block drop, task toggles, list indentation, table navigation, and history input. <code>SelectionHandler</code> converts DOM ranges to logical document paths and back—including nested and bidirectional text—then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
             <p>Ctrl/Cmd+A selects the document. Clicking an atomic node or pressing Left/Right at its neighboring text boundary creates a node selection. Shift-click extends a table-cell rectangle; Alt+Shift+Arrow does the same from the keyboard. Public selection commands expose the identical behavior to plain DOM, Web Components, React, or another adapter.</p>
             <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. URL attributes and tag names pass safety checks before reaching the DOM.</p>
             <h3>Interactive NodeViews keep identity without owning the document</h3>
@@ -322,7 +330,8 @@ function Developers() {
             <Code>{formatExample}</Code>
             <p>Block images support editable captions, alt text, titles, alignment, responsive source sets, explicit dimensions, load recovery, and pointer, touch, or keyboard resizing. <code>inline_image</code> is a separate typed node that can sit between text. Both are selectable and portable through JSON and HTML.</p>
             <Code>{mediaExample}</Code>
-            <p>Upload progress, errors, cancellation, and retry stay transient. The intended insertion or replacement target maps through edits made during the upload; if a replacement image is deleted, the response fails closed instead of overwriting another node. By default local files become size-limited data URLs. A host can pass <code>imageUpload(file, context)</code> for any storage provider; credentials and files never enter FountainJS configuration or document state.</p>
+            <p><code>MediaExtension</code>, included in <code>StarterKit</code>, adds typed native audio/video with tracks and playback policy, downloadable file cards, and titled embeds. Default embeds are fail-closed: public YouTube URLs become privacy-enhanced <code>youtube-nocookie.com</code> frames, Vimeo becomes <code>player.vimeo.com</code>, and every other origin is refused. <code>createMediaExtension</code> lets a host replace that allowlist with explicit provider resolvers and validated sandbox/permission tokens.</p>
+            <p>Upload progress, errors, cancellation, and retry stay transient. The intended insertion or replacement target maps through edits made during the upload; if a replacement node is deleted, the response fails closed instead of overwriting another node. By default only small local images become size-limited data URLs. Audio, video, and files require <code>assetUpload(file, context)</code>, so the host keeps responsibility for storage, authorization, malware scanning, content types, and URL lifetime. Credentials and <code>File</code> objects never enter FountainJS configuration or document state.</p>
           </section>
 
           <section className="dev-section" id="ai-mcp">
@@ -341,7 +350,7 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/core/transaction"><code>src/core/transaction/</code><span>Immutable steps, paths, ranges, transforms, transaction metadata.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/core/commands.ts"><code>src/core/commands.ts</code><span>Text, marks, blocks, selection, document insertion, table and list commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
-              <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, and plugins.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/math.ts"><code>src/extensions/math.ts</code><span>Opt-in TeX nodes, commands, input/paste rules, NodeViews, and renderer adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/lean"><code>src/lean/</code><span>Provider-neutral Lean requests, proof-service results, validation, and stale protection.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/react"><code>src/react/</code><span>Optional React hooks and product-ready interface components.</span></a>

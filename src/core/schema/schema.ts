@@ -41,7 +41,9 @@ export class NodeType {
   }
 
   create(attrs: Attributes = {}, content: readonly Node[] = [], text?: string, marks: readonly Mark[] = []): Node {
-    return new Node(this, computeAttrs(this.spec.attrs, attrs), content, text, marks);
+    const node = new Node(this, computeAttrs(this.spec.attrs, attrs), content, text, marks);
+    if (this.spec.validate && !this.spec.validate(node)) throw new Error(`Invalid node invariant: ${this.name}`);
+    return node;
   }
 }
 
@@ -112,6 +114,9 @@ export class Schema {
     const visit = (current: Node, path: readonly number[]): void => {
       if (current.type.schema !== this) throw new Error(`Node at ${path.join('.') || 'root'} belongs to another schema.`);
       computeAttrs(current.type.spec.attrs, current.attrs);
+      if (current.type.spec.validate && !current.type.spec.validate(current)) {
+        throw new Error(`Invalid node invariant: ${current.type.name} at ${path.join('.') || 'root'}`);
+      }
       current.marks.forEach((mark) => {
         if (mark.type.schema !== this) throw new Error(`Mark on ${path.join('.') || 'root'} belongs to another schema.`);
         computeAttrs(mark.type.spec.attrs, mark.attrs);

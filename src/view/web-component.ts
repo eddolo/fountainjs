@@ -1,7 +1,7 @@
 import type { NodeJSON, Plugin, SchemaSpec, Transaction } from '../core';
 import { createEditor, setContent, type Editor, type EditorState } from '../core';
 import { CoreSchemaSpec } from '../extensions';
-import type { ImageUploadHandler } from './media';
+import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import { EditorView, type EditorFocusPosition } from './view';
 
 export interface FountainElementChangeDetail {
@@ -23,6 +23,7 @@ export interface RegisterFountainElementOptions {
   placeholder?: string;
   ariaLabel?: string;
   imageUpload?: ImageUploadHandler;
+  assetUpload?: AssetUploadHandler;
   maxInlineImageBytes?: number;
   onError?: (error: unknown) => void;
 }
@@ -76,6 +77,7 @@ export function registerFountainElement(
         placeholder: this.getAttribute('placeholder') ?? options.placeholder,
         ariaLabel: this.getAttribute('aria-label') ?? options.ariaLabel ?? 'Rich text editor',
         imageUpload: options.imageUpload,
+        assetUpload: options.assetUpload,
         maxInlineImageBytes: options.maxInlineImageBytes,
         onError: options.onError,
       });

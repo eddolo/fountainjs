@@ -22,7 +22,7 @@ import {
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
 import { renderDocument, type MountedNodeView } from './dom-renderer';
 import { InputManager } from './input';
-import type { ImageUploadHandler } from './media';
+import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import { SelectionHandler } from './selection-handler';
 
 export interface EditorViewOptions {
@@ -31,6 +31,7 @@ export interface EditorViewOptions {
   placeholder?: string;
   attributes?: Record<string, string>;
   imageUpload?: ImageUploadHandler;
+  assetUpload?: AssetUploadHandler;
   maxInlineImageBytes?: number;
   onError?: (error: unknown) => void;
 }
@@ -73,6 +74,7 @@ export class EditorView {
     this.selections = new SelectionHandler(editor, this.dom, this.shouldStopNodeViewEvent);
     this.input = new InputManager(editor, this.dom, this.selections, {
       imageUpload: options.imageUpload,
+      assetUpload: options.assetUpload,
       maxInlineImageBytes: options.maxInlineImageBytes,
       onError: options.onError,
       shouldStopEvent: this.shouldStopNodeViewEvent,

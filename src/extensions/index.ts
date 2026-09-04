@@ -43,6 +43,7 @@ import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
 import { SyntaxHighlightExtension } from './plugins/syntax-highlight';
 import { TableEditingExtension } from './plugins/table-editing';
 import { LinkBehaviorExtension } from './link-behavior';
+import { MediaExtension } from './media';
 import { composeExtensions, defineExtension } from './extension';
 
 export * from './extension';
@@ -51,6 +52,7 @@ export * from './math';
 export * from './lean';
 export * from './link-behavior';
 export * from './clipboard-history';
+export * from './media';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';
@@ -142,6 +144,7 @@ export const TextFormatExtension = defineExtension({
 
 export const StarterKit = composeExtensions([
   CoreExtension,
+  MediaExtension,
   HistoryExtension,
   MarkdownShortcutsExtension,
   LinkBehaviorExtension,

@@ -43,13 +43,30 @@ import { getClipboardHistoryState, openClipboardHistory } from '../extensions/cl
 import { canRedo, canUndo, redo, undo } from '../extensions/plugins/history';
 import { editLink, getActiveLink, removeLink } from '../extensions/link-behavior';
 import {
+  deleteMedia,
+  getActiveMedia,
+  insertAudio,
+  insertEmbed,
+  insertFileAttachment,
+  insertVideo,
+  setEmbed,
+  setMediaAttributes,
+  type MediaAlignment,
+  type MediaPreload,
+} from '../extensions/media';
+import {
   CODE_BLOCK_LANGUAGES,
   getActiveCodeBlock,
   setCodeBlockLanguage,
   toggleCodeBlockLineNumbers,
 } from '../extensions/plugins/syntax-highlight';
 import {
+  startAssetUpload,
   startImageUpload,
+  type AssetUploadHandler,
+  type AssetUploadKind,
+  type AssetUploadSnapshot,
+  type AssetUploadTask,
   type ImageUploadHandler,
   type ImageUploadSnapshot,
   type ImageUploadTask,
@@ -62,6 +79,7 @@ export interface FountainToolbarProps {
   className?: string;
   extraActions?: ReactNode;
   imageUpload?: ImageUploadHandler;
+  assetUpload?: AssetUploadHandler;
   onError?: (error: unknown) => void;
 }
 
@@ -97,11 +115,12 @@ function ToolButton({ label, title, active, disabled, onAction }: ToolButtonProp
   );
 }
 
-export function FountainToolbar({ editor, className, extraActions, imageUpload, onError }: FountainToolbarProps) {
+export function FountainToolbar({ editor, className, extraActions, imageUpload, assetUpload, onError }: FountainToolbarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
+  const assetInput = useRef<HTMLInputElement>(null);
   const languageListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'search' | 'code' | 'table' | null>(null);
+  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'table' | null>(null);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -116,18 +135,51 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const [imageSrcset, setImageSrcset] = useState('');
   const [imageSizes, setImageSizes] = useState('');
   const [imageTask, setImageTask] = useState<ImageUploadTask | null>(null);
+  const imageTaskRef = useRef<ImageUploadTask | null>(null);
   const [uploadSnapshot, setUploadSnapshot] = useState<ImageUploadSnapshot | null>(null);
+  const [mediaKind, setMediaKind] = useState<AssetUploadKind | 'embed'>('audio');
+  const [mediaURL, setMediaURL] = useState('');
+  const [mediaTitle, setMediaTitle] = useState('');
+  const [mediaCaption, setMediaCaption] = useState('');
+  const [mediaPoster, setMediaPoster] = useState('');
+  const [mediaWidth, setMediaWidth] = useState('100%');
+  const [mediaHeight, setMediaHeight] = useState('auto');
+  const [mediaAlign, setMediaAlign] = useState<MediaAlignment>('center');
+  const [mediaControls, setMediaControls] = useState(true);
+  const [mediaAutoplay, setMediaAutoplay] = useState(false);
+  const [mediaLoop, setMediaLoop] = useState(false);
+  const [mediaMuted, setMediaMuted] = useState(false);
+  const [mediaPreload, setMediaPreload] = useState<MediaPreload>('metadata');
+  const [mediaPlaysInline, setMediaPlaysInline] = useState(true);
+  const [mediaMimeType, setMediaMimeType] = useState('');
+  const [mediaFileName, setMediaFileName] = useState('');
+  const [mediaDownloadName, setMediaDownloadName] = useState('');
+  const [assetTask, setAssetTask] = useState<AssetUploadTask | null>(null);
+  const assetTaskRef = useRef<AssetUploadTask | null>(null);
+  const [assetSnapshot, setAssetSnapshot] = useState<AssetUploadSnapshot | null>(null);
   const [query, setQuery] = useState('');
   const [replacement, setReplacement] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('text');
   const [tableWidth, setTableWidth] = useState('120');
-  useEffect(() => imageTask?.subscribe(setUploadSnapshot), [imageTask]);
+  useEffect(() => {
+    if (!imageTask) return;
+    return imageTask.subscribe(setUploadSnapshot);
+  }, [imageTask]);
+  useEffect(() => {
+    if (!assetTask) return;
+    return assetTask.subscribe(setAssetSnapshot);
+  }, [assetTask]);
+  useEffect(() => () => {
+    imageTaskRef.current?.cancel();
+    assetTaskRef.current?.cancel();
+  }, []);
   if (!editor) return null;
   const mark = (name: string) => () => toggleMark(editor, name);
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
   const activeTable = getActiveTableCell(editor);
   const activeImage = getActiveImage(editor);
+  const activeMedia = getActiveMedia(editor);
   const clipboardHistory = getClipboardHistoryState(editor);
 
   const toggleLinkPanel = () => {
@@ -223,6 +275,7 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
   const chooseImage = async (file?: File) => {
     if (!file) return;
     try {
+      imageTaskRef.current?.cancel();
       const task = startImageUpload(editor, file, {
         upload: imageUpload,
         replacePath: activeImage?.path,
@@ -236,11 +289,147 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         srcset: imageSrcset,
         sizes: imageSizes,
       });
+      imageTaskRef.current = task;
       setImageTask(task);
       setPanel('image');
       void task.completion.catch((error) => onError?.(error));
     } catch (error) { onError?.(error); }
     if (fileInput.current) fileInput.current.value = '';
+  };
+
+  const toggleMediaPanel = (preferred: AssetUploadKind | 'embed' = 'audio') => {
+    if (panel === 'media') {
+      setPanel(null);
+      return;
+    }
+    const attrs = activeMedia?.node.attrs;
+    const kind = activeMedia?.kind === 'file_attachment' ? 'file' : activeMedia?.kind ?? preferred;
+    setMediaKind(kind);
+    setMediaURL(String(attrs?.src ?? ''));
+    setMediaTitle(String(attrs?.title ?? ''));
+    setMediaCaption(String(attrs?.caption ?? attrs?.description ?? ''));
+    setMediaPoster(String(attrs?.poster ?? ''));
+    setMediaWidth(String(attrs?.width ?? '100%'));
+    setMediaHeight(String(attrs?.height ?? (kind === 'embed' ? '360px' : 'auto')));
+    setMediaAlign((attrs?.align as MediaAlignment | undefined) ?? 'center');
+    setMediaControls(attrs?.controls !== false);
+    setMediaAutoplay(attrs?.autoplay === true);
+    setMediaLoop(attrs?.loop === true);
+    setMediaMuted(attrs?.muted === true);
+    setMediaPreload((attrs?.preload as MediaPreload | undefined) ?? 'metadata');
+    setMediaPlaysInline(attrs?.playsInline !== false);
+    setMediaMimeType(String(attrs?.mimeType ?? ''));
+    setMediaFileName(String(attrs?.name ?? ''));
+    setMediaDownloadName(String(attrs?.downloadName ?? ''));
+    setPanel('media');
+  };
+
+  const submitMedia = (event: FormEvent) => {
+    event.preventDefault();
+    const playback = {
+      src: mediaURL,
+      title: mediaTitle,
+      caption: mediaCaption,
+      controls: mediaControls,
+      autoplay: mediaAutoplay,
+      loop: mediaLoop,
+      muted: mediaMuted,
+      preload: mediaPreload,
+    };
+    const accepted = activeMedia
+      ? activeMedia.kind === 'embed'
+        ? setEmbed(editor, mediaURL, {
+          title: mediaTitle,
+          caption: mediaCaption,
+          width: mediaWidth,
+          height: mediaHeight,
+          align: mediaAlign,
+        })
+        : setMediaAttributes(editor, activeMedia.kind === 'file_attachment' ? {
+          src: mediaURL,
+          name: mediaFileName,
+          mimeType: mediaMimeType,
+          description: mediaCaption,
+          downloadName: mediaDownloadName,
+        } : activeMedia.kind === 'video' ? {
+          ...playback,
+          poster: mediaPoster,
+          width: mediaWidth,
+          height: mediaHeight,
+          align: mediaAlign,
+          playsInline: mediaPlaysInline,
+        } : playback)
+      : mediaKind === 'embed'
+        ? insertEmbed(editor, mediaURL, {
+          title: mediaTitle,
+          caption: mediaCaption,
+          width: mediaWidth,
+          height: mediaHeight,
+          align: mediaAlign,
+        })
+        : mediaKind === 'file'
+          ? insertFileAttachment(editor, {
+            src: mediaURL,
+            name: mediaFileName,
+            mimeType: mediaMimeType,
+            description: mediaCaption,
+            downloadName: mediaDownloadName,
+          })
+          : mediaKind === 'video'
+            ? insertVideo(editor, {
+              ...playback,
+              poster: mediaPoster,
+              width: mediaWidth,
+              height: mediaHeight,
+              align: mediaAlign,
+              playsInline: mediaPlaysInline,
+            })
+            : insertAudio(editor, playback);
+    if (accepted) setPanel(null);
+  };
+
+  const chooseAsset = (file?: File) => {
+    if (!file || !assetUpload) return;
+    try {
+      assetTaskRef.current?.cancel();
+      const task = startAssetUpload(editor, file, {
+        upload: assetUpload,
+        replacePath: activeMedia && activeMedia.kind !== 'embed' ? activeMedia.path : undefined,
+        attributes: activeMedia?.kind === 'file_attachment' ? {
+          name: mediaFileName || file.name,
+          mimeType: mediaMimeType || file.type,
+          description: mediaCaption,
+          downloadName: mediaDownloadName || file.name,
+        } : activeMedia?.kind === 'video' ? {
+          title: mediaTitle || undefined,
+          caption: mediaCaption,
+          poster: mediaPoster,
+          width: mediaWidth,
+          height: mediaHeight,
+          align: mediaAlign,
+          controls: mediaControls,
+          autoplay: mediaAutoplay,
+          loop: mediaLoop,
+          muted: mediaMuted,
+          preload: mediaPreload,
+          playsInline: mediaPlaysInline,
+        } : activeMedia?.kind === 'audio' ? {
+          title: mediaTitle || undefined,
+          caption: mediaCaption,
+          controls: mediaControls,
+          autoplay: mediaAutoplay,
+          loop: mediaLoop,
+          muted: mediaMuted,
+          preload: mediaPreload,
+        } : undefined,
+      });
+      assetTaskRef.current = task;
+      setAssetTask(task);
+      setMediaKind(task.kind);
+      setPanel('media');
+      void task.completion.catch((error) => onError?.(error));
+    } catch (error) { onError?.(error); }
+    if (assetInput.current) assetInput.current.value = '';
   };
 
   return (
@@ -290,6 +479,8 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
           <ToolButton label="▦" title="Insert 3 by 3 table" onAction={() => insertTable(editor)} />
           <ToolButton label="IMG" title={activeImage ? 'Edit selected image' : 'Insert image from URL'} active={Boolean(activeImage)} onAction={toggleImagePanel} />
           <ToolButton label="↑IMG" title={activeImage ? 'Replace selected image' : 'Upload image'} onAction={() => fileInput.current?.click()} />
+          {editor.state.schema.nodes.audio && <ToolButton label="MEDIA" title={activeMedia ? 'Edit selected media' : 'Insert audio, video, file, or embed'} active={Boolean(activeMedia)} onAction={() => toggleMediaPanel()} />}
+          {editor.state.schema.nodes.audio && <ToolButton label="↑FILE" title={assetUpload ? (activeMedia && activeMedia.kind !== 'embed' ? 'Replace selected media file' : 'Upload audio, video, or file') : 'Configure assetUpload to upload files'} disabled={!assetUpload || activeMedia?.kind === 'embed'} onAction={() => assetInput.current?.click()} />}
           <ToolButton label="—" title="Divider" onAction={() => insertBlock(editor, 'horizontal_rule')} />
           <ToolButton label="↵" title="Line break" onAction={() => insertHardBreak(editor)} />
         </div>
@@ -313,6 +504,7 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
         </div>
         {extraActions}
         <input ref={fileInput} className="fountain-toolbar__file" type="file" accept="image/*" onChange={(event) => void chooseImage(event.target.files?.[0])} />
+        <input ref={assetInput} className="fountain-toolbar__file" type="file" accept="audio/*,video/*,application/pdf,text/*,.zip" onChange={(event) => chooseAsset(event.target.files?.[0])} />
       </div>
       {panel === 'link' && <form className="fountain-toolbar__popover is-link" onSubmit={submitLink}>
         <strong>{activeLink ? 'Edit link' : 'Add link'}</strong>
@@ -374,6 +566,74 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
             <button type="button" onClick={() => imageTask?.cancel()}>Cancel upload</button>
           </>}
           {uploadSnapshot.status === 'failed' && <button type="button" onClick={() => void imageTask?.retry().catch((error) => onError?.(error))}>Retry upload</button>}
+        </div>}
+      </form>}
+      {panel === 'media' && <form className="fountain-toolbar__popover is-media" onSubmit={submitMedia}>
+        <strong>{activeMedia ? 'Edit media' : 'Add media'}</strong>
+        <select aria-label="Media type" value={mediaKind} disabled={Boolean(activeMedia)} onChange={(event) => {
+          const kind = event.target.value as AssetUploadKind | 'embed';
+          setMediaKind(kind);
+          setMediaHeight(kind === 'embed' ? '360px' : 'auto');
+        }}>
+          <option value="audio">Audio</option>
+          <option value="video">Video</option>
+          <option value="file">Downloadable file</option>
+          <option value="embed">Approved embed</option>
+        </select>
+        <input aria-label="Media URL" required inputMode="url" placeholder={mediaKind === 'embed' ? 'YouTube or Vimeo URL' : 'https://cdn.example.com/file'} value={mediaURL} onChange={(event) => setMediaURL(event.target.value)} />
+        {mediaKind === 'file' ? <>
+          <input aria-label="File name" required placeholder="Visible file name" value={mediaFileName} onChange={(event) => setMediaFileName(event.target.value)} />
+          <input aria-label="File MIME type" placeholder="application/pdf" value={mediaMimeType} onChange={(event) => setMediaMimeType(event.target.value)} />
+          <input aria-label="Download file name" placeholder="Optional downloaded filename" value={mediaDownloadName} onChange={(event) => setMediaDownloadName(event.target.value)} />
+          <textarea aria-label="File description" placeholder="Description (optional)" value={mediaCaption} onChange={(event) => setMediaCaption(event.target.value)} />
+        </> : <>
+          <input aria-label="Media title" required={mediaKind === 'embed'} placeholder={mediaKind === 'embed' ? 'Accessible embed title' : 'Title (optional)'} value={mediaTitle} onChange={(event) => setMediaTitle(event.target.value)} />
+          <textarea aria-label="Media caption" placeholder="Caption (optional)" value={mediaCaption} onChange={(event) => setMediaCaption(event.target.value)} />
+        </>}
+        {mediaKind === 'video' && <input aria-label="Video poster URL" inputMode="url" placeholder="Poster image URL (optional)" value={mediaPoster} onChange={(event) => setMediaPoster(event.target.value)} />}
+        {(mediaKind === 'video' || mediaKind === 'embed') && <>
+          <label>Width <input aria-label="Media width" required placeholder="100% or 640px" value={mediaWidth} onChange={(event) => setMediaWidth(event.target.value)} /></label>
+          <label>Height <input aria-label="Media height" required placeholder="auto or 360px" value={mediaHeight} onChange={(event) => setMediaHeight(event.target.value)} /></label>
+          <select aria-label="Media alignment" value={mediaAlign} onChange={(event) => setMediaAlign(event.target.value as MediaAlignment)}>
+            <option value="left">Align left</option>
+            <option value="center">Align center</option>
+            <option value="right">Align right</option>
+          </select>
+        </>}
+        {(mediaKind === 'audio' || mediaKind === 'video') && <details>
+          <summary>Playback and accessibility</summary>
+          <select aria-label="Media preload" value={mediaPreload} onChange={(event) => setMediaPreload(event.target.value as MediaPreload)}>
+            <option value="none">Do not preload</option>
+            <option value="metadata">Preload metadata</option>
+            <option value="auto">Allow preload</option>
+          </select>
+          <label className="fountain-toolbar__check"><input type="checkbox" checked={mediaControls} onChange={(event) => setMediaControls(event.target.checked)} /> Show controls</label>
+          <label className="fountain-toolbar__check"><input type="checkbox" checked={mediaAutoplay} onChange={(event) => setMediaAutoplay(event.target.checked)} /> Autoplay</label>
+          <label className="fountain-toolbar__check"><input type="checkbox" checked={mediaLoop} onChange={(event) => setMediaLoop(event.target.checked)} /> Loop</label>
+          <label className="fountain-toolbar__check"><input type="checkbox" checked={mediaMuted} onChange={(event) => setMediaMuted(event.target.checked)} /> Muted</label>
+          {mediaKind === 'video' && <label className="fountain-toolbar__check"><input type="checkbox" checked={mediaPlaysInline} onChange={(event) => setMediaPlaysInline(event.target.checked)} /> Play inline on mobile</label>}
+          <p>Caption tracks are available through the typed <code>tracks</code> attribute.</p>
+        </details>}
+        {mediaKind === 'embed' && <p className="fountain-toolbar__hint">The default policy accepts YouTube and Vimeo and renders privacy-enhanced, sandboxed iframes. Hosts can replace the provider allowlist.</p>}
+        <div className="fountain-toolbar__image-actions">
+          <button type="submit">{activeMedia ? 'Save media' : 'Insert URL'}</button>
+          {assetUpload && mediaKind !== 'embed' && <button type="button" onClick={() => assetInput.current?.click()}>{activeMedia ? 'Replace file' : 'Choose file'}</button>}
+          {activeMedia && <button type="button" onClick={() => { deleteMedia(editor); setPanel(null); }}>Delete media</button>}
+          <button type="button" onClick={() => setPanel(null)}>Close</button>
+        </div>
+        {assetSnapshot && <div className="fountain-image-upload" role="status" aria-live="polite">
+          <span>{assetSnapshot.status === 'uploading'
+            ? `Uploading ${assetSnapshot.fileName}: ${Math.round(assetSnapshot.progress * 100)}%`
+            : assetSnapshot.status === 'succeeded'
+              ? `${assetSnapshot.fileName} inserted`
+              : assetSnapshot.status === 'cancelled'
+                ? `${assetSnapshot.fileName} cancelled`
+                : `Upload failed: ${assetSnapshot.error instanceof Error ? assetSnapshot.error.message : 'Unknown error'}`}</span>
+          {assetSnapshot.status === 'uploading' && <>
+            <progress max="1" value={assetSnapshot.progress} />
+            <button type="button" onClick={() => assetTask?.cancel()}>Cancel upload</button>
+          </>}
+          {assetSnapshot.status === 'failed' && <button type="button" onClick={() => void assetTask?.retry().catch((error) => onError?.(error))}>Retry upload</button>}
         </div>}
       </form>}
       {panel === 'code' && <form className="fountain-toolbar__popover is-code" onSubmit={submitCodeLanguage}>

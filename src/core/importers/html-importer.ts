@@ -76,6 +76,95 @@ function imageNode(
   } catch { return null; }
 }
 
+function mediaTracks(element: HTMLMediaElement): readonly Record<string, unknown>[] {
+  return Array.from(element.querySelectorAll(':scope > track')).flatMap((track) => {
+    const src = track.getAttribute('src') ?? '';
+    const kind = track.getAttribute('kind') ?? '';
+    if (!isSafeURL(src) || !['subtitles', 'captions', 'descriptions', 'chapters', 'metadata'].includes(kind)) return [];
+    return [{
+      src,
+      kind,
+      srclang: track.getAttribute('srclang') ?? '',
+      label: track.getAttribute('label') ?? '',
+      default: track.hasAttribute('default'),
+    }];
+  });
+}
+
+function mediaSizeFromElement(element: HTMLElement, fallback: string): string {
+  return imageSize(element.style.width || element.getAttribute('width') || '', fallback);
+}
+
+function playbackNode(
+  element: HTMLMediaElement,
+  schema: Schema,
+  kind: 'audio' | 'video',
+  container?: HTMLElement,
+): FountainNode | null {
+  const type = schema.nodes[kind];
+  const src = element.getAttribute('src') ?? element.querySelector('source')?.getAttribute('src') ?? '';
+  if (!type || !isSafeURL(src)) return null;
+  const crossOrigin = element.getAttribute('crossorigin') ?? '';
+  const common = {
+    src,
+    title: element.getAttribute('title') ?? '',
+    caption: container?.querySelector(':scope > figcaption')?.textContent ?? '',
+    controls: element.hasAttribute('controls'),
+    autoplay: element.hasAttribute('autoplay'),
+    loop: element.hasAttribute('loop'),
+    muted: element.hasAttribute('muted'),
+    preload: ['none', 'metadata', 'auto'].includes(element.getAttribute('preload') ?? '') ? element.getAttribute('preload') : 'metadata',
+    controlsList: element.getAttribute('controlslist') ?? '',
+    crossOrigin: ['', 'anonymous', 'use-credentials'].includes(crossOrigin) ? crossOrigin : '',
+    disableRemotePlayback: element.hasAttribute('disableremoteplayback'),
+    tracks: mediaTracks(element),
+  };
+  try {
+    return type.create(kind === 'video' ? {
+      ...common,
+      poster: element.getAttribute('poster') ?? '',
+      width: mediaSizeFromElement(container ?? element, '100%'),
+      height: imageSize(element.style.height || element.getAttribute('height') || '', 'auto'),
+      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
+      playsInline: element.hasAttribute('playsinline'),
+    } : common);
+  } catch { return null; }
+}
+
+function fileNode(element: HTMLAnchorElement, schema: Schema, container?: HTMLElement): FountainNode | null {
+  const src = element.getAttribute('href') ?? '';
+  if (!schema.nodes.file_attachment || !isSafeURL(src)) return null;
+  try {
+    return schema.node('file_attachment', {
+      src,
+      name: element.dataset.name || element.textContent?.trim() || 'Download file',
+      mimeType: element.dataset.mimeType ?? '',
+      size: Math.max(0, Number(element.dataset.size) || 0),
+      description: container?.querySelector(':scope > figcaption')?.textContent ?? '',
+      downloadName: element.getAttribute('download') ?? '',
+    });
+  } catch { return null; }
+}
+
+function embedNode(element: HTMLIFrameElement, schema: Schema, container?: HTMLElement): FountainNode | null {
+  const src = element.getAttribute('src') ?? '';
+  if (!schema.nodes.embed || !isSafeURL(src)) return null;
+  try {
+    return schema.node('embed', {
+      src,
+      provider: container?.dataset.provider ?? '',
+      title: element.getAttribute('title')?.trim() || 'Embedded content',
+      caption: container?.querySelector(':scope > figcaption')?.textContent ?? '',
+      width: mediaSizeFromElement(container ?? element, '100%'),
+      height: imageSize(element.style.height || element.getAttribute('height') || '', '360px'),
+      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
+      allow: element.getAttribute('allow') ?? '',
+      sandbox: element.getAttribute('sandbox') ?? '',
+      allowFullscreen: element.hasAttribute('allowfullscreen'),
+    });
+  } catch { return null; }
+}
+
 function alignment(element: Element): 'left' | 'center' | 'right' | 'justify' {
   const value = (element as HTMLElement).style.textAlign || element.getAttribute('align') || 'left';
   return ['left', 'center', 'right', 'justify'].includes(value) ? value as 'left' | 'center' | 'right' | 'justify' : 'left';
@@ -99,7 +188,7 @@ function tableCellWidths(cell: Element, colspan: number): number[] | null {
   return null;
 }
 
-const LIST_BLOCK_TAGS = new Set(['p', 'div', 'blockquote', 'pre', 'ul', 'ol', 'table', 'figure', 'img', 'hr']);
+const LIST_BLOCK_TAGS = new Set(['p', 'div', 'blockquote', 'pre', 'ul', 'ol', 'table', 'figure', 'img', 'audio', 'video', 'iframe', 'hr']);
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
   const result: FountainNode[] = [];
@@ -158,6 +247,27 @@ function block(element: Element, schema: Schema): FountainNode[] {
     return [schema.node(listType, tag === 'ol' ? { start: Number(element.getAttribute('start')) || 1 } : {}, items)];
   }
   if (tag === 'figure') {
+    const mediaType = element.getAttribute('data-fountain-media');
+    if (mediaType === 'audio') {
+      const media = element.querySelector<HTMLAudioElement>(':scope > audio');
+      const node = media ? playbackNode(media, schema, 'audio', element as HTMLElement) : null;
+      return node ? [node] : [];
+    }
+    if (mediaType === 'video') {
+      const media = element.querySelector<HTMLVideoElement>(':scope > video');
+      const node = media ? playbackNode(media, schema, 'video', element as HTMLElement) : null;
+      return node ? [node] : [];
+    }
+    if (mediaType === 'file') {
+      const link = element.querySelector<HTMLAnchorElement>(':scope > a[data-fountain-file]');
+      const node = link ? fileNode(link, schema, element as HTMLElement) : null;
+      return node ? [node] : [];
+    }
+    if (mediaType === 'embed') {
+      const frame = element.querySelector<HTMLIFrameElement>(':scope > iframe');
+      const node = frame ? embedNode(frame, schema, element as HTMLElement) : null;
+      return node ? [node] : [];
+    }
     const images = Array.from(element.querySelectorAll(':scope > img'));
     if (images.length !== 1) {
       return Array.from(element.querySelectorAll('img'))
@@ -189,6 +299,18 @@ function block(element: Element, schema: Schema): FountainNode[] {
   if (tag === 'img') {
     const image = imageNode(element as HTMLImageElement, schema, 'image_super');
     return image ? [image] : [];
+  }
+  if (tag === 'audio' || tag === 'video') {
+    const media = playbackNode(element as HTMLMediaElement, schema, tag);
+    return media ? [media] : [];
+  }
+  if (tag === 'a' && element.hasAttribute('data-fountain-file')) {
+    const file = fileNode(element as HTMLAnchorElement, schema);
+    return file ? [file] : [];
+  }
+  if (tag === 'iframe' && element.hasAttribute('data-fountain-embed')) {
+    const embed = embedNode(element as HTMLIFrameElement, schema);
+    return embed ? [embed] : [];
   }
   const nested = Array.from(element.children).flatMap((child) => block(child, schema));
   return nested.length ? nested : [paragraph(element, schema)];

@@ -1,4 +1,4 @@
-import type { Attributes } from './node-spec';
+import { freezeAttributes, type Attributes } from './node-spec';
 import type { MarkType, Schema } from './schema';
 
 export interface MarkJSON {
@@ -10,7 +10,7 @@ export class Mark {
   readonly attrs: Readonly<Attributes>;
 
   constructor(public readonly type: MarkType, attrs: Attributes = {}) {
-    this.attrs = Object.freeze({ ...attrs });
+    this.attrs = freezeAttributes(attrs);
   }
 
   eq(other: Mark): boolean {

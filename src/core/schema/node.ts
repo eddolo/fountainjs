@@ -1,5 +1,5 @@
 import { Mark, type MarkJSON } from './mark';
-import type { Attributes } from './node-spec';
+import { freezeAttributes, type Attributes } from './node-spec';
 import type { NodeType, Schema } from './schema';
 
 export interface NodeJSON {
@@ -27,7 +27,7 @@ export class Node {
     if (type.name === 'text' && text === undefined) throw new Error('Text nodes require a text value.');
     if (type.name === 'text' && content.length) throw new Error('Text nodes cannot contain child nodes.');
     if (type.name !== 'text' && text !== undefined) throw new Error(`${type.name} nodes cannot carry text directly.`);
-    this.attrs = Object.freeze({ ...attrs });
+    this.attrs = freezeAttributes(attrs);
     this.content = Object.freeze([...content]);
     this.marks = Object.freeze([...marks]);
   }

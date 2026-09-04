@@ -231,14 +231,18 @@ const save = (event: CustomEvent) => api.save(event.detail.value)
     host: 'Angular',
     surface: 'Angular → Web Component',
     runtime: 'element',
-    summary: 'A campaign editor mixing block and inline media, editable captions, responsive metadata, accessible resizing, and rich narrative blocks.',
-    boundary: 'Angular enables custom elements; FountainJS receives an observable upload adapter owned by the application.',
-    capabilities: ['Block and inline images', 'Progress/cancel/retry upload boundary', 'Caption, alignment, and responsive metadata', 'Pointer and keyboard resizing'],
+    summary: 'A campaign editor mixing images, native audio and video, downloadable files, approved embeds, captions, tracks, and rich narrative blocks.',
+    boundary: 'Angular enables custom elements; FountainJS receives observable image and asset upload adapters owned by the application.',
+    capabilities: ['Block and inline images', 'Native audio and video', 'File attachments and safe embeds', 'Progress/cancel/retry upload boundary'],
     content: doc(
       heading(1, 'A launch story with real media'),
       paragraph(text('Images are typed nodes with source, alt text, title, caption, layout, and responsive metadata. This '), { type: 'inline_image', attrs: { src: '../demo-media.svg', alt: 'inline media example', width: '1.5em', height: '1.5em' } }, text(' image lives inside the sentence.')),
-      { type: 'image_super', attrs: { src: '../demo-media.svg', alt: 'Abstract purple and mint shapes representing composable content', title: 'Composable content', caption: 'Select me to edit the caption or resize from either side.', width: '100%', align: 'center', srcset: '../demo-media.svg 800w', sizes: '100vw' } },
-      paragraph(text('Paste or drop another image to exercise mapped progress, cancellation, retry, and replacement through the same host-owned media boundary.')),
+      { type: 'image_super', attrs: { src: '../demo-media.svg', alt: 'Abstract purple and mint shapes representing composable content', title: 'Composable content', caption: 'Select me to edit the caption or resize from either side.', width: '60%', align: 'center', srcset: '../demo-media.svg 800w', sizes: '(max-width: 700px) 100vw, 60vw' } },
+      { type: 'audio', attrs: { src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3', title: 'Campaign sound', caption: 'Native audio with host-controlled metadata and controls.', controls: true, preload: 'metadata' } },
+      { type: 'video', attrs: { src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', title: 'Campaign film', caption: 'Native video remains a portable typed node.', width: '100%', height: 'auto', controls: true, playsInline: true, preload: 'metadata' } },
+      { type: 'file_attachment', attrs: { src: '../demo-media.svg', name: 'campaign-artwork.svg', mimeType: 'image/svg+xml', size: 1726, description: 'A downloadable file attachment rendered without a framework-specific component.' } },
+      { type: 'embed', attrs: { src: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', provider: 'youtube', title: 'Approved campaign embed', caption: 'Provider-gated, privacy-enhanced, and sandboxed.', width: '100%', height: '360px', allow: 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen', sandbox: 'allow-scripts allow-same-origin allow-presentation', allowFullscreen: true } },
+      paragraph(text('Paste or drop another image, audio, video, or file to exercise mapped progress, cancellation, retry, and fail-closed replacement through host-owned adapters.')),
     ),
     code: `import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { StarterKit, registerFountainElement } from 'fountainjs-editor'
@@ -257,6 +261,8 @@ export class CampaignEditor {
       plugins: StarterKit.plugins,
       imageUpload: (file, { signal, reportProgress }) =>
         this.assets.upload(file, { signal, onProgress: reportProgress }),
+      assetUpload: (file, { kind, signal, reportProgress }) =>
+        this.assets.upload(file, { kind, signal, onProgress: reportProgress }),
     })
   }
 }`,

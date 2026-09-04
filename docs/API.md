@@ -4,11 +4,18 @@
 
 `Schema` compiles a `SchemaSpec` into node and mark types. Use `schema.node()`, `schema.text()`, and `schema.mark()` to create values with attribute defaults and validation. `schema.validate()` enforces ownership, attributes, atom rules, mark placement, and node content expressions at every editor-state boundary. `Node` values are immutable and provide `textContent`, `nodeSize`, `child()`, `descendants()`, `eq()`, and `toJSON()`.
 
-`CoreSchemaSpec` includes paragraphs, headings, quotes, ordered/bullet/task lists, code blocks, tables, media, dividers, hard breaks, and common inline marks. Applications may extend or replace it with a compatible `SchemaSpec`.
+`CoreSchemaSpec` includes paragraphs, headings, quotes, ordered/bullet/task lists, code blocks, tables, block/inline images, dividers, hard breaks, and common inline marks. `StarterKit` adds the independently composable native-media module and behavior/format extensions. Applications may extend or replace either with a compatible `SchemaSpec`.
 
 ## Extension composition
 
 `defineExtension()` declares a named, framework-neutral module. It can contribute `nodes`, `marks`, `plugins`, commands with typed arguments, `formats`, and arbitrary host-owned `services`. A custom `NodeSpec` may provide a `nodeView` class to mount interactive product UI without depending on React.
+
+Node and mark attribute arrays/plain objects are cloned and recursively frozen
+at construction, so callers cannot mutate a document through a retained nested
+reference. Per-attribute validators handle local values; `NodeSpec.validate(node)`
+can enforce relationships across attributes, such as requiring an embed's
+declared provider to match its canonical source. Both checks run during direct
+construction, JSON import, and full schema validation.
 
 Non-text nodes may implement `toText(node)`. That projection feeds
 `Node.textContent`, `Editor.getText()`, plain-text export, previews, and explicit
@@ -596,7 +603,7 @@ return its own transaction or document for more specialized structures.
 
 ## DOM view
 
-`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, an optional `imageUpload(file, context)` adapter, an inline-image byte limit, and error handling. Without an upload adapter, local images up to the configured limit are embedded as data URLs. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image upload/paste/drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
 
 ### Images and uploads
 
@@ -629,6 +636,67 @@ Paste and drop use the same task path and emit bubbling
 `fountain-image-upload` events whose detail contains `{ snapshot, task }`.
 Upload state is deliberately absent from document JSON. Hosts own file storage,
 authentication, retry policy beyond a task, and persistence.
+
+### Audio, video, files, and configurable embeds
+
+`MediaExtension` is included in `StarterKit` but can be removed or replaced like
+any other extension. It contributes four atomic block nodes and their commands:
+
+- `audio`: native playback source, title/caption, controls, autoplay, loop,
+  mute, preload, `controlsList`, CORS/remote-playback policy, and up to 32
+  validated WebVTT subtitle, caption, description, chapter, or metadata tracks;
+- `video`: the audio fields plus a safe poster, width/height, alignment, and
+  inline mobile playback;
+- `file_attachment`: URL, visible name, MIME type, byte size, description, and
+  an optional safe download filename;
+- `embed`: a provider-approved canonical HTTPS source, required accessible
+  title, caption, dimensions/alignment, bounded permission tokens, sandbox
+  tokens, and fullscreen policy.
+
+Use `insertAudio`, `insertVideo`, `insertFileAttachment`, and `insertEmbed` for
+insertion. `getActiveMedia`, `setMediaAttributes`, `setEmbed`, and `deleteMedia`
+operate on a `NodeSelection` or explicit path. `createMediaNode` validates a
+node without dispatching. Native controls remain interactive inside the atomic
+NodeView; the outer node/caption remains selectable. Audio/video load failures
+expose an accessible status and host-visible retry. File cards use safe new-tab
+link semantics and human-readable byte metadata.
+
+The default embed providers accept common YouTube, `youtu.be`, privacy-enhanced
+YouTube, and Vimeo URLs. They persist only canonical
+`youtube-nocookie.com/embed/...` or `player.vimeo.com/video/...` sources.
+Unknown origins, HTTP URLs, unsafe URL schemes, invalid provider output,
+unrecognized sandbox tokens, and undeclared iframe permissions are rejected.
+The rule is enforced by the schema as well as the command, so forged JSON or
+HTML cannot bypass it.
+
+`createMediaExtension({ embedProviders })` replaces—not widens—the allowlist.
+Each `EmbedProvider` has a stable `name`, a `resolve(URL)` function, and optional
+validated `sandbox`, `allow`, and `allowFullscreen` defaults. A resolver is
+trusted application code, but its result must still be canonical HTTPS. Compose
+the resulting extension in place of the starter `media` extension. The resolver
+must recognize its own canonical output so validation remains stable after
+persistence. Per-node permissions, sandbox tokens, and fullscreen access may
+only narrow the matched provider's declared policy ceiling; HTML import cannot
+grant a provider an undeclared capability.
+
+`startAssetUpload(editor, file, options)` returns an `AssetUploadTask` with the
+same `snapshot`, `completion`, `subscribe`, `cancel`, and `retry` contract as
+image tasks. MIME type infers `audio`, `video`, or `file`; `kind` can be supplied
+explicitly. The required `AssetUploadHandler` receives
+`{ editor, kind, signal, reportProgress }` and returns a URL or typed attributes.
+The target position maps through every local transaction. `replacePath` may
+replace only the same mapped live asset type and fails closed if that node is
+deleted or the MIME-derived kind differs.
+
+Editor paste/drop routes non-image files through `assetUpload` and emits a
+bubbling, composed `fountain-asset-upload` event with `{ snapshot, task }`.
+React exposes the same adapter on `FountainEditor`, `FountainToolbar`, and
+`FountainComposer`; the supplied toolbar supports URL insertion/editing and
+host-uploaded audio, video, and files. Storage credentials, local `File`
+objects, progress, abort controllers, and errors never enter document JSON.
+Hosts remain responsible for authorization, storage, quotas, malware scanning,
+content-type verification, transcoding, and long-lived URLs. A failed task keeps
+mapping its retry target; call `cancel()` when discarding it instead of retrying.
 
 The controlled `beforeinput` path covers normal/replacement text, composition
 commit orderings, paragraph and line breaks, forward/backward deletion,

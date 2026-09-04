@@ -28,7 +28,12 @@ import {
 import { HTMLImporter } from '../core/importers/html-importer';
 import { getNodeAtPath } from '../core/transaction/path';
 import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
-import { insertImageFile, type ImageUploadHandler } from './media';
+import {
+  insertAssetFile,
+  insertImageFile,
+  type AssetUploadHandler,
+  type ImageUploadHandler,
+} from './media';
 import type { SelectionHandler } from './selection-handler';
 
 const BLOCK_DRAG_TYPE = 'application/x-fountain-block';
@@ -39,6 +44,7 @@ function sameMarks(left: readonly import('../core').Mark[], right: readonly impo
 
 export interface InputManagerOptions {
   imageUpload?: ImageUploadHandler;
+  assetUpload?: AssetUploadHandler;
   maxInlineImageBytes?: number;
   onError?: (error: unknown) => void;
   shouldStopEvent?: (event: Event) => boolean;
@@ -249,10 +255,11 @@ export class InputManager {
       event.preventDefault();
       return;
     }
-    const images = Array.from(event.clipboardData?.files ?? []).filter((file) => file.type.startsWith('image/'));
-    if (images.length) {
+    const files = Array.from(event.clipboardData?.files ?? [])
+      .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload));
+    if (files.length) {
       event.preventDefault();
-      void this.insertImages(images);
+      void this.insertFiles(files);
       return;
     }
     const html = event.clipboardData?.getData('text/html');
@@ -392,8 +399,10 @@ export class InputManager {
     if (this.options.shouldStopEvent?.(event)) return;
     const internal = this.draggedBlockIndex !== undefined
       || Array.from(event.dataTransfer?.types ?? []).includes(BLOCK_DRAG_TYPE);
-    const image = Array.from(event.dataTransfer?.items ?? []).some((item) => item.kind === 'file' && item.type.startsWith('image/'));
-    if (this.editor.editable && (internal || image)) {
+    const uploadable = Array.from(event.dataTransfer?.items ?? []).some((item) => (
+      item.kind === 'file' && (item.type.startsWith('image/') || Boolean(this.options.assetUpload))
+    ));
+    if (this.editor.editable && (internal || uploadable)) {
       event.preventDefault();
       if (event.dataTransfer) event.dataTransfer.dropEffect = internal ? 'move' : 'copy';
     }
@@ -453,12 +462,13 @@ export class InputManager {
       this.onDragEnd();
       return;
     }
-    const images = Array.from(event.dataTransfer?.files ?? []).filter((file) => file.type.startsWith('image/'));
-    if (!images.length) return;
+    const files = Array.from(event.dataTransfer?.files ?? [])
+      .filter((file) => file.type.startsWith('image/') || Boolean(this.options.assetUpload));
+    if (!files.length) return;
     event.preventDefault();
     this.placeCaret(event.clientX, event.clientY);
     this.selections.capture();
-    void this.insertImages(images);
+    void this.insertFiles(files);
   };
 
   private placeCaret(x: number, y: number): void {
@@ -478,19 +488,33 @@ export class InputManager {
     selection?.addRange(range);
   }
 
-  private async insertImages(files: readonly File[]): Promise<void> {
+  private async insertFiles(files: readonly File[]): Promise<void> {
     try {
       for (const file of files) {
-        await insertImageFile(this.editor, file, {
-          upload: this.options.imageUpload,
-          maxInlineBytes: this.options.maxInlineImageBytes,
-          onStatusChange: (snapshot, task) => {
-            this.dom.dispatchEvent(new CustomEvent('fountain-image-upload', {
-              bubbles: true,
-              detail: { snapshot, task },
-            }));
-          },
-        });
+        if (file.type.startsWith('image/')) {
+          await insertImageFile(this.editor, file, {
+            upload: this.options.imageUpload,
+            maxInlineBytes: this.options.maxInlineImageBytes,
+            onStatusChange: (snapshot, task) => {
+              this.dom.dispatchEvent(new CustomEvent('fountain-image-upload', {
+                bubbles: true,
+                composed: true,
+                detail: { snapshot, task },
+              }));
+            },
+          });
+        } else if (this.options.assetUpload) {
+          await insertAssetFile(this.editor, file, {
+            upload: this.options.assetUpload,
+            onStatusChange: (snapshot, task) => {
+              this.dom.dispatchEvent(new CustomEvent('fountain-asset-upload', {
+                bubbles: true,
+                composed: true,
+                detail: { snapshot, task },
+              }));
+            },
+          });
+        }
       }
     } catch (error) {
       this.options.onError?.(error);

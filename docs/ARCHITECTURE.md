@@ -378,15 +378,31 @@ pointer/touch/keyboard resize; a separate inline image node can live inside any
 alternative text, dimensions, responsive source, loading, and presentation
 metadata.
 
-Without an upload handler, files become size-limited, cancellable data URLs. An
-`ImageUploadHandler` can upload to any storage provider and returns a URL plus
-metadata while reporting normalized progress. `ImageUploadTask` keeps status,
-errors, cancellation, and retry outside the document. It captures the intended
-insertion, inline-selection, or replacement target and maps that target through
-every transaction until completion. A deleted replacement target fails closed;
-a slow response cannot overwrite a different node that later occupies the same
-path. Paste, drop, React controls, and direct API use share this path. Storage
-credentials, network transport, and persistence remain host responsibilities.
+Without an image-upload handler, small image files become size-limited,
+cancellable data URLs. `ImageUploadHandler` can instead return a URL plus
+metadata from any storage provider. Audio, video, and arbitrary files are never
+embedded automatically; they require the parallel `AssetUploadHandler` host
+boundary. Both handlers receive abort and normalized-progress signals.
+
+`ImageUploadTask` and `AssetUploadTask` keep status, errors, cancellation, and
+retry outside the document. They capture the intended insertion, selection, or
+replacement target and map it through every transaction until completion. A
+deleted or type-mismatched replacement fails closed; a slow response cannot
+overwrite a different node that later occupies the same path. Paste, drop,
+React controls, Custom Element events, and direct API use share this path.
+Failed tasks retain mapping only while retry remains possible and release it on
+success or cancellation. Storage credentials, network transport, malware
+scanning, and persistence remain host responsibilities.
+
+`MediaExtension` is independently composable and adds native audio/video,
+tracks, file attachments, and approved embeds. Each embed provider converts
+recognized public URLs to canonical HTTPS, declares the maximum iframe
+permissions and sandbox capabilities it needs, and must recognize its own
+canonical output. Whole-node schema validation binds the canonical URL to that
+provider and prevents persisted or imported content from widening its policy.
+YouTube and Vimeo are the default allowlist; a host can replace the list but an
+arbitrary iframe never becomes trusted implicitly. Native controls and file
+links remain interactive inside atomic, selectable, accessible NodeViews.
 
 ## Optional AI and MCP
 
@@ -411,6 +427,8 @@ The suites are organized by boundary:
 - `tests/image.test.ts`: block and inline nodes, responsive metadata, mapped
   uploads, progress/cancellation/retry, stale replacement protection, caption
   editing, load recovery, and accessible resizing;
+- `tests/media.test.ts`: native playback, tracks, file cards, provider policy,
+  safe interchange, mapped asset uploads, undo, selection, and load recovery;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
@@ -435,6 +453,7 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/view/` | DOM projection, input, selection, media, Custom Element |
 | `src/extensions/` | Composition contract and supplied capabilities |
+| `src/extensions/media.ts` | Native media nodes, embed providers, policy, commands, and NodeViews |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

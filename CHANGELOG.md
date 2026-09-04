@@ -2,8 +2,18 @@
 
 ## Unreleased
 
+### Fixed
+
+- The ESM React entry now keeps `react-dom/client` external and has a package
+  smoke gate, preventing an embedded CommonJS runtime from breaking ESM import.
+
 ### Added
 
+- A framework-neutral `MediaExtension`, included by `StarterKit`, with typed
+  native audio/video and WebVTT tracks, file attachments, provider-gated
+  sandboxed embeds, safe HTML/text/Markdown boundaries, mapped observable asset
+  uploads, paste/drop events, React controls, a Web Component demo, and unit
+  plus cross-browser contracts.
 - Production block and inline images with mapped progress/cancel/retry uploads,
   safe replacement, editable captions, alignment, load recovery, accessible
   pointer/touch/keyboard resizing, responsive metadata, expanded interchange,

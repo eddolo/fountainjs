@@ -46,6 +46,33 @@ function imageSize(value: unknown, fallback: string): string {
   return /^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw|vh))$/.test(size) ? size : fallback;
 }
 
+function booleanAttribute(name: string, value: unknown): string {
+  return value === true ? ` ${name}` : '';
+}
+
+function mediaTracks(value: unknown): string {
+  if (!Array.isArray(value)) return '';
+  return value.map((candidate) => {
+    if (!candidate || typeof candidate !== 'object') return '';
+    const track = candidate as Record<string, unknown>;
+    const src = safeURL(track.src);
+    if (!src || !['subtitles', 'captions', 'descriptions', 'chapters', 'metadata'].includes(String(track.kind))) return '';
+    const language = track.srclang ? ` srclang="${escapeHTML(track.srclang)}"` : '';
+    const label = track.label ? ` label="${escapeHTML(track.label)}"` : '';
+    return `<track src="${src}" kind="${escapeHTML(track.kind)}"${language}${label}${booleanAttribute('default', track.default)}>`;
+  }).join('');
+}
+
+function playbackAttributes(node: Node): string {
+  const src = safeURL(node.attrs.src);
+  if (!src) return '';
+  const title = node.attrs.title ? ` title="${escapeHTML(node.attrs.title)}"` : '';
+  const preload = ['none', 'metadata', 'auto'].includes(String(node.attrs.preload)) ? node.attrs.preload : 'metadata';
+  const controlsList = node.attrs.controlsList ? ` controlslist="${escapeHTML(node.attrs.controlsList)}"` : '';
+  const crossOrigin = node.attrs.crossOrigin ? ` crossorigin="${escapeHTML(node.attrs.crossOrigin)}"` : '';
+  return `src="${src}"${title}${booleanAttribute('controls', node.attrs.controls)}${booleanAttribute('autoplay', node.attrs.autoplay)}${booleanAttribute('loop', node.attrs.loop)}${booleanAttribute('muted', node.attrs.muted)} preload="${preload}"${controlsList}${crossOrigin}${booleanAttribute('disableremoteplayback', node.attrs.disableRemotePlayback)}`;
+}
+
 function tableCellSizeAttributes(node: Node): string {
   const colspan = Number(node.attrs.colspan) || 1;
   const widths = Array.isArray(node.attrs.colwidth) ? node.attrs.colwidth.map(Number) : [];
@@ -110,6 +137,39 @@ function renderNode(node: Node): string {
       const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
       return `<figure data-align="${align}" style="width:${escapeHTML(width)};max-width:100%"><img ${attributes} style="width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
     }
+    case 'audio': {
+      const attributes = playbackAttributes(node);
+      if (!attributes) return '';
+      const caption = escapeHTML(node.attrs.caption);
+      return `<figure data-fountain-media="audio"><audio ${attributes}>${mediaTracks(node.attrs.tracks)}</audio>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+    }
+    case 'video': {
+      const attributes = playbackAttributes(node);
+      if (!attributes) return '';
+      const poster = node.attrs.poster ? safeURL(node.attrs.poster, true) : '';
+      const width = imageSize(node.attrs.width, '100%');
+      const height = imageSize(node.attrs.height, 'auto');
+      const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
+      const caption = escapeHTML(node.attrs.caption);
+      return `<figure data-fountain-media="video" data-align="${align}" style="width:${escapeHTML(width)};max-width:100%"><video ${attributes}${poster ? ` poster="${poster}"` : ''}${booleanAttribute('playsinline', node.attrs.playsInline)} style="width:100%;height:${escapeHTML(height)}">${mediaTracks(node.attrs.tracks)}</video>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+    }
+    case 'file_attachment': {
+      const src = safeURL(node.attrs.src);
+      if (!src) return '';
+      const description = escapeHTML(node.attrs.description);
+      const download = node.attrs.downloadName ? ` download="${escapeHTML(node.attrs.downloadName)}"` : '';
+      return `<figure data-fountain-media="file"><a data-fountain-file="true" href="${src}" target="_blank" rel="noopener noreferrer" data-name="${escapeHTML(node.attrs.name)}" data-mime-type="${escapeHTML(node.attrs.mimeType)}" data-size="${Number(node.attrs.size) || 0}"${download}>${escapeHTML(node.attrs.name)}</a>${description ? `<figcaption>${description}</figcaption>` : ''}</figure>`;
+    }
+    case 'embed': {
+      const src = safeURL(node.attrs.src);
+      if (!src) return '';
+      const width = imageSize(node.attrs.width, '100%');
+      const height = imageSize(node.attrs.height, '360px');
+      const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
+      const caption = escapeHTML(node.attrs.caption);
+      const allow = node.attrs.allow ? ` allow="${escapeHTML(node.attrs.allow)}"` : '';
+      return `<figure data-fountain-media="embed" data-provider="${escapeHTML(node.attrs.provider)}" data-align="${align}" style="width:${escapeHTML(width)};max-width:100%"><iframe class="fountain-embed" src="${src}" title="${escapeHTML(node.attrs.title)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="${escapeHTML(node.attrs.sandbox)}"${allow}${booleanAttribute('allowfullscreen', node.attrs.allowFullscreen)} style="width:100%;height:${escapeHTML(height)}"></iframe>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+    }
     case 'figcaption': return `<figcaption>${children()}</figcaption>`;
     case 'table': return `<table><tbody>${children()}</tbody></table>`;
     case 'table_row': return `<tr>${children()}</tr>`;
@@ -119,7 +179,7 @@ function renderNode(node: Node): string {
   }
 }
 
-const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img{max-width:100%;height:auto}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:1em;text-align:center;background:#f6f7fa;border-radius:8px}`;
+const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:1em;text-align:center;background:#f6f7fa;border-radius:8px}`;
 
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {

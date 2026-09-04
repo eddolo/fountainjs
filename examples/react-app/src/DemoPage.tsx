@@ -208,6 +208,32 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
         reportProgress(1);
         return { src: '../demo-media.svg', alt: file.name.replace(/\.[^.]+$/, ''), caption: 'Uploaded through the demo host adapter.' };
       } : undefined,
+      assetUpload: demo.slug === 'angular-media' ? async (file, { kind, signal, reportProgress }) => {
+        reportProgress(.25);
+        await new Promise<void>((resolve, reject) => {
+          const timer = window.setTimeout(resolve, 220);
+          signal.addEventListener('abort', () => {
+            window.clearTimeout(timer);
+            reject(new DOMException('Upload cancelled', 'AbortError'));
+          }, { once: true });
+        });
+        reportProgress(1);
+        if (kind === 'audio') return {
+          src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+          title: file.name.replace(/\.[^.]+$/, ''),
+          caption: 'Audio uploaded through the Angular-owned adapter.',
+        };
+        if (kind === 'video') return {
+          src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          title: file.name.replace(/\.[^.]+$/, ''),
+          caption: 'Video uploaded through the Angular-owned adapter.',
+        };
+        return {
+          src: '../demo-media.svg',
+          name: file.name,
+          description: 'File uploaded through the Angular-owned adapter.',
+        };
+      } : undefined,
     });
     const element = document.createElement(tagName) as FountainEditorElement;
     element.value = demo.content;
@@ -224,19 +250,21 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
     };
     element.addEventListener('fountain-change', onChange);
     element.addEventListener('fountain-image-upload', onUpload);
+    element.addEventListener('fountain-asset-upload', onUpload);
     mount.current.appendChild(element);
     setEditor(element.editor ?? null);
     setCurrentDocument(element.editor?.state.doc);
     return () => {
       element.removeEventListener('fountain-change', onChange);
       element.removeEventListener('fountain-image-upload', onUpload);
+      element.removeEventListener('fountain-asset-upload', onUpload);
       element.remove();
       setEditor(null);
     };
   }, [demo]);
 
   return <div className="demo-workspace">
-    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>The editable region below is a registered &lt;fountain-demo-editor&gt;.</i></div><DemoControls editor={editor} /><div className="element-editor" ref={mount} />{demo.slug === 'angular-media' && <p className="headless-status" role="status">{uploadStatus || 'Paste or drop an image to run the host upload adapter.'}</p>}</section>
+    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>The editable region below is a registered &lt;fountain-demo-editor&gt;.</i></div><DemoControls editor={editor} /><div className="element-editor" ref={mount} />{demo.slug === 'angular-media' && <p className="headless-status" role="status">{uploadStatus || 'Paste or drop an image, audio, video, or file to run the host upload adapters.'}</p>}</section>
     <OutputPanel document={currentDocument} />
   </div>;
 }
