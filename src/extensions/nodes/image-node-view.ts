@@ -154,7 +154,11 @@ export class ImageNodeView implements NodeViewLike {
     handle.setAttribute('aria-valuemin', String(MIN_IMAGE_WIDTH));
     handle.setAttribute('aria-valuemax', String(MAX_IMAGE_WIDTH));
     handle.setAttribute('aria-orientation', 'horizontal');
-    handle.addEventListener('pointerdown', (event) => this.startResize(event, side === 'left' ? -1 : 1));
+    const direction = side === 'left' ? -1 : 1;
+    handle.addEventListener('pointerdown', (event) => this.startResize(event, direction));
+    handle.addEventListener('mousedown', (event) => {
+      if (!this.dragging) this.startMouseResize(event, direction);
+    });
     handle.addEventListener('keydown', (event) => this.onResizeKeyDown(event));
     return handle;
   }
@@ -200,10 +204,20 @@ export class ImageNodeView implements NodeViewLike {
     event.preventDefault();
     try { (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId); }
     catch { /* Pointer capture is an enhancement; the window listeners remain authoritative. */ }
+    this.beginResize(event.clientX, direction);
+  }
+
+  private startMouseResize(event: MouseEvent, direction: -1 | 1): void {
+    if (!this.editable || event.button !== 0) return;
+    event.preventDefault();
+    this.beginResize(event.clientX, direction);
+  }
+
+  private beginResize(clientX: number, direction: -1 | 1): void {
     selectNode(this.editor as Editor, this.getPath());
     this.dragging = true;
     this.dragDirection = direction;
-    this.startX = event.clientX;
+    this.startX = clientX;
     this.startWidth = Math.max(MIN_IMAGE_WIDTH, Math.round(this.dom.getBoundingClientRect().width || MIN_IMAGE_WIDTH));
     this.previewWidth = this.startWidth;
     this.dom.dataset.fountainImageResizing = 'true';
