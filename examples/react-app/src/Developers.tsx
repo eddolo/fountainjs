@@ -144,6 +144,36 @@ element.addEventListener('fountain-change', event => save(event.detail.value))
 const reactEditor = useFountain({ schema: kit.schema, plugins: kit.plugins })
 return <FountainComposer editor={reactEditor} />`;
 
+const toolbarExample = `import {
+  FountainComposer,
+  FountainToolbarButton,
+  FountainToolbarGroup,
+  FountainToolbarIcon,
+  FountainToolbarRoot,
+} from 'fountainjs-editor/react'
+
+// Configure the complete supplied toolbar by stable IDs.
+<FountainComposer editor={editor} toolbarProps={{
+  toolbarLabel: 'Article formatting',
+  groups: ['marks', 'block-types', 'history'],
+  actionOrder: { marks: ['highlight', 'bold', 'italic'] },
+  hiddenActions: ['strike', 'subscript', 'superscript'],
+  actionLabels: { bold: 'Strong emphasis' },
+  actionIcons: { bold: <ProductStrongIcon aria-hidden="true" /> },
+}} />
+
+// Or assemble a product-owned toolbar around any command.
+<FountainToolbarRoot label="Comment formatting">
+  <FountainToolbarGroup label="Text">
+    <FountainToolbarButton
+      actionId="bold"
+      label="Bold"
+      icon={<FountainToolbarIcon name="bold" />}
+      onAction={() => toggleMark(editor, 'strong')}
+    />
+  </FountainToolbarGroup>
+</FountainToolbarRoot>`;
+
 const formatExample = `const portableFormat = {
   parse(source, schema) {
     return decodeMyFormat(source, schema)
@@ -413,6 +443,10 @@ function Developers() {
               <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
+            <h3>The supplied toolbar is composable, not mandatory</h3>
+            <p>The React toolbar maps stable group and action IDs onto the same public commands used by every other surface. Products can change group/action order, visibility, labels, icons, and rendering through <code>FountainComposer.toolbarProps</code>, or compose the root/group/button primitives directly. Built-in buttons keep the model selection intact, publish pressed and disabled states, offer complete names and hover titles, traverse with RTL-aware Arrow/Home/End keys, and scroll by intact groups on narrow screens.</p>
+            <Code>{toolbarExample}</Code>
+            <p>Plain DOM, Vue, Svelte, Angular, and Web Component hosts do not need a hidden React toolbar service: subscribe to <code>editor.state</code>, derive active/disabled state, and call the framework-neutral commands directly. The complete ID registry and replacement contract are in the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TOOLBAR.md">toolbar guide</a>.</p>
           </section>
 
           <section className="dev-section" id="formats-media">

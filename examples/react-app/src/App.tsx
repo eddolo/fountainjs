@@ -237,6 +237,7 @@ function App() {
   );
   const [format, setFormat] = useState<ExportFormat>('markdown');
   const [copied, setCopied] = useState(false);
+  const [compactToolbar, setCompactToolbar] = useState(false);
 
   const output = useMemo(() => {
     if (!state) return '';
@@ -333,8 +334,26 @@ function App() {
               <button onClick={() => addBlock('task')}>☑ Tasks</button>
               <button onClick={() => addBlock('table')}>▦ Table</button>
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
+              <button
+                className="toolbar-profile"
+                aria-pressed={compactToolbar}
+                onClick={() => setCompactToolbar((current) => !current)}
+              >{compactToolbar ? 'Show full toolbar' : 'Use compact toolbar'}</button>
             </div>
-            <FountainComposer ref={editorHandle} editor={editor} placeholder="Start writing…" assetUpload={demoAssetUpload} />
+            <FountainComposer
+              ref={editorHandle}
+              editor={editor}
+              placeholder="Start writing…"
+              assetUpload={demoAssetUpload}
+              toolbarProps={compactToolbar ? {
+                toolbarLabel: 'Compact writing toolbar',
+                groups: ['marks', 'block-types', 'history'],
+                actionOrder: { marks: ['highlight', 'bold', 'italic', 'underline'] },
+                hiddenActions: ['strike', 'inline-code', 'subscript', 'superscript', 'link', 'unlink', 'text-color', 'clear-text-color'],
+                groupLabels: { marks: 'Essential formatting' },
+                actionLabels: { bold: 'Strong emphasis' },
+              } : undefined}
+            />
             <FountainBubbleMenu
               editor={editor}
               service={demoKit.services.bubbleMenu as FountainMenuService}

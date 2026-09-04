@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from 'react';
+import { Fragment, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   addTableColumn,
   addTableRow,
@@ -73,6 +73,22 @@ import {
 } from '../view/media';
 import { useFountainState } from './useFountain';
 import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
+import {
+  FountainToolbarButton,
+  FountainToolbarGroup,
+  FountainToolbarIcon,
+  FountainToolbarRoot,
+  defaultFountainToolbarGroups,
+  type FountainToolbarActionId,
+  type FountainToolbarGroupId,
+} from './FountainToolbarPrimitives';
+
+export interface FountainToolbarActionRenderContext {
+  readonly actionId: FountainToolbarActionId;
+  readonly label: string;
+  readonly defaultControl: ReactNode;
+  readonly editor: Editor;
+}
 
 export interface FountainToolbarProps {
   editor: Editor | null;
@@ -81,41 +97,33 @@ export interface FountainToolbarProps {
   imageUpload?: ImageUploadHandler;
   assetUpload?: AssetUploadHandler;
   onError?: (error: unknown) => void;
+  toolbarLabel?: string;
+  groups?: readonly FountainToolbarGroupId[];
+  /** Moves listed actions to the front of each group in the supplied order. List every action for an exact order. */
+  actionOrder?: Readonly<Partial<Record<FountainToolbarGroupId, readonly FountainToolbarActionId[]>>>;
+  hiddenActions?: readonly FountainToolbarActionId[];
+  groupLabels?: Readonly<Partial<Record<FountainToolbarGroupId, string>>>;
+  actionLabels?: Readonly<Partial<Record<FountainToolbarActionId, string>>>;
+  actionIcons?: Readonly<Partial<Record<FountainToolbarActionId, ReactNode>>>;
+  renderAction?: (context: FountainToolbarActionRenderContext) => ReactNode;
 }
 
-interface ToolButtonProps {
-  label: string;
-  title: string;
-  active?: boolean;
-  disabled?: boolean;
-  onAction: () => void;
-}
-
-function ToolButton({ label, title, active, disabled, onAction }: ToolButtonProps) {
-  const runPointerAction = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    onAction();
-  };
-  const runKeyboardAction = (event: MouseEvent<HTMLButtonElement>) => {
-    if (event.detail !== 0) return;
-    event.preventDefault();
-    onAction();
-  };
-  return (
-    <button
-      type="button"
-      className="fountain-toolbar__button"
-      aria-label={title}
-      aria-pressed={active}
-      title={title}
-      disabled={disabled}
-      onMouseDown={runPointerAction}
-      onClick={runKeyboardAction}
-    >{label}</button>
-  );
-}
-
-export function FountainToolbar({ editor, className, extraActions, imageUpload, assetUpload, onError }: FountainToolbarProps) {
+export function FountainToolbar({
+  editor,
+  className,
+  extraActions,
+  imageUpload,
+  assetUpload,
+  onError,
+  toolbarLabel = 'Formatting and rich content',
+  groups = defaultFountainToolbarGroups,
+  actionOrder = {},
+  hiddenActions = [],
+  groupLabels = {},
+  actionLabels = {},
+  actionIcons = {},
+  renderAction,
+}: FountainToolbarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const assetInput = useRef<HTMLInputElement>(null);
   const languageListId = useId();
@@ -432,80 +440,144 @@ export function FountainToolbar({ editor, className, extraActions, imageUpload, 
     if (assetInput.current) assetInput.current.value = '';
   };
 
+  const hidden = new Set(hiddenActions);
+  const customize = (actionId: FountainToolbarActionId, defaultLabel: string, defaultControl: ReactNode): ReactNode => {
+    if (hidden.has(actionId)) return null;
+    const label = actionLabels[actionId] ?? defaultLabel;
+    return renderAction ? renderAction({ actionId, label, defaultControl, editor }) : defaultControl;
+  };
+  const tool = (
+    actionId: FountainToolbarActionId,
+    defaultLabel: string,
+    onAction: () => void,
+    options: { active?: boolean; disabled?: boolean } = {},
+  ): ReactNode => {
+    const label = actionLabels[actionId] ?? defaultLabel;
+    const icon = Object.prototype.hasOwnProperty.call(actionIcons, actionId)
+      ? actionIcons[actionId]
+      : <FountainToolbarIcon name={actionId} />;
+    return customize(actionId, defaultLabel, <FountainToolbarButton
+      actionId={actionId}
+      label={label}
+      icon={icon}
+      active={options.active}
+      disabled={options.disabled}
+      onAction={onAction}
+    />);
+  };
+  const colorLabel = actionLabels['text-color'] ?? 'Text color';
+  const colorControl = customize('text-color', 'Text color', <label
+    className="fountain-toolbar__color"
+    title={colorLabel}
+    data-fountain-toolbar-action="text-color"
+  >
+    {Object.prototype.hasOwnProperty.call(actionIcons, 'text-color')
+      ? actionIcons['text-color']
+      : <FountainToolbarIcon name="text-color" />}
+    <input aria-label={colorLabel} type="color" defaultValue="#171923" onChange={(event) => setMark(editor, 'text_color', { color: event.target.value })} />
+  </label>);
+  const defaultGroupLabels: Readonly<Record<FountainToolbarGroupId, string>> = {
+    history: 'History and search',
+    'block-types': 'Block types',
+    marks: 'Text formatting',
+    alignment: 'Alignment',
+    insert: 'Insert rich content',
+    table: 'Edit table',
+  };
+  type ToolbarEntry = readonly [FountainToolbarActionId, ReactNode];
+  const entry = (actionId: FountainToolbarActionId, control: ReactNode): ToolbarEntry => [actionId, control];
+  const toolbarGroup = (groupId: FountainToolbarGroupId, entries: readonly ToolbarEntry[]) => {
+    const requested = actionOrder[groupId] ?? [];
+    const byId = new Map(entries);
+    const orderedIds = [...new Set([...requested, ...entries.map(([actionId]) => actionId)])];
+    return <FountainToolbarGroup
+      key={groupId}
+      label={groupLabels[groupId] ?? defaultGroupLabels[groupId]}
+      data-fountain-toolbar-group={groupId}
+    >
+      {orderedIds.map((actionId) => byId.has(actionId)
+        ? <Fragment key={actionId}>{byId.get(actionId)}</Fragment>
+        : null)}
+    </FountainToolbarGroup>;
+  };
+  const groupRenderers: Readonly<Record<FountainToolbarGroupId, () => ReactNode>> = {
+    history: () => toolbarGroup('history', [
+      entry('undo', tool('undo', 'Undo', () => undo(editor), { disabled: !canUndo(editor) })),
+      entry('redo', tool('redo', 'Redo', () => redo(editor), { disabled: !canRedo(editor) })),
+      entry('search', tool('search', 'Find and replace', () => setPanel(panel === 'search' ? null : 'search'))),
+      entry('clipboard-history', clipboardHistory && tool('clipboard-history', 'Clipboard history (Ctrl/Command+Alt+V)', () => openClipboardHistory(editor), { active: clipboardHistory.open })),
+    ]),
+    'block-types': () => toolbarGroup('block-types', [
+      entry('paragraph', tool('paragraph', 'Paragraph', () => setBlockType(editor, 'paragraph'))),
+      entry('heading-1', tool('heading-1', 'Heading 1', () => setBlockType(editor, 'heading', { level: 1 }))),
+      entry('heading-2', tool('heading-2', 'Heading 2', () => setBlockType(editor, 'heading', { level: 2 }))),
+      entry('heading-3', tool('heading-3', 'Heading 3', () => setBlockType(editor, 'heading', { level: 3 }))),
+    ]),
+    marks: () => toolbarGroup('marks', [
+      entry('bold', tool('bold', 'Bold', mark('strong'), { active: isMarkActive(editor, 'strong') })),
+      entry('italic', tool('italic', 'Italic', mark('em'), { active: isMarkActive(editor, 'em') })),
+      entry('underline', tool('underline', 'Underline', mark('underline'), { active: isMarkActive(editor, 'underline') })),
+      entry('strike', tool('strike', 'Strikethrough', mark('strike'), { active: isMarkActive(editor, 'strike') })),
+      entry('inline-code', tool('inline-code', 'Inline code', mark('code'), { active: isMarkActive(editor, 'code') })),
+      entry('highlight', tool('highlight', 'Highlight', mark('highlight'), { active: isMarkActive(editor, 'highlight') })),
+      entry('subscript', tool('subscript', 'Subscript', mark('subscript'), { active: isMarkActive(editor, 'subscript') })),
+      entry('superscript', tool('superscript', 'Superscript', mark('superscript'), { active: isMarkActive(editor, 'superscript') })),
+      entry('link', tool('link', 'Add or edit link', toggleLinkPanel, { active: Boolean(activeLink) || isMarkActive(editor, 'link') })),
+      entry('unlink', tool('unlink', 'Remove link', () => removeLink(editor), { disabled: !activeLink && !isMarkActive(editor, 'link') })),
+      entry('text-color', colorControl),
+      entry('clear-text-color', tool('clear-text-color', 'Remove text color', () => unsetMark(editor, 'text_color'), { disabled: !isMarkActive(editor, 'text_color') })),
+    ]),
+    alignment: () => toolbarGroup('alignment', [
+      entry('align-left', tool('align-left', 'Align left', () => activeImage ? setImageAlignment(editor, 'left') : setTextAlignment(editor, 'left'), { active: activeImage?.node.attrs.align === 'left' })),
+      entry('align-center', tool('align-center', 'Align center', () => activeImage ? setImageAlignment(editor, 'center') : setTextAlignment(editor, 'center'), { active: activeImage?.node.attrs.align === 'center' })),
+      entry('align-right', tool('align-right', 'Align right', () => activeImage ? setImageAlignment(editor, 'right') : setTextAlignment(editor, 'right'), { active: activeImage?.node.attrs.align === 'right' })),
+      entry('justify', tool('justify', 'Justify', () => setTextAlignment(editor, 'justify'))),
+    ]),
+    insert: () => toolbarGroup('insert', [
+      entry('quote', tool('quote', 'Quote', () => insertQuote(editor))),
+      entry('bullet-list', tool('bullet-list', 'Bullet list', () => toggleList(editor, 'bullet'), { active: isInsideNode(editor, 'bullet_list') })),
+      entry('ordered-list', tool('ordered-list', 'Numbered list', () => toggleList(editor, 'ordered'), { active: isInsideNode(editor, 'ordered_list') })),
+      entry('task-list', tool('task-list', 'Task list', () => toggleList(editor, 'task'), { active: isInsideNode(editor, 'task_list') })),
+      entry('outdent-list', tool('outdent-list', 'Lift list item', () => outdentListItem(editor), { disabled: !isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item') })),
+      entry('indent-list', tool('indent-list', 'Indent list item', () => indentListItem(editor), { disabled: !isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item') })),
+      entry('code-block', tool('code-block', 'Code block and language', toggleCodePanel, { active: Boolean(activeCodeBlock) })),
+      entry('insert-table', tool('insert-table', 'Insert 3 by 3 table', () => insertTable(editor))),
+      entry('image', tool('image', activeImage ? 'Edit selected image' : 'Insert image from URL', toggleImagePanel, { active: Boolean(activeImage) })),
+      entry('upload-image', tool('upload-image', activeImage ? 'Replace selected image' : 'Upload image', () => fileInput.current?.click())),
+      entry('media', editor.state.schema.nodes.audio && tool('media', activeMedia ? 'Edit selected media' : 'Insert audio, video, file, or embed', () => toggleMediaPanel(), { active: Boolean(activeMedia) })),
+      entry('upload-asset', editor.state.schema.nodes.audio && tool('upload-asset', assetUpload ? (activeMedia && activeMedia.kind !== 'embed' ? 'Replace selected media file' : 'Upload audio, video, or file') : 'Configure assetUpload to upload files', () => assetInput.current?.click(), { disabled: !assetUpload || activeMedia?.kind === 'embed' })),
+      entry('divider', tool('divider', 'Divider', () => insertBlock(editor, 'horizontal_rule'))),
+      entry('hard-break', tool('hard-break', 'Line break', () => insertHardBreak(editor))),
+    ]),
+    table: () => toolbarGroup('table', [
+      entry('add-table-row', tool('add-table-row', 'Add table row', () => addTableRow(editor), { disabled: !isInsideNode(editor, 'table') })),
+      entry('delete-table-row', tool('delete-table-row', 'Delete table row', () => deleteTableRow(editor), { disabled: !isInsideNode(editor, 'table') })),
+      entry('add-table-column', tool('add-table-column', 'Add table column', () => addTableColumn(editor), { disabled: !isInsideNode(editor, 'table') })),
+      entry('delete-table-column', tool('delete-table-column', 'Delete table column', () => deleteTableColumn(editor), { disabled: !isInsideNode(editor, 'table') })),
+      entry('merge-cells', tool('merge-cells', 'Merge selected table cells', () => mergeTableCells(editor), { disabled: !(editor.state.selection instanceof CellSelection) || editor.state.selection.cellPaths.length < 2 })),
+      entry('split-cell', tool('split-cell', 'Split merged table cell', () => splitTableCell(editor), { disabled: !activeTable || (activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1) })),
+      entry('toggle-header-row', tool('toggle-header-row', 'Toggle header row', () => toggleTableHeaderRow(editor), { disabled: !activeTable })),
+      entry('toggle-header-column', tool('toggle-header-column', 'Toggle header column', () => toggleTableHeaderColumn(editor), { disabled: !activeTable })),
+      entry('toggle-header-cell', tool('toggle-header-cell', 'Toggle header cell', () => toggleTableHeaderCell(editor), { disabled: !activeTable })),
+      entry('select-row', tool('select-row', 'Select table row', () => selectTableRow(editor), { disabled: !activeTable })),
+      entry('select-column', tool('select-column', 'Select table column', () => selectTableColumn(editor), { disabled: !activeTable })),
+      entry('column-width', tool('column-width', 'Set table column width', () => {
+        const width = activeTable?.map.columnWidth(activeTable.cell.column) ?? 120;
+        setTableWidth(String(width));
+        setPanel(panel === 'table' ? null : 'table');
+      }, { disabled: !activeTable })),
+    ]),
+  };
+  const visibleGroups = [...new Set(groups)].filter((group): group is FountainToolbarGroupId => group in groupRenderers);
+
   return (
     <div className="fountain-toolbar-wrap">
-      <div className={['fountain-toolbar', className].filter(Boolean).join(' ')} role="toolbar" aria-label="Formatting and rich content">
-        <div className="fountain-toolbar__group" aria-label="History">
-          <ToolButton label="↶" title="Undo" disabled={!canUndo(editor)} onAction={() => undo(editor)} />
-          <ToolButton label="↷" title="Redo" disabled={!canRedo(editor)} onAction={() => redo(editor)} />
-          <ToolButton label="⌕" title="Find and replace" onAction={() => setPanel(panel === 'search' ? null : 'search')} />
-          {clipboardHistory && <ToolButton label="Clip" title="Clipboard history (Ctrl/Command+Alt+V)" active={clipboardHistory.open} onAction={() => openClipboardHistory(editor)} />}
-        </div>
-        <div className="fountain-toolbar__group" aria-label="Text styles">
-          <ToolButton label="P" title="Paragraph" onAction={() => setBlockType(editor, 'paragraph')} />
-          <ToolButton label="H1" title="Heading 1" onAction={() => setBlockType(editor, 'heading', { level: 1 })} />
-          <ToolButton label="H2" title="Heading 2" onAction={() => setBlockType(editor, 'heading', { level: 2 })} />
-          <ToolButton label="H3" title="Heading 3" onAction={() => setBlockType(editor, 'heading', { level: 3 })} />
-          <ToolButton label="B" title="Bold" active={isMarkActive(editor, 'strong')} onAction={mark('strong')} />
-          <ToolButton label="I" title="Italic" active={isMarkActive(editor, 'em')} onAction={mark('em')} />
-          <ToolButton label="U" title="Underline" active={isMarkActive(editor, 'underline')} onAction={mark('underline')} />
-          <ToolButton label="S" title="Strikethrough" active={isMarkActive(editor, 'strike')} onAction={mark('strike')} />
-          <ToolButton label="&lt;/&gt;" title="Inline code" active={isMarkActive(editor, 'code')} onAction={mark('code')} />
-          <ToolButton label="HL" title="Highlight" active={isMarkActive(editor, 'highlight')} onAction={mark('highlight')} />
-          <ToolButton label="X₂" title="Subscript" active={isMarkActive(editor, 'subscript')} onAction={mark('subscript')} />
-          <ToolButton label="X²" title="Superscript" active={isMarkActive(editor, 'superscript')} onAction={mark('superscript')} />
-          <ToolButton label="↗" title="Add or edit link" active={Boolean(activeLink) || isMarkActive(editor, 'link')} onAction={toggleLinkPanel} />
-          <ToolButton label="×↗" title="Remove link" disabled={!activeLink && !isMarkActive(editor, 'link')} onAction={() => removeLink(editor)} />
-          <label className="fountain-toolbar__color" title="Text color">
-            <span>A</span>
-            <input aria-label="Text color" type="color" defaultValue="#171923" onChange={(event) => setMark(editor, 'text_color', { color: event.target.value })} />
-          </label>
-          <ToolButton label="A×" title="Remove text color" disabled={!isMarkActive(editor, 'text_color')} onAction={() => unsetMark(editor, 'text_color')} />
-        </div>
-        <div className="fountain-toolbar__group" aria-label="Alignment">
-          <ToolButton label="≡←" title="Align left" active={activeImage?.node.attrs.align === 'left'} onAction={() => activeImage ? setImageAlignment(editor, 'left') : setTextAlignment(editor, 'left')} />
-          <ToolButton label="≡" title="Align center" active={activeImage?.node.attrs.align === 'center'} onAction={() => activeImage ? setImageAlignment(editor, 'center') : setTextAlignment(editor, 'center')} />
-          <ToolButton label="→≡" title="Align right" active={activeImage?.node.attrs.align === 'right'} onAction={() => activeImage ? setImageAlignment(editor, 'right') : setTextAlignment(editor, 'right')} />
-          <ToolButton label="☰" title="Justify" onAction={() => setTextAlignment(editor, 'justify')} />
-        </div>
-        <div className="fountain-toolbar__group" aria-label="Insert blocks">
-          <ToolButton label="❝" title="Quote" onAction={() => insertQuote(editor)} />
-          <ToolButton label="• List" title="Bullet list" active={isInsideNode(editor, 'bullet_list')} onAction={() => toggleList(editor, 'bullet')} />
-          <ToolButton label="1. List" title="Numbered list" active={isInsideNode(editor, 'ordered_list')} onAction={() => toggleList(editor, 'ordered')} />
-          <ToolButton label="☑" title="Task list" active={isInsideNode(editor, 'task_list')} onAction={() => toggleList(editor, 'task')} />
-          <ToolButton label="⇤" title="Lift list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => outdentListItem(editor)} />
-          <ToolButton label="⇥" title="Indent list item" disabled={!isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item')} onAction={() => indentListItem(editor)} />
-          <ToolButton label="{ }" title="Code block and language" active={Boolean(activeCodeBlock)} onAction={toggleCodePanel} />
-          <ToolButton label="▦" title="Insert 3 by 3 table" onAction={() => insertTable(editor)} />
-          <ToolButton label="IMG" title={activeImage ? 'Edit selected image' : 'Insert image from URL'} active={Boolean(activeImage)} onAction={toggleImagePanel} />
-          <ToolButton label="↑IMG" title={activeImage ? 'Replace selected image' : 'Upload image'} onAction={() => fileInput.current?.click()} />
-          {editor.state.schema.nodes.audio && <ToolButton label="MEDIA" title={activeMedia ? 'Edit selected media' : 'Insert audio, video, file, or embed'} active={Boolean(activeMedia)} onAction={() => toggleMediaPanel()} />}
-          {editor.state.schema.nodes.audio && <ToolButton label="↑FILE" title={assetUpload ? (activeMedia && activeMedia.kind !== 'embed' ? 'Replace selected media file' : 'Upload audio, video, or file') : 'Configure assetUpload to upload files'} disabled={!assetUpload || activeMedia?.kind === 'embed'} onAction={() => assetInput.current?.click()} />}
-          <ToolButton label="—" title="Divider" onAction={() => insertBlock(editor, 'horizontal_rule')} />
-          <ToolButton label="↵" title="Line break" onAction={() => insertHardBreak(editor)} />
-        </div>
-        <div className="fountain-toolbar__group" aria-label="Edit table">
-          <ToolButton label="+Row" title="Add table row" disabled={!isInsideNode(editor, 'table')} onAction={() => addTableRow(editor)} />
-          <ToolButton label="−Row" title="Delete table row" disabled={!isInsideNode(editor, 'table')} onAction={() => deleteTableRow(editor)} />
-          <ToolButton label="+Col" title="Add table column" disabled={!isInsideNode(editor, 'table')} onAction={() => addTableColumn(editor)} />
-          <ToolButton label="−Col" title="Delete table column" disabled={!isInsideNode(editor, 'table')} onAction={() => deleteTableColumn(editor)} />
-          <ToolButton label="Merge" title="Merge selected table cells" disabled={!(editor.state.selection instanceof CellSelection) || editor.state.selection.cellPaths.length < 2} onAction={() => mergeTableCells(editor)} />
-          <ToolButton label="Split" title="Split merged table cell" disabled={!activeTable || (activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1)} onAction={() => splitTableCell(editor)} />
-          <ToolButton label="H·Row" title="Toggle header row" disabled={!activeTable} onAction={() => toggleTableHeaderRow(editor)} />
-          <ToolButton label="H·Col" title="Toggle header column" disabled={!activeTable} onAction={() => toggleTableHeaderColumn(editor)} />
-          <ToolButton label="H·Cell" title="Toggle header cell" disabled={!activeTable} onAction={() => toggleTableHeaderCell(editor)} />
-          <ToolButton label="Sel Row" title="Select table row" disabled={!activeTable} onAction={() => selectTableRow(editor)} />
-          <ToolButton label="Sel Col" title="Select table column" disabled={!activeTable} onAction={() => selectTableColumn(editor)} />
-          <ToolButton label="↔" title="Set table column width" disabled={!activeTable} onAction={() => {
-            const width = activeTable?.map.columnWidth(activeTable.cell.column) ?? 120;
-            setTableWidth(String(width));
-            setPanel(panel === 'table' ? null : 'table');
-          }} />
-        </div>
+      <FountainToolbarRoot className={className} label={toolbarLabel}>
+        {visibleGroups.map((group) => groupRenderers[group]())}
         {extraActions}
-        <input ref={fileInput} className="fountain-toolbar__file" type="file" accept="image/*" onChange={(event) => void chooseImage(event.target.files?.[0])} />
-        <input ref={assetInput} className="fountain-toolbar__file" type="file" accept="audio/*,video/*,application/pdf,text/*,.zip" onChange={(event) => chooseAsset(event.target.files?.[0])} />
-      </div>
+        <input ref={fileInput} className="fountain-toolbar__file" type="file" accept="image/*" tabIndex={-1} aria-hidden="true" onChange={(event) => void chooseImage(event.target.files?.[0])} />
+        <input ref={assetInput} className="fountain-toolbar__file" type="file" accept="audio/*,video/*,application/pdf,text/*,.zip" tabIndex={-1} aria-hidden="true" onChange={(event) => chooseAsset(event.target.files?.[0])} />
+      </FountainToolbarRoot>
       {panel === 'link' && <form className="fountain-toolbar__popover is-link" onSubmit={submitLink}>
         <strong>{activeLink ? 'Edit link' : 'Add link'}</strong>
         <input aria-label="Link URL" required inputMode="url" placeholder="https://example.com, /page, or mail@example.com" value={url} onChange={(event) => setURL(event.target.value)} />

@@ -849,6 +849,43 @@ test('runs accessible bubble and floating menus in the public React playground',
   await expect(editor.locator('h2').last()).toBeAttached();
 });
 
+test('composes and keyboard-navigates the public toolbar by stable group and action IDs', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Use compact toolbar' }).click();
+
+  const toolbar = page.getByRole('toolbar', { name: 'Compact writing toolbar' });
+  await expect(toolbar).toBeVisible();
+  expect(await toolbar.locator('[data-fountain-toolbar-group]').evaluateAll((groups) => groups.map((group) => group.getAttribute('data-fountain-toolbar-group')))).toEqual([
+    'marks', 'block-types', 'history',
+  ]);
+  await expect(toolbar.locator('[data-fountain-toolbar-group="marks"]')).toHaveAttribute('aria-label', 'Essential formatting');
+  expect((await toolbar.locator('[data-fountain-toolbar-group="marks"] [data-fountain-toolbar-action]').evaluateAll((actions) => actions.map((action) => action.getAttribute('data-fountain-toolbar-action')))).slice(0, 4)).toEqual([
+    'highlight', 'bold', 'italic', 'underline',
+  ]);
+  await expect(toolbar.locator('[data-fountain-toolbar-action="strike"]')).toHaveCount(0);
+
+  const highlight = toolbar.getByRole('button', { name: 'Highlight' });
+  const strong = toolbar.getByRole('button', { name: 'Strong emphasis' });
+  await highlight.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(strong).toBeFocused();
+
+  const firstText = page.getByRole('textbox', { name: 'Rich text editor' }).locator('[data-fountain-text-path]').first();
+  await firstText.evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text) throw new Error('Expected editor text.');
+    const range = document.createRange();
+    range.setStart(text, 0);
+    range.setEnd(text, Math.min(5, text.textContent?.length ?? 0));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await strong.click();
+  await expect(page.getByRole('textbox', { name: 'Rich text editor' }).locator('strong').first()).toContainText('Build');
+});
+
 test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
   await page.goto('/');
   const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';

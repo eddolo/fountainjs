@@ -153,3 +153,25 @@ test('keeps contextual menus reachable and touch-selectable on a phone viewport'
   await expect(editor.locator('h1').last()).toBeAttached();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
+
+test('keeps a composed icon toolbar reachable and touch-operable on a phone viewport', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Use compact toolbar' }).tap();
+  const toolbar = page.getByRole('toolbar', { name: 'Compact writing toolbar' });
+  await expect(toolbar).toBeVisible();
+  const viewport = page.viewportSize();
+  const box = await toolbar.boundingBox();
+  expect(box).not.toBeNull();
+  expect((box?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  const overflow = await toolbar.evaluate((element) => ({ client: element.clientWidth, scroll: element.scrollWidth }));
+  expect(overflow.scroll).toBeGreaterThan(overflow.client);
+
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstText = editor.locator('[data-fountain-text-path]').first();
+  await firstText.tap();
+  const strong = toolbar.getByRole('button', { name: 'Strong emphasis' });
+  await strong.tap();
+  await expect(strong).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});

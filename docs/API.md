@@ -826,6 +826,8 @@ Import React bindings from `fountainjs-editor/react`:
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `FountainToolbarRoot`, `FountainToolbarGroup`, `FountainToolbarButton`, and
+  `FountainToolbarIcon`
 - `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
   `FountainFloatingMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
@@ -850,3 +852,12 @@ const CounterView = createReactNodeView(({ node, selected, updateAttributes }) =
   </button>
 ), { tagName: 'section', className: 'counter-node' })
 ```
+
+`FountainToolbar` exposes stable `FountainToolbarGroupId` and
+`FountainToolbarActionId` contracts. Configure `groups`, `actionOrder`,
+`hiddenActions`, `groupLabels`, `actionLabels`, `actionIcons`, and
+`renderAction`; `FountainComposer.toolbarProps` forwards the same options.
+The standalone toolbar primitives can compose product-owned commands without
+mounting the supplied toolbar. See [TOOLBAR.md](TOOLBAR.md) for the complete ID
+registry, render context, keyboard/focus contract, responsive behavior, and
+non-React boundary.

@@ -79,6 +79,8 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .quick-insert { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin-bottom: 12px; }
 .quick-insert > span { margin-right: 3px; color: #888197; font: 11px DM Mono, monospace; text-transform: uppercase; }
 .quick-insert button { padding: 7px 10px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 7px; font-size: 11px; font-weight: 700; }
+.quick-insert .toolbar-profile { margin-inline-start: auto; color: #4633d8; border-color: #bcb3ff; }
+.quick-insert .toolbar-profile[aria-pressed="true"] { color: white; background: #5841ff; border-color: #5841ff; }
 .studio__canvas .fountain-composer { border: 0; border-radius: 12px; box-shadow: 0 12px 30px rgb(39 32 66 / 10%); }
 .studio__canvas .fountain-editor { height: 635px; min-height: 0; overflow-y: auto; }
 .studio__canvas > .fountain-character-count { justify-content: flex-end; }

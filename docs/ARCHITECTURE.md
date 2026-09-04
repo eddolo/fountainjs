@@ -402,7 +402,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, `FountainToolbar`, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React.
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. Keeping it in a separate entry prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -479,6 +479,9 @@ The suites are organized by boundary:
   lifecycle, failure containment, read-only policy, and placement geometry;
 - `tests/react-floating-menu.test.tsx`: focused toolbar rendering, positioning,
   keyboard traversal, and Escape dismissal;
+- `tests/react-toolbar.test.tsx`: stable action/group composition, custom
+  labels/icons/rendering, selection-preserving activation, touch de-duplication,
+  RTL keyboard traversal, and composer passthrough;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
 - `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against

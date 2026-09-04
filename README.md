@@ -212,6 +212,29 @@ React hosts can render any product controls inside `FountainBubbleMenu` and
 use `getEditorMenuAnchorRect()` plus `placeEditorMenu()`. See the full
 [contextual-menu guide](docs/CONTEXTUAL_MENUS.md).
 
+## Composable React toolbar
+
+The supplied `FountainToolbar` uses dependency-free SVG icons with complete
+accessible names. Stable group/action IDs let a product reorder groups and
+actions, hide controls, replace labels or icons, and wrap or replace any action.
+`FountainComposer` accepts the same configuration through `toolbarProps`.
+
+```tsx
+<FountainComposer editor={editor} toolbarProps={{
+  toolbarLabel: 'Article formatting',
+  groups: ['marks', 'block-types', 'history'],
+  actionOrder: { marks: ['highlight', 'bold', 'italic'] },
+  hiddenActions: ['strike', 'subscript', 'superscript'],
+  actionLabels: { bold: 'Strong emphasis' },
+}} />
+```
+
+Applications can instead assemble `FountainToolbarRoot`,
+`FountainToolbarGroup`, and `FountainToolbarButton` around any FountainJS or
+product command. Arrow/Home/End navigation is RTL-aware, mouse activation
+preserves the model selection, and narrow toolbars scroll by intact groups.
+See the complete [toolbar composition guide](docs/TOOLBAR.md).
+
 ## Native LaTeX mathematics
 
 `MathExtension` is a first-party but opt-in module. It adds portable
@@ -518,7 +541,8 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 ## React exports
 
 - `useFountain` and `useFountainState`
-- `FountainEditor`, `FountainToolbar`, and `FountainComposer`
+- `FountainEditor`, `FountainToolbar`, `FountainComposer`, and the
+  `FountainToolbarRoot` / `Group` / `Button` / `Icon` primitives
 - `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
   `FountainFloatingMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
@@ -563,6 +587,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Mentions, emoji, typography, and character count](docs/DOCUMENT_UTILITIES.md)
 - [Slash commands and runtime registrations](docs/SLASH_COMMANDS.md)
 - [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)
+- [Toolbar composition and stable action IDs](docs/TOOLBAR.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

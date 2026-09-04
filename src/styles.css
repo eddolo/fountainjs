@@ -12,14 +12,16 @@
 .fountain-toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px; background: #fafafa; border-bottom: 1px solid var(--fountain-border); }
 .fountain-toolbar-wrap > .fountain-toolbar { border-bottom: 0; }
 .fountain-toolbar__group { display: flex; gap: 3px; padding-inline-end: 6px; margin-inline-end: 2px; border-inline-end: 1px solid var(--fountain-border); }
-.fountain-toolbar__button { min-width: 34px; height: 34px; padding: 0 9px; color: var(--fountain-ink); font: 600 13px/1 system-ui, sans-serif; background: transparent; border: 0; border-radius: 8px; cursor: pointer; }
+.fountain-toolbar__button { display: grid; min-width: 34px; height: 34px; padding: 0 8px; place-items: center; color: var(--fountain-ink); font: 600 13px/1 system-ui, sans-serif; background: transparent; border: 0; border-radius: 8px; cursor: pointer; touch-action: manipulation; }
+.fountain-toolbar__button svg, .fountain-toolbar__color svg { display: block; pointer-events: none; }
 .fountain-toolbar__button:hover:not(:disabled), .fountain-toolbar__button[aria-pressed="true"] { color: var(--fountain-accent); background: var(--fountain-accent-soft); }
 .fountain-toolbar__button:focus-visible { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 35%, transparent); outline-offset: 1px; }
 .fountain-toolbar__button:disabled { cursor: not-allowed; opacity: .35; }
 .fountain-toolbar__color { position: relative; display: grid; width: 34px; height: 34px; place-items: center; color: var(--fountain-ink); font: 700 13px/1 system-ui, sans-serif; border-radius: 8px; cursor: pointer; }
 .fountain-toolbar__color:hover { color: var(--fountain-accent); background: var(--fountain-accent-soft); }
+.fountain-toolbar__color:focus-within { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 35%, transparent); outline-offset: 1px; }
 .fountain-toolbar__color input { position: absolute; inset: auto 7px 4px; width: 20px; height: 4px; padding: 0; overflow: hidden; border: 0; cursor: pointer; }
-.fountain-toolbar__file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.fountain-toolbar__file { display: none; }
 .fountain-toolbar__popover { display: flex; gap: 7px; align-items: center; padding: 10px; color: var(--fountain-ink); background: #fff; border-top: 1px solid var(--fountain-border); box-shadow: 0 10px 24px rgb(23 25 35 / 8%); }
 .fountain-toolbar__popover strong { margin-right: 4px; font: 700 12px/1.2 system-ui, sans-serif; }
 .fountain-toolbar__popover input,
@@ -248,8 +250,8 @@
 }
 
 @media (max-width: 720px) {
-  .fountain-toolbar { flex-wrap: nowrap; overflow-x: auto; }
-  .fountain-toolbar__group { flex: none; }
+  .fountain-toolbar { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; scroll-snap-type: inline proximity; }
+  .fountain-toolbar__group { flex: none; scroll-snap-align: start; }
   .fountain-toolbar__popover { align-items: stretch; flex-direction: column; }
   .fountain-toolbar__popover input,
   .fountain-toolbar__popover select,

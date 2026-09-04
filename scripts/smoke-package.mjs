@@ -8,7 +8,12 @@ function assertExports(module, names, surface) {
 }
 
 const coreNames = ['MediaExtension', 'startAssetUpload', 'registerFountainElement', 'BubbleMenuExtension', 'FloatingMenuExtension', 'getEditorMenuAnchorRect'];
-const reactNames = ['FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainSlashCommandMenu', 'FountainBubbleMenu', 'FountainFloatingMenu'];
+const reactNames = [
+  'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
+  'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
+  'defaultFountainToolbarGroups', 'FountainSlashCommandMenu', 'FountainBubbleMenu',
+  'FountainFloatingMenu',
+];
 const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
 

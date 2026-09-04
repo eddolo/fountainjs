@@ -10,6 +10,10 @@
 
 ### Added
 
+- A configurable, icon-based React toolbar with stable group/action IDs,
+  ordering and visibility controls, label/icon/render overrides, public
+  root/group/button/icon primitives, composer passthrough, selection-preserving
+  pointer behavior, RTL keyboard navigation, and responsive scrolling.
 - Framework-neutral, opt-in bubble and floating menu controllers with named
   instances, safe visibility predicates, reusable selection geometry,
   collision-aware placement, accessible React toolbars, and package-backed
