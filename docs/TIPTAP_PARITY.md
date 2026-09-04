@@ -14,6 +14,11 @@ Primary comparison references:
 - [Tiptap AI Toolkit](https://tiptap.dev/docs/ai/ai-toolkit/overview)
 - [Tiptap conversion](https://tiptap.dev/docs/conversion/getting-started/overview)
 
+The public Tiptap catalogue was last re-audited on **2026-09-04**. Catalogue
+labels such as Open Source, Start, Team, and Add-on are availability boundaries,
+not quality scores; a paid/cloud outcome still counts as a product capability
+that FountainJS must either deliver or identify as a deliberate host boundary.
+
 ## Status language
 
 - **Delivered**: public API, automated behavioural coverage, documentation, and
@@ -70,6 +75,15 @@ A row may move to **Delivered** only when all applicable gates pass:
 | DOC-08 | Mentions, emoji, typography, and character count | Delivered | Independent framework-neutral extensions, cancellable/stale-safe multi-trigger suggestions, safe mention/emoji atoms and interchange, curated plus isolated complete RGI emoji catalogues, configurable RTL-aware typography with literal undo, enforced custom counting/limits, accessible React UI, package-backed demos, unit coverage, and green Chromium/Firefox/WebKit plus mobile browser contracts are live. |
 | DOC-09 | Native inline and display mathematics from LaTeX | Delivered | Opt-in framework-neutral math nodes store editable TeX and labels; commands, isolated input/paste rules with literal undo, safe source fallback, caller-owned DOM renderers, a trust-disabled KaTeX adapter, JSON/HTML/Markdown/text round trips, unit tests, and the public headless demo are delivered. |
 | DOC-10 | Lean 4 source and interactive proof workflows | Partial | Portable Lean blocks, Unicode entry/highlighting, source-only operation, validated local/remote/managed/one-shot provider contracts, mapped transient diagnostics, exact-range selection, and a framework-neutral InfoView for checks, goals, hover, expected types, and completion are delivered. Add a hardened reference loopback bridge and real Lean integration tests before marking delivered. |
+| DOC-11 | Collapsible details/summary content | Missing | Add schema-valid details and summary nodes, nested editing, keyboard behavior, interchange, and accessible disclosure rendering. |
+| DOC-12 | Ruby annotations | Missing | Add portable ruby/base/annotation structure with safe HTML and plain-text fallbacks. |
+| DOC-13 | Text style suite: foreground/background colour, font family, font size, and line height | Partial | Foreground colour and attributed background highlighting are delivered. Add validated font-family, font-size, and line-height marks/attributes, controls, interchange, and sanitization. |
+| DOC-14 | Page layout, margins, page breaks, headers, and footers | Missing | Add a composable page model and print layout without coupling the document schema to one renderer. |
+| DOC-15 | Live table of contents | Missing | Add stable heading anchors, flat/hierarchical indexes, active-section state, and framework-neutral navigation. |
+| DOC-16 | Invisible-character visualization | Missing | Add view-only whitespace, hard-break, and paragraph markers with accessible enable/disable controls. |
+| DOC-17 | Stable unique node identifiers | Missing | Add configurable id generation, paste/collaboration collision repair, filtering, and migrations. |
+| DOC-18 | Guaranteed trailing editable block | Missing | Add a schema-aware trailing-node extension with undo, collaboration, and nested-root coverage. |
+| DOC-19 | Office and external-app paste normalization | Partial | Rich HTML, spreadsheet grids, nested lists, images, and safe fallback are delivered. Add explicit Word, Google Docs, and Excel fixture suites plus configurable cleanup policies. |
 
 ### Product UI
 
@@ -80,6 +94,8 @@ A row may move to **Delivered** only when all applicable gates pass:
 | UI-03 | Slash-command menu | Delivered | A framework-neutral live registry, eleven schema-aware defaults, stable grouped filtering, cancellable async sources, atomic execution/rollback, keyboard/touch control, accessible React UI, and package-backed desktop/mobile demos are covered by the complete release gate, all-engine CI, and deployed-site verification. |
 | UI-04 | Drag handles and block reordering | Delivered | Path-based schema-valid nested/cross-parent moves, visible contextual handles, real drop indicators, touch/keyboard buttons, host candidate/label policy, one-step undo, and framework-neutral/React/Web Component surfaces are covered by 217 behavioral tests, the complete 138-test Chromium/Firefox/WebKit/mobile [CI run for `02f8385`](https://github.com/eddolo/fountainjs/actions/runs/33880904977), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33880904970), and live-site interaction/console verification. |
 | UI-05 | Search and replace | Delivered | Add regex/whole-word options only if justified by product evidence. |
+| UI-06 | General drop cursor | Partial | Block reordering has an exact drop indicator. Add a framework-neutral cursor for arbitrary draggable inline and block content. |
+| UI-07 | Placeholder, focus, and blurred-selection persistence | Delivered | The DOM/React/Web Component surfaces expose placeholders, programmatic focus, selection state, and mapped restoration; keep them in browser and accessibility gates. |
 
 ### Collaboration and review
 
@@ -89,7 +105,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | COLLAB-02 | Provider-independent synchronization | Delivered | Framework-neutral lifecycle/status/reconnect contracts keep WebSocket, WebRTC, managed, custom, and offline providers optional while authentication, authorization, persistence, and retention stay host-owned. Adapter teardown, failure containment, package boundaries, documentation, the complete [CI gate](https://github.com/eddolo/fountainjs/actions/runs/33891892320), and the deployed provider-boundary demo verify the contract. |
 | COLLAB-03 | Presence and remote selections | Delivered | Awareness-relative text selections, normalized immutable users, overlapping-safe accessible range/caret decorations, departure cleanup, and the two-editor demo are covered by unit and all-engine browser tests in the complete [CI run](https://github.com/eddolo/fountainjs/actions/runs/33891892320), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33891892227), and live deployed peer/caret verification. |
 | COLLAB-04 | Threaded inline and document comments | Delivered | Provider-neutral thread records and lifecycle; inline/cross-block, point, block, and document anchors; overlapping decorations; mapped movement, deterministic recovery/orphan reattachment; replies, rich bodies, editing, reactions, resolve/archive/delete; permission hooks; authoritative storage operations plus an in-memory reference; accessible React UI; isolated ESM/CommonJS/types entries; and production/security guidance are covered by 252 behavioral tests, the complete 153-test Chromium/Firefox/WebKit/mobile [CI run for `75ae25f`](https://github.com/eddolo/fountainjs/actions/runs/33895703954), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33895703856), and live deployed verification of shared annotations, reply, reaction, resolution, and document-thread creation. |
-| COLLAB-05 | General tracked changes and suggestion mode | Partial | Provider-neutral insertion/deletion/exact replacement, mark, attribute, atom/table, and structural proposals; bounded portable author/time/reason/comment metadata; same-author grouping and nested records; individual/range/author/filtered batch accept/reject; enable/user/selection/hover/events; undo; Yjs no-retrack propagation; isolated ESM/CommonJS/types and an accessible full-text React panel are implemented. The full 265-test local gate, publint, packed-tarball type validation, 49 Chromium tests, 49 WebKit tests, and 14 mobile-emulation tests pass. Complete Linux Firefox CI and deployed-site verification before marking Delivered. |
+| COLLAB-05 | General tracked changes and suggestion mode | Delivered | Provider-neutral insertion/deletion/exact replacement, mark, attribute, atom/table, and structural proposals; bounded portable author/time/reason/comment metadata; same-author grouping and nested records; individual/range/author/filtered batch accept/reject; enable/user/selection/hover/events; undo; Yjs no-retrack propagation; isolated ESM/CommonJS/types; and an accessible full-text React panel are covered by 265 behavioral tests, packed-tarball package/type validation, the complete 161-test Chromium/Firefox/WebKit/mobile [CI run for `4665b50`](https://github.com/eddolo/fountainjs/actions/runs/33900282765), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33900282688), and live deployed acceptance/rejection plus complete-text verification. |
 | COLLAB-06 | Named versions, comparison, and restoration | Missing | Add snapshot provider contracts, structural diff, preview, and restore transactions. |
 
 ### AI
@@ -129,6 +145,21 @@ A row may move to **Delivered** only when all applicable gates pass:
 | PROD-05 | Performance and memory budgets | Missing | Benchmark large documents, transaction latency, rerenders, startup size, and teardown leaks. |
 | PROD-06 | Extension authoring and compatibility tooling | Missing | Add a scaffold, conformance suite, manifest metadata, examples, and compatibility policy. |
 | PROD-07 | Stable releases and migrations | Partial | Publish API stability levels, deprecations, migrations, security policy, and release evidence. |
+| PROD-08 | Operable collaboration/document backend | Host boundary | FountainJS deliberately accepts offline, WebSocket, WebRTC, managed, and custom providers instead of requiring one cloud. Ship a hardened self-host reference stack and deployment tests so teams are not forced to design the operational layer from scratch. |
+| PROD-09 | Comment/document APIs, webhooks, and notifications | Host boundary | Storage and authorization hooks exist; add reference REST/webhook contracts and notification examples while leaving deployment and identity under host control. |
+
+### Catalogue coverage notes
+
+The audit explicitly maps every distinct outcome in the current
+[Tiptap extension catalogue](https://tiptap.dev/docs/editor/extensions/overview).
+Bundle extensions such as StarterKit, ListKit, TableKit, and TextStyleKit do not
+receive duplicate rows because their underlying outcomes are already listed.
+YouTube and Twitch map to DOC-07's provider-gated embeds; Audio maps to native
+media; FileHandler maps to DOC-06/DOC-07 uploads; Gapcursor and Selection map to
+CORE-04; Focus and Placeholder map to UI-07; Color and Background Color map to
+DOC-13; and Snapshot, Compare, Comments, Collaboration, Tracked Changes, AI, and
+Conversion map to their named rows above. A theoretically possible custom
+extension is never counted as a delivered first-party capability.
 
 ## Delivery order
 
