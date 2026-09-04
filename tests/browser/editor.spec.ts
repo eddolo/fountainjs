@@ -404,6 +404,23 @@ test('edits, aligns, resizes, and undoes a production image through accessible c
   await page.keyboard.press('ControlOrMeta+z');
   await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.width)).toBe('360px');
 
+  await page.evaluate(() => {
+    const events: Array<Record<string, unknown>> = [];
+    (globalThis as any).fountainResizeEvents = events;
+    ['pointerdown', 'mousedown', 'pointermove', 'mousemove', 'pointerup', 'mouseup'].forEach((type) => {
+      window.addEventListener(type, (event) => {
+        const mouse = event as MouseEvent;
+        const target = event.target as Element | null;
+        events.push({
+          type,
+          target: target?.getAttribute?.('aria-label') ?? target?.nodeName,
+          clientX: mouse.clientX,
+          button: mouse.button,
+          buttons: mouse.buttons,
+        });
+      }, { capture: true, once: false });
+    });
+  });
   await figure.hover();
   const box = await handle.boundingBox();
   expect(box).not.toBeNull();
@@ -411,8 +428,11 @@ test('edits, aligns, resizes, and undoes a production image through accessible c
   await page.mouse.down();
   await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) / 2 + 55, (box?.y ?? 0) + (box?.height ?? 0) / 2);
   await page.mouse.up();
-  const resized = await page.evaluate(() => String((globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.width));
-  expect(Number.parseInt(resized, 10)).toBeGreaterThanOrEqual(410);
+  const resized = await page.evaluate(() => ({
+    width: String((globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.width),
+    events: (globalThis as any).fountainResizeEvents,
+  }));
+  expect(Number.parseInt(resized.width, 10), JSON.stringify({ box, events: resized.events }, null, 2)).toBeGreaterThanOrEqual(410);
 });
 
 test('inserts and removes a true inline image without breaking surrounding text', async ({ page }) => {
