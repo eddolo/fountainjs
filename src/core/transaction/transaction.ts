@@ -4,6 +4,8 @@ import { Transform } from './transform';
 import { mapSelection, type StepMap } from './mapping';
 
 export class Transaction extends Transform {
+  /** Selection at transaction creation, before any steps mapped it. */
+  readonly originalSelection: AnySelection;
   selection: AnySelection;
   selectionSet = false;
   storedMarks: readonly Mark[];
@@ -12,6 +14,7 @@ export class Transaction extends Transform {
 
   constructor(doc: Node, selection: AnySelection = Selection.cursor([], 0), storedMarks: readonly Mark[] = []) {
     super(doc);
+    this.originalSelection = selection;
     this.selection = selection;
     this.storedMarks = Object.freeze([...storedMarks]);
   }

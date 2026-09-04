@@ -52,6 +52,7 @@ export * from './math';
 export * from './lean';
 export * from './link-behavior';
 export * from './clipboard-history';
+export * from './collaboration';
 export * from './media';
 export * from './floating-menu';
 

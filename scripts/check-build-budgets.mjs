@@ -4,7 +4,7 @@ import { join } from 'node:path';
 const kibibyte = 1024;
 const limits = Object.freeze({
   'dist/index.js': 102 * kibibyte,
-  'dist/index.cjs': 84 * kibibyte,
+  'dist/index.cjs': 85 * kibibyte,
   'dist/document-utilities.js': 36 * kibibyte,
   'dist/document-utilities.cjs': 30 * kibibyte,
   // The complete Unicode catalogue is isolated from every runtime entry and
@@ -13,6 +13,10 @@ const limits = Object.freeze({
   'dist/emoji-data.cjs': 280 * kibibyte,
   'dist/react.js': 64 * kibibyte,
   'dist/react.cjs': 48 * kibibyte,
+  // Provider-independent collaboration stays in the root; the optional Yjs
+  // adapter remains a separately loaded peer-backed entry.
+  'dist/yjs.js': 16 * kibibyte,
+  'dist/yjs.cjs': 14 * kibibyte,
   // Accessible block handles and visible drop states add roughly 1.8 KiB while
   // leaving every JavaScript entry ceiling unchanged.
   'dist/styles.css': 34 * kibibyte,
@@ -24,8 +28,10 @@ const limits = Object.freeze({
   // custom HTML parsing and hardened output add another roughly 4.6/3.8 KiB.
   // Reference-aware nested Markdown parsing and explicit projection reports
   // add roughly 5.3/2.6 KiB, including about 1 KiB in the ESM root entry.
-  'all ESM runtime code': 448 * kibibyte,
-  'all CommonJS runtime code': 377 * kibibyte,
+  // Collaboration lifecycle plus the optional Yjs adapter add roughly
+  // 23/20 KiB while keeping Yjs itself external to every FountainJS bundle.
+  'all ESM runtime code': 473 * kibibyte,
+  'all CommonJS runtime code': 400 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -33,7 +39,7 @@ const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.end
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

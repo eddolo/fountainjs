@@ -552,6 +552,74 @@ Widget contents are non-editable and ignored by selection-offset calculation.
 Partially overlapping inline ranges are split at deterministic boundaries and
 nested only for the shared segment; mapping preserves both ranges across edits.
 
+## Collaboration
+
+`createCollaborationExtension(options)` is the framework-neutral boundary for
+any synchronization engine. `options.adapter(editor)` must return a fresh
+`CollaborationAdapter` for that editor. The adapter receives a
+`CollaborationAdapterContext` on `connect`:
+
+- `editor` is the editor instance owned by this integration;
+- `applyRemoteDocument(document, options)` validates a `Node` or `NodeJSON`,
+  applies it as a non-local-history transaction, optionally restores an
+  adapter-resolved selection, and returns whether the transaction was accepted;
+- `setPresences(values)` normalizes immutable remote users and structural
+  selection ranges before decoration rendering;
+- `setStatus(status, error?)` publishes `disconnected`, `connecting`,
+  `connected`, `reconnecting`, or `error` state.
+
+The adapter may implement `onLocalUpdate`, `onLocalSelection`, `disconnect`,
+`destroy`, and collaborative `undo`/`redo`/availability/boundary methods.
+`CollaborationLocalUpdate` contains the before/after document, before/after
+selection, and accepted transaction. A remote transaction never echoes through
+that callback.
+
+```ts
+const extension = createCollaborationExtension({
+  autoConnect: true,
+  adapter: () => myAdapter,
+})
+
+getCollaborationState(editor)
+connectCollaboration(editor)
+disconnectCollaboration(editor)
+reconnectCollaboration(editor)
+undoCollaboration(editor)
+redoCollaboration(editor)
+canUndoCollaboration(editor)
+canRedoCollaboration(editor)
+closeCollaborationHistory(editor)
+```
+
+The immutable plugin state contains `status`, normalized `presences`, and an
+optional bounded error. `collaborationKey` allows direct plugin-state access.
+Remote transactions carry `COLLABORATION_REMOTE_META`; adapter provenance is
+available through `COLLABORATION_ORIGIN_META`. Transaction filters remain in
+force, so host policy can reject an otherwise schema-valid remote update.
+
+The optional `fountainjs-editor/yjs` entry exports
+`YjsCollaborationAdapter`, `createYjsCollaborationExtension`,
+`YjsCollaborationAdapterOptions`, `YjsProvider`, and `YjsAwareness`. Supply a
+`Y.Doc`, local `CollaborationUser`, and optional fragment, provider, awareness,
+field name, or undo `captureTimeout`. `yjs` is an external optional peer; the
+root and React entries do not load it.
+
+```ts
+const ydoc = new Y.Doc()
+const collaboration = createYjsCollaborationExtension({
+  document: ydoc,
+  fragmentName: 'fountain',
+  user: { id: 'ada', name: 'Ada', color: '#6d4aff' },
+  provider,
+})
+```
+
+All collaborators must use compatible Fountain schemas. Text presence uses
+Yjs relative positions; non-text selections are not published. Use
+collaborative history commands instead of snapshot `HistoryExtension` for a
+shared editor. See [COLLABORATION.md](COLLABORATION.md) for provider,
+authentication, persistence, shared-tree, trust, and lifecycle rules.
+
 ## AI review
 
 `AIController(editor, adapter)` controls the propose/review/apply lifecycle.

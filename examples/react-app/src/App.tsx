@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import * as Y from 'yjs';
 import {
   AIController,
   BubbleMenuExtension,
@@ -15,6 +16,9 @@ import {
   createAIAdapter,
   defineExtension,
   historyPlugin,
+  canRedoCollaboration,
+  canUndoCollaboration,
+  getCollaborationState,
   isMarkActive,
   insertNode as demoInsertNode,
   markdownShortcutsPlugin,
@@ -23,6 +27,10 @@ import {
   type AssetUploadHandler,
   type FountainMenuService,
 } from 'fountainjs-editor';
+import {
+  createYjsCollaborationExtension,
+  type YjsAwareness,
+} from 'fountainjs-editor/yjs';
 import {
   EmojiExtension,
   TypographyExtension,
@@ -200,7 +208,7 @@ const competitors = [
     name: 'Tiptap',
     maturity: 'Mature ProseMirror-based platform with a large extension ecosystem.',
     architecture: 'Framework-agnostic core with official integrations across major frontend stacks.',
-    fit: 'Choose it for ecosystem depth, collaboration, and commercial support.',
+    fit: 'Choose it for ecosystem depth, hosted collaboration services, and commercial support.',
     href: 'https://tiptap.dev/docs/editor/getting-started/install',
   },
   {
@@ -225,6 +233,138 @@ const competitors = [
     href: 'https://github.com/eddolo/fountainjs',
   },
 ] as const;
+
+class DemoAwarenessHub {
+  readonly states = new Map<number, Record<string, unknown>>();
+  readonly clients = new Set<DemoAwareness>();
+
+  create(clientID: number): DemoAwareness {
+    const awareness = new DemoAwareness(this, clientID);
+    this.clients.add(awareness);
+    this.states.set(clientID, {});
+    return awareness;
+  }
+
+  emit(): void { this.clients.forEach((client) => client.emit()); }
+}
+
+class DemoAwareness implements YjsAwareness {
+  private readonly listeners = new Set<(...args: any[]) => void>();
+  constructor(private readonly hub: DemoAwarenessHub, readonly clientID: number) {}
+  getLocalState(): Record<string, unknown> | null { return this.hub.states.get(this.clientID) ?? null; }
+  getStates(): Map<number, Record<string, unknown>> { return this.hub.states; }
+  setLocalStateField(field: string, value: unknown): void {
+    const next = { ...(this.getLocalState() ?? {}) };
+    if (value === null) delete next[field];
+    else next[field] = value;
+    this.hub.states.set(this.clientID, next);
+    this.hub.emit();
+  }
+  on(_event: 'change' | 'update', listener: (...args: any[]) => void): void { this.listeners.add(listener); }
+  off(_event: 'change' | 'update', listener: (...args: any[]) => void): void { this.listeners.delete(listener); }
+  emit(): void { this.listeners.forEach((listener) => listener()); }
+}
+
+function CollaborationDemo() {
+  const room = useMemo(() => {
+    const leftDocument = new Y.Doc();
+    const rightDocument = new Y.Doc();
+    const awareness = new DemoAwarenessHub();
+    const leftExtension = createYjsCollaborationExtension({
+      document: leftDocument,
+      awareness: awareness.create(leftDocument.clientID),
+      user: { id: 'ada', name: 'Ada', color: '#6d4aff' },
+    });
+    const rightExtension = createYjsCollaborationExtension({
+      document: rightDocument,
+      awareness: awareness.create(rightDocument.clientID),
+      user: { id: 'grace', name: 'Grace', color: '#d23877' },
+    });
+    return {
+      leftDocument,
+      rightDocument,
+      leftKit: composeExtensions([CoreExtension, leftExtension]),
+      rightKit: composeExtensions([CoreExtension, rightExtension]),
+    };
+  }, []);
+  const collaborativeContent = useMemo(() => ({
+    type: 'doc',
+    content: [
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Shared launch note' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Edit either side. Text, blocks, selections, and undo remain author-aware.' }] },
+    ],
+  } as const), []);
+  const left = useFountain({
+    schema: room.leftKit.schema,
+    plugins: room.leftKit.plugins,
+    content: collaborativeContent,
+  });
+  const right = useFountain({
+    schema: room.rightKit.schema,
+    plugins: room.rightKit.plugins,
+    content: collaborativeContent,
+  });
+  const leftState = useFountainState(left);
+  const rightState = useFountainState(right);
+
+  useEffect(() => {
+    const sendLeft = (update: Uint8Array, origin: unknown) => {
+      if (origin !== room.rightDocument) Y.applyUpdate(room.rightDocument, update, room.leftDocument);
+    };
+    const sendRight = (update: Uint8Array, origin: unknown) => {
+      if (origin !== room.leftDocument) Y.applyUpdate(room.leftDocument, update, room.rightDocument);
+    };
+    room.leftDocument.on('update', sendLeft);
+    room.rightDocument.on('update', sendRight);
+    const leftSnapshot = Y.encodeStateAsUpdate(room.leftDocument);
+    const rightSnapshot = Y.encodeStateAsUpdate(room.rightDocument);
+    Y.applyUpdate(room.leftDocument, rightSnapshot, room.rightDocument);
+    Y.applyUpdate(room.rightDocument, leftSnapshot, room.leftDocument);
+    return () => {
+      room.leftDocument.off('update', sendLeft);
+      room.rightDocument.off('update', sendRight);
+    };
+  }, [room]);
+
+  const leftCollaboration = getCollaborationState(left);
+  const rightCollaboration = getCollaborationState(right);
+  return (
+    <section className="collaboration-demo" id="collaboration">
+      <div className="collaboration-demo__intro">
+        <div><span>REAL-TIME COLLABORATION</span><h2>Two editors. One convergent document.</h2></div>
+        <div>
+          <p>This page links two separate Yjs documents in memory. Type or select on either side and watch the other follow. The same adapter accepts a WebSocket, WebRTC, managed, or offline provider chosen by the host application.</p>
+          <p><strong>No FountainJS server or account is required.</strong> Transport, authentication, room access, and persistence stay replaceable.</p>
+        </div>
+      </div>
+      <div className="collaboration-demo__note"><b>Try it:</b> edit both documents, select a phrase to reveal the peer cursor, then use each author’s undo. Undo only affects that author’s collaborative history.</div>
+      <div className="collaboration-demo__editors">
+        <article data-collaboration-editor="ada">
+          <header><span><i style={{ background: '#6d4aff' }} />Ada</span><code>{leftCollaboration?.status ?? 'connecting'}</code></header>
+          <FountainComposer editor={left} showToolbar={false} ariaLabel="Ada collaborative editor" placeholder="Ada writes here…" />
+          <div className="collaboration-demo__editor-footer">
+            <span>{leftState?.doc.textContent.length ?? 0} characters · {leftCollaboration?.presences.length ?? 0} peer</span>
+            <div><button disabled={!canUndoCollaboration(left)} onClick={() => room.leftKit.commands.undoCollaboration?.(left)}>Undo Ada</button><button disabled={!canRedoCollaboration(left)} onClick={() => room.leftKit.commands.redoCollaboration?.(left)}>Redo</button></div>
+          </div>
+        </article>
+        <article data-collaboration-editor="grace">
+          <header><span><i style={{ background: '#d23877' }} />Grace</span><code>{rightCollaboration?.status ?? 'connecting'}</code></header>
+          <FountainComposer editor={right} showToolbar={false} ariaLabel="Grace collaborative editor" placeholder="Grace writes here…" />
+          <div className="collaboration-demo__editor-footer">
+            <span>{rightState?.doc.textContent.length ?? 0} characters · {rightCollaboration?.presences.length ?? 0} peer</span>
+            <div><button disabled={!canUndoCollaboration(right)} onClick={() => room.rightKit.commands.undoCollaboration?.(right)}>Undo Grace</button><button disabled={!canRedoCollaboration(right)} onClick={() => room.rightKit.commands.redoCollaboration?.(right)}>Redo</button></div>
+          </div>
+        </article>
+      </div>
+      <div className="collaboration-demo__boundary">
+        <code>fountainjs-editor/yjs</code>
+        <span>CRDT document + relative positions + local-origin undo</span>
+        <span>Your provider</span>
+        <span>Your auth and storage</span>
+      </div>
+    </section>
+  );
+}
 
 function App() {
   const editor = useFountain({
@@ -275,7 +415,7 @@ function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
+        <nav><a href="#what">What it is</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 
@@ -413,6 +553,8 @@ function App() {
         </div>
       </section>
 
+      <CollaborationDemo />
+
       <section className="comparison" id="compare">
         <div className="comparison__intro"><span>HONEST COMPARISON</span><h2>Framework-neutral is not a claim that nobody else can make.</h2><p>Tiptap supports several frameworks; Plate and BlockNote are strong React choices. FountainJS focuses on a modular DOM-first engine, a standards-based Custom Element, explicit extension composition, and portable data.</p></div>
         <div className="comparison__table" role="table" aria-label="Rich text editor comparison">
@@ -422,7 +564,7 @@ function App() {
         </div>
         <div className="truth-cards">
           <article className="is-good"><span>FountainJS is a fit when…</span><p>You need a capable editor across multiple frontend surfaces, want extensions to stay host-controlled, and prefer portable JSON, open interfaces, and MIT licensing.</p></article>
-          <article><span>Choose a mature alternative when…</span><p>You need real-time collaboration, mobile and IME battle-testing, a large plugin market, or commercial support today.</p></article>
+          <article><span>Choose a mature alternative when…</span><p>You need a much larger extension market, years of physical-device deployment evidence, or commercial support today.</p></article>
         </div>
       </section>
 

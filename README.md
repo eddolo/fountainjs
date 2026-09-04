@@ -31,6 +31,8 @@ npm install fountainjs-editor
 ```
 
 React is an optional peer dependency. Install `react` and `react-dom` only when importing `fountainjs-editor/react`.
+Yjs is also optional. Install `yjs` only when importing
+`fountainjs-editor/yjs` for real-time collaboration.
 
 ## Compose an editor
 
@@ -541,6 +543,38 @@ emit deterministic deduplicated references; `exportWithReport` identifies
 every unsupported node, mark, or attribute projection by document path so a
 publishing pipeline never has to guess what Markdown omitted.
 
+## Optional real-time collaboration
+
+The root package exposes a provider-independent collaboration boundary. The
+separate `fountainjs-editor/yjs` entry adds conflict-free shared text and
+structure, relative remote selections, accessible carets, deterministic room
+initialization, and local-origin undo/redo.
+
+```bash
+npm install fountainjs-editor yjs
+```
+
+```ts
+import * as Y from 'yjs'
+import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs'
+
+const ydoc = new Y.Doc()
+const collaboration = createYjsCollaborationExtension({
+  document: ydoc,
+  provider: myWebSocketWebRTCOrManagedProvider,
+  user: { id: user.id, name: user.name, color: '#6d4aff' },
+})
+const kit = composeExtensions([CoreExtension, collaboration])
+```
+
+The provider is optional. An app may transport Yjs updates itself, add offline
+persistence to the same `Y.Doc`, select a managed provider, or leave
+collaboration out. FountainJS hosts no room service and receives no document or
+credential. Authentication, authorization, persistence, and provider trust
+remain explicit application boundaries. See the
+[collaboration and Yjs guide](docs/COLLABORATION.md).
+
 ## Optional AI review module
 
 AI is one example of a host service. FountainJS does not provide a model account or require a Fountain cloud. The optional `AIController` lets an application inspect exactly what will be sent, request a text proposal from any adapter, show a before/after review, accept or reject, block stale proposals, and undo acceptance.
@@ -574,12 +608,12 @@ FountainJS is not the first framework-neutral or extensible editor.
 
 | Project | Architecture and maturity | Practical reason to choose it |
 | --- | --- | --- |
-| [Tiptap](https://tiptap.dev/docs/editor/getting-started/overview) | Mature ProseMirror platform with multiple framework integrations and a large extension ecosystem | Collaboration, ecosystem depth, and commercial support |
+| [Tiptap](https://tiptap.dev/docs/editor/getting-started/overview) | Mature ProseMirror platform with multiple framework integrations and a large extension ecosystem | Ecosystem depth, hosted collaboration services, and commercial support |
 | [Plate](https://platejs.org/docs) | Powerful React/Slate framework with a broad plugin catalog | A React-first product with many polished capabilities ready now |
 | [BlockNote](https://www.blocknotejs.org/docs) | Polished React block editor with an out-of-the-box Notion-like experience | Shipping a strong block UI quickly |
 | **FountainJS** | DOM-first editor platform, Web Component, React adapter, and explicit extension composition | Owning a modular editor platform and keeping framework/data boundaries open |
 
-Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need real-time collaboration, physical-device IME/mobile certification, a large plugin market, or commercial support.
+Choose FountainJS when those boundaries matter and an early API is acceptable. Choose a mature alternative today when you need years of physical-device IME/mobile certification, a large plugin market, hosted collaboration administration, or commercial support.
 
 ## React exports
 
@@ -622,7 +656,8 @@ nested block drag/button reordering, mentions, emoji, typography, character limi
 slash-command registry, framework-neutral bubble/floating menus, browser-event
 plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
-proposals, and MCP transport.
+proposals, MCP transport, and optional provider-independent Yjs collaboration
+with relative presence and origin-aware undo.
 
 FountainJS is open about integration boundaries: host applications choose their media storage, persistence, authentication, and collaboration provider through adapters and services. No Fountain cloud account is required, and those product-specific systems are not silently bundled into the editor.
 
@@ -632,6 +667,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)
 - [Toolbar composition and stable action IDs](docs/TOOLBAR.md)
 - [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
+- [Collaboration, Yjs, providers, presence, and security](docs/COLLABORATION.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

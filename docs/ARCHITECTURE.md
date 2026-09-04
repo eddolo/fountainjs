@@ -372,6 +372,41 @@ default; callers can override event and mutation policies.
 
 Services are deliberately open-ended. A host can use them for analytics, collaboration, persistence, feature flags, upload clients, or product-specific dependencies without teaching the editor core about those systems.
 
+## Collaboration boundary
+
+Collaboration is layered so neither a network vendor nor Yjs becomes editor
+architecture. `createCollaborationExtension` is a normal framework-neutral
+plugin plus lifecycle commands. It subscribes to accepted editor transactions,
+separates local from remote origins, validates complete incoming documents,
+keeps presence out of persisted content, and renders normalized carets/ranges
+through the ordinary decoration system.
+
+The adapter boundary receives before/after documents and selections. This is
+enough for a CRDT implementation to reconcile retained nodes without teaching
+the editor core about a CRDT, provider, socket, room, or account. Connection
+status and recoverable errors are immutable plugin state. Disconnect and final
+destroy are separate lifecycle stages so reconnectable transports and terminal
+resources can be handled correctly.
+
+The optional `src/yjs/` entry maps each Fountain node to a `Y.XmlElement`.
+Each attribute gets an independent shared key, text lives in `Y.XmlText`, and
+container children remain a shared sequence. Local transaction pairs drive
+alignment and minimal text edits. Remote Yjs transactions rebuild a candidate
+Fountain tree and pass it through the receiving schema before dispatch. A
+malformed or unknown tree never becomes editor state.
+
+Yjs relative positions attach ephemeral text selections to shared text rather
+than stale integer offsets. Awareness remains provider-owned and non-durable;
+the adapter converts valid remote values into generic collaboration presence.
+`Y.UndoManager` tracks only the adapter's local origin and stores relative
+before/after selections on stack items, so collaborative undo preserves remote
+work and restores the local cursor.
+
+`yjs` is externalized from the build and available only through the optional
+`fountainjs-editor/yjs` package path. Providers, authentication, authorization,
+offline databases, encryption, comments, and version archives are host
+boundaries. See [COLLABORATION.md](COLLABORATION.md).
+
 Syntax highlighting demonstrates the decoration boundary. A code block persists
 source and presentation-neutral language metadata. `SyntaxHighlightExtension`
 tokenizes that source into validated ranges, then supplies inline tokens,
@@ -496,6 +531,12 @@ The suites are organized by boundary:
 - `tests/markdown-format.test.ts`: titled inline/reference destinations,
   deterministic definitions, escaped/aligned tables, recursive blockquotes,
   loose multi-block lists, unsafe URLs, and explicit extension-loss reports;
+- `tests/collaboration.test.ts`: provider-neutral lifecycle, no-echo remote
+  application, status/error containment, presence hardening, decorations,
+  filters, reconnect, and selection-only updates;
+- `tests/yjs-collaboration.test.ts`: offline text/structure convergence,
+  simultaneous seed repair, awareness-relative selections, origin-aware undo,
+  provider lifecycle, and hostile shared trees;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -518,10 +559,11 @@ The suites are organized by boundary:
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
 `pnpm test:budget` enforces raw production ceilings of 102 KiB for the ESM root,
-84 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
-the isolated full emoji data, 64/48 KiB for the React entries, 34 KiB for CSS,
-and 448/377 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
-emoji data. Source maps are
+85 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
+the isolated full emoji data, 64/48 KiB for the React entries, 16/14 KiB for the
+optional Yjs adapter, 34 KiB for CSS, and 473/400 KiB for all emitted
+ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
+an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
 destruction. The broader large-document latency and teardown benchmark work is
@@ -547,6 +589,8 @@ tracked separately as `PROD-05`.
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |
 | `src/emoji-data.ts` | Optional complete searchable RGI emoji catalogue |
 | `src/extensions/media.ts` | Native media nodes, embed providers, policy, commands, and NodeViews |
+| `src/extensions/collaboration.ts` | Provider-neutral lifecycle, remote transactions, presence, decorations, and collaborative history commands |
+| `src/yjs/` | Optional Yjs tree reconciliation, awareness-relative selections, and origin-aware undo |
 | `src/react/` | Optional React integration and controls |
 | `src/ai/` | Optional provider-neutral AI and MCP adapter |
 | `src/lean/` | Optional provider-neutral Lean requests and proof state |

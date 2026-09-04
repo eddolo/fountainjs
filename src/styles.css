@@ -231,6 +231,10 @@
 .fountain-character-count { display: flex; flex-wrap: wrap; gap: 5px 16px; padding: 8px 12px; color: var(--fountain-muted); font: 600 12px/1.3 system-ui, sans-serif; }
 .fountain-character-count.is-over-limit { color: #b42318; }
 
+.fountain-collaboration-selection { background: color-mix(in srgb, var(--fountain-collaborator-color) 22%, transparent); border-radius: 2px; }
+.fountain-collaboration-caret { position: relative; display: inline-block; width: 0; height: 1.25em; margin-inline: -1px 0; vertical-align: text-bottom; border-inline-start: 2px solid var(--fountain-collaborator-color); pointer-events: none; }
+.fountain-collaboration-caret > span { position: absolute; inset-block-end: 100%; inset-inline-start: -2px; z-index: 5; max-width: 180px; padding: 2px 5px; overflow: hidden; color: #fff; background: var(--fountain-collaborator-color); border-radius: 4px 4px 4px 0; font: 700 10px/1.3 system-ui, sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+
 .fountain-ai-review { padding: 18px; color: var(--fountain-ink); font: 14px/1.5 ui-sans-serif, system-ui, sans-serif; background: var(--fountain-surface); border: 1px solid var(--fountain-border); border-radius: 14px; }
 .fountain-ai-review__head { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
 .fountain-ai-review__eyebrow { display: block; color: var(--fountain-accent); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }

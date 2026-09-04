@@ -11,12 +11,13 @@ export default defineConfig({
         react: fileURLToPath(new URL('./src/react/index.ts', import.meta.url)),
         'document-utilities': fileURLToPath(new URL('./src/document-utilities.ts', import.meta.url)),
         'emoji-data': fileURLToPath(new URL('./src/emoji-data.ts', import.meta.url)),
+        yjs: fileURLToPath(new URL('./src/yjs/index.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'yjs'],
       output: {
         globals: {
           react: 'React',

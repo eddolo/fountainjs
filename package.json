@@ -18,6 +18,9 @@
       ],
       "react": [
         "dist/react/index.d.ts"
+      ],
+      "yjs": [
+        "dist/yjs/index.d.ts"
       ]
     }
   },
@@ -62,6 +65,16 @@
         "default": "./dist/react.cjs"
       }
     },
+    "./yjs": {
+      "import": {
+        "types": "./dist/yjs/index.d.ts",
+        "default": "./dist/yjs.js"
+      },
+      "require": {
+        "types": "./dist/yjs/index.d.cts",
+        "default": "./dist/yjs.cjs"
+      }
+    },
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
@@ -103,6 +116,9 @@
     "human-in-the-loop",
     "bring-your-own-model",
     "headless",
+    "collaboration",
+    "crdt",
+    "yjs",
     "accessible"
   ],
   "engines": {
@@ -126,13 +142,17 @@
   },
   "peerDependencies": {
     "react": ">=18 <21",
-    "react-dom": ">=18 <21"
+    "react-dom": ">=18 <21",
+    "yjs": ">=13.6 <14"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
     },
     "react-dom": {
+      "optional": true
+    },
+    "yjs": {
       "optional": true
     }
   },
@@ -148,6 +168,7 @@
     "typescript": "^7.0.2",
     "unicode-emoji-json": "0.9.0",
     "vite": "^8.2.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "yjs": "^13.6.32"
   }
 }

@@ -2,6 +2,7 @@ import {
   Decoration,
   ClipboardHistoryExtension,
   DecorationSet,
+  CoreExtension,
   EditorView,
   LeanExtension,
   LeanController,
@@ -21,6 +22,8 @@ import {
   textPasteRule,
   type Node,
 } from '../../../src';
+import * as Y from 'yjs';
+import { createYjsCollaborationExtension } from '../../../src/yjs';
 import '../../../src/styles.css';
 
 const decorationKey = new PluginKey<DecorationSet>('browser-contract');
@@ -131,6 +134,52 @@ const updateOutput = () => { output.value = JSON.stringify(editor.getJSON()); };
 updateOutput();
 editor.subscribe(updateOutput);
 
+const leftYDocument = new Y.Doc();
+const leftCollaboration = createYjsCollaborationExtension({
+  document: leftYDocument,
+  user: { id: 'browser-left', name: 'Browser left', color: '#6d4aff' },
+});
+const leftKit = composeExtensions([CoreExtension, leftCollaboration]);
+const leftEditor = createEditor({
+  schema: leftKit.schema,
+  plugins: leftKit.plugins,
+  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared collaboration' }] }] },
+});
+const rightYDocument = new Y.Doc();
+Y.applyUpdate(rightYDocument, Y.encodeStateAsUpdate(leftYDocument), 'initial-browser-sync');
+const rightCollaboration = createYjsCollaborationExtension({
+  document: rightYDocument,
+  user: { id: 'browser-right', name: 'Browser right', color: '#d23877' },
+});
+const rightKit = composeExtensions([CoreExtension, rightCollaboration]);
+const rightEditor = createEditor({
+  schema: rightKit.schema,
+  plugins: rightKit.plugins,
+  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared collaboration' }] }] },
+});
+let collaborationLinked = true;
+const updateRight = (update: Uint8Array, origin: unknown) => {
+  if (collaborationLinked && origin !== rightYDocument) Y.applyUpdate(rightYDocument, update, leftYDocument);
+};
+const updateLeft = (update: Uint8Array, origin: unknown) => {
+  if (collaborationLinked && origin !== leftYDocument) Y.applyUpdate(leftYDocument, update, rightYDocument);
+};
+leftYDocument.on('update', updateRight);
+rightYDocument.on('update', updateLeft);
+const leftCollaborationMount = document.querySelector<HTMLElement>('#collaboration-left');
+const rightCollaborationMount = document.querySelector<HTMLElement>('#collaboration-right');
+if (!leftCollaborationMount || !rightCollaborationMount) throw new Error('Collaboration fixture failed to mount.');
+const leftCollaborationView = new EditorView(leftCollaborationMount, leftEditor, { ariaLabel: 'Collaborative editor left' });
+const rightCollaborationView = new EditorView(rightCollaborationMount, rightEditor, { ariaLabel: 'Collaborative editor right' });
+
+const resumeCollaboration = () => {
+  const leftUpdate = Y.encodeStateAsUpdate(leftYDocument);
+  const rightUpdate = Y.encodeStateAsUpdate(rightYDocument);
+  collaborationLinked = true;
+  Y.applyUpdate(leftYDocument, rightUpdate, rightYDocument);
+  Y.applyUpdate(rightYDocument, leftUpdate, leftYDocument);
+};
+
 const inspectMarkdown = (source: string) => {
   const document = MarkdownImporter.parse(source, editor.state.schema);
   const exported = MarkdownExporter.exportWithReport(document, { linkStyle: 'reference' });
@@ -153,5 +202,15 @@ Object.assign(globalThis, {
     inspectMarkdown,
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     startImageUpload,
+    collaboration: {
+      leftEditor,
+      rightEditor,
+      leftView: leftCollaborationView,
+      rightView: rightCollaborationView,
+      pause: () => { collaborationLinked = false; },
+      resume: resumeCollaboration,
+      closeLeftHistory: () => leftKit.commands.closeCollaborationHistory?.(leftEditor),
+      undoLeft: () => leftKit.commands.undoCollaboration?.(leftEditor),
+    },
   },
 });

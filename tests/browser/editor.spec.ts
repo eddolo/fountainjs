@@ -4,6 +4,35 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
 });
 
+test('converges live and offline Yjs edits and keeps collaborative undo author-local', async ({ page }) => {
+  const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
+  const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
+
+  await left.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('!');
+  await expect(right).toContainText('Shared collaboration!');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.collaboration.closeLeftHistory())).toBe(true);
+
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.collaboration.pause());
+  await left.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' LEFT');
+  await right.click();
+  await page.keyboard.press('Home');
+  await page.keyboard.type('RIGHT ');
+  await expect(left).not.toContainText('RIGHT');
+  await expect(right).not.toContainText('LEFT');
+
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.collaboration.resume());
+  await expect(left).toContainText('RIGHT Shared collaboration! LEFT');
+  await expect(right).toContainText('RIGHT Shared collaboration! LEFT');
+
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.collaboration.undoLeft())).toBe(true);
+  await expect(left).toContainText('RIGHT Shared collaboration!');
+  await expect(right).toContainText('RIGHT Shared collaboration!');
+});
+
 test('runs reference links, recursive blocks, rich tables, and loss reports in a real browser', async ({ page }) => {
   const result = await page.evaluate(() => (globalThis as any).fountainBrowserTest.inspectMarkdown([
     '> First paragraph.',
@@ -44,7 +73,8 @@ test('edits through real beforeinput events and undoes a Markdown input rule', a
 });
 
 test('groups adjacent browser typing and respects explicit undo boundaries', async ({ page }) => {
-  const first = page.locator('[data-fountain-path="0"]');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const first = editor.locator('[data-fountain-path="0"]');
   await first.click();
   await page.keyboard.press('Home');
   await page.keyboard.type('abc');
@@ -100,7 +130,7 @@ test('maps decorations through typing without persisting widget content', async 
   expect(await editor.locator('.tested-overlap').allTextContents()).toEqual(['ha', ' Bet']);
   await expect(editor.locator('[data-fountain-widget="remote"]')).toHaveText('Remote');
 
-  await page.locator('[data-fountain-path="0"]').click();
+  await editor.locator('[data-fountain-path="0"]').click();
   await page.keyboard.press('Home');
   await page.keyboard.type('!');
   expect(await editor.locator('.tested-range').allTextContents()).toEqual(['Alp', 'ha']);
@@ -334,8 +364,9 @@ test('edits bidirectional and deeply nested text by logical document positions',
 
 test('moves a selected top-level block through native drag data', async ({ page }) => {
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectNode([0]));
-  const first = page.locator('[data-fountain-path="0"]');
-  const second = page.locator('[data-fountain-path="1"]');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const first = editor.locator('[data-fountain-path="0"]');
+  const second = editor.locator('[data-fountain-path="1"]');
   await expect(first).toHaveAttribute('draggable', 'true');
   const targetBox = await second.boundingBox();
   await first.dragTo(second, { targetPosition: { x: 8, y: Math.max(1, (targetBox?.height ?? 2) - 1) } });
@@ -480,14 +511,15 @@ test('selects and deletes an atomic image through real pointer and keyboard inpu
     return contract.commands.commands.insertImage({ src: 'https://example.com/selected.png', alt: 'Selected image' });
   });
   expect(inserted).toBe(true);
-  const image = page.locator('[data-fountain-node="image_super"]');
-  await page.locator('[data-fountain-path="0"]').click();
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const image = editor.locator('[data-fountain-node="image_super"]');
+  await editor.locator('[data-fountain-path="0"]').click();
   await page.keyboard.press('End');
   await page.keyboard.press('ArrowRight');
   await expect(image).toHaveAttribute('data-fountain-selected-node', 'true');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
 
-  await page.locator('[data-fountain-path="0"]').click();
+  await editor.locator('[data-fountain-path="0"]').click();
   await image.locator('img').click();
   await expect(image).toHaveAttribute('data-fountain-selected-node', 'true');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('node');
@@ -838,6 +870,38 @@ test('loads the public React playground without console or page errors', async (
   expect(heroLines[2].top).toBeGreaterThan(heroLines[1].top);
   await expect(page.getByRole('textbox', { name: 'Rich text editor' })).toContainText('Build an editor');
   expect(errors).toEqual([]);
+});
+
+test('runs the public two-editor collaboration demo with presence and author-local undo', async ({ page }) => {
+  await page.goto('/');
+  const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const right = page.getByRole('textbox', { name: 'Grace collaborative editor' });
+  await expect(left).toBeVisible();
+  await expect(right).toContainText('Edit either side');
+
+  const leftParagraph = left.locator('[data-fountain-node="paragraph"]').first();
+  await leftParagraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' LIVE');
+  await expect(right).toContainText('author-aware. LIVE');
+
+  await leftParagraph.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text) throw new Error('Expected collaboration text.');
+    const range = document.createRange();
+    range.setStart(text, 0);
+    range.setEnd(text, Math.min(4, text.textContent?.length ?? 0));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await expect(right.locator('.fountain-collaboration-caret')).toHaveAttribute('aria-label', "Ada's cursor");
+  await expect(right.locator('.fountain-collaboration-selection')).toContainText('Edit');
+
+  await page.getByRole('button', { name: 'Undo Ada' }).click();
+  await expect(right).not.toContainText(' LIVE');
+  await expect(left).not.toContainText(' LIVE');
 });
 
 test('uses package-backed mentions, emoji, typography, and live counting in the public React playground', async ({ page }) => {

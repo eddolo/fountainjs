@@ -54,7 +54,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | CORE-07 | View-only inline, node, and widget decorations | Delivered | Immutable inline/node/widget sets, transaction mapping, plugin delivery, safe DOM rendering, overlapping-range segmentation, and browser contracts are implemented. |
 | CORE-08 | Custom interactive node views | Delivered | Framework-neutral NodeViews have mapped reuse, live paths, update/recreate and cleanup contracts, contentDOM refresh, semantic selection hooks, event isolation, mutation recovery, reversible decorations, a separate React adapter, a live public demo, and unit/real-browser coverage. |
 | CORE-09 | Predictable keyboard, IME, clipboard, and drag input | Delivered | Controlled input covers alternate composition commits without duplication, replacement/mobile input, rich structured paste, logical bidi and nested positions, selected-block native drag-move, semantic keyboard behavior, an optional bounded clipboard-history picker, and desktop plus emulated-mobile browser contracts. |
-| CORE-10 | Configurable undo/redo | Partial | Configurable depth/delay, adjacent typing/composition/deletion groups, explicit boundaries, semantic selection restoration, redo invalidation, and browser-history input are delivered; replace local snapshots with origin-aware rebased undo when collaboration lands. |
+| CORE-10 | Configurable undo/redo | Partial | Configurable local history plus Yjs local-origin undo/redo, remote-change preservation, explicit capture boundaries, and relative selection restoration are implemented; complete the collaboration release-evidence gate before marking delivered. |
 
 ### Document capabilities
 
@@ -85,9 +85,9 @@ A row may move to **Delivered** only when all applicable gates pass:
 
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
-| COLLAB-01 | Concurrent conflict-free document editing | Missing | Build a CRDT adapter, initially for Yjs, with deterministic schema-aware conversion. |
-| COLLAB-02 | Provider-independent synchronization | Missing | Define provider, awareness, authentication, reconnect, and offline persistence contracts. |
-| COLLAB-03 | Presence and remote selections | Missing | Render mapped remote carets/selections through decorations. |
+| COLLAB-01 | Concurrent conflict-free document editing | Partial | The optional Yjs adapter implements character-level text merging, retained structural identity, independent node attributes, disconnected convergence, deterministic seed repair, and schema-safe remote application; complete all-engine CI and deployed-demo verification. |
+| COLLAB-02 | Provider-independent synchronization | Partial | Framework-neutral lifecycle/status/reconnect contracts plus host-owned network, authentication, authorization, managed-provider, and offline-persistence boundaries are implemented and documented; complete release evidence. |
+| COLLAB-03 | Presence and remote selections | Partial | Awareness-relative text selections, normalized immutable users, accessible range/caret decorations, departure cleanup, and a live two-editor demo are implemented; complete all-engine and deployed-site verification. |
 | COLLAB-04 | Threaded inline and document comments | Missing | Add anchors, orphan recovery, permissions, storage adapter, and accessible UI. |
 | COLLAB-05 | General tracked changes and suggestion mode | Missing | Represent insert/delete/format suggestions with accept/reject and author metadata. |
 | COLLAB-06 | Named versions, comparison, and restoration | Missing | Add snapshot provider contracts, structural diff, preview, and restore transactions. |
