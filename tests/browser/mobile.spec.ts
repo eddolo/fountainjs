@@ -103,3 +103,53 @@ test('keeps the suggestion picker visible and touch-selectable on a phone viewpo
   await expect(editor.locator('.demo-callout').last()).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
+
+test('keeps contextual menus reachable and touch-selectable on a phone viewport', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstText = editor.locator('[data-fountain-text-path]').first();
+  await firstText.click();
+  await firstText.evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text) throw new Error('Expected editor text.');
+    const range = document.createRange();
+    range.setStart(text, 0);
+    range.setEnd(text, Math.min(8, text.textContent?.length ?? 0));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+
+  const bubble = page.getByRole('toolbar', { name: 'Selection actions' });
+  await expect(bubble).toBeVisible();
+  const viewport = page.viewportSize();
+  const bubbleBox = await bubble.boundingBox();
+  expect(bubbleBox).not.toBeNull();
+  expect((bubbleBox?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((bubbleBox?.x ?? 0) + (bubbleBox?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  await bubble.getByRole('button', { name: 'Underline selection' }).click();
+  await expect(editor.locator('u').first()).toBeAttached();
+
+  const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await paragraph.click();
+  await paragraph.locator('[data-fountain-text-path]').last().evaluate((wrapper) => {
+    const range = document.createRange();
+    range.selectNodeContents(wrapper);
+    range.collapse(false);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('Enter');
+  const floating = page.getByRole('toolbar', { name: 'Empty block actions' });
+  await expect(floating).toBeVisible();
+  const floatingBox = await floating.boundingBox();
+  expect(floatingBox).not.toBeNull();
+  expect((floatingBox?.x ?? -1)).toBeGreaterThanOrEqual(0);
+  expect((floatingBox?.x ?? 0) + (floatingBox?.width ?? 0)).toBeLessThanOrEqual((viewport?.width ?? 0) + 1);
+  await floating.getByRole('button', { name: 'Use heading 1' }).click();
+  await expect(editor.locator('h1').last()).toBeAttached();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});

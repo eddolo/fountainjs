@@ -53,6 +53,7 @@ export * from './lean';
 export * from './link-behavior';
 export * from './clipboard-history';
 export * from './media';
+export * from './floating-menu';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';

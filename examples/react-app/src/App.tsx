@@ -1,21 +1,27 @@
 import { useMemo, useRef, useState } from 'react';
 import {
   AIController,
+  BubbleMenuExtension,
   ClipboardHistoryExtension,
   CoreExtension,
   HTMLExporter,
   JSONExporter,
   MarkdownExporter,
   MediaExtension,
+  FloatingMenuExtension,
   SyntaxHighlightExtension,
   TableEditingExtension,
   composeExtensions,
   createAIAdapter,
   defineExtension,
   historyPlugin,
+  isMarkActive,
   insertNode as demoInsertNode,
   markdownShortcutsPlugin,
+  setBlockType,
+  toggleMark,
   type AssetUploadHandler,
+  type FountainMenuService,
 } from 'fountainjs-editor';
 import {
   EmojiExtension,
@@ -32,8 +38,10 @@ import {
 } from 'fountainjs-editor/document-utilities';
 import {
   FountainAIReview,
+  FountainBubbleMenu,
   FountainCharacterCount,
   FountainComposer,
+  FountainFloatingMenu,
   FountainSlashCommandMenu,
   FountainSuggestionMenu,
   Navigator,
@@ -166,6 +174,8 @@ const demoKit = composeExtensions([
   characterCountExtension,
   TypographyExtension,
   slashCommandExtension,
+  BubbleMenuExtension,
+  FloatingMenuExtension,
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
   SyntaxHighlightExtension,
@@ -313,7 +323,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>The package running in this page.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> start an empty line with <kbd>/</kbd> for the grouped command menu; type <kbd>@a</kbd> for a person, <kbd>#re</kbd> for a topic, or <kbd>:rock</kbd> for emoji; use ↑/↓ and Enter. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type. Everything else remains available too.</div>
+        <div className="demo-note"><b>Try it:</b> select text for the bubble toolbar, or press Enter at a paragraph end for the empty-block toolbar. Start an empty line with <kbd>/</kbd> for grouped commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -325,6 +335,25 @@ function App() {
               <button onClick={() => addBlock('callout')}>✦ Callout</button>
             </div>
             <FountainComposer ref={editorHandle} editor={editor} placeholder="Start writing…" assetUpload={demoAssetUpload} />
+            <FountainBubbleMenu
+              editor={editor}
+              service={demoKit.services.bubbleMenu as FountainMenuService}
+              anchorElement={editorHandle.current?.view?.dom}
+            >
+              <button type="button" aria-label="Bold selection" aria-pressed={isMarkActive(editor, 'strong')} onMouseDown={(event) => event.preventDefault()} onClick={() => toggleMark(editor, 'strong')}><b>B</b></button>
+              <button type="button" aria-label="Italic selection" aria-pressed={isMarkActive(editor, 'em')} onMouseDown={(event) => event.preventDefault()} onClick={() => toggleMark(editor, 'em')}><i>I</i></button>
+              <button type="button" aria-label="Underline selection" aria-pressed={isMarkActive(editor, 'underline')} onMouseDown={(event) => event.preventDefault()} onClick={() => toggleMark(editor, 'underline')}><u>U</u></button>
+              <button type="button" aria-label="Highlight selection" aria-pressed={isMarkActive(editor, 'highlight')} onMouseDown={(event) => event.preventDefault()} onClick={() => toggleMark(editor, 'highlight')}>Highlight</button>
+            </FountainBubbleMenu>
+            <FountainFloatingMenu
+              editor={editor}
+              service={demoKit.services.floatingMenu as FountainMenuService}
+              anchorElement={editorHandle.current?.view?.dom}
+            >
+              <button type="button" aria-label="Use paragraph" onMouseDown={(event) => event.preventDefault()} onClick={() => setBlockType(editor, 'paragraph')}>Text</button>
+              <button type="button" aria-label="Use heading 1" onMouseDown={(event) => event.preventDefault()} onClick={() => setBlockType(editor, 'heading', { level: 1 })}>H1</button>
+              <button type="button" aria-label="Use heading 2" onMouseDown={(event) => event.preventDefault()} onClick={() => setBlockType(editor, 'heading', { level: 2 })}>H2</button>
+            </FountainFloatingMenu>
             <FountainSlashCommandMenu
               editor={editor}
               service={demoKit.services.slashCommands as SlashCommandService}

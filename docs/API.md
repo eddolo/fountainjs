@@ -270,6 +270,30 @@ over the shared accessible suggestion listbox. See
 [SLASH_COMMANDS.md](SLASH_COMMANDS.md) for the full registration, execution,
 accessibility, and lifecycle contracts.
 
+### Bubble and floating menus
+
+`BubbleMenuExtension` and `FloatingMenuExtension` are opt-in root-package
+extensions. Their `bubbleMenu` and `floatingMenu` services expose
+`getController(editor)`. A `FountainMenuController` publishes immutable
+snapshots, `subscribe`, selection-local `dismiss`, explicit `refresh`, and
+`destroy`. Bubble eligibility defaults to text ranges plus node, cell, and
+whole-document selections; floating eligibility defaults to a collapsed caret in an empty
+nearest block and includes its `anchorPath`.
+
+Use `createBubbleMenuExtension(options)` or
+`createFloatingMenuExtension(options)` for `showWhenReadOnly`, a complete
+`shouldShow({ editor, state, selection, defaultOpen })` override, or a named
+`id`. Named services use `bubbleMenu:<id>` / `floatingMenu:<id>` so multiple
+instances can compose without silent replacement. Invalid IDs fail explicitly;
+predicate exceptions close the menu and appear in `snapshot.error`.
+
+`getEditorMenuAnchorRect(root, snapshot)` resolves model selection geometry,
+and `placeEditorMenu(reference, menu, kind, options?)` returns clamped,
+collision-aware fixed coordinates. React hosts can render arbitrary controls
+inside `FountainBubbleMenu` and `FountainFloatingMenu`; the renderers are
+focus-aware, SSR-safe labelled toolbars with arrow/Home/End navigation and
+Escape dismissal. See [CONTEXTUAL_MENUS.md](CONTEXTUAL_MENUS.md).
+
 ### Custom NodeViews
 
 A NodeView constructor receives the current model `node`, the owning
@@ -802,7 +826,8 @@ Import React bindings from `fountainjs-editor/react`:
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
-- `FountainSuggestionMenu`, `FountainSlashCommandMenu`, and `FountainCharacterCount`
+- `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
+  `FountainFloatingMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`

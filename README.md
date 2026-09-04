@@ -199,6 +199,19 @@ Any surface can render `kit.services.slashCommands.getController(editor)`.
 React applications can use the grouped, viewport-aware
 `FountainSlashCommandMenu`. See the complete [slash-command guide](docs/SLASH_COMMANDS.md).
 
+## Contextual bubble and floating menus
+
+`BubbleMenuExtension` and `FloatingMenuExtension` are separate opt-in modules.
+Their framework-neutral controllers derive eligibility from semantic selections,
+support named instances and safe custom `shouldShow` rules, and never persist UI
+state. Reusable DOM geometry resolves marked/cross-wrapper text, node, and cell
+selections and flips/clamps menus within the viewport.
+
+React hosts can render any product controls inside `FountainBubbleMenu` and
+`FountainFloatingMenu`; other frameworks subscribe to the same controller and
+use `getEditorMenuAnchorRect()` plus `placeEditorMenu()`. See the full
+[contextual-menu guide](docs/CONTEXTUAL_MENUS.md).
+
 ## Native LaTeX mathematics
 
 `MathExtension` is a first-party but opt-in module. It adds portable
@@ -506,7 +519,8 @@ Choose FountainJS when those boundaries matter and an early API is acceptable. C
 
 - `useFountain` and `useFountainState`
 - `FountainEditor`, `FountainToolbar`, and `FountainComposer`
-- `FountainSuggestionMenu`, `FountainSlashCommandMenu`, and `FountainCharacterCount`
+- `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
+  `FountainFloatingMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
 - `Navigator` and `useNavigatorState`
 - `FountainAIReview` and `useAIControllerState`
@@ -538,7 +552,7 @@ find/replace; rich content insertion; image URL/upload/paste/drop workflows;
 reusable input and paste rules; links, lists, tasks, code, tables, local history,
 interactive NodeViews, grouped browser input, structured clipboard and selected-
 block drag-move, mentions, emoji, typography, character limits, a live extensible
-slash-command registry, browser-event
+slash-command registry, framework-neutral bubble/floating menus, browser-event
 plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
 proposals, and MCP transport.
@@ -548,6 +562,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Architecture and internals](docs/ARCHITECTURE.md)
 - [Mentions, emoji, typography, and character count](docs/DOCUMENT_UTILITIES.md)
 - [Slash commands and runtime registrations](docs/SLASH_COMMANDS.md)
+- [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

@@ -225,6 +225,15 @@ unregisters. The query deletion and selected command commit together; any
 failed command or plugin-filtered result rolls the temporary state back. The
 registry and menu therefore add no slash-specific state to the document model.
 
+Bubble and floating menus follow the same boundary without using suggestion
+state. `FountainMenuController` derives an immutable eligibility snapshot from
+the semantic model selection and contains failures from host `shouldShow`
+predicates. The DOM view helper resolves model paths into selection, node, cell,
+or empty-block rectangles; a separate pure placement helper flips and clamps a
+surface. React only adds focus policy, resize/scroll observation, toolbar
+keyboard behavior, and rendering. None of these layers writes contextual UI or
+geometry into the document, plugin state, history, or serialized formats.
+
 History demonstrates this design. It is a normal stateful plugin holding `done`
 and `undone` snapshots. `createHistoryPlugin` validates configurable depth and
 group delay values. Input transactions carry an internal kind/time marker, so
@@ -466,6 +475,10 @@ The suites are organized by boundary:
   command rollback;
 - `tests/react-document-utilities.test.tsx`: accessible suggestion, grouped
   slash, and live count renderers;
+- `tests/floating-menu.test.ts`: bubble/floating eligibility, named services,
+  lifecycle, failure containment, read-only policy, and placement geometry;
+- `tests/react-floating-menu.test.tsx`: focused toolbar rendering, positioning,
+  keyboard traversal, and Escape dismissal;
 - `tests/ai.test.ts`: request scope, proposal lifecycle, stale protection, cancellation, and acceptance;
 - `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
@@ -476,7 +489,7 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 `pnpm test:budget` enforces raw production ceilings of 100 KiB for the ESM root,
 84 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
 the isolated full emoji data, 64/48 KiB for the React entries, 32 KiB for CSS,
-and 412/344 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
+and 424/356 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
 emoji data. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
@@ -496,8 +509,8 @@ tracked separately as `PROD-05`.
 | `src/core/search.ts` | Cross-fragment search and replacement |
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
-| `src/view/` | DOM projection, input, selection, media, Custom Element |
-| `src/extensions/` | Composition contract and supplied capabilities |
+| `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
+| `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |
 | `src/emoji-data.ts` | Optional complete searchable RGI emoji catalogue |
 | `src/extensions/media.ts` | Native media nodes, embed providers, policy, commands, and NodeViews |

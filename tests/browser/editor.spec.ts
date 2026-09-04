@@ -807,6 +807,48 @@ test('runs grouped default and product slash commands in the public React playgr
   await expect(freshEditor.locator('.demo-callout').last()).toContainText('A custom node supplied by the demo extension.');
 });
 
+test('runs accessible bubble and floating menus in the public React playground', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstText = editor.locator('[data-fountain-text-path]').first();
+  await firstText.click();
+  await firstText.evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text) throw new Error('Expected editor text.');
+    const range = document.createRange();
+    range.setStart(text, 0);
+    range.setEnd(text, Math.min(10, text.textContent?.length ?? 0));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+
+  const bubble = page.getByRole('toolbar', { name: 'Selection actions' });
+  await expect(bubble).toBeVisible();
+  await expect(bubble.getByRole('button')).toHaveCount(4);
+  await bubble.getByRole('button', { name: 'Bold selection' }).click();
+  await expect(editor.locator('strong').first()).toContainText('Build an e');
+
+  const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await paragraph.click();
+  await paragraph.locator('[data-fountain-text-path]').last().evaluate((wrapper) => {
+    const range = document.createRange();
+    range.selectNodeContents(wrapper);
+    range.collapse(false);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('Enter');
+  const floating = page.getByRole('toolbar', { name: 'Empty block actions' });
+  await expect(floating).toBeVisible();
+  await expect(floating.getByRole('button')).toHaveCount(3);
+  await floating.getByRole('button', { name: 'Use heading 2' }).click();
+  await expect(editor.locator('h2').last()).toBeAttached();
+});
+
 test('uses the public React image workflow for metadata, alignment, and replacement', async ({ page }) => {
   await page.goto('/');
   const dataURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';

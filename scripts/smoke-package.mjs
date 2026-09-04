@@ -7,8 +7,8 @@ function assertExports(module, names, surface) {
   if (missing.length) throw new Error(`${surface} is missing: ${missing.join(', ')}`);
 }
 
-const coreNames = ['MediaExtension', 'startAssetUpload', 'registerFountainElement'];
-const reactNames = ['FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainSlashCommandMenu'];
+const coreNames = ['MediaExtension', 'startAssetUpload', 'registerFountainElement', 'BubbleMenuExtension', 'FloatingMenuExtension', 'getEditorMenuAnchorRect'];
+const reactNames = ['FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainSlashCommandMenu', 'FountainBubbleMenu', 'FountainFloatingMenu'];
 const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
 

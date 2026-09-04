@@ -10,6 +10,10 @@
 
 ### Added
 
+- Framework-neutral, opt-in bubble and floating menu controllers with named
+  instances, safe visibility predicates, reusable selection geometry,
+  collision-aware placement, accessible React toolbars, and package-backed
+  desktop/mobile demos.
 - A framework-neutral slash-command extension with ranked multi-term filtering,
   cancellable async sources, live runtime registrations, atomic rollback,
   eleven schema-aware defaults, an accessible React renderer, and package-backed

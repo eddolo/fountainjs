@@ -213,6 +213,34 @@ const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
 // React is optional; every surface can subscribe to this controller.
 const controller = kit.services.slashCommands.getController(editor)`;
 
+const contextualMenuExample = `import {
+  createBubbleMenuExtension,
+  createFloatingMenuExtension,
+  getEditorMenuAnchorRect,
+  placeEditorMenu,
+  type FountainMenuService,
+} from 'fountainjs-editor'
+
+const selectionActions = createBubbleMenuExtension({ id: 'selection-actions' })
+const emptyBlocks = createFloatingMenuExtension({
+  id: 'empty-blocks',
+  shouldShow: ({ defaultOpen, editor }) => defaultOpen && editor.editable,
+})
+
+const kit = composeExtensions([
+  ...StarterKit.extensions,
+  selectionActions,
+  emptyBlocks,
+])
+
+// Any framework can subscribe and position its own surface.
+const service = kit.services['bubbleMenu:selection-actions'] as FountainMenuService
+const controller = service.getController(editor)
+controller.subscribe(snapshot => {
+  const reference = getEditorMenuAnchorRect(editorDOM, snapshot)
+  if (reference) placeMyMenu(placeEditorMenu(reference, menuRect, snapshot.kind))
+})`;
+
 const toc = [
   ['mental-model', 'Mental model'],
   ['system-map', 'System map'],
@@ -364,6 +392,9 @@ function Developers() {
             <h3>Slash commands are a live extension point</h3>
             <p><code>SlashCommandRegistry</code> combines the eleven supplied block actions with static product items or cancellable asynchronous sources. Search ranks exact aliases, prefixes, and multi-term matches while preserving stable source order. Registering or removing a module refreshes an open menu. Acceptance removes the literal query and runs the action in one command batch, so failure or a transaction filter restores the complete previous state.</p>
             <Code>{slashCommandExample}</Code>
+            <h3>Contextual menus keep state separate from UI</h3>
+            <p><code>BubbleMenuExtension</code> derives eligibility from text, node, or cell selections; <code>FloatingMenuExtension</code> targets an empty nearest block. Both expose framework-neutral controllers with named instances, dismissal, teardown, read-only policy, and contained <code>shouldShow</code> errors. The reusable DOM helper resolves Fountain paths into real selection geometry, while a separate placement function flips and clamps any host surface. React’s optional renderers add focused, labelled toolbars, resize/scroll observation, arrow-key navigation, and Escape—without deciding which product actions belong inside.</p>
+            <Code>{contextualMenuExample}</Code>
             <p><code>ClipboardHistoryExtension</code> records a bounded, deduplicated list only when copy or cut originates inside that editor. Native copy/paste remains unchanged; Ctrl/Cmd+Alt+V or a public command opens the optional searchable React picker. Its default is per-editor memory, with no upload and no browser-wide clipboard access. Applications must deliberately inject any persistence adapter, and non-React surfaces can render the same immutable plugin state.</p>
             <p><code>MathExtension</code> adds inline and display TeX nodes, commands, isolated typing/paste rules, and format round trips without changing <code>StarterKit</code>. Its default NodeView keeps accessible source visible; <code>createMathExtension</code> accepts a host-owned DOM renderer, and <code>createKaTeXRenderer</code> adapts KaTeX without coupling FountainJS to that dependency. Try the complete source-to-JSON route in the <a href="./demos/node-markdown.html">headless Markdown and LaTeX demo</a>.</p>
             <p><code>LeanExtension</code> is equally optional and works source-only: portable Lean blocks, Unicode shortcuts, highlighting, and a clear <code>LeanInfoView</code> do not require a server. An injected <code>LeanProvider</code> may add mapped diagnostics, goals, hover, and completion through a local, self-hosted, managed, or one-shot service. FountainJS chooses no endpoint and stores no credentials; see the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/LEAN.md">Lean provider and security guide</a>.</p>
@@ -379,7 +410,7 @@ function Developers() {
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>
               <div><h3>Web Component</h3><p>A standards boundary with a <code>value</code> property, <code>fountain-change</code> event, and configurable schema/plugins.</p></div>
-              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
+              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
           </section>
