@@ -34,9 +34,12 @@ import {
   type AssetUploadHandler,
   type ImageUploadHandler,
 } from './media';
+import {
+  FOUNTAIN_LEGACY_BLOCK_DRAG_TYPE,
+  FOUNTAIN_NODE_DRAG_TYPE,
+  type BlockHandleManager,
+} from './block-handles';
 import type { SelectionHandler } from './selection-handler';
-
-const BLOCK_DRAG_TYPE = 'application/x-fountain-block';
 
 function sameMarks(left: readonly import('../core').Mark[], right: readonly import('../core').Mark[]): boolean {
   return left.length === right.length && left.every((mark) => right.some((candidate) => candidate.eq(mark)));
@@ -48,13 +51,14 @@ export interface InputManagerOptions {
   maxInlineImageBytes?: number;
   onError?: (error: unknown) => void;
   shouldStopEvent?: (event: Event) => boolean;
+  blockHandles?: BlockHandleManager;
 }
 
 export class InputManager {
   private compositionSelection?: AnySelection;
   private compositionHandled = false;
   private composingValue = false;
-  private draggedBlockIndex?: number;
+  private draggedNodePath?: readonly number[];
   private suppressNativeDragDeleteUntil = 0;
 
   get composing(): boolean { return this.composingValue; }
@@ -84,7 +88,7 @@ export class InputManager {
     this.composingValue = false;
     this.compositionSelection = undefined;
     this.compositionHandled = false;
-    this.draggedBlockIndex = undefined;
+    this.draggedNodePath = undefined;
     this.suppressNativeDragDeleteUntil = 0;
     this.dom.removeEventListener('beforeinput', this.onBeforeInput);
     this.dom.removeEventListener('keydown', this.onKeyDown);
@@ -397,14 +401,18 @@ export class InputManager {
 
   private onDragOver = (event: DragEvent): void => {
     if (this.options.shouldStopEvent?.(event)) return;
-    const internal = this.draggedBlockIndex !== undefined
-      || Array.from(event.dataTransfer?.types ?? []).includes(BLOCK_DRAG_TYPE);
+    const types = Array.from(event.dataTransfer?.types ?? []);
+    const sourcePath = this.options.blockHandles?.draggedPath ?? this.draggedNodePath;
+    const internal = sourcePath !== undefined
+      || types.includes(FOUNTAIN_NODE_DRAG_TYPE)
+      || types.includes(FOUNTAIN_LEGACY_BLOCK_DRAG_TYPE);
     const uploadable = Array.from(event.dataTransfer?.items ?? []).some((item) => (
       item.kind === 'file' && (item.type.startsWith('image/') || Boolean(this.options.assetUpload))
     ));
     if (this.editor.editable && (internal || uploadable)) {
       event.preventDefault();
       if (event.dataTransfer) event.dataTransfer.dropEffect = internal ? 'move' : 'copy';
+      if (internal && sourcePath) this.options.blockHandles?.showDrop(event, sourcePath);
     }
   };
 
@@ -416,15 +424,17 @@ export class InputManager {
     const selected = this.dom.querySelector<HTMLElement>(`[data-fountain-path="${selection.nodePath[0]}"]`);
     if (!target || !selected || !(selected === target || selected.contains(target))) return;
     event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData(BLOCK_DRAG_TYPE, String(selection.nodePath[0]));
+    event.dataTransfer.setData(FOUNTAIN_NODE_DRAG_TYPE, JSON.stringify(selection.nodePath));
+    event.dataTransfer.setData(FOUNTAIN_LEGACY_BLOCK_DRAG_TYPE, String(selection.nodePath[0]));
     event.dataTransfer.setData('text/plain', getNodeAtPath(this.editor.state.doc, selection.nodePath).textContent);
-    this.draggedBlockIndex = selection.nodePath[0];
+    this.draggedNodePath = selection.nodePath;
     this.suppressNativeDragDeleteUntil = Date.now() + 5_000;
     selected.dataset.fountainDragging = 'true';
   };
 
   private onDragEnd = (): void => {
-    this.draggedBlockIndex = undefined;
+    this.draggedNodePath = undefined;
+    this.options.blockHandles?.clearDrag();
     this.suppressNativeDragDeleteUntil = Math.min(this.suppressNativeDragDeleteUntil, Date.now() + 1_000);
     this.dom.querySelectorAll<HTMLElement>('[data-fountain-dragging]')
       .forEach((element) => { delete element.dataset.fountainDragging; });
@@ -439,15 +449,20 @@ export class InputManager {
         return;
       }
     }
-    const internalSource = event.dataTransfer?.getData(BLOCK_DRAG_TYPE)
-      || (this.draggedBlockIndex === undefined ? '' : String(this.draggedBlockIndex));
-    if (internalSource && /^\d+$/.test(internalSource)) {
+    const sourcePath = this.options.blockHandles?.draggedPath
+      ?? this.draggedNodePath;
+    if (sourcePath) {
       event.preventDefault();
+      if (this.options.blockHandles?.drop(event, sourcePath)) {
+        this.suppressNativeDragDeleteUntil = Date.now() + 1_000;
+        this.onDragEnd();
+        return;
+      }
       const target = event.target instanceof Element
         ? event.target.closest<HTMLElement>('[data-fountain-path]')
         : null;
       const targetIndex = Number((target?.dataset.fountainPath ?? '').split('.')[0]);
-      const sourceIndex = Number(internalSource);
+      const sourceIndex = sourcePath.length === 1 ? sourcePath[0] : undefined;
       if (Number.isInteger(targetIndex) && Number.isInteger(sourceIndex)) {
         this.suppressNativeDragDeleteUntil = Date.now() + 1_000;
         const topLevel = this.dom.querySelector<HTMLElement>(`[data-fountain-path="${targetIndex}"]`);
@@ -455,11 +470,18 @@ export class InputManager {
         const boundary = targetIndex + (bounds && event.clientY >= bounds.top + bounds.height / 2 ? 1 : 0);
         const destination = Math.max(0, Math.min(
           this.editor.state.doc.childCount - 1,
-          boundary - (sourceIndex < boundary ? 1 : 0),
+          boundary - ((sourceIndex as number) < boundary ? 1 : 0),
         ));
-        moveBlock(this.editor, sourceIndex, destination);
+        moveBlock(this.editor, sourceIndex as number, destination);
       }
       this.onDragEnd();
+      return;
+    }
+    const types = Array.from(event.dataTransfer?.types ?? []);
+    if (types.includes(FOUNTAIN_NODE_DRAG_TYPE) || types.includes(FOUNTAIN_LEGACY_BLOCK_DRAG_TYPE)) {
+      // Fountain drag payloads are intentionally accepted only from this view's
+      // live drag state; paths from another editor instance are not transferable.
+      event.preventDefault();
       return;
     }
     const files = Array.from(event.dataTransfer?.files ?? [])

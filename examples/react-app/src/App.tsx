@@ -324,7 +324,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>The package running in this page.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> select text for the bubble toolbar, or press Enter at a paragraph end for the empty-block toolbar. Start an empty line with <kbd>/</kbd> for grouped commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
+        <div className="demo-note"><b>Try it:</b> hover or tap a block for drag, move-up, and move-down controls; nested blocks move too. Select text for the bubble toolbar, or press Enter at a paragraph end for the empty-block toolbar. Start an empty line with <kbd>/</kbd> for grouped commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -344,6 +344,7 @@ function App() {
               ref={editorHandle}
               editor={editor}
               placeholder="Start writing…"
+              blockHandles
               assetUpload={demoAssetUpload}
               toolbarProps={compactToolbar ? {
                 toolbarLabel: 'Compact writing toolbar',

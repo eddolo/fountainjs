@@ -299,6 +299,81 @@ test('moves a selected top-level block through native drag data', async ({ page 
   ))).toEqual(['Alpha Beta', 'Second paragraph', '']);
 });
 
+test('reorders nested blocks with accessible controls, drop indicators, drag, and undo', async ({ page }) => {
+  await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const { schema } = editor.state;
+    const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const quote = schema.node('blockquote', {}, [paragraph('Nested one'), paragraph('Nested two')]);
+    editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, [
+      paragraph('Outside'), quote, paragraph('Tail'),
+    ]));
+  });
+
+  const nestedTwo = page.locator('[data-fountain-path="1.1"]');
+  await nestedTwo.hover();
+  const controls = page.getByRole('toolbar', { name: 'Paragraph block controls' });
+  await expect(controls).toBeVisible();
+  await expect(controls).toHaveAttribute('data-fountain-block-path', '1.1');
+  await expect(controls.getByRole('button', { name: 'Move Paragraph block before' })).toBeEnabled();
+  await controls.getByRole('button', { name: 'Move Paragraph block before' }).click();
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(1).content.map((node: any) => node.textContent)
+  ))).toEqual(['Nested two', 'Nested one']);
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.undo());
+
+  await page.locator('[data-fountain-path="1.1"]').hover();
+  const dragResult = await page.evaluate(() => {
+    const drag = document.querySelector<HTMLElement>('[data-fountain-block-action="drag"]');
+    const target = document.querySelector<HTMLElement>('[data-fountain-path="2"]');
+    if (!drag || !target) throw new Error('Missing block drag fixture.');
+    const transfer = new DataTransfer();
+    drag.dispatchEvent(new DragEvent('dragstart', { bubbles: true, cancelable: true, dataTransfer: transfer }));
+    const bounds = target.getBoundingClientRect();
+    const over = new DragEvent('dragover', {
+      bubbles: true,
+      cancelable: true,
+      clientX: bounds.left + 4,
+      clientY: bounds.top + 1,
+      dataTransfer: transfer,
+    });
+    target.dispatchEvent(over);
+    const indicator = target.dataset.fountainDropPosition;
+    const drop = new DragEvent('drop', {
+      bubbles: true,
+      cancelable: true,
+      clientX: bounds.left + 4,
+      clientY: bounds.top + 1,
+      dataTransfer: transfer,
+    });
+    target.dispatchEvent(drop);
+    return { indicator, overPrevented: over.defaultPrevented, dropPrevented: drop.defaultPrevented };
+  });
+  expect(dragResult).toEqual({ indicator: 'before', overPrevented: true, dropPrevented: true });
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent)
+  ))).toEqual(['Outside', 'Nested one', 'Nested two', 'Tail']);
+  await expect(page.locator('[data-fountain-drop-position]')).toHaveCount(0);
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.undo());
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(1).content.map((node: any) => node.textContent)
+  ))).toEqual(['Nested one', 'Nested two']);
+
+  const external = await page.evaluate(() => {
+    const target = document.querySelector<HTMLElement>('[data-fountain-path="0"]');
+    if (!target) throw new Error('Missing untrusted-drop target.');
+    const transfer = new DataTransfer();
+    transfer.setData('application/x-fountain-node-path', JSON.stringify([2]));
+    const drop = new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: transfer });
+    target.dispatchEvent(drop);
+    return {
+      prevented: drop.defaultPrevented,
+      content: (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent),
+    };
+  });
+  expect(external).toEqual({ prevented: true, content: ['Outside', 'Nested oneNested two', 'Tail'] });
+});
+
 test('replaces a DOM selection that crosses block boundaries', async ({ page }) => {
   await page.evaluate(() => {
     const wrappers = document.querySelectorAll<HTMLElement>('[data-fountain-text-path]');

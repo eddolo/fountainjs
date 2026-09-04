@@ -587,7 +587,7 @@ Commands return whether they handled the operation:
 - `isMarkActive`, `toggleMark`, `setMark`, `unsetMark`, `setLink`, and `unsetLink`
 - `setTextAlignment`, `splitBlock`, `joinBackward`, and `joinForward`
 - `getActiveImage`, `setImageAttributes`, `setImageAlignment`, and `deleteImage`
-- `setNodeAttributes`, `removeNode`, `moveBlock`, `toggleTaskItem`, `toggleList`, `indentListItem`, and `outdentListItem`
+- `setNodeAttributes`, `removeNode`, `canMoveNode`, `moveNode`, `moveBlock`, `toggleTaskItem`, `toggleList`, `indentListItem`, and `outdentListItem`
 - `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, and `moveTableCell`
 - `undo`, `redo`, `canUndo`, `canRedo`, and `closeHistory`
 
@@ -618,6 +618,19 @@ editor transactions for dry runs to be side-effect-free. For commands named
 are evaluated against temporary selection state without focusing the DOM. A live
 focus chain commits its selection and edits atomically, then keeps the DOM view
 focused.
+
+### Node moves
+
+`moveNode(editor, { fromPath, toParentPath, toIndex })` moves any non-text node
+within or across compatible parents. All paths refer to the current document;
+`toIndex` is the final index after removal. The command rejects the root, text
+nodes, invalid paths, cycles, no-ops, read-only state, and any result that fails
+complete schema validation. Success dispatches one transaction, selects the
+moved node's first text leaf (or the atom itself), and creates one history entry.
+`canMoveNode` checks the identical operation without dispatching. `moveBlock`
+remains the top-level compatibility shortcut. See
+[BLOCK_REORDERING.md](BLOCK_REORDERING.md) for index examples, nested behavior,
+DOM controls, and extension guidance.
 
 `findText(document, query, options?)` returns model ranges even when a match crosses marked text fragments. `selectNextMatch()` wraps through matches, and `replaceAllText()` changes all matches in one undoable transaction.
 
@@ -700,7 +713,14 @@ return its own transaction or document for more specialized structures.
 
 ## DOM view
 
-`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+
+Set `blockHandles: true` for the supplied contextual drag/move toolbar, or pass
+`BlockHandleOptions` with an `include(context)` candidate policy and label
+functions. Controls mount outside the contenteditable, follow nested selection
+and pointer targets, expose touch-sized and keyboard-operable movement buttons,
+and show schema-valid before/after drop indicators. React's `FountainEditor` and
+`FountainComposer`, plus `registerFountainElement`, forward this same option.
 
 ### Images and uploads
 
@@ -800,9 +820,10 @@ commit orderings, paragraph and line breaks, forward/backward deletion,
 cut/drag deletion, browser history undo/redo, and native formatting input types.
 Rich HTML paste is parsed into validated nodes rather than flattened to text.
 Logical model offsets remain stable for bidirectional and nested content.
-Selecting a top-level block makes it natively draggable; dropping before or
-after another block calls the same undoable `moveBlock` command available as a
-keyboard-accessible host control.
+Selecting a top-level block keeps the compatible native drag path. With
+`blockHandles` enabled, top-level and nested blocks gain a visible drag handle,
+schema-valid before/after indicators, and explicit move buttons for keyboard
+and touch. Every route calls the same undoable path-based `moveNode` command.
 
 Selection input is available without a framework: Ctrl/Cmd+A creates an
 `AllSelection`; clicking an atomic node selects it; Left/Right at an adjacent

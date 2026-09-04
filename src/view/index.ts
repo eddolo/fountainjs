@@ -5,3 +5,4 @@ export * from './selection-handler';
 export * from './web-component';
 export * from './media';
 export * from './menu-position';
+export * from './block-handles';

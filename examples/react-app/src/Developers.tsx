@@ -25,6 +25,7 @@ const view = new EditorView(mount, editor, {
   imageUpload: file => uploadToMyStorage(file),
   assetUpload: (file, { kind, signal, reportProgress }) =>
     uploadAsset(file, { kind, signal, onProgress: reportProgress }),
+  blockHandles: true,
 })`;
 
 const mediaExample = `const task = startImageUpload(editor, file, {
@@ -173,6 +174,36 @@ const toolbarExample = `import {
     />
   </FountainToolbarGroup>
 </FountainToolbarRoot>`;
+
+const blockReorderingExample = `import {
+  canMoveNode,
+  moveNode,
+  EditorView,
+} from 'fountainjs-editor'
+
+// Paths use the current immutable document. toIndex is the final index.
+const move = {
+  fromPath: [2, 1],
+  toParentPath: [4],
+  toIndex: 0,
+}
+if (canMoveNode(editor, move)) moveNode(editor, move)
+
+// The supplied UI is optional and has no React dependency.
+new EditorView(mount, editor, {
+  blockHandles: {
+    include: ({ node, path }) =>
+      path.length === 1 || node.type.name === 'list_item',
+    labels: {
+      drag: () => 'Drag section',
+      moveBefore: () => 'Move section earlier',
+      moveAfter: () => 'Move section later',
+    },
+  },
+})
+
+// React forwards exactly the same view option:
+<FountainComposer editor={editor} blockHandles />`;
 
 const formatExample = `const portableFormat = {
   parse(source, schema) {
@@ -396,7 +427,10 @@ function Developers() {
           <section className="dev-section" id="input-view">
             <p className="dev-label">06 · INPUT & RENDERING</p>
             <h2>The browser is an interface, not the source of truth.</h2>
-            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles desktop and mobile <code>beforeinput</code> variants, alternate IME commit order, structured paste, image/asset and selected-block drop, task toggles, list indentation, table navigation, and history input. <code>SelectionHandler</code> converts DOM ranges to logical document paths and back—including nested and bidirectional text—then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
+            <p><code>EditorView</code> mounts one accessible <code>contenteditable</code>. <code>InputManager</code> handles desktop and mobile <code>beforeinput</code> variants, alternate IME commit order, structured paste, image/asset and schema-valid node drop, task toggles, list indentation, table navigation, and history input. <code>SelectionHandler</code> converts DOM ranges to logical document paths and back—including nested and bidirectional text—then renders exact node, gap, all-document, and cell selection states without storing view markers in JSON.</p>
+            <h3>Block movement is a model command first</h3>
+            <p><code>moveNode</code> names a source path, destination parent, and final child index. It rejects cycles, no-ops, read-only state, and any destination that fails the active schema before dispatching one undoable transaction. <code>canMoveNode</code> evaluates the identical operation without changing state. The optional <code>BlockHandleManager</code> mounts beside the contenteditable, follows nested model paths, and translates drag geometry or explicit move buttons into that same command; controls and drop markers never enter document JSON, exports, NodeView DOM, or clipboard text.</p>
+            <Code>{blockReorderingExample}</Code>
             <p>Ctrl/Cmd+A selects the document. Clicking an atomic node or pressing Left/Right at its neighboring text boundary creates a node selection. Shift-click extends a table-cell rectangle; Alt+Shift+Arrow does the same from the keyboard. Public selection commands expose the identical behavior to plain DOM, Web Components, React, or another adapter.</p>
             <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. URL attributes and tag names pass safety checks before reaching the DOM.</p>
             <h3>Interactive NodeViews keep identity without owning the document</h3>
@@ -447,6 +481,8 @@ function Developers() {
             <p>The React toolbar maps stable group and action IDs onto the same public commands used by every other surface. Products can change group/action order, visibility, labels, icons, and rendering through <code>FountainComposer.toolbarProps</code>, or compose the root/group/button primitives directly. Built-in buttons keep the model selection intact, publish pressed and disabled states, offer complete names and hover titles, traverse with RTL-aware Arrow/Home/End keys, and scroll by intact groups on narrow screens.</p>
             <Code>{toolbarExample}</Code>
             <p>Plain DOM, Vue, Svelte, Angular, and Web Component hosts do not need a hidden React toolbar service: subscribe to <code>editor.state</code>, derive active/disabled state, and call the framework-neutral commands directly. The complete ID registry and replacement contract are in the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TOOLBAR.md">toolbar guide</a>.</p>
+            <h3>Handles are optional; nested movement is core</h3>
+            <p>Pass <code>blockHandles</code> to <code>EditorView</code>, <code>FountainEditor</code>, <code>FountainComposer</code>, or <code>registerFountainElement</code>. The supplied contextual toolbar adds a native handle, schema-valid before/after indicator, and full-name move buttons with 44px coarse-pointer targets and keyboard traversal. Candidate and label functions are product-owned. A Vue, Svelte, Angular, Web Component, or plain-DOM product can also render entirely different controls around <code>canMoveNode</code> / <code>moveNode</code>. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/BLOCK_REORDERING.md">complete reordering contract</a>.</p>
           </section>
 
           <section className="dev-section" id="formats-media">
@@ -476,6 +512,7 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/core/transaction"><code>src/core/transaction/</code><span>Immutable steps, paths, ranges, transforms, transaction metadata.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/core/commands.ts"><code>src/core/commands.ts</code><span>Text, marks, blocks, selection, document insertion, table and list commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/src/view/block-handles.ts"><code>src/view/block-handles.ts</code><span>Optional contextual controls, nested path targeting, schema-valid indicators, and touch/keyboard movement.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/suggestion.ts"><code>src/extensions/suggestion.ts</code><span>Headless trigger matching, cancellable providers, stale-result protection, selection, and query decorations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCUMENT_UTILITIES.md"><code>docs/DOCUMENT_UTILITIES.md</code><span>Complete mention, emoji, typography, counting, React accessibility, and interchange contracts.</span></a>

@@ -13,12 +13,16 @@ const limits = Object.freeze({
   'dist/emoji-data.cjs': 280 * kibibyte,
   'dist/react.js': 64 * kibibyte,
   'dist/react.cjs': 48 * kibibyte,
-  'dist/styles.css': 32 * kibibyte,
+  // Accessible block handles and visible drop states add roughly 1.8 KiB while
+  // leaving every JavaScript entry ceiling unchanged.
+  'dist/styles.css': 34 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
-  // added about 9.5 KiB; their individual entry ceilings remain unchanged.
-  'all ESM runtime code': 424 * kibibyte,
-  'all CommonJS runtime code': 356 * kibibyte,
+  // added about 9.5 KiB. Framework-neutral nested block controls add another
+  // roughly 7 KiB across emitted shared chunks; individual entry ceilings stay
+  // unchanged so no consumer-facing entry can hide that growth.
+  'all ESM runtime code': 432 * kibibyte,
+  'all CommonJS runtime code': 364 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

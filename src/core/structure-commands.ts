@@ -1,9 +1,9 @@
 import type { Editor } from './editor';
-import { Selection } from './selection';
+import { NodeSelection, Selection } from './selection';
 import { Node, type Attributes } from './schema';
 import { getActiveTableCell } from './table-commands';
 import { TableMap } from './table-map';
-import { getNodeAtPath, getTextLeaves } from './transaction/path';
+import { getNodeAtPath, getTextLeaves, replaceNodeAtPath, replaceNodeWithNodes } from './transaction/path';
 
 function ancestorPath(editor: Editor, names: readonly string[]): number[] | null {
   const path = editor.state.selection.path;
@@ -146,17 +146,105 @@ export function removeNode(editor: Editor, path: readonly number[]): boolean {
   return true;
 }
 
-export function moveBlock(editor: Editor, from: number, to: number): boolean {
+export interface NodeMove {
+  /** Path of the node in the current document. The root document cannot move. */
+  readonly fromPath: readonly number[];
+  /** Path of the destination parent in the current document. Use `[]` for the document root. */
+  readonly toParentPath: readonly number[];
+  /** Final child index in the destination parent after the source has been removed. */
+  readonly toIndex: number;
+}
+
+interface ResolvedNodeMove {
+  readonly document: Node;
+  readonly node: Node;
+  readonly path: readonly number[];
+}
+
+function validPath(path: readonly number[]): boolean {
+  return path.every((part) => Number.isInteger(part) && part >= 0);
+}
+
+function samePath(left: readonly number[], right: readonly number[]): boolean {
+  return left.length === right.length && left.every((part, index) => part === right[index]);
+}
+
+function startsWithPath(path: readonly number[], prefix: readonly number[]): boolean {
+  return prefix.length <= path.length && prefix.every((part, index) => path[index] === part);
+}
+
+/** Maps an existing path through the removal of one sibling subtree. */
+function pathAfterRemoval(path: readonly number[], removedPath: readonly number[]): number[] {
+  const mapped = [...path];
+  const removedIndex = removedPath.at(-1) as number;
+  const parentPath = removedPath.slice(0, -1);
+  if (path.length > parentPath.length
+    && startsWithPath(path, parentPath)
+    && (path[parentPath.length] as number) > removedIndex) {
+    mapped[parentPath.length] = (mapped[parentPath.length] as number) - 1;
+  }
+  return mapped;
+}
+
+function resolveNodeMove(editor: Editor, move: NodeMove): ResolvedNodeMove | null {
+  const { fromPath, toParentPath, toIndex } = move;
+  if (!fromPath.length || !validPath(fromPath) || !validPath(toParentPath) || !Number.isInteger(toIndex) || toIndex < 0) return null;
+  // A node cannot become a child of itself or of one of its descendants.
+  if (startsWithPath(toParentPath, fromPath)) return null;
+  const sourceParentPath = fromPath.slice(0, -1);
+  const sourceIndex = fromPath.at(-1) as number;
+  if (samePath(sourceParentPath, toParentPath) && sourceIndex === toIndex) return null;
+
+  let node: Node;
+  let targetParent: Node;
+  try {
+    node = getNodeAtPath(editor.state.doc, fromPath);
+    targetParent = getNodeAtPath(editor.state.doc, toParentPath);
+  } catch { return null; }
+  if (node.isText || targetParent.isText) return null;
+
+  const maximum = targetParent.childCount - (samePath(sourceParentPath, toParentPath) ? 1 : 0);
+  if (toIndex > maximum) return null;
+
+  try {
+    const withoutSource = replaceNodeWithNodes(editor.state.doc, fromPath, []);
+    const mappedParentPath = pathAfterRemoval(toParentPath, fromPath);
+    const parentAfterRemoval = getNodeAtPath(withoutSource, mappedParentPath);
+    const content = [...parentAfterRemoval.content];
+    content.splice(toIndex, 0, node);
+    const document = replaceNodeAtPath(withoutSource, mappedParentPath, parentAfterRemoval.copy(content));
+    editor.state.schema.validate(document);
+    return { document, node, path: Object.freeze([...mappedParentPath, toIndex]) };
+  } catch { return null; }
+}
+
+/**
+ * Reports whether a schema-valid node move can run without changing editor state.
+ * Paths are resolved against the current document; `toIndex` is the final index.
+ */
+export function canMoveNode(editor: Editor, move: NodeMove): boolean {
+  return editor.editable && resolveNodeMove(editor, move) !== null;
+}
+
+/**
+ * Moves any non-text node, including nested blocks, in one undoable transaction.
+ * Invalid paths, cycles, no-ops, and schema-invalid destinations return `false`.
+ */
+export function moveNode(editor: Editor, move: NodeMove): boolean {
   if (!editor.editable) return false;
-  const blocks = [...editor.state.doc.content];
-  if (!Number.isInteger(from) || !Number.isInteger(to) || from < 0 || from >= blocks.length || to < 0 || to >= blocks.length || from === to) return false;
-  const [block] = blocks.splice(from, 1);
-  if (!block) return false;
-  blocks.splice(to, 0, block);
-  const transaction = editor.state.createTransaction().replace(0, editor.state.doc.childCount, blocks);
-  selectFirstText(transaction, block, [to]);
-  editor.dispatch(transaction);
-  return true;
+  const resolved = resolveNodeMove(editor, move);
+  if (!resolved) return false;
+  const transaction = editor.state.createTransaction()
+    .replace(0, editor.state.doc.childCount, resolved.document.content);
+  const leaf = getTextLeaves(resolved.node)[0];
+  if (leaf) transaction.setSelection(Selection.cursor([...resolved.path, ...leaf.path], 0));
+  else transaction.setSelection(new NodeSelection(transaction.doc, resolved.path));
+  return editor.dispatch(transaction);
+}
+
+/** Backwards-compatible top-level block move. */
+export function moveBlock(editor: Editor, from: number, to: number): boolean {
+  return moveNode(editor, { fromPath: [from], toParentPath: [], toIndex: to });
 }
 
 export function toggleTaskItem(editor: Editor, checked?: boolean): boolean {

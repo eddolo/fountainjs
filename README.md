@@ -75,7 +75,9 @@ const kit = composeExtensions([
 ]);
 
 const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
-const view = new EditorView(document.querySelector('#editor')!, editor);
+const view = new EditorView(document.querySelector('#editor')!, editor, {
+  blockHandles: true,
+});
 const commands = view.commandManager(kit.commands);
 
 commands.commands.insertCallout('This command came from an extension.');
@@ -122,6 +124,26 @@ toggleTableHeaderRow(editor)
 `TableEditingExtension` is part of `StarterKit`; it repairs non-rectangular
 geometry after arbitrary host transactions without adding repair steps to local
 undo history.
+
+## Nested block reordering
+
+`moveNode` is a framework-neutral, path-based command for same-parent or
+cross-parent moves. It rejects cycles and validates the whole result before one
+undoable transaction is dispatched. `canMoveNode` is its side-effect-free
+availability check; `moveBlock` remains the top-level shortcut.
+
+```ts
+const move = { fromPath: [2, 1], toParentPath: [4], toIndex: 0 }
+if (canMoveNode(editor, move)) moveNode(editor, move)
+```
+
+Pass `blockHandles: true` to `EditorView`, `FountainEditor`,
+`FountainComposer`, or `registerFountainElement`. The supplied contextual
+toolbar follows top-level and nested blocks, adds a native drag handle, shows
+only schema-valid before/after indicators, and provides labelled move buttons
+for keyboard and touch users. Hosts can filter candidates and replace every
+label, or call the same commands from wholly custom UI. See the
+[block-reordering guide](docs/BLOCK_REORDERING.md).
 
 ## Optional clipboard history
 
@@ -482,7 +504,7 @@ the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME
 input; configurable input/paste rules; multiline and rich-HTML paste; image and
-asset paste/drop/upload; selected-block drag-move; find/replace; Markdown shortcuts;
+asset paste/drop/upload; schema-safe nested drag/button reordering; find/replace; Markdown shortcuts;
 and configurable undo/redo that groups adjacent browser input.
 JSON is the lossless source of truth; Markdown, safe HTML, and plain text are
 interoperability boundaries.
@@ -575,7 +597,7 @@ and nested text; block splitting and joining; attributed text and alignment;
 find/replace; rich content insertion; image URL/upload/paste/drop workflows;
 reusable input and paste rules; links, lists, tasks, code, tables, local history,
 interactive NodeViews, grouped browser input, structured clipboard and selected-
-block drag-move, mentions, emoji, typography, character limits, a live extensible
+nested block drag/button reordering, mentions, emoji, typography, character limits, a live extensible
 slash-command registry, framework-neutral bubble/floating menus, browser-event
 plugin hooks, extensible schema composition,
 safe format serialization, DOM/Web Component/React surfaces, optional AI
@@ -588,6 +610,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Slash commands and runtime registrations](docs/SLASH_COMMANDS.md)
 - [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)
 - [Toolbar composition and stable action IDs](docs/TOOLBAR.md)
+- [Nested block reordering and accessible handles](docs/BLOCK_REORDERING.md)
 - [Tiptap parity programme and verified gap baseline](docs/TIPTAP_PARITY.md)
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)

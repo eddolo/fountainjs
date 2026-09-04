@@ -298,7 +298,7 @@ the default rich-HTML/plain-text import path and the first handled rule wins.
 
 The input manager handles `beforeinput`, keyboard shortcuts, alternate IME
 commit orderings, mobile replacement input, multiline/plain/rich paste, image
-paste/drop, rectangular TSV/HTML table copy/cut/paste, internal selected-block drag/drop, list indentation, code
+paste/drop, rectangular TSV/HTML table copy/cut/paste, internal node drag/drop, list indentation, code
 indentation, table navigation, and task checkbox changes. It captures the
 browser selection before running commands. Ctrl/Cmd+A, atomic-node boundary
 arrows, Shift-pointer cell extension, and Alt+Shift+Arrow cell extension
@@ -306,6 +306,16 @@ dispatch semantic selections instead of flattening them into text ranges.
 Input is exercised at logical offsets in bidirectional and deeply nested text.
 Mobile Chromium and WebKit emulation run focused virtual-keyboard and responsive
 layout contracts; physical-device coverage remains a separate production gate.
+
+`BlockHandleManager` is an optional fourth view concern. It discovers eligible
+top-level and nested node DOM from model paths, but mounts one accessible control
+toolbar beside the contenteditable so interactive buttons never enter text,
+clipboard, list/table structure, or NodeView-owned DOM. Pointer/selection changes
+only choose the active model path. Drag geometry produces a candidate
+`NodeMove`; `canMoveNode` validates the complete tree before an indicator is
+shown, and `moveNode` commits one transaction on drop or button activation.
+Resize/scroll observation affects only transient positioning. React and the Web
+Component forward the same `EditorView` option rather than reimplementing it.
 
 Rendered text is wrapped with `data-fountain-text-path`; block DOM carries node type and path attributes. These anchors let selection synchronization survive marks and nested DOM wrappers. The document—not browser-generated HTML—still decides the resulting state.
 
@@ -468,6 +478,9 @@ The suites are organized by boundary:
   editing, load recovery, and accessible resizing;
 - `tests/media.test.ts`: native playback, tracks, file cards, provider policy,
   safe interchange, mapped asset uploads, undo, selection, and load recovery;
+- `tests/block-reordering.test.ts`: same-parent and cross-parent path moves,
+  schema/cycle/no-op/read-only rejection, selection, undo, accessible controls,
+  host filtering, labels, and teardown;
 - `tests/view.test.ts`: DOM rendering, browser-event input, selections, media, NodeView reconciliation, and Web Component behavior in JSDOM;
 - `tests/react-node-view.test.tsx`: React NodeView state, mapped paths, commands, event isolation, and cleanup;
 - `tests/document-utilities.test.ts`: mention/emoji atoms, typography, enforced
@@ -491,8 +504,8 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 
 `pnpm test:budget` enforces raw production ceilings of 100 KiB for the ESM root,
 84 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
-the isolated full emoji data, 64/48 KiB for the React entries, 32 KiB for CSS,
-and 424/356 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
+the isolated full emoji data, 64/48 KiB for the React entries, 34 KiB for CSS,
+and 432/364 KiB for all emitted ESM/CommonJS runtime chunks excluding the full
 emoji data. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
@@ -506,7 +519,8 @@ tracked separately as `PROD-05`.
 | `src/core/schema/` | Documents, marks, schemas, and validation |
 | `src/core/transaction/` | Steps, transforms, paths, and transactions |
 | `src/core/commands.ts` | Text, marks, content, and document commands |
-| `src/core/structure-commands.ts` | Lists, tables, nested blocks, and structural editing |
+| `src/core/structure-commands.ts` | Lists, tables, schema-safe path moves, nested blocks, and structural editing |
+| `src/view/block-handles.ts` | Optional framework-neutral block controls, drag targets, and drop indicators |
 | `src/core/table-map.ts` | Span-aware logical table geometry |
 | `src/core/table-commands.ts` | Merge/split, headers, selection, resize, repair, and grid clipboard operations |
 | `src/core/search.ts` | Cross-fragment search and replacement |

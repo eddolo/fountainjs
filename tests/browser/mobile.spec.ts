@@ -175,3 +175,20 @@ test('keeps a composed icon toolbar reachable and touch-operable on a phone view
   await expect(strong).toHaveAttribute('aria-pressed', 'true');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
+
+test('exposes touch-sized block movement controls without page overflow', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await editor.locator('[data-fountain-path="0"]').tap();
+  const controls = page.getByRole('toolbar', { name: 'Heading block controls' });
+  await expect(controls).toBeVisible();
+  const moveAfter = controls.getByRole('button', { name: 'Move Heading block after' });
+  const box = await moveAfter.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+  expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+  await moveAfter.tap();
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('FountainJS is an');
+  await expect(controls).toHaveAttribute('data-fountain-block-path', '1');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});

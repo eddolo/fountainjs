@@ -107,7 +107,7 @@ const mount = document.querySelector<HTMLElement>('#editor');
 const output = document.querySelector<HTMLOutputElement>('#document-json');
 if (!mount || !output) throw new Error('Browser contract fixture failed to mount.');
 
-const view = new EditorView(mount, editor, { ariaLabel: 'Browser contract editor' });
+const view = new EditorView(mount, editor, { ariaLabel: 'Browser contract editor', blockHandles: true });
 const commands = view.commandManager(browserKit.commands);
 const leanController = new LeanController(editor, createLeanProvider({
   descriptor: { id: 'browser-one-shot', label: 'Browser one-shot checker', mode: 'one-shot', dataDestination: 'device' },

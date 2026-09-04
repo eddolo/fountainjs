@@ -10,6 +10,10 @@
 
 ### Added
 
+- Schema-safe `canMoveNode` / `moveNode` commands for same-parent and
+  cross-parent nested moves, plus optional framework-neutral drag handles,
+  before/after indicators, accessible move buttons, host candidate/label
+  policy, React/Web Component passthrough, and desktop/mobile browser coverage.
 - A configurable, icon-based React toolbar with stable group/action IDs,
   ordering and visibility controls, label/icon/render overrides, public
   root/group/button/icon primitives, composer passthrough, selection-preserving

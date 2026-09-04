@@ -22,6 +22,7 @@ import {
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
 import { renderDocument, type MountedNodeView } from './dom-renderer';
 import { InputManager } from './input';
+import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import { SelectionHandler } from './selection-handler';
 
@@ -33,6 +34,8 @@ export interface EditorViewOptions {
   imageUpload?: ImageUploadHandler;
   assetUpload?: AssetUploadHandler;
   maxInlineImageBytes?: number;
+  /** Enables framework-neutral drag, keyboard, and touch block controls. */
+  blockHandles?: boolean | BlockHandleOptions;
   onError?: (error: unknown) => void;
 }
 
@@ -48,6 +51,7 @@ export class EditorView {
   readonly dom: HTMLDivElement;
   private readonly selections: SelectionHandler;
   private readonly input: InputManager;
+  private readonly blockHandles?: BlockHandleManager;
   private readonly unsubscribe: () => void;
   private nodeViews: MountedNodeView[] = [];
   private selectedNodeView?: NodeViewLike;
@@ -69,6 +73,9 @@ export class EditorView {
       if (!/^on/i.test(name)) this.dom.setAttribute(name, value);
     });
     mount.appendChild(this.dom);
+    this.blockHandles = options.blockHandles
+      ? new BlockHandleManager(mount, this.dom, editor, options.blockHandles === true ? {} : options.blockHandles)
+      : undefined;
     this.decorations = this.collectDecorations(editor.state);
     this.render(editor.state.doc, this.decorations);
     this.selections = new SelectionHandler(editor, this.dom, this.shouldStopNodeViewEvent);
@@ -78,6 +85,7 @@ export class EditorView {
       maxInlineImageBytes: options.maxInlineImageBytes,
       onError: options.onError,
       shouldStopEvent: this.shouldStopNodeViewEvent,
+      blockHandles: this.blockHandles,
     });
     if (typeof MutationObserver !== 'undefined') {
       this.mutationObserver = new MutationObserver(this.onMutations);
@@ -130,6 +138,7 @@ export class EditorView {
     this.unsubscribe();
     this.input.destroy();
     this.selections.destroy();
+    this.blockHandles?.destroy();
     this.destroyNodeViews();
     this.dom.remove();
   }
@@ -140,6 +149,7 @@ export class EditorView {
     if (transaction.docChanged || !decorations.eq(this.decorations)) this.render(state.doc, decorations, transaction);
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
+    this.blockHandles?.syncSelection(state.selection);
     queueMicrotask(() => this.selections.sync(state.selection));
   };
 
@@ -159,6 +169,7 @@ export class EditorView {
       entry.nodeView.destroy?.();
     });
     this.nodeViews = mounted;
+    this.blockHandles?.refresh(document, this.editor.state.selection);
     this.mutationObserver?.takeRecords();
     this.observeMutations();
   }
@@ -253,6 +264,9 @@ export class EditorView {
         'data-fountain-selected-node',
         'data-fountain-selected-cell',
         'data-fountain-gap',
+        'data-fountain-block-reorderable',
+        'data-fountain-drop-position',
+        'data-fountain-dragging',
         'draggable',
       ].includes(mutation.attributeName ?? '')) continue;
       const entry = [...this.nodeViews]

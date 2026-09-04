@@ -2,6 +2,7 @@ import type { NodeJSON, Plugin, SchemaSpec, Transaction } from '../core';
 import { createEditor, setContent, type Editor, type EditorState } from '../core';
 import { CoreSchemaSpec } from '../extensions';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
+import type { BlockHandleOptions } from './block-handles';
 import { EditorView, type EditorFocusPosition } from './view';
 
 export interface FountainElementChangeDetail {
@@ -25,6 +26,7 @@ export interface RegisterFountainElementOptions {
   imageUpload?: ImageUploadHandler;
   assetUpload?: AssetUploadHandler;
   maxInlineImageBytes?: number;
+  blockHandles?: boolean | BlockHandleOptions;
   onError?: (error: unknown) => void;
 }
 
@@ -79,6 +81,7 @@ export function registerFountainElement(
         imageUpload: options.imageUpload,
         assetUpload: options.assetUpload,
         maxInlineImageBytes: options.maxInlineImageBytes,
+        blockHandles: options.blockHandles,
         onError: options.onError,
       });
       this.unsubscribe = this.currentEditor.subscribe((state, transaction) => {

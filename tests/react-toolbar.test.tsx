@@ -165,11 +165,13 @@ describe('supplied React toolbar composition', () => {
 
     await act(async () => root.render(<FountainComposer
       editor={editor}
+      blockHandles
       toolbarProps={{ groups: ['block-types'], hiddenActions: ['heading-2'] }}
     />));
     expect(mount.querySelectorAll('[data-fountain-toolbar-group]')).toHaveLength(1);
     expect(mount.querySelector('[data-fountain-toolbar-action="paragraph"]')).not.toBeNull();
     expect(mount.querySelector('[data-fountain-toolbar-action="heading-2"]')).toBeNull();
+    expect(mount.querySelector('[data-fountain-block-controls]')).not.toBeNull();
 
     await act(async () => root.unmount());
     editor.destroy();
