@@ -1329,8 +1329,14 @@ test('applies the complete text-style suite through the public React toolbar', a
   await expect(editor.locator('[style*="font-family"]').first()).toBeVisible();
   await expect(editor.locator('[style*="font-size: 20px"], [style*="font-size:20px"]').first()).toBeVisible();
   await expect(editor.locator('[style*="line-height: 1.8"], [style*="line-height:1.8"]').first()).toBeVisible();
-  await page.locator('.format-tabs').getByRole('button', { name: 'json' }).click();
-  const json = JSON.parse(await page.locator('.studio__export pre code').textContent() ?? '{}');
+  await page.getByRole('button', { name: 'Close' }).click();
+  await expect(page.getByRole('button', { name: 'Apply font' })).toBeHidden();
+  const jsonTab = page.locator('.format-tabs').getByRole('button', { name: 'json' });
+  const exportCode = page.locator('.studio__export pre code');
+  await jsonTab.click();
+  await expect(jsonTab).toHaveClass(/active/);
+  await expect(exportCode).toContainText('"type": "doc"');
+  const json = JSON.parse(await exportCode.textContent() ?? '{}');
   const leaves: Array<{ text?: string; marks?: Array<{ type: string; attrs?: Record<string, unknown> }> }> = [];
   const visit = (node: { content?: unknown[]; text?: string; marks?: Array<{ type: string; attrs?: Record<string, unknown> }> }) => {
     if (node.text !== undefined) leaves.push(node);
