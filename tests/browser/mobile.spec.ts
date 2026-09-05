@@ -84,6 +84,39 @@ test('keeps the public editor usable without horizontal overflow at a phone view
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
+test('keeps the closing promise in four intentional mobile phrases', async ({ page }) => {
+  await page.goto('/');
+  const heading = page.getByRole('heading', {
+    name: 'Build the editor your product needs. Nothing more. Nothing locked in.',
+  });
+  await heading.scrollIntoViewIfNeeded();
+  const phrases = heading.locator('.closing__phrase');
+  await expect(phrases).toHaveText([
+    'Build the editor',
+    'your product needs.',
+    'Nothing more.',
+    'Nothing locked in.',
+  ]);
+  const layout = await phrases.evaluateAll((items) => items.map((item) => {
+    const range = document.createRange();
+    range.selectNodeContents(item);
+    const box = item.getBoundingClientRect();
+    return {
+      display: getComputedStyle(item).display,
+      top: box.top,
+      textLines: range.getClientRects().length,
+      insideHeading: box.width <= (item.parentElement?.parentElement?.getBoundingClientRect().width ?? 0) + 1,
+    };
+  }));
+  expect(layout.map((phrase) => phrase.display)).toEqual(['block', 'block', 'block', 'block']);
+  expect(layout.map((phrase) => phrase.textLines)).toEqual([1, 1, 1, 1]);
+  expect(layout.every((phrase) => phrase.insideHeading)).toBe(true);
+  expect(layout[1].top).toBeGreaterThan(layout[0].top);
+  expect(layout[2].top).toBeGreaterThan(layout[1].top);
+  expect(layout[3].top).toBeGreaterThan(layout[2].top);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('keeps tracked review complete and touch-operable on a phone viewport', async ({ page }) => {
   await page.goto('/');
   const workspace = page.locator('.tracked-demo__workspace');

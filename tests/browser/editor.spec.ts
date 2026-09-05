@@ -40,6 +40,34 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
 });
 
+test('keeps comparison names separate from their copy in a mobile desktop-site viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 980, height: 800 });
+  await page.goto('/#compare');
+  const rows = page.getByRole('table', { name: 'Rich text editor comparison' }).getByRole('row');
+  await expect(rows).toHaveCount(4);
+  const layout = await rows.evaluateAll((items) => items.map((item) => {
+    const label = item.querySelector<HTMLElement>('strong');
+    const details = [...item.querySelectorAll<HTMLElement>('span')];
+    if (!label || details.length !== 3) throw new Error('Expected one comparison label and three detail cells.');
+    const labelBox = label.getBoundingClientRect();
+    const rowBox = item.getBoundingClientRect();
+    const detailBoxes = details.map((detail) => detail.getBoundingClientRect());
+    return {
+      labelRight: labelBox.right,
+      firstDetailLeft: detailBoxes[0].left,
+      detailTops: detailBoxes.map((box) => box.top),
+      contained: [labelBox, ...detailBoxes].every((box) => box.left >= rowBox.left && box.right <= rowBox.right),
+    };
+  }));
+  for (const row of layout) {
+    expect(row.firstDetailLeft - row.labelRight).toBeGreaterThanOrEqual(20);
+    expect(row.detailTops[1]).toBeGreaterThan(row.detailTops[0]);
+    expect(row.detailTops[2]).toBeGreaterThan(row.detailTops[1]);
+    expect(row.contained).toBe(true);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('renders, edits, and measures portable page intent in a real browser', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Page intent contract editor' });
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertBreak())).toBe(true);
