@@ -492,6 +492,11 @@ test('paginates imported styled semantic HTML without structural or PDF text los
           .filter((placement: any) => placement.itemId === 'block:1:paragraph')
           .map(() => contentPage.number)
       )),
+      blockquotePlacements: snapshot.content.pages.flatMap((contentPage: any) => (
+        contentPage.placements
+          .filter((placement: any) => placement.itemId === 'block:2:blockquote')
+          .map(() => contentPage.number)
+      )),
       tablePlacements: snapshot.content.pages.flatMap((contentPage: any) => (
         contentPage.placements
           .filter((placement: any) => placement.itemId === 'block:3:table')
@@ -504,6 +509,7 @@ test('paginates imported styled semantic HTML without structural or PDF text los
   expect(measured.presentationWarnings).toEqual([]);
   expect(measured.pages).toBeGreaterThan(3);
   expect(measured.paragraphPlacements.length).toBeGreaterThan(1);
+  expect(measured.blockquotePlacements.length).toBeGreaterThan(1);
   expect(measured.tablePlacements.length).toBeGreaterThan(1);
 
   const preview = await page.evaluate(() => (
@@ -526,6 +532,9 @@ test('paginates imported styled semantic HTML without structural or PDF text los
     const highlighted = styledRoot.querySelector<HTMLElement>('mark[style^="background-color:"]')!;
     const family = styledRoot.querySelector<HTMLElement>('[style*="font-family"]')!;
     const sized = styledRoot.querySelector<HTMLElement>('[style*="font-size"]')!;
+    const blockquotes = [...target.querySelectorAll<HTMLElement>(
+      '.fountain-page-preview__sheet blockquote[data-fountain-page-item="block:2:blockquote"]',
+    )];
     const pageOf = (selector: string) => target.querySelector<HTMLElement>(selector)
       ?.closest<HTMLElement>('[data-fountain-page]')?.dataset.fountainPage;
     return {
@@ -538,6 +547,7 @@ test('paginates imported styled semantic HTML without structural or PDF text los
       family: getComputedStyle(family).fontFamily,
       size: getComputedStyle(sized).fontSize,
       lineHeight: getComputedStyle(sized).lineHeight,
+      blockquoteChildCounts: blockquotes.map((blockquote) => blockquote.children.length),
       ruby: target.querySelectorAll('.fountain-page-preview__sheet ruby').length,
       math: target.querySelectorAll('.fountain-page-preview__sheet [data-fountain-math="block"]').length,
       pageBreaks: target.querySelectorAll('.fountain-page-preview__sheet [data-fountain-page-break]').length,
@@ -559,6 +569,8 @@ test('paginates imported styled semantic HTML without structural or PDF text los
     tableBodyRowspan: '2',
   });
   expect(Number.parseFloat(contract.lineHeight)).toBeCloseTo(32.4, 1);
+  expect(contract.blockquoteChildCounts).toHaveLength(measured.blockquotePlacements.length);
+  expect(contract.blockquoteChildCounts.every((count) => count === 1)).toBe(true);
   expect(Number(contract.afterBreakPage)).toBeGreaterThan(Math.max(...measured.tablePlacements));
 
   await page.emulateMedia({ media: 'print' });
@@ -571,7 +583,11 @@ test('paginates imported styled semantic HTML without structural or PDF text los
     expect(new Set(importedTokens).size).toBe(72);
     expect(importedTokens[0]).toBe('IMPORT001');
     expect(importedTokens.at(-1)).toBe('IMPORT072');
-    expect(pageText.join(' ').match(/AFTERIMPORTEDBREAK/gu)).toHaveLength(1);
+    const completeText = pageText.join(' ');
+    expect(completeText.match(/Semantic quotation/gu)).toHaveLength(1);
+    expect(completeText.match(/Nested imported item four/gu)).toHaveLength(1);
+    expect(completeText.match(/A second paragraph remains/gu)).toHaveLength(1);
+    expect(completeText.match(/AFTERIMPORTEDBREAK/gu)).toHaveLength(1);
   }
   await page.emulateMedia({ media: 'screen' });
 });

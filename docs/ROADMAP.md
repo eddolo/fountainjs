@@ -109,8 +109,8 @@ Yjs edits remain live across those automatic boundaries without persisting page
 numbers. Styled semantic HTML imported through the public schema contract is
 now checked across all three desktop engines for marks/alignment, ruby, math,
 nested quote/list structure, merged tables, and manual breaks, with exact
-Chromium PDF body-token de-duplication. Broader adversarial print fidelity and
-the remaining immutable evidence are still active. CSS page-shaped boxes or destructive
+Chromium PDF body-token de-duplication. Broader adversarial print fidelity
+remains active. CSS page-shaped boxes or destructive
 document splitting do not qualify.
 
 ## Prioritized after release foundations
