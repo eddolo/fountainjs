@@ -86,6 +86,11 @@
   formatting. Double underscores and triple star/underscore runs add strong
   and combined strong-emphasis support; canonical emphasis uses stars so
   adjacent word characters remain round-trip safe.
+  Non-ambiguous nested strong/emphasis runs now resolve inside their enclosing
+  mark, while links, code spans, autolinks, and inline HTML remain tighter than
+  emphasis. When adjacent text-node boundaries cannot be represented safely by
+  independent delimiters, canonical export uses Fountain's inert semantic span
+  inside the requested inline/reference link form and re-imports it losslessly.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

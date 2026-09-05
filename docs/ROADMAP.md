@@ -270,6 +270,10 @@ The emphasis baseline now prevents intraword-underscore and whitespace-opening
 false positives, accepts double-underscore strong and triple combined runs,
 and exports canonical emphasis with round-trip-safe stars. This deliberately
 does not claim the remaining full delimiter-stack algorithm.
+Unambiguous nested strong/emphasis spans now stay inside their enclosing mark;
+links, code, autolinks, and inline HTML group more tightly; and a generated
+semantic-span fallback preserves otherwise ambiguous adjacent text-node mark
+boundaries without giving up reference-style link output.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

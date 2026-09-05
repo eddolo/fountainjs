@@ -136,6 +136,8 @@ an initial standards-oriented set of behaviors:
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - Unicode-aware emphasis opening flanking, double-underscore strong, and
   triple-delimiter combined strong emphasis;
+- unambiguous nested emphasis plus link/code/HTML grouping precedence, with a
+  semantic-span fallback for lossless adjacent marked-node boundaries;
 - spaces or a backslash before a newline as a hard break;
 - inline/reference links and images with titles;
 - plain-text image descriptions derived from nested emphasis, links, and images;

@@ -399,21 +399,35 @@ function matchingEmphasisDelimiter(
   value: string,
   start: number,
   delimiter: string,
+  references: References,
 ): number {
   const marker = delimiter[0] as '*' | '_';
   for (let index = start; index <= value.length - delimiter.length; index++) {
     if (value[index] === '\\') { index++; continue; }
     const opaqueEnd = opaqueInlineEnd(value, index);
     if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
+    if (value[index] === '[' || value[index] === '!') {
+      const linkEnd = linkToken(value, index, references)?.end ?? -1;
+      if (linkEnd > index) { index = linkEnd - 1; continue; }
+    }
     if (!value.startsWith(delimiter, index) || value[index - 1] === marker) continue;
     let runEnd = index;
     while (value[runEnd] === marker) runEnd += 1;
     if (runEnd - index < delimiter.length) continue;
+    const flanking = emphasisFlanking(value, index, runEnd - index, marker);
+    if ((flanking & 1) && !(flanking & 2)) {
+      const nested = marker.repeat(runEnd - index >= 2 ? 2 : 1);
+      const nestedEnd = matchingEmphasisDelimiter(value, runEnd, nested, references);
+      if (nestedEnd >= 0) {
+        index = nestedEnd + nested.length - 1;
+        continue;
+      }
+    }
     // The end-of-fragment fallback preserves Fountain's canonical per-text-node
     // serialization when a marked node ends in whitespace. It is intentionally
     // narrower than ordinary delimiter recognition; opening delimiters still
     // obey CommonMark flanking rules.
-    if ((emphasisFlanking(value, index, runEnd - index, marker) & 2) || runEnd === value.length) return index;
+    if ((flanking & 2) || runEnd === value.length) return index;
     index = runEnd - 1;
   }
   return -1;
@@ -909,8 +923,8 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       }
     }
     const delimiters: readonly [string, readonly string[]][] = [
-      ['***', ['strong', 'em']],
-      ['___', ['strong', 'em']],
+      ['***', ['em', 'strong']],
+      ['___', ['em', 'strong']],
       ['**', ['strong']],
       ['__', ['strong']],
       ['~~', ['strike']],
@@ -925,7 +939,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       const marker = delimiter[0] as '*' | '_';
       if (emphasis && !(emphasisFlanking(text, index, delimiter.length, marker) & 1)) continue;
       const end = emphasis
-        ? matchingEmphasisDelimiter(text, index + delimiter.length, delimiter)
+        ? matchingEmphasisDelimiter(text, index + delimiter.length, delimiter, references)
         : matchingDelimiter(text, index + delimiter.length, delimiter);
       const types = markNames.map((markName) => schema.marks[markName]);
       if (end <= index + delimiter.length || types.some((type) => !type)) continue;

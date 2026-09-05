@@ -236,7 +236,7 @@ function textStyleHTML(node: Node, context: RenderContext, path: readonly number
   return `<span data-fountain-text-style="true" style="${escapeHTML(styles.join(';'))}">${value}</span>`;
 }
 
-function inline(node: Node, context: RenderContext, path: readonly number[]): string {
+function inline(node: Node, context: RenderContext, path: readonly number[], preserveMarkBoundary = false): string {
   reportNodeAttributes(node, context, path);
   if (!node.isText) {
     if (node.type.name === 'hard_break') return '  \n';
@@ -263,6 +263,11 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
       : escapeInline(node.textContent);
   }
 
+  if (preserveMarkBoundary) {
+    const linkMark = node.marks.find((mark) => mark.type.name === 'link');
+    const value = textStyleHTML(node.withMarks(node.marks.filter((mark) => mark !== linkMark)), context, path);
+    return linkMark ? link(value, linkMark.attrs.href, linkMark.attrs.title, context) : value;
+  }
   if (needsTextStyleHTML(node)) return textStyleHTML(node, context, path);
 
   node.marks.forEach((mark) => {
@@ -277,14 +282,36 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
   let text = node.marks.some((mark) => mark.type.name === 'code')
     ? codeSpan(node.text ?? '')
     : escapeInline(node.text ?? '');
+  const strongIndex = node.marks.findIndex((mark) => mark.type.name === 'strong');
+  const emIndex = node.marks.findIndex((mark) => mark.type.name === 'em');
+  const emDelimiter = strongIndex >= 0 && strongIndex < emIndex ? '_' : '*';
   for (const mark of [...node.marks].reverse().filter((item) => item.type.name !== 'code')) {
     if (mark.type.name === 'strong') text = `**${text}**`;
-    else if (mark.type.name === 'em') text = `*${text}*`;
+    else if (mark.type.name === 'em') text = `${emDelimiter}${text}${emDelimiter}`;
     else if (mark.type.name === 'strike') text = `~~${text}~~`;
     else if (mark.type.name === 'link') text = link(text, mark.attrs.href, mark.attrs.title, context);
     else if (mark.type.name === 'highlight') text = `==${text}==`;
   }
   return text;
+}
+
+function sharedEmphasis(left: Node | undefined, right: Node | undefined): boolean {
+  return Boolean(left?.isText && right?.isText && left.marks.some((mark) => (
+    (mark.type.name === 'strong' || mark.type.name === 'em')
+    && right.marks.some((candidate) => candidate.eq(mark))
+  )));
+}
+
+function inlineContent(node: Node, context: RenderContext, path: readonly number[]): string {
+  return node.content.map((child, index) => {
+    const marked = child.isText && child.marks.some((mark) => mark.type.name === 'strong' || mark.type.name === 'em');
+    const preserve = marked && (
+      /^\s|\s$/u.test(child.text ?? '')
+      || sharedEmphasis(node.content[index - 1], child)
+      || sharedEmphasis(child, node.content[index + 1])
+    );
+    return inline(child, context, [...path, index], preserve);
+  }).join('');
 }
 
 function tableCell(node: Node, context: RenderContext, path: readonly number[], depth: number): string {
@@ -353,8 +380,8 @@ function render(
   switch (node.type.name) {
     case 'doc': return node.content.map((child, index) => render(child, context, [index])).join('\n\n').replace(/\n{3,}/g, '\n\n');
     case 'text': return inline(node, context, path);
-    case 'paragraph': return node.content.map((child, index) => inline(child, context, [...path, index])).join('');
-    case 'heading': return `${'#'.repeat(Number(node.attrs.level) || 1)} ${node.content.map((child, index) => inline(child, context, [...path, index])).join('')}`;
+    case 'paragraph': return inlineContent(node, context, path);
+    case 'heading': return `${'#'.repeat(Number(node.attrs.level) || 1)} ${inlineContent(node, context, path)}`;
     case 'blockquote': return node.content
       .map((child, index) => render(child, context, [...path, index], depth))
       .join('\n\n')
@@ -371,9 +398,7 @@ function render(
         .join('\n\n');
       return `<details${node.attrs.open ? ' open' : ''}>\n<summary>${label}</summary>\n\n${body}\n</details>`;
     }
-    case 'details_summary': return node.content
-      .map((child, index) => inline(child, context, [...path, index]))
-      .join('');
+    case 'details_summary': return inlineContent(node, context, path);
     case 'bullet_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'ordered_list': return node.content.map((child, index) => `${'  '.repeat(depth)}${(Number(node.attrs.start) || 1) + index}. ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'task_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- [${child.attrs.checked ? 'x' : ' '}] ${render(child, context, [...path, index], depth + 1)}`).join('\n');

@@ -2298,6 +2298,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     emphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'snake_case / ***important*** / __strong__ / a*b*c',
     ),
+    nestedEmphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '*outer **inner** outer* / **strong *inside* strong** / *[linked](https://example.com)* / *[literal *](https://example.com)',
+    ),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2402,7 +2405,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     marks: node.marks?.map((mark: any) => mark.type) ?? [],
   }))).toEqual([
     { text: 'snake_case / ', marks: [] },
-    { text: 'important', marks: ['strong', 'em'] },
+    { text: 'important', marks: ['em', 'strong'] },
     { text: ' / ', marks: [] },
     { text: 'strong', marks: ['strong'] },
     { text: ' / a', marks: [] },
@@ -2410,6 +2413,23 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     { text: 'c', marks: [] },
   ]);
   expect(result.emphasis.losses).toEqual([]);
+  expect(result.nestedEmphasis.document).toEqual(result.nestedEmphasis.roundTrip);
+  expect(result.nestedEmphasis.document.content[0].content
+    .filter((node: any) => node.marks?.length)
+    .map((node: any) => ({
+      text: node.text,
+      marks: node.marks.map((mark: any) => mark.type),
+    }))).toEqual([
+      { text: 'outer ', marks: ['em'] },
+      { text: 'inner', marks: ['em', 'strong'] },
+      { text: ' outer', marks: ['em'] },
+      { text: 'strong ', marks: ['strong'] },
+      { text: 'inside', marks: ['strong', 'em'] },
+      { text: ' strong', marks: ['strong'] },
+      { text: 'linked', marks: ['em', 'link'] },
+      { text: 'literal *', marks: ['link'] },
+    ]);
+  expect(result.nestedEmphasis.losses).toEqual([]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

@@ -182,7 +182,9 @@ const limits = Object.freeze({
   // facade ceilings.
   // The pinned Unicode 17 full-case-fold exceptions add about 3.3/2.6 KiB to
   // Markdown's shared format chunk without introducing a runtime dependency.
-  'all ESM runtime code': 1098 * kibibyte,
+  // Unicode-aware emphasis flanking/nesting and lossless marked-node boundary
+  // projection add about 1.8/1.4 KiB to that same shared format chunk.
+  'all ESM runtime code': 1100 * kibibyte,
   'all CommonJS runtime code': 924 * kibibyte,
 });
 

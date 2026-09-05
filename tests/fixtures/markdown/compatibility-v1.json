@@ -236,7 +236,20 @@
         "headings": [],
         "codeBlocks": [],
         "links": [],
-        "marks": ["strong", "em", "strong"],
+        "marks": ["em", "strong", "strong"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-link-over-emphasis-precedence",
+      "source": "*[linked](https://example.com)* / *[literal *](https://example.com)",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "linked / *literal *",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["https://example.com", "https://example.com"],
+        "marks": ["em", "link", "link"],
         "hardBreaks": 0
       }
     }

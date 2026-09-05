@@ -382,10 +382,39 @@ describe('Markdown interchange', () => {
 
     expect(document.child(0).textContent).toBe('snake_case_value and * open* and _ open_');
     expect(marked).toEqual([
-      { text: 'combined', marks: ['strong', 'em'] },
-      { text: 'also combined', marks: ['strong', 'em'] },
+      { text: 'combined', marks: ['em', 'strong'] },
+      { text: 'also combined', marks: ['em', 'strong'] },
       { text: 'strong', marks: ['strong'] },
       { text: 'b', marks: ['em'] },
+    ]);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
+      .toEqual(document.toJSON());
+  });
+
+  it('keeps nested emphasis and links tighter than surrounding emphasis', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '*outer **inner** outer* / **strong *inside* strong**',
+      '',
+      '*[linked text](https://example.com)* / *[link with a literal *](https://example.com)',
+    ].join('\n'), schema);
+    const marked = document.content.map((paragraph) => paragraph.content
+      .filter((node) => node.marks.length)
+      .map((node) => ({ text: node.textContent, marks: node.marks.map((mark) => mark.type.name) })));
+
+    expect(marked).toEqual([
+      [
+        { text: 'outer ', marks: ['em'] },
+        { text: 'inner', marks: ['em', 'strong'] },
+        { text: ' outer', marks: ['em'] },
+        { text: 'strong ', marks: ['strong'] },
+        { text: 'inside', marks: ['strong', 'em'] },
+        { text: ' strong', marks: ['strong'] },
+      ],
+      [
+        { text: 'linked text', marks: ['em', 'link'] },
+        { text: 'link with a literal *', marks: ['link'] },
+      ],
     ]);
     expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
       .toEqual(document.toJSON());
@@ -717,7 +746,8 @@ describe('Markdown interchange', () => {
     const document = MarkdownImporter.parse(source, schema);
     const markdown = MarkdownExporter.export(document, { linkStyle: 'reference' });
 
-    expect(markdown).toContain('[**bold **][ref-1][***and italic***][ref-1]');
+    expect(markdown).toContain('[<span data-fountain-text-style="true" style=""><strong>bold </strong></span>][ref-1]');
+    expect(markdown).toContain('[<span data-fountain-text-style="true" style=""><strong><em>and italic</em></strong></span>][ref-1]');
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 
