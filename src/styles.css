@@ -142,6 +142,7 @@
 .fountain-page-preview__accessible { position: absolute !important; inline-size: 1px !important; block-size: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 @media print {
   .fountain-page-preview { display: block; padding: 0; overflow: visible; background: transparent; }
+  .fountain-page-preview__accessible { display: none !important; }
   .fountain-page-preview__sheet { margin: 0; box-shadow: none; break-after: page; page-break-after: always; }
   .fountain-page-preview__sheet:last-child { break-after: auto; page-break-after: auto; }
 }

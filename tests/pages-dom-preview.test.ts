@@ -50,7 +50,7 @@ describe('read-only DOM page preview', () => {
     const source = window.document.createElement('div');
     source.contentEditable = 'true';
     source.innerHTML = `
-      <header data-fountain-path="0" data-fountain-page-header="default" data-height="8"><p data-fountain-path="0.0">Page <span data-fountain-path="0.0.1" data-fountain-page-field="page-number">{page}</span> / <span data-fountain-path="0.0.3" data-fountain-page-field="page-count">{pages}</span></p></header>
+      <header data-fountain-path="0" data-fountain-page-header="default" data-height="8"><p data-fountain-path="0.0">Page <span class="fountain-page-field" data-fountain-path="0.0.1" data-fountain-page-field="page-number" data-fountain-selected-node="true">{page}</span> / <span class="fountain-page-field" data-fountain-path="0.0.3" data-fountain-page-field="page-count">{pages}</span></p></header>
       <p data-fountain-path="1" data-height="20">Claim<sup data-fountain-path="1.1" data-fountain-footnote-reference="proof"><a href="#fountain-footnote-proof">proof</a></sup></p>
       <hr data-fountain-path="2" data-fountain-page-break="true" data-height="0">
       <p data-fountain-path="3" data-height="20">After break</p>
@@ -87,6 +87,8 @@ describe('read-only DOM page preview', () => {
     expect(result.pages.every((page) => page.getAttribute('aria-hidden') === 'true')).toBe(true);
     expect(result.pages[0]?.querySelector('.fountain-page-preview__header')?.textContent).toContain('Page 1 / 2');
     expect(result.pages[1]?.querySelector('.fountain-page-preview__header')?.textContent).toContain('Page 2 / 2');
+    expect(result.pages.flatMap((page) => [...page.querySelectorAll('.fountain-page-field')])).toHaveLength(0);
+    expect(result.pages.flatMap((page) => [...page.querySelectorAll('[data-fountain-selected-node]')])).toHaveLength(0);
     expect(result.pages[0]?.querySelector('.fountain-page-preview__footer')?.textContent).toContain('Confidential');
     expect(result.pages[0]?.querySelector('[data-fountain-page-break]')).toBeNull();
     expect(result.pages[1]?.querySelector('.fountain-page-preview__content')?.textContent).toContain('After break');

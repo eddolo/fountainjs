@@ -337,14 +337,18 @@ their cached references. Resize, font, manual, and print cycles remeasure fully,
 and `{ incremental: false }` disables reuse for specialized hosts.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
-and print page breaks. It installs print-only physical `@page` rules matching the
-geometry; pass `{ includePrintStyles: false }` only when the host owns those
-global rules. Browser geometry must use CSS-pixel units (for example,
+and print page breaks. Editing-only selection markers and field-token styling
+are removed from visual copies, and the continuous accessibility copy is omitted
+from print. It installs print-only physical `@page` rules matching the geometry;
+pass `{ includePrintStyles: false }` only when the host owns those global rules.
+Browser geometry must use CSS-pixel units (for example,
 `unitsPerMillimetre: 96 / 25.4`) for physical A4/Letter output. Visual clipped
 copies are hidden from assistive technology while one continuous read-only copy
-preserves document semantics. It does **not** yet claim editable page shells or
-certified content-level print/PDF fidelity. Those remain active `DOC-14` work
-with explicit browser and accessibility gates in [the pagination
+preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
+page-specific header/field, body, list, table, footnote, and manual-break text
+without a duplicate hidden document. This is representative content evidence,
+not a claim of complete editable pagination or exhaustive PDF fidelity. Those
+remain active `DOC-14` work with explicit browser and accessibility gates in [the pagination
 contract](docs/PAGINATION.md).
 
 ## Optional clipboard history

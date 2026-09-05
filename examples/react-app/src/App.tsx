@@ -811,7 +811,7 @@ function App() {
             <div className="module-stack"><span>COMPOSED FOR THIS DEMO</span><div>{demoKit.extensions.map((extension) => <code key={extension.name}>{extension.name}</code>)}</div></div>
             <section className="studio__export">
               <div className="export-head"><strong>Live document output</strong><button onClick={copy}>{copied ? 'Copied!' : 'Copy'}</button></div>
-              <div className="format-tabs">{(['markdown', 'html', 'json'] as ExportFormat[]).map((item) => <button key={item} className={format === item ? 'active' : ''} onClick={() => setFormat(item)}>{item}</button>)}</div>
+              <div className="format-tabs">{(['markdown', 'html', 'json'] as ExportFormat[]).map((item) => <button type="button" key={item} className={format === item ? 'active' : ''} onClick={() => setFormat(item)}>{item}</button>)}</div>
               <pre><code>{output}</code></pre>
             </section>
             <details className="optional-ai"><summary>Optional AI review example</summary><FountainAIReview controller={aiController} title="Optional AI module" /></details>

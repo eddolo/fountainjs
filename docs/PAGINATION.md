@@ -2,7 +2,7 @@
 
 Status: active architecture and implementation work for `DOC-14`. The portable
 layout/document-intent foundation and a read-only paged preview/print projection
-are implemented; an editable paged DOM renderer and certified PDF fidelity are
+are implemented; an editable paged DOM renderer and exhaustive PDF fidelity are
 not. This page is not a claim that the complete pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
@@ -43,8 +43,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - an isolated `fountainjs-editor/pages/preview` renderer for fixed-size
   read-only sheets, exact line clips, structural continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
-  print page breaks, deterministic physical `@page` rules, namespaced IDs, and
-  a single continuous accessibility copy;
+  print page breaks, deterministic physical `@page` rules, namespaced IDs,
+  transient editor-state removal, and one screen-only continuous accessibility
+  copy;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -76,10 +77,12 @@ edited once in canonical document order. The neutral projector now decides
 which canonical furniture and footnotes belong to each measured page, and the
 browser adapter supplies real line/list/table/footnote measurements. The
 read-only renderer proves repeated DOM furniture and content projection. A real
-Chromium PDF gate verifies one output page per projected sheet plus A4/Letter
-MediaBox dimensions; that geometry evidence does not yet certify content-level
-PDF fidelity. Editable page shells and cross-browser editing across rendered
-page boundaries remain active work.
+Chromium PDF gate verifies one output page per projected sheet, A4/Letter
+MediaBox dimensions, and page-specific extracted header/field, body, list,
+table, footnote, and post-break text without printing the hidden accessibility
+copy. That representative fixture is not exhaustive visual/content fidelity.
+Editable page shells and cross-browser editing across rendered page boundaries
+remain active work.
 
 ## Current architecture audit
 

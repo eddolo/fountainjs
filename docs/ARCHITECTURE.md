@@ -752,12 +752,13 @@ The suites are organized by boundary:
   deterministic controller teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
-  separation, structural slices, continued ordered-list numbering, and physical
-  print-rule generation;
+  separation, transient editor-state removal, structural slices, continued
+  ordered-list numbering, and physical print-rule generation;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
-  presentation, Chromium-generated A4/Letter PDF page counts and MediaBoxes,
-  and 1,000-block incremental pagination reflow budgets.
+  presentation, Chromium-generated A4/Letter PDF page counts, MediaBoxes, and
+  page-specific content extraction, plus 1,000-block incremental pagination
+  reflow budgets.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 

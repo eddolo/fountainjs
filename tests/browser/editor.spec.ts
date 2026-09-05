@@ -1,4 +1,20 @@
 import { expect, test } from '@playwright/test';
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+
+async function extractPDFPageText(pdf: Buffer): Promise<readonly string[]> {
+  const task = getDocument({ data: new Uint8Array(pdf) });
+  const document = await task.promise;
+  try {
+    const pages: string[] = [];
+    for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) {
+      const content = await (await document.getPage(pageNumber)).getTextContent();
+      pages.push(content.items.flatMap((item) => ('str' in item ? [item.str] : [])).join(' ').replace(/\s+/gu, ' ').trim());
+    }
+    return pages;
+  } finally {
+    await task.destroy();
+  }
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
@@ -142,12 +158,14 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
     return {
       display: getComputedStyle(target).display,
       background: getComputedStyle(target).backgroundColor,
+      accessibleDisplay: getComputedStyle(target.querySelector<HTMLElement>('.fountain-page-preview__accessible')!).display,
       boxShadow: getComputedStyle(sheet).boxShadow,
       breakAfter: getComputedStyle(sheet).breakAfter,
     };
   });
   expect(printStyles.display).toBe('block');
   expect(['rgba(0, 0, 0, 0)', 'transparent']).toContain(printStyles.background);
+  expect(printStyles.accessibleDisplay).toBe('none');
   expect(printStyles.boxShadow).toBe('none');
   expect(['page', 'always']).toContain(printStyles.breakAfter);
   await page.emulateMedia({ media: 'screen' });
@@ -163,6 +181,8 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
 test('emits exact A4 and Letter PDF pages for every projected sheet in Chromium', async ({ page, browserName }) => {
   test.skip(browserName !== 'chromium', 'Playwright exposes PDF generation only for Chromium.');
   await page.goto('/browser-tests.html?fixture=pages-preview');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.setHeader())).toBe(true);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertPageNumber())).toBe(true);
   for (const format of [
     { name: 'a4', widthPoints: 210 * 72 / 25.4, heightPoints: 297 * 72 / 25.4 },
     { name: 'letter', widthPoints: 8.5 * 72, heightPoints: 11 * 72 },
@@ -184,6 +204,17 @@ test('emits exact A4 and Letter PDF pages for every projected sheet in Chromium'
       expect(Math.abs((right ?? 0) - format.widthPoints)).toBeLessThanOrEqual(.5);
       expect(Math.abs((top ?? 0) - format.heightPoints)).toBeLessThanOrEqual(.5);
     });
+
+    const pageText = await extractPDFPageText(pdf);
+    expect(pageText).toHaveLength(preview.pageCount);
+    expect(pageText[0]).toMatch(/^Browser report · 1 /u);
+    expect(pageText[0]).toContain('Measured layout');
+    expect(pageText[0]).toContain('First list item');
+    expect(pageText[0]).toContain('A measured footnote body.');
+    expect(pageText.at(-1)).toMatch(/^Browser report · 2 /u);
+    expect(pageText.at(-1)).toContain('After the manual break');
+    expect(pageText.at(-1)).not.toContain('Measured layout');
+    expect(pageText.join(' ').match(/Measured layout/gu)).toHaveLength(1);
   }
 });
 
@@ -1631,6 +1662,7 @@ test('applies the complete text-style suite through the public React toolbar', a
   await expect(page.getByRole('button', { name: 'Apply font' })).toBeHidden();
   const jsonTab = page.locator('.format-tabs').getByRole('button', { name: 'json' });
   const exportCode = page.locator('.studio__export pre code');
+  await jsonTab.evaluate((element) => element.scrollIntoView({ block: 'center' }));
   await jsonTab.click();
   await expect(jsonTab).toHaveClass(/active/);
   await expect(exportCode).toContainText('"type": "doc"');

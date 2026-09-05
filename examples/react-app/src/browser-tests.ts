@@ -472,6 +472,7 @@ Object.assign(globalThis, {
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({
         size,
         margins: 12.7,
+        headerHeight: 48,
         unitsPerMillimetre: 96 / 25.4,
       }), true),
       incrementalProbe: runPaginationIncrementalBudget,

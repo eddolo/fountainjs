@@ -1417,9 +1417,11 @@ on every cycle.
 
 This is the page-model, measurement, and read-only preview foundation, not a
 completed editable paginator. A real Chromium gate verifies A4/Letter PDF page
-counts and MediaBox dimensions, but editable page-shell rendering,
-selection/IME across visual boundaries, and content-level print/PDF fidelity
-remain active work.
+counts, MediaBox dimensions, resolved headers/page fields, body/list/table text,
+page-local footnotes, manual-break placement, and absence of the hidden
+accessibility duplicate. Editable page-shell rendering, selection/IME across
+visual boundaries, and broader adversarial/cross-engine print fidelity remain
+active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

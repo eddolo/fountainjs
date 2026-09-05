@@ -64,6 +64,20 @@ function prepareClone(
     element.removeAttribute('contenteditable');
     element.removeAttribute('aria-selected');
     element.removeAttribute('tabindex');
+    [
+      'data-fountain-selected-node',
+      'data-fountain-selected-cell',
+      'data-fountain-gap',
+      'data-fountain-block-reorderable',
+      'data-fountain-drop-position',
+      'data-fountain-dragging',
+      'data-fountain-image-selected',
+      'data-fountain-image-resizing',
+      'data-fountain-media-selected',
+      'data-fountain-math-selected',
+      'data-fountain-resizing',
+      'draggable',
+    ].forEach((attribute) => element.removeAttribute(attribute));
     if (['INPUT', 'BUTTON', 'SELECT', 'TEXTAREA'].includes(element.tagName)) {
       (element as HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement).disabled = true;
     }
@@ -169,7 +183,10 @@ function clonedTemplate(
   clone.dataset.fountainPageTemplate = `${template.kind}:${template.variant}`;
   clone.querySelectorAll<HTMLElement>('[data-fountain-page-field]').forEach((field) => {
     const projected = template.fields.find((candidate) => candidate.kind === field.dataset.fountainPageField);
-    if (projected) field.textContent = projected.value;
+    if (projected) {
+      field.textContent = projected.value;
+      field.classList.remove('fountain-page-field');
+    }
   });
   return clone;
 }
