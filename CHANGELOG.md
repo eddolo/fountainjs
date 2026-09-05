@@ -94,6 +94,9 @@
   Ambiguous star and underscore runs now apply CommonMark's rule-of-three and
   overlap precedence, preserving compact nested strong/emphasis forms where the
   inner run has no surrounding whitespace.
+  Uneven delimiter runs now consume only the characters needed for the resolved
+  mark; unmatched prefix/suffix characters remain literal and canonical export
+  can re-import escaped markers immediately beside emphasis.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

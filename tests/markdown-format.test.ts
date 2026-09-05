@@ -484,6 +484,33 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('keeps unmatched emphasis delimiters outside the formatted span', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      { source: '**foo*', text: '*foo', nodes: [{ text: '*', marks: [] }, { text: 'foo', marks: ['em'] }] },
+      { source: '*foo**', text: 'foo*', nodes: [{ text: 'foo', marks: ['em'] }, { text: '*', marks: [] }] },
+      { source: '***foo**', text: '*foo', nodes: [{ text: '*', marks: [] }, { text: 'foo', marks: ['strong'] }] },
+      { source: '****foo*', text: '***foo', nodes: [{ text: '***', marks: [] }, { text: 'foo', marks: ['em'] }] },
+      { source: '**foo***', text: 'foo*', nodes: [{ text: 'foo', marks: ['strong'] }, { text: '*', marks: [] }] },
+      { source: '*foo****', text: 'foo***', nodes: [{ text: 'foo', marks: ['em'] }, { text: '***', marks: [] }] },
+      { source: 'foo *\\**', text: 'foo *', nodes: [{ text: 'foo ', marks: [] }, { text: '*', marks: ['em'] }] },
+      { source: 'foo **\\***', text: 'foo *', nodes: [{ text: 'foo ', marks: [] }, { text: '*', marks: ['strong'] }] },
+      { source: 'foo *_*', text: 'foo _', nodes: [{ text: 'foo ', marks: [] }, { text: '_', marks: ['em'] }] },
+      { source: 'foo **_**', text: 'foo _', nodes: [{ text: 'foo ', marks: [] }, { text: '_', marks: ['strong'] }] },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      expect(document.textContent, example.source).toBe(example.text);
+      expect(document.child(0).content.map((node) => ({
+        text: node.textContent,
+        marks: node.marks.map((mark) => mark.type.name),
+      })), example.source).toEqual(example.nodes);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

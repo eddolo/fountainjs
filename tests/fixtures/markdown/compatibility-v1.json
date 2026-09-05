@@ -265,6 +265,19 @@
         "marks": ["em", "em", "strong", "em"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-unmatched-emphasis-delimiters",
+      "source": "*foo**",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "foo*",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["em"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

@@ -278,6 +278,9 @@ CommonMark rule-of-three arithmetic now prevents an ambidextrous delimiter run
 from closing the wrong span, including compact nested forms with no separating
 whitespace. Earlier overlapping spans keep precedence. The broader delimiter
 stack is still an explicit compatibility target rather than a completed claim.
+Uneven-run handling now leaves unmatched delimiter characters outside the
+formatted span and round-trips the otherwise ambiguous adjacent literal/mark
+boundary through escaped canonical Markdown.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

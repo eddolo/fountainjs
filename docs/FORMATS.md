@@ -162,6 +162,9 @@ edge whitespace that independent Markdown delimiters cannot preserve safely,
 canonical export uses the same inert `data-fountain-text-style` span used by
 lossless text styles. Reference-style links remain reference-style around that
 span, and Fountain re-imports the exact mark order.
+Uneven opening and closing runs consume only the delimiter characters required
+for the chosen mark. Surplus stars or underscores remain literal outside the
+formatted span, including when canonical export must escape an adjacent marker.
 
 Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
 (`[id][]`), and shortcut (`[id]`) reference links and reference images resolve

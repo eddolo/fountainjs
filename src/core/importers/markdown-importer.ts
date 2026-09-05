@@ -372,6 +372,12 @@ function matchingDelimiter(value: string, start: number, delimiter: string): num
   return -1;
 }
 
+function isEscapedMarkdownCharacter(value: string, index: number): boolean {
+  let slashes = 0;
+  for (let cursor = index - 1; cursor >= 0 && value[cursor] === '\\'; cursor--) slashes += 1;
+  return slashes % 2 === 1;
+}
+
 function emphasisFlanking(value: string, start: number, length: number, marker: '*' | '_') {
   const before = Array.from(value.slice(Math.max(0, start - 2), start)).at(-1) ?? ' ';
   const after = String.fromCodePoint(value.codePointAt(start + length) ?? 32);
@@ -423,10 +429,10 @@ function matchingEmphasisRun(
   openerLength: number,
   delimiterLength: 1 | 2,
   references: References,
+  openerRemainder = openerLength - delimiterLength,
 ): EmphasisMatch | null {
   const marker = value[openerStart] as '*' | '_';
   const openerFlanking = emphasisFlanking(value, openerStart, openerLength, marker);
-  const openerRemainder = openerLength - delimiterLength;
   const start = openerStart + openerLength;
   for (let index = start; index <= value.length - delimiterLength; index++) {
     if (value[index] === '\\') { index++; continue; }
@@ -436,7 +442,8 @@ function matchingEmphasisRun(
       const linkEnd = linkToken(value, index, references)?.end ?? -1;
       if (linkEnd > index) { index = linkEnd - 1; continue; }
     }
-    if (value[index] !== marker || value[index - 1] === marker) continue;
+    if (value[index] !== marker
+      || (value[index - 1] === marker && !isEscapedMarkdownCharacter(value, index - 1))) continue;
     let runEnd = index;
     while (value[runEnd] === marker) runEnd += 1;
     const runLength = runEnd - index;
@@ -446,7 +453,7 @@ function matchingEmphasisRun(
       && !violatesEmphasisRuleOfThree(openerLength, openerFlanking, runLength, flanking);
 
     if (canClose && !(openerRemainder > 0 && runLength <= openerRemainder)) {
-      const closeStart = delimiterLength === 1 ? runEnd - 1 : index;
+      const closeStart = index + Math.min(openerRemainder, runLength - delimiterLength);
       return { start: closeStart, end: closeStart + delimiterLength, runStart: index, runEnd };
     }
 
@@ -986,22 +993,38 @@ function inline(text: string, schema: Schema, references: References, inheritedM
     const marker = text[index] === '*' || text[index] === '_'
       ? text[index] as '*' | '_'
       : null;
-    if (marker && text[index - 1] !== marker) {
+    if (marker && (text[index - 1] !== marker || isEscapedMarkdownCharacter(text, index - 1))) {
       let openingEnd = index;
       while (text[openingEnd] === marker) openingEnd += 1;
       const openingLength = openingEnd - index;
-      const delimiterLength = emphasisDelimiterLength(openingLength);
-      const type = schema.marks[delimiterLength === 2 ? 'strong' : 'em'];
-      if (type && (emphasisFlanking(text, index, openingLength, marker) & 1)) {
-        const match = matchingEmphasisRun(text, index, openingLength, delimiterLength, references);
-        if (match && match.start > index + delimiterLength) {
+      const primaryLength = emphasisDelimiterLength(openingLength);
+      const attempts: readonly (1 | 2)[] = openingLength > 1
+        ? [primaryLength, primaryLength === 1 ? 2 : 1]
+        : [primaryLength];
+      if (emphasisFlanking(text, index, openingLength, marker) & 1) {
+        for (const delimiterLength of attempts) {
+          const prefix = delimiterLength === primaryLength ? 0 : openingLength - delimiterLength;
+          const type = schema.marks[delimiterLength === 2 ? 'strong' : 'em'];
+          if (!type) continue;
+          const match = matchingEmphasisRun(
+            text,
+            index,
+            openingLength,
+            delimiterLength,
+            references,
+            prefix === 0 ? openingLength - delimiterLength : 0,
+          );
+          const contentStart = prefix === 0 ? index + delimiterLength : openingEnd;
+          if (!match || match.start <= contentStart) continue;
+          if (prefix > 0) plain += marker.repeat(prefix);
           flush();
-          result.push(...inline(text.slice(index + delimiterLength, match.start), schema, references, [
+          result.push(...inline(text.slice(contentStart, match.start), schema, references, [
             ...inheritedMarks,
             type.create(),
           ]));
           index = match.end;
           handled = true;
+          break;
         }
       }
     }
