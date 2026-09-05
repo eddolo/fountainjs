@@ -603,7 +603,7 @@ function inlineChildren(
     if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
     if (tag === 'a' && schema.marks.link) {
       const href = child.getAttribute('href') ?? '';
-      if (isSafeURL(href)) addSchemaMark(nextMarks, schema, 'link', {
+      if (child.hasAttribute('href') && isSafeURL(href, { allowEmpty: true })) addSchemaMark(nextMarks, schema, 'link', {
         href,
         title: child.getAttribute('title') ?? '',
         target: child.getAttribute('target') === '_self' ? '_self' : '_blank',

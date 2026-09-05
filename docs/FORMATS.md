@@ -116,8 +116,10 @@ for a matching shortcut reference, and an inner link suppresses an enclosing
 link rather than producing nested anchors. Code spans are opaque during this
 check, so link-looking code remains ordinary linked label text. Fountain's
 safe-URL policy still wins after syntax recognition; an empty or blocked inline
-destination is retained as literal text and cannot silently select a reference
-with the same label.
+destination cannot silently select a reference with the same label. An explicit
+empty destination is represented as an empty link and round-trips as `[]()`;
+blocked protocols remain literal. The empty exception is link-specific: images,
+media, actions, and other URL-bearing attributes still require a destination.
 
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a
@@ -130,7 +132,8 @@ document. Other Markdown consumers still receive readable inline HTML.
 Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
 (`[id][]`), and shortcut (`[id]`) reference links and reference images resolve
 case-insensitively. Unsafe destination protocols are never turned into links or
-images. Export can emit ordinary inline links or deterministic, deduplicated
+images. An explicit HTML `<a href="">` also remains a link, while an anchor
+without an `href` is ordinary inline content. Export can emit ordinary inline links or deterministic, deduplicated
 reference definitions:
 
 ```ts

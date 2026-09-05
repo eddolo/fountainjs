@@ -2276,7 +2276,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '[Angle](<docs/guide)v1>) and [Relative](guide.md "Guide") plus [Reference] and [Labelled][Multi line].\n\n[reference]:\n  docs/reference.md\n  "Reference title"\n[multi\n  line]: docs/multiline-label.md',
     ),
     precedence: (globalThis as any).fountainBrowserTest.inspectMarkdown(
-      '[foo](not a link) / [outer [inner](docs/inner.md)](docs/outer.md)\n\n[foo]: docs/reference.md',
+      '[foo](not a link) / [foo]() / [outer [inner](docs/inner.md)](docs/outer.md)\n\n[foo]: docs/reference.md',
     ),
     unicodeReferences: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '[ẞ] [µ] [ς] [ﬃ]\n\n[SS]: docs/sharp-s.md\n[Μ]: docs/micro.md\n[Σ]: docs/sigma.md\n[FFI]: docs/ligature.md',
@@ -2318,6 +2318,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   expect(result.precedence.document.content[0].content).toEqual(expect.arrayContaining([
     expect.objectContaining({ text: 'foo', marks: [expect.objectContaining({
       type: 'link', attrs: expect.objectContaining({ href: 'docs/reference.md' }),
+    })] }),
+    expect.objectContaining({ text: 'foo', marks: [expect.objectContaining({
+      type: 'link', attrs: expect.objectContaining({ href: '' }),
     })] }),
     expect.objectContaining({ text: 'inner', marks: [expect.objectContaining({
       type: 'link', attrs: expect.objectContaining({ href: 'docs/inner.md' }),

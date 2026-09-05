@@ -64,6 +64,9 @@
   Definition labels may span nonblank physical lines and normalize internal
   whitespace for matching; unescaped nested brackets are rejected instead of
   being mistaken for a definition.
+  Explicit empty links now round-trip as links through Markdown, browser HTML,
+  server-only HTML, JSON, and DOM rendering. Anchors with no `href` remain
+  ordinary content, and empty image/source/action URLs remain invalid.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

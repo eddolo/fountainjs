@@ -128,7 +128,9 @@ function link(
   image = false,
 ): string {
   const prefix = image ? '!' : '';
-  if (context.options.linkStyle === 'reference') {
+  // Reference definitions require a destination. Preserve a semantic empty
+  // link inline even when the rest of the document uses reference style.
+  if (context.options.linkStyle === 'reference' && (image || String(href ?? '').trim())) {
     return `${prefix}[${label}][${reference(context, href, title)}]`;
   }
   const suffix = title ? ` "${escapeTitle(title)}"` : '';

@@ -104,6 +104,21 @@ describe('schema-owned HTML interchange', () => {
     expect(restoredMarks.find((mark) => mark.type.name === 'highlight')?.attrs.color).toBe('#aabbcc');
   });
 
+  it('preserves an explicit empty link without turning an anchor missing href into one', () => {
+    const document = HTMLImporter.parse('<p><a href="">Empty</a> <a>No href</a></p>', schema);
+    const empty = document.child(0).content.find((node) => node.text === 'Empty');
+    const missing = document.child(0).content.find((node) => node.text === 'No href');
+
+    expect(empty?.marks.find((mark) => mark.type.name === 'link')?.attrs.href).toBe('');
+    expect(missing?.marks.some((mark) => mark.type.name === 'link')).toBe(false);
+    const html = HTMLExporter.export(document, { document: false });
+    expect(html).toContain('<a href=""');
+    const restored = HTMLImporter.parse(html, schema);
+    expect(restored.textContent).toBe(document.textContent);
+    expect(restored.child(0).content.find((node) => node.text === 'Empty')
+      ?.marks.find((mark) => mark.type.name === 'link')?.attrs.href).toBe('');
+  });
+
   it('contains failing rules, rejects invalid attributes, and preserves readable fallback text', () => {
     const guarded = defineExtension({
       name: 'guarded-import',

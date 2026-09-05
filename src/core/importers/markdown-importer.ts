@@ -543,8 +543,9 @@ function generatedStyledNodes(
     } else {
       const current = stack.at(-1)?.marks ?? baseMarks;
       const type = schema.marks[tag === 'a' ? 'link' : markNames[tag] ?? ''];
+      const hasRequiredAttributes = tag !== 'a' || /\shref\s*=/iu.test(token);
       let next = current;
-      if (type && !current.some((mark) => mark.type === type)) {
+      if (type && hasRequiredAttributes && !current.some((mark) => mark.type === type)) {
         try {
           const attrs = tag === 'a' ? {
             href: generatedAttribute(token, 'href'),
@@ -766,7 +767,10 @@ function inline(text: string, schema: Schema, references: References, inheritedM
     if (text[index] === '!' || text[index] === '[') {
       const parsed = linkToken(text, index, references);
       if (parsed) {
-        const safe = isSafeURL(parsed.href, { allowDataImage: parsed.image });
+        const safe = isSafeURL(parsed.href, {
+          allowDataImage: parsed.image,
+          allowEmpty: !parsed.image,
+        });
         if (safe) {
           flush();
           if (parsed.image && schema.nodes.inline_image) {

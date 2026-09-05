@@ -122,7 +122,7 @@ an initial standards-oriented set of behaviors:
 - strict HTML5 named/numeric character references and all ASCII punctuation
   escapes, excluding code spans and blocks;
 - safe absolute/relative links with balanced or angle-bracket destinations,
-  strict title closers, bounded/escaped reference labels, and code-aware
+  explicit empty links, strict title closers, bounded/escaped reference labels, and code-aware
   single- or multiline definitions with multiline labels, plus
   malformed-inline/shortcut and
   nested-link precedence without treating link-looking code as a nested link;
@@ -164,13 +164,13 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The bounded link-precedence baseline, including multiline/container
-definitions, malformed-inline fallback, and nested-link suppression, is
-certified by the complete 491-test package gate and 295-pass
+The bounded Unicode-reference baseline, including multiline/container
+definitions, link precedence, and full Unicode 17 label case folding, is
+certified by the complete 492-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
-[CI run for `e5a1c03`](https://github.com/eddolo/fountainjs/actions/runs/33988146671),
+[CI run for `b300a11`](https://github.com/eddolo/fountainjs/actions/runs/33988446790),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33988146629).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33988446763).
 
 ## Security and collaboration
 

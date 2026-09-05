@@ -264,7 +264,13 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     if (tag === 'a' && schema.marks.link) {
       const href = child.getAttribute('href') ?? '';
       const anchor = child as HTMLAnchorElement;
-      if (isSafeURL(href)) addSchemaMark(nextMarks, schema, 'link', { href, title: anchor.title, target: anchor.target === '_self' ? '_self' : '_blank' });
+      if (child.hasAttribute('href') && isSafeURL(href, { allowEmpty: true })) {
+        addSchemaMark(nextMarks, schema, 'link', {
+          href,
+          title: anchor.title,
+          target: anchor.target === '_self' ? '_self' : '_blank',
+        });
+      }
     }
     result.push(...inlineChildren(child, schema, nextMarks));
   });

@@ -40,7 +40,8 @@ function renderDOMAttributes(attrs: Attributes): string {
     const name = (rawName === 'className' ? 'class' : rawName).toLowerCase();
     if (!/^[a-z_:][a-z0-9:._-]*$/i.test(name) || /^on/i.test(name) || value === undefined || value === null || value === false) return '';
     if (['srcdoc', 'ping', 'xlink:href'].includes(name)) return '';
-    if (['href', 'cite', 'action', 'formaction'].includes(name) && !isSafeURL(value)) return '';
+    if (name === 'href' && !isSafeURL(value, { allowEmpty: true })) return '';
+    if (['cite', 'action', 'formaction'].includes(name) && !isSafeURL(value)) return '';
     if (['src', 'poster'].includes(name) && !isSafeURL(value, { allowDataImage: true })) return '';
     if (name === 'srcset') {
       const sourceSet = safeSrcset(value);
@@ -151,10 +152,12 @@ function renderText(node: Node): string {
       case 'subscript': content = `<sub>${content}</sub>`; break;
       case 'superscript': content = `<sup>${content}</sup>`; break;
       case 'link': {
-        const href = safeURL(mark.attrs.href);
+        const rawHref = String(mark.attrs.href ?? '').trim();
         const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
         const target = mark.attrs.target === '_self' ? '_self' : '_blank';
-        content = href ? `<a href="${href}"${title} target="${target}" rel="noopener noreferrer nofollow">${content}</a>` : content;
+        content = isSafeURL(rawHref, { allowEmpty: true })
+          ? `<a href="${escapeHTML(rawHref)}"${title} target="${target}" rel="noopener noreferrer nofollow">${content}</a>`
+          : content;
         break;
       }
       default: {

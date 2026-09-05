@@ -1,5 +1,7 @@
 export interface SafeURLOptions {
   readonly allowDataImage?: boolean;
+  /** Accept the empty URL used by semantic links such as CommonMark `[]()`. */
+  readonly allowEmpty?: boolean;
 }
 
 const DATA_IMAGE = /^data:image\/(?:png|gif|jpe?g|webp);base64,[a-z\d+/=\s]+$/i;
@@ -10,7 +12,8 @@ const EXPLICIT_SCHEME = /^[A-Za-z][A-Za-z\d+.-]*:/u;
 export function isSafeURL(value: unknown, options: SafeURLOptions = {}): value is string {
   if (typeof value !== 'string') return false;
   const url = value.trim();
-  if (!url || CONTROL_CHARACTER.test(url)) return false;
+  if (!url) return options.allowEmpty === true;
+  if (CONTROL_CHARACTER.test(url)) return false;
   if (options.allowDataImage && DATA_IMAGE.test(url)) return true;
   if (url.startsWith('#')) return true;
   if (url.startsWith('/')) return !url.startsWith('//') && !url.startsWith('/\\');

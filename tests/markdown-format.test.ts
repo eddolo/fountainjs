@@ -150,15 +150,28 @@ describe('Markdown interchange', () => {
       });
     });
 
-    expect(document.child(0).textContent).toBe('foo(not a link) / [foo]()');
+    expect(document.child(0).textContent).toBe('foo(not a link) / foo');
     expect(document.child(1).textContent).toBe('[outer inner](docs/outer.md)');
     expect(document.child(2).textContent).toBe('outer [inner](docs/code.md)');
     expect(links).toEqual([
       { text: 'foo', href: 'docs/reference.md', code: false },
+      { text: 'foo', href: '', code: false },
       { text: 'inner', href: 'docs/inner.md', code: false },
       { text: 'outer ', href: 'docs/outer.md', code: false },
       { text: '[inner](docs/code.md)', href: 'docs/outer.md', code: true },
     ]);
+  });
+
+  it('round-trips an empty Markdown link without treating a missing destination as unsafe', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse('[Same page]()', schema);
+    const link = document.child(0).child(0).marks.find((mark) => mark.type.name === 'link');
+
+    expect(link?.attrs.href).toBe('');
+    expect(MarkdownExporter.export(document)).toBe('[Same page]()');
+    expect(MarkdownExporter.export(document, { linkStyle: 'reference' })).toBe('[Same page]()');
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
+      .toEqual(document.toJSON());
   });
 
   it('does not extract reference definitions from code or paragraph continuations', () => {
