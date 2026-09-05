@@ -133,6 +133,8 @@ an initial standards-oriented set of behaviors:
   spaces/tabs/line endings, counts its bound by Unicode code point, and honors
   adjacent full/collapsed/shortcut precedence;
 - safe URI and email autolinks inside angle brackets;
+- boundary-safe GFM `www.`, `http://`, and `https://` autolinks with validated
+  domains and path punctuation/parenthesis/entity-suffix trimming;
 - underscore or star emphasis, strong emphasis, exact one/two-tilde GFM
   strikethrough, code, and highlights;
 - Unicode-aware emphasis opening flanking, double-underscore strong, and
@@ -171,7 +173,8 @@ conformance. Important remaining work includes:
 - exact list marker, indentation, interruption, tight/loose, and lazy
   continuation rules;
 - full link destination/title/reference precedence;
-- GFM extended autolinks and additional strikethrough delimiter-stack cases;
+- GFM extended email plus `mailto:`/`xmpp:` autolinks and additional
+  strikethrough delimiter-stack cases;
 - a larger versioned subset tied to explicit specification examples;
 - identity-aware mapping for duplicate blocks and deeper structures without
   attaching raw text to the wrong node.

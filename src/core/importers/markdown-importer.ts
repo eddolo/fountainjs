@@ -977,6 +977,38 @@ function autolinkToken(value: string, start: number): (ReferenceDefinition & { r
   return isSafeURL(href) ? { href, title: '', label, end: closing + 1 } : null;
 }
 
+function extendedWebAutolinkToken(
+  value: string,
+  start: number,
+): (ReferenceDefinition & { readonly label: string; readonly end: number }) | null {
+  const before = Array.from(value.slice(Math.max(0, start - 2), start)).at(-1);
+  if (before && !UNICODE_WHITESPACE.test(before) && !'*_~('.includes(before)) return null;
+  const match = /^(www\.[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*|https?:\/\/[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)/u
+    .exec(value.slice(start));
+  if (!match) return null;
+  if (value[start + match[0].length] === '\\') return null;
+  const domain = match[0].startsWith('www.') ? match[0] : match[0].replace(/^https?:\/\//u, '');
+  const segments = domain.split('.');
+  if (segments.slice(-2).some((segment) => segment.includes('_'))) return null;
+
+  let end = start + match[0].length;
+  while (end < value.length && value[end] !== '<' && !UNICODE_WHITESPACE.test(value[end])) end += 1;
+  while ('?!.,:*_~'.includes(value[end - 1] ?? '')) end -= 1;
+  while (value[end - 1] === ')') {
+    const candidate = value.slice(start, end);
+    const opening = candidate.split('(').length - 1;
+    const closing = candidate.split(')').length - 1;
+    if (closing <= opening) break;
+    end -= 1;
+  }
+  const entitySuffix = /&[A-Za-z0-9]+;$/u.exec(value.slice(start, end));
+  if (entitySuffix) end -= entitySuffix[0].length;
+
+  const label = decodeMarkdownText(value.slice(start, end));
+  const href = match[0].startsWith('www.') ? `http://${label}` : label;
+  return label && isSafeURL(href) ? { href, title: '', label, end } : null;
+}
+
 function inline(text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = []): Node[] {
   const result: Node[] = [];
   let plain = '';
@@ -1073,6 +1105,18 @@ function inline(text: string, schema: Schema, references: References, inheritedM
           index = parsed.end;
           continue;
         }
+      }
+    }
+    if (schema.marks.link && !inheritedMarks.some((mark) => mark.type.name === 'link')) {
+      const extended = extendedWebAutolinkToken(text, index);
+      if (extended) {
+        flush();
+        result.push(...textNodes(extended.label, schema, [
+          ...inheritedMarks,
+          schema.marks.link.create({ href: extended.href, title: '' }),
+        ]));
+        index = extended.end;
+        continue;
       }
     }
     let handled = false;

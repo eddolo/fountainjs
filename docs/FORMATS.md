@@ -138,6 +138,14 @@ images. Import projects their plain textual content into `alt`, so Markdown
 punctuation and nested destinations do not leak into accessibility metadata;
 canonical export then emits that safe plain description.
 
+GFM bare web autolinks recognize `www.`, `http://`, and `https://` only at an
+allowed text boundary and only with a valid multi-segment domain. Trailing
+punctuation, excess closing parentheses, entity-looking suffixes, and `<` are
+kept outside the link according to the GFM path rules. A `www.` link receives
+an `http://` destination, and every result still passes Fountain's safe-URL
+policy. Bare email and `mailto:`/`xmpp:` extension forms remain a separate
+compatibility target.
+
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a
 deterministic `<span data-fountain-text-style="true">` form when ordinary

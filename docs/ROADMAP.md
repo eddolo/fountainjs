@@ -245,7 +245,10 @@ spans, strict semicolon-terminated HTML5 character references, all ASCII
 punctuation escapes, URI/email autolinks, star emphasis, and both hard-break
 forms without claiming complete standards conformance. GFM one- and two-tilde
 strikethrough is exact-run aware, stops at paragraph boundaries, and keeps runs
-of three or more literal. Entity-obfuscated URLs
+of three or more literal. The first GFM extended-autolink slice recognizes
+boundary-safe `www.`, `http://`, and `https://` links, validates domains, and
+trims punctuation, unmatched closing parentheses, entity-looking suffixes,
+and `<` exactly before URL safety validation. Entity-obfuscated URLs
 are decoded before protocol validation, while canonical export protects
 literal entity-shaped text. Safe path/query-relative destinations, balanced
 parentheses, strict title closers, bounded reference labels, and code/paragraph-

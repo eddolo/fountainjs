@@ -356,6 +356,32 @@
         "marks": ["strike", "strike", "code", "strike", "strike", "link", "strike"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "gfm-extended-www-autolink",
+      "source": "Visit www.docs.example/help.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Visit www.docs.example/help.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["http://www.docs.example/help"],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "gfm-extended-url-parenthesis-validation",
+      "source": "(https://docs.example/find?q=(work)).",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "(https://docs.example/find?q=(work)).",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["https://docs.example/find?q=(work)"],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

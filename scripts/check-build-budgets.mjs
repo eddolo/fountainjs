@@ -188,8 +188,10 @@ const limits = Object.freeze({
   // add about 0.6/0.3 KiB without moving any public entry-point ceiling.
   // Exact one/two-tilde GFM strikethrough and opaque-token precedence add
   // about 0.5/0.3 KiB without moving any public entry-point ceiling.
-  'all ESM runtime code': 1102 * kibibyte,
-  'all CommonJS runtime code': 924 * kibibyte,
+  // GFM extended web-autolink domain/path validation adds about 1.1/0.9 KiB
+  // to the shared format chunk without moving public entry-point ceilings.
+  'all ESM runtime code': 1104 * kibibyte,
+  'all CommonJS runtime code': 925 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

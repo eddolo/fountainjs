@@ -92,6 +92,59 @@ describe('Markdown interchange', () => {
       .toBe('Bad &#99999999; / � / &unknown;');
   });
 
+  it('imports GFM extended web autolinks with path and boundary validation', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      {
+        source: 'www.docs.example/help',
+        links: [{ text: 'www.docs.example/help', href: 'http://www.docs.example/help' }],
+      },
+      {
+        source: 'Visit https://docs.example/search?q=Markup+(work)).',
+        links: [{
+          text: 'https://docs.example/search?q=Markup+(work)',
+          href: 'https://docs.example/search?q=Markup+(work)',
+        }],
+      },
+      {
+        source: 'Visit www.docs.example/a.b.',
+        links: [{ text: 'www.docs.example/a.b', href: 'http://www.docs.example/a.b' }],
+      },
+      {
+        source: 'Visit www.docs.example/search?q=guide&zz;',
+        links: [{
+          text: 'www.docs.example/search?q=guide',
+          href: 'http://www.docs.example/search?q=guide',
+        }],
+      },
+      {
+        source: 'www.docs.example/he<lp',
+        links: [{ text: 'www.docs.example/he', href: 'http://www.docs.example/he' }],
+      },
+      {
+        source: '(https://docs.example/path)',
+        links: [{ text: 'https://docs.example/path', href: 'https://docs.example/path' }],
+      },
+      {
+        source: 'prefixwww.docs.example and www.bad_domain.example',
+        links: [],
+      },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      const links: Array<{ text: string; href: unknown }> = [];
+      document.descendants((node) => {
+        const mark = node.marks.find((candidate) => candidate.type.name === 'link');
+        if (node.isText && mark) links.push({ text: node.textContent, href: mark.attrs.href });
+      });
+      expect(document.textContent, example.source).toBe(example.source);
+      expect(links, example.source).toEqual(example.links);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
   it('escapes literal character-reference text during canonical export', () => {
     const schema = new Schema(CoreSchemaSpec);
     const link = schema.marks.link.create({
