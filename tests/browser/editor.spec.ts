@@ -1010,12 +1010,13 @@ test('keeps code, media, disclosures, and custom atoms canonical across editable
       && ['block:2:audio', 'block:4:code_block', 'block:5:browser_counter'].includes(warning.itemId)
   ))).toBe(true);
 
-  const oversizedNodeNames = contract.warnings.map((warning: any) => warning.itemId.split(':').at(-1));
-  const overflow = await page.evaluate((nodeNames) => {
+  const oversizedNodeNames: string[] = contract.warnings
+    .map((warning: any) => String(warning.itemId).split(':').at(-1) ?? '');
+  const overflow = await page.evaluate((nodeNames: string[]) => {
     const editor = document.querySelector<HTMLElement>('[aria-label="Atomic and structural page editor"]');
     const atom = editor?.querySelector<HTMLElement>(':scope > [data-fountain-node="browser_counter"]');
     const body = document.querySelector<HTMLElement>('.fountain-editable-pages__body');
-    const marked = nodeNames.map((nodeName) => {
+    const marked = nodeNames.map((nodeName: string) => {
       const node = editor?.querySelector<HTMLElement>(`:scope > [data-fountain-node="${nodeName}"]`);
       const pageNumber = node?.dataset.fountainEditablePage;
       const sheet = pageNumber
@@ -1030,8 +1031,10 @@ test('keeps code, media, disclosures, and custom atoms canonical across editable
     };
   }, oversizedNodeNames);
   expect(overflow.atomHeight).toBeGreaterThan(overflow.bodyHeight);
-  expect(overflow.marked.map((entry) => entry.nodeName)).toEqual(oversizedNodeNames);
-  expect(overflow.marked.every((entry) => /^\d+$/u.test(entry.pageNumber ?? '') && entry.marked === 'true')).toBe(true);
+  expect(overflow.marked.map((entry: { nodeName: string }) => entry.nodeName)).toEqual(oversizedNodeNames);
+  expect(overflow.marked.every((entry: { pageNumber?: string; marked?: string }) => (
+    /^\d+$/u.test(entry.pageNumber ?? '') && entry.marked === 'true'
+  ))).toBe(true);
 
   await counter.click();
   await expect(counter).toHaveText('Count 1');
