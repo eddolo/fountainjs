@@ -24,6 +24,7 @@ export default defineConfig({
         testing: fileURLToPath(new URL('./src/testing/index.ts', import.meta.url)),
         migrations: fileURLToPath(new URL('./src/migrations/index.ts', import.meta.url)),
         'node-ids': fileURLToPath(new URL('./src/node-ids/index.ts', import.meta.url)),
+        'structured-attributes': fileURLToPath(new URL('./src/structured-attributes/index.ts', import.meta.url)),
         widgets: fileURLToPath(new URL('./src/widgets/index.ts', import.meta.url)),
         'widgets-dom': fileURLToPath(new URL('./src/widgets/dom.ts', import.meta.url)),
         'react-widgets': fileURLToPath(new URL('./src/react/widgets.tsx', import.meta.url)),

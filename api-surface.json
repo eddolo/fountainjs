@@ -289,6 +289,8 @@
     "dist/react/widgets.d.ts": "fdb91825e42d2f511871af83a7bba123a05a03a0f8a4c83606b68ec33c04a562",
     "dist/ruby/index.d.cts": "200205ba11aa9fe6d67ace4ef16e0c8ce4030b6e360559b3c176e2b960440038",
     "dist/ruby/index.d.ts": "766ec019865038e28f252fc015e6be821b017d8fa01d2e76a0a2863026c34f6d",
+    "dist/structured-attributes/index.d.cts": "9a64378ef71222e62648b197d135ff4714c05bad2bf8bb84e906ef89c48142dd",
+    "dist/structured-attributes/index.d.ts": "525658970e965cb051ab34489bef7f6921e448667bfe9ed9369f5d23a69c81d2",
     "dist/testing/index.d.cts": "689d7f68a26a0d92a8a0a1ba7fa03e2a950148af8e518e4e5fc93a3b63ba061d",
     "dist/testing/index.d.ts": "f52b67df934386f919fba417dea765d883afbb205ee7724e04c915d1a58a76ac",
     "dist/text-style/commands.d.cts": "7a1cb4d7527a9fae6b9e191256c6333e9ded0f0ac69ff0164f93026af10dc37f",
@@ -329,7 +331,9 @@
     "dist/widgets/dom.d.ts": "032cb14a593792c7c2480bd0fecfc8318262aef3ab85e057af4656010b7a3e7c",
     "dist/widgets/index.d.cts": "e2a87fb8886094ae3f2ab8cc828bd997c157a86f67680dd7285eef4b8688d7dd",
     "dist/widgets/index.d.ts": "80a41c66c3262db3c944d4666a9d10753b8165a23b53a002471e0d2c6608c412",
-    "dist/yjs/index.d.cts": "c601a27a9efd10db52ad3eeb12c3404da4713b57a34cb7f97a97314a019f3f44",
-    "dist/yjs/index.d.ts": "d6f9d852cff24d4a7c0cdb1d548f5c390043087c8b3c34e06b36f87bcd489acd"
+    "dist/yjs/index.d.cts": "6f3c0fa9236fb0d44988f29f6d0600157a2131d9e61b2c821230ba6ebc2c3422",
+    "dist/yjs/index.d.ts": "684497794a8ea4abe0039b8413e6a726ab71736962f6079cf322bb0996067316",
+    "dist/yjs/structured-attributes.d.cts": "bfeba286247fafe423fb99ff541434d6de56179d9769ffbfc4132a3f611c5e11",
+    "dist/yjs/structured-attributes.d.ts": "a6c76fb61dc8e4e87ef77cafc5d2dd3b0a726cc9bf796f4ba44a5a5d2aa8b116"
   }
 }

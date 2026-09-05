@@ -142,22 +142,23 @@ plus its successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33969832692),
 certify the public package and rendered demos.
 
-## Active now: granular collaborative structured attributes
+## Active now: certify granular collaborative structured attributes
 
-Yjs already merges distinct node attributes independently, but an object or
-array stored inside one attribute is still one last-writer-wins value. The next
-milestone will define typed nested attribute paths, immutable map/array update
-steps, whole-node and path-local validation, bounded portable values, mapping,
-history and local-origin undo, and a granular Yjs representation that lets two
-authors change separate nested fields without overwriting each other. Existing
-flat attributes and document JSON must remain backward compatible.
+The implementation now defines bounded DOM-free object/array contracts, typed
+nested commands, whole-root and schema validation, stable-ID addressing, and an
+opt-in nested `Y.Map`/`Y.Array` representation beside backward-compatible flat
+JSON. Focused unit and real-browser tests prove separate nested fields,
+concurrent array insertions, local-only undo, room replacement, public controls,
+and malicious-value failure containment. The remaining work in this milestone
+is the complete package/browser matrix and published CI/deployment evidence;
+claims stay provisional until those gates pass.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
 | 1 | First-class interactive widgets | Delivered and certified in `cced9e2` | Continue browser, accessibility, format, and extension-composition regression coverage as products adopt the contract. |
-| 2 | Granular collaborative structured attributes | Active: Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
+| 2 | Granular collaborative structured attributes | Implemented; full release certification is running | Complete package/browser matrix, packed ESM/CJS and type-shape checks, public deployed demo, and recorded CI/Pages evidence. |
 | 3 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
 | 4 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
 | 5 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |

@@ -20,6 +20,12 @@ import {
   type CollaborationUser,
 } from '../extensions/collaboration';
 import type { FountainExtension } from '../extensions/extension';
+import {
+  YjsStructuredAttributeStore,
+  type YjsStructuredAttributesOptions,
+} from './structured-attributes';
+
+export type { YjsStructuredAttributesOptions } from './structured-attributes';
 
 const ELEMENT_NAME = 'fountain-node';
 const TYPE_ATTRIBUTE = 'fountain:type';
@@ -64,6 +70,8 @@ export interface YjsCollaborationAdapterOptions {
   readonly captureTimeout?: number;
   /** Minimum milliseconds between outgoing awareness writes. Defaults to 32. Set 0 to disable throttling. */
   readonly presenceThrottleMs?: number;
+  /** Opt-in granular CRDT storage for selected nested node attributes. */
+  readonly structuredAttributes?: YjsStructuredAttributesOptions;
 }
 
 export interface YjsCollaborationExtensionOptions extends YjsCollaborationAdapterOptions {
@@ -412,6 +420,7 @@ function normalizeLocalUser(user: CollaborationUser | undefined): CollaborationU
 export class YjsCollaborationAdapter implements CollaborationAdapter {
   readonly document: Y.Doc;
   readonly fragment: Y.XmlFragment;
+  readonly structuredAttributeMap?: Y.Map<unknown>;
   readonly awareness?: YjsAwareness;
   private readonly user: CollaborationUser;
   private readonly provider?: YjsProvider;
@@ -420,6 +429,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private readonly repairOrigin = Object.freeze({ fountain: 'repair' });
   private readonly captureTimeout: number;
   private readonly presenceThrottleMs: number;
+  private readonly structuredAttributes?: YjsStructuredAttributeStore;
+  private readonly processedTransactions = new WeakSet<Y.Transaction>();
   private context?: CollaborationAdapterContext;
   private undoManager?: Y.UndoManager;
   private observing = false;
@@ -458,7 +469,11 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private readonly onSharedChange = (events: readonly Y.YEvent<any>[], transaction: Y.Transaction): void => {
-    if (!this.context || transaction.origin === this.localOrigin) return;
+    if (!this.context
+      || transaction.origin === this.localOrigin
+      || transaction.origin === this.repairOrigin
+      || this.processedTransactions.has(transaction)) return;
+    this.processedTransactions.add(transaction);
     try {
       this.normalizeRoots();
       const incremental = this.textTransactionFromEvents(events);
@@ -472,7 +487,11 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         this.publishPresences();
         return;
       }
-      const document = this.context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
+      const base = this.context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
+      const document = this.structuredAttributes
+        ? this.context.editor.state.schema.nodeFromJSON(this.structuredAttributes.overlay(base))
+        : base;
+      if (this.structuredAttributes && !base.eq(document)) this.repairCanonicalDocument(base, document);
       const relativeSelection = this.pendingRestoredSelection ?? this.localSelection;
       const selection = relativeSelection
         ? this.resolveRelativeSelection(relativeSelection, document)
@@ -547,29 +566,51 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.awarenessField = options.awarenessField ?? 'fountain';
     this.captureTimeout = Math.max(0, options.captureTimeout ?? 500);
     this.presenceThrottleMs = Math.max(0, options.presenceThrottleMs ?? 32);
+    if (options.structuredAttributes) {
+      this.structuredAttributes = new YjsStructuredAttributeStore(
+        options.document,
+        options.structuredAttributes,
+        `${options.fragmentName ?? 'fountain'}:structured-attributes`,
+      );
+      this.structuredAttributeMap = this.structuredAttributes.map;
+    }
   }
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     this.context = context;
     if (!this.observing) {
       this.fragment.observeDeep(this.onSharedChange);
+      this.structuredAttributeMap?.observeDeep(this.onSharedChange);
       this.awareness?.on('change', this.onAwarenessChange);
       this.provider?.on?.('status', this.onProviderStatus);
       this.observing = true;
     }
     if (this.fragment.length === 0) {
-      this.document.transact(() => this.fragment.insert(0, [createSharedElement(context.editor.state.doc)]), this.localOrigin);
+      this.document.transact(() => {
+        this.fragment.insert(0, [createSharedElement(context.editor.state.doc)]);
+        this.structuredAttributes?.synchronize(context.editor.state.doc);
+      }, this.localOrigin);
     } else {
       this.normalizeRoots();
-      const shared = context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
+      const base = context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
+      if (this.structuredAttributes) {
+        this.document.transact(() => this.structuredAttributes?.initialize(base), this.localOrigin);
+      }
+      const shared = this.structuredAttributes
+        ? context.editor.state.schema.nodeFromJSON(this.structuredAttributes.overlay(base))
+        : base;
+      if (this.structuredAttributes && !base.eq(shared)) this.repairCanonicalDocument(base, shared);
       const selection = this.localSelection ? this.resolveRelativeSelection(this.localSelection, shared) : undefined;
       context.applyRemoteDocument(shared, { selection, origin: 'initial-sync' });
     }
     if (!this.undoManager) {
-      this.undoManager = new Y.UndoManager(this.fragment, {
-        captureTimeout: this.captureTimeout,
-        trackedOrigins: new Set([this.localOrigin]),
-      });
+      this.undoManager = new Y.UndoManager(
+        this.structuredAttributeMap ? [this.fragment, this.structuredAttributeMap] : this.fragment,
+        {
+          captureTimeout: this.captureTimeout,
+          trackedOrigins: new Set([this.localOrigin]),
+        },
+      );
       this.undoManager.on('stack-item-added', this.onHistoryItem);
       this.undoManager.on('stack-item-updated', this.onHistoryItem);
     }
@@ -583,6 +624,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   disconnect(): void | Promise<void> {
     if (this.observing) {
       this.fragment.unobserveDeep(this.onSharedChange);
+      this.structuredAttributeMap?.unobserveDeep(this.onSharedChange);
       this.awareness?.off('change', this.onAwarenessChange);
       this.provider?.off?.('status', this.onProviderStatus);
       this.observing = false;
@@ -611,6 +653,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
           if (this.fragment.length) this.fragment.delete(0, this.fragment.length);
           this.fragment.insert(0, [createSharedElement(update.document)]);
         } else synchronizeElement(root, update.before, update.document);
+        this.structuredAttributes?.synchronize(update.document);
         pending.after = this.relativeSelection(update.selection);
       }, this.localOrigin);
     } finally {
@@ -655,6 +698,12 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     const children = this.fragment.toArray();
     if (!children.every(isSharedElement)) return;
     this.document.transact(() => this.fragment.delete(1, this.fragment.length - 1), this.repairOrigin);
+  }
+
+  private repairCanonicalDocument(before: Node, after: Node): void {
+    const root = this.fragment.get(0);
+    if (!isSharedElement(root)) return;
+    this.document.transact(() => synchronizeElement(root, before, after), this.repairOrigin);
   }
 
   private relativeSelection(selection: AnySelection): RelativeSelectionJSON | undefined {

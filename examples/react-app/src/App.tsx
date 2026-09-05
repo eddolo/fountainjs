@@ -35,6 +35,11 @@ import {
   type YjsAwareness,
 } from 'fountainjs-editor/yjs';
 import {
+  defineStructuredAttribute,
+  insertStructuredAttributeItems,
+  setStructuredAttribute,
+} from 'fountainjs-editor/structured-attributes';
+import {
   InMemoryCommentsStore,
   createCommentThread,
   createCommentsExtension,
@@ -299,6 +304,49 @@ class DemoAwareness implements YjsAwareness {
   emit(): void { this.listeners.forEach((listener) => listener()); }
 }
 
+const collaborationSettingsExtension = defineExtension({
+  name: 'collaboration-settings-demo',
+  nodes: {
+    collaboration_settings: {
+      group: 'block',
+      atom: true,
+      attrs: {
+        nodeId: { validate: (value) => typeof value === 'string' && value.length > 0 },
+        config: { validate: (value) => Boolean(value && typeof value === 'object' && !Array.isArray(value)) },
+      },
+      toDOM: (node) => {
+        const config = node.attrs.config as { title?: string; layout?: { columns?: number; compact?: boolean } };
+        return ['aside', { 'data-collaboration-settings': '' },
+          ['strong', {}, config.title ?? 'Shared settings'],
+          ['span', {}, `${config.layout?.columns ?? 1} columns · ${config.layout?.compact ? 'compact' : 'comfortable'}`],
+        ];
+      },
+    },
+  },
+});
+
+const collaborationSettingsDefinition = defineStructuredAttribute({
+  nodeType: 'collaboration_settings',
+  attribute: 'config',
+  root: 'object',
+});
+
+const collaborationStructuredAttributes = Object.freeze({
+  definitions: Object.freeze([collaborationSettingsDefinition]),
+});
+
+const collaborationSettingsNode = {
+  type: 'collaboration_settings',
+  attrs: {
+    nodeId: 'shared-launch-settings',
+    config: {
+      title: 'Shared launch settings',
+      layout: { columns: 2, compact: false },
+      filters: [{ field: 'status', value: 'open' }],
+    },
+  },
+} as const;
+
 function CollaborationDemo() {
   const room = useMemo(() => {
     const createSession = () => {
@@ -342,11 +390,13 @@ function CollaborationDemo() {
       document: initial.leftDocument,
       awareness: initial.awareness.create(initial.leftDocument.clientID),
       user: { id: 'ada', name: 'Ada', color: '#6d4aff' },
+      structuredAttributes: collaborationStructuredAttributes,
     });
     const rightExtension = createYjsCollaborationExtension({
       document: initial.rightDocument,
       awareness: initial.awareness.create(initial.rightDocument.clientID),
       user: { id: 'grace', name: 'Grace', color: '#d23877' },
+      structuredAttributes: collaborationStructuredAttributes,
     });
     const leftComments = createCommentsExtension({
       adapter: () => comments.createAdapter(),
@@ -358,8 +408,8 @@ function CollaborationDemo() {
     });
     return {
       sessions,
-      leftKit: composeExtensions([CoreExtension, leftExtension, leftComments]),
-      rightKit: composeExtensions([CoreExtension, rightExtension, rightComments]),
+      leftKit: composeExtensions([CoreExtension, collaborationSettingsExtension, leftExtension, leftComments]),
+      rightKit: composeExtensions([CoreExtension, collaborationSettingsExtension, rightExtension, rightComments]),
     };
   }, []);
   const [activeRoom, setActiveRoom] = useState<keyof typeof room.sessions>('launch');
@@ -368,6 +418,7 @@ function CollaborationDemo() {
     content: [
       { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Shared launch note' }] },
       { type: 'paragraph', content: [{ type: 'text', text: 'Edit either side. Text, blocks, selections, and undo remain author-aware.' }] },
+      collaborationSettingsNode,
     ],
   } as const), []);
   const initializedRooms = useRef(new Set<keyof typeof room.sessions>(['launch']));
@@ -400,11 +451,13 @@ function CollaborationDemo() {
       document: session.leftDocument,
       awareness: session.awareness.create(session.leftDocument.clientID),
       user: { id: 'ada', name: 'Ada', color: '#6d4aff' },
+      structuredAttributes: collaborationStructuredAttributes,
     }));
     replaceCollaborationAdapter(right, new YjsCollaborationAdapter({
       document: session.rightDocument,
       awareness: session.awareness.create(session.rightDocument.clientID),
       user: { id: 'grace', name: 'Grace', color: '#d23877' },
+      structuredAttributes: collaborationStructuredAttributes,
     }));
     if (!initializedRooms.current.has(nextRoom)) {
       const heading = left.state.doc.childCount > 0 ? left.state.doc.child(0).textContent : '';
@@ -421,6 +474,7 @@ function CollaborationDemo() {
             content: [
               { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Shared planning agenda' }] },
               { type: 'paragraph', content: [{ type: 'text', text: 'Edit either side. Plan the milestones here. Each room keeps its own collaborative document when you switch away.' }] },
+              collaborationSettingsNode,
             ],
           } as const
           : collaborativeContent;
@@ -448,6 +502,14 @@ function CollaborationDemo() {
   const rightCollaboration = getCollaborationState(right);
   const leftComments = getCommentsState(left);
   const rightComments = getCommentsState(right);
+  const leftSettingsPath = leftState?.doc.content.findIndex((node) => node.type.name === 'collaboration_settings') ?? -1;
+  const rightSettingsPath = rightState?.doc.content.findIndex((node) => node.type.name === 'collaboration_settings') ?? -1;
+  const leftSettings = leftSettingsPath >= 0
+    ? leftState?.doc.child(leftSettingsPath).attrs.config as { layout?: { columns?: number; compact?: boolean }; filters?: unknown[] }
+    : undefined;
+  const rightSettings = rightSettingsPath >= 0
+    ? rightState?.doc.child(rightSettingsPath).attrs.config as { layout?: { columns?: number; compact?: boolean }; filters?: unknown[] }
+    : undefined;
   return (
     <section className="collaboration-demo" id="collaboration">
       <div className="collaboration-demo__intro">
@@ -480,6 +542,29 @@ function CollaborationDemo() {
           </div>
         </article>
       </div>
+      <div className="collaboration-demo__structured" role="region" aria-label="Granular collaborative settings">
+        <div>
+          <span>NESTED CRDT ATTRIBUTES</span>
+          <h3>Change separate fields. Keep both changes.</h3>
+          <p>The visible card is ordinary Fountain JSON. Its selected <code>config</code> attribute is mirrored into nested Y.Map and Y.Array values, so peers editing different settings do not overwrite the whole object.</p>
+        </div>
+        <article>
+          <strong>Ada’s controls</strong>
+          <span>{leftSettings?.layout?.columns ?? 0} columns · {leftSettings?.filters?.length ?? 0} filters</span>
+          <div>
+            <button onClick={() => leftSettingsPath >= 0 && setStructuredAttribute(left, [leftSettingsPath], collaborationSettingsDefinition, ['layout', 'columns'], Math.min(6, (leftSettings?.layout?.columns ?? 1) + 1))}>Add a column</button>
+            <button onClick={() => leftSettingsPath >= 0 && insertStructuredAttributeItems(left, [leftSettingsPath], collaborationSettingsDefinition, ['filters'], leftSettings?.filters?.length ?? 0, [{ field: 'owner', value: 'ada' }])}>Add owner filter</button>
+          </div>
+        </article>
+        <article>
+          <strong>Grace’s controls</strong>
+          <span>{rightSettings?.layout?.compact ? 'Compact' : 'Comfortable'} · {rightSettings?.filters?.length ?? 0} filters</span>
+          <div>
+            <button onClick={() => rightSettingsPath >= 0 && setStructuredAttribute(right, [rightSettingsPath], collaborationSettingsDefinition, ['layout', 'compact'], !rightSettings?.layout?.compact)}>Toggle density</button>
+            <button onClick={() => rightSettingsPath >= 0 && insertStructuredAttributeItems(right, [rightSettingsPath], collaborationSettingsDefinition, ['filters'], rightSettings?.filters?.length ?? 0, [{ field: 'priority', value: 'high' }])}>Add priority filter</button>
+          </div>
+        </article>
+      </div>
       <div className="collaboration-demo__comments">
         <div>
           <span>THREADED COMMENTS</span>
@@ -491,7 +576,7 @@ function CollaborationDemo() {
       </div>
       <div className="collaboration-demo__boundary">
         <code>fountainjs-editor/yjs</code>
-        <span>CRDT document + relative positions + local-origin undo</span>
+        <span>CRDT document + nested attributes + relative positions + local-origin undo</span>
         <code>fountainjs-editor/comments</code>
         <span>Mapped anchors + storage operations + permissions</span>
         <span>Your provider</span>

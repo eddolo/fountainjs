@@ -39,6 +39,7 @@ const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColo
 const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
 const nodeIdNames = ['StableNodeIdsExtension', 'StableNodeIdIndex', 'createStableNodeIdsExtension', 'createStableNodeIdIndex', 'normalizeStableNodeIds', 'normalizeStableNodeIdJSON', 'getNodeById', 'updateNodeById', 'selectNodeById'];
+const structuredAttributeNames = ['STRUCTURED_ATTRIBUTE_TRANSACTION_META', 'defineStructuredAttribute', 'validateStructuredAttributeValue', 'getStructuredAttribute', 'setStructuredAttribute', 'deleteStructuredAttribute', 'insertStructuredAttributeItems', 'deleteStructuredAttributeItems'];
 const widgetNames = ['WIDGET_TRANSACTION_META', 'DEFAULT_WIDGET_KEY_POLICY', 'defineWidget', 'validateWidgetAttributes', 'createWidgetNode', 'insertWidget', 'getWidgetNode', 'updateWidget', 'removeWidget', 'exitWidget', 'createWidgetController', 'createWidgetExtension'];
 const widgetDOMNames = ['createDOMWidgetNodeView', 'createDOMWidgetExtension'];
 const reactWidgetNames = ['createReactWidgetNodeView', 'createReactWidgetExtension'];
@@ -65,6 +66,7 @@ assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM
 assertExports(await import('fountainjs-editor/testing'), testingNames, 'ESM extension testing entry');
 assertExports(await import('fountainjs-editor/migrations'), migrationNames, 'ESM document migrations entry');
 assertExports(await import('fountainjs-editor/node-ids'), nodeIdNames, 'ESM stable node IDs entry');
+assertExports(await import('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'ESM structured attributes entry');
 assertExports(await import('fountainjs-editor/widgets'), widgetNames, 'ESM widgets entry');
 assertExports(await import('fountainjs-editor/widgets/dom'), widgetDOMNames, 'ESM DOM widgets entry');
 assertExports(await import('fountainjs-editor/react/widgets'), reactWidgetNames, 'ESM React widgets entry');
@@ -89,6 +91,7 @@ assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS
 assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS extension testing entry');
 assertExports(require('fountainjs-editor/migrations'), migrationNames, 'CommonJS document migrations entry');
 assertExports(require('fountainjs-editor/node-ids'), nodeIdNames, 'CommonJS stable node IDs entry');
+assertExports(require('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'CommonJS structured attributes entry');
 assertExports(require('fountainjs-editor/widgets'), widgetNames, 'CommonJS widgets entry');
 assertExports(require('fountainjs-editor/widgets/dom'), widgetDOMNames, 'CommonJS DOM widgets entry');
 assertExports(require('fountainjs-editor/react/widgets'), reactWidgetNames, 'CommonJS React widgets entry');
@@ -130,4 +133,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, structured attributes, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

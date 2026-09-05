@@ -32,7 +32,7 @@ Host application
                         JSON / Markdown / HTML / text
 ```
 
-`src/core` imports no React code. `src/view` depends on core. `src/react` depends on core and view. `src/ai` depends on core editor contracts, but core does not depend on AI. `src/widgets/index.ts` defines portable widget state and commands over core/editor contracts; `src/widgets/dom.ts` adds the browser lifecycle; `src/react/widgets.tsx` adds only the React renderer. Neither renderer is pulled into the neutral widget entry.
+`src/core` imports no React code. `src/view` depends on core. `src/react` depends on core and view. `src/ai` depends on core editor contracts, but core does not depend on AI. `src/widgets/index.ts` defines portable widget state and commands over core/editor contracts; `src/widgets/dom.ts` adds the browser lifecycle; `src/react/widgets.tsx` adds only the React renderer. Neither renderer is pulled into the neutral widget entry. `src/structured-attributes` likewise depends only on core transactions; the optional `src/yjs/structured-attributes.ts` bridge depends inward on that definition and never makes the neutral entry import Yjs.
 
 ## Document model
 
@@ -368,6 +368,32 @@ model children in a separate `contentDOM`. This direction is intentional:
 portable definitions never import `window`, `document`, browser selection,
 events, or React, while renderer adapters may depend inward on the neutral
 contract. See [WIDGETS.md](WIDGETS.md).
+
+### Granular structured attributes
+
+`src/structured-attributes/index.ts` treats an opted-in object or array node
+attribute as one bounded portable value with addressable nested paths. It owns
+definition normalization, JSON-only cloning/freezing, definition validation,
+one-step update/delete/array commands, whole-node schema validation, and
+transaction metadata. It does not own persistence, stable-ID generation, Yjs,
+or rendering.
+
+`src/yjs/structured-attributes.ts` is the CRDT-specific bridge. The existing
+shared XML element remains canonical for backward-compatible Fountain JSON. A
+separate top-level Yjs map addresses configured values by node type, stable node
+ID, and attribute. It recursively maps objects to `Y.Map`, arrays to `Y.Array`,
+and leaves to JSON primitives. Remote reads overlay that granular tree before
+the receiving schema constructs the document; a repair-origin transaction then
+makes the flat canonical attribute reflect the converged value. Local writes
+update both representations atomically.
+
+The Yjs undo scope contains both shared roots but tracks only local origin. Deep
+observers deduplicate the two callbacks from one transaction and ignore local
+and repair origins. Unconfigured attributes stay on the existing flat path, so
+the storage and bundle cost are opt-in. Identity failure, duplicate IDs,
+unexpected shared types, unsafe keys, excess depth/size, definition rejection,
+or receiving-schema rejection leave the previous editor state intact. See
+[STRUCTURED_ATTRIBUTES.md](STRUCTURED_ATTRIBUTES.md).
 
 ### NodeViews
 
@@ -861,8 +887,9 @@ Before a release, run `pnpm check` and `pnpm test:browser`, build the production
 
 `pnpm test:budget` enforces raw production ceilings of 111 KiB for the ESM root,
 93 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
-the isolated full emoji data, 69/52 KiB for the React entries, 19/16 KiB for the
-optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
+the isolated full emoji data, 69/52 KiB for the React entries, 30/25 KiB for the
+optional Yjs adapter, 11/9 KiB for structured-attribute commands, 30/25 KiB for
+the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
@@ -870,7 +897,7 @@ the text-style facade, 8/7 KiB for document migrations, 9/8 KiB for stable node
 identities, 9/8 KiB for neutral widgets, 5/5 KiB for their DOM adapter, 2/2 KiB
 for their React adapter, 23/19 KiB for the isolated page foundation, 54/45 KiB for browser
 measurement/reflow and the guarded editable page surface, 12/10 KiB for
-read-only page preview/print projection, 63 KiB for CSS, and 779/656 KiB for all
+read-only page preview/print projection, 63 KiB for CSS, and 799/672 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -899,6 +926,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
 | `src/node-ids/` | Optional DOM-free stable identity policy, diagnostics, normalization, immutable lookup index, and editor commands |
+| `src/structured-attributes/` | DOM-free structured-value definitions, safety limits, validation, typed-path commands, and transaction metadata |
 | `src/widgets/index.ts` | DOM-free widget definition, validation, commands, controller, transaction metadata, and extension composition |
 | `src/widgets/dom.ts` | Plain-DOM widget NodeView lifecycle, controls/content boundary, focus, read-only, and keyboard-exit policy |
 | `src/react/widgets.tsx` | Optional React renderer over the same portable widget/controller contract |
@@ -909,7 +937,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/emoji-data.ts` | Optional complete searchable RGI emoji catalogue |
 | `src/extensions/media.ts` | Native media nodes, embed providers, policy, commands, and NodeViews |
 | `src/extensions/collaboration.ts` | Provider-neutral lifecycle, remote transactions, presence, decorations, and collaborative history commands |
-| `src/yjs/` | Optional Yjs tree reconciliation, awareness-relative selections, and origin-aware undo |
+| `src/yjs/` | Optional Yjs tree reconciliation, granular structured map/array projection, awareness-relative selections, and origin-aware undo |
 | `src/comments/` | Optional thread model, mapped anchors, operations, adapter lifecycle, permissions, and in-memory store |
 | `src/react/FountainComments.tsx` | Optional accessible React discussion panel over the framework-neutral comments API |
 | `src/tracked-changes/` | Optional portable suggestion model, transaction transform, queries, decisions, events, and Yjs-compatible metadata |

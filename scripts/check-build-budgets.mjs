@@ -16,10 +16,11 @@ const limits = Object.freeze({
   'dist/react.js': 69 * kibibyte,
   'dist/react.cjs': 52 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
-  // adapter remains a separately loaded peer-backed entry. Its explicit
-  // provider replacement and bounded presence scheduler add about 1.3 KiB.
-  'dist/yjs.js': 19 * kibibyte,
-  'dist/yjs.cjs': 16 * kibibyte,
+  // adapter remains a separately loaded peer-backed entry. Granular structured
+  // attributes add nested Y.Map/Y.Array reconciliation and validation only to
+  // this opt-in peer-backed surface.
+  'dist/yjs.js': 30 * kibibyte,
+  'dist/yjs.cjs': 25 * kibibyte,
   // Thread state, mapped anchors, storage operations, and the optional React
   // discussion panel remain isolated from the root and React entry points.
   'dist/comments.js': 30 * kibibyte,
@@ -62,6 +63,9 @@ const limits = Object.freeze({
   // opt-in and do not increase the default editor entry.
   'dist/node-ids.js': 9 * kibibyte,
   'dist/node-ids.cjs': 8 * kibibyte,
+  // Bounded portable values and typed-path commands remain DOM/Yjs independent.
+  'dist/structured-attributes.js': 11 * kibibyte,
+  'dist/structured-attributes.cjs': 9 * kibibyte,
   // Portable widget definitions and commands, browser lifecycle/focus policy,
   // and the React bridge remain three opt-in surfaces. Hosts pay only for the
   // renderers they actually use.
@@ -145,9 +149,12 @@ const limits = Object.freeze({
   // First-class widgets add about 14.9/12.5 KiB across their neutral, DOM, and
   // React entries, including focus-preserving generic NodeView reuse. None of
   // this code enters the default root or standard React entry.
+  // Granular structured attributes add about 19.6/16.8 KiB across the neutral
+  // command entry and optional Yjs bridge while leaving the root/React entries
+  // unchanged.
   // The schema is data and is not counted.
-  'all ESM runtime code': 779 * kibibyte,
-  'all CommonJS runtime code': 656 * kibibyte,
+  'all ESM runtime code': 799 * kibibyte,
+  'all CommonJS runtime code': 672 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -155,7 +162,7 @@ const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.end
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/structured-attributes.js', 'dist/structured-attributes.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

@@ -61,6 +61,9 @@
       "node-ids": [
         "dist/node-ids/index.d.ts"
       ],
+      "structured-attributes": [
+        "dist/structured-attributes/index.d.ts"
+      ],
       "widgets": [
         "dist/widgets/index.d.ts"
       ],
@@ -250,6 +253,16 @@
       "require": {
         "types": "./dist/node-ids/index.d.cts",
         "default": "./dist/node-ids.cjs"
+      }
+    },
+    "./structured-attributes": {
+      "import": {
+        "types": "./dist/structured-attributes/index.d.ts",
+        "default": "./dist/structured-attributes.js"
+      },
+      "require": {
+        "types": "./dist/structured-attributes/index.d.cts",
+        "default": "./dist/structured-attributes.cjs"
       }
     },
     "./widgets": {

@@ -158,6 +158,38 @@ work without Yjs-specific code because their names and JSON-safe attributes use
 the same generic representation, but a client that does not recognize them
 will correctly reject the remote document instead of silently dropping data.
 
+### Opt-in nested attributes
+
+By default, different top-level attributes merge independently while an object
+or array inside one attribute is one flat JSON value. Pass
+`structuredAttributes` to `createYjsCollaborationExtension` when particular
+product nodes need field-level concurrency:
+
+```ts
+const collaboration = createYjsCollaborationExtension({
+  document: ydoc,
+  user,
+  structuredAttributes: {
+    definitions: [boardConfig],
+    identityAttribute: 'nodeId',
+  },
+})
+```
+
+Configured nodes need valid unique stable IDs. The adapter mirrors their
+selected values into a dedicated nested `Y.Map`/`Y.Array` tree, updates it in
+the same transaction as the canonical XML representation, overlays it on
+remote reads, and repairs the flat JSON attribute after convergence. Separate
+nested keys and concurrent array insertions survive; edits to the same leaf and
+whole-root replacement remain genuine conflicts resolved by Yjs. The undo
+manager covers both representations under the same local-only origin.
+
+Canonical `editor.getJSON()` and exports contain only ordinary objects and
+arrays. Mixed clients can read that flat value, but clients without the same
+granular configuration cannot promise field-level concurrency. See
+[STRUCTURED_ATTRIBUTES.md](STRUCTURED_ATTRIBUTES.md) for commands, rollout,
+limits, headless use, and the complete conflict matrix.
+
 ## Presence and relative selections
 
 When awareness is present, the adapter publishes only the configured user and

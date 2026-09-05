@@ -3224,6 +3224,25 @@ test('replaces both live collaboration documents without remounting the public e
   expect(await left.evaluate((element) => element.closest('[data-fountain-root]') === (globalThis as any).__fountainLeftRoot)).toBe(true);
 });
 
+test('merges nested collaborative settings through the public two-editor demo', async ({ page }) => {
+  await page.goto('/');
+  const controls = page.getByRole('region', { name: 'Granular collaborative settings' });
+  const left = page.locator('[data-collaboration-editor="ada"]');
+  const right = page.locator('[data-collaboration-editor="grace"]');
+
+  await expect(left.locator('[data-collaboration-settings]')).toContainText('2 columns · comfortable');
+  await expect(right.locator('[data-collaboration-settings]')).toContainText('2 columns · comfortable');
+  await controls.getByRole('button', { name: 'Add a column' }).click();
+  await controls.getByRole('button', { name: 'Toggle density' }).click();
+  await expect(left.locator('[data-collaboration-settings]')).toContainText('3 columns · compact');
+  await expect(right.locator('[data-collaboration-settings]')).toContainText('3 columns · compact');
+
+  await controls.getByRole('button', { name: 'Add owner filter' }).click();
+  await controls.getByRole('button', { name: 'Add priority filter' }).click();
+  await expect(controls.getByText('3 columns · 3 filters', { exact: true })).toBeVisible();
+  await expect(controls.getByText('Compact · 3 filters', { exact: true })).toBeVisible();
+});
+
 test('keeps headline phrases together and makes full-page navigation explicit', async ({ page }) => {
   await page.goto('/');
   const primary = page.getByRole('navigation', { name: 'Primary navigation' });

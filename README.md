@@ -289,6 +289,39 @@ eligibility and ID generators are supported, and the generic Yjs adapter writes
 remote repairs back so peers converge. Pure inspection and JSON normalization
 run in Node.js without a fake DOM. See the [stable identity guide](docs/NODE_IDS.md).
 
+## Granular structured attributes
+
+The DOM-free `fountainjs-editor/structured-attributes` entry updates validated
+paths inside object or array node attributes as ordinary one-step transactions.
+The optional Yjs adapter can mirror selected definitions into nested `Y.Map`
+and `Y.Array` values, so two authors changing different fields do not replace
+the complete object:
+
+```ts
+import { defineStructuredAttribute, setStructuredAttribute } from 'fountainjs-editor/structured-attributes'
+import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs'
+
+const boardConfig = defineStructuredAttribute({
+  nodeType: 'board',
+  attribute: 'config',
+  root: 'object',
+})
+
+const collaboration = createYjsCollaborationExtension({
+  document: ydoc,
+  user,
+  structuredAttributes: { definitions: [boardConfig] },
+})
+
+setStructuredAttribute(editor, [2], boardConfig, ['layout', 'columns'], 4)
+```
+
+Configured nodes require a valid unique stable ID. Canonical Fountain JSON stays
+unchanged, incoming nested values pass depth/size/schema validation, concurrent
+array insertions survive, and local-origin undo preserves remote fields. See the
+[structured-attribute guide](docs/STRUCTURED_ATTRIBUTES.md) and try the controls
+below the two-editor collaboration demo.
+
 ## Print-aware page foundation
 
 The isolated `fountainjs-editor/pages` entry provides a runtime-DOM-independent

@@ -15,6 +15,15 @@
 
 ### Added
 
+- Granular collaborative structured attributes through the new DOM-free
+  `fountainjs-editor/structured-attributes` entry and opt-in
+  `YjsCollaborationAdapterOptions.structuredAttributes`: bounded immutable JSON
+  contracts; typed nested set/delete/array commands; one-step schema-validated
+  transactions; stable-ID-addressed nested `Y.Map`/`Y.Array` projection;
+  concurrent non-overlapping field and array-insertion convergence; canonical
+  flat-JSON repair; local-only undo across both representations; hostile shared
+  value and identity failure containment; pure-Node coverage; package exports;
+  developer documentation; and working controls in the two-editor public demo.
 - First-class portable interactive widgets through isolated
   `fountainjs-editor/widgets`, `fountainjs-editor/widgets/dom`, and
   `fountainjs-editor/react/widgets` entries: immutable definitions; attribute

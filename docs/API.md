@@ -730,6 +730,36 @@ published back through the adapter so generic Yjs documents converge. Canonical
 JSON/Yjs preserve IDs; HTML and Markdown do not claim to preserve application
 identity. See [NODE_IDS.md](NODE_IDS.md) for policy, examples, and limits.
 
+## Structured attributes
+
+Import renderer-independent nested value APIs from
+`fountainjs-editor/structured-attributes`.
+
+`defineStructuredAttribute(options)` snapshots an exact node type, attribute,
+object/array root policy, recursive safety limits, and optional whole-root
+validator. `validateStructuredAttributeValue()` returns a cloned, recursively
+frozen portable value or explicit issues. Values support only JSON primitives,
+objects, and arrays; circular data, non-finite numbers, unsupported prototypes,
+control/unsafe keys, and configured depth/entry/string/encoding excesses fail.
+
+`getStructuredAttribute`, `setStructuredAttribute`,
+`deleteStructuredAttribute`, `insertStructuredAttributeItems`, and
+`deleteStructuredAttributeItems` address the node by its current model path.
+They refuse stale/wrong nodes and invalid intermediate paths. Every accepted
+change passes definition and complete node-schema validation, dispatches one
+`setNodeAttrs` step, and attaches
+`STRUCTURED_ATTRIBUTE_TRANSACTION_META` with the action, node path, attribute,
+nested path, and optional array range.
+
+`YjsCollaborationAdapterOptions.structuredAttributes` accepts definitions, an
+optional `identityAttribute`, and an optional dedicated `map` or `mapName`.
+Configured nodes require unique IDs. The adapter mirrors only those attributes
+into nested Yjs maps/arrays, overlays and validates remote values, repairs the
+ordinary flat attribute, and scopes local-origin undo across both forms. Other
+attributes retain the original representation and behavior. See
+[STRUCTURED_ATTRIBUTES.md](STRUCTURED_ATTRIBUTES.md) for the wire format,
+concurrency matrix, rollout boundary, and security limits.
+
 ## Decorations
 
 Decorations add view-only presentation without changing document JSON:

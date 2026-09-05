@@ -436,6 +436,30 @@ selectNodeById(editor, nodeId)
 // Duplicate IDs never silently resolve to the first match.
 if (!entry) showMissingOrAmbiguousReference(nodeId)`;
 
+const structuredAttributesExample = `import {
+  defineStructuredAttribute,
+  insertStructuredAttributeItems,
+  setStructuredAttribute,
+} from 'fountainjs-editor/structured-attributes'
+import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs'
+
+const boardConfig = defineStructuredAttribute({
+  nodeType: 'board',
+  attribute: 'config',
+  root: 'object',
+})
+
+const collaboration = createYjsCollaborationExtension({
+  document: ydoc,
+  user,
+  structuredAttributes: { definitions: [boardConfig] },
+})
+
+setStructuredAttribute(editor, [2], boardConfig, ['layout', 'columns'], 4)
+insertStructuredAttributeItems(editor, [2], boardConfig, ['filters'], 1, [
+  { field: 'owner', value: 'ada' },
+])`;
+
 const documentUtilitiesExample = `import {
   EmojiExtension,
   TypographyExtension,
@@ -685,6 +709,10 @@ function Developers() {
             <p>The opt-in <code>fountainjs-editor/node-ids</code> entry assigns portable <code>nodeId</code> values to blocks, maintains an immutable O(1) lookup index, and exposes path-independent update and selection commands. Missing, malformed, or copied duplicate IDs repair in one position-neutral step without becoming a second undo action. Duplicate lookup fails closed. Hosts may choose node types, filter extension nodes, and inject their own ID generator.</p>
             <Code>{stableIdentityExample}</Code>
             <p>Canonical JSON and generic Yjs preserve identities as ordinary validated attributes. If an older peer introduces a duplicate, an identity-aware peer deterministically repairs the shared document and publishes the correction. Stored JSON can be inspected and normalized in pure Node without jsdom; HTML and Markdown deliberately do not claim to preserve private application IDs. Try the IDs in the live JSON output of the <a href="./demos/go-docs-service.html">Go documentation-service demo</a>, or read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/NODE_IDS.md">complete identity and migration contract</a>.</p>
+            <h3>Nested product state can merge field by field</h3>
+            <p>The isolated <code>fountainjs-editor/structured-attributes</code> entry defines bounded object/array attributes and path-based set, delete, insert, and range-delete commands without importing Yjs or a browser. Every accepted change remains one schema-validated Fountain transaction and ordinary JSON.</p>
+            <Code>{structuredAttributesExample}</Code>
+            <p>Opting the same definitions into the Yjs adapter mirrors those selected values into nested <code>Y.Map</code> and <code>Y.Array</code> trees addressed by stable node ID. Separate nested keys and concurrent list insertions survive; same-leaf edits remain real deterministic conflicts. Local undo preserves a peer’s field, hostile shared values fail closed, and the canonical flat attribute is repaired after convergence. Exercise the controls beneath the <a href="./#collaboration">two-editor demo</a>, or read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/STRUCTURED_ATTRIBUTES.md">complete concurrency and rollout contract</a>.</p>
             <h3>First-party modules remain opt-in</h3>
             <p>Mentions, emoji, typography, character limits, and slash commands live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention, emoji, and slash queries use one headless, abortable suggestion controller with stale-result protection; React menus are merely renderers over that state. <code>EmojiExtension</code> keeps a curated catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
             <Code>{documentUtilitiesExample}</Code>
@@ -698,7 +726,7 @@ function Developers() {
             <p><code>MathExtension</code> adds inline and display TeX nodes, commands, isolated typing/paste rules, and format round trips without changing <code>StarterKit</code>. Its default NodeView keeps accessible source visible; <code>createMathExtension</code> accepts a host-owned DOM renderer, and <code>createKaTeXRenderer</code> adapts KaTeX without coupling FountainJS to that dependency. Try the complete source-to-JSON route in the <a href="./demos/node-markdown.html">headless Markdown and LaTeX demo</a>.</p>
             <p><code>LeanExtension</code> is equally optional and works source-only: portable Lean blocks, Unicode shortcuts, highlighting, and a clear <code>LeanInfoView</code> do not require a server. An injected <code>LeanProvider</code> may add mapped diagnostics, goals, hover, and completion through a local, self-hosted, managed, or one-shot service. FountainJS chooses no endpoint and stores no credentials; see the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/LEAN.md">Lean provider and security guide</a>.</p>
             <h3>Collaboration is a replaceable boundary</h3>
-            <p><code>createCollaborationExtension</code> owns validated remote application, status, no-echo lifecycle, normalized presence, and accessible caret/range decorations without choosing a transport. The optional <code>fountainjs-editor/yjs</code> entry maps generic Fountain nodes onto shared XML elements, character-level shared text, relative selections, and a local-origin undo manager. The application supplies a WebSocket, WebRTC, managed, custom, or no provider; it also owns authentication, room authorization, offline persistence, and retention.</p>
+            <p><code>createCollaborationExtension</code> owns validated remote application, status, no-echo lifecycle, normalized presence, and accessible caret/range decorations without choosing a transport. The optional <code>fountainjs-editor/yjs</code> entry maps generic Fountain nodes onto shared XML elements, character-level shared text, optional stable-ID-addressed nested attributes, relative selections, and a local-origin undo manager. The application supplies a WebSocket, WebRTC, managed, custom, or no provider; it also owns authentication, room authorization, offline persistence, and retention.</p>
             <Code>{collaborationExample}</Code>
             <p>Incoming shared trees must validate against the complete local schema before they replace editor state. Custom node types therefore work generically when every client composes the same extension, while an incompatible or hostile client fails closed. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COLLABORATION.md">collaboration guide</a> documents the shared representation, provider contract, security rules, simultaneous-room initialization, relative presence, and undo behavior.</p>
             <h3>Performance is a release contract</h3>
@@ -785,6 +813,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/migrations"><code>src/migrations/</code><span>DOM-independent document envelopes, bounded portable input, and deterministic sequential migrations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/node-ids"><code>src/node-ids/</code><span>DOM-independent identity policy, deterministic repair, immutable lookup, editor commands, and JSON normalization.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/NODE_IDS.md"><code>docs/NODE_IDS.md</code><span>Composition, ID policy, lookup, history, mixed-client collaboration, migration, performance, and limits.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/structured-attributes"><code>src/structured-attributes/</code><span>DOM-free structured-value contracts, recursive limits, validation, typed-path commands, and transaction metadata.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/STRUCTURED_ATTRIBUTES.md"><code>docs/STRUCTURED_ATTRIBUTES.md</code><span>Nested Yjs representation, concurrency matrix, undo, JSON compatibility, rollout, safety, and current boundaries.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/widgets"><code>src/widgets/</code><span>Portable widget definitions and commands plus isolated DOM lifecycle, focus, keyboard, and read-only behavior.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/WIDGETS.md"><code>docs/WIDGETS.md</code><span>Widget state, validation, renderers, history, collaboration, accessibility, formats, and current limits.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md"><code>docs/EXTENSIONS.md</code><span>Scaffold, manifests, requirements, fixtures, doctor, compatibility, migrations, and publishing contract.</span></a>

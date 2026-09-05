@@ -176,8 +176,9 @@ compose a compatible definition; widget attributes then synchronize like other
 portable node attributes, remote updates reach the mounted renderer's `update`
 hook, and local-origin undo remains author-local. Independent top-level
 attributes merge independently. A nested object stored in one attribute is still
-one collaborative value; granular nested CRDT attributes are a separate roadmap
-item.
+one collaborative value by default. Opt that attribute into the
+[`structuredAttributes` Yjs contract](STRUCTURED_ATTRIBUTES.md) when separate
+nested fields or array insertions must merge without replacing the root.
 
 ## Keyboard and focus policy
 
