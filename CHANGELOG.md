@@ -22,9 +22,13 @@
   snapshots and deterministic teardown; immutable per-page selection of
   canonical furniture, resolved fields, and footnotes; DOM fragment source maps
   with model/structural paths and clip geometry; strict page-placement/source
-  projection with separated continuation overhead; and an honest staged
-  pagination contract. Editable page-shell rendering, repeated DOM furniture, and print/PDF
-  fidelity remain active work rather than claimed capabilities.
+  projection with separated continuation overhead; an isolated read-only page
+  preview/print renderer with repeated furniture, structural continuation,
+  footnotes, width validation, ID isolation, and one accessibility copy; and an
+  improved keep-with-next rule that reserves a splittable block's required
+  opening lines, plus an honest staged pagination contract. Editable page-shell
+  behavior and certified print/PDF fidelity remain active work rather than
+  claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,

@@ -326,10 +326,17 @@ export function layoutPages(
     if (item.breakBefore && page().placements.length) nextPage(item.id);
 
     const next = normalized[itemIndex + 1];
-    if (item.keepWithNext && next && fragments.length === 1 && next.fragments.length === 1) {
-      const pair = fragments[0].height + next.fragments[0].height
-        + additionalFootnoteHeight(page(), [fragments[0], next.fragments[0]], placedFootnotes);
-      if (pair <= geometry.bodyHeight && pair > remaining(page()) && page().placements.length) nextPage(item.id);
+    if (item.keepWithNext && next && fragments.length === 1) {
+      const nextOpening = next.fragments.slice(0, next.minimumStart);
+      const pairFragments = [fragments[0], ...nextOpening];
+      const pair = pairFragments.reduce((sum, fragment) => sum + fragment.height, 0)
+        + additionalFootnoteHeight(page(), pairFragments, placedFootnotes);
+      if (pair > geometry.bodyHeight) warnings.push(Object.freeze({
+        code: 'constraint-relaxed',
+        itemId: item.id,
+        detail: `Keep-with-next for ${item.id} exceeds one empty page body and was relaxed.`,
+      }));
+      else if (pair > remaining(page()) && page().placements.length) nextPage(item.id);
     }
 
     let from = 0;

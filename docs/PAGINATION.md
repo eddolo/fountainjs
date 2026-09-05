@@ -1,9 +1,9 @@
 # Print-aware pages and pagination
 
 Status: active architecture and implementation work for `DOC-14`. The portable
-layout and document-intent foundation described below is implemented; an
-editable paged DOM/print renderer is not. This page is not a claim that the
-complete pagination outcome is delivered.
+layout/document-intent foundation and a read-only paged preview/print projection
+are implemented; an editable paged DOM renderer and certified PDF fidelity are
+not. This page is not a claim that the complete pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
 
@@ -39,6 +39,10 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - `projectPagePresentation()` for immutable page-shell plans that select the
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
+- an isolated `fountainjs-editor/pages/preview` renderer for fixed-size
+  read-only sheets, exact line clips, structural continuations, repeated table
+  headers and page furniture, resolved fields, linked page-local footnotes,
+  print page breaks, namespaced IDs, and a single continuous accessibility copy;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -68,10 +72,10 @@ const result = layoutPages(measuredFlowItems, geometry)
 Measurements are adapter input, not persisted editor state. Each template is
 edited once in canonical document order. The neutral projector now decides
 which canonical furniture and footnotes belong to each measured page, and the
-browser adapter supplies real line/list/table/footnote measurements. The current
-foundation deliberately does not claim repeated DOM furniture, editable
-page-shell rendering, PDF
-fidelity, or cross-browser editing across rendered page boundaries.
+browser adapter supplies real line/list/table/footnote measurements. The
+read-only renderer proves repeated DOM furniture and content projection but
+deliberately does not claim editable page shells, certified PDF fidelity, or
+cross-browser editing across rendered page boundaries.
 
 ## Current architecture audit
 
@@ -150,6 +154,9 @@ map is ordinary frozen data and never retains a DOM element. The strict content
 projection then joins page placements to those sources and fails closed if an
 external layout is incomplete or inconsistent. The optional controller
 automates invalidation and measurement but does not own rendering or state.
+The separate preview entry clones those exact slices into visual sheets; it
+requires the measured editor width to equal the page body width and never
+changes the editor DOM.
 
 ## Document semantics
 
@@ -164,9 +171,8 @@ The optional pages extension owns only portable intent:
   by the renderer rather than persisted.
 
 Automatic page membership is deliberately absent. Header/footer editing keeps
-one canonical editable model representation; future repeated page furniture is
-view-only and must be excluded from selection, clipboard, accessibility, and
-JSON.
+one canonical editable model representation; repeated preview furniture is
+view-only and excluded from selection, clipboard, accessibility, and JSON.
 
 ## Fragmentation policy
 
@@ -174,6 +180,8 @@ The layout engine treats a normal block as one flow item. A measurement adapter
 may expose legal fragments:
 
 - paragraph line boxes, with configurable minimum first/last lines;
+- a single-fragment heading kept with the following splittable block's required
+  opening fragments whenever that pair fits an empty page;
 - list items, preserving nested item content;
 - table row groups that never cut through a rowspan, with repeated column
   headers accounted for as continuation overhead;

@@ -25,6 +25,7 @@ export default defineConfig({
         migrations: fileURLToPath(new URL('./src/migrations/index.ts', import.meta.url)),
         pages: fileURLToPath(new URL('./src/pages/index.ts', import.meta.url)),
         'pages-dom': fileURLToPath(new URL('./src/pages/dom.ts', import.meta.url)),
+        'pages-preview': fileURLToPath(new URL('./src/pages/preview.ts', import.meta.url)),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,

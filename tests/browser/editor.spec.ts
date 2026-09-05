@@ -123,6 +123,17 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
     .every((placement: any) => placement.sources.length === placement.fragmentTo - placement.fragmentFrom)).toBe(true);
   expect(result.pages).toBeGreaterThan(1);
 
+  const preview = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.preview());
+  expect(preview).toMatchObject({
+    pageCount: result.pages,
+    visualPagesHidden: true,
+    accessibleDocuments: 1,
+    manualBreaks: 0,
+    sourceUnchanged: true,
+  });
+  expect(preview.pageNumbers).toEqual(Array.from({ length: result.pages }, (_value, index) => String(index + 1)));
+  expect(preview.clippedPlacements).toBeGreaterThan(0);
+
   const controller = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.controllerProbe());
   const sortedDurations = [...controller.cycles].sort((left: number, right: number) => left - right);
   const p95 = sortedDurations[Math.min(sortedDurations.length - 1, Math.floor(sortedDurations.length * .95))];

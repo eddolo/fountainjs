@@ -63,6 +63,8 @@ export interface DOMPageFlowMeasurement {
   readonly fragmentSources: readonly DOMPageFragmentSource[];
   readonly templates: readonly DOMPageTemplateMeasurement[];
   readonly warnings: readonly DOMPageMeasurementWarning[];
+  /** Inline size of the rendered source used to calculate wrapping. */
+  readonly contentWidth: number;
   /** Number of geometry reads made by this measurement pass. */
   readonly measurementCount: number;
 }
@@ -162,6 +164,20 @@ function outerHeight(element: HTMLElement, count: () => void): number {
   const margins = elementMargins(element);
   const height = rect.height + margins.before + margins.after;
   return finiteNonNegative(height) ? height : Number.NaN;
+}
+
+function contentWidth(element: HTMLElement, count: () => void): number {
+  const rect = measuredRect(element, count);
+  const view = element.ownerDocument.defaultView;
+  if (!view) return rect.width;
+  const style = view.getComputedStyle(element);
+  const borderLeft = style.borderLeftStyle === 'none' ? 0 : numericStyle(style.borderLeftWidth);
+  const borderRight = style.borderRightStyle === 'none' ? 0 : numericStyle(style.borderRightWidth);
+  return Math.max(0, rect.width
+    - numericStyle(style.paddingLeft)
+    - numericStyle(style.paddingRight)
+    - borderLeft
+    - borderRight);
 }
 
 function renderedTopLevel(root: HTMLElement, index: number): HTMLElement | null {
@@ -435,6 +451,7 @@ export function measureDOMPageFlow(
   const templates: DOMPageTemplateMeasurement[] = [];
   let measurementCount = 0;
   const count = () => { measurementCount += 1; };
+  const measuredContentWidth = contentWidth(root, count);
 
   const rendered = new Map<number, HTMLElement>();
   document.content.forEach((_node, index) => {
@@ -538,6 +555,7 @@ export function measureDOMPageFlow(
     fragmentSources: Object.freeze(fragmentSources),
     templates: Object.freeze(templates),
     warnings: Object.freeze(warnings),
+    contentWidth: measuredContentWidth,
     measurementCount,
   });
 }

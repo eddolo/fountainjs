@@ -69,6 +69,39 @@ describe('DOM-independent page layout', () => {
     expect(result.pages[1].placements[0]).toMatchObject({ fragmentFrom: 2, fragmentTo: 3, height: 38 });
   });
 
+  it('keeps a heading with the required opening lines of a splittable paragraph', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'lead', height: 70 },
+      { id: 'heading', height: 20, keepWithNext: true },
+      {
+        id: 'paragraph',
+        fragments: [1, 2, 3, 4].map((number) => ({ id: `line-${number}`, height: 10 })),
+        minimumStart: 2,
+        minimumEnd: 2,
+      },
+    ], geometry);
+
+    expect(result.pages).toHaveLength(2);
+    expect(result.pages[0]?.placements.map((placement) => placement.itemId)).toEqual(['lead']);
+    expect(result.pages[1]?.placements.map((placement) => placement.itemId)).toEqual(['heading', 'paragraph']);
+    expect(result.warnings).toEqual([]);
+  });
+
+  it('reports when keep-with-next cannot fit on an empty page', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'heading', height: 60, keepWithNext: true },
+      {
+        id: 'paragraph',
+        fragments: [{ id: 'line-1', height: 30 }, { id: 'line-2', height: 30 }],
+        minimumStart: 2,
+      },
+    ], geometry);
+
+    expect(result.warnings).toMatchObject([{ code: 'constraint-relaxed', itemId: 'heading' }]);
+  });
+
   it('reserves a repeated footnote only on the page containing its first reference', () => {
     const geometry = createPageGeometry({ size: { width: 100, height: 60 }, margins: 10 });
     const result = layoutPages([{

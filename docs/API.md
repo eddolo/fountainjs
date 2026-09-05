@@ -1296,6 +1296,7 @@ import {
   layoutDOMPages,
   measureDOMPageFlow,
 } from 'fountainjs-editor/pages/dom'
+import { renderDOMPagePreview } from 'fountainjs-editor/pages/preview'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
@@ -1303,15 +1304,24 @@ setPageTemplate(editor, { kind: 'footer', content: 'Page ' })
 selectPageTemplate(editor, 'footer')
 insertPageField(editor, 'page-number')
 
-const geometry = createPageGeometry({ size: 'letter', margins: 25.4 })
+const geometry = createPageGeometry({
+  size: 'letter',
+  margins: 25.4,
+  headerHeight: 32,
+  footerHeight: 32,
+  unitsPerMillimetre: 96 / 25.4,
+})
 const pages = layoutPages(measuredFlowItems, geometry)
 const presentation = projectPagePresentation(editor.state.doc, pages)
+view.dom.style.boxSizing = 'content-box'
+view.dom.style.inlineSize = `${geometry.size.width - geometry.margins.left - geometry.margins.right}px`
 const browserPages = layoutDOMPages(view.dom, editor.state.doc, geometry)
+renderDOMPagePreview(view.dom, previewElement, geometry, browserPages)
 const controller = createDOMPageLayoutController(
   view.dom,
   () => editor.state.doc,
   geometry,
-  { onLayout: ({ durationMs, snapshot }) => updatePreview(snapshot, durationMs) },
+  { onLayout: ({ snapshot }) => renderDOMPagePreview(view.dom, previewElement, geometry, snapshot) },
 )
 ```
 
@@ -1335,6 +1345,10 @@ resolves fields for a renderer without storing measured numbers in the document.
 returns frozen pages, placements, reserved footnotes, used/available height,
 and explicit overflow/constraint warnings. It never reads `document`, CSS, or
 viewport state and never writes automatic page membership into JSON.
+For a single-fragment keep-with-next item such as a heading, it reserves the
+following item's configured `minimumStart` fragments rather than requiring the
+whole following paragraph to be indivisible. If that opening pair cannot fit an
+empty page, the constraint is relaxed with an explicit warning.
 
 `projectPagePresentation(document, layout)` turns that result into an immutable
 renderer-neutral page plan. Each page references the selected canonical
@@ -1362,6 +1376,24 @@ placement exposes `contentHeight`, renderer-owned `continuationHeight`, and its
 frozen sources. Missing, partial, duplicated, or non-sequential external input
 throws instead of producing a visually plausible but incorrect page.
 
+The separately loaded browser entry `fountainjs-editor/pages/preview` exports
+`renderDOMPagePreview(sourceRoot, target, geometry, snapshot, options?)`. It
+creates fixed-size read-only sheets without moving, annotating, or changing the
+editable source. It projects exact text clips, assigned list items and table row
+groups, repeated table headers, selected page templates, resolved page fields,
+and linked page-local footnotes. The source must be measured at the exact page
+body width; a mismatch throws before rendering because changed wrapping would
+invalidate every line boundary.
+
+The visual sheets are `aria-hidden` because clipped DOM copies otherwise repeat
+off-page text to assistive technology. By default the preview contains one
+visually hidden, continuous, non-editable semantic copy of the source instead.
+Set `includeAccessibleDocument: false` only when the host keeps an equivalent
+accessible document beside the preview; the whole preview is then hidden from
+assistive technology. Cloned IDs are namespaced, form controls are disabled,
+and visual links are removed from keyboard order. The renderer owns no event
+listeners and is safe to call again on the same target.
+
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree
 mutations, element/window resize, loaded fonts, and print preparation into one
@@ -1371,10 +1403,9 @@ and listener in `destroy()`. `refreshNow()` remains available for synchronous
 printing and explicit host checks. The controller reads state through
 `getDocument()` so it never owns or mutates editor state.
 
-This is the page-model, measurement, and renderer-neutral presentation
-foundation, not a completed visual paginator. Repeated DOM template rendering,
-page-shell rendering, accessibility
-fallback, and print/PDF fidelity remain active work.
+This is the page-model, measurement, and read-only preview foundation, not a
+completed editable paginator. Editable page-shell rendering, selection/IME
+across visual boundaries, and certified print/PDF fidelity remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

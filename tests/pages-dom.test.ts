@@ -64,6 +64,7 @@ describe('DOM page measurement adapter', () => {
       { itemId: 'block:3:paragraph', kind: 'whole', sourcePath: [3], clipOffset: 0, height: 20 },
     ]);
     expect(Object.isFrozen(measurement.fragmentSources)).toBe(true);
+    expect(measurement.contentWidth).toBe(100);
     expect(measurement.items[0].fragments?.[0].footnotes).toEqual([{ id: 'note', height: 14 }]);
     expect(measurement.items[1]).toMatchObject({ breakAfter: true, height: 0 });
     expect(measurement.warnings).toEqual([]);
@@ -160,7 +161,7 @@ describe('DOM page measurement adapter', () => {
     });
     const measurement = Object.freeze({
       items: Object.freeze([]), fragmentSources: Object.freeze([source]), templates: Object.freeze([]),
-      warnings: Object.freeze([]), measurementCount: 0,
+      warnings: Object.freeze([]), contentWidth: 100, measurementCount: 0,
     });
     const layout = Object.freeze({
       pages: Object.freeze([Object.freeze({

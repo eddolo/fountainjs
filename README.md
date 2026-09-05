@@ -288,6 +288,7 @@ import {
   createDOMPageLayoutController,
   layoutDOMPages,
 } from 'fountainjs-editor/pages/dom'
+import { renderDOMPagePreview } from 'fountainjs-editor/pages/preview'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
@@ -295,15 +296,24 @@ setPageTemplate(editor, { kind: 'footer', content: 'Page ' })
 selectPageTemplate(editor, 'footer')
 insertPageField(editor, 'page-number')
 
-const geometry = createPageGeometry({ size: 'a4', margins: 20 })
+const geometry = createPageGeometry({
+  size: 'a4',
+  margins: 20,
+  headerHeight: 32,
+  footerHeight: 32,
+  unitsPerMillimetre: 96 / 25.4,
+})
 const result = layoutPages(measuredFlowItems, geometry) // any measurement host
 const presentation = projectPagePresentation(editor.state.doc, result)
+view.dom.style.boxSizing = 'content-box'
+view.dom.style.inlineSize = `${geometry.size.width - geometry.margins.left - geometry.margins.right}px`
 const browserResult = layoutDOMPages(view.dom, editor.state.doc, geometry)
+renderDOMPagePreview(view.dom, previewElement, geometry, browserResult)
 const controller = createDOMPageLayoutController(
   view.dom,
   () => editor.state.doc,
   geometry,
-  { onLayout: ({ snapshot }) => updatePagePreview(snapshot) },
+  { onLayout: ({ snapshot }) => renderDOMPagePreview(view.dom, previewElement, geometry, snapshot) },
 )
 // controller.destroy() when the host view is removed
 ```
@@ -321,10 +331,13 @@ continuation rendering. `projectDOMPageContent()` joins the neutral layout back
 to exact validated source slices and separates repeated continuation overhead.
 Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
-It does **not** yet claim a complete visual paginator, repeated DOM template
-rendering, or print/PDF fidelity. Those
-remain active `DOC-14` work with explicit browser and accessibility gates in
-[the pagination contract](docs/PAGINATION.md).
+The separate `pages/preview` entry renders non-destructive read-only page sheets,
+repeated templates and fields, structural continuations, page-local footnotes,
+and print page breaks. Visual clipped copies are hidden from assistive technology
+while one continuous read-only copy preserves document semantics. It does **not**
+yet claim editable page shells or certified print/PDF fidelity. Those remain
+active `DOC-14` work with explicit browser and accessibility gates in [the
+pagination contract](docs/PAGINATION.md).
 
 ## Optional clipboard history
 

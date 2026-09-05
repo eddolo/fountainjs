@@ -60,16 +60,18 @@ projection, undo, HTML/JSON, and Yjs. The browser side now
 also has isolated measurement for text lines, list items, rowspan-safe table
 groups, footnotes, and manual breaks; every fragment maps back to its model and
 structural paths plus clip geometry, and every page placement resolves to an
-exact validated source slice. Timed reflow observation is coalesced.
-Editable page-shell and print rendering plus the remaining evidence are still
-active. CSS page-shaped boxes or
+exact validated source slice. A separate read-only renderer now projects those
+slices into fixed sheets with repeated furniture, table headers, footnotes,
+print breaks, and one continuous accessibility copy. Timed reflow observation
+is coalesced. Editable page-shell rendering, certified PDF fidelity, and the
+remaining evidence are still active. CSS page-shaped boxes or
 destructive document splitting do not qualify.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent plus isolated real-DOM measurement, canonical rich header/footer variants, dynamic fields, and a renderer-neutral per-page furniture/footnote plan; the visual/print outcome is still partial | Add editable page shells and repeated DOM furniture; non-destructive paragraph/list/table/media continuation rendering; selection/IME/review behavior; print/PDF fidelity; incremental reflow budgets; and accessible continuous fallback. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, and a read-only paged screen/print renderer; the editable and certified-PDF outcome is still partial | Add editable page shells; selection/IME/review behavior across visual boundaries; print/PDF fidelity fixtures; and incremental reflow budgets. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

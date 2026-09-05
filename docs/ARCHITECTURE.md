@@ -748,6 +748,9 @@ The suites are organized by boundary:
   template/footnote separation, fragment source paths/clip geometry, strict
   placement-to-source projection, explicit warnings, neutral layout handoff,
   timed reflow cycles, and deterministic controller teardown;
+- `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
+  enforcement, repeated templates/fields, linked footnotes, visual/accessibility
+  separation, structural slices, and continued ordered-list numbering;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, and footnotes.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
@@ -792,7 +795,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
-| `src/pages/` | DOM-free physical layout, portable page intent, and renderer-neutral page presentation plans |
+| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement and read-only page projection entries |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |
