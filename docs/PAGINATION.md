@@ -60,9 +60,9 @@ transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
 The implementation is certified by the 361-test package suite and complete
-210-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
-[CI run for `869f20c`](https://github.com/eddolo/fountainjs/actions/runs/33942422220).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33942422228)
+213-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
+[CI run for `4cbeadf`](https://github.com/eddolo/fountainjs/actions/runs/33943604107).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33943604114)
 is also green.
 
 ```ts
