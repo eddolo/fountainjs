@@ -187,6 +187,19 @@
         "marks": ["link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-opaque-link-label-tokens",
+      "source": "[foo`][ref]` and [foo<https://example.com/?search=][ref]>\n\n[ref]: docs/reference.md",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "[foo][ref] and [foohttps://example.com/?search=][ref]",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["https://example.com/?search=][ref]"],
+        "marks": ["code", "link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

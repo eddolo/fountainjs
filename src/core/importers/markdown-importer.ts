@@ -383,6 +383,59 @@ function codeSpanToken(value: string, start: number): { readonly text: string; r
   return null;
 }
 
+function inlineHTMLTokenEnd(value: string, start: number): number {
+  if (value.startsWith('<!--', start)) {
+    const end = value.indexOf('-->', start + 4);
+    return end < 0 ? -1 : end + 3;
+  }
+  if (value.startsWith('<![CDATA[', start)) {
+    const end = value.indexOf(']]>', start + 9);
+    return end < 0 ? -1 : end + 3;
+  }
+  if (value.startsWith('<?', start)) {
+    const end = value.indexOf('?>', start + 2);
+    return end < 0 ? -1 : end + 2;
+  }
+  if (/^<![A-Z]/u.test(value.slice(start))) {
+    const end = value.indexOf('>', start + 2);
+    return end < 0 ? -1 : end + 1;
+  }
+  if (!/^<\/?[A-Za-z][A-Za-z\d-]*(?=[\t\n\f />])/u.test(value.slice(start))) return -1;
+
+  let quote = '';
+  for (let index = start + 1; index < value.length; index++) {
+    const character = value[index];
+    if (quote) {
+      if (character === quote) quote = '';
+      continue;
+    }
+    if (character === '"' || character === "'") { quote = character; continue; }
+    if (character === '>') return index + 1;
+  }
+  return -1;
+}
+
+function linkLabelEnd(value: string, start: number): number {
+  let depth = 0;
+  for (let index = start; index < value.length; index++) {
+    if (value[index] === '\\') { index++; continue; }
+    if (value[index] === '`') {
+      const code = codeSpanToken(value, index);
+      if (code) { index = code.end - 1; continue; }
+    }
+    if (value[index] === '<') {
+      const opaqueEnd = autolinkToken(value, index)?.end ?? inlineHTMLTokenEnd(value, index);
+      if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
+    }
+    if (value[index] === '[') depth++;
+    else if (value[index] === ']') {
+      depth--;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
 function destinationParts(value: string, allowEmpty = false): ReferenceDefinition | null {
   const source = value.trim();
   if (!source) return allowEmpty ? { href: '', title: '' } : null;
@@ -634,6 +687,12 @@ function containsNestedLink(label: string, references: References): boolean {
       const code = codeSpanToken(label, index);
       if (code) { index = code.end; continue; }
     }
+    if (label[index] === '<') {
+      const autolink = autolinkToken(label, index);
+      if (autolink) return true;
+      const htmlEnd = inlineHTMLTokenEnd(label, index);
+      if (htmlEnd > index) { index = htmlEnd; continue; }
+    }
     if (label[index] === '!' || label[index] === '[') {
       const nested = linkToken(label, index, references, false);
       if (nested && !nested.image) return true;
@@ -652,7 +711,7 @@ function linkToken(
   const image = value.startsWith('![', start);
   const bracket = image ? start + 1 : start;
   if (value[bracket] !== '[') return null;
-  const labelEnd = closingBracket(value, bracket);
+  const labelEnd = linkLabelEnd(value, bracket);
   if (labelEnd < 0) return null;
   const label = value.slice(bracket + 1, labelEnd);
   const following = labelEnd + 1;
@@ -749,6 +808,12 @@ function inline(text: string, schema: Schema, references: References, inheritedM
           schema.marks.link.create({ href: autolink.href, title: autolink.title }),
         ]));
         index = autolink.end;
+        continue;
+      }
+      const htmlEnd = inlineHTMLTokenEnd(text, index);
+      if (htmlEnd > index) {
+        plain += text.slice(index, htmlEnd);
+        index = htmlEnd;
         continue;
       }
     }

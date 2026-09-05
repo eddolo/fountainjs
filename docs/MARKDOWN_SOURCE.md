@@ -125,7 +125,7 @@ an initial standards-oriented set of behaviors:
   explicit empty links, strict title closers, bounded/escaped reference labels, and code-aware
   single- or multiline definitions with multiline labels, plus
   malformed-inline/shortcut and
-  nested-link precedence without treating link-looking code as a nested link;
+  nested-link precedence with code/autolink/inline-HTML opacity;
 - locale-neutral Unicode 17 full case folding for reference labels, including
   the expanding and compatibility mappings JavaScript lowercasing omits;
 - safe URI and email autolinks inside angle brackets;
@@ -164,13 +164,13 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The bounded Unicode-reference baseline, including multiline/container
-definitions, link precedence, and full Unicode 17 label case folding, is
-certified by the complete 492-test package gate and 295-pass
+The bounded multiline-label baseline, including container definitions, link
+precedence, full Unicode 17 case folding, and nested-bracket rejection, is
+certified by the complete 494-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
-[CI run for `b300a11`](https://github.com/eddolo/fountainjs/actions/runs/33988446790),
+[CI run for `507ee3d`](https://github.com/eddolo/fountainjs/actions/runs/33988667605),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33988446763).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33988667693).
 
 ## Security and collaboration
 

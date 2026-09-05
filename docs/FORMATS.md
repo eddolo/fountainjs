@@ -114,7 +114,10 @@ Link recognition follows the documented CommonMark precedence for two subtle
 cases: malformed inline destination syntax leaves the closing label available
 for a matching shortcut reference, and an inner link suppresses an enclosing
 link rather than producing nested anchors. Code spans are opaque during this
-check, so link-looking code remains ordinary linked label text. Fountain's
+check, so link-looking code remains ordinary linked label text. Brackets inside
+code spans, URI/email autolinks, and valid inline HTML constructs cannot close
+the surrounding label or start a hidden reference link. Unknown inline HTML is
+retained as inert readable text rather than interpreted or executed. Fountain's
 safe-URL policy still wins after syntax recognition; an empty or blocked inline
 destination cannot silently select a reference with the same label. An explicit
 empty destination is represented as an empty link and round-trips as `[]()`;

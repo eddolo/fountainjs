@@ -174,6 +174,32 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('keeps brackets inside code, autolinks, and inline HTML opaque to link labels', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[foo <bar attr="][ref]">',
+      '',
+      '[foo`][ref]`',
+      '',
+      '[foo<https://example.com/?search=][ref]>',
+      '',
+      '[ref]: docs/reference.md',
+    ].join('\n'), schema);
+    const links: Array<{ text: string; href: unknown }> = [];
+    document.descendants((node) => {
+      const link = node.marks.find((mark) => mark.type.name === 'link');
+      if (node.isText && link) links.push({ text: node.textContent, href: link.attrs.href });
+    });
+
+    expect(document.child(0).textContent).toBe('[foo <bar attr="][ref]">');
+    expect(document.child(1).textContent).toBe('[foo][ref]');
+    expect(document.child(1).content.some((node) => node.marks.some((mark) => mark.type.name === 'code'))).toBe(true);
+    expect(links).toEqual([{
+      text: 'https://example.com/?search=][ref]',
+      href: 'https://example.com/?search=][ref]',
+    }]);
+  });
+
   it('does not extract reference definitions from code or paragraph continuations', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

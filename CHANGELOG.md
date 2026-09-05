@@ -67,6 +67,10 @@
   Explicit empty links now round-trip as links through Markdown, browser HTML,
   server-only HTML, JSON, and DOM rendering. Anchors with no `href` remain
   ordinary content, and empty image/source/action URLs remain invalid.
+  Link-label scanning now treats code spans, URI/email autolinks, and valid
+  inline HTML tags/comments/declarations as opaque. Brackets inside them cannot
+  close an outer label or create a hidden reference link; unknown HTML remains
+  inert readable text in the Fountain document.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,
