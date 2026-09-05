@@ -25,13 +25,14 @@ export interface MarkdownExportResult {
   readonly losses: readonly MarkdownExportLoss[];
 }
 
-export type MarkdownSourcePreservation = 'exact' | 'blocks' | 'frontmatter' | 'canonical';
+export type MarkdownSourcePreservation = 'exact' | 'blocks' | 'mapped-blocks' | 'frontmatter' | 'canonical';
 
 export interface MarkdownSourceExportResult extends MarkdownExportResult {
   /**
    * `exact` returns the original source string unchanged; `blocks` additionally
-   * retains safely mapped unchanged top-level source; `frontmatter` retains only
-   * the inert frontmatter prefix; `canonical` is a normal semantic export.
+   * retains aligned separators; `mapped-blocks` retains uniquely mapped source
+   * through structural edits; `frontmatter` retains only the inert frontmatter
+   * prefix; `canonical` is a normal semantic export.
    */
   readonly preservation: MarkdownSourcePreservation;
 }
@@ -309,6 +310,17 @@ function withLineEnding(value: string, lineEnding: MarkdownLineEnding): string {
   return value.replace(/\r\n|\r|\n/gu, lineEnding);
 }
 
+function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): string {
+  const frontmatter = source.frontmatter?.raw ?? '';
+  const separator = frontmatter
+    && !frontmatter.endsWith('\n')
+    && !frontmatter.endsWith('\r')
+    && body
+    ? source.lineEnding
+    : '';
+  return `${frontmatter}${separator}${body}`;
+}
+
 function render(
   node: Node,
   context: RenderContext,
@@ -426,8 +438,9 @@ export class MarkdownExporter {
 
   /**
    * Preserves a captured source string exactly until the model changes. After a
-   * change, recognized frontmatter is retained exactly and the body is rendered
-   * canonically. Unknown body syntax is not claimed to survive a visual edit.
+   * change, recognized frontmatter and safely mapped unchanged blocks can remain
+   * exact while every other region is rendered canonically. Unknown syntax in a
+   * changed or unmatched block is not claimed to survive a visual edit.
    */
   exportWithSource(
     stateOrNode: EditorState | Node,
@@ -446,7 +459,15 @@ export class MarkdownExporter {
       });
     }
 
-    if (node.type.name === 'doc' && source.blocks.length === node.content.length && source.blocks.length > 0) {
+    const mappedBlocks = node.type.name === 'doc' ? source.mapBlocks(node) : null;
+    const originalIndexes = new Map(source.blocks.map((block, index) => [block, index]));
+    const structureChanged = Boolean(mappedBlocks && (
+      node.content.length !== source.blocks.length
+      || mappedBlocks.some((block, index) => block !== null && originalIndexes.get(block) !== index)
+    ));
+
+    if (!structureChanged && node.type.name === 'doc'
+      && source.blocks.length === node.content.length && source.blocks.length > 0) {
       const context: RenderContext = { options, losses: [], references: new Map() };
       reportNodeAttributes(node, context, []);
       let preservedBlocks = 0;
@@ -464,16 +485,34 @@ export class MarkdownExporter {
       // Reference-style output needs a new document-level definition section;
       // fall back rather than risk colliding with source-owned definitions.
       if (preservedBlocks > 0 && context.references.size === 0) {
-        const frontmatterSeparator = source.frontmatter
-          && !source.frontmatter.raw.endsWith('\n')
-          && !source.frontmatter.raw.endsWith('\r')
-          && body
-          ? source.lineEnding
-          : '';
         return Object.freeze({
-          markdown: `${source.frontmatter?.raw ?? ''}${frontmatterSeparator}${body}`,
+          markdown: withSourceFrontmatter(source, body),
           losses: Object.freeze([...context.losses]),
           preservation: 'blocks' as const,
+        });
+      }
+    }
+
+    if (structureChanged && mappedBlocks) {
+      const context: RenderContext = { options, losses: [], references: new Map() };
+      reportNodeAttributes(node, context, []);
+      let preservedBlocks = 0;
+      const renderedBlocks = node.content.map((block, index) => {
+        const captured = mappedBlocks[index];
+        if (captured) {
+          preservedBlocks += 1;
+          return captured.source;
+        }
+        return withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
+      });
+      // Structural output uses canonical separators. This avoids assigning
+      // source-owned whitespace to a different neighbor after a move/delete.
+      if (preservedBlocks > 0 && context.references.size === 0) {
+        const body = renderedBlocks.join(`${source.lineEnding}${source.lineEnding}`);
+        return Object.freeze({
+          markdown: withSourceFrontmatter(source, body),
+          losses: Object.freeze([...context.losses]),
+          preservation: 'mapped-blocks' as const,
         });
       }
     }
@@ -482,13 +521,9 @@ export class MarkdownExporter {
     if (!source.frontmatter) {
       return Object.freeze({ ...canonical, markdown, preservation: 'canonical' as const });
     }
-    const separator = source.frontmatter.raw.endsWith('\n') || source.frontmatter.raw.endsWith('\r')
-      || !markdown
-      ? ''
-      : source.lineEnding;
     return Object.freeze({
       ...canonical,
-      markdown: `${source.frontmatter.raw}${separator}${markdown}`,
+      markdown: withSourceFrontmatter(source, markdown),
       preservation: 'frontmatter' as const,
     });
   }

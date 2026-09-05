@@ -60,8 +60,10 @@ const exactMarkdown: string = MarkdownExporter.exportWithSource(
   sourcedMarkdown.source,
 ).markdown;
 const sourceBlock: string | undefined = sourcedMarkdown.source.blocks[0]?.source;
+const mappedSourceBlocks = sourcedMarkdown.source.mapBlocks(sourcedMarkdown.document);
 void exactMarkdown;
 void sourceBlock;
+void mappedSourceBlocks;
 MarkdownImporter.parse('**portable**', schema);
 TextExporter.export(editor.state);
 editor.destroy();

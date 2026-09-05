@@ -1000,9 +1000,10 @@ publishing pipeline never has to guess what Markdown omitted.
 `parseWithSource` plus `exportWithSource` provide an explicit raw/visual
 boundary: unchanged Markdown returns exactly as supplied, while visual edits
 retain recognized inert YAML frontmatter and safely aligned unchanged top-level
-source blocks with an exact `preservation` result. Ambiguous or structural
-edits fall back to canonical output instead of guessing that unknown syntax
-survived.
+source blocks with an exact `preservation` result. Unique unchanged blocks can
+also retain their spelling through insertion, deletion, and movement; ambiguous
+duplicates or reference ownership fall back instead of guessing that unknown
+syntax survived.
 
 ## Optional real-time collaboration
 

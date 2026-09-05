@@ -86,6 +86,15 @@ if (preservedBlocks.markdown !== '# Source spelling ###\r\n\r\nChanged'
   || preservedBlocks.preservation !== 'blocks') {
   throw new Error('ESM headless core did not preserve aligned Markdown source blocks.');
 }
+const structurallyChanged = markdownSchema.node('doc', {}, [
+  markdownSchema.node('paragraph', {}, [markdownSchema.text('Inserted')]),
+  ...blockMarkdown.document.content,
+]);
+const mappedBlocks = esmHeadlessCore.MarkdownExporter.exportWithSource(structurallyChanged, blockMarkdown.source);
+if (mappedBlocks.markdown !== 'Inserted\r\n\r\n# Source spelling ###\r\n\r\nOriginal  spacing'
+  || mappedBlocks.preservation !== 'mapped-blocks') {
+  throw new Error('ESM headless core did not preserve uniquely mapped Markdown blocks through insertion.');
+}
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');

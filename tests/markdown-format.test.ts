@@ -153,18 +153,86 @@ describe('Markdown interchange', () => {
     });
   });
 
-  it('falls back for structural edits instead of guessing source-block ownership', () => {
+  it('preserves uniquely mapped source blocks through insertion', () => {
     const schema = new Schema(CoreSchemaSpec);
-    const imported = MarkdownImporter.parseWithSource('# Keep ###\r\n\r\nOriginal', schema);
+    const imported = MarkdownImporter.parseWithSource('# Keep ###\r\n\r\nOriginal  spacing', schema);
     const changed = schema.node('doc', {}, [
-      ...imported.document.content,
       schema.node('paragraph', {}, [schema.text('Inserted')]),
+      ...imported.document.content,
     ]);
     const result = MarkdownExporter.exportWithSource(changed, imported.source);
 
     expect(imported.source.blocks).toHaveLength(2);
-    expect(result.preservation).toBe('canonical');
-    expect(result.markdown).toBe('# Keep\r\n\r\nOriginal\r\n\r\nInserted');
+    expect(result.preservation).toBe('mapped-blocks');
+    expect(result.markdown).toBe('Inserted\r\n\r\n# Keep ###\r\n\r\nOriginal  spacing');
+  });
+
+  it('preserves uniquely mapped source blocks through deletion', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('# First ###\n\nMiddle\n\nLast\n----', schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[0],
+      imported.document.content[2],
+    ]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(result).toEqual({
+      markdown: '# First ###\n\nLast\n----',
+      losses: [],
+      preservation: 'mapped-blocks',
+    });
+  });
+
+  it('preserves uniquely mapped source blocks through movement', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('Setext\n======\n\n\nA  spaced.\n\n\n\n# Tail ###', schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[2],
+      imported.document.content[0],
+      imported.document.content[1],
+    ]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(result).toEqual({
+      markdown: '# Tail ###\n\nSetext\n======\n\nA  spaced.',
+      losses: [],
+      preservation: 'mapped-blocks',
+    });
+  });
+
+  it('canonicalizes ambiguous duplicate blocks instead of guessing their source', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('# Same #\n\nSame\n====\n\nTail  spacing', schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[0],
+      imported.document.content[2],
+    ]);
+    const mapped = imported.source.mapBlocks(changed);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(mapped?.[0]).toBeNull();
+    expect(Object.isFrozen(mapped)).toBe(true);
+    expect(mapped?.[1]?.source).toBe('Tail  spacing');
+    expect(result).toEqual({
+      markdown: '# Same\n\nTail  spacing',
+      losses: [],
+      preservation: 'mapped-blocks',
+    });
+
+    const uniqueImported = MarkdownImporter.parseWithSource('# Original ###\n\nTail  spacing', schema);
+    const cloned = schema.node('doc', {}, [
+      uniqueImported.document.content[0],
+      uniqueImported.document.content[0],
+      uniqueImported.document.content[1],
+    ]);
+    const clonedMap = uniqueImported.source.mapBlocks(cloned);
+
+    expect(clonedMap?.slice(0, 2)).toEqual([null, null]);
+    expect(MarkdownExporter.exportWithSource(cloned, uniqueImported.source)).toEqual({
+      markdown: '# Original\n\n# Original\n\nTail  spacing',
+      losses: [],
+      preservation: 'mapped-blocks',
+    });
   });
 
   it('falls back when reference-style output needs document-level definitions', () => {

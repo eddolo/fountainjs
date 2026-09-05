@@ -2278,6 +2278,11 @@ test('preserves raw Markdown and inert frontmatter through the browser package',
     losses: [],
     preservation: 'blocks',
   });
+  expect(result.structural).toEqual({
+    markdown: '\uFEFF---\r\ntitle: Browser source\r\n---\r\nInserted first\r\n\r\n# Original ###\r\n\r\nKeep  this spacing.',
+    losses: [],
+    preservation: 'mapped-blocks',
+  });
   expect(result.body).toBe('# Original ###\r\n\r\nKeep  this spacing.\r\n');
   expect(result.lineEnding).toBe('\r\n');
   expect(result.frontmatter.content).toBe('title: Browser source\r\n');

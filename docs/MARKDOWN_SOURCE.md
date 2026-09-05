@@ -41,7 +41,7 @@ const unchanged = MarkdownExporter.exportWithSource(
 // retains exact frontmatter, safely mapped unchanged blocks, and intentionally
 // canonicalizes changed blocks or the full body when mapping is ambiguous.
 const edited = MarkdownExporter.exportWithSource(editor.state, imported.source)
-// edited.preservation === 'blocks', 'frontmatter', or 'canonical'
+// edited.preservation === 'blocks', 'mapped-blocks', 'frontmatter', or 'canonical'
 ```
 
 When the user edits raw Markdown, call `parseWithSource` again. The returned
@@ -76,6 +76,7 @@ longer empty, the detected source line ending is inserted between them.
 | --- | --- |
 | `exact` | The current document equals the snapshot's parsed document, so the original source string is returned exactly. |
 | `blocks` | The top-level shape stayed aligned; unchanged conservatively mapped blocks and their separators are exact while changed blocks are canonical. |
+| `mapped-blocks` | The top-level shape changed; uniquely equal blocks keep exact source while unmatched blocks and inter-block separators are canonical. |
 | `frontmatter` | The model changed; recognized frontmatter is exact and the body is canonical. |
 | `canonical` | The model changed and no recognized frontmatter exists; normal canonical export is returned. |
 
@@ -91,17 +92,22 @@ features represented in the model and exporter.
 blank-line-delimited source region must independently parse to exactly one node,
 and the complete ordered set must equal the full parsed document. Only then are
 the block source, leading whitespace, separators, and trailing whitespace
-captured. On export, the top-level count must still match; equal nodes reuse
-their exact source and changed nodes are rendered with the source's line-ending
-style. Capture is capped at 10,000 top-level regions; larger source still gets
-exact whole-document preservation while unchanged, then canonical fallback.
+captured. On export, position-aligned equal nodes reuse their exact source and
+separators. When insertion, deletion, or movement changes the top-level shape,
+`mapBlocks(document)` groups structural JSON and retains a block only when that
+semantic value occurs exactly once in both the imported and current document.
+Structural output uses canonical separators so whitespace is never transferred
+to a different neighbor. Capture is capped at 10,000 top-level regions; larger
+source still gets exact whole-document preservation while unchanged, then
+canonical fallback.
 
 This preserves useful author choices such as Setext headings, closing ATX
 markers, deliberate spacing, and unknown literal directives in untouched
-blocks. It deliberately falls back when ownership is ambiguous—for example
-loose structures spanning blank lines, cross-block reference definitions,
-insertions, deletions, reordering, or changed reference-style links. Fountain
-does not use fuzzy matching or silently attach raw source to the wrong node.
+blocks. It deliberately leaves duplicate equal blocks, loose structures
+spanning blank lines, cross-block reference definitions, and changed
+reference-style links canonical. Unique blocks can survive insertion, deletion,
+and movement. Fountain does not use fuzzy matching or silently attach raw
+source to the wrong node.
 
 ## Current semantic baseline
 
@@ -143,8 +149,8 @@ conformance. Important remaining work includes:
 - full link destination/title/reference precedence;
 - GFM extended autolinks and strikethrough edge cases;
 - a larger versioned subset tied to explicit specification examples;
-- broader source spans for safe structural insertion, deletion, and movement
-  without attaching raw text to the wrong node.
+- identity-aware mapping for duplicate blocks and deeper structures without
+  attaching raw text to the wrong node.
 
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”

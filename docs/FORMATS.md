@@ -114,10 +114,10 @@ frontmatter prefix in an immutable `MarkdownSourceSnapshot`.
 exactly while the parsed document is unchanged. After a visual edit it
 retains recognized frontmatter exactly and exports the changed body in
 canonical Markdown. The returned `preservation` value is `exact`,
-`blocks`, `frontmatter`, or `canonical`, so a host never has to infer what
-happened. `blocks` means conservatively mapped, position-aligned unchanged
-top-level regions and their separators remained exact while changed regions
-were rendered.
+`blocks`, `mapped-blocks`, `frontmatter`, or `canonical`, so a host never has
+to infer what happened. `blocks` means position-aligned unchanged regions and
+their separators remained exact. `mapped-blocks` means uniquely equal regions
+survived insertion, deletion, or movement with canonical inter-block spacing.
 
 ```ts
 const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema)
@@ -137,12 +137,13 @@ const edited = MarkdownExporter.exportWithSource(
 
 Source-block capture requires blank-line-delimited regions to independently
 parse one-to-one to the complete top-level document. Ambiguous structures,
-cross-block references, insertions, deletions, reordering, and changed reference
-definitions fall back to frontmatter-only or canonical output. Capture is
-bounded to 10,000 top-level regions. Unknown syntax inside a changed block is
-not retained. A source editor must reparse its new text to establish a new
-snapshot. JSON remains the lossless structured persistence format. The
-detailed contract, initial
+cross-block references, duplicate equal blocks, and changed reference
+definitions remain canonical rather than being assigned by guesswork. Unique
+blocks can be mapped through insertion, deletion, and movement. Capture is
+bounded to 10,000 top-level regions. Unknown syntax inside a changed or
+unmatched block is not retained. A source editor must reparse its new text to
+establish a new snapshot. JSON remains the lossless structured persistence
+format. The detailed contract, initial
 standards-oriented corpus, and explicit non-conformance list are in
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
 

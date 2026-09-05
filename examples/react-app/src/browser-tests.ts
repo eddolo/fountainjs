@@ -816,9 +816,15 @@ const inspectMarkdownSource = (source: string) => {
     editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Changed visually')]),
   ]);
   const edited = MarkdownExporter.exportWithSource(changed, imported.source);
+  const structurallyChanged = editor.state.schema.node('doc', {}, [
+    editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Inserted first')]),
+    ...imported.document.content,
+  ]);
+  const structural = MarkdownExporter.exportWithSource(structurallyChanged, imported.source);
   return {
     exact,
     edited,
+    structural,
     body: imported.source.body,
     lineEnding: imported.source.lineEnding,
     frontmatter: imported.source.frontmatter,

@@ -22,14 +22,18 @@
   `parseWithSource` retains exact input, line endings, and inert YAML
   frontmatter; `exportWithSource` returns unchanged source exactly or
   preserves the frontmatter while canonicalizing a visually edited body; and an
-  explicit `exact`/`blocks`/`frontmatter`/`canonical` result prevents false
-  source-fidelity claims. Unknown body syntax is deliberately not promised
-  after a model edit.
+  explicit `exact`/`blocks`/`mapped-blocks`/`frontmatter`/`canonical` result
+  prevents false source-fidelity claims. Unknown body syntax is deliberately
+  not promised after a model edit.
 - Conservative top-level Markdown source spans preserve unchanged aligned
   blocks, their whitespace, and their original line endings around a visual
-  edit. A `blocks` result makes that stronger outcome explicit; ambiguous,
-  structural, or reference-owning changes fall back to frontmatter-only or
+  edit. A `blocks` result makes that stronger outcome explicit; ambiguous
+  ownership and reference-owning changes fall back to frontmatter-only or
   canonical output instead of guessing.
+- Unique structural source mapping retains unchanged block spelling through
+  insertion, deletion, and movement while canonicalizing inter-block
+  separators. Duplicate semantic blocks remain deliberately unmapped, and the
+  explicit `mapped-blocks` result distinguishes this from aligned preservation.
 - An initial versioned CommonMark 0.31.2/GFM 0.29-oriented compatibility corpus,
   plus ATX/Setext headings, indented and variable backtick/tilde code fences,
   safe angle-bracket URI/email autolinks, star emphasis, backslash hard breaks,

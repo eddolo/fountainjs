@@ -37,8 +37,9 @@ interface MarkdownBlockCapture {
  * Immutable source provenance captured by `MarkdownImporter.parseWithSource`.
  *
  * The original string can be returned exactly while its parsed document is
- * unchanged. After a visual edit, only recognized frontmatter remains exact and
- * the document body is rendered through the canonical Markdown exporter.
+ * unchanged. After a visual edit, recognized frontmatter and safely mapped
+ * unchanged blocks can remain exact; every other region is rendered through
+ * the canonical Markdown exporter.
  */
 export class MarkdownSourceSnapshot {
   readonly source: string;
@@ -71,6 +72,37 @@ export class MarkdownSourceSnapshot {
   /** True only while the current immutable document is semantically unchanged. */
   matches(document: Node): boolean {
     return this.originalDocument.eq(document);
+  }
+
+  /**
+   * Maps current top-level nodes to uniquely equal captured source blocks.
+   * Duplicate/ambiguous content returns `null` for that node; the array itself
+   * is `null` when conservative source-block capture was unavailable.
+   */
+  mapBlocks(document: Node): readonly (MarkdownSourceBlockSnapshot | null)[] | null {
+    if (!this.blocks.length || document.type !== this.originalDocument.type) return null;
+    const originals = new Map<string, number[]>();
+    const currents = new Map<string, number[]>();
+    this.originalDocument.content.forEach((node, index) => {
+      const key = markdownNodeFingerprint(node);
+      const indexes = originals.get(key);
+      if (indexes) indexes.push(index);
+      else originals.set(key, [index]);
+    });
+    document.content.forEach((node, index) => {
+      const key = markdownNodeFingerprint(node);
+      const indexes = currents.get(key);
+      if (indexes) indexes.push(index);
+      else currents.set(key, [index]);
+    });
+    return Object.freeze(document.content.map((node) => {
+      const key = markdownNodeFingerprint(node);
+      const originalIndexes = originals.get(key) ?? [];
+      const currentIndexes = currents.get(key) ?? [];
+      if (originalIndexes.length !== 1 || currentIndexes.length !== 1) return null;
+      const block = this.blocks[originalIndexes[0]];
+      return block?.matches(node) ? block : null;
+    }));
   }
 
   static parse(source: string, schema: Schema): MarkdownSourceImportResult {
@@ -117,6 +149,10 @@ function sourceLine(source: string, start: number): SourceLine {
 function sourceLineEnding(source: string): MarkdownLineEnding {
   const match = /\r\n|\r|\n/.exec(source);
   return (match?.[0] as MarkdownLineEnding | undefined) ?? '\n';
+}
+
+function markdownNodeFingerprint(node: Node): string {
+  return JSON.stringify(node.toJSON());
 }
 
 function sourceLines(source: string): readonly SourceLine[] {
