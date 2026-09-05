@@ -28,7 +28,12 @@ collaboration moved to
 [`collaboration.ts`](../src/extensions/collaboration.ts) is the compatible DOM
 presence wrapper. Pure-Node tests cover document editing, history, formats,
 remote/local collaboration, and the first-party Yjs adapter with `document` and
-`window` absent. Native renderers remain deliberately unimplemented.
+`window` absent. The complete 455-test package gate and 289-pass browser/mobile
+matrix passed in
+[CI run `2c7ff4c`](https://github.com/eddolo/fountainjs/actions/runs/33979389234),
+with a successful
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33979389243).
+Native renderers remain deliberately unimplemented.
 
 ## Executive verdict
 
@@ -375,4 +380,6 @@ enforced dependency, declaration, and package property:
 Keep hardening the server/headless boundary as normal release work. Deliberately
 postpone native UI renderers until the web editor, extension contract, and this
 boundary are stable; the next native milestone is a written bridge design and a
-small feasibility prototype, not four production renderers.
+small feasibility prototype, not four production renderers. The written design,
+platform evidence, first-spike scope, and fail-fast criteria are now recorded in
+[NATIVE_RENDERER_FEASIBILITY.md](NATIVE_RENDERER_FEASIBILITY.md).

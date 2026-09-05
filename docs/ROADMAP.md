@@ -195,7 +195,7 @@ and the corresponding
 succeeded. Scope, accessibility policy, and the one-enormous-block limitation
 are explicit in [VIRTUALIZATION.md](VIRTUALIZATION.md).
 
-## Active now: enforced platform-neutral core boundary
+## Delivered: enforced platform-neutral core boundary
 
 The portability audit proved that the model, schema, logical selections,
 transactions, history, extension composition, collaboration state, Yjs, and
@@ -204,11 +204,30 @@ runtime-certified. The additive `fountainjs-editor/core` implementation now
 compiles and is consumed with no `lib.dom`; a source-graph gate rejects DOM,
 React, browser-parser, and aggregate-web imports; Node tests cover generic and
 Yjs collaboration without fake browser globals; and the compatible web root and
-StarterKit remain unchanged. The complete local package gate (455 tests) and
-five-surface browser/mobile matrix (289 passed, two intentional Chromium-only
-PDF skips) are green; public CI certification remains before “Delivered.”
+StarterKit remain unchanged. The complete 455-test package gate and 289-pass
+five-surface browser/mobile matrix (with two intentional Chromium-only PDF
+skips) passed in
+[CI run `2c7ff4c`](https://github.com/eddolo/fountainjs/actions/runs/33979389234),
+and the corresponding
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33979389243)
+succeeded.
 This designs for future native renderers now; it does not start React Native,
 Flutter, SwiftUI, or Compose implementations.
+
+## Native-renderer feasibility design: decision complete
+
+The new engine boundary removes unnecessary browser dependencies, but it does
+not make native rich-text editing a renderer swap. The next milestone is a
+written bridge design grounded in Fountain's actual selection, transaction,
+composition, clipboard, accessibility, and layout contracts. It must identify
+the smallest host interface, lifecycle and ordering rules, serialization and
+threading costs, and failure boundaries for React Native and Flutter/native
+bridges. No production native package should be promised or started until that
+design is reviewed; Electron and Tauri continue to use the certified web
+surface. A deliberately small feasibility spike may follow the design, not four
+parallel renderer implementations. The architecture decision, proposed host
+boundary, fail-fast criteria, first-spike scope, and platform risk register are
+now explicit in [NATIVE_RENDERER_FEASIBILITY.md](NATIVE_RENDERER_FEASIBILITY.md).
 
 ## Prioritized after release foundations
 
@@ -216,11 +235,11 @@ Flutter, SwiftUI, or Compose implementations.
 | --- | --- | --- | --- |
 | 1 | First-class interactive widgets | Delivered and certified in `cced9e2` | Continue browser, accessibility, format, and extension-composition regression coverage as products adopt the contract. |
 | 2 | Granular collaborative structured attributes | Delivered and certified in `0a33c87` | Continue adversarial mixed-version, nested-array, collaboration, and storage regression coverage. |
-| 3 | Truly server-native document conversion | Delivered and certified in `ebc3194` | Continue malformed-input, custom-rule, runtime, package, CPU, and memory regression coverage. The future no-DOM core declaration entry remains tracked separately. |
+| 3 | Truly server-native document conversion | Delivered and certified in `ebc3194` | Continue malformed-input, custom-rule, runtime, package, CPU, and memory regression coverage; the delivered no-DOM core gate now prevents browser dependencies from returning through the engine entry. |
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
-| 5 | Enforced platform-neutral core boundary | Implemented and locally certified: public no-DOM entry, source/declaration gates, portable collaboration lifecycle, browser presence adapter, package smoke, 455 tests, and 289-pass browser/mobile coverage | Publish the public CI evidence and keep every gate permanent. Native UI packages remain postponed. |
-| 6 | Native renderer feasibility | Portability audit and model/view separation exist; DOM, Web Component, and React are web surfaces | After the neutral boundary stabilizes, a written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
+| 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
+| 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
+| 7 | Higher-fidelity Markdown source preservation | Active: semantic round-trips, footnotes, reference links, tables, generated rich-style HTML, and loss reports exist | Add CommonMark/GFM corpus evidence, frontmatter, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node

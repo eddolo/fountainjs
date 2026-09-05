@@ -1281,6 +1281,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Print-aware page foundation and pagination gates](docs/PAGINATION.md)
 - [Release and API stability policy](docs/RELEASES.md)
 - [Platform-portability audit](docs/PORTABILITY_AUDIT.md)
+- [Native renderer feasibility and host-boundary design](docs/NATIVE_RENDERER_FEASIBILITY.md)
 - [Optional AI and MCP](docs/MCP.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
