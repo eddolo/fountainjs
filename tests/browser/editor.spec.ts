@@ -2324,6 +2324,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     orderedMarkerLimits: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '0. Zero\n1. One\n\n123456789. Valid\n\n1234567890. Literal',
     ),
+    emptyListItems: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '-\n- Filled\n\n1.\n2. Filled',
+    ),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2573,6 +2576,11 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   ]);
   expect(result.orderedMarkerLimits.markdown).toContain('0. Zero');
   expect(result.orderedMarkerLimits.losses).toEqual([]);
+  expect(result.emptyListItems.document).toEqual(result.emptyListItems.roundTrip);
+  expect(result.emptyListItems.document.content.map((node: any) => (
+    node.content.map((item: any) => item.content[0].content?.[0]?.text ?? '')
+  ))).toEqual([['', 'Filled'], ['', 'Filled']]);
+  expect(result.emptyListItems.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

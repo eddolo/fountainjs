@@ -226,4 +226,15 @@ describe('professional list transforms', () => {
     expect(boundaryMarkdown).toBe('999999999. Max\n0. Next');
     expect(MarkdownImporter.parse(boundaryMarkdown, schema).eq(boundary)).toBe(true);
   });
+
+  it('imports empty bullet and ordered items without requiring trailing whitespace', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '-\n- Filled\n\n1.\n2. Filled';
+    const doc = MarkdownImporter.parse(source, schema);
+
+    expect(doc.content.map((node) => node.type.name)).toEqual(['bullet_list', 'ordered_list']);
+    expect(doc.child(0).content.map((node) => node.textContent)).toEqual(['', 'Filled']);
+    expect(doc.child(1).content.map((node) => node.textContent)).toEqual(['', 'Filled']);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema).eq(doc)).toBe(true);
+  });
 });

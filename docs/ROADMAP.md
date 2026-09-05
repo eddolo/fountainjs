@@ -300,6 +300,11 @@ when the bullet marker or ordered delimiter changes, avoiding accidental merges
 of adjacent source lists.
 Ordered lists may start at any value at a block boundary, while only a list
 starting at `1` interrupts an existing paragraph as CommonMark requires.
+Ordered markers are limited to CommonMark's one-to-nine ASCII digits; zero is
+preserved across the model, Markdown, and browser/server HTML boundaries, and
+canonical continuation numbers stay within that grammar at the upper bound.
+Empty bullet and ordered items are recognized even when the source marker has
+no trailing whitespace.
 Setext underlines now terminate either a single line or a multiline paragraph,
 retaining inline marks across the heading's soft line breaks.
 The emphasis baseline now prevents intraword-underscore and whitespace-opening
@@ -355,7 +360,7 @@ before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, ATX closer/whitespace and multiline Setext handling, plain image-description projection, inline-node marks, nested emphasis with closing-flanking enforcement, rule-of-three arithmetic, complete bullet/ordered marker styles and interruption rules, ASCII-only list separation, spaced thematic breaks, and unmatched delimiters are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add deeper-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, ATX closer/whitespace and multiline Setext handling, plain image-description projection, inline-node marks, nested emphasis with closing-flanking enforcement, rule-of-three arithmetic, complete bullet/ordered marker styles and interruption rules, ASCII-only list separation, spaced thematic breaks, and unmatched delimiters are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Add a development-only CommonMark/GFM semantic oracle that compares a neutral projection rather than either parser's native AST; categorize deliberate Fountain dialect/security differences; expand the corpus and deeper-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
@@ -396,7 +401,10 @@ performance, and browser behavior:
   inspection; an opt-in verbatim mode that disables typography, normalization,
   entity/Markdown interpretation, trimming, whitespace rewriting, and
   autolinking for integrity-sensitive content; plus a separate explicit
-  sanitizer with preview/diff and per-category choices, never silent cleanup;
+  sanitizer with preview/diff and per-category choices, never silent cleanup.
+  Byte-for-byte fidelity must use an explicit byte import/hash boundary because
+  a DOM editor cannot reconstruct bytes after OS, clipboard, decoder, or browser
+  text conversion;
 - YAML frontmatter and raw/visual Markdown switching.
 
 ## Broader editor landscape audit

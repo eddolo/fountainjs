@@ -162,7 +162,10 @@ an initial standards-oriented set of behaviors:
 - recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
 - `-`, `*`, and `+` bullet markers plus both ordered-list delimiters, with a
   marker-style change preserving the boundary between adjacent lists and only
-  a `1`-starting ordered list allowed to interrupt an open paragraph;
+  a `1`-starting ordered list allowed to interrupt an open paragraph; ordered
+  markers use one to nine digits, preserve a zero start through Markdown and
+  browser/server HTML, keep continuation markers inside that bound, and accept
+  empty list items without requiring whitespace after a bare marker;
 - ASCII-space/tab-only list-marker separation, leaving non-breaking spaces as
   literal document content;
 - compact or spaced thematic breaks with up to three leading spaces and
@@ -182,6 +185,14 @@ is a versioned, Fountain-authored compatibility corpus. It records the
 baseline. The cases are independently worded representative fixtures; they are
 not a copy of either complete specification suite.
 
+The intended larger standards oracle compares a neutral semantic projection
+(block kind and nesting, text, marks, destinations, list starts, and rendered
+meaning), never literal equality between CommonMark's AST and Fountain's
+document schema. Fountain keeps its own parser, model, identity, extension,
+security, source-preservation, and loss-reporting contracts. Reference parsers
+belong in development/conformance tooling rather than the shipped runtime, and
+intentional dialect or safety-policy differences must be recorded explicitly.
+
 Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
 
@@ -194,7 +205,7 @@ conformance. Important remaining work includes:
 - additional strikethrough delimiter-stack cases;
 - configurable handling for CommonMark's arbitrary URI schemes without
   weakening Fountain's default safe-URL policy;
-- a larger versioned subset tied to explicit specification examples;
+- a larger versioned semantic corpus tied to explicit specification examples;
 - deeper-structure source mapping without attaching raw text to the wrong node.
 
 Until those gates exist, documentation should say “supports these Markdown

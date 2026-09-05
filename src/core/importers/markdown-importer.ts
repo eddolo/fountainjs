@@ -1308,13 +1308,13 @@ interface ListMarker {
 
 function listMarker(line: string): ListMarker | null {
   const normalized = line.replace(/^\t+/, (tabs) => '  '.repeat(tabs.length));
-  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\][ \t]+|([-*+])[ \t]+|(\d{1,9})([.)])[ \t]+)(.*)$/.exec(normalized);
+  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\]|([-*+])|(\d{1,9})([.)]))(?:[ \t]+(.*)|[ \t]*)$/.exec(normalized);
   if (!match) return null;
   return {
     indent: match[1].length,
     kind: match[2] ? 'task' : match[4] ? 'bullet' : 'ordered',
     m: (match[2] || match[4] || match[6]) as ListMarker['m'],
-    value: match[7],
+    value: match[7] || '',
     checked: match[3]?.toLowerCase() === 'x',
     start: +(match[5] || 1),
   };
@@ -1448,15 +1448,15 @@ function thematicBreak(line: string): boolean {
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
   const marker = listMarker(line);
-  return Boolean(markdownFence(line))
+  return !!(markdownFence(line)
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
     || thematicBreak(line)
     || /^>\s?/.test(line)
-    || (marker?.indent === 0 && marker.start === 1)
-    || Boolean(tableStart(lines, index))
-    || Boolean(blockImage(line, references))
-    || Boolean(schema.nodes.details && schema.nodes.details_summary && detailsStart(line));
+    || (marker?.value && !marker.indent && marker.start === 1)
+    || tableStart(lines, index)
+    || blockImage(line, references)
+    || (schema.nodes.details && schema.nodes.details_summary && detailsStart(line)));
 }
 
 function parseBlocks(lines: readonly string[], schema: Schema, references: References): Node[] {
