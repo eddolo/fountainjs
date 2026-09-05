@@ -180,8 +180,10 @@ const limits = Object.freeze({
   // Context-aware single/multiline reference extraction and balanced relative-
   // link parsing and precedence add about 2.7 KiB without changing the default entry or core
   // facade ceilings.
-  'all ESM runtime code': 1093 * kibibyte,
-  'all CommonJS runtime code': 920 * kibibyte,
+  // The pinned Unicode 17 full-case-fold exceptions add about 3.3/2.6 KiB to
+  // Markdown's shared format chunk without introducing a runtime dependency.
+  'all ESM runtime code': 1098 * kibibyte,
+  'all CommonJS runtime code': 924 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

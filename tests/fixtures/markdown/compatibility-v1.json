@@ -148,6 +148,19 @@
         "marks": ["link", "link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-unicode-reference-case-folding",
+      "source": "[ẞ] [µ] [ς] [ﬃ]\n\n[SS]: docs/sharp-s.md\n[Μ]: docs/micro.md\n[Σ]: docs/sigma.md\n[FFI]: docs/ligature.md",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "ẞ µ ς ﬃ",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["docs/sharp-s.md", "docs/micro.md", "docs/sigma.md", "docs/ligature.md"],
+        "marks": ["link", "link", "link", "link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

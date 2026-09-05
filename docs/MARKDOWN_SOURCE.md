@@ -125,6 +125,8 @@ an initial standards-oriented set of behaviors:
   strict title closers, bounded/escaped reference labels, and code-aware
   single- or multiline definitions, plus malformed-inline/shortcut and
   nested-link precedence without treating link-looking code as a nested link;
+- locale-neutral Unicode 17 full case folding for reference labels, including
+  the expanding and compatibility mappings JavaScript lowercasing omits;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;

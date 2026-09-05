@@ -1,6 +1,7 @@
 import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
+import { unicodeCaseFold } from '../unicode-case-fold';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
 const MAX_MARKDOWN_REFERENCE_LINES = 32;
@@ -301,7 +302,7 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): 
 }
 
 function referenceName(value: string): string {
-  return decodeMarkdownText(value).trim().replace(/\s+/g, ' ').toLowerCase();
+  return unicodeCaseFold(decodeMarkdownText(value).trim().replace(/\s+/g, ' '));
 }
 
 function closingBracket(value: string, start: number, open = '[', close = ']'): number {

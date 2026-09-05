@@ -2278,6 +2278,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     precedence: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '[foo](not a link) / [outer [inner](docs/inner.md)](docs/outer.md)\n\n[foo]: docs/reference.md',
     ),
+    unicodeReferences: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[ẞ] [µ] [ς] [ﬃ]\n\n[SS]: docs/sharp-s.md\n[Μ]: docs/micro.md\n[Σ]: docs/sigma.md\n[FFI]: docs/ligature.md',
+    ),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2318,6 +2321,12 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     })] }),
   ]));
   expect(result.precedence.losses).toEqual([]);
+  expect(result.unicodeReferences.document).toEqual(result.unicodeReferences.roundTrip);
+  expect(result.unicodeReferences.document.content[0].content
+    .filter((node: any) => node.marks?.some((mark: any) => mark.type === 'link'))
+    .map((node: any) => node.marks.find((mark: any) => mark.type === 'link').attrs.href))
+    .toEqual(['docs/sharp-s.md', 'docs/micro.md', 'docs/sigma.md', 'docs/ligature.md']);
+  expect(result.unicodeReferences.losses).toEqual([]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

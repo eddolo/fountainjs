@@ -58,6 +58,9 @@
   reference without consuming their literal suffix, while syntactically valid
   empty destinations keep inline precedence. A real link nested in link text
   suppresses the outer link; link-looking text inside a code span does not.
+  Reference labels now use locale-neutral full Unicode 17 case folding rather
+  than JavaScript lowercasing, backed by a pinned, reproducible exception table
+  generated from the official Unicode Character Database.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

@@ -251,6 +251,8 @@ aware single/multiline reference extraction, escaped definition labels, and
 global definitions nested in blockquotes are also covered. Malformed inline
 destinations now preserve shortcut-reference precedence, while actual nested
 links suppress their outer link without mistaking code spans for link syntax.
+Reference identifiers use pinned Unicode 17 full case folding rather than
+locale-sensitive or incomplete JavaScript lowercasing.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

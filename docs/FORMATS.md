@@ -96,8 +96,12 @@ relative destinations remain blocked.
 A reference destination may continue on the next nonblank line, and its
 optional quoted or parenthesized title may continue over further nonblank
 lines. Escaped `]` characters are accepted in labels, definition matching is
-case-insensitive, and the first valid definition wins. A blank line always
-ends the definition candidate, so title-looking prose after it is not consumed.
+case-insensitive using locale-neutral Unicode 17 full case folding, and the
+first valid definition wins. This includes expanding and compatibility folds
+such as `ẞ`/`SS`, Greek final sigma, micro sign, and presentation ligatures;
+the small generated exception table is pinned to the official Unicode data
+rather than delegated to the host locale. A blank line always ends the
+definition candidate, so title-looking prose after it is not consumed.
 Definition parsing is bounded to 32 physical lines per candidate.
 Definitions inside one or more blockquote levels are discovered without
 letting fenced code or ordinary paragraph continuations inside that quote leak
