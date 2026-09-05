@@ -118,6 +118,7 @@ an initial standards-oriented set of behaviors:
   closing hashes;
 - level-one/two Setext headings;
 - indented code and variable-length backtick or tilde fences;
+- variable-delimiter code spans with CommonMark whitespace normalization;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;
@@ -141,7 +142,7 @@ not a copy of either complete specification suite.
 Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
 
-- delimiter-stack-accurate emphasis and code spans;
+- delimiter-stack-accurate emphasis;
 - full entity/reference decoding rules;
 - all HTML block/inline precedence and safe unknown-HTML policy;
 - exact list marker, indentation, interruption, tight/loose, and lazy
@@ -155,7 +156,8 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The current bounded contract is certified by the complete 475-test package gate
+The source-preservation portion of this contract is certified by the complete
+475-test package gate
 and 292-pass Chromium/Firefox/WebKit/mobile
 [CI run for `168ebcb`](https://github.com/eddolo/fountainjs/actions/runs/33983773423),
 plus the corresponding successful

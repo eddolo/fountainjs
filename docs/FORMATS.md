@@ -65,12 +65,13 @@ while JSON remains the byte-stable source of truth.
 ## Markdown
 
 The Markdown boundary supports headings, paragraphs, recursive blockquotes,
-fenced code, tight and loose nested lists, aligned pipe tables, block and inline
-images, dividers, links, strong/emphasis/strike/code marks, highlight extension
-syntax, `$...$`/`$$...$$` math when `MathExtension` is present, and standard
-`[^id]` references plus indented multi-block definitions when `PagesExtension`
-is present. Footnote IDs remain stable while visible numbers are derived from
-first-reference order. Pipe tables
+fenced code, variable-delimiter code spans with standard whitespace
+normalization, tight and loose nested lists, aligned pipe tables, block and
+inline images, dividers, links, strong/emphasis/strike/code marks, highlight
+extension syntax, `$...$`/`$$...$$` math when `MathExtension` is present, and
+standard `[^id]` references plus indented multi-block definitions when
+`PagesExtension` is present. Footnote IDs remain stable while visible numbers
+are derived from first-reference order. Pipe tables
 retain left/centre/right column alignment, do not split escaped pipes, and pad
 short rows to the header width. Imported documents are validated against the
 complete receiving schema before they are returned.

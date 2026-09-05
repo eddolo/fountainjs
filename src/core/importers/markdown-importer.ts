@@ -322,6 +322,27 @@ function matchingDelimiter(value: string, start: number, delimiter: string): num
   return -1;
 }
 
+function codeSpanToken(value: string, start: number): { readonly text: string; readonly end: number } | null {
+  if (value[start] !== '`' || value[start - 1] === '`') return null;
+  let openingEnd = start;
+  while (value[openingEnd] === '`') openingEnd += 1;
+  const delimiterLength = openingEnd - start;
+
+  for (let cursor = openingEnd; cursor < value.length;) {
+    if (value[cursor] !== '`') { cursor += 1; continue; }
+    let closingEnd = cursor;
+    while (value[closingEnd] === '`') closingEnd += 1;
+    if (closingEnd - cursor !== delimiterLength) { cursor = closingEnd; continue; }
+
+    let content = value.slice(openingEnd, cursor).replace(/\r\n?|\n/gu, ' ');
+    if (content.startsWith(' ') && content.endsWith(' ') && /[^ ]/u.test(content)) {
+      content = content.slice(1, -1);
+    }
+    return { text: content, end: closingEnd };
+  }
+  return null;
+}
+
 function destinationParts(value: string): ReferenceDefinition | null {
   const source = value.trim();
   if (!source) return null;
@@ -654,11 +675,11 @@ function inline(text: string, schema: Schema, references: References, inheritedM
     }
     if (handled) continue;
     if (text[index] === '`' && schema.marks.code) {
-      const end = matchingDelimiter(text, index + 1, '`');
-      if (end > index + 1) {
+      const codeSpan = codeSpanToken(text, index);
+      if (codeSpan?.text) {
         flush();
-        result.push(...textNodes(text.slice(index + 1, end).replace(/\\`/g, '`'), schema, [...inheritedMarks, schema.marks.code.create()]));
-        index = end + 1;
+        result.push(...textNodes(codeSpan.text, schema, [...inheritedMarks, schema.marks.code.create()]));
+        index = codeSpan.end;
         continue;
       }
     }

@@ -2266,6 +2266,20 @@ test('runs reference links, recursive blocks, rich tables, and loss reports in a
   ]));
 });
 
+test('round-trips variable-delimiter Markdown code spans in the browser package', async ({ page }) => {
+  const result = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.inspectMarkdown('Use ``a ` tick`` and ` padded `.')
+  ));
+
+  expect(result.document).toEqual(result.roundTrip);
+  expect(result.markdown).toBe('Use ``a ` tick`` and `padded`.');
+  expect(result.document.content[0].content).toEqual(expect.arrayContaining([
+    expect.objectContaining({ text: 'a ` tick', marks: [expect.objectContaining({ type: 'code' })] }),
+    expect.objectContaining({ text: 'padded', marks: [expect.objectContaining({ type: 'code' })] }),
+  ]));
+  expect(result.losses).toEqual([]);
+});
+
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {
   const source = '\uFEFF---\r\ntitle: Browser source\r\n---\r\n# Original ###\r\n\r\nKeep  this spacing.\r\n';
   const result = await page.evaluate((value) => (

@@ -70,6 +70,45 @@
         "marks": ["em", "link", "link"],
         "hardBreaks": 1
       }
+    },
+    {
+      "id": "commonmark-variable-code-spans",
+      "source": "Use ``code with ` tick`` and `\\literal`.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Use code with ` tick and \\literal.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["code", "code"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-code-span-whitespace",
+      "source": "` padded ` / `   `",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "padded /    ",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["code", "code"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-unmatched-code-run",
+      "source": "```foo``bar`",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "```foo``bar`",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
     }
   ]
 }

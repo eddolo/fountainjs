@@ -36,9 +36,10 @@
   explicit `mapped-blocks` result distinguishes this from aligned preservation.
 - An initial versioned CommonMark 0.31.2/GFM 0.29-oriented compatibility corpus,
   plus ATX/Setext headings, indented and variable backtick/tilde code fences,
-  safe angle-bracket URI/email autolinks, star emphasis, backslash hard breaks,
-  and collision-safe code-fence export. This is documented as a supported
-  subset, not a false claim of complete standards conformance.
+  variable-delimiter code spans with standard whitespace normalization, safe
+  angle-bracket URI/email autolinks, star emphasis, backslash hard breaks, and
+  collision-safe code export. This is documented as a supported subset, not a
+  false claim of complete standards conformance.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

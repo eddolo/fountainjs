@@ -993,7 +993,9 @@ The structural envelope schema is published as
 nodes, marks, attributes, or content invariants.
 
 Markdown import supports titled inline and reference links/images, recursive
-quotes, loose nested lists, and aligned tables with escaped pipes. Export can
+quotes, loose nested lists, aligned tables with escaped pipes, and
+variable-delimiter code spans that preserve literal backticks and significant
+edge spaces. Export can
 emit deterministic deduplicated references; `exportWithReport` identifies
 every unsupported node, mark, or attribute projection by document path so a
 publishing pipeline never has to guess what Markdown omitted.

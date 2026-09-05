@@ -57,6 +57,17 @@ function escapeInline(text: string): string {
   return text.replace(/([\\`*_[\]<>])/g, '\\$1');
 }
 
+function codeSpan(text: string): string {
+  let longestRun = 0;
+  for (const match of text.matchAll(/`+/gu)) longestRun = Math.max(longestRun, match[0].length);
+  const delimiterLength = longestRun + 1;
+  const delimiter = '`'.repeat(delimiterLength);
+  const needsPadding = text.startsWith('`')
+    || text.endsWith('`')
+    || (text.startsWith(' ') && text.endsWith(' ') && /[^ ]/u.test(text));
+  return needsPadding ? `${delimiter} ${text} ${delimiter}` : `${delimiter}${text}${delimiter}`;
+}
+
 function escapeHTML(text: unknown): string {
   return String(text ?? '')
     .replace(/&/g, '&amp;')
@@ -257,7 +268,7 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
     }
   });
   let text = node.marks.some((mark) => mark.type.name === 'code')
-    ? `\`${(node.text ?? '').replace(/`/g, '\\`')}\``
+    ? codeSpan(node.text ?? '')
     : escapeInline(node.text ?? '');
   for (const mark of [...node.marks].reverse().filter((item) => item.type.name !== 'code')) {
     if (mark.type.name === 'strong') text = `**${text}**`;

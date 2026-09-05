@@ -95,6 +95,11 @@ if (mappedBlocks.markdown !== 'Inserted\r\n\r\n# Source spelling ###\r\n\r\nOrig
   || mappedBlocks.preservation !== 'mapped-blocks') {
   throw new Error('ESM headless core did not preserve uniquely mapped Markdown blocks through insertion.');
 }
+const packedCodeSpan = esmHeadlessCore.MarkdownImporter.parse('Use ``a ` tick``.', markdownSchema);
+if (packedCodeSpan.textContent !== 'Use a ` tick.'
+  || esmHeadlessCore.MarkdownExporter.export(packedCodeSpan) !== 'Use ``a ` tick``.') {
+  throw new Error('ESM headless core did not round-trip a variable-delimiter Markdown code span.');
+}
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');

@@ -55,6 +55,25 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 
+  it('round-trips code spans with delimiter collisions and significant edge spaces', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const code = schema.marks.code.create();
+    const cases = [
+      { value: 'inside ` tick', markdown: '``inside ` tick``' },
+      { value: '`wrapped`', markdown: '`` `wrapped` ``' },
+      { value: ' padded ', markdown: '`  padded  `' },
+      { value: '   ', markdown: '`   `' },
+    ];
+
+    cases.forEach(({ value, markdown }) => {
+      const document = schema.node('doc', {}, [
+        schema.node('paragraph', {}, [schema.text(value, [code])]),
+      ]);
+      expect(MarkdownExporter.export(document)).toBe(markdown);
+      expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
+    });
+  });
+
   it('returns untouched Markdown source exactly while its parsed document is unchanged', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [
