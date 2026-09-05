@@ -148,6 +148,40 @@ describe('portable page intent', () => {
     expect(MarkdownImporter.parse(exported.markdown, schema).toJSON()).toEqual(source.toJSON());
   });
 
+  it('imports an external Markdown footnote corpus with reordered definitions and nested blocks', () => {
+    const schema = new Schema(pagesKit().schema);
+    const imported = MarkdownImporter.parse([
+      '[^alpha]: Alpha has **strong evidence**.',
+      '',
+      '    - First supporting item',
+      '    - Second supporting item',
+      '[^beta]: Beta links to [the source](https://example.com/evidence).',
+      '',
+      'First cite[^beta], repeated[^beta], then alpha[^alpha].',
+    ].join('\r\n'), schema);
+
+    expect(inspectFootnotes(imported)).toMatchObject({
+      references: [{ id: 'beta' }, { id: 'beta' }, { id: 'alpha' }],
+      definitions: [{ id: 'alpha' }, { id: 'beta' }],
+      issues: [],
+      valid: true,
+    });
+    expect(computeFootnoteNumbering(imported).map((entry) => ({
+      id: entry.id,
+      label: entry.label,
+      references: entry.referencePaths.length,
+    }))).toEqual([
+      { id: 'beta', label: '1', references: 2 },
+      { id: 'alpha', label: '2', references: 1 },
+    ]);
+    const exported = MarkdownExporter.exportWithReport(imported);
+    expect(exported.losses).toEqual([]);
+    expect(exported.markdown).toContain('[^alpha]: Alpha has **strong evidence**.');
+    expect(exported.markdown).toContain('    - First supporting item');
+    expect(exported.markdown).toContain('[^beta]: Beta links to [the source](https://example.com/evidence).');
+    expect(MarkdownImporter.parse(exported.markdown, schema).toJSON()).toEqual(imported.toJSON());
+  });
+
   it('reports missing, duplicate, nested, and unreferenced definitions without mutating data', () => {
     const schema = new Schema(pagesKit().schema);
     const document = schema.nodeFromJSON({

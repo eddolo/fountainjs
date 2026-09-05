@@ -39,7 +39,10 @@ describe('read-only DOM page preview', () => {
           { type: 'footnote_reference', attrs: { id: 'proof' } },
         ] },
         { type: 'page_break' },
-        { type: 'paragraph', content: [{ type: 'text', text: 'After break' }] },
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'After break, repeated proof' },
+          { type: 'footnote_reference', attrs: { id: 'proof' } },
+        ] },
         { type: 'page_footer', attrs: { variant: 'default' }, content: [{
           type: 'paragraph', content: [{ type: 'text', text: 'Confidential' }],
         }] },
@@ -54,7 +57,7 @@ describe('read-only DOM page preview', () => {
       <header data-fountain-path="0" data-fountain-page-header="default" data-height="8"><p data-fountain-path="0.0">Page <span class="fountain-page-field" data-fountain-path="0.0.1" data-fountain-page-field="page-number" data-fountain-selected-node="true">{page}</span> / <span class="fountain-page-field" data-fountain-path="0.0.3" data-fountain-page-field="page-count">{pages}</span></p></header>
       <p data-fountain-path="1" data-height="20">Claim<sup data-fountain-path="1.1" data-fountain-footnote-reference="proof"><a href="#fountain-footnote-proof">proof</a></sup></p>
       <hr data-fountain-path="2" data-fountain-page-break="true" data-height="0">
-      <p data-fountain-path="3" data-height="20">After break</p>
+      <p data-fountain-path="3" data-height="20">After break, repeated proof<sup data-fountain-path="3.1" data-fountain-footnote-reference="proof"><a href="#fountain-footnote-proof">proof</a></sup></p>
       <footer data-fountain-path="4" data-fountain-page-footer="default" data-height="8"><p data-fountain-path="4.0">Confidential</p></footer>
       <section id="fountain-footnote-proof" data-fountain-path="5" data-fountain-footnote-definition="proof" data-height="10"><p data-fountain-path="5.0">Evidence</p></section>
     `;
@@ -93,10 +96,15 @@ describe('read-only DOM page preview', () => {
     expect(result.pages[0]?.querySelector('.fountain-page-preview__footer')?.textContent).toContain('Confidential');
     expect(result.pages[0]?.querySelector('[data-fountain-page-break]')).toBeNull();
     expect(result.pages[1]?.querySelector('.fountain-page-preview__content')?.textContent).toContain('After break');
-    const reference = result.pages[0]?.querySelector<HTMLAnchorElement>('[data-fountain-footnote-reference] a');
+    const references = result.pages.map((page) => (
+      page.querySelector<HTMLAnchorElement>('[data-fountain-footnote-reference] a')
+    ));
     const definition = result.pages[0]?.querySelector<HTMLElement>('[data-fountain-footnote-definition]');
-    expect(reference?.getAttribute('href')).toBe(`#${definition?.id}`);
-    expect(reference?.getAttribute('tabindex')).toBe('-1');
+    expect(references.map((reference) => reference?.getAttribute('href'))).toEqual([
+      `#${definition?.id}`,
+      `#${definition?.id}`,
+    ]);
+    expect(references.every((reference) => reference?.getAttribute('tabindex') === '-1')).toBe(true);
     expect(target.querySelector('[contenteditable="true"]')).toBeNull();
     expect(source.outerHTML).toBe(before);
     expect(Object.isFrozen(result.pages)).toBe(true);

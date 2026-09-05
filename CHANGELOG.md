@@ -89,6 +89,8 @@
   repeated references, and round-trip through standard Markdown footnotes and
   semantic HTML noteref/footnote roles. Context-sensitive node DOM output now
   receives document/path context and explicitly opts out of stale DOM reuse.
+  Paged previews route repeated cross-page references to the first rendered
+  fragment of their shared definition instead of a nonexistent local anchor.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

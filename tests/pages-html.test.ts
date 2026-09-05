@@ -116,4 +116,24 @@ describe('page-intent HTML interchange', () => {
     expect(exported).toContain('href="#fountain-footnote-source-alpha">1</a>');
     expect(exported).not.toContain('>7</a>');
   });
+
+  it('imports repeated references and endnote-role definitions from external semantic HTML', () => {
+    const schema = new Schema(composeExtensions([CoreExtension, PagesExtension]).schema);
+    const imported = HTMLImporter.parse(`
+      <aside role="doc-endnote appendix" id="alpha"><p>Alpha evidence</p><ul><li><p>Nested support</p></li></ul></aside>
+      <section role="doc-footnote" id="beta"><p>Beta evidence</p></section>
+      <p>First<a role="doc-noteref citation" href="#beta"><sup>20</sup></a>, repeated<a role="doc-noteref" href="#beta">20</a>, alpha<a role="doc-noteref" href="#alpha">10</a>.</p>
+    `, schema);
+
+    expect(imported.content.map((node) => node.type.name)).toEqual([
+      'footnote_definition', 'footnote_definition', 'paragraph',
+    ]);
+    expect(imported.child(0).child(1).type.name).toBe('bullet_list');
+    const exported = HTMLExporter.export(imported, { document: false });
+    expect(exported.match(/data-fountain-footnote-reference="beta"/gu)).toHaveLength(2);
+    expect(exported.match(/data-fountain-footnote-number="1"/gu)).toHaveLength(3);
+    expect(exported).toContain('data-fountain-footnote-reference="alpha"');
+    expect(exported).toContain('data-fountain-footnote-number="2"');
+    expect(HTMLImporter.parse(exported, schema).toJSON()).toEqual(imported.toJSON());
+  });
 });

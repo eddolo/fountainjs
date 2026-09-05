@@ -31,7 +31,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   and unreferenced definition diagnostics;
 - immutable `computeFootnoteNumbering()` output, with display labels derived
   from first-reference order, shared by repeated references, and never stored
-  in JSON; HTML and Markdown footnote interchange retain stable IDs;
+  in JSON; HTML and Markdown footnote interchange retain stable IDs, and
+  repeated cross-page preview links target the first rendered definition
+  fragment;
 - `inspectPageTemplates()` / `assertPageTemplates()` for duplicate/nested
   templates and orphan page-field diagnostics;
 - an isolated `fountainjs-editor/pages/dom` measurement adapter that converts
@@ -371,8 +373,10 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - canonical editable headers/footers and page-number fields;
 - footnote numbering, reservation, continuation, and interchange (transient
   first-reference numbering, semantic HTML roles, standard Markdown, and the
-  measured continuation baseline are implemented; broader imported-document
-  corpora remain);
+  measured continuation baseline are implemented; the imported corpus covers
+  multiple and repeated references, definition reordering, CRLF Markdown,
+  nested definition blocks, and semantic footnote/endnote roles; broader
+  document families remain);
 - paragraphs with widow/orphan rules;
 - nested lists and rowspan/colspan tables split only at legal boundaries
   (including multi-row headers and transitive body spans; broader imported and

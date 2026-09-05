@@ -265,7 +265,11 @@ function clonedTemplate(
   return clone;
 }
 
-function wireFootnotes(page: HTMLElement, pageNumber: number): void {
+function wireFootnotes(
+  page: HTMLElement,
+  pageNumber: number,
+  destinationPages: ReadonlyMap<string, number>,
+): void {
   const anchor = (id: string) => `fountain-preview-${pageNumber}-footnote-${encodeURIComponent(id)}`;
   page.querySelectorAll<HTMLElement>('[data-fountain-footnote-definition]').forEach((definition) => {
     const id = definition.dataset.fountainFootnoteDefinition;
@@ -274,8 +278,22 @@ function wireFootnotes(page: HTMLElement, pageNumber: number): void {
   page.querySelectorAll<HTMLElement>('[data-fountain-footnote-reference]').forEach((reference) => {
     const id = reference.dataset.fountainFootnoteReference;
     if (!id) return;
-    reference.querySelectorAll<HTMLAnchorElement>('a').forEach((link) => link.setAttribute('href', `#${anchor(id)}`));
+    const destinationPage = destinationPages.get(id) ?? pageNumber;
+    reference.querySelectorAll<HTMLAnchorElement>('a').forEach((link) => link.setAttribute(
+      'href',
+      `#fountain-preview-${destinationPage}-footnote-${encodeURIComponent(id)}`,
+    ));
   });
+}
+
+function footnoteDestinationPages(
+  pages: readonly PagePresentationPage[],
+): ReadonlyMap<string, number> {
+  const destinations = new Map<string, number>();
+  pages.forEach((page) => page.footnotes.forEach((footnote) => {
+    if (!destinations.has(footnote.id)) destinations.set(footnote.id, page.number);
+  }));
+  return destinations;
 }
 
 function appendFootnotes(
@@ -406,6 +424,7 @@ export function renderDOMPagePreview(
   const fragment = owner.createDocumentFragment();
   const pages: HTMLElement[] = [];
   const printPageName = options.includePrintStyles === false ? undefined : physicalPageName(geometry);
+  const footnoteDestinations = footnoteDestinationPages(snapshot.presentation.pages);
   let cloneCount = 0;
   snapshot.content.pages.forEach((contentPage, pageIndex) => {
     const presentation = snapshot.presentation.pages[pageIndex];
@@ -456,7 +475,7 @@ export function renderDOMPagePreview(
     if (projectedFooter) footer.appendChild(projectedFooter);
     sheet.appendChild(footer);
     if (presentation.usedHeight > presentation.availableHeight) sheet.dataset.fountainPageOverflow = 'true';
-    wireFootnotes(sheet, presentation.number);
+    wireFootnotes(sheet, presentation.number, footnoteDestinations);
     fragment.appendChild(sheet);
     pages.push(sheet);
   });
