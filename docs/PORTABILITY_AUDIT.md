@@ -10,7 +10,12 @@ ships as `fountainjs-editor/html/server`, parses HTML without browser globals or
 a fake DOM, and uses the new platform-neutral `HTMLParseRule` attribute surface.
 The original root `HTMLImporter` and all browser APIs remain compatible. This
 closes the runtime HTML-conversion blocker; it does **not** yet create a no-DOM
-core declaration/package boundary or native renderer.
+core declaration/package boundary or native renderer. The emitted path is
+permanently exercised in Node ESM/CommonJS, Bun, Deno, and Cloudflare `workerd`;
+the complete 439-test package suite and 284-pass browser/mobile matrix passed in
+[CI run `ebc3194`](https://github.com/eddolo/fountainjs/actions/runs/33974721733),
+with a successful
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33974721742).
 
 ## Executive verdict
 

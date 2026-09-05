@@ -158,16 +158,34 @@ and the corresponding
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33972148765)
 succeeded.
 
-## Active now: truly server-native document conversion
+## Delivered: truly server-native document conversion
 
-The model, schema, transactions, history, collaboration, extension composition,
-JSON, text, Markdown, and string-based HTML export already run without browser
-globals. The remaining conversion blocker is HTML import, which currently uses
-`DOMParser` and browser-only extension callbacks. This milestone isolates a
-standards-oriented DOM-free parser, adds a renderer-neutral attribute-extraction
-contract, keeps existing browser rules compatible, and requires fail-explicit
-loss reporting, resource bounds, packed Node execution, and browser/server
-parity fixtures before it is marked delivered.
+The isolated `fountainjs-editor/html/server` entry now parses HTML into the same
+schema-validated model without `window`, `document`, `DOMParser`, jsdom, or
+another fake DOM. Platform-neutral `parseHTML` rules give custom nodes and marks
+one browser/server contract while existing `parseDOM` rules remain compatible
+and browser-only callbacks are reported rather than impersonated. Input, tree,
+depth, attribute, parser-error, performance, memory, bundle, packed-package,
+browser/server parity, and adversarial URL/recovery gates are enforced. The
+emitted import/export path runs in Node ESM/CommonJS, Bun, Deno, and Cloudflare
+`workerd`. The complete 439-test package suite and 284-pass
+Chromium/Firefox/WebKit/mobile matrix passed in
+[CI run `ebc3194`](https://github.com/eddolo/fountainjs/actions/runs/33974721733),
+and the corresponding
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33974721742)
+succeeded. A clean no-DOM core declaration package is still a separate
+portability task and is not implied by this conversion milestone.
+
+## Active now: virtualized rendering for huge documents
+
+Fountain's immutable model and transaction gates already cover 10,000 blocks,
+and pagination incrementally remeasures 5,000 rendered blocks, but the DOM view
+still mounts every top-level node. The next milestone starts at that honest
+boundary: an opt-in windowed renderer with measured height reuse, stable scroll
+anchoring, selection/IME pinning, complete model-backed copy/search, NodeView and
+decoration lifecycle rules, full-render printing, accessibility behavior, and a
+real 100,000-block browser budget. It remains Active until those behaviors pass
+across Chromium, Firefox, WebKit, Pixel, and iPhone projects.
 
 ## Prioritized after release foundations
 
@@ -175,8 +193,8 @@ parity fixtures before it is marked delivered.
 | --- | --- | --- | --- |
 | 1 | First-class interactive widgets | Delivered and certified in `cced9e2` | Continue browser, accessibility, format, and extension-composition regression coverage as products adopt the contract. |
 | 2 | Granular collaborative structured attributes | Delivered and certified in `0a33c87` | Continue adversarial mixed-version, nested-array, collaboration, and storage regression coverage. |
-| 3 | Truly server-native document conversion | Active; neutral parser boundary and pure-Node importer are being implemented | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, fail-explicit browser-only rules, identical validation, and packed-runtime tests. |
-| 4 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
+| 3 | Truly server-native document conversion | Delivered and certified in `ebc3194` | Continue malformed-input, custom-rule, runtime, package, CPU, and memory regression coverage. The future no-DOM core declaration entry remains tracked separately. |
+| 4 | Virtualized or paged rendering for huge documents | Active; 10,000-block engine budgets exist, but the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
 | 5 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
 | 6 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
 
