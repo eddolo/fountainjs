@@ -141,6 +141,57 @@ describe('read-only DOM page preview', () => {
     }
   });
 
+  it('uses a sanitized host print projection without moving custom source DOM', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Live widget' }] }],
+    });
+    const source = window.document.createElement('div');
+    source.innerHTML = '<p data-fountain-path="0" data-height="20">Live widget</p>';
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+    const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(source, document, geometry, { lineFragmentNodeTypes: [] });
+    const target = window.document.createElement('div');
+    const projection = window.document.createElement('figure');
+    projection.id = 'print-widget';
+    projection.dataset.fountainPath = 'host-owned';
+    projection.innerHTML = '<figcaption>Printable widget</figcaption><button type="button">Live action</button>';
+    let seen: unknown;
+
+    const result = renderDOMPagePreview(source, target, geometry, snapshot, {
+      renderPlacement: (context) => {
+        seen = context;
+        return projection;
+      },
+    });
+
+    expect(seen).toMatchObject({
+      document: window.document,
+      pageNumber: 1,
+      source: source.firstElementChild,
+      placement: snapshot.content.pages[0]?.placements[0],
+    });
+    expect(Object.isFrozen(seen)).toBe(true);
+    const rendered = result.pages[0]?.querySelector<HTMLElement>('[data-fountain-page-item]');
+    expect(rendered?.tagName).toBe('FIGURE');
+    expect(rendered?.textContent).toContain('Printable widget');
+    expect(rendered?.id).toMatch(/^fountain-preview-1-\d+-print-widget$/u);
+    expect(rendered?.hasAttribute('data-fountain-path')).toBe(false);
+    expect(rendered?.contentEditable).toBe('false');
+    expect(rendered?.querySelector<HTMLButtonElement>('button')?.disabled).toBe(true);
+    expect(projection.id).toBe('print-widget');
+    expect(projection.dataset.fountainPath).toBe('host-owned');
+    expect(projection.querySelector<HTMLButtonElement>('button')?.disabled).toBe(false);
+    expect(projection.isConnected).toBe(false);
+    expect(source.textContent).toBe('Live widget');
+
+    const foreign = window.document.implementation.createHTMLDocument().createElement('div');
+    expect(() => renderDOMPagePreview(source, window.document.createElement('div'), geometry, snapshot, {
+      renderPlacement: () => foreign,
+    })).toThrow(/source-document/);
+  });
+
   it('keeps only assigned ordered-list items and continues numbering on later pages', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

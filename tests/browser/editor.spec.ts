@@ -226,6 +226,28 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
   expect(p95).toBeLessThan(75);
 });
 
+test('uses a host print renderer without moving or exposing live custom DOM', async ({ page }) => {
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.loadMeasurementFixture())).toBe(true);
+  const preview = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.previewWithHostRenderer()
+  ));
+  expect(preview.sourceUnchanged).toBe(true);
+  const projection = page.locator(
+    '#browser-page-preview .fountain-page-preview__sheet [data-host-print-projection="heading"]',
+  );
+  await expect(projection).toHaveCount(1);
+  await expect(projection).toContainText('Host-rendered heading');
+  await expect(projection).toHaveAttribute('contenteditable', 'false');
+  await expect(projection).toHaveAttribute('id', /^fountain-preview-\d+-\d+-host-print-heading$/u);
+  await expect(projection).not.toHaveAttribute('data-fountain-path', /.+/u);
+  await expect(projection.locator('button')).toBeDisabled();
+  await expect(page.locator('#pages-editor h2')).toHaveText('Measured layout');
+  await expect(page.locator('#pages-editor [data-host-print-projection]')).toHaveCount(0);
+  await page.emulateMedia({ media: 'print' });
+  await expect(projection).toBeVisible();
+  await page.emulateMedia({ media: 'screen' });
+});
+
 test('projects exact A4 and Letter print sheets in every browser engine', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=pages-preview');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.setHeader())).toBe(true);

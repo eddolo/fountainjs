@@ -1410,6 +1410,16 @@ Pass `includePrintStyles: false` only when the host owns the document's global
 print rules. DOM geometry values are CSS pixels, so physical A4/Letter output
 uses `unitsPerMillimetre: 96 / 25.4` as shown above.
 
+`options.renderPlacement(context)` is the host-owned print boundary for a
+custom NodeView, canvas, embed, atomic media surface, or any other placement
+whose live DOM is not a deterministic print representation. The frozen context
+contains the canonical source element, exact projected placement, page number,
+and source document. Return `undefined` for the default clone or an `HTMLElement`
+from that document for a replacement. Fountain clones the replacement,
+namespaces IDs, removes model/selection/drag state, disables controls, and never
+moves or changes either the returned template or live source. A foreign-document
+or non-element result fails closed.
+
 The visual sheets are `aria-hidden` because clipped DOM copies otherwise repeat
 off-page text to assistive technology. By default the preview contains one
 visually hidden, continuous, non-editable semantic copy of the source instead.

@@ -64,7 +64,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   read-only sheets, exact line clips, structural continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
   print page breaks, normalized deterministic physical `@page` rules and names,
-  namespaced IDs,
+  namespaced IDs, and an optional sanitized host placement renderer for custom
+  NodeViews/atomic media whose live DOM is not print-safe,
   transient editor-state removal, and one screen-only continuous accessibility
   copy;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
@@ -74,15 +75,16 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 369-test package suite plus
+The latest immutable public certification is the 370-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
 and atomic media/custom-NodeView coverage, including complex merged-table
-fragmentation and the physical three-engine A4/Letter print contract, in the
-[CI run for `678886a`](https://github.com/eddolo/fountainjs/actions/runs/33954387906).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33954387903)
-is also green. The gap-adjacent selection/IME and mobile-fallback contracts are
-the next immutable gate and are not counted in that earlier run.
+fragmentation, the physical three-engine A4/Letter print contract, gap-adjacent
+selection/IME, and mobile fallback, in the
+[CI run for `f52d86c`](https://github.com/eddolo/fountainjs/actions/runs/33954795143).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33954795113)
+is also green. The host-owned custom placement print renderer is the next
+immutable gate and is not counted in that earlier run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -137,6 +139,9 @@ default policy: retain the canonical editable DOM/model node, move it intact to
 the next page when it fits, and mark its sheet as overflowing without clipping
 when it is taller than the body. The representative custom NodeView remains
 interactive, details state persists, and code edits retain undo/redo. The view
+layer's read-only preview additionally exposes a host-owned `renderPlacement` boundary
+for deterministic print substitutes; it clones and sanitizes the returned
+template without moving or changing it or the canonical source. The EditorView
 observer recognizes only page-owned attributes and CSS-variable deltas as page
 decoration; an unrelated inline-style mutation still restores the model-owned
 NodeView DOM.

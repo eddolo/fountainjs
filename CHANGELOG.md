@@ -75,6 +75,10 @@
   stable normalized page names, headers/page numbers, page-local footnotes,
   forced breaks, accessibility isolation, and transient-editor-state removal in
   Chromium, Firefox, and WebKit while retaining Chromium PDF-byte verification.
+  `renderDOMPagePreview` now accepts a framework-neutral `renderPlacement` hook
+  for custom NodeViews and atomic media; returned host templates are cloned,
+  namespaced, made read-only, and stripped of live editor state without moving
+  either the template or canonical source DOM.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

@@ -400,6 +400,11 @@ are removed from visual copies, and the continuous accessibility copy is omitted
 from print. It installs normalized print-only physical `@page` rules and stable
 names matching the geometry;
 pass `{ includePrintStyles: false }` only when the host owns those global rules.
+For a custom NodeView, canvas, embed, or other atomic surface whose live DOM is
+not a useful print representation, pass `renderPlacement(context)`. Return a
+detached element template for the placements your host owns and `undefined` for
+Fountain's default clone. Fountain clones and sanitizes the returned template;
+it never moves the template or canonical editor source.
 Browser geometry must use CSS-pixel units (for example,
 `unitsPerMillimetre: 96 / 25.4`) for physical A4/Letter output. Visual clipped
 copies are hidden from assistive technology while one continuous read-only copy

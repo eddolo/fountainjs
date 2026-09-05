@@ -764,7 +764,8 @@ The suites are organized by boundary:
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
-  ordered-list numbering, normalized physical page names, and print-rule generation;
+  ordered-list numbering, normalized physical page names, print-rule generation,
+  and sanitized host-owned placement projection with foreign-document rejection;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
   presentation, physical A4/Letter sheet geometry, named pages, furniture,

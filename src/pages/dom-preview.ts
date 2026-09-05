@@ -15,7 +15,26 @@ export interface DOMPagePreviewOptions {
   readonly includeAccessibleDocument?: boolean;
   /** Install a named physical page rule for browser printing. Defaults to true. */
   readonly includePrintStyles?: boolean;
+  /**
+   * Optional trusted host projection for a body placement, useful for custom
+   * NodeViews or atomic media that need deterministic print DOM. Return
+   * `undefined` to use Fountain's default source clone. The returned element is
+   * cloned and sanitized; the live source is never moved.
+   */
+  readonly renderPlacement?: DOMPagePreviewPlacementRenderer;
 }
+
+export interface DOMPagePreviewRenderContext {
+  readonly document: Document;
+  readonly pageNumber: number;
+  readonly placement: DOMPageContentPlacement;
+  /** Canonical rendered source. Treat as read-only. */
+  readonly source: HTMLElement;
+}
+
+export type DOMPagePreviewPlacementRenderer = (
+  context: DOMPagePreviewRenderContext,
+) => HTMLElement | undefined;
 
 export interface DOMPagePreviewResult {
   readonly root: HTMLElement;
@@ -143,13 +162,24 @@ function clonedPlacement(
   allSources: readonly DOMPageFragmentSource[],
   pageNumber: number,
   cloneIndex: number,
+  renderPlacement?: DOMPagePreviewPlacementRenderer,
 ): HTMLElement | null {
   const first = placement.sources[0];
   if (!first || first.kind === 'manual-break') return null;
   const source = renderedTopLevel(sourceRoot, first.sourcePath);
   if (!source) throw new Error(`No rendered source exists for page placement ${placement.itemId}.`);
-  const clone = prepareClone(source.cloneNode(true) as HTMLElement, pageNumber, cloneIndex);
+  const rendered = renderPlacement?.(Object.freeze({
+    document: sourceRoot.ownerDocument,
+    pageNumber,
+    placement,
+    source,
+  }));
+  if (rendered !== undefined && (rendered.nodeType !== 1 || rendered.ownerDocument !== sourceRoot.ownerDocument)) {
+    throw new TypeError('renderPlacement must return a source-document HTMLElement.');
+  }
+  const clone = prepareClone((rendered ?? source).cloneNode(true) as HTMLElement, pageNumber, cloneIndex);
   clone.dataset.fountainPageItem = placement.itemId;
+  if (rendered !== undefined) return clone;
   if (first.kind === 'list-item' || first.kind === 'table-row-group') {
     return structuralClone(clone, placement);
   }
@@ -327,6 +357,7 @@ export function renderDOMPagePreview(
         snapshot.measurement.fragmentSources,
         presentation.number,
         ++cloneCount,
+        options.renderPlacement,
       );
       if (clone) content.appendChild(clone);
     });

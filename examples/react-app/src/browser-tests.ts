@@ -40,7 +40,7 @@ import {
   setPageTemplate,
 } from '../../../src/pages';
 import { createDOMEditablePageController, createDOMPageLayoutController, layoutDOMPages } from '../../../src/pages/dom';
-import { renderDOMPagePreview } from '../../../src/pages/preview';
+import { renderDOMPagePreview, type DOMPagePreviewOptions } from '../../../src/pages/preview';
 import {
   acceptTrackedSuggestion,
   createTrackedChangesExtension,
@@ -712,6 +712,7 @@ const runPerformanceBudget = async () => {
 const renderPagesPreview = (
   geometry: ReturnType<typeof createPageGeometry>,
   keepMounted = false,
+  options: DOMPagePreviewOptions = {},
 ) => {
   pagesView.dom.style.boxSizing = 'content-box';
   pagesView.dom.style.width = `${geometry.size.width - geometry.margins.left - geometry.margins.right}px`;
@@ -721,7 +722,7 @@ const renderPagesPreview = (
   target.id = 'browser-page-preview';
   document.body.appendChild(target);
   const before = pagesView.dom.outerHTML;
-  const result = renderDOMPagePreview(pagesView.dom, target, geometry, snapshot);
+  const result = renderDOMPagePreview(pagesView.dom, target, geometry, snapshot, options);
   const output = {
     pageCount: result.pages.length,
     pageNumbers: result.pages.map((page) => page.dataset.fountainPage),
@@ -996,6 +997,20 @@ Object.assign(globalThis, {
         headerHeight: 48,
         unitsPerMillimetre: 96 / 25.4,
       }), true),
+      previewWithHostRenderer: () => renderPagesPreview(
+        createPageGeometry({ size: { width: 260, height: 120 }, margins: 10 }),
+        true,
+        {
+          renderPlacement: ({ document, source }) => {
+            if (source.tagName !== 'H2') return undefined;
+            const figure = document.createElement('figure');
+            figure.id = 'host-print-heading';
+            figure.dataset.hostPrintProjection = 'heading';
+            figure.innerHTML = '<figcaption>Host-rendered heading</figcaption><button type="button">Live-only action</button>';
+            return figure;
+          },
+        },
+      ),
       incrementalProbe: runPaginationIncrementalBudget,
       structuralProbe: runPaginationStructuralBudget,
       controllerProbe: () => {
