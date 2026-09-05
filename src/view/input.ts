@@ -52,6 +52,8 @@ export interface InputManagerOptions {
   onError?: (error: unknown) => void;
   shouldStopEvent?: (event: Event) => boolean;
   blockHandles?: BlockHandleManager;
+  /** Mounts any virtualized selection content before the native clipboard reads it. */
+  prepareClipboard?: () => void;
 }
 
 export class InputManager {
@@ -303,7 +305,7 @@ export class InputManager {
         return;
       }
     }
-    this.writeCellSelection(event);
+    if (!this.writeCellSelection(event)) this.options.prepareClipboard?.();
   };
 
   private onCut = (event: ClipboardEvent): void => {
@@ -316,6 +318,7 @@ export class InputManager {
       }
     }
     if (this.writeCellSelection(event)) deleteSelection(this.editor);
+    else this.options.prepareClipboard?.();
   };
 
   private onCompositionStart = (event: CompositionEvent): void => {

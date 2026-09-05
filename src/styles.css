@@ -77,6 +77,8 @@
 .fountain-editor > :first-child { margin-top: 0; }
 .fountain-editor > :last-child { margin-bottom: 0; }
 .fountain-editor [data-fountain-text-path] { white-space: pre-wrap; }
+.fountain-editor[data-fountain-virtualized="true"] { overflow-anchor: none; }
+.fountain-editor > .fountain-virtual-spacer { box-sizing: border-box; width: 100%; margin: 0; padding: 0; overflow: hidden; border: 0; pointer-events: none; user-select: none; }
 .fountain-editor [data-fountain-mention="true"] { display: inline-block; padding-inline: .22em; color: var(--fountain-accent); overflow-wrap: anywhere; background: var(--fountain-accent-soft); border-radius: .3em; font-weight: 650; text-decoration: none; vertical-align: baseline; }
 .fountain-editor [data-fountain-emoji="true"] { display: inline-block; min-width: 1em; text-align: center; vertical-align: -.08em; }
 .fountain-editor .fountain-emoji-fallback { display: inline-block; width: 1.15em; height: 1.15em; margin: 0; border-radius: .15em; object-fit: contain; vertical-align: -.16em; }

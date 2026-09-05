@@ -851,6 +851,128 @@ const runPerformanceBudget = async () => {
   return { inputToPaint, added, removed, retainedBlocks, text, remainingDOM };
 };
 
+const runVirtualizationBudget = async (blockCount = 100_000) => {
+  const kit = composeExtensions([CoreExtension]);
+  const content = {
+    type: 'doc',
+    content: Array.from({ length: blockCount }, (_, index) => ({
+      type: 'paragraph',
+      content: [{
+        type: 'text',
+        text: `Virtual browser block ${index}`,
+        ...(index === 300 ? { marks: [{ type: 'strong' }] } : {}),
+      }],
+    })),
+  };
+  const virtualEditor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+  const scrollContainer = document.createElement('div');
+  scrollContainer.style.cssText = 'height:320px;overflow:auto;position:relative;width:600px';
+  document.body.appendChild(scrollContainer);
+  const started = performance.now();
+  const virtualView = new EditorView(scrollContainer, virtualEditor, {
+    ariaLabel: 'Virtual document fixture',
+    virtualization: {
+      scrollContainer,
+      minimumBlockCount: 0,
+      estimatedBlockHeight: 48,
+      overscanPx: 480,
+      pinnedOverscanBlocks: 1,
+    },
+  });
+  const createDurationMs = performance.now() - started;
+  const mountedCount = () => virtualView.dom.querySelectorAll(':scope > [data-fountain-path]').length;
+  const initialMounted = mountedCount();
+  const targetIndex = Math.floor(blockCount * 0.75);
+
+  scrollContainer.scrollTop = Math.floor(blockCount * 48 * 0.25);
+  scrollContainer.dispatchEvent(new Event('scroll'));
+  await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  const scrolledMounted = mountedCount();
+  const scrolledPaths = [...virtualView.dom.querySelectorAll<HTMLElement>(':scope > [data-fountain-path]')]
+    .map((element) => Number(element.dataset.fountainPath));
+  const scrollBeforeAnchorEdit = scrollContainer.scrollTop;
+  const leading = virtualEditor.state.schema.node('paragraph', {}, [
+    virtualEditor.state.schema.text('Leading anchor probe'),
+  ]);
+  virtualEditor.dispatch(virtualEditor.state.createTransaction().replace(0, 0, [leading]));
+  const scrollAfterAnchorInsert = scrollContainer.scrollTop;
+  virtualEditor.dispatch(virtualEditor.state.createTransaction().replace(0, 1));
+  const scrollAfterAnchorRestore = scrollContainer.scrollTop;
+
+  virtualEditor.dispatch(virtualEditor.state.createTransaction().setSelection(Selection.cursor([targetIndex, 0], 0)));
+  await Promise.resolve();
+  const selectedMounted = Boolean(virtualView.dom.querySelector(`[data-fountain-path="${targetIndex}"]`));
+  virtualView.dom.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+  virtualView.dom.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東京' }));
+  await Promise.resolve();
+  const composedText = virtualEditor.state.doc.child(targetIndex).textContent;
+
+  virtualEditor.dispatch(virtualEditor.state.createTransaction().setSelection(
+    Selection.range([100, 0], 0, [500, 0], 'Virtual browser block 500'.length),
+  ));
+  await Promise.resolve();
+  const copyMiddleBefore = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"]'));
+  virtualView.dom.dispatchEvent(new ClipboardEvent('copy', { bubbles: true, cancelable: true }));
+  const copyMiddleDuring = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"]'));
+  const copyRichMiddleDuring = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"] strong'));
+  const copySelectionDuring = document.getSelection()?.toString() ?? '';
+  await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  const copyMiddleAfter = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"]'));
+
+  const finalMounted = mountedCount();
+  const totalHeight = virtualView.dom.scrollHeight;
+  virtualView.destroy();
+  virtualEditor.destroy();
+  const remainingDOM = scrollContainer.childElementCount;
+  scrollContainer.remove();
+
+  const printEditor = createEditor({
+    schema: kit.schema,
+    plugins: kit.plugins,
+    content: {
+      type: 'doc',
+      content: Array.from({ length: 300 }, (_, index) => ({
+        type: 'paragraph', content: [{ type: 'text', text: `Printable virtual block ${index}` }],
+      })),
+    },
+  });
+  const printMount = document.body.appendChild(document.createElement('div'));
+  const printView = new EditorView(printMount, printEditor, {
+    virtualization: { minimumBlockCount: 0, estimatedBlockHeight: 48, overscanPx: 0 },
+  });
+  globalThis.dispatchEvent(new Event('beforeprint'));
+  const printMounted = printView.dom.querySelectorAll(':scope > [data-fountain-path]').length;
+  globalThis.dispatchEvent(new Event('afterprint'));
+  const printRestored = printView.virtualized;
+  printView.destroy();
+  printEditor.destroy();
+  printMount.remove();
+  return {
+    blockCount,
+    createDurationMs,
+    initialMounted,
+    scrolledMounted,
+    scrolledPathMinimum: Math.min(...scrolledPaths),
+    scrolledPathMaximum: Math.max(...scrolledPaths),
+    anchorInsertDelta: scrollAfterAnchorInsert - scrollBeforeAnchorEdit,
+    anchorRestoreDelta: scrollAfterAnchorRestore - scrollBeforeAnchorEdit,
+    selectedMounted,
+    composedText,
+    copyMiddleBefore,
+    copyMiddleDuring,
+    copyRichMiddleDuring,
+    copySelectionComplete: copySelectionDuring.includes('Virtual browser block 100')
+      && copySelectionDuring.includes('Virtual browser block 300')
+      && copySelectionDuring.includes('Virtual browser block 500'),
+    copyMiddleAfter,
+    finalMounted,
+    totalHeight,
+    remainingDOM,
+    printMounted,
+    printRestored,
+  };
+};
+
 const renderPagesPreview = (
   geometry: ReturnType<typeof createPageGeometry>,
   keepMounted = false,
@@ -1048,6 +1170,7 @@ Object.assign(globalThis, {
     inspectMarkdown,
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     performanceBudget: runPerformanceBudget,
+    virtualizationBudget: runVirtualizationBudget,
     startImageUpload,
     collaboration: {
       leftEditor,

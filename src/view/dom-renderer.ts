@@ -1,4 +1,5 @@
 import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
+import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
 
 export interface DOMRenderContext {
   /** Root model document used by context-sensitive node serializers. */
@@ -19,6 +20,8 @@ export interface MountedNodeView {
 export interface MountedDocumentNode {
   readonly node: Node;
   readonly dom: globalThis.Node;
+  /** Current top-level document index, independent of spacer DOM children. */
+  readonly index?: number;
 }
 
 function pathKey(path: readonly number[]): string { return path.join('.'); }
@@ -264,7 +267,7 @@ export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderC
     if (!child.isText) appendWidgets(fragment, position, renderContext);
     const dom = renderNode(child, [index], renderContext, position);
     fragment.appendChild(dom);
-    mounted.push({ node: child, dom });
+    mounted.push({ node: child, dom, index });
     position += child.nodeSize;
   });
   appendWidgets(fragment, position, renderContext);
@@ -334,7 +337,7 @@ export function reconcileDocument(
     if (previousIndex !== undefined && prior?.node === child && prior.dom.parentNode === root && !hasContextualDOM(child)) {
       if (prior.dom !== currentDOM) root.insertBefore(prior.dom, currentDOM ?? null);
       if (prior.dom.nodeType === 1) rebaseRenderedPath(prior.dom as HTMLElement, index);
-      mounted.push(prior);
+      mounted.push(prior.index === index ? prior : { ...prior, index });
       onReuse?.(index);
       position += child.nodeSize;
       return;
@@ -342,10 +345,78 @@ export function reconcileDocument(
 
     const dom = renderNode(child, [index], renderContext, position);
     if (currentDOM !== dom) root.insertBefore(dom, root.childNodes[index] ?? null);
-    mounted.push({ node: child, dom });
+    mounted.push({ node: child, dom, index });
     position += child.nodeSize;
   });
 
   while (root.childNodes.length > doc.childCount) root.lastChild?.remove();
+  return mounted;
+}
+
+function virtualSpacer(layout: VirtualBlockLayout, from: number, to: number): HTMLDivElement {
+  const spacer = document.createElement('div');
+  const height = layout.heightBetween(from, to);
+  spacer.className = 'fountain-virtual-spacer';
+  spacer.dataset.fountainVirtualSpacer = `${from}:${to}`;
+  spacer.dataset.fountainVirtualHeight = String(height);
+  spacer.contentEditable = 'false';
+  spacer.setAttribute('aria-hidden', 'true');
+  spacer.setAttribute('role', 'presentation');
+  spacer.style.height = `${height}px`;
+  spacer.style.minHeight = `${height}px`;
+  return spacer;
+}
+
+/**
+ * Renders only the planned top-level ranges while preserving the document's
+ * estimated scroll height with inert spacers. Model positions always come
+ * from the complete document, never from the reduced DOM.
+ */
+export function renderVirtualDocument(
+  root: HTMLElement,
+  doc: Node,
+  plan: VirtualBlockPlan,
+  layout: VirtualBlockLayout,
+  previous: readonly MountedDocumentNode[] = [],
+  context: DOMRenderContext = {},
+  onReuse?: (index: number) => void,
+): MountedDocumentNode[] {
+  const renderContext = context.document === doc ? context : { ...context, document: doc };
+  const fragment = document.createDocumentFragment();
+  const mounted: MountedDocumentNode[] = [];
+  const available = new Map<Node, MountedDocumentNode[]>();
+  previous.forEach((entry) => {
+    const entries = available.get(entry.node) ?? [];
+    entries.push(entry);
+    available.set(entry.node, entries);
+  });
+  const used = new Set<MountedDocumentNode>();
+  let cursor = 0;
+
+  plan.ranges.forEach((range) => {
+    if (range.from > cursor) fragment.appendChild(virtualSpacer(layout, cursor, range.from));
+    for (let index = range.from; index < range.to; index += 1) {
+      const child = doc.child(index);
+      const position = layout.positionAt(index);
+      appendWidgets(fragment, position, renderContext);
+      const candidates = available.get(child) ?? [];
+      const prior = candidates.find((entry) => !used.has(entry));
+      let dom: globalThis.Node;
+      if (prior && !hasContextualDOM(child)) {
+        used.add(prior);
+        dom = prior.dom;
+        if (dom.nodeType === 1) rebaseRenderedPath(dom as HTMLElement, index);
+        onReuse?.(index);
+      } else {
+        dom = renderNode(child, [index], renderContext, position);
+      }
+      fragment.appendChild(dom);
+      mounted.push({ node: child, dom, index });
+    }
+    cursor = range.to;
+  });
+  if (cursor < doc.childCount) fragment.appendChild(virtualSpacer(layout, cursor, doc.childCount));
+  else appendWidgets(fragment, layout.positionAt(doc.childCount), renderContext);
+  root.replaceChildren(fragment);
   return mounted;
 }

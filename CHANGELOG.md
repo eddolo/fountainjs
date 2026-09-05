@@ -4,6 +4,9 @@
 
 ### Fixed
 
+- Responsive block images now fall back from a failed `srcset` candidate to
+  their ordinary `src` without triggering a NodeView remount loop; Retry
+  deliberately restores the responsive candidates.
 - Focused controls inside a retained custom NodeView now keep DOM identity and
   focus across model updates and undo/redo; compatible same-path history
   changes may be accepted by the NodeView's own `update` contract.
@@ -15,6 +18,13 @@
 
 ### Added
 
+- Opt-in top-level `EditorView` virtualization with a renderer-independent
+  measured-height/position index, viewport and semantic-selection islands,
+  stable structural scroll anchoring, full-model decoration positions,
+  deterministic NodeView lifecycle, rich wide-selection copy/cut preparation,
+  automatic full-document print rendering, an explicit accessibility/export
+  suspension API, React and Web Component forwarding, and 100,000-block
+  Chromium/Firefox/WebKit/mobile browser contracts.
 - Pure-Node HTML conversion through the isolated
   `fountainjs-editor/html/server` entry: a standards-oriented parser and CSS
   selector engine bundled without jsdom; portable `parseHTML` extension rules;

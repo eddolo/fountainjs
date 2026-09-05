@@ -200,7 +200,17 @@ describe('production image editing', () => {
       content: {
         type: 'doc',
         content: [
-          { type: 'image_super', attrs: { src: 'https://cdn.example.com/view.png', alt: 'View', caption: 'Initial', width: '300px' } },
+          {
+            type: 'image_super',
+            attrs: {
+              src: 'https://cdn.example.com/view.png',
+              srcset: 'https://cdn.example.com/view-small.png 480w',
+              sizes: '300px',
+              alt: 'View',
+              caption: 'Initial',
+              width: '300px',
+            },
+          },
           { type: 'paragraph', content: [{ type: 'text', text: '' }] },
         ],
       },
@@ -218,9 +228,18 @@ describe('production image editing', () => {
     expect(editor.state.doc.child(0).attrs.caption).toBe('Edited caption');
     handle?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
     expect(editor.state.doc.child(0).attrs.width).toBe('310px');
-    figure?.querySelector('img')?.dispatchEvent(new Event('error'));
+    const image = figure?.querySelector('img');
+    image?.dispatchEvent(new Event('error'));
+    expect(image?.hasAttribute('srcset')).toBe(false);
+    expect(image?.getAttribute('src')).toBe('https://cdn.example.com/view.png');
+    expect(figure?.dataset.fountainImageError).toBeUndefined();
+    image?.dispatchEvent(new Event('error'));
     expect(figure?.dataset.fountainImageError).toBe('true');
     expect(figure?.querySelector('[role="status"]')?.hasAttribute('hidden')).toBe(false);
+    figure?.querySelector<HTMLButtonElement>('button')?.click();
+    expect(image?.getAttribute('srcset')).toBe('https://cdn.example.com/view-small.png 480w');
+    expect(image?.getAttribute('sizes')).toBe('300px');
+    expect(figure?.dataset.fountainImageError).toBeUndefined();
     view.destroy();
 
     const readonly = createEditor({

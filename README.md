@@ -705,6 +705,31 @@ view.destroy();
 editor.destroy();
 ```
 
+### Huge documents
+
+Viewport rendering is opt-in and keeps the complete model, transactions,
+history, collaboration, and search independent of the DOM window:
+
+```ts
+const scrollHost = document.querySelector<HTMLElement>('#editor-scroll')!
+const view = new EditorView(scrollHost, editor, {
+  virtualization: {
+    scrollContainer: scrollHost,
+    minimumBlockCount: 500,
+    estimatedBlockHeight: 48,
+    overscanPx: 1_000,
+  },
+})
+```
+
+Selections pin distant blocks; wide copy/cut and printing temporarily mount the
+required complete content. Call `view.setVirtualizationSuspended(true)` when a
+screen-reader, export, pagination, or host capture mode needs every block in the
+DOM simultaneously. The current boundary virtualizes top-level blocks, not rows
+inside one enormous table or another single block. See the
+[huge-document contract](docs/VIRTUALIZATION.md) for lifecycle, accessibility,
+measurement, and cross-browser evidence.
+
 ### Production images
 
 Block images support editable captions, alternative text, titles, left/centre/
@@ -1224,6 +1249,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 
 - [Architecture and internals](docs/ARCHITECTURE.md)
 - [Performance, memory, reconciliation, and bundle budgets](docs/PERFORMANCE.md)
+- [Huge-document virtualization, copy/print, and accessibility](docs/VIRTUALIZATION.md)
 - [Mentions, emoji, typography, and character count](docs/DOCUMENT_UTILITIES.md)
 - [Slash commands and runtime registrations](docs/SLASH_COMMANDS.md)
 - [Bubble and floating menus](docs/CONTEXTUAL_MENUS.md)

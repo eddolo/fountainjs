@@ -30,6 +30,8 @@ export class ImageNodeView implements NodeViewLike {
   private startX = 0;
   private startWidth = 0;
   private previewWidth = 0;
+  private sourceKey = '';
+  private usingFallbackSource = false;
 
   constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
     this.current = node;
@@ -86,7 +88,12 @@ export class ImageNodeView implements NodeViewLike {
   }
 
   ignoreMutation(mutation: MutationRecord): boolean {
-    if (this.caption.contains(mutation.target) || this.controls.contains(mutation.target) || this.error.contains(mutation.target)) return true;
+    if (
+      mutation.target === this.image
+      || this.caption.contains(mutation.target)
+      || this.controls.contains(mutation.target)
+      || this.error.contains(mutation.target)
+    ) return true;
     return mutation.target === this.dom
       && ['style', 'data-fountain-image-selected', 'data-fountain-image-resizing', 'data-fountain-image-error']
         .includes(mutation.attributeName ?? '');
@@ -113,7 +120,6 @@ export class ImageNodeView implements NodeViewLike {
     this.dom.style.width = String(attrs.width);
     this.dom.style.maxWidth = '100%';
     this.dom.setAttribute('aria-label', imageText(attrs));
-    this.image.src = String(attrs.src);
     this.image.alt = String(attrs.alt);
     this.image.title = String(attrs.title);
     this.image.loading = attrs.loading === 'eager' ? 'eager' : 'lazy';
@@ -124,10 +130,12 @@ export class ImageNodeView implements NodeViewLike {
     this.image.style.height = String(attrs.height);
     const srcset = String(attrs.srcset || '');
     const sizes = String(attrs.sizes || '');
-    if (srcset) this.image.srcset = srcset;
-    else this.image.removeAttribute('srcset');
-    if (sizes) this.image.sizes = sizes;
-    else this.image.removeAttribute('sizes');
+    const sourceKey = `${String(attrs.src)}\u0000${srcset}\u0000${sizes}`;
+    if (sourceKey !== this.sourceKey) {
+      this.sourceKey = sourceKey;
+      this.usingFallbackSource = false;
+    }
+    this.applySource();
     const value = String(attrs.caption || '');
     if (document.activeElement !== this.captionInput) this.captionInput.value = value;
     this.captionText.textContent = value;
@@ -280,13 +288,35 @@ export class ImageNodeView implements NodeViewLike {
   };
 
   private onError = (): void => {
+    if (!this.usingFallbackSource && this.image.hasAttribute('srcset')) {
+      this.usingFallbackSource = true;
+      this.image.removeAttribute('src');
+      this.image.removeAttribute('srcset');
+      this.image.removeAttribute('sizes');
+      this.image.src = String(this.current.attrs.src);
+      return;
+    }
     this.dom.dataset.fountainImageError = 'true';
     this.error.hidden = false;
   };
 
   private retryImage = (): void => {
+    delete this.dom.dataset.fountainImageError;
     this.error.hidden = true;
-    this.image.src = '';
-    this.image.src = String(this.current.attrs.src);
+    this.usingFallbackSource = false;
+    this.image.removeAttribute('src');
+    this.applySource();
   };
+
+  private applySource(): void {
+    const attrs = this.current.attrs;
+    const srcset = String(attrs.srcset || '');
+    const sizes = String(attrs.sizes || '');
+    if (!this.usingFallbackSource && srcset) this.image.srcset = srcset;
+    else this.image.removeAttribute('srcset');
+    if (!this.usingFallbackSource && sizes) this.image.sizes = sizes;
+    else this.image.removeAttribute('sizes');
+    const src = String(attrs.src);
+    if (this.image.getAttribute('src') !== src) this.image.src = src;
+  }
 }

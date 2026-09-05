@@ -1,5 +1,7 @@
 import {
+  CellSelection,
   DecorationSet,
+  GapSelection,
   NodeSelection,
   Selection,
   nodeRangeAtPath,
@@ -23,6 +25,7 @@ import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
 import {
   reconcileDocument,
   renderDocument,
+  renderVirtualDocument,
   type MountedDocumentNode,
   type MountedNodeView,
 } from './dom-renderer';
@@ -30,6 +33,19 @@ import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import { SelectionHandler } from './selection-handler';
+import {
+  VirtualBlockLayout,
+  type VirtualBlockLayoutOptions,
+  type VirtualBlockPlan,
+  type VirtualBlockRange,
+} from './virtual-layout';
+
+export interface EditorViewVirtualizationOptions extends VirtualBlockLayoutOptions {
+  /** Do not virtualize documents below this top-level block count. Defaults to 250. */
+  minimumBlockCount?: number;
+  /** Scroll viewport that owns this editor. Defaults to the editor window. */
+  scrollContainer?: HTMLElement | Window;
+}
 
 export interface EditorViewOptions {
   ariaLabel?: string;
@@ -41,6 +57,8 @@ export interface EditorViewOptions {
   maxInlineImageBytes?: number;
   /** Enables framework-neutral drag, keyboard, and touch block controls. */
   blockHandles?: boolean | BlockHandleOptions;
+  /** Opt-in viewport rendering for very large documents. */
+  virtualization?: boolean | EditorViewVirtualizationOptions;
   onError?: (error: unknown) => void;
 }
 
@@ -88,6 +106,17 @@ export class EditorView {
   private mutationObserver?: MutationObserver;
   private decorations = DecorationSet.empty;
   private destroyed = false;
+  private readonly virtualLayout?: VirtualBlockLayout;
+  private readonly virtualMinimumBlockCount: number = 250;
+  private readonly virtualScrollTarget?: HTMLElement | Window;
+  private virtualPlanKey?: string;
+  private virtualForcedRange?: VirtualBlockRange;
+  private virtualizationSuspended = false;
+  private virtualRenderFrame?: number;
+  private virtualMeasureFrame?: number;
+  private virtualRestoreTimer?: number;
+  private virtualPrintResume = false;
+  private virtualResizeObserver?: ResizeObserver;
 
   constructor(public readonly mount: HTMLElement, public readonly editor: Editor, options: EditorViewOptions = {}) {
     this.dom = document.createElement('div');
@@ -102,6 +131,16 @@ export class EditorView {
     Object.entries(options.attributes ?? {}).forEach(([name, value]) => {
       if (!/^on/i.test(name)) this.dom.setAttribute(name, value);
     });
+    if (options.virtualization) {
+      const virtualization = options.virtualization === true ? {} : options.virtualization;
+      const minimum = virtualization.minimumBlockCount ?? 250;
+      if (!Number.isSafeInteger(minimum) || minimum < 0) {
+        throw new RangeError('virtualization.minimumBlockCount must be a non-negative integer.');
+      }
+      this.virtualMinimumBlockCount = minimum;
+      this.virtualScrollTarget = virtualization.scrollContainer ?? this.dom.ownerDocument.defaultView ?? undefined;
+      this.virtualLayout = new VirtualBlockLayout(virtualization);
+    }
     mount.appendChild(this.dom);
     this.blockHandles = options.blockHandles
       ? new BlockHandleManager(mount, this.dom, editor, options.blockHandles === true ? {} : options.blockHandles)
@@ -116,12 +155,14 @@ export class EditorView {
       onError: options.onError,
       shouldStopEvent: this.shouldStopNodeViewEvent,
       blockHandles: this.blockHandles,
+      prepareClipboard: this.prepareVirtualClipboard,
     });
     if (typeof MutationObserver !== 'undefined') {
       this.mutationObserver = new MutationObserver(this.onMutations);
       this.observeMutations();
     }
     this.unsubscribe = editor.subscribe(this.onStateChange);
+    this.startVirtualization();
     this.syncNodeViewSelection(editor.state.selection);
     queueMicrotask(() => this.selections.sync(editor.state.selection, false));
   }
@@ -131,6 +172,21 @@ export class EditorView {
     this.moveSelection(position);
     this.dom.focus();
     this.selections.sync(this.editor.state.selection);
+  }
+
+  /** True while the view is currently rendering a reduced viewport window. */
+  get virtualized(): boolean { return this.dom.dataset.fountainVirtualized === 'true'; }
+
+  /**
+   * Temporarily mount the complete document for accessibility, capture, or a
+   * host-owned operation. Calling this does not change editor state.
+   */
+  setVirtualizationSuspended(suspended: boolean): void {
+    if (!this.virtualLayout || this.virtualizationSuspended === suspended) return;
+    this.virtualizationSuspended = suspended;
+    this.render(this.editor.state.doc, this.decorations);
+    this.syncNodeViewSelection(this.editor.state.selection);
+    queueMicrotask(() => this.selections.sync(this.editor.state.selection, this.selections.ownsDOMSelection()));
   }
 
   /** Adds a view-aware `focus()` command to any framework-neutral registry. */
@@ -165,6 +221,7 @@ export class EditorView {
     if (this.destroyed) return;
     this.destroyed = true;
     this.mutationObserver?.disconnect();
+    this.stopVirtualization();
     this.unsubscribe();
     this.input.destroy();
     this.selections.destroy();
@@ -180,14 +237,23 @@ export class EditorView {
       || this.dom === document.activeElement
       || (transaction.selectionSet && transaction.getMeta('fountain$collaborationRemote') !== true);
     const decorations = this.collectDecorations(state);
-    if (transaction.docChanged || !decorations.eq(this.decorations)) this.render(state.doc, decorations, transaction);
+    if (transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout)) || !decorations.eq(this.decorations)) {
+      this.render(state.doc, decorations, transaction);
+    }
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
     queueMicrotask(() => this.selections.sync(state.selection, ownsDOMSelection));
   };
 
-  private render(document: Node, decorations: DecorationSet, transaction?: Transaction, allowReuse = true): void {
+  private render(
+    document: Node,
+    decorations: DecorationSet,
+    transaction?: Transaction,
+    allowReuse = true,
+    viewportOnly = false,
+  ): void {
+    const wasVirtualized = this.virtualized;
     const previous = this.nodeViews;
     const activeElement = this.dom.ownerDocument.activeElement;
     const focusedNodeView = activeElement instanceof HTMLElement
@@ -200,25 +266,54 @@ export class EditorView {
     this.mutationObserver?.disconnect();
     const mounted: MountedNodeView[] = [];
     const context = { view: this, nodeViews: mounted, reusableNodeViews, decorations };
+    const virtualPlan = this.virtualPlan(document);
+    const virtualPlanKey = virtualPlan
+      ? `${virtualPlan.totalHeight}:${virtualPlan.ranges.map(({ from, to }) => `${from}-${to}`).join(',')}`
+      : undefined;
+    if (viewportOnly && virtualPlanKey === this.virtualPlanKey) {
+      this.observeMutations();
+      return;
+    }
+    this.virtualPlanKey = virtualPlanKey;
+    if (virtualPlan) this.dom.dataset.fountainVirtualized = 'true';
+    else delete this.dom.dataset.fountainVirtualized;
     const canReconcile = allowReuse
+      && !wasVirtualized
       && this.documentNodes.length > 0
       && this.decorations.decorations.length === 0
       && decorations.decorations.length === 0;
-    if (canReconcile) {
-      const mappedNodeViewsByTopLevel = new Map<number, MountedNodeView[]>();
-      reusableNodeViews.forEach((entry, key) => {
-        const path = key.split('.').map(Number);
-        const index = path[0];
-        if (index === undefined) return;
-        const mapped = { ...entry, path: Object.freeze(path) };
-        const entries = mappedNodeViewsByTopLevel.get(index) ?? [];
-        entries.push(mapped);
-        mappedNodeViewsByTopLevel.set(index, entries);
-      });
+    const mappedNodeViewsByTopLevel = new Map<number, MountedNodeView[]>();
+    reusableNodeViews.forEach((entry, key) => {
+      const path = key.split('.').map(Number);
+      const index = path[0];
+      if (index === undefined) return;
+      const mapped = { ...entry, path: Object.freeze(path) };
+      const entries = mappedNodeViewsByTopLevel.get(index) ?? [];
+      entries.push(mapped);
+      mappedNodeViewsByTopLevel.set(index, entries);
+    });
+    const retainReusedNodeViews = (index: number): void => {
+      const mapped = mappedNodeViewsByTopLevel.get(index) ?? [];
+      mapped.forEach((entry) => { entry.pathReference.current = [...entry.path]; });
+      mounted.push(...mapped);
+    };
+    if (virtualPlan && this.virtualLayout) {
+      const canReuseVirtualDOM = allowReuse && this.documentNodes.length > 0 && (
+        (this.decorations.decorations.length === 0 && decorations.decorations.length === 0)
+        || (!transaction?.docChanged && decorations.eq(this.decorations))
+      );
+      this.documentNodes = renderVirtualDocument(
+        this.dom,
+        document,
+        virtualPlan,
+        this.virtualLayout,
+        canReuseVirtualDOM ? this.documentNodes : [],
+        context,
+        retainReusedNodeViews,
+      );
+    } else if (canReconcile) {
       this.documentNodes = reconcileDocument(this.dom, document, this.documentNodes, context, (index) => {
-        const mapped = mappedNodeViewsByTopLevel.get(index) ?? [];
-        mapped.forEach((entry) => { entry.pathReference.current = [...entry.path]; });
-        mounted.push(...mapped);
+        retainReusedNodeViews(index);
       });
     } else {
       this.documentNodes = renderDocument(this.dom, document, context);
@@ -244,9 +339,216 @@ export class EditorView {
       catch { activeElement.focus(); }
     }
     this.blockHandles?.refresh(document, this.editor.state.selection);
+    if (virtualPlan) this.queueVirtualMeasurement();
     this.mutationObserver?.takeRecords();
     this.observeMutations();
   }
+
+  private virtualPlan(documentNode: Node): VirtualBlockPlan | undefined {
+    if (!this.virtualLayout || this.virtualizationSuspended || documentNode.childCount < this.virtualMinimumBlockCount) {
+      return undefined;
+    }
+    const priorViewport = this.virtualViewport();
+    const priorAnchorIndex = this.virtualLayout.blockCount
+      ? this.virtualLayout.indexAt(priorViewport.offset)
+      : -1;
+    const priorAnchor = priorAnchorIndex >= 0 ? this.virtualLayout.nodeAt(priorAnchorIndex) : undefined;
+    const priorAnchorOffset = priorAnchorIndex >= 0 ? this.virtualLayout.offsetAt(priorAnchorIndex) : 0;
+    const documentChanged = this.virtualLayout.sync(documentNode);
+    if (documentChanged && priorAnchor) {
+      const nextAnchorIndex = this.virtualLayout.indexOf(priorAnchor);
+      if (nextAnchorIndex >= 0) {
+        this.adjustVirtualScroll(this.virtualLayout.offsetAt(nextAnchorIndex) - priorAnchorOffset);
+      }
+    }
+    const selection = this.editor.state.selection;
+    const bounds = this.virtualSelectionBounds(selection, documentNode.childCount);
+    const pinned = [bounds.from, Math.max(bounds.from, bounds.to - 1)];
+    const viewport = this.virtualViewport();
+    const planned = this.virtualLayout.plan(viewport.offset, viewport.height, pinned);
+    if (!this.virtualForcedRange) return planned;
+
+    const forced = {
+      from: Math.max(0, Math.min(documentNode.childCount, this.virtualForcedRange.from)),
+      to: Math.max(0, Math.min(documentNode.childCount, this.virtualForcedRange.to)),
+    };
+    const ranges = [...planned.ranges, forced]
+      .filter((range) => range.to > range.from)
+      .sort((left, right) => left.from - right.from || left.to - right.to)
+      .reduce<VirtualBlockRange[]>((merged, range) => {
+        const prior = merged.at(-1);
+        if (!prior || range.from > prior.to) merged.push(Object.freeze({ ...range }));
+        else merged[merged.length - 1] = Object.freeze({ from: prior.from, to: Math.max(prior.to, range.to) });
+        return merged;
+      }, []);
+    return Object.freeze({
+      ranges: Object.freeze(ranges),
+      totalHeight: planned.totalHeight,
+      mountedCount: ranges.reduce((count, range) => count + range.to - range.from, 0),
+    });
+  }
+
+  private virtualViewport(): { offset: number; height: number } {
+    const layout = this.virtualLayout;
+    const target = this.virtualScrollTarget;
+    if (!layout || !target) return { offset: 0, height: 0 };
+    const rootRect = this.dom.getBoundingClientRect();
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    if (target === ownerWindow) {
+      const offset = Math.max(0, -rootRect.top);
+      const available = Math.max(0, (ownerWindow?.innerHeight ?? 0) - Math.max(0, rootRect.top));
+      return { offset, height: Math.min(Math.max(0, layout.totalHeight - offset), available) };
+    }
+    const container = target as HTMLElement;
+    const containerRect = container.getBoundingClientRect();
+    const visibleTop = Math.max(containerRect.top, rootRect.top);
+    const documentBottom = rootRect.top + layout.totalHeight;
+    return {
+      offset: Math.max(0, visibleTop - rootRect.top),
+      height: Math.max(0, Math.min(containerRect.bottom, documentBottom) - visibleTop),
+    };
+  }
+
+  private startVirtualization(): void {
+    if (!this.virtualLayout || !this.virtualScrollTarget) return;
+    this.virtualScrollTarget.addEventListener('scroll', this.onVirtualViewportChange, { passive: true });
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    ownerWindow?.addEventListener('resize', this.onVirtualViewportChange, { passive: true });
+    ownerWindow?.addEventListener('beforeprint', this.onVirtualBeforePrint);
+    ownerWindow?.addEventListener('afterprint', this.onVirtualAfterPrint);
+    if (typeof ResizeObserver !== 'undefined') {
+      this.virtualResizeObserver = new ResizeObserver(this.onVirtualViewportChange);
+      this.virtualResizeObserver.observe(this.dom);
+    }
+    this.queueVirtualMeasurement();
+  }
+
+  private stopVirtualization(): void {
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    this.virtualScrollTarget?.removeEventListener('scroll', this.onVirtualViewportChange);
+    ownerWindow?.removeEventListener('resize', this.onVirtualViewportChange);
+    ownerWindow?.removeEventListener('beforeprint', this.onVirtualBeforePrint);
+    ownerWindow?.removeEventListener('afterprint', this.onVirtualAfterPrint);
+    this.virtualResizeObserver?.disconnect();
+    if (this.virtualRenderFrame !== undefined) ownerWindow?.cancelAnimationFrame(this.virtualRenderFrame);
+    if (this.virtualMeasureFrame !== undefined) ownerWindow?.cancelAnimationFrame(this.virtualMeasureFrame);
+    if (this.virtualRestoreTimer !== undefined) ownerWindow?.clearTimeout(this.virtualRestoreTimer);
+    this.virtualRenderFrame = undefined;
+    this.virtualMeasureFrame = undefined;
+    this.virtualRestoreTimer = undefined;
+  }
+
+  private onVirtualViewportChange = (): void => {
+    if (!this.virtualized || this.virtualRenderFrame !== undefined) return;
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    this.virtualRenderFrame = ownerWindow?.requestAnimationFrame(() => {
+      this.virtualRenderFrame = undefined;
+      if (this.destroyed) return;
+      this.render(this.editor.state.doc, this.decorations, undefined, true, true);
+      this.syncNodeViewSelection(this.editor.state.selection);
+      queueMicrotask(() => this.selections.sync(this.editor.state.selection, this.selections.ownsDOMSelection()));
+    });
+  };
+
+  private queueVirtualMeasurement(): void {
+    if (!this.virtualized || this.virtualMeasureFrame !== undefined) return;
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    this.virtualMeasureFrame = ownerWindow?.requestAnimationFrame(() => {
+      this.virtualMeasureFrame = undefined;
+      this.measureVirtualBlocks();
+    });
+  }
+
+  private measureVirtualBlocks(): void {
+    if (!this.virtualized || !this.virtualLayout) return;
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    const viewport = this.virtualViewport();
+    const anchor = this.virtualLayout.indexAt(viewport.offset);
+    const anchorBefore = this.virtualLayout.offsetAt(anchor);
+    const measurements = this.documentNodes.flatMap(({ dom, index }) => {
+      if (!(dom instanceof HTMLElement) || index === undefined) return [];
+      const bounds = dom.getBoundingClientRect();
+      if (bounds.height <= 0) return [];
+      const style = ownerWindow?.getComputedStyle(dom);
+      const marginBefore = Number.parseFloat(style?.marginTop ?? '0') || 0;
+      const marginAfter = Number.parseFloat(style?.marginBottom ?? '0') || 0;
+      return [{ index, height: bounds.height + marginBefore + marginAfter }];
+    });
+    if (!this.virtualLayout.measure(measurements)) return;
+    const anchorDelta = this.virtualLayout.offsetAt(anchor) - anchorBefore;
+    if (Math.abs(anchorDelta) >= 0.5) this.adjustVirtualScroll(anchorDelta);
+    this.onVirtualViewportChange();
+  }
+
+  private adjustVirtualScroll(delta: number): void {
+    if (!Number.isFinite(delta) || Math.abs(delta) < 0.5) return;
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    if (this.virtualScrollTarget === ownerWindow) {
+      try { ownerWindow?.scrollBy({ top: delta, behavior: 'auto' }); } catch { /* Unsupported in tests. */ }
+    } else if (this.virtualScrollTarget) {
+      (this.virtualScrollTarget as HTMLElement).scrollTop += delta;
+    }
+  }
+
+  private prepareVirtualClipboard = (): void => {
+    if (!this.virtualized) return;
+    const selection = this.editor.state.selection;
+    const { from, to } = this.virtualSelectionBounds(selection, this.editor.state.doc.childCount);
+    if (to <= from) return;
+    const mounted = new Set(this.documentNodes.flatMap(({ index }) => index === undefined ? [] : [index]));
+    let complete = true;
+    for (let index = from; index < to; index += 1) {
+      if (!mounted.has(index)) { complete = false; break; }
+    }
+    if (complete) return;
+    this.virtualForcedRange = Object.freeze({ from, to });
+    this.render(this.editor.state.doc, this.decorations);
+    this.selections.sync(selection);
+    const ownerWindow = this.dom.ownerDocument.defaultView;
+    if (this.virtualRestoreTimer !== undefined) ownerWindow?.clearTimeout(this.virtualRestoreTimer);
+    this.virtualRestoreTimer = ownerWindow?.setTimeout(() => {
+      this.virtualRestoreTimer = undefined;
+      this.virtualForcedRange = undefined;
+      if (this.destroyed) return;
+      this.render(this.editor.state.doc, this.decorations);
+      this.syncNodeViewSelection(this.editor.state.selection);
+      queueMicrotask(() => this.selections.sync(this.editor.state.selection, this.selections.ownsDOMSelection()));
+    }, 0);
+  };
+
+  private virtualSelectionBounds(selection: AnySelection, blockCount: number): VirtualBlockRange {
+    if (selection instanceof NodeSelection) {
+      const index = selection.nodePath[0] ?? 0;
+      return Object.freeze({ from: index, to: Math.min(blockCount, index + 1) });
+    }
+    if (selection instanceof CellSelection) {
+      const indexes = selection.cellPaths.flatMap((path) => path[0] === undefined ? [] : [path[0]]);
+      const from = indexes.length ? Math.min(...indexes) : 0;
+      const to = (indexes.length ? Math.max(...indexes) : from) + 1;
+      return Object.freeze({ from, to: Math.min(blockCount, to) });
+    }
+    if (selection instanceof GapSelection && selection.parentPath.length === 0) {
+      return Object.freeze({
+        from: Math.max(0, Math.min(blockCount - 1, selection.index - 1)),
+        to: Math.min(blockCount, selection.index + 1),
+      });
+    }
+    const from = selection.path[0] ?? 0;
+    const to = Math.min(blockCount, (selection.endPath[0] ?? from) + 1);
+    return Object.freeze({ from, to });
+  }
+
+  private onVirtualBeforePrint = (): void => {
+    if (!this.virtualized) return;
+    this.virtualPrintResume = true;
+    this.setVirtualizationSuspended(true);
+  };
+
+  private onVirtualAfterPrint = (): void => {
+    if (!this.virtualPrintResume) return;
+    this.virtualPrintResume = false;
+    this.setVirtualizationSuspended(false);
+  };
 
   private collectDecorations(state: EditorState): DecorationSet {
     const decorations: Decoration[] = [];

@@ -339,6 +339,17 @@ Component forward the same `EditorView` option rather than reimplementing it.
 
 Rendered text is wrapped with `data-fountain-text-path`; block DOM carries node type and path attributes. These anchors let selection synchronization survive marks and nested DOM wrappers. The document—not browser-generated HTML—still decides the resulting state.
 
+The optional virtual view keeps this same DOM contract for mounted top-level
+blocks. `VirtualBlockLayout` is a renderer-neutral prefix index over full-model
+positions and measured heights. The DOM renderer replaces unmounted ranges with
+inert height spacers, but resolves node paths, widgets, and decorations from
+complete-model positions. Selection endpoints are additional mounted islands;
+wide clipboard operations and print temporarily request complete ranges.
+Measurements follow immutable node identities through structural changes, and
+the scroll owner is adjusted against the surviving first-visible identity.
+NodeViews outside every island receive normal destruction rather than being
+silently retained. See [VIRTUALIZATION.md](VIRTUALIZATION.md).
+
 The optional clipboard-history plugin listens at the editor copy/cut boundary,
 captures the model selection, and schedules its state-only transaction after
 the native clipboard event completes so a rerender cannot disturb native copy.

@@ -1217,7 +1217,17 @@ return its own transaction or document for more specialized structures.
 
 ## DOM view
 
-`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, `virtualization`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+
+`virtualization: true` uses the window viewport and starts at 250 top-level
+blocks. `EditorViewVirtualizationOptions` configures `scrollContainer`,
+`minimumBlockCount`, `estimatedBlockHeight`, `overscanPx`, and
+`pinnedOverscanBlocks`. `view.virtualized` reports whether the current document
+is windowed. `view.setVirtualizationSuspended(true)` mounts the complete
+document for continuous accessibility, capture, export, or another host-owned
+operation; `false` restores the viewport. Copy/cut selection ranges and print
+events use temporary complete rendering automatically. See
+[VIRTUALIZATION.md](VIRTUALIZATION.md).
 
 Set `blockHandles: true` for the supplied contextual drag/move toolbar, or pass
 `BlockHandleOptions` with an `include(context)` candidate policy and label

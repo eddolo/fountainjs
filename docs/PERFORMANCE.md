@@ -108,6 +108,13 @@ increase.
   directly into Fountain steps, so a remote keystroke does not rebuild or parse
   the document JSON. Structural or untrusted snapshot updates deliberately use
   the fully validated JSON boundary.
+- Opt-in top-level virtualization keeps only the viewport, overscan, and
+  selection islands mounted. Its renderer-neutral prefix index reuses measured
+  heights by immutable node identity and preserves complete model positions for
+  selection and decorations. A 100,000-block real-browser gate requires fewer
+  than 100 mounted top-level blocks through scrolling, distant IME input, and
+  copy restoration in Chromium, Firefox, WebKit, mobile Chromium, and mobile
+  WebKit. See [VIRTUALIZATION.md](VIRTUALIZATION.md).
 
 ## Interpretation and limits
 
@@ -119,9 +126,11 @@ and intentionally remain proportional to document size.
 The current array-backed top-level document also makes a leaf update linear in
 the number of top-level blocks because the changed ancestry is copied. The gate
 proves bounded near-linear behavior; it does not claim logarithmic editing.
-Decorated documents currently use a complete render pass because an earlier
-edit can shift absolute decoration positions. Large-document virtualization,
-physical-device input latency, multi-hour browser soak tests, and independent
-production traces remain useful maturity work. These limits are recorded so the
+Decorated non-virtual documents currently use a complete render pass because an
+earlier edit can shift absolute decoration positions. Virtual views limit that
+work to mounted windows but still recompute their absolute full-model positions.
+Virtualization is top-level only; one enormous mounted node remains the host or
+NodeView's responsibility. Physical-device input latency, multi-hour browser
+soak tests, and independent production traces remain useful maturity work. These limits are recorded so the
 benchmark is evidence, not a claim that FountainJS has already accumulated
 ProseMirror's decade of production tuning.

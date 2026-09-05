@@ -3931,3 +3931,57 @@ test('keeps a 1,000-block input update local and paints within budget', async ({
   expect(metrics.inputToPaint).toBeLessThan(250);
   expect(metrics.remainingDOM).toBe(0);
 });
+
+test('virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy', async ({ page }) => {
+  test.setTimeout(60_000);
+  const metrics = await page.evaluate(() => (globalThis as typeof globalThis & {
+    fountainBrowserTest: { virtualizationBudget(blockCount: number): Promise<{
+      blockCount: number;
+      createDurationMs: number;
+      initialMounted: number;
+      scrolledMounted: number;
+      scrolledPathMinimum: number;
+      scrolledPathMaximum: number;
+      anchorInsertDelta: number;
+      anchorRestoreDelta: number;
+      selectedMounted: boolean;
+      composedText: string;
+      copyMiddleBefore: boolean;
+      copyMiddleDuring: boolean;
+      copyRichMiddleDuring: boolean;
+      copySelectionComplete: boolean;
+      copyMiddleAfter: boolean;
+      finalMounted: number;
+      totalHeight: number;
+      remainingDOM: number;
+      printMounted: number;
+      printRestored: boolean;
+    }> };
+  }).fountainBrowserTest.virtualizationBudget(100_000));
+
+  expect(metrics).toMatchObject({
+    blockCount: 100_000,
+    selectedMounted: true,
+    copyMiddleBefore: false,
+    copyMiddleDuring: true,
+    copyRichMiddleDuring: true,
+    copySelectionComplete: true,
+    copyMiddleAfter: false,
+    remainingDOM: 0,
+    printMounted: 300,
+    printRestored: true,
+  });
+  expect(metrics.initialMounted).toBeLessThan(100);
+  expect(metrics.scrolledMounted).toBeLessThan(100);
+  expect(metrics.finalMounted).toBeLessThan(100);
+  // The initial caret remains mounted as a pinned island while the viewport
+  // itself advances tens of thousands of blocks.
+  expect(metrics.scrolledPathMinimum).toBe(0);
+  expect(metrics.scrolledPathMaximum).toBeGreaterThan(1_000);
+  expect(metrics.scrolledPathMaximum).toBeLessThan(99_000);
+  expect(metrics.anchorInsertDelta).toBeGreaterThan(20);
+  expect(Math.abs(metrics.anchorRestoreDelta)).toBeLessThan(1);
+  expect(metrics.composedText).toBe('東京Virtual browser block 75000');
+  expect(metrics.totalHeight).toBeGreaterThan(1_000_000);
+  expect(metrics.createDurationMs).toBeLessThan(5_000);
+});

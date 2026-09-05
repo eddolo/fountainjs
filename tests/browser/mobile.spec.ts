@@ -443,3 +443,37 @@ test('exposes touch-sized block movement controls without page overflow', async 
   await expect(controls).toHaveAttribute('data-fountain-block-path', '1');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
+
+test('keeps a 100,000-block virtual document bounded on mobile engines', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.goto('/browser-tests.html');
+  const metrics = await page.evaluate(() => (globalThis as typeof globalThis & {
+    fountainBrowserTest: { virtualizationBudget(blockCount: number): Promise<{
+      initialMounted: number;
+      scrolledMounted: number;
+      selectedMounted: boolean;
+      composedText: string;
+      copyMiddleDuring: boolean;
+      copyRichMiddleDuring: boolean;
+      copySelectionComplete: boolean;
+      copyMiddleAfter: boolean;
+      finalMounted: number;
+      remainingDOM: number;
+      printMounted: number;
+      printRestored: boolean;
+    }> };
+  }).fountainBrowserTest.virtualizationBudget(100_000));
+
+  expect(metrics.initialMounted).toBeLessThan(100);
+  expect(metrics.scrolledMounted).toBeLessThan(100);
+  expect(metrics.finalMounted).toBeLessThan(100);
+  expect(metrics.selectedMounted).toBe(true);
+  expect(metrics.composedText).toBe('東京Virtual browser block 75000');
+  expect(metrics.copyMiddleDuring).toBe(true);
+  expect(metrics.copyRichMiddleDuring).toBe(true);
+  expect(metrics.copySelectionComplete).toBe(true);
+  expect(metrics.copyMiddleAfter).toBe(false);
+  expect(metrics.remainingDOM).toBe(0);
+  expect(metrics.printMounted).toBe(300);
+  expect(metrics.printRestored).toBe(true);
+});
