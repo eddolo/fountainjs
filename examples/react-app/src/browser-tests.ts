@@ -52,12 +52,29 @@ const browserFixture = new URLSearchParams(globalThis.location.search).get('fixt
 const splitParagraphText = Array.from({ length: 18 }, (_, index) => (
   `Sentence ${index + 1} proves one canonical paragraph can continue across editable page boundaries. `
 )).join('');
+const splitListContent = {
+  type: 'doc',
+  content: [{
+    type: 'ordered_list',
+    attrs: { start: 4 },
+    content: Array.from({ length: 16 }, (_, index) => ({
+      type: 'list_item',
+      content: [{
+        type: 'paragraph',
+        content: [{ type: 'text', text: `Canonical list item ${index + 4} remains editable and correctly numbered.` }],
+      }],
+    })),
+  }],
+};
 const splitPageIntegrationsFixture = browserFixture === 'split-page-integrations';
-const pageIntegrationsFixture = browserFixture === 'page-integrations' || splitPageIntegrationsFixture;
+const splitListPageIntegrationsFixture = browserFixture === 'split-list-page-integrations';
+const pageIntegrationsFixture = browserFixture === 'page-integrations'
+  || splitPageIntegrationsFixture
+  || splitListPageIntegrationsFixture;
 const automaticPageContent = splitPageIntegrationsFixture ? {
   type: 'doc',
   content: [{ type: 'paragraph', content: [{ type: 'text', text: splitParagraphText }] }],
-} : {
+} : splitListPageIntegrationsFixture ? splitListContent : {
   type: 'doc',
   content: Array.from({ length: 5 }, (_, index) => ({
     type: 'paragraph',
@@ -243,7 +260,9 @@ const pageIntegrationGeometry = createPageGeometry({
   headerHeight: 20,
   footerHeight: 20,
 });
-const pageIntegrationMeasurement = splitPageIntegrationsFixture ? {} : { lineFragmentNodeTypes: [] };
+const pageIntegrationMeasurement = splitPageIntegrationsFixture || splitListPageIntegrationsFixture
+  ? {}
+  : { lineFragmentNodeTypes: [] };
 const leftPageController = pageIntegrationsFixture
   ? createDOMEditablePageController(
       leftCollaborationView.dom,
@@ -301,7 +320,8 @@ if (!pagesMount) throw new Error('Pages fixture failed to mount.');
 const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page intent contract editor' });
 
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
-const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditablePagesFixture)
+const splitEditableListFixture = browserFixture === 'editable-list-pages';
+const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditablePagesFixture || splitEditableListFixture)
   ? (() => {
       const pageEditor = createEditor({
         schema: pagesKit.schema,
@@ -315,7 +335,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditab
               text: splitParagraphText,
             }],
           }],
-        } : {
+        } : splitEditableListFixture ? splitListContent : {
           type: 'doc',
           content: [
             { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
@@ -328,7 +348,11 @@ const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditab
       const mount = document.querySelector<HTMLElement>('#editable-pages-editor');
       if (!mount) throw new Error('Editable pages fixture failed to mount.');
       const view = new EditorView(mount, pageEditor, {
-        ariaLabel: splitEditablePagesFixture ? 'Split paragraph page editor' : 'Editable page canvas editor',
+        ariaLabel: splitEditablePagesFixture
+          ? 'Split paragraph page editor'
+          : splitEditableListFixture
+            ? 'Split list page editor'
+            : 'Editable page canvas editor',
       });
       const geometry = createPageGeometry({
         size: { width: 420, height: 300 },
@@ -340,7 +364,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditab
         view.dom,
         () => pageEditor.state.doc,
         geometry,
-        { measurement: splitEditablePagesFixture ? {} : { lineFragmentNodeTypes: [] } },
+        { measurement: splitEditablePagesFixture || splitEditableListFixture ? {} : { lineFragmentNodeTypes: [] } },
       );
       return { editor: pageEditor, view, controller, commands: view.commandManager(pagesKit.commands) };
     })()

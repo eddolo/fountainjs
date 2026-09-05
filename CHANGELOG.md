@@ -42,10 +42,14 @@
   Yjs convergence across automatic whole-block boundaries; plus selection-safe,
   accessibility-hidden paragraph continuation gaps at measured line boundaries
   with stable cleanup, exact page-body alignment, responsive fallback, IME,
-  history, tracked-change decisions, and bidirectional Yjs coverage. It still
-  fails closed before cloning unsupported split content; plus an honest staged pagination contract. Split-list/table editing,
-  editable repeated furniture/footnotes, and broader adversarial/cross-engine
-  print fidelity remain active work rather than claimed capabilities.
+  history, tracked-change decisions, and bidirectional Yjs coverage; plus
+  canonical list-item continuation spacing that preserves ordered starts,
+  selection, IME, history, tracked decisions, Yjs convergence, and exact
+  page-body alignment without cloned or synthetic list items. It still fails
+  closed before cloning unsupported split content; plus an honest staged
+  pagination contract. Split-table editing, editable repeated
+  furniture/footnotes, and broader adversarial/cross-engine print fidelity remain
+  active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,

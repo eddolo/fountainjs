@@ -456,6 +456,74 @@ describe('DOM page measurement adapter', () => {
     host.remove();
   });
 
+  it('decorates canonical list items at page boundaries and restores their original styles', () => {
+    const pageSchema = schema();
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [{
+        type: 'ordered_list',
+        attrs: { start: 4 },
+        content: Array.from({ length: 4 }, (_, index) => ({
+          type: 'list_item',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: `Item ${index + 4}` }] }],
+        })),
+      }],
+    });
+    const host = window.document.createElement('div');
+    const root = window.document.createElement('div');
+    const list = window.document.createElement('ol');
+    list.dataset.fountainNode = 'ordered_list';
+    list.dataset.fountainPath = '0';
+    list.start = 4;
+    const items = document.content[0]!.content.map((node, index) => {
+      const item = window.document.createElement('li');
+      item.dataset.fountainNode = node.type.name;
+      item.dataset.fountainPath = `0.${index}`;
+      const paragraph = window.document.createElement('p');
+      paragraph.dataset.fountainNode = 'paragraph';
+      paragraph.dataset.fountainPath = `0.${index}.0`;
+      paragraph.textContent = node.textContent;
+      item.appendChild(paragraph);
+      list.appendChild(item);
+      return item;
+    });
+    root.appendChild(list);
+    host.appendChild(root);
+    window.document.body.appendChild(host);
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === host) return { ...rectangle(0, 40), width: 200, right: 200 } as DOMRect;
+      if (this === root || this === list) return { ...rectangle(0, 160), width: 100, right: 100 } as DOMRect;
+      if (this.tagName === 'LI') {
+        const index = Number(this.dataset.fountainPath?.split('.')[1] ?? 0);
+        const precedingSpacing = items.slice(0, index + 1).reduce((sum, item) => (
+          sum + Number.parseFloat(item.style.marginBlockStart || '0')
+        ), 0);
+        return rectangle(index * 40 + precedingSpacing, 40);
+      }
+      return rectangle(0, 40);
+    });
+    const geometry = createPageGeometry({ size: { width: 120, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(root, document, geometry);
+    expect(snapshot.layout.pages).toHaveLength(2);
+    const surface = new DOMEditablePageSurface(root, geometry, { gap: 20 });
+
+    expect(surface.update(geometry, snapshot)).toMatchObject({ mode: 'paged', issues: [] });
+    expect(items[2]!.dataset.fountainEditableListBreak).toBe('2');
+    expect(items[2]!.style.marginBlockStart).toBe('40px');
+    expect(list.start).toBe(4);
+    expect([...list.children]).toEqual(items);
+
+    surface.prepare(geometry, 2);
+    expect(items[2]!.hasAttribute('data-fountain-editable-list-break')).toBe(false);
+    expect(items[2]!.style.marginBlockStart).toBe('');
+    expect(surface.update(geometry, snapshot).mode).toBe('paged');
+    surface.destroy();
+    expect(items[2]!.hasAttribute('data-fountain-editable-list-break')).toBe(false);
+    expect(items[2]!.style.marginBlockStart).toBe('');
+    expect([...list.children]).toEqual(items);
+    host.remove();
+  });
+
   it('falls back to one continuous editable tree when a source would span pages', () => {
     const pageSchema = schema();
     const document = pageSchema.nodeFromJSON({

@@ -1108,6 +1108,19 @@ interface EditableTextBreakPlan {
   readonly size: number;
 }
 
+interface EditableListBreakPlan {
+  readonly element: HTMLElement;
+  readonly page: number;
+  readonly size: number;
+  readonly targetTop: number;
+}
+
+interface EditableListBreakDecoration {
+  readonly attribute: string | null;
+  readonly margin: string;
+  readonly marginPriority: string;
+}
+
 const EDITABLE_PAGE_VARIABLES = Object.freeze([
   '--fountain-editable-page-width',
   '--fountain-editable-page-height',
@@ -1134,6 +1147,13 @@ function editableTopLevel(root: HTMLElement, path: readonly number[]): HTMLEleme
   return Array.from(root.children).find((child) => (
     (child as HTMLElement).dataset.fountainPath === key
   )) as HTMLElement | undefined ?? null;
+}
+
+function editableAtPath(root: HTMLElement, path: readonly number[]): HTMLElement | null {
+  if (path.length < 1) return null;
+  const key = path.join('.');
+  return Array.from(root.querySelectorAll<HTMLElement>('[data-fountain-path]'))
+    .find((element) => element.dataset.fountainPath === key) ?? null;
 }
 
 function hasPageInlineSpace(host: HTMLElement, geometry: PageGeometry): boolean {
@@ -1182,14 +1202,16 @@ function pageShell(owner: Document, geometry: PageGeometry, number: number): HTM
  * Owns the visual page-sheet layer around one continuous EditorView root.
  * Editable model nodes are never cloned, moved, or reordered. Whole source
  * blocks receive transient visual offsets; split paragraphs receive transient
- * non-model gap widgets at measured line boundaries; unsupported split sources
- * fall back to a continuous canvas.
+ * non-model gap widgets at measured line boundaries; split lists receive
+ * reversible spacing on their canonical continuation items; unsupported split
+ * sources fall back to a continuous canvas.
  */
 export class DOMEditablePageSurface {
   readonly host: HTMLElement;
   readonly shells: HTMLElement;
   private readonly decorated = new Map<HTMLElement, EditableSourceDecoration>();
   private readonly textBreaks = new Set<HTMLElement>();
+  private readonly listBreaks = new Map<HTMLElement, EditableListBreakDecoration>();
   private readonly hostVariables = new Map<string, { value: string; priority: string }>();
   private readonly hostHadClass: boolean;
   private readonly rootHadClass: boolean;
@@ -1296,7 +1318,13 @@ export class DOMEditablePageSurface {
         entry.placement.sources.length > 0
         && entry.placement.sources.every((candidate) => candidate.kind === 'text-line')
       )) && sourceElement?.dataset.fountainNode === 'paragraph';
-      if (pages.size > 1 && source && !editableTextSplit) issues.push(Object.freeze({
+      const editableListSplit = entries.every((entry) => (
+        entry.placement.sources.length > 0
+        && entry.placement.sources.every((candidate) => (
+          candidate.kind === 'list-item' && candidate.partPaths.length === 1
+        ))
+      )) && ['bullet_list', 'ordered_list', 'task_list'].includes(sourceElement?.dataset.fountainNode ?? '');
+      if (pages.size > 1 && source && !editableTextSplit && !editableListSplit) issues.push(Object.freeze({
         code: 'fragmented-editable-source',
         path: Object.freeze([...source.sourcePath]),
         detail: `Editable source ${source.sourcePath.join('.')} spans ${pages.size} pages without editable text boundaries.`,
@@ -1319,6 +1347,8 @@ export class DOMEditablePageSurface {
     });
 
     const textBreakPlans: EditableTextBreakPlan[] = [];
+    const listBreakPlans: EditableListBreakPlan[] = [];
+    const undecoratedRootTop = this.root.getBoundingClientRect().top;
     placementsByItem.forEach((entries) => {
       if (new Set(entries.map((entry) => entry.page)).size < 2) return;
       const first = entries[0];
@@ -1351,6 +1381,43 @@ export class DOMEditablePageSurface {
         insertedSize += size;
       });
     });
+    placementsByItem.forEach((entries) => {
+      if (new Set(entries.map((entry) => entry.page)).size < 2) return;
+      const first = entries[0];
+      const firstSource = first?.placement.sources[0];
+      const element = firstSource ? editableTopLevel(this.root, firstSource.sourcePath) : null;
+      if (
+        !first || !firstSource || !element
+        || firstSource.kind !== 'list-item'
+        || !['bullet_list', 'ordered_list', 'task_list'].includes(element.dataset.fountainNode ?? '')
+      ) return;
+      const firstPageTop = (first.page - 1) * (geometry.size.height + this.gap);
+      const bodyStart = geometry.margins.top + geometry.headerHeight;
+      const style = element.ownerDocument.defaultView?.getComputedStyle(element);
+      const marginBefore = numericStyle(style?.marginBlockStart || style?.marginTop);
+      const naturalTop = element.getBoundingClientRect().top - undecoratedRootTop;
+      const topLevelShift = firstPageTop + bodyStart + first.cursor + marginBefore - naturalTop;
+      let insertedSize = 0;
+      entries.slice(1).forEach((entry) => {
+        const source = entry.placement.sources[0];
+        const partPath = source?.partPaths[0];
+        const listItem = partPath ? editableAtPath(this.root, partPath) : null;
+        const desired = (entry.page - 1) * (geometry.size.height + this.gap) + bodyStart + entry.cursor;
+        const itemTop = listItem ? listItem.getBoundingClientRect().top - undecoratedRootTop : Number.NaN;
+        const size = desired - itemTop - topLevelShift - insertedSize;
+        if (!source || source.kind !== 'list-item' || source.partPaths.length !== 1 || !listItem
+          || listItem.tagName !== 'LI' || !finiteNonNegative(size)) {
+          issues.push(Object.freeze({
+            code: 'fragmented-editable-source',
+            path: Object.freeze([...(partPath ?? firstSource.sourcePath)]),
+            detail: `Editable list boundary on page ${entry.page} could not be positioned safely.`,
+          }));
+          return;
+        }
+        listBreakPlans.push({ element: listItem, page: entry.page, size, targetTop: desired - topLevelShift });
+        insertedSize += size;
+      });
+    });
 
     if (issues.length) {
       this.shells.replaceChildren();
@@ -1374,6 +1441,7 @@ export class DOMEditablePageSurface {
     [...textBreakPlans]
       .sort((left, right) => right.fragmentIndex - left.fragmentIndex)
       .forEach((plan) => this.insertTextBreak(plan));
+    listBreakPlans.forEach((plan) => this.decorateListBreak(plan));
 
     const rootRect = this.root.getBoundingClientRect();
     const decoratedItems = new Set<string>();
@@ -1436,6 +1504,12 @@ export class DOMEditablePageSurface {
       });
     });
     this.textBreaks.clear();
+    this.listBreaks.forEach((prior, element) => {
+      this.restoreAttribute(element, 'data-fountain-editable-list-break', prior.attribute);
+      if (prior.margin) element.style.setProperty('margin-block-start', prior.margin, prior.marginPriority);
+      else element.style.removeProperty('margin-block-start');
+    });
+    this.listBreaks.clear();
     this.decorated.forEach((prior, element) => {
       this.restoreAttribute(element, 'data-fountain-editable-page', prior.attribute);
       if (prior.shift) element.style.setProperty('--fountain-editable-page-shift', prior.shift, prior.shiftPriority);
@@ -1458,6 +1532,24 @@ export class DOMEditablePageSurface {
     range.insertNode(element);
     range.detach?.();
     this.textBreaks.add(element);
+  }
+
+  private decorateListBreak(plan: EditableListBreakPlan): void {
+    if (!this.listBreaks.has(plan.element)) {
+      this.listBreaks.set(plan.element, {
+        attribute: plan.element.getAttribute('data-fountain-editable-list-break'),
+        margin: plan.element.style.getPropertyValue('margin-block-start'),
+        marginPriority: plan.element.style.getPropertyPriority('margin-block-start'),
+      });
+    }
+    const style = plan.element.ownerDocument.defaultView?.getComputedStyle(plan.element);
+    const margin = numericStyle(style?.marginBlockStart || style?.marginTop);
+    plan.element.dataset.fountainEditableListBreak = String(plan.page);
+    let applied = margin + plan.size;
+    plan.element.style.setProperty('margin-block-start', `${Math.round(applied * 1_000) / 1_000}px`);
+    const actualTop = plan.element.getBoundingClientRect().top - this.root.getBoundingClientRect().top;
+    applied += plan.targetTop - actualTop;
+    plan.element.style.setProperty('margin-block-start', `${Math.round(Math.max(0, applied) * 1_000) / 1_000}px`);
   }
 
   private setMode(mode: DOMEditablePageMode): void {

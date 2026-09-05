@@ -142,7 +142,7 @@
 .fountain-page-preview__accessible { position: absolute !important; inline-size: 1px !important; block-size: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 .fountain-editable-pages { position: relative; display: grid; justify-items: center; min-width: 0; padding: 1.5rem; overflow: auto; background: #e8e8ec; isolation: isolate; }
 .fountain-editable-pages__shells, .fountain-editable-pages__content { grid-area: 1 / 1; }
-.fountain-editable-pages__shells { z-index: 0; display: grid; gap: var(--fountain-editable-page-gap); width: var(--fountain-editable-page-width); pointer-events: none; user-select: none; }
+.fountain-editable-pages__shells { z-index: 0; align-self: start; display: grid; gap: var(--fountain-editable-page-gap); width: var(--fountain-editable-page-width); pointer-events: none; user-select: none; }
 .fountain-editable-pages__sheet { position: relative; box-sizing: border-box; width: var(--fountain-editable-page-width); height: var(--fountain-editable-page-height); color: #6d7280; background: #fff; box-shadow: 0 .5rem 2rem rgb(0 0 0 / 16%); }
 .fountain-editable-pages__header, .fountain-editable-pages__body, .fountain-editable-pages__footer { position: absolute; box-sizing: border-box; border-block: 1px dashed color-mix(in srgb, var(--fountain-border) 74%, transparent); }
 .fountain-editable-pages__body { border-block-style: dotted; }

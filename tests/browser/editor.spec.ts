@@ -502,6 +502,190 @@ test('keeps one paragraph editable when its measured lines span page shells', as
   )).toBe(1);
 });
 
+test('keeps one canonical ordered list editable and numbered across page shells', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-list-pages');
+  const editor = page.getByRole('textbox', { name: 'Split list page editor' });
+  const host = page.getByLabel('Editable pages browser contract').locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const pageCount = await host.locator('.fountain-editable-pages__sheet').count();
+  expect(pageCount).toBeGreaterThan(1);
+  const list = editor.locator(':scope > ol[data-fountain-node="ordered_list"]');
+  await expect(list).toHaveCount(1);
+  await expect(list).toHaveAttribute('start', '4');
+  await expect(list.locator(':scope > li[data-fountain-node="list_item"]')).toHaveCount(16);
+  const breaks = list.locator(':scope > li[data-fountain-editable-list-break]');
+  await expect(breaks).toHaveCount(pageCount - 1);
+  expect(await breaks.evaluateAll((items) => items.map((element) => ({
+    page: element.getAttribute('data-fountain-editable-list-break'),
+    path: element.getAttribute('data-fountain-path'),
+    role: element.getAttribute('role'),
+  })))).toEqual(Array.from({ length: pageCount - 1 }, (_, index) => expect.objectContaining({
+    page: String(index + 2), path: expect.stringMatching(/^0\.\d+$/), role: null,
+  })));
+
+  const alignment = await page.evaluate(() => {
+    const items = [...document.querySelectorAll<HTMLElement>('[data-fountain-editable-list-break]')];
+    const bodies = [...document.querySelectorAll<HTMLElement>('.fountain-editable-pages__body')];
+    return items.map((element) => {
+      const pageNumber = Number(element.dataset.fountainEditableListBreak);
+      return {
+        page: pageNumber,
+        delta: element.getBoundingClientRect().top - (bodies[pageNumber - 1]?.getBoundingClientRect().top ?? 0),
+      };
+    });
+  });
+  alignment.forEach((entry, index) => {
+    expect(entry.page).toBe(index + 2);
+    expect(Math.abs(entry.delta)).toBeLessThan(3);
+  });
+
+  const initial = await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.editable.summary();
+    return {
+      nodeCount: summary.document.content.length,
+      type: summary.document.content[0]?.type,
+      start: summary.document.content[0]?.attrs?.start,
+      itemCount: summary.document.content[0]?.content.length,
+      pageIntents: summary.document.content.filter((node: any) => node.type === 'page_break').length,
+      text: summary.document.content[0]?.content.map((item: any) => item.content[0].content[0].text),
+    };
+  });
+  expect(initial).toMatchObject({ nodeCount: 1, type: 'ordered_list', start: 4, itemCount: 16, pageIntents: 0 });
+  expect(initial.text).toEqual(Array.from({ length: 16 }, (_, index) => (
+    `Canonical list item ${index + 4} remains editable and correctly numbered.`
+  )));
+
+  const initialSpacing = await breaks.evaluateAll((items) => items.map((element) => (
+    (element as HTMLElement).style.marginBlockStart
+  )));
+  expect(await page.evaluate(() => {
+    for (let iteration = 0; iteration < 6; iteration += 1) {
+      (globalThis as any).fountainBrowserTest.pages.editable.refresh();
+    }
+    return [...document.querySelectorAll<HTMLElement>('[data-fountain-editable-list-break]')]
+      .map((element) => element.style.marginBlockStart);
+  })).toEqual(initialSpacing);
+
+  await editor.evaluate((element) => {
+    const wrappers = [...element.querySelectorAll<HTMLElement>('[data-fountain-text-path]')];
+    const first = wrappers[0]?.firstChild;
+    const lastWrapper = wrappers.at(-1);
+    const last = lastWrapper?.lastChild;
+    if (!(first instanceof Text) || !(last instanceof Text)) throw new Error('Expected list text nodes.');
+    const range = document.createRange();
+    range.setStart(first, 5);
+    range.setEnd(last, Math.max(5, last.data.length - 5));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
+  ))).toMatchObject({
+    type: 'text', path: [0, 0, 0, 0], from: 5, endPath: [0, 15, 0, 0],
+    to: initial.text[15].length - 5,
+  });
+
+  await breaks.first().evaluate((element) => {
+    const wrapper = element.querySelector<HTMLElement>('[data-fountain-text-path]');
+    const text = wrapper?.firstChild;
+    if (!(text instanceof Text)) throw new Error('Expected continuation item text.');
+    const range = document.createRange();
+    range.setStart(text, text.data.length);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+    element.closest('[contenteditable="true"]')?.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    element.closest('[contenteditable="true"]')?.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '続' }));
+  });
+  await expect(editor).toContainText('続');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(editor).not.toContainText('続');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(editor).toContainText('続');
+  await expect(list).toHaveAttribute('start', '4');
+
+  const region = page.getByLabel('Editable pages browser contract');
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '360px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');
+  await expect(editor.locator('[data-fountain-editable-list-break]')).toHaveCount(0);
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '900px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect.poll(async () => (
+    await host.locator('.fountain-editable-pages__sheet').count()
+      - await editor.locator('[data-fountain-editable-list-break]').count()
+  )).toBe(1);
+});
+
+test('keeps tracked review and Yjs live between list items split across pages', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=split-list-page-integrations');
+  const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
+  const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
+  const review = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
+  for (const editor of [left, right, review]) {
+    await expect(editor.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+    await expect(editor.locator(':scope > ol[data-fountain-node="ordered_list"]')).toHaveCount(1);
+    await expect(editor.locator(':scope > ol')).toHaveAttribute('start', '4');
+    expect(await editor.locator('[data-fountain-editable-list-break]').count()).toBeGreaterThan(0);
+  }
+
+  await selectBlockEnd(left.locator('[data-fountain-editable-list-break]').first());
+  await page.keyboard.type(' LEFT LIST REVIEW');
+  await expect(right).toContainText('LEFT LIST REVIEW');
+  await expect.poll(() => right.locator('[data-fountain-editable-list-break]').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      leftAuthor: summary.left.suggestions[0]?.user.id,
+      rightAuthor: summary.right.suggestions[0]?.user.id,
+      converged: JSON.stringify(summary.left.document) === JSON.stringify(summary.right.document),
+      nodeCounts: [summary.left.document.content.length, summary.right.document.content.length],
+      itemCounts: [summary.left.document.content[0]?.content.length, summary.right.document.content[0]?.content.length],
+      listStarts: [summary.left.document.content[0]?.attrs?.start, summary.right.document.content[0]?.attrs?.start],
+      pageIntents: [...summary.left.document.content, ...summary.right.document.content]
+        .filter((node: any) => node.type === 'page_break').length,
+    };
+  })).toEqual({
+    leftAuthor: 'browser-left',
+    rightAuthor: 'browser-left',
+    converged: true,
+    nodeCounts: [1, 1],
+    itemCounts: [16, 16],
+    listStarts: [4, 4],
+    pageIntents: 0,
+  });
+
+  await selectBlockEnd(review.locator('[data-fountain-editable-list-break]').first());
+  await page.keyboard.type(' LOCAL LIST DECISION');
+  await expect(review.locator('ins')).toContainText('LOCAL LIST DECISION');
+  const suggestionId = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.integrations.summary().review.suggestions[0].id
+  ));
+  expect(await page.evaluate((id) => (
+    (globalThis as any).fountainBrowserTest.tracked.accept(id)
+  ), suggestionId)).toBe(true);
+  await expect(review).toContainText('LOCAL LIST DECISION');
+  await expect(review.locator('ins, del')).toHaveCount(0);
+  await expect.poll(() => review.locator('[data-fountain-editable-list-break]').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      modes: [summary.left.mode, summary.right.mode, summary.review.mode],
+      leftItems: summary.left.document.content[0]?.content.length,
+      reviewItems: summary.review.document.content[0]?.content.length,
+      reviewSuggestions: summary.review.suggestions.length,
+    };
+  })).toEqual({
+    modes: ['paged', 'paged', 'paged'],
+    leftItems: 16,
+    reviewItems: 16,
+    reviewSuggestions: 0,
+  });
+});
+
 test('keeps tracked review and Yjs live inside a paragraph split across pages', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=split-page-integrations');
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
@@ -2133,10 +2317,11 @@ test('creates and edits a link through the public React toolbar', async ({ page 
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const firstParagraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  const linkButton = page.getByRole('button', { name: 'Add or edit link' });
   await firstParagraph.click();
   await page.keyboard.press('Home');
   await page.keyboard.press('Shift+End');
-  await page.getByRole('button', { name: 'Add or edit link' }).click();
+  await linkButton.click();
   await page.getByLabel('Link URL').fill('www.example.com');
   await page.getByLabel('Link title').fill('Example website');
   await page.getByLabel('Link destination').selectOption('_self');
@@ -2148,7 +2333,8 @@ test('creates and edits a link through the public React toolbar', async ({ page 
   await expect(link).toHaveAttribute('target', '_self');
 
   await link.click();
-  await page.getByRole('button', { name: 'Add or edit link' }).click();
+  await linkButton.evaluate((element) => element.scrollIntoView({ block: 'center', inline: 'nearest' }));
+  await linkButton.click();
   await expect(page.getByLabel('Link URL')).toHaveValue('https://www.example.com');
   await expect(page.getByRole('link', { name: 'Open current link' })).toHaveAttribute('href', 'https://www.example.com');
   await page.getByLabel('Link URL').fill('/internal');
