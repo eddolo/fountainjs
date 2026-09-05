@@ -17,9 +17,9 @@ entry rather than TypeScript source. The browser suite measures the real input,
 state, reconciliation, selection, and next-animation-frame path in Chromium,
 Firefox, and WebKit.
 
-The complete contract is certified by the public 312-test package gate and
-187-test Chromium/Firefox/WebKit/mobile matrix in [CI run
-`4b2990a`](https://github.com/eddolo/fountainjs/actions/runs/33923645172).
+The complete contract is certified by the public 363-test package gate and
+219-check Chromium/Firefox/WebKit/mobile matrix in [CI run
+`ca606cc`](https://github.com/eddolo/fountainjs/actions/runs/33945348804).
 
 ## Recorded baseline
 
@@ -48,9 +48,10 @@ recorded destroyed-editor sample retained 0.13 MiB.
 
 The build gate currently limits the independently loadable production entries,
 including 111/93 KiB raw for the ESM/CommonJS root, 19/16 KiB for the optional
-Yjs adapter, and 636/532 KiB for all emitted ESM/CommonJS runtime code excluding
-the isolated full emoji catalogue. Gzip sizes are printed by the build but raw
-sizes are enforced because they are deterministic.
+Yjs adapter, 32/27 KiB for the isolated DOM pagination entry, and 718/605 KiB
+for all emitted ESM/CommonJS runtime code excluding the isolated full emoji
+catalogue. Gzip sizes are printed by the build but raw sizes are enforced
+because they are deterministic.
 
 ## Why small edits stay local
 
@@ -67,7 +68,15 @@ sizes are enforced because they are deterministic.
   1,000-block browser gate inserts through `beforeinput`, waits for the next
   animation frame, requires 999 unchanged block elements to retain identity,
   caps added/removed DOM nodes at three each, and requires input-to-paint below
-  250 ms in every desktop engine.
+  250 ms in every desktop engine. Structural insertion/removal also moves and
+  rebases unchanged blocks instead of recreating them.
+- DOM pagination caches geometry by immutable node plus rendered-element
+  identity and rebases item, fragment, template, warning, and structural source
+  paths when top-level indexes shift. Repeated edits in 1,000 blocks are capped
+  at 75 ms p95; alternating edge edits in 5,000 blocks are capped at 250 ms p95
+  and two geometry reads; six 5,000-block leading insertion/removal cycles are
+  capped at 500 ms p95 and exactly two/one reads while retaining every unchanged
+  DOM block.
 - Unchanged React NodeViews are carried across that reconciliation without an
   `update` or React render. A fifty-NodeView regression test requires zero
   unrelated rerenders. React state uses `useSyncExternalStore`, and Strict Mode

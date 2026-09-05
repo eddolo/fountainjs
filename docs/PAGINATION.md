@@ -182,7 +182,10 @@ invalidate fully. Real-browser gates permit only the root width and changed
 block to perform geometry reads: repeated middle edits in 1,000 blocks stay
 below a 75 ms p95 cycle budget, while 20 edits alternating between the first and
 last ten positions of 5,000 rendered blocks stay below 250 ms p95 under the
-parallel cross-engine runner.
+parallel cross-engine runner. Leading insertion/removal also preserves all
+5,000 unchanged DOM blocks and rebases every rendered and cached source path;
+six repeated cycles require exactly two geometry reads per insertion and one
+per removal while remaining below 500 ms p95.
 The separate preview entry clones those exact slices into visual sheets; it
 requires the measured editor width to equal the page body width and never
 changes the editor DOM. It emits an unnamed physical page rule for broad print
@@ -257,8 +260,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;
 - reflow latency, measurement count, DOM identity, memory, and bundle budgets
-  for structural insertion/removal and beyond the current 5,000-block
-  adversarial replacement gate;
+  beyond the current 5,000-block adversarial replacement and structural
+  insertion/removal gates;
 - packed ESM/CommonJS/types, public docs/demo, and immutable CI/deployment
   evidence.
 

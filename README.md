@@ -345,9 +345,13 @@ to exact validated source slices and separates repeated continuation overhead.
 Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
 Mutation-only cycles reuse geometry only when both the immutable model node and
-rendered top-level element are unchanged; changed footnote heights invalidate
-their cached references. Resize, font, manual, and print cycles remeasure fully,
-and `{ incremental: false }` disables reuse for specialized hosts.
+rendered top-level element are unchanged, even when a structural insertion or
+removal shifts their top-level path. The view retains those unchanged DOM
+objects and rebases rendered paths, while the page cache rebases item,
+fragment, template, warning, and structural source paths without rereading
+geometry. Changed footnote heights still invalidate their cached references.
+Resize, font, manual, and print cycles remeasure fully, and
+`{ incremental: false }` disables reuse for specialized hosts.
 `createDOMEditablePageController()` adds a responsive screen-editing surface
 without cloning, moving, wrapping, or reordering any editable node. Whole
 top-level blocks receive transient visual offsets over fixed page shells, so

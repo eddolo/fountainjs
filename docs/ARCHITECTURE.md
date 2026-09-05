@@ -748,9 +748,10 @@ The suites are organized by boundary:
   template/footnote separation, fragment source paths/clip geometry, strict
   placement-to-source projection, explicit warnings, neutral layout handoff,
   timed reflow cycles, identity/width/footnote-safe mutation caching, observed
-  dirty-block invalidation, full resize/font/manual invalidation, and
-  deterministic controller teardown, plus guarded whole-block editable page
-  shells that retain direct child paths and restore their host on teardown;
+  dirty-block invalidation, shifted-path cache rebasing, full
+  resize/font/manual invalidation, and deterministic controller teardown, plus
+  guarded whole-block editable page shells that retain direct child paths and
+  restore their host on teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
@@ -759,8 +760,10 @@ The suites are organized by boundary:
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
   presentation, Chromium-generated A4/Letter PDF page counts, MediaBoxes, and
   page-specific content extraction, plus 1,000-block repeated-middle and
-  5,000-block alternating-edge incremental pagination reflow budgets. The
-  editable fixture also proves one unchanged
+  5,000-block alternating-edge incremental pagination reflow budgets and
+  5,000-block leading insertion/removal cycles that retain every unchanged DOM
+  node with exact rendered/source paths and two/one geometry reads. The editable
+  fixture also proves one unchanged
   contenteditable, retained block identity, native composition on page two,
   selection mapping and undo/redo across a manual page boundary, reversible
   container-responsive page/continuous modes, tracked decisions plus
@@ -779,9 +782,9 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 30/25 KiB for browser measurement/reflow and the
+isolated page foundation, 32/27 KiB for browser measurement/reflow and the
 guarded editable page surface, 9/8 KiB for read-only page preview/print
-projection, 60 KiB for CSS, and 715/603 KiB for all
+projection, 60 KiB for CSS, and 718/605 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
