@@ -91,6 +91,9 @@
   receives document/path context and explicitly opts out of stale DOM reuse.
   Paged previews route repeated cross-page references to the first rendered
   fragment of their shared definition instead of a nonexistent local anchor.
+  A mixed three-engine print fixture now combines reversed footnote-definition
+  order, repeated citations, continued notes, merged tables, page furniture,
+  a manual break, and Chromium PDF text de-duplication.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

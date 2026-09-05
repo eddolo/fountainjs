@@ -578,6 +578,58 @@ const longFootnoteContent = {
   ],
 };
 
+const adversarialPrintContent = {
+  type: 'doc',
+  content: [
+    { type: 'page_header', attrs: { variant: 'default' }, content: [{
+      type: 'paragraph', content: [
+        { type: 'text', text: 'Adversarial report · ' },
+        { type: 'page_field', attrs: { kind: 'page-number' } },
+        { type: 'text', text: ' / ' },
+        { type: 'page_field', attrs: { kind: 'page-count' } },
+      ],
+    }] },
+    { type: 'paragraph', content: [
+      { type: 'text', text: 'Beta is cited first' },
+      { type: 'footnote_reference', attrs: { id: 'beta-proof' } },
+      { type: 'text', text: '.' },
+    ] },
+    { type: 'paragraph', content: [
+      { type: 'text', text: 'Alpha follows with a long note' },
+      { type: 'footnote_reference', attrs: { id: 'alpha-proof' } },
+      { type: 'text', text: ', while beta is cited again' },
+      { type: 'footnote_reference', attrs: { id: 'beta-proof' } },
+      { type: 'text', text: `. ${'Wrapped body evidence remains measurable. '.repeat(12)}` },
+    ] },
+    ...complexTableContent.content,
+    { type: 'page_break' },
+    { type: 'paragraph', content: [
+      { type: 'text', text: 'AFTERBREAK repeats alpha' },
+      { type: 'footnote_reference', attrs: { id: 'alpha-proof' } },
+      { type: 'text', text: '.' },
+    ] },
+    { type: 'footnote_definition', attrs: { id: 'alpha-proof' }, content: [{
+      type: 'paragraph',
+      content: [{
+        type: 'text',
+        text: Array.from({ length: 80 }, (_value, index) => (
+          `ALPHA${String(index + 1).padStart(3, '0')} evidence`
+        )).join(' '),
+      }],
+    }] },
+    { type: 'footnote_definition', attrs: { id: 'beta-proof' }, content: [{
+      type: 'paragraph', content: [{ type: 'text', text: 'BETAONLY concise evidence.' }],
+    }] },
+  ],
+};
+
+const adversarialPrintGeometry = () => createPageGeometry({
+  size: { width: 360, height: 300 },
+  margins: 16,
+  headerHeight: 24,
+  footerHeight: 16,
+});
+
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
@@ -1024,6 +1076,15 @@ Object.assign(globalThis, {
         pagesView.dom.style.width = '240px';
         return true;
       },
+      loadAdversarialPrintFixture: () => {
+        const fixture = pagesEditor.state.schema.nodeFromJSON(adversarialPrintContent);
+        pagesEditor.dispatch(pagesEditor.state.createTransaction()
+          .replace(0, pagesEditor.state.doc.childCount, fixture.content)
+          .setSelection(Selection.cursor([1, 0], 0)));
+        pagesView.dom.style.boxSizing = 'content-box';
+        pagesView.dom.style.width = '328px';
+        return true;
+      },
       measure: () => layoutDOMPages(
         pagesView.dom,
         pagesEditor.state.doc,
@@ -1042,6 +1103,12 @@ Object.assign(globalThis, {
         createPageGeometry({ size: { width: 260, height: 160 }, margins: 10 }),
         true,
       ),
+      measureAdversarialPrint: () => layoutDOMPages(
+        pagesView.dom,
+        pagesEditor.state.doc,
+        adversarialPrintGeometry(),
+      ),
+      previewAdversarialPrint: () => renderPagesPreview(adversarialPrintGeometry(), true),
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({
         size,
         margins: 12.7,

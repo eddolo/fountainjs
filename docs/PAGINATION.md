@@ -392,7 +392,10 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - continuous narrow-screen and assistive fallback;
 - print-media fixtures in Chromium, Firefox, and WebKit, plus emitted PDF-byte
   fixtures in Chromium where Playwright exposes that primitive (the physical
-  A4/Letter baseline now covers both layers; broader adversarial documents do not);
+  A4/Letter baseline covers both layers, and a mixed fixture combines repeated
+  and continued footnotes, reversed definition order, a merged table, page
+  furniture, a manual break, and PDF text de-duplication; broader imported and
+  styled document families remain);
 - reflow latency, measurement count, DOM identity, memory, and bundle budgets
   beyond the current 5,000-block adversarial replacement and structural
   insertion/removal gates;

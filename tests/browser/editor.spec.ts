@@ -339,6 +339,114 @@ test('continues measured long footnotes through editable and print page projecti
   await expect(editableClips.last()).toHaveAttribute('data-fountain-footnote-continued-after', 'false');
 });
 
+test('prints a mixed repeated-footnote, merged-table, and manual-break document without loss', async ({ page, browserName }) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.loadAdversarialPrintFixture()
+  ))).toBe(true);
+  const measured = await page.evaluate(() => {
+    const snapshot = (globalThis as any).fountainBrowserTest.pages.measureAdversarialPrint();
+    const notes = snapshot.layout.pages.flatMap((layoutPage: any) => (
+      layoutPage.footnotes.map((footnote: any) => ({ page: layoutPage.number, ...footnote }))
+    ));
+    return {
+      pages: snapshot.layout.pages.length,
+      measurementWarnings: snapshot.measurement.warnings,
+      layoutWarnings: snapshot.layout.warnings,
+      presentationWarnings: snapshot.presentation.warnings,
+      alpha: notes.filter((note: any) => note.id === 'alpha-proof'),
+      beta: notes.filter((note: any) => note.id === 'beta-proof'),
+      tablePlacements: snapshot.content.pages.flatMap((contentPage: any) => (
+        contentPage.placements.filter((placement: any) => placement.itemId === 'block:3:table')
+      )),
+    };
+  });
+  expect(measured.measurementWarnings).toEqual([]);
+  expect(measured.layoutWarnings).toEqual([]);
+  expect(measured.presentationWarnings).toEqual([]);
+  expect(measured.pages).toBeGreaterThan(3);
+  expect(measured.alpha.length).toBeGreaterThan(1);
+  expect(measured.beta).toHaveLength(1);
+  expect(measured.tablePlacements.length).toBeGreaterThan(1);
+  await expect(page.locator('#pages-editor [data-fountain-footnote-reference]')).toHaveCount(4);
+
+  const preview = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.previewAdversarialPrint()
+  ));
+  expect(preview).toMatchObject({
+    pageCount: measured.pages,
+    visualPagesHidden: true,
+    accessibleDocuments: 1,
+    sourceUnchanged: true,
+  });
+  const contract = await page.locator('#browser-page-preview').evaluate((target) => {
+    const sheets = [...target.querySelectorAll<HTMLElement>('.fountain-page-preview__sheet')];
+    const references = [...target.querySelectorAll<HTMLElement>(
+      '.fountain-page-preview__sheet [data-fountain-footnote-reference]',
+    )].map((reference) => ({
+      id: reference.dataset.fountainFootnoteReference,
+      number: reference.dataset.fountainFootnoteNumber,
+      href: reference.querySelector('a')?.getAttribute('href'),
+      page: reference.closest<HTMLElement>('[data-fountain-page]')?.dataset.fountainPage,
+    }));
+    const definitions = [...target.querySelectorAll<HTMLElement>(
+      '.fountain-page-preview__sheet [data-fountain-footnote-definition]',
+    )].map((definition) => ({
+      id: definition.dataset.fountainFootnoteDefinition,
+      number: definition.dataset.fountainFootnoteNumber,
+      domId: definition.id,
+      page: definition.closest<HTMLElement>('[data-fountain-page]')?.dataset.fountainPage,
+    }));
+    return {
+      references,
+      definitions,
+      linksResolve: references.every((reference) => (
+        typeof reference.href === 'string' && target.querySelector(reference.href) !== null
+      )),
+      uniqueDefinitionIds: new Set(definitions.map((definition) => definition.domId)).size,
+      exactAlphaClips: [...target.querySelectorAll<HTMLElement>(
+        '[data-fountain-page-footnote="alpha-proof"]',
+      )].every((clip) => clip.dataset.fountainFootnoteExactTextSlice === 'true'),
+      overflowPages: sheets.filter((sheet) => sheet.dataset.fountainPageOverflow === 'true').length,
+      headerText: sheets.map((sheet) => (
+        sheet.querySelector('.fountain-page-preview__header')?.textContent?.replace(/\s+/gu, ' ').trim()
+      )),
+    };
+  });
+  const betaReferences = contract.references.filter((reference) => reference.id === 'beta-proof');
+  const alphaReferences = contract.references.filter((reference) => reference.id === 'alpha-proof');
+  expect(betaReferences.length).toBeGreaterThanOrEqual(2);
+  expect(betaReferences.every((reference) => reference.number === '1')).toBe(true);
+  expect(alphaReferences.length).toBeGreaterThanOrEqual(2);
+  expect(alphaReferences.every((reference) => reference.number === '2')).toBe(true);
+  expect(contract.definitions.filter((definition) => definition.id === 'beta-proof').map((definition) => definition.number))
+    .toEqual(['1']);
+  expect(contract.definitions.filter((definition) => definition.id === 'alpha-proof').every((definition) => (
+    definition.number === '2'
+  ))).toBe(true);
+  expect(contract.linksResolve).toBe(true);
+  expect(contract.uniqueDefinitionIds).toBe(contract.definitions.length);
+  expect(contract.exactAlphaClips).toBe(true);
+  expect(contract.overflowPages).toBe(0);
+  expect(contract.headerText).toEqual(Array.from(
+    { length: preview.pageCount },
+    (_value, index) => `Adversarial report · ${index + 1} / ${preview.pageCount}`,
+  ));
+
+  await page.emulateMedia({ media: 'print' });
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true });
+    const pageText = await extractPDFPageText(pdf);
+    const alphaTokens = pageText.flatMap((text) => text.match(/ALPHA\d{3}/gu) ?? []);
+    expect(pageText).toHaveLength(preview.pageCount);
+    expect(alphaTokens).toHaveLength(80);
+    expect(new Set(alphaTokens).size).toBe(80);
+    expect(pageText.join(' ').match(/BETAONLY/gu)).toHaveLength(1);
+    expect(pageText.join(' ').match(/AFTERBREAK/gu)).toHaveLength(1);
+  }
+  await page.emulateMedia({ media: 'screen' });
+});
+
 test('uses a host print renderer without moving or exposing live custom DOM', async ({ page }) => {
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.loadMeasurementFixture())).toBe(true);
   const preview = await page.evaluate(() => (
