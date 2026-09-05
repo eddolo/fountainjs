@@ -30,6 +30,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - `DOMPageLayoutController` for coalesced mutation/resize/font/window/print
   invalidation, timed immutable snapshots, explicit host callbacks, synchronous
   print refresh, and deterministic observer/listener teardown;
+- `projectPagePresentation()` for immutable page-shell plans that select the
+  canonical first/odd/even/default header and footer, resolve page fields, and
+  pair reserved footnotes with their one canonical definition;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -57,9 +60,11 @@ const result = layoutPages(measuredFlowItems, geometry)
 ```
 
 Measurements are adapter input, not persisted editor state. Each template is
-edited once in canonical document order. The browser adapter now supplies real
-line/list/table/footnote measurements, but the current foundation deliberately
-does not claim repeated template projection, page-shell rendering, PDF
+edited once in canonical document order. The neutral projector now decides
+which canonical furniture and footnotes belong to each measured page, and the
+browser adapter supplies real line/list/table/footnote measurements. The current
+foundation deliberately does not claim repeated DOM furniture, editable
+page-shell rendering, PDF
 fidelity, or cross-browser editing across rendered page boundaries.
 
 ## Current architecture audit
@@ -129,7 +134,10 @@ DOM-independent page layout
 
 `layoutPages()` is the first boundary. It consumes ordinary numbers and frozen
 descriptors and returns page placements plus explicit overflow warnings.
-`measureDOMPageFlow()` is the optional browser boundary: it measures line boxes,
+`projectPagePresentation()` is the renderer-neutral handoff: it converts layout
+pages and canonical document intent into immutable per-page references and
+resolved field values without copying model content. `measureDOMPageFlow()` is
+the optional browser boundary: it measures line boxes,
 list items, table row-span groups, media, and footnotes, but those measurements
 never enter editor state and the adapter never moves editable nodes. The
 optional controller automates invalidation and measurement but does not own

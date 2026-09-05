@@ -741,6 +741,9 @@ The suites are organized by boundary:
   fragmentation, constraints, continuation, footnotes, and hostile values;
 - `tests/pages.test.ts` and `tests/pages-html.test.ts`: optional page intent,
   integrity diagnostics, commands, history, JSON/HTML, and Yjs convergence.
+- `tests/pages-presentation.test.ts`: renderer-neutral template variant
+  selection, dynamic fields, canonical footnote assignment, immutable output,
+  ambiguous-input diagnostics, and external-layout validation;
 - `tests/pages-dom.test.ts`: DOM measurement boundaries, model immutability,
   template/footnote separation, explicit warnings, neutral layout handoff, timed
   reflow cycles, and deterministic controller teardown;
@@ -788,7 +791,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
-| `src/pages/` | DOM-free physical page layout plus optional portable manual-break and footnote semantics |
+| `src/pages/` | DOM-free physical layout, portable page intent, and renderer-neutral page presentation plans |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |

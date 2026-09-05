@@ -66,6 +66,9 @@ describe('DOM page measurement adapter', () => {
       { lineFragmentNodeTypes: [] },
     );
     expect(snapshot.layout.pages).toHaveLength(2);
+    expect(snapshot.presentation.pages).toHaveLength(2);
+    expect(snapshot.presentation.pages[0]?.header).toMatchObject({ variant: 'default', sourcePath: [0] });
+    expect(snapshot.presentation.pages[0]?.footnotes[0]).toMatchObject({ id: 'note', sourcePath: [4] });
     expect(Object.isFrozen(snapshot)).toBe(true);
   });
 

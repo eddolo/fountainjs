@@ -38,7 +38,7 @@ const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRub
 const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'getActiveTextStyle'];
 const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
-const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometry', 'layoutPages', 'insertPageBreak', 'insertFootnote', 'inspectFootnotes', 'removeFootnote', 'setPageTemplate', 'insertPageField', 'inspectPageTemplates', 'resolvePageField'];
+const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometry', 'layoutPages', 'projectPagePresentation', 'insertPageBreak', 'insertFootnote', 'inspectFootnotes', 'removeFootnote', 'setPageTemplate', 'insertPageField', 'inspectPageTemplates', 'resolvePageField'];
 const pagesDOMNames = ['measureDOMPageFlow', 'layoutDOMPages', 'DOMPageLayoutController', 'createDOMPageLayoutController'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');

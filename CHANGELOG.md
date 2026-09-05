@@ -19,8 +19,9 @@
   history/Yjs behavior; an isolated browser measurement adapter for line boxes,
   list items, rowspan-safe table groups, footnotes, and manual breaks; package
   budgets; a coalesced mutation/resize/font/print reflow controller with timed
-  snapshots and deterministic teardown; and an honest staged pagination
-  contract. Editable page-shell rendering, repeated furniture, and print/PDF
+  snapshots and deterministic teardown; immutable per-page selection of
+  canonical furniture, resolved fields, and footnotes; and an honest staged
+  pagination contract. Editable page-shell rendering, repeated DOM furniture, and print/PDF
   fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed

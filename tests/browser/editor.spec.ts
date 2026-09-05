@@ -44,6 +44,14 @@ test('renders, edits, and measures portable page intent in a real browser', asyn
       warnings: snapshot.measurement.warnings,
       measurementCount: snapshot.measurement.measurementCount,
       pages: snapshot.layout.pages.length,
+      presentationPages: snapshot.presentation.pages.map((projected: any) => ({
+        number: projected.number,
+        header: projected.header && {
+          variant: projected.header.variant,
+          fields: projected.header.fields.map((field: any) => field.value),
+        },
+      })),
+      presentationWarnings: snapshot.presentation.warnings,
       hasManualBreak: snapshot.measurement.items.some((item: any) => item.breakAfter === true),
     };
   });
@@ -52,6 +60,11 @@ test('renders, edits, and measures portable page intent in a real browser', asyn
   expect(measured.warnings).toEqual([]);
   expect(measured.measurementCount).toBeGreaterThan(0);
   expect(measured.pages).toBeGreaterThanOrEqual(2);
+  expect(measured.presentationWarnings).toEqual([]);
+  expect(measured.presentationPages.slice(0, 2)).toMatchObject([
+    { number: 1, header: { variant: 'default', fields: ['1'] } },
+    { number: 2, header: { variant: 'default', fields: ['2'] } },
+  ]);
   expect(measured.hasManualBreak).toBe(true);
 });
 

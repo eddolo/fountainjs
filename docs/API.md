@@ -1287,6 +1287,7 @@ import {
   insertPageField,
   insertFootnote,
   layoutPages,
+  projectPagePresentation,
   selectPageTemplate,
   setPageTemplate,
 } from 'fountainjs-editor/pages'
@@ -1304,6 +1305,7 @@ insertPageField(editor, 'page-number')
 
 const geometry = createPageGeometry({ size: 'letter', margins: 25.4 })
 const pages = layoutPages(measuredFlowItems, geometry)
+const presentation = projectPagePresentation(editor.state.doc, pages)
 const browserPages = layoutDOMPages(view.dom, editor.state.doc, geometry)
 const controller = createDOMPageLayoutController(
   view.dom,
@@ -1334,6 +1336,13 @@ returns frozen pages, placements, reserved footnotes, used/available height,
 and explicit overflow/constraint warnings. It never reads `document`, CSS, or
 viewport state and never writes automatic page membership into JSON.
 
+`projectPagePresentation(document, layout)` turns that result into an immutable
+renderer-neutral page plan. Each page references the selected canonical
+first/odd/even/default header and footer, resolves current/total page fields,
+and pairs reserved footnote measurements with their one canonical definition.
+Ambiguous templates and missing/duplicate footnote definitions remain explicit
+warnings; the projector fails closed instead of picking one duplicate.
+
 The separate browser-only `fountainjs-editor/pages/dom` entry provides
 `measureDOMPageFlow(root, document, options?)` and `layoutDOMPages(...)`. It
 reads the current rendered geometry and emits legal line fragments for text,
@@ -1342,7 +1351,8 @@ header cost, first-reference footnote reservations, manual-break intent, and
 canonical template measurements. Missing nodes, invalid geometry, and
 unmeasured footnotes are explicit warnings. It never reparents, clones, or
 annotates the editable DOM; its output is ordinary frozen input for the neutral
-layout engine.
+layout engine. `layoutDOMPages` also includes the neutral `presentation` plan in
+its frozen snapshot so a host does not have to repeat variant or footnote logic.
 
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree
@@ -1353,8 +1363,9 @@ and listener in `destroy()`. `refreshNow()` remains available for synchronous
 printing and explicit host checks. The controller reads state through
 `getDocument()` so it never owns or mutates editor state.
 
-This is the page-model and measurement foundation, not a completed visual
-paginator. Repeated template projection, page-shell rendering, accessibility
+This is the page-model, measurement, and renderer-neutral presentation
+foundation, not a completed visual paginator. Repeated DOM template rendering,
+page-shell rendering, accessibility
 fallback, and print/PDF fidelity remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 

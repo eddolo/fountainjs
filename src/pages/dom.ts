@@ -1,5 +1,6 @@
 import type { Node } from '../core';
 import { layoutPages, type PageFlowFragment, type PageFlowItem, type PageGeometry, type PageLayoutOptions, type PageLayoutResult } from './layout';
+import { projectPagePresentation, type PagePresentation } from './presentation';
 import type { PageTemplateKind, PageTemplateVariant } from './templates';
 
 interface RectLike {
@@ -47,6 +48,7 @@ export interface DOMPageFlowMeasurement {
 export interface DOMPageLayoutSnapshot {
   readonly measurement: DOMPageFlowMeasurement;
   readonly layout: PageLayoutResult;
+  readonly presentation: PagePresentation;
 }
 
 export type DOMPageLayoutReason =
@@ -427,9 +429,11 @@ export function layoutDOMPages(
   layoutOptions: PageLayoutOptions = {},
 ): DOMPageLayoutSnapshot {
   const measurement = measureDOMPageFlow(root, document, measurementOptions);
+  const layout = layoutPages(measurement.items, geometry, layoutOptions);
   return Object.freeze({
     measurement,
-    layout: layoutPages(measurement.items, geometry, layoutOptions),
+    layout,
+    presentation: projectPagePresentation(document, layout),
   });
 }
 
