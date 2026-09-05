@@ -137,6 +137,30 @@ performance, and browser behavior:
 - visible tabs, non-breaking spaces, and other invisible characters (`DOC-16`);
 - YAML frontmatter and raw/visual Markdown switching.
 
+## Broader editor landscape audit
+
+After the active ProseMirror + Tiptap parity work, audit other editor families
+for ideas FountainJS can improve or make framework-neutral. This is a research
+queue, not a claim that the named projects expose identical capabilities:
+
+- Lexical and Slate: state/update architecture, normalization, operation
+  mapping, DOM reconciliation, and custom behavior ergonomics;
+- Plate and Remirror: extension composition, typed authoring, supplied UI,
+  framework integration, and what happens when their abstraction leaks;
+- BlockNote and Editor.js: block-first workflows, structured output, slash and
+  drag interactions, and the limits of mixing free-form rich text with blocks;
+- CKEditor 5 and TinyMCE: mature authoring workflows, accessibility, import and
+  export fidelity, plugin operations, long-term compatibility, and deployment;
+- Eddyter and other finished-editor products: onboarding speed, default UI,
+  customization boundaries, licensing, and which advertised capabilities have
+  independently reproducible evidence.
+
+Use the same evidence template for every audit: public API and license, supplied
+features versus paid/hosted services, framework and server portability, input
+and IME behavior, collaboration, document fidelity, performance, accessibility,
+extension conflicts, documentation quality, and runnable tests. Promote an idea
+to the capability ledger only when it has a FountainJS contract and proof plan.
+
 ## Sequencing rule
 
 Finish and certify one ledger outcome before beginning another. Each outcome

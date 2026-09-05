@@ -870,6 +870,7 @@ test('maps carets, ranges, and composition around injected paragraph page gaps',
     await expect(editor).toHaveText(expected);
     expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
     await expect(editor).toHaveText(initialText);
+    await expect(gap).toBeAttached();
   }
   expect(await page.evaluate(() => (
     (globalThis as any).fountainBrowserTest.pages.editable.summary().document.content
@@ -1614,7 +1615,7 @@ for (const continuation of [
   const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
   for (const editor of [left, right]) {
     await expect(editor.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
-    expect(await editor.locator(continuation.breakSelector).count()).toBeGreaterThan(0);
+    await expect.poll(() => editor.locator(continuation.breakSelector).count()).toBeGreaterThan(0);
   }
 
   const threadId = await page.evaluate(async () => (
@@ -1658,7 +1659,7 @@ for (const continuation of [
   await expect(right.locator(`[data-fountain-comment-thread="${threadId}"]`).first()).toBeVisible();
   for (const editor of [left, right]) {
     await expect(editor.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
-    expect(await editor.locator(continuation.breakSelector).count()).toBeGreaterThan(0);
+    await expect.poll(() => editor.locator(continuation.breakSelector).count()).toBeGreaterThan(0);
   }
 });
 
