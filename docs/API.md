@@ -1397,14 +1397,19 @@ source, options?)` then returns `{ markdown, losses, preservation }`:
 - `exact` means the parsed model has not changed and the original source string
   is returned exactly, including line endings, spacing, reference spelling,
   and syntax Fountain does not semantically understand;
+- `blocks` means top-level source regions mapped one-to-one, the document shape
+  stayed aligned, and unchanged blocks plus their separators were retained
+  exactly while changed blocks were rendered canonically;
 - `frontmatter` means a visual edit occurred, the exact frontmatter prefix was
   retained, and the changed body was rendered canonically;
 - `canonical` means no recognized frontmatter existed and the changed model was
   rendered through the normal exporter.
 
-This is a safe first raw/visual boundary, not block-level source preservation.
-After a model change, unknown body syntax and original marker choices are not
-claimed to survive. Reparse raw edits to create a new source snapshot. See
+Block preservation deliberately fails closed for ambiguous blank-line
+ownership, cross-block references, insertions, deletions, and reordering.
+Capture is bounded to 10,000 top-level source regions. Unknown syntax inside a
+changed block is not claimed to survive. Reparse raw edits to create a new
+source snapshot. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md) for the exact frontmatter contract,
 initial standards-oriented fixture corpus, and explicit conformance limits.
 

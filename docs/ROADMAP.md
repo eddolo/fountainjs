@@ -245,8 +245,11 @@ hard-break forms without claiming complete standards conformance. The complete
 in [CI run `3d66d03`](https://github.com/eddolo/fountainjs/actions/runs/33981135923),
 and the corresponding
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33981135912)
-succeeded. Next evidence expands that corpus and adds block-level source spans
-before considering a source editor UI. See
+succeeded. The next implementation now adds the first fail-closed aligned
+top-level spans: unchanged blocks and separators stay exact, changed blocks are
+canonical, and ambiguous or structural edits fall back rather than guessing.
+Broader insertion/deletion/movement mapping and a larger standards corpus
+remain before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
 
 ## Prioritized after release foundations
@@ -259,7 +262,7 @@ before considering a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | First source capsule certified in `3d66d03`: unchanged input is exact; recognized inert frontmatter remains exact after visual edits; preservation status, a versioned standards-oriented subset, unknown-syntax limits, and format-stability fixtures are explicit | Expand the CommonMark/GFM corpus and add safe block-level source spans before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | First source capsule certified in `3d66d03`; fail-closed aligned top-level spans now preserve unchanged blocks and separators around changed blocks without guessing through structural edits | Expand the CommonMark/GFM corpus and safely map insertion/deletion/movement before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node

@@ -38,9 +38,10 @@ const unchanged = MarkdownExporter.exportWithSource(
 // unchanged.preservation === 'exact'
 
 // A visual editor can use imported.document. After a model edit, Fountain
-// retains exact frontmatter and intentionally canonicalizes the body.
+// retains exact frontmatter, safely mapped unchanged blocks, and intentionally
+// canonicalizes changed blocks or the full body when mapping is ambiguous.
 const edited = MarkdownExporter.exportWithSource(editor.state, imported.source)
-// edited.preservation === 'frontmatter' or 'canonical'
+// edited.preservation === 'blocks', 'frontmatter', or 'canonical'
 ```
 
 When the user edits raw Markdown, call `parseWithSource` again. The returned
@@ -74,13 +75,33 @@ longer empty, the detected source line ending is inserted between them.
 | Value | Meaning |
 | --- | --- |
 | `exact` | The current document equals the snapshot's parsed document, so the original source string is returned exactly. |
+| `blocks` | The top-level shape stayed aligned; unchanged conservatively mapped blocks and their separators are exact while changed blocks are canonical. |
 | `frontmatter` | The model changed; recognized frontmatter is exact and the body is canonical. |
 | `canonical` | The model changed and no recognized frontmatter exists; normal canonical export is returned. |
 
 An exact result can retain syntax Fountain does not understand because it does
 not regenerate anything. It does **not** mean that unknown syntax entered the
-structured model. After a visual edit, only features represented in the model
-and exporter can survive.
+structured model. After a visual edit, unknown syntax can survive only inside
+an unchanged safely mapped block; a changed or canonicalized block retains only
+features represented in the model and exporter.
+
+## Safe block-level preservation
+
+`parseWithSource` attempts a deliberately conservative top-level mapping. A
+blank-line-delimited source region must independently parse to exactly one node,
+and the complete ordered set must equal the full parsed document. Only then are
+the block source, leading whitespace, separators, and trailing whitespace
+captured. On export, the top-level count must still match; equal nodes reuse
+their exact source and changed nodes are rendered with the source's line-ending
+style. Capture is capped at 10,000 top-level regions; larger source still gets
+exact whole-document preservation while unchanged, then canonical fallback.
+
+This preserves useful author choices such as Setext headings, closing ATX
+markers, deliberate spacing, and unknown literal directives in untouched
+blocks. It deliberately falls back when ownership is ambiguous—for example
+loose structures spanning blank lines, cross-block reference definitions,
+insertions, deletions, reordering, or changed reference-style links. Fountain
+does not use fuzzy matching or silently attach raw source to the wrong node.
 
 ## Current semantic baseline
 
@@ -122,14 +143,14 @@ conformance. Important remaining work includes:
 - full link destination/title/reference precedence;
 - GFM extended autolinks and strikethrough edge cases;
 - a larger versioned subset tied to explicit specification examples;
-- block-level source spans that can retain untouched source around a visually
-  edited block.
+- broader source spans for safe structural insertion, deletion, and movement
+  without attaching raw text to the wrong node.
 
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The current bounded contract is certified by the complete 466-test package
-gate and 292-pass Chromium/Firefox/WebKit/mobile
+The whole-source/frontmatter baseline is certified by the complete 466-test
+package gate and 292-pass Chromium/Firefox/WebKit/mobile
 [CI run for `3d66d03`](https://github.com/eddolo/fountainjs/actions/runs/33981135923),
 plus the corresponding successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33981135912).

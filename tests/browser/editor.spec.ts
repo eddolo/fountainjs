@@ -2267,20 +2267,24 @@ test('runs reference links, recursive blocks, rich tables, and loss reports in a
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {
-  const source = '\uFEFF---\r\ntitle: Browser source\r\n---\r\n# Original  \r\n';
+  const source = '\uFEFF---\r\ntitle: Browser source\r\n---\r\n# Original ###\r\n\r\nKeep  this spacing.\r\n';
   const result = await page.evaluate((value) => (
     (globalThis as any).fountainBrowserTest.inspectMarkdownSource(value)
   ), source);
 
   expect(result.exact).toEqual({ markdown: source, losses: [], preservation: 'exact' });
   expect(result.edited).toEqual({
-    markdown: '\uFEFF---\r\ntitle: Browser source\r\n---\r\nChanged visually',
+    markdown: '\uFEFF---\r\ntitle: Browser source\r\n---\r\n# Original ###\r\n\r\nChanged visually\r\n',
     losses: [],
-    preservation: 'frontmatter',
+    preservation: 'blocks',
   });
-  expect(result.body).toBe('# Original  \r\n');
+  expect(result.body).toBe('# Original ###\r\n\r\nKeep  this spacing.\r\n');
   expect(result.lineEnding).toBe('\r\n');
   expect(result.frontmatter.content).toBe('title: Browser source\r\n');
+  expect(result.sourceBlocks).toEqual([
+    { source: '# Original ###', separatorAfter: '\r\n\r\n' },
+    { source: 'Keep  this spacing.', separatorAfter: '\r\n' },
+  ]);
 });
 
 test('edits through real beforeinput events and undoes a Markdown input rule', async ({ page }) => {

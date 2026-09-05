@@ -1,7 +1,7 @@
 import type { EditorState } from '../state';
 import type { Node } from '../schema';
 import { fontFamilyCSS } from '../../text-style/values';
-import { MarkdownSourceSnapshot } from '../importers/markdown-importer';
+import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/markdown-importer';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -25,11 +25,12 @@ export interface MarkdownExportResult {
   readonly losses: readonly MarkdownExportLoss[];
 }
 
-export type MarkdownSourcePreservation = 'exact' | 'frontmatter' | 'canonical';
+export type MarkdownSourcePreservation = 'exact' | 'blocks' | 'frontmatter' | 'canonical';
 
 export interface MarkdownSourceExportResult extends MarkdownExportResult {
   /**
-   * `exact` returns the original source string unchanged; `frontmatter` retains only
+   * `exact` returns the original source string unchanged; `blocks` additionally
+   * retains safely mapped unchanged top-level source; `frontmatter` retains only
    * the inert frontmatter prefix; `canonical` is a normal semantic export.
    */
   readonly preservation: MarkdownSourcePreservation;
@@ -304,6 +305,10 @@ function fencedCode(node: Node): string {
   return `${fence}${language}\n${value}\n${fence}`;
 }
 
+function withLineEnding(value: string, lineEnding: MarkdownLineEnding): string {
+  return value.replace(/\r\n|\r|\n/gu, lineEnding);
+}
+
 function render(
   node: Node,
   context: RenderContext,
@@ -440,17 +445,50 @@ export class MarkdownExporter {
         preservation: 'exact' as const,
       });
     }
+
+    if (node.type.name === 'doc' && source.blocks.length === node.content.length && source.blocks.length > 0) {
+      const context: RenderContext = { options, losses: [], references: new Map() };
+      reportNodeAttributes(node, context, []);
+      let preservedBlocks = 0;
+      const body = source.leading + node.content.map((block, index) => {
+        const captured = source.blocks[index];
+        let rendered: string;
+        if (captured.matches(block)) {
+          preservedBlocks += 1;
+          rendered = captured.source;
+        } else {
+          rendered = withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
+        }
+        return `${rendered}${captured.separatorAfter}`;
+      }).join('');
+      // Reference-style output needs a new document-level definition section;
+      // fall back rather than risk colliding with source-owned definitions.
+      if (preservedBlocks > 0 && context.references.size === 0) {
+        const frontmatterSeparator = source.frontmatter
+          && !source.frontmatter.raw.endsWith('\n')
+          && !source.frontmatter.raw.endsWith('\r')
+          && body
+          ? source.lineEnding
+          : '';
+        return Object.freeze({
+          markdown: `${source.frontmatter?.raw ?? ''}${frontmatterSeparator}${body}`,
+          losses: Object.freeze([...context.losses]),
+          preservation: 'blocks' as const,
+        });
+      }
+    }
     const canonical = this.exportWithReport(node, options);
+    const markdown = withLineEnding(canonical.markdown, source.lineEnding);
     if (!source.frontmatter) {
-      return Object.freeze({ ...canonical, preservation: 'canonical' as const });
+      return Object.freeze({ ...canonical, markdown, preservation: 'canonical' as const });
     }
     const separator = source.frontmatter.raw.endsWith('\n') || source.frontmatter.raw.endsWith('\r')
-      || !canonical.markdown
+      || !markdown
       ? ''
       : source.lineEnding;
     return Object.freeze({
       ...canonical,
-      markdown: `${source.frontmatter.raw}${separator}${canonical.markdown}`,
+      markdown: `${source.frontmatter.raw}${separator}${markdown}`,
       preservation: 'frontmatter' as const,
     });
   }

@@ -96,6 +96,106 @@ describe('Markdown interchange', () => {
     expect(imported.source.frontmatter?.content).toBe('title: Keep me\n');
   });
 
+  it('preserves unchanged top-level source blocks around an aligned visual edit', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '\r\n# Keep this heading ###\r\n\r\nA :custom[raw directive] value.\r\n\r\nLast  spaced block.\r\n';
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[0],
+      schema.node('paragraph', {}, [schema.text('Changed block')]),
+      imported.document.content[2],
+    ]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(imported.source.leading).toBe('\r\n');
+    expect(imported.source.blocks).toHaveLength(3);
+    expect(Object.isFrozen(imported.source.blocks)).toBe(true);
+    expect(Object.isFrozen(imported.source.blocks[0])).toBe(true);
+    expect(imported.source.blocks[0].source).toBe('# Keep this heading ###');
+    expect(imported.source.blocks[0].separatorAfter).toBe('\r\n\r\n');
+    expect(result).toEqual({
+      markdown: '\r\n# Keep this heading ###\r\n\r\nChanged block\r\n\r\nLast  spaced block.\r\n',
+      losses: [],
+      preservation: 'blocks',
+    });
+  });
+
+  it('keeps frontmatter and aligned source blocks together after an edit', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '---\ntitle: Blocks\n---\n\nSetext source\n=============\n\nOriginal';
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[0],
+      schema.node('paragraph', {}, [schema.text('Changed')]),
+    ]);
+
+    expect(MarkdownExporter.exportWithSource(changed, imported.source)).toEqual({
+      markdown: '---\ntitle: Blocks\n---\n\nSetext source\n=============\n\nChanged',
+      losses: [],
+      preservation: 'blocks',
+    });
+  });
+
+  it('fails closed to canonical output when source blocks cannot align safely', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('# Heading ###\r\nParagraph without a blank line', schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[0],
+      schema.node('paragraph', {}, [schema.text('Changed')]),
+    ]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(imported.source.blocks).toEqual([]);
+    expect(result).toEqual({
+      markdown: '# Heading\r\n\r\nChanged',
+      losses: [],
+      preservation: 'canonical',
+    });
+  });
+
+  it('falls back for structural edits instead of guessing source-block ownership', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('# Keep ###\r\n\r\nOriginal', schema);
+    const changed = schema.node('doc', {}, [
+      ...imported.document.content,
+      schema.node('paragraph', {}, [schema.text('Inserted')]),
+    ]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(imported.source.blocks).toHaveLength(2);
+    expect(result.preservation).toBe('canonical');
+    expect(result.markdown).toBe('# Keep\r\n\r\nOriginal\r\n\r\nInserted');
+  });
+
+  it('falls back when reference-style output needs document-level definitions', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('# Keep ###\n\nOriginal', schema);
+    const changed = schema.node('doc', {}, [
+      imported.document.content[0],
+      schema.node('paragraph', {}, [schema.text('Linked', [
+        schema.marks.link.create({ href: 'https://example.com', title: '' }),
+      ])]),
+    ]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source, { linkStyle: 'reference' });
+
+    expect(result.preservation).toBe('canonical');
+    expect(result.markdown).toBe('# Keep\n\n[Linked][ref-1]\n\n[ref-1]: https://example.com');
+  });
+
+  it('bounds per-block provenance while retaining whole-source exactness', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = Array.from({ length: 10_001 }, (_, index) => `Block ${index}`).join('\n\n');
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+
+    expect(imported.document.content).toHaveLength(10_001);
+    expect(imported.source.blocks).toEqual([]);
+    expect(MarkdownExporter.exportWithSource(imported.document, imported.source)).toEqual({
+      markdown: source,
+      losses: [],
+      preservation: 'exact',
+    });
+  });
+
   it('does not mistake an unclosed delimiter for frontmatter', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = '---\ntitle: Not closed\nBody';

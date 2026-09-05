@@ -1,6 +1,8 @@
 import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 
+const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
+
 export type MarkdownLineEnding = '\n' | '\r\n' | '\r';
 
 export interface MarkdownFrontmatter {
@@ -18,6 +20,19 @@ interface MarkdownSourceParts {
   readonly frontmatter?: MarkdownFrontmatter;
 }
 
+/** One conservatively mapped top-level source block and its following whitespace. */
+export interface MarkdownSourceBlockSnapshot {
+  readonly source: string;
+  readonly separatorAfter: string;
+  /** True when a current top-level node is semantically equal to this captured block. */
+  matches(document: Node): boolean;
+}
+
+interface MarkdownBlockCapture {
+  readonly leading: string;
+  readonly blocks: readonly MarkdownSourceBlockSnapshot[];
+}
+
 /**
  * Immutable source provenance captured by `MarkdownImporter.parseWithSource`.
  *
@@ -30,16 +45,26 @@ export class MarkdownSourceSnapshot {
   readonly body: string;
   readonly lineEnding: MarkdownLineEnding;
   readonly frontmatter?: MarkdownFrontmatter;
+  /** Exact whitespace before the first safely mapped block. */
+  readonly leading: string;
+  /**
+   * Conservatively mapped top-level blocks. An empty array means this source was
+   * too structurally ambiguous for block-level preservation.
+   */
+  readonly blocks: readonly MarkdownSourceBlockSnapshot[];
 
   private constructor(
     source: string,
     parts: MarkdownSourceParts,
     private readonly originalDocument: Node,
+    capture?: MarkdownBlockCapture,
   ) {
     this.source = source;
     this.body = parts.body;
     this.lineEnding = parts.lineEnding;
     this.frontmatter = parts.frontmatter;
+    this.leading = capture?.leading ?? '';
+    this.blocks = Object.freeze([...(capture?.blocks ?? [])]);
     Object.freeze(this);
   }
 
@@ -52,9 +77,10 @@ export class MarkdownSourceSnapshot {
     if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
     const parts = splitMarkdownSource(source);
     const document = new MarkdownImporter().parse(parts.body, schema);
+    const capture = captureMarkdownBlocks(parts.body, schema, document);
     return Object.freeze({
       document,
-      source: new MarkdownSourceSnapshot(source, parts, document),
+      source: new MarkdownSourceSnapshot(source, parts, document, capture),
     });
   }
 }
@@ -91,6 +117,73 @@ function sourceLine(source: string, start: number): SourceLine {
 function sourceLineEnding(source: string): MarkdownLineEnding {
   const match = /\r\n|\r|\n/.exec(source);
   return (match?.[0] as MarkdownLineEnding | undefined) ?? '\n';
+}
+
+function sourceLines(source: string): readonly SourceLine[] {
+  const lines: SourceLine[] = [];
+  for (let cursor = 0; cursor <= source.length;) {
+    const line = sourceLine(source, cursor);
+    lines.push(line);
+    if (!line.ending) break;
+    cursor = line.next;
+  }
+  return lines;
+}
+
+function markdownBlockSegments(source: string): { leading: string; blocks: Array<{ source: string; separatorAfter: string }> } {
+  const lines = sourceLines(source);
+  let index = 0;
+  while (index < lines.length && !lines[index].value.trim()) index += 1;
+  const firstStart = lines[index]?.start ?? source.length;
+  const blocks: Array<{ source: string; separatorAfter: string }> = [];
+
+  while (index < lines.length) {
+    const start = lines[index].start;
+    let last = lines[index];
+    while (index < lines.length && lines[index].value.trim()) {
+      last = lines[index];
+      index += 1;
+    }
+    const end = last.end;
+    while (index < lines.length && !lines[index].value.trim()) index += 1;
+    const nextStart = lines[index]?.start ?? source.length;
+    blocks.push({
+      source: source.slice(start, end),
+      separatorAfter: source.slice(end, nextStart),
+    });
+  }
+
+  return { leading: source.slice(0, firstStart), blocks };
+}
+
+/**
+ * Capture only when blank-line-delimited source regions independently map
+ * one-to-one to the parsed top-level nodes. Ambiguous lists, definitions,
+ * fenced content with blank lines, and cross-block references fail closed.
+ */
+function captureMarkdownBlocks(source: string, schema: Schema, document: Node): MarkdownBlockCapture | undefined {
+  const segments = markdownBlockSegments(source);
+  if (!segments.blocks.length
+    || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS
+    || segments.blocks.length !== document.content.length) return undefined;
+
+  const blocks: MarkdownSourceBlockSnapshot[] = [];
+  for (let index = 0; index < segments.blocks.length; index += 1) {
+    const segment = segments.blocks[index];
+    const parsed = new MarkdownImporter().parse(segment.source, schema);
+    const original = document.content[index];
+    if (parsed.content.length !== 1 || !parsed.content[0].eq(original)) return undefined;
+    blocks.push(Object.freeze({
+      source: segment.source,
+      separatorAfter: segment.separatorAfter,
+      matches: (current: Node) => original.eq(current),
+    }));
+  }
+
+  return Object.freeze({
+    leading: segments.leading,
+    blocks: Object.freeze(blocks),
+  });
 }
 
 function isOpeningDelimiter(value: string): boolean {

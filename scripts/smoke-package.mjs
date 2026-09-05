@@ -75,6 +75,17 @@ if (frontmatterMarkdown.markdown !== '\uFEFF---\r\ntitle: Packed source\r\n---\r
   || frontmatterMarkdown.preservation !== 'frontmatter') {
   throw new Error('ESM headless core did not preserve Markdown frontmatter after a visual edit.');
 }
+const blockSource = '# Source spelling ###\r\n\r\nOriginal  spacing';
+const blockMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(blockSource, markdownSchema);
+const blockChanged = markdownSchema.node('doc', {}, [
+  blockMarkdown.document.content[0],
+  markdownSchema.node('paragraph', {}, [markdownSchema.text('Changed')]),
+]);
+const preservedBlocks = esmHeadlessCore.MarkdownExporter.exportWithSource(blockChanged, blockMarkdown.source);
+if (preservedBlocks.markdown !== '# Source spelling ###\r\n\r\nChanged'
+  || preservedBlocks.preservation !== 'blocks') {
+  throw new Error('ESM headless core did not preserve aligned Markdown source blocks.');
+}
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');

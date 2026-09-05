@@ -812,6 +812,7 @@ const inspectMarkdownSource = (source: string) => {
   const imported = MarkdownImporter.parseWithSource(source, editor.state.schema);
   const exact = MarkdownExporter.exportWithSource(imported.document, imported.source);
   const changed = editor.state.schema.node('doc', {}, [
+    ...imported.document.content.slice(0, -1),
     editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Changed visually')]),
   ]);
   const edited = MarkdownExporter.exportWithSource(changed, imported.source);
@@ -821,6 +822,10 @@ const inspectMarkdownSource = (source: string) => {
     body: imported.source.body,
     lineEnding: imported.source.lineEnding,
     frontmatter: imported.source.frontmatter,
+    sourceBlocks: imported.source.blocks.map((block) => ({
+      source: block.source,
+      separatorAfter: block.separatorAfter,
+    })),
   };
 };
 

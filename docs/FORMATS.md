@@ -114,7 +114,10 @@ frontmatter prefix in an immutable `MarkdownSourceSnapshot`.
 exactly while the parsed document is unchanged. After a visual edit it
 retains recognized frontmatter exactly and exports the changed body in
 canonical Markdown. The returned `preservation` value is `exact`,
-`frontmatter`, or `canonical`, so a host never has to infer what happened.
+`blocks`, `frontmatter`, or `canonical`, so a host never has to infer what
+happened. `blocks` means conservatively mapped, position-aligned unchanged
+top-level regions and their separators remained exact while changed regions
+were rendered.
 
 ```ts
 const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema)
@@ -125,18 +128,21 @@ const unchanged = MarkdownExporter.exportWithSource(
   imported.source,
 )
 
-// After a visual edit, frontmatter stays exact and the body is canonical.
+// After a visual edit, safe unchanged blocks and frontmatter stay exact.
 const edited = MarkdownExporter.exportWithSource(
   editor.state,
   imported.source,
 )
 ```
 
-This does not yet preserve unchanged body blocks around a changed block.
-Unknown body directives, delimiter spelling, reference ordering, and whitespace
-remain exact only while the complete parsed document is unchanged. A source
-editor must reparse its new text to establish a new snapshot. JSON remains the
-lossless structured persistence format. The detailed contract, initial
+Source-block capture requires blank-line-delimited regions to independently
+parse one-to-one to the complete top-level document. Ambiguous structures,
+cross-block references, insertions, deletions, reordering, and changed reference
+definitions fall back to frontmatter-only or canonical output. Capture is
+bounded to 10,000 top-level regions. Unknown syntax inside a changed block is
+not retained. A source editor must reparse its new text to establish a new
+snapshot. JSON remains the lossless structured persistence format. The
+detailed contract, initial
 standards-oriented corpus, and explicit non-conformance list are in
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
 
