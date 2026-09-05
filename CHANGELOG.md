@@ -116,6 +116,10 @@
   a forbidden newline inside a link destination from becoming a valid space.
   Link-title separation now uses only CommonMark's ASCII whitespace rather than
   incorrectly treating non-breaking spaces as syntax.
+  Marks can now belong to any inline node rather than text alone. Linked and
+  emphasized image atoms import and export correctly through Markdown,
+  browser/server HTML, DOM rendering, JSON, and Yjs; marks on block nodes remain
+  invalid.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

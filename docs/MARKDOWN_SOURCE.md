@@ -154,6 +154,8 @@ an initial standards-oriented set of behaviors:
 - spaces or a backslash before a newline as a hard break;
 - inline/reference links and images with titles;
 - plain-text image descriptions derived from nested emphasis, links, and images;
+- links and emphasis around inline image atoms, preserved through canonical
+  Markdown plus browser/server HTML, JSON, DOM rendering, and Yjs;
 - recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
 - aligned GFM pipe tables;
 - extension-aware footnotes, math, details, ruby, and rich text-style HTML.

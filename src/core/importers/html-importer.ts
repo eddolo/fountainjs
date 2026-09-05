@@ -31,7 +31,7 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[]): Fount
   segments.forEach((segment) => {
     if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
     flush();
-    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment })); }
+    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment }, [], undefined, marks)); }
     catch { result.push(schema.text(segment, marks)); }
   });
   flush();
@@ -140,7 +140,7 @@ function configuredNode(
     for (const content of candidates) {
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
-        const node = type.create(attrs, content);
+        const node = type.create(attrs, content, undefined, inheritedMarks);
         schema.validate(node);
         return node;
       } catch { /* Try the next content shape or parse rule. */ }
@@ -203,16 +203,19 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     if (ruby) { result.push(...ruby); return; }
     const customNode = configuredNode(child, schema, true, marks);
     if (customNode) { result.push(customNode); return; }
-    if (tag === 'br' && schema.nodes.hard_break) { result.push(schema.node('hard_break')); return; }
+    if (tag === 'br' && schema.nodes.hard_break) {
+      result.push(schema.node('hard_break', {}, [], undefined, marks));
+      return;
+    }
     if (tag === 'img' && schema.nodes.inline_image) {
-      const image = imageNode(child as HTMLImageElement, schema, 'inline_image');
+      const image = imageNode(child as HTMLImageElement, schema, 'inline_image', undefined, marks);
       if (image) result.push(image);
       return;
     }
     if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
       const latex = child.getAttribute('data-latex') ?? child.textContent ?? '';
       const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
-      try { result.push(schema.node('inline_math', { latex, ariaLabel })); }
+      try { result.push(schema.node('inline_math', { latex, ariaLabel }, [], undefined, marks)); }
       catch { if (latex) result.push(schema.text(latex, marks)); }
       return;
     }
@@ -226,7 +229,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
           trigger: child.getAttribute('data-trigger') ?? '@',
           kind: child.getAttribute('data-kind') ?? 'mention',
           href: href && isSafeURL(href) ? href : '',
-        }));
+        }, [], undefined, marks));
       } catch { result.push(...textNodes(child.textContent ?? '', schema, marks)); }
       return;
     }
@@ -240,7 +243,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
           name: child.getAttribute('data-name') ?? unicodeEmojiName(emoji),
           emoji,
           fallbackImage: fallback && isSafeURL(fallback, { allowDataImage: true }) ? fallback : '',
-        }));
+        }, [], undefined, marks));
       } catch { result.push(...textNodes(emoji || child.textContent || '', schema, marks)); }
       return;
     }
@@ -289,6 +292,7 @@ function imageNode(
   schema: Schema,
   type: 'image_super' | 'inline_image',
   container?: HTMLElement,
+  marks: readonly Mark[] = [],
 ): FountainNode | null {
   const src = image.getAttribute('src') ?? '';
   if (!isSafeURL(src, { allowDataImage: true }) || !schema.nodes[type]) return null;
@@ -311,7 +315,7 @@ function imageNode(
       loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '') ? image.getAttribute('decoding') : 'async',
       ...(block ? { caption: container?.querySelector(':scope > figcaption')?.textContent ?? '' } : {}),
-    });
+    }, [], undefined, marks);
   } catch { return null; }
 }
 

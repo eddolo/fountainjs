@@ -126,8 +126,7 @@ function clearDecorationAttributes(element: HTMLElement): void {
   appliedDecorations.delete(element);
 }
 
-function renderMarkedText(node: Node, text: string): globalThis.Node {
-  let content: globalThis.Node = document.createTextNode(text);
+function renderMarks(node: Node, content: globalThis.Node): globalThis.Node {
   for (const mark of node.marks) {
     const spec = mark.type.spec.toDOM?.(mark);
     if (!spec) continue;
@@ -186,7 +185,7 @@ function renderText(node: Node, path: readonly number[], position: number, conte
       .forEach((decoration) => wrapper.appendChild(renderWidget(decoration)));
     const to = boundaries[index + 1];
     if (to === undefined || to <= from) continue;
-    let content = renderMarkedText(node, value.slice(from, to));
+    let content = renderMarks(node, document.createTextNode(value.slice(from, to)));
     inline.filter((decoration) => decoration.from < position + to && decoration.to > position + from)
       .forEach((decoration) => {
         const span = document.createElement('span');
@@ -255,7 +254,7 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   });
   const last = node.content.at(-1);
   if (!last?.isText || (last.text?.length ?? 0) > 0) appendWidgets(target, childPosition, context);
-  return dom;
+  return node.type.isInline && node.marks.length ? renderMarks(node, dom) : dom;
 }
 
 export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderContext = {}): MountedDocumentNode[] {

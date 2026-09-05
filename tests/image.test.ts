@@ -10,6 +10,7 @@ import {
   MarkdownImporter,
   NodeSelection,
   Plugin,
+  Schema,
   Selection,
   createEditor,
   deleteImage,
@@ -91,6 +92,31 @@ describe('production image editing', () => {
     expect(deleteImage(editor)).toBe(true);
     expect(editor.state.doc.child(0).textContent).toBe('hello');
     expect(editor.state.selection.kind).toBe('text');
+  });
+
+  it('round-trips and renders linked inline images as marked atoms', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: HTMLImporter.parse(
+        '<p><a href="/details" title="Details" target="_self"><img src="/status.png" alt="Status"></a></p>',
+        new Schema(CoreSchemaSpec),
+      ).toJSON(),
+    });
+    const image = editor.state.doc.child(0).child(0);
+    expect(image.marks.map((mark) => ({ type: mark.type.name, attrs: mark.attrs }))).toEqual([{
+      type: 'link',
+      attrs: { href: '/details', title: 'Details', target: '_self' },
+    }]);
+
+    const html = HTMLExporter.export(editor.state, { document: false });
+    expect(html).toContain('<a href="/details" title="Details" target="_self"');
+    expect(html).toContain('<img src="/status.png" alt="Status"');
+    expect(HTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(editor.getJSON());
+
+    const root = document.createElement('div');
+    const view = new EditorView(root, editor);
+    expect(root.querySelector('a[href="/details"] > img[data-fountain-node="inline_image"]')).not.toBeNull();
+    view.destroy();
   });
 
   it('maps an asynchronous upload destination through edits and reports progress', async () => {

@@ -236,7 +236,39 @@ function textStyleHTML(node: Node, context: RenderContext, path: readonly number
   return `<span data-fountain-text-style="true" style="${escapeHTML(styles.join(';'))}">${value}</span>`;
 }
 
+function markdownMarks(
+  node: Node,
+  value: string,
+  context: RenderContext,
+  path: readonly number[],
+  allowCode = false,
+): string {
+  node.marks.forEach((mark) => {
+    if (!SUPPORTED_MARKS.has(mark.type.name) || (!allowCode && mark.type.name === 'code')) {
+      report(context, 'mark', mark.type.name, path, 'Mark omitted from Markdown.');
+    } else if (mark.type.name === 'link' && mark.attrs.target !== '_blank') {
+      report(context, 'attribute', 'link', path, 'The link target is not represented by Markdown.');
+    } else if (mark.type.name === 'highlight' && mark.attrs.color !== '#fff3a3') {
+      report(context, 'attribute', 'highlight', path, 'The custom highlight color is projected to the default Markdown highlight.');
+    }
+  });
+  const strongIndex = node.marks.findIndex((mark) => mark.type.name === 'strong');
+  const emIndex = node.marks.findIndex((mark) => mark.type.name === 'em');
+  const emDelimiter = strongIndex >= 0 && strongIndex < emIndex ? '_' : '*';
+  for (const mark of [...node.marks].reverse().filter((item) => item.type.name !== 'code')) {
+    if (mark.type.name === 'strong') value = `**${value}**`;
+    else if (mark.type.name === 'em') value = `${emDelimiter}${value}${emDelimiter}`;
+    else if (mark.type.name === 'strike') value = `~~${value}~~`;
+    else if (mark.type.name === 'link') value = link(value, mark.attrs.href, mark.attrs.title, context);
+    else if (mark.type.name === 'highlight') value = `==${value}==`;
+  }
+  return value;
+}
+
 function inline(node: Node, context: RenderContext, path: readonly number[], preserveMarkBoundary = false): string {
+  if (!node.isText && node.type.isInline && node.marks.length) {
+    return markdownMarks(node, inline(node.withMarks([]), context, path, preserveMarkBoundary), context, path);
+  }
   reportNodeAttributes(node, context, path);
   if (!node.isText) {
     if (node.type.name === 'hard_break') return '  \n';
@@ -271,29 +303,10 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
   }
   if (needsTextStyleHTML(node)) return textStyleHTML(node, context, path);
 
-  node.marks.forEach((mark) => {
-    if (!SUPPORTED_MARKS.has(mark.type.name)) {
-      report(context, 'mark', mark.type.name, path, 'This mark has no built-in Markdown representation and is omitted.');
-    } else if (mark.type.name === 'link' && mark.attrs.target !== '_blank') {
-      report(context, 'attribute', 'link', path, 'The link target is not represented by Markdown.');
-    } else if (mark.type.name === 'highlight' && mark.attrs.color !== '#fff3a3') {
-      report(context, 'attribute', 'highlight', path, 'The custom highlight color is projected to the default Markdown highlight.');
-    }
-  });
-  let text = node.marks.some((mark) => mark.type.name === 'code')
+  const text = node.marks.some((mark) => mark.type.name === 'code')
     ? codeSpan(node.text ?? '')
     : escapeInline(node.text ?? '');
-  const strongIndex = node.marks.findIndex((mark) => mark.type.name === 'strong');
-  const emIndex = node.marks.findIndex((mark) => mark.type.name === 'em');
-  const emDelimiter = strongIndex >= 0 && strongIndex < emIndex ? '_' : '*';
-  for (const mark of [...node.marks].reverse().filter((item) => item.type.name !== 'code')) {
-    if (mark.type.name === 'strong') text = `**${text}**`;
-    else if (mark.type.name === 'em') text = `${emDelimiter}${text}${emDelimiter}`;
-    else if (mark.type.name === 'strike') text = `~~${text}~~`;
-    else if (mark.type.name === 'link') text = link(text, mark.attrs.href, mark.attrs.title, context);
-    else if (mark.type.name === 'highlight') text = `==${text}==`;
-  }
-  return text;
+  return markdownMarks(node, text, context, path, true);
 }
 
 function sharedDelimitedMark(left: Node | undefined, right: Node | undefined): boolean {

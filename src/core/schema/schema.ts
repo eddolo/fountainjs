@@ -143,7 +143,9 @@ export class Schema {
         if (cacheable) this.validatedNodes.add(current);
         return cacheable;
       }
-      if (current.marks.length) throw new Error(`Only text nodes may carry marks (${path.join('.') || 'root'}).`);
+      if (current.marks.length && !current.type.isInline) {
+        throw new Error(`Only inline nodes may carry marks (${path.join('.') || 'root'}).`);
+      }
       if (current.type.spec.atom && current.content.length) throw new Error(`Atom node ${current.type.name} cannot contain children.`);
       const expression = current.type.spec.content;
       if (expression) {
@@ -156,7 +158,9 @@ export class Schema {
       const childrenCacheable = current.content
         .map((child, index) => visit(child, [...path, index]))
         .every(Boolean);
-      const cacheable = childrenCacheable && isDeeplyImmutable(current.attrs);
+      const cacheable = childrenCacheable
+        && isDeeplyImmutable(current.attrs)
+        && current.marks.every((mark) => isDeeplyImmutable(mark.attrs));
       if (cacheable) this.validatedNodes.add(current);
       return cacheable;
     };

@@ -21,6 +21,12 @@ server with `fountainjs-editor/html/server`. See
 
 `Schema` compiles a `SchemaSpec` into node and mark types. Use `schema.node()`, `schema.text()`, and `schema.mark()` to create values with attribute defaults and validation. `schema.validate()` enforces ownership, attributes, atom rules, mark placement, and node content expressions at every editor-state boundary. `Node` values are immutable and provide `textContent`, `nodeSize`, `child()`, `descendants()`, `eq()`, and `toJSON()`.
 
+Marks belong to inline content, including atomic inline nodes—not only text.
+Pass them as the fifth argument to `schema.node(...)`, or use
+`inlineNode.withMarks(marks)`. Block nodes carrying marks fail schema
+validation. JSON, DOM rendering, browser/server HTML, Markdown's supported
+inline-node forms, and Yjs preserve this distinction.
+
 `CoreSchemaSpec` includes paragraphs, headings, quotes, ordered/bullet/task lists, code blocks, tables, block/inline images, dividers, hard breaks, and common inline marks. `StarterKit` adds the independently composable native-media module and behavior/format extensions. Applications may extend or replace either with a compatible `SchemaSpec`.
 
 ## Extension composition
@@ -1265,6 +1271,11 @@ dispatching, while `insertImage` and `insertInlineImage` use the active
 selection. `setImageAttributes`, `setImageAlignment`, and `deleteImage` operate
 on a selected image or an explicit live path.
 
+An inline image may carry ordinary inline marks. In particular, linked images
+round-trip as an `inline_image` with a `link` mark through JSON, Markdown,
+browser/server HTML, the DOM renderer, and Yjs; no image-specific URL attribute
+or browser-only wrapper is required.
+
 The block-image NodeView supplies a multiline caption field, selection state,
 load-error status and retry, and two resize sliders. Drag either handle with a
 pointer/touch input, or focus it and use Left/Right (10 px), Shift+Left/Right
@@ -1385,7 +1396,8 @@ attribute length, and recorded parser errors. See
 `MarkdownImporter.parse(source, schema)` recognizes inline links with titles;
 full, collapsed, and shortcut reference links/images; recursive quotes; loose
 multi-block nested lists; aligned tables with escaped pipes; and the remaining
-built-in Markdown projections. Reference identifiers are normalized without
+built-in Markdown projections. Links and emphasis around inline images remain
+marks on the image atom, including full/reference linked-image forms. Reference identifiers are normalized without
 changing their displayed label, unsafe URLs remain ordinary text, short table
 rows are padded, and the final tree passes `schema.validate()`.
 

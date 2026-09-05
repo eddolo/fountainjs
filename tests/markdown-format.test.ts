@@ -536,6 +536,25 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('preserves links and emphasis around inline images', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '[![moon](moon.jpg "Moon")](/uri "Outer") and *![star](star.png)*';
+    const document = MarkdownImporter.parse(source, schema);
+    const images = document.child(0).content.filter((node) => node.type.name === 'inline_image');
+
+    expect(images).toHaveLength(2);
+    expect(images[0]?.marks.map((mark) => ({ type: mark.type.name, attrs: mark.attrs }))).toEqual([{
+      type: 'link',
+      attrs: { href: '/uri', title: 'Outer', target: '_blank' },
+    }]);
+    expect(images[1]?.marks.map((mark) => mark.type.name)).toEqual(['em']);
+    expect(MarkdownExporter.export(document)).toBe(source);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
+
+    const referenced = MarkdownImporter.parse('[![moon](moon.jpg)][ref]\n\n[ref]: /uri "Outer"', schema);
+    expect(referenced.child(0).child(0).marks[0]?.attrs).toMatchObject({ href: '/uri', title: 'Outer' });
+  });
+
   it('keeps nested emphasis and links tighter than surrounding emphasis', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

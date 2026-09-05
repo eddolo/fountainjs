@@ -2295,6 +2295,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     imageDescription: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Before ![photo *with emphasis*, [a link](https://example.com), and ![an icon](icon.png)](hero.png "Hero") after',
     ),
+    linkedImages: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[![moon](moon.jpg "Moon")](/uri "Outer") and *![star](star.png)*',
+    ),
     emphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'snake_case / ***important*** / __strong__ / a*b*c',
     ),
@@ -2451,6 +2454,25 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     }),
   ]));
   expect(result.imageDescription.losses).toEqual([]);
+  expect(result.linkedImages.document).toEqual(result.linkedImages.roundTrip);
+  expect(result.linkedImages.document.content[0].content
+    .filter((node: any) => node.type === 'inline_image')
+    .map((node: any) => ({
+      alt: node.attrs.alt,
+      marks: node.marks?.map((mark: any) => mark.type) ?? [],
+    })))
+    .toEqual([
+      { alt: 'moon', marks: ['link'] },
+      { alt: 'star', marks: ['em'] },
+    ]);
+  expect(result.linkedImages.markdown).toBe([
+    '[![moon][ref-1]][ref-2] and *![star][ref-3]*',
+    '',
+    '[ref-1]: moon.jpg "Moon"',
+    '[ref-2]: /uri "Outer"',
+    '[ref-3]: star.png',
+  ].join('\n'));
+  expect(result.linkedImages.losses).toEqual([]);
   expect(result.emphasis.document).toEqual(result.emphasis.roundTrip);
   expect(result.emphasis.document.content[0].content.map((node: any) => ({
     text: node.text,

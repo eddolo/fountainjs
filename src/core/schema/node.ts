@@ -57,8 +57,8 @@ export class Node {
   }
 
   withMarks(marks: readonly Mark[]): Node {
-    if (!this.isText) throw new Error('Marks can only be applied to text nodes.');
-    return new Node(this.type, this.attrs, [], this.text, marks);
+    if (!this.type.isInline) throw new Error('Marks can only be applied to inline nodes.');
+    return new Node(this.type, this.attrs, this.content, this.text, marks);
   }
 
   withAttrs(attrs: Attributes): Node {

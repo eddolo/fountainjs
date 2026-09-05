@@ -1,5 +1,5 @@
 import type { EditorState } from '../state';
-import type { Attributes, DOMOutputSpec, Node } from '../schema';
+import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
 import { isSafeURL } from '../url';
 
 export interface HTMLExportOptions {
@@ -138,9 +138,8 @@ function tableCellSizeAttributes(node: Node): string {
   return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}" style="width:${widths.reduce((sum, width) => sum + width, 0)}px"` : ''}`;
 }
 
-function renderText(node: Node): string {
-  let content = escapeHTML(node.text);
-  for (const mark of node.marks) {
+function renderMarks(content: string, marks: readonly Mark[]): string {
+  for (const mark of marks) {
     switch (mark.type.name) {
       case 'strong': content = `<strong>${content}</strong>`; break;
       case 'em': content = `<em>${content}</em>`; break;
@@ -168,8 +167,15 @@ function renderText(node: Node): string {
   return content;
 }
 
+function renderText(node: Node): string {
+  return renderMarks(escapeHTML(node.text), node.marks);
+}
+
 function renderNode(node: Node, document: Node = node, path: readonly number[] = []): string {
   if (node.isText) return renderText(node);
+  if (node.type.isInline && node.marks.length) {
+    return renderMarks(renderNode(node.withMarks([]), document, path), node.marks);
+  }
   const context = { document, path };
   const children = () => node.content.map((child, index) => renderNode(child, document, [...path, index])).join('');
   switch (node.type.name) {

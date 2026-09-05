@@ -100,6 +100,28 @@ class MemoryAwareness implements YjsAwareness {
 }
 
 describe('optional Yjs collaboration adapter', () => {
+  it('synchronizes marks carried by inline atom nodes', () => {
+    const content: NodeJSON = {
+      type: 'doc',
+      content: [{
+        type: 'paragraph',
+        content: [{
+          type: 'inline_image',
+          attrs: { src: '/status.png', alt: 'Status' },
+          marks: [{ type: 'link', attrs: { href: '/details', title: 'Details', target: '_self' } }],
+        }],
+      }],
+    };
+    const leftDocument = new Y.Doc();
+    const left = createCollaborativeEditor(leftDocument, ada, content);
+    const rightDocument = new Y.Doc();
+    Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument), 'initial-sync');
+    const right = createCollaborativeEditor(rightDocument, linus, content);
+
+    expect(right.getJSON()).toEqual(left.getJSON());
+    expect(right.state.doc.child(0).child(0).marks[0]?.type.name).toBe('link');
+  });
+
   it('converges concurrent offline text edits at character granularity', () => {
     const leftDocument = new Y.Doc();
     const left = createCollaborativeEditor(leftDocument, ada);

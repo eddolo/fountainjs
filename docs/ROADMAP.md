@@ -275,6 +275,9 @@ matrix without letting an earlier shortcut capture a following label.
 Image descriptions project nested inline formatting, links, and images to
 plain alt text rather than preserving Markdown punctuation in accessibility
 metadata.
+Inline atom marks now close a lower-level model gap: links and emphasis around
+images remain attached to the image node through Markdown, browser/server HTML,
+DOM rendering, JSON, and Yjs, while block marks remain schema-invalid.
 GFM bare email autolinks accept the specified local-part characters, require a
 multi-segment domain, remove a final period from the link, and reject invalid
 plus, hyphen, or underscore domain tails rather than linking a valid-looking

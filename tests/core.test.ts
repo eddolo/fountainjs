@@ -91,6 +91,20 @@ describe('document model and transactions', () => {
     expect(() => (doc.content as unknown[]).push(doc)).toThrow();
   });
 
+  it('allows immutable marks on inline nodes while rejecting them on block nodes', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const link = schema.mark('link', { href: '/details', title: 'Details', target: '_self' });
+    const image = schema.node('inline_image', { src: '/status.png', alt: 'Status' }, [], undefined, [link]);
+    const document = schema.node('doc', {}, [schema.node('paragraph', {}, [image])]);
+    schema.validate(document);
+
+    expect(schema.nodeFromJSON(document.toJSON()).toJSON()).toEqual(document.toJSON());
+    expect(image.withMarks([]).marks).toEqual([]);
+    const invalid = schema.node('paragraph', {}, [], undefined, [schema.mark('strong')]);
+    expect(() => schema.validate(invalid)).toThrow('Only inline nodes may carry marks');
+    expect(() => invalid.withMarks([])).toThrow('Marks can only be applied to inline nodes');
+  });
+
   it('enforces schema content expressions at the editor boundary', () => {
     expect(() => createEditor({
       schema: CoreSchemaSpec,

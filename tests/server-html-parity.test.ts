@@ -34,6 +34,7 @@ const fixtures = [
   '<hr data-fountain-page-break="true"><details open><summary>Summary</summary><p>Body</p></details>',
   '<figure data-fountain-media="audio"><audio src="https://example.com/audio.mp3" controls><track src="https://example.com/en.vtt" kind="captions" srclang="en"></audio><figcaption>Audio</figcaption></figure>',
   '<figure data-align="left" style="width:75%"><img src="https://example.com/image.png" alt="Diagram" width="640"><figcaption>Caption</figcaption></figure>',
+  '<p><a href="/details" title="Details" target="_self"><img src="/status.png" alt="Status"></a></p>',
 ];
 
 describe('browser and server HTML semantic parity', () => {

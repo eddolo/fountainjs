@@ -316,7 +316,7 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): 
   segments.forEach((segment) => {
     if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
     flush();
-    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment })); }
+    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment }, [], undefined, marks)); }
     catch { result.push(schema.text(segment, marks)); }
   });
   flush();
@@ -929,6 +929,7 @@ function containsNestedLink(label: string, references: References): boolean {
     if (label[index] === '!' || label[index] === '[') {
       const nested = linkToken(label, index, references, false);
       if (nested && !nested.image) return true;
+      if (nested) { index = nested.end; continue; }
     }
     index += 1;
   }
@@ -1104,7 +1105,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       const token = /^\[\^([^\]\r\n]+)\]/.exec(text.slice(index));
       if (token) {
         try {
-          const reference = schema.node('footnote_reference', { id: decodeMarkdownText(token[1]) });
+          const reference = schema.node('footnote_reference', { id: decodeMarkdownText(token[1]) }, [], undefined, inheritedMarks);
           flush();
           result.push(reference);
           index += token[0].length;
@@ -1127,7 +1128,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
                 src: parsed.href,
                 alt: imageDescription(parsed.label, schema, references),
                 title: parsed.title,
-              }));
+              }, [], undefined, inheritedMarks));
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
           } else if (!parsed.image && schema.marks.link) {
             const mark = schema.marks.link.create({ href: parsed.href, title: parsed.title });
@@ -1229,7 +1230,15 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       const end = matchingDelimiter(text, index + 1, '$');
       if (end > index + 1 && !/^\s|\s$/.test(text.slice(index + 1, end))) {
         flush();
-        try { result.push(schema.node('inline_math', { latex: text.slice(index + 1, end), ariaLabel: '' })); }
+        try {
+          result.push(schema.node(
+            'inline_math',
+            { latex: text.slice(index + 1, end), ariaLabel: '' },
+            [],
+            undefined,
+            inheritedMarks,
+          ));
+        }
         catch { result.push(...textNodes(text.slice(index, end + 1), schema, inheritedMarks)); }
         index = end + 1;
         continue;

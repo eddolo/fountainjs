@@ -334,7 +334,6 @@ function parseSharedElement(element: SharedElement, depth: number, count: { node
       ...(marks?.length ? { marks } : {}),
     };
   }
-  if (marks?.length) throw new Error('Only collaborative text nodes may contain marks.');
   const content = children.map((child) => {
     if (!isSharedElement(child)) throw new Error('Collaborative container nodes may contain only FountainJS nodes.');
     return parseSharedElement(child, depth + 1, count);
@@ -342,6 +341,7 @@ function parseSharedElement(element: SharedElement, depth: number, count: { node
   return {
     type,
     ...(Object.keys(attrs).length ? { attrs } : {}),
+    ...(marks?.length ? { marks } : {}),
     ...(content.length ? { content } : {}),
   };
 }
