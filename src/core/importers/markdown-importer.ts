@@ -1308,7 +1308,7 @@ interface ListMarker {
 
 function listMarker(line: string): ListMarker | null {
   const normalized = line.replace(/^\t+/, (tabs) => '  '.repeat(tabs.length));
-  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\][ \t]+|([-*+])[ \t]+|(\d+)([.)])[ \t]+)(.*)$/.exec(normalized);
+  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\][ \t]+|([-*+])[ \t]+|(\d{1,9})([.)])[ \t]+)(.*)$/.exec(normalized);
   if (!match) return null;
   return {
     indent: match[1].length,
@@ -1316,7 +1316,7 @@ function listMarker(line: string): ListMarker | null {
     m: (match[2] || match[4] || match[6]) as ListMarker['m'],
     value: match[7],
     checked: match[3]?.toLowerCase() === 'x',
-    start: Number(match[5] || 1),
+    start: +(match[5] || 1),
   };
 }
 

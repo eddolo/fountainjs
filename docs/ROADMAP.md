@@ -390,7 +390,13 @@ performance, and browser behavior:
 - iframe/isolated-surface editing and host focus coordination;
 - vertical Japanese writing with logical selection/navigation evidence;
 - spell-check, dictionaries, thesaurus, and replaceable language-service hooks;
-- visible tabs, non-breaking spaces, and other invisible characters (`DOC-16`);
+- invisible-character integrity tools (`DOC-16`): non-mutating visualization of
+  spaces/NBSP, tabs, hard breaks, paragraphs, CR/LF differences, zero-width and
+  bidi controls, and BOM; raw code-point, UTF-8-byte, and Unicode-normalization
+  inspection; an opt-in verbatim mode that disables typography, normalization,
+  entity/Markdown interpretation, trimming, whitespace rewriting, and
+  autolinking for integrity-sensitive content; plus a separate explicit
+  sanitizer with preview/diff and per-category choices, never silent cleanup;
 - YAML frontmatter and raw/visual Markdown switching.
 
 ## Broader editor landscape audit

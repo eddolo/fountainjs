@@ -139,6 +139,14 @@ describe('DOM-free server HTML import', () => {
     });
   });
 
+  it('preserves an ordered-list start of zero without a browser DOM', () => {
+    const imported = ServerHTMLImporter.parse('<ol start="0"><li>Zero</li><li>One</li></ol>', schema);
+
+    expect(imported.child(0).attrs.start).toBe(0);
+    expect(HTMLExporter.export(imported, { document: false }))
+      .toBe('<ol start="0"><li><p>Zero</p></li><li><p>One</p></li></ol>');
+  });
+
   it('reports browser-only attribute callbacks instead of simulating HTMLElement', () => {
     const browserOnly = defineExtension({
       name: 'browser-only-html-rule',

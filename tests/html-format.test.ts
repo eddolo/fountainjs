@@ -220,4 +220,12 @@ describe('schema-owned HTML interchange', () => {
     expect(quote.child(1).child(0).content.map((node) => node.type.name))
       .toEqual(['paragraph', 'paragraph']);
   });
+
+  it('preserves an ordered-list start of zero through browser HTML interchange', () => {
+    const imported = HTMLImporter.parse('<ol start="0"><li>Zero</li><li>One</li></ol>', schema);
+
+    expect(imported.child(0).attrs.start).toBe(0);
+    expect(HTMLExporter.export(imported, { document: false }))
+      .toBe('<ol start="0"><li><p>Zero</p></li><li><p>One</p></li></ol>');
+  });
 });

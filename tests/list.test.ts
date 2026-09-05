@@ -201,4 +201,29 @@ describe('professional list transforms', () => {
     expect(markdown).toContain('    - [x] Done');
     expect(MarkdownImporter.parse(markdown, schema).eq(doc)).toBe(true);
   });
+
+  it('preserves zero starts and limits ordered markers to nine digits', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '0. Zero\n1. One\n\n123456789. Valid\n\n1234567890. Literal';
+    const doc = MarkdownImporter.parse(source, schema);
+
+    expect(doc.content.map((node) => node.type.name)).toEqual([
+      'ordered_list', 'ordered_list', 'paragraph',
+    ]);
+    expect(doc.child(0).attrs.start).toBe(0);
+    expect(doc.child(1).attrs.start).toBe(123456789);
+    expect(doc.child(2).textContent).toBe('1234567890. Literal');
+    expect(MarkdownExporter.export(doc)).toBe(source);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema).eq(doc)).toBe(true);
+
+    const boundaryItem = (text: string) => schema.node('list_item', {}, [
+      schema.node('paragraph', {}, [schema.text(text)]),
+    ]);
+    const boundary = schema.node('doc', {}, [schema.node('ordered_list', { start: 999999999 }, [
+      boundaryItem('Max'), boundaryItem('Next'),
+    ])]);
+    const boundaryMarkdown = MarkdownExporter.export(boundary);
+    expect(boundaryMarkdown).toBe('999999999. Max\n0. Next');
+    expect(MarkdownImporter.parse(boundaryMarkdown, schema).eq(boundary)).toBe(true);
+  });
 });

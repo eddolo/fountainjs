@@ -2321,6 +2321,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     orderedInterruption: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Existing paragraph\n14. stays in it\n\nExisting paragraph\n1. starts a list',
     ),
+    orderedMarkerLimits: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '0. Zero\n1. One\n\n123456789. Valid\n\n1234567890. Literal',
+    ),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2558,6 +2561,18 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   expect(result.orderedInterruption.document.content[0].content[0].text)
     .toBe('Existing paragraph 14. stays in it');
   expect(result.orderedInterruption.losses).toEqual([]);
+  expect(result.orderedMarkerLimits.document).toEqual(result.orderedMarkerLimits.roundTrip);
+  expect(result.orderedMarkerLimits.document.content.map((node: any) => ({
+    type: node.type,
+    start: node.attrs?.start,
+    text: node.content?.[0]?.text,
+  }))).toEqual([
+    { type: 'ordered_list', start: 0, text: undefined },
+    { type: 'ordered_list', start: 123456789, text: undefined },
+    { type: 'paragraph', start: undefined, text: '1234567890. Literal' },
+  ]);
+  expect(result.orderedMarkerLimits.markdown).toContain('0. Zero');
+  expect(result.orderedMarkerLimits.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

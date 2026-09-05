@@ -184,7 +184,7 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     case 'heading': return `<h${Number(node.attrs.level) || 1}${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</h${Number(node.attrs.level) || 1}>`;
     case 'blockquote': return `<blockquote>${children()}</blockquote>`;
     case 'bullet_list': return `<ul>${children()}</ul>`;
-    case 'ordered_list': return `<ol${Number(node.attrs.start) !== 1 ? ` start="${Number(node.attrs.start) || 1}"` : ''}>${children()}</ol>`;
+    case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}>${children()}</ol>`;
     case 'list_item': return `<li>${children()}</li>`;
     case 'task_list': return `<ul data-type="task-list">${children()}</ul>`;
     case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;

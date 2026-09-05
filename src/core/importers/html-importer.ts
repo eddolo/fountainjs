@@ -523,7 +523,8 @@ function block(element: Element, schema: Schema): FountainNode[] {
       );
     });
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
-    return [schema.node(listType, tag === 'ol' ? { start: Number(element.getAttribute('start')) || 1 } : {}, items)];
+    const start = +(element.getAttribute('start') || 1);
+    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 && !(start % 1) ? start : 1 } : {}, items)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

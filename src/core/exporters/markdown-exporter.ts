@@ -417,7 +417,7 @@ function render(
     }
     case 'details_summary': return inlineContent(node, context, path);
     case 'bullet_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- ${render(child, context, [...path, index], depth + 1)}`).join('\n');
-    case 'ordered_list': return node.content.map((child, index) => `${'  '.repeat(depth)}${(Number(node.attrs.start) || 1) + index}. ${render(child, context, [...path, index], depth + 1)}`).join('\n');
+    case 'ordered_list': return node.content.map((child, index) => `${'  '.repeat(depth)}${((node.attrs.start as number) + index) % 1e9}. ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'task_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- [${child.attrs.checked ? 'x' : ' '}] ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'list_item': case 'task_item': return node.content.map((child, index) => {
       const value = render(child, context, [...path, index], depth);
