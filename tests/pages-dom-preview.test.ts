@@ -101,6 +101,46 @@ describe('read-only DOM page preview', () => {
     expect(Object.isFrozen(result.pages)).toBe(true);
   });
 
+  it('normalizes physical page CSS and names without floating-point artifacts', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Physical page' }] }],
+    });
+    const source = window.document.createElement('div');
+    source.innerHTML = '<p data-fountain-path="0" data-height="10">Physical page</p>';
+    let measuredWidth = 0;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      const height = Number(this.dataset.height ?? 0);
+      return {
+        x: 0, y: 0, top: 0, bottom: height, left: 0, right: measuredWidth,
+        width: measuredWidth, height, toJSON: () => ({}),
+      } as DOMRect;
+    });
+
+    for (const format of [
+      {
+        size: 'a4', cssWidth: '793.700787', cssHeight: '1122.519685',
+        pageName: 'fountain-preview-w793p700787-h1122p519685',
+      },
+      {
+        size: 'letter', cssWidth: '816', cssHeight: '1056',
+        pageName: 'fountain-preview-w816-h1056',
+      },
+    ] as const) {
+      const geometry = createPageGeometry({
+        size: format.size, margins: 12.7, unitsPerMillimetre: 96 / 25.4,
+      });
+      measuredWidth = geometry.size.width - geometry.margins.left - geometry.margins.right;
+      const snapshot = layoutDOMPages(source, document, geometry, { lineFragmentNodeTypes: [] });
+      const target = window.document.createElement('div');
+      const result = renderDOMPagePreview(source, target, geometry, snapshot);
+
+      expect(result.printPageName).toBe(format.pageName);
+      expect(target.querySelector('style[data-fountain-page-print-style]')?.textContent)
+        .toContain(`@page { size: ${format.cssWidth}px ${format.cssHeight}px; margin: 0; }`);
+      expect(result.pages[0]?.style.getPropertyValue('page')).toBe(format.pageName);
+    }
+  });
+
   it('keeps only assigned ordered-list items and continues numbering on later pages', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

@@ -66,6 +66,10 @@
   every header rowspan remains inside the header band; a rowspan leaking into
   body rows disables the unsafe repeated copy. A real-browser fixture keeps the
   canonical merged table editable with history across continuation pages.
+  A physical print-media contract now verifies A4/Letter sheet rectangles,
+  stable normalized page names, headers/page numbers, page-local footnotes,
+  forced breaks, accessibility isolation, and transient-editor-state removal in
+  Chromium, Firefox, and WebKit while retaining Chromium PDF-byte verification.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

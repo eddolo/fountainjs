@@ -62,9 +62,11 @@ groups, footnotes, and manual breaks; every fragment maps back to its model and
 structural paths plus clip geometry, and every page placement resolves to an
 exact validated source slice. A separate read-only renderer now projects those
 slices into fixed sheets with repeated furniture, table headers, footnotes,
-physical print rules, and one continuous accessibility copy. A Chromium PDF
-gate verifies page count, A4/Letter physical geometry, and representative
-page-specific content without a duplicate hidden document. Timed reflow
+physical print rules, and one continuous accessibility copy. Chromium, Firefox,
+and WebKit verify physical A4/Letter sheet geometry, stable named pages,
+furniture/fields, footnotes, page breaks, and print-only accessibility/editor
+state. A Chromium PDF gate additionally verifies page count, MediaBoxes, and
+representative page-specific content without a duplicate hidden document. Timed reflow
 observation is coalesced, and mutation-only cycles reuse unchanged top-level
 geometry under 1,000-block/75 ms and alternating-edge 5,000-block/250 ms p95
 browser gates. Leading insertion/removal preserves 5,000 unchanged DOM blocks,
@@ -92,7 +94,7 @@ tables. The surface returns to continuous mode when either the
 viewport or embedding container is narrow, and restores pages without
 remounting when space returns. History, tracked suggestions, and bidirectional
 Yjs edits remain live across those automatic boundaries without persisting page
-numbers. Broader adversarial/cross-engine PDF fidelity and the remaining
+numbers. Broader adversarial print fidelity and the remaining
 immutable evidence are still active. CSS page-shaped boxes or destructive
 document splitting do not qualify.
 
@@ -100,7 +102,7 @@ document splitting do not qualify.
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, real A4/Letter PDF geometry and representative page-content checks, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, transitive rowspan-safe table row groups, safe multi-row/merged repeated headers, canonical page-intent rails, page-local copies, and canonical image/media/details/code/custom-NodeView placement. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; unsplittable rows and atomic surfaces remain editable with explicit non-clipping overflow. The exhaustive-fidelity outcome is still partial | Add broader adversarial and cross-engine visual/content print fixtures, including specialized continuation/print adapters where keeping a custom surface together is insufficient. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, cross-engine physical A4/Letter print projection, Chromium PDF geometry and representative page-content checks, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, transitive rowspan-safe table row groups, safe multi-row/merged repeated headers, canonical page-intent rails, page-local copies, and canonical image/media/details/code/custom-NodeView placement. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; unsplittable rows and atomic surfaces remain editable with explicit non-clipping overflow. The exhaustive-fidelity outcome is still partial | Add broader adversarial visual/content print fixtures, including specialized continuation/print adapters where keeping a custom surface together is insufficient. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

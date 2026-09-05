@@ -391,12 +391,16 @@ The separate `pages/preview` entry renders non-destructive read-only page sheets
 repeated templates and fields, structural continuations, page-local footnotes,
 and print page breaks. Editing-only selection markers and field-token styling
 are removed from visual copies, and the continuous accessibility copy is omitted
-from print. It installs print-only physical `@page` rules matching the geometry;
+from print. It installs normalized print-only physical `@page` rules and stable
+names matching the geometry;
 pass `{ includePrintStyles: false }` only when the host owns those global rules.
 Browser geometry must use CSS-pixel units (for example,
 `unitsPerMillimetre: 96 / 25.4`) for physical A4/Letter output. Visual clipped
 copies are hidden from assistive technology while one continuous read-only copy
-preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
+preserves document semantics. Chromium, Firefox, and WebKit verify physical
+A4/Letter sheet geometry, named-page assignment, page-specific headers/numbers,
+footnotes, print breaks, accessibility isolation, and removal of live editor
+state. Real Chromium PDFs additionally verify A4/Letter MediaBoxes and
 page-specific header/field, body, list, table, footnote, and manual-break text
 without a duplicate hidden document. Whole blocks, measured paragraph lines,
 canonical list items, and rowspan-safe table row groups are editable across
@@ -406,7 +410,7 @@ dedicated browser contracts. A real browser contract also covers canonical
 image, audio, details, code, and custom NodeView placement, interaction, history,
 and explicit oversized overflow. Another covers merged two-row headers,
 rowspan-safe body groups, header-copy sanitization, and history after a table
-continuation. Broader adversarial/cross-engine PDF fidelity
+continuation. Broader adversarial print fidelity
 remains active `DOC-14` work with explicit browser and accessibility gates in
 [the pagination contract](docs/PAGINATION.md).
 

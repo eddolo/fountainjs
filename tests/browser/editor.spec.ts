@@ -226,6 +226,123 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
   expect(p95).toBeLessThan(75);
 });
 
+test('projects exact A4 and Letter print sheets in every browser engine', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.setHeader())).toBe(true);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertPageNumber())).toBe(true);
+
+  for (const format of [
+    {
+      name: 'a4', width: 210 * 96 / 25.4, height: 297 * 96 / 25.4,
+      cssWidth: '793.700787', cssHeight: '1122.519685',
+      pageName: 'fountain-preview-w793p700787-h1122p519685',
+    },
+    {
+      name: 'letter', width: 8.5 * 96, height: 11 * 96,
+      cssWidth: '816', cssHeight: '1056',
+      pageName: 'fountain-preview-w816-h1056',
+    },
+  ] as const) {
+    const preview = await page.evaluate((name) => (
+      (globalThis as any).fountainBrowserTest.pages.previewPhysical(name)
+    ), format.name);
+    expect(preview).toMatchObject({
+      visualPagesHidden: true,
+      accessibleDocuments: 1,
+      manualBreaks: 0,
+      sourceUnchanged: true,
+    });
+    expect(preview.pageWidth).toBeCloseTo(format.width, 8);
+    expect(preview.pageHeight).toBeCloseTo(format.height, 8);
+    expect(preview.pageCount).toBeGreaterThan(1);
+    expect(preview.printPageName).toBe(format.pageName);
+    expect(preview.pageNumbers).toEqual(
+      Array.from({ length: preview.pageCount }, (_value, index) => String(index + 1)),
+    );
+    expect(preview.printStyle).toContain(
+      `@page { size: ${format.cssWidth}px ${format.cssHeight}px; margin: 0; }`,
+    );
+
+    await page.emulateMedia({ media: 'print' });
+    const contract = await page.locator('#browser-page-preview').evaluate((target) => {
+      const sheets = [...target.querySelectorAll<HTMLElement>('.fountain-page-preview__sheet')];
+      const transientSelector = [
+        '[contenteditable="true"]',
+        '[data-fountain-path]',
+        '[data-fountain-text-path]',
+        '[data-fountain-selected-node]',
+        '[data-fountain-selected-cell]',
+        '[data-fountain-gap]',
+        '[data-fountain-dragging]',
+        '[data-fountain-resizing]',
+        '[draggable]',
+      ].join(',');
+      return {
+        root: {
+          display: getComputedStyle(target).display,
+          background: getComputedStyle(target).backgroundColor,
+          accessibleDisplay: getComputedStyle(
+            target.querySelector<HTMLElement>('.fountain-page-preview__accessible')!,
+          ).display,
+        },
+        sheets: sheets.map((sheet) => {
+          const rect = sheet.getBoundingClientRect();
+          const header = sheet.querySelector<HTMLElement>('.fountain-page-preview__header')!;
+          const body = sheet.querySelector<HTMLElement>('.fountain-page-preview__body')!;
+          const footer = sheet.querySelector<HTMLElement>('.fountain-page-preview__footer')!;
+          return {
+            number: sheet.dataset.fountainPage,
+            ariaHidden: sheet.getAttribute('aria-hidden'),
+            width: rect.width,
+            height: rect.height,
+            headerHeight: header.getBoundingClientRect().height,
+            bodyHeight: body.getBoundingClientRect().height,
+            footerHeight: footer.getBoundingClientRect().height,
+            headerText: header.textContent?.replace(/\s+/gu, ' ').trim(),
+            footnotes: sheet.querySelectorAll('.fountain-page-preview__footnotes').length,
+            shadow: getComputedStyle(sheet).boxShadow,
+            breakAfter: getComputedStyle(sheet).breakAfter,
+            pageBreakAfter: getComputedStyle(sheet).pageBreakAfter,
+            namedPage: sheet.style.getPropertyValue('page'),
+            transientNodes: sheet.querySelectorAll(transientSelector).length,
+            interactiveControls: sheet.querySelectorAll(
+              'input:not(:disabled), button:not(:disabled), select:not(:disabled), textarea:not(:disabled)',
+            ).length,
+          };
+        }),
+      };
+    });
+
+    expect(contract.root.display).toBe('block');
+    expect(['rgba(0, 0, 0, 0)', 'transparent']).toContain(contract.root.background);
+    expect(contract.root.accessibleDisplay).toBe('none');
+    expect(contract.sheets).toHaveLength(preview.pageCount);
+    contract.sheets.forEach((sheet, index) => {
+      expect(sheet.number).toBe(String(index + 1));
+      expect(sheet.ariaHidden).toBe('true');
+      expect(Math.abs(sheet.width - format.width)).toBeLessThanOrEqual(.05);
+      expect(Math.abs(sheet.height - format.height)).toBeLessThanOrEqual(.05);
+      expect(Math.abs(sheet.headerHeight - 48)).toBeLessThanOrEqual(.05);
+      expect(Math.abs(sheet.bodyHeight - (format.height - 144))).toBeLessThanOrEqual(.05);
+      expect(sheet.footerHeight).toBe(0);
+      expect(sheet.headerText).toBe(`Browser report · ${index + 1}`);
+      expect(sheet.footnotes).toBe(index === 0 ? 1 : 0);
+      expect(sheet.shadow).toBe('none');
+      expect(sheet.namedPage).toBe(preview.printPageName);
+      expect(sheet.transientNodes).toBe(0);
+      expect(sheet.interactiveControls).toBe(0);
+      if (index === contract.sheets.length - 1) {
+        expect(sheet.breakAfter).toBe('auto');
+        expect(sheet.pageBreakAfter).toBe('auto');
+      } else {
+        expect(['page', 'always']).toContain(sheet.breakAfter);
+        expect(sheet.pageBreakAfter).toBe('always');
+      }
+    });
+    await page.emulateMedia({ media: 'screen' });
+  }
+});
+
 test('emits exact A4 and Letter PDF pages for every projected sheet in Chromium', async ({ page, browserName }) => {
   test.skip(browserName !== 'chromium', 'Playwright exposes PDF generation only for Chromium.');
   await page.goto('/browser-tests.html?fixture=pages-preview');

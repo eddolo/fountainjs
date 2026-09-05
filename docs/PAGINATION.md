@@ -6,8 +6,10 @@ a guarded editable page surface for whole blocks, measured paragraph lines,
 canonical list items, rowspan-safe table row groups, canonical page-intent
 rails, page-local projections, and atomic images/media/disclosures/code/custom
 NodeViews are implemented. Unsplittable content has an explicit non-clipping
-overflow policy. Exhaustive cross-engine PDF fidelity is not. This page is not
-a claim that the complete pagination outcome is delivered.
+overflow policy. Physical A4/Letter print projection is exercised in Chromium,
+Firefox, and WebKit; Chromium additionally verifies emitted PDF bytes and text.
+Exhaustive adversarial print fidelity is not complete. This page is not a claim
+that the complete pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
 
@@ -61,7 +63,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - an isolated `fountainjs-editor/pages/preview` renderer for fixed-size
   read-only sheets, exact line clips, structural continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
-  print page breaks, deterministic physical `@page` rules, namespaced IDs,
+  print page breaks, normalized deterministic physical `@page` rules and names,
+  namespaced IDs,
   transient editor-state removal, and one screen-only continuous accessibility
   copy;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
@@ -71,14 +74,15 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 367-test package suite plus
+The latest immutable public certification is the 368-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
-and atomic media/custom-NodeView coverage, in the
-[CI run for `4e60bed`](https://github.com/eddolo/fountainjs/actions/runs/33953036708).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33953036702)
-is also green. The complex merged-table contract is the next immutable gate and
-is not counted in that earlier run.
+and atomic media/custom-NodeView coverage, including complex merged-table
+fragmentation, in the
+[CI run for `dc2f013`](https://github.com/eddolo/fountainjs/actions/runs/33953541150).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33953540773)
+is also green. The physical three-engine A4/Letter print contract is the next
+immutable gate and is not counted in that earlier run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -101,7 +105,10 @@ read-only renderer proves repeated DOM furniture and content projection. A real
 Chromium PDF gate verifies one output page per projected sheet, A4/Letter
 MediaBox dimensions, and page-specific extracted header/field, body, list,
 table, footnote, and post-break text without printing the hidden accessibility
-copy. A separate browser fixture proves that the guarded editor retains direct
+copy. A separate print-media contract verifies A4/Letter sheet rectangles,
+normalized named-page assignment, headers/page numbers, footnotes, forced page
+breaks, hidden accessibility duplication, and removal of live editor state in
+Chromium, Firefox, and WebKit. A separate browser fixture proves that the guarded editor retains direct
 top-level DOM/model paths, preserves unchanged block identity, commits IME on a
 second page, maps one selection across page one and page two, and removes page
 decoration on narrow Chrome/Safari surfaces. The desktop fixture also proves
@@ -137,8 +144,8 @@ no manual breaks and proves tracked insertions/decisions, preserved remote
 authorship, and bidirectional Yjs convergence on automatically placed blocks.
 The same contracts cover paragraph, list-item, and table-row-group boundaries.
 Mapped comment anchors and top-level block movement are covered across split
-lists and tables. Exhaustive cross-engine visual/content print fidelity remains
-active work.
+lists and tables. Exhaustive adversarial visual/content print fidelity remains
+active work; only Chromium exposes PDF-byte generation through Playwright.
 
 ## Current architecture audit
 
@@ -326,8 +333,9 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
   container resize, tracked decisions, and bidirectional Yjs; split lists and
   tables also cover mapped comments and top-level movement);
 - continuous narrow-screen and assistive fallback;
-- print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
-  the required primitive;
+- print-media fixtures in Chromium, Firefox, and WebKit, plus emitted PDF-byte
+  fixtures in Chromium where Playwright exposes that primitive (the physical
+  A4/Letter baseline now covers both layers; broader adversarial documents do not);
 - reflow latency, measurement count, DOM identity, memory, and bundle budgets
   beyond the current 5,000-block adversarial replacement and structural
   insertion/removal gates;

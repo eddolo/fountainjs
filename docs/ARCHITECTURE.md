@@ -764,11 +764,13 @@ The suites are organized by boundary:
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
-  ordered-list numbering, and physical print-rule generation;
+  ordered-list numbering, normalized physical page names, and print-rule generation;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
-  presentation, Chromium-generated A4/Letter PDF page counts, MediaBoxes, and
-  page-specific content extraction, plus 1,000-block repeated-middle and
+  presentation, physical A4/Letter sheet geometry, named pages, furniture,
+  footnotes, page breaks, and editor-state isolation in Chromium, Firefox, and
+  WebKit, plus Chromium-generated PDF page counts, MediaBoxes, and page-specific
+  content extraction, plus 1,000-block repeated-middle and
   5,000-block alternating-edge incremental pagination reflow budgets and
   5,000-block leading insertion/removal cycles that retain every unchanged DOM
   node with exact rendered/source paths and two/one geometry reads. The editable

@@ -1402,7 +1402,9 @@ body width; a mismatch throws before rendering because changed wrapping would
 invalidate every line boundary.
 
 By default the renderer also inserts print-only unnamed and deterministic named
-`@page` rules for the supplied width/height, assigns the named page to each
+`@page` rules for the supplied width/height, normalizes CSS numbers so equivalent
+physical sizes do not leak floating-point artifacts into public page names,
+assigns the named page to each
 sheet, removes screen decoration, and preserves one forced PDF page per sheet.
 Pass `includePrintStyles: false` only when the host owns the document's global
 print rules. DOM geometry values are CSS pixels, so physical A4/Letter output
@@ -1462,8 +1464,11 @@ mounted host restores paged mode without replacing selection/history state. Dest
 controller before the owning `EditorView` so it can restore host classes,
 variables, and source annotations deterministically.
 
-This is a guarded editable paginator, not completed Word-style pagination. A
-real Chromium gate verifies A4/Letter PDF page
+This is a guarded editable paginator, not completed Word-style pagination.
+Chromium, Firefox, and WebKit gates verify A4/Letter sheet rectangles, stable
+named-page assignment, per-page headers/numbers, footnote placement, forced
+print breaks, accessibility-copy suppression, and removal of transient editor
+state. A real Chromium gate additionally verifies A4/Letter PDF page
 counts, MediaBox dimensions, resolved headers/page fields, body/list/table text,
 page-local footnotes, manual-break placement, and absence of the hidden
 accessibility duplicate. Editable split paragraphs, canonical list items, and
@@ -1473,7 +1478,7 @@ split-container comments, top-level movement, and canonical
 image/audio/details/code/custom-NodeView placement and interaction are also
 covered in dedicated browser fixtures. A complex-table fixture covers safe
 two-row header repetition, mixed row/column spans, continued body groups, and
-history. Broader adversarial/cross-engine print
+history. Broader adversarial print
 fidelity remains active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 

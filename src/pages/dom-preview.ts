@@ -233,8 +233,13 @@ function pageRegion(owner: Document, className: string, height: number): HTMLEle
   return region;
 }
 
+function cssNumber(value: number): string {
+  const rounded = Math.round(value * 1_000_000) / 1_000_000;
+  return String(Object.is(rounded, -0) ? 0 : rounded);
+}
+
 function cssNumberToken(value: number): string {
-  return value.toString().replaceAll('-', 'm').replaceAll('.', 'p').replaceAll('+', 'p');
+  return cssNumber(value).replaceAll('-', 'm').replaceAll('.', 'p').replaceAll('+', 'p');
 }
 
 function physicalPageName(geometry: PageGeometry): string {
@@ -245,7 +250,7 @@ function physicalPageStyle(owner: Document, pageName: string, geometry: PageGeom
   const style = owner.createElement('style');
   style.media = 'print';
   style.dataset.fountainPagePrintStyle = pageName;
-  const declaration = `size: ${geometry.size.width}px ${geometry.size.height}px; margin: 0;`;
+  const declaration = `size: ${cssNumber(geometry.size.width)}px ${cssNumber(geometry.size.height)}px; margin: 0;`;
   style.textContent = `@page { ${declaration} }\n@page ${pageName} { ${declaration} }`;
   return style;
 }
