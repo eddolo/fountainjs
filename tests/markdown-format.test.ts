@@ -1012,7 +1012,7 @@ describe('Markdown interchange', () => {
     });
   });
 
-  it('canonicalizes ambiguous duplicate blocks instead of guessing their source', () => {
+  it('uses immutable identity for duplicate source blocks and rejects ambiguous clones', () => {
     const schema = new Schema(CoreSchemaSpec);
     const imported = MarkdownImporter.parseWithSource('# Same #\n\nSame\n====\n\nTail  spacing', schema);
     const changed = schema.node('doc', {}, [
@@ -1022,11 +1022,29 @@ describe('Markdown interchange', () => {
     const mapped = imported.source.mapBlocks(changed);
     const result = MarkdownExporter.exportWithSource(changed, imported.source);
 
-    expect(mapped?.[0]).toBeNull();
+    expect(mapped?.[0]?.source).toBe('# Same #');
     expect(Object.isFrozen(mapped)).toBe(true);
     expect(mapped?.[1]?.source).toBe('Tail  spacing');
     expect(result).toEqual({
-      markdown: '# Same\n\nTail  spacing',
+      markdown: '# Same #\n\nTail  spacing',
+      losses: [],
+      preservation: 'mapped-blocks',
+    });
+
+    const movedDuplicates = schema.node('doc', {}, [
+      imported.document.content[1],
+      imported.document.content[0],
+      schema.node('paragraph', {}, [schema.text('Changed tail')]),
+    ]);
+    const movedMap = imported.source.mapBlocks(movedDuplicates);
+
+    expect(movedMap?.map((block) => block?.source)).toEqual([
+      'Same\n====',
+      '# Same #',
+      undefined,
+    ]);
+    expect(MarkdownExporter.exportWithSource(movedDuplicates, imported.source)).toEqual({
+      markdown: 'Same\n====\n\n# Same #\n\nChanged tail',
       losses: [],
       preservation: 'mapped-blocks',
     });

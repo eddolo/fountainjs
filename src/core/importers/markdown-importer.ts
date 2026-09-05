@@ -80,27 +80,42 @@ export class MarkdownSourceSnapshot {
   }
 
   /**
-   * Maps current top-level nodes to uniquely equal captured source blocks.
-   * Duplicate/ambiguous content returns `null` for that node; the array itself
-   * is `null` when conservative source-block capture was unavailable.
+   * Maps current top-level nodes to captured source blocks. Preserved immutable
+   * node identity disambiguates equal duplicates; otherwise only a semantic
+   * value unique in both documents can map. Ambiguous content returns `null`.
+   * The array itself is `null` when conservative capture was unavailable.
    */
   mapBlocks(document: Node): readonly (MarkdownSourceBlockSnapshot | null)[] | null {
     if (!this.blocks.length || document.type !== this.originalDocument.type) return null;
+    const originalIdentities = new Map<Node, number[]>();
+    const currentIdentities = new Map<Node, number[]>();
     const originals = new Map<string, number[]>();
     const currents = new Map<string, number[]>();
     this.originalDocument.content.forEach((node, index) => {
+      const identities = originalIdentities.get(node);
+      if (identities) identities.push(index);
+      else originalIdentities.set(node, [index]);
       const key = markdownNodeFingerprint(node);
       const indexes = originals.get(key);
       if (indexes) indexes.push(index);
       else originals.set(key, [index]);
     });
     document.content.forEach((node, index) => {
+      const identities = currentIdentities.get(node);
+      if (identities) identities.push(index);
+      else currentIdentities.set(node, [index]);
       const key = markdownNodeFingerprint(node);
       const indexes = currents.get(key);
       if (indexes) indexes.push(index);
       else currents.set(key, [index]);
     });
     return Object.freeze(document.content.map((node) => {
+      const identityOriginalIndexes = originalIdentities.get(node) ?? [];
+      const identityCurrentIndexes = currentIdentities.get(node) ?? [];
+      if (identityOriginalIndexes.length === 1 && identityCurrentIndexes.length === 1) {
+        const block = this.blocks[identityOriginalIndexes[0]];
+        if (block?.matches(node)) return block;
+      }
       const key = markdownNodeFingerprint(node);
       const originalIndexes = originals.get(key) ?? [];
       const currentIndexes = currents.get(key) ?? [];

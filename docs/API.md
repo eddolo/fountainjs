@@ -1402,7 +1402,8 @@ source, options?)` then returns `{ markdown, losses, preservation }`:
   stayed aligned, and unchanged blocks plus their separators were retained
   exactly while changed blocks were rendered canonically;
 - `mapped-blocks` means insertion, deletion, or movement changed the top-level
-  shape; uniquely equal unchanged blocks retained exact source while
+  shape; identity-preserved or uniquely equal unchanged blocks retained exact
+  source while
   inter-block separators and unmatched blocks were rendered canonically;
 - `frontmatter` means a visual edit occurred, the exact frontmatter prefix was
   retained, and the changed body was rendered canonically;
@@ -1410,7 +1411,9 @@ source, options?)` then returns `{ markdown, losses, preservation }`:
   rendered through the normal exporter.
 
 `MarkdownSourceSnapshot.mapBlocks(document)` exposes the same immutable,
-unique-only mapping. Duplicate equal nodes return `null`, so source is never
+identity-first mapping. Equal originals can retain distinct source spellings
+when their immutable node references survive deletion or movement; duplicated
+references and reconstructed ambiguous equals return `null`, so source is never
 assigned by guesswork. Block capture deliberately fails closed for ambiguous
 blank-line ownership and cross-block references; changed reference-style links
 also require canonical document-level definitions. Capture is bounded to

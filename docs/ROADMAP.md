@@ -309,15 +309,17 @@ semantic fallback preserves the exact mark stack when strike continues across
 adjacent nodes with different inner marks.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
-through insertion, deletion, and movement with canonical separators; duplicate
-blocks remain deliberately unmapped. The current Markdown baseline passed the
+through insertion, deletion, and movement with canonical separators. Preserved
+immutable node identity now distinguishes equal original blocks without fuzzy
+matching, while cloned references and reconstructed ambiguous equals remain
+deliberately unmapped. The current Markdown baseline passed the
 complete 514-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile matrix in
 [CI run `36fc481`](https://github.com/eddolo/fountainjs/actions/runs/33991664306),
 and the corresponding
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33991664261)
-succeeded. Identity-aware duplicate/deep-structure
-mapping and a larger standards corpus remain before a source editor UI. See
+succeeded. Deeper-structure source mapping and a larger standards corpus remain
+before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
 
 ## Prioritized after release foundations
@@ -330,7 +332,7 @@ mapping and a larger standards corpus remain before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, plain image-description projection, nested emphasis, rule-of-three arithmetic, and unmatched delimiters are certified in `36fc481`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, plain image-description projection, nested emphasis, rule-of-three arithmetic, and unmatched delimiters are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add deeper-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
@@ -350,6 +352,14 @@ performance, and browser behavior:
   backed by the existing structured GitHub form; request Fountain version,
   framework/runtime, browser/OS, minimal reproduction, expected/actual behavior,
   and sanitized document JSON without asking users to publish private content;
+- an explicitly unofficial GitLab-style issue-editor workflow demo, using no
+  copied branding or implication of affiliation. The proof must exercise a
+  rich/Markdown switch, exact untouched-source preservation after a visual
+  edit, tasks, tables, code, links, host-owned uploads, and Fountain diagnostics
+  for virtualization, headless runtimes, collaboration, and pagination. Link
+  [GitLab's public architecture evidence](https://docs.gitlab.com/development/fe_guide/content_editor/)
+  that its real rich editor uses Tiptap/ProseMirror, and present this as a
+  recognizable replacement-workflow test rather than a visual clone;
 - table captions and advanced image/text wrapping;
 - cross-editor schema-aware drag and drop plus a general inline/block drop cursor;
 - footnote/endnote interchange independent of paged rendering;

@@ -30,10 +30,12 @@
   edit. A `blocks` result makes that stronger outcome explicit; ambiguous
   ownership and reference-owning changes fall back to frontmatter-only or
   canonical output instead of guessing.
-- Unique structural source mapping retains unchanged block spelling through
-  insertion, deletion, and movement while canonicalizing inter-block
-  separators. Duplicate semantic blocks remain deliberately unmapped, and the
-  explicit `mapped-blocks` result distinguishes this from aligned preservation.
+- Identity-first structural source mapping retains unchanged block spelling
+  through insertion, deletion, and movement while canonicalizing inter-block
+  separators. Preserved immutable node identity safely distinguishes equal
+  originals; duplicated references and reconstructed ambiguous equals remain
+  unmapped. The explicit `mapped-blocks` result distinguishes this from aligned
+  preservation.
 - An initial versioned CommonMark 0.31.2/GFM 0.29-oriented compatibility corpus,
   plus ATX/Setext headings, indented and variable backtick/tilde code fences,
   variable-delimiter code spans with standard whitespace normalization, safe
@@ -103,6 +105,13 @@
   Indefinite mixed nesting now survives soft line breaks and link labels. A
   non-outermost link stays at its exact mark-stack position in semantic output,
   and generated inline HTML applies the shared safe-URL policy on import.
+  GFM strikethrough recognizes exact one- and two-tilde runs, stops at paragraph
+  boundaries, and treats code, links, autolinks, and inline HTML as opaque.
+  Boundary-safe GFM bare web and email autolinks validate domains and trim only
+  the specified path punctuation, unmatched parentheses, entity-looking
+  suffixes, and final email periods. Angle autolinks add case-preserving XMPP
+  alongside HTTP(S) and `mailto:` while unknown and scriptable schemes remain
+  inert under the shared safe-URL policy.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

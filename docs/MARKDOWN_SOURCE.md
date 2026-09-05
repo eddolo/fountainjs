@@ -76,7 +76,7 @@ longer empty, the detected source line ending is inserted between them.
 | --- | --- |
 | `exact` | The current document equals the snapshot's parsed document, so the original source string is returned exactly. |
 | `blocks` | The top-level shape stayed aligned; unchanged conservatively mapped blocks and their separators are exact while changed blocks are canonical. |
-| `mapped-blocks` | The top-level shape changed; uniquely equal blocks keep exact source while unmatched blocks and inter-block separators are canonical. |
+| `mapped-blocks` | The top-level shape changed; identity-preserved or uniquely equal blocks keep exact source while unmatched blocks and inter-block separators are canonical. |
 | `frontmatter` | The model changed; recognized frontmatter is exact and the body is canonical. |
 | `canonical` | The model changed and no recognized frontmatter exists; normal canonical export is returned. |
 
@@ -94,8 +94,10 @@ and the complete ordered set must equal the full parsed document. Only then are
 the block source, leading whitespace, separators, and trailing whitespace
 captured. On export, position-aligned equal nodes reuse their exact source and
 separators. When insertion, deletion, or movement changes the top-level shape,
-`mapBlocks(document)` groups structural JSON and retains a block only when that
-semantic value occurs exactly once in both the imported and current document.
+`mapBlocks(document)` first uses preserved immutable node identity. This safely
+distinguishes semantically equal original blocks through deletion and movement.
+When identity is unavailable, it groups structural JSON and retains a block
+only when that semantic value occurs exactly once in both documents.
 Structural output uses canonical separators so whitespace is never transferred
 to a different neighbor. Capture is capped at 10,000 top-level regions; larger
 source still gets exact whole-document preservation while unchanged, then
@@ -103,11 +105,11 @@ canonical fallback.
 
 This preserves useful author choices such as Setext headings, closing ATX
 markers, deliberate spacing, and unknown literal directives in untouched
-blocks. It deliberately leaves duplicate equal blocks, loose structures
-spanning blank lines, cross-block reference definitions, and changed
-reference-style links canonical. Unique blocks can survive insertion, deletion,
-and movement. Fountain does not use fuzzy matching or silently attach raw
-source to the wrong node.
+blocks. Equal duplicates retain their own source only while their original node
+identity survives; duplicated references, reconstructed equal nodes, loose
+structures spanning blank lines, cross-block reference definitions, and changed
+reference-style links remain canonical. Fountain does not use fuzzy matching or
+silently attach raw source to the wrong node.
 
 ## Current semantic baseline
 
@@ -179,8 +181,7 @@ conformance. Important remaining work includes:
 - configurable handling for CommonMark's arbitrary URI schemes without
   weakening Fountain's default safe-URL policy;
 - a larger versioned subset tied to explicit specification examples;
-- identity-aware mapping for duplicate blocks and deeper structures without
-  attaching raw text to the wrong node.
+- deeper-structure source mapping without attaching raw text to the wrong node.
 
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
