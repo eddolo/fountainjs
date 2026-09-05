@@ -63,17 +63,18 @@ const limits = Object.freeze({
   // an application opts in.
   'dist/pages.js': 23 * kibibyte,
   'dist/pages.cjs': 19 * kibibyte,
-  // Browser geometry, strict placement/source projection, and the coalesced
-  // reflow controller are isolated from the neutral page model.
-  'dist/pages-dom.js': 19 * kibibyte,
-  'dist/pages-dom.cjs': 16 * kibibyte,
+  // Browser geometry, strict placement/source projection, coalesced reflow,
+  // and guarded single-contenteditable page shells are isolated from the
+  // neutral page model. Editable shells add a measured 9.1/7.9 KiB.
+  'dist/pages-dom.js': 30 * kibibyte,
+  'dist/pages-dom.cjs': 25 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
   // from both the neutral model and browser measurement lifecycle.
   'dist/pages-preview.js': 9 * kibibyte,
   'dist/pages-preview.cjs': 8 * kibibyte,
-  // Accessible block handles, visible drop states, and page-preview layout/print
-  // rules remain inside one explicitly measured public stylesheet.
-  'dist/styles.css': 56 * kibibyte,
+  // Accessible block handles, visible drop states, page-preview print rules,
+  // and responsive editable page shells remain inside one measured stylesheet.
+  'dist/styles.css': 60 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -100,10 +101,11 @@ const limits = Object.freeze({
   // 21/18 KiB as an isolated opt-in entry, including canonical page-template
   // semantics. Browser fragment mapping and strict placement projection add
   // about 6/5 KiB; read-only screen/print projection stays in its own entry.
-  // Physical print rules add less than 1 KiB and retain a small regression
-  // allowance. The schema is data and is not counted as runtime JS.
-  'all ESM runtime code': 704 * kibibyte,
-  'all CommonJS runtime code': 594 * kibibyte,
+  // Physical print rules add less than 1 KiB. Guarded editable page shells add
+  // about 9.6/6.8 KiB without changing the default editor entry. The schema is
+  // data and is not counted as runtime JS.
+  'all ESM runtime code': 715 * kibibyte,
+  'all CommonJS runtime code': 603 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

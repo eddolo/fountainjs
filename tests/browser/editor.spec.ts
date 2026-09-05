@@ -230,6 +230,66 @@ test('keeps 1,000-block pagination reflow local to the changed block', async ({ 
   expect(p95).toBeLessThan(50);
 });
 
+test('edits, selects, and composes across guarded page shells in one contenteditable', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-pages');
+  const editor = page.getByRole('textbox', { name: 'Editable page canvas editor' });
+  const host = page.getByLabel('Editable pages browser contract').locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(host.locator('.fountain-editable-pages__sheet')).toHaveCount(2);
+  await expect(editor.locator(':scope > [data-fountain-path]')).toHaveCount(4);
+  await expect(editor.locator(':scope > [data-fountain-editable-page="1"]')).toHaveCount(2);
+  await expect(editor.locator(':scope > [data-fountain-editable-page="2"]')).toHaveCount(2);
+  expect(await editor.evaluate((element) => (
+    [...element.children].every((child) => child.hasAttribute('data-fountain-path'))
+  ))).toBe(true);
+  expect(await editor.locator(':scope > [data-fountain-path="2"]').evaluate((element) => (
+    getComputedStyle(element).translate !== 'none'
+  ))).toBe(true);
+
+  const firstIdentity = await editor.locator(':scope > [data-fountain-path="0"]').evaluate((element) => {
+    (element as HTMLElement).dataset.browserIdentity = 'retained';
+    return element.getAttribute('data-browser-identity');
+  });
+  expect(firstIdentity).toBe('retained');
+  const secondText = editor.locator('[data-fountain-text-path="2.0"]');
+  await secondText.evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text) throw new Error('Expected editable second-page text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await editor.evaluate((element) => {
+    element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '漢字' }));
+  });
+  await expect(editor).toContainText('Second editable page漢字');
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toHaveAttribute('data-browser-identity', 'retained');
+  await expect(editor.locator(':scope > [data-fountain-path="2"]')).toHaveAttribute('data-fountain-editable-page', '2');
+
+  await editor.evaluate((element) => {
+    const start = element.querySelector('[data-fountain-text-path="0.0"]')?.firstChild;
+    const end = element.querySelector('[data-fountain-text-path="2.0"]')?.firstChild;
+    if (!start || !end) throw new Error('Expected text on both editable pages.');
+    const range = document.createRange();
+    range.setStart(start, 6);
+    range.setEnd(end, 6);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
+  ))).toMatchObject({ type: 'text', path: [0, 0], from: 6, endPath: [2, 0], to: 6 });
+  expect(await editor.evaluate((element) => element.querySelectorAll('[data-fountain-text-path="0.0"]').length)).toBe(1);
+  expect(await editor.evaluate((element) => element.querySelectorAll('[data-fountain-text-path="2.0"]').length)).toBe(1);
+});
+
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
   await editor.click();

@@ -37,7 +37,7 @@ import {
   selectFootnoteDefinition,
   setPageTemplate,
 } from '../../../src/pages';
-import { createDOMPageLayoutController, layoutDOMPages } from '../../../src/pages/dom';
+import { createDOMEditablePageController, createDOMPageLayoutController, layoutDOMPages } from '../../../src/pages/dom';
 import { renderDOMPagePreview } from '../../../src/pages/preview';
 import {
   acceptTrackedSuggestion,
@@ -218,6 +218,39 @@ const pagesEditor = createEditor({
 const pagesMount = document.querySelector<HTMLElement>('#pages-editor');
 if (!pagesMount) throw new Error('Pages fixture failed to mount.');
 const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page intent contract editor' });
+
+const editablePagesFixture = new URLSearchParams(globalThis.location.search).get('fixture') === 'editable-pages'
+  ? (() => {
+      const pageEditor = createEditor({
+        schema: pagesKit.schema,
+        content: {
+          type: 'doc',
+          content: [
+            { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
+            { type: 'page_break' },
+            { type: 'paragraph', content: [{ type: 'text', text: 'Second editable page' }] },
+            { type: 'paragraph', content: [{ type: 'text', text: 'Selection and composition remain native.' }] },
+          ],
+        },
+      });
+      const mount = document.querySelector<HTMLElement>('#editable-pages-editor');
+      if (!mount) throw new Error('Editable pages fixture failed to mount.');
+      const view = new EditorView(mount, pageEditor, { ariaLabel: 'Editable page canvas editor' });
+      const geometry = createPageGeometry({
+        size: { width: 420, height: 300 },
+        margins: 40,
+        headerHeight: 20,
+        footerHeight: 20,
+      });
+      const controller = createDOMEditablePageController(
+        view.dom,
+        () => pageEditor.state.doc,
+        geometry,
+        { measurement: { lineFragmentNodeTypes: [] } },
+      );
+      return { editor: pageEditor, view, controller };
+    })()
+  : null;
 
 const resumeCollaboration = () => {
   const leftUpdate = Y.encodeStateAsUpdate(leftYDocument);
@@ -492,6 +525,24 @@ Object.assign(globalThis, {
           lastReason: last.reason,
           destroyed: controller.isDestroyed,
         };
+      },
+      editable: {
+        refresh: () => editablePagesFixture?.controller.refreshNow('manual'),
+        summary: () => {
+          if (!editablePagesFixture) return { mounted: false };
+          const selection = editablePagesFixture.editor.state.selection;
+          return {
+            mounted: true,
+            mode: editablePagesFixture.controller.current?.mode,
+            pages: editablePagesFixture.controller.current?.pages.length,
+            issues: editablePagesFixture.controller.current?.issues,
+            selection: selection instanceof Selection ? {
+              type: 'text', path: selection.path, from: selection.from,
+              endPath: selection.endPath, to: selection.to,
+            } : { type: selection.kind },
+            document: editablePagesFixture.editor.getJSON(),
+          };
+        },
       },
     },
   },

@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CoreExtension, Schema, composeExtensions } from '../src';
 import { PagesExtension, createPageGeometry } from '../src/pages';
 import {
+  DOMEditablePageSurface,
   createDOMPageLayoutController,
   layoutDOMPages,
   measureDOMPageFlow,
@@ -313,5 +314,112 @@ describe('DOM page measurement adapter', () => {
       ...measurement,
       fragmentSources: [source, source],
     }, { ...layout, pages: [] })).toThrow(/duplicated/);
+  });
+
+  it('places whole editable blocks over page shells without changing the editor tree', () => {
+    const pageSchema = schema();
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: Array.from({ length: 3 }, (_, index) => ({
+        type: 'paragraph', content: [{ type: 'text', text: `Editable block ${index + 1}` }],
+      })),
+    });
+    const host = window.document.createElement('div');
+    const root = window.document.createElement('div');
+    root.className = 'fountain-editor';
+    root.contentEditable = 'true';
+    document.content.forEach((node, index) => {
+      const paragraph = window.document.createElement('p');
+      paragraph.dataset.fountainNode = node.type.name;
+      paragraph.dataset.fountainPath = String(index);
+      paragraph.style.margin = '0';
+      paragraph.textContent = node.textContent;
+      root.appendChild(paragraph);
+    });
+    host.appendChild(root);
+    window.document.body.appendChild(host);
+    const originalChildren = [...root.children];
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === root) return { ...rectangle(0, 120), width: 100, right: 100 } as DOMRect;
+      const index = Number(this.dataset.fountainPath ?? 0);
+      return rectangle(index * 40, 40);
+    });
+    const geometry = createPageGeometry({ size: { width: 120, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(root, document, geometry, { lineFragmentNodeTypes: [] });
+    expect(snapshot.layout.pages).toHaveLength(2);
+
+    const surface = new DOMEditablePageSurface(root, geometry, { gap: 20, className: 'host-pages' });
+    const result = surface.update(geometry, snapshot);
+
+    expect(result.mode).toBe('paged');
+    expect(result.issues).toEqual([]);
+    expect(result.pages).toHaveLength(2);
+    expect(host.firstElementChild).toBe(surface.shells);
+    expect([...root.children]).toEqual(originalChildren);
+    expect(root.querySelectorAll(':scope > [data-fountain-editable-page="1"]')).toHaveLength(2);
+    expect(root.querySelectorAll(':scope > [data-fountain-editable-page="2"]')).toHaveLength(1);
+    expect((root.children[2] as HTMLElement).style.getPropertyValue('--fountain-editable-page-shift')).toBe('50px');
+    expect(surface.shells.querySelectorAll('[aria-hidden="true"]')).toHaveLength(2);
+
+    surface.destroy();
+    expect(host.firstElementChild).toBe(root);
+    expect(host.classList.contains('fountain-editable-pages')).toBe(false);
+    expect(host.classList.contains('host-pages')).toBe(false);
+    expect(root.querySelectorAll('[data-fountain-editable-page]')).toHaveLength(0);
+    expect([...root.children]).toEqual(originalChildren);
+    host.remove();
+  });
+
+  it('falls back to one continuous editable tree when a source would span pages', () => {
+    const pageSchema = schema();
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: Array.from({ length: 3 }, (_, index) => ({
+        type: 'paragraph', content: [{ type: 'text', text: `Block ${index + 1}` }],
+      })),
+    });
+    const host = window.document.createElement('div');
+    const root = window.document.createElement('div');
+    document.content.forEach((node, index) => {
+      const paragraph = window.document.createElement('p');
+      paragraph.dataset.fountainNode = node.type.name;
+      paragraph.dataset.fountainPath = String(index);
+      paragraph.style.margin = '0';
+      root.appendChild(paragraph);
+    });
+    host.appendChild(root);
+    window.document.body.appendChild(host);
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === root) return { ...rectangle(0, 120), width: 100, right: 100 } as DOMRect;
+      return rectangle(Number(this.dataset.fountainPath ?? 0) * 40, 40);
+    });
+    const geometry = createPageGeometry({ size: { width: 120, height: 100 }, margins: 10 });
+    const measured = layoutDOMPages(root, document, geometry, { lineFragmentNodeTypes: [] });
+    const first = measured.content.pages[0]!.placements[0]!;
+    const secondPage = measured.content.pages[1]!;
+    const fragmented = {
+      ...measured,
+      content: {
+        pages: [
+          measured.content.pages[0],
+          {
+            ...secondPage,
+            placements: [{ ...first, fragmentFrom: 1, fragmentTo: 2 }],
+          },
+        ],
+      },
+    } as typeof measured;
+    const surface = new DOMEditablePageSurface(root, geometry);
+    const result = surface.update(geometry, fragmented);
+
+    expect(result.mode).toBe('continuous');
+    expect(result.pages).toEqual([]);
+    expect(result.issues).toMatchObject([{
+      code: 'fragmented-editable-source', path: [0],
+    }]);
+    expect(root.querySelectorAll('[data-fountain-editable-page]')).toHaveLength(0);
+    expect([...root.children]).toHaveLength(3);
+    surface.destroy();
+    host.remove();
   });
 });

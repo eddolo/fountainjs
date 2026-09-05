@@ -39,7 +39,7 @@ const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColo
 const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
 const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometry', 'layoutPages', 'projectPagePresentation', 'insertPageBreak', 'insertFootnote', 'inspectFootnotes', 'removeFootnote', 'setPageTemplate', 'insertPageField', 'inspectPageTemplates', 'resolvePageField'];
-const pagesDOMNames = ['measureDOMPageFlow', 'layoutDOMPages', 'projectDOMPageContent', 'DOMPageLayoutController', 'createDOMPageLayoutController'];
+const pagesDOMNames = ['measureDOMPageFlow', 'layoutDOMPages', 'projectDOMPageContent', 'DOMPageLayoutController', 'createDOMPageLayoutController', 'DOMEditablePageSurface', 'DOMEditablePageController', 'createDOMEditablePageController'];
 const pagesPreviewNames = ['renderDOMPagePreview'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');

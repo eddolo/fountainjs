@@ -285,6 +285,7 @@ import {
   setPageTemplate,
 } from 'fountainjs-editor/pages'
 import {
+  createDOMEditablePageController,
   createDOMPageLayoutController,
   layoutDOMPages,
 } from 'fountainjs-editor/pages/dom'
@@ -316,6 +317,18 @@ const controller = createDOMPageLayoutController(
   { onLayout: ({ snapshot }) => renderDOMPagePreview(view.dom, previewElement, geometry, snapshot) },
 )
 // controller.destroy() when the host view is removed
+
+// Or keep one live contenteditable over guarded visual page shells.
+const editablePages = createDOMEditablePageController(
+  view.dom,
+  () => editor.state.doc,
+  geometry,
+  {
+    measurement: { lineFragmentNodeTypes: [] },
+    onFallback: issues => console.warn('Using continuous editing', issues),
+  },
+)
+// editablePages.destroy() before destroying the EditorView
 ```
 
 The foundation covers legal fragments, keep-with-next, widow/orphan minima,
@@ -335,6 +348,15 @@ Mutation-only cycles reuse geometry only when both the immutable model node and
 rendered top-level element are unchanged; changed footnote heights invalidate
 their cached references. Resize, font, manual, and print cycles remeasure fully,
 and `{ incremental: false }` disables reuse for specialized hosts.
+`createDOMEditablePageController()` adds a responsive screen-editing surface
+without cloning, moving, wrapping, or reordering any editable node. Whole
+top-level blocks receive transient visual offsets over fixed page shells, so
+native DOM selection and IME can cross a manual page boundary inside the same
+`contenteditable`. Narrow screens return to a normal continuous editor. When a
+paragraph, list, or table would need to split across sheets—or canonical page
+furniture/footnotes cannot remain uniquely editable—the controller reports
+typed issues through `onFallback` and keeps a continuous canvas. That guarded
+fallback is intentional; it is not yet complete Word-style editable pagination.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
 and print page breaks. Editing-only selection markers and field-token styling
@@ -346,9 +368,10 @@ Browser geometry must use CSS-pixel units (for example,
 copies are hidden from assistive technology while one continuous read-only copy
 preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
 page-specific header/field, body, list, table, footnote, and manual-break text
-without a duplicate hidden document. This is representative content evidence,
-not a claim of complete editable pagination or exhaustive PDF fidelity. Those
-remain active `DOC-14` work with explicit browser and accessibility gates in [the pagination
+without a duplicate hidden document. The guarded whole-block editor is real,
+but split-block editing, editable/repeated furniture, page-local footnote
+editing, and exhaustive PDF fidelity remain active `DOC-14` work with explicit
+browser and accessibility gates in [the pagination
 contract](docs/PAGINATION.md).
 
 ## Optional clipboard history

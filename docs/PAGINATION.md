@@ -1,8 +1,9 @@
 # Print-aware pages and pagination
 
 Status: active architecture and implementation work for `DOC-14`. The portable
-layout/document-intent foundation and a read-only paged preview/print projection
-are implemented; an editable paged DOM renderer and exhaustive PDF fidelity are
+layout/document-intent foundation, read-only paged preview/print projection, and
+a guarded whole-block editable page surface are implemented. Split-block
+editing, editable repeated furniture/footnotes, and exhaustive PDF fidelity are
 not. This page is not a claim that the complete pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
@@ -37,6 +38,10 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   invalidation, timed immutable snapshots, explicit host callbacks, synchronous
   print refresh, deterministic observer/listener teardown, and safe reuse of
   unchanged top-level geometry on mutation-only cycles;
+- `DOMEditablePageSurface` and `DOMEditablePageController` for responsive fixed
+  page shells around one unchanged contenteditable, transient whole-block
+  placement, manual-boundary editing, narrow-screen continuous fallback, typed
+  unsupported-fragment issues, and deterministic restoration on teardown;
 - `projectPagePresentation()` for immutable page-shell plans that select the
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
@@ -80,9 +85,13 @@ read-only renderer proves repeated DOM furniture and content projection. A real
 Chromium PDF gate verifies one output page per projected sheet, A4/Letter
 MediaBox dimensions, and page-specific extracted header/field, body, list,
 table, footnote, and post-break text without printing the hidden accessibility
-copy. That representative fixture is not exhaustive visual/content fidelity.
-Editable page shells and cross-browser editing across rendered page boundaries
-remain active work.
+copy. A separate browser fixture proves that the guarded editor retains direct
+top-level DOM/model paths, preserves unchanged block identity, commits IME on a
+second page, maps one selection across page one and page two, and removes page
+decoration on narrow Chrome/Safari surfaces. That evidence covers whole blocks
+and manual boundaries only. Split paragraphs/lists/tables, canonical furniture
+and footnote editing inside the paged surface, and exhaustive visual/content
+fidelity remain active work.
 
 ## Current architecture audit
 
@@ -173,6 +182,15 @@ changes the editor DOM. It emits an unnamed physical page rule for broad print
 support and a deterministic named equivalent for engines that support named
 pages. Hosts printing multiple geometries in one document can disable those
 rules and own the global print stylesheet.
+The editable page controller takes a deliberately narrower path. It inserts
+only non-interactive sibling sheets and never inserts a wrapper inside the
+contenteditable. Whole top-level source nodes keep their original DOM identity,
+path, order, input handlers, and selection mapping; transient CSS `translate`
+offsets align them with the body of their assigned sheet. If one source requires
+placements on multiple pages, or a canonical header/footer/footnote definition
+cannot yet remain uniquely editable, the surface removes every offset and
+returns typed issues in continuous mode. This fail-closed rule avoids the common
+but incorrect shortcut of cloning editable nodes with duplicate model paths.
 
 ## Document semantics
 
@@ -220,8 +238,9 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - nested lists and rowspan/colspan tables split only at legal boundaries;
 - images, media, details, code, and custom NodeViews with explicit overflow
   behavior;
-- selection, IME, undo, block movement, comments, tracked changes, Yjs, and
-  resize behavior across page boundaries;
+- split-paragraph/list/table selection and IME, undo, block movement, comments,
+  tracked changes, Yjs, and resize behavior across page boundaries (whole-block
+  manual-boundary selection and IME are now covered);
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;

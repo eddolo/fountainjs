@@ -941,3 +941,402 @@ export function createDOMPageLayoutController(
 ): DOMPageLayoutController {
   return new DOMPageLayoutController(root, getDocument, geometry, options);
 }
+
+export type DOMEditablePageMode = 'paged' | 'continuous';
+
+export type DOMEditablePageIssueCode =
+  | 'fragmented-editable-source'
+  | 'missing-rendered-source'
+  | 'unplaced-page-intent';
+
+export interface DOMEditablePageIssue {
+  readonly code: DOMEditablePageIssueCode;
+  readonly path: readonly number[];
+  readonly detail: string;
+}
+
+export interface DOMEditablePageSurfaceOptions {
+  /** Space between page sheets in CSS pixels. Defaults to 24. */
+  readonly gap?: number;
+  /** Optional host class added alongside the FountainJS page-surface class. */
+  readonly className?: string;
+}
+
+export interface DOMEditablePageSurfaceResult {
+  readonly mode: DOMEditablePageMode;
+  readonly root: HTMLElement;
+  readonly pages: readonly HTMLElement[];
+  readonly issues: readonly DOMEditablePageIssue[];
+  readonly snapshot: DOMPageLayoutSnapshot;
+}
+
+interface EditableSourceDecoration {
+  readonly attribute: string | null;
+  readonly shift: string;
+  readonly shiftPriority: string;
+}
+
+const EDITABLE_PAGE_VARIABLES = Object.freeze([
+  '--fountain-editable-page-width',
+  '--fountain-editable-page-height',
+  '--fountain-editable-page-total-height',
+  '--fountain-editable-page-gap',
+  '--fountain-editable-page-margin-left',
+  '--fountain-editable-page-margin-right',
+]);
+
+function editableGeometry(geometry: PageGeometry): void {
+  if (
+    !geometry
+    || !finiteNonNegative(geometry.size?.width)
+    || geometry.size.width === 0
+    || !finiteNonNegative(geometry.size?.height)
+    || geometry.size.height === 0
+    || !finiteNonNegative(geometry.bodyHeight)
+  ) throw new TypeError('Editable page surfaces require valid positive page geometry.');
+}
+
+function editableTopLevel(root: HTMLElement, path: readonly number[]): HTMLElement | null {
+  if (path.length < 1) return null;
+  const key = String(path[0]);
+  return Array.from(root.children).find((child) => (
+    (child as HTMLElement).dataset.fountainPath === key
+  )) as HTMLElement | undefined ?? null;
+}
+
+function pageShell(owner: Document, geometry: PageGeometry, number: number): HTMLElement {
+  const sheet = owner.createElement('article');
+  sheet.className = 'fountain-editable-pages__sheet';
+  sheet.dataset.fountainEditablePage = String(number);
+  sheet.setAttribute('aria-hidden', 'true');
+
+  const header = owner.createElement('div');
+  header.className = 'fountain-editable-pages__header';
+  header.style.insetBlockStart = `${geometry.margins.top}px`;
+  header.style.insetInline = `${geometry.margins.left}px ${geometry.margins.right}px`;
+  header.style.blockSize = `${geometry.headerHeight}px`;
+
+  const body = owner.createElement('div');
+  body.className = 'fountain-editable-pages__body';
+  body.style.insetBlockStart = `${geometry.margins.top + geometry.headerHeight}px`;
+  body.style.insetInline = `${geometry.margins.left}px ${geometry.margins.right}px`;
+  body.style.blockSize = `${geometry.bodyHeight}px`;
+
+  const footer = owner.createElement('div');
+  footer.className = 'fountain-editable-pages__footer';
+  footer.style.insetBlockEnd = `${geometry.margins.bottom}px`;
+  footer.style.insetInline = `${geometry.margins.left}px ${geometry.margins.right}px`;
+  footer.style.blockSize = `${geometry.footerHeight}px`;
+
+  const label = owner.createElement('span');
+  label.className = 'fountain-editable-pages__number';
+  label.textContent = String(number);
+  sheet.append(header, body, footer, label);
+  return sheet;
+}
+
+/**
+ * Owns the visual page-sheet layer around one continuous EditorView root.
+ * Editable nodes are never cloned, moved, wrapped, or reordered. Whole source
+ * blocks receive transient visual offsets; unsupported split sources fall back
+ * to a continuous canvas.
+ */
+export class DOMEditablePageSurface {
+  readonly host: HTMLElement;
+  readonly shells: HTMLElement;
+  private readonly decorated = new Map<HTMLElement, EditableSourceDecoration>();
+  private readonly hostVariables = new Map<string, { value: string; priority: string }>();
+  private readonly hostHadClass: boolean;
+  private readonly rootHadClass: boolean;
+  private readonly extraClasses: readonly string[];
+  private readonly priorExtraClasses = new Map<string, boolean>();
+  private readonly priorHostMode: string | null;
+  private readonly priorRootMode: string | null;
+  private destroyed = false;
+  private gap: number;
+  private currentResult?: DOMEditablePageSurfaceResult;
+
+  constructor(
+    public readonly root: HTMLElement,
+    geometry: PageGeometry,
+    options: DOMEditablePageSurfaceOptions = {},
+  ) {
+    if (!root?.ownerDocument || !root.parentElement) {
+      throw new TypeError('DOMEditablePageSurface requires a mounted editor root.');
+    }
+    editableGeometry(geometry);
+    const gap = options.gap ?? 24;
+    if (!finiteNonNegative(gap)) throw new TypeError('Editable page gap must be a finite non-negative number.');
+    this.gap = gap;
+    this.host = root.parentElement;
+    this.hostHadClass = this.host.classList.contains('fountain-editable-pages');
+    this.rootHadClass = root.classList.contains('fountain-editable-pages__content');
+    this.extraClasses = Object.freeze(options.className?.trim().split(/\s+/u).filter(Boolean) ?? []);
+    this.extraClasses.forEach((token) => this.priorExtraClasses.set(token, this.host.classList.contains(token)));
+    this.priorHostMode = this.host.getAttribute('data-fountain-editable-pages-mode');
+    this.priorRootMode = root.getAttribute('data-fountain-editable-pages-mode');
+    EDITABLE_PAGE_VARIABLES.forEach((property) => this.hostVariables.set(property, {
+      value: this.host.style.getPropertyValue(property),
+      priority: this.host.style.getPropertyPriority(property),
+    }));
+    this.host.classList.add('fountain-editable-pages', ...this.extraClasses);
+    root.classList.add('fountain-editable-pages__content');
+    this.shells = root.ownerDocument.createElement('div');
+    this.shells.className = 'fountain-editable-pages__shells';
+    this.shells.setAttribute('aria-hidden', 'true');
+    this.shells.contentEditable = 'false';
+    this.host.insertBefore(this.shells, root);
+    this.prepare(geometry, 1);
+  }
+
+  get isDestroyed(): boolean { return this.destroyed; }
+  get current(): DOMEditablePageSurfaceResult | undefined { return this.currentResult; }
+
+  prepare(geometry: PageGeometry, pageCount: number): void {
+    if (this.destroyed) throw new Error('Cannot prepare a destroyed DOMEditablePageSurface.');
+    editableGeometry(geometry);
+    if (!Number.isSafeInteger(pageCount) || pageCount < 1) {
+      throw new TypeError('Editable page surfaces require a positive page count.');
+    }
+    const totalHeight = pageCount * geometry.size.height + Math.max(0, pageCount - 1) * this.gap;
+    this.host.style.setProperty('--fountain-editable-page-width', `${geometry.size.width}px`);
+    this.host.style.setProperty('--fountain-editable-page-height', `${geometry.size.height}px`);
+    this.host.style.setProperty('--fountain-editable-page-total-height', `${totalHeight}px`);
+    this.host.style.setProperty('--fountain-editable-page-gap', `${this.gap}px`);
+    this.host.style.setProperty('--fountain-editable-page-margin-left', `${geometry.margins.left}px`);
+    this.host.style.setProperty('--fountain-editable-page-margin-right', `${geometry.margins.right}px`);
+  }
+
+  update(geometry: PageGeometry, snapshot: DOMPageLayoutSnapshot): DOMEditablePageSurfaceResult {
+    if (this.destroyed) throw new Error('Cannot update a destroyed DOMEditablePageSurface.');
+    editableGeometry(geometry);
+    if (!snapshot?.content?.pages.length || snapshot.content.pages.length !== snapshot.layout.pages.length) {
+      throw new TypeError('Editable page surfaces require a complete non-empty page snapshot.');
+    }
+    const view = this.root.ownerDocument.defaultView;
+    const narrowContinuous = view?.getComputedStyle(this.shells).display === 'none';
+    if (narrowContinuous) {
+      this.clearDecorations();
+      this.shells.replaceChildren();
+      this.prepare(geometry, 1);
+      this.setMode('continuous');
+      return this.finish('continuous', [], [], snapshot);
+    }
+    const bodyWidth = geometry.size.width - geometry.margins.left - geometry.margins.right;
+    if (!finiteNonNegative(bodyWidth) || Math.abs(snapshot.measurement.contentWidth - bodyWidth) > .5) {
+      throw new TypeError(
+        `The editable page body width (${bodyWidth}) must match the measured editor width `
+        + `(${snapshot.measurement.contentWidth}).`,
+      );
+    }
+    this.clearDecorations();
+    this.prepare(geometry, snapshot.content.pages.length);
+
+    const issues: DOMEditablePageIssue[] = [];
+    const placementsByItem = new Map<string, Array<{ page: number; placement: DOMPageContentPlacement }>>();
+    snapshot.content.pages.forEach((page) => page.placements.forEach((placement) => {
+      const entries = placementsByItem.get(placement.itemId) ?? [];
+      entries.push({ page: page.number, placement });
+      placementsByItem.set(placement.itemId, entries);
+    }));
+    placementsByItem.forEach((entries) => {
+      const pages = new Set(entries.map((entry) => entry.page));
+      const source = entries[0]?.placement.sources[0];
+      if (pages.size > 1 && source) issues.push(Object.freeze({
+        code: 'fragmented-editable-source',
+        path: Object.freeze([...source.sourcePath]),
+        detail: `Editable source ${source.sourcePath.join('.')} spans ${pages.size} pages and cannot be cloned safely.`,
+      }));
+      if (source && !editableTopLevel(this.root, source.sourcePath)) issues.push(Object.freeze({
+        code: 'missing-rendered-source',
+        path: Object.freeze([...source.sourcePath]),
+        detail: `No rendered top-level node exists for editable source ${source.sourcePath.join('.')}.`,
+      }));
+    });
+    Array.from(this.root.children).forEach((child) => {
+      const element = child as HTMLElement;
+      if (!['page_header', 'page_footer', 'footnote_definition'].includes(element.dataset.fountainNode ?? '')) return;
+      const path = pathOf(element);
+      issues.push(Object.freeze({
+        code: 'unplaced-page-intent',
+        path,
+        detail: `${element.dataset.fountainNode} remains canonical editable intent and is not duplicated into page shells.`,
+      }));
+    });
+
+    if (issues.length) {
+      this.shells.replaceChildren();
+      this.setMode('continuous');
+      return this.finish('continuous', [], issues, snapshot);
+    }
+
+    const fragment = this.root.ownerDocument.createDocumentFragment();
+    const pages = snapshot.content.pages.map((page) => {
+      const shell = pageShell(this.root.ownerDocument, geometry, page.number);
+      if (snapshot.layout.pages[page.number - 1]?.usedHeight
+        > snapshot.layout.pages[page.number - 1]!.availableHeight) {
+        shell.dataset.fountainEditablePageOverflow = 'true';
+      }
+      fragment.appendChild(shell);
+      return shell;
+    });
+    this.shells.replaceChildren(fragment);
+    this.setMode('paged');
+
+    const rootRect = this.root.getBoundingClientRect();
+    const decoratedItems = new Set<string>();
+    snapshot.content.pages.forEach((page) => {
+      let cursor = 0;
+      page.placements.forEach((placement) => {
+        const source = placement.sources[0];
+        const element = source ? editableTopLevel(this.root, source.sourcePath) : null;
+        if (source && element && !decoratedItems.has(placement.itemId)) {
+          const style = element.ownerDocument.defaultView?.getComputedStyle(element);
+          const marginBefore = numericStyle(style?.marginBlockStart || style?.marginTop);
+          const naturalTop = element.getBoundingClientRect().top - rootRect.top;
+          const pageTop = (page.number - 1) * (geometry.size.height + this.gap);
+          const desiredTop = pageTop + geometry.margins.top + geometry.headerHeight + cursor + marginBefore;
+          this.decorate(element, page.number, desiredTop - naturalTop);
+          decoratedItems.add(placement.itemId);
+        }
+        cursor += placement.height;
+      });
+    });
+    return this.finish('paged', pages, [], snapshot);
+  }
+
+  destroy(): void {
+    if (this.destroyed) return;
+    this.destroyed = true;
+    this.clearDecorations();
+    this.shells.remove();
+    if (!this.hostHadClass) this.host.classList.remove('fountain-editable-pages');
+    if (!this.rootHadClass) this.root.classList.remove('fountain-editable-pages__content');
+    this.extraClasses.forEach((token) => {
+      if (!this.priorExtraClasses.get(token)) this.host.classList.remove(token);
+    });
+    EDITABLE_PAGE_VARIABLES.forEach((property) => {
+      const prior = this.hostVariables.get(property);
+      if (prior?.value) this.host.style.setProperty(property, prior.value, prior.priority);
+      else this.host.style.removeProperty(property);
+    });
+    this.restoreAttribute(this.host, 'data-fountain-editable-pages-mode', this.priorHostMode);
+    this.restoreAttribute(this.root, 'data-fountain-editable-pages-mode', this.priorRootMode);
+    this.currentResult = undefined;
+  }
+
+  private decorate(element: HTMLElement, page: number, shift: number): void {
+    if (!this.decorated.has(element)) this.decorated.set(element, {
+      attribute: element.getAttribute('data-fountain-editable-page'),
+      shift: element.style.getPropertyValue('--fountain-editable-page-shift'),
+      shiftPriority: element.style.getPropertyPriority('--fountain-editable-page-shift'),
+    });
+    element.dataset.fountainEditablePage = String(page);
+    element.style.setProperty('--fountain-editable-page-shift', `${Math.round(shift * 1_000) / 1_000}px`);
+  }
+
+  private clearDecorations(): void {
+    this.decorated.forEach((prior, element) => {
+      this.restoreAttribute(element, 'data-fountain-editable-page', prior.attribute);
+      if (prior.shift) element.style.setProperty('--fountain-editable-page-shift', prior.shift, prior.shiftPriority);
+      else element.style.removeProperty('--fountain-editable-page-shift');
+    });
+    this.decorated.clear();
+  }
+
+  private setMode(mode: DOMEditablePageMode): void {
+    this.host.dataset.fountainEditablePagesMode = mode;
+    this.root.dataset.fountainEditablePagesMode = mode;
+  }
+
+  private finish(
+    mode: DOMEditablePageMode,
+    pages: readonly HTMLElement[],
+    issues: readonly DOMEditablePageIssue[],
+    snapshot: DOMPageLayoutSnapshot,
+  ): DOMEditablePageSurfaceResult {
+    const result = Object.freeze({
+      mode,
+      root: this.root,
+      pages: Object.freeze([...pages]),
+      issues: Object.freeze([...issues]),
+      snapshot,
+    });
+    this.currentResult = result;
+    return result;
+  }
+
+  private restoreAttribute(element: HTMLElement, name: string, value: string | null): void {
+    if (value === null) element.removeAttribute(name);
+    else element.setAttribute(name, value);
+  }
+}
+
+export interface DOMEditablePageControllerOptions extends DOMPageLayoutControllerOptions, DOMEditablePageSurfaceOptions {
+  /** Called when a source cannot be paged without duplicating editable content. */
+  readonly onFallback?: (issues: readonly DOMEditablePageIssue[]) => void;
+}
+
+/** Couples measured reflow to the guarded single-contenteditable page surface. */
+export class DOMEditablePageController {
+  readonly surface: DOMEditablePageSurface;
+  readonly layout: DOMPageLayoutController;
+  private destroyed = false;
+
+  constructor(
+    root: HTMLElement,
+    getDocument: () => Node,
+    geometry: DOMPageGeometrySource,
+    options: DOMEditablePageControllerOptions = {},
+  ) {
+    const resolveGeometry = () => typeof geometry === 'function' ? geometry() : geometry;
+    let currentGeometry = resolveGeometry();
+    this.surface = new DOMEditablePageSurface(root, currentGeometry, options);
+    const geometryForLayout = () => {
+      currentGeometry = resolveGeometry();
+      this.surface.prepare(currentGeometry, this.surface.current?.pages.length || 1);
+      return currentGeometry;
+    };
+    this.layout = new DOMPageLayoutController(root, getDocument, geometryForLayout, {
+      measurement: options.measurement,
+      layout: options.layout,
+      observe: options.observe,
+      incremental: options.incremental,
+      onError: options.onError,
+      onLayout: (cycle) => {
+        const result = this.surface.update(currentGeometry, cycle.snapshot);
+        options.onLayout?.(cycle);
+        if (result.mode === 'continuous' && result.issues.length) options.onFallback?.(result.issues);
+      },
+    });
+    this.layout.refreshNow('initial');
+  }
+
+  get isDestroyed(): boolean { return this.destroyed; }
+  get current(): DOMEditablePageSurfaceResult | undefined { return this.surface.current; }
+
+  requestLayout(reason: DOMPageLayoutReason = 'manual'): void { this.layout.requestLayout(reason); }
+
+  refreshNow(reason: DOMPageLayoutReason = 'manual'): DOMEditablePageSurfaceResult {
+    if (this.destroyed) throw new Error('Cannot refresh a destroyed DOMEditablePageController.');
+    this.layout.refreshNow(reason);
+    if (!this.surface.current) throw new Error('Editable page layout produced no surface result.');
+    return this.surface.current;
+  }
+
+  destroy(): void {
+    if (this.destroyed) return;
+    this.destroyed = true;
+    this.layout.destroy();
+    this.surface.destroy();
+  }
+}
+
+export function createDOMEditablePageController(
+  root: HTMLElement,
+  getDocument: () => Node,
+  geometry: DOMPageGeometrySource,
+  options: DOMEditablePageControllerOptions = {},
+): DOMEditablePageController {
+  return new DOMEditablePageController(root, getDocument, geometry, options);
+}

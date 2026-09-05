@@ -749,7 +749,8 @@ The suites are organized by boundary:
   placement-to-source projection, explicit warnings, neutral layout handoff,
   timed reflow cycles, identity/width/footnote-safe mutation caching, observed
   dirty-block invalidation, full resize/font/manual invalidation, and
-  deterministic controller teardown;
+  deterministic controller teardown, plus guarded whole-block editable page
+  shells that retain direct child paths and restore their host on teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
@@ -758,7 +759,10 @@ The suites are organized by boundary:
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
   presentation, Chromium-generated A4/Letter PDF page counts, MediaBoxes, and
   page-specific content extraction, plus 1,000-block incremental pagination
-  reflow budgets.
+  reflow budgets. The editable fixture also proves one unchanged
+  contenteditable, retained block identity, native composition on page two,
+  selection mapping across a manual page boundary, and continuous Chrome/Safari
+  behavior on narrow screens;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
@@ -772,8 +776,9 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 19/16 KiB for browser measurement/reflow, 9/8 KiB for
-read-only page preview/print projection, 56 KiB for CSS, and 704/594 KiB for all
+isolated page foundation, 30/25 KiB for browser measurement/reflow and the
+guarded editable page surface, 9/8 KiB for read-only page preview/print
+projection, 60 KiB for CSS, and 715/603 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -801,7 +806,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
-| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement and read-only page projection entries |
+| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block editable page shells, and read-only page projection entries |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |

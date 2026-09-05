@@ -1292,6 +1292,7 @@ import {
   setPageTemplate,
 } from 'fountainjs-editor/pages'
 import {
+  createDOMEditablePageController,
   createDOMPageLayoutController,
   layoutDOMPages,
   measureDOMPageFlow,
@@ -1322,6 +1323,16 @@ const controller = createDOMPageLayoutController(
   () => editor.state.doc,
   geometry,
   { onLayout: ({ snapshot }) => renderDOMPagePreview(view.dom, previewElement, geometry, snapshot) },
+)
+
+const editablePages = createDOMEditablePageController(
+  view.dom,
+  () => editor.state.doc,
+  geometry,
+  {
+    measurement: { lineFragmentNodeTypes: [] },
+    onFallback: issues => showContinuousModeNotice(issues),
+  },
 )
 ```
 
@@ -1415,13 +1426,27 @@ changes explicitly dirty their owning block. Resize, font, window, manual, and
 print cycles clear the cache. Set `incremental: false` to force full measurement
 on every cycle.
 
-This is the page-model, measurement, and read-only preview foundation, not a
-completed editable paginator. A real Chromium gate verifies A4/Letter PDF page
+`createDOMEditablePageController(root, getDocument, geometry, options)` couples
+that measured lifecycle to `DOMEditablePageSurface`. The surface inserts
+non-interactive sibling sheets, keeps one continuous contenteditable tree, and
+uses only transient visual offsets on whole top-level source nodes. DOM order,
+node identity, model paths, selection handlers, input handlers, and persisted
+JSON remain unchanged. Its result is `mode: 'paged'` while every source stays
+whole on one sheet. A source split across pages, a missing rendered source, or
+canonical header/footer/footnote-definition content that cannot yet stay
+uniquely editable produces typed `issues` and `mode: 'continuous'`; `onFallback`
+can explain that transition in host UI. Below 720 CSS pixels the supplied styles
+hide page decoration and remove every visual offset. Destroy the page controller
+before the owning `EditorView` so it can restore host classes, variables, and
+source annotations deterministically.
+
+This is a guarded whole-block editable paginator, not a completed split-block
+Word-style paginator. A real Chromium gate verifies A4/Letter PDF page
 counts, MediaBox dimensions, resolved headers/page fields, body/list/table text,
 page-local footnotes, manual-break placement, and absence of the hidden
-accessibility duplicate. Editable page-shell rendering, selection/IME across
-visual boundaries, and broader adversarial/cross-engine print fidelity remain
-active work.
+accessibility duplicate. Editable split paragraphs/lists/tables, uniquely
+editable repeated furniture/footnotes, and broader adversarial/cross-engine
+print fidelity remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

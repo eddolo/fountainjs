@@ -39,6 +39,29 @@ test('handles virtual-keyboard replacement, composition, deletion, and history i
   ))).toBe('Mobile大阪 Beta');
 });
 
+test('keeps editable page content continuous on a narrow screen', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-pages');
+  const region = page.getByLabel('Editable pages browser contract');
+  const editor = page.getByRole('textbox', { name: 'Editable page canvas editor' });
+  await expect(region.locator('.fountain-editable-pages__shells')).toBeHidden();
+  await expect(editor).toContainText('First editable page');
+  await expect(editor).toContainText('Second editable page');
+  expect(await editor.evaluate((element) => ({
+    width: element.getBoundingClientRect().width,
+    parentWidth: element.parentElement?.getBoundingClientRect().width ?? 0,
+    translations: [...element.children].map((child) => getComputedStyle(child).translate),
+    paths: [...element.children].map((child) => child.getAttribute('data-fountain-path')),
+  }))).toMatchObject({
+    translations: ['none', 'none', 'none', 'none'],
+    paths: ['0', '1', '2', '3'],
+  });
+  const sizes = await editor.evaluate((element) => ({
+    width: element.getBoundingClientRect().width,
+    parentWidth: element.parentElement?.getBoundingClientRect().width ?? 0,
+  }));
+  expect(sizes.width).toBeLessThanOrEqual(sizes.parentWidth);
+});
+
 test('keeps the public editor usable without horizontal overflow at a phone viewport', async ({ page }) => {
   await page.goto('/');
   const primary = page.getByRole('navigation', { name: 'Primary navigation' });

@@ -140,6 +140,24 @@
 .fountain-page-preview__footnotes > .fountain-footnote-definition { margin-block: .35em 0; padding: 0; border: 0; }
 .fountain-page-preview__sheet[data-fountain-page-overflow="true"] { outline: 3px solid #c33; outline-offset: 3px; }
 .fountain-page-preview__accessible { position: absolute !important; inline-size: 1px !important; block-size: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
+.fountain-editable-pages { position: relative; display: grid; justify-items: center; min-width: 0; padding: 1.5rem; overflow: auto; background: #e8e8ec; isolation: isolate; }
+.fountain-editable-pages__shells, .fountain-editable-pages__content { grid-area: 1 / 1; }
+.fountain-editable-pages__shells { z-index: 0; display: grid; gap: var(--fountain-editable-page-gap); width: var(--fountain-editable-page-width); pointer-events: none; user-select: none; }
+.fountain-editable-pages__sheet { position: relative; box-sizing: border-box; width: var(--fountain-editable-page-width); height: var(--fountain-editable-page-height); color: #6d7280; background: #fff; box-shadow: 0 .5rem 2rem rgb(0 0 0 / 16%); }
+.fountain-editable-pages__header, .fountain-editable-pages__body, .fountain-editable-pages__footer { position: absolute; box-sizing: border-box; border-block: 1px dashed color-mix(in srgb, var(--fountain-border) 74%, transparent); }
+.fountain-editable-pages__body { border-block-style: dotted; }
+.fountain-editable-pages__number { position: absolute; inset-block-end: .45rem; inset-inline-end: .65rem; font: 600 10px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.fountain-editable-pages__sheet[data-fountain-editable-page-overflow="true"] { outline: 3px solid #c33; outline-offset: 3px; }
+.fountain-editor.fountain-editable-pages__content { z-index: 1; box-sizing: border-box; width: var(--fountain-editable-page-width); min-height: var(--fountain-editable-page-total-height); padding: 0 var(--fountain-editable-page-margin-right) 0 var(--fountain-editable-page-margin-left); background: transparent; box-shadow: none; }
+.fountain-editable-pages[data-fountain-editable-pages-mode="paged"] .fountain-editable-pages__content > [data-fountain-editable-page] { translate: 0 var(--fountain-editable-page-shift); }
+.fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__shells { display: none; }
+.fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__content { min-height: 280px; padding-block: clamp(20px, 4vw, 44px); background: var(--fountain-surface); box-shadow: 0 .5rem 2rem rgb(0 0 0 / 12%); }
+@media (max-width: 720px) {
+  .fountain-editable-pages { display: block; padding: 0; background: transparent; }
+  .fountain-editable-pages__shells { display: none; }
+  .fountain-editor.fountain-editable-pages__content { width: 100%; min-height: 280px; padding: clamp(20px, 4vw, 44px); background: var(--fountain-surface); }
+  .fountain-editable-pages .fountain-editable-pages__content > [data-fountain-editable-page] { translate: none; }
+}
 @media print {
   .fountain-page-preview { display: block; padding: 0; overflow: visible; background: transparent; }
   .fountain-page-preview__accessible { display: none !important; }

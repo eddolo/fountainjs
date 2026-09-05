@@ -30,9 +30,13 @@
   improved keep-with-next rule that reserves a splittable block's required
   opening lines; plus indexed top-level lookup, identity/footnote-safe
   mutation-cycle measurement reuse, and a 1,000-block browser reflow budget;
-  plus an honest staged pagination contract. Editable page-shell behavior and
-  broader adversarial/cross-engine print fidelity remain active work rather
-  than claimed capabilities.
+  plus a guarded editable page-shell controller that retains one unchanged
+  contenteditable/model-path tree, supports native cross-page selection and
+  IME across whole-block/manual boundaries, restores continuous narrow-screen
+  editing, and fails closed when editable content would require cloning or
+  fragmenting; plus an honest staged pagination contract. Split-block editing,
+  editable repeated furniture/footnotes, and broader adversarial/cross-engine
+  print fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,
