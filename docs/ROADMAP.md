@@ -113,29 +113,41 @@ Chromium PDF body-token de-duplication. This bounded contract is delivered;
 new document families remain hardening work under the same gates. CSS
 page-shaped boxes or destructive document splitting do not qualify.
 
-## Active now: certify stable node identities and lookup
+## Delivered: stable node identities and lookup
 
-`DOC-17` is implemented and awaiting release certification. The isolated module
-provides configurable, portable identities without forcing IDs onto text leaves;
-indexed lookup, update, and selection APIs; deterministic repair for paste,
-duplication, and mixed-client collaboration; position-neutral history mapping;
-schema filtering and stored-JSON normalization; and compatibility with arbitrary
-extension nodes and portable attributes. Identity generation is injectable for
-deterministic tests and non-browser runtimes, and an invalid or duplicate
-identifier never silently targets the wrong node. Certification still requires
-the complete package and browser matrices from the pushed implementation.
+`DOC-17` now provides configurable, portable identities without forcing IDs onto
+text leaves; indexed lookup, update, and selection APIs; deterministic repair for
+paste, duplication, and mixed-client collaboration; position-neutral history
+mapping; schema filtering and stored-JSON normalization; and compatibility with
+arbitrary extension nodes and portable attributes. Identity generation is
+injectable for deterministic tests and non-browser runtimes, and an invalid or
+duplicate identifier never silently targets the wrong node. The complete
+400-test package suite and 278-pass Chromium/Firefox/WebKit/mobile
+[CI run for `8fca57c`](https://github.com/eddolo/fountainjs/actions/runs/33967296032),
+plus its successful
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33967296119),
+certify the public package and rendered demo.
+
+## Active now: first-class interactive widget contract
+
+The next milestone turns the already-delivered low-level NodeView lifecycle into
+a reusable product primitive. The contract must keep widget values in validated
+portable document attributes rather than private framework state; make each
+accepted change one undoable transaction that collaboration can reproduce; and
+standardize focus/cursor handoff, Tab/Enter/Escape policy, read-only rendering,
+teardown, and validation. It must remain framework-neutral at the state boundary,
+with both plain-DOM and React adapters and public working examples.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Stable node identities and lookup | Implemented; certification pending | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
-| 2 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
-| 3 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
-| 4 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
-| 5 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
-| 6 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
+| 1 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
+| 2 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
+| 3 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
+| 4 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
+| 5 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
+| 6 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
