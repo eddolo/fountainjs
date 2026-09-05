@@ -125,6 +125,8 @@
   ASCII spaces or tabs as syntax instead of consuming non-breaking spaces.
   Thematic breaks accept standard spaces or tabs between three or more matching
   markers, up to three leading spaces, and take precedence over list items.
+  ATX headings discard trailing spaces and correctly recognize a hash-only
+  optional closing sequence as syntax rather than document text.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

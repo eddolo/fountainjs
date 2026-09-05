@@ -20,6 +20,24 @@
       }
     },
     {
+      "id": "commonmark-atx-closing-sequence-and-whitespace",
+      "source": "#                  foo                     \n## \n#\n### ###",
+      "expected": {
+        "topLevelTypes": ["heading", "heading", "heading", "heading"],
+        "text": "foo",
+        "headings": [
+          { "level": 1, "text": "foo" },
+          { "level": 2, "text": "" },
+          { "level": 1, "text": "" },
+          { "level": 3, "text": "" }
+        ],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
       "id": "commonmark-setext-heading",
       "source": "Setext heading\n--------------",
       "expected": {

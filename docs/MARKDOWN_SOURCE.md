@@ -117,7 +117,8 @@ The importer currently covers Fountain's documented Markdown projections plus
 an initial standards-oriented set of behaviors:
 
 - one-to-six-level ATX headings with up to three leading spaces and optional
-  closing hashes;
+  closing hashes, including hash-only closers and standard trailing-space
+  removal;
 - level-one/two Setext headings;
 - indented code and variable-length backtick or tilde fences;
 - variable-delimiter code spans with CommonMark whitespace normalization;

@@ -1525,7 +1525,9 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     const heading = /^ {0,3}(#{1,6})(?:[\t ]+(.*?)|[\t ]*)$/u.exec(line);
     if (heading) {
-      const value = (heading[2] ?? '').replace(/[\t ]+#+[\t ]*$/u, '');
+      const value = (heading[2] ?? '')
+        .replace(/(?:^|[\t ]+)#+[\t ]*$/u, '')
+        .replace(/[\t ]+$/u, '');
       blocks.push(schema.node('heading', { level: heading[1].length }, inline(value, schema, references)));
       index++;
       continue;
