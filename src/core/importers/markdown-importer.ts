@@ -585,13 +585,6 @@ function matchingEmphasisRun(
         continue;
       }
     }
-    // The end-of-fragment fallback preserves Fountain's canonical per-text-node
-    // serialization when a marked node ends in whitespace. It is intentionally
-    // narrower than ordinary delimiter recognition; opening delimiters still
-    // obey CommonMark flanking rules.
-    if (pendingRemainder === 0 && runEnd === value.length && runLength === delimiterLength) {
-      return { start: index, end: runEnd, runStart: index, runEnd };
-    }
     index = runEnd - 1;
   }
   return null;
@@ -1314,7 +1307,7 @@ interface ListMarker {
 
 function listMarker(line: string): ListMarker | null {
   const normalized = line.replace(/^\t+/, (tabs) => '  '.repeat(tabs.length));
-  const match = /^(\s*)(?:(?:[-*])\s+\[([ xX])\]\s+|([-*])\s+|(\d+)[.)]\s+)(.*)$/.exec(normalized);
+  const match = /^([ \t]*)(?:(?:[-*])[ \t]+\[([ xX])\][ \t]+|([-*])[ \t]+|(\d+)[.)][ \t]+)(.*)$/.exec(normalized);
   if (!match) return null;
   return {
     indent: match[1].length,

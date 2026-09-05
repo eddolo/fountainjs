@@ -120,6 +120,9 @@
   emphasized image atoms import and export correctly through Markdown,
   browser/server HTML, DOM rendering, JSON, and Yjs; marks on block nodes remain
   invalid.
+  Markdown emphasis closing delimiters now obey Unicode-aware CommonMark
+  flanking through the end of an inline fragment, and list markers accept only
+  ASCII spaces or tabs as syntax instead of consuming non-breaking spaces.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

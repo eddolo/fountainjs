@@ -2301,6 +2301,14 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     emphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'snake_case / ***important*** / __strong__ / a*b*c',
     ),
+    whitespaceDelimiters: [
+      '*foo bar *',
+      '_foo bar _',
+      '**foo bar **',
+      '__foo bar __',
+      '*foo bar\n*',
+      '*\u00a0a\u00a0*',
+    ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
     nestedEmphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '*outer **inner** outer* / **strong *inside* strong** / *[linked](https://example.com)* / *[literal *](https://example.com)',
     ),
@@ -2487,6 +2495,13 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     { text: 'c', marks: [] },
   ]);
   expect(result.emphasis.losses).toEqual([]);
+  expect(result.whitespaceDelimiters.every((entry: any) => (
+    entry.document.content.length === 1
+      && entry.document.content[0].type === 'paragraph'
+      && entry.document.content[0].content.every((node: any) => !(node.marks?.length))
+      && JSON.stringify(entry.document) === JSON.stringify(entry.roundTrip)
+      && entry.losses.length === 0
+  ))).toBe(true);
   expect(result.nestedEmphasis.document).toEqual(result.nestedEmphasis.roundTrip);
   expect(result.nestedEmphasis.document.content[0].content
     .filter((node: any) => node.marks?.length)

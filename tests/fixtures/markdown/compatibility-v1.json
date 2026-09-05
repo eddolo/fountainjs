@@ -241,6 +241,32 @@
       }
     },
     {
+      "id": "commonmark-emphasis-whitespace-closer",
+      "source": "*foo bar * / **foo bar ** / *foo bar\n*",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "*foo bar * / **foo bar ** / *foo bar *",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-non-breaking-space-is-not-list-separation",
+      "source": "* a *",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "* a *",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
       "id": "commonmark-link-over-emphasis-precedence",
       "source": "*[linked](https://example.com)* / *[literal *](https://example.com)",
       "expected": {

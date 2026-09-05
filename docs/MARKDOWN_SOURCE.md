@@ -145,6 +145,8 @@ an initial standards-oriented set of behaviors:
   strikethrough, code, and highlights;
 - Unicode-aware emphasis opening flanking, double-underscore strong, and
   triple-delimiter combined strong emphasis;
+- Unicode-aware closing flanking at inline-fragment boundaries, so whitespace
+  before a star/underscore run cannot become an invalid emphasis closer;
 - unambiguous nested emphasis plus link/code/HTML grouping precedence, with a
   semantic-span fallback for lossless adjacent marked-node boundaries;
 - delimiter arithmetic for surplus star/underscore runs, repeated emphasis or
@@ -157,6 +159,8 @@ an initial standards-oriented set of behaviors:
 - links and emphasis around inline image atoms, preserved through canonical
   Markdown plus browser/server HTML, JSON, DOM rendering, and Yjs;
 - recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
+- ASCII-space/tab-only list-marker separation, leaving non-breaking spaces as
+  literal document content;
 - aligned GFM pipe tables;
 - extension-aware footnotes, math, details, ruby, and rich text-style HTML.
 

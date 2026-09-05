@@ -536,6 +536,28 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('rejects whitespace-separated emphasis closers and non-ASCII list separators', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      '*foo bar *',
+      '_foo bar _',
+      '**foo bar **',
+      '__foo bar __',
+      '*foo bar\n*',
+      '*\u00a0a\u00a0*',
+    ];
+
+    for (const source of cases) {
+      const document = MarkdownImporter.parse(source, schema);
+      expect(document.childCount, source).toBe(1);
+      expect(document.child(0).type.name, source).toBe('paragraph');
+      expect(document.child(0).content.every((node) => node.marks.length === 0), source).toBe(true);
+    }
+
+    expect(MarkdownImporter.parse('*foo bar\n*', schema).textContent).toBe('*foo bar *');
+    expect(MarkdownImporter.parse('*\u00a0a\u00a0*', schema).textContent).toBe('*\u00a0a\u00a0*');
+  });
+
   it('preserves links and emphasis around inline images', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = '[![moon](moon.jpg "Moon")](/uri "Outer") and *![star](star.png)*';
