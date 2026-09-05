@@ -761,7 +761,8 @@ The suites are organized by boundary:
   page-specific content extraction, plus 1,000-block incremental pagination
   reflow budgets. The editable fixture also proves one unchanged
   contenteditable, retained block identity, native composition on page two,
-  selection mapping across a manual page boundary, and continuous Chrome/Safari
+  selection mapping and undo/redo across a manual page boundary, reversible
+  container-responsive page/continuous modes, and continuous Chrome/Safari
   behavior on narrow screens;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.

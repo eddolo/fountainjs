@@ -4,6 +4,7 @@ import {
   DecorationSet,
   CoreExtension,
   EditorView,
+  HistoryExtension,
   LeanExtension,
   LeanController,
   MarkdownExporter,
@@ -210,9 +211,10 @@ if (!trackedMount) throw new Error('Tracked changes fixture failed to mount.');
 const trackedView = new EditorView(trackedMount, trackedEditor, { ariaLabel: 'Tracked changes contract editor' });
 const trackedCommands = trackedView.commandManager(trackedKit.commands);
 
-const pagesKit = composeExtensions([CoreExtension, PagesExtension]);
+const pagesKit = composeExtensions([CoreExtension, HistoryExtension, PagesExtension]);
 const pagesEditor = createEditor({
   schema: pagesKit.schema,
+  plugins: pagesKit.plugins,
   content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Browser pages' }] }] },
 });
 const pagesMount = document.querySelector<HTMLElement>('#pages-editor');
@@ -223,6 +225,7 @@ const editablePagesFixture = new URLSearchParams(globalThis.location.search).get
   ? (() => {
       const pageEditor = createEditor({
         schema: pagesKit.schema,
+        plugins: pagesKit.plugins,
         content: {
           type: 'doc',
           content: [
@@ -248,7 +251,7 @@ const editablePagesFixture = new URLSearchParams(globalThis.location.search).get
         geometry,
         { measurement: { lineFragmentNodeTypes: [] } },
       );
-      return { editor: pageEditor, view, controller };
+      return { editor: pageEditor, view, controller, commands: view.commandManager(pagesKit.commands) };
     })()
   : null;
 
@@ -527,6 +530,8 @@ Object.assign(globalThis, {
         };
       },
       editable: {
+        undo: () => editablePagesFixture?.commands.commands.undo?.() ?? false,
+        redo: () => editablePagesFixture?.commands.commands.redo?.() ?? false,
         refresh: () => editablePagesFixture?.controller.refreshNow('manual'),
         summary: () => {
           if (!editablePagesFixture) return { mounted: false };

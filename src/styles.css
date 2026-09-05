@@ -151,7 +151,7 @@
 .fountain-editor.fountain-editable-pages__content { z-index: 1; box-sizing: border-box; width: var(--fountain-editable-page-width); min-height: var(--fountain-editable-page-total-height); padding: 0 var(--fountain-editable-page-margin-right) 0 var(--fountain-editable-page-margin-left); background: transparent; box-shadow: none; }
 .fountain-editable-pages[data-fountain-editable-pages-mode="paged"] .fountain-editable-pages__content > [data-fountain-editable-page] { translate: 0 var(--fountain-editable-page-shift); }
 .fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__shells { display: none; }
-.fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__content { min-height: 280px; padding-block: clamp(20px, 4vw, 44px); background: var(--fountain-surface); box-shadow: 0 .5rem 2rem rgb(0 0 0 / 12%); }
+.fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__content { width: min(100%, var(--fountain-editable-page-width)); min-height: 280px; padding-block: clamp(20px, 4vw, 44px); background: var(--fountain-surface); box-shadow: 0 .5rem 2rem rgb(0 0 0 / 12%); }
 @media (max-width: 720px) {
   .fountain-editable-pages { display: block; padding: 0; background: transparent; }
   .fountain-editable-pages__shells { display: none; }

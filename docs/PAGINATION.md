@@ -40,8 +40,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   unchanged top-level geometry on mutation-only cycles;
 - `DOMEditablePageSurface` and `DOMEditablePageController` for responsive fixed
   page shells around one unchanged contenteditable, transient whole-block
-  placement, manual-boundary editing, narrow-screen continuous fallback, typed
-  unsupported-fragment issues, and deterministic restoration on teardown;
+  placement, manual-boundary editing, reversible viewport/container-responsive
+  continuous fallback, typed unsupported-fragment issues, and deterministic
+  restoration on teardown;
 - `projectPagePresentation()` for immutable page-shell plans that select the
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
@@ -88,8 +89,10 @@ table, footnote, and post-break text without printing the hidden accessibility
 copy. A separate browser fixture proves that the guarded editor retains direct
 top-level DOM/model paths, preserves unchanged block identity, commits IME on a
 second page, maps one selection across page one and page two, and removes page
-decoration on narrow Chrome/Safari surfaces. That evidence covers whole blocks
-and manual boundaries only. Split paragraphs/lists/tables, canonical furniture
+decoration on narrow Chrome/Safari surfaces. The desktop fixture also proves
+history undo/redo and a narrow-container → paged-container transition without
+remounting or losing that cross-page selection. That evidence covers whole
+blocks and manual boundaries only. Split paragraphs/lists/tables, canonical furniture
 and footnote editing inside the paged surface, and exhaustive visual/content
 fidelity remain active work.
 
@@ -191,6 +194,10 @@ placements on multiple pages, or a canonical header/footer/footnote definition
 cannot yet remain uniquely editable, the surface removes every offset and
 returns typed issues in continuous mode. This fail-closed rule avoids the common
 but incorrect shortcut of cloning editable nodes with duplicate model paths.
+The controller observes the embedding host in addition to the editor root. A
+viewport below 720 CSS pixels or a host content box narrower than the physical
+sheet uses continuous mode; widening the same mounted host remeasures and
+restores its page shells.
 
 ## Document semantics
 
@@ -240,7 +247,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
   behavior;
 - split-paragraph/list/table selection and IME, undo, block movement, comments,
   tracked changes, Yjs, and resize behavior across page boundaries (whole-block
-  manual-boundary selection and IME are now covered);
+  manual-boundary selection, IME, history, and reversible container resize are
+  now covered);
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;

@@ -270,6 +270,10 @@ test('edits, selects, and composes across guarded page shells in one contentedit
   await expect(editor).toContainText('Second editable page漢字');
   await expect(editor.locator(':scope > [data-fountain-path="0"]')).toHaveAttribute('data-browser-identity', 'retained');
   await expect(editor.locator(':scope > [data-fountain-path="2"]')).toHaveAttribute('data-fountain-editable-page', '2');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(editor).not.toContainText('漢字');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(editor).toContainText('Second editable page漢字');
 
   await editor.evaluate((element) => {
     const start = element.querySelector('[data-fountain-text-path="0.0"]')?.firstChild;
@@ -288,6 +292,18 @@ test('edits, selects, and composes across guarded page shells in one contentedit
   ))).toMatchObject({ type: 'text', path: [0, 0], from: 6, endPath: [2, 0], to: 6 });
   expect(await editor.evaluate((element) => element.querySelectorAll('[data-fountain-text-path="0.0"]').length)).toBe(1);
   expect(await editor.evaluate((element) => element.querySelectorAll('[data-fountain-text-path="2.0"]').length)).toBe(1);
+
+  const region = page.getByLabel('Editable pages browser contract');
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '360px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');
+  await expect(host.locator('.fountain-editable-pages__sheet')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
+  ))).toMatchObject({ type: 'text', path: [0, 0], from: 6, endPath: [2, 0], to: 6 });
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '900px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(host.locator('.fountain-editable-pages__sheet')).toHaveCount(2);
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toHaveAttribute('data-browser-identity', 'retained');
 });
 
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {

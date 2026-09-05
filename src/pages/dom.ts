@@ -1004,6 +1004,17 @@ function editableTopLevel(root: HTMLElement, path: readonly number[]): HTMLEleme
   )) as HTMLElement | undefined ?? null;
 }
 
+function hasPageInlineSpace(host: HTMLElement, geometry: PageGeometry): boolean {
+  const rect = host.getBoundingClientRect();
+  if (!finiteNonNegative(rect.width) || rect.width === 0) return true;
+  const style = host.ownerDocument.defaultView?.getComputedStyle(host);
+  const border = numericStyle(style?.borderInlineStartWidth || style?.borderLeftWidth)
+    + numericStyle(style?.borderInlineEndWidth || style?.borderRightWidth);
+  const padding = numericStyle(style?.paddingInlineStart || style?.paddingLeft)
+    + numericStyle(style?.paddingInlineEnd || style?.paddingRight);
+  return rect.width - border - padding + .5 >= geometry.size.width;
+}
+
 function pageShell(owner: Document, geometry: PageGeometry, number: number): HTMLElement {
   const sheet = owner.createElement('article');
   sheet.className = 'fountain-editable-pages__sheet';
@@ -1114,7 +1125,8 @@ export class DOMEditablePageSurface {
       throw new TypeError('Editable page surfaces require a complete non-empty page snapshot.');
     }
     const view = this.root.ownerDocument.defaultView;
-    const narrowContinuous = view?.getComputedStyle(this.shells).display === 'none';
+    const narrowContinuous = (view?.matchMedia?.('(max-width: 720px)').matches ?? false)
+      || !hasPageInlineSpace(this.host, geometry);
     if (narrowContinuous) {
       this.clearDecorations();
       this.shells.replaceChildren();
@@ -1281,6 +1293,7 @@ export interface DOMEditablePageControllerOptions extends DOMPageLayoutControlle
 export class DOMEditablePageController {
   readonly surface: DOMEditablePageSurface;
   readonly layout: DOMPageLayoutController;
+  private readonly hostResizeObserver?: ResizeObserver;
   private destroyed = false;
 
   constructor(
@@ -1309,6 +1322,15 @@ export class DOMEditablePageController {
         if (result.mode === 'continuous' && result.issues.length) options.onFallback?.(result.issues);
       },
     });
+    if (options.observe !== false) {
+      const ResizeObserverConstructor = (root.ownerDocument.defaultView as (Window & {
+        ResizeObserver?: typeof ResizeObserver;
+      }) | null)?.ResizeObserver;
+      if (ResizeObserverConstructor && this.surface.host !== root) {
+        this.hostResizeObserver = new ResizeObserverConstructor(() => this.layout.requestLayout('resize'));
+        this.hostResizeObserver.observe(this.surface.host);
+      }
+    }
     this.layout.refreshNow('initial');
   }
 
@@ -1327,6 +1349,7 @@ export class DOMEditablePageController {
   destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
+    this.hostResizeObserver?.disconnect();
     this.layout.destroy();
     this.surface.destroy();
   }

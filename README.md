@@ -352,7 +352,9 @@ and `{ incremental: false }` disables reuse for specialized hosts.
 without cloning, moving, wrapping, or reordering any editable node. Whole
 top-level blocks receive transient visual offsets over fixed page shells, so
 native DOM selection and IME can cross a manual page boundary inside the same
-`contenteditable`. Narrow screens return to a normal continuous editor. When a
+`contenteditable`. Narrow viewports or embedding containers that cannot fit a
+complete sheet return to a normal continuous editor, and a host resize restores
+paged mode without remounting the editor. When a
 paragraph, list, or table would need to split across sheets—or canonical page
 furniture/footnotes cannot remain uniquely editable—the controller reports
 typed issues through `onFallback` and keeps a continuous canvas. That guarded

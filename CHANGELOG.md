@@ -32,8 +32,9 @@
   mutation-cycle measurement reuse, and a 1,000-block browser reflow budget;
   plus a guarded editable page-shell controller that retains one unchanged
   contenteditable/model-path tree, supports native cross-page selection and
-  IME across whole-block/manual boundaries, restores continuous narrow-screen
-  editing, and fails closed when editable content would require cloning or
+  IME plus history across whole-block/manual boundaries, restores continuous
+  editing for narrow viewports and embedding containers, returns to pages on
+  resize without remounting, and fails closed when content would require cloning or
   fragmenting; plus an honest staged pagination contract. Split-block editing,
   editable repeated furniture/footnotes, and broader adversarial/cross-engine
   print fidelity remain active work rather than claimed capabilities.

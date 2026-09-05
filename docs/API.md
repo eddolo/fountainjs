@@ -1435,8 +1435,11 @@ JSON remain unchanged. Its result is `mode: 'paged'` while every source stays
 whole on one sheet. A source split across pages, a missing rendered source, or
 canonical header/footer/footnote-definition content that cannot yet stay
 uniquely editable produces typed `issues` and `mode: 'continuous'`; `onFallback`
-can explain that transition in host UI. Below 720 CSS pixels the supplied styles
-hide page decoration and remove every visual offset. Destroy the page controller
+can explain that transition in host UI. At viewports below 720 CSS pixels, or
+when the embedding container cannot fit a complete sheet, the supplied surface
+hides page decoration and removes every visual offset. The controller observes
+its host as well as the editor, so widening a panel restores paged mode without
+remounting or replacing selection/history state. Destroy the page controller
 before the owning `EditorView` so it can restore host classes, variables, and
 source annotations deterministically.
 

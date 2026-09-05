@@ -340,6 +340,7 @@ describe('DOM page measurement adapter', () => {
     window.document.body.appendChild(host);
     const originalChildren = [...root.children];
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === host) return { ...rectangle(0, 40), width: 200, right: 200 } as DOMRect;
       if (this === root) return { ...rectangle(0, 120), width: 100, right: 100 } as DOMRect;
       const index = Number(this.dataset.fountainPath ?? 0);
       return rectangle(index * 40, 40);
@@ -390,6 +391,7 @@ describe('DOM page measurement adapter', () => {
     host.appendChild(root);
     window.document.body.appendChild(host);
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === host) return { ...rectangle(0, 40), width: 200, right: 200 } as DOMRect;
       if (this === root) return { ...rectangle(0, 120), width: 100, right: 100 } as DOMRect;
       return rectangle(Number(this.dataset.fountainPath ?? 0) * 40, 40);
     });
@@ -419,6 +421,39 @@ describe('DOM page measurement adapter', () => {
     }]);
     expect(root.querySelectorAll('[data-fountain-editable-page]')).toHaveLength(0);
     expect([...root.children]).toHaveLength(3);
+    surface.destroy();
+    host.remove();
+  });
+
+  it('uses continuous editing when the host cannot fit a complete page sheet', () => {
+    const pageSchema = schema();
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Narrow container' }] }],
+    });
+    const host = window.document.createElement('div');
+    const root = window.document.createElement('div');
+    const paragraph = window.document.createElement('p');
+    paragraph.dataset.fountainNode = 'paragraph';
+    paragraph.dataset.fountainPath = '0';
+    root.appendChild(paragraph);
+    host.appendChild(root);
+    window.document.body.appendChild(host);
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === host) return { ...rectangle(0, 40), width: 110, right: 110 } as DOMRect;
+      if (this === root) return { ...rectangle(0, 40), width: 100, right: 100 } as DOMRect;
+      return rectangle(0, 40);
+    });
+    const geometry = createPageGeometry({ size: { width: 120, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(root, document, geometry, { lineFragmentNodeTypes: [] });
+    const surface = new DOMEditablePageSurface(root, geometry, { gap: 20 });
+    const result = surface.update(geometry, snapshot);
+
+    expect(result.mode).toBe('continuous');
+    expect(result.pages).toEqual([]);
+    expect(result.issues).toEqual([]);
+    expect(host.dataset.fountainEditablePagesMode).toBe('continuous');
+    expect(root.querySelectorAll('[data-fountain-editable-page]')).toHaveLength(0);
     surface.destroy();
     host.remove();
   });
