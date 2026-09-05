@@ -128,23 +128,36 @@ plus its successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33967296119),
 certify the public package and rendered demo.
 
-## Active now: first-class interactive widget contract
+## Delivered: first-class interactive widget contract
 
-The first-class widget implementation is complete locally and awaiting release
-certification. A DOM-free definition/controller keeps validated values in
+The first-class widget implementation keeps validated values in
 portable document attributes; accepted changes are one undoable transaction;
 generic Yjs collaboration reproduces them; and explicit focus/cursor handoff,
 Tab/Enter/Escape policy, read-only behavior, teardown, and validation are shared
 by isolated plain-DOM and React adapters. Public working examples exercise both
-renderers. It remains `Partial` in the parity ledger until the complete package,
-browser, and deployed-site gates are green.
+renderers. The complete 414-test package suite and 281-pass
+Chromium/Firefox/WebKit/mobile
+[CI run for `cced9e2`](https://github.com/eddolo/fountainjs/actions/runs/33969832708),
+plus its successful
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33969832692),
+certify the public package and rendered demos.
+
+## Active now: granular collaborative structured attributes
+
+Yjs already merges distinct node attributes independently, but an object or
+array stored inside one attribute is still one last-writer-wins value. The next
+milestone will define typed nested attribute paths, immutable map/array update
+steps, whole-node and path-local validation, bounded portable values, mapping,
+history and local-origin undo, and a granular Yjs representation that lets two
+authors change separate nested fields without overwriting each other. Existing
+flat attributes and document JSON must remain backward compatible.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | First-class interactive widgets | Implemented locally; release certification pending | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
-| 2 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
+| 1 | First-class interactive widgets | Delivered and certified in `cced9e2` | Continue browser, accessibility, format, and extension-composition regression coverage as products adopt the contract. |
+| 2 | Granular collaborative structured attributes | Active: Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
 | 3 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
 | 4 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
 | 5 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |

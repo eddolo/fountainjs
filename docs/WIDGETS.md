@@ -242,6 +242,15 @@ run in Node without jsdom. `widgets/dom` owns browser elements and events;
 `react/widgets` owns React rendering. A future native renderer can consume the
 same definition/controller contract without pretending that a WebView is native.
 
+## Verification
+
+The public contract is certified by 414 package tests covering model commands,
+history, DOM/React lifecycle, safe HTML, Node-only execution, and real Yjs
+convergence, plus the complete 281-pass Chromium/Firefox/WebKit/mobile
+[CI run for `cced9e2`](https://github.com/eddolo/fountainjs/actions/runs/33969832708).
+The matching [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33969832692)
+builds both package-backed widget demos from the public entry structure.
+
 ## Current limits
 
 - Widget validation is synchronous. Async business validation belongs in the
