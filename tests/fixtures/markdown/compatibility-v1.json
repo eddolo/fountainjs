@@ -434,6 +434,45 @@
         "marks": [],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-link-destination-line-ending",
+      "source": "[link](foo\nbar)",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "[link](foo bar)",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-angle-link-destination-line-ending",
+      "source": "[link](<foo\nbar>)",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "[link](<foo bar>)",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-unicode-link-title-separator",
+      "source": "[link](/url\u00a0\"title\")",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "link",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["/url\u00a0\"title\""],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

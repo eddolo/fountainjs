@@ -2348,6 +2348,11 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '<xmpp:writer@chat.example/mobile>',
       '<javascript:alert(1)> / <made-up-scheme://host>',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
+    linkWhitespace: [
+      '[link](foo\nbar)',
+      '[link](<foo\nbar>)',
+      '[link](/url\u00a0"title")',
+    ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2629,6 +2634,21 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       [{ text: 'xmpp:writer@chat.example/mobile', href: 'xmpp:writer@chat.example/mobile' }],
       [],
     ]);
+  expect(result.linkWhitespace.every((entry: any) => (
+    JSON.stringify(entry.document) === JSON.stringify(entry.roundTrip)
+      && entry.losses.length === 0
+  ))).toBe(true);
+  expect(result.linkWhitespace.map((entry: any) => ({
+    text: entry.document.content.flatMap((block: any) => block.content)
+      .map((node: any) => node.text ?? '').join(''),
+    links: entry.document.content.flatMap((block: any) => block.content)
+      .filter((node: any) => node.marks?.some((mark: any) => mark.type === 'link'))
+      .map((node: any) => node.marks.find((mark: any) => mark.type === 'link').attrs.href),
+  }))).toEqual([
+    { text: '[link](foo bar)', links: [] },
+    { text: '[link](<foo bar>)', links: [] },
+    { text: 'link', links: ['/url\u00a0"title"'] },
+  ]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

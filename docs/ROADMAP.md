@@ -261,6 +261,10 @@ locale-sensitive or incomplete JavaScript lowercasing.
 Definition labels can span nonblank lines and reject unescaped nested brackets.
 Explicit empty links remain semantic links across Markdown and browser/server
 HTML, without weakening validation for empty image, media, or action URLs.
+Inline parsing now validates physical line endings before projecting ordinary
+soft breaks to spaces, so forbidden newlines cannot create accidental link
+destinations. Title separation uses CommonMark's ASCII whitespace set rather
+than treating non-breaking space or other Unicode spacing as syntax.
 Code spans, autolinks, and valid inline HTML are opaque to link-label bracket
 matching, preventing false outer closures and hidden inner references.
 Reference matching normalizes raw source identifiers rather than parsed inline

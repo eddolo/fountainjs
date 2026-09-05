@@ -128,6 +128,8 @@ an initial standards-oriented set of behaviors:
   single- or multiline definitions with multiline labels, plus
   malformed-inline/shortcut and
   nested-link precedence with code/autolink/inline-HTML opacity;
+- physical-line-aware link validation and CommonMark-exact ASCII whitespace
+  separation between destinations and titles;
 - locale-neutral Unicode 17 full case folding for reference labels, including
   the expanding and compatibility mappings JavaScript lowercasing omits;
 - source-normalized reference matching that keeps escape/entity spelling

@@ -112,6 +112,10 @@
   suffixes, and final email periods. Angle autolinks add case-preserving XMPP
   alongside HTTP(S) and `mailto:` while unknown and scriptable schemes remain
   inert under the shared safe-URL policy.
+  Physical line endings are retained until inline syntax validation, preventing
+  a forbidden newline inside a link destination from becoming a valid space.
+  Link-title separation now uses only CommonMark's ASCII whitespace rather than
+  incorrectly treating non-breaking spaces as syntax.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

@@ -211,6 +211,32 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('rejects physical line endings inside inline link destinations', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      { source: '[link](foo\nbar)', text: '[link](foo bar)' },
+      { source: '[link](<foo\nbar>)', text: '[link](<foo bar>)' },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      expect(document.textContent, example.source).toBe(example.text);
+      expect(compatibilitySnapshot(document).links, example.source).toEqual([]);
+    }
+  });
+
+  it('does not treat Unicode whitespace as a link-title separator', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '[link](/url\u00a0"title")';
+    const document = MarkdownImporter.parse(source, schema);
+    const link = document.content[0].content[0].marks.find((mark) => mark.type.name === 'link');
+
+    expect(document.textContent).toBe('link');
+    expect(link?.attrs).toMatchObject({ href: '/url\u00a0"title"', title: '' });
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
+      .toEqual(document.toJSON());
+  });
+
   it('escapes literal character-reference text during canonical export', () => {
     const schema = new Schema(CoreSchemaSpec);
     const link = schema.marks.link.create({

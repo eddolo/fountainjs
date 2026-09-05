@@ -133,6 +133,11 @@ destination cannot silently select a reference with the same label. An explicit
 empty destination is represented as an empty link and round-trips as `[]()`;
 blocked protocols remain literal. The empty exception is link-specific: images,
 media, actions, and other URL-bearing attributes still require a destination.
+Physical line endings remain visible while inline syntax is parsed, so neither
+bare nor angle-bracket link destinations can become valid merely because the
+visible Fountain document projects a soft break to a space. Only CommonMark's
+ASCII spaces, tabs, and line endings separate a destination from its title;
+Unicode whitespace such as a non-breaking space remains part of the destination.
 Image descriptions may contain ordinary inline formatting, links, and nested
 images. Import projects their plain textual content into `alt`, so Markdown
 punctuation and nested destinations do not leak into accessibility metadata;

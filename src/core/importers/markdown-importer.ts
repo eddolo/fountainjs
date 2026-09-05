@@ -666,7 +666,7 @@ function linkLabelEnd(value: string, start: number): number {
 }
 
 function destinationParts(value: string, allowEmpty = false): ReferenceDefinition | null {
-  const source = value.trim();
+  const source = value.replace(/^[\t \r\n]+|[\t \r\n]+$/gu, '');
   if (!source) return allowEmpty ? { href: '', title: '' } : null;
   let href = '';
   let cursor = 0;
@@ -681,7 +681,7 @@ function destinationParts(value: string, allowEmpty = false): ReferenceDefinitio
     for (; cursor < source.length; cursor++) {
       const character = source[cursor];
       if (character === '\\') { href += character + (source[++cursor] ?? ''); continue; }
-      if (/\s/.test(character) && depth === 0) break;
+      if (/[\t \r\n]/u.test(character) && depth === 0) break;
       if (character === '(') depth++;
       else if (character === ')') {
         if (depth === 0) return null;
@@ -691,7 +691,7 @@ function destinationParts(value: string, allowEmpty = false): ReferenceDefinitio
     }
     if (depth !== 0) return null;
   }
-  const remainder = source.slice(cursor).trim();
+  const remainder = source.slice(cursor).replace(/^[\t \r\n]+|[\t \r\n]+$/gu, '');
   let title = '';
   if (remainder) {
     const first = remainder[0];
@@ -1042,7 +1042,11 @@ function inline(text: string, schema: Schema, references: References, inheritedM
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
-    if (plain) result.push(...textNodes(decodeMarkdownText(plain), schema, inheritedMarks));
+    if (plain) result.push(...textNodes(
+      decodeMarkdownText(plain).replace(/\n/gu, ' '),
+      schema,
+      inheritedMarks,
+    ));
     plain = '';
   };
   for (let index = 0; index < text.length;) {
@@ -1432,13 +1436,6 @@ function indentedCodeLine(line: string): string | null {
   return line.startsWith('    ') ? line.slice(4) : null;
 }
 
-function endsWithHardBreak(value: string): boolean {
-  if (/ {2,}$/u.test(value)) return true;
-  let slashes = 0;
-  for (let index = value.length - 1; index >= 0 && value[index] === '\\'; index -= 1) slashes += 1;
-  return slashes % 2 === 1;
-}
-
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
   return Boolean(markdownFence(line))
@@ -1580,7 +1577,10 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     const paragraphLines = [line];
     for (index++; index < lines.length && lines[index].trim() && !startsBlock(lines, index, references, schema); index++) paragraphLines.push(lines[index]);
-    const joined = paragraphLines.reduce((value, current) => endsWithHardBreak(value) ? `${value}\n${current}` : `${value} ${current}`);
+    // Keep physical line endings visible to inline syntax validation. Ordinary
+    // soft breaks become spaces only when text nodes are emitted; hard-break
+    // markers are consumed by `inline` before that normalization.
+    const joined = paragraphLines.join('\n');
     blocks.push(paragraph(schema, joined, references));
   }
   return blocks;
