@@ -85,6 +85,7 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
       list: summarize('block:2:bullet_list'),
       table: summarize('block:3:table'),
       sources: snapshot.measurement.fragmentSources,
+      content: snapshot.content,
       warnings: snapshot.measurement.warnings,
       layoutWarnings: snapshot.layout.warnings,
       pages: snapshot.layout.pages.length,
@@ -116,6 +117,10 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
       { kind: 'table-row-group', sourcePath: [3], partPaths: [[3, 0]] },
       { kind: 'table-row-group', sourcePath: [3], partPaths: [[3, 1], [3, 2]] },
     ]);
+  expect(result.content.pages.flatMap((page: any) => page.placements)
+    .flatMap((placement: any) => placement.sources)).toHaveLength(result.sources.length);
+  expect(result.content.pages.flatMap((page: any) => page.placements)
+    .every((placement: any) => placement.sources.length === placement.fragmentTo - placement.fragmentFrom)).toBe(true);
   expect(result.pages).toBeGreaterThan(1);
 
   const controller = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.controllerProbe());

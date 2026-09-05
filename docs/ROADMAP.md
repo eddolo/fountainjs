@@ -59,7 +59,8 @@ templates, dynamic page fields, renderer-neutral per-page furniture/footnote
 projection, undo, HTML/JSON, and Yjs. The browser side now
 also has isolated measurement for text lines, list items, rowspan-safe table
 groups, footnotes, and manual breaks; every fragment maps back to its model and
-structural paths plus clip geometry. Timed reflow observation is coalesced.
+structural paths plus clip geometry, and every page placement resolves to an
+exact validated source slice. Timed reflow observation is coalesced.
 Editable page-shell and print rendering plus the remaining evidence are still
 active. CSS page-shaped boxes or
 destructive document splitting do not qualify.

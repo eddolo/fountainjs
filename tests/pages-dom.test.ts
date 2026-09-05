@@ -3,7 +3,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CoreExtension, Schema, composeExtensions } from '../src';
 import { PagesExtension, createPageGeometry } from '../src/pages';
-import { createDOMPageLayoutController, layoutDOMPages, measureDOMPageFlow } from '../src/pages/dom';
+import {
+  createDOMPageLayoutController,
+  layoutDOMPages,
+  measureDOMPageFlow,
+  projectDOMPageContent,
+} from '../src/pages/dom';
 
 function schema() {
   return new Schema(composeExtensions([CoreExtension, PagesExtension]).schema);
@@ -72,6 +77,27 @@ describe('DOM page measurement adapter', () => {
       { lineFragmentNodeTypes: [] },
     );
     expect(snapshot.layout.pages).toHaveLength(2);
+    expect(snapshot.content.pages).toMatchObject([
+      {
+        number: 1,
+        placements: [
+          {
+            itemId: 'block:1:paragraph',
+            contentHeight: 30,
+            continuationHeight: 0,
+            sources: [{ sourcePath: [1], kind: 'whole' }],
+          },
+          { itemId: 'block:2:page_break', sources: [{ sourcePath: [2], kind: 'manual-break' }] },
+        ],
+      },
+      {
+        number: 2,
+        placements: [
+          { itemId: 'block:3:paragraph', sources: [{ sourcePath: [3], kind: 'whole' }] },
+        ],
+      },
+    ]);
+    expect(Object.isFrozen(snapshot.content.pages[0]?.placements[0]?.sources)).toBe(true);
     expect(snapshot.presentation.pages).toHaveLength(2);
     expect(snapshot.presentation.pages[0]?.header).toMatchObject({ variant: 'default', sourcePath: [0] });
     expect(snapshot.presentation.pages[0]?.footnotes[0]).toMatchObject({ id: 'note', sourcePath: [4] });
@@ -124,5 +150,33 @@ describe('DOM page measurement adapter', () => {
     expect(controller.isDestroyed).toBe(true);
     expect(() => controller.refreshNow()).toThrow(/destroyed/);
     controller.destroy();
+  });
+
+  it('fails closed when an external layout references a missing or duplicate measured fragment', () => {
+    const source = Object.freeze({
+      itemId: 'paragraph', fragmentId: 'paragraph:1', fragmentIndex: 0,
+      kind: 'text-line' as const, sourcePath: Object.freeze([0]), partPaths: Object.freeze([]),
+      clipOffset: 0, height: 10,
+    });
+    const measurement = Object.freeze({
+      items: Object.freeze([]), fragmentSources: Object.freeze([source]), templates: Object.freeze([]),
+      warnings: Object.freeze([]), measurementCount: 0,
+    });
+    const layout = Object.freeze({
+      pages: Object.freeze([Object.freeze({
+        number: 1,
+        placements: Object.freeze([Object.freeze({
+          itemId: 'paragraph', fragmentFrom: 0, fragmentTo: 2, height: 20,
+          continuedBefore: false, continuedAfter: false,
+        })]),
+        footnotes: Object.freeze([]), usedHeight: 20, availableHeight: 100,
+      })]),
+      warnings: Object.freeze([]),
+    });
+    expect(() => projectDOMPageContent(measurement, layout)).toThrow(/no complete measured fragment source range/);
+    expect(() => projectDOMPageContent({
+      ...measurement,
+      fragmentSources: [source, source],
+    }, { ...layout, pages: [] })).toThrow(/duplicated/);
   });
 });

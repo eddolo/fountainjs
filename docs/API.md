@@ -1356,6 +1356,12 @@ vertical clip offset without retaining DOM nodes. Its output is ordinary frozen
 input for the neutral layout engine. `layoutDOMPages` also includes the neutral `presentation` plan in
 its frozen snapshot so a host does not have to repeat variant or footnote logic.
 
+`projectDOMPageContent(measurement, layout)` validates and joins every layout
+placement to its exact contiguous `fragmentSources` slice. Each projected
+placement exposes `contentHeight`, renderer-owned `continuationHeight`, and its
+frozen sources. Missing, partial, duplicated, or non-sequential external input
+throws instead of producing a visually plausible but incorrect page.
+
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree
 mutations, element/window resize, loaded fonts, and print preparation into one

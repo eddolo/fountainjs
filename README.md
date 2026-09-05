@@ -317,7 +317,9 @@ pages without cloning the model. The separate `pages/dom` adapter measures real 
 items, rowspan-safe table groups, footnotes, and manual breaks without moving
 editable DOM. Every measured fragment includes an immutable source map with its
 model path, structural child paths, clip offset, and height for non-destructive
-continuation rendering. Its optional controller coalesces DOM mutations, resize, font,
+continuation rendering. `projectDOMPageContent()` joins the neutral layout back
+to exact validated source slices and separates repeated continuation overhead.
+Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
 It does **not** yet claim a complete visual paginator, repeated DOM template
 rendering, or print/PDF fidelity. Those

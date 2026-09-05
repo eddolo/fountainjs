@@ -67,9 +67,32 @@ export interface DOMPageFlowMeasurement {
   readonly measurementCount: number;
 }
 
+export interface DOMPageContentPlacement {
+  readonly itemId: string;
+  readonly fragmentFrom: number;
+  readonly fragmentTo: number;
+  readonly height: number;
+  readonly contentHeight: number;
+  readonly continuationHeight: number;
+  readonly continuedBefore: boolean;
+  readonly continuedAfter: boolean;
+  readonly sources: readonly DOMPageFragmentSource[];
+}
+
+export interface DOMPageContentPage {
+  readonly number: number;
+  readonly placements: readonly DOMPageContentPlacement[];
+}
+
+export interface DOMPageContentProjection {
+  readonly pages: readonly DOMPageContentPage[];
+}
+
 export interface DOMPageLayoutSnapshot {
   readonly measurement: DOMPageFlowMeasurement;
   readonly layout: PageLayoutResult;
+  /** Exact measured source slices assigned to each calculated page. */
+  readonly content: DOMPageContentProjection;
   readonly presentation: PagePresentation;
 }
 
@@ -519,6 +542,86 @@ export function measureDOMPageFlow(
   });
 }
 
+/**
+ * Resolves each neutral page placement to the exact measured DOM/model source
+ * fragments it owns. The result contains no DOM nodes and is safe to retain.
+ */
+export function projectDOMPageContent(
+  measurement: DOMPageFlowMeasurement,
+  layout: PageLayoutResult,
+): DOMPageContentProjection {
+  if (!measurement || !Array.isArray(measurement.fragmentSources) || !layout || !Array.isArray(layout.pages)) {
+    throw new TypeError('projectDOMPageContent requires a DOM page measurement and page layout result.');
+  }
+  const layoutPages = layout.pages as PageLayoutResult['pages'];
+  const sourcesByItem = new Map<string, DOMPageFragmentSource[]>();
+  measurement.fragmentSources.forEach((source) => {
+    if (
+      !source
+      || typeof source.itemId !== 'string'
+      || !source.itemId
+      || typeof source.fragmentId !== 'string'
+      || !source.fragmentId
+      || !Number.isSafeInteger(source.fragmentIndex)
+      || source.fragmentIndex < 0
+      || !finiteNonNegative(source.clipOffset)
+      || !finiteNonNegative(source.height)
+    ) {
+      throw new TypeError('DOM page fragment sources require ids, a non-negative safe index, offset, and height.');
+    }
+    const sources = sourcesByItem.get(source.itemId) ?? [];
+    if (sources.some((candidate) => candidate.fragmentIndex === source.fragmentIndex)) {
+      throw new TypeError(`DOM page fragment source ${source.itemId}:${source.fragmentIndex} is duplicated.`);
+    }
+    sources.push(source);
+    sourcesByItem.set(source.itemId, sources);
+  });
+  sourcesByItem.forEach((sources) => sources.sort((left, right) => left.fragmentIndex - right.fragmentIndex));
+
+  const pages = layoutPages.map((page, pageIndex) => {
+    if (page.number !== pageIndex + 1) {
+      throw new TypeError('DOM page content requires sequential one-based layout page numbers.');
+    }
+    const placements = page.placements.map((placement) => {
+      if (
+        !Number.isSafeInteger(placement.fragmentFrom)
+        || !Number.isSafeInteger(placement.fragmentTo)
+        || placement.fragmentFrom < 0
+        || placement.fragmentTo <= placement.fragmentFrom
+        || !finiteNonNegative(placement.height)
+      ) {
+        throw new TypeError(`Page ${page.number} contains an invalid placement for ${placement.itemId}.`);
+      }
+      const itemSources = sourcesByItem.get(placement.itemId) ?? [];
+      const sources = itemSources.filter((source) => (
+        source.fragmentIndex >= placement.fragmentFrom && source.fragmentIndex < placement.fragmentTo
+      ));
+      const expected = placement.fragmentTo - placement.fragmentFrom;
+      if (expected < 1 || sources.length !== expected || sources.some((source, index) => (
+        source.fragmentIndex !== placement.fragmentFrom + index
+      ))) {
+        throw new TypeError(
+          `Page ${page.number} placement ${placement.itemId} has no complete measured fragment source range `
+          + `${placement.fragmentFrom}:${placement.fragmentTo}.`,
+        );
+      }
+      const contentHeight = sources.reduce((sum, source) => sum + source.height, 0);
+      if (contentHeight > placement.height + 0.01) {
+        throw new TypeError(`Page ${page.number} placement ${placement.itemId} is shorter than its measured content.`);
+      }
+      const continuationHeight = Math.max(0, placement.height - contentHeight);
+      return Object.freeze({
+        ...placement,
+        contentHeight,
+        continuationHeight,
+        sources: Object.freeze(sources),
+      });
+    });
+    return Object.freeze({ number: page.number, placements: Object.freeze(placements) });
+  });
+  return Object.freeze({ pages: Object.freeze(pages) });
+}
+
 /** Measures rendered content and immediately feeds the neutral pagination algorithm. */
 export function layoutDOMPages(
   root: HTMLElement,
@@ -532,6 +635,7 @@ export function layoutDOMPages(
   return Object.freeze({
     measurement,
     layout,
+    content: projectDOMPageContent(measurement, layout),
     presentation: projectPagePresentation(document, layout),
   });
 }

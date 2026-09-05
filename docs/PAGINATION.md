@@ -30,6 +30,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - immutable DOM-fragment source maps with model paths, structural descendant
   paths, clip offsets, and heights, so continuation renderers do not infer
   identity from pixels or persist automatic boundaries;
+- a strict page-content projection that joins every neutral placement to its
+  exact contiguous source slice and separates body content from repeated
+  continuation overhead;
 - `DOMPageLayoutController` for coalesced mutation/resize/font/window/print
   invalidation, timed immutable snapshots, explicit host callbacks, synchronous
   print refresh, and deterministic observer/listener teardown;
@@ -143,9 +146,10 @@ resolved field values without copying model content. `measureDOMPageFlow()` is
 the optional browser boundary: it measures line boxes,
 list items, table row-span groups, media, and footnotes, but those measurements
 never enter editor state and the adapter never moves editable nodes. Its source
-map is ordinary frozen data and never retains a DOM element. The
-optional controller automates invalidation and measurement but does not own
-rendering or state.
+map is ordinary frozen data and never retains a DOM element. The strict content
+projection then joins page placements to those sources and fails closed if an
+external layout is incomplete or inconsistent. The optional controller
+automates invalidation and measurement but does not own rendering or state.
 
 ## Document semantics
 

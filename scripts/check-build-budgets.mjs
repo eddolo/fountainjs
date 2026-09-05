@@ -63,10 +63,10 @@ const limits = Object.freeze({
   // an application opts in.
   'dist/pages.js': 23 * kibibyte,
   'dist/pages.cjs': 19 * kibibyte,
-  // Actual browser geometry reads and the coalesced reflow controller are
-  // isolated from the neutral page model.
-  'dist/pages-dom.js': 13 * kibibyte,
-  'dist/pages-dom.cjs': 11 * kibibyte,
+  // Browser geometry, strict placement/source projection, and the coalesced
+  // reflow controller are isolated from the neutral page model.
+  'dist/pages-dom.js': 15 * kibibyte,
+  'dist/pages-dom.cjs': 13 * kibibyte,
   // Accessible block handles and visible drop states add roughly 1.8 KiB while
   // leaving every JavaScript entry ceiling unchanged.
   'dist/styles.css': 56 * kibibyte,
@@ -94,9 +94,10 @@ const limits = Object.freeze({
   // Versioned document envelopes and the isolated migration runner add about
   // 7/6 KiB respectively. The platform-neutral page foundation adds about
   // 21/18 KiB as an isolated opt-in entry, including canonical page-template
-  // semantics. The schema is data and is not counted as runtime JS.
-  'all ESM runtime code': 697 * kibibyte,
-  'all CommonJS runtime code': 590 * kibibyte,
+  // semantics. Browser fragment mapping and strict placement projection add
+  // about 6/5 KiB. The schema is data and is not counted as runtime JS.
+  'all ESM runtime code': 700 * kibibyte,
+  'all CommonJS runtime code': 594 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
