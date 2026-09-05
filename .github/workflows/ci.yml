@@ -20,8 +20,14 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+      - uses: oven-sh/setup-bun@v2
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: lts
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - run: bun scripts/smoke-server-html-runtime.mjs
+      - run: deno run --allow-read scripts/smoke-server-html-runtime.mjs
       - run: pnpm test:package
       - run: pnpm test:budget
       - run: pnpm test:performance

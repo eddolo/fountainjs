@@ -56,6 +56,8 @@ A release is eligible for npm staging only when all of the following are true:
    and limitations;
 8. security-sensitive changes include adversarial tests and updated trust
    boundaries.
+9. the emitted server HTML entry runs without browser globals in Node, Bun,
+   Deno, and Cloudflare `workerd`.
 
 `scripts/check-release.mjs` enforces items 1 and 2. The GitHub Publish npm
 workflow runs it from a published release event before the complete package
@@ -77,6 +79,8 @@ long-lived npm token belongs in GitHub or the repository.
    ```sh
    node scripts/check-release.mjs
    pnpm check
+   bun scripts/smoke-server-html-runtime.mjs
+   deno run --allow-read scripts/smoke-server-html-runtime.mjs
    pnpm test:browser
    pnpm dlx publint@0.3.24
    pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview

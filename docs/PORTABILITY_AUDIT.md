@@ -269,7 +269,7 @@ Do not rewrite the engine or replace working DOM code. Establish an additive bou
    provides bounded DOM-free conversion plus `parseHTML` extension rules.
    Remaining ownership work is a future headless/core declaration boundary and
    an injectable Markdown embedded-HTML decoder.
-8. **Add permanent Node gates.** Test the built headless entry in ESM and CommonJS with browser globals absent, typecheck a consumer with no `DOM` lib, and run Yjs convergence in the default Node environment. Keep browser matrices for the DOM adapter.
+8. **Keep permanent server-runtime gates.** The emitted HTML path now executes with browser globals absent in Node, Bun, Deno, and Cloudflare `workerd`; packed ESM/CommonJS and Node Yjs convergence remain covered too. Still add a no-`DOM` TypeScript consumer gate when the dedicated core declaration entry is introduced. Keep browser matrices for the DOM adapter.
 
 A useful target graph is:
 
@@ -315,7 +315,7 @@ The highest destabilization risk is changing schema and plugin contracts while t
 | --- | --- | --- |
 | Browser DOM | Working primary platform | Continue hardening now. Move it behind an explicit adapter without rewriting it. |
 | Node.js/server-only | Core behavior and bounded HTML import work without a fake DOM; the public core declaration/package boundary is still mixed | Keep the server conversion gate permanent, then formalize a no-DOM core entry without rewriting the web editor. |
-| Bun/Deno/serverless/Workers | Likely compatible for core algorithms, not certified | Certify after the no-DOM entry exists; avoid assuming Node built-ins. |
+| Bun/Deno/serverless/Workers | Emitted server HTML import/export is certified in Bun, Deno, and Cloudflare `workerd`; the broader core declaration graph is still mixed | Keep the runtime gates permanent, avoid Node built-ins in server entries, and certify the future no-DOM core declaration boundary separately. |
 | Electron/Tauri | Browser renderer should work naturally | Treat as web deployment targets, not new editor engines. Validate packaging later. |
 | React Native without WebView | Not supported | Preserve architectural possibility now; implement much later with a dedicated native input/render adapter. |
 | Flutter without WebView | Not supported | Requires a Dart bridge/implementation plus native editing surface. Post-1.0 work. |

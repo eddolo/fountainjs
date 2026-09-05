@@ -22,12 +22,18 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
+      - uses: oven-sh/setup-bun@v2
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: lts
       - run: npm install --global npm@12.0.2
       - run: pnpm install --frozen-lockfile
       - name: Verify release tag and changelog
         if: github.event_name == 'release'
         run: node scripts/check-release.mjs --tag "${{ github.event.release.tag_name }}"
       - run: pnpm check
+      - run: bun scripts/smoke-server-html-runtime.mjs
+      - run: deno run --allow-read scripts/smoke-server-html-runtime.mjs
       - run: pnpm dlx publint@0.3.24
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
       - run: pnpm pack --dry-run

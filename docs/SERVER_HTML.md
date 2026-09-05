@@ -156,10 +156,13 @@ document authorization, request size/time limits, and storage validation.
 ## Runtime status
 
 Pure Node.js ESM and CommonJS execution is a permanent packed-package gate, and
-browser/server semantic parity uses a shared fixture corpus. The implementation
-has no Node built-in imports and is designed to remain compatible with Bun,
-Deno, and standards-based worker runtimes, but those runtimes are not claimed
-as certified until dedicated CI jobs execute the packed entry in each one.
+browser/server semantic parity uses a shared fixture corpus. A second emitted-
+bundle smoke test runs without browser globals in Node, Bun, and Deno. The same
+conversion is bundled into an ES-module Worker and dispatched inside Cloudflare
+`workerd` through Miniflare, so Worker compatibility is exercised by the real
+runtime rather than inferred from a browser-like Node test. CI and the npm
+release workflow repeat these checks. The implementation imports no Node
+built-ins; only the test harness uses Node to start `workerd`.
 
 The existing root `HTMLImporter` remains the browser implementation. Keeping the
 server parser isolated avoids adding its parser payload to web editors and avoids
