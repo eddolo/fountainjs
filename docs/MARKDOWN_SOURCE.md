@@ -134,6 +134,8 @@ an initial standards-oriented set of behaviors:
   adjacent full/collapsed/shortcut precedence;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
+- Unicode-aware emphasis opening flanking, double-underscore strong, and
+  triple-delimiter combined strong emphasis;
 - spaces or a backslash before a newline as a hard break;
 - inline/reference links and images with titles;
 - plain-text image descriptions derived from nested emphasis, links, and images;

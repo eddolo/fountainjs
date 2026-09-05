@@ -279,7 +279,7 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
     : escapeInline(node.text ?? '');
   for (const mark of [...node.marks].reverse().filter((item) => item.type.name !== 'code')) {
     if (mark.type.name === 'strong') text = `**${text}**`;
-    else if (mark.type.name === 'em') text = `_${text}_`;
+    else if (mark.type.name === 'em') text = `*${text}*`;
     else if (mark.type.name === 'strike') text = `~~${text}~~`;
     else if (mark.type.name === 'link') text = link(text, mark.attrs.href, mark.attrs.title, context);
     else if (mark.type.name === 'highlight') text = `==${text}==`;

@@ -369,6 +369,28 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(MarkdownExporter.export(block), schema).toJSON()).toEqual(block.toJSON());
   });
 
+  it('uses flanking rules for emphasis and supports combined delimiter runs', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      'snake_case_value and * open* and _ open_',
+      '',
+      '***combined*** / ___also combined___ / __strong__ / a*b*c',
+    ].join('\n'), schema);
+    const marked = document.child(1).content
+      .filter((node) => node.marks.length)
+      .map((node) => ({ text: node.textContent, marks: node.marks.map((mark) => mark.type.name) }));
+
+    expect(document.child(0).textContent).toBe('snake_case_value and * open* and _ open_');
+    expect(marked).toEqual([
+      { text: 'combined', marks: ['strong', 'em'] },
+      { text: 'also combined', marks: ['strong', 'em'] },
+      { text: 'strong', marks: ['strong'] },
+      { text: 'b', marks: ['em'] },
+    ]);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
+      .toEqual(document.toJSON());
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([
@@ -695,7 +717,7 @@ describe('Markdown interchange', () => {
     const document = MarkdownImporter.parse(source, schema);
     const markdown = MarkdownExporter.export(document, { linkStyle: 'reference' });
 
-    expect(markdown).toContain('[**bold **][ref-1][**_and italic_**][ref-1]');
+    expect(markdown).toContain('[**bold **][ref-1][***and italic***][ref-1]');
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 

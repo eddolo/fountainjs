@@ -2295,6 +2295,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     imageDescription: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Before ![photo *with emphasis*, [a link](https://example.com), and ![an icon](icon.png)](hero.png "Hero") after',
     ),
+    emphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      'snake_case / ***important*** / __strong__ / a*b*c',
+    ),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2393,6 +2396,20 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     }),
   ]));
   expect(result.imageDescription.losses).toEqual([]);
+  expect(result.emphasis.document).toEqual(result.emphasis.roundTrip);
+  expect(result.emphasis.document.content[0].content.map((node: any) => ({
+    text: node.text,
+    marks: node.marks?.map((mark: any) => mark.type) ?? [],
+  }))).toEqual([
+    { text: 'snake_case / ', marks: [] },
+    { text: 'important', marks: ['strong', 'em'] },
+    { text: ' / ', marks: [] },
+    { text: 'strong', marks: ['strong'] },
+    { text: ' / a', marks: [] },
+    { text: 'b', marks: ['em'] },
+    { text: 'c', marks: [] },
+  ]);
+  expect(result.emphasis.losses).toEqual([]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

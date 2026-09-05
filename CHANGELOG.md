@@ -81,6 +81,11 @@
   Markdown image descriptions now become plain alt text after parsing nested
   emphasis, links, and images, instead of leaking their source punctuation into
   accessibility metadata.
+  Emphasis opening delimiters now use Unicode-aware flanking checks, preventing
+  intraword underscores and whitespace-prefixed runs from becoming accidental
+  formatting. Double underscores and triple star/underscore runs add strong
+  and combined strong-emphasis support; canonical emphasis uses stars so
+  adjacent word characters remain round-trip safe.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

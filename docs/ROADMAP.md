@@ -266,6 +266,10 @@ matrix without letting an earlier shortcut capture a following label.
 Image descriptions project nested inline formatting, links, and images to
 plain alt text rather than preserving Markdown punctuation in accessibility
 metadata.
+The emphasis baseline now prevents intraword-underscore and whitespace-opening
+false positives, accepts double-underscore strong and triple combined runs,
+and exports canonical emphasis with round-trip-safe stars. This deliberately
+does not claim the remaining full delimiter-stack algorithm.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

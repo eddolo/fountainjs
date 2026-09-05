@@ -146,6 +146,13 @@ both browsers and headless Node.js, preserves supported semantic marks nested
 inside it, and validates every recovered style or link before it enters the
 document. Other Markdown consumers still receive readable inline HTML.
 
+Emphasis supports star and underscore delimiters, double-underscore strong,
+and triple-delimiter combined strong emphasis. Unicode-aware opening flanking
+keeps intraword underscores and runs followed by whitespace literal. Canonical
+emphasis export uses stars so an emphasized segment between word characters
+does not turn into a forbidden intraword underscore on re-import. Full
+delimiter-stack conformance remains outside the currently claimed subset.
+
 Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
 (`[id][]`), and shortcut (`[id]`) reference links and reference images resolve
 case-insensitively. Unsafe destination protocols are never turned into links or

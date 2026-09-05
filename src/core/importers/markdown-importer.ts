@@ -5,6 +5,8 @@ import { unicodeCaseFold } from '../unicode-case-fold';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
 const MAX_MARKDOWN_REFERENCE_LINES = 32;
+const UNICODE_WHITESPACE = /\p{White_Space}/u;
+const UNICODE_PUNCTUATION = /[\p{P}\p{S}]/u;
 
 export type MarkdownLineEnding = '\n' | '\r\n' | '\r';
 
@@ -370,6 +372,53 @@ function matchingDelimiter(value: string, start: number, delimiter: string): num
   return -1;
 }
 
+function emphasisFlanking(value: string, start: number, length: number, marker: '*' | '_') {
+  const before = Array.from(value.slice(Math.max(0, start - 2), start)).at(-1) ?? ' ';
+  const after = String.fromCodePoint(value.codePointAt(start + length) ?? 32);
+  const beforeWhitespace = UNICODE_WHITESPACE.test(before);
+  const afterWhitespace = UNICODE_WHITESPACE.test(after);
+  const beforePunctuation = UNICODE_PUNCTUATION.test(before);
+  const afterPunctuation = UNICODE_PUNCTUATION.test(after);
+  const leftFlanking = !afterWhitespace && (!afterPunctuation || beforeWhitespace || beforePunctuation);
+  const rightFlanking = !beforeWhitespace && (!beforePunctuation || afterWhitespace || afterPunctuation);
+  return marker === '_'
+    ? (leftFlanking && (!rightFlanking || beforePunctuation) ? 1 : 0)
+      | (rightFlanking && (!leftFlanking || afterPunctuation) ? 2 : 0)
+    : (leftFlanking ? 1 : 0) | (rightFlanking ? 2 : 0);
+}
+
+function opaqueInlineEnd(value: string, start: number): number {
+  return value[start] === '`'
+    ? codeSpanToken(value, start)?.end ?? -1
+    : value[start] === '<'
+      ? autolinkToken(value, start)?.end ?? inlineHTMLTokenEnd(value, start)
+      : -1;
+}
+
+function matchingEmphasisDelimiter(
+  value: string,
+  start: number,
+  delimiter: string,
+): number {
+  const marker = delimiter[0] as '*' | '_';
+  for (let index = start; index <= value.length - delimiter.length; index++) {
+    if (value[index] === '\\') { index++; continue; }
+    const opaqueEnd = opaqueInlineEnd(value, index);
+    if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
+    if (!value.startsWith(delimiter, index) || value[index - 1] === marker) continue;
+    let runEnd = index;
+    while (value[runEnd] === marker) runEnd += 1;
+    if (runEnd - index < delimiter.length) continue;
+    // The end-of-fragment fallback preserves Fountain's canonical per-text-node
+    // serialization when a marked node ends in whitespace. It is intentionally
+    // narrower than ordinary delimiter recognition; opening delimiters still
+    // obey CommonMark flanking rules.
+    if ((emphasisFlanking(value, index, runEnd - index, marker) & 2) || runEnd === value.length) return index;
+    index = runEnd - 1;
+  }
+  return -1;
+}
+
 function codeSpanToken(value: string, start: number): { readonly text: string; readonly end: number } | null {
   if (value[start] !== '`' || value[start - 1] === '`') return null;
   let openingEnd = start;
@@ -427,14 +476,8 @@ function linkLabelEnd(value: string, start: number): number {
   let depth = 0;
   for (let index = start; index < value.length; index++) {
     if (value[index] === '\\') { index++; continue; }
-    if (value[index] === '`') {
-      const code = codeSpanToken(value, index);
-      if (code) { index = code.end - 1; continue; }
-    }
-    if (value[index] === '<') {
-      const opaqueEnd = autolinkToken(value, index)?.end ?? inlineHTMLTokenEnd(value, index);
-      if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
-    }
+    const opaqueEnd = opaqueInlineEnd(value, index);
+    if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
     if (value[index] === '[') depth++;
     else if (value[index] === ']') {
       depth--;
@@ -865,18 +908,33 @@ function inline(text: string, schema: Schema, references: References, inheritedM
         }
       }
     }
-    const delimiters: readonly [string, string, string][] = [
-      ['**', '**', 'strong'], ['~~', '~~', 'strike'], ['==', '==', 'highlight'], ['_', '_', 'em'], ['*', '*', 'em'],
+    const delimiters: readonly [string, readonly string[]][] = [
+      ['***', ['strong', 'em']],
+      ['___', ['strong', 'em']],
+      ['**', ['strong']],
+      ['__', ['strong']],
+      ['~~', ['strike']],
+      ['==', ['highlight']],
+      ['_', ['em']],
+      ['*', ['em']],
     ];
     let handled = false;
-    for (const [opening, closing, markName] of delimiters) {
-      if (!text.startsWith(opening, index)) continue;
-      const end = matchingDelimiter(text, index + opening.length, closing);
-      const type = schema.marks[markName];
-      if (end <= index + opening.length || !type) continue;
+    for (const [delimiter, markNames] of delimiters) {
+      if (!text.startsWith(delimiter, index)) continue;
+      const emphasis = delimiter[0] === '*' || delimiter[0] === '_';
+      const marker = delimiter[0] as '*' | '_';
+      if (emphasis && !(emphasisFlanking(text, index, delimiter.length, marker) & 1)) continue;
+      const end = emphasis
+        ? matchingEmphasisDelimiter(text, index + delimiter.length, delimiter)
+        : matchingDelimiter(text, index + delimiter.length, delimiter);
+      const types = markNames.map((markName) => schema.marks[markName]);
+      if (end <= index + delimiter.length || types.some((type) => !type)) continue;
       flush();
-      result.push(...inline(text.slice(index + opening.length, end), schema, references, [...inheritedMarks, type.create()]));
-      index = end + closing.length;
+      result.push(...inline(text.slice(index + delimiter.length, end), schema, references, [
+        ...inheritedMarks,
+        ...types.map((type) => type.create()),
+      ]));
+      index = end + delimiter.length;
       handled = true;
       break;
     }

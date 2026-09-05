@@ -226,6 +226,19 @@
         "marks": ["link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-emphasis-flanking-baseline",
+      "source": "snake_case stays literal; ***important*** is both; __strong__ is strong.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "snake_case stays literal; important is both; strong is strong.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["strong", "em", "strong"],
+        "hardBreaks": 0
+      }
     }
   ]
 }
