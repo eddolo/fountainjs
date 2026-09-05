@@ -116,6 +116,19 @@
       }
     },
     {
+      "id": "commonmark-ordered-list-paragraph-interruption",
+      "source": "Existing paragraph\n14. stays in it\n\nExisting paragraph\n1. starts a list",
+      "expected": {
+        "topLevelTypes": ["paragraph", "paragraph", "ordered_list"],
+        "text": "Existing paragraph 14. stays in itExisting paragraphstarts a list",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
       "id": "commonmark-indented-code",
       "source": "    const indented = true;",
       "expected": {

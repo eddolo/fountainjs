@@ -129,6 +129,8 @@
   optional closing sequence as syntax rather than document text.
   Bullet lists accept `+` markers, and a change of bullet marker or ordered-list
   delimiter starts a distinct adjacent list instead of merging list identity.
+  Ordered lists beginning above `1` remain valid at a block boundary but no
+  longer interrupt an existing paragraph.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

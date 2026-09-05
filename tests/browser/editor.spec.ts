@@ -2318,6 +2318,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     listDelimiters: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '+ foo\n+ bar\n* baz\n\n1. one\n2. two\n3) three',
     ),
+    orderedInterruption: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      'Existing paragraph\n14. stays in it\n\nExisting paragraph\n1. starts a list',
+    ),
     nestedEmphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '*outer **inner** outer* / **strong *inside* strong** / *[linked](https://example.com)* / *[literal *](https://example.com)',
     ),
@@ -2543,6 +2546,15 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     { type: 'ordered_list', start: 3, items: 1 },
   ]);
   expect(result.listDelimiters.losses).toEqual([]);
+  expect(result.orderedInterruption.document).toEqual(result.orderedInterruption.roundTrip);
+  expect(result.orderedInterruption.document.content.map((node: any) => node.type)).toEqual([
+    'paragraph',
+    'paragraph',
+    'ordered_list',
+  ]);
+  expect(result.orderedInterruption.document.content[0].content[0].text)
+    .toBe('Existing paragraph 14. stays in it');
+  expect(result.orderedInterruption.losses).toEqual([]);
   expect(result.nestedEmphasis.document).toEqual(result.nestedEmphasis.roundTrip);
   expect(result.nestedEmphasis.document.content[0].content
     .filter((node: any) => node.marks?.length)

@@ -1300,7 +1300,7 @@ function tableStart(lines: readonly string[], index: number): { headers: string[
 interface ListMarker {
   readonly indent: number;
   readonly kind: 'bullet' | 'ordered' | 'task';
-  readonly style: '-' | '*' | '+' | '.' | ')';
+  readonly m: '-' | '*' | '+' | '.' | ')';
   readonly value: string;
   readonly checked: boolean;
   readonly start: number;
@@ -1312,11 +1312,11 @@ function listMarker(line: string): ListMarker | null {
   if (!match) return null;
   return {
     indent: match[1].length,
-    kind: match[3] !== undefined ? 'task' : match[4] ? 'bullet' : 'ordered',
-    style: (match[2] ?? match[4] ?? match[6]) as ListMarker['style'],
+    kind: match[2] ? 'task' : match[4] ? 'bullet' : 'ordered',
+    m: (match[2] || match[4] || match[6]) as ListMarker['m'],
     value: match[7],
     checked: match[3]?.toLowerCase() === 'x',
-    start: Number(match[5] ?? 1),
+    start: Number(match[5] || 1),
   };
 }
 
@@ -1343,7 +1343,7 @@ function parseList(
   while (index < lines.length) {
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
-    if (!marker || marker.indent !== indent || marker.kind !== first.kind || marker.style !== first.style) break;
+    if (!marker || marker.indent !== indent || marker.kind !== first.kind || marker.m !== first.m) break;
     const content: Node[] = [paragraph(schema, marker.value, references)];
     index++;
     while (index < lines.length) {
@@ -1447,12 +1447,13 @@ function thematicBreak(line: string): boolean {
 
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
+  const marker = listMarker(line);
   return Boolean(markdownFence(line))
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
     || thematicBreak(line)
     || /^>\s?/.test(line)
-    || listMarker(line)?.indent === 0
+    || (marker?.indent === 0 && marker.start === 1)
     || Boolean(tableStart(lines, index))
     || Boolean(blockImage(line, references))
     || Boolean(schema.nodes.details && schema.nodes.details_summary && detailsStart(line));
