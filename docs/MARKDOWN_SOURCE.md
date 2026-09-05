@@ -185,13 +185,18 @@ is a versioned, Fountain-authored compatibility corpus. It records the
 baseline. The cases are independently worded representative fixtures; they are
 not a copy of either complete specification suite.
 
-The intended larger standards oracle compares a neutral semantic projection
+The development-only standards oracle in the
+[repository conformance script](https://github.com/eddolo/fountainjs/blob/master/scripts/check-markdown-conformance.mjs)
+scans all 652 CommonMark 0.31.2 examples and compares a neutral semantic projection
 (block kind and nesting, text, marks, destinations, list starts, and rendered
 meaning), never literal equality between CommonMark's AST and Fountain's
 document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
-belong in development/conformance tooling rather than the shipped runtime, and
-intentional dialect or safety-policy differences must be recorded explicitly.
+do not enter the shipped runtime. The versioned
+[semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
+classifies every example: 406 currently match, 240 remain pending, and six are
+intentional default-policy/GFM divergences. A regression, unclassified case, or
+newly matching case fails the gate and requires an explicit baseline review.
 
 Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
@@ -205,7 +210,8 @@ conformance. Important remaining work includes:
 - additional strikethrough delimiter-stack cases;
 - configurable handling for CommonMark's arbitrary URI schemes without
   weakening Fountain's default safe-URL policy;
-- a larger versioned semantic corpus tied to explicit specification examples;
+- promotion of the remaining explicitly classified oracle cases as their
+  semantics become supported;
 - deeper-structure source mapping without attaching raw text to the wrong node.
 
 Until those gates exist, documentation should say “supports these Markdown

@@ -23,6 +23,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.1.1
         version: 6.1.1(vite@8.2.2(@types/node@26.4.1))
+      commonmark-spec:
+        specifier: 0.31.2
+        version: 0.31.2
       css-select:
         specifier: 7.0.0
         version: 7.0.0
@@ -557,6 +560,9 @@ packages:
   chai@6.2.2:
     resolution: {integrity: sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==}
     engines: {node: '>=18'}
+
+  commonmark-spec@0.31.2:
+    resolution: {integrity: sha512-vXKxmclzJPymhOJYD26G0oBjVmIcKC8p5m2DvHIq1A1btr1m0r0dT/PzRA5/nwxUbCAPedMNPEoiQE+zvuOcOw==}
 
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
@@ -1358,6 +1364,8 @@ snapshots:
   boolbase@2.0.0: {}
 
   chai@6.2.2: {}
+
+  commonmark-spec@0.31.2: {}
 
   cookie@0.7.2: {}
 

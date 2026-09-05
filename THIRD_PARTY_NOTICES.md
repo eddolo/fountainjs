@@ -1,5 +1,15 @@
 # Third-party notices
 
+## Development-only CommonMark conformance data
+
+The release gate installs the unmodified `commonmark-spec` 0.31.2 package to
+read the official examples and expected HTML published by the CommonMark
+project. The material is licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and attributed
+to John MacFarlane and the CommonMark contributors. It is used only by the
+development conformance script and is not bundled into FountainJS runtime
+entries or copied into the published package.
+
 ## unicode-emoji-json
 
 FountainJS's optional `emoji-data` entry includes data transformed from
