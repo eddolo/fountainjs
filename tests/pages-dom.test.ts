@@ -230,6 +230,43 @@ describe('DOM page measurement adapter', () => {
     })).toThrow(/at least two fragment elements/);
   });
 
+  it('keeps a one-line rendered heading with the following block', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [{ type: 'text', text: 'Lead' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'One-line heading' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'Following paragraph' }] },
+      ],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <p data-fountain-path="0" data-height="60">Lead</p>
+      <h2 data-fountain-path="1" data-height="10">One-line heading</h2>
+      <p data-fountain-path="2" data-height="40">Following paragraph</p>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+
+    const snapshot = layoutDOMPages(
+      root,
+      document,
+      createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      { lineFragmentNodeTypes: [] },
+    );
+
+    expect(snapshot.measurement.items[1]).toMatchObject({
+      id: 'block:1:heading',
+      height: 10,
+      keepWithNext: true,
+    });
+    expect(snapshot.layout.pages.map((page) => page.placements.map((placement) => placement.itemId))).toEqual([
+      ['block:0:paragraph'],
+      ['block:1:heading', 'block:2:paragraph'],
+    ]);
+  });
+
   it('reports missing model DOM and unresolved footnotes and rejects invalid line constraints', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

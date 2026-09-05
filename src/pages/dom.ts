@@ -1066,7 +1066,9 @@ function measureDOMPageFlowInternal(
     });
     else {
       const whole = wholeItem(element, itemId, path, definitionMeasurements, count);
-      item = whole.item;
+      item = node.type.name === 'heading'
+        ? Object.freeze({ ...whole.item, keepWithNext: true })
+        : whole.item;
       sources = whole.sources;
     }
     if (text && !structural) sources = text.sources;
