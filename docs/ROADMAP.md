@@ -237,20 +237,20 @@ first additive source capsule now keeps unchanged input exactly, retains
 strict leading YAML frontmatter as inert exact text, reports whether output is
 `exact`, `blocks`, `mapped-blocks`, `frontmatter`, or `canonical`, and
 canonicalizes changed source honestly after a visual edit. It never executes
-YAML and preserves
-unknown body syntax after a model change only in safely mapped unchanged
-blocks. The first versioned, Fountain-authored
+YAML and preserves unknown body syntax after a model change only in safely
+mapped unchanged blocks. The first versioned, Fountain-authored
 CommonMark/GFM-oriented fixture subset also covers ATX/Setext headings,
-indented and variable fenced code, URI/email autolinks, star emphasis, and both
-hard-break forms without claiming complete standards conformance. Fail-closed
+indented and variable fenced code, collision-safe variable-delimiter code
+spans, URI/email autolinks, star emphasis, and both hard-break forms without
+claiming complete standards conformance. Fail-closed
 aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate
-blocks remain deliberately unmapped. The complete 475-test package gate and 292-pass
+blocks remain deliberately unmapped. The complete 479-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile matrix passed in
-[CI run `168ebcb`](https://github.com/eddolo/fountainjs/actions/runs/33983773423),
+[CI run `86dd1cb`](https://github.com/eddolo/fountainjs/actions/runs/33984604184),
 and the corresponding
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33983773452)
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33984604123)
 succeeded. Identity-aware duplicate/deep-structure
 mapping and a larger standards corpus remain before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
@@ -265,7 +265,7 @@ mapping and a larger standards corpus remain before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, and unique structural mapping certified in `168ebcb`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, and collision-safe code spans certified in `86dd1cb`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node

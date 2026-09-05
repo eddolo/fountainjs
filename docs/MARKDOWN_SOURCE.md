@@ -156,12 +156,11 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The source-preservation portion of this contract is certified by the complete
-475-test package gate
-and 292-pass Chromium/Firefox/WebKit/mobile
-[CI run for `168ebcb`](https://github.com/eddolo/fountainjs/actions/runs/33983773423),
+The current bounded contract is certified by the complete 479-test package gate
+and 295-pass Chromium/Firefox/WebKit/mobile
+[CI run for `86dd1cb`](https://github.com/eddolo/fountainjs/actions/runs/33984604184),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33983773452).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33984604123).
 
 ## Security and collaboration
 
