@@ -177,9 +177,10 @@ const limits = Object.freeze({
   // existing entity trie in a shared ~40/39 KiB raw chunk. This adds less than
   // 1 KiB to aggregate emitted code, though Markdown consumers now load the
   // decoder when they use that format boundary.
-  // Context-aware reference extraction and balanced relative-link parsing add
-  // about 1.2 KiB without changing the default entry or core facade ceilings.
-  'all ESM runtime code': 1092 * kibibyte,
+  // Context-aware single/multiline reference extraction and balanced relative-
+  // link parsing add about 2.3 KiB without changing the default entry or core
+  // facade ceilings.
+  'all ESM runtime code': 1093 * kibibyte,
   'all CommonJS runtime code': 920 * kibibyte,
 });
 

@@ -2273,7 +2273,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '[Safe](https://example.com/?a=1&amp;b=2) \\&copy; &NotEqualTilde;',
     ),
     destinations: (globalThis as any).fountainBrowserTest.inspectMarkdown(
-      '[Angle](<docs/guide)v1>) and [Relative](guide.md "Guide")',
+      '[Angle](<docs/guide)v1>) and [Relative](guide.md "Guide") plus [Reference].\n\n[reference]:\n  docs/reference.md\n  "Reference title"',
     ),
   }));
 
@@ -2299,6 +2299,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     })] }),
     expect.objectContaining({ text: 'Relative', marks: [expect.objectContaining({
       type: 'link', attrs: expect.objectContaining({ href: 'guide.md', title: 'Guide' }),
+    })] }),
+    expect.objectContaining({ text: 'Reference', marks: [expect.objectContaining({
+      type: 'link', attrs: expect.objectContaining({ href: 'docs/reference.md', title: 'Reference title' }),
     })] }),
   ]));
   expect(result.destinations.losses).toEqual([]);

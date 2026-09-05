@@ -154,6 +154,69 @@ describe('Markdown interchange', () => {
     expect(links[0].attrs.href).toBe('docs/real.md');
   });
 
+  it('resolves multiline reference definitions and escaped label brackets', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[Guide], [Release], and [A\\]].',
+      '',
+      '[guide]:',
+      '      <docs/user guide.md>',
+      '      "User guide"',
+      '[release]: releases/v2.md',
+      "  'Version two",
+      "  notes'",
+      '[A\\]]: docs/brackets.md "Bracket label"',
+    ].join('\n'), schema);
+    const links = document.child(0).content.flatMap((node) => node.marks
+      .filter((mark) => mark.type.name === 'link')
+      .map((mark) => ({ text: node.textContent, href: mark.attrs.href, title: mark.attrs.title })));
+
+    expect(links).toEqual([
+      { text: 'Guide', href: 'docs/user guide.md', title: 'User guide' },
+      { text: 'Release', href: 'releases/v2.md', title: 'Version two\nnotes' },
+      { text: 'A]', href: 'docs/brackets.md', title: 'Bracket label' },
+    ]);
+    expect(document.childCount).toBe(1);
+  });
+
+  it('does not join a reference title across a blank line', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[Guide]',
+      '',
+      '[guide]: docs/guide.md',
+      '',
+      '"Not the title"',
+    ].join('\n'), schema);
+    const link = document.child(0).child(0).marks.find((mark) => mark.type.name === 'link');
+
+    expect(link?.attrs).toMatchObject({ href: 'docs/guide.md', title: '' });
+    expect(document.child(1).textContent).toBe('"Not the title"');
+  });
+
+  it('extracts global multiline reference definitions from blockquotes', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[Outside][quoted]',
+      '',
+      '> [quoted]:',
+      '>   docs/quoted.md',
+      '>   "Quoted title"',
+      '>',
+      '> [Inside][quoted]',
+    ].join('\n'), schema);
+    const links: Array<{ text: string; href: unknown; title: unknown }> = [];
+    document.descendants((node) => node.marks
+      .filter((mark) => mark.type.name === 'link')
+      .forEach((mark) => links.push({ text: node.textContent, href: mark.attrs.href, title: mark.attrs.title })));
+
+    expect(links).toEqual([
+      { text: 'Outside', href: 'docs/quoted.md', title: 'Quoted title' },
+      { text: 'Inside', href: 'docs/quoted.md', title: 'Quoted title' },
+    ]);
+    expect(document.child(1).type.name).toBe('blockquote');
+  });
+
   it('returns untouched Markdown source exactly while its parsed document is unchanged', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [

@@ -3,6 +3,7 @@ import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
+const MAX_MARKDOWN_REFERENCE_LINES = 32;
 
 export type MarkdownLineEnding = '\n' | '\r\n' | '\r';
 
@@ -260,11 +261,16 @@ function splitMarkdownSource(source: string): MarkdownSourceParts {
 }
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
-const REFERENCE_DEFINITION = /^\s{0,3}\[([^\]]+)\]:\s*(<[^>]*>|\S+)(?:\s+(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)'|\(((?:\\.|[^)\\])*)\)))?\s*$/;
+const REFERENCE_DEFINITION_OPENING = /^ {0,3}\[((?:\\.|[^\\\x5d])+)\]:[\t ]*(.*)$/u;
 
 interface ReferenceDefinition {
   readonly href: string;
   readonly title: string;
+}
+
+interface ParsedReferenceDefinition extends ReferenceDefinition {
+  readonly label: string;
+  readonly lineCount: number;
 }
 
 type References = ReadonlyMap<string, ReferenceDefinition>;
@@ -380,6 +386,7 @@ function destinationParts(value: string): ReferenceDefinition | null {
     const close = matchingDelimiter(source, 1, '>');
     if (close < 0) return null;
     href = source.slice(1, close);
+    if (/\r|\n/u.test(href)) return null;
     cursor = close + 1;
   } else {
     let depth = 0;
@@ -388,9 +395,13 @@ function destinationParts(value: string): ReferenceDefinition | null {
       if (character === '\\') { href += character + (source[++cursor] ?? ''); continue; }
       if (/\s/.test(character) && depth === 0) break;
       if (character === '(') depth++;
-      else if (character === ')' && depth > 0) depth--;
+      else if (character === ')') {
+        if (depth === 0) return null;
+        depth--;
+      }
       href += character;
     }
+    if (depth !== 0) return null;
   }
   const remainder = source.slice(cursor).trim();
   let title = '';
@@ -405,6 +416,27 @@ function destinationParts(value: string): ReferenceDefinition | null {
     title = remainder.slice(1, -1);
   }
   return { href: decodeMarkdownText(href), title: decodeMarkdownText(title) };
+}
+
+function referenceDefinitionAt(lines: readonly string[], index: number): ParsedReferenceDefinition | null {
+  const opening = REFERENCE_DEFINITION_OPENING.exec(lines[index] ?? '');
+  if (!opening || opening[1].length > 999) return null;
+  const label = referenceName(opening[1]);
+  if (!label) return null;
+
+  const parts = [opening[2]];
+  let best: ParsedReferenceDefinition | null = null;
+  for (let cursor = index; cursor < lines.length && cursor < index + MAX_MARKDOWN_REFERENCE_LINES; cursor++) {
+    if (cursor > index) {
+      if (!lines[cursor].trim()) break;
+      parts.push(lines[cursor].trim());
+    }
+    const parsed = destinationParts(parts.join('\n'));
+    if (parsed && isSafeURL(parsed.href, { allowDataImage: true })) {
+      best = { ...parsed, label, lineCount: cursor - index + 1 };
+    }
+  }
+  return best;
 }
 
 interface LinkToken extends ReferenceDefinition {
@@ -1066,43 +1098,64 @@ function references(markdown: string): { lines: string[]; definitions: Reference
   const lines: string[] = [];
   let fence: MarkdownFence | null = null;
   let paragraphOpen = false;
-  sourceLines.forEach((line) => {
+  for (let index = 0; index < sourceLines.length;) {
+    const line = sourceLines[index];
+    const quote = /^( {0,3}>[\t ]?)(.*)$/u.exec(line);
+    if (quote && !fence) {
+      const prefixes: string[] = [];
+      const contents: string[] = [];
+      let cursor = index;
+      for (; cursor < sourceLines.length; cursor++) {
+        const nested = /^( {0,3}>[\t ]?)(.*)$/u.exec(sourceLines[cursor]);
+        if (!nested) break;
+        prefixes.push(nested[1]);
+        contents.push(nested[2]);
+      }
+      const extracted = references(contents.join('\n'));
+      extracted.definitions.forEach((definition, name) => {
+        if (!definitions.has(name)) definitions.set(name, definition);
+      });
+      extracted.lines.forEach((content, offset) => lines.push(`${prefixes[offset]}${content}`));
+      paragraphOpen = false;
+      index = cursor;
+      continue;
+    }
     if (fence) {
       lines.push(line);
       if (closesMarkdownFence(line, fence)) fence = null;
       paragraphOpen = false;
-      return;
+      index++;
+      continue;
     }
     const openingFence = markdownFence(line);
     if (openingFence) {
       fence = openingFence;
       lines.push(line);
       paragraphOpen = false;
-      return;
+      index++;
+      continue;
     }
     if (!line.trim()) {
       lines.push(line);
       paragraphOpen = false;
-      return;
+      index++;
+      continue;
     }
     if (indentedCodeLine(line) !== null && !paragraphOpen) {
       lines.push(line);
-      return;
+      index++;
+      continue;
     }
-    const match = REFERENCE_DEFINITION.exec(line);
-    if (match && !paragraphOpen) {
-      const rawHref = match[2];
-      const href = decodeMarkdownText(rawHref.startsWith('<') && rawHref.endsWith('>') ? rawHref.slice(1, -1) : rawHref);
-      const name = referenceName(match[1]);
-      if (name && match[1].length <= 999 && isSafeURL(href, { allowDataImage: true })) {
-        if (!definitions.has(name)) definitions.set(name, {
-          href,
-          title: decodeMarkdownText(match[3] ?? match[4] ?? match[5] ?? ''),
-        });
-        lines.push('');
-        paragraphOpen = false;
-        return;
-      }
+    const definition = paragraphOpen ? null : referenceDefinitionAt(sourceLines, index);
+    if (definition) {
+      if (!definitions.has(definition.label)) definitions.set(definition.label, {
+        href: definition.href,
+        title: definition.title,
+      });
+      for (let offset = 0; offset < definition.lineCount; offset++) lines.push('');
+      paragraphOpen = false;
+      index += definition.lineCount;
+      continue;
     }
     lines.push(line);
     if (/^ {0,3}(?:#{1,6}(?:[\t ]+|$)|(?:-{3,}|\*{3,}|_{3,})[\t ]*$|>|(?:[-*])\s+|\d+[.)]\s+|\$\$)/u.test(line)) {
@@ -1112,7 +1165,8 @@ function references(markdown: string): { lines: string[]; definitions: Reference
     } else {
       paragraphOpen = true;
     }
-  });
+    index++;
+  }
   return { lines, definitions };
 }
 

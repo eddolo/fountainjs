@@ -51,7 +51,9 @@
   angle destinations containing `)`, reject unescaped title closers and labels
   beyond CommonMark's 999-character reference bound, and no longer extract
   reference definitions from fenced/indented code or paragraph continuation
-  text.
+  text. Destinations and titles can continue across nonblank definition lines,
+  including multiline titles and escaped closing brackets in labels, and
+  definitions nested in blockquotes remain global as CommonMark requires.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

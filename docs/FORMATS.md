@@ -93,6 +93,16 @@ or in the middle of an ordinary paragraph, remain literal content rather than
 silently changing links elsewhere in the document. Executable and protocol-
 relative destinations remain blocked.
 
+A reference destination may continue on the next nonblank line, and its
+optional quoted or parenthesized title may continue over further nonblank
+lines. Escaped `]` characters are accepted in labels, definition matching is
+case-insensitive, and the first valid definition wins. A blank line always
+ends the definition candidate, so title-looking prose after it is not consumed.
+Definition parsing is bounded to 32 physical lines per candidate.
+Definitions inside one or more blockquote levels are discovered without
+letting fenced code or ordinary paragraph continuations inside that quote leak
+into the global reference map.
+
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a
 deterministic `<span data-fountain-text-style="true">` form when ordinary

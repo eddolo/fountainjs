@@ -122,7 +122,8 @@ an initial standards-oriented set of behaviors:
 - strict HTML5 named/numeric character references and all ASCII punctuation
   escapes, excluding code spans and blocks;
 - safe absolute/relative links with balanced or angle-bracket destinations,
-  strict title closers, bounded reference labels, and code-aware definitions;
+  strict title closers, bounded/escaped reference labels, and code-aware
+  single- or multiline definitions;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;
@@ -159,8 +160,9 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The current bounded contract is certified by the complete 486-test package gate
-and 295-pass Chromium/Firefox/WebKit/mobile
+The link-boundary baseline preceding multiline/container definitions is
+certified by the complete 486-test package gate and 295-pass
+Chromium/Firefox/WebKit/mobile
 [CI run for `f88d10e`](https://github.com/eddolo/fountainjs/actions/runs/33986844427),
 plus the corresponding successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33986844442).

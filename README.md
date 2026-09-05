@@ -998,7 +998,7 @@ variable-delimiter code spans that preserve literal backticks and significant
 edge spaces. Strict HTML5 character references decode before link safety checks
 and canonical export protects entity-shaped literal text. Safe relative paths,
 balanced destinations, strict titles, and code-aware reference definitions are
-also supported. Export can
+also supported, including multiline definitions. Export can
 emit deterministic deduplicated references; `exportWithReport` identifies
 every unsupported node, mark, or attribute projection by document path so a
 publishing pipeline never has to guess what Markdown omitted.
