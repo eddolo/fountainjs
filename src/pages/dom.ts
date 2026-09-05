@@ -464,12 +464,21 @@ function tableRows(element: HTMLElement): readonly HTMLTableRowElement[] {
   )));
 }
 
+function effectiveRowSpan(cell: HTMLTableCellElement, rowIndex: number, rowCount: number): number {
+  return cell.rowSpan === 0 ? Math.max(1, rowCount - rowIndex) : Math.max(1, cell.rowSpan);
+}
+
 function tableHeaderRows(element: HTMLElement): readonly HTMLTableRowElement[] {
+  const rows = tableRows(element);
   const headers: HTMLTableRowElement[] = [];
-  for (const row of tableRows(element)) {
+  for (const row of rows) {
     if (row.querySelectorAll(':scope > th').length === 0 || row.querySelectorAll(':scope > td').length > 0) break;
     headers.push(row);
   }
+  const safe = headers.every((row, rowIndex) => [...row.cells].every((cell) => (
+    rowIndex + effectiveRowSpan(cell, rowIndex, rows.length) <= headers.length
+  )));
+  if (!safe) return Object.freeze([]);
   return Object.freeze(headers);
 }
 
@@ -479,7 +488,7 @@ function groupedTableRows(rows: readonly HTMLTableRowElement[]): readonly (reado
   let occupiedUntil = 1;
   rows.forEach((row, index) => {
     row.querySelectorAll<HTMLTableCellElement>(':scope > th, :scope > td').forEach((cell) => {
-      occupiedUntil = Math.max(occupiedUntil, index + Math.max(1, cell.rowSpan));
+      occupiedUntil = Math.max(occupiedUntil, index + effectiveRowSpan(cell, index, rows.length));
     });
     if (index + 1 >= occupiedUntil) {
       groups.push(rows.slice(start, index + 1));

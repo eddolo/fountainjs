@@ -815,6 +815,72 @@ test('keeps one canonical table editable with repeated headers across page shell
   )).toBe(1);
 });
 
+test('keeps merged header and body rowspans intact across editable table pages', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-complex-table-pages');
+  const editor = page.getByRole('textbox', { name: 'Complex table page editor' });
+  const host = page.getByLabel('Editable pages browser contract').locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const table = editor.locator(':scope > table[data-fountain-node="table"]');
+  const rows = table.locator('tr[data-fountain-node="table_row"]');
+  const breaks = table.locator('tr[data-fountain-editable-table-break]');
+  const repeatedHeaders = host.locator('.fountain-editable-pages__shells [data-fountain-editable-table-header]');
+  await expect(table).toHaveCount(1);
+  await expect(rows).toHaveCount(10);
+  expect(await breaks.count()).toBeGreaterThan(0);
+  await expect(repeatedHeaders).toHaveCount(await breaks.count());
+
+  expect(await page.evaluate(() => {
+    const result = (globalThis as any).fountainBrowserTest.pages.editable.refresh();
+    return result.snapshot.measurement.fragmentSources
+      .filter((source: any) => source.kind === 'table-row-group')
+      .map((source: any) => source.partPaths);
+  })).toEqual([
+    [[0, 0], [0, 1]],
+    [[0, 2], [0, 3]],
+    [[0, 4], [0, 5]],
+    [[0, 6], [0, 7]],
+    [[0, 8], [0, 9]],
+  ]);
+
+  const continuationStarts = await breaks.evaluateAll((items) => items.map((item) => (
+    (item.nextElementSibling as HTMLElement | null)?.dataset.fountainPath
+  )));
+  expect(continuationStarts.length).toBeGreaterThan(0);
+  expect(continuationStarts.every((path) => ['0.2', '0.4', '0.6', '0.8'].includes(path ?? ''))).toBe(true);
+  expect(new Set(continuationStarts).size).toBe(continuationStarts.length);
+
+  const headerContracts = await repeatedHeaders.evaluateAll((headers) => headers.map((header) => {
+    const cells = [...header.querySelectorAll<HTMLTableCellElement>('th')];
+    const report = cells.find((cell) => cell.textContent?.includes('Merged report'));
+    const owner = cells.find((cell) => cell.textContent?.includes('Owner'));
+    return {
+      rows: header.querySelectorAll('tr').length,
+      reportColspan: report?.colSpan,
+      ownerRowspan: owner?.rowSpan,
+      paths: header.querySelectorAll('[data-fountain-path]').length,
+      editable: (header as HTMLElement).contentEditable,
+      hidden: header.closest('[aria-hidden="true"]') !== null,
+    };
+  }));
+  expect(headerContracts.every((contract) => (
+    contract.rows === 2
+      && contract.reportColspan === 2
+      && contract.ownerRowspan === 2
+      && contract.paths === 0
+      && contract.editable === 'false'
+      && contract.hidden
+  ))).toBe(true);
+
+  await selectBlockEnd(table.locator('[data-fountain-editable-table-break] + tr').first());
+  await page.keyboard.type(' MERGED');
+  await expect(table).toContainText('MERGED');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(table).not.toContainText('MERGED');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(table).toContainText('MERGED');
+  await expect(rows).toHaveCount(10);
+});
+
 test('reports an oversized table row without clipping or splitting its editable model', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=editable-oversized-table-pages');
   const editor = page.getByRole('textbox', { name: 'Oversized table page editor' });

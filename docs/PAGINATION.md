@@ -45,7 +45,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   page shells around one unchanged contenteditable, transient whole-block
   placement, selection-safe non-model paragraph continuation gaps at measured
   line boundaries, canonical list-item continuation spacing, reversible
-  rowspan-safe table-row spacers with read-only repeated column headers,
+  transitive rowspan-safe table-row spacers with read-only repeated multi-row
+  column headers that preserve colspans/rowspans and are omitted when a header
+  rowspan leaks into body rows,
   uniquely editable canonical header/footer/footnote rails with sanitized,
   field-resolved per-page projections, explicit oversized-row overflow,
   keep-together placement and explicit oversized overflow for images, media,
@@ -69,14 +71,14 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 366-test package suite plus
+The latest immutable public certification is the 367-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
-coverage, in the
-[CI run for `76892a8`](https://github.com/eddolo/fountainjs/actions/runs/33951253743).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33951253756)
-is also green. The atomic media/custom-NodeView contract is the next immutable
-gate and is not counted in that earlier run.
+and atomic media/custom-NodeView coverage, in the
+[CI run for `4e60bed`](https://github.com/eddolo/fountainjs/actions/runs/33953036708).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33953036702)
+is also green. The complex merged-table contract is the next immutable gate and
+is not counted in that earlier run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -112,6 +114,12 @@ and every real row remain editable. Accessibility-hidden page shells show
 read-only clones of leading all-header rows, and those copies refresh after an
 edit to the canonical header. Oversized rows stay one editable row, expose an
 overflow marker on the affected sheet, and retain edit/undo/redo behavior.
+Overlapping/transitive body rowspans are collapsed into one legal fragment, so
+no continuation can cut through the merged region. A two-row header fixture
+proves preserved header `rowspan`/`colspan`, sanitized copies, continued merged
+body groups, editing, and history in Chromium and WebKit. If any leading header
+cell spans beyond the all-header band, continuation keeps the affected source
+rows together but omits the structurally incomplete repeated header.
 Images, audio, native disclosures, code blocks, and custom NodeViews use one
 default policy: retain the canonical editable DOM/model node, move it intact to
 the next page when it fits, and mark its sheet as overflowing without clipping
@@ -244,8 +252,9 @@ Lists use reversible margin spacing only on the real continuation item; no list
 item is cloned or synthesized. Tables insert accessibility-hidden, non-model
 spacer rows before the real row at each rowspan-safe continuation boundary.
 The page shell may project read-only copies of the table's leading all-header
-rows, but the original is the only editable header and every copy is rebuilt on
-reflow. Canonical headers must precede body content; canonical footers and
+rows only when all their rowspans close inside that header band; the original is
+the only editable header and every safe copy is rebuilt on reflow. Canonical
+headers must precede body content; canonical footers and
 footnote definitions must follow it. They remain uniquely editable in rails
 before and after the page stack. Sanitized read-only copies in each sheet carry
 no model paths, duplicate IDs, editable controls, or accessibility exposure;
@@ -305,10 +314,12 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - canonical editable headers/footers and page-number fields;
 - footnote numbering, reservation, continuation, and interchange;
 - paragraphs with widow/orphan rules;
-- nested lists and rowspan/colspan tables split only at legal boundaries;
+- nested lists and rowspan/colspan tables split only at legal boundaries
+  (including multi-row headers and transitive body spans; broader imported and
+  styling combinations remain part of adversarial print coverage);
 - images, media, details, code, and custom NodeViews with explicit overflow
-  behavior (covered by the canonical editable browser contract; immutable
-  public CI evidence remains pending for this newest fixture);
+  behavior, covered by the canonical editable browser contract and immutable
+  public CI;
 - selection and IME, undo, block movement, comments, tracked changes, Yjs, and
   resize behavior across page boundaries (whole-block, paragraph, list, and
   rowspan-safe table boundaries now cover selection, IME, history, reversible

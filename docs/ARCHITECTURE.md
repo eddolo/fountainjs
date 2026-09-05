@@ -779,7 +779,8 @@ The suites are organized by boundary:
   page/continuous modes, tracked decisions plus bidirectional Yjs convergence
   across automatic whole-block, paragraph-line, list-item, and table-row-group
   boundaries, mapped comments and top-level movement across split lists/tables,
-  explicit editable oversized-row overflow, canonical page-furniture/footnote
+  explicit editable oversized-row overflow, multi-row merged header projection
+  plus transitive body-rowspan safety, canonical page-furniture/footnote
   edits and unique sanitized projections, canonical keep-together
   image/audio/details/code/custom-NodeView placement with non-clipping oversized
   overflow and retained interaction/history, and continuous Chrome/Safari

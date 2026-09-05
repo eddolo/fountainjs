@@ -128,6 +128,67 @@ describe('DOM page measurement adapter', () => {
     expect(() => measureDOMPageFlow(root, document, { minimumTextLines: 0 })).toThrow(/positive safe integer/);
   });
 
+  it('groups complex table spans and repeats headers only when their rowspans stay inside the header', () => {
+    const pageSchema = schema();
+    const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [{
+        type: 'table',
+        content: [
+          { type: 'table_row', content: [
+            { type: 'table_header', attrs: { colspan: 2, rowspan: 1 }, content: [paragraph('Report')] },
+            { type: 'table_header', attrs: { colspan: 1, rowspan: 2 }, content: [paragraph('Owner')] },
+          ] },
+          { type: 'table_row', content: [
+            { type: 'table_header', content: [paragraph('Quarter')] },
+            { type: 'table_header', content: [paragraph('Status')] },
+          ] },
+          { type: 'table_row', content: [
+            { type: 'table_cell', attrs: { rowspan: 2 }, content: [paragraph('Group A')] },
+            { type: 'table_cell', content: [paragraph('A1')] },
+            { type: 'table_cell', content: [paragraph('Ada')] },
+          ] },
+          { type: 'table_row', content: [
+            { type: 'table_cell', attrs: { colspan: 2 }, content: [paragraph('A2 merged')] },
+          ] },
+          { type: 'table_row', content: [
+            { type: 'table_cell', content: [paragraph('Tail')] },
+            { type: 'table_cell', attrs: { colspan: 2 }, content: [paragraph('Done')] },
+          ] },
+        ],
+      }],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <table data-fountain-path="0" data-height="100"><tbody>
+        <tr data-fountain-path="0.0" data-height="20"><th data-fountain-path="0.0.0" colspan="2">Report</th><th data-fountain-path="0.0.1" rowspan="2">Owner</th></tr>
+        <tr data-fountain-path="0.1" data-height="20"><th data-fountain-path="0.1.0">Quarter</th><th data-fountain-path="0.1.1">Status</th></tr>
+        <tr data-fountain-path="0.2" data-height="20"><td data-fountain-path="0.2.0" rowspan="2">Group A</td><td data-fountain-path="0.2.1">A1</td><td data-fountain-path="0.2.2">Ada</td></tr>
+        <tr data-fountain-path="0.3" data-height="20"><td data-fountain-path="0.3.0" colspan="2">A2 merged</td></tr>
+        <tr data-fountain-path="0.4" data-height="20"><td data-fountain-path="0.4.0">Tail</td><td data-fountain-path="0.4.1" colspan="2">Done</td></tr>
+      </tbody></table>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+
+    const measurement = measureDOMPageFlow(root, document, { lineFragmentNodeTypes: [] });
+    expect(measurement.items[0]?.continuationHeight).toBe(40);
+    expect(measurement.fragmentSources).toMatchObject([
+      { kind: 'table-row-group', partPaths: [[0, 0], [0, 1]], height: 40 },
+      { kind: 'table-row-group', partPaths: [[0, 2], [0, 3]], height: 40 },
+      { kind: 'table-row-group', partPaths: [[0, 4]], height: 20 },
+    ]);
+
+    const leaking = root.querySelector<HTMLTableCellElement>('[data-fountain-path="0.0.1"]');
+    if (!leaking) throw new Error('Expected the complex header cell.');
+    leaking.rowSpan = 3;
+    const unsafe = measureDOMPageFlow(root, document, { lineFragmentNodeTypes: [] });
+    expect(unsafe.items[0]?.continuationHeight).toBeUndefined();
+    expect(unsafe.fragmentSources[0]?.partPaths).toEqual([[0, 0], [0, 1], [0, 2], [0, 3]]);
+  });
+
   it('provides explicit timed reflow cycles and deterministic teardown', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

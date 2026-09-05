@@ -61,6 +61,11 @@
   overflow when it exceeds the body. Pagination-owned attributes and CSS
   variables no longer cause custom NodeViews to be mistaken for foreign DOM
   mutations, while unrelated mutations still recover from immutable state.
+  Complex table measurement now keeps transitive body rowspans together,
+  preserves merged-column geometry, and repeats multi-row headers only when
+  every header rowspan remains inside the header band; a rowspan leaking into
+  body rows disables the unsafe repeated copy. A real-browser fixture keeps the
+  canonical merged table editable with history across continuation pages.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

@@ -96,6 +96,56 @@ const splitTableContent = {
     ],
   }],
 };
+const complexTableContent = {
+  type: 'doc',
+  content: [{
+    type: 'table',
+    content: [
+      {
+        type: 'table_row',
+        content: [
+          {
+            type: 'table_header', attrs: { colspan: 2 },
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Merged report' }] }],
+          },
+          {
+            type: 'table_header', attrs: { rowspan: 2 },
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Owner' }] }],
+          },
+        ],
+      },
+      {
+        type: 'table_row',
+        content: ['Quarter', 'Status'].map((value) => ({
+          type: 'table_header',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: value }] }],
+        })),
+      },
+      ...Array.from({ length: 4 }, (_, groupIndex) => ([
+        {
+          type: 'table_row',
+          content: [
+            {
+              type: 'table_cell', attrs: { rowspan: 2 },
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: `Group ${groupIndex + 1}` }] }],
+            },
+            ...[`Entry ${groupIndex + 1}`, `Editor ${groupIndex + 1}`].map((value) => ({
+              type: 'table_cell',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: value }] }],
+            })),
+          ],
+        },
+        {
+          type: 'table_row',
+          content: [{
+            type: 'table_cell', attrs: { colspan: 2 },
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: `Merged continuation ${groupIndex + 1}` }] }],
+          }],
+        },
+      ])).flat(),
+    ],
+  }],
+};
 const oversizedTableContent = {
   type: 'doc',
   content: [{
@@ -511,6 +561,7 @@ const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page int
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
+const complexEditableTableFixture = browserFixture === 'editable-complex-table-pages';
 const oversizedEditableTableFixture = browserFixture === 'editable-oversized-table-pages';
 const editablePageIntentFixture = browserFixture === 'editable-page-intent';
 const editableAtomicPagesFixture = browserFixture === 'editable-atomic-pages';
@@ -518,6 +569,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
   || splitEditablePagesFixture
   || splitEditableListFixture
   || splitEditableTableFixture
+  || complexEditableTableFixture
   || oversizedEditableTableFixture
   || editablePageIntentFixture
   || editableAtomicPagesFixture)
@@ -540,7 +592,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
           }],
         } : splitEditableListFixture ? splitListContent
           : splitEditableTableFixture ? splitTableContent
-            : oversizedEditableTableFixture ? oversizedTableContent
+            : complexEditableTableFixture ? complexTableContent
+              : oversizedEditableTableFixture ? oversizedTableContent
               : editablePageIntentFixture ? editablePageIntentContent
                 : editableAtomicPagesFixture ? editableAtomicPageContent : {
                 type: 'doc',
@@ -561,6 +614,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
             ? 'Split list page editor'
             : splitEditableTableFixture
               ? 'Split table page editor'
+              : complexEditableTableFixture
+                ? 'Complex table page editor'
               : oversizedEditableTableFixture
                 ? 'Oversized table page editor'
                 : editablePageIntentFixture
@@ -581,7 +636,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
         geometry,
         {
           measurement: splitEditablePagesFixture || splitEditableListFixture
-            || splitEditableTableFixture || oversizedEditableTableFixture
+            || splitEditableTableFixture || complexEditableTableFixture || oversizedEditableTableFixture
             || editablePageIntentFixture || editableAtomicPagesFixture
             ? {}
             : { lineFragmentNodeTypes: [] },

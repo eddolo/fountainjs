@@ -1438,7 +1438,10 @@ uses transient visual offsets plus non-model continuation spacing. Paragraphs
 split at measured line boundaries, lists split between canonical list items,
 and tables split at rowspan-safe row groups. A split table remains one editable
 table with the same row nodes; page shells render read-only, accessibility-hidden
-copies of its canonical leading header rows. DOM order, model-node identity,
+copies of its canonical leading header rows. Multi-row headers preserve
+`rowspan` and `colspan` only when each rowspan closes within the leading header
+band; a header spanning into body rows is kept canonical but not repeated.
+Transitive body rowspans form one unsplittable row group. DOM order, model-node identity,
 model paths, selection/input handlers, and persisted JSON remain unchanged.
 Canonical `page_header` nodes must precede ordinary body content; canonical
 `page_footer` and `footnote_definition` nodes must follow it. The surface keeps
@@ -1468,7 +1471,9 @@ rowspan-safe table row groups are covered. Canonical page-furniture/footnote
 rails and their page-local projections, oversized-row behavior,
 split-container comments, top-level movement, and canonical
 image/audio/details/code/custom-NodeView placement and interaction are also
-covered in dedicated browser fixtures. Broader adversarial/cross-engine print
+covered in dedicated browser fixtures. A complex-table fixture covers safe
+two-row header repetition, mixed row/column spans, continued body groups, and
+history. Broader adversarial/cross-engine print
 fidelity remains active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 

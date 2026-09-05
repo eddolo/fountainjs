@@ -364,7 +364,10 @@ canonical list items without cloning them. Tables continue only at
 rowspan-safe row-group boundaries: the one canonical table and every real row
 stay editable, while transient non-model spacer rows align each continuation
 and page shells show accessibility-hidden, read-only copies of the canonical
-column header. Header edits update every copy on reflow. Selection, IME,
+column header. Multi-row headers retain their row/column spans when every
+rowspan stays inside the header band; Fountain omits an unsafe repeated header
+when a header cell spans into body rows. Transitive body rowspans remain one
+legal group and are never cut apart. Header edits update every copy on reflow. Selection, IME,
 undo/redo, tracked-change decisions, and Yjs convergence are covered across
 both list and table page boundaries. Canonical header templates remain editable
 once in a rail before the page stack; canonical footer templates and footnote
@@ -401,7 +404,9 @@ pages. Editable canonical page furniture and page-local footnotes, oversized-row
 behavior, split-container comments, and top-level block movement now have
 dedicated browser contracts. A real browser contract also covers canonical
 image, audio, details, code, and custom NodeView placement, interaction, history,
-and explicit oversized overflow. Broader adversarial/cross-engine PDF fidelity
+and explicit oversized overflow. Another covers merged two-row headers,
+rowspan-safe body groups, header-copy sanitization, and history after a table
+continuation. Broader adversarial/cross-engine PDF fidelity
 remains active `DOC-14` work with explicit browser and accessibility gates in
 [the pagination contract](docs/PAGINATION.md).
 
