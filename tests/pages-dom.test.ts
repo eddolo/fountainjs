@@ -107,6 +107,64 @@ describe('DOM page measurement adapter', () => {
     expect(Object.isFrozen(snapshot)).toBe(true);
   });
 
+  it('turns real footnote line boxes into legal continuation fragments', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Claim' },
+          { type: 'footnote_reference', attrs: { id: 'long' } },
+        ] },
+        { type: 'footnote_definition', attrs: { id: 'long' }, content: [{
+          type: 'paragraph', content: [{ type: 'text', text: 'One two three four' }],
+        }] },
+      ],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <p data-fountain-path="0" data-height="10">Claim<sup data-fountain-footnote-reference="long" data-height="5"></sup></p>
+      <section data-fountain-path="1" data-fountain-footnote-definition="long" data-height="38"><p>One two three four</p></section>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      const top = this.dataset.fountainFootnoteDefinition ? 20 : 0;
+      return rectangle(top, Number(this.dataset.height ?? 0));
+    });
+
+    let selected: Node | null = null;
+    vi.spyOn(window.document, 'createRange').mockReturnValue({
+      selectNodeContents: (node: Node) => { selected = node; },
+      getClientRects: () => selected instanceof window.HTMLElement && selected.closest('[data-fountain-footnote-definition]')
+        ? [rectangle(20, 8), rectangle(30, 8), rectangle(40, 8), rectangle(50, 8)] as unknown as DOMRectList
+        : [] as unknown as DOMRectList,
+      detach: () => {},
+    } as unknown as Range);
+
+    const snapshot = layoutDOMPages(
+      root,
+      document,
+      createPageGeometry({ size: { width: 100, height: 50 }, margins: 10 }),
+      { lineFragmentNodeTypes: ['paragraph'] },
+    );
+
+    expect(snapshot.measurement.items[0]?.fragments?.[0]?.footnotes).toMatchObject([{
+      id: 'long',
+      height: 38,
+      fragments: [
+        { id: 'long:line:1', height: 9 },
+        { id: 'long:line:2', height: 10 },
+        { id: 'long:line:3', height: 10 },
+        { id: 'long:line:4', height: 9 },
+      ],
+    }]);
+    expect(snapshot.layout.pages.map((page) => page.footnotes)).toMatchObject([
+      [{ id: 'long', fragmentFrom: 0, fragmentTo: 2, height: 19, continuedAfter: true }],
+      [{ id: 'long', fragmentFrom: 2, fragmentTo: 4, height: 19, continuedBefore: true }],
+    ]);
+    expect(snapshot.presentation.pages.map((page) => page.footnotes[0]?.sourcePath)).toEqual([[1], [1]]);
+    expect(measureDOMPageFlow(root, document, { lineFragmentNodeTypes: [] })
+      .items[0]?.fragments?.[0]?.footnotes).toEqual([{ id: 'long', height: 38 }]);
+  });
+
   it('reports missing model DOM and unresolved footnotes and rejects invalid line constraints', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',
@@ -442,7 +500,7 @@ describe('DOM page measurement adapter', () => {
     });
     const measurement = Object.freeze({
       items: Object.freeze([]), fragmentSources: Object.freeze([source]), templates: Object.freeze([]),
-      warnings: Object.freeze([]), contentWidth: 100, measurementCount: 0,
+      footnoteSources: Object.freeze([]), warnings: Object.freeze([]), contentWidth: 100, measurementCount: 0,
     });
     const layout = Object.freeze({
       pages: Object.freeze([Object.freeze({

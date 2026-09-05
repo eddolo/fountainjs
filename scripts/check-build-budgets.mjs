@@ -67,12 +67,16 @@ const limits = Object.freeze({
   // guarded single-contenteditable page shells, editable paragraph/list/table
   // continuations, and identity-rebased structural measurement caching remain
   // isolated from the neutral model.
-  'dist/pages-dom.js': 48 * kibibyte,
+  // Exact rendered-text intervals for semantic continuation clips add about
+  // 0.9 KiB to the ESM measurement path; the CommonJS entry remains below 41 KiB.
+  'dist/pages-dom.js': 50 * kibibyte,
   'dist/pages-dom.cjs': 41 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
-  // from both the neutral model and browser measurement lifecycle.
-  'dist/pages-preview.js': 9 * kibibyte,
-  'dist/pages-preview.cjs': 8 * kibibyte,
+  // from both the neutral model and browser measurement lifecycle. Clipped
+  // long-footnote continuations and non-duplicating print text masks add about
+  // 1.9/1.5 KiB to this opt-in entry.
+  'dist/pages-preview.js': 12 * kibibyte,
+  'dist/pages-preview.cjs': 10 * kibibyte,
   // Accessible block handles, visible drop states, page-preview print rules,
   // and responsive editable page shells remain inside one measured stylesheet.
   'dist/styles.css': 62 * kibibyte,
@@ -111,9 +115,12 @@ const limits = Object.freeze({
   // continuation and read-only repeated header projection add about 4.6/4 KiB
   // plus 1.9 KiB of CSS. Canonical editable page-intent rails and sanitized
   // furniture/footnote projection add about 4.2/3.7 KiB plus 1.2 KiB of CSS.
+  // Measured long-footnote fragmentation, neutral continuation placement, and
+  // editable/print clips, including searchable PDF text de-duplication, add
+  // about 6.5/4.9 KiB across the optional page entries.
   // The schema is data and is not counted.
-  'all ESM runtime code': 736 * kibibyte,
-  'all CommonJS runtime code': 620 * kibibyte,
+  'all ESM runtime code': 743 * kibibyte,
+  'all CommonJS runtime code': 625 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

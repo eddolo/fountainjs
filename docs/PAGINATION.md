@@ -5,7 +5,8 @@ layout/document-intent foundation, read-only paged preview/print projection, and
 a guarded editable page surface for whole blocks, measured paragraph lines,
 canonical list items, rowspan-safe table row groups, canonical page-intent
 rails, page-local projections, and atomic images/media/disclosures/code/custom
-NodeViews are implemented. Unsplittable content has an explicit non-clipping
+NodeViews are implemented. Measured long footnotes now continue across pages
+through the neutral layout, editable shell, and print projection. Unsplittable content has an explicit non-clipping
 overflow policy. Physical A4/Letter print projection is exercised in Chromium,
 Firefox, and WebKit; Chromium additionally verifies emitted PDF bytes and text.
 Exhaustive adversarial print fidelity is not complete. This page is not a claim
@@ -18,7 +19,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - `createPageGeometry()` for A4, Letter, and bounded custom geometry;
 - `layoutPages()` for deterministic legal-fragment placement, manual break
   intent, keep-with-next, widow/orphan minima, continuation overhead,
-  page-local footnote reservation, maximum-page bounds, and explicit overflow;
+  page-local footnote reservation and legal-fragment continuation with optional
+  opening/ending minima, maximum-page bounds, and explicit overflow;
 - optional `page_break`, `footnote_reference`, and `footnote_definition` nodes;
 - canonical rich `page_header` / `page_footer` templates for default, first,
   odd, and even pages, plus `page_field` atoms for current/total page counts;
@@ -31,7 +33,7 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   templates and orphan page-field diagnostics;
 - an isolated `fountainjs-editor/pages/dom` measurement adapter that converts
   actual line boxes, direct list items, rowspan-safe table row groups, repeated
-  table-header cost, footnotes, templates, and manual breaks into neutral flow
+  table-header cost, footnote line fragments, templates, and manual breaks into neutral flow
   descriptors without changing the DOM;
 - immutable DOM-fragment source maps with model paths, structural descendant
   paths, clip offsets, and heights, so continuation renderers do not infer
@@ -64,7 +66,7 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   read-only sheets, exact line clips, structural continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
   print page breaks, normalized deterministic physical `@page` rules and names,
-  namespaced IDs, and an optional sanitized host placement renderer for custom
+  namespaced IDs, exact clipped long-footnote continuations, and an optional sanitized host placement renderer for custom
   NodeViews/atomic media whose live DOM is not print-safe,
   transient editor-state removal, and one screen-only continuous accessibility
   copy;
@@ -75,16 +77,16 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 370-test package suite plus
+The latest immutable public certification is the 371-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
 and atomic media/custom-NodeView coverage, including complex merged-table
 fragmentation, the physical three-engine A4/Letter print contract, gap-adjacent
-selection/IME, and mobile fallback, in the
-[CI run for `f52d86c`](https://github.com/eddolo/fountainjs/actions/runs/33954795143).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33954795113)
-is also green. The host-owned custom placement print renderer is the next
-immutable gate and is not counted in that earlier run.
+selection/IME, mobile fallback, and the host-owned sanitized print renderer in
+the [CI run for `33a9920`](https://github.com/eddolo/fountainjs/actions/runs/33955189993).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33955189994)
+is also green. Long-footnote continuation passes the local Chromium, Firefox,
+and WebKit contract but is not counted in that preceding immutable run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -98,6 +100,29 @@ const kit = composeExtensions([CoreExtension, PagesExtension])
 const geometry = createPageGeometry({ size: 'a4', margins: 20 })
 const result = layoutPages(measuredFlowItems, geometry)
 ```
+
+A renderer adapter can make a long footnote continuable by supplying only its
+legal measured slices. The neutral engine does not inspect text or the DOM:
+
+```ts
+const note = {
+  id: 'source-1',
+  height: 48,
+  fragments: [
+    { id: 'source-1:line:1', height: 12 },
+    { id: 'source-1:line:2', height: 12 },
+    { id: 'source-1:line:3', height: 12 },
+    { id: 'source-1:line:4', height: 12 },
+  ],
+  minimumStart: 1,
+  minimumEnd: 2,
+}
+```
+
+Every fragment ID and height must be stable for the layout pass, their heights
+must sum to the measured footnote height, and repeated references with the same
+footnote ID must provide the same measurement. Output page placements include
+the assigned fragment interval, source clip offset, and continuation flags.
 
 Measurements are adapter input, not persisted editor state. Each template is
 edited once in canonical document order. The neutral projector now decides
@@ -153,6 +178,14 @@ reversible narrow-container fallback. A separate multi-page fixture has
 no manual breaks and proves tracked insertions/decisions, preserved remote
 authorship, and bidirectional Yjs convergence on automatically placed blocks.
 The same contracts cover paragraph, list-item, and table-row-group boundaries.
+Long definitions are measured from their rendered child-block line boxes and
+supplied as ordinary fragment data to `layoutPages()`. The first reference
+reserves an opening slice; continuation placements carry exact source offsets,
+never duplicate or omit a fragment, preserve optional minimum ending lines, and
+can share their final page with later body content. Both editable shells and
+the read-only print renderer clone the one canonical definition and clip only
+the assigned slice; the continuous accessibility copy still contains the full
+definition exactly once.
 Mapped comment anchors and top-level block movement are covered across split
 lists and tables. Exhaustive adversarial visual/content print fidelity remains
 active work; only Chromium exposes PDF-byte generation through Playwright.
@@ -318,7 +351,11 @@ may expose legal fragments:
 - captions with their media/table when they fit together;
 - atomic media/NodeViews, native disclosures, and code blocks, kept together
   unless a host supplies a specialized continuation/print renderer;
-- footnote bodies reserved on the page containing their first reference.
+- footnote bodies reserved on the page containing their first reference, with
+  measured legal fragments continued across later pages when the body cannot
+  fit intact; definitions containing a block outside the configured safe
+  line-fragment types remain whole rather than being clipped through a table,
+  media node, or other atomic structure;
 
 If a single unsplittable fragment exceeds the body, the result must identify an
 overflow instead of silently clipping it. The renderer may expose a continuous
@@ -329,7 +366,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - A4, Letter, and bounded custom physical sizes and margins;
 - manual breaks and deterministic automatic reflow in both directions;
 - canonical editable headers/footers and page-number fields;
-- footnote numbering, reservation, continuation, and interchange;
+- footnote numbering, reservation, continuation, and interchange (the measured
+  continuation baseline is implemented; broader numbering/import fixtures remain);
 - paragraphs with widow/orphan rules;
 - nested lists and rowspan/colspan tables split only at legal boundaries
   (including multi-row headers and transitive body spans; broader imported and

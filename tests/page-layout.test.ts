@@ -118,6 +118,60 @@ describe('DOM-independent page layout', () => {
     expect(result.pages[1].usedHeight).toBe(25);
   });
 
+  it('continues a fragmented footnote without dropping content and reuses its final page', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 60 }, margins: 10 });
+    const note = {
+      id: 'long-note',
+      height: 40,
+      fragments: [1, 2, 3, 4].map((number) => ({ id: `note-line-${number}`, height: 10 })),
+    };
+    const result = layoutPages([
+      { id: 'claim', fragments: [{ id: 'claim-line', height: 20, footnotes: [note] }] },
+      { id: 'after', height: 10 },
+    ], geometry);
+
+    expect(result.pages).toHaveLength(2);
+    expect(result.pages[0]).toMatchObject({
+      usedHeight: 40,
+      footnotes: [{
+        id: 'long-note', height: 20, fragmentFrom: 0, fragmentTo: 2,
+        fragmentCount: 4, clipOffset: 0, continuedBefore: false, continuedAfter: true,
+      }],
+    });
+    expect(result.pages[1]).toMatchObject({
+      usedHeight: 30,
+      footnotes: [{
+        id: 'long-note', height: 20, fragmentFrom: 2, fragmentTo: 4,
+        fragmentCount: 4, clipOffset: 20, continuedBefore: true, continuedAfter: false,
+      }],
+    });
+    expect(result.pages[1].placements.map((placement) => placement.itemId)).toEqual(['after']);
+    expect(result.pages.flatMap((page) => page.footnotes).reduce((total, placement) => total + placement.height, 0)).toBe(40);
+    expect(result.warnings).toEqual([]);
+  });
+
+  it('preserves the minimum ending fragments of a continued footnote', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 80 }, margins: 10 });
+    const result = layoutPages([{
+      id: 'claim',
+      fragments: [{
+        id: 'claim-line',
+        height: 20,
+        footnotes: [{
+          id: 'balanced-note',
+          height: 50,
+          fragments: [1, 2, 3, 4, 5].map((number) => ({ id: `line-${number}`, height: 10 })),
+          minimumEnd: 2,
+        }],
+      }],
+    }], geometry);
+
+    expect(result.pages.map((page) => page.footnotes.map((footnote) => [
+      footnote.fragmentFrom, footnote.fragmentTo, footnote.height,
+    ]))).toEqual([[[0, 3, 30]], [[3, 5, 20]]]);
+    expect(result.warnings).toEqual([]);
+  });
+
   it('retains oversized content with explicit warnings and rejects hostile measurements', () => {
     const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
     const result = layoutPages([{ id: 'media', height: 120 }], geometry);
@@ -134,6 +188,20 @@ describe('DOM-independent page layout', () => {
         { id: 'second', height: 1, footnotes: [{ id: 'note', height: 3 }] },
       ],
     }], geometry)).toThrow(/conflicting/);
+    expect(() => layoutPages([{
+      id: 'fragmented-note',
+      fragments: [{
+        id: 'line', height: 1,
+        footnotes: [{ id: 'note', height: 3, fragments: [{ id: 'only', height: 2 }] }],
+      }],
+    }], geometry)).toThrow(/sum/);
+    expect(() => layoutPages([{
+      id: 'fragmented-note',
+      fragments: [{
+        id: 'line', height: 1,
+        footnotes: [{ id: 'note', height: 2, fragments: [{ id: 'only', height: 2 }], minimumEnd: 2 }],
+      }],
+    }], geometry)).toThrow(/constraint larger/);
     expect(() => layoutPages([{ id: 'bad', height: 1 }], geometry, { maximumPages: 0 })).toThrow(/positive safe integer/);
     expect(() => layoutPages([{ id: 'bad', height: 1 }], geometry, { maximumPages: 100_001 })).toThrow(/100,000/);
   });

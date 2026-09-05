@@ -2,9 +2,10 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CoreExtension, Schema, composeExtensions } from '../src';
-import { PagesExtension, createPageGeometry } from '../src/pages';
-import { layoutDOMPages } from '../src/pages/dom';
+import { PagesExtension, createPageGeometry, layoutPages } from '../src/pages';
+import { layoutDOMPages, projectDOMPageContent, type DOMPageFlowMeasurement } from '../src/pages/dom';
 import { renderDOMPagePreview } from '../src/pages/preview';
+import { projectPagePresentation } from '../src/pages/presentation';
 
 function schema() {
   return new Schema(composeExtensions([CoreExtension, PagesExtension]).schema);
@@ -99,6 +100,105 @@ describe('read-only DOM page preview', () => {
     expect(target.querySelector('[contenteditable="true"]')).toBeNull();
     expect(source.outerHTML).toBe(before);
     expect(Object.isFrozen(result.pages)).toBe(true);
+  });
+
+  it('clips every long-footnote continuation to its assigned measured fragments', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Claim' },
+          { type: 'footnote_reference', attrs: { id: 'long' } },
+        ] },
+        { type: 'footnote_definition', attrs: { id: 'long' }, content: [{
+          type: 'paragraph', content: [{ type: 'text', text: 'One two three four' }],
+        }] },
+      ],
+    });
+    const source = window.document.createElement('div');
+    source.innerHTML = `
+      <p data-fountain-path="0">Claim<sup data-fountain-footnote-reference="long"><a href="#fountain-footnote-long">long</a></sup></p>
+      <section id="fountain-footnote-long" data-fountain-path="1" data-fountain-footnote-definition="long"><p data-fountain-path="1.0">One <strong>two</strong><span> three </span><em>four</em></p></section>
+    `;
+    const note = Object.freeze({
+      id: 'long',
+      height: 40,
+      fragments: Object.freeze([1, 2, 3, 4].map((number) => Object.freeze({ id: `note-line-${number}`, height: 10 }))),
+    });
+    const item = Object.freeze({
+      id: 'block:0:paragraph',
+      fragments: Object.freeze([Object.freeze({ id: 'block:0:paragraph:whole', height: 20, footnotes: Object.freeze([note]) })]),
+    });
+    const measurement: DOMPageFlowMeasurement = Object.freeze({
+      items: Object.freeze([item]),
+      fragmentSources: Object.freeze([Object.freeze({
+        itemId: item.id,
+        fragmentId: 'block:0:paragraph:whole',
+        fragmentIndex: 0,
+        kind: 'whole' as const,
+        sourcePath: Object.freeze([0]),
+        partPaths: Object.freeze([]),
+        clipOffset: 0,
+        height: 20,
+      })]),
+      footnoteSources: Object.freeze([
+        Object.freeze({ footnoteId: 'long', fragmentId: 'note-line-1', fragmentIndex: 0, textFrom: 0, textTo: 4 }),
+        Object.freeze({ footnoteId: 'long', fragmentId: 'note-line-2', fragmentIndex: 1, textFrom: 4, textTo: 13 }),
+        Object.freeze({ footnoteId: 'long', fragmentId: 'note-line-3', fragmentIndex: 2, textFrom: 13, textTo: 14 }),
+        Object.freeze({ footnoteId: 'long', fragmentId: 'note-line-4', fragmentIndex: 3, textFrom: 14, textTo: 18 }),
+      ]),
+      templates: Object.freeze([]),
+      warnings: Object.freeze([]),
+      contentWidth: 80,
+      measurementCount: 0,
+    });
+    const geometry = createPageGeometry({ size: { width: 100, height: 60 }, margins: 10 });
+    const layout = layoutPages(measurement.items, geometry);
+    const snapshot = Object.freeze({
+      measurement,
+      layout,
+      content: projectDOMPageContent(measurement, layout),
+      presentation: projectPagePresentation(document, layout),
+    });
+    const target = window.document.createElement('div');
+    const before = source.outerHTML;
+
+    const result = renderDOMPagePreview(source, target, geometry, snapshot);
+
+    expect(result.pages).toHaveLength(2);
+    const clips = [...target.querySelectorAll<HTMLElement>('.fountain-page-preview__footnote-clip')];
+    expect(clips).toHaveLength(2);
+    expect(clips.map((clip) => ({
+      height: clip.style.blockSize,
+      before: clip.dataset.fountainFootnoteContinuedBefore,
+      after: clip.dataset.fountainFootnoteContinuedAfter,
+      transform: clip.firstElementChild instanceof HTMLElement ? clip.firstElementChild.style.transform : '',
+    }))).toEqual([
+      { height: '20px', before: 'false', after: 'true', transform: 'translateY(0px)' },
+      { height: '20px', before: 'true', after: 'false', transform: 'translateY(-20px)' },
+    ]);
+    const reference = result.pages[0]?.querySelector<HTMLAnchorElement>('[data-fountain-footnote-reference] a');
+    const definition = result.pages[0]?.querySelector<HTMLElement>('[data-fountain-footnote-definition]');
+    expect(reference?.getAttribute('href')).toBe(`#${definition?.id}`);
+    expect(result.pages[1]?.querySelector('[data-fountain-footnote-definition]')?.id).not.toBe(definition?.id);
+    const visibleFootnoteText = (page: HTMLElement) => {
+      const definition = page.querySelector<HTMLElement>('[data-fountain-footnote-definition]');
+      if (!definition) return '';
+      const walker = window.document.createTreeWalker(definition, window.NodeFilter.SHOW_TEXT);
+      const visible: string[] = [];
+      let text = walker.nextNode() as Text | null;
+      while (text) {
+        if (!text.parentElement?.closest('[style*="visibility: hidden"]')) visible.push(text.data);
+        text = walker.nextNode() as Text | null;
+      }
+      return visible.join('');
+    };
+    expect(result.pages.map(visibleFootnoteText)).toEqual(['One two three', ' four']);
+    expect(result.pages.map((page) => (
+      page.querySelector<HTMLElement>('.fountain-page-preview__footnote-clip')
+        ?.dataset.fountainFootnoteExactTextSlice
+    ))).toEqual(['true', 'true']);
+    expect(source.outerHTML).toBe(before);
   });
 
   it('normalizes physical page CSS and names without floating-point artifacts', () => {

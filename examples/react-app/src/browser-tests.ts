@@ -558,6 +558,26 @@ const pagesMount = document.querySelector<HTMLElement>('#pages-editor');
 if (!pagesMount) throw new Error('Pages fixture failed to mount.');
 const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page intent contract editor' });
 
+const longFootnoteContent = {
+  type: 'doc',
+  content: [
+    { type: 'paragraph', content: [
+      { type: 'text', text: 'Claim' },
+      { type: 'footnote_reference', attrs: { id: 'long-note' } },
+    ] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'After.' }] },
+    { type: 'footnote_definition', attrs: { id: 'long-note' }, content: [{
+      type: 'paragraph',
+      content: [{
+        type: 'text',
+        text: Array.from({ length: 120 }, (_value, index) => (
+          `FN${String(index + 1).padStart(3, '0')} continuation evidence`
+        )).join(' '),
+      }],
+    }] },
+  ],
+};
+
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
@@ -565,6 +585,7 @@ const complexEditableTableFixture = browserFixture === 'editable-complex-table-p
 const oversizedEditableTableFixture = browserFixture === 'editable-oversized-table-pages';
 const editablePageIntentFixture = browserFixture === 'editable-page-intent';
 const editableAtomicPagesFixture = browserFixture === 'editable-atomic-pages';
+const editableLongFootnoteFixture = browserFixture === 'editable-long-footnote-pages';
 const editablePagesFixture = (browserFixture === 'editable-pages'
   || splitEditablePagesFixture
   || splitEditableListFixture
@@ -572,7 +593,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
   || complexEditableTableFixture
   || oversizedEditableTableFixture
   || editablePageIntentFixture
-  || editableAtomicPagesFixture)
+  || editableAtomicPagesFixture
+  || editableLongFootnoteFixture)
   ? (() => {
       const errors: string[] = [];
       const pageKit = editableAtomicPagesFixture
@@ -595,7 +617,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
             : complexEditableTableFixture ? complexTableContent
               : oversizedEditableTableFixture ? oversizedTableContent
               : editablePageIntentFixture ? editablePageIntentContent
-                : editableAtomicPagesFixture ? editableAtomicPageContent : {
+                : editableAtomicPagesFixture ? editableAtomicPageContent
+                  : editableLongFootnoteFixture ? longFootnoteContent : {
                 type: 'doc',
                 content: [
                   { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
@@ -622,6 +645,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
                   ? 'Page furniture and footnote editor'
                   : editableAtomicPagesFixture
                     ? 'Atomic and structural page editor'
+                    : editableLongFootnoteFixture
+                      ? 'Long footnote page editor'
                     : 'Editable page canvas editor',
       });
       const geometry = createPageGeometry({
@@ -637,7 +662,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
         {
           measurement: splitEditablePagesFixture || splitEditableListFixture
             || splitEditableTableFixture || complexEditableTableFixture || oversizedEditableTableFixture
-            || editablePageIntentFixture || editableAtomicPagesFixture
+            || editablePageIntentFixture || editableAtomicPagesFixture || editableLongFootnoteFixture
             ? {}
             : { lineFragmentNodeTypes: [] },
           onError: (error) => errors.push(error instanceof Error ? error.message : String(error)),
@@ -733,6 +758,14 @@ const renderPagesPreview = (
     visualPagesHidden: result.pages.every((page) => page.getAttribute('aria-hidden') === 'true'),
     accessibleDocuments: target.querySelectorAll('.fountain-page-preview__accessible').length,
     clippedPlacements: target.querySelectorAll('.fountain-page-preview__clip').length,
+    footnoteClips: [...target.querySelectorAll<HTMLElement>('.fountain-page-preview__footnote-clip')].map((clip) => ({
+      page: clip.closest<HTMLElement>('[data-fountain-page]')?.dataset.fountainPage,
+      height: clip.getBoundingClientRect().height,
+      before: clip.dataset.fountainFootnoteContinuedBefore,
+      after: clip.dataset.fountainFootnoteContinuedAfter,
+      exact: clip.dataset.fountainFootnoteExactTextSlice,
+      transform: (clip.firstElementChild as HTMLElement | null)?.style.transform,
+    })),
     manualBreaks: result.pages.reduce((count, page) => (
       count + page.querySelectorAll('[data-fountain-page-break]').length
     ), 0),
@@ -939,6 +972,15 @@ Object.assign(globalThis, {
         return insertPageField(pagesEditor, 'page-number');
       },
       inspectTemplates: () => inspectPageTemplates(pagesEditor.state.doc),
+      loadLongFootnoteFixture: () => {
+        const fixture = pagesEditor.state.schema.nodeFromJSON(longFootnoteContent);
+        pagesEditor.dispatch(pagesEditor.state.createTransaction()
+          .replace(0, pagesEditor.state.doc.childCount, fixture.content)
+          .setSelection(Selection.cursor([0, 0], 0)));
+        pagesView.dom.style.boxSizing = 'content-box';
+        pagesView.dom.style.width = '240px';
+        return true;
+      },
       loadMeasurementFixture: () => {
         const fixture = pagesEditor.state.schema.nodeFromJSON({
           type: 'doc',
@@ -987,9 +1029,18 @@ Object.assign(globalThis, {
         pagesEditor.state.doc,
         createPageGeometry({ size: { width: 260, height: 120 }, margins: 10 }),
       ),
+      measureLongFootnote: () => layoutDOMPages(
+        pagesView.dom,
+        pagesEditor.state.doc,
+        createPageGeometry({ size: { width: 260, height: 160 }, margins: 10 }),
+      ),
       preview: (keepMounted = false) => renderPagesPreview(
         createPageGeometry({ size: { width: 260, height: 120 }, margins: 10 }),
         keepMounted,
+      ),
+      previewLongFootnote: () => renderPagesPreview(
+        createPageGeometry({ size: { width: 260, height: 160 }, margins: 10 }),
+        true,
       ),
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({
         size,

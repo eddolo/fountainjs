@@ -1,5 +1,13 @@
 import type { Node } from '../core';
-import { layoutPages, type PageFlowFragment, type PageFlowItem, type PageGeometry, type PageLayoutOptions, type PageLayoutResult } from './layout';
+import {
+  layoutPages,
+  type PageFlowFragment,
+  type PageFlowItem,
+  type PageFootnoteMeasurement,
+  type PageGeometry,
+  type PageLayoutOptions,
+  type PageLayoutResult,
+} from './layout';
 import {
   projectPagePresentation,
   type PagePresentation,
@@ -45,6 +53,15 @@ export interface DOMPageFragmentSource {
   readonly height: number;
 }
 
+export interface DOMPageFootnoteFragmentSource {
+  readonly footnoteId: string;
+  readonly fragmentId: string;
+  readonly fragmentIndex: number;
+  /** Character interval in the rendered canonical definition. */
+  readonly textFrom: number;
+  readonly textTo: number;
+}
+
 export type DOMPageMeasurementWarningCode =
   | 'missing-rendered-node'
   | 'invalid-measurement'
@@ -57,7 +74,7 @@ export interface DOMPageMeasurementWarning {
 }
 
 export interface DOMPageMeasurementOptions {
-  /** Minimum paragraph/code lines retained at each side of a split. Defaults to two. */
+  /** Minimum text/footnote lines retained at each side of a split. Defaults to two. */
   readonly minimumTextLines?: number;
   /** Custom block types whose rendered line boxes are legal split points. */
   readonly lineFragmentNodeTypes?: readonly string[];
@@ -66,6 +83,8 @@ export interface DOMPageMeasurementOptions {
 export interface DOMPageFlowMeasurement {
   readonly items: readonly PageFlowItem[];
   readonly fragmentSources: readonly DOMPageFragmentSource[];
+  /** Exact rendered-text slices for continuable footnote fragments. */
+  readonly footnoteSources: readonly DOMPageFootnoteFragmentSource[];
   readonly templates: readonly DOMPageTemplateMeasurement[];
   readonly warnings: readonly DOMPageMeasurementWarning[];
   /** Inline size of the rendered source used to calculate wrapping. */
@@ -137,7 +156,8 @@ const DEFAULT_LINE_FRAGMENT_TYPES = Object.freeze(['paragraph', 'heading', 'code
 interface CachedDefinitionMeasurement {
   readonly node: Node;
   readonly element: HTMLElement;
-  readonly height: number;
+  readonly measurement: PageFootnoteMeasurement;
+  readonly sources: readonly DOMPageFootnoteFragmentSource[];
 }
 
 interface CachedFlowMeasurement {
@@ -322,8 +342,7 @@ interface DOMTextPoint {
   readonly offset: number;
 }
 
-function firstTextPointOnLine(element: HTMLElement, lineIndex: number): DOMTextPoint | null {
-  const target = lineBands(rangeRects(element, () => {}))[lineIndex];
+function firstTextPointInBand(element: HTMLElement, target: RectLike | undefined): DOMTextPoint | null {
   const nodeFilter = element.ownerDocument.defaultView?.NodeFilter;
   if (!target || !nodeFilter) return null;
   const walker = element.ownerDocument.createTreeWalker(element, nodeFilter.SHOW_TEXT, {
@@ -332,6 +351,14 @@ function firstTextPointOnLine(element: HTMLElement, lineIndex: number): DOMTextP
       : nodeFilter.FILTER_ACCEPT,
   });
   const range = element.ownerDocument.createRange();
+  if (
+    typeof range.setStart !== 'function'
+    || typeof range.setEnd !== 'function'
+    || typeof range.getClientRects !== 'function'
+  ) {
+    range.detach?.();
+    return null;
+  }
   const intersectsTarget = (rect: RectLike) => rect.top < target.bottom + 1 && rect.bottom > target.top - 1;
   let current = walker.nextNode() as Text | null;
   while (current) {
@@ -368,6 +395,45 @@ function firstTextPointOnLine(element: HTMLElement, lineIndex: number): DOMTextP
   return null;
 }
 
+function firstTextPointOnLine(element: HTMLElement, lineIndex: number): DOMTextPoint | null {
+  return firstTextPointInBand(element, lineBands(rangeRects(element, () => {}))[lineIndex]);
+}
+
+function renderedTextOffset(element: HTMLElement, point: DOMTextPoint): number | null {
+  const nodeFilter = element.ownerDocument.defaultView?.NodeFilter;
+  if (!nodeFilter) return null;
+  const walker = element.ownerDocument.createTreeWalker(element, nodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+      ? nodeFilter.FILTER_REJECT
+      : nodeFilter.FILTER_ACCEPT,
+  });
+  let offset = 0;
+  let current = walker.nextNode() as Text | null;
+  while (current) {
+    if (current === point.node) return offset + point.offset;
+    offset += current.data.length;
+    current = walker.nextNode() as Text | null;
+  }
+  return null;
+}
+
+function renderedTextLength(element: HTMLElement): number {
+  const nodeFilter = element.ownerDocument.defaultView?.NodeFilter;
+  if (!nodeFilter) return 0;
+  const walker = element.ownerDocument.createTreeWalker(element, nodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+      ? nodeFilter.FILTER_REJECT
+      : nodeFilter.FILTER_ACCEPT,
+  });
+  let length = 0;
+  let current = walker.nextNode() as Text | null;
+  while (current) {
+    length += current.data.length;
+    current = walker.nextNode() as Text | null;
+  }
+  return length;
+}
+
 function fragmentHeights(element: HTMLElement, lines: readonly RectLike[], count: () => void): readonly number[] {
   const block = measuredRect(element, count);
   const margins = elementMargins(element);
@@ -383,56 +449,131 @@ function fragmentHeights(element: HTMLElement, lines: readonly RectLike[], count
   }));
 }
 
-function referencesIn(element: HTMLElement, definitionHeights: ReadonlyMap<string, number>, count: () => void): readonly {
-  readonly id: string;
-  readonly height: number;
+function footnoteMeasurement(
+  id: string,
+  node: Node,
+  element: HTMLElement,
+  lineTypes: ReadonlySet<string>,
+  minimumTextLines: number,
+  count: () => void,
+): {
+  readonly measurement: PageFootnoteMeasurement;
+  readonly sources: readonly DOMPageFootnoteFragmentSource[];
+} {
+  let textOnly = true;
+  node.content.forEach((block) => block.descendants((descendant, path) => {
+    if (path.length > 0 && !descendant.isText) textOnly = false;
+  }));
+  if (
+    !node.content.length
+    || !textOnly
+    || node.content.some((child) => !lineTypes.has(child.type.name))
+    || element.querySelector('[data-fountain-widget]')
+  ) {
+    return Object.freeze({
+      measurement: Object.freeze({ id, height: outerHeight(element, count) }),
+      sources: Object.freeze([]),
+    });
+  }
+  const lineSources = Array.from(element.children) as HTMLElement[];
+  const lines = lineBands((lineSources.length ? lineSources : [element]).flatMap((source) => rangeRects(source, count)));
+  if (lines.length < 2) return Object.freeze({
+    measurement: Object.freeze({ id, height: outerHeight(element, count) }),
+    sources: Object.freeze([]),
+  });
+  const heights = fragmentHeights(element, lines, count);
+  const fragments = Object.freeze(heights.map((height, index) => Object.freeze({
+    id: `${id}:line:${index + 1}`,
+    height,
+  })));
+  const measurement = Object.freeze({
+    id,
+    height: heights.reduce((total, height) => total + height, 0),
+    fragments,
+    minimumStart: Math.min(minimumTextLines, heights.length),
+    minimumEnd: Math.min(minimumTextLines, heights.length),
+  });
+  const starts = lines.map((line) => {
+    const point = firstTextPointInBand(element, line);
+    return point ? renderedTextOffset(element, point) : null;
+  });
+  const textLength = renderedTextLength(element);
+  const exact = starts.every((start): start is number => start !== null)
+    && starts.every((start, index) => index === 0 || start > (starts[index - 1] as number))
+    && (starts.at(-1) ?? textLength) < textLength;
+  const sources = exact ? Object.freeze(fragments.map((fragment, index) => Object.freeze({
+    footnoteId: id,
+    fragmentId: fragment.id,
+    fragmentIndex: index,
+    textFrom: starts[index] as number,
+    textTo: (starts[index + 1] ?? textLength) as number,
+  }))) : Object.freeze([]);
+  return Object.freeze({ measurement, sources });
+}
+
+function referencesIn(element: HTMLElement, definitions: ReadonlyMap<string, PageFootnoteMeasurement>, count: () => void): readonly {
+  readonly footnote: PageFootnoteMeasurement;
   readonly center: number;
 }[] {
-  const references: Array<{ id: string; height: number; center: number }> = [];
+  const references: Array<{ footnote: PageFootnoteMeasurement; center: number }> = [];
   element.querySelectorAll<HTMLElement>('[data-fountain-footnote-reference]').forEach((reference) => {
     const id = reference.dataset.fountainFootnoteReference;
     if (!id) return;
-    const height = definitionHeights.get(id);
-    if (height === undefined) return;
+    const footnote = definitions.get(id);
+    if (!footnote) return;
     const rect = measuredRect(reference, count);
-    references.push({ id, height, center: (rect.top + rect.bottom) / 2 });
+    references.push({ footnote, center: (rect.top + rect.bottom) / 2 });
   });
   return Object.freeze(references);
 }
 
-function uniqueFootnotes(references: readonly { readonly id: string; readonly height: number }[]): readonly {
-  readonly id: string;
-  readonly height: number;
-}[] {
-  const found = new Map<string, number>();
-  references.forEach(({ id, height }) => found.set(id, height));
-  return Object.freeze([...found].map(([id, height]) => Object.freeze({ id, height })));
+function uniqueFootnotes(references: readonly { readonly footnote: PageFootnoteMeasurement }[]): readonly PageFootnoteMeasurement[] {
+  const found = new Map<string, PageFootnoteMeasurement>();
+  references.forEach(({ footnote }) => found.set(footnote.id, footnote));
+  return Object.freeze([...found.values()]);
 }
 
-function referencedDefinitionSignature(node: Node, definitions: ReadonlyMap<string, number>): string {
+function referencedDefinitionSignature(node: Node, definitions: ReadonlyMap<string, PageFootnoteMeasurement>): string {
   const ids = new Set<string>();
   node.descendants((descendant) => {
     if (descendant.type.name === 'footnote_reference') ids.add(String(descendant.attrs.id));
   });
-  return [...ids].sort().map((id) => `${id}:${definitions.get(id) ?? 'missing'}`).join('|');
+  return [...ids].sort().map((id) => {
+    const measurement = definitions.get(id);
+    return `${id}:${measurement ? JSON.stringify(measurement) : 'missing'}`;
+  }).join('|');
 }
 
 function textFragments(
   element: HTMLElement,
   itemId: string,
   sourcePath: readonly number[],
-  definitionHeights: ReadonlyMap<string, number>,
+  definitions: ReadonlyMap<string, PageFootnoteMeasurement>,
   count: () => void,
 ): { readonly fragments: readonly PageFlowFragment[]; readonly sources: readonly DOMPageFragmentSource[] } | null {
   const lines = lineBands(rangeRects(element, count));
   if (lines.length < 2) return null;
   const heights = fragmentHeights(element, lines, count);
-  const references = referencesIn(element, definitionHeights, count);
+  const references = referencesIn(element, definitions, count);
+  const referencesByLine = lines.map(() => [] as typeof references[number][]);
+  references.forEach((reference) => {
+    const containing = lines.findIndex((line) => (
+      reference.center >= line.top - 1 && reference.center <= line.bottom + 1
+    ));
+    const lineIndex = containing >= 0 ? containing : lines.reduce((closest, line, index) => {
+      const distance = Math.abs(reference.center - (line.top + line.bottom) / 2);
+      const closestLine = lines[closest];
+      const closestDistance = closestLine
+        ? Math.abs(reference.center - (closestLine.top + closestLine.bottom) / 2)
+        : Number.POSITIVE_INFINITY;
+      return distance < closestDistance ? index : closest;
+    }, 0);
+    referencesByLine[lineIndex]?.push(reference);
+  });
   const fragments = lines.map((line, index) => Object.freeze({
     id: `${itemId}:line:${index + 1}`,
     height: heights[index] as number,
-    footnotes: uniqueFootnotes(references
-      .filter((reference) => reference.center >= line.top - 1 && reference.center <= line.bottom + 1)),
+    footnotes: uniqueFootnotes(referencesByLine[index] ?? []),
   }));
   let clipOffset = 0;
   const sources = fragments.map((fragment, index) => {
@@ -505,7 +646,7 @@ function structuralFragments(
   node: Node,
   itemId: string,
   sourcePath: readonly number[],
-  definitionHeights: ReadonlyMap<string, number>,
+  definitions: ReadonlyMap<string, PageFootnoteMeasurement>,
   count: () => void,
 ): {
   readonly fragments: readonly PageFlowFragment[];
@@ -526,7 +667,7 @@ function structuralFragments(
   const pieceHeights = pieces.map((piece) => piece.reduce((sum, child) => sum + measuredRect(child, count).height, 0));
   const missing = Math.max(0, wholeHeight - pieceHeights.reduce((sum, height) => sum + height, 0));
   const fragments = pieces.map((piece, index) => {
-    const references = piece.flatMap((child) => referencesIn(child, definitionHeights, count));
+    const references = piece.flatMap((child) => referencesIn(child, definitions, count));
     return Object.freeze({
       id: `${itemId}:${node.type.name === 'table' ? 'row-group' : 'item'}:${index + 1}`,
       height: pieceHeights[index] as number + (index === 0 ? missing : 0),
@@ -562,11 +703,11 @@ function wholeItem(
   element: HTMLElement,
   itemId: string,
   sourcePath: readonly number[],
-  definitionHeights: ReadonlyMap<string, number>,
+  definitions: ReadonlyMap<string, PageFootnoteMeasurement>,
   count: () => void,
 ): { readonly item: PageFlowItem; readonly sources: readonly DOMPageFragmentSource[] } {
   const height = outerHeight(element, count);
-  const references = referencesIn(element, definitionHeights, count);
+  const references = referencesIn(element, definitions, count);
   const item = Object.freeze({
     id: itemId,
     height,
@@ -611,6 +752,7 @@ function measureDOMPageFlowInternal(
   const warnings: DOMPageMeasurementWarning[] = [];
   const items: PageFlowItem[] = [];
   const fragmentSources: DOMPageFragmentSource[] = [];
+  const footnoteSources: DOMPageFootnoteFragmentSource[] = [];
   const templates: DOMPageTemplateMeasurement[] = [];
   let measurementCount = 0;
   const count = () => { measurementCount += 1; };
@@ -645,7 +787,7 @@ function measureDOMPageFlowInternal(
     }));
   });
 
-  const definitionHeights = new Map<string, number>();
+  const definitionMeasurements = new Map<string, PageFootnoteMeasurement>();
   const nextDefinitions = new Map<number, CachedDefinitionMeasurement>();
   document.content.forEach((node, index) => {
     if (node.type.name !== 'footnote_definition') return;
@@ -655,11 +797,15 @@ function measureDOMPageFlowInternal(
     const cached = !invalidatedIndexes.has(index)
       ? indexed?.node === node && indexed.element === element ? indexed : priorDefinitionsByElement.get(element)
       : undefined;
-    const height = cached?.node === node && cached.element === element
-      ? cached.height
-      : outerHeight(element, count);
-    nextDefinitions.set(index, { node, element, height });
-    if (finiteNonNegative(height)) definitionHeights.set(String(node.attrs.id), height);
+    const id = String(node.attrs.id);
+    const measured = cached?.node === node && cached.element === element
+      ? cached
+      : footnoteMeasurement(id, node, element, lineTypes, minimumTextLines, count);
+    const measurement = measured.measurement;
+    const sources = measured.sources;
+    nextDefinitions.set(index, { node, element, measurement, sources });
+    footnoteSources.push(...sources);
+    if (finiteNonNegative(measurement.height)) definitionMeasurements.set(id, measurement);
   });
 
   const nextEntries = new Map<number, CachedFlowMeasurement>();
@@ -668,7 +814,7 @@ function measureDOMPageFlowInternal(
     if (!element) return;
     const path = Object.freeze([index]);
     if (node.type.name === 'footnote_definition') return;
-    const definitionSignature = referencedDefinitionSignature(node, definitionHeights);
+    const definitionSignature = referencedDefinitionSignature(node, definitionMeasurements);
     const indexed = priorEntries.get(index);
     const candidate = !invalidatedIndexes.has(index)
       ? indexed?.node === node && indexed.element === element ? indexed : priorEntriesByElement.get(element)
@@ -735,9 +881,9 @@ function measureDOMPageFlowInternal(
 
     let item: PageFlowItem;
     let sources: readonly DOMPageFragmentSource[] = Object.freeze([]);
-    const structural = structuralFragments(element, node, itemId, path, definitionHeights, count);
+    const structural = structuralFragments(element, node, itemId, path, definitionMeasurements, count);
     const text = lineTypes.has(node.type.name)
-      ? textFragments(element, itemId, path, definitionHeights, count)
+      ? textFragments(element, itemId, path, definitionMeasurements, count)
       : null;
     if (structural) {
       item = Object.freeze({
@@ -757,7 +903,7 @@ function measureDOMPageFlowInternal(
       ...(node.type.name === 'heading' ? { keepWithNext: true } : {}),
     });
     else {
-      const whole = wholeItem(element, itemId, path, definitionHeights, count);
+      const whole = wholeItem(element, itemId, path, definitionMeasurements, count);
       item = whole.item;
       sources = whole.sources;
     }
@@ -776,7 +922,7 @@ function measureDOMPageFlowInternal(
 
     element.querySelectorAll<HTMLElement>('[data-fountain-footnote-reference]').forEach((reference) => {
       const id = reference.dataset.fountainFootnoteReference;
-      if (id && !definitionHeights.has(id)) entryWarnings.push(Object.freeze({
+      if (id && !definitionMeasurements.has(id)) entryWarnings.push(Object.freeze({
         code: 'unmeasured-footnote', path: pathOf(reference),
         detail: `Footnote ${id} has no measurable rendered definition.`,
       }));
@@ -803,6 +949,7 @@ function measureDOMPageFlowInternal(
   return Object.freeze({
     items: Object.freeze(items),
     fragmentSources: Object.freeze(fragmentSources),
+    footnoteSources: Object.freeze(footnoteSources),
     templates: Object.freeze(templates),
     warnings: Object.freeze(warnings),
     contentWidth: measuredContentWidth,
@@ -1364,7 +1511,24 @@ function editablePageFootnotes(
     clone.classList.add('fountain-editable-pages__footnote');
     clone.dataset.fountainEditablePageFootnote = footnote.id;
     clone.contentEditable = 'false';
-    section.appendChild(clone);
+    const complete = footnote.fragmentFrom === undefined
+      || (footnote.fragmentFrom === 0 && footnote.fragmentTo === footnote.fragmentCount);
+    if (complete) {
+      section.appendChild(clone);
+      return;
+    }
+    const clip = root.ownerDocument.createElement('div');
+    clip.className = 'fountain-editable-pages__footnote-clip';
+    clip.dataset.fountainEditablePageFootnote = footnote.id;
+    clip.dataset.fountainFootnoteContinuedBefore = String(Boolean(footnote.continuedBefore));
+    clip.dataset.fountainFootnoteContinuedAfter = String(Boolean(footnote.continuedAfter));
+    clip.style.display = 'flow-root';
+    clip.style.blockSize = `${footnote.height}px`;
+    clip.style.overflow = 'hidden';
+    clone.style.transform = `translateY(${-Number(footnote.clipOffset ?? 0)}px)`;
+    clone.style.transformOrigin = 'top left';
+    clip.appendChild(clone);
+    section.appendChild(clip);
   });
   return section.childElementCount ? section : null;
 }

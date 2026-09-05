@@ -1,7 +1,7 @@
 import type { Node } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
 import type {
-  PageFootnoteMeasurement,
+  PageFootnotePlacement,
   PageLayoutResult,
   PagePlacement,
 } from './layout';
@@ -29,7 +29,7 @@ export interface ProjectedPageTemplate {
   readonly fields: readonly ProjectedPageField[];
 }
 
-export interface ProjectedPageFootnote extends PageFootnoteMeasurement {
+export interface ProjectedPageFootnote extends PageFootnotePlacement {
   /** Path of the one canonical editable definition in document JSON. */
   readonly sourcePath: readonly number[];
   readonly source: Node;
@@ -190,8 +190,7 @@ export function projectPagePresentation(document: Node, layout: PageLayoutResult
       }
       const definition = matches[0] as FootnoteDefinition;
       projectedFootnotes.push(Object.freeze({
-        id: footnote.id,
-        height: footnote.height,
+        ...footnote,
         sourcePath: frozenPath(definition.path),
         source: definition.node,
       }));

@@ -78,7 +78,12 @@
   `renderDOMPagePreview` now accepts a framework-neutral `renderPlacement` hook
   for custom NodeViews and atomic media; returned host templates are cloned,
   namespaced, made read-only, and stripped of live editor state without moving
-  either the template or canonical source DOM.
+  either the template or canonical source DOM. Long footnote definitions now
+  expose measured line fragments to the neutral layout engine, continue without
+  duplicated or dropped content, retain configurable opening/ending minima,
+  and render exact sanitized clips in both editable page shells and print
+  previews. Inline references outside a text line's vertical center fall back
+  to the nearest legal line instead of losing their reservation.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

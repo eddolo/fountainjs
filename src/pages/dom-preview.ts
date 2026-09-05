@@ -2,6 +2,7 @@ import type { PageGeometry } from './layout';
 import type { PagePresentationPage, ProjectedPageTemplate } from './presentation';
 import type {
   DOMPageContentPlacement,
+  DOMPageFootnoteFragmentSource,
   DOMPageFragmentSource,
   DOMPageLayoutSnapshot,
 } from './dom';
@@ -111,6 +112,49 @@ function prepareClone(
   });
   clone.contentEditable = 'false';
   return clone;
+}
+
+function maskTextOutsideRange(root: HTMLElement, from: number, to: number): void {
+  const view = root.ownerDocument.defaultView;
+  if (!view || from < 0 || to < from) return;
+  const walker = root.ownerDocument.createTreeWalker(root, view.NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+  let current = walker.nextNode() as Text | null;
+  while (current) {
+    nodes.push(current);
+    current = walker.nextNode() as Text | null;
+  }
+  let cursor = 0;
+  nodes.forEach((node) => {
+    const start = cursor;
+    const end = start + node.data.length;
+    cursor = end;
+    if (end <= from || start >= to) {
+      const hidden = root.ownerDocument.createElement('span');
+      hidden.style.visibility = 'hidden';
+      hidden.textContent = node.data;
+      node.replaceWith(hidden);
+      return;
+    }
+    const visibleFrom = Math.max(start, from);
+    const visibleTo = Math.min(end, to);
+    if (visibleFrom <= start && visibleTo >= end) return;
+    const fragment = root.ownerDocument.createDocumentFragment();
+    const append = (text: string, visible: boolean) => {
+      if (!text) return;
+      if (visible) fragment.append(text);
+      else {
+        const hidden = root.ownerDocument.createElement('span');
+        hidden.style.visibility = 'hidden';
+        hidden.textContent = text;
+        fragment.append(hidden);
+      }
+    };
+    append(node.data.slice(0, Math.max(0, visibleFrom - start)), false);
+    append(node.data.slice(Math.max(0, visibleFrom - start), Math.max(0, visibleTo - start)), true);
+    append(node.data.slice(Math.max(0, visibleTo - start)), false);
+    node.replaceWith(fragment);
+  });
 }
 
 function sourcePathKey(path: readonly number[]): string {
@@ -239,6 +283,7 @@ function appendFootnotes(
   page: PagePresentationPage,
   target: HTMLElement,
   cloneIndex: () => number,
+  fragmentSources: readonly DOMPageFootnoteFragmentSource[],
 ): void {
   if (!page.footnotes.length) return;
   const footnotes = sourceRoot.ownerDocument.createElement('section');
@@ -247,7 +292,42 @@ function appendFootnotes(
   page.footnotes.forEach((footnote) => {
     const source = renderedTopLevel(sourceRoot, footnote.sourcePath);
     if (!source) throw new Error(`No rendered source exists for footnote ${footnote.id}.`);
-    footnotes.appendChild(prepareClone(source.cloneNode(true) as HTMLElement, page.number, cloneIndex()));
+    const sourceClone = source.cloneNode(true) as HTMLElement;
+    const complete = footnote.fragmentFrom === undefined
+      || (footnote.fragmentFrom === 0 && footnote.fragmentTo === footnote.fragmentCount);
+    let exactTextSlice = false;
+    if (!complete) {
+      const sources = fragmentSources
+        .filter((candidate) => candidate.footnoteId === footnote.id)
+        .sort((left, right) => left.fragmentIndex - right.fragmentIndex)
+        .slice(footnote.fragmentFrom, footnote.fragmentTo);
+      if (sources.length === Number(footnote.fragmentTo) - Number(footnote.fragmentFrom)) {
+        const first = sources[0];
+        const last = sources.at(-1);
+        if (first && last) {
+          maskTextOutsideRange(sourceClone, first.textFrom, last.textTo);
+          exactTextSlice = true;
+        }
+      }
+    }
+    const clone = prepareClone(sourceClone, page.number, cloneIndex());
+    if (complete) {
+      footnotes.appendChild(clone);
+      return;
+    }
+    const clip = sourceRoot.ownerDocument.createElement('div');
+    clip.className = 'fountain-page-preview__footnote-clip';
+    clip.dataset.fountainPageFootnote = footnote.id;
+    clip.dataset.fountainFootnoteContinuedBefore = String(Boolean(footnote.continuedBefore));
+    clip.dataset.fountainFootnoteContinuedAfter = String(Boolean(footnote.continuedAfter));
+    clip.dataset.fountainFootnoteExactTextSlice = String(exactTextSlice);
+    clip.style.display = 'flow-root';
+    clip.style.blockSize = `${footnote.height}px`;
+    clip.style.overflow = exactTextSlice ? 'visible' : 'hidden';
+    clone.style.transform = `translateY(${-Number(footnote.clipOffset ?? 0)}px)`;
+    clone.style.transformOrigin = 'top left';
+    clip.appendChild(clone);
+    footnotes.appendChild(clip);
   });
   target.appendChild(footnotes);
 }
@@ -362,7 +442,13 @@ export function renderDOMPagePreview(
       if (clone) content.appendChild(clone);
     });
     body.appendChild(content);
-    appendFootnotes(sourceRoot, presentation, body, () => ++cloneCount);
+    appendFootnotes(
+      sourceRoot,
+      presentation,
+      body,
+      () => ++cloneCount,
+      snapshot.measurement.footnoteSources,
+    );
     sheet.appendChild(body);
 
     const footer = pageRegion(owner, 'fountain-page-preview__footer', geometry.footerHeight);

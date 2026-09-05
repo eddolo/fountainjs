@@ -226,6 +226,111 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
   expect(p95).toBeLessThan(75);
 });
 
+test('continues measured long footnotes through editable and print page projections', async ({ page, browserName }) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.loadLongFootnoteFixture())).toBe(true);
+  const measured = await page.evaluate(() => {
+    const snapshot = (globalThis as any).fountainBrowserTest.pages.measureLongFootnote();
+    const measurement = snapshot.measurement.items
+      .flatMap((item: any) => item.fragments ?? [])
+      .flatMap((fragment: any) => fragment.footnotes ?? [])
+      .find((footnote: any) => footnote.id === 'long-note');
+    const placements = snapshot.layout.pages.flatMap((layoutPage: any) => (
+      layoutPage.footnotes
+        .filter((footnote: any) => footnote.id === 'long-note')
+        .map((footnote: any) => ({ page: layoutPage.number, ...footnote }))
+    ));
+    return {
+      measurement,
+      placements,
+      warnings: snapshot.layout.warnings,
+      footnoteText: document.querySelector<HTMLElement>(
+        '#pages-editor [data-fountain-footnote-definition="long-note"]',
+      )?.textContent ?? '',
+      footnoteSources: snapshot.measurement.footnoteSources,
+      presentationPaths: snapshot.presentation.pages.flatMap((presentationPage: any) => (
+        presentationPage.footnotes
+          .filter((footnote: any) => footnote.id === 'long-note')
+          .map((footnote: any) => footnote.sourcePath)
+      )),
+    };
+  });
+
+  expect(measured.measurement).toBeDefined();
+  expect(measured.measurement.fragments.length).toBeGreaterThan(4);
+  expect(measured.footnoteSources).toHaveLength(measured.measurement.fragments.length);
+  expect(measured.footnoteSources[0]?.textFrom).toBe(0);
+  expect(measured.footnoteSources.at(-1)?.textTo).toBe(measured.footnoteText.length);
+  measured.footnoteSources.forEach((source: any, index: number) => {
+    if (index > 0) expect(source.textFrom).toBe(measured.footnoteSources[index - 1].textTo);
+    expect(measured.footnoteText.slice(source.textFrom, source.textTo)).toMatch(/^FN\d{3}/u);
+  });
+  expect(measured.placements.length).toBeGreaterThan(1);
+  expect(measured.placements[0]).toMatchObject({
+    fragmentFrom: 0, clipOffset: 0, continuedBefore: false, continuedAfter: true,
+  });
+  expect(measured.placements.at(-1)).toMatchObject({
+    fragmentTo: measured.measurement.fragments.length, continuedBefore: true, continuedAfter: false,
+  });
+  for (let index = 1; index < measured.placements.length; index += 1) {
+    expect(measured.placements[index].fragmentFrom).toBe(measured.placements[index - 1].fragmentTo);
+    expect(measured.placements[index].clipOffset).toBeCloseTo(
+      measured.placements[index - 1].clipOffset + measured.placements[index - 1].height,
+      5,
+    );
+  }
+  expect(measured.placements.reduce((total: number, placement: any) => total + placement.height, 0))
+    .toBeCloseTo(measured.measurement.height, 5);
+  expect(measured.presentationPaths).toEqual(measured.placements.map(() => [2]));
+  expect(measured.warnings).toEqual([]);
+
+  const preview = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.previewLongFootnote());
+  expect(preview.sourceUnchanged).toBe(true);
+  expect(preview.footnoteClips).toHaveLength(measured.placements.length);
+  expect(preview.footnoteClips[0]).toMatchObject({ before: 'false', after: 'true', transform: 'translateY(0px)' });
+  expect(preview.footnoteClips.at(-1)).toMatchObject({ before: 'true', after: 'false' });
+  expect(preview.footnoteClips.every((clip: any) => clip.height > 0)).toBe(true);
+  expect(preview.footnoteClips.every((clip: any) => clip.exact === 'true')).toBe(true);
+  preview.footnoteClips.forEach((clip: any, index: number) => {
+    expect(clip.height).toBeCloseTo(measured.placements[index].height, 1);
+    expect(Number.parseFloat(clip.transform.match(/-?[\d.]+/u)?.[0] ?? 'NaN'))
+      .toBeCloseTo(-measured.placements[index].clipOffset, 2);
+  });
+  await expect(page.locator('#pages-editor [data-fountain-footnote-definition="long-note"]')).toHaveCount(1);
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('#browser-page-preview .fountain-page-preview__footnote-clip')).toHaveCount(
+    measured.placements.length,
+  );
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true });
+    const pageText = await extractPDFPageText(pdf);
+    const tokens = pageText.flatMap((text) => text.match(/FN\d{3}/gu) ?? []);
+    expect(pageText).toHaveLength(preview.pageCount);
+    expect(tokens).toHaveLength(120);
+    expect(new Set(tokens).size).toBe(120);
+    expect(tokens[0]).toBe('FN001');
+    expect(tokens.at(-1)).toBe('FN120');
+  }
+  await page.emulateMedia({ media: 'screen' });
+
+  await page.goto('/browser-tests.html?fixture=editable-long-footnote-pages');
+  const editor = page.getByRole('textbox', { name: 'Long footnote page editor' });
+  await expect(editor.locator(':scope > [data-fountain-footnote-definition="long-note"]')).toHaveCount(1);
+  await expect.poll(async () => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().pages
+  ))).toBeGreaterThan(1);
+  const editableSummary = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary()
+  ));
+  expect(editableSummary).toMatchObject({ mode: 'paged', issues: [], errors: [] });
+  const editableClips = page.locator('.fountain-editable-pages__footnote-clip');
+  expect(await editableClips.count()).toBeGreaterThan(1);
+  await expect(editableClips.first()).toHaveAttribute('data-fountain-footnote-continued-before', 'false');
+  await expect(editableClips.first()).toHaveAttribute('data-fountain-footnote-continued-after', 'true');
+  await expect(editableClips.last()).toHaveAttribute('data-fountain-footnote-continued-before', 'true');
+  await expect(editableClips.last()).toHaveAttribute('data-fountain-footnote-continued-after', 'false');
+});
+
 test('uses a host print renderer without moving or exposing live custom DOM', async ({ page }) => {
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.loadMeasurementFixture())).toBe(true);
   const preview = await page.evaluate(() => (
