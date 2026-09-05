@@ -307,7 +307,9 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): 
 }
 
 function referenceName(value: string): string {
-  return unicodeCaseFold(decodeMarkdownText(value).trim().replace(/\s+/g, ' '));
+  // CommonMark matches normalized source labels, not their parsed inline
+  // content. Escapes and character references therefore remain significant.
+  return unicodeCaseFold(value.trim().replace(/\s+/g, ' '));
 }
 
 function closingBracket(value: string, start: number, open = '[', close = ']'): number {

@@ -200,6 +200,19 @@
         "marks": ["code", "link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-reference-source-normalization",
+      "source": "[no][foo\\!] and [yes][foo\\[]\n\n[foo!]: docs/plain.md\n[foo\\[]: docs/escaped.md",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "[no][foo!] and yes",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["docs/escaped.md"],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

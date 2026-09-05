@@ -42,7 +42,7 @@
   false claim of complete standards conformance.
 - Strict semicolon-terminated HTML5 named, decimal, and hexadecimal character
   references now decode everywhere CommonMark permits them, including link
-  destinations, titles, reference labels, and fence info strings, but remain
+  destinations, titles, visible link text, and fence info strings, but remain
   literal in code. All ASCII punctuation escapes are recognized; escaped
   ampersands remain literal; decoded URLs pass protocol validation; and
   canonical export protects literal entity-shaped text from changing meaning.
@@ -71,6 +71,9 @@
   inline HTML tags/comments/declarations as opaque. Brackets inside them cannot
   close an outer label or create a hidden reference link; unknown HTML remains
   inert readable text in the Fountain document.
+  Reference identifiers now match normalized source spelling as CommonMark
+  requires: case and whitespace fold, but escape and entity spelling remains
+  significant until the resolved link's visible label is parsed.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

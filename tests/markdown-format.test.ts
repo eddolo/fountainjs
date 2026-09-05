@@ -277,6 +277,26 @@ describe('Markdown interchange', () => {
     expect(document.textContent).toContain('[ref[]: docs/not-a-definition.md');
   });
 
+  it('matches normalized reference source rather than equivalent parsed inline text', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[escaped mismatch][foo\\!] / [entity mismatch][foo&amp;] / [escaped match][foo\\[]',
+      '',
+      '[foo!]: docs/not-escaped.md',
+      '[foo&]: docs/not-entity.md',
+      '[foo\\[]: docs/escaped.md',
+    ].join('\n'), schema);
+    const links: Array<{ text: string; href: unknown }> = [];
+    document.descendants((node) => {
+      const link = node.marks.find((mark) => mark.type.name === 'link');
+      if (node.isText && link) links.push({ text: node.textContent, href: link.attrs.href });
+    });
+
+    expect(links).toEqual([{ text: 'escaped match', href: 'docs/escaped.md' }]);
+    expect(document.textContent).toContain('[escaped mismatch][foo!]');
+    expect(document.textContent).toContain('[entity mismatch][foo&]');
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

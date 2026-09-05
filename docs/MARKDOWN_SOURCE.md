@@ -128,6 +128,8 @@ an initial standards-oriented set of behaviors:
   nested-link precedence with code/autolink/inline-HTML opacity;
 - locale-neutral Unicode 17 full case folding for reference labels, including
   the expanding and compatibility mappings JavaScript lowercasing omits;
+- source-normalized reference matching that keeps escape/entity spelling
+  significant until the resolved visible label is parsed;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;

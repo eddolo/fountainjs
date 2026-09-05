@@ -2284,6 +2284,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     opaquePrecedence: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '[foo <bar attr="][ref]">\n\n[foo`][ref]`\n\n[foo<https://example.com/?search=][ref]>\n\n[ref]: docs/reference.md',
     ),
+    sourceLabels: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[no][foo\\!] and [yes][foo\\[]\n\n[foo!]: docs/plain.md\n[foo\\[]: docs/escaped.md',
+    ),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2349,6 +2352,15 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       href: 'https://example.com/?search=][ref]',
     }]);
   expect(result.opaquePrecedence.losses).toEqual([]);
+  expect(result.sourceLabels.document).toEqual(result.sourceLabels.roundTrip);
+  expect(result.sourceLabels.document.content[0].content
+    .filter((node: any) => node.marks?.some((mark: any) => mark.type === 'link'))
+    .map((node: any) => ({
+      text: node.text,
+      href: node.marks.find((mark: any) => mark.type === 'link').attrs.href,
+    })))
+    .toEqual([{ text: 'yes', href: 'docs/escaped.md' }]);
+  expect(result.sourceLabels.losses).toEqual([]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

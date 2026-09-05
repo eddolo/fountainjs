@@ -77,8 +77,11 @@ short rows to the header width. Imported documents are validated against the
 complete receiving schema before they are returned.
 
 Semicolon-terminated HTML5 named and numeric character references decode in
-text, link destinations and titles, reference labels, and code-fence info
-strings. They remain literal inside inline and block code. Backslash escapes
+text, link destinations and titles, visible link labels, and code-fence info
+strings. Reference identifiers are the deliberate exception: matching uses
+normalized source spelling before inline parsing, so `foo\!` is distinct from
+`foo!` and `foo&amp;` is distinct from `foo&`. Character references remain
+literal inside inline and block code. Backslash escapes
 cover every ASCII punctuation character and take precedence over reference
 decoding, so `\&copy;` remains the literal text `&copy;`. URL protocols are
 validated after decoding, and canonical export escapes a literal reference-like
@@ -105,6 +108,8 @@ such as `ẞ`/`SS`, Greek final sigma, micro sign, and presentation ligatures;
 the small generated exception table is pinned to the official Unicode data
 rather than delegated to the host locale. A blank line always ends the
 definition candidate, so title-looking prose after it is not consumed.
+Backslash escapes and character references remain significant while matching;
+after a reference resolves, its visible label is parsed as normal inline text.
 The complete label/destination/title scan is bounded to 32 physical lines per candidate.
 Definitions inside one or more blockquote levels are discovered without
 letting fenced code or ordinary paragraph continuations inside that quote leak

@@ -258,6 +258,8 @@ Explicit empty links remain semantic links across Markdown and browser/server
 HTML, without weakening validation for empty image, media, or action URLs.
 Code spans, autolinks, and valid inline HTML are opaque to link-label bracket
 matching, preventing false outer closures and hidden inner references.
+Reference matching normalizes raw source identifiers rather than parsed inline
+content, so escape and character-reference spellings do not falsely collide.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate
