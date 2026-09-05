@@ -18,8 +18,8 @@ state, reconciliation, selection, and next-animation-frame path in Chromium,
 Firefox, and WebKit.
 
 The complete contract is certified by the public 363-test package gate and
-219-check Chromium/Firefox/WebKit/mobile matrix in [CI run
-`ca606cc`](https://github.com/eddolo/fountainjs/actions/runs/33945348804).
+225-check Chromium/Firefox/WebKit/mobile matrix in [CI run
+`928e45f`](https://github.com/eddolo/fountainjs/actions/runs/33946679970).
 
 ## Recorded baseline
 
@@ -48,7 +48,7 @@ recorded destroyed-editor sample retained 0.13 MiB.
 
 The build gate currently limits the independently loadable production entries,
 including 111/93 KiB raw for the ESM/CommonJS root, 19/16 KiB for the optional
-Yjs adapter, 32/27 KiB for the isolated DOM pagination entry, and 718/605 KiB
+Yjs adapter, 36/30 KiB for the isolated DOM pagination entry, and 722/608 KiB
 for all emitted ESM/CommonJS runtime code excluding the isolated full emoji
 catalogue. Gzip sizes are printed by the build but raw sizes are enforced
 because they are deterministic.

@@ -324,7 +324,6 @@ const editablePages = createDOMEditablePageController(
   () => editor.state.doc,
   geometry,
   {
-    measurement: { lineFragmentNodeTypes: [] },
     onFallback: issues => console.warn('Using continuous editing', issues),
   },
 )
@@ -353,18 +352,22 @@ geometry. Changed footnote heights still invalidate their cached references.
 Resize, font, manual, and print cycles remeasure fully, and
 `{ incremental: false }` disables reuse for specialized hosts.
 `createDOMEditablePageController()` adds a responsive screen-editing surface
-without cloning, moving, wrapping, or reordering any editable node. Whole
-top-level blocks receive transient visual offsets over fixed page shells, so
-native DOM selection and IME can cross a manual page boundary inside the same
-`contenteditable`. Narrow viewports or embedding containers that cannot fit a
-complete sheet return to a normal continuous editor, and a host resize restores
-paged mode without remounting the editor. Automatic whole-block boundaries also
-retain portable tracked suggestions and bidirectional Yjs convergence; layout
-does not persist page numbers into the shared document. When a
-paragraph, list, or table would need to split across sheets—or canonical page
-furniture/footnotes cannot remain uniquely editable—the controller reports
-typed issues through `onFallback` and keeps a continuous canvas. That guarded
-fallback is intentional; it is not yet complete Word-style editable pagination.
+without cloning, moving, or reordering any editable model node. Whole top-level
+blocks receive transient visual offsets over fixed page shells. A paragraph can
+also continue across sheets: the adapter inserts accessibility-hidden,
+non-model gap widgets at measured line boundaries, marks them as Fountain
+widgets so selection mapping ignores them, and removes them before every fresh
+measurement. The paragraph remains one model node inside the same
+`contenteditable`; selection, IME, undo/redo, tracked-change decisions, and Yjs
+convergence are covered across its page boundaries. Narrow viewports or
+embedding containers that cannot fit a complete sheet return to a normal
+continuous editor, and a host resize restores paged mode without remounting the
+editor. Layout never persists automatic page numbers or continuation widgets
+into the shared document. When a list or table would need to split across
+sheets—or canonical page furniture/footnotes cannot remain uniquely
+editable—the controller reports typed issues through `onFallback` and keeps a
+continuous canvas. That guarded fallback is intentional; it is not yet complete
+Word-style editable pagination.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
 and print page breaks. Editing-only selection markers and field-token styling
@@ -376,10 +379,10 @@ Browser geometry must use CSS-pixel units (for example,
 copies are hidden from assistive technology while one continuous read-only copy
 preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
 page-specific header/field, body, list, table, footnote, and manual-break text
-without a duplicate hidden document. The guarded whole-block editor is real,
-but split-block editing (including its review/collaboration cases),
-editable/repeated furniture, page-local footnote editing, and exhaustive PDF
-fidelity remain active `DOC-14` work with explicit browser and accessibility gates in [the pagination
+without a duplicate hidden document. Whole-block and split-paragraph editing
+are real, but split-list/table editing, editable/repeated furniture, page-local
+footnote editing, and exhaustive PDF fidelity remain active `DOC-14` work with
+explicit browser and accessibility gates in [the pagination
 contract](docs/PAGINATION.md).
 
 ## Optional clipboard history

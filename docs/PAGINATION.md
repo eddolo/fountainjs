@@ -2,9 +2,10 @@
 
 Status: active architecture and implementation work for `DOC-14`. The portable
 layout/document-intent foundation, read-only paged preview/print projection, and
-a guarded whole-block editable page surface are implemented. Split-block
-editing, editable repeated furniture/footnotes, and exhaustive PDF fidelity are
-not. This page is not a claim that the complete pagination outcome is delivered.
+a guarded whole-block plus split-paragraph editable page surface are
+implemented. Split-list/table editing, editable repeated furniture/footnotes,
+and exhaustive PDF fidelity are not. This page is not a claim that the complete
+pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
 
@@ -40,9 +41,10 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   unchanged top-level geometry on mutation-only cycles;
 - `DOMEditablePageSurface` and `DOMEditablePageController` for responsive fixed
   page shells around one unchanged contenteditable, transient whole-block
-  placement, manual-boundary editing, reversible viewport/container-responsive
-  continuous fallback, typed unsupported-fragment issues, and deterministic
-  restoration on teardown;
+  placement, selection-safe non-model paragraph continuation gaps at measured
+  line boundaries, reversible viewport/container-responsive continuous
+  fallback, typed unsupported-fragment issues, and deterministic restoration on
+  remeasurement and teardown;
 - `projectPagePresentation()` for immutable page-shell plans that select the
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
@@ -59,10 +61,10 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The implementation is certified by the 361-test package suite and complete
-216-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
-[CI run for `219caa2`](https://github.com/eddolo/fountainjs/actions/runs/33944276070).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33944276067)
+The implementation is certified by the 363-test package suite and complete
+225-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
+[CI run for `928e45f`](https://github.com/eddolo/fountainjs/actions/runs/33946679970).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33946679930)
 is also green.
 
 ```ts
@@ -193,14 +195,24 @@ support and a deterministic named equivalent for engines that support named
 pages. Hosts printing multiple geometries in one document can disable those
 rules and own the global print stylesheet.
 The editable page controller takes a deliberately narrower path. It inserts
-only non-interactive sibling sheets and never inserts a wrapper inside the
-contenteditable. Whole top-level source nodes keep their original DOM identity,
-path, order, input handlers, and selection mapping; transient CSS `translate`
-offsets align them with the body of their assigned sheet. If one source requires
-placements on multiple pages, or a canonical header/footer/footnote definition
-cannot yet remain uniquely editable, the surface removes every offset and
-returns typed issues in continuous mode. This fail-closed rule avoids the common
-but incorrect shortcut of cloning editable nodes with duplicate model paths.
+non-interactive sibling sheets and never clones or reparents editable model
+nodes. Whole top-level source nodes keep their original DOM identity, path,
+order, input handlers, and selection mapping; transient CSS `translate` offsets
+align them with the body of their assigned sheet. A paragraph placed on several
+pages stays one canonical model and rendered block. The surface finds each
+measured continuation line in the rendered text, inserts a transient
+`contenteditable=false`, `aria-hidden` gap widget before that line, and excludes
+the widget from Fountain's DOM-to-model selection mapping. It removes all gaps
+before measuring natural content again, cleans the empty text nodes created by
+Range insertion, and consumes its own observer records so visual decoration
+does not schedule a reflow loop. Real-browser tests cover exact page-body
+alignment, stable repeated cleanup, selection through multiple gaps, IME,
+undo/redo, tracked review, Yjs convergence, and responsive fallback/restoration.
+If a list/table source requires placements on multiple pages, or a canonical
+header/footer/footnote definition cannot yet remain uniquely editable, the
+surface removes every offset and gap and returns typed issues in continuous
+mode. This fail-closed rule avoids the common but incorrect shortcut of cloning
+editable nodes with duplicate model paths.
 The controller observes the embedding host in addition to the editor root. A
 viewport below 720 CSS pixels or a host content box narrower than the physical
 sheet uses continuous mode; widening the same mounted host remeasures and
@@ -252,9 +264,9 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - nested lists and rowspan/colspan tables split only at legal boundaries;
 - images, media, details, code, and custom NodeViews with explicit overflow
   behavior;
-- split-paragraph/list/table selection and IME, undo, block movement, comments,
-  tracked changes, Yjs, and resize behavior across page boundaries (whole-block
-  manual-boundary selection, IME, history, reversible container resize, tracked
+- split-list/table selection and IME, undo, block movement, comments, tracked
+  changes, Yjs, and resize behavior across page boundaries (whole-block and
+  split-paragraph selection, IME, history, reversible container resize, tracked
   decisions, and bidirectional Yjs across automatic boundaries are now covered);
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes

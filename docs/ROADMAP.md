@@ -69,24 +69,28 @@ observation is coalesced, and mutation-only cycles reuse unchanged top-level
 geometry under 1,000-block/75 ms and alternating-edge 5,000-block/250 ms p95
 browser gates. Leading insertion/removal preserves 5,000 unchanged DOM blocks,
 rebases their model/source paths, and holds page measurement to two/one geometry
-reads under a 500 ms p95 structural gate. A guarded editable surface now
-places whole top-level blocks over fixed page shells while retaining one
-unchanged contenteditable, direct model paths, block identity, native IME, and
-cross-page selection. It returns to continuous mode when either the viewport or
-embedding container is narrow, and restores pages without remounting when space
-returns; history and selection survive that transition. It fails closed when a source would need to split or repeated furniture/footnotes could
-not remain uniquely editable. Tracked suggestions and bidirectional Yjs edits
-now remain live across automatically placed whole blocks without persisting page
-numbers. Split paragraphs, lists, and tables; editable
-page furniture and footnotes; broader adversarial/cross-engine PDF fidelity;
-and the remaining evidence are still active. CSS page-shaped boxes or
-destructive document splitting do not qualify.
+reads under a 500 ms p95 structural gate. A guarded editable surface now places
+whole top-level blocks and line-fragmented paragraphs over fixed page shells
+while retaining one unchanged contenteditable, direct model paths, block
+identity, native IME, and cross-page selection. Paragraph continuations are
+transient accessibility-hidden widgets, not document nodes, and are rebuilt
+from natural layout without accumulating text nodes or observer feedback. The
+surface returns to continuous mode when either the viewport or embedding
+container is narrow, and restores pages without remounting when space returns;
+history and selection survive that transition. Tracked suggestions and
+bidirectional Yjs edits remain live across automatic whole-block and paragraph
+boundaries without persisting page numbers. It still fails closed when a list or
+table must split or repeated furniture/footnotes cannot remain uniquely
+editable. Split lists and tables; editable page furniture and footnotes;
+broader adversarial/cross-engine PDF fidelity; and the remaining evidence are
+still active. CSS page-shaped boxes or destructive document splitting do not
+qualify.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, real A4/Letter PDF geometry and representative page-content checks, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded whole-block editable surface that preserves one contenteditable, selection/IME/history across a manual page boundary, reversible container-responsive fallback, tracked decisions, and bidirectional Yjs across automatic boundaries; the complete editable and exhaustive-fidelity outcome is still partial | Add editable split-paragraph/list/table rendering and its review/collaboration cases, repeated furniture/footnote editing, and broader visual/content print fixtures. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, real A4/Letter PDF geometry and representative page-content checks, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded whole-block plus split-paragraph editable surface that preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, and bidirectional Yjs across automatic boundaries; the complete editable and exhaustive-fidelity outcome is still partial | Add editable split-list/table rendering and its review/collaboration cases, repeated furniture/footnote editing, and broader visual/content print fixtures. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

@@ -750,8 +750,9 @@ The suites are organized by boundary:
   timed reflow cycles, identity/width/footnote-safe mutation caching, observed
   dirty-block invalidation, shifted-path cache rebasing, full
   resize/font/manual invalidation, and deterministic controller teardown, plus
-  guarded whole-block editable page shells that retain direct child paths and
-  restore their host on teardown;
+  guarded whole-block plus split-paragraph editable page shells that retain
+  direct child paths, clean transient continuation gaps, and restore their host
+  on teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
@@ -763,12 +764,13 @@ The suites are organized by boundary:
   5,000-block alternating-edge incremental pagination reflow budgets and
   5,000-block leading insertion/removal cycles that retain every unchanged DOM
   node with exact rendered/source paths and two/one geometry reads. The editable
-  fixture also proves one unchanged
-  contenteditable, retained block identity, native composition on page two,
-  selection mapping and undo/redo across a manual page boundary, reversible
-  container-responsive page/continuous modes, tracked decisions plus
-  bidirectional Yjs convergence across automatic whole-block boundaries, and
-  continuous Chrome/Safari behavior on narrow screens;
+  fixtures also prove one unchanged contenteditable, retained block identity,
+  native composition on page two, selection mapping and undo/redo across manual
+  and measured paragraph boundaries, stable repeated continuation cleanup,
+  exact gap-to-page-body alignment, reversible container-responsive
+  page/continuous modes, tracked decisions plus bidirectional Yjs convergence
+  across automatic whole-block and split-paragraph boundaries, and continuous
+  Chrome/Safari behavior on narrow screens;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
@@ -782,9 +784,9 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 32/27 KiB for browser measurement/reflow and the
+isolated page foundation, 36/30 KiB for browser measurement/reflow and the
 guarded editable page surface, 9/8 KiB for read-only page preview/print
-projection, 60 KiB for CSS, and 718/605 KiB for all
+projection, 60 KiB for CSS, and 722/608 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -812,7 +814,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
-| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block editable page shells, and read-only page projection entries |
+| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block/split-paragraph editable page shells, and read-only page projection entries |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |
