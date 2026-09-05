@@ -169,6 +169,10 @@ Delimiter characters shared by nested marks are assigned in parse order, so
 compact forms can create repeated emphasis or arbitrarily nested strong marks.
 When nested identical marks have no unambiguous Markdown serialization,
 canonical export uses the inert semantic span and re-imports every mark level.
+Nesting can continue through soft line breaks and link labels. If an outer mark
+wraps a link that itself contains another mark, semantic export keeps the link
+at its original position in the mark stack; only an outermost link can retain
+the requested inline/reference Markdown form around a fallback span.
 
 Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
 (`[id][]`), and shortcut (`[id]`) reference links and reference images resolve

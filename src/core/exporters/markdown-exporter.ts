@@ -264,7 +264,8 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
   }
 
   if (preserveMarkBoundary) {
-    const linkMark = node.marks.find((mark) => mark.type.name === 'link');
+    const linkIndex = node.marks.findIndex((mark) => mark.type.name === 'link');
+    const linkMark = linkIndex > 0 ? undefined : node.marks[linkIndex];
     const value = textStyleHTML(node.withMarks(node.marks.filter((mark) => mark !== linkMark)), context, path);
     return linkMark ? link(value, linkMark.attrs.href, linkMark.attrs.title, context) : value;
   }

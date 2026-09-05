@@ -100,6 +100,9 @@
   Shared delimiter runs now retain parse-order nesting, including repeated
   emphasis and multiple strong levels. Duplicate identical marks use the inert
   semantic-span fallback so canonical export does not collapse a level.
+  Indefinite mixed nesting now survives soft line breaks and link labels. A
+  non-outermost link stays at its exact mark-stack position in semantic output,
+  and generated inline HTML applies the shared safe-URL policy on import.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

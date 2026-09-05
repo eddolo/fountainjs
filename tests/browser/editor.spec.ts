@@ -2322,6 +2322,10 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '***foo* bar**',
       '**foo *bar***',
       'foo******bar*********baz',
+      '*foo **bar *baz* bim** bop*',
+      '*foo [*bar*](/url)*',
+      '**foo *bar **baz** bim* bop**',
+      '**foo [*bar*](/url)**',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
@@ -2510,6 +2514,22 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       [{ text: 'foo', marks: ['strong', 'em'] }, { text: ' bar', marks: ['strong'] }],
       [{ text: 'foo ', marks: ['strong'] }, { text: 'bar', marks: ['strong', 'em'] }],
       [{ text: 'foo', marks: [] }, { text: 'bar', marks: ['strong', 'strong', 'strong'] }, { text: '***baz', marks: [] }],
+      [
+        { text: 'foo ', marks: ['em'] },
+        { text: 'bar ', marks: ['em', 'strong'] },
+        { text: 'baz', marks: ['em', 'strong', 'em'] },
+        { text: ' bim', marks: ['em', 'strong'] },
+        { text: ' bop', marks: ['em'] },
+      ],
+      [{ text: 'foo ', marks: ['em'] }, { text: 'bar', marks: ['em', 'link', 'em'] }],
+      [
+        { text: 'foo ', marks: ['strong'] },
+        { text: 'bar ', marks: ['strong', 'em'] },
+        { text: 'baz', marks: ['strong', 'em', 'strong'] },
+        { text: ' bim', marks: ['strong', 'em'] },
+        { text: ' bop', marks: ['strong'] },
+      ],
+      [{ text: 'foo ', marks: ['strong'] }, { text: 'bar', marks: ['strong', 'link', 'em'] }],
     ]);
 });
 

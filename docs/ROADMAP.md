@@ -284,6 +284,9 @@ boundary through escaped canonical Markdown.
 Shared opener/closer runs now preserve parse-order nesting, including repeated
 emphasis and multiple strong levels. Duplicate identical marks take the
 lossless semantic-span export path instead of being silently collapsed.
+Indefinite mixed nesting now survives soft line breaks and link labels. The
+semantic fallback keeps a non-outermost link at its exact mark-stack position
+and applies the same URL safety policy on re-import.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

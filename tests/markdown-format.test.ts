@@ -547,6 +547,56 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('keeps indefinite emphasis nesting through links and soft line breaks', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      {
+        source: '*foo **bar *baz* bim** bop*',
+        nodes: [
+          { text: 'foo ', marks: ['em'] },
+          { text: 'bar ', marks: ['em', 'strong'] },
+          { text: 'baz', marks: ['em', 'strong', 'em'] },
+          { text: ' bim', marks: ['em', 'strong'] },
+          { text: ' bop', marks: ['em'] },
+        ],
+      },
+      {
+        source: '*foo [*bar*](/url)*',
+        nodes: [
+          { text: 'foo ', marks: ['em'] },
+          { text: 'bar', marks: ['em', 'link', 'em'] },
+        ],
+      },
+      {
+        source: '**foo *bar **baz**\nbim* bop**',
+        nodes: [
+          { text: 'foo ', marks: ['strong'] },
+          { text: 'bar ', marks: ['strong', 'em'] },
+          { text: 'baz', marks: ['strong', 'em', 'strong'] },
+          { text: ' bim', marks: ['strong', 'em'] },
+          { text: ' bop', marks: ['strong'] },
+        ],
+      },
+      {
+        source: '**foo [*bar*](/url)**',
+        nodes: [
+          { text: 'foo ', marks: ['strong'] },
+          { text: 'bar', marks: ['strong', 'link', 'em'] },
+        ],
+      },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      expect(document.child(0).content.map((node) => ({
+        text: node.textContent,
+        marks: node.marks.map((mark) => mark.type.name),
+      })), example.source).toEqual(example.nodes);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

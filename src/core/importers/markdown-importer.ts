@@ -740,8 +740,10 @@ function generatedStyledNodes(
         tag === 'em' || tag === 'strong' || !current.some((mark) => mark.type === type)
       )) {
         try {
+          const href = generatedAttribute(token, 'href');
+          if (tag === 'a' && !isSafeURL(href, { allowEmpty: true })) throw new Error('Unsafe link');
           const attrs = tag === 'a' ? {
-            href: generatedAttribute(token, 'href'),
+            href,
             title: generatedAttribute(token, 'title'),
             target: generatedAttribute(token, 'target') === '_self' ? '_self' : '_blank',
           } : {};

@@ -291,6 +291,19 @@
         "marks": ["strong", "em", "strong"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-emphasis-inside-link",
+      "source": "*foo [*bar*](/url)*",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "foo bar",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["/url"],
+        "marks": ["em", "em", "link", "em"],
+        "hardBreaks": 0
+      }
     }
   ]
 }
