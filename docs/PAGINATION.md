@@ -58,10 +58,10 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The implementation is certified by the 358-test package suite and complete
-205-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
-[CI run for `4557945`](https://github.com/eddolo/fountainjs/actions/runs/33939524492).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33939524482)
+The implementation is certified by the 360-test package suite and complete
+210-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
+[CI run for `6ef5b7f`](https://github.com/eddolo/fountainjs/actions/runs/33941161496).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33941161552)
 is also green.
 
 ```ts
