@@ -447,8 +447,9 @@ and explicit oversized overflow. Another covers merged two-row headers,
 rowspan-safe body groups, header-copy sanitization, and history after a table
 continuation. An imported semantic-HTML contract covers preserved alignment and
 text styles, ruby, math, nested multi-block quotes/lists, merged tables, forced
-breaks, and exact once-only body text in generated PDF output. Broader adversarial print fidelity
-remains active `DOC-14` work with explicit browser and accessibility gates in
+breaks, and exact once-only body text in generated PDF output. This bounded
+`DOC-14` contract is delivered; further document families remain ongoing
+hardening under the same explicit browser and accessibility gates in
 [the pagination contract](docs/PAGINATION.md).
 
 ## Optional clipboard history

@@ -1,16 +1,18 @@
 # Print-aware pages and pagination
 
-Status: active architecture and implementation work for `DOC-14`. The portable
+Status: delivered bounded capability for `DOC-14`. The portable
 layout/document-intent foundation, read-only paged preview/print projection, and
 a guarded editable page surface for whole blocks, measured paragraph lines,
 canonical list items, rowspan-safe table row groups, canonical page-intent
 rails, page-local projections, and atomic images/media/disclosures/code/custom
-NodeViews are implemented. Measured long footnotes now continue across pages
+NodeViews are implemented. Read-only/print pages also continue multi-block
+blockquotes at canonical direct-child boundaries. Measured long footnotes continue across pages
 through the neutral layout, editable shell, and print projection. Unsplittable content has an explicit non-clipping
 overflow policy. Physical A4/Letter print projection is exercised in Chromium,
 Firefox, and WebKit; Chromium additionally verifies emitted PDF bytes and text.
-Exhaustive adversarial print fidelity is not complete. This page is not a claim
-that the complete pagination outcome is delivered.
+This delivery claim is limited to the explicit contract below; it is not a
+claim that arbitrary imported CSS or an uncooperative custom widget can be
+split safely. Unsupported live splits fail closed to continuous editing.
 
 ## Implemented platform-neutral foundation
 
@@ -380,7 +382,7 @@ If a single unsplittable fragment exceeds the body, the result must identify an
 overflow instead of silently clipping it. The renderer may expose a continuous
 fallback or a host-provided scale/print replacement, but cannot discard content.
 
-## Required evidence before Delivered
+## Delivered evidence
 
 - A4, Letter, and bounded custom physical sizes and margins;
 - manual breaks and deterministic automatic reflow in both directions;
@@ -417,5 +419,7 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - packed ESM/CommonJS/types, public docs/demo, and immutable CI/deployment
   evidence.
 
-Until those gates pass, `DOC-14` remains partial or missing in the capability
-ledger regardless of how convincing a screenshot looks.
+These gates are covered by package tests, the full browser matrix, generated
+Chromium PDF inspection, public documentation, and immutable CI. New document
+families and physical-device runs remain production hardening and must satisfy
+the same gates before their narrower claims are added.

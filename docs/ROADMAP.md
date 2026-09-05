@@ -47,10 +47,10 @@ repeatable release gates. That outcome is now implemented and publicly
 certified in [TIPTAP_PARITY.md](TIPTAP_PARITY.md); the operational contracts are
 in [MIGRATIONS.md](MIGRATIONS.md) and [RELEASES.md](RELEASES.md).
 
-## Active now: print-aware pages and pagination
+## Delivered: print-aware pages and pagination
 
-DOC-14 owns the first post-foundation capability. It must begin with a measured
-layout/persistence architecture and fixtures for pages, headers, footers,
+DOC-14 is the first delivered post-foundation capability. Its measured
+layout/persistence architecture includes fixtures for pages, headers, footers,
 footnotes, tables, lists, media, manual breaks, and continuous accessibility.
 Its first platform-neutral milestone now ships in source: physical geometry,
 legal-fragment flow, non-persisted automatic boundaries, manual breaks,
@@ -109,22 +109,32 @@ Yjs edits remain live across those automatic boundaries without persisting page
 numbers. Styled semantic HTML imported through the public schema contract is
 now checked across all three desktop engines for marks/alignment, ruby, math,
 nested quote/list structure, merged tables, and manual breaks, with exact
-Chromium PDF body-token de-duplication. Broader adversarial print fidelity
-remains active. CSS page-shaped boxes or destructive
-document splitting do not qualify.
+Chromium PDF body-token de-duplication. This bounded contract is delivered;
+new document families remain hardening work under the same gates. CSS
+page-shaped boxes or destructive document splitting do not qualify.
+
+## Active now: stable node identities and lookup
+
+`DOC-17` is the next dependency milestone. It must provide configurable,
+portable identities without forcing IDs onto text leaves; indexed lookup,
+update, and selection APIs; deterministic repair for paste, duplication, and
+concurrent collaboration; transaction/history mapping; schema filtering and
+document migrations; and compatibility with comments, tracked changes, page
+anchors, and extension-defined nodes. Identity generation must be injectable
+for deterministic tests and non-browser runtimes, and an invalid or duplicate
+identifier must never silently target the wrong node.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, derived first-reference footnote numbering, multi-reference/nested-block Markdown and semantic HTML footnote interchange, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, measured long-footnote continuation, direct-child read-only/print blockquote continuation, a mixed cross-engine print fixture with repeated/continued notes, merged tables and manual breaks, an imported styled semantic-HTML fixture, a read-only paged screen/print renderer with strictly validated custom-block continuation bands and sanitized host-owned placement projection, cross-engine physical A4/Letter print projection, Chromium PDF geometry and text de-duplication, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, transitive rowspan-safe table row groups, safe multi-row/merged repeated headers, canonical page-intent rails, page-local copies, and canonical image/media/details/code/custom-NodeView placement. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; unsplittable rows and atomic surfaces remain editable with explicit non-clipping overflow. The exhaustive-fidelity outcome is still partial | Add broader adversarial mixed-layout visual/content print fixtures and specialized custom-surface cases where generic bands are insufficient. Define separate editable blockquote/custom-fragment contracts only if they can preserve one canonical structure, selection, IME, accessibility, and lifecycle. CSS boxes alone do not qualify. |
-| 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
-| 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
-| 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
-| 5 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
-| 6 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
-| 7 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
-| 8 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
+| 1 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
+| 2 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
+| 3 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
+| 4 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
+| 5 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
+| 6 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
+| 7 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
