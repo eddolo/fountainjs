@@ -762,8 +762,9 @@ The suites are organized by boundary:
   reflow budgets. The editable fixture also proves one unchanged
   contenteditable, retained block identity, native composition on page two,
   selection mapping and undo/redo across a manual page boundary, reversible
-  container-responsive page/continuous modes, and continuous Chrome/Safari
-  behavior on narrow screens;
+  container-responsive page/continuous modes, tracked decisions plus
+  bidirectional Yjs convergence across automatic whole-block boundaries, and
+  continuous Chrome/Safari behavior on narrow screens;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 

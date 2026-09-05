@@ -48,6 +48,22 @@ import {
 } from '../../../src/tracked-changes';
 import '../../../src/styles.css';
 
+const browserFixture = new URLSearchParams(globalThis.location.search).get('fixture');
+const pageIntegrationsFixture = browserFixture === 'page-integrations';
+const automaticPageContent = {
+  type: 'doc',
+  content: Array.from({ length: 5 }, (_, index) => ({
+    type: 'paragraph',
+    content: [
+      { type: 'text', text: `Automatic page block ${index + 1}, line one.` },
+      { type: 'hard_break' },
+      { type: 'text', text: 'Line two remains in the same canonical block.' },
+      { type: 'hard_break' },
+      { type: 'text', text: 'Line three proves the boundary is layout-owned.' },
+    ],
+  })),
+};
+
 const decorationKey = new PluginKey<DecorationSet>('browser-contract');
 const decorations = new Plugin<DecorationSet>({
   key: decorationKey,
@@ -161,11 +177,21 @@ const leftCollaboration = createYjsCollaborationExtension({
   document: leftYDocument,
   user: { id: 'browser-left', name: 'Browser left', color: '#6d4aff' },
 });
-const leftKit = composeExtensions([CoreExtension, leftCollaboration]);
+let leftPageTrackedIdentifier = 0;
+const leftPageTracked = createTrackedChangesExtension({
+  user: { id: 'browser-left', name: 'Browser left', color: '#6d4aff' },
+  idFactory: () => `browser-left-page-review-${++leftPageTrackedIdentifier}`,
+  now: () => '2026-09-05T12:00:00.000Z',
+});
+const leftKit = composeExtensions(pageIntegrationsFixture
+  ? [CoreExtension, PagesExtension, leftPageTracked, leftCollaboration]
+  : [CoreExtension, leftCollaboration]);
 const leftEditor = createEditor({
   schema: leftKit.schema,
   plugins: leftKit.plugins,
-  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared collaboration' }] }] },
+  content: pageIntegrationsFixture
+    ? automaticPageContent
+    : { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared collaboration' }] }] },
 });
 const rightYDocument = new Y.Doc();
 Y.applyUpdate(rightYDocument, Y.encodeStateAsUpdate(leftYDocument), 'initial-browser-sync');
@@ -173,11 +199,21 @@ const rightCollaboration = createYjsCollaborationExtension({
   document: rightYDocument,
   user: { id: 'browser-right', name: 'Browser right', color: '#d23877' },
 });
-const rightKit = composeExtensions([CoreExtension, rightCollaboration]);
+let rightPageTrackedIdentifier = 0;
+const rightPageTracked = createTrackedChangesExtension({
+  user: { id: 'browser-right', name: 'Browser right', color: '#d23877' },
+  idFactory: () => `browser-right-page-review-${++rightPageTrackedIdentifier}`,
+  now: () => '2026-09-05T12:01:00.000Z',
+});
+const rightKit = composeExtensions(pageIntegrationsFixture
+  ? [CoreExtension, PagesExtension, rightPageTracked, rightCollaboration]
+  : [CoreExtension, rightCollaboration]);
 const rightEditor = createEditor({
   schema: rightKit.schema,
   plugins: rightKit.plugins,
-  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared collaboration' }] }] },
+  content: pageIntegrationsFixture
+    ? automaticPageContent
+    : { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared collaboration' }] }] },
 });
 let collaborationLinked = true;
 const updateRight = (update: Uint8Array, origin: unknown) => {
@@ -194,22 +230,57 @@ if (!leftCollaborationMount || !rightCollaborationMount) throw new Error('Collab
 const leftCollaborationView = new EditorView(leftCollaborationMount, leftEditor, { ariaLabel: 'Collaborative editor left' });
 const rightCollaborationView = new EditorView(rightCollaborationMount, rightEditor, { ariaLabel: 'Collaborative editor right' });
 
+const pageIntegrationGeometry = createPageGeometry({
+  size: { width: 420, height: 300 },
+  margins: 40,
+  headerHeight: 20,
+  footerHeight: 20,
+});
+const leftPageController = pageIntegrationsFixture
+  ? createDOMEditablePageController(
+      leftCollaborationView.dom,
+      () => leftEditor.state.doc,
+      pageIntegrationGeometry,
+      { measurement: { lineFragmentNodeTypes: [] } },
+    )
+  : null;
+const rightPageController = pageIntegrationsFixture
+  ? createDOMEditablePageController(
+      rightCollaborationView.dom,
+      () => rightEditor.state.doc,
+      pageIntegrationGeometry,
+      { measurement: { lineFragmentNodeTypes: [] } },
+    )
+  : null;
+
 let trackedIdentifier = 0;
 const trackedExtension = createTrackedChangesExtension({
   user: { id: 'browser-author', name: 'Browser author with a complete name', color: '#6d4aff' },
   idFactory: () => `browser-review-${++trackedIdentifier}`,
   now: () => '2026-09-04T12:00:00.000Z',
 });
-const trackedKit = composeExtensions([CoreExtension, trackedExtension]);
+const trackedKit = composeExtensions(pageIntegrationsFixture
+  ? [CoreExtension, PagesExtension, trackedExtension]
+  : [CoreExtension, trackedExtension]);
 const trackedEditor = createEditor({
   schema: trackedKit.schema,
   plugins: trackedKit.plugins,
-  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha review' }] }] },
+  content: pageIntegrationsFixture
+    ? automaticPageContent
+    : { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha review' }] }] },
 });
 const trackedMount = document.querySelector<HTMLElement>('#tracked-editor');
 if (!trackedMount) throw new Error('Tracked changes fixture failed to mount.');
 const trackedView = new EditorView(trackedMount, trackedEditor, { ariaLabel: 'Tracked changes contract editor' });
 const trackedCommands = trackedView.commandManager(trackedKit.commands);
+const trackedPageController = pageIntegrationsFixture
+  ? createDOMEditablePageController(
+      trackedView.dom,
+      () => trackedEditor.state.doc,
+      pageIntegrationGeometry,
+      { measurement: { lineFragmentNodeTypes: [] } },
+    )
+  : null;
 
 const pagesKit = composeExtensions([CoreExtension, HistoryExtension, PagesExtension]);
 const pagesEditor = createEditor({
@@ -221,7 +292,7 @@ const pagesMount = document.querySelector<HTMLElement>('#pages-editor');
 if (!pagesMount) throw new Error('Pages fixture failed to mount.');
 const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page intent contract editor' });
 
-const editablePagesFixture = new URLSearchParams(globalThis.location.search).get('fixture') === 'editable-pages'
+const editablePagesFixture = browserFixture === 'editable-pages'
   ? (() => {
       const pageEditor = createEditor({
         schema: pagesKit.schema,
@@ -528,6 +599,29 @@ Object.assign(globalThis, {
           lastReason: last.reason,
           destroyed: controller.isDestroyed,
         };
+      },
+      integrations: {
+        summary: () => ({
+          mounted: pageIntegrationsFixture,
+          left: {
+            mode: leftPageController?.current?.mode,
+            pages: leftPageController?.current?.pages.length,
+            document: leftEditor.getJSON(),
+            suggestions: getTrackedChangesState(leftEditor)?.suggestions ?? [],
+          },
+          right: {
+            mode: rightPageController?.current?.mode,
+            pages: rightPageController?.current?.pages.length,
+            document: rightEditor.getJSON(),
+            suggestions: getTrackedChangesState(rightEditor)?.suggestions ?? [],
+          },
+          review: {
+            mode: trackedPageController?.current?.mode,
+            pages: trackedPageController?.current?.pages.length,
+            document: trackedEditor.getJSON(),
+            suggestions: getTrackedChangesState(trackedEditor)?.suggestions ?? [],
+          },
+        }),
       },
       editable: {
         undo: () => editablePagesFixture?.commands.commands.undo?.() ?? false,

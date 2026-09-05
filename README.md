@@ -354,7 +354,9 @@ top-level blocks receive transient visual offsets over fixed page shells, so
 native DOM selection and IME can cross a manual page boundary inside the same
 `contenteditable`. Narrow viewports or embedding containers that cannot fit a
 complete sheet return to a normal continuous editor, and a host resize restores
-paged mode without remounting the editor. When a
+paged mode without remounting the editor. Automatic whole-block boundaries also
+retain portable tracked suggestions and bidirectional Yjs convergence; layout
+does not persist page numbers into the shared document. When a
 paragraph, list, or table would need to split across sheets—or canonical page
 furniture/footnotes cannot remain uniquely editable—the controller reports
 typed issues through `onFallback` and keeps a continuous canvas. That guarded
@@ -371,9 +373,9 @@ copies are hidden from assistive technology while one continuous read-only copy
 preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
 page-specific header/field, body, list, table, footnote, and manual-break text
 without a duplicate hidden document. The guarded whole-block editor is real,
-but split-block editing, editable/repeated furniture, page-local footnote
-editing, and exhaustive PDF fidelity remain active `DOC-14` work with explicit
-browser and accessibility gates in [the pagination
+but split-block editing (including its review/collaboration cases),
+editable/repeated furniture, page-local footnote editing, and exhaustive PDF
+fidelity remain active `DOC-14` work with explicit browser and accessibility gates in [the pagination
 contract](docs/PAGINATION.md).
 
 ## Optional clipboard history

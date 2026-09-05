@@ -34,8 +34,9 @@
   contenteditable/model-path tree, supports native cross-page selection and
   IME plus history across whole-block/manual boundaries, restores continuous
   editing for narrow viewports and embedding containers, returns to pages on
-  resize without remounting, and fails closed when content would require cloning or
-  fragmenting; plus an honest staged pagination contract. Split-block editing,
+  resize without remounting, preserves tracked-change decisions and bidirectional
+  Yjs convergence across automatic whole-block boundaries, and fails closed when
+  content would require cloning or fragmenting; plus an honest staged pagination contract. Split-block editing,
   editable repeated furniture/footnotes, and broader adversarial/cross-engine
   print fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential

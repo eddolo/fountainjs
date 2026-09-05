@@ -306,6 +306,84 @@ test('edits, selects, and composes across guarded page shells in one contentedit
   await expect(editor.locator(':scope > [data-fountain-path="0"]')).toHaveAttribute('data-browser-identity', 'retained');
 });
 
+test('keeps tracked review and Yjs collaboration live across automatic page boundaries', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=page-integrations');
+  const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
+  const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
+  const review = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
+
+  await expect(left.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(right.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(review.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const initial = await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      leftPages: summary.left.pages,
+      rightPages: summary.right.pages,
+      reviewPages: summary.review.pages,
+      hasManualBreak: [summary.left, summary.right, summary.review].some((entry: any) => (
+        entry.document.content.some((node: any) => node.type === 'page_break')
+      )),
+    };
+  });
+  expect(initial.hasManualBreak).toBe(false);
+  expect(initial.leftPages).toBeGreaterThan(1);
+  expect(initial.rightPages).toBe(initial.leftPages);
+  expect(initial.reviewPages).toBe(initial.leftPages);
+
+  const leftSecondPage = left.locator(':scope > [data-fountain-editable-page="2"]').first();
+  await leftSecondPage.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' LEFT REVIEW');
+  await expect(right).toContainText('LEFT REVIEW');
+  await expect(right.locator(':scope > [data-fountain-editable-page="2"]')).toContainText('LEFT REVIEW');
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      leftAuthor: summary.left.suggestions[0]?.user.id,
+      rightAuthor: summary.right.suggestions[0]?.user.id,
+      converged: JSON.stringify(summary.left.document) === JSON.stringify(summary.right.document),
+    };
+  })).toEqual({ leftAuthor: 'browser-left', rightAuthor: 'browser-left', converged: true });
+
+  const rightFirstPage = right.locator(':scope > [data-fountain-editable-page="1"]').first();
+  await rightFirstPage.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' RIGHT REVIEW');
+  await expect(left).toContainText('RIGHT REVIEW');
+  expect(await page.evaluate(() => {
+    const suggestions = (globalThis as any).fountainBrowserTest.pages.integrations.summary().left.suggestions;
+    return suggestions.map((suggestion: any) => suggestion.user.id).sort();
+  })).toEqual(['browser-left', 'browser-right']);
+
+  const reviewSecondPage = review.locator(':scope > [data-fountain-editable-page="2"]').first();
+  await reviewSecondPage.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' LOCAL DECISION');
+  await expect(reviewSecondPage.locator('ins')).toContainText('LOCAL DECISION');
+  const reviewSuggestionId = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.integrations.summary().review.suggestions[0].id
+  ));
+  expect(await page.evaluate((id) => (globalThis as any).fountainBrowserTest.tracked.accept(id), reviewSuggestionId)).toBe(true);
+  await expect(review).toContainText('LOCAL DECISION');
+  await expect(review.locator('ins, del')).toHaveCount(0);
+  await expect(review.locator(':scope > [data-fountain-editable-page="2"]')).toContainText('LOCAL DECISION');
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      modes: [summary.left.mode, summary.right.mode, summary.review.mode],
+      collaborativeDocumentsMatch: JSON.stringify(summary.left.document) === JSON.stringify(summary.right.document),
+      collaborationStillPaged: summary.left.pages > 1 && summary.right.pages > 1,
+      reviewStillPaged: summary.review.pages > 1,
+    };
+  })).toEqual({
+    modes: ['paged', 'paged', 'paged'],
+    collaborativeDocumentsMatch: true,
+    collaborationStillPaged: true,
+    reviewStillPaged: true,
+  });
+});
+
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
   await editor.click();

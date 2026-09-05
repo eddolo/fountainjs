@@ -91,10 +91,12 @@ top-level DOM/model paths, preserves unchanged block identity, commits IME on a
 second page, maps one selection across page one and page two, and removes page
 decoration on narrow Chrome/Safari surfaces. The desktop fixture also proves
 history undo/redo and a narrow-container → paged-container transition without
-remounting or losing that cross-page selection. That evidence covers whole
-blocks and manual boundaries only. Split paragraphs/lists/tables, canonical furniture
-and footnote editing inside the paged surface, and exhaustive visual/content
-fidelity remain active work.
+remounting or losing that cross-page selection. A separate multi-page fixture has
+no manual breaks and proves tracked insertions/decisions, preserved remote
+authorship, and bidirectional Yjs convergence on automatically placed blocks.
+That evidence covers whole blocks only. Split paragraphs/lists/tables, canonical
+furniture and footnote editing inside the paged surface, and exhaustive
+visual/content fidelity remain active work.
 
 ## Current architecture audit
 
@@ -247,8 +249,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
   behavior;
 - split-paragraph/list/table selection and IME, undo, block movement, comments,
   tracked changes, Yjs, and resize behavior across page boundaries (whole-block
-  manual-boundary selection, IME, history, and reversible container resize are
-  now covered);
+  manual-boundary selection, IME, history, reversible container resize, tracked
+  decisions, and bidirectional Yjs across automatic boundaries are now covered);
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;
