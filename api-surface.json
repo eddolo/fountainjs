@@ -333,7 +333,7 @@
     "dist/widgets/index.d.ts": "80a41c66c3262db3c944d4666a9d10753b8165a23b53a002471e0d2c6608c412",
     "dist/yjs/index.d.cts": "6f3c0fa9236fb0d44988f29f6d0600157a2131d9e61b2c821230ba6ebc2c3422",
     "dist/yjs/index.d.ts": "684497794a8ea4abe0039b8413e6a726ab71736962f6079cf322bb0996067316",
-    "dist/yjs/structured-attributes.d.cts": "bfeba286247fafe423fb99ff541434d6de56179d9769ffbfc4132a3f611c5e11",
-    "dist/yjs/structured-attributes.d.ts": "a6c76fb61dc8e4e87ef77cafc5d2dd3b0a726cc9bf796f4ba44a5a5d2aa8b116"
+    "dist/yjs/structured-attributes.d.cts": "783fad435a4b880d340fcde14e456c9a437746fc36ddad83ed6cddff3811845f",
+    "dist/yjs/structured-attributes.d.ts": "44aecb337c6c742fa45ee136982965b7cbd43da9940936cea9ed69c3ec3a248c"
   }
 }

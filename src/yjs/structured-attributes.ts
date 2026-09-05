@@ -276,6 +276,10 @@ export class YjsStructuredAttributeStore {
     this.synchronizeEntries(this.entries(document), true, false);
   }
 
+  validate(document: Node): void {
+    this.entries(document);
+  }
+
   synchronize(document: Node): void {
     this.synchronizeEntries(this.entries(document), false, true);
   }

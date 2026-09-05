@@ -578,6 +578,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     this.context = context;
+    this.structuredAttributes?.validate(context.editor.state.doc);
     if (!this.observing) {
       this.fragment.observeDeep(this.onSharedChange);
       this.structuredAttributeMap?.observeDeep(this.onSharedChange);
@@ -642,6 +643,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
+    this.structuredAttributes?.overlay(update.before);
+    this.structuredAttributes?.validate(update.document);
     const root = this.fragment.get(0);
     const pending: PendingHistorySelection = {
       before: this.relativeSelection(update.beforeSelection),

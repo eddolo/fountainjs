@@ -8,6 +8,7 @@ import {
   createEditor,
   defineExtension,
   getCollaborationState,
+  setNodeAttributes,
   undoCollaboration,
   type CollaborationUser,
   type Editor,
@@ -212,6 +213,23 @@ describe('granular Yjs structured attributes', () => {
     const root = [...store.values()][0] as Y.Map<unknown>;
     document.transact(() => root.set('__proto__', 'hostile'), 'hostile-peer');
     expect(editor.getJSON()).toEqual(before);
+    expect(getCollaborationState(editor)).toMatchObject({
+      status: 'error', error: { recoverable: true },
+    });
+  });
+
+  it('preflights local structured values before changing the shared canonical tree', () => {
+    const document = new Y.Doc();
+    const editor = createCollaborativeEditor(document, ada);
+    const documentRoot = document.getXmlFragment('fountain').get(0) as Y.XmlElement;
+    const panel = documentRoot.get(0) as Y.XmlElement;
+    const canonicalBefore = panel.getAttribute('fountain:attr:config');
+
+    expect(setNodeAttributes(editor, [0], {
+      config: { ...config(editor), unsupported: new Date('2026-01-01T00:00:00Z') },
+    })).toBe(true);
+
+    expect(panel.getAttribute('fountain:attr:config')).toBe(canonicalBefore);
     expect(getCollaborationState(editor)).toMatchObject({
       status: 'error', error: { recoverable: true },
     });
