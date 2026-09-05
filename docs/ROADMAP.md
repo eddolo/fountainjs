@@ -245,15 +245,17 @@ spans, strict semicolon-terminated HTML5 character references, all ASCII
 punctuation escapes, URI/email autolinks, star emphasis, and both hard-break
 forms without claiming complete standards conformance. Entity-obfuscated URLs
 are decoded before protocol validation, while canonical export protects
-literal entity-shaped text. Fail-closed
+literal entity-shaped text. Safe path/query-relative destinations, balanced
+parentheses, strict title closers, bounded reference labels, and code/paragraph-
+aware reference extraction are also covered. Fail-closed
 aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate
-blocks remain deliberately unmapped. The complete 482-test package gate and 295-pass
+blocks remain deliberately unmapped. The complete 486-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile matrix passed in
-[CI run `9fb18b3`](https://github.com/eddolo/fountainjs/actions/runs/33985681916),
+[CI run `f88d10e`](https://github.com/eddolo/fountainjs/actions/runs/33986844427),
 and the corresponding
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33985681887)
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33986844442)
 succeeded. Identity-aware duplicate/deep-structure
 mapping and a larger standards corpus remain before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
@@ -268,7 +270,7 @@ mapping and a larger standards corpus remain before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 character references, and complete ASCII punctuation escapes are certified in `9fb18b3`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, and safer relative/balanced link boundaries are certified in `f88d10e`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
