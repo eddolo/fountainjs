@@ -127,6 +127,8 @@
   markers, up to three leading spaces, and take precedence over list items.
   ATX headings discard trailing spaces and correctly recognize a hash-only
   optional closing sequence as syntax rather than document text.
+  Bullet lists accept `+` markers, and a change of bullet marker or ordered-list
+  delimiter starts a distinct adjacent list instead of merging list identity.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

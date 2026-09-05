@@ -90,6 +90,32 @@
       }
     },
     {
+      "id": "commonmark-distinct-bullet-marker-lists",
+      "source": "+ foo\n+ bar\n* baz",
+      "expected": {
+        "topLevelTypes": ["bullet_list", "bullet_list"],
+        "text": "foobarbaz",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-distinct-ordered-delimiter-lists",
+      "source": "1. foo\n2. bar\n3) baz",
+      "expected": {
+        "topLevelTypes": ["ordered_list", "ordered_list"],
+        "text": "foobarbaz",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
       "id": "commonmark-indented-code",
       "source": "    const indented = true;",
       "expected": {

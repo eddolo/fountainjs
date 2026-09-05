@@ -2315,6 +2315,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     atxWhitespace: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '#                  foo                     \n## \n#\n### ###',
     ),
+    listDelimiters: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '+ foo\n+ bar\n* baz\n\n1. one\n2. two\n3) three',
+    ),
     nestedEmphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '*outer **inner** outer* / **strong *inside* strong** / *[linked](https://example.com)* / *[literal *](https://example.com)',
     ),
@@ -2528,6 +2531,18 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     { type: 'heading', level: 3, text: '' },
   ]);
   expect(result.atxWhitespace.losses).toEqual([]);
+  expect(result.listDelimiters.document).toEqual(result.listDelimiters.roundTrip);
+  expect(result.listDelimiters.document.content.map((node: any) => ({
+    type: node.type,
+    start: node.attrs?.start,
+    items: node.content.length,
+  }))).toEqual([
+    { type: 'bullet_list', start: undefined, items: 2 },
+    { type: 'bullet_list', start: undefined, items: 1 },
+    { type: 'ordered_list', start: 1, items: 2 },
+    { type: 'ordered_list', start: 3, items: 1 },
+  ]);
+  expect(result.listDelimiters.losses).toEqual([]);
   expect(result.nestedEmphasis.document).toEqual(result.nestedEmphasis.roundTrip);
   expect(result.nestedEmphasis.document.content[0].content
     .filter((node: any) => node.marks?.length)

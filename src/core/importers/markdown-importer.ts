@@ -1300,6 +1300,7 @@ function tableStart(lines: readonly string[], index: number): { headers: string[
 interface ListMarker {
   readonly indent: number;
   readonly kind: 'bullet' | 'ordered' | 'task';
+  readonly style: '-' | '*' | '+' | '.' | ')';
   readonly value: string;
   readonly checked: boolean;
   readonly start: number;
@@ -1307,14 +1308,15 @@ interface ListMarker {
 
 function listMarker(line: string): ListMarker | null {
   const normalized = line.replace(/^\t+/, (tabs) => '  '.repeat(tabs.length));
-  const match = /^([ \t]*)(?:(?:[-*])[ \t]+\[([ xX])\][ \t]+|([-*])[ \t]+|(\d+)[.)][ \t]+)(.*)$/.exec(normalized);
+  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\][ \t]+|([-*+])[ \t]+|(\d+)([.)])[ \t]+)(.*)$/.exec(normalized);
   if (!match) return null;
   return {
     indent: match[1].length,
-    kind: match[2] !== undefined ? 'task' : match[3] ? 'bullet' : 'ordered',
-    value: match[5],
-    checked: match[2]?.toLowerCase() === 'x',
-    start: Number(match[4] ?? 1),
+    kind: match[3] !== undefined ? 'task' : match[4] ? 'bullet' : 'ordered',
+    style: (match[2] ?? match[4] ?? match[6]) as ListMarker['style'],
+    value: match[7],
+    checked: match[3]?.toLowerCase() === 'x',
+    start: Number(match[5] ?? 1),
   };
 }
 
@@ -1341,7 +1343,7 @@ function parseList(
   while (index < lines.length) {
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
-    if (!marker || marker.indent !== indent || marker.kind !== first.kind) break;
+    if (!marker || marker.indent !== indent || marker.kind !== first.kind || marker.style !== first.style) break;
     const content: Node[] = [paragraph(schema, marker.value, references)];
     index++;
     while (index < lines.length) {

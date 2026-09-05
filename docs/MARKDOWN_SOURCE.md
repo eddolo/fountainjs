@@ -160,6 +160,8 @@ an initial standards-oriented set of behaviors:
 - links and emphasis around inline image atoms, preserved through canonical
   Markdown plus browser/server HTML, JSON, DOM rendering, and Yjs;
 - recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
+- `-`, `*`, and `+` bullet markers plus both ordered-list delimiters, with a
+  marker-style change preserving the boundary between adjacent lists;
 - ASCII-space/tab-only list-marker separation, leaving non-breaking spaces as
   literal document content;
 - compact or spaced thematic breaks with up to three leading spaces and
