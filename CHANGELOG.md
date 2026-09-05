@@ -55,8 +55,14 @@
   now remain uniquely editable in ordered rails while sanitized,
   accessibility-hidden page-shell copies resolve fields and update after every
   edit. It still fails closed before cloning unsupported split content; plus an
-  honest staged pagination contract. Broader adversarial/cross-engine print
-  fidelity remains active work rather than a claimed capability.
+  honest staged pagination contract; plus a keep-together policy for canonical
+  images, audio, disclosures, code blocks, and custom NodeViews. Unsplittable
+  content moves intact when it fits and receives explicit, non-clipping page
+  overflow when it exceeds the body. Pagination-owned attributes and CSS
+  variables no longer cause custom NodeViews to be mistaken for foreign DOM
+  mutations, while unrelated mutations still recover from immutable state.
+  Broader adversarial/cross-engine print fidelity remains active work rather
+  than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,

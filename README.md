@@ -378,8 +378,10 @@ continuous editor, and a host resize restores paged mode without remounting the
 editor. Layout never persists automatic page numbers or continuation widgets
 into the shared document. Unsupported structural fragments or page intent in
 an invalid canonical order produce a typed continuous-mode fallback. An
-individual table row taller than the body stays one canonical editable row and
-is marked as explicit overflow rather than clipped or destructively split.
+individual table row, image, media player, disclosure, code block, or custom
+NodeView stays one canonical editable node. Unsplittable content moves to the
+next page when it fits and is marked as explicit overflow rather than clipped
+or destructively split when it is taller than the body.
 That guarded boundary is intentional; it is not yet complete Word-style
 editable pagination.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
@@ -397,9 +399,11 @@ without a duplicate hidden document. Whole blocks, measured paragraph lines,
 canonical list items, and rowspan-safe table row groups are editable across
 pages. Editable canonical page furniture and page-local footnotes, oversized-row
 behavior, split-container comments, and top-level block movement now have
-dedicated browser contracts. Broader adversarial/cross-engine PDF fidelity and
-unsupported custom structural content remain active `DOC-14` work with explicit
-browser and accessibility gates in [the pagination contract](docs/PAGINATION.md).
+dedicated browser contracts. A real browser contract also covers canonical
+image, audio, details, code, and custom NodeView placement, interaction, history,
+and explicit oversized overflow. Broader adversarial/cross-engine PDF fidelity
+remains active `DOC-14` work with explicit browser and accessibility gates in
+[the pagination contract](docs/PAGINATION.md).
 
 ## Optional clipboard history
 

@@ -53,6 +53,7 @@ import {
   createCommentsExtension,
   getCommentsState,
 } from '../../../src/comments';
+import { DetailsExtension } from '../../../src/details';
 import '../../../src/styles.css';
 
 const browserFixture = new URLSearchParams(globalThis.location.search).get('fixture');
@@ -155,6 +156,51 @@ const editablePageIntentContent = {
     },
   ],
 };
+const editableAtomicPageContent = {
+  type: 'doc',
+  content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'Atomic page surfaces remain canonical.' }] },
+    {
+      type: 'image_super',
+      attrs: {
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+        alt: 'Paged atomic image',
+        caption: 'One canonical image.',
+        width: '160px',
+        height: '72px',
+      },
+    },
+    {
+      type: 'audio',
+      attrs: {
+        src: '/paged-audio.mp3',
+        title: 'Paged audio',
+        caption: 'One canonical audio player.',
+      },
+    },
+    {
+      type: 'details',
+      attrs: { open: false },
+      content: [
+        { type: 'details_summary', content: [{ type: 'text', text: 'Canonical disclosure' }] },
+        ...Array.from({ length: 6 }, (_, index) => ({
+          type: 'paragraph',
+          content: [{ type: 'text', text: `Disclosure paragraph ${index + 1} remains inside one model node.` }],
+        })),
+      ],
+    },
+    {
+      type: 'code_block',
+      attrs: { language: 'text', lineNumbers: true },
+      content: [{
+        type: 'text',
+        text: Array.from({ length: 14 }, (_, index) => `const pageLine${index + 1} = ${index + 1};`).join('\n'),
+      }],
+    },
+    { type: 'browser_counter', attrs: { count: 0, pageHeight: 240 } },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Content after the oversized custom atom remains reachable.' }] },
+  ],
+};
 const splitPageIntegrationsFixture = browserFixture === 'split-page-integrations';
 const splitListPageIntegrationsFixture = browserFixture === 'split-list-page-integrations';
 const splitTablePageIntegrationsFixture = browserFixture === 'split-table-page-integrations';
@@ -233,7 +279,13 @@ class BrowserCounterNodeView {
     return mutation.type === 'attributes' && mutation.attributeName === 'data-local-state';
   }
   destroy(): void { nodeViewMetrics.destroyed += 1; }
-  private render(node: Node): void { this.dom.textContent = `Count ${String(node.attrs.count)}`; }
+  private render(node: Node): void {
+    const pageHeight = Number(node.attrs.pageHeight);
+    this.dom.style.display = pageHeight > 0 ? 'block' : '';
+    this.dom.style.width = pageHeight > 0 ? '100%' : '';
+    this.dom.style.minHeight = pageHeight > 0 ? `${pageHeight}px` : '';
+    this.dom.textContent = `Count ${String(node.attrs.count)}`;
+  }
 }
 
 const browserNodeView = defineExtension({
@@ -242,12 +294,25 @@ const browserNodeView = defineExtension({
     browser_counter: {
       group: 'block',
       atom: true,
-      attrs: { count: { default: 0, validate: (value) => Number.isInteger(value) } },
+      attrs: {
+        count: { default: 0, validate: (value) => Number.isInteger(value) },
+        pageHeight: {
+          default: 0,
+          validate: (value) => Number.isFinite(value) && Number(value) >= 0 && Number(value) <= 1_000,
+        },
+      },
       parseDOM: [{
         tag: '[data-browser-counter-html]',
-        getAttrs: (element) => ({ count: Number(element.dataset.count) }),
+        getAttrs: (element) => ({
+          count: Number(element.dataset.count),
+          pageHeight: Number(element.dataset.pageHeight ?? 0),
+        }),
       }],
-      toDOM: (node) => ['div', { 'data-browser-counter-html': '', 'data-count': node.attrs.count }],
+      toDOM: (node) => ['div', {
+        'data-browser-counter-html': '',
+        'data-count': node.attrs.count,
+        'data-page-height': node.attrs.pageHeight,
+      }],
       nodeView: BrowserCounterNodeView,
     },
   },
@@ -448,16 +513,22 @@ const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
 const oversizedEditableTableFixture = browserFixture === 'editable-oversized-table-pages';
 const editablePageIntentFixture = browserFixture === 'editable-page-intent';
+const editableAtomicPagesFixture = browserFixture === 'editable-atomic-pages';
 const editablePagesFixture = (browserFixture === 'editable-pages'
   || splitEditablePagesFixture
   || splitEditableListFixture
   || splitEditableTableFixture
   || oversizedEditableTableFixture
-  || editablePageIntentFixture)
+  || editablePageIntentFixture
+  || editableAtomicPagesFixture)
   ? (() => {
+      const errors: string[] = [];
+      const pageKit = editableAtomicPagesFixture
+        ? composeExtensions([...StarterKit.extensions, browserNodeView, DetailsExtension, PagesExtension])
+        : pagesKit;
       const pageEditor = createEditor({
-        schema: pagesKit.schema,
-        plugins: pagesKit.plugins,
+        schema: pageKit.schema,
+        plugins: pageKit.plugins,
         content: splitEditablePagesFixture ? {
           type: 'doc',
           content: [{
@@ -470,7 +541,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
         } : splitEditableListFixture ? splitListContent
           : splitEditableTableFixture ? splitTableContent
             : oversizedEditableTableFixture ? oversizedTableContent
-              : editablePageIntentFixture ? editablePageIntentContent : {
+              : editablePageIntentFixture ? editablePageIntentContent
+                : editableAtomicPagesFixture ? editableAtomicPageContent : {
                 type: 'doc',
                 content: [
                   { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
@@ -493,7 +565,9 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
                 ? 'Oversized table page editor'
                 : editablePageIntentFixture
                   ? 'Page furniture and footnote editor'
-            : 'Editable page canvas editor',
+                  : editableAtomicPagesFixture
+                    ? 'Atomic and structural page editor'
+                    : 'Editable page canvas editor',
       });
       const geometry = createPageGeometry({
         size: { width: 420, height: 300 },
@@ -508,12 +582,13 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
         {
           measurement: splitEditablePagesFixture || splitEditableListFixture
             || splitEditableTableFixture || oversizedEditableTableFixture
-            || editablePageIntentFixture
+            || editablePageIntentFixture || editableAtomicPagesFixture
             ? {}
             : { lineFragmentNodeTypes: [] },
+          onError: (error) => errors.push(error instanceof Error ? error.message : String(error)),
         },
       );
-      return { editor: pageEditor, view, controller, commands: view.commandManager(pagesKit.commands) };
+      return { editor: pageEditor, view, controller, commands: view.commandManager(pageKit.commands), errors };
     })()
   : null;
 
@@ -950,6 +1025,7 @@ Object.assign(globalThis, {
             mode: editablePagesFixture.controller.current?.mode,
             pages: editablePagesFixture.controller.current?.pages.length,
             issues: editablePagesFixture.controller.current?.issues,
+            errors: editablePagesFixture.errors,
             selection: selection instanceof Selection ? {
               type: 'text', path: selection.path, from: selection.from,
               endPath: selection.endPath, to: selection.to,

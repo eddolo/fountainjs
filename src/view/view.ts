@@ -52,6 +52,30 @@ type ViewFocusCommands = {
 
 export type ViewCommandRegistry<Commands extends CommandRegistry> = Omit<Commands, 'focus'> & ViewFocusCommands;
 
+const EDITABLE_PAGE_STYLE_PREFIX = '--fountain-editable-page-';
+
+function styleWithoutEditablePageProperties(ownerDocument: Document, value: string | null): string {
+  const probe = ownerDocument.createElement('span');
+  if (value) probe.setAttribute('style', value);
+  return [...probe.style]
+    .filter((property) => !property.startsWith(EDITABLE_PAGE_STYLE_PREFIX))
+    .sort()
+    .map((property) => (
+      `${property}:${probe.style.getPropertyValue(property)}!${probe.style.getPropertyPriority(property)}`
+    ))
+    .join(';');
+}
+
+function isEditablePageStyleMutation(mutation: MutationRecord): boolean {
+  if (mutation.type !== 'attributes' || mutation.attributeName !== 'style') return false;
+  const target = mutation.target;
+  if (!(target instanceof HTMLElement)) return false;
+  const current = target.getAttribute('style');
+  if (![mutation.oldValue, current].some((value) => value?.includes(EDITABLE_PAGE_STYLE_PREFIX))) return false;
+  return styleWithoutEditablePageProperties(target.ownerDocument, mutation.oldValue)
+    === styleWithoutEditablePageProperties(target.ownerDocument, current);
+}
+
 export class EditorView {
   readonly dom: HTMLDivElement;
   private readonly selections: SelectionHandler;
@@ -305,8 +329,11 @@ export class EditorView {
         'data-fountain-block-reorderable',
         'data-fountain-drop-position',
         'data-fountain-dragging',
+        'data-fountain-editable-page',
+        'data-fountain-editable-page-intent',
         'draggable',
       ].includes(mutation.attributeName ?? '')) continue;
+      if (isEditablePageStyleMutation(mutation)) continue;
       const entry = [...this.nodeViews]
         .sort((left, right) => right.path.length - left.path.length)
         .find(({ nodeView }) => nodeView.dom === mutation.target || nodeView.dom.contains(mutation.target));
@@ -335,6 +362,7 @@ export class EditorView {
     if (this.destroyed) return;
     this.mutationObserver?.observe(this.dom, {
       attributes: true,
+      attributeOldValue: true,
       characterData: true,
       childList: true,
       subtree: true,

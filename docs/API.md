@@ -477,6 +477,11 @@ NodeViews retain identity while mapped transactions move them. Node decorations
 are reversible across reuse, and hook-generated DOM changes are excluded from
 mutation recovery. During IME composition the observer waits for controlled
 input to commit before reconciling the document.
+When `DOMEditablePageController` is mounted, Fountain's reserved
+`data-fountain-editable-page*` attributes and changes limited to
+`--fountain-editable-page-*` CSS variables are also excluded from NodeView
+recovery. Product-owned attribute, child, text, and unrelated style mutations
+still follow the NodeView's own `ignoreMutation` policy.
 
 ### Mathematics extension
 
@@ -1443,8 +1448,10 @@ page-assigned footnote copies into each sheet. Page fields are resolved in the
 copies, while edits continue to target the one canonical model node and trigger
 a fresh projection. Missing sources, unsupported structural fragments, invalid
 page-intent order, and presentation-integrity warnings produce typed `issues`
-and `mode: 'continuous'`; an oversized unsplittable row stays one canonical
-editable row and receives an explicit layout-overflow marker. `onFallback` can
+and `mode: 'continuous'`. Unsplittable rows, images, media, details, code, and
+custom NodeViews stay canonical and editable: they move intact to the next page
+when they fit, or receive an explicit non-clipping layout-overflow marker when
+taller than its body. `onFallback` can
 explain the transition in host UI. At viewports below 720 CSS pixels, or when the
 embedding container cannot fit a complete sheet, the surface removes every
 continuation widget, intent rail, page copy, and visual offset. Widening the same
@@ -1459,9 +1466,10 @@ page-local footnotes, manual-break placement, and absence of the hidden
 accessibility duplicate. Editable split paragraphs, canonical list items, and
 rowspan-safe table row groups are covered. Canonical page-furniture/footnote
 rails and their page-local projections, oversized-row behavior,
-split-container comments, and top-level movement are also covered in dedicated
-browser fixtures. Broader adversarial/cross-engine print fidelity and custom
-structural overflow policies remain active work.
+split-container comments, top-level movement, and canonical
+image/audio/details/code/custom-NodeView placement and interaction are also
+covered in dedicated browser fixtures. Broader adversarial/cross-engine print
+fidelity remains active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

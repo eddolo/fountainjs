@@ -511,6 +511,53 @@ describe('EditorView', () => {
     expect(destroyed).toBe(2);
   });
 
+  it('preserves NodeViews for page-placement mutations but recovers unrelated inline styles', async () => {
+    let instances = 0;
+    let destroyed = 0;
+    class PageNodeView {
+      dom = document.createElement('section');
+      constructor() {
+        instances += 1;
+        this.dom.dataset.pageNodeView = '';
+      }
+      destroy(): void { destroyed += 1; }
+    }
+    const kit = composeExtensions([CoreExtension, defineExtension({
+      name: 'page-node-view',
+      nodes: { page_atom: { group: 'block', atom: true, nodeView: PageNodeView } },
+    })]);
+    const editor = createEditor({
+      schema: kit.schema,
+      content: { type: 'doc', content: [{ type: 'page_atom' }] },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const original = view.dom.querySelector<HTMLElement>('[data-page-node-view]');
+    expect(original).not.toBeNull();
+
+    original?.setAttribute('data-fountain-editable-page', '2');
+    original?.style.setProperty('--fountain-editable-page-shift', '20px');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(view.dom.querySelector('[data-page-node-view]')).toBe(original);
+    expect(instances).toBe(1);
+    expect(destroyed).toBe(0);
+
+    original?.removeAttribute('data-fountain-editable-page');
+    original?.style.removeProperty('--fountain-editable-page-shift');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(view.dom.querySelector('[data-page-node-view]')).toBe(original);
+
+    if (original) original.style.color = 'red';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(view.dom.querySelector('[data-page-node-view]')).not.toBe(original);
+    expect(instances).toBe(2);
+    expect(destroyed).toBe(1);
+
+    view.destroy();
+    expect(destroyed).toBe(2);
+  });
+
   it('reuses a NodeView contentDOM while refreshing its model-owned children', () => {
     let updates = 0;
     class CalloutNodeView {

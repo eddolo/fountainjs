@@ -942,6 +942,113 @@ test('keeps canonical page furniture and footnotes editable while projecting eve
   await expect(host.locator('[data-fountain-editable-page-footnote="intent-note"]')).toHaveCount(1);
 });
 
+test('keeps code, media, disclosures, and custom atoms canonical across editable pages', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-atomic-pages');
+  const editor = page.getByRole('textbox', { name: 'Atomic and structural page editor' });
+  const region = page.getByLabel('Editable pages browser contract');
+  const host = region.locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().errors
+  ))).toEqual([]);
+
+  const image = editor.locator(':scope > [data-fountain-node="image_super"]');
+  const audio = editor.locator(':scope > [data-fountain-node="audio"]');
+  const details = editor.locator(':scope > [data-fountain-node="details"]');
+  const code = editor.locator(':scope > [data-fountain-node="code_block"]');
+  const counter = editor.locator(':scope > [data-fountain-node="browser_counter"]');
+  await expect(image).toHaveCount(1);
+  await expect(audio).toHaveCount(1);
+  await expect(details).toHaveCount(1);
+  await expect(code).toHaveCount(1);
+  await expect(counter).toHaveCount(1);
+  await expect(image).toHaveAttribute('data-fountain-editable-page', /\d+/);
+  await expect(audio).toHaveAttribute('data-fountain-editable-page', /\d+/);
+  await expect(details).toHaveAttribute('data-fountain-editable-page', /\d+/);
+  await expect(code).toHaveAttribute('data-fountain-editable-page', /\d+/);
+  await expect(counter).toHaveAttribute('data-fountain-editable-page', /\d+/);
+  await expect(host.locator(
+    '.fountain-editable-pages__shells .fountain-image, '
+    + '.fountain-editable-pages__shells .fountain-media, '
+    + '.fountain-editable-pages__shells .fountain-details, '
+    + '.fountain-editable-pages__shells [data-browser-counter], '
+    + '.fountain-editable-pages__shells [data-fountain-node="code_block"]',
+  )).toHaveCount(0);
+
+  const contract = await page.evaluate(() => {
+    const editable = (globalThis as any).fountainBrowserTest.pages.editable;
+    const result = editable.refresh();
+    return {
+      mode: result.mode,
+      issues: result.issues,
+      warnings: result.snapshot.layout.warnings.map((warning: any) => ({
+        code: warning.code,
+        itemId: warning.itemId,
+      })),
+      sources: result.snapshot.measurement.fragmentSources.map((source: any) => ({
+        kind: source.kind,
+        path: source.sourcePath,
+      })),
+    };
+  });
+  expect(contract.mode).toBe('paged');
+  expect(contract.issues).toEqual([]);
+  expect(contract.sources.filter((source: any) => [1, 2, 3, 4, 5].includes(source.path[0])))
+    .toEqual([
+      { kind: 'whole', path: [1] },
+      { kind: 'whole', path: [2] },
+      { kind: 'whole', path: [3] },
+      { kind: 'whole', path: [4] },
+      { kind: 'whole', path: [5] },
+    ]);
+  expect(contract.warnings).toEqual(expect.arrayContaining([
+    { code: 'oversized-item', itemId: 'block:4:code_block' },
+    { code: 'oversized-item', itemId: 'block:5:browser_counter' },
+  ]));
+  expect(contract.warnings.every((warning: any) => (
+    warning.code === 'oversized-item'
+      && ['block:2:audio', 'block:4:code_block', 'block:5:browser_counter'].includes(warning.itemId)
+  ))).toBe(true);
+
+  const oversizedNodeNames = contract.warnings.map((warning: any) => warning.itemId.split(':').at(-1));
+  const overflow = await page.evaluate((nodeNames) => {
+    const editor = document.querySelector<HTMLElement>('[aria-label="Atomic and structural page editor"]');
+    const atom = editor?.querySelector<HTMLElement>(':scope > [data-fountain-node="browser_counter"]');
+    const body = document.querySelector<HTMLElement>('.fountain-editable-pages__body');
+    const marked = nodeNames.map((nodeName) => {
+      const node = editor?.querySelector<HTMLElement>(`:scope > [data-fountain-node="${nodeName}"]`);
+      const pageNumber = node?.dataset.fountainEditablePage;
+      const sheet = pageNumber
+        ? document.querySelector<HTMLElement>(`.fountain-editable-pages__sheet[data-fountain-editable-page="${pageNumber}"]`)
+        : null;
+      return { nodeName, pageNumber, marked: sheet?.dataset.fountainEditablePageOverflow };
+    });
+    return {
+      atomHeight: atom?.getBoundingClientRect().height ?? 0,
+      bodyHeight: body?.getBoundingClientRect().height ?? 0,
+      marked,
+    };
+  }, oversizedNodeNames);
+  expect(overflow.atomHeight).toBeGreaterThan(overflow.bodyHeight);
+  expect(overflow.marked.map((entry) => entry.nodeName)).toEqual(oversizedNodeNames);
+  expect(overflow.marked.every((entry) => /^\d+$/u.test(entry.pageNumber ?? '') && entry.marked === 'true')).toBe(true);
+
+  await counter.click();
+  await expect(counter).toHaveText('Count 1');
+  await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open', '');
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().document.content[3].attrs.open
+  ))).toBe(true);
+  await selectBlockEnd(code);
+  await page.keyboard.type(' // verified');
+  await expect(code).toContainText('// verified');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(code).not.toContainText('// verified');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(code).toContainText('// verified');
+});
+
 test('keeps tracked review and Yjs live between list items split across pages', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=split-list-page-integrations');
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });

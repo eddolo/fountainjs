@@ -354,6 +354,11 @@ handling. A subtree `MutationObserver` asks the innermost NodeView's
 from immutable editor state. Observer work is suspended during renderer and
 selection hooks and deferred through IME composition. These rules keep the
 document authoritative without destroying framework components on every edit.
+The editable-page surface owns two reserved placement attributes and
+`--fountain-editable-page-*` style variables. The observer ignores those
+attribute changes and only style mutations whose non-page declarations are
+unchanged. This preserves canonical custom NodeViews during pagination without
+allowing unrelated inline-style changes to bypass model-DOM recovery.
 
 The optional React entry exposes `createReactNodeView`. Its React root lives in
 a dedicated container beside optional `contentDOM`, so React never reconciles
@@ -775,8 +780,10 @@ The suites are organized by boundary:
   across automatic whole-block, paragraph-line, list-item, and table-row-group
   boundaries, mapped comments and top-level movement across split lists/tables,
   explicit editable oversized-row overflow, canonical page-furniture/footnote
-  edits and unique sanitized projections, and continuous Chrome/Safari behavior
-  on narrow screens;
+  edits and unique sanitized projections, canonical keep-together
+  image/audio/details/code/custom-NodeView placement with non-clipping oversized
+  overflow and retained interaction/history, and continuous Chrome/Safari
+  behavior on narrow screens;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 

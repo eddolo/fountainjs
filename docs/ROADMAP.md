@@ -80,20 +80,25 @@ canonical header. Canonical page templates and footnote definitions remain
 uniquely editable in ordered rails around the page stack while sanitized,
 field-resolved, accessibility-hidden copies appear on their assigned sheets.
 Rows taller than a page body remain one editable row with explicit overflow.
+Images, audio, details, code blocks, and custom NodeViews now follow the same
+canonical keep-together rule: move intact when possible and show explicit
+non-clipping overflow when taller than the page body. Pagination-owned
+attributes and style variables preserve custom NodeView identity without
+weakening recovery for unrelated DOM mutations.
 Mapped comments and top-level movement are certified across continued lists and
 tables. The surface returns to continuous mode when either the
 viewport or embedding container is narrow, and restores pages without
 remounting when space returns. History, tracked suggestions, and bidirectional
 Yjs edits remain live across those automatic boundaries without persisting page
-numbers. Broader adversarial/cross-engine PDF fidelity, explicit policies for
-media and custom structural NodeViews, and the remaining evidence are still
-active. CSS page-shaped boxes or destructive document splitting do not qualify.
+numbers. Broader adversarial/cross-engine PDF fidelity and the remaining
+immutable evidence are still active. CSS page-shaped boxes or destructive
+document splitting do not qualify.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, real A4/Letter PDF geometry and representative page-content checks, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, rowspan-safe table row groups, canonical page-intent rails, and page-local copies. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; oversized rows remain editable with explicit overflow. The exhaustive-fidelity outcome is still partial | Add explicit media/custom-NodeView overflow and continuation policies plus broader adversarial and cross-engine visual/content print fixtures. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, real A4/Letter PDF geometry and representative page-content checks, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, rowspan-safe table row groups, canonical page-intent rails, page-local copies, and canonical image/media/details/code/custom-NodeView placement. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; unsplittable rows and atomic surfaces remain editable with explicit non-clipping overflow. The exhaustive-fidelity outcome is still partial | Add broader adversarial and cross-engine visual/content print fixtures, including specialized continuation/print adapters where keeping a custom surface together is insufficient. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

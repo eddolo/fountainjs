@@ -4,10 +4,10 @@ Status: active architecture and implementation work for `DOC-14`. The portable
 layout/document-intent foundation, read-only paged preview/print projection, and
 a guarded editable page surface for whole blocks, measured paragraph lines,
 canonical list items, rowspan-safe table row groups, canonical page-intent
-rails, and page-local projections are implemented. Oversized table rows have an
-explicit non-clipping overflow policy. Exhaustive PDF fidelity and specialized
-policies for every custom structural surface are not. This page is not a claim
-that the complete pagination outcome is delivered.
+rails, page-local projections, and atomic images/media/disclosures/code/custom
+NodeViews are implemented. Unsplittable content has an explicit non-clipping
+overflow policy. Exhaustive cross-engine PDF fidelity is not. This page is not
+a claim that the complete pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
 
@@ -48,6 +48,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   rowspan-safe table-row spacers with read-only repeated column headers,
   uniquely editable canonical header/footer/footnote rails with sanitized,
   field-resolved per-page projections, explicit oversized-row overflow,
+  keep-together placement and explicit oversized overflow for images, media,
+  disclosures, code, and custom NodeViews,
   viewport/container-responsive continuous fallback, typed
   unsupported-fragment issues, and deterministic restoration on remeasurement
   and teardown;
@@ -67,13 +69,14 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 365-test package suite plus
+The latest immutable public certification is the 366-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
-oversized-row browser matrix in the
-[CI run for `09dbe70`](https://github.com/eddolo/fountainjs/actions/runs/33950230953).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33950230949)
-is also green. The canonical page-intent rail and projection evidence is the
-next immutable gate and is not counted in that earlier run.
+oversized-row browser matrix, plus canonical page-intent rail/projection
+coverage, in the
+[CI run for `76892a8`](https://github.com/eddolo/fountainjs/actions/runs/33951253743).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33951253756)
+is also green. The atomic media/custom-NodeView contract is the next immutable
+gate and is not counted in that earlier run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -109,6 +112,14 @@ and every real row remain editable. Accessibility-hidden page shells show
 read-only clones of leading all-header rows, and those copies refresh after an
 edit to the canonical header. Oversized rows stay one editable row, expose an
 overflow marker on the affected sheet, and retain edit/undo/redo behavior.
+Images, audio, native disclosures, code blocks, and custom NodeViews use one
+default policy: retain the canonical editable DOM/model node, move it intact to
+the next page when it fits, and mark its sheet as overflowing without clipping
+when it is taller than the body. The representative custom NodeView remains
+interactive, details state persists, and code edits retain undo/redo. The view
+observer recognizes only page-owned attributes and CSS-variable deltas as page
+decoration; an unrelated inline-style mutation still restores the model-owned
+NodeView DOM.
 Canonical templates and definitions stay editable once in ordered rails outside
 the sheet stack; sanitized, accessibility-hidden copies resolve page fields and
 page-local footnotes inside the sheets. A dedicated multi-page fixture verifies
@@ -118,8 +129,8 @@ no manual breaks and proves tracked insertions/decisions, preserved remote
 authorship, and bidirectional Yjs convergence on automatically placed blocks.
 The same contracts cover paragraph, list-item, and table-row-group boundaries.
 Mapped comment anchors and top-level block movement are covered across split
-lists and tables. Exhaustive visual/content fidelity and explicit policies for
-all custom structural nodes remain active work.
+lists and tables. Exhaustive cross-engine visual/content print fidelity remains
+active work.
 
 ## Current architecture audit
 
@@ -279,8 +290,8 @@ may expose legal fragments:
 - table row groups that never cut through a rowspan, with repeated column
   headers accounted for as continuation overhead;
 - captions with their media/table when they fit together;
-- atomic media/NodeViews, kept together unless a host supplies a specialized
-  print renderer;
+- atomic media/NodeViews, native disclosures, and code blocks, kept together
+  unless a host supplies a specialized continuation/print renderer;
 - footnote bodies reserved on the page containing their first reference.
 
 If a single unsplittable fragment exceeds the body, the result must identify an
@@ -296,7 +307,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - paragraphs with widow/orphan rules;
 - nested lists and rowspan/colspan tables split only at legal boundaries;
 - images, media, details, code, and custom NodeViews with explicit overflow
-  behavior;
+  behavior (covered by the canonical editable browser contract; immutable
+  public CI evidence remains pending for this newest fixture);
 - selection and IME, undo, block movement, comments, tracked changes, Yjs, and
   resize behavior across page boundaries (whole-block, paragraph, list, and
   rowspan-safe table boundaries now cover selection, IME, history, reversible
