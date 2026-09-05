@@ -1,5 +1,25 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+
+async function selectBlockEnd(block: Locator): Promise<void> {
+  await block.evaluate((element) => {
+    const editor = element.closest<HTMLElement>('[contenteditable="true"]');
+    const wrappers = element.querySelectorAll<HTMLElement>('[data-fountain-text-path]');
+    const wrapper = wrappers.item(wrappers.length - 1);
+    const text = wrapper?.lastChild;
+    if (!editor || !text || text.nodeType !== Node.TEXT_NODE) {
+      throw new Error('Expected an editable terminal text node in the selected page block.');
+    }
+    editor.focus({ preventScroll: true });
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+}
 
 async function extractPDFPageText(pdf: Buffer): Promise<readonly string[]> {
   const task = getDocument({ data: new Uint8Array(pdf) });
@@ -332,8 +352,7 @@ test('keeps tracked review and Yjs collaboration live across automatic page boun
   expect(initial.reviewPages).toBe(initial.leftPages);
 
   const leftSecondPage = left.locator(':scope > [data-fountain-editable-page="2"]').first();
-  await leftSecondPage.click();
-  await page.keyboard.press('End');
+  await selectBlockEnd(leftSecondPage);
   await page.keyboard.type(' LEFT REVIEW');
   await expect(right).toContainText('LEFT REVIEW');
   await expect(right.locator(':scope > [data-fountain-editable-page="2"]')).toContainText('LEFT REVIEW');
@@ -347,8 +366,7 @@ test('keeps tracked review and Yjs collaboration live across automatic page boun
   })).toEqual({ leftAuthor: 'browser-left', rightAuthor: 'browser-left', converged: true });
 
   const rightFirstPage = right.locator(':scope > [data-fountain-editable-page="1"]').first();
-  await rightFirstPage.click();
-  await page.keyboard.press('End');
+  await selectBlockEnd(rightFirstPage);
   await page.keyboard.type(' RIGHT REVIEW');
   await expect(left).toContainText('RIGHT REVIEW');
   expect(await page.evaluate(() => {
@@ -357,8 +375,7 @@ test('keeps tracked review and Yjs collaboration live across automatic page boun
   })).toEqual(['browser-left', 'browser-right']);
 
   const reviewSecondPage = review.locator(':scope > [data-fountain-editable-page="2"]').first();
-  await reviewSecondPage.click();
-  await page.keyboard.press('End');
+  await selectBlockEnd(reviewSecondPage);
   await page.keyboard.type(' LOCAL DECISION');
   await expect(reviewSecondPage.locator('ins')).toContainText('LOCAL DECISION');
   const reviewSuggestionId = await page.evaluate(() => (
