@@ -240,9 +240,14 @@ after a visual edit. It never executes YAML and it does not claim that unknown
 body syntax survives a model change. The first versioned, Fountain-authored
 CommonMark/GFM-oriented fixture subset also covers ATX/Setext headings,
 indented and variable fenced code, URI/email autolinks, star emphasis, and both
-hard-break forms without claiming complete standards conformance. Next evidence
-expands that corpus and adds block-level source spans before considering a
-source editor UI. See [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
+hard-break forms without claiming complete standards conformance. The complete
+466-test package gate and 292-pass Chromium/Firefox/WebKit/mobile matrix passed
+in [CI run `3d66d03`](https://github.com/eddolo/fountainjs/actions/runs/33981135923),
+and the corresponding
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33981135912)
+succeeded. Next evidence expands that corpus and adds block-level source spans
+before considering a source editor UI. See
+[MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
 
 ## Prioritized after release foundations
 
@@ -254,7 +259,7 @@ source editor UI. See [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Active: semantic round-trips, footnotes, reference links, tables, generated rich-style HTML, and loss reports exist | Add CommonMark/GFM corpus evidence, frontmatter, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
+| 7 | Higher-fidelity Markdown source preservation | First source capsule certified in `3d66d03`: unchanged input is exact; recognized inert frontmatter remains exact after visual edits; preservation status, a versioned standards-oriented subset, unknown-syntax limits, and format-stability fixtures are explicit | Expand the CommonMark/GFM corpus and add safe block-level source spans before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
