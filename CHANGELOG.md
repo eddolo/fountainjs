@@ -91,6 +91,9 @@
   emphasis. When adjacent text-node boundaries cannot be represented safely by
   independent delimiters, canonical export uses Fountain's inert semantic span
   inside the requested inline/reference link form and re-imports it losslessly.
+  Ambiguous star and underscore runs now apply CommonMark's rule-of-three and
+  overlap precedence, preserving compact nested strong/emphasis forms where the
+  inner run has no surrounding whitespace.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

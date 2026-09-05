@@ -152,7 +152,10 @@ keeps intraword underscores and runs followed by whitespace literal. Canonical
 emphasis export uses stars so an emphasized segment between word characters
 does not turn into a forbidden intraword underscore on re-import. Full
 delimiter-stack conformance remains outside the currently claimed subset.
-Ordinary unambiguous strong/emphasis nesting is supported, and links, code,
+The supported subset does apply CommonMark's rule-of-three arithmetic to
+ambiguous delimiter runs, including compact nested forms such as
+`*foo**bar**baz*`, and gives the earlier span precedence when unlike emphasis
+markers overlap. Ordinary strong/emphasis nesting is supported, and links, code,
 autolinks, and inline HTML group more tightly during delimiter search. If a
 continuous mark is split across adjacent Fountain text nodes, or includes
 edge whitespace that independent Markdown delimiters cannot preserve safely,

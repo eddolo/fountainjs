@@ -274,6 +274,10 @@ Unambiguous nested strong/emphasis spans now stay inside their enclosing mark;
 links, code, autolinks, and inline HTML group more tightly; and a generated
 semantic-span fallback preserves otherwise ambiguous adjacent text-node mark
 boundaries without giving up reference-style link output.
+CommonMark rule-of-three arithmetic now prevents an ambidextrous delimiter run
+from closing the wrong span, including compact nested forms with no separating
+whitespace. Earlier overlapping spans keep precedence. The broader delimiter
+stack is still an explicit compatibility target rather than a completed claim.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

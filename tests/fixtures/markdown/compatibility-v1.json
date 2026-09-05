@@ -252,6 +252,19 @@
         "marks": ["em", "link", "link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-emphasis-rule-of-three",
+      "source": "*foo**bar**baz*",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "foobarbaz",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["em", "em", "strong", "em"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

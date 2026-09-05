@@ -420,6 +420,70 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('applies CommonMark delimiter-run arithmetic to ambiguous emphasis', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      {
+        source: '*foo**bar**baz*',
+        nodes: [
+          { text: 'foo', marks: ['em'] },
+          { text: 'bar', marks: ['em', 'strong'] },
+          { text: 'baz', marks: ['em'] },
+        ],
+      },
+      {
+        source: '*foo**bar*',
+        nodes: [{ text: 'foo**bar', marks: ['em'] }],
+      },
+      {
+        source: '***foo** bar*',
+        nodes: [
+          { text: 'foo', marks: ['em', 'strong'] },
+          { text: ' bar', marks: ['em'] },
+        ],
+      },
+      {
+        source: '*foo **bar***',
+        nodes: [
+          { text: 'foo ', marks: ['em'] },
+          { text: 'bar', marks: ['em', 'strong'] },
+        ],
+      },
+      {
+        source: '*foo**bar***',
+        nodes: [
+          { text: 'foo', marks: ['em'] },
+          { text: 'bar', marks: ['em', 'strong'] },
+        ],
+      },
+      {
+        source: 'foo***bar***baz',
+        nodes: [
+          { text: 'foo', marks: [] },
+          { text: 'bar', marks: ['em', 'strong'] },
+          { text: 'baz', marks: [] },
+        ],
+      },
+      {
+        source: '*foo _bar* baz_',
+        nodes: [
+          { text: 'foo _bar', marks: ['em'] },
+          { text: ' baz_', marks: [] },
+        ],
+      },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      expect(document.child(0).content.map((node) => ({
+        text: node.textContent,
+        marks: node.marks.map((mark) => mark.type.name),
+      })), example.source).toEqual(example.nodes);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

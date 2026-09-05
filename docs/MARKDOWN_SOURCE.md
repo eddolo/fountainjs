@@ -160,7 +160,8 @@ not a copy of either complete specification suite.
 Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
 
-- delimiter-stack-accurate emphasis;
+- the remaining delimiter-stack emphasis cases beyond the flanking,
+  rule-of-three, nesting, and overlap baseline;
 - all HTML block/inline precedence and safe unknown-HTML policy;
 - exact list marker, indentation, interruption, tight/loose, and lazy
   continuation rules;
