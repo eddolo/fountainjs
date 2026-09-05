@@ -3712,9 +3712,34 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   await expect(math.filter({ hasText: '\\sum_{i=1}^{n} i' })).toHaveAttribute('aria-label', 'Sum of the first n integers');
   await expect(page.locator('pre[data-language="lean"]')).toContainText('example : 1 = 1 := rfl');
   await expect(page.getByText('Source-only mode. No checker is configured and no source leaves this editor.')).toBeVisible();
+  const output = page.locator('.demo-output pre');
+  const identitySnapshot = async () => output.evaluate((element) => {
+    const root = JSON.parse(element.textContent ?? '{}') as {
+      type: string;
+      content?: Array<{ type: string; attrs?: { nodeId?: unknown }; content?: any[] }>;
+    };
+    const entries: Array<{ type: string; id: unknown }> = [];
+    const visit = (node: { type: string; attrs?: { nodeId?: unknown }; content?: any[] }, rootNode = false) => {
+      if (!rootNode && node.type !== 'text' && node.type !== 'inline_math') {
+        entries.push({ type: node.type, id: node.attrs?.nodeId });
+      }
+      node.content?.forEach((child) => visit(child));
+    };
+    visit(root, true);
+    return entries;
+  });
+  const before = await identitySnapshot();
+  expect(before.length).toBeGreaterThan(10);
+  expect(before.every((entry) => typeof entry.id === 'string' && entry.id.startsWith('fjs-'))).toBe(true);
+  expect(new Set(before.map((entry) => entry.id)).size).toBe(before.length);
   await page.getByRole('button', { name: '+ Math' }).click();
   await expect(math).toHaveCount(3);
-  await expect(page.locator('.demo-output pre')).toContainText('a^2 + b^2 = c^2');
+  await expect(output).toContainText('a^2 + b^2 = c^2');
+  const after = await identitySnapshot();
+  const afterIds = new Set(after.map((entry) => entry.id));
+  expect(before.every((entry) => afterIds.has(entry.id))).toBe(true);
+  expect(after.length).toBeGreaterThan(before.length);
+  expect(new Set(after.map((entry) => entry.id)).size).toBe(after.length);
 });
 
 test('publishes semantic selection controls and table interaction in the demo gallery', async ({ page }) => {

@@ -113,22 +113,23 @@ Chromium PDF body-token de-duplication. This bounded contract is delivered;
 new document families remain hardening work under the same gates. CSS
 page-shaped boxes or destructive document splitting do not qualify.
 
-## Active now: stable node identities and lookup
+## Active now: certify stable node identities and lookup
 
-`DOC-17` is the next dependency milestone. It must provide configurable,
-portable identities without forcing IDs onto text leaves; indexed lookup,
-update, and selection APIs; deterministic repair for paste, duplication, and
-concurrent collaboration; transaction/history mapping; schema filtering and
-document migrations; and compatibility with comments, tracked changes, page
-anchors, and extension-defined nodes. Identity generation must be injectable
-for deterministic tests and non-browser runtimes, and an invalid or duplicate
-identifier must never silently target the wrong node.
+`DOC-17` is implemented and awaiting release certification. The isolated module
+provides configurable, portable identities without forcing IDs onto text leaves;
+indexed lookup, update, and selection APIs; deterministic repair for paste,
+duplication, and mixed-client collaboration; position-neutral history mapping;
+schema filtering and stored-JSON normalization; and compatibility with arbitrary
+extension nodes and portable attributes. Identity generation is injectable for
+deterministic tests and non-browser runtimes, and an invalid or duplicate
+identifier never silently targets the wrong node. Certification still requires
+the complete package and browser matrices from the pushed implementation.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
+| 1 | Stable node identities and lookup | Implemented; certification pending | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 2 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 3 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
 | 4 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |

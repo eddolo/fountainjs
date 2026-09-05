@@ -35,6 +35,7 @@ import {
   type Node,
 } from 'fountainjs-editor';
 import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
+import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
 import { SitePageLink } from './SitePageLink';
 
@@ -77,7 +78,12 @@ const demoStatusExtension = defineExtension({
   },
 });
 const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
-const docsDemoKit = composeExtensions([...StarterKit.extensions, MathExtension, LeanExtension]);
+const docsDemoKit = composeExtensions([
+  ...StarterKit.extensions,
+  StableNodeIdsExtension,
+  MathExtension,
+  LeanExtension,
+]);
 const reactDemoKit = composeExtensions([...StarterKit.extensions, ClipboardHistoryExtension]);
 const headlessDemoKit = docsDemoKit;
 

@@ -78,6 +78,23 @@ includes both the stable type and attributes.
 
 JSON is the lossless persistence boundary. HTML and Markdown are interoperability formats and may not represent every custom extension.
 
+### Optional stable identity index
+
+Paths are transaction-local locations; `src/node-ids/` adds durable node
+identity when a product needs external references. The isolated extension stores
+`nodeId` as an ordinary portable attribute, while its plugin state owns an
+immutable ID-to-node/path index. Missing, malformed, and duplicate IDs are
+planned from one document snapshot and applied in one linear, position-neutral
+step. The default generator is deterministic; applications can inject their own.
+
+Identity repair deliberately has an empty `StepMap`, so position-based
+selections, comments, suggestions, and pagination anchors do not move. It is not
+a separate history action. When repair follows a remote transaction, an explicit
+core metadata marker lets the provider-neutral collaboration boundary publish
+the appended local correction without echoing ordinary remote work. The Yjs
+adapter needs no identity-specific representation because it already stores
+each node attribute independently. See [NODE_IDS.md](NODE_IDS.md).
+
 ## Schema and validation
 
 `Schema` converts a `SchemaSpec` into owned node and mark types. Node specs declare groups, content expressions, attributes, atoms, code behavior, DOM output, and optional NodeViews. Mark specs declare attributes and DOM output.
@@ -828,10 +845,10 @@ optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
-the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 48/41 KiB for browser measurement/reflow and the
-guarded editable page surface, 9/8 KiB for read-only page preview/print
-projection, 62 KiB for CSS, and 736/620 KiB for all
+the text-style facade, 8/7 KiB for document migrations, 9/8 KiB for stable node
+identities, 23/19 KiB for the isolated page foundation, 54/45 KiB for browser
+measurement/reflow and the guarded editable page surface, 12/10 KiB for
+read-only page preview/print projection, 63 KiB for CSS, and 761/640 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -859,6 +876,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
+| `src/node-ids/` | Optional DOM-free stable identity policy, diagnostics, normalization, immutable lookup index, and editor commands |
 | `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block/paragraph/list/table editable page shells, canonical editable page-intent rails with sanitized per-page projections, and read-only print projection entries |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |

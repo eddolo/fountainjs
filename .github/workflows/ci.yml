@@ -28,7 +28,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm dlx publint@0.3.24
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./pages ./pages/dom ./pages/preview
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./pages ./pages/dom ./pages/preview
       - run: pnpm exec vite build --base /fountainjs/
       - run: pnpm pack --dry-run
   browser:

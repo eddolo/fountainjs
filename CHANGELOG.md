@@ -12,6 +12,13 @@
 
 ### Added
 
+- An isolated `fountainjs-editor/node-ids` module with configurable portable
+  `nodeId` assignment; injected and deterministic generation; immutable O(1)
+  lookup; fail-closed duplicate diagnostics; lookup, update, selection, pure
+  normalization, and schema-valid JSON migration APIs; single-pass repair;
+  history-neutral position mapping; generic Yjs repair rebroadcast; custom
+  block/inline eligibility; package exports and budgets; and Node-only
+  10,000-block performance plus legacy-peer convergence coverage.
 - An isolated `fountainjs-editor/pages` foundation with DOM-independent
   A4/Letter/custom geometry and legal-fragment flow; manual page-break and rich
   footnote schema intent; one canonical rich header/footer template per

@@ -657,6 +657,39 @@ If the original range or block was deleted, resolution returns the nearest valid
 cursor instead of a stale path. `SelectionBookmark.cursor(position, association)`
 is available when an integration already owns a structural position.
 
+## Stable node identities
+
+Import stable identity APIs from `fountainjs-editor/node-ids`. The entry is
+framework-neutral and does not load the DOM view, React, or Yjs.
+
+`StableNodeIdsExtension` assigns `nodeId` to every non-root block by default.
+`createStableNodeIdsExtension(options)` configures another attribute, eligible
+node types, a predicate, and a synchronous injected generator. Text leaves and
+the document root are always excluded. Generated values must match
+`STABLE_NODE_ID_PATTERN`; generation is bounded and fails rather than accepting
+an invalid or colliding value.
+
+`StableNodeIdIndex` contains immutable `{ id, path, node }` entries and issue
+reports for missing, invalid, or duplicate identities. `get(id)` is O(1) and
+returns `undefined` for a duplicated key. `getAll(id)` exposes ambiguous matches
+for diagnostics. Build a headless index with `createStableNodeIdIndex()` or use
+the live plugin index through `getStableNodeIdIndex(editor)`.
+
+The live APIs are `getNodeById`, `updateNodeById`, `selectNodeById`, and
+`repairStableNodeIds`. Pure document APIs are `nodeById`,
+`inspectStableNodeIds`, `planStableNodeIdRepairs`, and
+`normalizeStableNodeIds`. `normalizeStableNodeIdJSON(schema, json)` validates
+and normalizes stored JSON without a DOM, which lets a host opt identities into
+its own versioned migration.
+
+Repair changes only attributes and uses an empty position map. Existing
+selections, comment/tracked-change anchors, and page positions therefore remain
+stable. Repair is excluded from history, while the user action that caused it
+remains undoable. A repair appended after a remote collaborative transaction is
+published back through the adapter so generic Yjs documents converge. Canonical
+JSON/Yjs preserve IDs; HTML and Markdown do not claim to preserve application
+identity. See [NODE_IDS.md](NODE_IDS.md) for policy, examples, and limits.
+
 ## Decorations
 
 Decorations add view-only presentation without changing document JSON:

@@ -5,6 +5,12 @@ import type { Decoration, DecorationSet } from './decoration';
 
 let pluginId = 0;
 
+/**
+ * Marks an appended structural repair that must be published even when the
+ * transaction that triggered it came from a remote collaboration adapter.
+ */
+export const REBROADCAST_APPEND_TRANSACTION_META = 'fountain$rebroadcastAppendTransaction';
+
 export class PluginKey<T = unknown> {
   readonly id: string;
 

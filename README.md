@@ -263,7 +263,33 @@ Fountain Markdown round-trip the complete suite, generic Yjs synchronization
 carries the marks unchanged, and the React toolbar supplies a responsive
 `Text styles` panel. See the [text-style guide](docs/TEXT_STYLE.md).
 
-## Print-aware page foundation (active)
+## Stable node identities
+
+The opt-in `fountainjs-editor/node-ids` entry adds portable, document-scoped
+identities with O(1) lookup and path-aware update/selection commands:
+
+```ts
+import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import {
+  StableNodeIdsExtension,
+  getNodeById,
+  selectNodeById,
+  updateNodeById,
+} from 'fountainjs-editor/node-ids'
+
+const kit = composeExtensions([CoreExtension, StableNodeIdsExtension])
+updateNodeById(editor, nodeId, { status: 'approved' })
+selectNodeById(editor, nodeId)
+console.log(getNodeById(editor, nodeId))
+```
+
+Missing, invalid, and copied duplicate IDs are repaired deterministically
+without adding a repair-only undo entry. Duplicate lookup fails closed, custom
+eligibility and ID generators are supported, and the generic Yjs adapter writes
+remote repairs back so peers converge. Pure inspection and JSON normalization
+run in Node.js without a fake DOM. See the [stable identity guide](docs/NODE_IDS.md).
+
+## Print-aware page foundation
 
 The isolated `fountainjs-editor/pages` entry provides a runtime-DOM-independent
 page-flow algorithm and portable manual page-break, footnote, and canonical

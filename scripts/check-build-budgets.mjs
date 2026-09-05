@@ -58,6 +58,10 @@ const limits = Object.freeze({
   // schema validation host-owned.
   'dist/migrations.js': 8 * kibibyte,
   'dist/migrations.cjs': 7 * kibibyte,
+  // Portable identity inspection, deterministic repair, and O(1) lookup are
+  // opt-in and do not increase the default editor entry.
+  'dist/node-ids.js': 9 * kibibyte,
+  'dist/node-ids.cjs': 8 * kibibyte,
   // Portable page geometry, legal-fragment flow, page/footnote intent, and
   // canonical header/footer templates stay outside the default editor until
   // an application opts in.
@@ -127,9 +131,11 @@ const limits = Object.freeze({
   // shared and opt-in chunks without increasing the default root entry.
   // Host-declared custom continuation validation and source mapping add about
   // 3.4/2.9 KiB to the optional pages/DOM entry and no default-entry code.
+  // Stable node identities add about 7.8/6.4 KiB as an isolated entry while a
+  // shared collaboration metadata constant adds only a few bytes elsewhere.
   // The schema is data and is not counted.
-  'all ESM runtime code': 752 * kibibyte,
-  'all CommonJS runtime code': 632 * kibibyte,
+  'all ESM runtime code': 761 * kibibyte,
+  'all CommonJS runtime code': 640 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -137,7 +143,7 @@ const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.end
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

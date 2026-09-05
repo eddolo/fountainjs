@@ -400,6 +400,27 @@ await database.write(id, encodeFountainDocument(editor.getJSON(), { validate }))
 const loaded = migrateFountainDocument(await database.read(id), { validate })
 const reopened = createEditor({ schema: CoreSchemaSpec, content: loaded.envelope.document })`;
 
+const stableIdentityExample = `import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import {
+  StableNodeIdsExtension,
+  getStableNodeIdIndex,
+  selectNodeById,
+  updateNodeById,
+} from 'fountainjs-editor/node-ids'
+
+const kit = composeExtensions([
+  CoreExtension,
+  StableNodeIdsExtension,
+  collaboration, // IDs normalize before the provider connects
+])
+
+const entry = getStableNodeIdIndex(editor)?.get(nodeId)
+updateNodeById(editor, nodeId, { status: 'approved' })
+selectNodeById(editor, nodeId)
+
+// Duplicate IDs never silently resolve to the first match.
+if (!entry) showMissingOrAmbiguousReference(nodeId)`;
+
 const documentUtilitiesExample = `import {
   EmojiExtension,
   TypographyExtension,
@@ -644,6 +665,10 @@ function Developers() {
             <p><code>CoreExtension</code> and <code>StarterKit</code> include independent marks for foreground colour, background colour, font family, font size, and line height. The <code>fountainjs-editor/text-style</code> entry exposes the same validated specs plus framework-neutral setters, removers, normalizers, and mixed-selection inspection for custom kits and interfaces.</p>
             <Code>{textStyleExample}</Code>
             <p>Each command follows the ordinary selection and transaction path, including multi-paragraph, node, cell, and all-document selections, stored marks at a caret, history, and generic Yjs synchronization. Values are canonical and bounded before entering JSON or CSS. JSON is exact; safe HTML and Fountain Markdown round-trip every style in browsers and headless Node.js; plain text deliberately keeps only readable characters. The supplied React panel is one optional consumer of this API. See the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TEXT_STYLE.md">complete text-style contract</a>.</p>
+            <h3>Stable identities outlive document paths</h3>
+            <p>The opt-in <code>fountainjs-editor/node-ids</code> entry assigns portable <code>nodeId</code> values to blocks, maintains an immutable O(1) lookup index, and exposes path-independent update and selection commands. Missing, malformed, or copied duplicate IDs repair in one position-neutral step without becoming a second undo action. Duplicate lookup fails closed. Hosts may choose node types, filter extension nodes, and inject their own ID generator.</p>
+            <Code>{stableIdentityExample}</Code>
+            <p>Canonical JSON and generic Yjs preserve identities as ordinary validated attributes. If an older peer introduces a duplicate, an identity-aware peer deterministically repairs the shared document and publishes the correction. Stored JSON can be inspected and normalized in pure Node without jsdom; HTML and Markdown deliberately do not claim to preserve private application IDs. Try the IDs in the live JSON output of the <a href="./demos/go-docs-service.html">Go documentation-service demo</a>, or read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/NODE_IDS.md">complete identity and migration contract</a>.</p>
             <h3>First-party modules remain opt-in</h3>
             <p>Mentions, emoji, typography, character limits, and slash commands live in the optional <code>fountainjs-editor/document-utilities</code> entry. Mention, emoji, and slash queries use one headless, abortable suggestion controller with stale-result protection; React menus are merely renderers over that state. <code>EmojiExtension</code> keeps a curated catalogue, while <code>fountainjs-editor/emoji-data</code> offers more than 1,900 searchable RGI base entries without loading them into applications that do not ask for them. Typography rules are individually replaceable or removable, and character limits are enforced through the public transaction-filter contract.</p>
             <Code>{documentUtilitiesExample}</Code>
@@ -742,6 +767,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/extensions"><code>src/extensions/</code><span>Composition API plus built-in nodes, marks, formats, media providers, and plugins.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/testing"><code>src/testing/</code><span>Framework-neutral extension conformance and whole-installation compatibility diagnostics.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/migrations"><code>src/migrations/</code><span>DOM-independent document envelopes, bounded portable input, and deterministic sequential migrations.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/node-ids"><code>src/node-ids/</code><span>DOM-independent identity policy, deterministic repair, immutable lookup, editor commands, and JSON normalization.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/NODE_IDS.md"><code>docs/NODE_IDS.md</code><span>Composition, ID policy, lookup, history, mixed-client collaboration, migration, performance, and limits.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md"><code>docs/EXTENSIONS.md</code><span>Scaffold, manifests, requirements, fixtures, doctor, compatibility, migrations, and publishing contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/MIGRATIONS.md"><code>docs/MIGRATIONS.md</code><span>Document versions, extension helpers, schema validation, and safe deployment order.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/RELEASES.md"><code>docs/RELEASES.md</code><span>API stability, deprecation, evidence, trusted publishing, rollback, and security support.</span></a>

@@ -340,9 +340,9 @@ def save_document(document_id: str, document: Document):
     host: 'Go',
     surface: 'Plain DOM editor ↔ JSON service',
     runtime: 'dom',
-    summary: 'Technical documentation with code, native LaTeX, tables, and headings stored behind a typed Go HTTP boundary.',
-    boundary: 'Go treats extension attributes as JSON while preserving the stable node/content shape.',
-    capabilities: ['Code, LaTeX, and Lean', 'Structured tables', 'Go JSON structs', 'Framework-free frontend'],
+    summary: 'Technical documentation with stable node IDs, code, native LaTeX, tables, and headings stored behind a typed Go HTTP boundary.',
+    boundary: 'Go treats extension attributes as JSON, including portable nodeId values that survive moves and updates.',
+    capabilities: ['Stable node identities', 'Code, LaTeX, and Lean', 'Structured tables', 'Framework-free frontend'],
     content: doc(
       heading(1, 'Create an API client'),
       paragraph(text('Technical prose, equations such as '), { type: 'inline_math', attrs: { latex: 'T(n)=O(n \\log n)', ariaLabel: 'T of n is order n log n' } }, text(', and runnable-looking examples live in one structured document.')),

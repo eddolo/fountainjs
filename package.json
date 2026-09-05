@@ -58,6 +58,9 @@
       "migrations": [
         "dist/migrations/index.d.ts"
       ],
+      "node-ids": [
+        "dist/node-ids/index.d.ts"
+      ],
       "pages": [
         "dist/pages/index.d.ts"
       ],
@@ -228,6 +231,16 @@
       "require": {
         "types": "./dist/migrations/index.d.cts",
         "default": "./dist/migrations.cjs"
+      }
+    },
+    "./node-ids": {
+      "import": {
+        "types": "./dist/node-ids/index.d.ts",
+        "default": "./dist/node-ids.js"
+      },
+      "require": {
+        "types": "./dist/node-ids/index.d.cts",
+        "default": "./dist/node-ids.cjs"
       }
     },
     "./pages": {

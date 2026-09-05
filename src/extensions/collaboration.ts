@@ -4,6 +4,7 @@ import {
   Node,
   Plugin,
   PluginKey,
+  REBROADCAST_APPEND_TRANSACTION_META,
   SelectionBookmark,
   isSafeURL,
   isTextSelection,
@@ -561,7 +562,9 @@ export function createCollaborationExtension(options: CollaborationExtensionOpti
           if (transaction.getMeta(STATE_META)) return;
           const activeAdapter = runtime.adapter;
           const generation = runtime.generation;
-          if (runtime.connected && transaction.docChanged && transaction.getMeta(COLLABORATION_REMOTE_META) !== true) {
+          const rebroadcastRepair = transaction.getMeta(REBROADCAST_APPEND_TRANSACTION_META) === true;
+          if (runtime.connected && transaction.docChanged
+            && (transaction.getMeta(COLLABORATION_REMOTE_META) !== true || rebroadcastRepair)) {
             contain(runtime, () => activeAdapter.onLocalUpdate?.({
               before: transaction.originalDoc,
               document: state.doc,
