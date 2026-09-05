@@ -79,6 +79,7 @@ import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/ve
 import { FountainVersions } from 'fountainjs-editor/react/versions';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
+import { SitePageLink } from './SitePageLink';
 import 'fountainjs-editor/styles.css';
 
 const initialContent = {
@@ -369,6 +370,7 @@ function CollaborationDemo() {
       { type: 'paragraph', content: [{ type: 'text', text: 'Edit either side. Text, blocks, selections, and undo remain author-aware.' }] },
     ],
   } as const), []);
+  const initializedRooms = useRef(new Set<keyof typeof room.sessions>(['launch']));
   const left = useFountain({
     schema: room.leftKit.schema,
     plugins: room.leftKit.plugins,
@@ -404,6 +406,29 @@ function CollaborationDemo() {
       awareness: session.awareness.create(session.rightDocument.clientID),
       user: { id: 'grace', name: 'Grace', color: '#d23877' },
     }));
+    if (!initializedRooms.current.has(nextRoom)) {
+      const heading = left.state.doc.childCount > 0 ? left.state.doc.child(0).textContent : '';
+      const paragraph = left.state.doc.childCount > 1 ? left.state.doc.child(1).textContent : '';
+      const keepsDemoShape = left.state.doc.childCount >= 2 && heading.length > 0 && paragraph.startsWith('Edit either side.');
+      if (nextRoom === 'planning' && keepsDemoShape) {
+        left.dispatch(left.state.createTransaction()
+          .replaceText([0, 0], 0, heading.length, 'Shared planning agenda')
+          .replaceText([1, 0], 'Edit either side.'.length, paragraph.length, ' Plan the milestones here. Each room keeps its own collaborative document when you switch away.'));
+      } else {
+        const content = nextRoom === 'planning'
+          ? {
+            type: 'doc',
+            content: [
+              { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Shared planning agenda' }] },
+              { type: 'paragraph', content: [{ type: 'text', text: 'Edit either side. Plan the milestones here. Each room keeps its own collaborative document when you switch away.' }] },
+            ],
+          } as const
+          : collaborativeContent;
+        const document = left.state.schema.nodeFromJSON(content);
+        left.dispatch(left.state.createTransaction().replace(0, left.state.doc.childCount, document.content));
+      }
+      initializedRooms.current.add(nextRoom);
+    }
     setActiveRoom(nextRoom);
   };
 
@@ -426,7 +451,7 @@ function CollaborationDemo() {
   return (
     <section className="collaboration-demo" id="collaboration">
       <div className="collaboration-demo__intro">
-        <div><span>REAL-TIME COLLABORATION</span><h2>Two editors. One convergent document.</h2></div>
+        <div><span>REAL-TIME COLLABORATION</span><h2>Two editors. <span className="keep-together">One convergent</span> document.</h2></div>
         <div>
           <p>This page links two separate Yjs documents in memory. Type or select on either side and watch the other follow. The same adapter accepts a WebSocket, WebRTC, managed, or offline provider chosen by the host application.</p>
           <p><strong>No FountainJS server or account is required.</strong> Transport, authentication, room access, and persistence stay replaceable.</p>
@@ -641,7 +666,7 @@ function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#what">What it is</a><a href="#open-source">Open source</a><a href="#playground">Live demo</a><a href="#collaboration">Collaboration</a><a href="#review">Review</a><a href="#versions">Versions</a><a href="./demos.html">10 demos</a><a href="./developers.html">Developers</a></nav>
+        <nav aria-label="Primary navigation"><SitePageLink href="#top" current>Home</SitePageLink><a className="site-section-link" href="#what">What it is</a><a className="site-section-link" href="#open-source">Open source</a><a className="site-section-link" href="#playground">Live demo</a><a className="site-section-link" href="#collaboration">Collaboration</a><a className="site-section-link" href="#review">Review</a><a className="site-section-link" href="#versions">Versions</a><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 
@@ -699,7 +724,7 @@ function App() {
       </section>
 
       <section className="flow" id="modularity">
-        <div className="flow__title"><span>HOW MODULARITY WORKS</span><h2>Start with a working editor. Change only what you need.</h2></div>
+        <div className="flow__title"><span>HOW MODULARITY WORKS</span><h2>Start with a working editor. <span className="keep-together">Change only</span> what you need.</h2></div>
         <ol>
           <li><b>1</b><strong>Install it</strong><span>Start with the supplied editor and a document that already supports common rich content.</span></li>
           <li><b>2</b><strong>Choose features</strong><span>Import collaboration, comments, tracked changes, versions, AI, or other optional modules only when you use them.</span></li>

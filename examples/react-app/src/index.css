@@ -12,8 +12,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid rgb(109 74 255 / 35%)
 .site-header { position: sticky; z-index: 20; top: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 72px; padding: 0 clamp(20px, 4vw, 64px); background: rgb(247 245 240 / 88%); border-bottom: 1px solid rgb(23 21 42 / 10%); backdrop-filter: blur(18px); }
 .brand { display: flex; gap: 10px; align-items: center; font-weight: 800; letter-spacing: -.03em; }
 .brand span { display: grid; width: 30px; height: 30px; color: white; background: #6d4aff; border-radius: 9px 9px 9px 2px; place-items: center; }
-.site-header nav { display: flex; gap: clamp(12px, 1.8vw, 28px); color: #5c586b; font-size: clamp(11px, 1vw, 13px); font-weight: 600; }
+.site-header nav { display: flex; gap: clamp(10px, 1.25vw, 22px); align-items: center; color: #5c586b; font-size: clamp(11px, 1vw, 13px); font-weight: 600; }
 .site-header nav a:hover { color: #6d4aff; }
+.site-page-link { display: inline-flex; gap: 5px; align-items: center; padding: 5px 7px; border-radius: 7px; white-space: nowrap; }
+.site-page-link[aria-current="page"] { color: #4c35c3; background: #eae5ff; }
+.site-page-link__arrow { color: #8b82b4; font-size: 12px; font-style: normal; line-height: 1; }
+.site-page-link__current { width: 6px; height: 6px; background: #6d4aff; border-radius: 50%; }
+.keep-together { white-space: nowrap; }
 .install-pill { justify-self: end; padding: 9px 13px; color: #f3f0ff; background: #17152a; border-radius: 8px; font: 12px DM Mono, monospace; }
 
 .hero { position: relative; overflow: hidden; min-height: 720px; padding: 112px 24px 80px; text-align: center; background: radial-gradient(circle at 50% 8%, #fff 0 17%, transparent 53%), linear-gradient(180deg, #f7f5f0, #ece9ff); }
@@ -121,7 +126,7 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 
 .collaboration-demo { padding: 115px clamp(24px, 7vw, 118px); background: #e9e5ff; }
 .collaboration-demo__intro { display: grid; grid-template-columns: 1fr .82fr; gap: 8vw; max-width: 1400px; margin: auto; }
-.collaboration-demo__intro span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
+.collaboration-demo__intro > div > span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
 .collaboration-demo__intro h2 { max-width: 760px; margin: 16px 0 0; font-size: clamp(42px, 5.7vw, 76px); line-height: 1; letter-spacing: -.06em; }
 .collaboration-demo__intro p { margin: 0 0 18px; color: #5f5a6b; font-size: 15px; line-height: 1.8; }
 .collaboration-demo__intro strong { color: #31285e; }
@@ -238,9 +243,15 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .capabilities__heading > span { grid-column: 1 / -1; }
 }
 
-@media (max-width: 780px) {
+@media (max-width: 1100px) {
   .site-header { grid-template-columns: 1fr auto; }
-  .site-header nav { display: none; }
+  .site-header nav { justify-self: end; }
+  .site-header nav .site-section-link, .site-header .install-pill { display: none; }
+}
+
+@media (max-width: 780px) {
+  .site-header { grid-template-columns: 1fr auto; height: auto; min-height: 72px; padding-block: 10px; row-gap: 7px; }
+  .site-header nav { display: flex; grid-column: 1 / -1; grid-row: 2; justify-self: stretch; justify-content: center; }
   .install-pill { font-size: 9px; }
   .hero { min-height: 650px; padding-top: 80px; }
   .hero h1 { font-size: clamp(36px, 11vw, 52px); }
@@ -271,6 +282,10 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .versions-demo .fountain-version-card footer { flex-direction: row; }
   footer { gap: 12px; flex-direction: column; }
   .hero h1 > span, .hero h1 > em { white-space: normal; }
+}
+
+@media (max-width: 420px) {
+  .keep-together { white-space: normal; }
 }
 
 @media (max-width: 640px) {

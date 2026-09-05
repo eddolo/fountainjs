@@ -36,6 +36,7 @@ import {
 } from 'fountainjs-editor';
 import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
+import { SitePageLink } from './SitePageLink';
 
 type OutputFormat = 'json' | 'markdown' | 'html';
 
@@ -304,7 +305,7 @@ function DemoPage() {
   return <main className="single-demo" style={{ '--demo-accent': demo.accent } as React.CSSProperties}>
     <header className="site-header">
       <a className="brand" href="../" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-      <nav><a href="../demos.html">All 10 demos</a><a href="../developers.html">Developer guide</a><a href="https://github.com/eddolo/fountainjs">Source</a></nav>
+      <nav aria-label="Primary navigation"><SitePageLink href="../">Home</SitePageLink><SitePageLink href="../demos.html">10 demos</SitePageLink><SitePageLink href="../developers.html">Developers</SitePageLink><a className="site-section-link site-external-link" href="https://github.com/eddolo/fountainjs">Source ↗</a></nav>
       <a className="install-pill" href="../demos.html">Demo {String(demo.index).padStart(2, '0')} / 10</a>
     </header>
 

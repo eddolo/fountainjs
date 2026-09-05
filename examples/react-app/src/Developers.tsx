@@ -1,3 +1,5 @@
+import { SitePageLink } from './SitePageLink';
+
 const composeExample = `import {
   CoreExtension,
   HistoryExtension,
@@ -506,7 +508,7 @@ function Developers() {
     <main className="developer-page">
       <header className="site-header">
         <a className="brand" href="./" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#system-map">Architecture</a><a href="#extensions">Extensions</a><a href="./demos.html">10 demos</a></nav>
+        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html" current>Developers</SitePageLink><a className="site-section-link" href="#system-map">Architecture</a><a className="site-section-link" href="#extensions">Extensions</a></nav>
         <a className="install-pill" href="./#playground">Open playground</a>
       </header>
 

@@ -1,4 +1,5 @@
 import { demoDefinitions } from './demo-definitions';
+import { SitePageLink } from './SitePageLink';
 
 const surfaces = [
   ['React', 'The optional React entry supplies hooks, composer, toolbar, navigator, and review UI.'],
@@ -12,7 +13,7 @@ function DemoGallery() {
     <main className="demos-site">
       <header className="site-header">
         <a className="brand" href="./" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav><a href="#gallery">Demos</a><a href="#boundaries">Boundaries</a><a href="./developers.html">Developer guide</a></nav>
+        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html" current>10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink><a className="site-section-link" href="#boundaries">Boundaries</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
 

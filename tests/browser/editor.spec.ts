@@ -1196,7 +1196,9 @@ test('replaces both live collaboration documents without remounting the public e
 
   await switchToPlanning.click();
   await expect(page.getByText('Room: Planning', { exact: true })).toBeVisible();
-  await expect(right).toContainText('Edit either side');
+  await expect(left).toContainText('Shared planning agenda');
+  await expect(right).toContainText('Shared planning agenda');
+  await expect(left).not.toContainText('Shared launch note');
   await left.focus();
   await left.locator('[data-fountain-node="paragraph"]').last().locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
     const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
@@ -1220,6 +1222,9 @@ test('replaces both live collaboration documents without remounting the public e
 
   await page.getByRole('button', { name: 'Switch both editors to Launch room' }).click();
   await expect(page.getByText('Room: Launch', { exact: true })).toBeVisible();
+  await expect(left).toContainText('Shared launch note');
+  await expect(right).toContainText('Shared launch note');
+  await expect(left).not.toContainText('Shared planning agenda');
   await expect.poll(() => documentText(left)).not.toContain('PLANNING');
   await expect.poll(() => documentText(right)).not.toContain('PLANNING');
   expect(await left.evaluate((element) => element.closest('[data-fountain-root]') === (globalThis as any).__fountainLeftRoot)).toBe(true);
@@ -1228,6 +1233,31 @@ test('replaces both live collaboration documents without remounting the public e
   await expect.poll(() => documentText(left)).toContain('PLANNING');
   await expect.poll(() => documentText(right)).toContain('PLANNING');
   expect(await left.evaluate((element) => element.closest('[data-fountain-root]') === (globalThis as any).__fountainLeftRoot)).toBe(true);
+});
+
+test('keeps headline phrases together and makes full-page navigation explicit', async ({ page }) => {
+  await page.goto('/');
+  const primary = page.getByRole('navigation', { name: 'Primary navigation' });
+  await expect(primary.getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(primary.getByRole('link', { name: '10 demos', exact: true }).locator('.site-page-link__arrow')).toBeVisible();
+  await expect(primary.getByRole('link', { name: 'Developers', exact: true }).locator('.site-page-link__arrow')).toBeVisible();
+
+  const collaborationPhrase = page.getByRole('heading', { name: 'Two editors. One convergent document.' }).locator('.keep-together');
+  const modularityPhrase = page.getByRole('heading', { name: 'Start with a working editor. Change only what you need.' }).locator('.keep-together');
+  expect(await collaborationPhrase.evaluate((element) => element.getClientRects().length)).toBe(1);
+  expect(await modularityPhrase.evaluate((element) => element.getClientRects().length)).toBe(1);
+
+  await page.goto('/demos.html');
+  const demosNavigation = page.getByRole('navigation', { name: 'Primary navigation' });
+  await expect(demosNavigation.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
+  await expect(demosNavigation.getByRole('link', { name: '10 demos', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(demosNavigation.getByRole('link', { name: 'Developers', exact: true })).toBeVisible();
+
+  await page.goto('/developers.html');
+  const developerNavigation = page.getByRole('navigation', { name: 'Primary navigation' });
+  await expect(developerNavigation.getByRole('link', { name: 'Home', exact: true })).toBeVisible();
+  await expect(developerNavigation.getByRole('link', { name: '10 demos', exact: true })).toBeVisible();
+  await expect(developerNavigation.getByRole('link', { name: 'Developers', exact: true })).toHaveAttribute('aria-current', 'page');
 });
 
 test('runs shared threaded comments through the public provider-neutral review panel', async ({ page }) => {
