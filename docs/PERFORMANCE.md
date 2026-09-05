@@ -48,7 +48,7 @@ recorded destroyed-editor sample retained 0.13 MiB.
 
 The build gate currently limits the independently loadable production entries,
 including 111/93 KiB raw for the ESM/CommonJS root, 19/16 KiB for the optional
-Yjs adapter, 36/30 KiB for the isolated DOM pagination entry, and 722/608 KiB
+Yjs adapter, 44/37 KiB for the isolated DOM pagination entry, and 732/616 KiB
 for all emitted ESM/CommonJS runtime code excluding the isolated full emoji
 catalogue. Gzip sizes are printed by the build but raw sizes are enforced
 because they are deterministic.

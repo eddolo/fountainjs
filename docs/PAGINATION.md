@@ -2,9 +2,10 @@
 
 Status: active architecture and implementation work for `DOC-14`. The portable
 layout/document-intent foundation, read-only paged preview/print projection, and
-a guarded whole-block plus split-paragraph editable page surface are
-implemented. Split-list/table editing, editable repeated furniture/footnotes,
-and exhaustive PDF fidelity are not. This page is not a claim that the complete
+a guarded editable page surface for whole blocks, measured paragraph lines,
+canonical list items, and rowspan-safe table row groups are implemented.
+Editable repeated page furniture/footnotes, oversized table-row handling, and
+exhaustive PDF fidelity are not. This page is not a claim that the complete
 pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
@@ -42,9 +43,11 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - `DOMEditablePageSurface` and `DOMEditablePageController` for responsive fixed
   page shells around one unchanged contenteditable, transient whole-block
   placement, selection-safe non-model paragraph continuation gaps at measured
-  line boundaries, reversible viewport/container-responsive continuous
-  fallback, typed unsupported-fragment issues, and deterministic restoration on
-  remeasurement and teardown;
+  line boundaries, canonical list-item continuation spacing, reversible
+  rowspan-safe table-row spacers with read-only repeated column headers,
+  viewport/container-responsive continuous fallback, typed
+  unsupported-fragment issues, and deterministic restoration on remeasurement
+  and teardown;
 - `projectPagePresentation()` for immutable page-shell plans that select the
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
@@ -61,11 +64,12 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The implementation is certified by the 363-test package suite and complete
-225-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
-[CI run for `928e45f`](https://github.com/eddolo/fountainjs/actions/runs/33946679970).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33946679930)
-is also green.
+The latest immutable public certification is the 364-test package suite and
+whole-block/paragraph/list browser matrix in the
+[CI run for `78c41b2`](https://github.com/eddolo/fountainjs/actions/runs/33947931490).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33947931479)
+is also green. Table-continuation evidence is implemented locally but must pass
+the same immutable CI/deployment gates before this paragraph is advanced.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -93,12 +97,19 @@ top-level DOM/model paths, preserves unchanged block identity, commits IME on a
 second page, maps one selection across page one and page two, and removes page
 decoration on narrow Chrome/Safari surfaces. The desktop fixture also proves
 history undo/redo and a narrow-container → paged-container transition without
-remounting or losing that cross-page selection. A separate multi-page fixture has
+remounting or losing that cross-page selection. Lists use reversible spacing on
+their real continuation items and keep ordered-list starts, selection, IME,
+history, review, and collaboration intact. Tables use reversible non-model
+spacer rows at measured rowspan-safe boundaries while the one canonical table
+and every real row remain editable. Accessibility-hidden page shells show
+read-only clones of leading all-header rows, and those copies refresh after an
+edit to the canonical header. A separate multi-page fixture has
 no manual breaks and proves tracked insertions/decisions, preserved remote
 authorship, and bidirectional Yjs convergence on automatically placed blocks.
-That evidence covers whole blocks only. Split paragraphs/lists/tables, canonical
-furniture and footnote editing inside the paged surface, and exhaustive
-visual/content fidelity remain active work.
+The same contracts cover paragraph, list-item, and table-row-group boundaries.
+Canonical page-furniture and footnote editing inside the paged surface,
+oversized table rows, and exhaustive visual/content fidelity remain active
+work.
 
 ## Current architecture audit
 
@@ -208,11 +219,16 @@ Range insertion, and consumes its own observer records so visual decoration
 does not schedule a reflow loop. Real-browser tests cover exact page-body
 alignment, stable repeated cleanup, selection through multiple gaps, IME,
 undo/redo, tracked review, Yjs convergence, and responsive fallback/restoration.
-If a list/table source requires placements on multiple pages, or a canonical
-header/footer/footnote definition cannot yet remain uniquely editable, the
-surface removes every offset and gap and returns typed issues in continuous
-mode. This fail-closed rule avoids the common but incorrect shortcut of cloning
-editable nodes with duplicate model paths.
+Lists use reversible margin spacing only on the real continuation item; no list
+item is cloned or synthesized. Tables insert accessibility-hidden, non-model
+spacer rows before the real row at each rowspan-safe continuation boundary.
+The page shell may project read-only copies of the table's leading all-header
+rows, but the original is the only editable header and every copy is rebuilt on
+reflow. Unsupported structural sources or a canonical header/footer/footnote
+definition that cannot yet remain uniquely editable remove every offset/widget
+and return typed issues in continuous mode. An individual table row taller than
+a body is reported as overflow rather than split. These fail-closed rules avoid
+cloning editable nodes with duplicate model paths.
 The controller observes the embedding host in addition to the editor root. A
 viewport below 720 CSS pixels or a host content box narrower than the physical
 sheet uses continuous mode; widening the same mounted host remeasures and
@@ -264,10 +280,11 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - nested lists and rowspan/colspan tables split only at legal boundaries;
 - images, media, details, code, and custom NodeViews with explicit overflow
   behavior;
-- split-list/table selection and IME, undo, block movement, comments, tracked
-  changes, Yjs, and resize behavior across page boundaries (whole-block and
-  split-paragraph selection, IME, history, reversible container resize, tracked
-  decisions, and bidirectional Yjs across automatic boundaries are now covered);
+- selection and IME, undo, block movement, comments, tracked changes, Yjs, and
+  resize behavior across page boundaries (whole-block, paragraph, list, and
+  rowspan-safe table boundaries now cover selection, IME, history, reversible
+  container resize, tracked decisions, and bidirectional Yjs; block movement and
+  comments still need dedicated split-container gates);
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;

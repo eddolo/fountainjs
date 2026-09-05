@@ -455,8 +455,17 @@ function directListItems(element: HTMLElement): readonly HTMLElement[] {
 
 function tableRows(element: HTMLElement): readonly HTMLTableRowElement[] {
   return Object.freeze(Array.from(element.querySelectorAll<HTMLTableRowElement>('tr')).filter((row) => (
-    row.closest('table') === element
+    row.closest('table') === element && !row.hasAttribute('data-fountain-widget')
   )));
+}
+
+function tableHeaderRows(element: HTMLElement): readonly HTMLTableRowElement[] {
+  const headers: HTMLTableRowElement[] = [];
+  for (const row of tableRows(element)) {
+    if (row.querySelectorAll(':scope > th').length === 0 || row.querySelectorAll(':scope > td').length > 0) break;
+    headers.push(row);
+  }
+  return Object.freeze(headers);
 }
 
 function groupedTableRows(rows: readonly HTMLTableRowElement[]): readonly (readonly HTMLTableRowElement[])[] {
@@ -495,7 +504,11 @@ function structuralFragments(
       ? directListItems(element).map((item) => [item])
       : [];
   if (pieces.length < 2) return null;
-  const wholeHeight = outerHeight(element, count);
+  const transientTableHeight = node.type.name === 'table'
+    ? Array.from(element.querySelectorAll<HTMLElement>('[data-fountain-editable-table-break]'))
+        .reduce((sum, spacer) => sum + measuredRect(spacer, count).height, 0)
+    : 0;
+  const wholeHeight = Math.max(0, outerHeight(element, count) - transientTableHeight);
   const pieceHeights = pieces.map((piece) => piece.reduce((sum, child) => sum + measuredRect(child, count).height, 0));
   const missing = Math.max(0, wholeHeight - pieceHeights.reduce((sum, height) => sum + height, 0));
   const fragments = pieces.map((piece, index) => {
@@ -506,12 +519,7 @@ function structuralFragments(
       footnotes: uniqueFootnotes(references),
     });
   });
-  const rows = node.type.name === 'table' ? tableRows(element) : [];
-  const headerRows: HTMLTableRowElement[] = [];
-  for (const row of rows) {
-    if (row.querySelectorAll(':scope > th').length === 0 || row.querySelectorAll(':scope > td').length > 0) break;
-    headerRows.push(row);
-  }
+  const headerRows = tableHeaderRows(element);
   const continuationHeight = headerRows.reduce((sum, row) => sum + measuredRect(row, count).height, 0);
   let clipOffset = 0;
   const kind = node.type.name === 'table' ? 'table-row-group' as const : 'list-item' as const;
@@ -1121,6 +1129,20 @@ interface EditableListBreakDecoration {
   readonly marginPriority: string;
 }
 
+interface EditableTableBreakPlan {
+  readonly row: HTMLTableRowElement;
+  readonly page: number;
+  readonly size: number;
+  readonly targetTop: number;
+}
+
+interface EditableTableHeaderPlan {
+  readonly table: HTMLTableElement;
+  readonly page: number;
+  readonly cursor: number;
+  readonly height: number;
+}
+
 const EDITABLE_PAGE_VARIABLES = Object.freeze([
   '--fountain-editable-page-width',
   '--fountain-editable-page-height',
@@ -1198,13 +1220,55 @@ function pageShell(owner: Document, geometry: PageGeometry, number: number): HTM
   return sheet;
 }
 
+function sanitizeEditableTableHeader(root: HTMLElement): void {
+  root.querySelectorAll('[data-fountain-widget], .fountain-table-cell__resize-handle').forEach((element) => element.remove());
+  [root, ...root.querySelectorAll<HTMLElement>('*')].forEach((element) => {
+    if (element.id) element.removeAttribute('id');
+    Array.from(element.attributes).forEach((attribute) => {
+      if (attribute.name.startsWith('data-fountain-')) element.removeAttribute(attribute.name);
+    });
+    element.removeAttribute('contenteditable');
+    element.removeAttribute('aria-selected');
+    element.removeAttribute('tabindex');
+    element.removeAttribute('draggable');
+    if (['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'].includes(element.tagName)) {
+      (element as HTMLButtonElement | HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).disabled = true;
+    }
+    if (element.tagName === 'A') element.setAttribute('tabindex', '-1');
+  });
+}
+
+function editableTableHeader(plan: EditableTableHeaderPlan): HTMLTableElement | null {
+  const sourceRows = tableHeaderRows(plan.table);
+  if (!sourceRows.length || !finiteNonNegative(plan.height) || plan.height === 0) return null;
+  const clone = plan.table.cloneNode(true) as HTMLTableElement;
+  const cloneRows = tableRows(clone);
+  cloneRows.slice(sourceRows.length).forEach((row) => row.remove());
+  const sourceCells = sourceRows.flatMap((row) => [...row.cells]);
+  const cloneCells = tableRows(clone).flatMap((row) => [...row.cells]);
+  sanitizeEditableTableHeader(clone);
+  sourceCells.forEach((cell, index) => {
+    const target = cloneCells[index];
+    if (!target) return;
+    target.style.inlineSize = `${Math.round(cell.getBoundingClientRect().width * 1_000) / 1_000}px`;
+  });
+  clone.classList.add('fountain-editable-pages__table-header');
+  clone.dataset.fountainEditableTableHeader = String(plan.page);
+  clone.contentEditable = 'false';
+  clone.style.insetBlockStart = `${Math.round(plan.cursor * 1_000) / 1_000}px`;
+  clone.style.blockSize = `${Math.round(plan.height * 1_000) / 1_000}px`;
+  return clone;
+}
+
 /**
  * Owns the visual page-sheet layer around one continuous EditorView root.
  * Editable model nodes are never cloned, moved, or reordered. Whole source
  * blocks receive transient visual offsets; split paragraphs receive transient
  * non-model gap widgets at measured line boundaries; split lists receive
- * reversible spacing on their canonical continuation items; unsupported split
- * sources fall back to a continuous canvas.
+ * reversible spacing on their canonical continuation items; split tables use
+ * non-model spacer rows at rowspan-safe boundaries and read-only repeated
+ * headers behind the editor; unsupported split sources fall back to a
+ * continuous canvas.
  */
 export class DOMEditablePageSurface {
   readonly host: HTMLElement;
@@ -1212,6 +1276,8 @@ export class DOMEditablePageSurface {
   private readonly decorated = new Map<HTMLElement, EditableSourceDecoration>();
   private readonly textBreaks = new Set<HTMLElement>();
   private readonly listBreaks = new Map<HTMLElement, EditableListBreakDecoration>();
+  private readonly tableBreaks = new Set<HTMLTableRowElement>();
+  private readonly splitTables = new Map<HTMLTableElement, string | null>();
   private readonly hostVariables = new Map<string, { value: string; priority: string }>();
   private readonly hostHadClass: boolean;
   private readonly rootHadClass: boolean;
@@ -1266,6 +1332,7 @@ export class DOMEditablePageSurface {
       throw new TypeError('Editable page surfaces require a positive page count.');
     }
     this.clearDecorations();
+    this.shells.replaceChildren();
     const totalHeight = pageCount * geometry.size.height + Math.max(0, pageCount - 1) * this.gap;
     this.host.style.setProperty('--fountain-editable-page-width', `${geometry.size.width}px`);
     this.host.style.setProperty('--fountain-editable-page-height', `${geometry.size.height}px`);
@@ -1324,10 +1391,16 @@ export class DOMEditablePageSurface {
           candidate.kind === 'list-item' && candidate.partPaths.length === 1
         ))
       )) && ['bullet_list', 'ordered_list', 'task_list'].includes(sourceElement?.dataset.fountainNode ?? '');
-      if (pages.size > 1 && source && !editableTextSplit && !editableListSplit) issues.push(Object.freeze({
+      const editableTableSplit = entries.every((entry) => (
+        entry.placement.sources.length > 0
+        && entry.placement.sources.every((candidate) => (
+          candidate.kind === 'table-row-group' && candidate.partPaths.length > 0
+        ))
+      )) && sourceElement?.dataset.fountainNode === 'table';
+      if (pages.size > 1 && source && !editableTextSplit && !editableListSplit && !editableTableSplit) issues.push(Object.freeze({
         code: 'fragmented-editable-source',
         path: Object.freeze([...source.sourcePath]),
-        detail: `Editable source ${source.sourcePath.join('.')} spans ${pages.size} pages without editable text boundaries.`,
+        detail: `Editable source ${source.sourcePath.join('.')} spans ${pages.size} pages without safe editable boundaries.`,
       }));
       if (source && !sourceElement) issues.push(Object.freeze({
         code: 'missing-rendered-source',
@@ -1348,6 +1421,8 @@ export class DOMEditablePageSurface {
 
     const textBreakPlans: EditableTextBreakPlan[] = [];
     const listBreakPlans: EditableListBreakPlan[] = [];
+    const tableBreakPlans: EditableTableBreakPlan[] = [];
+    const tableHeaderPlans: EditableTableHeaderPlan[] = [];
     const undecoratedRootTop = this.root.getBoundingClientRect().top;
     placementsByItem.forEach((entries) => {
       if (new Set(entries.map((entry) => entry.page)).size < 2) return;
@@ -1378,6 +1453,52 @@ export class DOMEditablePageSurface {
           return;
         }
         textBreakPlans.push({ point, fragmentIndex: source.fragmentIndex, page: entry.page, size });
+        insertedSize += size;
+      });
+    });
+    placementsByItem.forEach((entries) => {
+      if (new Set(entries.map((entry) => entry.page)).size < 2) return;
+      const first = entries[0];
+      const firstSource = first?.placement.sources[0];
+      const element = firstSource ? editableTopLevel(this.root, firstSource.sourcePath) : null;
+      if (
+        !first || !firstSource || !element
+        || firstSource.kind !== 'table-row-group'
+        || element.dataset.fountainNode !== 'table'
+        || element.tagName !== 'TABLE'
+      ) return;
+      const table = element as HTMLTableElement;
+      const firstPageTop = (first.page - 1) * (geometry.size.height + this.gap);
+      const bodyStart = geometry.margins.top + geometry.headerHeight;
+      const style = table.ownerDocument.defaultView?.getComputedStyle(table);
+      const marginBefore = numericStyle(style?.marginBlockStart || style?.marginTop);
+      const naturalTop = table.getBoundingClientRect().top - undecoratedRootTop;
+      const topLevelShift = firstPageTop + bodyStart + first.cursor + marginBefore - naturalTop;
+      let insertedSize = 0;
+      entries.slice(1).forEach((entry) => {
+        const source = entry.placement.sources[0];
+        const partPath = source?.partPaths[0];
+        const row = partPath ? editableAtPath(this.root, partPath) : null;
+        const desired = (entry.page - 1) * (geometry.size.height + this.gap)
+          + bodyStart + entry.cursor + entry.placement.continuationHeight;
+        const rowTop = row ? row.getBoundingClientRect().top - undecoratedRootTop : Number.NaN;
+        const size = desired - rowTop - topLevelShift - insertedSize;
+        if (!source || source.kind !== 'table-row-group' || source.partPaths.length < 1 || !row
+          || row.tagName !== 'TR' || !finiteNonNegative(size)) {
+          issues.push(Object.freeze({
+            code: 'fragmented-editable-source',
+            path: Object.freeze([...(partPath ?? firstSource.sourcePath)]),
+            detail: `Editable table boundary on page ${entry.page} could not be positioned safely.`,
+          }));
+          return;
+        }
+        tableBreakPlans.push({ row: row as HTMLTableRowElement, page: entry.page, size, targetTop: desired - topLevelShift });
+        if (entry.placement.continuationHeight > 0) tableHeaderPlans.push({
+          table,
+          page: entry.page,
+          cursor: entry.cursor,
+          height: entry.placement.continuationHeight,
+        });
         insertedSize += size;
       });
     });
@@ -1442,6 +1563,12 @@ export class DOMEditablePageSurface {
       .sort((left, right) => right.fragmentIndex - left.fragmentIndex)
       .forEach((plan) => this.insertTextBreak(plan));
     listBreakPlans.forEach((plan) => this.decorateListBreak(plan));
+    tableBreakPlans.forEach((plan) => this.insertTableBreak(plan));
+    tableHeaderPlans.forEach((plan) => {
+      const body = pages[plan.page - 1]?.querySelector<HTMLElement>('.fountain-editable-pages__body');
+      const header = editableTableHeader(plan);
+      if (body && header) body.appendChild(header);
+    });
 
     const rootRect = this.root.getBoundingClientRect();
     const decoratedItems = new Set<string>();
@@ -1510,6 +1637,12 @@ export class DOMEditablePageSurface {
       else element.style.removeProperty('margin-block-start');
     });
     this.listBreaks.clear();
+    this.tableBreaks.forEach((element) => element.remove());
+    this.tableBreaks.clear();
+    this.splitTables.forEach((attribute, element) => {
+      this.restoreAttribute(element, 'data-fountain-editable-table-split', attribute);
+    });
+    this.splitTables.clear();
     this.decorated.forEach((prior, element) => {
       this.restoreAttribute(element, 'data-fountain-editable-page', prior.attribute);
       if (prior.shift) element.style.setProperty('--fountain-editable-page-shift', prior.shift, prior.shiftPriority);
@@ -1550,6 +1683,32 @@ export class DOMEditablePageSurface {
     const actualTop = plan.element.getBoundingClientRect().top - this.root.getBoundingClientRect().top;
     applied += plan.targetTop - actualTop;
     plan.element.style.setProperty('margin-block-start', `${Math.round(Math.max(0, applied) * 1_000) / 1_000}px`);
+  }
+
+  private insertTableBreak(plan: EditableTableBreakPlan): void {
+    const parent = plan.row.parentElement;
+    if (!parent) return;
+    const table = plan.row.closest<HTMLTableElement>('table');
+    if (table && !this.splitTables.has(table)) {
+      this.splitTables.set(table, table.getAttribute('data-fountain-editable-table-split'));
+      table.dataset.fountainEditableTableSplit = 'true';
+    }
+    const spacer = this.root.ownerDocument.createElement('tr');
+    spacer.className = 'fountain-editable-pages__table-break';
+    spacer.dataset.fountainWidget = 'editable-table-break';
+    spacer.dataset.fountainEditableTableBreak = String(plan.page);
+    spacer.setAttribute('aria-hidden', 'true');
+    spacer.contentEditable = 'false';
+    const cell = this.root.ownerDocument.createElement('td');
+    cell.colSpan = Math.max(1, [...plan.row.cells].reduce((sum, candidate) => sum + Math.max(1, candidate.colSpan), 0));
+    spacer.appendChild(cell);
+    parent.insertBefore(spacer, plan.row);
+    let applied = plan.size;
+    cell.style.setProperty('--fountain-editable-table-break-size', `${Math.round(applied * 1_000) / 1_000}px`);
+    const actualTop = plan.row.getBoundingClientRect().top - this.root.getBoundingClientRect().top;
+    applied += plan.targetTop - actualTop;
+    cell.style.setProperty('--fountain-editable-table-break-size', `${Math.round(Math.max(0, applied) * 1_000) / 1_000}px`);
+    this.tableBreaks.add(spacer);
   }
 
   private setMode(mode: DOMEditablePageMode): void {

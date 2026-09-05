@@ -64,17 +64,18 @@ const limits = Object.freeze({
   'dist/pages.js': 23 * kibibyte,
   'dist/pages.cjs': 19 * kibibyte,
   // Browser geometry, strict placement/source projection, coalesced reflow,
-  // guarded single-contenteditable page shells, and identity-rebased
-  // structural measurement caching remain isolated from the neutral model.
-  'dist/pages-dom.js': 39 * kibibyte,
-  'dist/pages-dom.cjs': 32 * kibibyte,
+  // guarded single-contenteditable page shells, editable paragraph/list/table
+  // continuations, and identity-rebased structural measurement caching remain
+  // isolated from the neutral model.
+  'dist/pages-dom.js': 44 * kibibyte,
+  'dist/pages-dom.cjs': 37 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
   // from both the neutral model and browser measurement lifecycle.
   'dist/pages-preview.js': 9 * kibibyte,
   'dist/pages-preview.cjs': 8 * kibibyte,
   // Accessible block handles, visible drop states, page-preview print rules,
   // and responsive editable page shells remain inside one measured stylesheet.
-  'dist/styles.css': 60 * kibibyte,
+  'dist/styles.css': 62 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -106,9 +107,11 @@ const limits = Object.freeze({
   // DOM reuse and path-aware page-cache rebasing add about 2.2/1 KiB. Editable
   // paragraph continuation boundaries add about 3.5/2.8 KiB while remaining
   // isolated from the default editor. Canonical list continuation adds about
-  // 2.9/2.4 KiB to that same optional entry. The schema is data and is not counted.
-  'all ESM runtime code': 726 * kibibyte,
-  'all CommonJS runtime code': 611 * kibibyte,
+  // 2.9/2.4 KiB to that same optional entry. Rowspan-safe editable table
+  // continuation and read-only repeated header projection add about 4.6/4 KiB
+  // plus 1.9 KiB of CSS. The schema is data and is not counted.
+  'all ESM runtime code': 732 * kibibyte,
+  'all CommonJS runtime code': 616 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

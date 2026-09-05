@@ -45,11 +45,15 @@
   history, tracked-change decisions, and bidirectional Yjs coverage; plus
   canonical list-item continuation spacing that preserves ordered starts,
   selection, IME, history, tracked decisions, Yjs convergence, and exact
-  page-body alignment without cloned or synthetic list items. It still fails
-  closed before cloning unsupported split content; plus an honest staged
-  pagination contract. Split-table editing, editable repeated
-  furniture/footnotes, and broader adversarial/cross-engine print fidelity remain
-  active work rather than claimed capabilities.
+  page-body alignment without cloned or synthetic list items; plus canonical
+  rowspan-safe table-row continuation with reversible non-model spacer rows,
+  read-only repeated column-header projections, live header reflow, selection,
+  IME, history, tracked decisions, and Yjs convergence without cloning the
+  editable table. It still fails closed before cloning unsupported split
+  content; plus an honest staged pagination contract. Editable repeated page
+  furniture/footnotes, oversized-row handling, and broader
+  adversarial/cross-engine print fidelity remain active work rather than claimed
+  capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,

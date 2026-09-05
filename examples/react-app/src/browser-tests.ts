@@ -66,15 +66,40 @@ const splitListContent = {
     })),
   }],
 };
+const splitTableContent = {
+  type: 'doc',
+  content: [{
+    type: 'table',
+    content: [
+      {
+        type: 'table_row',
+        content: ['Record', 'Status'].map((value) => ({
+          type: 'table_header',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: value }] }],
+        })),
+      },
+      ...Array.from({ length: 12 }, (_, index) => ({
+        type: 'table_row',
+        content: [`Canonical row ${index + 1}`, `Editable value ${index + 1}`].map((value) => ({
+          type: 'table_cell',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: value }] }],
+        })),
+      })),
+    ],
+  }],
+};
 const splitPageIntegrationsFixture = browserFixture === 'split-page-integrations';
 const splitListPageIntegrationsFixture = browserFixture === 'split-list-page-integrations';
+const splitTablePageIntegrationsFixture = browserFixture === 'split-table-page-integrations';
 const pageIntegrationsFixture = browserFixture === 'page-integrations'
   || splitPageIntegrationsFixture
-  || splitListPageIntegrationsFixture;
+  || splitListPageIntegrationsFixture
+  || splitTablePageIntegrationsFixture;
 const automaticPageContent = splitPageIntegrationsFixture ? {
   type: 'doc',
   content: [{ type: 'paragraph', content: [{ type: 'text', text: splitParagraphText }] }],
-} : splitListPageIntegrationsFixture ? splitListContent : {
+} : splitListPageIntegrationsFixture ? splitListContent
+  : splitTablePageIntegrationsFixture ? splitTableContent : {
   type: 'doc',
   content: Array.from({ length: 5 }, (_, index) => ({
     type: 'paragraph',
@@ -260,7 +285,9 @@ const pageIntegrationGeometry = createPageGeometry({
   headerHeight: 20,
   footerHeight: 20,
 });
-const pageIntegrationMeasurement = splitPageIntegrationsFixture || splitListPageIntegrationsFixture
+const pageIntegrationMeasurement = splitPageIntegrationsFixture
+  || splitListPageIntegrationsFixture
+  || splitTablePageIntegrationsFixture
   ? {}
   : { lineFragmentNodeTypes: [] };
 const leftPageController = pageIntegrationsFixture
@@ -321,7 +348,11 @@ const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page int
 
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
-const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditablePagesFixture || splitEditableListFixture)
+const splitEditableTableFixture = browserFixture === 'editable-table-pages';
+const editablePagesFixture = (browserFixture === 'editable-pages'
+  || splitEditablePagesFixture
+  || splitEditableListFixture
+  || splitEditableTableFixture)
   ? (() => {
       const pageEditor = createEditor({
         schema: pagesKit.schema,
@@ -335,7 +366,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditab
               text: splitParagraphText,
             }],
           }],
-        } : splitEditableListFixture ? splitListContent : {
+        } : splitEditableListFixture ? splitListContent
+          : splitEditableTableFixture ? splitTableContent : {
           type: 'doc',
           content: [
             { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
@@ -352,6 +384,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditab
           ? 'Split paragraph page editor'
           : splitEditableListFixture
             ? 'Split list page editor'
+            : splitEditableTableFixture
+              ? 'Split table page editor'
             : 'Editable page canvas editor',
       });
       const geometry = createPageGeometry({
@@ -364,7 +398,11 @@ const editablePagesFixture = (browserFixture === 'editable-pages' || splitEditab
         view.dom,
         () => pageEditor.state.doc,
         geometry,
-        { measurement: splitEditablePagesFixture || splitEditableListFixture ? {} : { lineFragmentNodeTypes: [] } },
+        {
+          measurement: splitEditablePagesFixture || splitEditableListFixture || splitEditableTableFixture
+            ? {}
+            : { lineFragmentNodeTypes: [] },
+        },
       );
       return { editor: pageEditor, view, controller, commands: view.commandManager(pagesKit.commands) };
     })()

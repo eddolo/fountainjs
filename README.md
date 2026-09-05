@@ -359,14 +359,21 @@ non-model gap widgets at measured line boundaries, marks them as Fountain
 widgets so selection mapping ignores them, and removes them before every fresh
 measurement. The paragraph remains one model node inside the same
 `contenteditable`; selection, IME, undo/redo, tracked-change decisions, and Yjs
-convergence are covered across its page boundaries. Narrow viewports or
+convergence are covered across its page boundaries. Lists continue between
+canonical list items without cloning them. Tables continue only at
+rowspan-safe row-group boundaries: the one canonical table and every real row
+stay editable, while transient non-model spacer rows align each continuation
+and page shells show accessibility-hidden, read-only copies of the canonical
+column header. Header edits update every copy on reflow. Selection, IME,
+undo/redo, tracked-change decisions, and Yjs convergence are covered across
+both list and table page boundaries. Narrow viewports or
 embedding containers that cannot fit a complete sheet return to a normal
 continuous editor, and a host resize restores paged mode without remounting the
 editor. Layout never persists automatic page numbers or continuation widgets
-into the shared document. When a list or table would need to split across
-sheets—or canonical page furniture/footnotes cannot remain uniquely
-editable—the controller reports typed issues through `onFallback` and keeps a
-continuous canvas. That guarded fallback is intentional; it is not yet complete
+into the shared document. Unsupported structural fragments, an individual
+table row too tall for a page, or canonical page furniture/footnotes that cannot
+remain uniquely editable produce typed fallback/overflow results rather than a
+destructive split. That guarded boundary is intentional; it is not yet complete
 Word-style editable pagination.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
@@ -379,9 +386,10 @@ Browser geometry must use CSS-pixel units (for example,
 copies are hidden from assistive technology while one continuous read-only copy
 preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
 page-specific header/field, body, list, table, footnote, and manual-break text
-without a duplicate hidden document. Whole-block and split-paragraph editing
-are real, but split-list/table editing, editable/repeated furniture, page-local
-footnote editing, and exhaustive PDF fidelity remain active `DOC-14` work with
+without a duplicate hidden document. Whole blocks, measured paragraph lines,
+canonical list items, and rowspan-safe table row groups are editable across
+pages. Editable/repeated page furniture, page-local footnote editing, oversized
+row handling, and exhaustive PDF fidelity remain active `DOC-14` work with
 explicit browser and accessibility gates in [the pagination
 contract](docs/PAGINATION.md).
 

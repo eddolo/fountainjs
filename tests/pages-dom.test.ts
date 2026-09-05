@@ -524,6 +524,104 @@ describe('DOM page measurement adapter', () => {
     host.remove();
   });
 
+  it('inserts reversible table spacers at row-safe boundaries and repeats read-only headers', () => {
+    const pageSchema = schema();
+    const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [{
+        type: 'table',
+        content: [
+          { type: 'table_row', content: [{ type: 'table_header', content: [paragraph('Heading')] }] },
+          ...Array.from({ length: 3 }, (_, index) => ({
+            type: 'table_row',
+            content: [{ type: 'table_cell', content: [paragraph(`Value ${index + 1}`)] }],
+          })),
+        ],
+      }],
+    });
+    const host = window.document.createElement('div');
+    const root = window.document.createElement('div');
+    const table = window.document.createElement('table');
+    table.dataset.fountainNode = 'table';
+    table.dataset.fountainPath = '0';
+    const body = window.document.createElement('tbody');
+    const rows = document.content[0]!.content.map((node, rowIndex) => {
+      const row = window.document.createElement('tr');
+      row.dataset.fountainNode = 'table_row';
+      row.dataset.fountainPath = `0.${rowIndex}`;
+      const cell = window.document.createElement(rowIndex === 0 ? 'th' : 'td');
+      cell.dataset.fountainNode = rowIndex === 0 ? 'table_header' : 'table_cell';
+      cell.dataset.fountainPath = `0.${rowIndex}.0`;
+      const content = window.document.createElement('div');
+      content.className = 'fountain-table-cell__content';
+      content.textContent = node.textContent;
+      cell.appendChild(content);
+      row.appendChild(cell);
+      body.appendChild(row);
+      return row;
+    });
+    table.appendChild(body);
+    root.appendChild(table);
+    host.appendChild(root);
+    window.document.body.appendChild(host);
+    const spacerHeightBefore = (row: HTMLTableRowElement) => [...body.children]
+      .slice(0, [...body.children].indexOf(row))
+      .filter((candidate) => (candidate as HTMLElement).dataset.fountainWidget === 'editable-table-break')
+      .reduce((sum, candidate) => sum + Number.parseFloat(
+        (candidate.firstElementChild as HTMLElement | null)?.style.getPropertyValue('--fountain-editable-table-break-size') || '0',
+      ), 0);
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === host) return { ...rectangle(0, 40), width: 200, right: 200 } as DOMRect;
+      if (this === root) return { ...rectangle(0, 160), width: 100, right: 100 } as DOMRect;
+      if (this === table) {
+        const spacers = [...table.querySelectorAll<HTMLElement>('[data-fountain-editable-table-break]')]
+          .reduce((sum, spacer) => sum + Number.parseFloat(
+            (spacer.firstElementChild as HTMLElement | null)?.style.getPropertyValue('--fountain-editable-table-break-size') || '0',
+          ), 0);
+        return rectangle(0, 160 + spacers);
+      }
+      if (this.tagName === 'TR' && this.dataset.fountainWidget === 'editable-table-break') {
+        return rectangle(0, Number.parseFloat(
+          (this.firstElementChild as HTMLElement | null)?.style.getPropertyValue('--fountain-editable-table-break-size') || '0',
+        ));
+      }
+      if (this.tagName === 'TR') {
+        const index = Number(this.dataset.fountainPath?.split('.')[1] ?? 0);
+        return rectangle(index * 40 + spacerHeightBefore(this as HTMLTableRowElement), 40);
+      }
+      return rectangle(0, 40);
+    });
+    const geometry = createPageGeometry({ size: { width: 120, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(root, document, geometry);
+    expect(snapshot.layout.pages).toHaveLength(3);
+    const surface = new DOMEditablePageSurface(root, geometry, { gap: 20 });
+
+    expect(surface.update(geometry, snapshot)).toMatchObject({ mode: 'paged', issues: [] });
+    const breaks = [...table.querySelectorAll<HTMLTableRowElement>('[data-fountain-editable-table-break]')];
+    expect(table.dataset.fountainEditableTableSplit).toBe('true');
+    expect(breaks.map((row) => row.dataset.fountainEditableTableBreak)).toEqual(['2', '3']);
+    expect(breaks.map((row) => row.dataset.fountainWidget)).toEqual(['editable-table-break', 'editable-table-break']);
+    expect(breaks.every((row) => row.getAttribute('aria-hidden') === 'true' && row.contentEditable === 'false')).toBe(true);
+    expect(rows.every((row) => body.contains(row))).toBe(true);
+    expect([...body.querySelectorAll('tr[data-fountain-path]')]).toEqual(rows);
+    const headers = [...surface.shells.querySelectorAll<HTMLTableElement>('[data-fountain-editable-table-header]')];
+    expect(headers.map((header) => header.dataset.fountainEditableTableHeader)).toEqual(['2', '3']);
+    expect(headers.every((header) => header.textContent === 'Heading' && !header.querySelector('[data-fountain-path]'))).toBe(true);
+
+    surface.prepare(geometry, 3);
+    expect(table.querySelectorAll('[data-fountain-editable-table-break]')).toHaveLength(0);
+    expect(table.hasAttribute('data-fountain-editable-table-split')).toBe(false);
+    expect(surface.shells.querySelectorAll('[data-fountain-editable-table-header]')).toHaveLength(0);
+    expect([...body.querySelectorAll('tr[data-fountain-path]')]).toEqual(rows);
+    expect(surface.update(geometry, snapshot).mode).toBe('paged');
+    surface.destroy();
+    expect(table.querySelectorAll('[data-fountain-editable-table-break]')).toHaveLength(0);
+    expect(table.hasAttribute('data-fountain-editable-table-split')).toBe(false);
+    expect([...body.querySelectorAll('tr[data-fountain-path]')]).toEqual(rows);
+    host.remove();
+  });
+
   it('falls back to one continuous editable tree when a source would span pages', () => {
     const pageSchema = schema();
     const document = pageSchema.nodeFromJSON({

@@ -1429,27 +1429,31 @@ on every cycle.
 `createDOMEditablePageController(root, getDocument, geometry, options)` couples
 that measured lifecycle to `DOMEditablePageSurface`. The surface inserts
 non-interactive sibling sheets, keeps one continuous contenteditable tree, and
-uses only transient visual offsets on whole top-level source nodes. DOM order,
-node identity, model paths, selection handlers, input handlers, and persisted
-JSON remain unchanged. Its result is `mode: 'paged'` while every source stays
-whole on one sheet. A source split across pages, a missing rendered source, or
-canonical header/footer/footnote-definition content that cannot yet stay
-uniquely editable produces typed `issues` and `mode: 'continuous'`; `onFallback`
-can explain that transition in host UI. At viewports below 720 CSS pixels, or
-when the embedding container cannot fit a complete sheet, the supplied surface
-hides page decoration and removes every visual offset. The controller observes
-its host as well as the editor, so widening a panel restores paged mode without
-remounting or replacing selection/history state. Destroy the page controller
-before the owning `EditorView` so it can restore host classes, variables, and
-source annotations deterministically.
+uses transient visual offsets plus non-model continuation spacing. Paragraphs
+split at measured line boundaries, lists split between canonical list items,
+and tables split at rowspan-safe row groups. A split table remains one editable
+table with the same row nodes; page shells render read-only, accessibility-hidden
+copies of its canonical leading header rows. DOM order, model-node identity,
+model paths, selection/input handlers, and persisted JSON remain unchanged.
+Missing sources, unsupported structural fragments, and canonical
+header/footer/footnote-definition content that cannot yet stay uniquely
+editable produce typed `issues` and `mode: 'continuous'`; an oversized
+unsplittable row remains an explicit layout overflow. `onFallback` can explain
+the transition in host UI. At viewports below 720 CSS pixels, or when the
+embedding container cannot fit a complete sheet, the surface removes every
+continuation widget and visual offset. Widening the same mounted host restores
+paged mode without replacing selection/history state. Destroy the page
+controller before the owning `EditorView` so it can restore host classes,
+variables, and source annotations deterministically.
 
-This is a guarded whole-block editable paginator, not a completed split-block
-Word-style paginator. A real Chromium gate verifies A4/Letter PDF page
+This is a guarded editable paginator, not completed Word-style pagination. A
+real Chromium gate verifies A4/Letter PDF page
 counts, MediaBox dimensions, resolved headers/page fields, body/list/table text,
 page-local footnotes, manual-break placement, and absence of the hidden
-accessibility duplicate. Editable split paragraphs/lists/tables, uniquely
-editable repeated furniture/footnotes, and broader adversarial/cross-engine
-print fidelity remain active work.
+accessibility duplicate. Editable split paragraphs, canonical list items, and
+rowspan-safe table row groups are covered. Uniquely editable repeated page
+furniture/footnotes, oversized-row handling, and broader
+adversarial/cross-engine print fidelity remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React
