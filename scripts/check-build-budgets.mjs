@@ -190,6 +190,7 @@ const limits = Object.freeze({
   // about 0.5/0.3 KiB without moving any public entry-point ceiling.
   // GFM extended web-autolink domain/path validation adds about 1.1/0.9 KiB
   // to the shared format chunk without moving public entry-point ceilings.
+  // GFM bare-email domain/tail validation adds about 0.4/0.3 KiB more.
   'all ESM runtime code': 1104 * kibibyte,
   'all CommonJS runtime code': 925 * kibibyte,
 });

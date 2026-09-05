@@ -143,8 +143,10 @@ allowed text boundary and only with a valid multi-segment domain. Trailing
 punctuation, excess closing parentheses, entity-looking suffixes, and `<` are
 kept outside the link according to the GFM path rules. A `www.` link receives
 an `http://` destination, and every result still passes Fountain's safe-URL
-policy. Bare email and `mailto:`/`xmpp:` extension forms remain a separate
-compatibility target.
+policy. Bare email autolinks accept GFM's local-part characters and require a
+multi-segment domain whose final character is alphanumeric; invalid plus,
+hyphen, underscore, or escaped tails fail closed instead of linking a prefix.
+The `mailto:`/`xmpp:` protocol forms remain a separate compatibility target.
 
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a

@@ -1009,6 +1009,20 @@ function extendedWebAutolinkToken(
   return label && isSafeURL(href) ? { href, title: '', label, end } : null;
 }
 
+function extendedEmailAutolinkToken(
+  value: string,
+  start: number,
+): (ReferenceDefinition & { readonly label: string; readonly end: number }) | null {
+  if (/[A-Za-z0-9._+-]/u.test(value[start - 1] ?? '')) return null;
+  const match = /^[A-Za-z0-9._+-]+@[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+/u.exec(value.slice(start));
+  if (!match || !/[A-Za-z0-9]$/u.test(match[0])) return null;
+  const end = start + match[0].length;
+  if (value[end] === '+' || value[end] === '\\') return null;
+  const label = decodeMarkdownText(match[0]);
+  const href = `mailto:${label}`;
+  return isSafeURL(href) ? { href, title: '', label, end } : null;
+}
+
 function inline(text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = []): Node[] {
   const result: Node[] = [];
   let plain = '';
@@ -1108,7 +1122,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       }
     }
     if (schema.marks.link && !inheritedMarks.some((mark) => mark.type.name === 'link')) {
-      const extended = extendedWebAutolinkToken(text, index);
+      const extended = extendedWebAutolinkToken(text, index) ?? extendedEmailAutolinkToken(text, index);
       if (extended) {
         flush();
         result.push(...textNodes(extended.label, schema, [

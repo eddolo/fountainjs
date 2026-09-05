@@ -382,6 +382,32 @@
         "marks": ["link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "gfm-extended-email-autolink",
+      "source": "Write to author+docs@mail.example.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Write to author+docs@mail.example.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["mailto:author+docs@mail.example"],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "gfm-invalid-email-domain-tail",
+      "source": "Keep author@mail.example_ literal.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Keep author@mail.example_ literal.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
     }
   ]
 }

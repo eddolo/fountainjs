@@ -145,6 +145,41 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('imports GFM extended email autolinks without accepting invalid domain tails', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      {
+        source: 'Write to author+docs@mail.example.',
+        links: [{ text: 'author+docs@mail.example', href: 'mailto:author+docs@mail.example' }],
+      },
+      {
+        source: "hello@mail+team.example is invalid, but hello+team@mail.example works.",
+        links: [{ text: 'hello+team@mail.example', href: 'mailto:hello+team@mail.example' }],
+      },
+      {
+        source: 'a.b-c_d@a.b / a.b-c_d@a.b.',
+        links: [
+          { text: 'a.b-c_d@a.b', href: 'mailto:a.b-c_d@a.b' },
+          { text: 'a.b-c_d@a.b', href: 'mailto:a.b-c_d@a.b' },
+        ],
+      },
+      { source: 'a.b-c_d@a.b- / a.b-c_d@a.b_', links: [] },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      const links: Array<{ text: string; href: unknown }> = [];
+      document.descendants((node) => {
+        const mark = node.marks.find((candidate) => candidate.type.name === 'link');
+        if (node.isText && mark) links.push({ text: node.textContent, href: mark.attrs.href });
+      });
+      expect(document.textContent, example.source).toBe(example.source);
+      expect(links, example.source).toEqual(example.links);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
   it('escapes literal character-reference text during canonical export', () => {
     const schema = new Schema(CoreSchemaSpec);
     const link = schema.marks.link.create({
