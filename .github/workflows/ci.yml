@@ -29,6 +29,7 @@ jobs:
       - run: bun scripts/smoke-server-html-runtime.mjs
       - run: deno run --allow-read scripts/smoke-server-html-runtime.mjs
       - run: pnpm test:package
+      - run: pnpm test:headless
       - run: pnpm test:budget
       - run: pnpm test:performance
       - run: pnpm typecheck
