@@ -430,6 +430,46 @@ inside `FountainBubbleMenu` and `FountainFloatingMenu`; the renderers are
 focus-aware, SSR-safe labelled toolbars with arrow/Home/End navigation and
 Escape dismissal. See [CONTEXTUAL_MENUS.md](CONTEXTUAL_MENUS.md).
 
+### First-class interactive widgets
+
+The optional `fountainjs-editor/widgets` entry defines renderer-independent
+application controls whose accepted state remains in validated document
+attributes. It exports:
+
+- `defineWidget(options)` for immutable node attributes, whole-widget
+  validation, block/inline/content shape, text/HTML projection, protected
+  identity attributes, and Tab/Enter/Escape policy;
+- `createWidgetExtension(definition, options?)` to contribute the node, named
+  commands, and definition service to any extension kit;
+- `createWidgetNode`, `insertWidget`, `getWidgetNode`, `updateWidget`,
+  `removeWidget`, and `exitWidget` as framework-neutral commands;
+- `validateWidgetAttributes` for non-mutating validation and
+  `createWidgetController` for a renderer or other host using a live path;
+- `WIDGET_TRANSACTION_META`, which identifies accepted insert/update
+  transactions without relying on DOM events.
+
+An accepted multi-attribute update is one `SetNodeAttrsStep` and one history
+item. Invalid, unchanged, read-only, stale-path, wrong-kind, unsafe-attribute,
+and protected-identity updates return `false` without changing the editor.
+JSON and Yjs keep the same portable state; the default bounded HTML projection
+round-trips it or fails explicitly rather than silently discarding data.
+
+`createDOMWidgetNodeView` and `createDOMWidgetExtension` live in the separate
+`fountainjs-editor/widgets/dom` entry. Their render context exposes immutable
+node/attribute state, validation and selection state, separate `controls` and
+optional model-owned `contentDOM` containers, the live path, and controller
+actions. A renderer may return `update` and `destroy` hooks. The adapter retains
+focused controls across accepted updates, excludes control events/mutations
+from editing, disables nested form controls in read-only editors, and applies
+the definition's composition-aware key-exit policy.
+
+`createReactWidgetNodeView` and `createReactWidgetExtension` live in
+`fountainjs-editor/react/widgets`; importing the neutral widget entry does not
+load React. Components receive the same attributes, validation, selection,
+editable state, path, and actions as DOM renderers. Read the complete examples,
+persistence rules, accessibility responsibilities, collaboration behavior, and
+limits in [WIDGETS.md](WIDGETS.md).
+
 ### Custom NodeViews
 
 A NodeView constructor receives the current model `node`, the owning

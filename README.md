@@ -820,15 +820,46 @@ The React entry is separate, so the framework-neutral root does not load React. 
 
 ### Build interactive nodes
 
-An extension node can provide a plain DOM `nodeView` for polls, diagrams,
-mentions, embeds, or any product-owned widget. FountainJS keeps its instance and
-live path across mapped edits, calls `update` when model data changes, mirrors
-semantic node selection, isolates embedded controls with `stopEvent`, restores
-unapproved DOM mutations, refreshes optional editable `contentDOM`, and calls
-`destroy` on replacement or removal. React products can adapt a component with
-`createReactNodeView` from `fountainjs-editor/react`; React remains absent from
-the package root. See the [NodeView API](docs/API.md#custom-nodeviews) and the
+Use the first-class widget contract for status fields, date pickers, polls,
+variables, ratings, form questions, and other application controls. Define
+portable validated attributes once, then choose a plain-DOM or React renderer:
+
+```ts
+import { defineWidget } from 'fountainjs-editor/widgets'
+import { createDOMWidgetExtension } from 'fountainjs-editor/widgets/dom'
+
+const status = defineWidget({
+  name: 'status_field',
+  attributes: {
+    value: { default: 'open', validate: value => value === 'open' || value === 'done' },
+  },
+})
+
+const extension = createDOMWidgetExtension(status, context => {
+  const button = document.createElement('button')
+  button.onclick = () => {
+    const current = context.controller.getAttributes()?.value
+    context.set('value', current === 'open' ? 'done' : 'open')
+  }
+  context.controls.append(button)
+  const render = next => { button.textContent = String(next.attributes.value) }
+  render(context)
+  return { update: render }
+})
+```
+
+Each accepted update is one validated transaction, so JSON, history,
+subscriptions, Yjs, read-only state, and mapped focus all observe the same
+document value. `fountainjs-editor/widgets` is DOM-free;
+`fountainjs-editor/widgets/dom` and `fountainjs-editor/react/widgets` are
+separate renderer adapters. See the [widget guide](docs/WIDGETS.md) and the
 [working plain-DOM demo](https://eddolo.github.io/fountainjs/demos/plain-dom-notes.html).
+
+The lower-level NodeView API remains available for unusual rendering contracts.
+It provides mapped reuse, optional editable `contentDOM`, semantic selection,
+event and mutation boundaries, and deterministic teardown. React products can
+adapt one with `createReactNodeView` from `fountainjs-editor/react`; React
+remains absent from the package root. See the [NodeView API](docs/API.md#custom-nodeviews).
 
 ## Included document capabilities
 

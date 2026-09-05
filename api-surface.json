@@ -285,6 +285,8 @@
     "dist/react/useNavigatorState.d.ts": "7df8641dccbbe06b898ac992aa2d0a6cd237fc3359afea7021f18c44abaaa84b",
     "dist/react/versions.d.cts": "642df853d35b8a7ab8d3ccf8949de695ea91ea11ec9b36f76cac14a63f4d2a67",
     "dist/react/versions.d.ts": "02ee72128e4f64b59a7232c272b5bbdfadd0dfd0dfea056b92950248ab0830ae",
+    "dist/react/widgets.d.cts": "e164bb84555900db104d584b23a819bfb1210630d54c40f9ba5a94013d119267",
+    "dist/react/widgets.d.ts": "fdb91825e42d2f511871af83a7bba123a05a03a0f8a4c83606b68ec33c04a562",
     "dist/ruby/index.d.cts": "200205ba11aa9fe6d67ace4ef16e0c8ce4030b6e360559b3c176e2b960440038",
     "dist/ruby/index.d.ts": "766ec019865038e28f252fc015e6be821b017d8fa01d2e76a0a2863026c34f6d",
     "dist/testing/index.d.cts": "689d7f68a26a0d92a8a0a1ba7fa03e2a950148af8e518e4e5fc93a3b63ba061d",
@@ -323,6 +325,10 @@
     "dist/view/view.d.ts": "5c996776313c5348ab864aaba59101b6df01c446f24f104d994cc42be29c220b",
     "dist/view/web-component.d.cts": "da7bf86f7fda674848b8e38055f3a6fe28976d7c2bdc3f9c9cbd84870bc01f9a",
     "dist/view/web-component.d.ts": "30abc2260c753611e92c8f2941cfe11dea3b2c7fc90a8b97b5cd74c4326299a3",
+    "dist/widgets/dom.d.cts": "ed0548edf220b85efe19021c58cb24aa344bc5a0852b94cb6cb0d7c31707d8aa",
+    "dist/widgets/dom.d.ts": "032cb14a593792c7c2480bd0fecfc8318262aef3ab85e057af4656010b7a3e7c",
+    "dist/widgets/index.d.cts": "e2a87fb8886094ae3f2ab8cc828bd997c157a86f67680dd7285eef4b8688d7dd",
+    "dist/widgets/index.d.ts": "80a41c66c3262db3c944d4666a9d10753b8165a23b53a002471e0d2c6608c412",
     "dist/yjs/index.d.cts": "c601a27a9efd10db52ad3eeb12c3404da4713b57a34cb7f97a97314a019f3f44",
     "dist/yjs/index.d.ts": "d6f9d852cff24d4a7c0cdb1d548f5c390043087c8b3c34e06b36f87bcd489acd"
   }

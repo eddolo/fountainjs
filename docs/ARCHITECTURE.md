@@ -32,7 +32,7 @@ Host application
                         JSON / Markdown / HTML / text
 ```
 
-`src/core` imports no React code. `src/view` depends on core. `src/react` depends on core and view. `src/ai` depends on core editor contracts, but core does not depend on AI.
+`src/core` imports no React code. `src/view` depends on core. `src/react` depends on core and view. `src/ai` depends on core editor contracts, but core does not depend on AI. `src/widgets/index.ts` defines portable widget state and commands over core/editor contracts; `src/widgets/dom.ts` adds the browser lifecycle; `src/react/widgets.tsx` adds only the React renderer. Neither renderer is pulled into the neutral widget entry.
 
 ## Document model
 
@@ -347,6 +347,27 @@ part of document JSON. A host must explicitly inject persistence; the React
 picker and any custom UI consume the same immutable plugin state.
 
 DOM output specs accept a tag, safe attributes, nested specs, and one `0` content hole. The renderer rejects unsafe tag names, event attributes, and unsupported URL schemes.
+
+### First-class widgets
+
+`src/widgets/index.ts` builds a product-control contract above schema nodes and
+transactions without adding a renderer to the engine. `defineWidget` snapshots
+attributes, validation, identity protection, key-exit policy, and format
+projection into one immutable definition. `createWidgetExtension` contributes
+that definition through the ordinary extension system. Creation, insertion,
+updates, removal, and model-selection exits are regular commands; an accepted
+multi-attribute update remains one step and one history item. Yjs therefore
+synchronizes widget values through the existing node-attribute representation
+instead of a widget-specific wire protocol.
+
+`src/widgets/dom.ts` owns elements, event isolation, form-control read-only
+state, focus restoration, and Tab/Enter/Escape handling. It builds on the same
+mapped NodeView lifecycle described below. `src/react/widgets.tsx` mounts a
+React component into the DOM adapter's controls container and leaves optional
+model children in a separate `contentDOM`. This direction is intentional:
+portable definitions never import `window`, `document`, browser selection,
+events, or React, while renderer adapters may depend inward on the neutral
+contract. See [WIDGETS.md](WIDGETS.md).
 
 ### NodeViews
 
@@ -846,9 +867,10 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 9/8 KiB for stable node
-identities, 23/19 KiB for the isolated page foundation, 54/45 KiB for browser
+identities, 9/8 KiB for neutral widgets, 5/5 KiB for their DOM adapter, 2/2 KiB
+for their React adapter, 23/19 KiB for the isolated page foundation, 54/45 KiB for browser
 measurement/reflow and the guarded editable page surface, 12/10 KiB for
-read-only page preview/print projection, 63 KiB for CSS, and 761/640 KiB for all
+read-only page preview/print projection, 63 KiB for CSS, and 779/656 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -877,6 +899,9 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
 | `src/node-ids/` | Optional DOM-free stable identity policy, diagnostics, normalization, immutable lookup index, and editor commands |
+| `src/widgets/index.ts` | DOM-free widget definition, validation, commands, controller, transaction metadata, and extension composition |
+| `src/widgets/dom.ts` | Plain-DOM widget NodeView lifecycle, controls/content boundary, focus, read-only, and keyboard-exit policy |
+| `src/react/widgets.tsx` | Optional React renderer over the same portable widget/controller contract |
 | `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block/paragraph/list/table editable page shells, canonical editable page-intent rails with sanitized per-page projections, and read-only print projection entries |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |

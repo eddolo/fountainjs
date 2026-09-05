@@ -61,6 +61,15 @@
       "node-ids": [
         "dist/node-ids/index.d.ts"
       ],
+      "widgets": [
+        "dist/widgets/index.d.ts"
+      ],
+      "widgets/dom": [
+        "dist/widgets/dom.d.ts"
+      ],
+      "react/widgets": [
+        "dist/react/widgets.d.ts"
+      ],
       "pages": [
         "dist/pages/index.d.ts"
       ],
@@ -241,6 +250,36 @@
       "require": {
         "types": "./dist/node-ids/index.d.cts",
         "default": "./dist/node-ids.cjs"
+      }
+    },
+    "./widgets": {
+      "import": {
+        "types": "./dist/widgets/index.d.ts",
+        "default": "./dist/widgets.js"
+      },
+      "require": {
+        "types": "./dist/widgets/index.d.cts",
+        "default": "./dist/widgets.cjs"
+      }
+    },
+    "./widgets/dom": {
+      "import": {
+        "types": "./dist/widgets/dom.d.ts",
+        "default": "./dist/widgets-dom.js"
+      },
+      "require": {
+        "types": "./dist/widgets/dom.d.cts",
+        "default": "./dist/widgets-dom.cjs"
+      }
+    },
+    "./react/widgets": {
+      "import": {
+        "types": "./dist/react/widgets.d.ts",
+        "default": "./dist/react-widgets.js"
+      },
+      "require": {
+        "types": "./dist/react/widgets.d.cts",
+        "default": "./dist/react-widgets.cjs"
       }
     },
     "./pages": {

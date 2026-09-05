@@ -189,6 +189,13 @@ export class EditorView {
 
   private render(document: Node, decorations: DecorationSet, transaction?: Transaction, allowReuse = true): void {
     const previous = this.nodeViews;
+    const activeElement = this.dom.ownerDocument.activeElement;
+    const focusedNodeView = activeElement instanceof HTMLElement
+      ? previous.find((entry) => (
+        entry.nodeView.dom.contains(activeElement)
+        && !entry.nodeView.contentDOM?.contains(activeElement)
+      ))
+      : undefined;
     const reusableNodeViews = allowReuse ? this.reusableNodeViewMap(document, transaction) : new Map<string, MountedNodeView>();
     this.mutationObserver?.disconnect();
     const mounted: MountedNodeView[] = [];
@@ -226,6 +233,16 @@ export class EditorView {
       entry.nodeView.destroy?.();
     });
     this.nodeViews = mounted;
+    if (
+      focusedNodeView
+      && retained.has(focusedNodeView.nodeView)
+      && activeElement instanceof HTMLElement
+      && activeElement.isConnected
+      && this.dom.ownerDocument.activeElement !== activeElement
+    ) {
+      try { activeElement.focus({ preventScroll: true }); }
+      catch { activeElement.focus(); }
+    }
     this.blockHandles?.refresh(document, this.editor.state.selection);
     this.mutationObserver?.takeRecords();
     this.observeMutations();
@@ -272,6 +289,10 @@ export class EditorView {
           const from = transaction.mapping.map(range.from, 1);
           const to = transaction.mapping.map(range.to, -1);
           path = this.findNodePath(document, entry.node.type.name, from, to);
+          // Attribute/history steps may describe a same-size node replacement
+          // without a useful positional range. In that case the NodeView's own
+          // update hook remains the authority on whether same-path reuse is safe.
+          if (!path && samePathNode.type === entry.node.type) path = entry.path;
         } else {
           const candidate = getNodeAtPath(document, path);
           if (candidate.type !== entry.node.type) path = null;

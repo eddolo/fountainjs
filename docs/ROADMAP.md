@@ -130,19 +130,20 @@ certify the public package and rendered demo.
 
 ## Active now: first-class interactive widget contract
 
-The next milestone turns the already-delivered low-level NodeView lifecycle into
-a reusable product primitive. The contract must keep widget values in validated
-portable document attributes rather than private framework state; make each
-accepted change one undoable transaction that collaboration can reproduce; and
-standardize focus/cursor handoff, Tab/Enter/Escape policy, read-only rendering,
-teardown, and validation. It must remain framework-neutral at the state boundary,
-with both plain-DOM and React adapters and public working examples.
+The first-class widget implementation is complete locally and awaiting release
+certification. A DOM-free definition/controller keeps validated values in
+portable document attributes; accepted changes are one undoable transaction;
+generic Yjs collaboration reproduces them; and explicit focus/cursor handoff,
+Tab/Enter/Escape policy, read-only behavior, teardown, and validation are shared
+by isolated plain-DOM and React adapters. Public working examples exercise both
+renderers. It remains `Partial` in the parity ledger until the complete package,
+browser, and deployed-site gates are green.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
+| 1 | First-class interactive widgets | Implemented locally; release certification pending | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 2 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |
 | 3 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
 | 4 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |

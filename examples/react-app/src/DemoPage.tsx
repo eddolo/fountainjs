@@ -16,7 +16,6 @@ import {
   addTableRow,
   composeExtensions,
   createEditor,
-  defineExtension,
   insertList,
   insertMathBlock,
   insertTable,
@@ -24,7 +23,6 @@ import {
   registerFountainElement,
   selectAll,
   selectGap,
-  setNodeAttributes,
   setTextAlignment,
   topLevelPosition,
   toggleMark,
@@ -35,48 +33,66 @@ import {
   type Node,
 } from 'fountainjs-editor';
 import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
+import { createReactWidgetExtension, type ReactWidgetProps } from 'fountainjs-editor/react/widgets';
 import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
+import { defineWidget } from 'fountainjs-editor/widgets';
+import { createDOMWidgetExtension } from 'fountainjs-editor/widgets/dom';
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
 import { SitePageLink } from './SitePageLink';
 
 type OutputFormat = 'json' | 'markdown' | 'html';
 
-class DemoStatusNodeView {
-  dom = document.createElement('button');
-  constructor(node: Node, view: unknown, getPath: () => number[]) {
-    this.dom.type = 'button';
-    this.dom.className = 'demo-status-node';
-    this.dom.addEventListener('click', () => {
-      const editor = (view as EditorView).editor;
-      const path = getPath();
-      let current = editor.state.doc;
-      for (const index of path) current = current.child(index);
-      setNodeAttributes(editor, path, { status: current.attrs.status === 'Resolved' ? 'Investigating' : 'Resolved' });
-    });
-    this.update(node);
-  }
-  update(node: Node): boolean {
-    this.dom.textContent = `Incident status · ${String(node.attrs.status)}`;
-    return true;
-  }
-  selectNode(): void { this.dom.dataset.selected = 'true'; }
-  deselectNode(): void { delete this.dom.dataset.selected; }
-  stopEvent(event: Event): boolean {
-    return event.target instanceof globalThis.Node && this.dom.contains(event.target);
-  }
-}
-
-const demoStatusExtension = defineExtension({
-  name: 'demo-status-node',
-  nodes: {
-    status_panel: {
-      group: 'block',
-      atom: true,
-      attrs: { status: { default: 'Investigating', validate: (value) => ['Investigating', 'Resolved'].includes(String(value)) } },
-      nodeView: DemoStatusNodeView,
-    },
+const demoStatusWidget = defineWidget({
+  name: 'status_panel',
+  label: 'Incident status',
+  attributes: {
+    status: { default: 'Investigating', validate: (value) => ['Investigating', 'Resolved'].includes(String(value)) },
   },
 });
+const demoStatusExtension = createDOMWidgetExtension(demoStatusWidget, (context) => {
+  const button = context.dom.ownerDocument.createElement('button');
+  button.type = 'button';
+  button.className = 'demo-status-node';
+  const render = (status: unknown) => { button.textContent = `Incident status · ${String(status)}`; };
+  const onClick = () => {
+    const current = context.controller.getAttributes()?.status;
+    context.set('status', current === 'Resolved' ? 'Investigating' : 'Resolved');
+  };
+  button.addEventListener('click', onClick);
+  context.controls.appendChild(button);
+  render(context.attributes.status);
+  return {
+    update(next) { render(next.attributes.status); },
+    destroy() { button.removeEventListener('click', onClick); },
+  };
+}, { className: 'demo-status-widget', controlsClassName: 'demo-status-controls' });
+
+const demoPriorityWidget = defineWidget({
+  name: 'review_priority',
+  label: 'Review priority',
+  attributes: {
+    priority: { default: 'Normal', validate: (value) => ['Low', 'Normal', 'High'].includes(String(value)) },
+  },
+});
+function DemoPriorityWidget({ attributes, editable, selected, set }: ReactWidgetProps) {
+  return <label className="demo-priority-control">
+    <span>Review priority{selected ? ' · selected' : ''}</span>
+    <select
+      aria-label="Review priority"
+      disabled={!editable}
+      value={String(attributes.priority)}
+      onChange={(event) => set('priority', event.target.value)}
+    >
+      <option>Low</option><option>Normal</option><option>High</option>
+    </select>
+  </label>;
+}
+const demoPriorityExtension = createReactWidgetExtension(
+  demoPriorityWidget,
+  DemoPriorityWidget,
+  { className: 'demo-priority-widget' },
+);
+
 const statusDemoKit = composeExtensions([...StarterKit.extensions, demoStatusExtension]);
 const docsDemoKit = composeExtensions([
   ...StarterKit.extensions,
@@ -84,7 +100,11 @@ const docsDemoKit = composeExtensions([
   MathExtension,
   LeanExtension,
 ]);
-const reactDemoKit = composeExtensions([...StarterKit.extensions, ClipboardHistoryExtension]);
+const reactDemoKit = composeExtensions([
+  ...StarterKit.extensions,
+  ClipboardHistoryExtension,
+  demoPriorityExtension,
+]);
 const headlessDemoKit = docsDemoKit;
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {

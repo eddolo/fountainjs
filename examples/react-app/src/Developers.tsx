@@ -222,35 +222,50 @@ const revisionPlugin = new Plugin({
   },
 })`;
 
-const nodeViewExample = `class StatusNodeView {
-  dom = document.createElement('button')
-
-  constructor(node, view, getPath) {
-    this.render(node)
-    this.dom.onclick = () => setNodeAttributes(
-      view.editor,
-      getPath(), // live after inserts, moves, and deletes before this node
-      { status: 'resolved' },
-    )
-  }
-
-  update(node) { this.render(node); return true }
-  selectNode() { this.dom.dataset.selected = 'true' }
-  deselectNode() { delete this.dom.dataset.selected }
-  stopEvent(event) { return this.dom.contains(event.target) }
-  ignoreMutation(record) { return record.attributeName === 'aria-expanded' }
-  destroy() { this.unsubscribe?.() }
-}
-
-const statusExtension = defineExtension({
-  name: 'status-node',
-  nodes: {
-    status_panel: { group: 'block', atom: true, nodeView: StatusNodeView },
+const widgetExample = `// Portable definition: safe to import in Node or another renderer.
+const statusWidget = defineWidget({
+  name: 'status_field',
+  attributes: {
+    status: {
+      default: 'open',
+      validate: value => value === 'open' || value === 'resolved',
+    },
+    owner: { default: '' },
   },
+  validate: ({ attributes }) =>
+    attributes.status !== 'resolved' || attributes.owner
+      ? true
+      : 'Resolved work requires an owner.',
+  keyPolicy: { Tab: 'cycle', Enter: 'allow', Escape: 'select' },
 })
 
-// React stays optional and is imported only from fountainjs-editor/react:
-const ReactStatusView = createReactNodeView(StatusComponent)`;
+// React is an optional renderer; it is not a second state store.
+const statusExtension = createReactWidgetExtension(
+  statusWidget,
+  ({ attributes, editable, validation, set }) => (
+    <label>
+      Status
+      <select
+        value={String(attributes.status)}
+        disabled={!editable}
+        aria-invalid={!validation.valid}
+        onChange={event => set('status', event.target.value)}
+      >
+        <option value="open">Open</option>
+        <option value="resolved">Resolved</option>
+      </select>
+    </label>
+  ),
+)
+
+const kit = composeExtensions([
+  CoreExtension,
+  HistoryExtension,
+  statusExtension,
+])
+
+// Plain DOM uses createDOMWidgetExtension(statusWidget, render).
+// A lower-level custom NodeView remains available as the escape hatch.`;
 
 const surfacesExample = `// Plain DOM
 new EditorView(document.querySelector('#editor'), editor)
@@ -637,10 +652,11 @@ function Developers() {
             <Code>{blockReorderingExample}</Code>
             <p>Ctrl/Cmd+A selects the document. Clicking an atomic node or pressing Left/Right at its neighboring text boundary creates a node selection. Shift-click extends a table-cell rectangle; Alt+Shift+Arrow does the same from the keyboard. Public selection commands expose the identical behavior to plain DOM, Web Components, React, or another adapter.</p>
             <p>Rendering walks the document and asks each node/mark for a safe DOM output specification. Text wrappers carry document paths for selection recovery. URL attributes and tag names pass safety checks before reaching the DOM.</p>
-            <h3>Interactive NodeViews keep identity without owning the document</h3>
-            <p>A custom NodeView owns its surrounding UI while FountainJS still owns model content. Its path accessor follows transaction mapping; <code>update</code> chooses reuse or recreation; selection hooks mirror node selection; <code>stopEvent</code> protects embedded controls; and <code>ignoreMutation</code> identifies intentional local UI state. Unapproved DOM changes are restored from the document, and <code>destroy</code> releases resources exactly when the instance leaves the view.</p>
-            <Code>{nodeViewExample}</Code>
-            <p>For nodes with editable children, return a <code>contentDOM</code> element and leave its descendants to FountainJS. The React adapter uses separate sibling containers for React-owned controls and model-owned content, so neither renderer rewrites the other’s subtree. The live <a href="./demos/plain-dom-notes.html">plain-DOM demo</a> exercises a mapped interactive status node.</p>
+            <h3>Interactive widgets are portable document state, not component state</h3>
+            <p><code>defineWidget</code> declares validated attributes, optional cross-field rules, block or inline structure, protected identity, format projections, and focus-exit keys without importing the DOM or React. <code>createWidgetExtension</code> adds the node and framework-neutral commands. Every accepted control update is one normal transaction, so undo, subscriptions, JSON, read-only policy, selection mapping, and Yjs all observe the same value.</p>
+            <Code>{widgetExample}</Code>
+            <p>The isolated <code>widgets/dom</code> and <code>react/widgets</code> entries render that same definition. They preserve a focused control across accepted updates and undo, separate renderer-owned controls from optional Fountain-owned <code>contentDOM</code> children, disable controls when read-only, implement explicit composition-aware Tab/Enter/Escape handoff, and tear down exactly once. The live <a href="./demos/plain-dom-notes.html">plain-DOM widget demo</a> and <a href="./demos/react-article.html">React widget demo</a> exercise both surfaces. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/WIDGETS.md">complete widget contract</a>.</p>
+            <p>Raw NodeViews remain the advanced escape hatch. Their live path follows transaction mapping; <code>update</code> chooses reuse or recreation; selection hooks mirror node selection; <code>stopEvent</code> and <code>ignoreMutation</code> define the product UI boundary; and <code>destroy</code> releases resources. For editable children, a NodeView returns a <code>contentDOM</code> whose descendants remain Fountain-owned.</p>
             <div className="dev-callout dev-callout--mint"><b>Why controlled input?</b><span>Commands—not browser-generated HTML—decide the resulting document. That keeps undo, schema validation, portable output, cross-block selection, and multiple UI surfaces consistent.</span></div>
           </section>
 
@@ -769,6 +785,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/migrations"><code>src/migrations/</code><span>DOM-independent document envelopes, bounded portable input, and deterministic sequential migrations.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/node-ids"><code>src/node-ids/</code><span>DOM-independent identity policy, deterministic repair, immutable lookup, editor commands, and JSON normalization.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/NODE_IDS.md"><code>docs/NODE_IDS.md</code><span>Composition, ID policy, lookup, history, mixed-client collaboration, migration, performance, and limits.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/widgets"><code>src/widgets/</code><span>Portable widget definitions and commands plus isolated DOM lifecycle, focus, keyboard, and read-only behavior.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/WIDGETS.md"><code>docs/WIDGETS.md</code><span>Widget state, validation, renderers, history, collaboration, accessibility, formats, and current limits.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/EXTENSIONS.md"><code>docs/EXTENSIONS.md</code><span>Scaffold, manifests, requirements, fixtures, doctor, compatibility, migrations, and publishing contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/MIGRATIONS.md"><code>docs/MIGRATIONS.md</code><span>Document versions, extension helpers, schema validation, and safe deployment order.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/RELEASES.md"><code>docs/RELEASES.md</code><span>API stability, deprecation, evidence, trusted publishing, rollback, and security support.</span></a>

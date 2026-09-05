@@ -4,6 +4,9 @@
 
 ### Fixed
 
+- Focused controls inside a retained custom NodeView now keep DOM identity and
+  focus across model updates and undo/redo; compatible same-path history
+  changes may be accepted by the NodeView's own `update` contract.
 - Semantic HTML import no longer turns indentation-only whitespace between
   nested blocks into empty paragraphs.
 - The ESM React entry now keeps `react-dom/client` external and has package
@@ -12,6 +15,16 @@
 
 ### Added
 
+- First-class portable interactive widgets through isolated
+  `fountainjs-editor/widgets`, `fountainjs-editor/widgets/dom`, and
+  `fountainjs-editor/react/widgets` entries: immutable definitions; attribute
+  and cross-field validation; block/inline/content shapes; protected identity;
+  insert/update/remove/selection commands; live-path controllers; transaction
+  metadata; one-step history; generic Yjs synchronization; safe bounded HTML
+  state; explicit Tab/Enter/Escape focus policy; read-only and accessibility
+  state; separate controls/contentDOM ownership; deterministic teardown; plain
+  DOM and React renderers; package/API/bundle gates; documentation; unit tests;
+  and two package-backed public demos.
 - An isolated `fountainjs-editor/node-ids` module with configurable portable
   `nodeId` assignment; injected and deterministic generation; immutable O(1)
   lookup; fail-closed duplicate diagnostics; lookup, update, selection, pure

@@ -3670,19 +3670,43 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   await expect(paragraph).toContainText('the real npm package, not a picture');
 });
 
-test('runs the public plain-DOM custom NodeView demo', async ({ page }) => {
+test('runs the public plain-DOM first-class widget demo', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/demos/plain-dom-notes.html');
   await expect(page.getByRole('heading', { name: 'Knowledge-base notes' })).toBeVisible();
-  await expect(page.getByText('Custom interactive NodeView', { exact: true })).toBeVisible();
+  await expect(page.getByText('First-class portable widget', { exact: true })).toBeVisible();
 
   const status = page.getByRole('button', { name: 'Incident status · Investigating' });
   await expect(status).toBeVisible();
   await status.click();
   await expect(page.getByRole('button', { name: 'Incident status · Resolved' })).toBeVisible();
   await expect(page.locator('.demo-output pre')).toContainText('"status": "Resolved"');
+  await page.locator('.demo-controls').getByRole('button', { name: 'Undo' }).click();
+  const restored = page.getByRole('button', { name: 'Incident status · Investigating' });
+  await expect(restored).toBeVisible();
+  await restored.focus();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.fountain-editor')).toBeFocused();
+  expect(errors).toEqual([]);
+});
+
+test('runs the public React first-class widget demo without losing control focus', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/demos/react-article.html');
+  await expect(page.getByText('React portable widget', { exact: true })).toBeVisible();
+
+  const priority = page.getByRole('combobox', { name: 'Review priority' });
+  await expect(priority).toHaveValue('Normal');
+  await priority.focus();
+  await priority.selectOption('High');
+  await expect(priority).toBeFocused();
+  await expect(page.locator('.demo-output pre')).toContainText('"priority": "High"');
+  await page.locator('.demo-controls').getByRole('button', { name: 'Undo' }).click();
+  await expect(priority).toHaveValue('Normal');
   expect(errors).toEqual([]);
 });
 

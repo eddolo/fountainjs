@@ -43,24 +43,42 @@ export const demoDefinitions: readonly DemoDefinition[] = [
     host: 'React',
     surface: 'React hooks + composer',
     runtime: 'react',
-    summary: 'A long-form publishing surface with rich marks, headings, quotes, lists, links, history, and live portable output.',
+    summary: 'A long-form publishing surface with rich content, history, a React-rendered portable workflow control, and live output.',
     boundary: 'React owns layout and controls; FountainJS owns document state and editing.',
-    capabilities: ['Text, block, and document selection', 'Rich formatting', 'Lists and quotes', 'Live JSON/HTML/Markdown'],
+    capabilities: ['Text, block, and document selection', 'Rich formatting', 'React portable widget', 'Live JSON/HTML/Markdown'],
     content: doc(
       heading(1, 'The city designed around shade'),
       paragraph(text('A newsroom can compose '), text('structured stories', [{ type: 'strong' }]), text(' without making React the document model. Select across these paragraphs and use the full toolbar.')),
+      { type: 'review_priority', attrs: { priority: 'Normal' } },
       heading(2, 'Reporting notes become publishable structure'),
       paragraph(text('Links, highlights, colour, semantic headings, images, tables, and custom blocks all remain typed content.')),
       { type: 'blockquote', content: [paragraph(text('One source of truth can feed the website, app, newsletter, and archive.'))] },
       { type: 'bullet_list', content: [listItem('Edit with the supplied React composer'), listItem('Persist lossless JSON'), listItem('Publish through a format module')] },
     ),
-    code: `import { StarterKit } from 'fountainjs-editor'
+    code: `import { StarterKit, composeExtensions } from 'fountainjs-editor'
 import { FountainComposer, useFountain } from 'fountainjs-editor/react'
+import { createReactWidgetExtension } from 'fountainjs-editor/react/widgets'
+import { defineWidget } from 'fountainjs-editor/widgets'
+
+const priority = defineWidget({
+  name: 'review_priority',
+  attributes: {
+    priority: { default: 'Normal', validate: value => ['Low', 'Normal', 'High'].includes(value) },
+  },
+})
+const priorityExtension = createReactWidgetExtension(priority, ({ attributes, set }) => (
+  <label>Review priority
+    <select value={attributes.priority} onChange={event => set('priority', event.target.value)}>
+      <option>Low</option><option>Normal</option><option>High</option>
+    </select>
+  </label>
+))
+const kit = composeExtensions([...StarterKit.extensions, priorityExtension])
 
 function ArticleEditor({ value, save }) {
   const editor = useFountain({
-    schema: StarterKit.schema,
-    plugins: StarterKit.plugins,
+    schema: kit.schema,
+    plugins: kit.plugins,
     content: value,
     onUpdate: state => save(state.doc.toJSON()),
   })
@@ -78,7 +96,7 @@ function ArticleEditor({ value, save }) {
     runtime: 'dom',
     summary: 'A dependency-free browser integration for teams that do not want a UI framework around the editor.',
     boundary: 'An HTMLElement mount, commands, and one subscription are the complete integration.',
-    capabilities: ['Custom interactive NodeView', 'Keyboard and IME input', 'Mapped lifecycle updates', 'Host-owned controls'],
+    capabilities: ['First-class portable widget', 'Validated undoable controls', 'Tab/Escape cursor handoff', 'Focus-safe mapped lifecycle'],
     content: doc(
       heading(1, 'Incident response notes'),
       paragraph(text('Keep operational knowledge in a portable tree, not framework component state.')),
@@ -89,30 +107,33 @@ function ArticleEditor({ value, save }) {
     ),
     code: `import {
   CoreExtension, EditorView, HistoryExtension,
-  composeExtensions, createEditor, defineExtension, setNodeAttributes, toggleMark,
+  composeExtensions, createEditor, toggleMark,
 } from 'fountainjs-editor'
+import { defineWidget } from 'fountainjs-editor/widgets'
+import { createDOMWidgetExtension } from 'fountainjs-editor/widgets/dom'
 
-class StatusView {
-  dom = document.createElement('button')
-  constructor(node, view, getPath) {
-    this.update(node)
-    this.dom.onclick = () => setNodeAttributes(view.editor, getPath(), { status: 'Resolved' })
-  }
-  update(node) { this.dom.textContent = node.attrs.status; return true }
-  stopEvent(event) { return this.dom.contains(event.target) }
-}
-
-const status = defineExtension({
-  name: 'status',
-  nodes: {
-    status_panel: {
-      group: 'block', atom: true,
-      attrs: { status: { default: 'Investigating' } },
-      nodeView: StatusView,
+const status = defineWidget({
+  name: 'status_panel',
+  attributes: {
+    status: {
+      default: 'Investigating',
+      validate: value => ['Investigating', 'Resolved'].includes(value),
     },
   },
 })
-const kit = composeExtensions([CoreExtension, HistoryExtension, status])
+
+const statusExtension = createDOMWidgetExtension(status, context => {
+  const button = document.createElement('button')
+  const render = next => { button.textContent = \`Incident status · \${next.attributes.status}\` }
+  button.onclick = () => context.set(
+    'status',
+    context.controller.getAttributes().status === 'Resolved' ? 'Investigating' : 'Resolved',
+  )
+  context.controls.append(button)
+  render(context)
+  return { update: render }
+})
+const kit = composeExtensions([CoreExtension, HistoryExtension, statusExtension])
 
 const editor = createEditor({
   schema: kit.schema,
