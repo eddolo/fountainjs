@@ -116,11 +116,12 @@ test('preserves split-paragraph selection and composition through mobile page fa
   await expect(editor).toHaveText(`${initialText.slice(0, boundary)}携${initialText.slice(boundary)}`);
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
   await expect(editor).toHaveText(initialText);
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(gap).toBeAttached();
 
-  const selected = await editor.evaluate((element) => {
-    const pageGap = element.querySelector<HTMLElement>('[data-fountain-editable-page-break]');
-    const wrapper = pageGap?.closest<HTMLElement>('[data-fountain-text-path]');
-    if (!pageGap || !wrapper) throw new Error('Expected a page gap inside a text-path wrapper.');
+  const selected = await gap.evaluate((pageGap) => {
+    const wrapper = pageGap.closest<HTMLElement>('[data-fountain-text-path]');
+    if (!wrapper) throw new Error('Expected a page gap inside a text-path wrapper.');
     const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
       acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
         ? NodeFilter.FILTER_REJECT
