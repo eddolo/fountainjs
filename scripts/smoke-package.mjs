@@ -40,6 +40,7 @@ const testingNames = ['checkExtensionConformance', 'assertExtensionConformance',
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
 const nodeIdNames = ['StableNodeIdsExtension', 'StableNodeIdIndex', 'createStableNodeIdsExtension', 'createStableNodeIdIndex', 'normalizeStableNodeIds', 'normalizeStableNodeIdJSON', 'getNodeById', 'updateNodeById', 'selectNodeById'];
 const structuredAttributeNames = ['STRUCTURED_ATTRIBUTE_TRANSACTION_META', 'defineStructuredAttribute', 'validateStructuredAttributeValue', 'getStructuredAttribute', 'setStructuredAttribute', 'deleteStructuredAttribute', 'insertStructuredAttributeItems', 'deleteStructuredAttributeItems'];
+const serverHTMLNames = ['ServerHTMLImporter', 'HTMLImportLimitError'];
 const widgetNames = ['WIDGET_TRANSACTION_META', 'DEFAULT_WIDGET_KEY_POLICY', 'defineWidget', 'validateWidgetAttributes', 'createWidgetNode', 'insertWidget', 'getWidgetNode', 'updateWidget', 'removeWidget', 'exitWidget', 'createWidgetController', 'createWidgetExtension'];
 const widgetDOMNames = ['createDOMWidgetNodeView', 'createDOMWidgetExtension'];
 const reactWidgetNames = ['createReactWidgetNodeView', 'createReactWidgetExtension'];
@@ -47,7 +48,8 @@ const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometr
 const pagesDOMNames = ['measureDOMPageFlow', 'layoutDOMPages', 'projectDOMPageContent', 'DOMPageLayoutController', 'createDOMPageLayoutController', 'DOMEditablePageSurface', 'DOMEditablePageController', 'createDOMEditablePageController'];
 const pagesPreviewNames = ['renderDOMPagePreview'];
 
-assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');
+const esmCore = await import('fountainjs-editor');
+assertExports(esmCore, coreNames, 'ESM package root');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');
@@ -67,13 +69,18 @@ assertExports(await import('fountainjs-editor/testing'), testingNames, 'ESM exte
 assertExports(await import('fountainjs-editor/migrations'), migrationNames, 'ESM document migrations entry');
 assertExports(await import('fountainjs-editor/node-ids'), nodeIdNames, 'ESM stable node IDs entry');
 assertExports(await import('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'ESM structured attributes entry');
+const esmServerHTML = await import('fountainjs-editor/html/server');
+assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
+const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
+if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
 assertExports(await import('fountainjs-editor/widgets'), widgetNames, 'ESM widgets entry');
 assertExports(await import('fountainjs-editor/widgets/dom'), widgetDOMNames, 'ESM DOM widgets entry');
 assertExports(await import('fountainjs-editor/react/widgets'), reactWidgetNames, 'ESM React widgets entry');
 assertExports(await import('fountainjs-editor/pages'), pagesNames, 'ESM pages entry');
 assertExports(await import('fountainjs-editor/pages/dom'), pagesDOMNames, 'ESM DOM page measurement entry');
 assertExports(await import('fountainjs-editor/pages/preview'), pagesPreviewNames, 'ESM page preview entry');
-assertExports(require('fountainjs-editor'), coreNames, 'CommonJS package root');
+const cjsCore = require('fountainjs-editor');
+assertExports(cjsCore, coreNames, 'CommonJS package root');
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
 assertExports(cjsEmojiData, emojiDataNames, 'CommonJS Unicode emoji data entry');
@@ -92,6 +99,10 @@ assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS exte
 assertExports(require('fountainjs-editor/migrations'), migrationNames, 'CommonJS document migrations entry');
 assertExports(require('fountainjs-editor/node-ids'), nodeIdNames, 'CommonJS stable node IDs entry');
 assertExports(require('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'CommonJS structured attributes entry');
+const cjsServerHTML = require('fountainjs-editor/html/server');
+assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
+const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
+if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');
 assertExports(require('fountainjs-editor/widgets'), widgetNames, 'CommonJS widgets entry');
 assertExports(require('fountainjs-editor/widgets/dom'), widgetDOMNames, 'CommonJS DOM widgets entry');
 assertExports(require('fountainjs-editor/react/widgets'), reactWidgetNames, 'CommonJS React widgets entry');
@@ -133,4 +144,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, structured attributes, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

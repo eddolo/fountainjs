@@ -23,13 +23,17 @@ context extraction without persisting view DOM. Math nodes use it to expose TeX;
 custom atoms should return the text users would expect search or assistive tools
 to read.
 
-`NodeSpec` and `MarkSpec` may provide ordered `parseDOM` rules for safe HTML
-import. Each `DOMParseRule` has a CSS `tag` selector, optional numeric
+`NodeSpec` and `MarkSpec` may provide ordered `parseHTML` rules for safe,
+browser/server HTML import. Each `HTMLParseRule` has a CSS `tag` selector, optional numeric
 `priority`, optional `getAttrs(element)`, and—for nodes—an optional
 `contentElement` selector. `getAttrs` returns portable attributes, `null` for
 defaults, or `false` to decline the match. Selectors and callbacks are contained
 at the format boundary; created values pass normal attribute, node-invariant,
-content-expression, and full-document validation. `toDOM` is the matching
+content-expression, and full-document validation. `HTMLParseElement` exposes
+only tag/text/attribute/dataset/inline-style data. Browser-only `parseDOM`
+rules and `DOMParseRule.getAttrs(HTMLElement)` remain compatible with the root
+`HTMLImporter`; a server import reports a matching callback unless a portable
+rule is supplied. `toDOM` is the matching
 export contract for both nodes and marks. A node serializer may read the
 optional `{ document, path }` context when presentation depends on document
 order. Set `contextualDOM: true` for such a node so top-level reconciliation
@@ -1340,6 +1344,15 @@ Hosts can add their own labelled controls around `selectNode`, `selectGap`, or
 ## Import and export
 
 The root package exports `HTMLImporter`, `MarkdownImporter`, `HTMLExporter`, `MarkdownExporter`, `JSONExporter`, and `TextExporter`. Importers receive a `Schema`; exporters accept an `EditorState` or `Node`.
+
+The isolated `fountainjs-editor/html/server` entry exports
+`ServerHTMLImporter`, `HTMLImportLimitError`, and their option/report types.
+`ServerHTMLImporter.parse(html, schema, options?)` returns a validated document
+in pure Node.js without browser globals. `parseWithReport(...)` also returns
+bounded parser-recovery, invalid-selector, and unsupported-browser-rule issues.
+Options cap UTF-8 input bytes, parsed nodes, depth, attributes per element,
+attribute length, and recorded parser errors. See
+[SERVER_HTML.md](SERVER_HTML.md).
 
 `MarkdownImporter.parse(source, schema)` recognizes inline links with titles;
 full, collapsed, and shortcut reference links/images; recursive quotes; loose

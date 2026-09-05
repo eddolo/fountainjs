@@ -4,13 +4,23 @@ Audit date: 2026-09-05
 Audited revision: `b11eb75` (`feat: add extension authoring conformance tooling`)  
 Scope: architecture and dependency inspection only. No portability refactor is included in this audit.
 
+Implementation update (2026-09-05): the audit's server-conversion recommendation
+now has an additive implementation. [`src/html/server.ts`](../src/html/server.ts)
+ships as `fountainjs-editor/html/server`, parses HTML without browser globals or
+a fake DOM, and uses the new platform-neutral `HTMLParseRule` attribute surface.
+The original root `HTMLImporter` and all browser APIs remain compatible. This
+closes the runtime HTML-conversion blocker; it does **not** yet create a no-DOM
+core declaration/package boundary or native renderer.
+
 ## Executive verdict
 
 FountainJS already has a genuinely platform-neutral document engine at runtime, but it does **not** yet expose a clean platform-neutral package boundary.
 
 - The immutable document model, schema validation, logical selections, transactions, commands, history, extension composition, JSON/text/Markdown/HTML serialization, and Yjs document synchronization can run in pure Node.js without jsdom or another fake DOM.
 - The package root can be imported in pure Node.js because browser globals are generally accessed only when a DOM view, parser, widget, or node view is used.
-- `HTMLImporter` cannot run in pure Node.js. It explicitly requires `DOMParser`.
+- The root `HTMLImporter` still requires `DOMParser`; the isolated
+  `ServerHTMLImporter` now performs the same supported semantic conversion in
+  pure Node.js with resource limits and fail-explicit extension diagnostics.
 - Plain Markdown import runs in Node. Two richer Markdown paths optionally call `HTMLImporter` when `DOMParser` exists and otherwise use dependency-free fallbacks.
 - Collaboration state and Yjs synchronization run in Node. Collaborator caret rendering is browser-only and deliberately returns no decorations when `document` is unavailable.
 - The current public core types are not platform-neutral: `NodeSpec`, `MarkSpec`, `PluginProps`, and `Decoration` directly mention DOM types.
@@ -69,7 +79,7 @@ This proves runtime behavior. It does not erase the declaration-level and owners
 | 3. History/undo | **Already platform-neutral** | [`history.ts`](../src/extensions/plugins/history.ts) imports only core editor/model/plugin types and stores immutable transactions/selections. It passed in the Node probe. | Keep in the headless layer. Collaboration-specific undo remains with its collaboration adapter. |
 | 4. Collaboration/Yjs | **Browser-dependent but separable** | [`src/yjs/index.ts`](../src/yjs/index.ts) uses Yjs and Fountain logical nodes/selections only. [`collaboration.ts`](../src/extensions/collaboration.ts) mixes adapter lifecycle with browser caret widgets at lines 411-441, guarded by `typeof globalThis.document`. | Synchronization is already headless-capable. Move presence decorations to the DOM adapter; keep adapter state and commands in core/collaboration. |
 | 5. Extension system | **Browser-dependent but separable** | [`extension.ts`](../src/extensions/extension.ts) performs platform-neutral composition, manifests, conflicts, formats, commands, and services, but consumes `NodeSpec` and `Plugin`, whose current public contracts contain DOM types. | Composition needs no rewrite; parameterize or split platform contributions so a core extension need not import DOM contracts. |
-| 6. Parsing/serialization | **Mixed** | JSON, text, Markdown export, and string-based HTML export are neutral. [`html-importer.ts`](../src/core/importers/html-importer.ts) uses `DOMParser`, DOM elements, selectors, style objects, and fragments. [`markdown-importer.ts`](../src/core/importers/markdown-importer.ts) imports it and conditionally uses it. | HTML parsing is the only confirmed blocker to complete server document conversion. Isolate it, then provide an injected or DOM-free parser. |
+| 6. Parsing/serialization | **Browser-dependent but separated** | JSON, text, Markdown export, and string-based HTML export are neutral. [`html-importer.ts`](../src/core/importers/html-importer.ts) remains the browser parser. [`src/html/server.ts`](../src/html/server.ts) is an isolated DOM-free parser with equivalent validation, portable extension rules, reports, and limits. [`markdown-importer.ts`](../src/core/importers/markdown-importer.ts) still conditionally imports the browser parser for two generated inline subsets and has dependency-free fallbacks. | Server HTML conversion is implemented without destabilizing the browser path. Keep closing declaration/package ownership leaks separately. |
 | 7. Selection/cursor model | **Already platform-neutral in core; DOM mapping is correctly separate** | [`selection.ts`](../src/core/selection.ts) and transaction mappings use paths and offsets. [`selection-handler.ts`](../src/view/selection-handler.ts) owns browser `Selection`, `Range`, tree walking, and `selectionchange`. | Preserve the logical model. A native renderer must implement its own logical-to-native selection bridge. |
 | 8. Rendering/view layer | **Fundamentally DOM-specific as currently implemented** | [`src/view`](../src/view) creates elements, uses `contentEditable`, node views, `MutationObserver`, measurements, and Custom Elements. | This is appropriate for a future `@fountain/dom`; it must not define the engine's core contracts. Native platforms need independent renderers. |
 | 9. Input/event handling | **Fundamentally DOM-specific as currently implemented** | [`input.ts`](../src/view/input.ts) consumes `beforeinput`, keyboard, composition, clipboard, drag/drop, pointer, change, and click events. Core [`PluginProps`](../src/core/plugin.ts) currently exposes these browser event classes. | Keep the implementation in the DOM adapter; move its event-hook types out of the core plugin contract. |
@@ -238,7 +248,7 @@ The package root remains import-safe in Node because these modules defer DOM ope
 | Extension definition, composition, manifests, doctor/conformance | **Yes** | Verified in Node and package smoke. A TypeScript consumer still sees DOM-bearing core declarations. |
 | JSON/text/Markdown/HTML serialization | **Yes** | HTML export is string-based; no DOM is constructed. |
 | Plain Markdown import | **Yes** | Verified. Ruby/styled-span paths have dependency-free fallback behavior. |
-| Arbitrary HTML import | **No** | `HTMLImporter` requires browser `DOMParser` or a shim. |
+| Arbitrary HTML import | **Yes, through the isolated server entry** | `ServerHTMLImporter` runs without browser globals or a shim; the root `HTMLImporter` remains the browser implementation. Schema-defined `parseHTML` rules are portable, while matching browser-only attribute callbacks are reported and skipped. |
 | Collaboration adapter state/lifecycle | **Yes** | Adapter plugin runs headlessly. DOM presence decorations become empty without `document`. |
 | Yjs document synchronization and local undo | **Yes** | Two-editor convergence was verified in pure Node. |
 | Comments/versions/tracked-change models | **Mostly yes** | Their data operations are portable. Comments mixes in DOM presentation; tracked changes carries declarative HTML presentation. Separate headless entries are not yet enforced. |
@@ -254,7 +264,11 @@ Do not rewrite the engine or replace working DOM code. Establish an additive bou
 4. **Separate state plugins from DOM plugin props.** Keep state, transaction filtering/appending, and lifecycle in core. Put keyboard/input/clipboard/drop/click/decorations into a DOM view-props contract. A generic `Plugin<TState, TViewProps = unknown>` can minimize churn.
 5. **Make widget payloads renderer-neutral.** Either move decorations entirely to the DOM layer or make mapped annotations generic and let DOM specialize the widget payload to `Node`. Do not require native renderers to manufacture DOM nodes.
 6. **Split mixed extensions without changing their public convenience exports.** Collaboration, comments, Lean diagnostics, syntax highlighting, links, clipboard history, suggestions, paste rules, math, media, details, ruby, images, and resizable tables should each expose portable logic plus an optional DOM presenter/binding. Existing `StarterKit` can compose both for web users.
-7. **Isolate HTML parsing.** Immediately stop treating the current `DOMParser` implementation as core. Then implement a DOM-free, security-reviewed HTML parser or accept an explicit host parser adapter. Markdown should accept an optional embedded-HTML decoder rather than import the DOM parser directly.
+7. **Isolate HTML parsing.** **Runtime portion implemented:** the current
+   `DOMParser` path remains browser-only and `fountainjs-editor/html/server`
+   provides bounded DOM-free conversion plus `parseHTML` extension rules.
+   Remaining ownership work is a future headless/core declaration boundary and
+   an injectable Markdown embedded-HTML decoder.
 8. **Add permanent Node gates.** Test the built headless entry in ESM and CommonJS with browser globals absent, typecheck a consumer with no `DOM` lib, and run Yjs convergence in the default Node environment. Keep browser matrices for the DOM adapter.
 
 A useful target graph is:
@@ -300,7 +314,7 @@ The highest destabilization risk is changing schema and plugin contracts while t
 | Platform | Current status | Recommendation |
 | --- | --- | --- |
 | Browser DOM | Working primary platform | Continue hardening now. Move it behind an explicit adapter without rewriting it. |
-| Node.js/server-only | Core behavior works; HTML import and type/package boundaries are incomplete | Highest-priority portability target. Formalize soon. |
+| Node.js/server-only | Core behavior and bounded HTML import work without a fake DOM; the public core declaration/package boundary is still mixed | Keep the server conversion gate permanent, then formalize a no-DOM core entry without rewriting the web editor. |
 | Bun/Deno/serverless/Workers | Likely compatible for core algorithms, not certified | Certify after the no-DOM entry exists; avoid assuming Node built-ins. |
 | Electron/Tauri | Browser renderer should work naturally | Treat as web deployment targets, not new editor engines. Validate packaging later. |
 | React Native without WebView | Not supported | Preserve architectural possibility now; implement much later with a dedicated native input/render adapter. |

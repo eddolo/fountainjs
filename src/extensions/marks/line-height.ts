@@ -8,6 +8,13 @@ export const lineHeight: MarkSpec = {
       validate: (value) => normalizeLineHeight(value) === value,
     },
   },
+  parseHTML: [{
+    tag: '[style]',
+    getAttrs: (element) => {
+      const lineHeight = normalizeLineHeight(element.style.lineHeight);
+      return lineHeight ? { lineHeight } : false;
+    },
+  }],
   parseDOM: [{
     tag: '[style]',
     getAttrs: (element) => {

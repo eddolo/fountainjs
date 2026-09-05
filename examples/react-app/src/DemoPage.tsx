@@ -106,6 +106,11 @@ const reactDemoKit = composeExtensions([
   demoPriorityExtension,
 ]);
 const headlessDemoKit = docsDemoKit;
+const HEADLESS_HTML_SOURCE = `<h1>Server-native document</h1>
+<p style="text-align:center"><strong>DOM-free HTML</strong> becomes validated Fountain JSON.</p>
+<p><span data-fountain-math="inline" data-latex="E=mc^2" data-math-aria-label="E equals m c squared">E=mc²</span></p>
+<ol start="3"><li>Parse the source<ul><li>Keep nested structure</li></ul></li><li>Validate every node</li></ol>
+<table><thead><tr><th>Boundary</th><th>Behavior</th></tr></thead><tbody><tr><td>Node.js</td><td>no jsdom</td></tr></tbody></table>`;
 
 function outputFor(document: Node | undefined, format: OutputFormat): string {
   if (!document) return '';
@@ -300,18 +305,46 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const schema = useMemo(() => new Schema(
     demo.slug === 'node-markdown' ? headlessDemoKit.schema : StarterKit.schema,
   ), [demo.slug]);
-  const [source, setSource] = useState(demo.markdown ?? '');
-  const parsed = useMemo(() => {
+  const [inputFormat, setInputFormat] = useState<'markdown' | 'html'>('markdown');
+  const [markdownSource, setMarkdownSource] = useState(demo.markdown ?? '');
+  const [htmlSource, setHTMLSource] = useState(HEADLESS_HTML_SOURCE);
+  const markdownParsed = useMemo(() => {
     try {
-      const document = MarkdownImporter.parse(source, schema);
-      return { document, losses: MarkdownExporter.exportWithReport(document).losses, error: '' };
+      const document = MarkdownImporter.parse(markdownSource, schema);
+      return { document, details: MarkdownExporter.exportWithReport(document).losses.length, error: '', loading: false };
     } catch (error) {
-      return { document: undefined, losses: [], error: error instanceof Error ? error.message : String(error) };
+      return { document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false };
     }
-  }, [schema, source]);
+  }, [schema, markdownSource]);
+  const [htmlParsed, setHTMLParsed] = useState<{
+    document: Node | undefined;
+    details: number;
+    error: string;
+    loading: boolean;
+  }>({ document: undefined, details: 0, error: '', loading: false });
+  useEffect(() => {
+    if (inputFormat !== 'html') return undefined;
+    let active = true;
+    setHTMLParsed((current) => ({ ...current, error: '', loading: true }));
+    void import('fountainjs-editor/html/server').then(({ ServerHTMLImporter }) => {
+      if (!active) return;
+      const result = ServerHTMLImporter.parseWithReport(htmlSource, schema);
+      setHTMLParsed({ document: result.document, details: result.issues.length, error: '', loading: false });
+    }).catch((error: unknown) => {
+      if (!active) return;
+      setHTMLParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false });
+    });
+    return () => { active = false; };
+  }, [htmlSource, inputFormat, schema]);
+  const parsed = inputFormat === 'html' ? htmlParsed : markdownParsed;
+  const source = inputFormat === 'html' ? htmlSource : markdownSource;
+  const setSource = inputFormat === 'html' ? setHTMLSource : setMarkdownSource;
+  const detailLabel = inputFormat === 'html'
+    ? `${parsed.details ? `${parsed.details} recovered HTML issue${parsed.details === 1 ? '' : 's'}` : 'no recovered HTML issues'}`
+    : `${parsed.details ? `${parsed.details} projected Markdown detail${parsed.details === 1 ? '' : 's'}` : 'no reported Markdown losses'}`;
 
   return <div className="demo-workspace">
-    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><label htmlFor="markdown-source">Markdown input</label><textarea id="markdown-source" value={source} onChange={(event) => setSource(event.target.value)} /><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${parsed.losses.length ? `${parsed.losses.length} projected Markdown detail${parsed.losses.length === 1 ? '' : 's'}` : 'no reported Markdown losses'}`}</p></section>
+    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button></nav><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
     <OutputPanel document={parsed.document} />
   </div>;
 }

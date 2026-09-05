@@ -64,6 +64,9 @@
       "structured-attributes": [
         "dist/structured-attributes/index.d.ts"
       ],
+      "html/server": [
+        "dist/html/server.d.ts"
+      ],
       "widgets": [
         "dist/widgets/index.d.ts"
       ],
@@ -265,6 +268,16 @@
         "default": "./dist/structured-attributes.cjs"
       }
     },
+    "./html/server": {
+      "import": {
+        "types": "./dist/html/server.d.ts",
+        "default": "./dist/html-server.js"
+      },
+      "require": {
+        "types": "./dist/html/server.d.cts",
+        "default": "./dist/html-server.cjs"
+      }
+    },
     "./widgets": {
       "import": {
         "types": "./dist/widgets/index.d.ts",
@@ -441,7 +454,10 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "css-select": "7.0.0",
     "jsdom": "^30.0.1",
+    "parse5": "8.0.1",
+    "parse5-htmlparser2-tree-adapter": "8.0.1",
     "pdfjs-dist": "^6.3.289",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

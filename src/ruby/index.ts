@@ -451,6 +451,7 @@ function createRubyNode(options: RubyOptions): NodeSpec {
           && !/[\u0000-\u001f\u007f]/u.test(value),
       },
     },
+    parseHTML: [{ tag: 'ruby' }],
     parseDOM: [{ tag: 'ruby' }],
     toDOM: (node) => [
       'ruby',

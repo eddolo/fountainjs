@@ -99,6 +99,7 @@ function displayFootnoteLabel(node: Node, context?: NodeDOMContext): string {
 export const pageBreakNode: NodeSpec = {
   group: 'block',
   atom: true,
+  parseHTML: [{ tag: 'hr[data-fountain-page-break="true"]' }],
   parseDOM: [{ tag: 'hr[data-fountain-page-break="true"]' }],
   toDOM: () => ['hr', {
     'data-fountain-page-break': 'true',
@@ -115,6 +116,19 @@ export const footnoteReferenceNode: NodeSpec = {
   atom: true,
   contextualDOM: true,
   attrs: { id: { validate: validFootnoteId } },
+  parseHTML: [
+    {
+      tag: 'sup[data-fountain-footnote-reference]',
+      getAttrs: (element) => ({ id: element.dataset.fountainFootnoteReference ?? '' }),
+    },
+    {
+      tag: 'a[role~="doc-noteref"][href^="#"]',
+      getAttrs: (element) => {
+        const id = footnoteIdFromFragment(element.getAttribute('href'));
+        return id ? { id } : false;
+      },
+    },
+  ],
   parseDOM: [
     {
       tag: 'sup[data-fountain-footnote-reference]',
@@ -146,6 +160,19 @@ export const footnoteDefinitionNode: NodeSpec = {
   content: 'block+',
   contextualDOM: true,
   attrs: { id: { validate: validFootnoteId } },
+  parseHTML: [
+    {
+      tag: 'section[data-fountain-footnote-definition]',
+      getAttrs: (element) => ({ id: element.dataset.fountainFootnoteDefinition ?? '' }),
+    },
+    {
+      tag: 'section[role~="doc-footnote"][id], aside[role~="doc-footnote"][id], section[role~="doc-endnote"][id], aside[role~="doc-endnote"][id]',
+      getAttrs: (element) => {
+        const id = footnoteIdFromFragment(element.getAttribute('id'));
+        return id ? { id } : false;
+      },
+    },
+  ],
   parseDOM: [
     {
       tag: 'section[data-fountain-footnote-definition]',

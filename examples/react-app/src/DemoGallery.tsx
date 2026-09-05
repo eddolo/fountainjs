@@ -43,7 +43,7 @@ function DemoGallery() {
       <section className="boundary-section" id="boundaries">
         <div className="boundary-section__heading"><span>WHAT IS ACTUALLY SHARED</span><h2>Framework-neutral does not mean framework-shaped examples.</h2><p>The browser editor has four honest integration boundaries. The gallery uses each one where it belongs.</p></div>
         <div className="boundary-list">{surfaces.map(([name, description], index) => <article key={name}><b>0{index + 1}</b><h3>{name}</h3><p>{description}</p></article>)}</div>
-        <div className="boundary-note"><b>About backend demos</b><p>Python, Go, and Java do not execute a browser editor. Their demos pair a live FountainJS frontend with real server-side JSON shapes, while the Node.js demo runs the headless schema and format layer. The page labels this boundary instead of pretending every language runs the DOM view.</p></div>
+        <div className="boundary-note"><b>About backend demos</b><p>Python, Go, and Java do not execute a browser editor. Their demos pair a live FountainJS frontend with real server-side JSON shapes. The Node.js demo runs the headless schema and formats, including the isolated DOM-free HTML importer without jsdom. The page labels this boundary instead of pretending every language runs the DOM view.</p></div>
       </section>
 
       <section className="demos-closing"><p>LOOK UNDER THE HOOD</p><h2>Every demo points back to the same extension and state contracts.</h2><div><a href="./developers.html">Read the developer guide →</a><a href="https://github.com/eddolo/fountainjs">Browse the source ↗</a></div></section>

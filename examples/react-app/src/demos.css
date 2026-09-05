@@ -95,6 +95,9 @@
 .demo-output pre { min-width: 0; padding: 18px; margin: 0; overflow: auto; color: #bbb5c9; background: #211e30; border-top: 1px solid #38344c; font: 10px/1.7 'DM Mono', monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
 .headless-surface { display: flex; flex-direction: column; }
 .headless-surface > label { margin: 12px 0 8px; color: #625d6d; font-size: 12px; font-weight: 800; }
+.headless-input-tabs { display: flex; gap: 6px; margin-top: 12px; }
+.headless-input-tabs button { padding: 7px 10px; color: #756d89; background: white; border: 1px solid #d9d4df; border-radius: 7px; font: 700 10px 'DM Mono', monospace; }
+.headless-input-tabs button.active { color: white; background: var(--demo-accent); border-color: var(--demo-accent); }
 .headless-surface textarea { min-height: 500px; padding: 25px; resize: vertical; color: #2b2736; background: white; border: 1px solid #d9d4df; border-radius: 12px; font: 13px/1.8 'DM Mono', monospace; }
 .headless-status { margin: 10px 0 0; color: #267356; font: 10px 'DM Mono', monospace; }
 .headless-status.error { color: #b03656; }

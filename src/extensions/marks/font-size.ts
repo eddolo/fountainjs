@@ -8,6 +8,13 @@ export const fontSize: MarkSpec = {
       validate: (value) => normalizeFontSize(value) === value,
     },
   },
+  parseHTML: [{
+    tag: '[style]',
+    getAttrs: (element) => {
+      const size = normalizeFontSize(element.style.fontSize);
+      return size ? { size } : false;
+    },
+  }],
   parseDOM: [{
     tag: '[style]',
     getAttrs: (element) => {

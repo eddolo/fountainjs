@@ -35,6 +35,25 @@ contract.
 | 5,000 | 3.75 / 6.19 ms | 4.16 / 6.14 ms | 52.82 / 59.36 ms |
 | 10,000 | 8.57 / 12.03 ms | 10.42 / 13.83 ms | 94.12 / 98.44 ms |
 
+The isolated DOM-free HTML importer has its own production-build curve. The
+fixture contains a paragraph, strong text, ordinary text, and a safe link per
+top-level block. The 10,000-block source is about 1.1 MiB/60,000 parsed nodes,
+so the benchmark explicitly opts into the public 2 MiB/100,000-node policy
+instead of weakening request-oriented defaults.
+
+| HTML blocks | Server import p50 / p95 |
+| ---: | ---: |
+| 100 | 6.07 / 9.26 ms |
+| 1,000 | 35.66 / 41.20 ms |
+| 5,000 | 191.40 / 206.31 ms |
+| 10,000 | 425.07 / 475.79 ms |
+
+CI caps those p95 values at 35/120/500/900 ms respectively, caps median growth
+from 1,000 to 10,000 blocks at 15×, and caps the retained 10,000-block parsed
+document at 48 MiB. This sample grew 11.92× and retained 14.21 MiB. Input byte,
+node, depth, attribute, and parser-error limits are independently tested; see
+[SERVER_HTML.md](SERVER_HTML.md).
+
 The local and incremental-remote medians may grow by at most 15× when the
 fixture grows from 1,000 to 10,000 blocks. This allowance absorbs runner noise
 but rejects the former quadratic content-expression path, which approaches
@@ -47,11 +66,14 @@ grow by at most 8 MiB and destroyed editors may retain at most 16 MiB. The
 recorded destroyed-editor sample retained 0.13 MiB.
 
 The build gate currently limits the independently loadable production entries,
-including 111/93 KiB raw for the ESM/CommonJS root, 19/16 KiB for the optional
-Yjs adapter, 48/41 KiB for the isolated DOM pagination entry, and 736/620 KiB
-for all emitted ESM/CommonJS runtime code excluding the isolated full emoji
-catalogue. Gzip sizes are printed by the build but raw sizes are enforced
-because they are deterministic.
+including 111/93 KiB raw for the ESM/CommonJS root, 30/25 KiB for the optional
+Yjs adapter, 54/45 KiB for the isolated DOM pagination entry, and 270/225 KiB
+for the self-contained server HTML entry (about 72/68 KiB gzip). Aggregate
+ceilings are 1,075/905 KiB for all emitted ESM/CommonJS runtime code excluding
+the isolated full emoji catalogue. Gzip sizes are printed by the build but raw
+sizes are enforced because they are deterministic. The parser payload changes
+the opt-in server entry and aggregate only; existing web entry ceilings did not
+increase.
 
 ## Why small edits stay local
 

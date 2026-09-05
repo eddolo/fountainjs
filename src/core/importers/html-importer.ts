@@ -3,6 +3,7 @@ import {
   Node as FountainNode,
   type Attributes,
   type DOMParseRule,
+  type HTMLParseRule,
   type MarkType,
   type NodeType,
   type Schema,
@@ -37,18 +38,25 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[]): Fount
   return result;
 }
 
-function parseRulePriority(rule: DOMParseRule): number {
+type BrowserParseRule = DOMParseRule | HTMLParseRule;
+
+function parseRules(spec: { parseHTML?: readonly HTMLParseRule[]; parseDOM?: readonly DOMParseRule[] }): BrowserParseRule[] {
+  return [...(spec.parseHTML ?? []), ...(spec.parseDOM ?? [])];
+}
+
+function parseRulePriority(rule: BrowserParseRule): number {
   return Number.isFinite(rule.priority) ? Number(rule.priority) : 50;
 }
 
-function matchesRule(element: Element, rule: DOMParseRule): boolean {
+function matchesRule(element: Element, rule: BrowserParseRule): boolean {
   try { return Boolean(rule.tag) && element.matches(rule.tag); }
   catch { return false; }
 }
 
-function attrsFromRule(element: HTMLElement, rule: DOMParseRule): Attributes | false {
+function attrsFromRule(element: HTMLElement, rule: BrowserParseRule): Attributes | false {
   try {
-    const value = rule.getAttrs?.(element) ?? {};
+    const getAttrs = rule.getAttrs as ((candidate: HTMLElement) => Attributes | null | false) | undefined;
+    const value = getAttrs?.(element) ?? {};
     if (value === false) return false;
     if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
     const prototype = Object.getPrototypeOf(value);
@@ -56,7 +64,7 @@ function attrsFromRule(element: HTMLElement, rule: DOMParseRule): Attributes | f
   } catch { return false; }
 }
 
-function ruleContentElement(element: HTMLElement, rule: DOMParseRule): HTMLElement | null {
+function ruleContentElement(element: HTMLElement, rule: BrowserParseRule): HTMLElement | null {
   if (!rule.contentElement) return element;
   try { return element.querySelector<HTMLElement>(rule.contentElement); }
   catch { return null; }
@@ -74,9 +82,9 @@ function addSchemaMark(marks: Mark[], schema: Schema, name: string, attrs: Attri
 }
 
 function configuredMarks(element: HTMLElement, schema: Schema): Mark[] {
-  const matches: Array<{ type: MarkType; rule: DOMParseRule; order: number }> = [];
+  const matches: Array<{ type: MarkType; rule: BrowserParseRule; order: number }> = [];
   Object.values(schema.marks).forEach((type, order) => {
-    type.spec.parseDOM?.forEach((rule) => {
+    parseRules(type.spec).forEach((rule) => {
       if (matchesRule(element, rule)) matches.push({ type, rule, order });
     });
   });
@@ -109,10 +117,10 @@ function configuredNode(
   inline: boolean,
   inheritedMarks: readonly Mark[] = [],
 ): FountainNode | null {
-  const matches: Array<{ type: NodeType; rule: DOMParseRule; order: number }> = [];
+  const matches: Array<{ type: NodeType; rule: BrowserParseRule; order: number }> = [];
   Object.values(schema.nodes).forEach((type, order) => {
     if (type.name === 'doc' || type.name === 'text' || type.isInline !== inline) return;
-    type.spec.parseDOM?.forEach((rule) => {
+    parseRules(type.spec).forEach((rule) => {
       if (matchesRule(element, rule)) matches.push({ type, rule, order });
     });
   });
@@ -422,7 +430,7 @@ const BLOCK_TAGS = new Set([
 
 function hasConfiguredBlockRule(element: HTMLElement, schema: Schema): boolean {
   return Object.values(schema.nodes).some((type) => type.isBlock && type.name !== 'doc'
-    && type.spec.parseDOM?.some((rule) => matchesRule(element, rule)));
+    && parseRules(type.spec).some((rule) => matchesRule(element, rule)));
 }
 
 function blockChildren(element: HTMLElement, schema: Schema): FountainNode[] {

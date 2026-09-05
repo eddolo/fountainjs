@@ -663,7 +663,7 @@ A new framework adapter needs four operations: create an editor, subscribe to st
 Formats are parser/serializer objects owned by extensions. The supplied JSON,
 Markdown, HTML, and text modules share the schema document as their boundary.
 HTML is schema-extensible: node and mark specs contribute declarative
-`parseDOM` selectors/attribute readers, while `toDOM` serializes both custom
+`parseHTML` selectors and platform-neutral attribute readers, while `toDOM` serializes both custom
 nodes and marks. A node serializer can receive its root document and path; a
 node that sets `contextualDOM` opts its unchanged ancestor out of reconciliation
 reuse when another edit can change that presentation (for example, derived
@@ -673,6 +673,19 @@ complete result is validated before it crosses into editor state. Generic
 export output is escaped and restricted to non-executable semantic tags,
 attributes, protocols, and CSS; privileged built-in media uses narrower
 provider-specific paths. See [FORMATS.md](FORMATS.md).
+
+Browser HTML import and server HTML import deliberately have different parser
+owners but the same schema boundary. The root `HTMLImporter` adapts the live
+browser `DOMParser` and continues to accept legacy `parseDOM` callbacks. The
+isolated `fountainjs-editor/html/server` entry bundles parse5 plus a selector
+engine, projects its tree through the same built-in semantics and portable
+`parseHTML` contributions, then performs full schema validation. It has no
+browser globals or Node built-in imports. Browser-only attribute callbacks are
+reported and skipped rather than receiving a partial DOM façade. Cross-parser
+fixtures compare exact Fountain JSON for structure, styles, lists, tables,
+ruby, math, pages, details, images, and media. Input/tree limits bound hostile
+work; the parser bundle stays outside every web editor entry. See
+[SERVER_HTML.md](SERVER_HTML.md).
 
 Media insertion accepts remote URLs or browser `File` objects. Block images use
 an accessible NodeView for editable captions, load recovery, alignment, and

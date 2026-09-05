@@ -1,10 +1,12 @@
 import { performance } from 'node:perf_hooks';
 import {
   CoreExtension,
+  Schema,
   composeExtensions,
   createCollaborationExtension,
   createEditor,
 } from '../dist/index.js';
+import { ServerHTMLImporter } from '../dist/html-server.js';
 
 const sizes = [100, 1_000, 5_000, 10_000];
 const iterations = 12;
@@ -17,6 +19,9 @@ const limits = Object.freeze({
   maximumCurveRatio: 15,
   longSessionHeap: 8 * 1024 * 1024,
   retainedHeap: 16 * 1024 * 1024,
+  serverHTMLP95: { 100: 35, 1000: 120, 5000: 500, 10000: 900 },
+  serverHTMLMaximumCurveRatio: 15,
+  serverHTMLHeap: 48 * 1024 * 1024,
 });
 
 function content(size, suffix = '') {
@@ -27,6 +32,12 @@ function content(size, suffix = '') {
       content: [{ type: 'text', text: `Paragraph ${index}${index === size - 1 ? suffix : ''}` }],
     })),
   };
+}
+
+function htmlContent(size) {
+  return Array.from({ length: size }, (_, index) => (
+    `<p data-index="${index}"><strong>Paragraph ${index}</strong> with <a href="https://example.com/${index}">a safe link</a>.</p>`
+  )).join('');
 }
 
 function percentile(values, fraction) {
@@ -108,6 +119,12 @@ const local = new Map();
 const remote = new Map();
 const fullRemote = new Map();
 const failures = [];
+const serverHTML = new Map();
+const serverHTMLSchema = new Schema(composeExtensions([CoreExtension]).schema);
+const serverHTMLImporter = new ServerHTMLImporter({
+  maxInputBytes: 2 * 1024 * 1024,
+  maxNodes: 100_000,
+});
 
 for (const size of sizes) {
   const localResult = localCurve(size);
@@ -120,6 +137,25 @@ for (const size of sizes) {
   if (localResult.p95 > limits.localP95[size]) failures.push(`${size}-block local p95 ${format(localResult.p95)} exceeds ${limits.localP95[size]} ms`);
   if (remoteResult.p95 > limits.remoteP95[size]) failures.push(`${size}-block incremental remote p95 ${format(remoteResult.p95)} exceeds ${limits.remoteP95[size]} ms`);
   if (fullRemoteResult.p95 > limits.fullRemoteP95[size]) failures.push(`${size}-block JSON-boundary p95 ${format(fullRemoteResult.p95)} exceeds ${limits.fullRemoteP95[size]} ms`);
+}
+
+for (const size of sizes) {
+  const html = htmlContent(size);
+  const result = sample(() => {
+    const document = serverHTMLImporter.parse(html, serverHTMLSchema);
+    if (document.childCount !== size) throw new Error('Server HTML benchmark returned an incomplete document.');
+  }, 6);
+  serverHTML.set(size, result);
+  console.log(`${size.toLocaleString('en-US')} HTML blocks: server parse p50 ${format(result.median)}, p95 ${format(result.p95)}`);
+  if (result.p95 > limits.serverHTMLP95[size]) {
+    failures.push(`${size}-block server HTML p95 ${format(result.p95)} exceeds ${limits.serverHTMLP95[size]} ms`);
+  }
+}
+
+const serverHTMLRatio = serverHTML.get(10_000).median / Math.max(serverHTML.get(1_000).median, 0.01);
+console.log(`server HTML 1,000→10,000 median growth: ${serverHTMLRatio.toFixed(2)}x / ${limits.serverHTMLMaximumCurveRatio}x`);
+if (serverHTMLRatio > limits.serverHTMLMaximumCurveRatio) {
+  failures.push(`server HTML curve grew ${serverHTMLRatio.toFixed(2)}x from 1,000 to 10,000 blocks`);
 }
 
 for (const [name, curve] of [['local', local], ['incremental remote', remote]]) {
@@ -166,6 +202,16 @@ if (typeof globalThis.gc !== 'function') {
   const retained = Math.max(0, process.memoryUsage().heapUsed - baseline);
   console.log(`destroyed-editor retained heap: ${(retained / 1024 / 1024).toFixed(2)} MiB / ${(limits.retainedHeap / 1024 / 1024).toFixed(0)} MiB`);
   if (retained > limits.retainedHeap) failures.push(`destroyed editors retained ${(retained / 1024 / 1024).toFixed(2)} MiB`);
+
+  globalThis.gc();
+  const htmlBaseline = process.memoryUsage().heapUsed;
+  let parsedHTMLDocument = serverHTMLImporter.parse(htmlContent(10_000), serverHTMLSchema);
+  globalThis.gc();
+  const htmlGrowth = Math.max(0, process.memoryUsage().heapUsed - htmlBaseline);
+  console.log(`retained 10,000-block server HTML document: ${(htmlGrowth / 1024 / 1024).toFixed(2)} MiB / ${(limits.serverHTMLHeap / 1024 / 1024).toFixed(0)} MiB`);
+  if (parsedHTMLDocument.childCount !== 10_000) failures.push('server HTML memory fixture returned an incomplete document');
+  if (htmlGrowth > limits.serverHTMLHeap) failures.push(`server HTML document retained ${(htmlGrowth / 1024 / 1024).toFixed(2)} MiB`);
+  parsedHTMLDocument = undefined;
 }
 
 if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);

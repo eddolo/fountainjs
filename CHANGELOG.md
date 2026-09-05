@@ -15,6 +15,14 @@
 
 ### Added
 
+- Pure-Node HTML conversion through the isolated
+  `fountainjs-editor/html/server` entry: a standards-oriented parser and CSS
+  selector engine bundled without jsdom; portable `parseHTML` extension rules;
+  retained browser-only `parseDOM` compatibility; full schema validation;
+  malformed-input and unsupported-rule reports; URL and attribute safety;
+  configurable input/tree/depth/attribute/error bounds; ESM/CommonJS package
+  smoke checks; browser/server semantic parity fixtures; and enforced
+  10,000-block CPU, growth, memory, and bundle budgets.
 - Granular collaborative structured attributes through the new DOM-free
   `fountainjs-editor/structured-attributes` entry and opt-in
   `YjsCollaborationAdapterOptions.structuredAttributes`: bounded immutable JSON

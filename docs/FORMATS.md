@@ -10,23 +10,35 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 `HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only approved protocols survive link and media serialization. Alignment, foreground/background colour, font family, font size, line height, subscript, superscript, semantic hard breaks, tasks, tables, images, native audio/video with tracks, downloadable file metadata, and provider-approved embeds retain their HTML meaning.
 
-`HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, audio, video, files, approved embeds, tables, dividers, line breaks, common inline marks, and optional math, mention, and emoji nodes when their receiving schema includes the corresponding extension. Media is reconstructed through schema validation: an iframe is discarded unless the configured `MediaExtension` recognizes its canonical HTTPS provider URL and accepts every permission/sandbox attribute. Math HTML stores TeX separately from its computed accessible label, so import does not persist renderer markup or mutate JSON. Mention identity and safe links round-trip through typed data attributes. Emoji name, Unicode value, and safe fallback metadata likewise round-trip; raw Unicode emoji in ordinary imported text becomes an emoji node when that schema supports it. The importer uses `DOMParser`, so a DOM shim is required in Node.js.
+`HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, audio, video, files, approved embeds, tables, dividers, line breaks, common inline marks, and optional math, mention, and emoji nodes when their receiving schema includes the corresponding extension. Media is reconstructed through schema validation: an iframe is discarded unless the configured `MediaExtension` recognizes its canonical HTTPS provider URL and accepts every permission/sandbox attribute. Math HTML stores TeX separately from its computed accessible label, so import does not persist renderer markup or mutate JSON. Mention identity and safe links round-trip through typed data attributes. Emoji name, Unicode value, and safe fallback metadata likewise round-trip; raw Unicode emoji in ordinary imported text becomes an emoji node when that schema supports it. This root importer uses the browser's `DOMParser`.
 
-Custom nodes and marks own their HTML import contract through ordered
-`parseDOM` rules on `NodeSpec` / `MarkSpec`. A rule supplies a CSS `tag`
+Pure Node.js uses the isolated `fountainjs-editor/html/server` entry. Its
+`ServerHTMLImporter` reconstructs the same supported semantic tree without
+`window`, `document`, `DOMParser`, jsdom, or another fake DOM. It adds bounded
+input/tree policies plus diagnostics for parser recovery, invalid selectors,
+and extension callbacks that genuinely require `HTMLElement`. The optional
+parser/selector payload does not enter the root or browser bundles. See
+[SERVER_HTML.md](SERVER_HTML.md).
+
+Custom nodes and marks own their cross-runtime HTML import contract through
+ordered `parseHTML` rules on `NodeSpec` / `MarkSpec`. A rule supplies a CSS `tag`
 selector, optional `priority`, optional `getAttrs(element)`, and an optional
 `contentElement` selector for wrapped content. Return `false` to decline a
 match. Exceptions, malformed selectors, invalid attributes, and content that
 does not satisfy the node's schema are contained; normal readable fallback
 parsing continues. The complete imported document passes `schema.validate()`
-before it is returned.
+before it is returned. `HTMLParseElement` deliberately exposes attributes,
+dataset, normalized inline style, text, and tag name—not layout, events,
+selection, or live DOM identity. Existing browser-only `parseDOM` rules remain
+supported by `HTMLImporter`; the server importer reports a matching
+`getAttrs(HTMLElement)` callback instead of impersonating the DOM.
 
 ```ts
 const callout = {
   group: 'block',
   content: 'block+',
   attrs: { tone: { default: 'info' } },
-  parseDOM: [{
+  parseHTML: [{
     tag: 'aside[data-callout]',
     contentElement: '[data-callout-content]',
     getAttrs: element => ({ tone: element.dataset.tone ?? 'info' }),

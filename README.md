@@ -75,7 +75,7 @@ const callout = defineExtension({
       group: 'block',
       content: 'inline*',
       attrs: { tone: { default: 'info' } },
-      parseDOM: [{
+      parseHTML: [{
         tag: 'aside[data-fountain-callout]',
         getAttrs: (element) => ({ tone: element.dataset.tone ?? 'info' }),
       }],
@@ -920,10 +920,26 @@ JSONExporter.export(document);
 HTML export escapes text and attributes, rejects unsafe URL protocols, and
 restricts generic extension output to non-executable semantic markup. Custom
 nodes and marks pair `toDOM` with schema-owned `parseDOM` selector/attribute
-rules, so configured extension content can survive HTML paste and round trips
+rules, or with platform-neutral `parseHTML` rules when the same conversion must
+also run on a server. Configured extension content can therefore survive HTML paste and round trips
 without hard-coding the extension into FountainJS. Every imported document is
 validated by the receiving schema. JSON remains the exact persistence format;
 see the [format-boundary guide](docs/FORMATS.md).
+
+Server conversion does not require a fake DOM. The isolated entry bundles its
+own standards-oriented parser without changing the root/editor bundles:
+
+```ts
+import { CoreSchemaSpec, Schema } from 'fountainjs-editor'
+import { ServerHTMLImporter } from 'fountainjs-editor/html/server'
+
+const schema = new Schema(CoreSchemaSpec)
+const document = ServerHTMLImporter.parse('<h1>Hello</h1><p>From Node.</p>', schema)
+```
+
+It includes malformed-input diagnostics, fail-explicit browser-only extension
+rules, and configurable hard resource limits. See the
+[server HTML contract](docs/SERVER_HTML.md).
 
 Persisted documents can use an explicit, independently versioned envelope.
 The migration runner accepts historical bare `NodeJSON` as format version 1,
@@ -1225,6 +1241,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)
+- [Server-native HTML conversion](docs/SERVER_HTML.md)
 - [Document versions and migrations](docs/MIGRATIONS.md)
 - [Print-aware page foundation and pagination gates](docs/PAGINATION.md)
 - [Release and API stability policy](docs/RELEASES.md)

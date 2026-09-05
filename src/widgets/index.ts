@@ -9,6 +9,8 @@ import {
   type Attributes,
   type DOMOutputSpec,
   type DOMParseRule,
+  type HTMLParseElement,
+  type HTMLParseRule,
   type Editor,
   type Node,
   type NodeDOMContext,
@@ -72,6 +74,9 @@ export interface WidgetDefinitionOptions {
   validate?: (context: WidgetValidationContext) => WidgetValidationResult;
   toText?: (node: Node) => string;
   toDOM?: (node: Node, context?: NodeDOMContext) => DOMOutputSpec;
+  /** Portable HTML rules used by browser and server importers. */
+  parseHTML?: readonly HTMLParseRule[];
+  /** Browser-only compatibility rules for extensions that require DOM APIs. */
   parseDOM?: readonly DOMParseRule[];
 }
 
@@ -120,7 +125,7 @@ function embeddedState(node: Node): string {
   return serialized;
 }
 
-function parseEmbeddedState(element: HTMLElement): Attributes | false {
+function parseEmbeddedState(element: Pick<HTMLParseElement, 'getAttribute'>): Attributes | false {
   const source = element.getAttribute('data-fountain-widget-state');
   if (!source || source.length > MAX_EMBEDDED_WIDGET_STATE) return false;
   try {
@@ -141,6 +146,13 @@ function defaultDOM(definition: Pick<WidgetDefinition, 'name' | 'label' | 'inlin
     };
     return definition.content ? [tag, attrs, 0] : [tag, attrs, definition.label];
   };
+}
+
+function defaultParseHTML(name: string): readonly HTMLParseRule[] {
+  return Object.freeze([{
+    tag: `[data-fountain-widget="${name}"]`,
+    getAttrs: parseEmbeddedState,
+  }]);
 }
 
 function defaultParseDOM(name: string): readonly DOMParseRule[] {
@@ -202,9 +214,12 @@ export function defineWidget(options: WidgetDefinitionOptions): WidgetDefinition
     validate: (node: Node) => validateWidgetAttributes(definition, node.attrs).valid,
     toText: options.toText ?? (() => definitionBase.label),
     toDOM: options.toDOM ?? defaultDOM(definitionBase),
+    parseHTML: options.parseHTML
+      ? Object.freeze(options.parseHTML.map((rule) => Object.freeze({ ...rule })))
+      : options.parseDOM ? undefined : defaultParseHTML(options.name),
     parseDOM: options.parseDOM
       ? Object.freeze(options.parseDOM.map((rule) => Object.freeze({ ...rule })))
-      : defaultParseDOM(options.name),
+      : options.parseHTML ? undefined : defaultParseDOM(options.name),
   });
   definition = Object.freeze({ ...definitionBase, nodeSpec });
   return definition;

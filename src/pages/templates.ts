@@ -39,6 +39,10 @@ function pageTemplateNode(kind: PageTemplateKind): NodeSpec {
     group: 'block',
     content: 'block+',
     attrs: { variant: { default: 'default', validate: validTemplateVariant } },
+    parseHTML: [{
+      tag: `${element}[${attribute}]`,
+      getAttrs: (dom) => ({ variant: dom.getAttribute(attribute) || 'default' }),
+    }],
     parseDOM: [{
       tag: `${element}[${attribute}]`,
       getAttrs: (dom) => ({ variant: dom.getAttribute(attribute) || 'default' }),
@@ -61,6 +65,10 @@ export const pageFieldNode: NodeSpec = {
   inline: true,
   atom: true,
   attrs: { kind: { default: 'page-number', validate: validPageFieldKind } },
+  parseHTML: [{
+    tag: 'span[data-fountain-page-field]',
+    getAttrs: (dom) => ({ kind: dom.dataset.fountainPageField ?? '' }),
+  }],
   parseDOM: [{
     tag: 'span[data-fountain-page-field]',
     getAttrs: (dom) => ({ kind: dom.dataset.fountainPageField ?? '' }),

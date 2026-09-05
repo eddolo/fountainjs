@@ -29,7 +29,7 @@ jobs:
         run: node scripts/check-release.mjs --tag "${{ github.event.release.tag_name }}"
       - run: pnpm check
       - run: pnpm dlx publint@0.3.24
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
       - run: pnpm pack --dry-run
       - name: Verify npm trusted publisher
         if: github.event_name == 'workflow_dispatch'

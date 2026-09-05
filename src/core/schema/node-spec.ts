@@ -35,6 +35,33 @@ export interface AttributeSpec {
 }
 
 /**
+ * Read-only HTML element surface shared by browser and server parsers.
+ *
+ * The deliberately small contract covers portable attribute extraction. It
+ * does not expose layout, live selection, events, mutation, or DOM identity.
+ */
+export interface HTMLParseElement {
+  readonly tagName: string;
+  readonly textContent: string;
+  readonly style: Readonly<Record<string, string>>;
+  readonly dataset: Readonly<Record<string, string | undefined>>;
+  getAttribute(name: string): string | null;
+  hasAttribute(name: string): boolean;
+}
+
+/** Declarative HTML rule that can run without browser globals or a fake DOM. */
+export interface HTMLParseRule {
+  /** CSS selector matched against the candidate element. */
+  tag: string;
+  /** Higher-priority rules are tried first. Defaults to 50. */
+  priority?: number;
+  /** Extract portable attributes, use defaults, or decline this match. */
+  getAttrs?: (element: HTMLParseElement) => Attributes | null | false;
+  /** Optional descendant selector whose children provide the node content. */
+  contentElement?: string;
+}
+
+/**
  * Declarative, schema-owned rule for reconstructing a node or mark from HTML.
  * Returning `false` from `getAttrs` declines the rule. Parsed attributes still
  * pass through the normal schema validators before a node enters a document.
@@ -80,6 +107,8 @@ export interface NodeSpec {
   validate?: (node: Node) => boolean;
   /** Safe HTML-import rules owned by this node extension. */
   parseDOM?: readonly DOMParseRule[];
+  /** HTML-import rules usable by both browser and server parsers. */
+  parseHTML?: readonly HTMLParseRule[];
   /** Re-evaluate otherwise unchanged ancestors when model context affects their DOM. */
   contextualDOM?: boolean;
   toDOM?: (node: Node, context?: NodeDOMContext) => DOMOutputSpec;

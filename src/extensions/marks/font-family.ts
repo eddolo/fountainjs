@@ -8,6 +8,13 @@ export const fontFamily: MarkSpec = {
       validate: (value) => normalizeFontFamily(value) === value,
     },
   },
+  parseHTML: [{
+    tag: '[style]',
+    getAttrs: (element) => {
+      const family = normalizeFontFamily(element.style.fontFamily);
+      return family ? { family } : false;
+    },
+  }],
   parseDOM: [{
     tag: '[style]',
     getAttrs: (element) => {

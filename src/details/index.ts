@@ -284,6 +284,7 @@ const detailsKeyboardPlugin = new Plugin({
 
 export const detailsSummaryNode: NodeSpec = {
   content: 'inline*',
+  parseHTML: [{ tag: 'summary' }],
   parseDOM: [{ tag: 'summary' }],
   toDOM: () => ['summary', { className: 'fountain-details__summary' }, 0],
 };
@@ -292,6 +293,7 @@ export const detailsNode: NodeSpec = {
   group: 'block',
   content: 'details_summary block+',
   attrs: { open: { default: false, validate: (value) => typeof value === 'boolean' } },
+  parseHTML: [{ tag: 'details', getAttrs: (element) => ({ open: element.hasAttribute('open') }) }],
   parseDOM: [{ tag: 'details', getAttrs: (element) => ({ open: element.hasAttribute('open') }) }],
   toDOM: (node) => ['details', { className: 'fountain-details', open: node.attrs.open === true }, 0],
   toText: (node) => node.content.map((child) => child.textContent).join('\n'),

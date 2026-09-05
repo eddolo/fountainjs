@@ -3729,7 +3729,7 @@ test('runs the public React first-class widget demo without losing control focus
   expect(errors).toEqual([]);
 });
 
-test('runs the public headless Markdown and LaTeX pipeline', async ({ page }) => {
+test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async ({ page }) => {
   await page.goto('/demos/node-markdown.html');
   const source = page.getByLabel('Markdown input');
   await expect(source).toContainText('$E=mc^2$');
@@ -3743,8 +3743,17 @@ test('runs the public headless Markdown and LaTeX pipeline', async ({ page }) =>
   await expect(output).toContainText('Format boundary guide');
   await source.fill('# Formula\n\n$\\alpha+\\beta$');
   await expect(page.getByText('Valid document · 2 top-level blocks')).toBeVisible();
-  await page.getByRole('button', { name: 'markdown' }).click();
+  await page.getByRole('button', { name: 'markdown', exact: true }).click();
   await expect(output).toContainText('$\\alpha+\\beta$');
+
+  await page.getByRole('button', { name: 'Server HTML' }).click();
+  await expect(page.getByLabel('Server HTML input')).toContainText('<h1>Server-native document</h1>');
+  await expect(page.getByText('Valid document · 5 top-level blocks · no recovered HTML issues')).toBeVisible();
+  await page.getByRole('button', { name: 'json' }).click();
+  await expect(output).toContainText('inline_math');
+  await expect(output).toContainText('ordered_list');
+  await expect(output).toContainText('table');
+  await expect(output).toContainText('no jsdom');
 });
 
 test('renders and inserts native math in the public DOM integration', async ({ page }) => {
