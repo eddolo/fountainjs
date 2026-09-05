@@ -73,6 +73,12 @@ describe('read-only DOM page preview', () => {
     });
 
     expect(result.pages).toHaveLength(2);
+    expect(result.printPageName).toBe('fountain-preview-w100-h70');
+    expect(target.querySelector('style[data-fountain-page-print-style]')?.textContent)
+      .toContain('@page { size: 100px 70px; margin: 0; }');
+    expect(target.querySelector('style[data-fountain-page-print-style]')?.textContent)
+      .toContain('@page fountain-preview-w100-h70 { size: 100px 70px; margin: 0; }');
+    expect(result.pages.every((page) => page.style.getPropertyValue('page') === result.printPageName)).toBe(true);
     expect(target.getAttribute('aria-label')).toBe('Report preview');
     expect(target.classList.contains('report')).toBe(true);
     expect(target.classList.contains('compact')).toBe(true);
@@ -119,9 +125,14 @@ describe('read-only DOM page preview', () => {
     const snapshot = layoutDOMPages(source, document, geometry);
     const target = window.document.createElement('div');
 
-    const result = renderDOMPagePreview(source, target, geometry, snapshot, { includeAccessibleDocument: false });
+    const result = renderDOMPagePreview(source, target, geometry, snapshot, {
+      includeAccessibleDocument: false,
+      includePrintStyles: false,
+    });
 
     expect(result.pages).toHaveLength(2);
+    expect(result.printPageName).toBeUndefined();
+    expect(target.querySelector('[data-fountain-page-print-style]')).toBeNull();
     expect(result.pages[0]?.querySelectorAll('li')).toHaveLength(2);
     expect(result.pages[1]?.querySelectorAll('li')).toHaveLength(1);
     expect(result.pages[1]?.querySelector('ol')?.getAttribute('start')).toBe('3');

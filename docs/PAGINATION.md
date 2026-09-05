@@ -42,7 +42,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - an isolated `fountainjs-editor/pages/preview` renderer for fixed-size
   read-only sheets, exact line clips, structural continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
-  print page breaks, namespaced IDs, and a single continuous accessibility copy;
+  print page breaks, deterministic physical `@page` rules, namespaced IDs, and
+  a single continuous accessibility copy;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -73,9 +74,11 @@ Measurements are adapter input, not persisted editor state. Each template is
 edited once in canonical document order. The neutral projector now decides
 which canonical furniture and footnotes belong to each measured page, and the
 browser adapter supplies real line/list/table/footnote measurements. The
-read-only renderer proves repeated DOM furniture and content projection but
-deliberately does not claim editable page shells, certified PDF fidelity, or
-cross-browser editing across rendered page boundaries.
+read-only renderer proves repeated DOM furniture and content projection. A real
+Chromium PDF gate verifies one output page per projected sheet plus A4/Letter
+MediaBox dimensions; that geometry evidence does not yet certify content-level
+PDF fidelity. Editable page shells and cross-browser editing across rendered
+page boundaries remain active work.
 
 ## Current architecture audit
 
@@ -156,7 +159,10 @@ external layout is incomplete or inconsistent. The optional controller
 automates invalidation and measurement but does not own rendering or state.
 The separate preview entry clones those exact slices into visual sheets; it
 requires the measured editor width to equal the page body width and never
-changes the editor DOM.
+changes the editor DOM. It emits an unnamed physical page rule for broad print
+support and a deterministic named equivalent for engines that support named
+pages. Hosts printing multiple geometries in one document can disable those
+rules and own the global print stylesheet.
 
 ## Document semantics
 

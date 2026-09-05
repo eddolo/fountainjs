@@ -750,9 +750,11 @@ The suites are organized by boundary:
   timed reflow cycles, and deterministic controller teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
-  separation, structural slices, and continued ordered-list numbering;
+  separation, structural slices, continued ordered-list numbering, and physical
+  print-rule generation;
 - the page browser contracts additionally exercise real multi-line range boxes,
-  list items, rowspan groups, repeated table-header cost, and footnotes.
+  list items, rowspan groups, repeated table-header cost, footnotes, print-media
+  presentation, and Chromium-generated A4/Letter PDF page counts and MediaBoxes.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
@@ -766,9 +768,9 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 13/11 KiB for browser measurement/reflow, 56 KiB for
-CSS, and 700/594 KiB for all emitted
-ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
+isolated page foundation, 16/13 KiB for browser measurement/reflow, 9/8 KiB for
+read-only page preview/print projection, 56 KiB for CSS, and 704/594 KiB for all
+emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on

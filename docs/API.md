@@ -1385,6 +1385,13 @@ and linked page-local footnotes. The source must be measured at the exact page
 body width; a mismatch throws before rendering because changed wrapping would
 invalidate every line boundary.
 
+By default the renderer also inserts print-only unnamed and deterministic named
+`@page` rules for the supplied width/height, assigns the named page to each
+sheet, removes screen decoration, and preserves one forced PDF page per sheet.
+Pass `includePrintStyles: false` only when the host owns the document's global
+print rules. DOM geometry values are CSS pixels, so physical A4/Letter output
+uses `unitsPerMillimetre: 96 / 25.4` as shown above.
+
 The visual sheets are `aria-hidden` because clipped DOM copies otherwise repeat
 off-page text to assistive technology. By default the preview contains one
 visually hidden, continuous, non-editable semantic copy of the source instead.
@@ -1404,8 +1411,10 @@ printing and explicit host checks. The controller reads state through
 `getDocument()` so it never owns or mutates editor state.
 
 This is the page-model, measurement, and read-only preview foundation, not a
-completed editable paginator. Editable page-shell rendering, selection/IME
-across visual boundaries, and certified print/PDF fidelity remain active work.
+completed editable paginator. A real Chromium gate verifies A4/Letter PDF page
+counts and MediaBox dimensions, but editable page-shell rendering,
+selection/IME across visual boundaries, and content-level print/PDF fidelity
+remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

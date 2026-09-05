@@ -99,8 +99,10 @@ const limits = Object.freeze({
   // 7/6 KiB respectively. The platform-neutral page foundation adds about
   // 21/18 KiB as an isolated opt-in entry, including canonical page-template
   // semantics. Browser fragment mapping and strict placement projection add
-  // about 6/5 KiB. The schema is data and is not counted as runtime JS.
-  'all ESM runtime code': 700 * kibibyte,
+  // about 6/5 KiB; read-only screen/print projection stays in its own entry.
+  // Physical print rules add less than 1 KiB and retain a small regression
+  // allowance. The schema is data and is not counted as runtime JS.
+  'all ESM runtime code': 704 * kibibyte,
   'all CommonJS runtime code': 594 * kibibyte,
 });
 

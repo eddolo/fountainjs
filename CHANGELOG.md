@@ -24,7 +24,8 @@
   with model/structural paths and clip geometry; strict page-placement/source
   projection with separated continuation overhead; an isolated read-only page
   preview/print renderer with repeated furniture, structural continuation,
-  footnotes, width validation, ID isolation, and one accessibility copy; and an
+  footnotes, width validation, ID isolation, one accessibility copy, physical
+  print-page rules, and real A4/Letter PDF geometry checks; and an
   improved keep-with-next rule that reserves a splittable block's required
   opening lines, plus an honest staged pagination contract. Editable page-shell
   behavior and certified print/PDF fidelity remain active work rather than

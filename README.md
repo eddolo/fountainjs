@@ -333,11 +333,15 @@ Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
-and print page breaks. Visual clipped copies are hidden from assistive technology
-while one continuous read-only copy preserves document semantics. It does **not**
-yet claim editable page shells or certified print/PDF fidelity. Those remain
-active `DOC-14` work with explicit browser and accessibility gates in [the
-pagination contract](docs/PAGINATION.md).
+and print page breaks. It installs print-only physical `@page` rules matching the
+geometry; pass `{ includePrintStyles: false }` only when the host owns those
+global rules. Browser geometry must use CSS-pixel units (for example,
+`unitsPerMillimetre: 96 / 25.4`) for physical A4/Letter output. Visual clipped
+copies are hidden from assistive technology while one continuous read-only copy
+preserves document semantics. It does **not** yet claim editable page shells or
+certified content-level print/PDF fidelity. Those remain active `DOC-14` work
+with explicit browser and accessibility gates in [the pagination
+contract](docs/PAGINATION.md).
 
 ## Optional clipboard history
 

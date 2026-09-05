@@ -281,6 +281,39 @@ const runPerformanceBudget = async () => {
   return { inputToPaint, added, removed, retainedBlocks, text, remainingDOM };
 };
 
+const renderPagesPreview = (
+  geometry: ReturnType<typeof createPageGeometry>,
+  keepMounted = false,
+) => {
+  pagesView.dom.style.boxSizing = 'content-box';
+  pagesView.dom.style.width = `${geometry.size.width - geometry.margins.left - geometry.margins.right}px`;
+  const snapshot = layoutDOMPages(pagesView.dom, pagesEditor.state.doc, geometry);
+  document.querySelector('#browser-page-preview')?.remove();
+  const target = document.createElement('div');
+  target.id = 'browser-page-preview';
+  document.body.appendChild(target);
+  const before = pagesView.dom.outerHTML;
+  const result = renderDOMPagePreview(pagesView.dom, target, geometry, snapshot);
+  const output = {
+    pageCount: result.pages.length,
+    pageNumbers: result.pages.map((page) => page.dataset.fountainPage),
+    pageWidth: geometry.size.width,
+    pageHeight: geometry.size.height,
+    printPageName: result.printPageName,
+    printStyle: target.querySelector<HTMLStyleElement>('[data-fountain-page-print-style]')?.textContent,
+    visualPagesHidden: result.pages.every((page) => page.getAttribute('aria-hidden') === 'true'),
+    accessibleDocuments: target.querySelectorAll('.fountain-page-preview__accessible').length,
+    clippedPlacements: target.querySelectorAll('.fountain-page-preview__clip').length,
+    manualBreaks: result.pages.reduce((count, page) => (
+      count + page.querySelectorAll('[data-fountain-page-break]').length
+    ), 0),
+    sourceUnchanged: pagesView.dom.outerHTML === before,
+  };
+  if (!keepMounted) target.remove();
+  else target.scrollIntoView({ block: 'start' });
+  return output;
+};
+
 Object.assign(globalThis, {
   fountainBrowserTest: {
     commands,
@@ -381,30 +414,15 @@ Object.assign(globalThis, {
         pagesEditor.state.doc,
         createPageGeometry({ size: { width: 260, height: 120 }, margins: 10 }),
       ),
-      preview: (keepMounted = false) => {
-        const geometry = createPageGeometry({ size: { width: 260, height: 120 }, margins: 10 });
-        const snapshot = layoutDOMPages(pagesView.dom, pagesEditor.state.doc, geometry);
-        document.querySelector('#browser-page-preview')?.remove();
-        const target = document.createElement('div');
-        target.id = 'browser-page-preview';
-        document.body.appendChild(target);
-        const before = pagesView.dom.outerHTML;
-        const result = renderDOMPagePreview(pagesView.dom, target, geometry, snapshot);
-        const output = {
-          pageCount: result.pages.length,
-          pageNumbers: result.pages.map((page) => page.dataset.fountainPage),
-          visualPagesHidden: result.pages.every((page) => page.getAttribute('aria-hidden') === 'true'),
-          accessibleDocuments: target.querySelectorAll('.fountain-page-preview__accessible').length,
-          clippedPlacements: target.querySelectorAll('.fountain-page-preview__clip').length,
-          manualBreaks: result.pages.reduce((count, page) => (
-            count + page.querySelectorAll('[data-fountain-page-break]').length
-          ), 0),
-          sourceUnchanged: pagesView.dom.outerHTML === before,
-        };
-        if (!keepMounted) target.remove();
-        else target.scrollIntoView({ block: 'start' });
-        return output;
-      },
+      preview: (keepMounted = false) => renderPagesPreview(
+        createPageGeometry({ size: { width: 260, height: 120 }, margins: 10 }),
+        keepMounted,
+      ),
+      previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({
+        size,
+        margins: 12.7,
+        unitsPerMillimetre: 96 / 25.4,
+      }), true),
       controllerProbe: () => {
         const cycles: number[] = [];
         const controller = createDOMPageLayoutController(
@@ -427,6 +445,16 @@ Object.assign(globalThis, {
 });
 
 if (new URLSearchParams(globalThis.location.search).get('fixture') === 'pages-preview') {
+  document.body.dataset.fountainPagePrintFixture = 'true';
+  const fixturePrintStyle = document.createElement('style');
+  fixturePrintStyle.textContent = `
+    @media print {
+      body[data-fountain-page-print-fixture="true"] { margin: 0; }
+      body[data-fountain-page-print-fixture="true"] > :not(#browser-page-preview) { display: none !important; }
+      #browser-page-preview { margin: 0 !important; }
+    }
+  `;
+  document.head.appendChild(fixturePrintStyle);
   const contract = (globalThis as typeof globalThis & {
     fountainBrowserTest: {
       pages: { loadMeasurementFixture: () => boolean; preview: (keepMounted?: boolean) => unknown };

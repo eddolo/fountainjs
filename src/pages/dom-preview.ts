@@ -13,11 +13,15 @@ export interface DOMPagePreviewOptions {
   readonly className?: string;
   /** Include one non-paginated screen-reader copy. Defaults to true. */
   readonly includeAccessibleDocument?: boolean;
+  /** Install a named physical page rule for browser printing. Defaults to true. */
+  readonly includePrintStyles?: boolean;
 }
 
 export interface DOMPagePreviewResult {
   readonly root: HTMLElement;
   readonly pages: readonly HTMLElement[];
+  /** Deterministic named `@page`, absent when print styles are disabled. */
+  readonly printPageName?: string;
 }
 
 function finitePositive(value: unknown): value is number {
@@ -212,6 +216,23 @@ function pageRegion(owner: Document, className: string, height: number): HTMLEle
   return region;
 }
 
+function cssNumberToken(value: number): string {
+  return value.toString().replaceAll('-', 'm').replaceAll('.', 'p').replaceAll('+', 'p');
+}
+
+function physicalPageName(geometry: PageGeometry): string {
+  return `fountain-preview-w${cssNumberToken(geometry.size.width)}-h${cssNumberToken(geometry.size.height)}`;
+}
+
+function physicalPageStyle(owner: Document, pageName: string, geometry: PageGeometry): HTMLStyleElement {
+  const style = owner.createElement('style');
+  style.media = 'print';
+  style.dataset.fountainPagePrintStyle = pageName;
+  const declaration = `size: ${geometry.size.width}px ${geometry.size.height}px; margin: 0;`;
+  style.textContent = `@page { ${declaration} }\n@page ${pageName} { ${declaration} }`;
+  return style;
+}
+
 /**
  * Renders a separate read-only paged preview from one measured editor snapshot.
  * The editable source DOM is only cloned and is never moved or annotated.
@@ -252,6 +273,7 @@ export function renderDOMPagePreview(
   const owner = target.ownerDocument;
   const fragment = owner.createDocumentFragment();
   const pages: HTMLElement[] = [];
+  const printPageName = options.includePrintStyles === false ? undefined : physicalPageName(geometry);
   let cloneCount = 0;
   snapshot.content.pages.forEach((contentPage, pageIndex) => {
     const presentation = snapshot.presentation.pages[pageIndex];
@@ -266,6 +288,7 @@ export function renderDOMPagePreview(
     sheet.style.inlineSize = `${geometry.size.width}px`;
     sheet.style.blockSize = `${geometry.size.height}px`;
     sheet.style.padding = `${geometry.margins.top}px ${geometry.margins.right}px ${geometry.margins.bottom}px ${geometry.margins.left}px`;
+    if (printPageName) sheet.style.setProperty('page', printPageName);
 
     const header = pageRegion(owner, 'fountain-page-preview__header', geometry.headerHeight);
     const projectedHeader = clonedTemplate(sourceRoot, presentation.header, presentation.number, ++cloneCount);
@@ -306,6 +329,7 @@ export function renderDOMPagePreview(
     accessible.setAttribute('aria-label', options.ariaLabel ?? 'Document content');
     fragment.prepend(accessible);
   }
+  if (printPageName) fragment.prepend(physicalPageStyle(owner, printPageName, geometry));
   target.replaceChildren(fragment);
   target.classList.add('fountain-page-preview');
   if (extraClasses.length) target.classList.add(...extraClasses);
@@ -313,5 +337,9 @@ export function renderDOMPagePreview(
   target.setAttribute('aria-label', options.ariaLabel ?? 'Document page preview');
   if (options.includeAccessibleDocument === false) target.setAttribute('aria-hidden', 'true');
   else target.removeAttribute('aria-hidden');
-  return Object.freeze({ root: target, pages: Object.freeze(pages) });
+  return Object.freeze({
+    root: target,
+    pages: Object.freeze(pages),
+    ...(printPageName ? { printPageName } : {}),
+  });
 }

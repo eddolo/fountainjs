@@ -123,22 +123,68 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
     .every((placement: any) => placement.sources.length === placement.fragmentTo - placement.fragmentFrom)).toBe(true);
   expect(result.pages).toBeGreaterThan(1);
 
-  const preview = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.preview());
+  const preview = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.preview(true));
   expect(preview).toMatchObject({
     pageCount: result.pages,
+    printPageName: 'fountain-preview-w260-h120',
     visualPagesHidden: true,
     accessibleDocuments: 1,
     manualBreaks: 0,
     sourceUnchanged: true,
   });
+  expect(preview.printStyle).toContain('@page { size: 260px 120px; margin: 0; }');
   expect(preview.pageNumbers).toEqual(Array.from({ length: result.pages }, (_value, index) => String(index + 1)));
   expect(preview.clippedPlacements).toBeGreaterThan(0);
+  await page.emulateMedia({ media: 'print' });
+  const printStyles = await page.locator('#browser-page-preview').evaluate((target) => {
+    const sheet = target.querySelector<HTMLElement>('[data-fountain-page]');
+    if (!sheet) throw new Error('Expected one rendered preview sheet.');
+    return {
+      display: getComputedStyle(target).display,
+      background: getComputedStyle(target).backgroundColor,
+      boxShadow: getComputedStyle(sheet).boxShadow,
+      breakAfter: getComputedStyle(sheet).breakAfter,
+    };
+  });
+  expect(printStyles.display).toBe('block');
+  expect(['rgba(0, 0, 0, 0)', 'transparent']).toContain(printStyles.background);
+  expect(printStyles.boxShadow).toBe('none');
+  expect(['page', 'always']).toContain(printStyles.breakAfter);
+  await page.emulateMedia({ media: 'screen' });
+  await page.locator('#browser-page-preview').evaluate((target) => target.remove());
 
   const controller = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.controllerProbe());
   const sortedDurations = [...controller.cycles].sort((left: number, right: number) => left - right);
   const p95 = sortedDurations[Math.min(sortedDurations.length - 1, Math.floor(sortedDurations.length * .95))];
   expect(controller).toMatchObject({ lastRevision: 12, lastReason: 'manual', destroyed: true });
   expect(p95).toBeLessThan(50);
+});
+
+test('emits exact A4 and Letter PDF pages for every projected sheet in Chromium', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'Playwright exposes PDF generation only for Chromium.');
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  for (const format of [
+    { name: 'a4', widthPoints: 210 * 72 / 25.4, heightPoints: 297 * 72 / 25.4 },
+    { name: 'letter', widthPoints: 8.5 * 72, heightPoints: 11 * 72 },
+  ] as const) {
+    const preview = await page.evaluate((name) => (
+      (globalThis as any).fountainBrowserTest.pages.previewPhysical(name)
+    ), format.name);
+    expect(preview.pageCount).toBeGreaterThan(1);
+    const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true });
+    const source = pdf.toString('latin1');
+    expect(source.match(/\/Type\s*\/Page\b/g)).toHaveLength(preview.pageCount);
+    const mediaBoxes = [...source.matchAll(/\/MediaBox\s*\[([^\]]+)\]/g)].map((match) => (
+      match[1]?.trim().split(/\s+/u).map(Number) ?? []
+    ));
+    expect(mediaBoxes).toHaveLength(preview.pageCount);
+    mediaBoxes.forEach(([left, bottom, right, top]) => {
+      expect(left).toBe(0);
+      expect(bottom).toBe(0);
+      expect(Math.abs((right ?? 0) - format.widthPoints)).toBeLessThanOrEqual(.5);
+      expect(Math.abs((top ?? 0) - format.heightPoints)).toBeLessThanOrEqual(.5);
+    });
+  }
 });
 
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
