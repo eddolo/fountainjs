@@ -78,6 +78,9 @@
   characters, and measures the 999-character bound in Unicode code points.
   Adjacent full and shortcut references follow the specified precedence rather
   than allowing an earlier shortcut to steal a later link label.
+  Markdown image descriptions now become plain alt text after parsing nested
+  emphasis, links, and images, instead of leaking their source punctuation into
+  accessibility metadata.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

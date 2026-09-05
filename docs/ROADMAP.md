@@ -263,6 +263,9 @@ content, so escape and character-reference spellings do not falsely collide.
 It now applies the exact label-whitespace class, counts the 999-character bound
 by Unicode code point, and covers the official adjacent-reference precedence
 matrix without letting an earlier shortcut capture a following label.
+Image descriptions project nested inline formatting, links, and images to
+plain alt text rather than preserving Markdown punctuation in accessibility
+metadata.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

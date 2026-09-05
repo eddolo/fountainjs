@@ -354,6 +354,21 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('projects nested image descriptions to plain alt text', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const description = 'photo *with emphasis*, [a link](https://example.com), and ![an icon](icon.png)';
+    const block = MarkdownImporter.parse(`![${description}](hero.png "Hero")`, schema);
+    const inlineDocument = MarkdownImporter.parse(`Before ![${description}](hero.png "Hero") after`, schema);
+    const inlineImage = inlineDocument.child(0).content.find((node) => node.type.name === 'inline_image');
+    const expectedAlt = 'photo with emphasis, a link, and an icon';
+
+    expect(block.child(0).type.name).toBe('image_super');
+    expect(block.child(0).attrs).toMatchObject({ src: 'hero.png', alt: expectedAlt, title: 'Hero' });
+    expect(inlineImage?.attrs).toMatchObject({ src: 'hero.png', alt: expectedAlt, title: 'Hero' });
+    expect(MarkdownExporter.export(block)).toBe(`![${expectedAlt}](hero.png "Hero")`);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(block), schema).toJSON()).toEqual(block.toJSON());
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

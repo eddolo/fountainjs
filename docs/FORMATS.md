@@ -133,6 +133,10 @@ destination cannot silently select a reference with the same label. An explicit
 empty destination is represented as an empty link and round-trips as `[]()`;
 blocked protocols remain literal. The empty exception is link-specific: images,
 media, actions, and other URL-bearing attributes still require a destination.
+Image descriptions may contain ordinary inline formatting, links, and nested
+images. Import projects their plain textual content into `alt`, so Markdown
+punctuation and nested destinations do not leak into accessibility metadata;
+canonical export then emits that safe plain description.
 
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a

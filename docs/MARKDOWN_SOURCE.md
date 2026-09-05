@@ -136,6 +136,7 @@ an initial standards-oriented set of behaviors:
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;
 - inline/reference links and images with titles;
+- plain-text image descriptions derived from nested emphasis, links, and images;
 - recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
 - aligned GFM pipe tables;
 - extension-aware footnotes, math, details, ruby, and rich text-style HTML.

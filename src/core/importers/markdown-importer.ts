@@ -850,7 +850,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
             try {
               result.push(schema.node('inline_image', {
                 src: parsed.href,
-                alt: decodeMarkdownText(parsed.label),
+                alt: imageDescription(parsed.label, schema, references),
                 title: parsed.title,
               }));
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
@@ -905,6 +905,18 @@ function inline(text: string, schema: Schema, references: References, inheritedM
   }
   flush();
   return result.length ? result : [schema.text('')];
+}
+
+function imageDescription(value: string, schema: Schema, references: References): string {
+  return inline(value, schema, references).map((node) => {
+    if (node.isText) return node.textContent;
+    if (node.type.name === 'inline_image') return String(node.attrs.alt ?? '');
+    if (node.type.name === 'hard_break') return '\n';
+    if (node.type.name === 'footnote_reference') return `[^${String(node.attrs.id ?? '')}]`;
+    if (node.type.name === 'inline_math') return String(node.attrs.latex ?? '');
+    if (node.type.name === 'emoji') return String(node.attrs.emoji ?? node.textContent);
+    return node.textContent;
+  }).join('');
 }
 
 function paragraph(schema: Schema, value: string, references: References, align = 'left'): Node {
@@ -1198,7 +1210,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     if (image && isSafeURL(image.href, { allowDataImage: true })) {
       blocks.push(schema.node('image_super', {
         src: image.href,
-        alt: decodeMarkdownText(image.label),
+        alt: imageDescription(image.label, schema, references),
         title: image.title,
         width: '100%',
         caption: '',
