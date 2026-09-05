@@ -211,6 +211,33 @@ describe('Markdown interchange', () => {
     expect(document.childCount).toBe(1);
   });
 
+  it('normalizes multiline definition labels and rejects unescaped nested brackets', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[Baz][Foo bar] and [Escaped][ref\\[].',
+      '',
+      '[Foo',
+      '  bar]: docs/multiline-label.md "Multiline label"',
+      '[ref\\[]: docs/escaped-opening.md',
+      '',
+      '[bad][ref[]',
+      '',
+      '[ref[]: docs/not-a-definition.md',
+    ].join('\n'), schema);
+    const links: Array<{ text: string; href: unknown }> = [];
+    document.descendants((node) => {
+      const link = node.marks.find((mark) => mark.type.name === 'link');
+      if (node.isText && link) links.push({ text: node.textContent, href: link.attrs.href });
+    });
+
+    expect(links).toEqual([
+      { text: 'Baz', href: 'docs/multiline-label.md' },
+      { text: 'Escaped', href: 'docs/escaped-opening.md' },
+    ]);
+    expect(document.textContent).toContain('[bad][ref[]');
+    expect(document.textContent).toContain('[ref[]: docs/not-a-definition.md');
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

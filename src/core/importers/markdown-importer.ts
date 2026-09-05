@@ -262,7 +262,6 @@ function splitMarkdownSource(source: string): MarkdownSourceParts {
 }
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
-const REFERENCE_DEFINITION_OPENING = /^ {0,3}\[((?:\\.|[^\\\x5d])+)\]:[\t ]*(.*)$/u;
 
 interface ReferenceDefinition {
   readonly href: string;
@@ -271,6 +270,12 @@ interface ReferenceDefinition {
 
 interface ParsedReferenceDefinition extends ReferenceDefinition {
   readonly label: string;
+  readonly lineCount: number;
+}
+
+interface ReferenceDefinitionOpening {
+  readonly label: string;
+  readonly remainder: string;
   readonly lineCount: number;
 }
 
@@ -419,16 +424,51 @@ function destinationParts(value: string, allowEmpty = false): ReferenceDefinitio
   return { href: decodeMarkdownText(href), title: decodeMarkdownText(title) };
 }
 
+function referenceDefinitionOpeningAt(
+  lines: readonly string[],
+  index: number,
+): ReferenceDefinitionOpening | null {
+  const first = /^ {0,3}\[(.*)$/u.exec(lines[index] ?? '');
+  if (!first) return null;
+  let label = '';
+
+  for (let cursor = index; cursor < lines.length && cursor < index + MAX_MARKDOWN_REFERENCE_LINES; cursor++) {
+    const content = cursor === index ? first[1] : lines[cursor];
+    if (cursor > index) {
+      if (!content.trim() || /^(?: {4}|\t)/u.test(content)) return null;
+      label += '\n';
+    }
+    for (let offset = 0; offset < content.length; offset++) {
+      const character = content[offset];
+      if (character === '\\') {
+        label += character + (content[++offset] ?? '');
+        continue;
+      }
+      // An unescaped opening bracket is not legal inside a reference label.
+      if (character === '[') return null;
+      if (character !== ']') {
+        label += character;
+        continue;
+      }
+      const suffix = /^:[\t ]*(.*)$/u.exec(content.slice(offset + 1));
+      if (!suffix || !label.trim() || Array.from(label).length > 999) return null;
+      return { label, remainder: suffix[1], lineCount: cursor - index + 1 };
+    }
+  }
+  return null;
+}
+
 function referenceDefinitionAt(lines: readonly string[], index: number): ParsedReferenceDefinition | null {
-  const opening = REFERENCE_DEFINITION_OPENING.exec(lines[index] ?? '');
-  if (!opening || opening[1].length > 999) return null;
-  const label = referenceName(opening[1]);
+  const opening = referenceDefinitionOpeningAt(lines, index);
+  if (!opening) return null;
+  const label = referenceName(opening.label);
   if (!label) return null;
 
-  const parts = [opening[2]];
+  const parts = [opening.remainder];
   let best: ParsedReferenceDefinition | null = null;
-  for (let cursor = index; cursor < lines.length && cursor < index + MAX_MARKDOWN_REFERENCE_LINES; cursor++) {
-    if (cursor > index) {
+  const closingLine = index + opening.lineCount - 1;
+  for (let cursor = closingLine; cursor < lines.length && cursor < index + MAX_MARKDOWN_REFERENCE_LINES; cursor++) {
+    if (cursor > closingLine) {
       if (!lines[cursor].trim()) break;
       parts.push(lines[cursor].trim());
     }

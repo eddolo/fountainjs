@@ -93,16 +93,19 @@ or in the middle of an ordinary paragraph, remain literal content rather than
 silently changing links elsewhere in the document. Executable and protocol-
 relative destinations remain blocked.
 
-A reference destination may continue on the next nonblank line, and its
-optional quoted or parenthesized title may continue over further nonblank
-lines. Escaped `]` characters are accepted in labels, definition matching is
+A reference label may span nonblank physical lines before `]:`; its internal
+whitespace is normalized for matching, while unescaped nested brackets make
+the candidate literal. The destination may continue on the next nonblank line,
+and its optional quoted or parenthesized title may continue over further
+nonblank lines. Escaped `[` and `]` characters are accepted in labels,
+definition matching is
 case-insensitive using locale-neutral Unicode 17 full case folding, and the
 first valid definition wins. This includes expanding and compatibility folds
 such as `ẞ`/`SS`, Greek final sigma, micro sign, and presentation ligatures;
 the small generated exception table is pinned to the official Unicode data
 rather than delegated to the host locale. A blank line always ends the
 definition candidate, so title-looking prose after it is not consumed.
-Definition parsing is bounded to 32 physical lines per candidate.
+The complete label/destination/title scan is bounded to 32 physical lines per candidate.
 Definitions inside one or more blockquote levels are discovered without
 letting fenced code or ordinary paragraph continuations inside that quote leak
 into the global reference map.

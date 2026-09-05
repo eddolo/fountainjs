@@ -2273,7 +2273,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '[Safe](https://example.com/?a=1&amp;b=2) \\&copy; &NotEqualTilde;',
     ),
     destinations: (globalThis as any).fountainBrowserTest.inspectMarkdown(
-      '[Angle](<docs/guide)v1>) and [Relative](guide.md "Guide") plus [Reference].\n\n[reference]:\n  docs/reference.md\n  "Reference title"',
+      '[Angle](<docs/guide)v1>) and [Relative](guide.md "Guide") plus [Reference] and [Labelled][Multi line].\n\n[reference]:\n  docs/reference.md\n  "Reference title"\n[multi\n  line]: docs/multiline-label.md',
     ),
     precedence: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '[foo](not a link) / [outer [inner](docs/inner.md)](docs/outer.md)\n\n[foo]: docs/reference.md',
@@ -2308,6 +2308,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     })] }),
     expect.objectContaining({ text: 'Reference', marks: [expect.objectContaining({
       type: 'link', attrs: expect.objectContaining({ href: 'docs/reference.md', title: 'Reference title' }),
+    })] }),
+    expect.objectContaining({ text: 'Labelled', marks: [expect.objectContaining({
+      type: 'link', attrs: expect.objectContaining({ href: 'docs/multiline-label.md' }),
     })] }),
   ]));
   expect(result.destinations.losses).toEqual([]);

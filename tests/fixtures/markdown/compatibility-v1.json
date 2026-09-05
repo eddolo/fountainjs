@@ -161,6 +161,19 @@
         "marks": ["link", "link", "link", "link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-multiline-reference-label",
+      "source": "[Baz][Foo bar]\n\n[Foo\n  bar]: docs/multiline-label.md",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Baz",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["docs/multiline-label.md"],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

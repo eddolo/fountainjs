@@ -61,6 +61,9 @@
   Reference labels now use locale-neutral full Unicode 17 case folding rather
   than JavaScript lowercasing, backed by a pinned, reproducible exception table
   generated from the official Unicode Character Database.
+  Definition labels may span nonblank physical lines and normalize internal
+  whitespace for matching; unescaped nested brackets are rejected instead of
+  being mistaken for a definition.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,
