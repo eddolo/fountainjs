@@ -18,6 +18,7 @@ import {
   createLeanProvider,
   defineExtension,
   getClipboardHistoryState,
+  moveBlock,
   pasteRulesPlugin,
   startImageUpload,
   setNodeAttributes,
@@ -46,6 +47,12 @@ import {
   getTrackedChangesState,
   rejectTrackedSuggestion,
 } from '../../../src/tracked-changes';
+import {
+  InMemoryCommentsStore,
+  createCommentThread,
+  createCommentsExtension,
+  getCommentsState,
+} from '../../../src/comments';
 import '../../../src/styles.css';
 
 const browserFixture = new URLSearchParams(globalThis.location.search).get('fixture');
@@ -232,8 +239,16 @@ const leftPageTracked = createTrackedChangesExtension({
   idFactory: () => `browser-left-page-review-${++leftPageTrackedIdentifier}`,
   now: () => '2026-09-05T12:00:00.000Z',
 });
+const pageCommentsStore = new InMemoryCommentsStore();
+let leftPageCommentIdentifier = 0;
+const leftPageComments = createCommentsExtension({
+  adapter: () => pageCommentsStore.createAdapter(),
+  user: { id: 'browser-left', name: 'Browser left' },
+  idFactory: (kind) => `browser-left-page-${kind}-${++leftPageCommentIdentifier}`,
+  now: () => new Date('2026-09-05T12:00:00.000Z'),
+});
 const leftKit = composeExtensions(pageIntegrationsFixture
-  ? [CoreExtension, PagesExtension, leftPageTracked, leftCollaboration]
+  ? [CoreExtension, PagesExtension, leftPageTracked, leftCollaboration, leftPageComments]
   : [CoreExtension, leftCollaboration]);
 const leftEditor = createEditor({
   schema: leftKit.schema,
@@ -254,8 +269,15 @@ const rightPageTracked = createTrackedChangesExtension({
   idFactory: () => `browser-right-page-review-${++rightPageTrackedIdentifier}`,
   now: () => '2026-09-05T12:01:00.000Z',
 });
+let rightPageCommentIdentifier = 0;
+const rightPageComments = createCommentsExtension({
+  adapter: () => pageCommentsStore.createAdapter(),
+  user: { id: 'browser-right', name: 'Browser right' },
+  idFactory: (kind) => `browser-right-page-${kind}-${++rightPageCommentIdentifier}`,
+  now: () => new Date('2026-09-05T12:01:00.000Z'),
+});
 const rightKit = composeExtensions(pageIntegrationsFixture
-  ? [CoreExtension, PagesExtension, rightPageTracked, rightCollaboration]
+  ? [CoreExtension, PagesExtension, rightPageTracked, rightCollaboration, rightPageComments]
   : [CoreExtension, rightCollaboration]);
 const rightEditor = createEditor({
   schema: rightKit.schema,
@@ -335,6 +357,21 @@ const trackedPageController = pageIntegrationsFixture
       { measurement: pageIntegrationMeasurement },
     )
   : null;
+
+const pageIntegrationCommentPath = (): readonly number[] => {
+  if (splitTablePageIntegrationsFixture) return Object.freeze([0, 3, 0, 0, 0]);
+  if (splitListPageIntegrationsFixture) return Object.freeze([0, 5, 0, 0]);
+  return Object.freeze([0, 0]);
+};
+
+const createPageIntegrationComment = async () => {
+  if (!pageIntegrationsFixture) throw new Error('Page integration comments require a page integration fixture.');
+  const path = pageIntegrationCommentPath();
+  return createCommentThread(leftEditor, {
+    content: 'Comment anchored across an automatic page boundary.',
+    selection: Selection.range(path, 0, path, 9),
+  });
+};
 
 const pagesKit = composeExtensions([CoreExtension, HistoryExtension, PagesExtension]);
 const pagesEditor = createEditor({
@@ -777,6 +814,16 @@ Object.assign(globalThis, {
         };
       },
       integrations: {
+        createComment: createPageIntegrationComment,
+        insertBeforeComment: () => {
+          if (!pageIntegrationsFixture) return false;
+          return leftEditor.dispatch(leftEditor.state.createTransaction().replaceText(
+            pageIntegrationCommentPath(),
+            0,
+            0,
+            'Before ',
+          ));
+        },
         summary: () => ({
           mounted: pageIntegrationsFixture,
           left: {
@@ -784,12 +831,14 @@ Object.assign(globalThis, {
             pages: leftPageController?.current?.pages.length,
             document: leftEditor.getJSON(),
             suggestions: getTrackedChangesState(leftEditor)?.suggestions ?? [],
+            comments: getCommentsState(leftEditor)?.threads ?? [],
           },
           right: {
             mode: rightPageController?.current?.mode,
             pages: rightPageController?.current?.pages.length,
             document: rightEditor.getJSON(),
             suggestions: getTrackedChangesState(rightEditor)?.suggestions ?? [],
+            comments: getCommentsState(rightEditor)?.threads ?? [],
           },
           review: {
             mode: trackedPageController?.current?.mode,
@@ -803,6 +852,24 @@ Object.assign(globalThis, {
         undo: () => editablePagesFixture?.commands.commands.undo?.() ?? false,
         redo: () => editablePagesFixture?.commands.commands.redo?.() ?? false,
         refresh: () => editablePagesFixture?.controller.refreshNow('manual'),
+        moveContainerAfterParagraph: () => {
+          if (!editablePagesFixture || (!splitEditableTableFixture && !splitEditableListFixture)) return false;
+          const paragraphType = editablePagesFixture.editor.state.schema.nodes.paragraph;
+          if (!paragraphType) return false;
+          const paragraph = paragraphType.create({}, [
+            editablePagesFixture.editor.state.schema.text('Paragraph moved before the paginated container.'),
+          ]);
+          const inserted = editablePagesFixture.editor.dispatch(
+            editablePagesFixture.editor.state.createTransaction().replace(
+              editablePagesFixture.editor.state.doc.childCount,
+              editablePagesFixture.editor.state.doc.childCount,
+              [paragraph],
+            ),
+          );
+          if (!inserted || !moveBlock(editablePagesFixture.editor, 0, 1)) return false;
+          editablePagesFixture.controller.refreshNow('manual');
+          return true;
+        },
         summary: () => {
           if (!editablePagesFixture) return { mounted: false };
           const selection = editablePagesFixture.editor.state.selection;

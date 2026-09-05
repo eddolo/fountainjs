@@ -636,6 +636,23 @@ test('keeps one canonical ordered list editable and numbered across page shells'
   await expect(editor).toContainText('続');
   await expect(list).toHaveAttribute('start', '4');
 
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.moveContainerAfterParagraph()
+  ))).toBe(true);
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('Paragraph moved before the paginated container.');
+  await expect(list).toHaveAttribute('data-fountain-path', '1');
+  await expect(list.locator(':scope > li[data-fountain-node="list_item"]')).toHaveCount(16);
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  expect(await list.locator('[data-fountain-editable-list-break]').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.editable.summary();
+    return {
+      types: summary.document.content.map((node: any) => node.type),
+      itemCount: summary.document.content[1]?.content.length,
+      start: summary.document.content[1]?.attrs?.start,
+    };
+  })).toEqual({ types: ['paragraph', 'ordered_list'], itemCount: 16, start: 4 });
+
   const region = page.getByLabel('Editable pages browser contract');
   await region.evaluate((element) => { (element as HTMLElement).style.width = '360px'; });
   await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');
@@ -645,7 +662,7 @@ test('keeps one canonical ordered list editable and numbered across page shells'
   await expect.poll(async () => (
     await host.locator('.fountain-editable-pages__sheet').count()
       - await editor.locator('[data-fountain-editable-list-break]').count()
-  )).toBe(1);
+  )).toBe(2);
 });
 
 test('keeps one canonical table editable with repeated headers across page shells', async ({ page }) => {
@@ -762,6 +779,23 @@ test('keeps one canonical table editable with repeated headers across page shell
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
   await expect(editor).toContainText('表');
   await expect(rows).toHaveCount(13);
+
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.moveContainerAfterParagraph()
+  ))).toBe(true);
+  await expect(editor.locator(':scope > [data-fountain-path="0"]')).toContainText('Paragraph moved before the paginated container.');
+  await expect(table).toHaveAttribute('data-fountain-path', '1');
+  await expect(table.locator('tr[data-fountain-node="table_row"]')).toHaveCount(13);
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  expect(await table.locator('[data-fountain-editable-table-break]').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.editable.summary();
+    return {
+      types: summary.document.content.map((node: any) => node.type),
+      rowCount: summary.document.content[1]?.content.length,
+      pageIntents: summary.document.content.filter((node: any) => node.type === 'page_break').length,
+    };
+  })).toEqual({ types: ['paragraph', 'table'], rowCount: 13, pageIntents: 0 });
 
   const region = page.getByLabel('Editable pages browser contract');
   await region.evaluate((element) => { (element as HTMLElement).style.width = '360px'; });
@@ -913,6 +947,69 @@ test('keeps tracked review and Yjs live between table rows split across pages', 
     reviewRows: 13,
     reviewSuggestions: 0,
   });
+});
+
+for (const continuation of [
+  {
+    label: 'list', fixture: 'split-list-page-integrations',
+    breakSelector: '[data-fountain-editable-list-break]', expectedText: 'Before Canonical list item 9',
+  },
+  {
+    label: 'table', fixture: 'split-table-page-integrations',
+    breakSelector: '[data-fountain-editable-table-break]', expectedText: 'Before Canonical row 3',
+  },
+] as const) test(`keeps comments attached and synchronized inside a continued ${continuation.label}`, async ({ page }) => {
+  await page.goto(`/browser-tests.html?fixture=${continuation.fixture}`);
+  const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
+  const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
+  for (const editor of [left, right]) {
+    await expect(editor.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+    expect(await editor.locator(continuation.breakSelector).count()).toBeGreaterThan(0);
+  }
+
+  const threadId = await page.evaluate(async () => (
+    await (globalThis as any).fountainBrowserTest.pages.integrations.createComment()
+  ).id);
+  await expect(left.locator(`[data-fountain-comment-thread="${threadId}"]`).first()).toBeVisible();
+  await expect(right.locator(`[data-fountain-comment-thread="${threadId}"]`).first()).toBeVisible();
+  await expect.poll(() => page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return [summary.left.comments.length, summary.right.comments.length];
+  })).toEqual([1, 1]);
+  const initialAnchors = await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return [summary.left.comments[0].anchor, summary.right.comments[0].anchor];
+  });
+  expect(initialAnchors[0]).toMatchObject({ status: 'attached', quote: 'Canonical' });
+  expect(initialAnchors[1]).toEqual(initialAnchors[0]);
+
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.integrations.insertBeforeComment()
+  ))).toBe(true);
+  await expect(right).toContainText(continuation.expectedText);
+  await expect.poll(() => page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return [summary.left.comments[0]?.anchor, summary.right.comments[0]?.anchor];
+  })).toEqual([
+    expect.objectContaining({
+      status: 'attached',
+      from: initialAnchors[0].from + 7,
+      to: initialAnchors[0].to + 7,
+      quote: 'Canonical',
+    }),
+    expect.objectContaining({
+      status: 'attached',
+      from: initialAnchors[0].from + 7,
+      to: initialAnchors[0].to + 7,
+      quote: 'Canonical',
+    }),
+  ]);
+  await expect(left.locator(`[data-fountain-comment-thread="${threadId}"]`).first()).toBeVisible();
+  await expect(right.locator(`[data-fountain-comment-thread="${threadId}"]`).first()).toBeVisible();
+  for (const editor of [left, right]) {
+    await expect(editor.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+    expect(await editor.locator(continuation.breakSelector).count()).toBeGreaterThan(0);
+  }
 });
 
 test('keeps tracked review and Yjs live inside a paragraph split across pages', async ({ page }) => {
