@@ -84,6 +84,15 @@ decoding, so `\&copy;` remains the literal text `&copy;`. URL protocols are
 validated after decoding, and canonical export escapes a literal reference-like
 sequence so reparsing cannot silently change its meaning.
 
+Links accept safe absolute, root/hash/dot-relative, path-relative, and
+query-relative destinations. Bare destinations retain balanced parentheses;
+angle destinations may contain parentheses; title delimiters must close
+without an unescaped matching delimiter; and reference labels are bounded to
+999 source characters. Reference definitions inside fenced or indented code,
+or in the middle of an ordinary paragraph, remain literal content rather than
+silently changing links elsewhere in the document. Executable and protocol-
+relative destinations remain blocked.
+
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a
 deterministic `<span data-fountain-text-style="true">` form when ordinary

@@ -311,6 +311,37 @@ function closingBracket(value: string, start: number, open = '[', close = ']'): 
   return -1;
 }
 
+function inlineLinkEnd(value: string, start: number): number {
+  let depth = 0;
+  let angleDestination = false;
+  let destinationStarted = false;
+  for (let index = start; index < value.length; index++) {
+    const character = value[index];
+    if (character === '\\') { index++; continue; }
+    if (index === start) {
+      if (character !== '(') return -1;
+      depth = 1;
+      continue;
+    }
+    if (!destinationStarted && /[\t ]/u.test(character)) continue;
+    if (!destinationStarted) {
+      destinationStarted = true;
+      angleDestination = character === '<';
+    }
+    if (angleDestination) {
+      if (character === '\n' || character === '\r') return -1;
+      if (character === '>') angleDestination = false;
+      continue;
+    }
+    if (character === '(') depth++;
+    else if (character === ')') {
+      depth--;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
 function matchingDelimiter(value: string, start: number, delimiter: string): number {
   for (let index = start; index <= value.length - delimiter.length; index++) {
     if (value[index] === '\\') { index++; continue; }
@@ -367,6 +398,10 @@ function destinationParts(value: string): ReferenceDefinition | null {
     const first = remainder[0];
     const last = remainder.at(-1);
     if (!((first === '"' && last === '"') || (first === "'" && last === "'") || (first === '(' && last === ')'))) return null;
+    for (let index = 1; index < remainder.length - 1; index++) {
+      if (remainder[index] === '\\') { index++; continue; }
+      if (remainder[index] === last) return null;
+    }
     title = remainder.slice(1, -1);
   }
   return { href: decodeMarkdownText(href), title: decodeMarkdownText(title) };
@@ -527,7 +562,7 @@ function linkToken(value: string, start: number, references: References): LinkTo
   const label = value.slice(bracket + 1, labelEnd);
   const following = labelEnd + 1;
   if (value[following] === '(') {
-    const destinationEnd = closingBracket(value, following, '(', ')');
+    const destinationEnd = inlineLinkEnd(value, following);
     if (destinationEnd < 0) return null;
     const parsed = destinationParts(value.slice(following + 1, destinationEnd));
     return parsed ? { ...parsed, label, image, end: destinationEnd + 1 } : null;
@@ -536,9 +571,12 @@ function linkToken(value: string, start: number, references: References): LinkTo
     const referenceEnd = closingBracket(value, following);
     if (referenceEnd < 0) return null;
     const explicit = value.slice(following + 1, referenceEnd);
-    const definition = references.get(referenceName(explicit || label));
+    const referenceLabel = explicit || label;
+    if (!referenceLabel.trim() || referenceLabel.length > 999) return null;
+    const definition = references.get(referenceName(referenceLabel));
     return definition ? { ...definition, label, image, end: referenceEnd + 1 } : null;
   }
+  if (!label.trim() || label.length > 999) return null;
   const definition = references.get(referenceName(label));
   return definition ? { ...definition, label, image, end: labelEnd + 1 } : null;
 }
@@ -1024,18 +1062,56 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
 
 function references(markdown: string): { lines: string[]; definitions: References } {
   const definitions = new Map<string, ReferenceDefinition>();
-  const lines = markdown.replace(/\r\n?/g, '\n').split('\n').map((line) => {
+  const sourceLines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const lines: string[] = [];
+  let fence: MarkdownFence | null = null;
+  let paragraphOpen = false;
+  sourceLines.forEach((line) => {
+    if (fence) {
+      lines.push(line);
+      if (closesMarkdownFence(line, fence)) fence = null;
+      paragraphOpen = false;
+      return;
+    }
+    const openingFence = markdownFence(line);
+    if (openingFence) {
+      fence = openingFence;
+      lines.push(line);
+      paragraphOpen = false;
+      return;
+    }
+    if (!line.trim()) {
+      lines.push(line);
+      paragraphOpen = false;
+      return;
+    }
+    if (indentedCodeLine(line) !== null && !paragraphOpen) {
+      lines.push(line);
+      return;
+    }
     const match = REFERENCE_DEFINITION.exec(line);
-    if (!match) return line;
-    const rawHref = match[2];
-    const href = decodeMarkdownText(rawHref.startsWith('<') && rawHref.endsWith('>') ? rawHref.slice(1, -1) : rawHref);
-    if (!isSafeURL(href, { allowDataImage: true })) return line;
-    const name = referenceName(match[1]);
-    if (name && !definitions.has(name)) definitions.set(name, {
-      href,
-      title: decodeMarkdownText(match[3] ?? match[4] ?? match[5] ?? ''),
-    });
-    return '';
+    if (match && !paragraphOpen) {
+      const rawHref = match[2];
+      const href = decodeMarkdownText(rawHref.startsWith('<') && rawHref.endsWith('>') ? rawHref.slice(1, -1) : rawHref);
+      const name = referenceName(match[1]);
+      if (name && match[1].length <= 999 && isSafeURL(href, { allowDataImage: true })) {
+        if (!definitions.has(name)) definitions.set(name, {
+          href,
+          title: decodeMarkdownText(match[3] ?? match[4] ?? match[5] ?? ''),
+        });
+        lines.push('');
+        paragraphOpen = false;
+        return;
+      }
+    }
+    lines.push(line);
+    if (/^ {0,3}(?:#{1,6}(?:[\t ]+|$)|(?:-{3,}|\*{3,}|_{3,})[\t ]*$|>|(?:[-*])\s+|\d+[.)]\s+|\$\$)/u.test(line)) {
+      paragraphOpen = false;
+    } else if (paragraphOpen && /^ {0,3}(?:=+|-+)[\t ]*$/u.test(line)) {
+      paragraphOpen = false;
+    } else {
+      paragraphOpen = true;
+    }
   });
   return { lines, definitions };
 }

@@ -46,6 +46,12 @@
   literal in code. All ASCII punctuation escapes are recognized; escaped
   ampersands remain literal; decoded URLs pass protocol validation; and
   canonical export protects literal entity-shaped text from changing meaning.
+- Safe path-relative and query-relative URLs now pass the shared link policy.
+  Markdown links additionally handle balanced destination parentheses and
+  angle destinations containing `)`, reject unescaped title closers and labels
+  beyond CommonMark's 999-character reference bound, and no longer extract
+  reference definitions from fenced/indented code or paragraph continuation
+  text.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

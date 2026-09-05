@@ -71,6 +71,34 @@ describe('link behavior extension', () => {
     view.destroy();
   });
 
+  it('recognizes explicit relative-path pastes without consuming ordinary text', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins });
+    const mount = document.createElement('div');
+    const view = new EditorView(mount, editor);
+    const relativePaste = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(relativePaste, 'clipboardData', {
+      value: { files: [], getData: (type: string) => type === 'text/plain' ? 'docs/guide.md' : '' },
+    });
+    view.dom.dispatchEvent(relativePaste);
+    expect(relativePaste.defaultPrevented).toBe(true);
+    expect(links(editor)).toContainEqual({ text: 'docs/guide.md', href: 'docs/guide.md' });
+    view.destroy();
+    editor.destroy();
+
+    const ordinaryEditor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins });
+    const ordinaryView = new EditorView(document.createElement('div'), ordinaryEditor);
+    const ordinaryPaste = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(ordinaryPaste, 'clipboardData', {
+      value: { files: [], getData: (type: string) => type === 'text/plain' ? 'ordinary' : '' },
+    });
+    ordinaryView.dom.dispatchEvent(ordinaryPaste);
+    expect(ordinaryPaste.defaultPrevented).toBe(true);
+    expect(ordinaryEditor.getText()).toContain('ordinary');
+    expect(links(ordinaryEditor)).toEqual([]);
+    ordinaryView.destroy();
+    ordinaryEditor.destroy();
+  });
+
   it('edits or removes the complete link surrounding a collapsed caret', () => {
     const editor = createEditor({
       schema: StarterKit.schema,
@@ -115,6 +143,9 @@ describe('link behavior extension', () => {
     expect(normalizeLinkURL('data:text/html,bad')).toBeNull();
     expect(normalizeLinkURL('//untrusted.example/path')).toBeNull();
     expect(normalizeLinkURL('http:untrusted.example')).toBeNull();
+    expect(normalizeLinkURL('guide/getting-started.md')).toBe('guide/getting-started.md');
+    expect(normalizeLinkURL('?tab=examples')).toBe('?tab=examples');
+    expect(normalizeLinkURL('\\untrusted.example/path')).toBeNull();
     expect(normalizeLinkURL('www.example.com')).toBe('https://www.example.com');
     expect(normalizeLinkURL('https://blocked.example', {
       validate: (href) => !href.includes('blocked'),

@@ -108,6 +108,52 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 
+  it('parses safe relative and balanced Markdown link destinations with strict titles', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = [
+      '[angle](<docs/guide)v1>)',
+      '[nested](docs/(stable))',
+      '[relative](guide.md "Guide")',
+      '[invalid](guide.md "one "two" three")',
+    ].join(' ');
+    const document = MarkdownImporter.parse(source, schema);
+    const links = document.content[0].content.flatMap((node) => node.marks
+      .filter((mark) => mark.type.name === 'link')
+      .map((mark) => ({ text: node.textContent, href: mark.attrs.href, title: mark.attrs.title })));
+
+    expect(links).toEqual([
+      { text: 'angle', href: 'docs/guide)v1', title: '' },
+      { text: 'nested', href: 'docs/(stable)', title: '' },
+      { text: 'relative', href: 'guide.md', title: 'Guide' },
+    ]);
+    expect(document.textContent).toContain('[invalid](guide.md "one "two" three")');
+  });
+
+  it('does not extract reference definitions from code or paragraph continuations', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '```md',
+      '[inside]: docs/code.md',
+      '```',
+      '',
+      'Paragraph',
+      '[continuation]: docs/wrong.md',
+      '',
+      '[inside] [continuation] [real]',
+      '',
+      '[real]: docs/real.md',
+    ].join('\n'), schema);
+    const links = document.content.flatMap((block) => block.content).flatMap((node) => node.marks
+      .filter((mark) => mark.type.name === 'link'));
+
+    expect(document.child(0).type.name).toBe('code_block');
+    expect(document.child(0).textContent).toBe('[inside]: docs/code.md');
+    expect(document.textContent).toContain('Paragraph [continuation]: docs/wrong.md');
+    expect(document.textContent).toContain('[inside] [continuation] real');
+    expect(links).toHaveLength(1);
+    expect(links[0].attrs.href).toBe('docs/real.md');
+  });
+
   it('returns untouched Markdown source exactly while its parsed document is unchanged', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [

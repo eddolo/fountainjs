@@ -200,6 +200,11 @@ function insertLinkAtCaret(
 }
 
 function pasteLink(editor: Editor, text: string, options: LinkBehaviorOptions): boolean {
+  const candidate = text.trim();
+  const looksLikeLink = /^(?:https?:\/\/|mailto:|tel:|www\.|[#/?]|\.\.\/|\.\/)/iu.test(candidate)
+    || /^[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}$/u.test(candidate)
+    || (!/\s/u.test(candidate) && (candidate.includes('/') || /(?:^|\/)[^/]+\.[A-Za-z\d]{1,16}(?:[?#].*)?$/u.test(candidate)));
+  if (!looksLikeLink) return false;
   const href = normalizeLinkURL(text, options, 'paste');
   if (!href) return false;
   if (!editor.state.selection.isCollapsed) return setLink(editor, href, { target: options.defaultTarget ?? '_blank' });

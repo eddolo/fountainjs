@@ -122,6 +122,19 @@
         "marks": ["code"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-link-destinations",
+      "source": "[Angle](<docs/guide)v1>) and [nested](docs/(stable)) plus [relative](guide.md 'Guide').",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Angle and nested plus relative.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["docs/guide)v1", "docs/(stable)", "guide.md"],
+        "marks": ["link", "link", "link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

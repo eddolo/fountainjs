@@ -121,6 +121,8 @@ an initial standards-oriented set of behaviors:
 - variable-delimiter code spans with CommonMark whitespace normalization;
 - strict HTML5 named/numeric character references and all ASCII punctuation
   escapes, excluding code spans and blocks;
+- safe absolute/relative links with balanced or angle-bracket destinations,
+  strict title closers, bounded reference labels, and code-aware definitions;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;

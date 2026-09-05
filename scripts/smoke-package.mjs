@@ -105,6 +105,11 @@ if (packedEntities.textContent !== 'Packed © / &copy;'
   || esmHeadlessCore.MarkdownExporter.export(packedEntities) !== 'Packed © / \\&copy;') {
   throw new Error('ESM headless core did not decode and protect strict Markdown character references.');
 }
+const packedRelativeLink = esmHeadlessCore.MarkdownImporter.parse('[Guide](docs/(stable) "Local")', markdownSchema);
+const packedRelativeMark = packedRelativeLink.child(0).child(0).marks.find((mark) => mark.type.name === 'link');
+if (packedRelativeMark?.attrs.href !== 'docs/(stable)' || packedRelativeMark.attrs.title !== 'Local') {
+  throw new Error('ESM headless core did not parse a safe balanced relative Markdown link.');
+}
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');

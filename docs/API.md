@@ -96,7 +96,8 @@ const poll = defineExtension({
 It recognizes complete web and email addresses as the user types, links a text
 selection when a URL is pasted, inserts linked text when a URL is pasted at a
 caret, and keeps trailing punctuation outside the link. It accepts `https`,
-`http`, `mailto`, `tel`, root-relative, hash, and dot-relative destinations;
+`http`, `mailto`, `tel`, root-relative, hash, dot-relative, safe path-relative,
+and query-relative destinations;
 unsafe schemes, NUL characters, invalid attributes, and overlong URLs are
 rejected.
 
