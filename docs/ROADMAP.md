@@ -57,8 +57,9 @@ legal-fragment flow, non-persisted automatic boundaries, manual breaks,
 footnote intent/integrity, canonical default/first/odd/even header/footer
 templates, dynamic page fields, undo, HTML/JSON, and Yjs. The browser side now
 also has isolated measurement for text lines, list items, rowspan-safe table
-groups, footnotes, and manual breaks. Editable page-shell and print rendering
-plus the remaining evidence are still active. CSS page-shaped boxes or
+groups, footnotes, and manual breaks, plus coalesced timed reflow observation.
+Editable page-shell and print rendering plus the remaining evidence are still
+active. CSS page-shaped boxes or
 destructive document splitting do not qualify.
 
 ## Prioritized after release foundations

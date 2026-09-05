@@ -18,7 +18,8 @@
   overflow/constraint results; JSON and semantic HTML interchange; generic
   history/Yjs behavior; an isolated browser measurement adapter for line boxes,
   list items, rowspan-safe table groups, footnotes, and manual breaks; package
-  budgets; and an honest staged pagination
+  budgets; a coalesced mutation/resize/font/print reflow controller with timed
+  snapshots and deterministic teardown; and an honest staged pagination
   contract. Editable page-shell rendering, repeated furniture, and print/PDF
   fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential

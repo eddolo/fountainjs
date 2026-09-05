@@ -37,7 +37,7 @@ import {
   selectFootnoteDefinition,
   setPageTemplate,
 } from '../../../src/pages';
-import { layoutDOMPages } from '../../../src/pages/dom';
+import { createDOMPageLayoutController, layoutDOMPages } from '../../../src/pages/dom';
 import {
   acceptTrackedSuggestion,
   createTrackedChangesExtension,
@@ -379,6 +379,23 @@ Object.assign(globalThis, {
         pagesEditor.state.doc,
         createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 }),
       ),
+      controllerProbe: () => {
+        const cycles: number[] = [];
+        const controller = createDOMPageLayoutController(
+          pagesView.dom,
+          () => pagesEditor.state.doc,
+          createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 }),
+          { observe: false, onLayout: (cycle) => cycles.push(cycle.durationMs) },
+        );
+        const last = Array.from({ length: 12 }, () => controller.refreshNow('manual')).at(-1)!;
+        controller.destroy();
+        return {
+          cycles,
+          lastRevision: last.revision,
+          lastReason: last.reason,
+          destroyed: controller.isDestroyed,
+        };
+      },
     },
   },
 });

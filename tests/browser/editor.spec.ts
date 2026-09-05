@@ -84,6 +84,12 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
   expect(result.table.fragments).toBe(2);
   expect(result.table.continuationHeight).toBeGreaterThan(0);
   expect(result.pages).toBeGreaterThan(1);
+
+  const controller = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.controllerProbe());
+  const sortedDurations = [...controller.cycles].sort((left: number, right: number) => left - right);
+  const p95 = sortedDurations[Math.min(sortedDurations.length - 1, Math.floor(sortedDurations.length * .95))];
+  expect(controller).toMatchObject({ lastRevision: 12, lastReason: 'manual', destroyed: true });
+  expect(p95).toBeLessThan(50);
 });
 
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {

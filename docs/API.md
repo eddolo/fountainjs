@@ -1290,7 +1290,11 @@ import {
   selectPageTemplate,
   setPageTemplate,
 } from 'fountainjs-editor/pages'
-import { layoutDOMPages, measureDOMPageFlow } from 'fountainjs-editor/pages/dom'
+import {
+  createDOMPageLayoutController,
+  layoutDOMPages,
+  measureDOMPageFlow,
+} from 'fountainjs-editor/pages/dom'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
@@ -1301,6 +1305,12 @@ insertPageField(editor, 'page-number')
 const geometry = createPageGeometry({ size: 'letter', margins: 25.4 })
 const pages = layoutPages(measuredFlowItems, geometry)
 const browserPages = layoutDOMPages(view.dom, editor.state.doc, geometry)
+const controller = createDOMPageLayoutController(
+  view.dom,
+  () => editor.state.doc,
+  geometry,
+  { onLayout: ({ durationMs, snapshot }) => updatePreview(snapshot, durationMs) },
+)
 ```
 
 `inspectFootnotes(document)` reports duplicate, missing, nested, and
@@ -1333,6 +1343,15 @@ canonical template measurements. Missing nodes, invalid geometry, and
 unmeasured footnotes are explicit warnings. It never reparents, clones, or
 annotates the editable DOM; its output is ordinary frozen input for the neutral
 layout engine.
+
+`createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
+optional automatic lifecycle around the same functions. It coalesces subtree
+mutations, element/window resize, loaded fonts, and print preparation into one
+animation-frame refresh; reports the reason, revision, duration, and frozen
+snapshot; accepts host error/layout callbacks; and disconnects every observer
+and listener in `destroy()`. `refreshNow()` remains available for synchronous
+printing and explicit host checks. The controller reads state through
+`getDocument()` so it never owns or mutates editor state.
 
 This is the page-model and measurement foundation, not a completed visual
 paginator. Repeated template projection, page-shell rendering, accessibility

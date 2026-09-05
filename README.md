@@ -283,7 +283,10 @@ import {
   selectPageTemplate,
   setPageTemplate,
 } from 'fountainjs-editor/pages'
-import { layoutDOMPages } from 'fountainjs-editor/pages/dom'
+import {
+  createDOMPageLayoutController,
+  layoutDOMPages,
+} from 'fountainjs-editor/pages/dom'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
@@ -294,6 +297,13 @@ insertPageField(editor, 'page-number')
 const geometry = createPageGeometry({ size: 'a4', margins: 20 })
 const result = layoutPages(measuredFlowItems, geometry) // any measurement host
 const browserResult = layoutDOMPages(view.dom, editor.state.doc, geometry)
+const controller = createDOMPageLayoutController(
+  view.dom,
+  () => editor.state.doc,
+  geometry,
+  { onLayout: ({ snapshot }) => updatePagePreview(snapshot) },
+)
+// controller.destroy() when the host view is removed
 ```
 
 The foundation covers legal fragments, keep-with-next, widow/orphan minima,
@@ -301,7 +311,9 @@ continuation overhead, page-local footnote reservation, canonical editable
 templates, dynamic page fields, overflow diagnostics, undo, JSON, semantic
 HTML, and Yjs. The separate `pages/dom` adapter measures real line boxes, list
 items, rowspan-safe table groups, footnotes, and manual breaks without moving
-editable DOM. It does **not** yet claim a complete visual paginator, repeated
+editable DOM. Its optional controller coalesces DOM mutations, resize, font,
+window, and print invalidations into timed snapshots and has explicit teardown.
+It does **not** yet claim a complete visual paginator, repeated
 template rendering, or print/PDF fidelity. Those
 remain active `DOC-14` work with explicit browser and accessibility gates in
 [the pagination contract](docs/PAGINATION.md).

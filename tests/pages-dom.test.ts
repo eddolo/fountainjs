@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CoreExtension, Schema, composeExtensions } from '../src';
 import { PagesExtension, createPageGeometry } from '../src/pages';
-import { layoutDOMPages, measureDOMPageFlow } from '../src/pages/dom';
+import { createDOMPageLayoutController, layoutDOMPages, measureDOMPageFlow } from '../src/pages/dom';
 
 function schema() {
   return new Schema(composeExtensions([CoreExtension, PagesExtension]).schema);
@@ -88,5 +88,32 @@ describe('DOM page measurement adapter', () => {
     expect(measureDOMPageFlow(root, document, { lineFragmentNodeTypes: [] }).warnings)
       .toMatchObject([{ code: 'unmeasured-footnote', path: [0, 1] }]);
     expect(() => measureDOMPageFlow(root, document, { minimumTextLines: 0 })).toThrow(/positive safe integer/);
+  });
+
+  it('provides explicit timed reflow cycles and deterministic teardown', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Measured' }] }],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = '<p data-fountain-path="0" data-height="20"></p>';
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+    const cycles: number[] = [];
+    const controller = createDOMPageLayoutController(
+      root,
+      () => document,
+      () => createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      { observe: false, measurement: { lineFragmentNodeTypes: [] }, onLayout: (cycle) => cycles.push(cycle.revision) },
+    );
+    const cycle = controller.refreshNow('manual');
+    expect(cycle).toMatchObject({ revision: 1, reason: 'manual', snapshot: { layout: { pages: [{ number: 1 }] } } });
+    expect(cycle.durationMs).toBeGreaterThanOrEqual(0);
+    expect(cycles).toEqual([1]);
+    controller.destroy();
+    expect(controller.isDestroyed).toBe(true);
+    expect(() => controller.refreshNow()).toThrow(/destroyed/);
+    controller.destroy();
   });
 });

@@ -742,7 +742,8 @@ The suites are organized by boundary:
 - `tests/pages.test.ts` and `tests/pages-html.test.ts`: optional page intent,
   integrity diagnostics, commands, history, JSON/HTML, and Yjs convergence.
 - `tests/pages-dom.test.ts`: DOM measurement boundaries, model immutability,
-  template/footnote separation, explicit warnings, and neutral layout handoff;
+  template/footnote separation, explicit warnings, neutral layout handoff, timed
+  reflow cycles, and deterministic controller teardown;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, and footnotes.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
@@ -758,8 +759,8 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 9/8 KiB for browser page measurement, 56 KiB for CSS,
-and 692/585 KiB for all emitted
+isolated page foundation, 13/11 KiB for browser measurement/reflow, 56 KiB for
+CSS, and 697/590 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload

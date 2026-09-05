@@ -27,6 +27,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   actual line boxes, direct list items, rowspan-safe table row groups, repeated
   table-header cost, footnotes, templates, and manual breaks into neutral flow
   descriptors without changing the DOM;
+- `DOMPageLayoutController` for coalesced mutation/resize/font/window/print
+  invalidation, timed immutable snapshots, explicit host callbacks, synchronous
+  print refresh, and deterministic observer/listener teardown;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -128,7 +131,9 @@ DOM-independent page layout
 descriptors and returns page placements plus explicit overflow warnings.
 `measureDOMPageFlow()` is the optional browser boundary: it measures line boxes,
 list items, table row-span groups, media, and footnotes, but those measurements
-never enter editor state and the adapter never moves editable nodes.
+never enter editor state and the adapter never moves editable nodes. The
+optional controller automates invalidation and measurement but does not own
+rendering or state.
 
 ## Document semantics
 

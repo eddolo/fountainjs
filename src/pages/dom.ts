@@ -49,6 +49,33 @@ export interface DOMPageLayoutSnapshot {
   readonly layout: PageLayoutResult;
 }
 
+export type DOMPageLayoutReason =
+  | 'initial'
+  | 'manual'
+  | 'mutation'
+  | 'resize'
+  | 'window-resize'
+  | 'fonts'
+  | 'before-print';
+
+export interface DOMPageLayoutCycle {
+  readonly revision: number;
+  readonly reason: DOMPageLayoutReason;
+  readonly durationMs: number;
+  readonly snapshot: DOMPageLayoutSnapshot;
+}
+
+export interface DOMPageLayoutControllerOptions {
+  readonly measurement?: DOMPageMeasurementOptions;
+  readonly layout?: PageLayoutOptions;
+  /** Observe DOM, size, font, window, and print changes. Defaults to true. */
+  readonly observe?: boolean;
+  readonly onLayout?: (cycle: DOMPageLayoutCycle) => void;
+  readonly onError?: (error: unknown) => void;
+}
+
+export type DOMPageGeometrySource = PageGeometry | (() => PageGeometry);
+
 const DEFAULT_LINE_FRAGMENT_TYPES = Object.freeze(['paragraph', 'heading', 'code_block']);
 
 function finiteNonNegative(value: unknown): value is number {
@@ -404,4 +431,138 @@ export function layoutDOMPages(
     measurement,
     layout: layoutPages(measurement.items, geometry, layoutOptions),
   });
+}
+
+/**
+ * Coalesces browser layout invalidations into measured snapshots. It observes
+ * the editor but never inserts, moves, clones, or annotates editable nodes.
+ */
+export class DOMPageLayoutController {
+  private readonly mutationObserver?: MutationObserver;
+  private readonly resizeObserver?: ResizeObserver;
+  private readonly view: Window | null;
+  private readonly fonts: FontFaceSet | null;
+  private scheduledFrame: number | null = null;
+  private scheduledMicrotask = false;
+  private pendingReason: DOMPageLayoutReason = 'initial';
+  private revision = 0;
+  private destroyed = false;
+
+  constructor(
+    public readonly root: HTMLElement,
+    private readonly getDocument: () => Node,
+    private readonly geometry: DOMPageGeometrySource,
+    private readonly options: DOMPageLayoutControllerOptions = {},
+  ) {
+    if (!root?.ownerDocument || typeof getDocument !== 'function') {
+      throw new TypeError('DOMPageLayoutController requires an editor root and document reader.');
+    }
+    this.view = root.ownerDocument.defaultView;
+    this.fonts = root.ownerDocument.fonts ?? null;
+    if (options.observe !== false) {
+      const MutationObserverConstructor = (this.view as (Window & {
+        MutationObserver?: typeof MutationObserver;
+      }) | null)?.MutationObserver;
+      if (MutationObserverConstructor) {
+        const observer = new MutationObserverConstructor(() => this.requestLayout('mutation'));
+        observer.observe(root, { childList: true, characterData: true, subtree: true });
+        this.mutationObserver = observer;
+      }
+      const ResizeObserverConstructor = (this.view as (Window & {
+        ResizeObserver?: typeof ResizeObserver;
+      }) | null)?.ResizeObserver;
+      if (ResizeObserverConstructor) {
+        const observer = new ResizeObserverConstructor(() => this.requestLayout('resize'));
+        observer.observe(root);
+        this.resizeObserver = observer;
+      }
+      this.view?.addEventListener('resize', this.onWindowResize);
+      this.view?.addEventListener('beforeprint', this.onBeforePrint);
+      this.fonts?.addEventListener('loadingdone', this.onFontsChanged);
+    }
+    this.requestLayout('initial');
+  }
+
+  get isDestroyed(): boolean { return this.destroyed; }
+
+  /** Schedules one animation-frame measurement for any number of invalidations. */
+  requestLayout(reason: DOMPageLayoutReason = 'manual'): void {
+    if (this.destroyed) return;
+    this.pendingReason = reason;
+    if (this.scheduledFrame !== null || this.scheduledMicrotask) return;
+    if (this.view?.requestAnimationFrame) {
+      this.scheduledFrame = this.view.requestAnimationFrame(() => {
+        this.scheduledFrame = null;
+        this.runScheduled();
+      });
+      return;
+    }
+    this.scheduledMicrotask = true;
+    queueMicrotask(() => {
+      this.scheduledMicrotask = false;
+      this.runScheduled();
+    });
+  }
+
+  /** Measures synchronously, primarily for printing, tests, and explicit host refresh. */
+  refreshNow(reason: DOMPageLayoutReason = 'manual'): DOMPageLayoutCycle {
+    if (this.destroyed) throw new Error('Cannot refresh a destroyed DOMPageLayoutController.');
+    const started = this.now();
+    const geometry = typeof this.geometry === 'function' ? this.geometry() : this.geometry;
+    const snapshot = layoutDOMPages(
+      this.root,
+      this.getDocument(),
+      geometry,
+      this.options.measurement,
+      this.options.layout,
+    );
+    const cycle = Object.freeze({
+      revision: ++this.revision,
+      reason,
+      durationMs: Math.max(0, this.now() - started),
+      snapshot,
+    });
+    this.options.onLayout?.(cycle);
+    return cycle;
+  }
+
+  destroy(): void {
+    if (this.destroyed) return;
+    this.destroyed = true;
+    this.mutationObserver?.disconnect();
+    this.resizeObserver?.disconnect();
+    this.view?.removeEventListener('resize', this.onWindowResize);
+    this.view?.removeEventListener('beforeprint', this.onBeforePrint);
+    this.fonts?.removeEventListener('loadingdone', this.onFontsChanged);
+    if (this.scheduledFrame !== null) this.view?.cancelAnimationFrame(this.scheduledFrame);
+    this.scheduledFrame = null;
+  }
+
+  private readonly onWindowResize = () => this.requestLayout('window-resize');
+  private readonly onFontsChanged = () => this.requestLayout('fonts');
+  private readonly onBeforePrint = () => {
+    if (this.destroyed) return;
+    try { this.refreshNow('before-print'); }
+    catch (error) { this.options.onError?.(error); }
+  };
+
+  private runScheduled(): void {
+    if (this.destroyed) return;
+    const reason = this.pendingReason;
+    try { this.refreshNow(reason); }
+    catch (error) { this.options.onError?.(error); }
+  }
+
+  private now(): number {
+    return this.view?.performance.now() ?? Date.now();
+  }
+}
+
+export function createDOMPageLayoutController(
+  root: HTMLElement,
+  getDocument: () => Node,
+  geometry: DOMPageGeometrySource,
+  options: DOMPageLayoutControllerOptions = {},
+): DOMPageLayoutController {
+  return new DOMPageLayoutController(root, getDocument, geometry, options);
 }
