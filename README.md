@@ -349,7 +349,8 @@ templates, dynamic page fields, overflow diagnostics, undo, JSON, semantic
 HTML, and Yjs. Its immutable presentation plan selects first/odd/even/default
 furniture, resolves page fields, and assigns canonical footnotes to measured
 pages without cloning the model. The separate `pages/dom` adapter measures real
-line boxes, list items, rowspan-safe table groups, footnotes, manual breaks, and
+line boxes, direct blockquote children, list items, rowspan-safe table groups,
+footnotes, manual breaks, and
 opt-in host-declared custom-block bands without moving editable DOM. A
 `blockContinuation` adapter may return at least two unique, ordered,
 non-overlapping descendants of one rendered block plus optional start/end
@@ -413,7 +414,7 @@ or destructively split when it is taller than the body.
 That guarded boundary is intentional; it is not yet complete Word-style
 editable pagination.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
-repeated templates and fields, structural continuations, page-local footnotes,
+repeated templates and fields, blockquote/list/table structural continuations, page-local footnotes,
 and print page breaks. Editing-only selection markers and field-token styling
 are removed from visual copies, and the continuous accessibility copy is omitted
 from print. It installs normalized print-only physical `@page` rules and stable
@@ -444,7 +445,9 @@ dedicated browser contracts. A real browser contract also covers canonical
 image, audio, details, code, and custom NodeView placement, interaction, history,
 and explicit oversized overflow. Another covers merged two-row headers,
 rowspan-safe body groups, header-copy sanitization, and history after a table
-continuation. Broader adversarial print fidelity
+continuation. An imported semantic-HTML contract covers preserved alignment and
+text styles, ruby, math, nested multi-block quotes/lists, merged tables, forced
+breaks, and exact once-only body text in generated PDF output. Broader adversarial print fidelity
 remains active `DOC-14` work with explicit browser and accessibility gates in
 [the pagination contract](docs/PAGINATION.md).
 

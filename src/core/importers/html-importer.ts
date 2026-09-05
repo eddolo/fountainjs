@@ -430,7 +430,8 @@ function blockChildren(element: HTMLElement, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    if (content.length && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0);
+    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {
@@ -452,7 +453,8 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    if (content.length) result.push(schema.node('paragraph', {}, content));
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0);
+    if (meaningful) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {

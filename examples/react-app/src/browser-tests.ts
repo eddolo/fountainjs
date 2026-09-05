@@ -5,8 +5,10 @@ import {
   CoreExtension,
   EditorView,
   HistoryExtension,
+  HTMLImporter,
   LeanExtension,
   LeanController,
+  MathExtension,
   MarkdownExporter,
   MarkdownImporter,
   Plugin,
@@ -54,6 +56,7 @@ import {
   getCommentsState,
 } from '../../../src/comments';
 import { DetailsExtension } from '../../../src/details';
+import { RubyExtension } from '../../../src/ruby';
 import '../../../src/styles.css';
 
 const browserFixture = new URLSearchParams(globalThis.location.search).get('fixture');
@@ -560,7 +563,13 @@ const createPageIntegrationComment = async () => {
   });
 };
 
-const pagesKit = composeExtensions([CoreExtension, HistoryExtension, PagesExtension]);
+const pagesKit = composeExtensions([
+  CoreExtension,
+  HistoryExtension,
+  PagesExtension,
+  MathExtension,
+  RubyExtension,
+]);
 const pagesEditor = createEditor({
   schema: pagesKit.schema,
   plugins: pagesKit.plugins,
@@ -635,8 +644,52 @@ const adversarialPrintContent = {
   ],
 };
 
+const importedStyledTokens = Array.from({ length: 72 }, (_value, index) => (
+  `IMPORT${String(index + 1).padStart(3, '0')}`
+)).join(' ');
+
+const importedStyledHTML = `
+  <h2 style="text-align:right"><span style="color:#123456;font-family:Georgia,serif;font-size:22px">Imported styled report</span></h2>
+  <p style="text-align:justify"><span style="color:#6547ff;background-color:#e1dafe;font-family:Arial,sans-serif;font-size:18px;line-height:1.8">${importedStyledTokens}</span></p>
+  <blockquote>
+    <p>Semantic quotation with <ruby><strong>東京</strong><rp>(</rp><rt>とうきょう</rt><rp>)</rp></ruby>.</p>
+    <ol start="4">
+      <li><p>Nested imported item four.</p></li>
+      <li><p>Nested imported item five.</p><p>A second paragraph remains in the same list item.</p></li>
+    </ol>
+  </blockquote>
+  <table>
+    <thead>
+      <tr><th colspan="2">Imported records</th><th rowspan="2">Owner</th></tr>
+      <tr><th>Record</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="2">Group A</td><td>Ready</td><td>Ada</td></tr>
+      <tr><td colspan="2">Merged follow-up</td></tr>
+      <tr><td>Group B</td><td>Review</td><td>Grace</td></tr>
+      <tr><td>Group C</td><td>Approved</td><td>Lin</td></tr>
+      <tr><td>Group D</td><td>Ready</td><td>Edsger</td></tr>
+      <tr><td>Group E</td><td>Review</td><td>Margaret</td></tr>
+      <tr><td>Group F</td><td>Approved</td><td>Barbara</td></tr>
+      <tr><td>Group G</td><td>Ready</td><td>Donald</td></tr>
+      <tr><td>Group H</td><td>Review</td><td>Frances</td></tr>
+      <tr><td>Group I</td><td>Approved</td><td>Alan</td></tr>
+    </tbody>
+  </table>
+  <div data-fountain-math="block" data-latex="x^2+y^2=z^2" data-math-aria-label="Pythagorean theorem">x² + y² = z²</div>
+  <hr data-fountain-page-break="true">
+  <p>AFTERIMPORTEDBREAK remains after the explicit imported page break.</p>
+`;
+
 const adversarialPrintGeometry = () => createPageGeometry({
   size: { width: 360, height: 300 },
+  margins: 16,
+  headerHeight: 24,
+  footerHeight: 16,
+});
+
+const importedStyledPrintGeometry = () => createPageGeometry({
+  size: { width: 360, height: 420 },
   margins: 16,
   headerHeight: 24,
   footerHeight: 16,
@@ -1097,6 +1150,36 @@ Object.assign(globalThis, {
         pagesView.dom.style.width = '328px';
         return true;
       },
+      loadImportedStyledFixture: () => {
+        const fixture = HTMLImporter.parse(importedStyledHTML, pagesEditor.state.schema);
+        pagesEditor.dispatch(pagesEditor.state.createTransaction()
+          .replace(0, pagesEditor.state.doc.childCount, fixture.content)
+          .setSelection(Selection.cursor([0, 0], 0)));
+        pagesView.dom.style.boxSizing = 'content-box';
+        pagesView.dom.style.width = '328px';
+        const headingText = fixture.child(0).child(0);
+        const styledText = fixture.child(1).child(0);
+        const quotation = fixture.child(2);
+        const table = fixture.child(3);
+        let ruby: ReturnType<Node['toJSON']> | undefined;
+        quotation.descendants((node) => {
+          if (!ruby && node.type.name === 'ruby') ruby = node.toJSON();
+        });
+        return {
+          types: fixture.content.map((node) => node.type.name),
+          headingAlign: fixture.child(0).attrs.align,
+          headingMarks: Object.fromEntries(headingText.marks.map((mark) => [mark.type.name, mark.attrs])),
+          paragraphAlign: fixture.child(1).attrs.align,
+          paragraphMarks: Object.fromEntries(styledText.marks.map((mark) => [mark.type.name, mark.attrs])),
+          ruby,
+          nestedListStart: quotation.child(1).attrs.start,
+          secondItemBlocks: quotation.child(1).child(1).childCount,
+          tableHeader: table.child(0).child(0).attrs,
+          tableRowspan: table.child(2).child(0).attrs.rowspan,
+          tableColspan: table.child(3).child(0).attrs.colspan,
+          math: fixture.child(4).attrs,
+        };
+      },
       measure: () => layoutDOMPages(
         pagesView.dom,
         pagesEditor.state.doc,
@@ -1121,6 +1204,12 @@ Object.assign(globalThis, {
         adversarialPrintGeometry(),
       ),
       previewAdversarialPrint: () => renderPagesPreview(adversarialPrintGeometry(), true),
+      measureImportedStyled: () => layoutDOMPages(
+        pagesView.dom,
+        pagesEditor.state.doc,
+        importedStyledPrintGeometry(),
+      ),
+      previewImportedStyled: () => renderPagesPreview(importedStyledPrintGeometry(), true),
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({
         size,
         margins: 12.7,

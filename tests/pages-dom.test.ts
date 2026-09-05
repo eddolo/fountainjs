@@ -267,6 +267,57 @@ describe('DOM page measurement adapter', () => {
     ]);
   });
 
+  it('measures blockquotes at canonical direct-child boundaries with repeated container overhead', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [{
+        type: 'blockquote',
+        content: ['First quote block', 'Second quote block', 'Third quote block'].map((text) => ({
+          type: 'paragraph', content: [{ type: 'text', text }],
+        })),
+      }],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <blockquote data-fountain-path="0" data-top="0" data-height="75">
+        <p data-fountain-path="0.0" data-top="5" data-height="20">First quote block</p>
+        <p data-fountain-path="0.1" data-top="25" data-height="20">Second quote block</p>
+        <p data-fountain-path="0.2" data-top="45" data-height="20">Third quote block</p>
+      </blockquote>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(Number(this.dataset.top ?? 0), Number(this.dataset.height ?? 0));
+    });
+
+    const snapshot = layoutDOMPages(
+      root,
+      document,
+      createPageGeometry({ size: { width: 100, height: 70 }, margins: 10 }),
+      { lineFragmentNodeTypes: [] },
+    );
+
+    expect(snapshot.measurement.items[0]).toMatchObject({
+      id: 'block:0:blockquote',
+      continuationHeight: 15,
+      fragments: [
+        { id: 'block:0:blockquote:child:1', height: 35 },
+        { id: 'block:0:blockquote:child:2', height: 20 },
+        { id: 'block:0:blockquote:child:3', height: 20 },
+      ],
+    });
+    expect(snapshot.measurement.fragmentSources).toMatchObject([
+      { kind: 'block-child', partPaths: [[0, 0]], height: 35 },
+      { kind: 'block-child', partPaths: [[0, 1]], height: 20 },
+      { kind: 'block-child', partPaths: [[0, 2]], height: 20 },
+    ]);
+    expect(snapshot.layout.warnings).toEqual([]);
+    expect(snapshot.content.pages.map((page) => page.placements[0])).toMatchObject([
+      { continuationHeight: 0, sources: [{ partPaths: [[0, 0]] }] },
+      { continuationHeight: 15, sources: [{ partPaths: [[0, 1]] }] },
+      { continuationHeight: 15, sources: [{ partPaths: [[0, 2]] }] },
+    ]);
+  });
+
   it('reports missing model DOM and unresolved footnotes and rejects invalid line constraints', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

@@ -58,8 +58,9 @@ footnote intent/integrity, transient first-reference numbering, standard
 Markdown and semantic HTML interchange, canonical default/first/odd/even header/footer
 templates, dynamic page fields, renderer-neutral per-page furniture/footnote
 projection, undo, HTML/JSON, and Yjs. The browser side now
-also has isolated measurement for text lines, list items, rowspan-safe table
-groups, long-footnote line continuations, and manual breaks; every fragment maps back to its model and
+also has isolated measurement for text lines, direct blockquote children, list
+items, rowspan-safe table groups, long-footnote line continuations, and manual
+breaks; every fragment maps back to its model and
 structural paths plus clip geometry, and every page placement resolves to an
 exact validated source slice. A separate read-only renderer now projects those
 slices into fixed sheets with repeated furniture, table headers, footnotes,
@@ -90,7 +91,9 @@ canonical keep-together rule: move intact when possible and show explicit
 non-clipping overflow when taller than the page body. Pagination-owned
 attributes and style variables preserve custom NodeView identity without
 weakening recovery for unrelated DOM mutations. The read-only renderer also
-accepts strictly validated host-declared custom continuation bands and a
+continues multi-block blockquotes at their canonical direct-child boundaries
+while repeating their measured container overhead, and accepts strictly
+validated host-declared custom continuation bands and a
 sanitized host-owned placement projection for custom NodeViews, canvases,
 embeds, and atomic media whose live DOM is unsuitable for print. This contract
 does not mutate the model or claim that an arbitrary widget is safely editable
@@ -103,15 +106,18 @@ tables. The surface returns to continuous mode when either the
 viewport or embedding container is narrow, and restores pages without
 remounting when space returns. History, tracked suggestions, and bidirectional
 Yjs edits remain live across those automatic boundaries without persisting page
-numbers. Broader adversarial print fidelity and the remaining
-immutable evidence are still active. CSS page-shaped boxes or destructive
+numbers. Styled semantic HTML imported through the public schema contract is
+now checked across all three desktop engines for marks/alignment, ruby, math,
+nested quote/list structure, merged tables, and manual breaks, with exact
+Chromium PDF body-token de-duplication. Broader adversarial print fidelity and
+the remaining immutable evidence are still active. CSS page-shaped boxes or destructive
 document splitting do not qualify.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, derived first-reference footnote numbering, multi-reference/nested-block Markdown and semantic HTML footnote interchange, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, measured long-footnote continuation, a mixed cross-engine print fixture with repeated/continued notes, merged tables and manual breaks, a read-only paged screen/print renderer with strictly validated custom-block continuation bands and sanitized host-owned placement projection, cross-engine physical A4/Letter print projection, Chromium PDF geometry and text de-duplication, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, transitive rowspan-safe table row groups, safe multi-row/merged repeated headers, canonical page-intent rails, page-local copies, and canonical image/media/details/code/custom-NodeView placement. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; unsplittable rows and atomic surfaces remain editable with explicit non-clipping overflow. The exhaustive-fidelity outcome is still partial | Add broader adversarial visual/content print fixtures and specialized imported/styled custom-surface cases where generic bands are insufficient. Define a separate editable custom-fragment contract only if it can preserve one canonical widget, selection, IME, accessibility, and lifecycle. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, derived first-reference footnote numbering, multi-reference/nested-block Markdown and semantic HTML footnote interchange, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, measured long-footnote continuation, direct-child read-only/print blockquote continuation, a mixed cross-engine print fixture with repeated/continued notes, merged tables and manual breaks, an imported styled semantic-HTML fixture, a read-only paged screen/print renderer with strictly validated custom-block continuation bands and sanitized host-owned placement projection, cross-engine physical A4/Letter print projection, Chromium PDF geometry and text de-duplication, bounded 1,000-block repeated and 5,000-block alternating-edge mutation reflow, 5,000-block identity-preserving structural insertion/removal, and a guarded editable surface for whole blocks, paragraph lines, canonical list items, transitive rowspan-safe table row groups, safe multi-row/merged repeated headers, canonical page-intent rails, page-local copies, and canonical image/media/details/code/custom-NodeView placement. It preserves one contenteditable, selection/IME/history, reversible container-responsive fallback, tracked decisions, comments, movement, and bidirectional Yjs across the covered automatic boundaries; unsplittable rows and atomic surfaces remain editable with explicit non-clipping overflow. The exhaustive-fidelity outcome is still partial | Add broader adversarial mixed-layout visual/content print fixtures and specialized custom-surface cases where generic bands are insufficient. Define separate editable blockquote/custom-fragment contracts only if they can preserve one canonical structure, selection, IME, accessibility, and lifecycle. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

@@ -209,6 +209,46 @@ describe('read-only DOM page preview', () => {
     expect(source.outerHTML).toBe(before);
   });
 
+  it('projects one canonical blockquote child per continued page', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [{
+        type: 'blockquote',
+        content: ['First quote block', 'Second quote block', 'Third quote block'].map((text) => ({
+          type: 'paragraph', content: [{ type: 'text', text }],
+        })),
+      }],
+    });
+    const source = window.document.createElement('div');
+    source.innerHTML = `
+      <blockquote data-fountain-path="0" data-height="75">
+        <p data-fountain-path="0.0" data-top="5" data-height="20">First quote block</p>
+        <p data-fountain-path="0.1" data-top="25" data-height="20">Second quote block</p>
+        <p data-fountain-path="0.2" data-top="45" data-height="20">Third quote block</p>
+      </blockquote>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(Number(this.dataset.top ?? 0), Number(this.dataset.height ?? 0));
+    });
+    const geometry = createPageGeometry({ size: { width: 100, height: 70 }, margins: 10 });
+    const snapshot = layoutDOMPages(source, document, geometry, { lineFragmentNodeTypes: [] });
+    const target = window.document.createElement('div');
+    const before = source.outerHTML;
+
+    const result = renderDOMPagePreview(source, target, geometry, snapshot);
+
+    expect(result.pages).toHaveLength(3);
+    expect(result.pages.map((page) => (
+      [...page.querySelectorAll('blockquote > p')].map((paragraph) => paragraph.textContent)
+    ))).toEqual([
+      ['First quote block'],
+      ['Second quote block'],
+      ['Third quote block'],
+    ]);
+    expect(result.pages.every((page) => page.querySelectorAll('blockquote').length === 1)).toBe(true);
+    expect(source.outerHTML).toBe(before);
+  });
+
   it('projects host-declared custom continuations with a sanitized placement renderer', () => {
     const document = schema().nodeFromJSON({
       type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Canonical widget' }] }],

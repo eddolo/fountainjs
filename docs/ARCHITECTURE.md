@@ -768,7 +768,8 @@ The suites are organized by boundary:
   selection, dynamic fields, canonical footnote assignment, immutable output,
   ambiguous-input diagnostics, and external-layout validation;
 - `tests/pages-dom.test.ts`: DOM measurement boundaries, model immutability,
-  template/footnote separation, fragment source paths/clip geometry, strict
+  template/footnote separation, fragment source paths/clip geometry, direct
+  blockquote-child boundaries and repeated container overhead, strict
   placement-to-source projection, explicit warnings, neutral layout handoff,
   timed reflow cycles, identity/width/footnote-safe mutation caching, observed
   dirty-block invalidation, shifted-path cache rebasing, full
@@ -782,12 +783,14 @@ The suites are organized by boundary:
   their host on teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
-  separation, transient editor-state removal, structural slices, continued
+  separation, transient editor-state removal, blockquote/list/table structural
+  slices, continued
   ordered-list numbering, normalized physical page names, print-rule generation,
   custom-band projection, and sanitized host-owned placement rendering with
   foreign-document rejection;
 - the page browser contracts additionally exercise real multi-line range boxes,
-  list items, rowspan groups, repeated table-header cost, footnotes, print-media
+  imported styled semantic HTML, direct blockquote children, list items,
+  rowspan groups, repeated table-header cost, footnotes, print-media
   presentation, physical A4/Letter sheet geometry, named pages, furniture,
   footnotes, page breaks, and editor-state isolation in Chromium, Firefox, and
   WebKit, plus Chromium-generated PDF page counts, MediaBoxes, and page-specific

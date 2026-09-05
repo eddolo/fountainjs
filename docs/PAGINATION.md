@@ -37,7 +37,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
 - `inspectPageTemplates()` / `assertPageTemplates()` for duplicate/nested
   templates and orphan page-field diagnostics;
 - an isolated `fountainjs-editor/pages/dom` measurement adapter that converts
-  actual line boxes, direct list items, rowspan-safe table row groups, repeated
+  actual line boxes, direct blockquote children, direct list items,
+  rowspan-safe table row groups, repeated
   table-header cost, footnote line fragments, templates, and manual breaks into neutral flow
   descriptors without changing the DOM;
 - immutable DOM-fragment source maps with model paths, structural descendant
@@ -68,7 +69,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
 - an isolated `fountainjs-editor/pages/preview` renderer for fixed-size
-  read-only sheets, exact line clips, structural continuations, repeated table
+  read-only sheets, exact line clips, blockquote/list/table structural
+  continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
   print page breaks, normalized deterministic physical `@page` rules and names,
   namespaced IDs, exact clipped long-footnote continuations, strict opt-in
@@ -272,8 +274,8 @@ descriptors and returns page placements plus explicit overflow warnings.
 `projectPagePresentation()` is the renderer-neutral handoff: it converts layout
 pages and canonical document intent into immutable per-page references and
 resolved field values without copying model content. `measureDOMPageFlow()` is
-the optional browser boundary: it measures line boxes,
-list items, table row-span groups, media, and footnotes, but those measurements
+the optional browser boundary: it measures line boxes, direct blockquote
+children, list items, table row-span groups, media, and footnotes, but those measurements
 never enter editor state and the adapter never moves editable nodes. Its source
 map is ordinary frozen data and never retains a DOM element. The strict content
 projection then joins page placements to those sources and fails closed if an
@@ -357,6 +359,9 @@ may expose legal fragments:
 - paragraph line boxes, with configurable minimum first/last lines;
 - a single-fragment heading kept with the following splittable block's required
   opening fragments whenever that pair fits an empty page;
+- direct blockquote children in read-only/print output, retaining the canonical
+  container and accounting for its repeated visual overhead; the guarded live
+  editable surface falls back to continuous mode when such a quote spans pages;
 - list items, preserving nested item content;
 - table row groups that never cut through a rowspan, with repeated column
   headers accounted for as continuation overhead;
@@ -387,9 +392,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
   nested definition blocks, and semantic footnote/endnote roles; broader
   document families remain);
 - paragraphs with widow/orphan rules;
-- nested lists and rowspan/colspan tables split only at legal boundaries
-  (including multi-row headers and transitive body spans; broader imported and
-  styling combinations remain part of adversarial print coverage);
+- nested lists, multi-block blockquotes, and rowspan/colspan tables split only
+  at legal boundaries (including multi-row headers and transitive body spans);
 - images, media, details, code, and custom NodeViews with explicit overflow
   behavior, plus an opt-in custom continuation/print projection that leaves the
   canonical model and editable view untouched, covered by browser tests and
@@ -404,8 +408,9 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
   fixtures in Chromium where Playwright exposes that primitive (the physical
   A4/Letter baseline covers both layers, and a mixed fixture combines repeated
   and continued footnotes, reversed definition order, a merged table, page
-  furniture, a manual break, and PDF text de-duplication; broader imported and
-  styled document families remain);
+  furniture, a manual break, and PDF text de-duplication; an imported semantic
+  HTML fixture adds alignment, text styles, ruby, math, nested quote/list blocks,
+  merged tables, a forced break, and exact once-only body text);
 - reflow latency, measurement count, DOM identity, memory, and bundle budgets
   beyond the current 5,000-block adversarial replacement and structural
   insertion/removal gates;

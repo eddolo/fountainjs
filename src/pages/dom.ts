@@ -35,6 +35,7 @@ export interface DOMPageTemplateMeasurement {
 export type DOMPageFragmentSourceKind =
   | 'text-line'
   | 'list-item'
+  | 'block-child'
   | 'table-row-group'
   | 'custom'
   | 'whole'
@@ -47,7 +48,7 @@ export interface DOMPageFragmentSource {
   readonly kind: DOMPageFragmentSourceKind;
   /** Top-level model path of the measured flow item. */
   readonly sourcePath: readonly number[];
-  /** Nested model paths represented by a list/table structural fragment. */
+  /** Nested model paths represented by a structural fragment. */
   readonly partPaths: readonly (readonly number[])[];
   /** Vertical source offset used by a non-editable clipped projection. */
   readonly clipOffset: number;
@@ -684,7 +685,15 @@ function structuralFragments(
     ? groupedTableRows(tableRows(element)).map((group) => [...group])
     : ['bullet_list', 'ordered_list', 'task_list'].includes(node.type.name)
       ? directListItems(element).map((item) => [item])
-      : [];
+      : node.type.name === 'blockquote'
+        ? Array.from(element.children)
+            .filter((child): child is HTMLElement => {
+              const childPath = pathOf(child as HTMLElement);
+              return childPath.length === sourcePath.length + 1
+                && sourcePath.every((part, index) => childPath[index] === part);
+            })
+            .map((child) => [child])
+        : [];
   if (pieces.length < 2) return null;
   const transientTableHeight = node.type.name === 'table'
     ? Array.from(element.querySelectorAll<HTMLElement>('[data-fountain-editable-table-break]'))
@@ -693,18 +702,29 @@ function structuralFragments(
   const wholeHeight = Math.max(0, outerHeight(element, count) - transientTableHeight);
   const pieceHeights = pieces.map((piece) => piece.reduce((sum, child) => sum + measuredRect(child, count).height, 0));
   const missing = Math.max(0, wholeHeight - pieceHeights.reduce((sum, height) => sum + height, 0));
+  const fragmentLabel = node.type.name === 'table'
+    ? 'row-group'
+    : node.type.name === 'blockquote'
+      ? 'child'
+      : 'item';
   const fragments = pieces.map((piece, index) => {
     const references = piece.flatMap((child) => referencesIn(child, definitions, count));
     return Object.freeze({
-      id: `${itemId}:${node.type.name === 'table' ? 'row-group' : 'item'}:${index + 1}`,
+      id: `${itemId}:${fragmentLabel}:${index + 1}`,
       height: pieceHeights[index] as number + (index === 0 ? missing : 0),
       footnotes: uniqueFootnotes(references),
     });
   });
   const headerRows = tableHeaderRows(element);
-  const continuationHeight = headerRows.reduce((sum, row) => sum + measuredRect(row, count).height, 0);
+  const continuationHeight = node.type.name === 'blockquote'
+    ? missing
+    : headerRows.reduce((sum, row) => sum + measuredRect(row, count).height, 0);
   let clipOffset = 0;
-  const kind = node.type.name === 'table' ? 'table-row-group' as const : 'list-item' as const;
+  const kind = node.type.name === 'table'
+    ? 'table-row-group' as const
+    : node.type.name === 'blockquote'
+      ? 'block-child' as const
+      : 'list-item' as const;
   const sources = fragments.map((fragment, index) => {
     const source = Object.freeze({
       itemId,

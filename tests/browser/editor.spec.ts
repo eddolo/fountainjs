@@ -447,6 +447,135 @@ test('prints a mixed repeated-footnote, merged-table, and manual-break document 
   await page.emulateMedia({ media: 'screen' });
 });
 
+test('paginates imported styled semantic HTML without structural or PDF text loss', async ({ page, browserName }) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  const imported = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.loadImportedStyledFixture()
+  ));
+  expect(imported).toMatchObject({
+    types: ['heading', 'paragraph', 'blockquote', 'table', 'math_block', 'page_break', 'paragraph'],
+    headingAlign: 'right',
+    headingMarks: {
+      text_color: { color: '#123456' },
+      font_family: { family: 'Georgia, serif' },
+      font_size: { size: '22px' },
+    },
+    paragraphAlign: 'justify',
+    paragraphMarks: {
+      text_color: { color: '#6547ff' },
+      highlight: { color: '#e1dafe' },
+      font_family: { family: 'Arial, sans-serif' },
+      font_size: { size: '18px' },
+      line_height: { lineHeight: '1.8' },
+    },
+    ruby: {
+      type: 'ruby', attrs: { rt: 'とうきょう' },
+      content: [{ type: 'text', marks: [{ type: 'strong' }], text: '東京' }],
+    },
+    nestedListStart: 4,
+    secondItemBlocks: 2,
+    tableHeader: { colspan: 2, rowspan: 1, colwidth: null, scope: 'col' },
+    tableRowspan: 2,
+    tableColspan: 2,
+    math: { latex: 'x^2+y^2=z^2', ariaLabel: 'Pythagorean theorem' },
+  });
+
+  const measured = await page.evaluate(() => {
+    const snapshot = (globalThis as any).fountainBrowserTest.pages.measureImportedStyled();
+    return {
+      pages: snapshot.layout.pages.length,
+      measurementWarnings: snapshot.measurement.warnings,
+      layoutWarnings: snapshot.layout.warnings,
+      presentationWarnings: snapshot.presentation.warnings,
+      paragraphPlacements: snapshot.content.pages.flatMap((contentPage: any) => (
+        contentPage.placements
+          .filter((placement: any) => placement.itemId === 'block:1:paragraph')
+          .map(() => contentPage.number)
+      )),
+      tablePlacements: snapshot.content.pages.flatMap((contentPage: any) => (
+        contentPage.placements
+          .filter((placement: any) => placement.itemId === 'block:3:table')
+          .map(() => contentPage.number)
+      )),
+    };
+  });
+  expect(measured.measurementWarnings).toEqual([]);
+  expect(measured.layoutWarnings).toEqual([]);
+  expect(measured.presentationWarnings).toEqual([]);
+  expect(measured.pages).toBeGreaterThan(3);
+  expect(measured.paragraphPlacements.length).toBeGreaterThan(1);
+  expect(measured.tablePlacements.length).toBeGreaterThan(1);
+
+  const preview = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.previewImportedStyled()
+  ));
+  expect(preview).toMatchObject({
+    pageCount: measured.pages,
+    visualPagesHidden: true,
+    accessibleDocuments: 1,
+    sourceUnchanged: true,
+  });
+  const contract = await page.locator('#browser-page-preview').evaluate((target) => {
+    const heading = target.querySelector<HTMLElement>(
+      '.fountain-page-preview__sheet [data-fountain-page-item="block:0:heading"]',
+    )!;
+    const styledRoot = target.querySelector<HTMLElement>(
+      '.fountain-page-preview__sheet [data-fountain-page-item="block:1:paragraph"]',
+    )!;
+    const colored = styledRoot.querySelector<HTMLElement>('span[style^="color:"]')!;
+    const highlighted = styledRoot.querySelector<HTMLElement>('mark[style^="background-color:"]')!;
+    const family = styledRoot.querySelector<HTMLElement>('[style*="font-family"]')!;
+    const sized = styledRoot.querySelector<HTMLElement>('[style*="font-size"]')!;
+    const pageOf = (selector: string) => target.querySelector<HTMLElement>(selector)
+      ?.closest<HTMLElement>('[data-fountain-page]')?.dataset.fountainPage;
+    return {
+      headingPage: pageOf('[data-fountain-page-item="block:0:heading"]'),
+      paragraphPage: pageOf('[data-fountain-page-item="block:1:paragraph"]'),
+      afterBreakPage: pageOf('[data-fountain-page-item="block:6:paragraph"]'),
+      headingAlign: getComputedStyle(heading).textAlign,
+      color: getComputedStyle(colored).color,
+      background: getComputedStyle(highlighted).backgroundColor,
+      family: getComputedStyle(family).fontFamily,
+      size: getComputedStyle(sized).fontSize,
+      lineHeight: getComputedStyle(sized).lineHeight,
+      ruby: target.querySelectorAll('.fountain-page-preview__sheet ruby').length,
+      math: target.querySelectorAll('.fountain-page-preview__sheet [data-fountain-math="block"]').length,
+      pageBreaks: target.querySelectorAll('.fountain-page-preview__sheet [data-fountain-page-break]').length,
+      tableHeaderColspan: target.querySelector('th')?.getAttribute('colspan'),
+      tableBodyRowspan: target.querySelector('td[rowspan]')?.getAttribute('rowspan'),
+    };
+  });
+  expect(contract).toMatchObject({
+    headingPage: contract.paragraphPage,
+    headingAlign: 'right',
+    color: 'rgb(101, 71, 255)',
+    background: 'rgb(225, 218, 254)',
+    family: 'Arial, sans-serif',
+    size: '18px',
+    ruby: 1,
+    math: 1,
+    pageBreaks: 0,
+    tableHeaderColspan: '2',
+    tableBodyRowspan: '2',
+  });
+  expect(Number.parseFloat(contract.lineHeight)).toBeCloseTo(32.4, 1);
+  expect(Number(contract.afterBreakPage)).toBeGreaterThan(Math.max(...measured.tablePlacements));
+
+  await page.emulateMedia({ media: 'print' });
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ printBackground: true, preferCSSPageSize: true });
+    const pageText = await extractPDFPageText(pdf);
+    const importedTokens = pageText.flatMap((text) => text.match(/IMPORT\d{3}/gu) ?? []);
+    expect(pageText).toHaveLength(preview.pageCount);
+    expect(importedTokens).toHaveLength(72);
+    expect(new Set(importedTokens).size).toBe(72);
+    expect(importedTokens[0]).toBe('IMPORT001');
+    expect(importedTokens.at(-1)).toBe('IMPORT072');
+    expect(pageText.join(' ').match(/AFTERIMPORTEDBREAK/gu)).toHaveLength(1);
+  }
+  await page.emulateMedia({ media: 'screen' });
+});
+
 test('uses a host print renderer without moving or exposing live custom DOM', async ({ page }) => {
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.loadMeasurementFixture())).toBe(true);
   const preview = await page.evaluate(() => (

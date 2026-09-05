@@ -1385,12 +1385,13 @@ warnings; the projector fails closed instead of picking one duplicate.
 The separate browser-only `fountainjs-editor/pages/dom` entry provides
 `measureDOMPageFlow(root, document, options?)` and `layoutDOMPages(...)`. It
 reads the current rendered geometry and emits legal line fragments for text,
-direct list-item fragments, rowspan-safe table row groups with continuation
+direct blockquote-child and list-item fragments, rowspan-safe table row groups
+with continuation
 header cost, first-reference footnote reservations, manual-break intent, and
 canonical template measurements. Missing nodes, invalid geometry, and
 unmeasured footnotes are explicit warnings. It never reparents, clones, or
 annotates the editable DOM. `fragmentSources` maps each legal fragment back to
-its top-level model path, nested list-item/table-row paths, measured height, and
+its top-level model path, nested structural paths, measured height, and
 vertical clip offset without retaining DOM nodes. Its output is ordinary frozen
 input for the neutral layout engine. `layoutDOMPages` also includes the neutral `presentation` plan in
 its frozen snapshot so a host does not have to repeat variant or footnote logic.
@@ -1428,7 +1429,8 @@ throws instead of producing a visually plausible but incorrect page.
 The separately loaded browser entry `fountainjs-editor/pages/preview` exports
 `renderDOMPagePreview(sourceRoot, target, geometry, snapshot, options?)`. It
 creates fixed-size read-only sheets without moving, annotating, or changing the
-editable source. It projects exact text clips, assigned list items and table row
+editable source. It projects exact text clips, assigned blockquote children,
+list items, and table row
 groups, repeated table headers, selected page templates, resolved page fields,
 and linked page-local footnotes. The source must be measured at the exact page
 body width; a mismatch throws before rendering because changed wrapping would
@@ -1528,7 +1530,9 @@ split-container comments, top-level movement, and canonical
 image/audio/details/code/custom-NodeView placement and interaction are also
 covered in dedicated browser fixtures. A complex-table fixture covers safe
 two-row header repetition, mixed row/column spans, continued body groups, and
-history. Broader adversarial print
+history. An imported semantic-HTML fixture additionally verifies alignment and
+text-style marks, ruby, math, nested multi-block quotes/lists, merged tables, a
+forced page break, and exact once-only generated-PDF body text. Broader adversarial print
 fidelity remains active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 

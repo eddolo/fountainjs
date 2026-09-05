@@ -185,4 +185,24 @@ describe('schema-owned HTML interchange', () => {
   it('validates the complete imported tree before returning it', () => {
     expect(() => HTMLImporter.parse('<ul></ul>', schema)).toThrow(/Content of bullet_list/);
   });
+
+  it('ignores formatting whitespace between nested block elements', () => {
+    const imported = HTMLImporter.parse(`
+      <blockquote>
+        <p>Quoted introduction.</p>
+        <ol start="4">
+          <li>
+            <p>First block.</p>
+            <p>Second block.</p>
+          </li>
+        </ol>
+      </blockquote>
+    `, schema);
+
+    const quote = imported.child(0);
+    expect(quote.content.map((node) => node.type.name)).toEqual(['paragraph', 'ordered_list']);
+    expect(quote.child(1).attrs.start).toBe(4);
+    expect(quote.child(1).child(0).content.map((node) => node.type.name))
+      .toEqual(['paragraph', 'paragraph']);
+  });
 });

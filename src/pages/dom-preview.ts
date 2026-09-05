@@ -191,6 +191,11 @@ function structuralClone(
       const originalStart = Number.parseInt(clone.getAttribute('start') ?? '1', 10);
       clone.setAttribute('start', String((Number.isSafeInteger(originalStart) ? originalStart : 1) + firstIndex));
     }
+  } else if (kind === 'block-child') {
+    Array.from(clone.children).forEach((child) => {
+      const element = child as HTMLElement;
+      if (!retained.has(element.dataset.fountainSourcePath ?? '')) element.remove();
+    });
   } else if (kind === 'table-row-group') {
     tableRows(clone).forEach((row) => {
       const repeatHeader = placement.continuedBefore && isTableHeaderRow(row);
@@ -224,7 +229,7 @@ function clonedPlacement(
   const clone = prepareClone((rendered ?? source).cloneNode(true) as HTMLElement, pageNumber, cloneIndex);
   clone.dataset.fountainPageItem = placement.itemId;
   if (rendered !== undefined) return clone;
-  if (first.kind === 'list-item' || first.kind === 'table-row-group') {
+  if (first.kind === 'list-item' || first.kind === 'block-child' || first.kind === 'table-row-group') {
     return structuralClone(clone, placement);
   }
   const itemSources = allSources.filter((candidate) => candidate.itemId === placement.itemId);

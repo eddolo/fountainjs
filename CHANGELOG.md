@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Semantic HTML import no longer turns indentation-only whitespace between
+  nested blocks into empty paragraphs.
 - The ESM React entry now keeps `react-dom/client` external and has package
   import and build-budget gates, preventing an embedded CommonJS runtime from
   breaking ESM import or silently inflating release assets.
@@ -100,6 +102,12 @@
   One-line headings now carry the same keep-with-next intent as measured
   multi-line headings, preventing an ordinary heading from being stranded at
   the bottom of a page while its following block moves to the next sheet.
+  Read-only and print pagination now exposes `block-child` fragments and can
+  continue a multi-block blockquote at its canonical direct-child boundaries,
+  preserving repeated container decoration without cloning or mutating the
+  source document. Imported styled semantic HTML is covered across Chromium,
+  Firefox, and WebKit, including marks, nested quote/list structure, merged
+  tables, math, manual breaks, and Chromium PDF text de-duplication.
   A mixed three-engine print fixture now combines reversed footnote-definition
   order, repeated citations, continued notes, merged tables, page furniture,
   a manual break, and Chromium PDF text de-duplication.
