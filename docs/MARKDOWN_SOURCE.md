@@ -161,6 +161,8 @@ an initial standards-oriented set of behaviors:
 - recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
 - ASCII-space/tab-only list-marker separation, leaving non-breaking spaces as
   literal document content;
+- compact or spaced thematic breaks with up to three leading spaces and
+  block-level precedence over list markers;
 - aligned GFM pipe tables;
 - extension-aware footnotes, math, details, ruby, and rich text-style HTML.
 

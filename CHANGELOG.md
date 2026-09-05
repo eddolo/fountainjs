@@ -123,6 +123,8 @@
   Markdown emphasis closing delimiters now obey Unicode-aware CommonMark
   flanking through the end of an inline fragment, and list markers accept only
   ASCII spaces or tabs as syntax instead of consuming non-breaking spaces.
+  Thematic breaks accept standard spaces or tabs between three or more matching
+  markers, up to three leading spaces, and take precedence over list items.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

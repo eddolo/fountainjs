@@ -1339,6 +1339,7 @@ function parseList(
   const items: Node[] = [];
   let index = startIndex;
   while (index < lines.length) {
+    if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
     if (!marker || marker.indent !== indent || marker.kind !== first.kind) break;
     const content: Node[] = [paragraph(schema, marker.value, references)];
@@ -1438,12 +1439,16 @@ function indentedCodeLine(line: string): string | null {
   return line.startsWith('    ') ? line.slice(4) : null;
 }
 
+function thematicBreak(line: string): boolean {
+  return /^ {0,3}(?:\*(?:[ \t]*\*){2,}|_(?:[ \t]*_){2,}|-(?:[ \t]*-){2,})[ \t]*$/u.test(line);
+}
+
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
   return Boolean(markdownFence(line))
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
-    || /^ {0,3}(?:-{3,}|\*{3,}|_{3,})[\t ]*$/u.test(line)
+    || thematicBreak(line)
     || /^>\s?/.test(line)
     || listMarker(line)?.indent === 0
     || Boolean(tableStart(lines, index))
@@ -1525,7 +1530,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       index++;
       continue;
     }
-    if (/^ {0,3}(?:-{3,}|\*{3,}|_{3,})[\t ]*$/u.test(line)) {
+    if (thematicBreak(line)) {
       blocks.push(schema.node('horizontal_rule'));
       index++;
       continue;

@@ -46,6 +46,32 @@
       }
     },
     {
+      "id": "commonmark-spaced-thematic-breaks",
+      "source": " ***\n  - - -\n_ _ _ _",
+      "expected": {
+        "topLevelTypes": ["horizontal_rule", "horizontal_rule", "horizontal_rule"],
+        "text": "",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-thematic-break-list-precedence",
+      "source": "* Foo\n* * *\n* Bar",
+      "expected": {
+        "topLevelTypes": ["bullet_list", "horizontal_rule", "bullet_list"],
+        "text": "FooBar",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
       "id": "commonmark-indented-code",
       "source": "    const indented = true;",
       "expected": {

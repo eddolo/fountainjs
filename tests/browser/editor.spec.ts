@@ -2309,6 +2309,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '*foo bar\n*',
       '*\u00a0a\u00a0*',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
+    thematicBreaks: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '* Foo\n* * *\n* Bar\n\n**  * ** * ** * **',
+    ),
     nestedEmphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '*outer **inner** outer* / **strong *inside* strong** / *[linked](https://example.com)* / *[literal *](https://example.com)',
     ),
@@ -2502,6 +2505,14 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       && JSON.stringify(entry.document) === JSON.stringify(entry.roundTrip)
       && entry.losses.length === 0
   ))).toBe(true);
+  expect(result.thematicBreaks.document).toEqual(result.thematicBreaks.roundTrip);
+  expect(result.thematicBreaks.document.content.map((node: any) => node.type)).toEqual([
+    'bullet_list',
+    'horizontal_rule',
+    'bullet_list',
+    'horizontal_rule',
+  ]);
+  expect(result.thematicBreaks.losses).toEqual([]);
   expect(result.nestedEmphasis.document).toEqual(result.nestedEmphasis.roundTrip);
   expect(result.nestedEmphasis.document.content[0].content
     .filter((node: any) => node.marks?.length)
