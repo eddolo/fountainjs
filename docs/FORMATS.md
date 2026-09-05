@@ -146,7 +146,11 @@ an `http://` destination, and every result still passes Fountain's safe-URL
 policy. Bare email autolinks accept GFM's local-part characters and require a
 multi-segment domain whose final character is alphanumeric; invalid plus,
 hyphen, underscore, or escaped tails fail closed instead of linking a prefix.
-The `mailto:`/`xmpp:` protocol forms remain a separate compatibility target.
+Angle-bracket protocol autolinks support HTTP(S), `mailto:`, and `xmpp:` while
+preserving the original visible protocol spelling. Fountain intentionally does
+not make CommonMark's arbitrary or invented schemes clickable: the shared
+safe-URL policy wins after syntax recognition, so `javascript:` and unknown
+protocols remain inert literal text.
 
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a

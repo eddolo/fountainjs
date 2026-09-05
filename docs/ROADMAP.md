@@ -275,6 +275,10 @@ GFM bare email autolinks accept the specified local-part characters, require a
 multi-segment domain, remove a final period from the link, and reject invalid
 plus, hyphen, or underscore domain tails rather than linking a valid-looking
 prefix.
+Safe angle-bracket protocol autolinks cover case-preserving `mailto:` and XMPP
+destinations in addition to HTTP(S). CommonMark's syntactic acceptance of
+arbitrary and invented schemes does not override Fountain's security boundary:
+unknown protocols and `javascript:` remain inert literal text.
 The emphasis baseline now prevents intraword-underscore and whitespace-opening
 false positives, accepts double-underscore strong and triple combined runs,
 and exports canonical emphasis with round-trip-safe stars. This deliberately

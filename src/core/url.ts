@@ -20,6 +20,7 @@ export function isSafeURL(value: unknown, options: SafeURLOptions = {}): value i
   if (url.startsWith('./') || url.startsWith('../')) return true;
   if (/^mailto:/i.test(url)) return /^mailto:[^\s]+$/i.test(url);
   if (/^tel:/i.test(url)) return /^tel:[+\d][\d().\- ]*$/i.test(url);
+  if (/^xmpp:/i.test(url)) return /^xmpp:[^\s<>]+$/i.test(url);
   if (!EXPLICIT_SCHEME.test(url)) return !url.startsWith('\\');
   if (!/^https?:\/\//i.test(url)) return false;
   try {

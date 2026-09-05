@@ -132,7 +132,7 @@ an initial standards-oriented set of behaviors:
   significant until the resolved visible label is parsed, collapses only
   spaces/tabs/line endings, counts its bound by Unicode code point, and honors
   adjacent full/collapsed/shortcut precedence;
-- safe URI and email autolinks inside angle brackets;
+- safe HTTP(S), `mailto:`, XMPP, and email autolinks inside angle brackets;
 - boundary-safe GFM `www.`, `http://`, and `https://` autolinks with validated
   domains and path punctuation/parenthesis/entity-suffix trimming;
 - GFM bare email autolinks with local/domain character validation and
@@ -175,8 +175,9 @@ conformance. Important remaining work includes:
 - exact list marker, indentation, interruption, tight/loose, and lazy
   continuation rules;
 - full link destination/title/reference precedence;
-- GFM `mailto:`/`xmpp:` protocol autolinks and additional strikethrough
-  delimiter-stack cases;
+- additional strikethrough delimiter-stack cases;
+- configurable handling for CommonMark's arbitrary URI schemes without
+  weakening Fountain's default safe-URL policy;
 - a larger versioned subset tied to explicit specification examples;
 - identity-aware mapping for duplicate blocks and deeper structures without
   attaching raw text to the wrong node.

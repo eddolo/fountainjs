@@ -2343,6 +2343,11 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       "hello@mail+team.example is invalid, but hello+team@mail.example works.",
       'Keep author@mail.example_ literal.',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
+    protocolAutolinks: [
+      '<MAILTO:FOO@BAR.BAZ>',
+      '<xmpp:writer@chat.example/mobile>',
+      '<javascript:alert(1)> / <made-up-scheme://host>',
+    ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2607,6 +2612,21 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     })))).toEqual([
       [{ text: 'author+docs@mail.example', href: 'mailto:author+docs@mail.example' }],
       [{ text: 'hello+team@mail.example', href: 'mailto:hello+team@mail.example' }],
+      [],
+    ]);
+  expect(result.protocolAutolinks.every((entry: any) => (
+    JSON.stringify(entry.document) === JSON.stringify(entry.roundTrip)
+      && entry.losses.length === 0
+  ))).toBe(true);
+  expect(result.protocolAutolinks.map((entry: any) => entry.document.content
+    .flatMap((block: any) => block.content)
+    .filter((node: any) => node.marks?.some((mark: any) => mark.type === 'link'))
+    .map((node: any) => ({
+      text: node.text,
+      href: node.marks.find((mark: any) => mark.type === 'link').attrs.href,
+    })))).toEqual([
+      [{ text: 'MAILTO:FOO@BAR.BAZ', href: 'MAILTO:FOO@BAR.BAZ' }],
+      [{ text: 'xmpp:writer@chat.example/mobile', href: 'xmpp:writer@chat.example/mobile' }],
       [],
     ]);
 });

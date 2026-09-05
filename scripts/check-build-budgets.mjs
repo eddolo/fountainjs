@@ -191,6 +191,7 @@ const limits = Object.freeze({
   // GFM extended web-autolink domain/path validation adds about 1.1/0.9 KiB
   // to the shared format chunk without moving public entry-point ceilings.
   // GFM bare-email domain/tail validation adds about 0.4/0.3 KiB more.
+  // The strict XMPP safe-URL branch fits inside the existing shared-core margin.
   'all ESM runtime code': 1104 * kibibyte,
   'all CommonJS runtime code': 925 * kibibyte,
 });

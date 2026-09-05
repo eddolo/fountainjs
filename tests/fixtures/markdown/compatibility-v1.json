@@ -408,6 +408,32 @@
         "marks": [],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-safe-protocol-autolinks",
+      "source": "<MAILTO:FOO@BAR.BAZ> / <xmpp:writer@chat.example/mobile>",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "MAILTO:FOO@BAR.BAZ / xmpp:writer@chat.example/mobile",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["MAILTO:FOO@BAR.BAZ", "xmpp:writer@chat.example/mobile"],
+        "marks": ["link", "link"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-blocked-protocol-autolinks",
+      "source": "<javascript:alert(1)> / <made-up-scheme://host> / <m:abc>",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "<javascript:alert(1)> / <made-up-scheme://host> / <m:abc>",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
     }
   ]
 }

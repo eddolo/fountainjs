@@ -180,6 +180,37 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('imports safe CommonMark protocol autolinks while keeping blocked schemes literal', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = [
+      '<MAILTO:FOO@BAR.BAZ>',
+      '<xmpp:writer@chat.example/mobile>',
+      '<javascript:alert(1)>',
+      '<made-up-scheme://host>',
+      '<m:abc>',
+    ].join(' / ');
+    const document = MarkdownImporter.parse(source, schema);
+    const links: Array<{ text: string; href: unknown }> = [];
+    document.descendants((node) => {
+      const mark = node.marks.find((candidate) => candidate.type.name === 'link');
+      if (node.isText && mark) links.push({ text: node.textContent, href: mark.attrs.href });
+    });
+
+    expect(document.textContent).toBe([
+      'MAILTO:FOO@BAR.BAZ',
+      'xmpp:writer@chat.example/mobile',
+      '<javascript:alert(1)>',
+      '<made-up-scheme://host>',
+      '<m:abc>',
+    ].join(' / '));
+    expect(links).toEqual([
+      { text: 'MAILTO:FOO@BAR.BAZ', href: 'MAILTO:FOO@BAR.BAZ' },
+      { text: 'xmpp:writer@chat.example/mobile', href: 'xmpp:writer@chat.example/mobile' },
+    ]);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
+      .toEqual(document.toJSON());
+  });
+
   it('escapes literal character-reference text during canonical export', () => {
     const schema = new Schema(CoreSchemaSpec);
     const link = schema.marks.link.create({

@@ -147,6 +147,9 @@ describe('link behavior extension', () => {
     expect(normalizeLinkURL('?tab=examples')).toBe('?tab=examples');
     expect(normalizeLinkURL('\\untrusted.example/path')).toBeNull();
     expect(normalizeLinkURL('www.example.com')).toBe('https://www.example.com');
+    expect(normalizeLinkURL('xmpp:writer@chat.example/mobile')).toBe('xmpp:writer@chat.example/mobile');
+    expect(normalizeLinkURL('xmpp:writer chat.example')).toBeNull();
+    expect(normalizeLinkURL('xmpp:<writer@chat.example>')).toBeNull();
     expect(normalizeLinkURL('https://blocked.example', {
       validate: (href) => !href.includes('blocked'),
     })).toBeNull();
