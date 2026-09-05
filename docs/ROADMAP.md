@@ -54,7 +54,8 @@ layout/persistence architecture and fixtures for pages, headers, footers,
 footnotes, tables, lists, media, manual breaks, and continuous accessibility.
 Its first platform-neutral milestone now ships in source: physical geometry,
 legal-fragment flow, non-persisted automatic boundaries, manual breaks,
-footnote intent/integrity, undo, HTML/JSON, and Yjs. The editable DOM/print
+footnote intent/integrity, canonical default/first/odd/even header/footer
+templates, dynamic page fields, undo, HTML/JSON, and Yjs. The editable DOM/print
 renderer and the remaining evidence are still active. CSS page-shaped boxes or
 destructive document splitting do not qualify.
 
@@ -62,7 +63,7 @@ destructive document splitting do not qualify.
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has a tested platform-neutral layout and page-intent foundation; the visual/print outcome is still partial | Add DOM measurement and editable page shells; rich repeated headers/footers/page numbers; non-destructive paragraph/list/table/media rendering; selection/IME/review behavior; print/PDF fidelity; measurable reflow cost; and accessible continuous fallback. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout, page intent, canonical rich header/footer variants, and dynamic page fields; the visual/print outcome is still partial | Add DOM measurement and editable page shells; repeated template projection; non-destructive paragraph/list/table/media rendering; selection/IME/review behavior; print/PDF fidelity; measurable reflow cost; and accessible continuous fallback. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

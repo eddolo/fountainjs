@@ -14,10 +14,15 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   intent, keep-with-next, widow/orphan minima, continuation overhead,
   page-local footnote reservation, maximum-page bounds, and explicit overflow;
 - optional `page_break`, `footnote_reference`, and `footnote_definition` nodes;
+- canonical rich `page_header` / `page_footer` templates for default, first,
+  odd, and even pages, plus `page_field` atoms for current/total page counts;
 - atomic `insertPageBreak`, `insertFootnote`, `removeFootnote`, and footnote
-  navigation commands;
+  navigation commands, plus template create/replace/select/remove and page-field
+  insertion commands;
 - `inspectFootnotes()` / `assertFootnotes()` for missing, duplicate, nested,
   and unreferenced definition diagnostics;
+- `inspectPageTemplates()` / `assertPageTemplates()` for duplicate/nested
+  templates and orphan page-field diagnostics;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -44,10 +49,10 @@ const geometry = createPageGeometry({ size: 'a4', margins: 20 })
 const result = layoutPages(measuredFlowItems, geometry)
 ```
 
-Measurements are adapter input, not persisted editor state. The current
-foundation deliberately does not claim line measurement, editable repeated
-headers/footers, page-shell rendering, PDF fidelity, or cross-browser editing
-across rendered boundaries.
+Measurements are adapter input, not persisted editor state. Each template is
+edited once in canonical document order; the current foundation deliberately
+does not claim line measurement, repeated template projection, page-shell
+rendering, PDF fidelity, or cross-browser editing across rendered boundaries.
 
 ## Current architecture audit
 
@@ -125,14 +130,16 @@ The optional pages extension owns only portable intent:
 
 - `page_break`: a selectable block atom that forces the next legal fragment to
   a new page;
-- footnote references and definitions with collision-safe identifiers.
+- footnote references and definitions with collision-safe identifiers;
+- one canonical rich header/footer template for each default/first/odd/even
+  variant;
+- current-page and total-page-count fields whose measured values are resolved
+  by the renderer rather than persisted.
 
-Rich header/footer templates and page-number fields remain renderer/model work
-to be designed and tested; they are not included in the current extension.
-
-Automatic page membership is deliberately absent. Header/footer editing must
-keep one canonical editable model representation; repeated page furniture is
-view-only and excluded from selection, clipboard, accessibility, and JSON.
+Automatic page membership is deliberately absent. Header/footer editing keeps
+one canonical editable model representation; future repeated page furniture is
+view-only and must be excluded from selection, clipboard, accessibility, and
+JSON.
 
 ## Fragmentation policy
 

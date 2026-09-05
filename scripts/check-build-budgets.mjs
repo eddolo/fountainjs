@@ -58,13 +58,14 @@ const limits = Object.freeze({
   // schema validation host-owned.
   'dist/migrations.js': 8 * kibibyte,
   'dist/migrations.cjs': 7 * kibibyte,
-  // Portable page geometry, legal-fragment flow, page intent, and footnote
-  // integrity stay outside the default editor until an application opts in.
-  'dist/pages.js': 16 * kibibyte,
-  'dist/pages.cjs': 13 * kibibyte,
+  // Portable page geometry, legal-fragment flow, page/footnote intent, and
+  // canonical header/footer templates stay outside the default editor until
+  // an application opts in.
+  'dist/pages.js': 23 * kibibyte,
+  'dist/pages.cjs': 19 * kibibyte,
   // Accessible block handles and visible drop states add roughly 1.8 KiB while
   // leaving every JavaScript entry ceiling unchanged.
-  'dist/styles.css': 54 * kibibyte,
+  'dist/styles.css': 56 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -88,10 +89,10 @@ const limits = Object.freeze({
   // including the whole-installation doctor. Keep a small allowance above it.
   // Versioned document envelopes and the isolated migration runner add about
   // 7/6 KiB respectively. The platform-neutral page foundation adds about
-  // 15/12 KiB as an isolated opt-in entry. The schema is data and is not
-  // counted as runtime JS.
-  'all ESM runtime code': 674 * kibibyte,
-  'all CommonJS runtime code': 568 * kibibyte,
+  // 21/18 KiB as an isolated opt-in entry, including canonical page-template
+  // semantics. The schema is data and is not counted as runtime JS.
+  'all ESM runtime code': 682 * kibibyte,
+  'all CommonJS runtime code': 576 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

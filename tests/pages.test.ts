@@ -14,10 +14,16 @@ import {
   assertFootnotes,
   createPagesExtension,
   insertFootnote,
+  insertPageField,
   insertPageBreak,
   inspectFootnotes,
+  inspectPageTemplates,
+  removePageTemplate,
   removeFootnote,
+  resolvePageField,
+  selectPageTemplate,
   selectFootnoteDefinition,
+  setPageTemplate,
 } from '../src/pages';
 import { createYjsCollaborationExtension } from '../src/yjs';
 
@@ -109,6 +115,10 @@ describe('portable page intent', () => {
     const left = createEditor({ schema: leftKit.schema, plugins: leftKit.plugins, content: { type: 'doc', content: [paragraph('Shared')] } });
     left.dispatch(left.state.createTransaction().setSelection(Selection.cursor([0, 0], 6)));
     expect(insertFootnote(left, { id: 'shared-note', content: 'Shared definition' })).toBe(true);
+    expect(setPageTemplate(left, { kind: 'header', content: 'Shared report' })).toBe(true);
+    expect(selectPageTemplate(left, 'header')).toBe(true);
+    left.dispatch(left.state.createTransaction().setSelection(Selection.cursor([0, 0, 0], 13)));
+    expect(insertPageField(left, 'page-number')).toBe(true);
 
     const json = left.getJSON();
     const schema = new Schema(pagesKit().schema);
@@ -129,5 +139,61 @@ describe('portable page intent', () => {
     right.destroy();
     leftDocument.destroy();
     rightDocument.destroy();
+  });
+
+  it('owns one canonical editable template per kind/variant with portable dynamic fields', () => {
+    const composed = pagesKit(HistoryExtension);
+    const editor = createEditor({
+      schema: composed.schema,
+      plugins: composed.plugins,
+      content: { type: 'doc', content: [paragraph('Body')] },
+    });
+
+    expect(setPageTemplate(editor, { kind: 'header', content: 'Report · ' })).toBe(true);
+    expect(setPageTemplate(editor, { kind: 'footer', variant: 'odd', content: 'Page ' })).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['page_header', 'paragraph', 'page_footer']);
+    expect(selectPageTemplate(editor, 'footer', 'odd')).toBe(true);
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([2, 0, 0], 5)));
+    expect(insertPageField(editor, 'page-number')).toBe(true);
+    expect(inspectPageTemplates(editor.state.doc)).toMatchObject({
+      valid: true,
+      templates: [
+        { kind: 'header', variant: 'default', path: [0] },
+        { kind: 'footer', variant: 'odd', path: [2] },
+      ],
+      fields: [{ kind: 'page-number', path: [2, 0, 1] }],
+    });
+    expect(resolvePageField('page-number', 3, 8)).toBe('3');
+    expect(resolvePageField('page-count', 3, 8)).toBe('8');
+    expect(() => resolvePageField('page-number', 0, 8)).toThrow(/pageNumber/);
+    expect(undo(editor)).toBe(true);
+    expect(inspectPageTemplates(editor.state.doc).fields).toEqual([]);
+
+    expect(setPageTemplate(editor, { kind: 'header', content: 'Updated' })).toBe(true);
+    expect(editor.state.doc.content.filter((node) => node.type.name === 'page_header')).toHaveLength(1);
+    expect(editor.state.doc.content[0].textContent).toBe('Updated');
+    expect(removePageTemplate(editor, 'footer', 'odd')).toBe(true);
+    expect(inspectPageTemplates(editor.state.doc)).toMatchObject({ valid: true, templates: [{ kind: 'header' }] });
+  });
+
+  it('reports duplicate/nested templates and page fields outside a template', () => {
+    const schema = new Schema(pagesKit().schema);
+    const document = schema.nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'page_header', attrs: { variant: 'default' }, content: [paragraph('One')] },
+        { type: 'page_header', attrs: { variant: 'default' }, content: [paragraph('Two')] },
+        { type: 'paragraph', content: [{ type: 'page_field', attrs: { kind: 'page-count' } }] },
+        {
+          type: 'blockquote',
+          content: [{ type: 'page_footer', attrs: { variant: 'first' }, content: [paragraph('Nested')] }],
+        },
+      ],
+    });
+    const report = inspectPageTemplates(document);
+    expect(new Set(report.issues.map((issue) => issue.code))).toEqual(new Set([
+      'duplicate-template', 'nested-template', 'orphan-page-field',
+    ]));
+    expect(report.valid).toBe(false);
   });
 });

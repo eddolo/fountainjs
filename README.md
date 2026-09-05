@@ -266,7 +266,9 @@ carries the marks unchanged, and the React toolbar supplies a responsive
 ## Print-aware page foundation (active)
 
 The isolated `fountainjs-editor/pages` entry provides a runtime-DOM-independent
-page-flow algorithm and portable manual page-break/footnote document semantics.
+page-flow algorithm and portable manual page-break, footnote, and canonical
+header/footer template semantics. Templates support default, first, odd, and
+even variants plus current-page/page-count fields.
 Automatic page boundaries are measurements, not JSON, so two collaborators
 with different fonts or viewports cannot overwrite each other's document.
 
@@ -275,21 +277,28 @@ import { CoreExtension, composeExtensions } from 'fountainjs-editor'
 import {
   PagesExtension,
   createPageGeometry,
+  insertPageField,
   insertFootnote,
   layoutPages,
+  selectPageTemplate,
+  setPageTemplate,
 } from 'fountainjs-editor/pages'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
+setPageTemplate(editor, { kind: 'footer', content: 'Page ' })
+selectPageTemplate(editor, 'footer')
+insertPageField(editor, 'page-number')
 
 const geometry = createPageGeometry({ size: 'a4', margins: 20 })
 const result = layoutPages(measuredFlowItems, geometry)
 ```
 
 The foundation covers legal fragments, keep-with-next, widow/orphan minima,
-continuation overhead, page-local footnote reservation, overflow diagnostics,
-undo, JSON, semantic HTML, and Yjs. It does **not** yet claim a complete visual
-paginator, editable repeated headers/footers, or print/PDF fidelity. Those
+continuation overhead, page-local footnote reservation, canonical editable
+templates, dynamic page fields, overflow diagnostics, undo, JSON, semantic
+HTML, and Yjs. It does **not** yet claim a complete visual paginator, repeated
+template rendering, or print/PDF fidelity. Those
 remain active `DOC-14` work with explicit browser and accessibility gates in
 [the pagination contract](docs/PAGINATION.md).
 

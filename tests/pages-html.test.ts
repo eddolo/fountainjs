@@ -15,6 +15,17 @@ describe('page-intent HTML interchange', () => {
           { type: 'footnote_reference', attrs: { id: 'note-1' } },
         ] },
         { type: 'page_break' },
+        { type: 'page_header', attrs: { variant: 'first' }, content: [
+          { type: 'paragraph', content: [
+            { type: 'text', text: 'Report · ' },
+            { type: 'page_field', attrs: { kind: 'page-number' } },
+            { type: 'text', text: ' of ' },
+            { type: 'page_field', attrs: { kind: 'page-count' } },
+          ] },
+        ] },
+        { type: 'page_footer', attrs: { variant: 'default' }, content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'Confidential' }] },
+        ] },
         { type: 'footnote_definition', attrs: { id: 'note-1' }, content: [
           { type: 'paragraph', content: [{ type: 'text', text: 'Evidence' }] },
         ] },
@@ -24,6 +35,9 @@ describe('page-intent HTML interchange', () => {
     const html = HTMLExporter.export(source, { document: false });
     expect(html).toContain('data-fountain-page-break="true"');
     expect(html).toContain('data-fountain-footnote-reference="note-1"');
+    expect(html).toContain('data-fountain-page-header="first"');
+    expect(html).toContain('data-fountain-page-footer="default"');
+    expect(html).toContain('data-fountain-page-field="page-number"');
     expect(html).toContain('role="doc-footnote"');
     expect(HTMLImporter.parse(html, schema).toJSON()).toEqual(source.toJSON());
   });

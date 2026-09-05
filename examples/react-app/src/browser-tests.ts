@@ -27,11 +27,14 @@ import * as Y from 'yjs';
 import { createYjsCollaborationExtension } from '../../../src/yjs';
 import {
   PagesExtension,
+  insertPageField,
   inspectFootnotes,
+  inspectPageTemplates,
   insertFootnote,
   insertPageBreak,
   removeFootnote,
   selectFootnoteDefinition,
+  setPageTemplate,
 } from '../../../src/pages';
 import {
   acceptTrackedSuggestion,
@@ -316,6 +319,17 @@ Object.assign(globalThis, {
       inspect: () => inspectFootnotes(pagesEditor.state.doc),
       selectDefinition: () => selectFootnoteDefinition(pagesEditor, 'browser-note'),
       removeFootnote: () => removeFootnote(pagesEditor, 'browser-note'),
+      setHeader: () => setPageTemplate(pagesEditor, { kind: 'header', content: 'Browser report · ' }),
+      insertPageNumber: () => {
+        const headerIndex = pagesEditor.state.doc.content.findIndex((node) => node.type.name === 'page_header');
+        const header = pagesEditor.state.doc.content[headerIndex];
+        if (!header) return false;
+        pagesEditor.dispatch(pagesEditor.state.createTransaction().setSelection(
+          Selection.cursor([headerIndex, 0, 0], header.textContent.length),
+        ));
+        return insertPageField(pagesEditor, 'page-number');
+      },
+      inspectTemplates: () => inspectPageTemplates(pagesEditor.state.doc),
     },
   },
 });

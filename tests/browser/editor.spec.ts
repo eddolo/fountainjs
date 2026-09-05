@@ -24,6 +24,17 @@ test('renders and edits portable page-break and footnote intent in a real browse
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.removeFootnote())).toBe(true);
   await expect(reference).toHaveCount(0);
   await expect(definition).toHaveCount(0);
+
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.setHeader())).toBe(true);
+  const header = editor.locator('header[data-fountain-page-header="default"]');
+  await expect(header).toHaveCount(1);
+  await expect(header).toHaveAttribute('aria-label', 'Header template (default)');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertPageNumber())).toBe(true);
+  const field = header.locator('[data-fountain-page-field="page-number"]');
+  await expect(field).toHaveCount(1);
+  await expect(field).toHaveAttribute('contenteditable', 'false');
+  await expect(field).toHaveText('{page}');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.inspectTemplates().valid)).toBe(true);
 });
 
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {

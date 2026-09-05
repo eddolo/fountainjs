@@ -1275,20 +1275,27 @@ deployment order.
 ## Print-aware page foundation
 
 The opt-in, runtime-DOM-independent `fountainjs-editor/pages` entry separates
-persisted page intent from automatic layout. Compose `PagesExtension` to add manual page
-breaks plus inline footnote references and top-level rich footnote definitions:
+persisted page intent from automatic layout. Compose `PagesExtension` to add
+manual page breaks, inline footnote references, top-level rich footnote
+definitions, canonical header/footer templates, and dynamic page fields:
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
 import {
   PagesExtension,
   createPageGeometry,
+  insertPageField,
   insertFootnote,
   layoutPages,
+  selectPageTemplate,
+  setPageTemplate,
 } from 'fountainjs-editor/pages'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
+setPageTemplate(editor, { kind: 'footer', content: 'Page ' })
+selectPageTemplate(editor, 'footer')
+insertPageField(editor, 'page-number')
 
 const geometry = createPageGeometry({ size: 'letter', margins: 25.4 })
 const pages = layoutPages(measuredFlowItems, geometry)
@@ -1302,14 +1309,22 @@ collaborative hosts inject their own collision-resistant identifier policy.
 `removeFootnote` use ordinary validated transactions, so history and Yjs carry
 them without a page-specific collaboration protocol.
 
+`setPageTemplate(editor, { kind, variant, content })` creates or replaces the
+single canonical `header` or `footer` for a `default`, `first`, `odd`, or `even`
+page variant. `selectPageTemplate`, `removePageTemplate`, and `insertPageField`
+provide the corresponding editing surface; fields can represent either the
+current page number or total page count. `inspectPageTemplates` reports nested
+or duplicate templates and fields outside a template. `resolvePageField`
+resolves fields for a renderer without storing measured numbers in the document.
+
 `layoutPages(items, geometry, options?)` consumes measured legal fragments and
 returns frozen pages, placements, reserved footnotes, used/available height,
 and explicit overflow/constraint warnings. It never reads `document`, CSS, or
 viewport state and never writes automatic page membership into JSON.
 
 This is the page-model foundation, not a completed visual paginator. DOM
-measurement, editable repeated headers/footers, page-number fields, page-shell
-rendering, accessibility fallback, and print/PDF fidelity remain active work.
+measurement, repeated template projection, page-shell rendering, accessibility
+fallback, and print/PDF fidelity remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

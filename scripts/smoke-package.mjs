@@ -38,7 +38,7 @@ const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRub
 const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'getActiveTextStyle'];
 const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
-const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometry', 'layoutPages', 'insertPageBreak', 'insertFootnote', 'inspectFootnotes', 'removeFootnote'];
+const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometry', 'layoutPages', 'insertPageBreak', 'insertFootnote', 'inspectFootnotes', 'removeFootnote', 'setPageTemplate', 'insertPageField', 'inspectPageTemplates', 'resolvePageField'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');

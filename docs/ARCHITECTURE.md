@@ -753,8 +753,8 @@ optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
-the text-style facade, 8/7 KiB for document migrations, 16/13 KiB for the
-isolated page foundation, 54 KiB for CSS, and 674/568 KiB for all emitted
+the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
+isolated page foundation, 56 KiB for CSS, and 682/576 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload

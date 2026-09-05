@@ -12,7 +12,9 @@
 
 - An isolated `fountainjs-editor/pages` foundation with DOM-independent
   A4/Letter/custom geometry and legal-fragment flow; manual page-break and rich
-  footnote schema intent; integrity diagnostics; atomic commands; explicit
+  footnote schema intent; one canonical rich header/footer template per
+  default/first/odd/even variant; portable current-page/page-count fields;
+  integrity diagnostics; atomic commands; explicit
   overflow/constraint results; JSON and semantic HTML interchange; generic
   history/Yjs behavior; package budgets; and an honest staged pagination
   contract. Editable page-shell rendering, repeated furniture, and print/PDF

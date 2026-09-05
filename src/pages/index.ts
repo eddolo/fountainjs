@@ -8,8 +8,20 @@ import {
 } from '../core';
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
 import { defineExtension, type FountainExtension } from '../extensions/extension';
+import {
+  assertPageTemplates,
+  insertPageField,
+  inspectPageTemplates,
+  pageFieldNode,
+  pageFooterNode,
+  pageHeaderNode,
+  removePageTemplate,
+  selectPageTemplate,
+  setPageTemplate,
+} from './templates';
 
 export * from './layout';
+export * from './templates';
 
 const FOOTNOTE_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
@@ -289,15 +301,22 @@ export function createPagesExtension(options: PagesExtensionOptions = {}): Fount
       page_break: pageBreakNode,
       footnote_reference: footnoteReferenceNode,
       footnote_definition: footnoteDefinitionNode,
+      page_header: pageHeaderNode,
+      page_footer: pageFooterNode,
+      page_field: pageFieldNode,
     },
     commands: {
       insertPageBreak,
       insertFootnote: (editor, insertOptions: InsertFootnoteOptions = {}) => insertFootnoteWithFactory(editor, insertOptions, idFactory),
       selectFootnoteDefinition,
       removeFootnote,
+      setPageTemplate,
+      removePageTemplate,
+      selectPageTemplate,
+      insertPageField,
     },
     services: {
-      pages: Object.freeze({ inspectFootnotes, assertFootnotes }),
+      pages: Object.freeze({ inspectFootnotes, assertFootnotes, inspectPageTemplates, assertPageTemplates }),
     },
   });
 }
