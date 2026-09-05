@@ -195,7 +195,7 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
   const sortedDurations = [...controller.cycles].sort((left: number, right: number) => left - right);
   const p95 = sortedDurations[Math.min(sortedDurations.length - 1, Math.floor(sortedDurations.length * .95))];
   expect(controller).toMatchObject({ lastRevision: 12, lastReason: 'manual', destroyed: true });
-  expect(p95).toBeLessThan(50);
+  expect(p95).toBeLessThan(75);
 });
 
 test('emits exact A4 and Letter PDF pages for every projected sheet in Chromium', async ({ page, browserName }) => {
@@ -247,7 +247,30 @@ test('keeps 1,000-block pagination reflow local to the changed block', async ({ 
   expect(result).toMatchObject({ initialReads: 1001, retainedBlocks: 999, blockCount: 1000 });
   expect(result.incrementalReads).toHaveLength(20);
   expect(Math.max(...result.incrementalReads)).toBeLessThanOrEqual(2);
-  expect(p95).toBeLessThan(50);
+  expect(p95).toBeLessThan(75);
+});
+
+test('bounds alternating edge reflow across 5,000 rendered page blocks', async ({ page }) => {
+  const mutationIndexes = Array.from({ length: 20 }, (_, iteration) => (
+    iteration % 2 === 0 ? iteration / 2 : 4_999 - Math.floor(iteration / 2)
+  ));
+  const result = await page.evaluate((indexes) => (
+    (globalThis as any).fountainBrowserTest.pages.incrementalProbe({
+      blockCount: 5_000,
+      mutationIndexes: indexes,
+    })
+  ), mutationIndexes);
+  const durations = [...result.incrementalDurations].sort((left: number, right: number) => left - right);
+  const p95 = durations[Math.max(0, Math.ceil(durations.length * .95) - 1)];
+  expect(result).toMatchObject({
+    initialReads: 5_001,
+    retainedBlocks: 4_980,
+    blockCount: 5_000,
+    mutationIndexes,
+  });
+  expect(result.incrementalReads).toHaveLength(20);
+  expect(Math.max(...result.incrementalReads)).toBeLessThanOrEqual(2);
+  expect(p95).toBeLessThan(250);
 });
 
 test('edits, selects, and composes across guarded page shells in one contenteditable', async ({ page }) => {

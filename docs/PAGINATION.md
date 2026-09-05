@@ -178,9 +178,11 @@ automates invalidation and measurement but does not own rendering or state. Its
 mutation cache requires identical immutable node and DOM-element identities,
 the same body width, and the same referenced footnote heights. Observed DOM
 changes dirty their owning block; resize, font, window, manual, and print cycles
-invalidate fully. A real-browser 1,000-block gate permits only the root width
-and changed block to perform geometry reads across repeated edits and enforces a
-50 ms p95 cycle budget.
+invalidate fully. Real-browser gates permit only the root width and changed
+block to perform geometry reads: repeated middle edits in 1,000 blocks stay
+below a 75 ms p95 cycle budget, while 20 edits alternating between the first and
+last ten positions of 5,000 rendered blocks stay below 250 ms p95 under the
+parallel cross-engine runner.
 The separate preview entry clones those exact slices into visual sheets; it
 requires the measured editor width to equal the page body width and never
 changes the editor DOM. It emits an unnamed physical page rule for broad print
@@ -255,7 +257,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;
 - reflow latency, measurement count, DOM identity, memory, and bundle budgets
-  beyond the current 1,000-block single-edit gate;
+  for structural insertion/removal and beyond the current 5,000-block
+  adversarial replacement gate;
 - packed ESM/CommonJS/types, public docs/demo, and immutable CI/deployment
   evidence.
 

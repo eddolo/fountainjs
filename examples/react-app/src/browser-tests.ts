@@ -421,14 +421,19 @@ const renderPagesPreview = (
   return output;
 };
 
-const runPaginationIncrementalBudget = () => {
+const runPaginationIncrementalBudget = (options: {
+  readonly blockCount?: number;
+  readonly mutationIndexes?: readonly number[];
+} = {}) => {
+  const blockCount = options.blockCount ?? 1_000;
+  const mutationIndexes = options.mutationIndexes ?? Array.from({ length: 20 }, () => 500);
   const kit = composeExtensions([CoreExtension, PagesExtension]);
   const largeEditor = createEditor({
     schema: kit.schema,
     plugins: kit.plugins,
     content: {
       type: 'doc',
-      content: Array.from({ length: 1_000 }, (_, index) => ({
+      content: Array.from({ length: blockCount }, (_, index) => ({
         type: 'paragraph', content: [{ type: 'text', text: `Page block ${index}` }],
       })),
     },
@@ -448,12 +453,12 @@ const runPaginationIncrementalBudget = () => {
   );
   try {
     const initial = controller.refreshNow('initial');
-    const cycles = Array.from({ length: 20 }, (_, iteration) => {
-      const current = largeEditor.state.doc.child(500);
+    const cycles = mutationIndexes.map((blockIndex, iteration) => {
+      const current = largeEditor.state.doc.child(blockIndex);
       const replacement = current.copy([
         largeEditor.state.schema.text(`${current.textContent}!${iteration}`),
       ]);
-      largeEditor.dispatch(largeEditor.state.createTransaction().replace(500, 501, [replacement]));
+      largeEditor.dispatch(largeEditor.state.createTransaction().replace(blockIndex, blockIndex + 1, [replacement]));
       return controller.refreshNow('mutation');
     });
     const after = [...largeView.dom.children];
@@ -463,6 +468,7 @@ const runPaginationIncrementalBudget = () => {
       incrementalDurations: cycles.map((cycle) => cycle.durationMs),
       retainedBlocks: after.filter((node, index) => node === before[index]).length,
       blockCount: after.length,
+      mutationIndexes,
     };
   } finally {
     controller.destroy();

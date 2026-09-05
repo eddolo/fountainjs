@@ -758,8 +758,9 @@ The suites are organized by boundary:
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
   presentation, Chromium-generated A4/Letter PDF page counts, MediaBoxes, and
-  page-specific content extraction, plus 1,000-block incremental pagination
-  reflow budgets. The editable fixture also proves one unchanged
+  page-specific content extraction, plus 1,000-block repeated-middle and
+  5,000-block alternating-edge incremental pagination reflow budgets. The
+  editable fixture also proves one unchanged
   contenteditable, retained block identity, native composition on page two,
   selection mapping and undo/redo across a manual page boundary, reversible
   container-responsive page/continuous modes, tracked decisions plus

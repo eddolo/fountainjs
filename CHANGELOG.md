@@ -29,7 +29,8 @@
   PDF geometry plus page-content extraction checks; and an
   improved keep-with-next rule that reserves a splittable block's required
   opening lines; plus indexed top-level lookup, identity/footnote-safe
-  mutation-cycle measurement reuse, and a 1,000-block browser reflow budget;
+  mutation-cycle measurement reuse, and 1,000-/5,000-block browser reflow budgets
+  covering repeated middle edits and alternating document-edge edits;
   plus a guarded editable page-shell controller that retains one unchanged
   contenteditable/model-path tree, supports native cross-page selection and
   IME plus history across whole-block/manual boundaries, restores continuous
