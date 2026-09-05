@@ -64,6 +64,22 @@
       }
     },
     {
+      "id": "commonmark-multiline-setext-heading",
+      "source": "Foo *bar\nbaz*\n====\n\nFoo\nBar\n---",
+      "expected": {
+        "topLevelTypes": ["heading", "heading"],
+        "text": "Foo bar bazFoo Bar",
+        "headings": [
+          { "level": 1, "text": "Foo bar baz" },
+          { "level": 2, "text": "Foo Bar" }
+        ],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["em"],
+        "hardBreaks": 0
+      }
+    },
+    {
       "id": "commonmark-spaced-thematic-breaks",
       "source": " ***\n  - - -\n_ _ _ _",
       "expected": {

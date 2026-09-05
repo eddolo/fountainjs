@@ -119,7 +119,7 @@ an initial standards-oriented set of behaviors:
 - one-to-six-level ATX headings with up to three leading spaces and optional
   closing hashes, including hash-only closers and standard trailing-space
   removal;
-- level-one/two Setext headings;
+- level-one/two Setext headings over one or multiple content lines;
 - indented code and variable-length backtick or tilde fences;
 - variable-delimiter code spans with CommonMark whitespace normalization;
 - strict HTML5 named/numeric character references and all ASCII punctuation

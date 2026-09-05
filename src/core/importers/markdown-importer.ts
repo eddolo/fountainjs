@@ -1442,7 +1442,7 @@ function indentedCodeLine(line: string): string | null {
 }
 
 function thematicBreak(line: string): boolean {
-  return /^ {0,3}(?:\*(?:[ \t]*\*){2,}|_(?:[ \t]*_){2,}|-(?:[ \t]*-){2,})[ \t]*$/u.test(line);
+  return /^ {0,3}([*_-])(?:[ \t]*\1){2,}[ \t]*$/u.test(line);
 }
 
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
@@ -1461,7 +1461,7 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
 
 function parseBlocks(lines: readonly string[], schema: Schema, references: References): Node[] {
   const blocks: Node[] = [];
-  for (let index = 0; index < lines.length;) {
+  b: for (let index = 0; index < lines.length;) {
     const line = lines[index];
     if (!line.trim()) { index++; continue; }
     const disclosure = detailsStart(line);
@@ -1540,12 +1540,6 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       index++;
       continue;
     }
-    const setext = /^ {0,3}(=+|-+)[\t ]*$/u.exec(lines[index + 1] ?? '');
-    if (setext && !listMarker(line) && !/^ {0,3}>[\t ]?/u.test(line) && !detailsStart(line)) {
-      blocks.push(schema.node('heading', { level: setext[1][0] === '=' ? 1 : 2 }, inline(line.trim(), schema, references)));
-      index += 2;
-      continue;
-    }
     const image = blockImage(line, references);
     if (image && isSafeURL(image.href, { allowDataImage: true })) {
       blocks.push(schema.node('image_super', {
@@ -1588,12 +1582,20 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       continue;
     }
     const paragraphLines = [line];
-    for (index++; index < lines.length && lines[index].trim() && !startsBlock(lines, index, references, schema); index++) paragraphLines.push(lines[index]);
+    for (index++; index < lines.length && lines[index].trim(); index++) {
+      const underline = /^ {0,3}(=+|-+)[\t ]*$/u.exec(lines[index]);
+      if (underline && !marker && !/^ {0,3}>/u.test(line) && !detailsStart(line)) {
+        blocks.push(schema.node('heading', { level: underline[1][0] === '=' ? 1 : 2 }, inline(paragraphLines.join('\n').trim(), schema, references)));
+        index++;
+        continue b;
+      }
+      if (startsBlock(lines, index, references, schema)) break;
+      paragraphLines.push(lines[index]);
+    }
     // Keep physical line endings visible to inline syntax validation. Ordinary
     // soft breaks become spaces only when text nodes are emitted; hard-break
     // markers are consumed by `inline` before that normalization.
-    const joined = paragraphLines.join('\n');
-    blocks.push(paragraph(schema, joined, references));
+    blocks.push(paragraph(schema, paragraphLines.join('\n'), references));
   }
   return blocks;
 }

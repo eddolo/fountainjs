@@ -2321,6 +2321,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     orderedInterruption: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Existing paragraph\n14. stays in it\n\nExisting paragraph\n1. starts a list',
     ),
+    multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
+    ),
     nestedEmphasis: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '*outer **inner** outer* / **strong *inside* strong** / *[linked](https://example.com)* / *[literal *](https://example.com)',
     ),
@@ -2555,6 +2558,16 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   expect(result.orderedInterruption.document.content[0].content[0].text)
     .toBe('Existing paragraph 14. stays in it');
   expect(result.orderedInterruption.losses).toEqual([]);
+  expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
+  expect(result.multilineSetext.document.content.map((node: any) => ({
+    type: node.type,
+    level: node.attrs.level,
+    text: node.content.map((child: any) => child.text ?? '').join(''),
+  }))).toEqual([
+    { type: 'heading', level: 1, text: 'Foo bar baz' },
+    { type: 'heading', level: 2, text: 'Foo Bar' },
+  ]);
+  expect(result.multilineSetext.losses).toEqual([]);
   expect(result.nestedEmphasis.document).toEqual(result.nestedEmphasis.roundTrip);
   expect(result.nestedEmphasis.document.content[0].content
     .filter((node: any) => node.marks?.length)
