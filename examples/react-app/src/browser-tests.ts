@@ -27,6 +27,7 @@ import * as Y from 'yjs';
 import { createYjsCollaborationExtension } from '../../../src/yjs';
 import {
   PagesExtension,
+  createPageGeometry,
   insertPageField,
   inspectFootnotes,
   inspectPageTemplates,
@@ -36,6 +37,7 @@ import {
   selectFootnoteDefinition,
   setPageTemplate,
 } from '../../../src/pages';
+import { layoutDOMPages } from '../../../src/pages/dom';
 import {
   acceptTrackedSuggestion,
   createTrackedChangesExtension,
@@ -330,6 +332,53 @@ Object.assign(globalThis, {
         return insertPageField(pagesEditor, 'page-number');
       },
       inspectTemplates: () => inspectPageTemplates(pagesEditor.state.doc),
+      loadMeasurementFixture: () => {
+        const fixture = pagesEditor.state.schema.nodeFromJSON({
+          type: 'doc',
+          content: [
+            { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Measured layout' }] },
+            { type: 'paragraph', content: [
+              { type: 'text', text: 'A long measured paragraph wraps into several legal browser line boxes. '.repeat(7) },
+              { type: 'footnote_reference', attrs: { id: 'measure-note' } },
+              { type: 'text', text: ' Final words.' },
+            ] },
+            { type: 'bullet_list', content: [
+              { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'First list item' }] }] },
+              { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Second list item' }] }] },
+              { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Third list item' }] }] },
+            ] },
+            { type: 'table', content: [
+              { type: 'table_row', content: [
+                { type: 'table_header', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Name' }] }] },
+                { type: 'table_header', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Value' }] }] },
+              ] },
+              { type: 'table_row', content: [
+                { type: 'table_cell', attrs: { rowspan: 2 }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Grouped' }] }] },
+                { type: 'table_cell', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'One' }] }] },
+              ] },
+              { type: 'table_row', content: [
+                { type: 'table_cell', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Two' }] }] },
+              ] },
+            ] },
+            { type: 'page_break' },
+            { type: 'paragraph', content: [{ type: 'text', text: 'After the manual break' }] },
+            { type: 'footnote_definition', attrs: { id: 'measure-note' }, content: [
+              { type: 'paragraph', content: [{ type: 'text', text: 'A measured footnote body.' }] },
+            ] },
+          ],
+        });
+        const transaction = pagesEditor.state.createTransaction()
+          .replace(0, pagesEditor.state.doc.childCount, fixture.content)
+          .setSelection(Selection.cursor([0, 0], 0));
+        pagesEditor.dispatch(transaction);
+        pagesView.dom.style.width = '240px';
+        return true;
+      },
+      measure: () => layoutDOMPages(
+        pagesView.dom,
+        pagesEditor.state.doc,
+        createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 }),
+      ),
     },
   },
 });

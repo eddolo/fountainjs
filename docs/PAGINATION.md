@@ -23,6 +23,10 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   and unreferenced definition diagnostics;
 - `inspectPageTemplates()` / `assertPageTemplates()` for duplicate/nested
   templates and orphan page-field diagnostics;
+- an isolated `fountainjs-editor/pages/dom` measurement adapter that converts
+  actual line boxes, direct list items, rowspan-safe table row groups, repeated
+  table-header cost, footnotes, templates, and manual breaks into neutral flow
+  descriptors without changing the DOM;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
 
 All layout inputs and outputs are frozen ordinary data. The entry imports no
@@ -50,9 +54,10 @@ const result = layoutPages(measuredFlowItems, geometry)
 ```
 
 Measurements are adapter input, not persisted editor state. Each template is
-edited once in canonical document order; the current foundation deliberately
-does not claim line measurement, repeated template projection, page-shell
-rendering, PDF fidelity, or cross-browser editing across rendered boundaries.
+edited once in canonical document order. The browser adapter now supplies real
+line/list/table/footnote measurements, but the current foundation deliberately
+does not claim repeated template projection, page-shell rendering, PDF
+fidelity, or cross-browser editing across rendered page boundaries.
 
 ## Current architecture audit
 
@@ -120,9 +125,10 @@ DOM-independent page layout
 ```
 
 `layoutPages()` is the first boundary. It consumes ordinary numbers and frozen
-descriptors and returns page placements plus explicit overflow warnings. A DOM
-adapter may measure line boxes, list items, table row-span groups, media, and
-footnotes, but those measurements never enter editor state.
+descriptors and returns page placements plus explicit overflow warnings.
+`measureDOMPageFlow()` is the optional browser boundary: it measures line boxes,
+list items, table row-span groups, media, and footnotes, but those measurements
+never enter editor state and the adapter never moves editable nodes.
 
 ## Document semantics
 

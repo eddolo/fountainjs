@@ -60,6 +60,9 @@
       ],
       "pages": [
         "dist/pages/index.d.ts"
+      ],
+      "pages/dom": [
+        "dist/pages/dom.d.ts"
       ]
     }
   },
@@ -232,6 +235,16 @@
       "require": {
         "types": "./dist/pages/index.d.cts",
         "default": "./dist/pages.cjs"
+      }
+    },
+    "./pages/dom": {
+      "import": {
+        "types": "./dist/pages/dom.d.ts",
+        "default": "./dist/pages-dom.js"
+      },
+      "require": {
+        "types": "./dist/pages/dom.d.cts",
+        "default": "./dist/pages-dom.cjs"
       }
     },
     "./schema/document.json": "./schemas/fountain-document.schema.json",

@@ -1290,6 +1290,7 @@ import {
   selectPageTemplate,
   setPageTemplate,
 } from 'fountainjs-editor/pages'
+import { layoutDOMPages, measureDOMPageFlow } from 'fountainjs-editor/pages/dom'
 
 const kit = composeExtensions([CoreExtension, PagesExtension])
 insertFootnote(editor, { id: 'source-1', content: 'Source text' })
@@ -1299,6 +1300,7 @@ insertPageField(editor, 'page-number')
 
 const geometry = createPageGeometry({ size: 'letter', margins: 25.4 })
 const pages = layoutPages(measuredFlowItems, geometry)
+const browserPages = layoutDOMPages(view.dom, editor.state.doc, geometry)
 ```
 
 `inspectFootnotes(document)` reports duplicate, missing, nested, and
@@ -1322,8 +1324,18 @@ returns frozen pages, placements, reserved footnotes, used/available height,
 and explicit overflow/constraint warnings. It never reads `document`, CSS, or
 viewport state and never writes automatic page membership into JSON.
 
-This is the page-model foundation, not a completed visual paginator. DOM
-measurement, repeated template projection, page-shell rendering, accessibility
+The separate browser-only `fountainjs-editor/pages/dom` entry provides
+`measureDOMPageFlow(root, document, options?)` and `layoutDOMPages(...)`. It
+reads the current rendered geometry and emits legal line fragments for text,
+direct list-item fragments, rowspan-safe table row groups with continuation
+header cost, first-reference footnote reservations, manual-break intent, and
+canonical template measurements. Missing nodes, invalid geometry, and
+unmeasured footnotes are explicit warnings. It never reparents, clones, or
+annotates the editable DOM; its output is ordinary frozen input for the neutral
+layout engine.
+
+This is the page-model and measurement foundation, not a completed visual
+paginator. Repeated template projection, page-shell rendering, accessibility
 fallback, and print/PDF fidelity remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 

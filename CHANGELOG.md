@@ -16,7 +16,9 @@
   default/first/odd/even variant; portable current-page/page-count fields;
   integrity diagnostics; atomic commands; explicit
   overflow/constraint results; JSON and semantic HTML interchange; generic
-  history/Yjs behavior; package budgets; and an honest staged pagination
+  history/Yjs behavior; an isolated browser measurement adapter for line boxes,
+  list items, rowspan-safe table groups, footnotes, and manual breaks; package
+  budgets; and an honest staged pagination
   contract. Editable page-shell rendering, repeated furniture, and print/PDF
   fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential

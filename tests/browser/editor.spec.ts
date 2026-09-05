@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
 });
 
-test('renders and edits portable page-break and footnote intent in a real browser', async ({ page }) => {
+test('renders, edits, and measures portable page intent in a real browser', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Page intent contract editor' });
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertBreak())).toBe(true);
   await expect(editor.locator('hr[data-fountain-page-break="true"]')).toHaveCount(1);
@@ -35,6 +35,55 @@ test('renders and edits portable page-break and footnote intent in a real browse
   await expect(field).toHaveAttribute('contenteditable', 'false');
   await expect(field).toHaveText('{page}');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.inspectTemplates().valid)).toBe(true);
+
+  const measured = await page.evaluate(() => {
+    const snapshot = (globalThis as any).fountainBrowserTest.pages.measure();
+    return {
+      itemCount: snapshot.measurement.items.length,
+      templates: snapshot.measurement.templates,
+      warnings: snapshot.measurement.warnings,
+      measurementCount: snapshot.measurement.measurementCount,
+      pages: snapshot.layout.pages.length,
+      hasManualBreak: snapshot.measurement.items.some((item: any) => item.breakAfter === true),
+    };
+  });
+  expect(measured.itemCount).toBeGreaterThanOrEqual(3);
+  expect(measured.templates).toMatchObject([{ kind: 'header', variant: 'default' }]);
+  expect(measured.warnings).toEqual([]);
+  expect(measured.measurementCount).toBeGreaterThan(0);
+  expect(measured.pages).toBeGreaterThanOrEqual(2);
+  expect(measured.hasManualBreak).toBe(true);
+});
+
+test('measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments', async ({ page }) => {
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.loadMeasurementFixture())).toBe(true);
+  const result = await page.evaluate(() => {
+    const snapshot = (globalThis as any).fountainBrowserTest.pages.measure();
+    const summarize = (id: string) => {
+      const item = snapshot.measurement.items.find((candidate: any) => candidate.id === id);
+      return {
+        fragments: item?.fragments?.length ?? (item ? 1 : 0),
+        continuationHeight: item?.continuationHeight ?? 0,
+        footnotes: item?.fragments?.flatMap((fragment: any) => fragment.footnotes ?? []).map((note: any) => note.id) ?? [],
+      };
+    };
+    return {
+      paragraph: summarize('block:1:paragraph'),
+      list: summarize('block:2:bullet_list'),
+      table: summarize('block:3:table'),
+      warnings: snapshot.measurement.warnings,
+      layoutWarnings: snapshot.layout.warnings,
+      pages: snapshot.layout.pages.length,
+    };
+  });
+
+  expect(result.warnings).toEqual([]);
+  expect(result.paragraph.fragments).toBeGreaterThan(2);
+  expect(result.paragraph.footnotes).toContain('measure-note');
+  expect(result.list.fragments).toBe(3);
+  expect(result.table.fragments).toBe(2);
+  expect(result.table.continuationHeight).toBeGreaterThan(0);
+  expect(result.pages).toBeGreaterThan(1);
 });
 
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
