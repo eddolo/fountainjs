@@ -18,6 +18,18 @@
 
 ### Added
 
+- An immutable Markdown source snapshot for raw/visual workflows:
+  `parseWithSource` retains exact input, line endings, and inert YAML
+  frontmatter; `exportWithSource` returns unchanged source exactly or
+  preserves the frontmatter while canonicalizing a visually edited body; and an
+  explicit `exact`/`frontmatter`/`canonical` result prevents false
+  source-fidelity claims. Unknown body syntax is deliberately not promised
+  after a model edit.
+- An initial versioned CommonMark 0.31.2/GFM 0.29-oriented compatibility corpus,
+  plus ATX/Setext headings, indented and variable backtick/tilde code fences,
+  safe angle-bracket URI/email autolinks, star emphasis, backslash hard breaks,
+  and collision-safe code-fence export. This is documented as a supported
+  subset, not a false claim of complete standards conformance.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

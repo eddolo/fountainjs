@@ -808,6 +808,22 @@ const inspectMarkdown = (source: string) => {
   };
 };
 
+const inspectMarkdownSource = (source: string) => {
+  const imported = MarkdownImporter.parseWithSource(source, editor.state.schema);
+  const exact = MarkdownExporter.exportWithSource(imported.document, imported.source);
+  const changed = editor.state.schema.node('doc', {}, [
+    editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Changed visually')]),
+  ]);
+  const edited = MarkdownExporter.exportWithSource(changed, imported.source);
+  return {
+    exact,
+    edited,
+    body: imported.source.body,
+    lineEnding: imported.source.lineEnding,
+    frontmatter: imported.source.frontmatter,
+  };
+};
+
 const runPerformanceBudget = async () => {
   const kit = composeExtensions([CoreExtension]);
   const content = {
@@ -1168,6 +1184,7 @@ Object.assign(globalThis, {
     nodeViewMetrics,
     clipboardHistory: () => getClipboardHistoryState(editor),
     inspectMarkdown,
+    inspectMarkdownSource,
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     performanceBudget: runPerformanceBudget,
     virtualizationBudget: runVirtualizationBudget,

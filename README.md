@@ -997,6 +997,11 @@ quotes, loose nested lists, and aligned tables with escaped pipes. Export can
 emit deterministic deduplicated references; `exportWithReport` identifies
 every unsupported node, mark, or attribute projection by document path so a
 publishing pipeline never has to guess what Markdown omitted.
+`parseWithSource` plus `exportWithSource` provide an explicit raw/visual
+boundary: unchanged Markdown returns exactly as supplied, while visual edits retain
+recognized inert YAML frontmatter and canonicalize the body with an exact
+`preservation` result. It does not claim block-level preservation of unknown
+syntax after an edit.
 
 ## Optional real-time collaboration
 
@@ -1275,6 +1280,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Ten working integration demos](https://eddolo.github.io/fountainjs/demos.html)
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)
+- [Markdown semantics, raw source, frontmatter, and conformance limits](docs/MARKDOWN_SOURCE.md)
 - [Server-native HTML conversion](docs/SERVER_HTML.md)
 - [Platform-neutral core and headless collaboration](docs/HEADLESS_CORE.md)
 - [Document versions and migrations](docs/MIGRATIONS.md)

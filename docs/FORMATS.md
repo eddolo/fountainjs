@@ -106,6 +106,40 @@ An `onLoss` callback is observational: its exception is contained and cannot
 break otherwise valid serialization. `MarkdownExporter.export(...)` remains
 the convenient string-only API and accepts the same options.
 
+For a raw/visual workflow, `MarkdownImporter.parseWithSource(...)` separates a
+strict leading `---` frontmatter block from the document body without parsing
+or executing YAML. It records the exact source, original line endings, and
+frontmatter prefix in an immutable `MarkdownSourceSnapshot`.
+`MarkdownExporter.exportWithSource(...)` returns the original source string
+exactly while the parsed document is unchanged. After a visual edit it
+retains recognized frontmatter exactly and exports the changed body in
+canonical Markdown. The returned `preservation` value is `exact`,
+`frontmatter`, or `canonical`, so a host never has to infer what happened.
+
+```ts
+const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema)
+
+// Exact until the parsed model changes.
+const unchanged = MarkdownExporter.exportWithSource(
+  imported.document,
+  imported.source,
+)
+
+// After a visual edit, frontmatter stays exact and the body is canonical.
+const edited = MarkdownExporter.exportWithSource(
+  editor.state,
+  imported.source,
+)
+```
+
+This does not yet preserve unchanged body blocks around a changed block.
+Unknown body directives, delimiter spelling, reference ordering, and whitespace
+remain exact only while the complete parsed document is unchanged. A source
+editor must reparse its new text to establish a new snapshot. JSON remains the
+lossless structured persistence format. The detailed contract, initial
+standards-oriented corpus, and explicit non-conformance list are in
+[MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
+
 Mentions and emoji export as their readable text projections; the report makes
 the lost mention identity/kind and emoji fallback metadata explicit because
 CommonMark has no portable typed representation for either. Raw Unicode emoji

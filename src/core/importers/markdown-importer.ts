@@ -1,6 +1,134 @@
 import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 
+export type MarkdownLineEnding = '\n' | '\r\n' | '\r';
+
+export interface MarkdownFrontmatter {
+  /** Exact prefix, including the opening/closing delimiters and any final line ending. */
+  readonly raw: string;
+  /** Exact unparsed content between the delimiter lines. FountainJS never executes YAML. */
+  readonly content: string;
+  readonly openingDelimiter: '---';
+  readonly closingDelimiter: '---' | '...';
+}
+
+interface MarkdownSourceParts {
+  readonly body: string;
+  readonly lineEnding: MarkdownLineEnding;
+  readonly frontmatter?: MarkdownFrontmatter;
+}
+
+/**
+ * Immutable source provenance captured by `MarkdownImporter.parseWithSource`.
+ *
+ * The original string can be returned exactly while its parsed document is
+ * unchanged. After a visual edit, only recognized frontmatter remains exact and
+ * the document body is rendered through the canonical Markdown exporter.
+ */
+export class MarkdownSourceSnapshot {
+  readonly source: string;
+  readonly body: string;
+  readonly lineEnding: MarkdownLineEnding;
+  readonly frontmatter?: MarkdownFrontmatter;
+
+  private constructor(
+    source: string,
+    parts: MarkdownSourceParts,
+    private readonly originalDocument: Node,
+  ) {
+    this.source = source;
+    this.body = parts.body;
+    this.lineEnding = parts.lineEnding;
+    this.frontmatter = parts.frontmatter;
+    Object.freeze(this);
+  }
+
+  /** True only while the current immutable document is semantically unchanged. */
+  matches(document: Node): boolean {
+    return this.originalDocument.eq(document);
+  }
+
+  static parse(source: string, schema: Schema): MarkdownSourceImportResult {
+    if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
+    const parts = splitMarkdownSource(source);
+    const document = new MarkdownImporter().parse(parts.body, schema);
+    return Object.freeze({
+      document,
+      source: new MarkdownSourceSnapshot(source, parts, document),
+    });
+  }
+}
+
+export interface MarkdownSourceImportResult {
+  readonly document: Node;
+  readonly source: MarkdownSourceSnapshot;
+}
+
+interface SourceLine {
+  readonly value: string;
+  readonly start: number;
+  readonly end: number;
+  readonly next: number;
+  readonly ending: MarkdownLineEnding | '';
+}
+
+function sourceLine(source: string, start: number): SourceLine {
+  let end = start;
+  while (end < source.length && source[end] !== '\n' && source[end] !== '\r') end += 1;
+  let ending: MarkdownLineEnding | '' = '';
+  if (source[end] === '\r' && source[end + 1] === '\n') ending = '\r\n';
+  else if (source[end] === '\r') ending = '\r';
+  else if (source[end] === '\n') ending = '\n';
+  return {
+    value: source.slice(start, end),
+    start,
+    end,
+    next: end + ending.length,
+    ending,
+  };
+}
+
+function sourceLineEnding(source: string): MarkdownLineEnding {
+  const match = /\r\n|\r|\n/.exec(source);
+  return (match?.[0] as MarkdownLineEnding | undefined) ?? '\n';
+}
+
+function isOpeningDelimiter(value: string): boolean {
+  return /^---[\t ]*$/u.test(value.replace(/^\uFEFF/u, ''));
+}
+
+function closingDelimiter(value: string): '---' | '...' | null {
+  const match = /^(---|\.\.\.)[\t ]*$/u.exec(value)?.[1];
+  return match === '---' || match === '...' ? match : null;
+}
+
+function splitMarkdownSource(source: string): MarkdownSourceParts {
+  const lineEnding = sourceLineEnding(source);
+  const opening = sourceLine(source, 0);
+  if (!isOpeningDelimiter(opening.value) || !opening.ending) return { body: source, lineEnding };
+
+  for (let cursor = opening.next; cursor <= source.length;) {
+    const line = sourceLine(source, cursor);
+    const close = closingDelimiter(line.value);
+    if (close) {
+      const raw = source.slice(0, line.next);
+      return {
+        body: source.slice(line.next),
+        lineEnding,
+        frontmatter: Object.freeze({
+          raw,
+          content: source.slice(opening.next, line.start),
+          openingDelimiter: '---' as const,
+          closingDelimiter: close,
+        }),
+      };
+    }
+    if (line.next <= cursor || line.next >= source.length && line.end >= source.length) break;
+    cursor = line.next;
+  }
+  return { body: source, lineEnding };
+}
+
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 const REFERENCE_DEFINITION = /^\s{0,3}\[([^\]]+)\]:\s*(<[^>]*>|\S+)(?:\s+(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)'|\(((?:\\.|[^)\\])*)\)))?\s*$/;
 
@@ -111,6 +239,13 @@ interface RubyToken {
 interface StyledTextToken {
   readonly nodes: readonly Node[];
   readonly end: number;
+}
+
+interface MarkdownFence {
+  readonly marker: '`' | '~';
+  readonly length: number;
+  readonly indent: number;
+  readonly language: string;
 }
 
 function decodeHTMLEntities(value: string): string {
@@ -272,6 +407,18 @@ function linkToken(value: string, start: number, references: References): LinkTo
   return definition ? { ...definition, label, image, end: labelEnd + 1 } : null;
 }
 
+function autolinkToken(value: string, start: number): (ReferenceDefinition & { readonly label: string; readonly end: number }) | null {
+  if (value[start] !== '<') return null;
+  const closing = value.indexOf('>', start + 1);
+  if (closing < 0) return null;
+  const label = value.slice(start + 1, closing);
+  if (!label || /[\s<>\u0000-\u001f\u007f]/u.test(label)) return null;
+  const email = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/u.test(label);
+  const href = email ? `mailto:${label}` : label;
+  if (!email && !/^[A-Za-z][A-Za-z\d+.-]{1,31}:/u.test(label)) return null;
+  return isSafeURL(href) ? { href, title: '', label, end: closing + 1 } : null;
+}
+
 function inline(text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = []): Node[] {
   const result: Node[] = [];
   let plain = '';
@@ -280,6 +427,19 @@ function inline(text: string, schema: Schema, references: References, inheritedM
     plain = '';
   };
   for (let index = 0; index < text.length;) {
+    const spaceBreak = /^ {2,}\n/u.exec(text.slice(index));
+    if (spaceBreak && schema.nodes.hard_break) {
+      flush();
+      result.push(schema.node('hard_break'));
+      index += spaceBreak[0].length;
+      continue;
+    }
+    if (text.startsWith('\\\n', index) && schema.nodes.hard_break) {
+      flush();
+      result.push(schema.node('hard_break'));
+      index += 2;
+      continue;
+    }
     if (text[index] === '\\' && index + 1 < text.length) {
       plain += text.slice(index, index + 2);
       index += 2;
@@ -300,12 +460,16 @@ function inline(text: string, schema: Schema, references: References, inheritedM
         index = parsed.end;
         continue;
       }
-    }
-    if (text.startsWith('  \n', index) && schema.nodes.hard_break) {
-      flush();
-      result.push(schema.node('hard_break'));
-      index += 3;
-      continue;
+      const autolink = autolinkToken(text, index);
+      if (autolink && schema.marks.link) {
+        flush();
+        result.push(...textNodes(autolink.label, schema, [
+          ...inheritedMarks,
+          schema.marks.link.create({ href: autolink.href, title: autolink.title }),
+        ]));
+        index = autolink.end;
+        continue;
+      }
     }
     if (text.startsWith('[^', index) && schema.nodes.footnote_reference) {
       const token = /^\[\^([^\]\r\n]+)\]/.exec(text.slice(index));
@@ -345,7 +509,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       }
     }
     const delimiters: readonly [string, string, string][] = [
-      ['**', '**', 'strong'], ['~~', '~~', 'strike'], ['==', '==', 'highlight'], ['_', '_', 'em'],
+      ['**', '**', 'strong'], ['~~', '~~', 'strike'], ['==', '==', 'highlight'], ['_', '_', 'em'], ['*', '*', 'em'],
     ];
     let handled = false;
     for (const [opening, closing, markName] of delimiters) {
@@ -544,12 +708,43 @@ function detailsEnd(lines: readonly string[], start: number): number {
   return -1;
 }
 
+function markdownFence(line: string): MarkdownFence | null {
+  const match = /^( {0,3})(`{3,}|~{3,})(.*)$/u.exec(line);
+  if (!match) return null;
+  const marker = match[2][0] as '`' | '~';
+  const info = match[3].trim();
+  if (marker === '`' && info.includes('`')) return null;
+  return {
+    marker,
+    length: match[2].length,
+    indent: match[1].length,
+    language: unescapeMarkdown(info.split(/\s+/u)[0] ?? ''),
+  };
+}
+
+function closesMarkdownFence(line: string, fence: MarkdownFence): boolean {
+  const match = /^( {0,3})(`+|~+)[\t ]*$/u.exec(line);
+  return Boolean(match && match[2][0] === fence.marker && match[2].length >= fence.length);
+}
+
+function indentedCodeLine(line: string): string | null {
+  if (line.startsWith('\t')) return line.slice(1);
+  return line.startsWith('    ') ? line.slice(4) : null;
+}
+
+function endsWithHardBreak(value: string): boolean {
+  if (/ {2,}$/u.test(value)) return true;
+  let slashes = 0;
+  for (let index = value.length - 1; index >= 0 && value[index] === '\\'; index -= 1) slashes += 1;
+  return slashes % 2 === 1;
+}
+
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
-  return /^```[^`]*$/.test(line)
+  return Boolean(markdownFence(line))
     || /^\$\$/.test(line)
-    || /^(#{1,6})\s+/.test(line)
-    || /^(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)
+    || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
+    || /^ {0,3}(?:-{3,}|\*{3,}|_{3,})[\t ]*$/u.test(line)
     || /^>\s?/.test(line)
     || listMarker(line)?.indent === 0
     || Boolean(tableStart(lines, index))
@@ -583,12 +778,29 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         } catch { /* Preserve malformed disclosure source as ordinary text. */ }
       }
     }
-    const fence = /^```([^\s]*)\s*$/.exec(line);
+    const fence = markdownFence(line);
     if (fence) {
       const code: string[] = [];
-      for (index++; index < lines.length && !/^```\s*$/.test(lines[index]); index++) code.push(lines[index]);
+      for (index++; index < lines.length && !closesMarkdownFence(lines[index], fence); index++) {
+        const content = lines[index];
+        const indentation = /^ */u.exec(content)?.[0].length ?? 0;
+        code.push(content.slice(Math.min(fence.indent, indentation)));
+      }
       if (index < lines.length) index++;
-      blocks.push(schema.node('code_block', { language: fence[1] || 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
+      blocks.push(schema.node('code_block', { language: fence.language || 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
+      continue;
+    }
+    const firstCodeLine = indentedCodeLine(line);
+    if (firstCodeLine !== null) {
+      const code = [firstCodeLine];
+      for (index++; index < lines.length;) {
+        const content = indentedCodeLine(lines[index]);
+        if (content !== null) { code.push(content); index++; continue; }
+        if (!lines[index].trim()) { code.push(''); index++; continue; }
+        break;
+      }
+      while (code.at(-1) === '') code.pop();
+      blocks.push(schema.node('code_block', { language: 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
       continue;
     }
     if (schema.nodes.math_block && /^\$\$/.test(line)) {
@@ -607,15 +819,22 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         }
       }
     }
-    const heading = /^(#{1,6})\s+(.+)$/.exec(line);
+    const heading = /^ {0,3}(#{1,6})(?:[\t ]+(.*?)|[\t ]*)$/u.exec(line);
     if (heading) {
-      blocks.push(schema.node('heading', { level: heading[1].length }, inline(heading[2], schema, references)));
+      const value = (heading[2] ?? '').replace(/[\t ]+#+[\t ]*$/u, '');
+      blocks.push(schema.node('heading', { level: heading[1].length }, inline(value, schema, references)));
       index++;
       continue;
     }
-    if (/^(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+    if (/^ {0,3}(?:-{3,}|\*{3,}|_{3,})[\t ]*$/u.test(line)) {
       blocks.push(schema.node('horizontal_rule'));
       index++;
+      continue;
+    }
+    const setext = /^ {0,3}(=+|-+)[\t ]*$/u.exec(lines[index + 1] ?? '');
+    if (setext && !listMarker(line) && !/^ {0,3}>[\t ]?/u.test(line) && !detailsStart(line)) {
+      blocks.push(schema.node('heading', { level: setext[1][0] === '=' ? 1 : 2 }, inline(line.trim(), schema, references)));
+      index += 2;
       continue;
     }
     const image = blockImage(line, references);
@@ -661,7 +880,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     const paragraphLines = [line];
     for (index++; index < lines.length && lines[index].trim() && !startsBlock(lines, index, references, schema); index++) paragraphLines.push(lines[index]);
-    const joined = paragraphLines.reduce((value, current) => value.endsWith('  ') ? `${value}\n${current}` : `${value} ${current}`);
+    const joined = paragraphLines.reduce((value, current) => endsWithHardBreak(value) ? `${value}\n${current}` : `${value} ${current}`);
     blocks.push(paragraph(schema, joined, references));
   }
   return blocks;
@@ -743,5 +962,17 @@ export class MarkdownImporter {
     return document;
   }
 
+  /**
+   * Parses the document body while retaining exact source and inert YAML
+   * frontmatter provenance for raw/visual workflows.
+   */
+  parseWithSource(markdown: string, schema: Schema): MarkdownSourceImportResult {
+    return MarkdownSourceSnapshot.parse(markdown, schema);
+  }
+
   static parse(markdown: string, schema: Schema): Node { return new MarkdownImporter().parse(markdown, schema); }
+
+  static parseWithSource(markdown: string, schema: Schema): MarkdownSourceImportResult {
+    return new MarkdownImporter().parseWithSource(markdown, schema);
+  }
 }

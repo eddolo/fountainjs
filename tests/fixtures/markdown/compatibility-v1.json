@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "standards": {
+    "commonmark": "0.31.2",
+    "gfm": "0.29-gfm"
+  },
+  "note": "Fountain-authored representative fixtures. Passing this subset is not a claim of complete CommonMark or GFM conformance.",
+  "cases": [
+    {
+      "id": "commonmark-atx-heading",
+      "source": "  ### ATX heading ###",
+      "expected": {
+        "topLevelTypes": ["heading"],
+        "text": "ATX heading",
+        "headings": [{ "level": 3, "text": "ATX heading" }],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-setext-heading",
+      "source": "Setext heading\n--------------",
+      "expected": {
+        "topLevelTypes": ["heading"],
+        "text": "Setext heading",
+        "headings": [{ "level": 2, "text": "Setext heading" }],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-tilde-fence",
+      "source": "~~~typescript extra metadata\nconst ticks = \"```\";\n~~~",
+      "expected": {
+        "topLevelTypes": ["code_block"],
+        "text": "const ticks = \"```\";",
+        "headings": [],
+        "codeBlocks": [{ "language": "typescript", "text": "const ticks = \"```\";" }],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-indented-code",
+      "source": "    const indented = true;",
+      "expected": {
+        "topLevelTypes": ["code_block"],
+        "text": "const indented = true;",
+        "headings": [],
+        "codeBlocks": [{ "language": "text", "text": "const indented = true;" }],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "commonmark-emphasis-autolinks-hard-break",
+      "source": "Use *star emphasis*, <https://example.com/docs>, and <writer@example.com>.\\\nContinue after a hard break.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Use star emphasis, https://example.com/docs, and writer@example.com.Continue after a hard break.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["https://example.com/docs", "mailto:writer@example.com"],
+        "marks": ["em", "link", "link"],
+        "hardBreaks": 1
+      }
+    }
+  ]
+}

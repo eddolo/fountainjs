@@ -54,6 +54,12 @@ commands.commands.insertText(editor, ' core');
 JSONExporter.export(editor.state);
 HTMLExporter.export(editor.state, { document: false });
 MarkdownExporter.export(editor.state);
+const sourcedMarkdown = MarkdownImporter.parseWithSource('---\ntitle: Portable\n---\n**portable**', schema);
+const exactMarkdown: string = MarkdownExporter.exportWithSource(
+  sourcedMarkdown.document,
+  sourcedMarkdown.source,
+).markdown;
+void exactMarkdown;
 MarkdownImporter.parse('**portable**', schema);
 TextExporter.export(editor.state);
 editor.destroy();

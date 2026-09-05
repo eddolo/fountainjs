@@ -20,7 +20,7 @@ const coreNames = [
 const headlessCoreNames = [
   'Schema', 'Editor', 'createEditor', 'Selection', 'Transaction', 'Plugin',
   'composeExtensions', 'defineExtension', 'createCommandManager',
-  'createHistoryPlugin', 'MarkdownImporter', 'MarkdownExporter',
+  'createHistoryPlugin', 'MarkdownImporter', 'MarkdownExporter', 'MarkdownSourceSnapshot',
   'HTMLExporter', 'JSONExporter', 'TextExporter', 'FountainDocumentMigrator',
   'StableNodeIdIndex', 'defineStructuredAttribute',
   'createCoreCollaborationExtension', 'getCollaborationState',
@@ -60,6 +60,21 @@ const esmCore = await import('fountainjs-editor');
 assertExports(esmCore, coreNames, 'ESM package root');
 const esmHeadlessCore = await import('fountainjs-editor/core');
 assertExports(esmHeadlessCore, headlessCoreNames, 'ESM headless core entry');
+const markdownSource = '\uFEFF---\r\ntitle: Packed source\r\n---\r\n# Exact\r\n';
+const markdownSchema = new esmHeadlessCore.Schema(esmCore.CoreSchemaSpec);
+const sourcedMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, markdownSchema);
+const exactMarkdown = esmHeadlessCore.MarkdownExporter.exportWithSource(sourcedMarkdown.document, sourcedMarkdown.source);
+if (exactMarkdown.markdown !== markdownSource || exactMarkdown.preservation !== 'exact') {
+  throw new Error('ESM headless core did not preserve unchanged Markdown source.');
+}
+const changedMarkdown = markdownSchema.node('doc', {}, [
+  markdownSchema.node('paragraph', {}, [markdownSchema.text('Changed')]),
+]);
+const frontmatterMarkdown = esmHeadlessCore.MarkdownExporter.exportWithSource(changedMarkdown, sourcedMarkdown.source);
+if (frontmatterMarkdown.markdown !== '\uFEFF---\r\ntitle: Packed source\r\n---\r\nChanged'
+  || frontmatterMarkdown.preservation !== 'frontmatter') {
+  throw new Error('ESM headless core did not preserve Markdown frontmatter after a visual edit.');
+}
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');
@@ -134,7 +149,13 @@ yjsEditor.destroy();
 ydoc.destroy();
 const cjsCore = require('fountainjs-editor');
 assertExports(cjsCore, coreNames, 'CommonJS package root');
-assertExports(require('fountainjs-editor/core'), headlessCoreNames, 'CommonJS headless core entry');
+const cjsHeadlessCore = require('fountainjs-editor/core');
+assertExports(cjsHeadlessCore, headlessCoreNames, 'CommonJS headless core entry');
+const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
+const cjsSourcedMarkdown = cjsHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, cjsMarkdownSchema);
+if (cjsHeadlessCore.MarkdownExporter.exportWithSource(cjsSourcedMarkdown.document, cjsSourcedMarkdown.source).markdown !== markdownSource) {
+  throw new Error('CommonJS headless core did not preserve unchanged Markdown source.');
+}
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
 assertExports(cjsEmojiData, emojiDataNames, 'CommonJS Unicode emoji data entry');

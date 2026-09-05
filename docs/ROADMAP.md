@@ -229,6 +229,21 @@ parallel renderer implementations. The architecture decision, proposed host
 boundary, fail-fast criteria, first-spike scope, and platform risk register are
 now explicit in [NATIVE_RENDERER_FEASIBILITY.md](NATIVE_RENDERER_FEASIBILITY.md).
 
+## Active now: higher-fidelity Markdown source preservation
+
+Fountain already reconstructs its supported Markdown semantics and reports
+projection loss, but semantic equality is different from source equality. The
+first additive source capsule now keeps unchanged input exactly, retains
+strict leading YAML frontmatter as inert exact text, reports whether output is
+`exact`, `frontmatter`, or `canonical`, and canonicalizes the body honestly
+after a visual edit. It never executes YAML and it does not claim that unknown
+body syntax survives a model change. The first versioned, Fountain-authored
+CommonMark/GFM-oriented fixture subset also covers ATX/Setext headings,
+indented and variable fenced code, URI/email autolinks, star emphasis, and both
+hard-break forms without claiming complete standards conformance. Next evidence
+expands that corpus and adds block-level source spans before considering a
+source editor UI. See [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
+
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |

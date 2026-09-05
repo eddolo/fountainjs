@@ -1388,6 +1388,26 @@ built-in Markdown projections. Reference identifiers are normalized without
 changing their displayed label, unsafe URLs remain ordinary text, short table
 rows are padded, and the final tree passes `schema.validate()`.
 
+`MarkdownImporter.parseWithSource(source, schema)` returns
+`{ document, source }`. The immutable `MarkdownSourceSnapshot` keeps the exact
+input, detected line ending, body, and optional inert YAML frontmatter. Fountain
+does not parse or execute the YAML. `MarkdownExporter.exportWithSource(document,
+source, options?)` then returns `{ markdown, losses, preservation }`:
+
+- `exact` means the parsed model has not changed and the original source string
+  is returned exactly, including line endings, spacing, reference spelling,
+  and syntax Fountain does not semantically understand;
+- `frontmatter` means a visual edit occurred, the exact frontmatter prefix was
+  retained, and the changed body was rendered canonically;
+- `canonical` means no recognized frontmatter existed and the changed model was
+  rendered through the normal exporter.
+
+This is a safe first raw/visual boundary, not block-level source preservation.
+After a model change, unknown body syntax and original marker choices are not
+claimed to survive. Reparse raw edits to create a new source snapshot. See
+[MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md) for the exact frontmatter contract,
+initial standards-oriented fixture corpus, and explicit conformance limits.
+
 `MarkdownExporter.export(stateOrNode, options?)` returns a string. Set
 `options.linkStyle` to `"reference"` for stable `ref-1`, `ref-2`, … definitions
 deduplicated by destination and title. The default is `"inline"`.

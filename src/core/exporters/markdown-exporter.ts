@@ -1,6 +1,7 @@
 import type { EditorState } from '../state';
 import type { Node } from '../schema';
 import { fontFamilyCSS } from '../../text-style/values';
+import { MarkdownSourceSnapshot } from '../importers/markdown-importer';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -22,6 +23,16 @@ export interface MarkdownExportOptions {
 export interface MarkdownExportResult {
   readonly markdown: string;
   readonly losses: readonly MarkdownExportLoss[];
+}
+
+export type MarkdownSourcePreservation = 'exact' | 'frontmatter' | 'canonical';
+
+export interface MarkdownSourceExportResult extends MarkdownExportResult {
+  /**
+   * `exact` returns the original source string unchanged; `frontmatter` retains only
+   * the inert frontmatter prefix; `canonical` is a normal semantic export.
+   */
+  readonly preservation: MarkdownSourcePreservation;
 }
 
 interface ReferenceDefinition {
@@ -273,6 +284,26 @@ function tableAlignment(cell: Node | undefined): 'left' | 'center' | 'right' {
   return align === 'center' || align === 'right' ? align : 'left';
 }
 
+function longestMarkerRun(value: string, marker: '`' | '~'): number {
+  let longest = 0;
+  let current = 0;
+  for (const character of value) {
+    if (character === marker) {
+      current += 1;
+      longest = Math.max(longest, current);
+    } else current = 0;
+  }
+  return longest;
+}
+
+function fencedCode(node: Node): string {
+  const value = node.textContent;
+  const language = String(node.attrs.language ?? '').trim().split(/\s+/u)[0] ?? '';
+  const marker: '`' | '~' = language.includes('`') ? '~' : '`';
+  const fence = marker.repeat(Math.max(3, longestMarkerRun(value, marker) + 1));
+  return `${fence}${language}\n${value}\n${fence}`;
+}
+
 function render(
   node: Node,
   context: RenderContext,
@@ -318,7 +349,7 @@ function render(
       const indentation = '  '.repeat(depth);
       return `\n\n${indentation}${value.replace(/\n/g, `\n${indentation}`)}`;
     }).join('');
-    case 'code_block': return `\`\`\`${String(node.attrs.language ?? '')}\n${node.textContent}\n\`\`\``;
+    case 'code_block': return fencedCode(node);
     case 'horizontal_rule': return '---';
     case 'hard_break': return '  \n';
     case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;
@@ -388,11 +419,55 @@ export class MarkdownExporter {
     return this.exportWithReport(stateOrNode, options).markdown;
   }
 
+  /**
+   * Preserves a captured source string exactly until the model changes. After a
+   * change, recognized frontmatter is retained exactly and the body is rendered
+   * canonically. Unknown body syntax is not claimed to survive a visual edit.
+   */
+  exportWithSource(
+    stateOrNode: EditorState | Node,
+    source: MarkdownSourceSnapshot,
+    options: MarkdownExportOptions = {},
+  ): MarkdownSourceExportResult {
+    if (!(source instanceof MarkdownSourceSnapshot)) {
+      throw new TypeError('Markdown source must come from MarkdownImporter.parseWithSource().');
+    }
+    const node = 'doc' in stateOrNode ? stateOrNode.doc : stateOrNode;
+    if (source.matches(node)) {
+      return Object.freeze({
+        markdown: source.source,
+        losses: Object.freeze([]),
+        preservation: 'exact' as const,
+      });
+    }
+    const canonical = this.exportWithReport(node, options);
+    if (!source.frontmatter) {
+      return Object.freeze({ ...canonical, preservation: 'canonical' as const });
+    }
+    const separator = source.frontmatter.raw.endsWith('\n') || source.frontmatter.raw.endsWith('\r')
+      || !canonical.markdown
+      ? ''
+      : source.lineEnding;
+    return Object.freeze({
+      ...canonical,
+      markdown: `${source.frontmatter.raw}${separator}${canonical.markdown}`,
+      preservation: 'frontmatter' as const,
+    });
+  }
+
   static exportWithReport(stateOrNode: EditorState | Node, options?: MarkdownExportOptions): MarkdownExportResult {
     return new MarkdownExporter().exportWithReport(stateOrNode, options);
   }
 
   static export(stateOrNode: EditorState | Node, options?: MarkdownExportOptions): string {
     return new MarkdownExporter().export(stateOrNode, options);
+  }
+
+  static exportWithSource(
+    stateOrNode: EditorState | Node,
+    source: MarkdownSourceSnapshot,
+    options?: MarkdownExportOptions,
+  ): MarkdownSourceExportResult {
+    return new MarkdownExporter().exportWithSource(stateOrNode, source, options);
   }
 }

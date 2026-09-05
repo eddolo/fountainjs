@@ -8,8 +8,121 @@ import {
   composeExtensions,
   defineExtension,
 } from '../src';
+import compatibilityCorpus from './fixtures/markdown/compatibility-v1.json';
+
+function compatibilitySnapshot(document: ReturnType<typeof MarkdownImporter.parse>) {
+  const headings: Array<{ level: number; text: string }> = [];
+  const codeBlocks: Array<{ language: string; text: string }> = [];
+  const links: string[] = [];
+  const marks: string[] = [];
+  let hardBreaks = 0;
+  document.descendants((node) => {
+    if (node.type.name === 'heading') headings.push({ level: Number(node.attrs.level), text: node.textContent });
+    if (node.type.name === 'code_block') codeBlocks.push({ language: String(node.attrs.language), text: node.textContent });
+    if (node.type.name === 'hard_break') hardBreaks += 1;
+    if (node.isText) node.marks.forEach((mark) => {
+      marks.push(mark.type.name);
+      if (mark.type.name === 'link') links.push(String(mark.attrs.href));
+    });
+  });
+  return {
+    topLevelTypes: document.content.map((node) => node.type.name),
+    text: document.textContent,
+    headings,
+    codeBlocks,
+    links,
+    marks,
+    hardBreaks,
+  };
+}
 
 describe('Markdown interchange', () => {
+  it.each(compatibilityCorpus.cases)('covers compatibility corpus case $id', ({ source, expected }) => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse(source, schema);
+
+    expect(compatibilitySnapshot(document)).toEqual(expected);
+  });
+
+  it('chooses a safe variable-length code fence around fence text', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = schema.node('doc', {}, [schema.node('code_block', {
+      language: 'markdown', lineNumbers: true,
+    }, [schema.text('before\n```\nafter')])]);
+    const markdown = MarkdownExporter.export(document);
+
+    expect(markdown).toBe('````markdown\nbefore\n```\nafter\n````');
+    expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
+  });
+
+  it('returns untouched Markdown source exactly while its parsed document is unchanged', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = [
+      '\uFEFF---',
+      'title: "Source fidelity"',
+      'tags: [editor, portable]',
+      '---',
+      '# Heading',
+      '',
+      'A paragraph with  deliberate spacing and an :unknown[directive].',
+    ].join('\r\n');
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const result = MarkdownExporter.exportWithSource(imported.document, imported.source);
+
+    expect(imported.document.textContent).toContain('Heading');
+    expect(imported.document.textContent).not.toContain('title:');
+    expect(imported.source.frontmatter).toMatchObject({
+      openingDelimiter: '---',
+      closingDelimiter: '---',
+      content: 'title: "Source fidelity"\r\ntags: [editor, portable]\r\n',
+    });
+    expect(imported.source.lineEnding).toBe('\r\n');
+    expect(result).toEqual({ markdown: source, losses: [], preservation: 'exact' });
+    expect(Object.isFrozen(imported)).toBe(true);
+    expect(Object.isFrozen(imported.source)).toBe(true);
+    expect(Object.isFrozen(imported.source.frontmatter)).toBe(true);
+  });
+
+  it('keeps inert frontmatter exactly and canonicalizes only the body after a visual edit', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '---\ntitle: Keep me\n...\n# Original\n';
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const changed = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Changed')])]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(result.markdown).toBe('---\ntitle: Keep me\n...\nChanged');
+    expect(result.preservation).toBe('frontmatter');
+    expect(result.losses).toEqual([]);
+    expect(imported.source.frontmatter?.content).toBe('title: Keep me\n');
+  });
+
+  it('does not mistake an unclosed delimiter for frontmatter', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '---\ntitle: Not closed\nBody';
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const changed = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Changed')])]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+
+    expect(imported.source.frontmatter).toBeUndefined();
+    expect(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown).toBe(source);
+    expect(result).toEqual({ markdown: 'Changed', losses: [], preservation: 'canonical' });
+  });
+
+  it('requires frontmatter delimiters at the start of their lines', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const imported = MarkdownImporter.parseWithSource('  ---\ntitle: Indented\n  ---\nBody', schema);
+
+    expect(imported.source.frontmatter).toBeUndefined();
+  });
+
+  it('rejects source provenance that was not captured by the importer', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse('Document', schema);
+
+    expect(() => MarkdownExporter.exportWithSource(document, {} as never))
+      .toThrow('Markdown source must come from MarkdownImporter.parseWithSource().');
+  });
+
   it('imports full, collapsed, and shortcut references with titles and nested marks', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [
