@@ -745,8 +745,9 @@ The suites are organized by boundary:
   selection, dynamic fields, canonical footnote assignment, immutable output,
   ambiguous-input diagnostics, and external-layout validation;
 - `tests/pages-dom.test.ts`: DOM measurement boundaries, model immutability,
-  template/footnote separation, explicit warnings, neutral layout handoff, timed
-  reflow cycles, and deterministic controller teardown;
+  template/footnote separation, fragment source paths/clip geometry, explicit
+  warnings, neutral layout handoff, timed reflow cycles, and deterministic
+  controller teardown;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, and footnotes.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against

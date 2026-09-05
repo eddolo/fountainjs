@@ -19,6 +19,27 @@ export interface DOMPageTemplateMeasurement {
   readonly height: number;
 }
 
+export type DOMPageFragmentSourceKind =
+  | 'text-line'
+  | 'list-item'
+  | 'table-row-group'
+  | 'whole'
+  | 'manual-break';
+
+export interface DOMPageFragmentSource {
+  readonly itemId: string;
+  readonly fragmentId: string;
+  readonly fragmentIndex: number;
+  readonly kind: DOMPageFragmentSourceKind;
+  /** Top-level model path of the measured flow item. */
+  readonly sourcePath: readonly number[];
+  /** Nested model paths represented by a list/table structural fragment. */
+  readonly partPaths: readonly (readonly number[])[];
+  /** Vertical source offset used by a non-editable clipped projection. */
+  readonly clipOffset: number;
+  readonly height: number;
+}
+
 export type DOMPageMeasurementWarningCode =
   | 'missing-rendered-node'
   | 'invalid-measurement'
@@ -39,6 +60,7 @@ export interface DOMPageMeasurementOptions {
 
 export interface DOMPageFlowMeasurement {
   readonly items: readonly PageFlowItem[];
+  readonly fragmentSources: readonly DOMPageFragmentSource[];
   readonly templates: readonly DOMPageTemplateMeasurement[];
   readonly warnings: readonly DOMPageMeasurementWarning[];
   /** Number of geometry reads made by this measurement pass. */
@@ -214,19 +236,36 @@ function uniqueFootnotes(references: readonly { readonly id: string; readonly he
 function textFragments(
   element: HTMLElement,
   itemId: string,
+  sourcePath: readonly number[],
   definitionHeights: ReadonlyMap<string, number>,
   count: () => void,
-): readonly PageFlowFragment[] | null {
+): { readonly fragments: readonly PageFlowFragment[]; readonly sources: readonly DOMPageFragmentSource[] } | null {
   const lines = lineBands(rangeRects(element, count));
   if (lines.length < 2) return null;
   const heights = fragmentHeights(element, lines, count);
   const references = referencesIn(element, definitionHeights, count);
-  return Object.freeze(lines.map((line, index) => Object.freeze({
+  const fragments = lines.map((line, index) => Object.freeze({
     id: `${itemId}:line:${index + 1}`,
     height: heights[index] as number,
     footnotes: uniqueFootnotes(references
       .filter((reference) => reference.center >= line.top - 1 && reference.center <= line.bottom + 1)),
-  })));
+  }));
+  let clipOffset = 0;
+  const sources = fragments.map((fragment, index) => {
+    const source = Object.freeze({
+      itemId,
+      fragmentId: fragment.id,
+      fragmentIndex: index,
+      kind: 'text-line' as const,
+      sourcePath,
+      partPaths: Object.freeze([]),
+      clipOffset,
+      height: fragment.height,
+    });
+    clipOffset += fragment.height;
+    return source;
+  });
+  return Object.freeze({ fragments: Object.freeze(fragments), sources: Object.freeze(sources) });
 }
 
 function directListItems(element: HTMLElement): readonly HTMLElement[] {
@@ -263,9 +302,14 @@ function structuralFragments(
   element: HTMLElement,
   node: Node,
   itemId: string,
+  sourcePath: readonly number[],
   definitionHeights: ReadonlyMap<string, number>,
   count: () => void,
-): { readonly fragments: readonly PageFlowFragment[]; readonly continuationHeight?: number } | null {
+): {
+  readonly fragments: readonly PageFlowFragment[];
+  readonly sources: readonly DOMPageFragmentSource[];
+  readonly continuationHeight?: number;
+} | null {
   const pieces: readonly HTMLElement[][] = node.type.name === 'table'
     ? groupedTableRows(tableRows(element)).map((group) => [...group])
     : ['bullet_list', 'ordered_list', 'task_list'].includes(node.type.name)
@@ -290,8 +334,25 @@ function structuralFragments(
     headerRows.push(row);
   }
   const continuationHeight = headerRows.reduce((sum, row) => sum + measuredRect(row, count).height, 0);
+  let clipOffset = 0;
+  const kind = node.type.name === 'table' ? 'table-row-group' as const : 'list-item' as const;
+  const sources = fragments.map((fragment, index) => {
+    const source = Object.freeze({
+      itemId,
+      fragmentId: fragment.id,
+      fragmentIndex: index,
+      kind,
+      sourcePath,
+      partPaths: Object.freeze((pieces[index] ?? []).map((part) => pathOf(part)).filter((path) => path.length > 0)),
+      clipOffset,
+      height: fragment.height,
+    });
+    clipOffset += fragment.height;
+    return source;
+  });
   return Object.freeze({
     fragments: Object.freeze(fragments),
+    sources: Object.freeze(sources),
     ...(continuationHeight > 0 ? { continuationHeight } : {}),
   });
 }
@@ -299,12 +360,13 @@ function structuralFragments(
 function wholeItem(
   element: HTMLElement,
   itemId: string,
+  sourcePath: readonly number[],
   definitionHeights: ReadonlyMap<string, number>,
   count: () => void,
-): PageFlowItem {
+): { readonly item: PageFlowItem; readonly sources: readonly DOMPageFragmentSource[] } {
   const height = outerHeight(element, count);
   const references = referencesIn(element, definitionHeights, count);
-  return Object.freeze({
+  const item = Object.freeze({
     id: itemId,
     height,
     ...(references.length
@@ -316,6 +378,19 @@ function wholeItem(
           })]),
         }
       : {}),
+  });
+  return Object.freeze({
+    item,
+    sources: Object.freeze([Object.freeze({
+      itemId,
+      fragmentId: item.fragments?.[0]?.id ?? itemId,
+      fragmentIndex: 0,
+      kind: 'whole',
+      sourcePath,
+      partPaths: Object.freeze([]),
+      clipOffset: 0,
+      height,
+    })]),
   });
 }
 
@@ -333,6 +408,7 @@ export function measureDOMPageFlow(
   const lineTypes = new Set(options.lineFragmentNodeTypes ?? DEFAULT_LINE_FRAGMENT_TYPES);
   const warnings: DOMPageMeasurementWarning[] = [];
   const items: PageFlowItem[] = [];
+  const fragmentSources: DOMPageFragmentSource[] = [];
   const templates: DOMPageTemplateMeasurement[] = [];
   let measurementCount = 0;
   const count = () => { measurementCount += 1; };
@@ -378,30 +454,52 @@ export function measureDOMPageFlow(
     const itemId = `block:${index}:${node.type.name}`;
     if (node.type.name === 'page_break') {
       items.push(Object.freeze({ id: itemId, height: 0, breakAfter: true }));
+      fragmentSources.push(Object.freeze({
+        itemId,
+        fragmentId: itemId,
+        fragmentIndex: 0,
+        kind: 'manual-break',
+        sourcePath: path,
+        partPaths: Object.freeze([]),
+        clipOffset: 0,
+        height: 0,
+      }));
       return;
     }
 
     let item: PageFlowItem;
-    const structural = structuralFragments(element, node, itemId, definitionHeights, count);
+    let sources: readonly DOMPageFragmentSource[] = Object.freeze([]);
+    const structural = structuralFragments(element, node, itemId, path, definitionHeights, count);
     const text = lineTypes.has(node.type.name)
-      ? textFragments(element, itemId, definitionHeights, count)
+      ? textFragments(element, itemId, path, definitionHeights, count)
       : null;
-    if (structural) item = Object.freeze({ id: itemId, ...structural });
+    if (structural) {
+      item = Object.freeze({ id: itemId, fragments: structural.fragments, ...(structural.continuationHeight !== undefined ? { continuationHeight: structural.continuationHeight } : {}) });
+      sources = structural.sources;
+    }
     else if (text) item = Object.freeze({
       id: itemId,
-      fragments: text,
-      minimumStart: Math.min(minimumTextLines, text.length),
-      minimumEnd: Math.min(minimumTextLines, text.length),
+      fragments: text.fragments,
+      minimumStart: Math.min(minimumTextLines, text.fragments.length),
+      minimumEnd: Math.min(minimumTextLines, text.fragments.length),
       ...(node.type.name === 'heading' ? { keepWithNext: true } : {}),
     });
-    else item = wholeItem(element, itemId, definitionHeights, count);
+    else {
+      const whole = wholeItem(element, itemId, path, definitionHeights, count);
+      item = whole.item;
+      sources = whole.sources;
+    }
+    if (text && !structural) sources = text.sources;
 
     const heights = item.fragments?.map((fragment) => fragment.height) ?? [item.height];
     if (heights.some((height) => !finiteNonNegative(height))) warnings.push(Object.freeze({
       code: 'invalid-measurement', path,
       detail: `Rendered node at ${index} returned a non-finite height and was excluded.`,
     }));
-    else items.push(item);
+    else {
+      items.push(item);
+      fragmentSources.push(...sources);
+    }
 
     element.querySelectorAll<HTMLElement>('[data-fountain-footnote-reference]').forEach((reference) => {
       const id = reference.dataset.fountainFootnoteReference;
@@ -414,6 +512,7 @@ export function measureDOMPageFlow(
 
   return Object.freeze({
     items: Object.freeze(items),
+    fragmentSources: Object.freeze(fragmentSources),
     templates: Object.freeze(templates),
     warnings: Object.freeze(warnings),
     measurementCount,

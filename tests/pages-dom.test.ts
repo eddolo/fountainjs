@@ -53,6 +53,12 @@ describe('DOM page measurement adapter', () => {
     const measurement = measureDOMPageFlow(root, document, { lineFragmentNodeTypes: [] });
     expect(measurement.templates).toMatchObject([{ kind: 'header', variant: 'default', path: [0], height: 12 }]);
     expect(measurement.items).toHaveLength(3);
+    expect(measurement.fragmentSources).toMatchObject([
+      { itemId: 'block:1:paragraph', kind: 'whole', sourcePath: [1], clipOffset: 0, height: 30 },
+      { itemId: 'block:2:page_break', kind: 'manual-break', sourcePath: [2], clipOffset: 0, height: 0 },
+      { itemId: 'block:3:paragraph', kind: 'whole', sourcePath: [3], clipOffset: 0, height: 20 },
+    ]);
+    expect(Object.isFrozen(measurement.fragmentSources)).toBe(true);
     expect(measurement.items[0].fragments?.[0].footnotes).toEqual([{ id: 'note', height: 14 }]);
     expect(measurement.items[1]).toMatchObject({ breakAfter: true, height: 0 });
     expect(measurement.warnings).toEqual([]);

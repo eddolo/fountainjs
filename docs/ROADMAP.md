@@ -58,7 +58,8 @@ footnote intent/integrity, canonical default/first/odd/even header/footer
 templates, dynamic page fields, renderer-neutral per-page furniture/footnote
 projection, undo, HTML/JSON, and Yjs. The browser side now
 also has isolated measurement for text lines, list items, rowspan-safe table
-groups, footnotes, and manual breaks, plus coalesced timed reflow observation.
+groups, footnotes, and manual breaks; every fragment maps back to its model and
+structural paths plus clip geometry. Timed reflow observation is coalesced.
 Editable page-shell and print rendering plus the remaining evidence are still
 active. CSS page-shaped boxes or
 destructive document splitting do not qualify.

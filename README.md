@@ -315,7 +315,9 @@ HTML, and Yjs. Its immutable presentation plan selects first/odd/even/default
 furniture, resolves page fields, and assigns canonical footnotes to measured
 pages without cloning the model. The separate `pages/dom` adapter measures real line boxes, list
 items, rowspan-safe table groups, footnotes, and manual breaks without moving
-editable DOM. Its optional controller coalesces DOM mutations, resize, font,
+editable DOM. Every measured fragment includes an immutable source map with its
+model path, structural child paths, clip offset, and height for non-destructive
+continuation rendering. Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
 It does **not** yet claim a complete visual paginator, repeated DOM template
 rendering, or print/PDF fidelity. Those

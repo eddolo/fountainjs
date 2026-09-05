@@ -20,7 +20,8 @@
   list items, rowspan-safe table groups, footnotes, and manual breaks; package
   budgets; a coalesced mutation/resize/font/print reflow controller with timed
   snapshots and deterministic teardown; immutable per-page selection of
-  canonical furniture, resolved fields, and footnotes; and an honest staged
+  canonical furniture, resolved fields, and footnotes; DOM fragment source maps
+  with model/structural paths and clip geometry; and an honest staged
   pagination contract. Editable page-shell rendering, repeated DOM furniture, and print/PDF
   fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential

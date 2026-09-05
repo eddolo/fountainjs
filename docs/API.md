@@ -1350,8 +1350,10 @@ direct list-item fragments, rowspan-safe table row groups with continuation
 header cost, first-reference footnote reservations, manual-break intent, and
 canonical template measurements. Missing nodes, invalid geometry, and
 unmeasured footnotes are explicit warnings. It never reparents, clones, or
-annotates the editable DOM; its output is ordinary frozen input for the neutral
-layout engine. `layoutDOMPages` also includes the neutral `presentation` plan in
+annotates the editable DOM. `fragmentSources` maps each legal fragment back to
+its top-level model path, nested list-item/table-row paths, measured height, and
+vertical clip offset without retaining DOM nodes. Its output is ordinary frozen
+input for the neutral layout engine. `layoutDOMPages` also includes the neutral `presentation` plan in
 its frozen snapshot so a host does not have to repeat variant or footnote logic.
 
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an

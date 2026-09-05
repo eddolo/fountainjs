@@ -84,6 +84,7 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
       paragraph: summarize('block:1:paragraph'),
       list: summarize('block:2:bullet_list'),
       table: summarize('block:3:table'),
+      sources: snapshot.measurement.fragmentSources,
       warnings: snapshot.measurement.warnings,
       layoutWarnings: snapshot.layout.warnings,
       pages: snapshot.layout.pages.length,
@@ -96,6 +97,25 @@ test('measures browser line boxes, list items, rowspan groups, and footnotes as 
   expect(result.list.fragments).toBe(3);
   expect(result.table.fragments).toBe(2);
   expect(result.table.continuationHeight).toBeGreaterThan(0);
+  const paragraphSources = result.sources.filter((source: any) => source.itemId === 'block:1:paragraph');
+  expect(paragraphSources).toHaveLength(result.paragraph.fragments);
+  expect(paragraphSources[0]).toMatchObject({
+    kind: 'text-line', sourcePath: [1], fragmentIndex: 0, clipOffset: 0,
+  });
+  expect(paragraphSources.every((source: any, index: number) => (
+    index === 0 || source.clipOffset > paragraphSources[index - 1].clipOffset
+  ))).toBe(true);
+  expect(result.sources.filter((source: any) => source.itemId === 'block:2:bullet_list'))
+    .toMatchObject([
+      { kind: 'list-item', sourcePath: [2], partPaths: [[2, 0]] },
+      { kind: 'list-item', sourcePath: [2], partPaths: [[2, 1]] },
+      { kind: 'list-item', sourcePath: [2], partPaths: [[2, 2]] },
+    ]);
+  expect(result.sources.filter((source: any) => source.itemId === 'block:3:table'))
+    .toMatchObject([
+      { kind: 'table-row-group', sourcePath: [3], partPaths: [[3, 0]] },
+      { kind: 'table-row-group', sourcePath: [3], partPaths: [[3, 1], [3, 2]] },
+    ]);
   expect(result.pages).toBeGreaterThan(1);
 
   const controller = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.controllerProbe());
