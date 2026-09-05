@@ -129,7 +129,9 @@ an initial standards-oriented set of behaviors:
 - locale-neutral Unicode 17 full case folding for reference labels, including
   the expanding and compatibility mappings JavaScript lowercasing omits;
 - source-normalized reference matching that keeps escape/entity spelling
-  significant until the resolved visible label is parsed;
+  significant until the resolved visible label is parsed, collapses only
+  spaces/tabs/line endings, counts its bound by Unicode code point, and honors
+  adjacent full/collapsed/shortcut precedence;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;
@@ -166,13 +168,13 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The bounded multiline-label baseline, including container definitions, link
-precedence, full Unicode 17 case folding, and nested-bracket rejection, is
-certified by the complete 494-test package gate and 295-pass
+The raw-label baseline, including container definitions, link precedence, full
+Unicode 17 case folding, opaque-token scanning, raw-source normalization, and
+nested-bracket rejection, is certified by the complete 502-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
-[CI run for `507ee3d`](https://github.com/eddolo/fountainjs/actions/runs/33988667605),
+[CI run for `3b6395e`](https://github.com/eddolo/fountainjs/actions/runs/33989652712),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33988667693).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33989652791).
 
 ## Security and collaboration
 

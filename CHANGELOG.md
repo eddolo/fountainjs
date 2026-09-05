@@ -73,7 +73,11 @@
   inert readable text in the Fountain document.
   Reference identifiers now match normalized source spelling as CommonMark
   requires: case and whitespace fold, but escape and entity spelling remains
-  significant until the resolved link's visible label is parsed.
+  significant until the resolved link's visible label is parsed. Normalization
+  collapses only spaces, tabs, and line endings, preserves other Unicode space
+  characters, and measures the 999-character bound in Unicode code points.
+  Adjacent full and shortcut references follow the specified precedence rather
+  than allowing an earlier shortcut to steal a later link label.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

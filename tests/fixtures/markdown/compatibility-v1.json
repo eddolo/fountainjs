@@ -213,6 +213,19 @@
         "marks": ["link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-adjacent-reference-precedence",
+      "source": "[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "[foo]bar",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["/url1"],
+        "marks": ["link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

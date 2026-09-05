@@ -297,6 +297,63 @@ describe('Markdown interchange', () => {
     expect(document.textContent).toContain('[entity mismatch][foo&]');
   });
 
+  it('normalizes only CommonMark label whitespace and counts Unicode code points', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const astralLabel = '💧'.repeat(500);
+    const document = MarkdownImporter.parse([
+      '[plain][foo bar] / [nbsp][foo\u00a0bar] / [only nbsp][\u00a0] / [astral][' + astralLabel + ']',
+      '',
+      '[foo\t\n bar]: docs/plain.md',
+      '[foo\u00a0bar]: docs/nbsp.md',
+      '[\u00a0]: docs/only-nbsp.md',
+      '[' + astralLabel + ']: docs/astral.md',
+    ].join('\n'), schema);
+    const links: Array<{ text: string; href: unknown }> = [];
+    document.descendants((node) => {
+      const link = node.marks.find((mark) => mark.type.name === 'link');
+      if (node.isText && link) links.push({ text: node.textContent, href: link.attrs.href });
+    });
+
+    expect(links).toEqual([
+      { text: 'plain', href: 'docs/plain.md' },
+      { text: 'nbsp', href: 'docs/nbsp.md' },
+      { text: 'only nbsp', href: 'docs/only-nbsp.md' },
+      { text: 'astral', href: 'docs/astral.md' },
+    ]);
+  });
+
+  it('resolves adjacent reference links with CommonMark precedence', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      {
+        source: '[foo][bar][baz]\n\n[baz]: /url',
+        text: '[foo]bar',
+        links: [{ text: 'bar', href: '/url' }],
+      },
+      {
+        source: '[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2',
+        text: 'foobaz',
+        links: [{ text: 'foo', href: '/url2' }, { text: 'baz', href: '/url1' }],
+      },
+      {
+        source: '[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2',
+        text: '[foo]bar',
+        links: [{ text: 'bar', href: '/url1' }],
+      },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      const links: Array<{ text: string; href: unknown }> = [];
+      document.descendants((node) => {
+        const link = node.marks.find((mark) => mark.type.name === 'link');
+        if (node.isText && link) links.push({ text: node.textContent, href: link.attrs.href });
+      });
+      expect(document.textContent).toBe(example.text);
+      expect(links).toEqual(example.links);
+    }
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

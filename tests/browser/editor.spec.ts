@@ -2287,6 +2287,11 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     sourceLabels: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '[no][foo\\!] and [yes][foo\\[]\n\n[foo!]: docs/plain.md\n[foo\\[]: docs/escaped.md',
     ),
+    adjacentReferences: [
+      '[foo][bar][baz]\n\n[baz]: /url',
+      '[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2',
+      '[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2',
+    ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2361,6 +2366,18 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     })))
     .toEqual([{ text: 'yes', href: 'docs/escaped.md' }]);
   expect(result.sourceLabels.losses).toEqual([]);
+  expect(result.adjacentReferences.map((entry: any) => entry.document.content[0].content
+    .filter((node: any) => node.marks?.some((mark: any) => mark.type === 'link'))
+    .map((node: any) => ({
+      text: node.text,
+      href: node.marks.find((mark: any) => mark.type === 'link').attrs.href,
+    }))))
+    .toEqual([
+      [{ text: 'bar', href: '/url' }],
+      [{ text: 'foo', href: '/url2' }, { text: 'baz', href: '/url1' }],
+      [{ text: 'bar', href: '/url1' }],
+    ]);
+  expect(result.adjacentReferences.every((entry: any) => entry.losses.length === 0)).toBe(true);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

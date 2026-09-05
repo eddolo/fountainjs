@@ -309,7 +309,13 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): 
 function referenceName(value: string): string {
   // CommonMark matches normalized source labels, not their parsed inline
   // content. Escapes and character references therefore remain significant.
-  return unicodeCaseFold(value.trim().replace(/\s+/g, ' '));
+  return unicodeCaseFold(value
+    .replace(/^[\t\n\r ]+|[\t\n\r ]+$/gu, '')
+    .replace(/[\t\n\r ]+/gu, ' '));
+}
+
+function validReferenceLabel(value: string): boolean {
+  return /[^\t\n\r ]/u.test(value) && Array.from(value).length <= 999;
 }
 
 function closingBracket(value: string, start: number, open = '[', close = ']'): number {
@@ -506,7 +512,7 @@ function referenceDefinitionOpeningAt(
         continue;
       }
       const suffix = /^:[\t ]*(.*)$/u.exec(content.slice(offset + 1));
-      if (!suffix || !label.trim() || Array.from(label).length > 999) return null;
+      if (!suffix || !validReferenceLabel(label)) return null;
       return { label, remainder: suffix[1], lineCount: cursor - index + 1 };
     }
   }
@@ -731,7 +737,7 @@ function linkToken(
     // Invalid inline-link syntax does not consume the label. CommonMark can
     // therefore still resolve it as a shortcut reference and leave the
     // malformed `(…)` suffix as literal text.
-    if (!label.trim() || label.length > 999) return null;
+    if (!validReferenceLabel(label)) return null;
     const definition = references.get(referenceName(label));
     return definition ? result(definition, labelEnd + 1) : null;
   }
@@ -740,11 +746,11 @@ function linkToken(
     if (referenceEnd < 0) return null;
     const explicit = value.slice(following + 1, referenceEnd);
     const referenceLabel = explicit || label;
-    if (!referenceLabel.trim() || referenceLabel.length > 999) return null;
+    if (!validReferenceLabel(referenceLabel)) return null;
     const definition = references.get(referenceName(referenceLabel));
     return definition ? result(definition, referenceEnd + 1) : null;
   }
-  if (!label.trim() || label.length > 999) return null;
+  if (!validReferenceLabel(label)) return null;
   const definition = references.get(referenceName(label));
   return definition ? result(definition, labelEnd + 1) : null;
 }

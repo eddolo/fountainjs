@@ -91,7 +91,7 @@ Links accept safe absolute, root/hash/dot-relative, path-relative, and
 query-relative destinations. Bare destinations retain balanced parentheses;
 angle destinations may contain parentheses; title delimiters must close
 without an unescaped matching delimiter; and reference labels are bounded to
-999 source characters. Reference definitions inside fenced or indented code,
+999 Unicode code points. Reference definitions inside fenced or indented code,
 or in the middle of an ordinary paragraph, remain literal content rather than
 silently changing links elsewhere in the document. Executable and protocol-
 relative destinations remain blocked.
@@ -110,6 +110,11 @@ rather than delegated to the host locale. A blank line always ends the
 definition candidate, so title-looking prose after it is not consumed.
 Backslash escapes and character references remain significant while matching;
 after a reference resolves, its visible label is parsed as normal inline text.
+Only spaces, tabs, and line endings are stripped or collapsed for identifier
+matching; other Unicode space characters remain significant and can form a
+non-empty label. Adjacent bracket groups honor full/collapsed-reference
+precedence, and a shortcut reference is not recognized when a link label
+immediately follows it—even when that following label has no definition.
 The complete label/destination/title scan is bounded to 32 physical lines per candidate.
 Definitions inside one or more blockquote levels are discovered without
 letting fenced code or ordinary paragraph continuations inside that quote leak

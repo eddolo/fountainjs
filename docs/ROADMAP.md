@@ -260,15 +260,18 @@ Code spans, autolinks, and valid inline HTML are opaque to link-label bracket
 matching, preventing false outer closures and hidden inner references.
 Reference matching normalizes raw source identifiers rather than parsed inline
 content, so escape and character-reference spellings do not falsely collide.
+It now applies the exact label-whitespace class, counts the 999-character bound
+by Unicode code point, and covers the official adjacent-reference precedence
+matrix without letting an earlier shortcut capture a following label.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate
-blocks remain deliberately unmapped. The multiline-label baseline passed
-the complete 494-test package gate and 295-pass
+blocks remain deliberately unmapped. The raw-label baseline passed the
+complete 502-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile matrix in
-[CI run `507ee3d`](https://github.com/eddolo/fountainjs/actions/runs/33988667605),
+[CI run `3b6395e`](https://github.com/eddolo/fountainjs/actions/runs/33989652712),
 and the corresponding
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33988667693)
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33989652791)
 succeeded. Identity-aware duplicate/deep-structure
 mapping and a larger standards corpus remain before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
@@ -283,7 +286,7 @@ mapping and a larger standards corpus remain before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, and full Unicode 17 label case folding are certified in `507ee3d`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, and full Unicode 17 label case folding are certified in `3b6395e`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
