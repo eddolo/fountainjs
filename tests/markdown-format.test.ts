@@ -507,6 +507,14 @@ describe('Markdown interchange', () => {
           { text: ' baz_', marks: [] },
         ],
       },
+      {
+        source: '*foo __bar *baz bim__ bam*',
+        nodes: [
+          { text: 'foo ', marks: ['em'] },
+          { text: 'bar *baz bim', marks: ['em', 'strong'] },
+          { text: ' bam', marks: ['em'] },
+        ],
+      },
     ];
 
     for (const example of cases) {
@@ -582,6 +590,41 @@ describe('Markdown interchange', () => {
         nodes: [
           { text: 'foo ', marks: ['strong'] },
           { text: 'bar', marks: ['strong', 'link', 'em'] },
+        ],
+      },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      expect(document.child(0).content.map((node) => ({
+        text: node.textContent,
+        marks: node.marks.map((mark) => mark.type.name),
+      })), example.source).toEqual(example.nodes);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
+  it('covers underscore surplus, repeated nesting, and competing spans', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      { source: '__alpha_', nodes: [{ text: '_', marks: [] }, { text: 'alpha', marks: ['em'] }] },
+      { source: '_alpha__', nodes: [{ text: 'alpha', marks: ['em'] }, { text: '_', marks: [] }] },
+      { source: '___alpha__', nodes: [{ text: '_', marks: [] }, { text: 'alpha', marks: ['strong'] }] },
+      { source: '____alpha_', nodes: [{ text: '___', marks: [] }, { text: 'alpha', marks: ['em'] }] },
+      { source: '__alpha___', nodes: [{ text: 'alpha', marks: ['strong'] }, { text: '_', marks: [] }] },
+      { source: '_alpha____', nodes: [{ text: 'alpha', marks: ['em'] }, { text: '___', marks: [] }] },
+      { source: '*_alpha_*', nodes: [{ text: 'alpha', marks: ['em', 'em'] }] },
+      { source: '_*alpha*_', nodes: [{ text: 'alpha', marks: ['em', 'em'] }] },
+      { source: '****alpha****', nodes: [{ text: 'alpha', marks: ['strong', 'strong'] }] },
+      { source: '____alpha____', nodes: [{ text: 'alpha', marks: ['strong', 'strong'] }] },
+      { source: '******alpha******', nodes: [{ text: 'alpha', marks: ['strong', 'strong', 'strong'] }] },
+      { source: '_____alpha_____', nodes: [{ text: 'alpha', marks: ['em', 'strong', 'strong'] }] },
+      {
+        source: '**alpha **beta gamma**',
+        nodes: [
+          { text: '**alpha ', marks: [] },
+          { text: 'beta gamma', marks: ['strong'] },
         ],
       },
     ];

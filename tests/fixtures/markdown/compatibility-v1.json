@@ -304,6 +304,19 @@
         "marks": ["em", "em", "link", "em"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-unlike-emphasis-overlap",
+      "source": "*alpha __beta *gamma delta__ omega*",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "alpha beta *gamma delta omega",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["em", "em", "strong", "em"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

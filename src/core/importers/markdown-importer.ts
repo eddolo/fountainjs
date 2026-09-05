@@ -423,6 +423,46 @@ function violatesEmphasisRuleOfThree(
     && (openerLength % 3 !== 0 || closerLength % 3 !== 0);
 }
 
+function enclosedByEarlierUnlikeEmphasis(
+  value: string,
+  searchStart: number,
+  candidateStart: number,
+  candidateCloserStart: number,
+  references: References,
+): boolean {
+  const candidateMarker = value[candidateStart] as '*' | '_';
+  const marker = candidateMarker === '*' ? '_' : '*';
+
+  for (let index = searchStart; index < candidateStart; index++) {
+    if (value[index] === '\\') { index++; continue; }
+    const opaqueEnd = opaqueInlineEnd(value, index);
+    if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
+    if (value[index] === '[' || value[index] === '!') {
+      const linkEnd = linkToken(value, index, references)?.end ?? -1;
+      if (linkEnd > index) { index = linkEnd - 1; continue; }
+    }
+    if (value[index] !== marker) continue;
+
+    let runEnd = index;
+    while (value[runEnd] === marker) runEnd += 1;
+    const runLength = runEnd - index;
+    if (emphasisFlanking(value, index, runLength, marker) & 1) {
+      const delimiterLength = emphasisDelimiterLength(runLength);
+      const match = matchingEmphasisRun(
+        value,
+        index,
+        runLength,
+        delimiterLength,
+        references,
+        runLength - delimiterLength,
+      );
+      if (match && match.start > candidateStart && match.end <= candidateCloserStart) return true;
+    }
+    index = runEnd - 1;
+  }
+  return false;
+}
+
 function matchingEmphasisRun(
   value: string,
   openerStart: number,
@@ -465,8 +505,28 @@ function matchingEmphasisRun(
 
     if (flanking & 1) {
       const nestedLength = emphasisDelimiterLength(runLength);
-      const nested = matchingEmphasisRun(value, index, runLength, nestedLength, references);
+      const nested = matchingEmphasisRun(
+        value,
+        index,
+        runLength,
+        nestedLength,
+        references,
+        runLength - nestedLength,
+      );
       if (nested) {
+        // A same-marker opener inside an already-open unlike span must not
+        // steal the current opener's later closer. CommonMark rule 15 gives
+        // the earlier, outer span precedence in this overlap shape.
+        if (enclosedByEarlierUnlikeEmphasis(
+          value,
+          start,
+          index,
+          nested.start,
+          references,
+        )) {
+          index = runEnd - 1;
+          continue;
+        }
         const remainingCloserLength = nested.runEnd - nested.end;
         const nestedCloserFlanking = emphasisFlanking(
           value,

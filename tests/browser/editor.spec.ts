@@ -2326,6 +2326,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '*foo [*bar*](/url)*',
       '**foo *bar **baz** bim* bop**',
       '**foo [*bar*](/url)**',
+      '*foo __bar *baz bim__ bam*',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
@@ -2530,6 +2531,11 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
         { text: ' bop', marks: ['strong'] },
       ],
       [{ text: 'foo ', marks: ['strong'] }, { text: 'bar', marks: ['strong', 'link', 'em'] }],
+      [
+        { text: 'foo ', marks: ['em'] },
+        { text: 'bar *baz bim', marks: ['em', 'strong'] },
+        { text: ' bam', marks: ['em'] },
+      ],
     ]);
 });
 
