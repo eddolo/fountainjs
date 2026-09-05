@@ -142,24 +142,40 @@ plus its successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33969832692),
 certify the public package and rendered demos.
 
-## Active now: certify granular collaborative structured attributes
+## Delivered: granular collaborative structured attributes
 
-The implementation now defines bounded DOM-free object/array contracts, typed
+The implementation defines bounded DOM-free object/array contracts, typed
 nested commands, whole-root and schema validation, stable-ID addressing, and an
 opt-in nested `Y.Map`/`Y.Array` representation beside backward-compatible flat
-JSON. Focused unit and real-browser tests prove separate nested fields,
-concurrent array insertions, local-only undo, room replacement, public controls,
-and malicious-value failure containment. The remaining work in this milestone
-is the complete package/browser matrix and published CI/deployment evidence;
-claims stay provisional until those gates pass.
+JSON. Package and real-browser tests prove separate nested fields, changes
+inside array objects, concurrent array insertions, local-only undo, room
+replacement, public controls, canonical repair, malicious-value failure
+containment, and preflighted local writes that cannot partially mutate the
+shared canonical tree. The complete 425-test package suite and 284-pass
+Chromium/Firefox/WebKit/mobile matrix passed in
+[CI run `0a33c87`](https://github.com/eddolo/fountainjs/actions/runs/33972148767),
+and the corresponding
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33972148765)
+succeeded.
+
+## Active now: truly server-native document conversion
+
+The model, schema, transactions, history, collaboration, extension composition,
+JSON, text, Markdown, and string-based HTML export already run without browser
+globals. The remaining conversion blocker is HTML import, which currently uses
+`DOMParser` and browser-only extension callbacks. This milestone isolates a
+standards-oriented DOM-free parser, adds a renderer-neutral attribute-extraction
+contract, keeps existing browser rules compatible, and requires fail-explicit
+loss reporting, resource bounds, packed Node execution, and browser/server
+parity fixtures before it is marked delivered.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
 | 1 | First-class interactive widgets | Delivered and certified in `cced9e2` | Continue browser, accessibility, format, and extension-composition regression coverage as products adopt the contract. |
-| 2 | Granular collaborative structured attributes | Implemented; full release certification is running | Complete package/browser matrix, packed ESM/CJS and type-shape checks, public deployed demo, and recorded CI/Pages evidence. |
-| 3 | Truly server-native document conversion | Headless model and Markdown exist; safe HTML still uses DOM facilities | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, safe parser substitution, identical validation, and packed-runtime tests. |
+| 2 | Granular collaborative structured attributes | Delivered and certified in `0a33c87` | Continue adversarial mixed-version, nested-array, collaboration, and storage regression coverage. |
+| 3 | Truly server-native document conversion | Active; neutral parser boundary and pure-Node importer are being implemented | DOM-free HTML parse/serialize for Node.js, Bun, Deno, and worker runtimes with CPU/memory budgets, fail-explicit browser-only rules, identical validation, and packed-runtime tests. |
 | 4 | Virtualized or paged rendering for huge documents | 10,000-block engine budgets exist; the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
 | 5 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
 | 6 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
