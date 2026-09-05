@@ -1408,7 +1408,12 @@ animation-frame refresh; reports the reason, revision, duration, and frozen
 snapshot; accepts host error/layout callbacks; and disconnects every observer
 and listener in `destroy()`. `refreshNow()` remains available for synchronous
 printing and explicit host checks. The controller reads state through
-`getDocument()` so it never owns or mutates editor state.
+`getDocument()` so it never owns or mutates editor state. Mutation-only cycles
+reuse a top-level measurement only when the immutable model node, DOM element,
+page body width, and referenced footnote heights remain identical; observed DOM
+changes explicitly dirty their owning block. Resize, font, window, manual, and
+print cycles clear the cache. Set `incremental: false` to force full measurement
+on every cycle.
 
 This is the page-model, measurement, and read-only preview foundation, not a
 completed editable paginator. A real Chromium gate verifies A4/Letter PDF page

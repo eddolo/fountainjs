@@ -27,7 +27,9 @@
   footnotes, width validation, ID isolation, one accessibility copy, physical
   print-page rules, and real A4/Letter PDF geometry checks; and an
   improved keep-with-next rule that reserves a splittable block's required
-  opening lines, plus an honest staged pagination contract. Editable page-shell
+  opening lines; plus indexed top-level lookup, identity/footnote-safe
+  mutation-cycle measurement reuse, and a 1,000-block browser reflow budget;
+  plus an honest staged pagination contract. Editable page-shell
   behavior and certified print/PDF fidelity remain active work rather than
   claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential

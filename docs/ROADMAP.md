@@ -64,7 +64,8 @@ exact validated source slice. A separate read-only renderer now projects those
 slices into fixed sheets with repeated furniture, table headers, footnotes,
 physical print rules, and one continuous accessibility copy. A Chromium PDF
 gate verifies page count and A4/Letter physical geometry. Timed reflow
-observation is coalesced. Editable page-shell rendering, content-level PDF
+observation is coalesced, and mutation-only cycles reuse unchanged top-level
+geometry under a 1,000-block/50 ms browser gate. Editable page-shell rendering, content-level PDF
 fidelity, and the remaining evidence are still active. CSS page-shaped boxes or
 destructive document splitting do not qualify.
 
@@ -72,7 +73,7 @@ destructive document splitting do not qualify.
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, and real A4/Letter PDF geometry checks; the editable and content-fidelity outcome is still partial | Add editable page shells; selection/IME/review behavior across visual boundaries; content-level print/PDF fixtures; and incremental reflow budgets. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has tested platform-neutral layout/page intent, isolated real-DOM measurement, canonical rich furniture/fields, strict source projection, a read-only paged screen/print renderer, real A4/Letter PDF geometry checks, and bounded 1,000-block mutation reflow; the editable and content-fidelity outcome is still partial | Add editable page shells; selection/IME/review behavior across visual boundaries; larger/adversarial reflow evidence; and content-level print/PDF fixtures. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

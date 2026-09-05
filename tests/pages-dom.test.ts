@@ -8,6 +8,7 @@ import {
   layoutDOMPages,
   measureDOMPageFlow,
   projectDOMPageContent,
+  type DOMPageLayoutCycle,
 } from '../src/pages/dom';
 
 function schema() {
@@ -150,6 +151,139 @@ describe('DOM page measurement adapter', () => {
     controller.destroy();
     expect(controller.isDestroyed).toBe(true);
     expect(() => controller.refreshNow()).toThrow(/destroyed/);
+    controller.destroy();
+  });
+
+  it('remeasures only changed top-level content during mutation cycles', () => {
+    const pageSchema = schema();
+    let document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: Array.from({ length: 100 }, (_, index) => ({
+        type: 'paragraph', content: [{ type: 'text', text: `Block ${index}` }],
+      })),
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = document.content.map((_node, index) => (
+      `<p data-fountain-path="${index}" data-height="20">Block ${index}</p>`
+    )).join('');
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+    const controller = createDOMPageLayoutController(
+      root,
+      () => document,
+      createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      { observe: false, measurement: { lineFragmentNodeTypes: [] } },
+    );
+
+    const initial = controller.refreshNow('initial').snapshot.measurement.measurementCount;
+    const unchanged = controller.refreshNow('mutation').snapshot.measurement.measurementCount;
+    const replacement = pageSchema.nodeFromJSON({
+      type: 'paragraph', content: [{ type: 'text', text: 'Changed block' }],
+    });
+    document = document.copy(document.content.map((node, index) => index === 50 ? replacement : node));
+    (root.children[50] as HTMLElement).dataset.height = '30';
+    const changed = controller.refreshNow('mutation').snapshot;
+    const fullResize = controller.refreshNow('resize').snapshot.measurement.measurementCount;
+
+    expect(initial).toBe(101);
+    expect(unchanged).toBe(1);
+    expect(changed.measurement.measurementCount).toBe(2);
+    expect(changed.measurement.items[50]?.height).toBe(30);
+    expect(fullResize).toBe(initial);
+    controller.destroy();
+
+    const uncached = createDOMPageLayoutController(
+      root,
+      () => document,
+      createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      { observe: false, incremental: false, measurement: { lineFragmentNodeTypes: [] } },
+    );
+    uncached.refreshNow('initial');
+    expect(uncached.refreshNow('mutation').snapshot.measurement.measurementCount).toBe(101);
+    uncached.destroy();
+  });
+
+  it('invalidates the owning top-level cache entry for observed DOM mutations', async () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [{ type: 'text', text: 'First' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'Second' }] },
+      ],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = '<p data-fountain-path="0" data-height="20">First</p><p data-fountain-path="1" data-height="20">Second</p>';
+    const reads: string[] = [];
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      reads.push(this.dataset.fountainPath ?? 'root');
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+    const cycles: DOMPageLayoutCycle[] = [];
+    const controller = createDOMPageLayoutController(
+      root,
+      () => document,
+      createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      {
+        measurement: { lineFragmentNodeTypes: [] },
+        onLayout: (cycle) => cycles.push(cycle),
+      },
+    );
+    controller.refreshNow('initial');
+    cycles.length = 0;
+    reads.length = 0;
+
+    const first = root.children[0] as HTMLElement;
+    first.dataset.height = '30';
+    first.textContent = 'Browser-normalized text';
+    await vi.waitFor(() => expect(cycles).toHaveLength(1));
+
+    expect(cycles[0]?.reason).toBe('mutation');
+    expect(cycles[0]?.snapshot.measurement.items[0]?.height).toBe(30);
+    expect(reads).toEqual(['root', '0']);
+    controller.destroy();
+  });
+
+  it('remeasures cached references when a footnote definition height changes', () => {
+    const pageSchema = schema();
+    let document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Claim' },
+          { type: 'footnote_reference', attrs: { id: 'proof' } },
+        ] },
+        { type: 'footnote_definition', attrs: { id: 'proof' }, content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'Evidence' }] },
+        ] },
+      ],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <p data-fountain-path="0" data-height="20">Claim<sup data-fountain-path="0.1" data-fountain-footnote-reference="proof" data-height="5"></sup></p>
+      <section data-fountain-path="1" data-height="14">Evidence</section>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+    const controller = createDOMPageLayoutController(
+      root,
+      () => document,
+      createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      { observe: false, measurement: { lineFragmentNodeTypes: [] } },
+    );
+    const initial = controller.refreshNow('initial').snapshot;
+    expect(initial.measurement.items[0]?.fragments?.[0]?.footnotes).toEqual([{ id: 'proof', height: 14 }]);
+    expect(controller.refreshNow('mutation').snapshot.measurement.measurementCount).toBe(1);
+
+    const definition = document.child(1).copy([
+      pageSchema.nodeFromJSON({ type: 'paragraph', content: [{ type: 'text', text: 'Longer evidence' }] }),
+    ]);
+    document = document.copy([document.child(0), definition]);
+    (root.children[1] as HTMLElement).dataset.height = '22';
+    const changed = controller.refreshNow('mutation').snapshot;
+    expect(changed.measurement.items[0]?.fragments?.[0]?.footnotes).toEqual([{ id: 'proof', height: 22 }]);
+    expect(changed.measurement.measurementCount).toBeGreaterThan(1);
     controller.destroy();
   });
 

@@ -331,6 +331,10 @@ continuation rendering. `projectDOMPageContent()` joins the neutral layout back
 to exact validated source slices and separates repeated continuation overhead.
 Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
+Mutation-only cycles reuse geometry only when both the immutable model node and
+rendered top-level element are unchanged; changed footnote heights invalidate
+their cached references. Resize, font, manual, and print cycles remeasure fully,
+and `{ incremental: false }` disables reuse for specialized hosts.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
 and print page breaks. It installs print-only physical `@page` rules matching the

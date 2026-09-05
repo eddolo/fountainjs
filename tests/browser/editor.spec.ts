@@ -187,6 +187,18 @@ test('emits exact A4 and Letter PDF pages for every projected sheet in Chromium'
   }
 });
 
+test('keeps 1,000-block pagination reflow local to the changed block', async ({ page }) => {
+  const result = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.incrementalProbe()
+  ));
+  const durations = [...result.incrementalDurations].sort((left: number, right: number) => left - right);
+  const p95 = durations[Math.max(0, Math.ceil(durations.length * .95) - 1)];
+  expect(result).toMatchObject({ initialReads: 1001, retainedBlocks: 999, blockCount: 1000 });
+  expect(result.incrementalReads).toHaveLength(20);
+  expect(Math.max(...result.incrementalReads)).toBeLessThanOrEqual(2);
+  expect(p95).toBeLessThan(50);
+});
+
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
   await editor.click();

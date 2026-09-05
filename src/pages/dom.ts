@@ -119,6 +119,8 @@ export interface DOMPageLayoutControllerOptions {
   readonly layout?: PageLayoutOptions;
   /** Observe DOM, size, font, window, and print changes. Defaults to true. */
   readonly observe?: boolean;
+  /** Reuse unchanged top-level geometry for mutation-only cycles. Defaults to true. */
+  readonly incremental?: boolean;
   readonly onLayout?: (cycle: DOMPageLayoutCycle) => void;
   readonly onError?: (error: unknown) => void;
 }
@@ -126,6 +128,40 @@ export interface DOMPageLayoutControllerOptions {
 export type DOMPageGeometrySource = PageGeometry | (() => PageGeometry);
 
 const DEFAULT_LINE_FRAGMENT_TYPES = Object.freeze(['paragraph', 'heading', 'code_block']);
+
+interface CachedDefinitionMeasurement {
+  readonly node: Node;
+  readonly element: HTMLElement;
+  readonly height: number;
+}
+
+interface CachedFlowMeasurement {
+  readonly node: Node;
+  readonly element: HTMLElement;
+  readonly definitionSignature: string;
+  readonly item?: PageFlowItem;
+  readonly sources: readonly DOMPageFragmentSource[];
+  readonly template?: DOMPageTemplateMeasurement;
+  readonly warnings: readonly DOMPageMeasurementWarning[];
+}
+
+interface DOMPageMeasurementCache {
+  root: HTMLElement | null;
+  contentWidth: number;
+  definitions: Map<number, CachedDefinitionMeasurement>;
+  entries: Map<number, CachedFlowMeasurement>;
+}
+
+function createMeasurementCache(): DOMPageMeasurementCache {
+  return { root: null, contentWidth: Number.NaN, definitions: new Map(), entries: new Map() };
+}
+
+function clearMeasurementCache(cache: DOMPageMeasurementCache): void {
+  cache.root = null;
+  cache.contentWidth = Number.NaN;
+  cache.definitions.clear();
+  cache.entries.clear();
+}
 
 function finiteNonNegative(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0;
@@ -178,12 +214,6 @@ function contentWidth(element: HTMLElement, count: () => void): number {
     - numericStyle(style.paddingRight)
     - borderLeft
     - borderRight);
-}
-
-function renderedTopLevel(root: HTMLElement, index: number): HTMLElement | null {
-  return Array.from(root.children).find((element) => (
-    (element as HTMLElement).dataset?.fountainPath === String(index)
-  )) as HTMLElement | undefined ?? null;
 }
 
 function pathOf(element: HTMLElement): readonly number[] {
@@ -270,6 +300,14 @@ function uniqueFootnotes(references: readonly { readonly id: string; readonly he
   const found = new Map<string, number>();
   references.forEach(({ id, height }) => found.set(id, height));
   return Object.freeze([...found].map(([id, height]) => Object.freeze({ id, height })));
+}
+
+function referencedDefinitionSignature(node: Node, definitions: ReadonlyMap<string, number>): string {
+  const ids = new Set<string>();
+  node.descendants((descendant) => {
+    if (descendant.type.name === 'footnote_reference') ids.add(String(descendant.attrs.id));
+  });
+  return [...ids].sort().map((id) => `${id}:${definitions.get(id) ?? 'missing'}`).join('|');
 }
 
 function textFragments(
@@ -433,11 +471,12 @@ function wholeItem(
   });
 }
 
-/** Measures an EditorView-compatible DOM into platform-neutral legal page-flow items. */
-export function measureDOMPageFlow(
+function measureDOMPageFlowInternal(
   root: HTMLElement,
   document: Node,
   options: DOMPageMeasurementOptions = {},
+  cache?: DOMPageMeasurementCache,
+  invalidatedIndexes: ReadonlySet<number> = new Set(),
 ): DOMPageFlowMeasurement {
   if (!root?.ownerDocument || !document) throw new TypeError('measureDOMPageFlow requires a rendered editor root and document.');
   const minimumTextLines = options.minimumTextLines ?? 2;
@@ -452,49 +491,95 @@ export function measureDOMPageFlow(
   let measurementCount = 0;
   const count = () => { measurementCount += 1; };
   const measuredContentWidth = contentWidth(root, count);
+  const cacheMatches = cache?.root === root
+    && finiteNonNegative(cache.contentWidth)
+    && Math.abs(cache.contentWidth - measuredContentWidth) <= .01;
+  const priorDefinitions = cacheMatches ? cache.definitions : new Map<number, CachedDefinitionMeasurement>();
+  const priorEntries = cacheMatches ? cache.entries : new Map<number, CachedFlowMeasurement>();
 
   const rendered = new Map<number, HTMLElement>();
+  Array.from(root.children).forEach((child) => {
+    const element = child as HTMLElement;
+    const source = element.dataset.fountainPath;
+    if (!source || source.includes('.')) return;
+    const index = Number(source);
+    if (
+      Number.isSafeInteger(index)
+      && index >= 0
+      && String(index) === source
+      && !rendered.has(index)
+    ) rendered.set(index, element);
+  });
   document.content.forEach((_node, index) => {
-    const element = renderedTopLevel(root, index);
-    if (element) rendered.set(index, element);
-    else warnings.push(Object.freeze({
+    if (!rendered.has(index)) warnings.push(Object.freeze({
       code: 'missing-rendered-node', path: Object.freeze([index]),
       detail: `No rendered top-level node was found for model path ${index}.`,
     }));
   });
 
   const definitionHeights = new Map<string, number>();
+  const nextDefinitions = new Map<number, CachedDefinitionMeasurement>();
   document.content.forEach((node, index) => {
     if (node.type.name !== 'footnote_definition') return;
     const element = rendered.get(index);
     if (!element) return;
-    const height = outerHeight(element, count);
+    const cached = !invalidatedIndexes.has(index) ? priorDefinitions.get(index) : undefined;
+    const height = cached?.node === node && cached.element === element
+      ? cached.height
+      : outerHeight(element, count);
+    nextDefinitions.set(index, { node, element, height });
     if (finiteNonNegative(height)) definitionHeights.set(String(node.attrs.id), height);
   });
 
+  const nextEntries = new Map<number, CachedFlowMeasurement>();
   document.content.forEach((node, index) => {
     const element = rendered.get(index);
     if (!element) return;
     const path = Object.freeze([index]);
+    if (node.type.name === 'footnote_definition') return;
+    const definitionSignature = referencedDefinitionSignature(node, definitionHeights);
+    const cached = !invalidatedIndexes.has(index) ? priorEntries.get(index) : undefined;
+    if (
+      cached?.node === node
+      && cached.element === element
+      && cached.definitionSignature === definitionSignature
+    ) {
+      if (cached.template) templates.push(cached.template);
+      if (cached.item) items.push(cached.item);
+      fragmentSources.push(...cached.sources);
+      warnings.push(...cached.warnings);
+      nextEntries.set(index, cached);
+      return;
+    }
+
+    const entryWarnings: DOMPageMeasurementWarning[] = [];
     if (node.type.name === 'page_header' || node.type.name === 'page_footer') {
       const height = outerHeight(element, count);
-      if (!finiteNonNegative(height)) warnings.push(Object.freeze({
+      let template: DOMPageTemplateMeasurement | undefined;
+      if (!finiteNonNegative(height)) entryWarnings.push(Object.freeze({
         code: 'invalid-measurement', path,
         detail: `Page template at ${index} returned a non-finite height.`,
       }));
-      else templates.push(Object.freeze({
-        kind: node.type.name === 'page_header' ? 'header' : 'footer',
-        variant: node.attrs.variant as PageTemplateVariant,
-        path,
-        height,
-      }));
+      else {
+        template = Object.freeze({
+          kind: node.type.name === 'page_header' ? 'header' : 'footer',
+          variant: node.attrs.variant as PageTemplateVariant,
+          path,
+          height,
+        });
+        templates.push(template);
+      }
+      warnings.push(...entryWarnings);
+      nextEntries.set(index, {
+        node, element, definitionSignature, sources: Object.freeze([]), template,
+        warnings: Object.freeze(entryWarnings),
+      });
       return;
     }
-    if (node.type.name === 'footnote_definition') return;
     const itemId = `block:${index}:${node.type.name}`;
     if (node.type.name === 'page_break') {
-      items.push(Object.freeze({ id: itemId, height: 0, breakAfter: true }));
-      fragmentSources.push(Object.freeze({
+      const item = Object.freeze({ id: itemId, height: 0, breakAfter: true });
+      const sources = Object.freeze([Object.freeze({
         itemId,
         fragmentId: itemId,
         fragmentIndex: 0,
@@ -503,7 +588,12 @@ export function measureDOMPageFlow(
         partPaths: Object.freeze([]),
         clipOffset: 0,
         height: 0,
-      }));
+      })]);
+      items.push(item);
+      fragmentSources.push(...sources);
+      nextEntries.set(index, {
+        node, element, definitionSignature, item, sources, warnings: Object.freeze([]),
+      });
       return;
     }
 
@@ -514,7 +604,13 @@ export function measureDOMPageFlow(
       ? textFragments(element, itemId, path, definitionHeights, count)
       : null;
     if (structural) {
-      item = Object.freeze({ id: itemId, fragments: structural.fragments, ...(structural.continuationHeight !== undefined ? { continuationHeight: structural.continuationHeight } : {}) });
+      item = Object.freeze({
+        id: itemId,
+        fragments: structural.fragments,
+        ...(structural.continuationHeight !== undefined
+          ? { continuationHeight: structural.continuationHeight }
+          : {}),
+      });
       sources = structural.sources;
     }
     else if (text) item = Object.freeze({
@@ -532,7 +628,8 @@ export function measureDOMPageFlow(
     if (text && !structural) sources = text.sources;
 
     const heights = item.fragments?.map((fragment) => fragment.height) ?? [item.height];
-    if (heights.some((height) => !finiteNonNegative(height))) warnings.push(Object.freeze({
+    const validHeights = heights.every(finiteNonNegative);
+    if (!validHeights) entryWarnings.push(Object.freeze({
       code: 'invalid-measurement', path,
       detail: `Rendered node at ${index} returned a non-finite height and was excluded.`,
     }));
@@ -543,12 +640,28 @@ export function measureDOMPageFlow(
 
     element.querySelectorAll<HTMLElement>('[data-fountain-footnote-reference]').forEach((reference) => {
       const id = reference.dataset.fountainFootnoteReference;
-      if (id && !definitionHeights.has(id)) warnings.push(Object.freeze({
+      if (id && !definitionHeights.has(id)) entryWarnings.push(Object.freeze({
         code: 'unmeasured-footnote', path: pathOf(reference),
         detail: `Footnote ${id} has no measurable rendered definition.`,
       }));
     });
+    warnings.push(...entryWarnings);
+    nextEntries.set(index, {
+      node,
+      element,
+      definitionSignature,
+      ...(validHeights ? { item } : {}),
+      sources: validHeights ? sources : Object.freeze([]),
+      warnings: Object.freeze(entryWarnings),
+    });
   });
+
+  if (cache) {
+    cache.root = root;
+    cache.contentWidth = measuredContentWidth;
+    cache.definitions = nextDefinitions;
+    cache.entries = nextEntries;
+  }
 
   return Object.freeze({
     items: Object.freeze(items),
@@ -558,6 +671,15 @@ export function measureDOMPageFlow(
     contentWidth: measuredContentWidth,
     measurementCount,
   });
+}
+
+/** Measures an EditorView-compatible DOM into platform-neutral legal page-flow items. */
+export function measureDOMPageFlow(
+  root: HTMLElement,
+  document: Node,
+  options: DOMPageMeasurementOptions = {},
+): DOMPageFlowMeasurement {
+  return measureDOMPageFlowInternal(root, document, options);
 }
 
 /**
@@ -672,6 +794,8 @@ export class DOMPageLayoutController {
   private pendingReason: DOMPageLayoutReason = 'initial';
   private revision = 0;
   private destroyed = false;
+  private readonly measurementCache?: DOMPageMeasurementCache;
+  private readonly invalidatedIndexes = new Set<number>();
 
   constructor(
     public readonly root: HTMLElement,
@@ -684,12 +808,16 @@ export class DOMPageLayoutController {
     }
     this.view = root.ownerDocument.defaultView;
     this.fonts = root.ownerDocument.fonts ?? null;
+    this.measurementCache = options.incremental === false ? undefined : createMeasurementCache();
     if (options.observe !== false) {
       const MutationObserverConstructor = (this.view as (Window & {
         MutationObserver?: typeof MutationObserver;
       }) | null)?.MutationObserver;
       if (MutationObserverConstructor) {
-        const observer = new MutationObserverConstructor(() => this.requestLayout('mutation'));
+        const observer = new MutationObserverConstructor((records) => {
+          records.forEach((record) => this.markMutation(record));
+          this.requestLayout('mutation');
+        });
         observer.observe(root, { childList: true, characterData: true, subtree: true });
         this.mutationObserver = observer;
       }
@@ -734,13 +862,23 @@ export class DOMPageLayoutController {
     if (this.destroyed) throw new Error('Cannot refresh a destroyed DOMPageLayoutController.');
     const started = this.now();
     const geometry = typeof this.geometry === 'function' ? this.geometry() : this.geometry;
-    const snapshot = layoutDOMPages(
+    const document = this.getDocument();
+    if (reason !== 'mutation' && this.measurementCache) clearMeasurementCache(this.measurementCache);
+    const measurement = measureDOMPageFlowInternal(
       this.root,
-      this.getDocument(),
-      geometry,
+      document,
       this.options.measurement,
-      this.options.layout,
+      this.measurementCache,
+      reason === 'mutation' ? this.invalidatedIndexes : new Set(),
     );
+    this.invalidatedIndexes.clear();
+    const layout = layoutPages(measurement.items, geometry, this.options.layout);
+    const snapshot = Object.freeze({
+      measurement,
+      layout,
+      content: projectDOMPageContent(measurement, layout),
+      presentation: projectPagePresentation(document, layout),
+    });
     const cycle = Object.freeze({
       revision: ++this.revision,
       reason,
@@ -761,6 +899,8 @@ export class DOMPageLayoutController {
     this.fonts?.removeEventListener('loadingdone', this.onFontsChanged);
     if (this.scheduledFrame !== null) this.view?.cancelAnimationFrame(this.scheduledFrame);
     this.scheduledFrame = null;
+    this.invalidatedIndexes.clear();
+    if (this.measurementCache) clearMeasurementCache(this.measurementCache);
   }
 
   private readonly onWindowResize = () => this.requestLayout('window-resize');
@@ -770,6 +910,16 @@ export class DOMPageLayoutController {
     try { this.refreshNow('before-print'); }
     catch (error) { this.options.onError?.(error); }
   };
+
+  private markMutation(record: MutationRecord): void {
+    const element = record.target.nodeType === 1
+      ? record.target as HTMLElement
+      : record.target.parentElement;
+    const measured = element?.closest<HTMLElement>('[data-fountain-path]');
+    if (!measured || !this.root.contains(measured)) return;
+    const index = pathOf(measured)[0];
+    if (index !== undefined) this.invalidatedIndexes.add(index);
+  }
 
   private runScheduled(): void {
     if (this.destroyed) return;

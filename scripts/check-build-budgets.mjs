@@ -65,8 +65,8 @@ const limits = Object.freeze({
   'dist/pages.cjs': 19 * kibibyte,
   // Browser geometry, strict placement/source projection, and the coalesced
   // reflow controller are isolated from the neutral page model.
-  'dist/pages-dom.js': 16 * kibibyte,
-  'dist/pages-dom.cjs': 13 * kibibyte,
+  'dist/pages-dom.js': 19 * kibibyte,
+  'dist/pages-dom.cjs': 16 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
   // from both the neutral model and browser measurement lifecycle.
   'dist/pages-preview.js': 9 * kibibyte,

@@ -35,7 +35,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   continuation overhead;
 - `DOMPageLayoutController` for coalesced mutation/resize/font/window/print
   invalidation, timed immutable snapshots, explicit host callbacks, synchronous
-  print refresh, and deterministic observer/listener teardown;
+  print refresh, deterministic observer/listener teardown, and safe reuse of
+  unchanged top-level geometry on mutation-only cycles;
 - `projectPagePresentation()` for immutable page-shell plans that select the
   canonical first/odd/even/default header and footer, resolve page fields, and
   pair reserved footnotes with their one canonical definition;
@@ -156,7 +157,13 @@ never enter editor state and the adapter never moves editable nodes. Its source
 map is ordinary frozen data and never retains a DOM element. The strict content
 projection then joins page placements to those sources and fails closed if an
 external layout is incomplete or inconsistent. The optional controller
-automates invalidation and measurement but does not own rendering or state.
+automates invalidation and measurement but does not own rendering or state. Its
+mutation cache requires identical immutable node and DOM-element identities,
+the same body width, and the same referenced footnote heights. Observed DOM
+changes dirty their owning block; resize, font, window, manual, and print cycles
+invalidate fully. A real-browser 1,000-block gate permits only the root width
+and changed block to perform geometry reads across repeated edits and enforces a
+50 ms p95 cycle budget.
 The separate preview entry clones those exact slices into visual sheets; it
 requires the measured editor width to equal the page body width and never
 changes the editor DOM. It emits an unnamed physical page rule for broad print
@@ -215,7 +222,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;
-- reflow latency, measurement count, DOM identity, memory, and bundle budgets;
+- reflow latency, measurement count, DOM identity, memory, and bundle budgets
+  beyond the current 1,000-block single-edit gate;
 - packed ESM/CommonJS/types, public docs/demo, and immutable CI/deployment
   evidence.
 

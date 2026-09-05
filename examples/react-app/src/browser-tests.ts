@@ -314,6 +314,57 @@ const renderPagesPreview = (
   return output;
 };
 
+const runPaginationIncrementalBudget = () => {
+  const kit = composeExtensions([CoreExtension, PagesExtension]);
+  const largeEditor = createEditor({
+    schema: kit.schema,
+    plugins: kit.plugins,
+    content: {
+      type: 'doc',
+      content: Array.from({ length: 1_000 }, (_, index) => ({
+        type: 'paragraph', content: [{ type: 'text', text: `Page block ${index}` }],
+      })),
+    },
+  });
+  const mount = document.createElement('div');
+  document.body.appendChild(mount);
+  const largeView = new EditorView(mount, largeEditor, { ariaLabel: 'Pagination performance fixture' });
+  largeView.dom.style.boxSizing = 'content-box';
+  largeView.dom.style.width = '300px';
+  const geometry = createPageGeometry({ size: { width: 320, height: 1_000 }, margins: 10 });
+  const before = [...largeView.dom.children];
+  const controller = createDOMPageLayoutController(
+    largeView.dom,
+    () => largeEditor.state.doc,
+    geometry,
+    { observe: false, measurement: { lineFragmentNodeTypes: [] } },
+  );
+  try {
+    const initial = controller.refreshNow('initial');
+    const cycles = Array.from({ length: 20 }, (_, iteration) => {
+      const current = largeEditor.state.doc.child(500);
+      const replacement = current.copy([
+        largeEditor.state.schema.text(`${current.textContent}!${iteration}`),
+      ]);
+      largeEditor.dispatch(largeEditor.state.createTransaction().replace(500, 501, [replacement]));
+      return controller.refreshNow('mutation');
+    });
+    const after = [...largeView.dom.children];
+    return {
+      initialReads: initial.snapshot.measurement.measurementCount,
+      incrementalReads: cycles.map((cycle) => cycle.snapshot.measurement.measurementCount),
+      incrementalDurations: cycles.map((cycle) => cycle.durationMs),
+      retainedBlocks: after.filter((node, index) => node === before[index]).length,
+      blockCount: after.length,
+    };
+  } finally {
+    controller.destroy();
+    largeView.destroy();
+    largeEditor.destroy();
+    mount.remove();
+  }
+};
+
 Object.assign(globalThis, {
   fountainBrowserTest: {
     commands,
@@ -423,6 +474,7 @@ Object.assign(globalThis, {
         margins: 12.7,
         unitsPerMillimetre: 96 / 25.4,
       }), true),
+      incrementalProbe: runPaginationIncrementalBudget,
       controllerProbe: () => {
         const cycles: number[] = [];
         const controller = createDOMPageLayoutController(
