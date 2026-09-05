@@ -84,6 +84,11 @@
   and render exact sanitized clips in both editable page shells and print
   previews. Inline references outside a text line's vertical center fall back
   to the nearest legal line instead of losing their reservation.
+  Footnote display numbers are now derived from first-reference order without
+  changing stable JSON IDs, update after structural movement, stay shared by
+  repeated references, and round-trip through standard Markdown footnotes and
+  semantic HTML noteref/footnote roles. Context-sensitive node DOM output now
+  receives document/path context and explicitly opts out of stale DOM reuse.
   Broader adversarial/cross-engine print fidelity remains active work rather
   than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential

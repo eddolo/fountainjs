@@ -330,6 +330,10 @@ const editablePages = createDOMEditablePageController(
 // editablePages.destroy() before destroying the EditorView
 ```
 
+The foundation derives user-facing footnote numbers from first-reference order
+without storing those numbers in JSON; repeated references share a number and
+reorder automatically. Standard `[^id]` Markdown footnotes and semantic HTML
+`doc-noteref` / `doc-footnote` roles round-trip through a pages-enabled schema.
 The foundation covers legal fragments, keep-with-next, widow/orphan minima,
 continuation overhead, page-local footnote reservation, canonical editable
 templates, dynamic page fields, overflow diagnostics, undo, JSON, semantic

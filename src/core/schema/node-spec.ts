@@ -3,6 +3,12 @@ import type { Node } from './node';
 export type Attributes = Record<string, unknown>;
 export type DOMOutputSpec = string | [string, ...(Attributes | DOMOutputSpec | 0)[]];
 
+/** Immutable model context supplied while a node is serialized for a view or HTML. */
+export interface NodeDOMContext {
+  readonly document: Node;
+  readonly path: readonly number[];
+}
+
 function freezeAttributeValue(value: unknown, ancestors: ReadonlySet<object>): unknown {
   if (!value || typeof value !== 'object') return value;
   if (ancestors.has(value)) throw new TypeError('Node and mark attributes cannot contain circular values.');
@@ -74,6 +80,8 @@ export interface NodeSpec {
   validate?: (node: Node) => boolean;
   /** Safe HTML-import rules owned by this node extension. */
   parseDOM?: readonly DOMParseRule[];
-  toDOM?: (node: Node) => DOMOutputSpec;
+  /** Re-evaluate otherwise unchanged ancestors when model context affects their DOM. */
+  contextualDOM?: boolean;
+  toDOM?: (node: Node, context?: NodeDOMContext) => DOMOutputSpec;
   nodeView?: NodeViewConstructor;
 }

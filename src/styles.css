@@ -131,6 +131,8 @@
 .fountain-editor .fountain-page-header::before { content: "Header template · " attr(data-fountain-page-header); }
 .fountain-editor .fountain-page-footer::before { content: "Footer template · " attr(data-fountain-page-footer); }
 .fountain-editor .fountain-page-field { display: inline-block; min-width: 2.5em; margin-inline: .2em; padding-inline: .35em; color: var(--fountain-accent); background: var(--fountain-accent-soft); border-radius: .3em; font: 700 .85em/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; text-align: center; vertical-align: baseline; }
+.fountain-footnote-definition[data-fountain-footnote-number] { position: relative; padding-inline-start: 1.65em; }
+.fountain-footnote-definition[data-fountain-footnote-number]::before { position: absolute; inset-block-start: 0; inset-inline-start: 0; content: attr(data-fountain-footnote-number) "."; font: 700 .8em/1.7 ui-sans-serif, system-ui, sans-serif; }
 .fountain-page-preview { display: grid; justify-items: center; gap: 1.5rem; padding: 1.5rem; overflow: auto; background: #e8e8ec; }
 .fountain-page-preview__sheet { position: relative; flex: none; overflow: visible; color: #17171c; background: #fff; box-shadow: 0 .5rem 2rem rgb(0 0 0 / .16); }
 .fountain-page-preview__header, .fountain-page-preview__footer { overflow: hidden; }
@@ -140,6 +142,7 @@
 .fountain-page-preview__footnotes > .fountain-footnote-definition, .fountain-page-preview__footnote-clip > .fountain-footnote-definition { margin: 0; padding: 0; border: 0; }
 .fountain-page-preview__footnotes .fountain-footnote-definition > :first-child { margin-block-start: 0; }
 .fountain-page-preview__footnotes .fountain-footnote-definition > :last-child { margin-block-end: 0; }
+.fountain-page-preview__footnotes .fountain-footnote-definition[data-fountain-footnote-number] { padding-inline-start: 1.65em; }
 .fountain-page-preview__sheet[data-fountain-page-overflow="true"] { outline: 3px solid #c33; outline-offset: 3px; }
 .fountain-page-preview__accessible { position: absolute !important; inline-size: 1px !important; block-size: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 .fountain-editable-pages { position: relative; display: grid; justify-items: center; min-width: 0; padding: 1.5rem; overflow: auto; background: #e8e8ec; isolation: isolate; }

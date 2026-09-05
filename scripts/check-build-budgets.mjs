@@ -79,7 +79,9 @@ const limits = Object.freeze({
   'dist/pages-preview.cjs': 10 * kibibyte,
   // Accessible block handles, visible drop states, page-preview print rules,
   // and responsive editable page shells remain inside one measured stylesheet.
-  'dist/styles.css': 62 * kibibyte,
+  // Generated footnote labels add a small marker rule without affecting hosts
+  // that omit the optional pages schema.
+  'dist/styles.css': 63 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -118,9 +120,12 @@ const limits = Object.freeze({
   // Measured long-footnote fragmentation, neutral continuation placement, and
   // editable/print clips, including searchable PDF text de-duplication, add
   // about 6.5/4.9 KiB across the optional page entries.
+  // Context-aware DOM serialization, derived footnote numbering, and standard
+  // Markdown/semantic-HTML footnote interchange add about 4.1/3.2 KiB across
+  // shared and opt-in chunks without increasing the default root entry.
   // The schema is data and is not counted.
-  'all ESM runtime code': 743 * kibibyte,
-  'all CommonJS runtime code': 625 * kibibyte,
+  'all ESM runtime code': 748 * kibibyte,
+  'all CommonJS runtime code': 629 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

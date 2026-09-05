@@ -30,7 +30,11 @@ import. Each `DOMParseRule` has a CSS `tag` selector, optional numeric
 defaults, or `false` to decline the match. Selectors and callbacks are contained
 at the format boundary; created values pass normal attribute, node-invariant,
 content-expression, and full-document validation. `toDOM` is the matching
-export contract for both nodes and marks. Generic output accepts semantic HTML
+export contract for both nodes and marks. A node serializer may read the
+optional `{ document, path }` context when presentation depends on document
+order. Set `contextualDOM: true` for such a node so top-level reconciliation
+re-renders an otherwise unchanged ancestor after another part of the document
+changes; the context and flag affect only presentation, never JSON. Generic output accepts semantic HTML
 but strips executable tags, event/srcdoc attributes, unsafe URL protocols, and
 dangerous CSS URL/expression forms. See [FORMATS.md](FORMATS.md#html).
 
@@ -1345,6 +1349,11 @@ const editablePages = createDOMEditablePageController(
 unreferenced definitions. `assertFootnotes(document)` enforces the same graph
 when a product requires it. `createPagesExtension({ footnoteIdFactory })` lets
 collaborative hosts inject their own collision-resistant identifier policy.
+`computeFootnoteNumbering(document)` derives immutable display labels from the
+first occurrence of each reference. IDs remain stable in JSON while DOM and
+HTML labels renumber after document-order changes; repeated references retain
+the same label. The optional nodes also round-trip standard `[^id]` Markdown
+footnotes and import semantic HTML `doc-noteref` / `doc-footnote` roles.
 `insertPageBreak`, `insertFootnote`, `selectFootnoteDefinition`, and
 `removeFootnote` use ordinary validated transactions, so history and Yjs carry
 them without a page-specific collaboration protocol.

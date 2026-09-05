@@ -29,6 +29,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   insertion commands;
 - `inspectFootnotes()` / `assertFootnotes()` for missing, duplicate, nested,
   and unreferenced definition diagnostics;
+- immutable `computeFootnoteNumbering()` output, with display labels derived
+  from first-reference order, shared by repeated references, and never stored
+  in JSON; HTML and Markdown footnote interchange retain stable IDs;
 - `inspectPageTemplates()` / `assertPageTemplates()` for duplicate/nested
   templates and orphan page-field diagnostics;
 - an isolated `fountainjs-editor/pages/dom` measurement adapter that converts
@@ -77,16 +80,16 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 371-test package suite plus
+The latest immutable public certification is the 375-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
 and atomic media/custom-NodeView coverage, including complex merged-table
 fragmentation, the physical three-engine A4/Letter print contract, gap-adjacent
-selection/IME, mobile fallback, and the host-owned sanitized print renderer in
-the [CI run for `33a9920`](https://github.com/eddolo/fountainjs/actions/runs/33955189993).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33955189994)
-is also green. Long-footnote continuation passes the local Chromium, Firefox,
-and WebKit contract but is not counted in that preceding immutable run.
+selection/IME, mobile fallback, the host-owned sanitized print renderer, and
+exact long-footnote continuation without duplicated PDF text in the
+[CI run for `e11275a`](https://github.com/eddolo/fountainjs/actions/runs/33958307239).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33958307235)
+is also green.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -366,8 +369,10 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - A4, Letter, and bounded custom physical sizes and margins;
 - manual breaks and deterministic automatic reflow in both directions;
 - canonical editable headers/footers and page-number fields;
-- footnote numbering, reservation, continuation, and interchange (the measured
-  continuation baseline is implemented; broader numbering/import fixtures remain);
+- footnote numbering, reservation, continuation, and interchange (transient
+  first-reference numbering, semantic HTML roles, standard Markdown, and the
+  measured continuation baseline are implemented; broader imported-document
+  corpora remain);
 - paragraphs with widow/orphan rules;
 - nested lists and rowspan/colspan tables split only at legal boundaries
   (including multi-row headers and transitive body spans; broader imported and

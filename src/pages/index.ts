@@ -4,6 +4,7 @@ import {
   insertNode,
   type Editor,
   type Node,
+  type NodeDOMContext,
   type NodeSpec,
 } from '../core';
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
@@ -34,6 +35,67 @@ function footnoteAnchor(id: unknown): string {
   return `fountain-footnote-${String(id)}`;
 }
 
+function footnoteIdFromFragment(value: string | null): string | false {
+  if (!value) return false;
+  let fragment = value.startsWith('#') ? value.slice(1) : value;
+  try { fragment = decodeURIComponent(fragment); }
+  catch { return false; }
+  const id = fragment.startsWith('fountain-footnote-')
+    ? fragment.slice('fountain-footnote-'.length)
+    : fragment;
+  return validFootnoteId(id) ? id : false;
+}
+
+export interface FootnoteNumberingEntry {
+  readonly id: string;
+  readonly number: number;
+  readonly label: string;
+  readonly referencePaths: readonly (readonly number[])[];
+  readonly definitionPaths: readonly (readonly number[])[];
+}
+
+const footnoteNumberingCache = new WeakMap<Node, readonly FootnoteNumberingEntry[]>();
+const footnoteNumberByIdCache = new WeakMap<Node, ReadonlyMap<string, FootnoteNumberingEntry>>();
+
+/** Derives display numbers from first-reference order without persisting them. */
+export function computeFootnoteNumbering(document: Node): readonly FootnoteNumberingEntry[] {
+  const cached = footnoteNumberingCache.get(document);
+  if (cached) return cached;
+  const report = inspectFootnotes(document);
+  const entries = new Map<string, {
+    id: string;
+    number: number;
+    referencePaths: Array<readonly number[]>;
+    definitionPaths: Array<readonly number[]>;
+  }>();
+  report.references.forEach((reference) => {
+    let entry = entries.get(reference.id);
+    if (!entry) {
+      entry = { id: reference.id, number: entries.size + 1, referencePaths: [], definitionPaths: [] };
+      entries.set(reference.id, entry);
+    }
+    entry.referencePaths.push(reference.path);
+  });
+  report.definitions.forEach((definition) => entries.get(definition.id)?.definitionPaths.push(definition.path));
+  const result = Object.freeze([...entries.values()].map((entry) => Object.freeze({
+    id: entry.id,
+    number: entry.number,
+    label: String(entry.number),
+    referencePaths: Object.freeze([...entry.referencePaths]),
+    definitionPaths: Object.freeze([...entry.definitionPaths]),
+  })));
+  footnoteNumberingCache.set(document, result);
+  footnoteNumberByIdCache.set(document, new Map(result.map((entry) => [entry.id, entry])));
+  return result;
+}
+
+function displayFootnoteLabel(node: Node, context?: NodeDOMContext): string {
+  if (!context) return String(node.attrs.id);
+  computeFootnoteNumbering(context.document);
+  return footnoteNumberByIdCache.get(context.document)
+    ?.get(String(node.attrs.id))?.label ?? String(node.attrs.id);
+}
+
 export const pageBreakNode: NodeSpec = {
   group: 'block',
   atom: true,
@@ -51,33 +113,63 @@ export const footnoteReferenceNode: NodeSpec = {
   group: 'inline',
   inline: true,
   atom: true,
+  contextualDOM: true,
   attrs: { id: { validate: validFootnoteId } },
-  parseDOM: [{
-    tag: 'sup[data-fountain-footnote-reference]',
-    getAttrs: (element) => ({ id: element.dataset.fountainFootnoteReference ?? '' }),
-  }],
-  toDOM: (node) => ['sup', {
-    'data-fountain-footnote-reference': node.attrs.id,
-    className: 'fountain-footnote-reference',
-    role: 'doc-noteref',
-  }, ['a', { href: `#${footnoteAnchor(node.attrs.id)}` }, String(node.attrs.id)]],
+  parseDOM: [
+    {
+      tag: 'sup[data-fountain-footnote-reference]',
+      getAttrs: (element) => ({ id: element.dataset.fountainFootnoteReference ?? '' }),
+    },
+    {
+      tag: 'a[role~="doc-noteref"][href^="#"]',
+      getAttrs: (element) => {
+        const id = footnoteIdFromFragment(element.getAttribute('href'));
+        return id ? { id } : false;
+      },
+    },
+  ],
+  toDOM: (node, context) => {
+    const label = displayFootnoteLabel(node, context);
+    return ['sup', {
+      'data-fountain-footnote-reference': node.attrs.id,
+      'data-fountain-footnote-number': label,
+      className: 'fountain-footnote-reference',
+      role: 'doc-noteref',
+      'aria-label': `Footnote ${label}`,
+    }, ['a', { href: `#${footnoteAnchor(node.attrs.id)}` }, label]];
+  },
   toText: (node) => `[^${String(node.attrs.id)}]`,
 };
 
 export const footnoteDefinitionNode: NodeSpec = {
   group: 'block',
   content: 'block+',
+  contextualDOM: true,
   attrs: { id: { validate: validFootnoteId } },
-  parseDOM: [{
-    tag: 'section[data-fountain-footnote-definition]',
-    getAttrs: (element) => ({ id: element.dataset.fountainFootnoteDefinition ?? '' }),
-  }],
-  toDOM: (node) => ['section', {
-    'data-fountain-footnote-definition': node.attrs.id,
-    className: 'fountain-footnote-definition',
-    id: footnoteAnchor(node.attrs.id),
-    role: 'doc-footnote',
-  }, 0],
+  parseDOM: [
+    {
+      tag: 'section[data-fountain-footnote-definition]',
+      getAttrs: (element) => ({ id: element.dataset.fountainFootnoteDefinition ?? '' }),
+    },
+    {
+      tag: 'section[role~="doc-footnote"][id], aside[role~="doc-footnote"][id], section[role~="doc-endnote"][id], aside[role~="doc-endnote"][id]',
+      getAttrs: (element) => {
+        const id = footnoteIdFromFragment(element.id);
+        return id ? { id } : false;
+      },
+    },
+  ],
+  toDOM: (node, context) => {
+    const label = displayFootnoteLabel(node, context);
+    return ['section', {
+      'data-fountain-footnote-definition': node.attrs.id,
+      'data-fountain-footnote-number': label,
+      className: 'fountain-footnote-definition',
+      id: footnoteAnchor(node.attrs.id),
+      role: 'doc-footnote',
+      'aria-label': `Footnote ${label}`,
+    }, 0];
+  },
   toText: (node) => node.content.map((child) => child.textContent).join('\n'),
 };
 

@@ -209,6 +209,7 @@ function inline(node: Node, context: RenderContext, path: readonly number[]): st
   reportNodeAttributes(node, context, path);
   if (!node.isText) {
     if (node.type.name === 'hard_break') return '  \n';
+    if (node.type.name === 'footnote_reference') return `[^${String(node.attrs.id)}]`;
     if (node.type.name === 'inline_math') return `$${String(node.attrs.latex ?? '')}$`;
     if (node.type.name === 'inline_image') {
       return link(escapeInline(String(node.attrs.alt ?? '')), node.attrs.src, node.attrs.title, context, true);
@@ -347,6 +348,15 @@ function render(
       }).join('\n');
     }
     case 'table_row': case 'table_header': case 'table_cell': return children();
+    case 'footnote_definition': {
+      const body = node.content
+        .map((child, index) => render(child, context, [...path, index], depth))
+        .join('\n\n');
+      const [first = '', ...rest] = body.split('\n');
+      return `[^${String(node.attrs.id)}]: ${first}${rest.length
+        ? `\n${rest.map((line) => line ? `    ${line}` : '').join('\n')}`
+        : ''}`;
+    }
     default:
       report(context, 'node', node.type.name, path, node.content.length
         ? 'Unsupported block node structure is flattened to its child content.'

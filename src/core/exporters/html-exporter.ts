@@ -165,11 +165,12 @@ function renderText(node: Node): string {
   return content;
 }
 
-function renderNode(node: Node): string {
+function renderNode(node: Node, document: Node = node, path: readonly number[] = []): string {
   if (node.isText) return renderText(node);
-  const children = () => node.content.map(renderNode).join('');
+  const context = { document, path };
+  const children = () => node.content.map((child, index) => renderNode(child, document, [...path, index])).join('');
   switch (node.type.name) {
-    case 'doc': return node.content.map(renderNode).join('\n');
+    case 'doc': return node.content.map((child, index) => renderNode(child, document, [index])).join('\n');
     case 'paragraph': return `<p${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</p>`;
     case 'heading': return `<h${Number(node.attrs.level) || 1}${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</h${Number(node.attrs.level) || 1}>`;
     case 'blockquote': return `<blockquote>${children()}</blockquote>`;
@@ -183,7 +184,7 @@ function renderNode(node: Node): string {
     case 'hard_break': return '<br>';
     case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
     case 'mention': case 'emoji': return node.type.spec.toDOM
-      ? renderDOMOutputSpec(node.type.spec.toDOM(node), children())
+      ? renderDOMOutputSpec(node.type.spec.toDOM(node, context), children())
       : escapeHTML(node.textContent);
     case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'inline_image': {
@@ -240,11 +241,11 @@ function renderNode(node: Node): string {
     case 'table_row': return `<tr>${children()}</tr>`;
     case 'table_header': return `<th${tableCellSizeAttributes(node)} scope="${escapeHTML(node.attrs.scope || 'col')}">${children()}</th>`;
     case 'table_cell': return `<td${tableCellSizeAttributes(node)}>${children()}</td>`;
-    default: return node.type.spec.toDOM ? renderDOMOutputSpec(node.type.spec.toDOM(node), children()) : children();
+    default: return node.type.spec.toDOM ? renderDOMOutputSpec(node.type.spec.toDOM(node, context), children()) : children();
   }
 }
 
-const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:1em;text-align:center;background:#f6f7fa;border-radius:8px}`;
+const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:1em;text-align:center;background:#f6f7fa;border-radius:8px}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
 
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {

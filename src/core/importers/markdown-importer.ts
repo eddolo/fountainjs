@@ -334,6 +334,18 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       index += 3;
       continue;
     }
+    if (text.startsWith('[^', index) && schema.nodes.footnote_reference) {
+      const token = /^\[\^([^\]\r\n]+)\]/.exec(text.slice(index));
+      if (token) {
+        try {
+          const reference = schema.node('footnote_reference', { id: unescapeMarkdown(token[1]) });
+          flush();
+          result.push(reference);
+          index += token[0].length;
+          continue;
+        } catch { /* Invalid IDs remain readable literal text. */ }
+      }
+    }
     if (text[index] === '!' || text[index] === '[') {
       const parsed = linkToken(text, index, references);
       if (parsed) {
@@ -700,11 +712,60 @@ function references(markdown: string): { lines: string[]; definitions: Reference
   return { lines, definitions };
 }
 
+interface MarkdownFootnoteDefinition {
+  readonly id: string;
+  readonly lines: readonly string[];
+}
+
+function extractFootnoteDefinitions(
+  markdown: string,
+  schema: Schema,
+): { markdown: string; definitions: readonly MarkdownFootnoteDefinition[] } {
+  if (!schema.nodes.footnote_reference || !schema.nodes.footnote_definition) {
+    return { markdown, definitions: [] };
+  }
+  const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const body: string[] = [];
+  const definitions: MarkdownFootnoteDefinition[] = [];
+  for (let index = 0; index < lines.length;) {
+    const opening = /^\s{0,3}\[\^([^\]]+)\]:[ \t]*(.*)$/.exec(lines[index]);
+    if (!opening) { body.push(lines[index]); index += 1; continue; }
+    const id = unescapeMarkdown(opening[1]);
+    try { schema.nodes.footnote_definition.create({ id }, [paragraph(schema, '', new Map())]); }
+    catch { body.push(lines[index]); index += 1; continue; }
+
+    const content = [opening[2]];
+    let cursor = index + 1;
+    while (cursor < lines.length) {
+      const continuation = /^(?: {4}|\t)(.*)$/.exec(lines[cursor]);
+      if (continuation) { content.push(continuation[1]); cursor += 1; continue; }
+      if (!lines[cursor].trim() && /^(?: {4}|\t)/.test(lines[cursor + 1] ?? '')) {
+        content.push('');
+        cursor += 1;
+        continue;
+      }
+      break;
+    }
+    definitions.push(Object.freeze({ id, lines: Object.freeze(content) }));
+    body.push('');
+    index = cursor;
+  }
+  return { markdown: body.join('\n'), definitions: Object.freeze(definitions) };
+}
+
 export class MarkdownImporter {
   parse(markdown: string, schema: Schema): Node {
-    const source = references(markdown);
+    const footnotes = extractFootnoteDefinitions(markdown, schema);
+    const source = references(footnotes.markdown);
     const blocks = parseBlocks(source.lines, schema, source.definitions);
-    const document = schema.topNodeType.create({}, blocks.length ? blocks : [paragraph(schema, '', source.definitions)]);
+    const definitions = footnotes.definitions.map((definition) => {
+      const content = parseBlocks(definition.lines, schema, source.definitions);
+      return schema.node('footnote_definition', { id: definition.id }, content.length
+        ? content
+        : [paragraph(schema, '', source.definitions)]);
+    });
+    const content = [...blocks, ...definitions];
+    const document = schema.topNodeType.create({}, content.length ? content : [paragraph(schema, '', source.definitions)]);
     schema.validate(document);
     return document;
   }

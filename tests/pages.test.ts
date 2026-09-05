@@ -3,6 +3,8 @@ import * as Y from 'yjs';
 import {
   CoreExtension,
   HistoryExtension,
+  MarkdownExporter,
+  MarkdownImporter,
   Schema,
   Selection,
   composeExtensions,
@@ -12,6 +14,7 @@ import {
 import {
   PagesExtension,
   assertFootnotes,
+  computeFootnoteNumbering,
   createPagesExtension,
   insertFootnote,
   insertPageField,
@@ -73,6 +76,76 @@ describe('portable page intent', () => {
     expect(removeFootnote(editor, 'source-1')).toBe(true);
     expect(editor.state.doc.textContent).toBe('Before after');
     expect(inspectFootnotes(editor.state.doc)).toMatchObject({ references: [], definitions: [], valid: true });
+  });
+
+  it('derives immutable display numbers from first-reference order without changing IDs', () => {
+    const schema = new Schema(pagesKit().schema);
+    const document = schema.nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Beta' },
+          { type: 'footnote_reference', attrs: { id: 'stable-beta' } },
+          { type: 'text', text: ' repeated' },
+          { type: 'footnote_reference', attrs: { id: 'stable-beta' } },
+        ] },
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Alpha' },
+          { type: 'footnote_reference', attrs: { id: 'stable-alpha' } },
+        ] },
+        { type: 'footnote_definition', attrs: { id: 'stable-alpha' }, content: [paragraph('Alpha note')] },
+        { type: 'footnote_definition', attrs: { id: 'stable-beta' }, content: [paragraph('Beta note')] },
+      ],
+    });
+
+    const numbering = computeFootnoteNumbering(document);
+    expect(numbering.map(({ id, number, label, referencePaths, definitionPaths }) => ({
+      id, number, label, referencePaths, definitionPaths,
+    }))).toEqual([
+      {
+        id: 'stable-beta', number: 1, label: '1',
+        referencePaths: [[0, 1], [0, 3]], definitionPaths: [[3]],
+      },
+      {
+        id: 'stable-alpha', number: 2, label: '2',
+        referencePaths: [[1, 1]], definitionPaths: [[2]],
+      },
+    ]);
+    expect(Object.isFrozen(numbering)).toBe(true);
+    expect(Object.isFrozen(numbering[0]?.referencePaths)).toBe(true);
+    expect(computeFootnoteNumbering(document)).toBe(numbering);
+    expect(document.child(0).child(1).attrs.id).toBe('stable-beta');
+    expect(document.child(0).child(3).attrs.id).toBe('stable-beta');
+  });
+
+  it('round-trips standard Markdown footnotes with multi-block definitions without a DOM', () => {
+    const schema = new Schema(pagesKit().schema);
+    const source = schema.nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Claim' },
+          { type: 'footnote_reference', attrs: { id: 'source-alpha' } },
+          { type: 'text', text: ' and repeat' },
+          { type: 'footnote_reference', attrs: { id: 'source-alpha' } },
+        ] },
+        { type: 'footnote_definition', attrs: { id: 'source-alpha' }, content: [
+          paragraph('First paragraph'),
+          paragraph('Second paragraph'),
+        ] },
+      ],
+    });
+
+    const exported = MarkdownExporter.exportWithReport(source);
+    expect(exported.losses).toEqual([]);
+    expect(exported.markdown).toBe([
+      'Claim[^source-alpha] and repeat[^source-alpha]',
+      '',
+      '[^source-alpha]: First paragraph',
+      '',
+      '    Second paragraph',
+    ].join('\n'));
+    expect(MarkdownImporter.parse(exported.markdown, schema).toJSON()).toEqual(source.toJSON());
   });
 
   it('reports missing, duplicate, nested, and unreferenced definitions without mutating data', () => {

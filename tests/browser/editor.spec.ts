@@ -79,7 +79,12 @@ test('renders, edits, and measures portable page intent in a real browser', asyn
   const definition = editor.locator('section[data-fountain-footnote-definition="browser-note"]');
   await expect(reference).toHaveCount(1);
   await expect(reference).toHaveAttribute('role', 'doc-noteref');
+  await expect(reference).toHaveAttribute('data-fountain-footnote-number', '1');
+  await expect(reference).toHaveAttribute('aria-label', 'Footnote 1');
+  await expect(reference).toHaveText('1');
   await expect(definition).toHaveAttribute('role', 'doc-footnote');
+  await expect(definition).toHaveAttribute('data-fountain-footnote-number', '1');
+  await expect(definition).toHaveAttribute('aria-label', 'Footnote 1');
   await expect(definition).toContainText('Browser footnote definition');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.inspect().valid)).toBe(true);
 

@@ -587,7 +587,10 @@ Formats are parser/serializer objects owned by extensions. The supplied JSON,
 Markdown, HTML, and text modules share the schema document as their boundary.
 HTML is schema-extensible: node and mark specs contribute declarative
 `parseDOM` selectors/attribute readers, while `toDOM` serializes both custom
-nodes and marks. Import rules are priority-ordered, callback failures are
+nodes and marks. A node serializer can receive its root document and path; a
+node that sets `contextualDOM` opts its unchanged ancestor out of reconciliation
+reuse when another edit can change that presentation (for example, derived
+footnote numbering). Import rules are priority-ordered, callback failures are
 contained, candidate content is checked against its content expression, and the
 complete result is validated before it crosses into editor state. Generic
 export output is escaped and restricted to non-executable semantic tags,
@@ -745,7 +748,9 @@ The suites are organized by boundary:
 - `tests/page-layout.test.ts`: DOM-independent physical geometry, legal
   fragmentation, constraints, continuation, footnotes, and hostile values;
 - `tests/pages.test.ts` and `tests/pages-html.test.ts`: optional page intent,
-  integrity diagnostics, commands, history, JSON/HTML, and Yjs convergence.
+  integrity diagnostics, transient first-reference numbering, context-aware DOM
+  reconciliation, standard Markdown and semantic HTML footnote interchange,
+  commands, history, JSON, and Yjs convergence.
 - `tests/pages-presentation.test.ts`: renderer-neutral template variant
   selection, dynamic fields, canonical footnote assignment, immutable output,
   ambiguous-input diagnostics, and external-layout validation;

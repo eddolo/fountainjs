@@ -1,6 +1,8 @@
 import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
 
 export interface DOMRenderContext {
+  /** Root model document used by context-sensitive node serializers. */
+  document?: Node;
   view?: unknown;
   nodeViews?: MountedNodeView[];
   reusableNodeViews?: ReadonlyMap<string, MountedNodeView>;
@@ -231,7 +233,8 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
       pathReference,
     });
   }
-  const rendered = custom ?? renderSpec(node.type.spec.toDOM?.(node) ?? ['div', 0]);
+  const nodeContext = context.document ? { document: context.document, path } : undefined;
+  const rendered = custom ?? renderSpec(node.type.spec.toDOM?.(node, nodeContext) ?? ['div', 0]);
   const { dom, contentDOM } = rendered;
   dom.dataset.fountainNode = node.type.name;
   dom.dataset.fountainPath = path.join('.');
@@ -253,17 +256,18 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
 }
 
 export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderContext = {}): MountedDocumentNode[] {
+  const renderContext = context.document === doc ? context : { ...context, document: doc };
   const fragment = document.createDocumentFragment();
   const mounted: MountedDocumentNode[] = [];
   let position = 0;
   doc.content.forEach((child, index) => {
-    if (!child.isText) appendWidgets(fragment, position, context);
-    const dom = renderNode(child, [index], context, position);
+    if (!child.isText) appendWidgets(fragment, position, renderContext);
+    const dom = renderNode(child, [index], renderContext, position);
     fragment.appendChild(dom);
     mounted.push({ node: child, dom });
     position += child.nodeSize;
   });
-  appendWidgets(fragment, position, context);
+  appendWidgets(fragment, position, renderContext);
   root.replaceChildren(fragment);
   return mounted;
 }
@@ -276,6 +280,16 @@ function rebaseRenderedPath(element: HTMLElement, index: number): void {
   rebase(element, 'data-fountain-path');
   element.querySelectorAll<HTMLElement>('[data-fountain-path]').forEach((target) => rebase(target, 'data-fountain-path'));
   element.querySelectorAll<HTMLElement>('[data-fountain-text-path]').forEach((target) => rebase(target, 'data-fountain-text-path'));
+}
+
+const contextualDOMCache = new WeakMap<Node, boolean>();
+
+function hasContextualDOM(node: Node): boolean {
+  const cached = contextualDOMCache.get(node);
+  if (cached !== undefined) return cached;
+  const result = Boolean(node.type.spec.contextualDOM || node.content.some(hasContextualDOM));
+  contextualDOMCache.set(node, result);
+  return result;
 }
 
 /**
@@ -291,6 +305,7 @@ export function reconcileDocument(
   context: DOMRenderContext = {},
   onReuse?: (index: number) => void,
 ): MountedDocumentNode[] {
+  const renderContext = context.document === doc ? context : { ...context, document: doc };
   const mounted: MountedDocumentNode[] = [];
   const available = new Map<Node, number[]>();
   const used = new Set<number>();
@@ -316,7 +331,7 @@ export function reconcileDocument(
     const previousIndex = reuseIndexes[index];
     const prior = previousIndex === undefined ? undefined : previous[previousIndex];
     const currentDOM = root.childNodes[index];
-    if (previousIndex !== undefined && prior?.node === child && prior.dom.parentNode === root) {
+    if (previousIndex !== undefined && prior?.node === child && prior.dom.parentNode === root && !hasContextualDOM(child)) {
       if (prior.dom !== currentDOM) root.insertBefore(prior.dom, currentDOM ?? null);
       if (prior.dom.nodeType === 1) rebaseRenderedPath(prior.dom as HTMLElement, index);
       mounted.push(prior);
@@ -325,7 +340,7 @@ export function reconcileDocument(
       return;
     }
 
-    const dom = renderNode(child, [index], context, position);
+    const dom = renderNode(child, [index], renderContext, position);
     if (currentDOM !== dom) root.insertBefore(dom, root.childNodes[index] ?? null);
     mounted.push({ node: child, dom });
     position += child.nodeSize;
