@@ -119,6 +119,8 @@ an initial standards-oriented set of behaviors:
 - level-one/two Setext headings;
 - indented code and variable-length backtick or tilde fences;
 - variable-delimiter code spans with CommonMark whitespace normalization;
+- strict HTML5 named/numeric character references and all ASCII punctuation
+  escapes, excluding code spans and blocks;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;
@@ -143,7 +145,6 @@ Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
 
 - delimiter-stack-accurate emphasis;
-- full entity/reference decoding rules;
 - all HTML block/inline precedence and safe unknown-HTML policy;
 - exact list marker, indentation, interruption, tight/loose, and lazy
   continuation rules;
@@ -156,8 +157,9 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The current bounded contract is certified by the complete 479-test package gate
-and 295-pass Chromium/Firefox/WebKit/mobile
+The preservation and code-span baseline preceding the character-reference
+addition is certified by the complete 479-test package gate and 295-pass
+Chromium/Firefox/WebKit/mobile
 [CI run for `86dd1cb`](https://github.com/eddolo/fountainjs/actions/runs/33984604184),
 plus the corresponding successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33984604123).
@@ -165,8 +167,8 @@ plus the corresponding successful
 ## Security and collaboration
 
 Raw Markdown and frontmatter are untrusted input. The snapshot does not execute
-content. Parsed URLs still pass Fountain's protocol policy, and the final model
-still passes full schema validation.
+content. Character references are decoded before parsed URLs pass Fountain's
+protocol policy, and the final model still passes full schema validation.
 
 The snapshot belongs to an import/export session rather than shared document
 state. Collaboration synchronizes the structured Fountain document. A product

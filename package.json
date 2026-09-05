@@ -470,6 +470,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "css-select": "7.0.0",
+    "entities": "8.0.0",
     "jsdom": "^30.0.1",
     "miniflare": "3.20250718.3",
     "parse5": "8.0.1",

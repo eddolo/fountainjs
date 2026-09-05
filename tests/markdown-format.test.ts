@@ -74,6 +74,40 @@ describe('Markdown interchange', () => {
     });
   });
 
+  it('decodes strict character references before validating Markdown links', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '[Safe](https://example.com/?a=1&amp;b=2 "Title &copy;") and [blocked](jav&#x61;script:alert(1))';
+    const document = MarkdownImporter.parse(source, schema);
+    const links = document.content[0].content.flatMap((node) => (
+      node.marks.filter((mark) => mark.type.name === 'link')
+    ));
+
+    expect(links).toHaveLength(1);
+    expect(links[0].attrs).toMatchObject({
+      href: 'https://example.com/?a=1&b=2',
+      title: 'Title ©',
+    });
+    expect(document.textContent).toBe('Safe and [blocked](javascript:alert(1))');
+    expect(MarkdownImporter.parse('Bad &#99999999; / &#xD800; / &unknown;', schema).textContent)
+      .toBe('Bad &#99999999; / � / &unknown;');
+  });
+
+  it('escapes literal character-reference text during canonical export', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const link = schema.marks.link.create({
+      href: 'https://example.com/?literal=&copy;',
+      title: 'Keep &copy;',
+    });
+    const document = schema.node('doc', {}, [schema.node('paragraph', {}, [
+      schema.text('See &copy;', [link]),
+      schema.text(' and &#35;.'),
+    ])]);
+    const markdown = MarkdownExporter.export(document);
+
+    expect(markdown).toBe('[See \\&copy;](https://example.com/?literal=\\&copy; "Keep \\&copy;") and \\&#35;.');
+    expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
+  });
+
   it('returns untouched Markdown source exactly while its parsed document is unchanged', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [

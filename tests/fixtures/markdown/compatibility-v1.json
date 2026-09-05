@@ -109,6 +109,19 @@
         "marks": [],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-character-references",
+      "source": "AT&amp;T &NotEqualTilde; &#35; &#x1F642; \\&copy; and `&copy;`.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "AT&T ≂̸ # 🙂 &copy; and &copy;.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["code"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

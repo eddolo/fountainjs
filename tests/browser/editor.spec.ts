@@ -2267,17 +2267,28 @@ test('runs reference links, recursive blocks, rich tables, and loss reports in a
 });
 
 test('round-trips variable-delimiter Markdown code spans in the browser package', async ({ page }) => {
-  const result = await page.evaluate(() => (
-    (globalThis as any).fountainBrowserTest.inspectMarkdown('Use ``a ` tick`` and ` padded `.')
-  ));
+  const result = await page.evaluate(() => ({
+    code: (globalThis as any).fountainBrowserTest.inspectMarkdown('Use ``a ` tick`` and ` padded `.'),
+    entities: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[Safe](https://example.com/?a=1&amp;b=2) \\&copy; &NotEqualTilde;',
+    ),
+  }));
 
-  expect(result.document).toEqual(result.roundTrip);
-  expect(result.markdown).toBe('Use ``a ` tick`` and `padded`.');
-  expect(result.document.content[0].content).toEqual(expect.arrayContaining([
+  expect(result.code.document).toEqual(result.code.roundTrip);
+  expect(result.code.markdown).toBe('Use ``a ` tick`` and `padded`.');
+  expect(result.code.document.content[0].content).toEqual(expect.arrayContaining([
     expect.objectContaining({ text: 'a ` tick', marks: [expect.objectContaining({ type: 'code' })] }),
     expect.objectContaining({ text: 'padded', marks: [expect.objectContaining({ type: 'code' })] }),
   ]));
-  expect(result.losses).toEqual([]);
+  expect(result.code.losses).toEqual([]);
+  expect(result.entities.document).toEqual(result.entities.roundTrip);
+  expect(result.entities.document.content[0].content).toEqual(expect.arrayContaining([
+    expect.objectContaining({ text: 'Safe', marks: [expect.objectContaining({
+      type: 'link', attrs: expect.objectContaining({ href: 'https://example.com/?a=1&b=2' }),
+    })] }),
+    expect.objectContaining({ text: ' &copy; ≂̸' }),
+  ]));
+  expect(result.entities.losses).toEqual([]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

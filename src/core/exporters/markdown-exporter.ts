@@ -2,6 +2,7 @@ import type { EditorState } from '../state';
 import type { Node } from '../schema';
 import { fontFamilyCSS } from '../../text-style/values';
 import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/markdown-importer';
+import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -54,7 +55,7 @@ const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'fon
 const LIST_TYPES = new Set(['bullet_list', 'ordered_list', 'task_list']);
 
 function escapeInline(text: string): string {
-  return text.replace(/([\\`*_[\]<>])/g, '\\$1');
+  return escapeMarkdownEntityOpeners(text.replace(/([\\`*_[\]<>])/g, '\\$1'));
 }
 
 function codeSpan(text: string): string {
@@ -78,12 +79,16 @@ function escapeHTML(text: unknown): string {
 }
 
 function escapeTitle(value: unknown): string {
-  return String(value ?? '').replace(/([\\"])/g, '\\$1').replace(/[\r\n]+/g, ' ');
+  const escaped = String(value ?? '').replace(/([\\"])/g, '\\$1').replace(/[\r\n]+/g, ' ');
+  return escapeMarkdownEntityOpeners(escaped);
 }
 
 function destination(value: unknown): string {
   const href = String(value ?? '');
-  return /[\s()<>]/.test(href) ? `<${href.replace(/([\\<>])/g, '\\$1')}>` : href;
+  const needsAngles = /[\s()<>]/.test(href);
+  const escaped = needsAngles ? href.replace(/([\\<>])/g, '\\$1') : href;
+  const protectedHref = escapeMarkdownEntityOpeners(escaped);
+  return needsAngles ? `<${protectedHref}>` : protectedHref;
 }
 
 function report(

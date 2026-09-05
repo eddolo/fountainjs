@@ -100,6 +100,11 @@ if (packedCodeSpan.textContent !== 'Use a ` tick.'
   || esmHeadlessCore.MarkdownExporter.export(packedCodeSpan) !== 'Use ``a ` tick``.') {
   throw new Error('ESM headless core did not round-trip a variable-delimiter Markdown code span.');
 }
+const packedEntities = esmHeadlessCore.MarkdownImporter.parse('Packed &copy; / \\&copy;', markdownSchema);
+if (packedEntities.textContent !== 'Packed © / &copy;'
+  || esmHeadlessCore.MarkdownExporter.export(packedEntities) !== 'Packed © / \\&copy;') {
+  throw new Error('ESM headless core did not decode and protect strict Markdown character references.');
+}
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');

@@ -76,6 +76,14 @@ retain left/centre/right column alignment, do not split escaped pipes, and pad
 short rows to the header width. Imported documents are validated against the
 complete receiving schema before they are returned.
 
+Semicolon-terminated HTML5 named and numeric character references decode in
+text, link destinations and titles, reference labels, and code-fence info
+strings. They remain literal inside inline and block code. Backslash escapes
+cover every ASCII punctuation character and take precedence over reference
+decoding, so `\&copy;` remains the literal text `&copy;`. URL protocols are
+validated after decoding, and canonical export escapes a literal reference-like
+sequence so reparsing cannot silently change its meaning.
+
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a
 deterministic `<span data-fountain-text-style="true">` form when ordinary

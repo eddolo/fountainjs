@@ -995,7 +995,8 @@ nodes, marks, attributes, or content invariants.
 Markdown import supports titled inline and reference links/images, recursive
 quotes, loose nested lists, aligned tables with escaped pipes, and
 variable-delimiter code spans that preserve literal backticks and significant
-edge spaces. Export can
+edge spaces. Strict HTML5 character references decode before link safety checks
+and canonical export protects entity-shaped literal text. Export can
 emit deterministic deduplicated references; `exportWithReport` identifies
 every unsupported node, mark, or attribute projection by document path so a
 publishing pipeline never has to guess what Markdown omitted.

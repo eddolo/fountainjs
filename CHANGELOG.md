@@ -40,6 +40,12 @@
   angle-bracket URI/email autolinks, star emphasis, backslash hard breaks, and
   collision-safe code export. This is documented as a supported subset, not a
   false claim of complete standards conformance.
+- Strict semicolon-terminated HTML5 named, decimal, and hexadecimal character
+  references now decode everywhere CommonMark permits them, including link
+  destinations, titles, reference labels, and fence info strings, but remain
+  literal in code. All ASCII punctuation escapes are recognized; escaped
+  ampersands remain literal; decoded URLs pass protocol validation; and
+  canonical export protects literal entity-shaped text from changing meaning.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

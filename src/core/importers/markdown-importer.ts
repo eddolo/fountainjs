@@ -1,5 +1,6 @@
 import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
+import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
 
@@ -272,10 +273,6 @@ function unicodeEmojiName(value: string): string {
   return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
 }
 
-function unescapeMarkdown(value: string): string {
-  return value.replace(/\\([\\`*{}\[\]()#+\-.!_|<>"'])/g, '$1');
-}
-
 function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): Node[] {
   if (!value || !schema.nodes.emoji || !HAS_EMOJI.test(value)) return [schema.text(value, marks)];
   const segments = typeof Intl.Segmenter === 'function'
@@ -298,7 +295,7 @@ function textNodes(value: string, schema: Schema, marks: readonly Mark[] = []): 
 }
 
 function referenceName(value: string): string {
-  return unescapeMarkdown(value).trim().replace(/\s+/g, ' ').toLowerCase();
+  return decodeMarkdownText(value).trim().replace(/\s+/g, ' ').toLowerCase();
 }
 
 function closingBracket(value: string, start: number, open = '[', close = ']'): number {
@@ -372,7 +369,7 @@ function destinationParts(value: string): ReferenceDefinition | null {
     if (!((first === '"' && last === '"') || (first === "'" && last === "'") || (first === '(' && last === ')'))) return null;
     title = remainder.slice(1, -1);
   }
-  return { href: unescapeMarkdown(href), title: unescapeMarkdown(title) };
+  return { href: decodeMarkdownText(href), title: decodeMarkdownText(title) };
 }
 
 interface LinkToken extends ReferenceDefinition {
@@ -398,20 +395,9 @@ interface MarkdownFence {
   readonly language: string;
 }
 
-function decodeHTMLEntities(value: string): string {
-  return value
-    .replace(/&#x([\da-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
-    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'")
-    .replace(/&gt;/gi, '>')
-    .replace(/&lt;/gi, '<')
-    .replace(/&amp;/gi, '&');
-}
-
 function generatedAttribute(source: string, name: string): string {
   const match = new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i').exec(source);
-  return decodeHTMLEntities(match?.[1] ?? match?.[2] ?? '');
+  return decodeMarkdownEntities(match?.[1] ?? match?.[2] ?? '');
 }
 
 /**
@@ -434,7 +420,7 @@ function generatedStyledNodes(
   };
   let cursor = 0;
   const appendText = (value: string) => {
-    if (value) nodes.push(...textNodes(decodeHTMLEntities(value), schema, stack.at(-1)?.marks ?? baseMarks));
+    if (value) nodes.push(...textNodes(decodeMarkdownEntities(value), schema, stack.at(-1)?.marks ?? baseMarks));
   };
 
   for (const match of source.matchAll(tagPattern)) {
@@ -487,7 +473,7 @@ function rubyToken(
     .replace(/<rt(?:\s[^>]*)?>[\s\S]*?<\/rt\s*>/gi, '')
     .replace(/<rp(?:\s[^>]*)?>[\s\S]*?<\/rp\s*>/gi, '');
   const base = generatedStyledNodes(baseSource, schema, inheritedMarks);
-  const rt = decodeHTMLEntities((annotation ?? '').replace(/<[^>]*>/g, '')).trim();
+  const rt = decodeMarkdownEntities((annotation ?? '').replace(/<[^>]*>/g, '')).trim();
   try {
     if (!base.some((node) => node.textContent) || !rt) return null;
     return { node: schema.node('ruby', { rt }, base), end };
@@ -508,7 +494,7 @@ function styledTextToken(
   const end = contentStart + closing.index + closing[0].length;
   const source = value.slice(start, end);
 
-  const style = decodeHTMLEntities(opening[1]);
+  const style = decodeMarkdownEntities(opening[1]);
   const marks = [...inheritedMarks];
   const add = (name: string, attrs: Record<string, unknown>) => {
     const type = schema.marks[name];
@@ -573,7 +559,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
-    if (plain) result.push(...textNodes(unescapeMarkdown(plain), schema, inheritedMarks));
+    if (plain) result.push(...textNodes(decodeMarkdownText(plain), schema, inheritedMarks));
     plain = '';
   };
   for (let index = 0; index < text.length;) {
@@ -625,7 +611,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       const token = /^\[\^([^\]\r\n]+)\]/.exec(text.slice(index));
       if (token) {
         try {
-          const reference = schema.node('footnote_reference', { id: unescapeMarkdown(token[1]) });
+          const reference = schema.node('footnote_reference', { id: decodeMarkdownText(token[1]) });
           flush();
           result.push(reference);
           index += token[0].length;
@@ -643,7 +629,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
             try {
               result.push(schema.node('inline_image', {
                 src: parsed.href,
-                alt: unescapeMarkdown(parsed.label),
+                alt: decodeMarkdownText(parsed.label),
                 title: parsed.title,
               }));
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
@@ -868,7 +854,7 @@ function markdownFence(line: string): MarkdownFence | null {
     marker,
     length: match[2].length,
     indent: match[1].length,
-    language: unescapeMarkdown(info.split(/\s+/u)[0] ?? ''),
+    language: decodeMarkdownText(info.split(/\s+/u)[0] ?? ''),
   };
 }
 
@@ -991,7 +977,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     if (image && isSafeURL(image.href, { allowDataImage: true })) {
       blocks.push(schema.node('image_super', {
         src: image.href,
-        alt: unescapeMarkdown(image.label),
+        alt: decodeMarkdownText(image.label),
         title: image.title,
         width: '100%',
         caption: '',
@@ -1042,12 +1028,12 @@ function references(markdown: string): { lines: string[]; definitions: Reference
     const match = REFERENCE_DEFINITION.exec(line);
     if (!match) return line;
     const rawHref = match[2];
-    const href = unescapeMarkdown(rawHref.startsWith('<') && rawHref.endsWith('>') ? rawHref.slice(1, -1) : rawHref);
+    const href = decodeMarkdownText(rawHref.startsWith('<') && rawHref.endsWith('>') ? rawHref.slice(1, -1) : rawHref);
     if (!isSafeURL(href, { allowDataImage: true })) return line;
     const name = referenceName(match[1]);
     if (name && !definitions.has(name)) definitions.set(name, {
       href,
-      title: unescapeMarkdown(match[3] ?? match[4] ?? match[5] ?? ''),
+      title: decodeMarkdownText(match[3] ?? match[4] ?? match[5] ?? ''),
     });
     return '';
   });
@@ -1072,7 +1058,7 @@ function extractFootnoteDefinitions(
   for (let index = 0; index < lines.length;) {
     const opening = /^\s{0,3}\[\^([^\]]+)\]:[ \t]*(.*)$/.exec(lines[index]);
     if (!opening) { body.push(lines[index]); index += 1; continue; }
-    const id = unescapeMarkdown(opening[1]);
+    const id = decodeMarkdownText(opening[1]);
     try { schema.nodes.footnote_definition.create({ id }, [paragraph(schema, '', new Map())]); }
     catch { body.push(lines[index]); index += 1; continue; }
 

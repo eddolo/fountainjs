@@ -58,6 +58,10 @@ SOFTWARE.
 
 ### css-select parser/runtime family
 
+Fountain's platform-neutral Markdown boundary also bundles `entities` directly
+to implement strict HTML5 named and numeric character references. The same
+BSD 2-Clause terms apply to that shared decoder and data trie.
+
 `css-select`, `css-what`, `domelementtype`, `domhandler`, `domutils`,
 `entities`, and `nth-check` are copyright (c) Felix Böhm and contributors.
 They are licensed under the BSD 2-Clause License:

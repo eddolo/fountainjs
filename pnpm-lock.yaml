@@ -26,6 +26,9 @@ importers:
       css-select:
         specifier: 7.0.0
         version: 7.0.0
+      entities:
+        specifier: 8.0.0
+        version: 8.0.0
       jsdom:
         specifier: ^30.0.1
         version: 30.0.1
