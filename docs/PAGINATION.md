@@ -25,6 +25,12 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
+The implementation is certified by the 339-test package suite and complete
+193-check Chromium, Firefox, WebKit, and mobile matrix in the immutable
+[CI run for `fc33455`](https://github.com/eddolo/fountainjs/actions/runs/33932531158).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33932531264)
+is also green.
+
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
 import {
