@@ -131,7 +131,13 @@ These are useful, narrower ideas. They should become ledger rows only after an
 owner defines persistence, selection, accessibility, collaboration, format,
 performance, and browser behavior:
 
-- explicit Word, Google Docs, and Excel paste normalization (`DOC-19`);
+- explicit Word, Google Docs, and Excel paste normalization (`DOC-19`), plus
+  property-by-property fixtures for MathML/LaTeX, semantic ruby/footnotes,
+  tracked changes, comments, and unknown application clipboard formats;
+- a visible privacy-aware “Report a bug” route on the website and every demo,
+  backed by the existing structured GitHub form; request Fountain version,
+  framework/runtime, browser/OS, minimal reproduction, expected/actual behavior,
+  and sanitized document JSON without asking users to publish private content;
 - table captions and advanced image/text wrapping;
 - cross-editor schema-aware drag and drop plus a general inline/block drop cursor;
 - footnote/endnote interchange independent of paged rendering;

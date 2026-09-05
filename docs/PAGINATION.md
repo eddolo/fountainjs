@@ -83,15 +83,15 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 375-test package suite plus
+The latest immutable public certification is the 383-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
 and atomic media/custom-NodeView coverage, including complex merged-table
 fragmentation, the physical three-engine A4/Letter print contract, gap-adjacent
 selection/IME, mobile fallback, the host-owned sanitized print renderer, and
 exact long-footnote continuation without duplicated PDF text in the
-[CI run for `e11275a`](https://github.com/eddolo/fountainjs/actions/runs/33958307239).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33958307235)
+[CI run for `ec6ad77`](https://github.com/eddolo/fountainjs/actions/runs/33961130481).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33961130507)
 is also green.
 
 ```ts
