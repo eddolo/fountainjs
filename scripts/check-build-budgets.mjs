@@ -67,10 +67,12 @@ const limits = Object.freeze({
   // guarded single-contenteditable page shells, editable paragraph/list/table
   // continuations, and identity-rebased structural measurement caching remain
   // isolated from the neutral model.
-  // Exact rendered-text intervals for semantic continuation clips add about
-  // 0.9 KiB to the ESM measurement path; the CommonJS entry remains below 41 KiB.
-  'dist/pages-dom.js': 50 * kibibyte,
-  'dist/pages-dom.cjs': 41 * kibibyte,
+  // Exact rendered-text intervals for semantic continuation clips and strict
+  // host-declared custom-block continuation validation/mapping add about
+  // 4.3/2.9 KiB to this optional browser adapter. The default entry is
+  // unchanged.
+  'dist/pages-dom.js': 54 * kibibyte,
+  'dist/pages-dom.cjs': 45 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
   // from both the neutral model and browser measurement lifecycle. Clipped
   // long-footnote continuations and non-duplicating print text masks add about
@@ -123,9 +125,11 @@ const limits = Object.freeze({
   // Context-aware DOM serialization, derived footnote numbering, and standard
   // Markdown/semantic-HTML footnote interchange add about 4.1/3.2 KiB across
   // shared and opt-in chunks without increasing the default root entry.
+  // Host-declared custom continuation validation and source mapping add about
+  // 3.4/2.9 KiB to the optional pages/DOM entry and no default-entry code.
   // The schema is data and is not counted.
-  'all ESM runtime code': 748 * kibibyte,
-  'all CommonJS runtime code': 629 * kibibyte,
+  'all ESM runtime code': 752 * kibibyte,
+  'all CommonJS runtime code': 632 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

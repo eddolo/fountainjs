@@ -365,6 +365,19 @@ a dedicated container beside optional `contentDOM`, so React never reconciles
 the model-owned editable subtree. React-originated mutations are ignored by
 default; callers can override event and mutation policies.
 
+The optional `src/pages/dom.ts` adapter is also where custom pagination meets a
+NodeView. A host may expose ordered descendant print bands through
+`blockContinuation`; Fountain validates their DOM ownership, order, geometry,
+fragment constraints, and footnote mapping before turning them into ordinary
+renderer-neutral page-flow data. `src/pages/dom-preview.ts` can vertically clip
+those bands or ask a host `renderPlacement` hook for a deterministic sanitized
+projection. Neither boundary changes the immutable model or canonical rendered
+block. The live editable paginator recognizes only its proven paragraph,
+list-item, and rowspan-safe table boundaries, so a custom band that spans pages
+causes continuous-mode fallback rather than an unsafe duplicate NodeView. This
+keeps custom continuation policy browser-side and leaves `src/pages/layout.ts`
+platform-neutral.
+
 ## Extension composition
 
 `defineExtension` creates a named, frozen extension description. A public
@@ -763,14 +776,16 @@ The suites are organized by boundary:
   guarded whole-block, split-paragraph, canonical list-item, and rowspan-safe
   table-row editable page shells that retain direct child paths, clean
   transient continuation gaps/spacers, project read-only table headers, retain
-  canonical page templates/footnotes in ordered editable rails, sanitize their
+  host-declared custom-block bands and invalid-contract rejection, canonical
+  page templates/footnotes in ordered editable rails, sanitize their
   field-resolved page copies, fail closed on invalid intent order, and restore
   their host on teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
   ordered-list numbering, normalized physical page names, print-rule generation,
-  and sanitized host-owned placement projection with foreign-document rejection;
+  custom-band projection, and sanitized host-owned placement rendering with
+  foreign-document rejection;
 - the page browser contracts additionally exercise real multi-line range boxes,
   list items, rowspan groups, repeated table-header cost, footnotes, print-media
   presentation, physical A4/Letter sheet geometry, named pages, furniture,
@@ -793,7 +808,8 @@ The suites are organized by boundary:
   plus transitive body-rowspan safety, canonical page-furniture/footnote
   edits and unique sanitized projections, canonical keep-together
   image/audio/details/code/custom-NodeView placement with non-clipping oversized
-  overflow and retained interaction/history, and continuous Chrome/Safari
+  overflow and retained interaction/history, opt-in three-band custom-NodeView
+  print projection without changing the live block, and continuous Chrome/Safari
   behavior on narrow screens. Mobile Chrome/Safari emulation also composes at a
   paragraph gap and preserves the cross-gap selection while narrow fallback
   removes every widget;

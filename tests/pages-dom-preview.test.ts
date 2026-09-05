@@ -209,6 +209,54 @@ describe('read-only DOM page preview', () => {
     expect(source.outerHTML).toBe(before);
   });
 
+  it('projects host-declared custom continuations with a sanitized placement renderer', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Canonical widget' }] }],
+    });
+    const source = window.document.createElement('div');
+    source.innerHTML = `
+      <section data-fountain-path="0" data-top="0" data-height="90">
+        <div data-custom-fragment="one" data-top="0" data-height="30">Live one</div>
+        <div data-custom-fragment="two" data-top="30" data-height="30">Live two</div>
+        <div data-custom-fragment="three" data-top="60" data-height="30">Live three</div>
+      </section>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(Number(this.dataset.top ?? 0), Number(this.dataset.height ?? 0));
+    });
+    const geometry = createPageGeometry({ size: { width: 90, height: 50 }, margins: 5 });
+    const snapshot = layoutDOMPages(source, document, geometry, {
+      blockContinuation: ({ element }) => ({
+        fragments: [...element.querySelectorAll<HTMLElement>('[data-custom-fragment]')],
+      }),
+    });
+    const before = source.outerHTML;
+    const target = window.document.createElement('div');
+    const rendered: string[] = [];
+
+    const result = renderDOMPagePreview(source, target, geometry, snapshot, {
+      renderPlacement: ({ document: owner, placement }) => {
+        const section = owner.createElement('section');
+        const label = `Rendered fragments ${placement.fragmentFrom}:${placement.fragmentTo}`;
+        section.textContent = label;
+        section.setAttribute('contenteditable', 'true');
+        rendered.push(label);
+        return section;
+      },
+    });
+
+    expect(result.pages).toHaveLength(3);
+    expect(rendered).toEqual([
+      'Rendered fragments 0:1',
+      'Rendered fragments 1:2',
+      'Rendered fragments 2:3',
+    ]);
+    expect(result.pages.map((page) => page.querySelector('.fountain-page-preview__content')?.textContent))
+      .toEqual(rendered);
+    expect(target.querySelector('[contenteditable="true"]')).toBeNull();
+    expect(source.outerHTML).toBe(before);
+  });
+
   it('normalizes physical page CSS and names without floating-point artifacts', () => {
     const document = schema().nodeFromJSON({
       type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Physical page' }] }],

@@ -78,7 +78,13 @@
   `renderDOMPagePreview` now accepts a framework-neutral `renderPlacement` hook
   for custom NodeViews and atomic media; returned host templates are cloned,
   namespaced, made read-only, and stripped of live editor state without moving
-  either the template or canonical source DOM. Long footnote definitions now
+  either the template or canonical source DOM. `pages/dom` now also accepts a
+  host-owned `blockContinuation` adapter for custom rendered blocks. It strictly
+  validates ordered descendant bands, fragment minima, continuation overhead,
+  geometry, and source ownership; maps them to neutral immutable flow sources;
+  and lets the preview render exact sanitized band ranges without changing the
+  model or live NodeView. A custom split remains read-only/print-only and causes
+  guarded editable pagination to fall back to continuous mode. Long footnote definitions now
   expose measured line fragments to the neutral layout engine, continue without
   duplicated or dropped content, retain configurable opening/ending minima,
   and render exact sanitized clips in both editable page shells and print

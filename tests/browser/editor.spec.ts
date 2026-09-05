@@ -1566,6 +1566,27 @@ test('keeps code, media, disclosures, and custom atoms canonical across editable
     /^\d+$/u.test(entry.pageNumber ?? '') && entry.marked === 'true'
   ))).toBe(true);
 
+  const customPreview = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.previewCustomContinuation()
+  ));
+  expect(customPreview).toMatchObject({ mounted: true, sourceUnchanged: true });
+  expect(customPreview.pages).toBeGreaterThan(1);
+  expect(customPreview.sources).toMatchObject([
+    { kind: 'custom', fragmentIndex: 0 },
+    { kind: 'custom', fragmentIndex: 1 },
+    { kind: 'custom', fragmentIndex: 2 },
+  ]);
+  expect(customPreview.warnings.some((warning: any) => warning.itemId === 'block:5:browser_counter')).toBe(false);
+  const projectedBands = page.locator('[data-browser-counter-print-band]');
+  await expect(projectedBands).toHaveCount(3);
+  await expect(projectedBands).toHaveText([
+    'Counter print band 1',
+    'Counter print band 2',
+    'Counter print band 3',
+  ]);
+  await expect(editor.locator(':scope > [data-browser-counter]')).toHaveCount(1);
+  await expect(editor.locator('[data-browser-counter-print-projection]')).toHaveCount(0);
+
   await counter.click();
   await expect(counter).toHaveText('Count 1');
   await details.locator('summary').click();

@@ -165,6 +165,71 @@ describe('DOM page measurement adapter', () => {
       .items[0]?.fragments?.[0]?.footnotes).toEqual([{ id: 'long', height: 38 }]);
   });
 
+  it('measures host-declared custom block fragments without changing the model', () => {
+    const document = schema().nodeFromJSON({
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Custom surface' }] }],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <section data-fountain-path="0" data-top="0" data-height="70">
+        <div data-custom-fragment="one" data-top="0" data-height="20">One</div>
+        <div data-custom-fragment="two" data-top="25" data-height="20">Two</div>
+        <div data-custom-fragment="three" data-top="50" data-height="20">Three</div>
+      </section>
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(Number(this.dataset.top ?? 0), Number(this.dataset.height ?? 0));
+    });
+    let context: unknown;
+    const snapshot = layoutDOMPages(
+      root,
+      document,
+      createPageGeometry({ size: { width: 100, height: 50 }, margins: 5 }),
+      {
+        lineFragmentNodeTypes: [],
+        blockContinuation: (value) => {
+          context = value;
+          return {
+            fragments: [...value.element.querySelectorAll<HTMLElement>('[data-custom-fragment]')],
+            minimumStart: 1,
+            minimumEnd: 1,
+            continuationHeight: 3,
+          };
+        },
+      },
+    );
+
+    expect(context).toMatchObject({ modelDocument: document, node: document.child(0), path: [0] });
+    expect(Object.isFrozen(context)).toBe(true);
+    expect(snapshot.measurement.items[0]).toMatchObject({
+      id: 'block:0:paragraph',
+      minimumStart: 1,
+      minimumEnd: 1,
+      continuationHeight: 3,
+      fragments: [
+        { id: 'block:0:paragraph:custom:1', height: 22.5 },
+        { id: 'block:0:paragraph:custom:2', height: 25 },
+        { id: 'block:0:paragraph:custom:3', height: 22.5 },
+      ],
+    });
+    expect(snapshot.measurement.fragmentSources).toMatchObject([
+      { kind: 'custom', fragmentIndex: 0, clipOffset: 0, height: 22.5 },
+      { kind: 'custom', fragmentIndex: 1, clipOffset: 22.5, height: 25 },
+      { kind: 'custom', fragmentIndex: 2, clipOffset: 47.5, height: 22.5 },
+    ]);
+    expect(snapshot.layout.pages).toHaveLength(3);
+    expect(snapshot.content.pages.map((page) => page.placements[0]?.continuedBefore)).toEqual([
+      false, true, true,
+    ]);
+    expect(document.textContent).toBe('Custom surface');
+
+    expect(() => measureDOMPageFlow(root, document, {
+      blockContinuation: ({ element }) => ({
+        fragments: [element.querySelector<HTMLElement>('[data-custom-fragment]')!],
+      }),
+    })).toThrow(/at least two fragment elements/);
+  });
+
   it('reports missing model DOM and unresolved footnotes and rejects invalid line constraints', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

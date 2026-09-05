@@ -1395,6 +1395,30 @@ vertical clip offset without retaining DOM nodes. Its output is ordinary frozen
 input for the neutral layout engine. `layoutDOMPages` also includes the neutral `presentation` plan in
 its frozen snapshot so a host does not have to repeat variant or footnote logic.
 
+`DOMPageMeasurementOptions.blockContinuation` is an opt-in measurement boundary
+for a custom rendered block or NodeView. The frozen adapter context contains the
+complete immutable `modelDocument`, its top-level `node`, canonical read-only
+`element`, model `path`, and generated `itemId`. Return `undefined` to keep the
+normal whole/structural/text policy, or return:
+
+```ts
+{
+  fragments: [...element.querySelectorAll<HTMLElement>('[data-print-band]')],
+  minimumStart: 1,
+  minimumEnd: 1,
+  continuationHeight: 24,
+}
+```
+
+`fragments` must contain at least two unique, ordered, non-overlapping descendant
+elements with finite geometry. A fragment cannot cut through a Fountain-owned
+widget. The optional minima are positive fragment counts no larger than the
+returned list; `continuationHeight` is finite, non-negative visual overhead
+repeated after the first placement. Invalid host output throws immediately.
+Accepted bands become ordinary frozen flow fragments with `kind: 'custom'`,
+exact clip offsets, mapped footnote reservations, and rebased source paths.
+The adapter never adds data to the model or changes the canonical DOM.
+
 `projectDOMPageContent(measurement, layout)` validates and joins every layout
 placement to its exact contiguous `fragmentSources` slice. Each projected
 placement exposes `contentHeight`, renderer-owned `continuationHeight`, and its
@@ -1422,12 +1446,13 @@ uses `unitsPerMillimetre: 96 / 25.4` as shown above.
 `options.renderPlacement(context)` is the host-owned print boundary for a
 custom NodeView, canvas, embed, atomic media surface, or any other placement
 whose live DOM is not a deterministic print representation. The frozen context
-contains the canonical source element, exact projected placement, page number,
-and source document. Return `undefined` for the default clone or an `HTMLElement`
-from that document for a replacement. Fountain clones the replacement,
-namespaces IDs, removes model/selection/drag state, disables controls, and never
-moves or changes either the returned template or live source. A foreign-document
-or non-element result fails closed.
+contains the canonical source element, exact projected placement and its
+`sources` (including the selected custom fragment interval), page number, and
+source document. Return `undefined` for the default clone/vertical clip or an
+`HTMLElement` from that document for a replacement. Fountain clones the
+replacement, namespaces IDs, removes model/selection/drag state, disables
+controls, and never moves or changes either the returned template or live
+source. A foreign-document or non-element result fails closed.
 
 The visual sheets are `aria-hidden` because clipped DOM copies otherwise repeat
 off-page text to assistive technology. By default the preview contains one
@@ -1478,7 +1503,10 @@ page-intent order, and presentation-integrity warnings produce typed `issues`
 and `mode: 'continuous'`. Unsplittable rows, images, media, details, code, and
 custom NodeViews stay canonical and editable: they move intact to the next page
 when they fit, or receive an explicit non-clipping layout-overflow marker when
-taller than its body. `onFallback` can
+taller than its body. A host-declared custom continuation may be rendered
+across read-only or print sheets, but it is not automatically a safe editable
+split. If its placement spans pages, this guarded controller reports
+`fragmented-editable-source` and returns to continuous mode. `onFallback` can
 explain the transition in host UI. At viewports below 720 CSS pixels, or when the
 embedding container cannot fit a complete sheet, the surface removes every
 continuation widget, intent rail, page copy, and visual offset. Widening the same

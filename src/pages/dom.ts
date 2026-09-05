@@ -36,6 +36,7 @@ export type DOMPageFragmentSourceKind =
   | 'text-line'
   | 'list-item'
   | 'table-row-group'
+  | 'custom'
   | 'whole'
   | 'manual-break';
 
@@ -78,7 +79,33 @@ export interface DOMPageMeasurementOptions {
   readonly minimumTextLines?: number;
   /** Custom block types whose rendered line boxes are legal split points. */
   readonly lineFragmentNodeTypes?: readonly string[];
+  /** Optional host-owned legal fragments for custom rendered blocks/NodeViews. */
+  readonly blockContinuation?: DOMPageBlockContinuationAdapter;
 }
+
+export interface DOMPageBlockContinuationContext {
+  /** Complete immutable model document being measured. */
+  readonly modelDocument: Node;
+  /** Top-level immutable model node represented by `element`. */
+  readonly node: Node;
+  /** Canonical rendered top-level element. Treat as read-only. */
+  readonly element: HTMLElement;
+  readonly path: readonly number[];
+  readonly itemId: string;
+}
+
+export interface DOMPageBlockContinuation {
+  /** Ordered, non-overlapping descendants that define every legal split band. */
+  readonly fragments: readonly HTMLElement[];
+  readonly minimumStart?: number;
+  readonly minimumEnd?: number;
+  /** Repeated visual overhead for every continuation after the first. */
+  readonly continuationHeight?: number;
+}
+
+export type DOMPageBlockContinuationAdapter = (
+  context: DOMPageBlockContinuationContext,
+) => DOMPageBlockContinuation | undefined;
 
 export interface DOMPageFlowMeasurement {
   readonly items: readonly PageFlowItem[];
@@ -699,6 +726,122 @@ function structuralFragments(
   });
 }
 
+function continuationMinimum(
+  value: number | undefined,
+  fragmentCount: number,
+  name: string,
+): number | undefined {
+  if (value === undefined) return undefined;
+  if (!Number.isSafeInteger(value) || value < 1 || value > fragmentCount) {
+    throw new TypeError(`${name} must be a positive safe integer no larger than the custom fragment count.`);
+  }
+  return value;
+}
+
+function customFragments(
+  adapter: DOMPageBlockContinuationAdapter | undefined,
+  modelDocument: Node,
+  node: Node,
+  element: HTMLElement,
+  itemId: string,
+  sourcePath: readonly number[],
+  definitions: ReadonlyMap<string, PageFootnoteMeasurement>,
+  count: () => void,
+): {
+  readonly fragments: readonly PageFlowFragment[];
+  readonly sources: readonly DOMPageFragmentSource[];
+  readonly minimumStart?: number;
+  readonly minimumEnd?: number;
+  readonly continuationHeight?: number;
+} | null {
+  if (!adapter) return null;
+  const configured = adapter(Object.freeze({ modelDocument, node, element, path: sourcePath, itemId }));
+  if (configured === undefined) return null;
+  if (!Array.isArray(configured.fragments) || configured.fragments.length < 2) {
+    throw new TypeError(`Custom continuation for ${itemId} requires at least two fragment elements.`);
+  }
+  const parts = [...configured.fragments];
+  const unique = new Set(parts);
+  if (unique.size !== parts.length) throw new TypeError(`Custom continuation for ${itemId} repeats a fragment element.`);
+  parts.forEach((part) => {
+    if (!part || part.nodeType !== 1 || part.ownerDocument !== element.ownerDocument || !element.contains(part)) {
+      throw new TypeError(`Every custom continuation fragment for ${itemId} must be a descendant of its rendered block.`);
+    }
+    if (part.closest('[data-fountain-widget]') && !part.hasAttribute('data-fountain-widget')) {
+      throw new TypeError(`Custom continuation for ${itemId} cannot split through a Fountain widget.`);
+    }
+  });
+  const following = element.ownerDocument.defaultView?.Node.DOCUMENT_POSITION_FOLLOWING ?? 4;
+  parts.slice(0, -1).forEach((part, index) => {
+    const next = parts[index + 1] as HTMLElement;
+    if (part.contains(next) || next.contains(part) || !(part.compareDocumentPosition(next) & following)) {
+      throw new TypeError(`Custom continuation fragments for ${itemId} must be non-overlapping and in DOM order.`);
+    }
+  });
+  const rectangles = parts.map((part) => measuredRect(part, count));
+  if (rectangles.some((rect, index) => (
+    !finiteNonNegative(rect.height)
+    || !Number.isFinite(rect.top)
+    || !Number.isFinite(rect.bottom)
+    || rect.bottom < rect.top
+    || (index > 0 && rect.top < (rectangles[index - 1]?.bottom ?? rect.top) - .01)
+  ))) throw new TypeError(`Custom continuation fragments for ${itemId} require finite, non-overlapping geometry.`);
+  const heights = fragmentHeights(element, rectangles, count);
+  if (heights.some((height) => !finiteNonNegative(height))) {
+    throw new TypeError(`Custom continuation fragments for ${itemId} produced invalid geometry.`);
+  }
+  const references = referencesIn(element, definitions, count);
+  const referencesByFragment = rectangles.map(() => [] as typeof references[number][]);
+  references.forEach((reference) => {
+    const containing = rectangles.findIndex((rect) => (
+      reference.center >= rect.top - 1 && reference.center <= rect.bottom + 1
+    ));
+    const fragmentIndex = containing >= 0 ? containing : rectangles.reduce((closest, rect, index) => {
+      const distance = Math.abs(reference.center - (rect.top + rect.bottom) / 2);
+      const closestRect = rectangles[closest];
+      const closestDistance = closestRect
+        ? Math.abs(reference.center - (closestRect.top + closestRect.bottom) / 2)
+        : Number.POSITIVE_INFINITY;
+      return distance < closestDistance ? index : closest;
+    }, 0);
+    referencesByFragment[fragmentIndex]?.push(reference);
+  });
+  const fragments = Object.freeze(heights.map((height, index) => Object.freeze({
+    id: `${itemId}:custom:${index + 1}`,
+    height,
+    footnotes: uniqueFootnotes(referencesByFragment[index] ?? []),
+  })));
+  let clipOffset = 0;
+  const sources = Object.freeze(fragments.map((fragment, index) => {
+    const partPath = pathOf(parts[index] as HTMLElement);
+    const source = Object.freeze({
+      itemId,
+      fragmentId: fragment.id,
+      fragmentIndex: index,
+      kind: 'custom' as const,
+      sourcePath,
+      partPaths: Object.freeze(partPath.length ? [partPath] : []),
+      clipOffset,
+      height: fragment.height,
+    });
+    clipOffset += fragment.height;
+    return source;
+  }));
+  const minimumStart = continuationMinimum(configured.minimumStart, fragments.length, 'minimumStart');
+  const minimumEnd = continuationMinimum(configured.minimumEnd, fragments.length, 'minimumEnd');
+  const continuationHeight = configured.continuationHeight;
+  if (continuationHeight !== undefined && !finiteNonNegative(continuationHeight)) {
+    throw new TypeError('Custom continuationHeight must be finite and non-negative.');
+  }
+  return Object.freeze({
+    fragments,
+    sources,
+    ...(minimumStart !== undefined ? { minimumStart } : {}),
+    ...(minimumEnd !== undefined ? { minimumEnd } : {}),
+    ...(continuationHeight !== undefined ? { continuationHeight } : {}),
+  });
+}
+
 function wholeItem(
   element: HTMLElement,
   itemId: string,
@@ -881,11 +1024,30 @@ function measureDOMPageFlowInternal(
 
     let item: PageFlowItem;
     let sources: readonly DOMPageFragmentSource[] = Object.freeze([]);
-    const structural = structuralFragments(element, node, itemId, path, definitionMeasurements, count);
-    const text = lineTypes.has(node.type.name)
+    const custom = customFragments(
+      options.blockContinuation,
+      document,
+      node,
+      element,
+      itemId,
+      path,
+      definitionMeasurements,
+      count,
+    );
+    const structural = custom ? null : structuralFragments(element, node, itemId, path, definitionMeasurements, count);
+    const text = !custom && lineTypes.has(node.type.name)
       ? textFragments(element, itemId, path, definitionMeasurements, count)
       : null;
-    if (structural) {
+    if (custom) {
+      item = Object.freeze({
+        id: itemId,
+        fragments: custom.fragments,
+        ...(custom.minimumStart !== undefined ? { minimumStart: custom.minimumStart } : {}),
+        ...(custom.minimumEnd !== undefined ? { minimumEnd: custom.minimumEnd } : {}),
+        ...(custom.continuationHeight !== undefined ? { continuationHeight: custom.continuationHeight } : {}),
+      });
+      sources = custom.sources;
+    } else if (structural) {
       item = Object.freeze({
         id: itemId,
         fragments: structural.fragments,

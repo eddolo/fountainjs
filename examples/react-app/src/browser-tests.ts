@@ -334,7 +334,19 @@ class BrowserCounterNodeView {
     this.dom.style.display = pageHeight > 0 ? 'block' : '';
     this.dom.style.width = pageHeight > 0 ? '100%' : '';
     this.dom.style.minHeight = pageHeight > 0 ? `${pageHeight}px` : '';
-    this.dom.textContent = `Count ${String(node.attrs.count)}`;
+    if (pageHeight <= 0) {
+      this.dom.textContent = `Count ${String(node.attrs.count)}`;
+      return;
+    }
+    const fragmentHeight = pageHeight / 3;
+    this.dom.replaceChildren(...Array.from({ length: 3 }, (_value, index) => {
+      const fragment = document.createElement('span');
+      fragment.dataset.browserCounterFragment = String(index + 1);
+      fragment.style.display = 'block';
+      fragment.style.blockSize = `${fragmentHeight}px`;
+      if (index === 0) fragment.textContent = `Count ${String(node.attrs.count)}`;
+      return fragment;
+    }));
   }
 }
 
@@ -1204,6 +1216,56 @@ Object.assign(globalThis, {
           if (!inserted || !moveBlock(editablePagesFixture.editor, 0, 1)) return false;
           editablePagesFixture.controller.refreshNow('manual');
           return true;
+        },
+        previewCustomContinuation: () => {
+          if (!editablePagesFixture || !editableAtomicPagesFixture) return { mounted: false };
+          const { view, editor: pageEditor } = editablePagesFixture;
+          const priorStyle = view.dom.style.cssText;
+          const before = view.dom.innerHTML;
+          view.dom.style.boxSizing = 'content-box';
+          view.dom.style.width = '340px';
+          try {
+            const geometry = createPageGeometry({
+              size: { width: 420, height: 300 },
+              margins: 40,
+              headerHeight: 20,
+              footerHeight: 20,
+            });
+            const snapshot = layoutDOMPages(view.dom, pageEditor.state.doc, geometry, {
+              blockContinuation: ({ node, element }) => node.type.name === 'browser_counter'
+                ? {
+                    fragments: [...element.querySelectorAll<HTMLElement>('[data-browser-counter-fragment]')],
+                  }
+                : undefined,
+            });
+            document.querySelector('#browser-custom-continuation-preview')?.remove();
+            const target = document.createElement('div');
+            target.id = 'browser-custom-continuation-preview';
+            document.body.appendChild(target);
+            const result = renderDOMPagePreview(view.dom, target, geometry, snapshot, {
+              renderPlacement: ({ document: owner, placement, source }) => {
+                if (source.dataset.fountainNode !== 'browser_counter') return undefined;
+                const projection = owner.createElement('section');
+                projection.dataset.browserCounterPrintProjection = '';
+                placement.sources.forEach((sourceFragment) => {
+                  const band = owner.createElement('div');
+                  band.dataset.browserCounterPrintBand = String(sourceFragment.fragmentIndex + 1);
+                  band.textContent = `Counter print band ${sourceFragment.fragmentIndex + 1}`;
+                  projection.appendChild(band);
+                });
+                return projection;
+              },
+            });
+            return {
+              mounted: true,
+              pages: result.pages.length,
+              sources: snapshot.measurement.fragmentSources.filter((source) => source.kind === 'custom'),
+              warnings: snapshot.layout.warnings,
+              sourceUnchanged: view.dom.innerHTML === before,
+            };
+          } finally {
+            view.dom.style.cssText = priorStyle;
+          }
         },
         summary: () => {
           if (!editablePagesFixture) return { mounted: false };

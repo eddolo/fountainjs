@@ -229,7 +229,7 @@ function clonedPlacement(
   }
   const itemSources = allSources.filter((candidate) => candidate.itemId === placement.itemId);
   const complete = placement.fragmentFrom === 0 && placement.fragmentTo === itemSources.length;
-  if (first.kind !== 'text-line' || complete) return clone;
+  if (!['text-line', 'custom'].includes(first.kind) || complete) return clone;
 
   const clip = sourceRoot.ownerDocument.createElement('div');
   clip.className = 'fountain-page-preview__clip';

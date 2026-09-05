@@ -71,8 +71,9 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   read-only sheets, exact line clips, structural continuations, repeated table
   headers and page furniture, resolved fields, linked page-local footnotes,
   print page breaks, normalized deterministic physical `@page` rules and names,
-  namespaced IDs, exact clipped long-footnote continuations, and an optional sanitized host placement renderer for custom
-  NodeViews/atomic media whose live DOM is not print-safe,
+  namespaced IDs, exact clipped long-footnote continuations, strict opt-in
+  custom-block continuation bands, and an optional sanitized host placement
+  renderer for custom NodeViews/atomic media whose live DOM is not print-safe,
   transient editor-state removal, and one screen-only continuous accessibility
   copy;
 - JSON, semantic HTML, undo, and generic Yjs coverage.
@@ -168,10 +169,16 @@ Images, audio, native disclosures, code blocks, and custom NodeViews use one
 default policy: retain the canonical editable DOM/model node, move it intact to
 the next page when it fits, and mark its sheet as overflowing without clipping
 when it is taller than the body. The representative custom NodeView remains
-interactive, details state persists, and code edits retain undo/redo. The view
-layer's read-only preview additionally exposes a host-owned `renderPlacement` boundary
-for deterministic print substitutes; it clones and sanitizes the returned
-template without moving or changing it or the canonical source. The EditorView
+interactive, details state persists, and code edits retain undo/redo. For
+read-only/print layout, a host may opt one block into `blockContinuation` by
+returning at least two ordered, non-overlapping descendant bands, optional
+start/end fragment minima, and repeated continuation height. Fountain validates
+the ownership and geometry, maps those bands into neutral fragments, and never
+changes the model or canonical DOM. `renderPlacement` receives the exact band
+range and may return a deterministic print substitute; Fountain clones and
+sanitizes it. A custom block split is not assumed safe for live editing, so the
+guarded editable surface falls back to continuous mode when such a placement
+spans pages. The EditorView
 observer recognizes only page-owned attributes and CSS-variable deltas as page
 decoration; an unrelated inline-style mutation still restores the model-owned
 NodeView DOM.
@@ -354,8 +361,10 @@ may expose legal fragments:
 - table row groups that never cut through a rowspan, with repeated column
   headers accounted for as continuation overhead;
 - captions with their media/table when they fit together;
-- atomic media/NodeViews, native disclosures, and code blocks, kept together
-  unless a host supplies a specialized continuation/print renderer;
+- atomic media/NodeViews, native disclosures, and code blocks, kept together by
+  default; read-only/print layout may use strictly validated host-declared
+  descendant bands plus a sanitized placement renderer, while the guarded
+  editable surface fails back to continuous mode for an actual custom split;
 - footnote bodies reserved on the page containing their first reference, with
   measured legal fragments continued across later pages when the body cannot
   fit intact; definitions containing a block outside the configured safe
@@ -382,8 +391,9 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
   (including multi-row headers and transitive body spans; broader imported and
   styling combinations remain part of adversarial print coverage);
 - images, media, details, code, and custom NodeViews with explicit overflow
-  behavior, covered by the canonical editable browser contract and immutable
-  public CI;
+  behavior, plus an opt-in custom continuation/print projection that leaves the
+  canonical model and editable view untouched, covered by browser tests and
+  immutable public CI;
 - selection and IME, undo, block movement, comments, tracked changes, Yjs, and
   resize behavior across page boundaries (whole-block, paragraph, list, and
   rowspan-safe table boundaries now cover selection, IME, history, reversible

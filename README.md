@@ -308,7 +308,16 @@ const result = layoutPages(measuredFlowItems, geometry) // any measurement host
 const presentation = projectPagePresentation(editor.state.doc, result)
 view.dom.style.boxSizing = 'content-box'
 view.dom.style.inlineSize = `${geometry.size.width - geometry.margins.left - geometry.margins.right}px`
-const browserResult = layoutDOMPages(view.dom, editor.state.doc, geometry)
+const browserResult = layoutDOMPages(view.dom, editor.state.doc, geometry, {
+  // Optional: a custom block can declare ordered, legal print bands.
+  blockContinuation: ({ node, element }) => node.type.name === 'dashboard'
+    ? {
+        fragments: [...element.querySelectorAll<HTMLElement>('[data-print-band]')],
+        minimumStart: 1,
+        minimumEnd: 1,
+      }
+    : undefined,
+})
 renderDOMPagePreview(view.dom, previewElement, geometry, browserResult)
 const controller = createDOMPageLayoutController(
   view.dom,
@@ -339,12 +348,18 @@ continuation overhead, page-local footnote reservation, canonical editable
 templates, dynamic page fields, overflow diagnostics, undo, JSON, semantic
 HTML, and Yjs. Its immutable presentation plan selects first/odd/even/default
 furniture, resolves page fields, and assigns canonical footnotes to measured
-pages without cloning the model. The separate `pages/dom` adapter measures real line boxes, list
-items, rowspan-safe table groups, footnotes, and manual breaks without moving
-editable DOM. Every measured fragment includes an immutable source map with its
-model path, structural child paths, clip offset, and height for non-destructive
-continuation rendering. `projectDOMPageContent()` joins the neutral layout back
-to exact validated source slices and separates repeated continuation overhead.
+pages without cloning the model. The separate `pages/dom` adapter measures real
+line boxes, list items, rowspan-safe table groups, footnotes, manual breaks, and
+opt-in host-declared custom-block bands without moving editable DOM. A
+`blockContinuation` adapter may return at least two unique, ordered,
+non-overlapping descendants of one rendered block plus optional start/end
+minima and repeated continuation height. Fountain validates that contract and
+rejects foreign, nested, overlapping, or invalid geometry rather than guessing
+where a NodeView can split. Every measured fragment includes an immutable source
+map with its model path, structural child paths, clip offset, and height for
+non-destructive continuation rendering. `projectDOMPageContent()` joins the
+neutral layout back to exact validated source slices and separates repeated
+continuation overhead.
 Its optional controller coalesces DOM mutations, resize, font,
 window, and print invalidations into timed snapshots and has explicit teardown.
 Mutation-only cycles reuse geometry only when both the immutable model node and
@@ -405,10 +420,14 @@ from print. It installs normalized print-only physical `@page` rules and stable
 names matching the geometry;
 pass `{ includePrintStyles: false }` only when the host owns those global rules.
 For a custom NodeView, canvas, embed, or other atomic surface whose live DOM is
-not a useful print representation, pass `renderPlacement(context)`. Return a
-detached element template for the placements your host owns and `undefined` for
-Fountain's default clone. Fountain clones and sanitizes the returned template;
-it never moves the template or canonical editor source.
+not a useful print representation, pass `renderPlacement(context)`. It receives
+the exact custom source-band range when `blockContinuation` split the placement.
+Return a detached element template for the placements your host owns and
+`undefined` for Fountain's default sanitized clone/clip. Fountain never moves
+the template or canonical editor source. Custom continuation is currently a
+read-only/print contract: if one custom block actually spans pages, the guarded
+live editable surface returns to continuous mode instead of creating a second
+editable widget or unsafe DOM split.
 Browser geometry must use CSS-pixel units (for example,
 `unitsPerMillimetre: 96 / 25.4`) for physical A4/Letter output. Visual clipped
 copies are hidden from assistive technology while one continuous read-only copy
