@@ -366,15 +366,22 @@ stay editable, while transient non-model spacer rows align each continuation
 and page shells show accessibility-hidden, read-only copies of the canonical
 column header. Header edits update every copy on reflow. Selection, IME,
 undo/redo, tracked-change decisions, and Yjs convergence are covered across
-both list and table page boundaries. Narrow viewports or
+both list and table page boundaries. Canonical header templates remain editable
+once in a rail before the page stack; canonical footer templates and footnote
+definitions remain editable once after it. Every sheet receives a sanitized,
+read-only, accessibility-hidden copy with resolved page fields and only the
+footnotes assigned to that page. Editing a canonical source rebuilds every copy
+without creating another model path, editable control, or persisted node.
+Narrow viewports or
 embedding containers that cannot fit a complete sheet return to a normal
 continuous editor, and a host resize restores paged mode without remounting the
 editor. Layout never persists automatic page numbers or continuation widgets
-into the shared document. Unsupported structural fragments, an individual
-table row too tall for a page, or canonical page furniture/footnotes that cannot
-remain uniquely editable produce typed fallback/overflow results rather than a
-destructive split. That guarded boundary is intentional; it is not yet complete
-Word-style editable pagination.
+into the shared document. Unsupported structural fragments or page intent in
+an invalid canonical order produce a typed continuous-mode fallback. An
+individual table row taller than the body stays one canonical editable row and
+is marked as explicit overflow rather than clipped or destructively split.
+That guarded boundary is intentional; it is not yet complete Word-style
+editable pagination.
 The separate `pages/preview` entry renders non-destructive read-only page sheets,
 repeated templates and fields, structural continuations, page-local footnotes,
 and print page breaks. Editing-only selection markers and field-token styling
@@ -388,10 +395,11 @@ preserves document semantics. Real Chromium PDFs verify A4/Letter geometry and
 page-specific header/field, body, list, table, footnote, and manual-break text
 without a duplicate hidden document. Whole blocks, measured paragraph lines,
 canonical list items, and rowspan-safe table row groups are editable across
-pages. Editable/repeated page furniture, page-local footnote editing, oversized
-row handling, and exhaustive PDF fidelity remain active `DOC-14` work with
-explicit browser and accessibility gates in [the pagination
-contract](docs/PAGINATION.md).
+pages. Editable canonical page furniture and page-local footnotes, oversized-row
+behavior, split-container comments, and top-level block movement now have
+dedicated browser contracts. Broader adversarial/cross-engine PDF fidelity and
+unsupported custom structural content remain active `DOC-14` work with explicit
+browser and accessibility gates in [the pagination contract](docs/PAGINATION.md).
 
 ## Optional clipboard history
 

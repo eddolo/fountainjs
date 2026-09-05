@@ -857,6 +857,91 @@ test('reports an oversized table row without clipping or splitting its editable 
   await expect(rows).toHaveCount(2);
 });
 
+test('keeps canonical page furniture and footnotes editable while projecting every page copy', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-page-intent');
+  const editor = page.getByRole('textbox', { name: 'Page furniture and footnote editor' });
+  const region = page.getByLabel('Editable pages browser contract');
+  const host = region.locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const pageCount = await host.locator('.fountain-editable-pages__sheet').count();
+  expect(pageCount).toBeGreaterThan(1);
+
+  const header = editor.locator(':scope > [data-fountain-node="page_header"]');
+  const footer = editor.locator(':scope > [data-fountain-node="page_footer"]');
+  const definition = editor.locator(':scope > [data-fountain-node="footnote_definition"]');
+  await expect(header).toHaveAttribute('data-fountain-editable-page-intent', 'header');
+  await expect(footer).toHaveAttribute('data-fountain-editable-page-intent', 'footer');
+  await expect(definition).toHaveAttribute('data-fountain-editable-page-intent', 'footnote');
+  await expect(header).toHaveCount(1);
+  await expect(footer).toHaveCount(1);
+  await expect(definition).toHaveCount(1);
+
+  const projectedHeaders = host.locator('[data-fountain-editable-page-template^="header:default"]');
+  const projectedFooters = host.locator('[data-fountain-editable-page-template^="footer:default"]');
+  const projectedFootnotes = host.locator('[data-fountain-editable-page-footnote="intent-note"]');
+  await expect(projectedHeaders).toHaveCount(pageCount);
+  await expect(projectedFooters).toHaveCount(pageCount);
+  await expect(projectedFootnotes).toHaveCount(1);
+  expect(await projectedHeaders.allTextContents()).toEqual(
+    Array.from({ length: pageCount }, (_, index) => `Canonical report · ${index + 1}`),
+  );
+  expect(await projectedFooters.allTextContents()).toEqual(Array(pageCount).fill(`Total pages · ${pageCount}`));
+  expect(await host.locator(
+    '.fountain-editable-pages__shells [data-fountain-path], '
+    + '.fountain-editable-pages__shells [data-fountain-text-path], '
+    + '.fountain-editable-pages__shells [id], '
+    + '.fountain-editable-pages__shells [contenteditable="true"]',
+  ).count()).toBe(0);
+
+  const alignment = await page.evaluate(() => {
+    const header = document.querySelector<HTMLElement>('[data-fountain-editable-page-intent="header"]');
+    const footer = document.querySelector<HTMLElement>('[data-fountain-editable-page-intent="footer"]');
+    const sheets = [...document.querySelectorAll<HTMLElement>('.fountain-editable-pages__sheet')];
+    return {
+      headerGap: (sheets[0]?.getBoundingClientRect().top ?? 0) - (header?.getBoundingClientRect().bottom ?? 0),
+      footerGap: (footer?.getBoundingClientRect().top ?? 0) - (sheets.at(-1)?.getBoundingClientRect().bottom ?? 0),
+    };
+  });
+  expect(alignment.headerGap).toBeGreaterThanOrEqual(20);
+  expect(alignment.footerGap).toBeGreaterThanOrEqual(20);
+
+  await selectBlockEnd(header);
+  await page.keyboard.type(' LIVE');
+  await expect.poll(() => projectedHeaders.allTextContents()).toEqual(
+    Array.from({ length: pageCount }, (_, index) => `Canonical report ·  LIVE${index + 1}`),
+  );
+  await selectBlockEnd(footer);
+  await page.keyboard.type(' VERIFIED');
+  await expect.poll(() => projectedFooters.allTextContents()).toEqual(
+    Array(pageCount).fill(`Total pages ·  VERIFIED${pageCount}`),
+  );
+  await selectBlockEnd(definition);
+  await page.keyboard.type(' UPDATED');
+  await expect.poll(() => projectedFootnotes.allTextContents()).toEqual([
+    'Canonical editable footnote evidence. UPDATED',
+  ]);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.editable.summary();
+    return {
+      mode: summary.mode,
+      headerCount: summary.document.content.filter((node: any) => node.type === 'page_header').length,
+      footerCount: summary.document.content.filter((node: any) => node.type === 'page_footer').length,
+      definitionCount: summary.document.content.filter((node: any) => node.type === 'footnote_definition').length,
+      automaticBreaks: summary.document.content.filter((node: any) => node.type === 'page_break').length,
+    };
+  })).toEqual({ mode: 'paged', headerCount: 1, footerCount: 1, definitionCount: 1, automaticBreaks: 0 });
+
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '360px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');
+  await expect(host.locator('[data-fountain-editable-page-template], [data-fountain-editable-page-footnote]')).toHaveCount(0);
+  await expect(editor.locator('[data-fountain-editable-page-intent]')).toHaveCount(0);
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '900px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(host.locator('[data-fountain-editable-page-template^="header:default"]')).toHaveCount(pageCount);
+  await expect(host.locator('[data-fountain-editable-page-template^="footer:default"]')).toHaveCount(pageCount);
+  await expect(host.locator('[data-fountain-editable-page-footnote="intent-note"]')).toHaveCount(1);
+});
+
 test('keeps tracked review and Yjs live between list items split across pages', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=split-list-page-integrations');
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });

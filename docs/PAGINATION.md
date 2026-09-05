@@ -3,10 +3,11 @@
 Status: active architecture and implementation work for `DOC-14`. The portable
 layout/document-intent foundation, read-only paged preview/print projection, and
 a guarded editable page surface for whole blocks, measured paragraph lines,
-canonical list items, and rowspan-safe table row groups are implemented.
-Editable repeated page furniture/footnotes, oversized table-row handling, and
-exhaustive PDF fidelity are not. This page is not a claim that the complete
-pagination outcome is delivered.
+canonical list items, rowspan-safe table row groups, canonical page-intent
+rails, and page-local projections are implemented. Oversized table rows have an
+explicit non-clipping overflow policy. Exhaustive PDF fidelity and specialized
+policies for every custom structural surface are not. This page is not a claim
+that the complete pagination outcome is delivered.
 
 ## Implemented platform-neutral foundation
 
@@ -45,6 +46,8 @@ The isolated `fountainjs-editor/pages` entry currently provides:
   placement, selection-safe non-model paragraph continuation gaps at measured
   line boundaries, canonical list-item continuation spacing, reversible
   rowspan-safe table-row spacers with read-only repeated column headers,
+  uniquely editable canonical header/footer/footnote rails with sanitized,
+  field-resolved per-page projections, explicit oversized-row overflow,
   viewport/container-responsive continuous fallback, typed
   unsupported-fragment issues, and deterministic restoration on remeasurement
   and teardown;
@@ -64,12 +67,13 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 364-test package suite and
-whole-block/paragraph/list browser matrix in the
-[CI run for `78c41b2`](https://github.com/eddolo/fountainjs/actions/runs/33947931490).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33947931479)
-is also green. Table-continuation evidence is implemented locally but must pass
-the same immutable CI/deployment gates before this paragraph is advanced.
+The latest immutable public certification is the 365-test package suite plus
+the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
+oversized-row browser matrix in the
+[CI run for `09dbe70`](https://github.com/eddolo/fountainjs/actions/runs/33950230953).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33950230949)
+is also green. The canonical page-intent rail and projection evidence is the
+next immutable gate and is not counted in that earlier run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -103,13 +107,19 @@ history, review, and collaboration intact. Tables use reversible non-model
 spacer rows at measured rowspan-safe boundaries while the one canonical table
 and every real row remain editable. Accessibility-hidden page shells show
 read-only clones of leading all-header rows, and those copies refresh after an
-edit to the canonical header. A separate multi-page fixture has
+edit to the canonical header. Oversized rows stay one editable row, expose an
+overflow marker on the affected sheet, and retain edit/undo/redo behavior.
+Canonical templates and definitions stay editable once in ordered rails outside
+the sheet stack; sanitized, accessibility-hidden copies resolve page fields and
+page-local footnotes inside the sheets. A dedicated multi-page fixture verifies
+live header/footer/definition edits, unique model paths and IDs, spacing, and
+reversible narrow-container fallback. A separate multi-page fixture has
 no manual breaks and proves tracked insertions/decisions, preserved remote
 authorship, and bidirectional Yjs convergence on automatically placed blocks.
 The same contracts cover paragraph, list-item, and table-row-group boundaries.
-Canonical page-furniture and footnote editing inside the paged surface,
-oversized table rows, and exhaustive visual/content fidelity remain active
-work.
+Mapped comment anchors and top-level block movement are covered across split
+lists and tables. Exhaustive visual/content fidelity and explicit policies for
+all custom structural nodes remain active work.
 
 ## Current architecture audit
 
@@ -224,11 +234,17 @@ item is cloned or synthesized. Tables insert accessibility-hidden, non-model
 spacer rows before the real row at each rowspan-safe continuation boundary.
 The page shell may project read-only copies of the table's leading all-header
 rows, but the original is the only editable header and every copy is rebuilt on
-reflow. Unsupported structural sources or a canonical header/footer/footnote
-definition that cannot yet remain uniquely editable remove every offset/widget
-and return typed issues in continuous mode. An individual table row taller than
-a body is reported as overflow rather than split. These fail-closed rules avoid
-cloning editable nodes with duplicate model paths.
+reflow. Canonical headers must precede body content; canonical footers and
+footnote definitions must follow it. They remain uniquely editable in rails
+before and after the page stack. Sanitized read-only copies in each sheet carry
+no model paths, duplicate IDs, editable controls, or accessibility exposure;
+resolved page fields and page-local definitions are refreshed from canonical
+state on every layout. Unsupported structural sources, invalid intent order, or
+presentation-integrity warnings remove every offset/widget/projection and
+return typed issues in continuous mode. An individual table row taller than a
+body remains one editable row and is marked as overflow rather than split or
+clipped. These fail-closed rules avoid cloned editable nodes and duplicate model
+paths.
 The controller observes the embedding host in addition to the editor root. A
 viewport below 720 CSS pixels or a host content box narrower than the physical
 sheet uses continuous mode; widening the same mounted host remeasures and
@@ -247,8 +263,9 @@ The optional pages extension owns only portable intent:
   by the renderer rather than persisted.
 
 Automatic page membership is deliberately absent. Header/footer editing keeps
-one canonical editable model representation; repeated preview furniture is
-view-only and excluded from selection, clipboard, accessibility, and JSON.
+one canonical editable model representation. Repeated preview and editable-page
+shell furniture is view-only and excluded from selection, clipboard,
+accessibility, and JSON.
 
 ## Fragmentation policy
 
@@ -283,8 +300,8 @@ fallback or a host-provided scale/print replacement, but cannot discard content.
 - selection and IME, undo, block movement, comments, tracked changes, Yjs, and
   resize behavior across page boundaries (whole-block, paragraph, list, and
   rowspan-safe table boundaries now cover selection, IME, history, reversible
-  container resize, tracked decisions, and bidirectional Yjs; block movement and
-  comments still need dedicated split-container gates);
+  container resize, tracked decisions, and bidirectional Yjs; split lists and
+  tables also cover mapped comments and top-level movement);
 - continuous narrow-screen and assistive fallback;
 - print/PDF fixtures in Chromium, Firefox, and WebKit where the engine exposes
   the required primitive;

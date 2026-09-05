@@ -67,8 +67,8 @@ const limits = Object.freeze({
   // guarded single-contenteditable page shells, editable paragraph/list/table
   // continuations, and identity-rebased structural measurement caching remain
   // isolated from the neutral model.
-  'dist/pages-dom.js': 44 * kibibyte,
-  'dist/pages-dom.cjs': 37 * kibibyte,
+  'dist/pages-dom.js': 48 * kibibyte,
+  'dist/pages-dom.cjs': 41 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
   // from both the neutral model and browser measurement lifecycle.
   'dist/pages-preview.js': 9 * kibibyte,
@@ -109,9 +109,11 @@ const limits = Object.freeze({
   // isolated from the default editor. Canonical list continuation adds about
   // 2.9/2.4 KiB to that same optional entry. Rowspan-safe editable table
   // continuation and read-only repeated header projection add about 4.6/4 KiB
-  // plus 1.9 KiB of CSS. The schema is data and is not counted.
-  'all ESM runtime code': 732 * kibibyte,
-  'all CommonJS runtime code': 616 * kibibyte,
+  // plus 1.9 KiB of CSS. Canonical editable page-intent rails and sanitized
+  // furniture/footnote projection add about 4.2/3.7 KiB plus 1.2 KiB of CSS.
+  // The schema is data and is not counted.
+  'all ESM runtime code': 736 * kibibyte,
+  'all CommonJS runtime code': 620 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

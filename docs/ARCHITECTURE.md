@@ -752,8 +752,10 @@ The suites are organized by boundary:
   resize/font/manual invalidation, and deterministic controller teardown, plus
   guarded whole-block, split-paragraph, canonical list-item, and rowspan-safe
   table-row editable page shells that retain direct child paths, clean
-  transient continuation gaps/spacers, project read-only table headers, and
-  restore their host on teardown;
+  transient continuation gaps/spacers, project read-only table headers, retain
+  canonical page templates/footnotes in ordered editable rails, sanitize their
+  field-resolved page copies, fail closed on invalid intent order, and restore
+  their host on teardown;
 - `tests/pages-dom-preview.test.ts`: source-DOM immutability, exact-width
   enforcement, repeated templates/fields, linked footnotes, visual/accessibility
   separation, transient editor-state removal, structural slices, continued
@@ -771,7 +773,10 @@ The suites are organized by boundary:
   exact gap-to-page-body alignment, reversible container-responsive
   page/continuous modes, tracked decisions plus bidirectional Yjs convergence
   across automatic whole-block, paragraph-line, list-item, and table-row-group
-  boundaries, and continuous Chrome/Safari behavior on narrow screens;
+  boundaries, mapped comments and top-level movement across split lists/tables,
+  explicit editable oversized-row overflow, canonical page-furniture/footnote
+  edits and unique sanitized projections, and continuous Chrome/Safari behavior
+  on narrow screens;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
@@ -785,9 +790,9 @@ its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
 the text-style facade, 8/7 KiB for document migrations, 23/19 KiB for the
-isolated page foundation, 44/37 KiB for browser measurement/reflow and the
+isolated page foundation, 48/41 KiB for browser measurement/reflow and the
 guarded editable page surface, 9/8 KiB for read-only page preview/print
-projection, 62 KiB for CSS, and 732/616 KiB for all
+projection, 62 KiB for CSS, and 736/620 KiB for all
 emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -815,7 +820,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
-| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block/paragraph/list/table editable page shells, and read-only page projection entries |
+| `src/pages/` | DOM-free physical layout/intent/presentation plus isolated DOM measurement, guarded whole-block/paragraph/list/table editable page shells, canonical editable page-intent rails with sanitized per-page projections, and read-only print projection entries |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |

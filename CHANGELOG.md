@@ -49,11 +49,14 @@
   rowspan-safe table-row continuation with reversible non-model spacer rows,
   read-only repeated column-header projections, live header reflow, selection,
   IME, history, tracked decisions, and Yjs convergence without cloning the
-  editable table. It still fails closed before cloning unsupported split
-  content; plus an honest staged pagination contract. Editable repeated page
-  furniture/footnotes, oversized-row handling, and broader
-  adversarial/cross-engine print fidelity remain active work rather than claimed
-  capabilities.
+  editable table; explicit oversized-row overflow without clipping or model
+  splitting; and mapped shared-comment anchors plus top-level movement across
+  continued lists and tables. Canonical page templates and footnote definitions
+  now remain uniquely editable in ordered rails while sanitized,
+  accessibility-hidden page-shell copies resolve fields and update after every
+  edit. It still fails closed before cloning unsupported split content; plus an
+  honest staged pagination contract. Broader adversarial/cross-engine print
+  fidelity remains active work rather than a claimed capability.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,

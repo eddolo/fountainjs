@@ -456,6 +456,97 @@ describe('DOM page measurement adapter', () => {
     host.remove();
   });
 
+  it('keeps canonical page intent editable in rails and projects read-only furniture', () => {
+    const pageSchema = schema();
+    const document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'page_header', attrs: { variant: 'default' }, content: [{
+          type: 'paragraph', content: [
+            { type: 'text', text: 'Header ' },
+            { type: 'page_field', attrs: { kind: 'page-number' } },
+          ],
+        }] },
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'Claim' },
+          { type: 'footnote_reference', attrs: { id: 'note' } },
+        ] },
+        { type: 'page_break' },
+        { type: 'paragraph', content: [{ type: 'text', text: 'After' }] },
+        { type: 'page_footer', attrs: { variant: 'default' }, content: [{
+          type: 'paragraph', content: [{ type: 'text', text: 'Footer' }],
+        }] },
+        { type: 'footnote_definition', attrs: { id: 'note' }, content: [{
+          type: 'paragraph', content: [{ type: 'text', text: 'Evidence' }],
+        }] },
+      ],
+    });
+    const host = window.document.createElement('div');
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <header data-fountain-node="page_header" data-fountain-path="0" data-fountain-page-header="default"><p data-fountain-path="0.0">Header <span data-fountain-path="0.0.1" data-fountain-page-field="page-number">{page}</span></p></header>
+      <p data-fountain-node="paragraph" data-fountain-path="1">Claim<sup data-fountain-path="1.1" data-fountain-footnote-reference="note">note</sup></p>
+      <hr data-fountain-node="page_break" data-fountain-path="2">
+      <p data-fountain-node="paragraph" data-fountain-path="3">After</p>
+      <footer data-fountain-node="page_footer" data-fountain-path="4" data-fountain-page-footer="default"><p data-fountain-path="4.0">Footer</p></footer>
+      <section data-fountain-node="footnote_definition" data-fountain-path="5" data-fountain-footnote-definition="note"><p data-fountain-path="5.0">Evidence</p></section>
+    `;
+    host.appendChild(root);
+    window.document.body.appendChild(host);
+    const children = [...root.children];
+    const geometryByPath = new Map<string, readonly [number, number]>([
+      ['0', [0, 10]], ['1', [15, 30]], ['2', [45, 0]],
+      ['3', [50, 20]], ['4', [75, 10]], ['5', [90, 14]],
+    ] as const);
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      if (this === host) return { ...rectangle(0, 120), width: 200, right: 200 } as DOMRect;
+      if (this === root) return { ...rectangle(0, 104), width: 100, right: 100 } as DOMRect;
+      const [top, height] = geometryByPath.get(this.dataset.fountainPath ?? '') ?? [0, 0];
+      return rectangle(top, height);
+    });
+    const geometry = createPageGeometry({
+      size: { width: 120, height: 100 }, margins: 10, headerHeight: 10, footerHeight: 10,
+    });
+    const snapshot = layoutDOMPages(root, document, geometry, { lineFragmentNodeTypes: [] });
+    expect(snapshot.layout.pages).toHaveLength(2);
+    const surface = new DOMEditablePageSurface(root, geometry, { gap: 20 });
+
+    expect(surface.update(geometry, snapshot)).toMatchObject({ mode: 'paged', issues: [] });
+    expect([...root.children]).toEqual(children);
+    expect((children[0] as HTMLElement).dataset.fountainEditablePageIntent).toBe('header');
+    expect((children[4] as HTMLElement).dataset.fountainEditablePageIntent).toBe('footer');
+    expect((children[5] as HTMLElement).dataset.fountainEditablePageIntent).toBe('footnote');
+    expect((children[4] as HTMLElement).style.getPropertyValue('--fountain-editable-page-intent-shift')).toBe('195px');
+    expect(surface.shells.querySelectorAll('[data-fountain-editable-page-template^="header:default"]')).toHaveLength(2);
+    expect(surface.shells.querySelectorAll('[data-fountain-editable-page-template^="footer:default"]')).toHaveLength(2);
+    expect(surface.shells.querySelectorAll('[data-fountain-editable-page-footnote="note"]')).toHaveLength(1);
+    expect([...surface.shells.querySelectorAll<HTMLElement>('[data-fountain-editable-page-template^="header"]')]
+      .map((element) => element.textContent?.trim())).toEqual(['Header 1', 'Header 2']);
+    expect(surface.shells.querySelectorAll('[data-fountain-path], [data-fountain-text-path], [id]')).toHaveLength(0);
+
+    surface.prepare(geometry, 2);
+    expect(surface.shells.childElementCount).toBe(0);
+    expect(root.querySelectorAll('[data-fountain-editable-page-intent]')).toHaveLength(0);
+    expect((children[4] as HTMLElement).style.getPropertyValue('--fountain-editable-page-intent-shift')).toBe('');
+
+    root.insertBefore(children[0]!, children[4]!);
+    expect(surface.update(geometry, snapshot)).toMatchObject({
+      mode: 'continuous',
+      issues: [{
+        code: 'unplaced-page-intent',
+        path: [0],
+        detail: 'Canonical page headers must precede document body content in editable page mode.',
+      }],
+    });
+    expect(surface.shells.childElementCount).toBe(0);
+    expect(root.querySelectorAll('[data-fountain-editable-page-intent]')).toHaveLength(0);
+    root.insertBefore(children[0]!, root.firstChild);
+
+    surface.destroy();
+    expect([...root.children]).toEqual(children);
+    host.remove();
+  });
+
   it('decorates canonical list items at page boundaries and restores their original styles', () => {
     const pageSchema = schema();
     const document = pageSchema.nodeFromJSON({

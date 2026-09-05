@@ -1435,14 +1435,20 @@ and tables split at rowspan-safe row groups. A split table remains one editable
 table with the same row nodes; page shells render read-only, accessibility-hidden
 copies of its canonical leading header rows. DOM order, model-node identity,
 model paths, selection/input handlers, and persisted JSON remain unchanged.
-Missing sources, unsupported structural fragments, and canonical
-header/footer/footnote-definition content that cannot yet stay uniquely
-editable produce typed `issues` and `mode: 'continuous'`; an oversized
-unsplittable row remains an explicit layout overflow. `onFallback` can explain
-the transition in host UI. At viewports below 720 CSS pixels, or when the
+Canonical `page_header` nodes must precede ordinary body content; canonical
+`page_footer` and `footnote_definition` nodes must follow it. The surface keeps
+those nodes uniquely editable in rails before and after the sheet stack, then
+projects sanitized, read-only, accessibility-hidden header/footer and
+page-assigned footnote copies into each sheet. Page fields are resolved in the
+copies, while edits continue to target the one canonical model node and trigger
+a fresh projection. Missing sources, unsupported structural fragments, invalid
+page-intent order, and presentation-integrity warnings produce typed `issues`
+and `mode: 'continuous'`; an oversized unsplittable row stays one canonical
+editable row and receives an explicit layout-overflow marker. `onFallback` can
+explain the transition in host UI. At viewports below 720 CSS pixels, or when the
 embedding container cannot fit a complete sheet, the surface removes every
-continuation widget and visual offset. Widening the same mounted host restores
-paged mode without replacing selection/history state. Destroy the page
+continuation widget, intent rail, page copy, and visual offset. Widening the same
+mounted host restores paged mode without replacing selection/history state. Destroy the page
 controller before the owning `EditorView` so it can restore host classes,
 variables, and source annotations deterministically.
 
@@ -1451,9 +1457,11 @@ real Chromium gate verifies A4/Letter PDF page
 counts, MediaBox dimensions, resolved headers/page fields, body/list/table text,
 page-local footnotes, manual-break placement, and absence of the hidden
 accessibility duplicate. Editable split paragraphs, canonical list items, and
-rowspan-safe table row groups are covered. Uniquely editable repeated page
-furniture/footnotes, oversized-row handling, and broader
-adversarial/cross-engine print fidelity remain active work.
+rowspan-safe table row groups are covered. Canonical page-furniture/footnote
+rails and their page-local projections, oversized-row behavior,
+split-container comments, and top-level movement are also covered in dedicated
+browser fixtures. Broader adversarial/cross-engine print fidelity and custom
+structural overflow policies remain active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
 ## React

@@ -120,6 +120,41 @@ const oversizedTableContent = {
     ],
   }],
 };
+const editablePageIntentContent = {
+  type: 'doc',
+  content: [
+    {
+      type: 'page_header', attrs: { variant: 'default' }, content: [{
+        type: 'paragraph', content: [
+          { type: 'text', text: 'Canonical report · ' },
+          { type: 'page_field', attrs: { kind: 'page-number' } },
+        ],
+      }],
+    },
+    ...Array.from({ length: 12 }, (_, index) => ({
+      type: 'paragraph',
+      content: index === 0
+        ? [
+            { type: 'text', text: 'Body claim with a canonical footnote' },
+            { type: 'footnote_reference', attrs: { id: 'intent-note' } },
+          ]
+        : [{ type: 'text', text: `Editable page body paragraph ${index + 1}.` }],
+    })),
+    {
+      type: 'page_footer', attrs: { variant: 'default' }, content: [{
+        type: 'paragraph', content: [
+          { type: 'text', text: 'Total pages · ' },
+          { type: 'page_field', attrs: { kind: 'page-count' } },
+        ],
+      }],
+    },
+    {
+      type: 'footnote_definition', attrs: { id: 'intent-note' }, content: [{
+        type: 'paragraph', content: [{ type: 'text', text: 'Canonical editable footnote evidence.' }],
+      }],
+    },
+  ],
+};
 const splitPageIntegrationsFixture = browserFixture === 'split-page-integrations';
 const splitListPageIntegrationsFixture = browserFixture === 'split-list-page-integrations';
 const splitTablePageIntegrationsFixture = browserFixture === 'split-table-page-integrations';
@@ -412,11 +447,13 @@ const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
 const oversizedEditableTableFixture = browserFixture === 'editable-oversized-table-pages';
+const editablePageIntentFixture = browserFixture === 'editable-page-intent';
 const editablePagesFixture = (browserFixture === 'editable-pages'
   || splitEditablePagesFixture
   || splitEditableListFixture
   || splitEditableTableFixture
-  || oversizedEditableTableFixture)
+  || oversizedEditableTableFixture
+  || editablePageIntentFixture)
   ? (() => {
       const pageEditor = createEditor({
         schema: pagesKit.schema,
@@ -432,15 +469,16 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
           }],
         } : splitEditableListFixture ? splitListContent
           : splitEditableTableFixture ? splitTableContent
-            : oversizedEditableTableFixture ? oversizedTableContent : {
-          type: 'doc',
-          content: [
-            { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
-            { type: 'page_break' },
-            { type: 'paragraph', content: [{ type: 'text', text: 'Second editable page' }] },
-            { type: 'paragraph', content: [{ type: 'text', text: 'Selection and composition remain native.' }] },
-          ],
-        },
+            : oversizedEditableTableFixture ? oversizedTableContent
+              : editablePageIntentFixture ? editablePageIntentContent : {
+                type: 'doc',
+                content: [
+                  { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
+                  { type: 'page_break' },
+                  { type: 'paragraph', content: [{ type: 'text', text: 'Second editable page' }] },
+                  { type: 'paragraph', content: [{ type: 'text', text: 'Selection and composition remain native.' }] },
+                ],
+              },
       });
       const mount = document.querySelector<HTMLElement>('#editable-pages-editor');
       if (!mount) throw new Error('Editable pages fixture failed to mount.');
@@ -453,6 +491,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
               ? 'Split table page editor'
               : oversizedEditableTableFixture
                 ? 'Oversized table page editor'
+                : editablePageIntentFixture
+                  ? 'Page furniture and footnote editor'
             : 'Editable page canvas editor',
       });
       const geometry = createPageGeometry({
@@ -468,6 +508,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
         {
           measurement: splitEditablePagesFixture || splitEditableListFixture
             || splitEditableTableFixture || oversizedEditableTableFixture
+            || editablePageIntentFixture
             ? {}
             : { lineFragmentNodeTypes: [] },
         },

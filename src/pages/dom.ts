@@ -1,6 +1,11 @@
 import type { Node } from '../core';
 import { layoutPages, type PageFlowFragment, type PageFlowItem, type PageGeometry, type PageLayoutOptions, type PageLayoutResult } from './layout';
-import { projectPagePresentation, type PagePresentation } from './presentation';
+import {
+  projectPagePresentation,
+  type PagePresentation,
+  type ProjectedPageFootnote,
+  type ProjectedPageTemplate,
+} from './presentation';
 import type { PageTemplateKind, PageTemplateVariant } from './templates';
 
 interface RectLike {
@@ -1143,6 +1148,20 @@ interface EditableTableHeaderPlan {
   readonly height: number;
 }
 
+interface EditableIntentDecoration {
+  readonly attribute: string | null;
+  readonly shift: string;
+  readonly shiftPriority: string;
+}
+
+interface EditablePageIntentLayout {
+  readonly before: readonly HTMLElement[];
+  readonly after: readonly HTMLElement[];
+  readonly pageOffset: number;
+  readonly afterShift: number;
+  readonly totalHeight: number;
+}
+
 const EDITABLE_PAGE_VARIABLES = Object.freeze([
   '--fountain-editable-page-width',
   '--fountain-editable-page-height',
@@ -1150,6 +1169,7 @@ const EDITABLE_PAGE_VARIABLES = Object.freeze([
   '--fountain-editable-page-gap',
   '--fountain-editable-page-margin-left',
   '--fountain-editable-page-margin-right',
+  '--fountain-editable-page-intent-before',
 ]);
 
 function editableGeometry(geometry: PageGeometry): void {
@@ -1220,7 +1240,7 @@ function pageShell(owner: Document, geometry: PageGeometry, number: number): HTM
   return sheet;
 }
 
-function sanitizeEditableTableHeader(root: HTMLElement): void {
+function sanitizeEditableProjection(root: HTMLElement): void {
   root.querySelectorAll('[data-fountain-widget], .fountain-table-cell__resize-handle').forEach((element) => element.remove());
   [root, ...root.querySelectorAll<HTMLElement>('*')].forEach((element) => {
     if (element.id) element.removeAttribute('id');
@@ -1246,7 +1266,7 @@ function editableTableHeader(plan: EditableTableHeaderPlan): HTMLTableElement | 
   cloneRows.slice(sourceRows.length).forEach((row) => row.remove());
   const sourceCells = sourceRows.flatMap((row) => [...row.cells]);
   const cloneCells = tableRows(clone).flatMap((row) => [...row.cells]);
-  sanitizeEditableTableHeader(clone);
+  sanitizeEditableProjection(clone);
   sourceCells.forEach((cell, index) => {
     const target = cloneCells[index];
     if (!target) return;
@@ -1260,6 +1280,86 @@ function editableTableHeader(plan: EditableTableHeaderPlan): HTMLTableElement | 
   return clone;
 }
 
+function editablePageIntentLayout(
+  root: HTMLElement,
+  pageHeight: number,
+  gap: number,
+): EditablePageIntentLayout {
+  const children = [...root.children] as HTMLElement[];
+  const before = children.filter((element) => element.dataset.fountainNode === 'page_header');
+  const after = children.filter((element) => (
+    element.dataset.fountainNode === 'page_footer'
+    || element.dataset.fountainNode === 'footnote_definition'
+  ));
+  const rootTop = root.getBoundingClientRect().top;
+  const beforeBottom = before.reduce((bottom, element) => (
+    Math.max(bottom, element.getBoundingClientRect().bottom - rootTop)
+  ), 0);
+  const pageOffset = before.length ? Math.max(0, beforeBottom) + gap : 0;
+  if (!after.length) return Object.freeze({
+    before: Object.freeze(before),
+    after: Object.freeze(after),
+    pageOffset,
+    afterShift: 0,
+    totalHeight: pageOffset + pageHeight,
+  });
+  const afterRects = after.map((element) => element.getBoundingClientRect());
+  const naturalStart = Math.min(...afterRects.map((rect) => rect.top - rootTop));
+  const naturalEnd = Math.max(...afterRects.map((rect) => rect.bottom - rootTop));
+  const afterStart = pageOffset + pageHeight + gap;
+  return Object.freeze({
+    before: Object.freeze(before),
+    after: Object.freeze(after),
+    pageOffset,
+    afterShift: afterStart - naturalStart,
+    totalHeight: afterStart + Math.max(0, naturalEnd - naturalStart),
+  });
+}
+
+function editablePageTemplate(
+  root: HTMLElement,
+  template: ProjectedPageTemplate | undefined,
+  page: number,
+): HTMLElement | null {
+  if (!template) return null;
+  const source = editableTopLevel(root, template.sourcePath);
+  if (!source) return null;
+  const clone = source.cloneNode(true) as HTMLElement;
+  clone.querySelectorAll<HTMLElement>('[data-fountain-page-field]').forEach((field) => {
+    const projected = template.fields.find((candidate) => candidate.kind === field.dataset.fountainPageField);
+    if (projected) field.textContent = projected.value;
+  });
+  sanitizeEditableProjection(clone);
+  clone.classList.remove(`fountain-page-${template.kind}`);
+  clone.classList.add('fountain-editable-pages__template');
+  clone.dataset.fountainEditablePageTemplate = `${template.kind}:${template.variant}:${page}`;
+  clone.contentEditable = 'false';
+  return clone;
+}
+
+function editablePageFootnotes(
+  root: HTMLElement,
+  footnotes: readonly ProjectedPageFootnote[],
+  page: number,
+): HTMLElement | null {
+  if (!footnotes.length) return null;
+  const section = root.ownerDocument.createElement('section');
+  section.className = 'fountain-editable-pages__footnotes';
+  section.dataset.fountainEditablePageFootnotes = String(page);
+  section.contentEditable = 'false';
+  footnotes.forEach((footnote) => {
+    const source = editableTopLevel(root, footnote.sourcePath);
+    if (!source) return;
+    const clone = source.cloneNode(true) as HTMLElement;
+    sanitizeEditableProjection(clone);
+    clone.classList.add('fountain-editable-pages__footnote');
+    clone.dataset.fountainEditablePageFootnote = footnote.id;
+    clone.contentEditable = 'false';
+    section.appendChild(clone);
+  });
+  return section.childElementCount ? section : null;
+}
+
 /**
  * Owns the visual page-sheet layer around one continuous EditorView root.
  * Editable model nodes are never cloned, moved, or reordered. Whole source
@@ -1267,7 +1367,9 @@ function editableTableHeader(plan: EditableTableHeaderPlan): HTMLTableElement | 
  * non-model gap widgets at measured line boundaries; split lists receive
  * reversible spacing on their canonical continuation items; split tables use
  * non-model spacer rows at rowspan-safe boundaries and read-only repeated
- * headers behind the editor; unsupported split sources fall back to a
+ * headers behind the editor. Canonical page templates and footnotes remain
+ * editable once in ordered rails while sanitized, read-only copies are
+ * projected into page shells; unsupported split sources fall back to a
  * continuous canvas.
  */
 export class DOMEditablePageSurface {
@@ -1278,6 +1380,7 @@ export class DOMEditablePageSurface {
   private readonly listBreaks = new Map<HTMLElement, EditableListBreakDecoration>();
   private readonly tableBreaks = new Set<HTMLTableRowElement>();
   private readonly splitTables = new Map<HTMLTableElement, string | null>();
+  private readonly intentDecorated = new Map<HTMLElement, EditableIntentDecoration>();
   private readonly hostVariables = new Map<string, { value: string; priority: string }>();
   private readonly hostHadClass: boolean;
   private readonly rootHadClass: boolean;
@@ -1340,6 +1443,7 @@ export class DOMEditablePageSurface {
     this.host.style.setProperty('--fountain-editable-page-gap', `${this.gap}px`);
     this.host.style.setProperty('--fountain-editable-page-margin-left', `${geometry.margins.left}px`);
     this.host.style.setProperty('--fountain-editable-page-margin-right', `${geometry.margins.right}px`);
+    this.host.style.setProperty('--fountain-editable-page-intent-before', '0px');
   }
 
   update(geometry: PageGeometry, snapshot: DOMPageLayoutSnapshot): DOMEditablePageSurfaceResult {
@@ -1367,6 +1471,33 @@ export class DOMEditablePageSurface {
     this.prepare(geometry, snapshot.content.pages.length);
 
     const issues: DOMEditablePageIssue[] = [];
+    let intentPhase: 'header' | 'flow' | 'after' = 'header';
+    Array.from(this.root.children).forEach((child) => {
+      const element = child as HTMLElement;
+      const nodeName = element.dataset.fountainNode;
+      if (nodeName === 'page_header') {
+        if (intentPhase !== 'header') issues.push(Object.freeze({
+          code: 'unplaced-page-intent', path: pathOf(element),
+          detail: 'Canonical page headers must precede document body content in editable page mode.',
+        }));
+        return;
+      }
+      if (nodeName === 'page_footer' || nodeName === 'footnote_definition') {
+        intentPhase = 'after';
+        return;
+      }
+      if (intentPhase === 'after') issues.push(Object.freeze({
+        code: 'unplaced-page-intent', path: pathOf(element),
+        detail: 'Canonical page footers and footnote definitions must follow document body content in editable page mode.',
+      }));
+      else intentPhase = 'flow';
+    });
+    snapshot.presentation.warnings.forEach((warning) => issues.push(Object.freeze({
+      code: 'unplaced-page-intent', path: Object.freeze([]), detail: warning.detail,
+    })));
+    const pageStackHeight = snapshot.content.pages.length * geometry.size.height
+      + Math.max(0, snapshot.content.pages.length - 1) * this.gap;
+    const intentLayout = editablePageIntentLayout(this.root, pageStackHeight, this.gap);
     const placementsByItem = new Map<string, EditablePlacementEntry[]>();
     snapshot.content.pages.forEach((page) => {
       let cursor = 0;
@@ -1408,17 +1539,6 @@ export class DOMEditablePageSurface {
         detail: `No rendered top-level node exists for editable source ${source.sourcePath.join('.')}.`,
       }));
     });
-    Array.from(this.root.children).forEach((child) => {
-      const element = child as HTMLElement;
-      if (!['page_header', 'page_footer', 'footnote_definition'].includes(element.dataset.fountainNode ?? '')) return;
-      const path = pathOf(element);
-      issues.push(Object.freeze({
-        code: 'unplaced-page-intent',
-        path,
-        detail: `${element.dataset.fountainNode} remains canonical editable intent and is not duplicated into page shells.`,
-      }));
-    });
-
     const textBreakPlans: EditableTextBreakPlan[] = [];
     const listBreakPlans: EditableListBreakPlan[] = [];
     const tableBreakPlans: EditableTableBreakPlan[] = [];
@@ -1434,7 +1554,7 @@ export class DOMEditablePageSurface {
         || firstSource.kind !== 'text-line'
         || element.dataset.fountainNode !== 'paragraph'
       ) return;
-      const firstPageTop = (first.page - 1) * (geometry.size.height + this.gap);
+      const firstPageTop = intentLayout.pageOffset + (first.page - 1) * (geometry.size.height + this.gap);
       const bodyStart = geometry.margins.top + geometry.headerHeight;
       const naturalOrigin = firstPageTop + bodyStart + first.cursor - firstSource.clipOffset;
       let insertedSize = 0;
@@ -1442,7 +1562,8 @@ export class DOMEditablePageSurface {
         const source = entry.placement.sources[0];
         if (!source || source.kind !== 'text-line') return;
         const point = firstTextPointOnLine(element, source.fragmentIndex);
-        const desired = (entry.page - 1) * (geometry.size.height + this.gap) + bodyStart + entry.cursor;
+        const desired = intentLayout.pageOffset
+          + (entry.page - 1) * (geometry.size.height + this.gap) + bodyStart + entry.cursor;
         const size = desired - naturalOrigin - source.clipOffset - insertedSize;
         if (!point || !finiteNonNegative(size)) {
           issues.push(Object.freeze({
@@ -1468,7 +1589,7 @@ export class DOMEditablePageSurface {
         || element.tagName !== 'TABLE'
       ) return;
       const table = element as HTMLTableElement;
-      const firstPageTop = (first.page - 1) * (geometry.size.height + this.gap);
+      const firstPageTop = intentLayout.pageOffset + (first.page - 1) * (geometry.size.height + this.gap);
       const bodyStart = geometry.margins.top + geometry.headerHeight;
       const style = table.ownerDocument.defaultView?.getComputedStyle(table);
       const marginBefore = numericStyle(style?.marginBlockStart || style?.marginTop);
@@ -1479,7 +1600,7 @@ export class DOMEditablePageSurface {
         const source = entry.placement.sources[0];
         const partPath = source?.partPaths[0];
         const row = partPath ? editableAtPath(this.root, partPath) : null;
-        const desired = (entry.page - 1) * (geometry.size.height + this.gap)
+        const desired = intentLayout.pageOffset + (entry.page - 1) * (geometry.size.height + this.gap)
           + bodyStart + entry.cursor + entry.placement.continuationHeight;
         const rowTop = row ? row.getBoundingClientRect().top - undecoratedRootTop : Number.NaN;
         const size = desired - rowTop - topLevelShift - insertedSize;
@@ -1512,7 +1633,7 @@ export class DOMEditablePageSurface {
         || firstSource.kind !== 'list-item'
         || !['bullet_list', 'ordered_list', 'task_list'].includes(element.dataset.fountainNode ?? '')
       ) return;
-      const firstPageTop = (first.page - 1) * (geometry.size.height + this.gap);
+      const firstPageTop = intentLayout.pageOffset + (first.page - 1) * (geometry.size.height + this.gap);
       const bodyStart = geometry.margins.top + geometry.headerHeight;
       const style = element.ownerDocument.defaultView?.getComputedStyle(element);
       const marginBefore = numericStyle(style?.marginBlockStart || style?.marginTop);
@@ -1523,7 +1644,8 @@ export class DOMEditablePageSurface {
         const source = entry.placement.sources[0];
         const partPath = source?.partPaths[0];
         const listItem = partPath ? editableAtPath(this.root, partPath) : null;
-        const desired = (entry.page - 1) * (geometry.size.height + this.gap) + bodyStart + entry.cursor;
+        const desired = intentLayout.pageOffset
+          + (entry.page - 1) * (geometry.size.height + this.gap) + bodyStart + entry.cursor;
         const itemTop = listItem ? listItem.getBoundingClientRect().top - undecoratedRootTop : Number.NaN;
         const size = desired - itemTop - topLevelShift - insertedSize;
         if (!source || source.kind !== 'list-item' || source.partPaths.length !== 1 || !listItem
@@ -1546,9 +1668,28 @@ export class DOMEditablePageSurface {
       return this.finish('continuous', [], issues, snapshot);
     }
 
+    this.host.style.setProperty('--fountain-editable-page-intent-before', `${intentLayout.pageOffset}px`);
+    this.host.style.setProperty('--fountain-editable-page-total-height', `${intentLayout.totalHeight}px`);
+    intentLayout.before.forEach((element) => this.decorateIntent(element, 'header'));
+    intentLayout.after.forEach((element) => this.decorateIntent(
+      element,
+      element.dataset.fountainNode === 'page_footer' ? 'footer' : 'footnote',
+      intentLayout.afterShift,
+    ));
+
     const fragment = this.root.ownerDocument.createDocumentFragment();
     const pages = snapshot.content.pages.map((page) => {
       const shell = pageShell(this.root.ownerDocument, geometry, page.number);
+      const presentation = snapshot.presentation.pages[page.number - 1];
+      const headerRegion = shell.querySelector<HTMLElement>('.fountain-editable-pages__header');
+      const bodyRegion = shell.querySelector<HTMLElement>('.fountain-editable-pages__body');
+      const footerRegion = shell.querySelector<HTMLElement>('.fountain-editable-pages__footer');
+      const header = editablePageTemplate(this.root, presentation?.header, page.number);
+      const footer = editablePageTemplate(this.root, presentation?.footer, page.number);
+      const footnotes = editablePageFootnotes(this.root, presentation?.footnotes ?? [], page.number);
+      if (headerRegion && header) headerRegion.appendChild(header);
+      if (bodyRegion && footnotes) bodyRegion.appendChild(footnotes);
+      if (footerRegion && footer) footerRegion.appendChild(footer);
       if (snapshot.layout.pages[page.number - 1]?.usedHeight
         > snapshot.layout.pages[page.number - 1]!.availableHeight) {
         shell.dataset.fountainEditablePageOverflow = 'true';
@@ -1581,7 +1722,7 @@ export class DOMEditablePageSurface {
           const style = element.ownerDocument.defaultView?.getComputedStyle(element);
           const marginBefore = numericStyle(style?.marginBlockStart || style?.marginTop);
           const naturalTop = element.getBoundingClientRect().top - rootRect.top;
-          const pageTop = (page.number - 1) * (geometry.size.height + this.gap);
+          const pageTop = intentLayout.pageOffset + (page.number - 1) * (geometry.size.height + this.gap);
           const desiredTop = pageTop + geometry.margins.top + geometry.headerHeight + cursor + marginBefore;
           this.decorate(element, page.number, desiredTop - naturalTop);
           decoratedItems.add(placement.itemId);
@@ -1643,6 +1784,13 @@ export class DOMEditablePageSurface {
       this.restoreAttribute(element, 'data-fountain-editable-table-split', attribute);
     });
     this.splitTables.clear();
+    this.intentDecorated.forEach((prior, element) => {
+      this.restoreAttribute(element, 'data-fountain-editable-page-intent', prior.attribute);
+      if (prior.shift) {
+        element.style.setProperty('--fountain-editable-page-intent-shift', prior.shift, prior.shiftPriority);
+      } else element.style.removeProperty('--fountain-editable-page-intent-shift');
+    });
+    this.intentDecorated.clear();
     this.decorated.forEach((prior, element) => {
       this.restoreAttribute(element, 'data-fountain-editable-page', prior.attribute);
       if (prior.shift) element.style.setProperty('--fountain-editable-page-shift', prior.shift, prior.shiftPriority);
@@ -1665,6 +1813,16 @@ export class DOMEditablePageSurface {
     range.insertNode(element);
     range.detach?.();
     this.textBreaks.add(element);
+  }
+
+  private decorateIntent(element: HTMLElement, kind: 'header' | 'footer' | 'footnote', shift = 0): void {
+    if (!this.intentDecorated.has(element)) this.intentDecorated.set(element, {
+      attribute: element.getAttribute('data-fountain-editable-page-intent'),
+      shift: element.style.getPropertyValue('--fountain-editable-page-intent-shift'),
+      shiftPriority: element.style.getPropertyPriority('--fountain-editable-page-intent-shift'),
+    });
+    element.dataset.fountainEditablePageIntent = kind;
+    element.style.setProperty('--fountain-editable-page-intent-shift', `${Math.round(shift * 1_000) / 1_000}px`);
   }
 
   private decorateListBreak(plan: EditableListBreakPlan): void {
