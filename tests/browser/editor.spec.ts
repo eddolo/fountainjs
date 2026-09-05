@@ -375,6 +375,194 @@ test('edits, selects, and composes across guarded page shells in one contentedit
   await expect(editor.locator(':scope > [data-fountain-path="0"]')).toHaveAttribute('data-browser-identity', 'retained');
 });
 
+test('keeps one paragraph editable when its measured lines span page shells', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-split-pages');
+  const editor = page.getByRole('textbox', { name: 'Split paragraph page editor' });
+  const host = page.getByLabel('Editable pages browser contract').locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const pageCount = await host.locator('.fountain-editable-pages__sheet').count();
+  expect(pageCount).toBeGreaterThan(1);
+  await expect(editor.locator(':scope > [data-fountain-path]')).toHaveCount(1);
+  await expect(editor.locator('[data-fountain-editable-page-break]')).toHaveCount(pageCount - 1);
+  expect(await editor.locator('[data-fountain-editable-page-break]').evaluateAll((breaks) => breaks.every((element) => (
+    element.getAttribute('aria-hidden') === 'true'
+    && (element as HTMLElement).contentEditable === 'false'
+    && element.getAttribute('data-fountain-widget') === 'editable-page-break'
+  )))).toBe(true);
+  const initial = await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.editable.summary();
+    return {
+      nodeCount: summary.document.content.length,
+      nodeType: summary.document.content[0]?.type,
+      pageIntents: summary.document.content.filter((node: any) => node.type === 'page_break').length,
+      text: summary.document.content[0]?.content[0]?.text,
+    };
+  });
+  expect(initial).toMatchObject({ nodeCount: 1, nodeType: 'paragraph', pageIntents: 0 });
+  await expect(editor).toHaveText(initial.text);
+
+  const alignment = await page.evaluate(() => {
+    const breaks = [...document.querySelectorAll<HTMLElement>('[data-fountain-editable-page-break]')];
+    const bodies = [...document.querySelectorAll<HTMLElement>('.fountain-editable-pages__body')];
+    return breaks.map((element, index) => ({
+      page: element.dataset.fountainEditablePageBreak,
+      delta: element.getBoundingClientRect().bottom - (bodies[index + 1]?.getBoundingClientRect().top ?? 0),
+    }));
+  });
+  alignment.forEach((entry, index) => {
+    expect(entry.page).toBe(String(index + 2));
+    expect(Math.abs(entry.delta)).toBeLessThan(3);
+  });
+  const textNodeCount = await editor.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let count = 0;
+    while (walker.nextNode()) count += 1;
+    return count;
+  });
+  expect(await page.evaluate(() => {
+    for (let iteration = 0; iteration < 6; iteration += 1) {
+      (globalThis as any).fountainBrowserTest.pages.editable.refresh();
+    }
+    const editor = document.querySelector<HTMLElement>('[aria-label="Split paragraph page editor"]');
+    if (!editor) return -1;
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+    let count = 0;
+    while (walker.nextNode()) count += 1;
+    return count;
+  })).toBe(textNodeCount);
+
+  await editor.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    const nodes: Text[] = [];
+    let current = walker.nextNode();
+    while (current) {
+      nodes.push(current as Text);
+      current = walker.nextNode();
+    }
+    const first = nodes[0];
+    const last = nodes.at(-1);
+    if (!first || !last) throw new Error('Expected split paragraph text nodes.');
+    const range = document.createRange();
+    range.setStart(first, 5);
+    range.setEnd(last, Math.max(5, last.data.length - 5));
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
+  ))).toMatchObject({
+    type: 'text', path: [0, 0], from: 5, endPath: [0, 0], to: initial.text.length - 5,
+  });
+
+  await editor.evaluate((element) => {
+    const wrapper = element.querySelector<HTMLElement>('[data-fountain-text-path="0.0"]');
+    const walker = wrapper && document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    let last: Text | null = null;
+    let current = walker?.nextNode() ?? null;
+    while (current) {
+      last = current as Text;
+      current = walker?.nextNode() ?? null;
+    }
+    if (!last) throw new Error('Expected a final paragraph text node.');
+    const range = document.createRange();
+    range.setStart(last, last.data.length);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+    element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '終' }));
+  });
+  await expect(editor).toContainText('終');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(editor).not.toContainText('終');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(editor).toContainText('終');
+
+  const region = page.getByLabel('Editable pages browser contract');
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '360px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');
+  await expect(editor.locator('[data-fountain-editable-page-break]')).toHaveCount(0);
+  await region.evaluate((element) => { (element as HTMLElement).style.width = '900px'; });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect.poll(async () => (
+    await host.locator('.fountain-editable-pages__sheet').count()
+      - await editor.locator('[data-fountain-editable-page-break]').count()
+  )).toBe(1);
+});
+
+test('keeps tracked review and Yjs live inside a paragraph split across pages', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=split-page-integrations');
+  const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
+  const right = page.getByRole('textbox', { name: 'Collaborative editor right' });
+  const review = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
+  for (const editor of [left, right, review]) {
+    await expect(editor.locator('..')).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+    await expect(editor.locator(':scope > [data-fountain-path]')).toHaveCount(1);
+    expect(await editor.locator('[data-fountain-editable-page-break]').count()).toBeGreaterThan(0);
+  }
+
+  await selectBlockEnd(left.locator(':scope > [data-fountain-path="0"]'));
+  await page.keyboard.type(' LEFT SPLIT REVIEW');
+  await expect(right).toContainText('LEFT SPLIT REVIEW');
+  await expect.poll(() => right.locator('[data-fountain-editable-page-break]').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      leftAuthor: summary.left.suggestions[0]?.user.id,
+      rightAuthor: summary.right.suggestions[0]?.user.id,
+      converged: JSON.stringify(summary.left.document) === JSON.stringify(summary.right.document),
+      nodeCounts: [summary.left.document.content.length, summary.right.document.content.length],
+      pageIntents: [...summary.left.document.content, ...summary.right.document.content]
+        .filter((node: any) => node.type === 'page_break').length,
+    };
+  })).toEqual({
+    leftAuthor: 'browser-left',
+    rightAuthor: 'browser-left',
+    converged: true,
+    nodeCounts: [1, 1],
+    pageIntents: 0,
+  });
+
+  await selectBlockEnd(review.locator(':scope > [data-fountain-path="0"]'));
+  await page.keyboard.type(' LOCAL SPLIT DECISION');
+  await expect(review.locator('ins')).toContainText('LOCAL SPLIT DECISION');
+  const suggestionId = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.integrations.summary().review.suggestions[0].id
+  ));
+  expect(await page.evaluate((id) => (
+    (globalThis as any).fountainBrowserTest.tracked.accept(id)
+  ), suggestionId)).toBe(true);
+  await expect(review).toContainText('LOCAL SPLIT DECISION');
+  await expect(review.locator('ins, del')).toHaveCount(0);
+  await expect.poll(() => review.locator('[data-fountain-editable-page-break]').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.integrations.summary();
+    return {
+      modes: [summary.left.mode, summary.right.mode, summary.review.mode],
+      leftNodes: summary.left.document.content.length,
+      reviewNodes: summary.review.document.content.length,
+      reviewSuggestions: summary.review.suggestions.length,
+    };
+  })).toEqual({
+    modes: ['paged', 'paged', 'paged'],
+    leftNodes: 1,
+    reviewNodes: 1,
+    reviewSuggestions: 0,
+  });
+});
+
 test('keeps tracked review and Yjs collaboration live across automatic page boundaries', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=page-integrations');
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });

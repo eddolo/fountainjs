@@ -312,6 +312,57 @@ function lineBands(rects: readonly RectLike[]): readonly RectLike[] {
   })));
 }
 
+interface DOMTextPoint {
+  readonly node: Text;
+  readonly offset: number;
+}
+
+function firstTextPointOnLine(element: HTMLElement, lineIndex: number): DOMTextPoint | null {
+  const target = lineBands(rangeRects(element, () => {}))[lineIndex];
+  const nodeFilter = element.ownerDocument.defaultView?.NodeFilter;
+  if (!target || !nodeFilter) return null;
+  const walker = element.ownerDocument.createTreeWalker(element, nodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+      ? nodeFilter.FILTER_REJECT
+      : nodeFilter.FILTER_ACCEPT,
+  });
+  const range = element.ownerDocument.createRange();
+  const intersectsTarget = (rect: RectLike) => rect.top < target.bottom + 1 && rect.bottom > target.top - 1;
+  let current = walker.nextNode() as Text | null;
+  while (current) {
+    const length = current.data.length;
+    if (length > 0) {
+      const read = (from: number, to: number) => {
+        range.setStart(current as Text, from);
+        range.setEnd(current as Text, to);
+        return lineBands(Array.from(range.getClientRects()).map((rect) => ({
+          top: rect.top, bottom: rect.bottom, left: rect.left, right: rect.right,
+          width: rect.width, height: rect.height,
+        })));
+      };
+      if (read(0, length).some(intersectsTarget)) {
+        let low = 0;
+        let high = length - 1;
+        while (low < high) {
+          const middle = Math.floor((low + high) / 2);
+          const last = read(0, middle + 1).at(-1);
+          if (last && last.bottom >= target.top - 1) high = middle;
+          else low = middle + 1;
+        }
+        for (let offset = Math.max(0, low - 1); offset < length; offset += 1) {
+          if (read(offset, offset + 1).some(intersectsTarget)) {
+            range.detach?.();
+            return Object.freeze({ node: current, offset });
+          }
+        }
+      }
+    }
+    current = walker.nextNode() as Text | null;
+  }
+  range.detach?.();
+  return null;
+}
+
 function fragmentHeights(element: HTMLElement, lines: readonly RectLike[], count: () => void): readonly number[] {
   const block = measuredRect(element, count);
   const margins = elementMargins(element);
@@ -844,6 +895,8 @@ export function layoutDOMPages(
   });
 }
 
+const pageLayoutMutationObservers = new WeakMap<object, MutationObserver>();
+
 /**
  * Coalesces browser layout invalidations into measured snapshots. It observes
  * the editor but never inserts, moves, clones, or annotates editable nodes.
@@ -884,6 +937,7 @@ export class DOMPageLayoutController {
         });
         observer.observe(root, { childList: true, characterData: true, subtree: true });
         this.mutationObserver = observer;
+        pageLayoutMutationObservers.set(this, observer);
       }
       const ResizeObserverConstructor = (this.view as (Window & {
         ResizeObserver?: typeof ResizeObserver;
@@ -965,6 +1019,7 @@ export class DOMPageLayoutController {
     this.scheduledFrame = null;
     this.invalidatedIndexes.clear();
     if (this.measurementCache) clearMeasurementCache(this.measurementCache);
+    pageLayoutMutationObservers.delete(this);
   }
 
   private readonly onWindowResize = () => this.requestLayout('window-resize');
@@ -1040,6 +1095,19 @@ interface EditableSourceDecoration {
   readonly shiftPriority: string;
 }
 
+interface EditablePlacementEntry {
+  readonly page: number;
+  readonly cursor: number;
+  readonly placement: DOMPageContentPlacement;
+}
+
+interface EditableTextBreakPlan {
+  readonly point: DOMTextPoint;
+  readonly fragmentIndex: number;
+  readonly page: number;
+  readonly size: number;
+}
+
 const EDITABLE_PAGE_VARIABLES = Object.freeze([
   '--fountain-editable-page-width',
   '--fountain-editable-page-height',
@@ -1112,14 +1180,16 @@ function pageShell(owner: Document, geometry: PageGeometry, number: number): HTM
 
 /**
  * Owns the visual page-sheet layer around one continuous EditorView root.
- * Editable nodes are never cloned, moved, wrapped, or reordered. Whole source
- * blocks receive transient visual offsets; unsupported split sources fall back
- * to a continuous canvas.
+ * Editable model nodes are never cloned, moved, or reordered. Whole source
+ * blocks receive transient visual offsets; split paragraphs receive transient
+ * non-model gap widgets at measured line boundaries; unsupported split sources
+ * fall back to a continuous canvas.
  */
 export class DOMEditablePageSurface {
   readonly host: HTMLElement;
   readonly shells: HTMLElement;
   private readonly decorated = new Map<HTMLElement, EditableSourceDecoration>();
+  private readonly textBreaks = new Set<HTMLElement>();
   private readonly hostVariables = new Map<string, { value: string; priority: string }>();
   private readonly hostHadClass: boolean;
   private readonly rootHadClass: boolean;
@@ -1173,6 +1243,7 @@ export class DOMEditablePageSurface {
     if (!Number.isSafeInteger(pageCount) || pageCount < 1) {
       throw new TypeError('Editable page surfaces require a positive page count.');
     }
+    this.clearDecorations();
     const totalHeight = pageCount * geometry.size.height + Math.max(0, pageCount - 1) * this.gap;
     this.host.style.setProperty('--fountain-editable-page-width', `${geometry.size.width}px`);
     this.host.style.setProperty('--fountain-editable-page-height', `${geometry.size.height}px`);
@@ -1192,7 +1263,6 @@ export class DOMEditablePageSurface {
     const narrowContinuous = (view?.matchMedia?.('(max-width: 720px)').matches ?? false)
       || !hasPageInlineSpace(this.host, geometry);
     if (narrowContinuous) {
-      this.clearDecorations();
       this.shells.replaceChildren();
       this.prepare(geometry, 1);
       this.setMode('continuous');
@@ -1205,25 +1275,33 @@ export class DOMEditablePageSurface {
         + `(${snapshot.measurement.contentWidth}).`,
       );
     }
-    this.clearDecorations();
     this.prepare(geometry, snapshot.content.pages.length);
 
     const issues: DOMEditablePageIssue[] = [];
-    const placementsByItem = new Map<string, Array<{ page: number; placement: DOMPageContentPlacement }>>();
-    snapshot.content.pages.forEach((page) => page.placements.forEach((placement) => {
-      const entries = placementsByItem.get(placement.itemId) ?? [];
-      entries.push({ page: page.number, placement });
-      placementsByItem.set(placement.itemId, entries);
-    }));
+    const placementsByItem = new Map<string, EditablePlacementEntry[]>();
+    snapshot.content.pages.forEach((page) => {
+      let cursor = 0;
+      page.placements.forEach((placement) => {
+        const entries = placementsByItem.get(placement.itemId) ?? [];
+        entries.push({ page: page.number, cursor, placement });
+        placementsByItem.set(placement.itemId, entries);
+        cursor += placement.height;
+      });
+    });
     placementsByItem.forEach((entries) => {
       const pages = new Set(entries.map((entry) => entry.page));
       const source = entries[0]?.placement.sources[0];
-      if (pages.size > 1 && source) issues.push(Object.freeze({
+      const sourceElement = source ? editableTopLevel(this.root, source.sourcePath) : null;
+      const editableTextSplit = entries.every((entry) => (
+        entry.placement.sources.length > 0
+        && entry.placement.sources.every((candidate) => candidate.kind === 'text-line')
+      )) && sourceElement?.dataset.fountainNode === 'paragraph';
+      if (pages.size > 1 && source && !editableTextSplit) issues.push(Object.freeze({
         code: 'fragmented-editable-source',
         path: Object.freeze([...source.sourcePath]),
-        detail: `Editable source ${source.sourcePath.join('.')} spans ${pages.size} pages and cannot be cloned safely.`,
+        detail: `Editable source ${source.sourcePath.join('.')} spans ${pages.size} pages without editable text boundaries.`,
       }));
-      if (source && !editableTopLevel(this.root, source.sourcePath)) issues.push(Object.freeze({
+      if (source && !sourceElement) issues.push(Object.freeze({
         code: 'missing-rendered-source',
         path: Object.freeze([...source.sourcePath]),
         detail: `No rendered top-level node exists for editable source ${source.sourcePath.join('.')}.`,
@@ -1238,6 +1316,40 @@ export class DOMEditablePageSurface {
         path,
         detail: `${element.dataset.fountainNode} remains canonical editable intent and is not duplicated into page shells.`,
       }));
+    });
+
+    const textBreakPlans: EditableTextBreakPlan[] = [];
+    placementsByItem.forEach((entries) => {
+      if (new Set(entries.map((entry) => entry.page)).size < 2) return;
+      const first = entries[0];
+      const firstSource = first?.placement.sources[0];
+      const element = firstSource ? editableTopLevel(this.root, firstSource.sourcePath) : null;
+      if (
+        !first || !firstSource || !element
+        || firstSource.kind !== 'text-line'
+        || element.dataset.fountainNode !== 'paragraph'
+      ) return;
+      const firstPageTop = (first.page - 1) * (geometry.size.height + this.gap);
+      const bodyStart = geometry.margins.top + geometry.headerHeight;
+      const naturalOrigin = firstPageTop + bodyStart + first.cursor - firstSource.clipOffset;
+      let insertedSize = 0;
+      entries.slice(1).forEach((entry) => {
+        const source = entry.placement.sources[0];
+        if (!source || source.kind !== 'text-line') return;
+        const point = firstTextPointOnLine(element, source.fragmentIndex);
+        const desired = (entry.page - 1) * (geometry.size.height + this.gap) + bodyStart + entry.cursor;
+        const size = desired - naturalOrigin - source.clipOffset - insertedSize;
+        if (!point || !finiteNonNegative(size)) {
+          issues.push(Object.freeze({
+            code: 'fragmented-editable-source',
+            path: Object.freeze([...source.sourcePath]),
+            detail: `Editable text boundary ${source.fragmentIndex} at ${source.sourcePath.join('.')} could not be positioned safely.`,
+          }));
+          return;
+        }
+        textBreakPlans.push({ point, fragmentIndex: source.fragmentIndex, page: entry.page, size });
+        insertedSize += size;
+      });
     });
 
     if (issues.length) {
@@ -1258,6 +1370,10 @@ export class DOMEditablePageSurface {
     });
     this.shells.replaceChildren(fragment);
     this.setMode('paged');
+
+    [...textBreakPlans]
+      .sort((left, right) => right.fragmentIndex - left.fragmentIndex)
+      .forEach((plan) => this.insertTextBreak(plan));
 
     const rootRect = this.root.getBoundingClientRect();
     const decoratedItems = new Set<string>();
@@ -1312,12 +1428,36 @@ export class DOMEditablePageSurface {
   }
 
   private clearDecorations(): void {
+    this.textBreaks.forEach((element) => {
+      const parent = element.parentNode;
+      element.remove();
+      Array.from(parent?.childNodes ?? []).forEach((node) => {
+        if (node.nodeType === 3 && !node.textContent) parent?.removeChild(node);
+      });
+    });
+    this.textBreaks.clear();
     this.decorated.forEach((prior, element) => {
       this.restoreAttribute(element, 'data-fountain-editable-page', prior.attribute);
       if (prior.shift) element.style.setProperty('--fountain-editable-page-shift', prior.shift, prior.shiftPriority);
       else element.style.removeProperty('--fountain-editable-page-shift');
     });
     this.decorated.clear();
+  }
+
+  private insertTextBreak(plan: EditableTextBreakPlan): void {
+    const element = this.root.ownerDocument.createElement('span');
+    element.className = 'fountain-editable-pages__break';
+    element.dataset.fountainWidget = 'editable-page-break';
+    element.dataset.fountainEditablePageBreak = String(plan.page);
+    element.setAttribute('aria-hidden', 'true');
+    element.contentEditable = 'false';
+    element.style.setProperty('--fountain-editable-page-break-size', `${Math.round(plan.size * 1_000) / 1_000}px`);
+    const range = this.root.ownerDocument.createRange();
+    range.setStart(plan.point.node, plan.point.offset);
+    range.collapse(true);
+    range.insertNode(element);
+    range.detach?.();
+    this.textBreaks.add(element);
   }
 
   private setMode(mode: DOMEditablePageMode): void {
@@ -1382,6 +1522,7 @@ export class DOMEditablePageController {
       onError: options.onError,
       onLayout: (cycle) => {
         const result = this.surface.update(currentGeometry, cycle.snapshot);
+        pageLayoutMutationObservers.get(this.layout)?.takeRecords();
         options.onLayout?.(cycle);
         if (result.mode === 'continuous' && result.issues.length) options.onFallback?.(result.issues);
       },

@@ -66,8 +66,8 @@ const limits = Object.freeze({
   // Browser geometry, strict placement/source projection, coalesced reflow,
   // guarded single-contenteditable page shells, and identity-rebased
   // structural measurement caching remain isolated from the neutral model.
-  'dist/pages-dom.js': 32 * kibibyte,
-  'dist/pages-dom.cjs': 27 * kibibyte,
+  'dist/pages-dom.js': 36 * kibibyte,
+  'dist/pages-dom.cjs': 30 * kibibyte,
   // The non-destructive read-only page/print projection is separately loaded
   // from both the neutral model and browser measurement lifecycle.
   'dist/pages-preview.js': 9 * kibibyte,
@@ -103,10 +103,11 @@ const limits = Object.freeze({
   // about 6/5 KiB; read-only screen/print projection stays in its own entry.
   // Physical print rules add less than 1 KiB. Guarded editable page shells add
   // about 9.6/6.8 KiB without changing the default editor entry. Structural
-  // DOM reuse and path-aware page-cache rebasing add about 2.2/1 KiB. The
-  // schema is data and is not counted as runtime JS.
-  'all ESM runtime code': 718 * kibibyte,
-  'all CommonJS runtime code': 605 * kibibyte,
+  // DOM reuse and path-aware page-cache rebasing add about 2.2/1 KiB. Editable
+  // paragraph continuation boundaries add about 3.5/2.8 KiB while remaining
+  // isolated from the default editor. The schema is data and is not counted.
+  'all ESM runtime code': 722 * kibibyte,
+  'all CommonJS runtime code': 608 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

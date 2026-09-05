@@ -39,8 +39,11 @@
   IME plus history across whole-block/manual boundaries, restores continuous
   editing for narrow viewports and embedding containers, returns to pages on
   resize without remounting, preserves tracked-change decisions and bidirectional
-  Yjs convergence across automatic whole-block boundaries, and fails closed when
-  content would require cloning or fragmenting; plus an honest staged pagination contract. Split-block editing,
+  Yjs convergence across automatic whole-block boundaries; plus selection-safe,
+  accessibility-hidden paragraph continuation gaps at measured line boundaries
+  with stable cleanup, exact page-body alignment, responsive fallback, IME,
+  history, tracked-change decisions, and bidirectional Yjs coverage. It still
+  fails closed before cloning unsupported split content; plus an honest staged pagination contract. Split-list/table editing,
   editable repeated furniture/footnotes, and broader adversarial/cross-engine
   print fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential

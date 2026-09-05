@@ -150,6 +150,7 @@
 .fountain-editable-pages__sheet[data-fountain-editable-page-overflow="true"] { outline: 3px solid #c33; outline-offset: 3px; }
 .fountain-editor.fountain-editable-pages__content { z-index: 1; box-sizing: border-box; width: var(--fountain-editable-page-width); min-height: var(--fountain-editable-page-total-height); padding: 0 var(--fountain-editable-page-margin-right) 0 var(--fountain-editable-page-margin-left); background: transparent; box-shadow: none; }
 .fountain-editable-pages[data-fountain-editable-pages-mode="paged"] .fountain-editable-pages__content > [data-fountain-editable-page] { translate: 0 var(--fountain-editable-page-shift); }
+.fountain-editable-pages__break { display: block; box-sizing: border-box; inline-size: 100%; block-size: var(--fountain-editable-page-break-size); margin: 0; padding: 0; border: 0; font-size: 0; line-height: 0; pointer-events: none; user-select: none; }
 .fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__shells { display: none; }
 .fountain-editable-pages[data-fountain-editable-pages-mode="continuous"] .fountain-editable-pages__content { width: min(100%, var(--fountain-editable-page-width)); min-height: 280px; padding-block: clamp(20px, 4vw, 44px); background: var(--fountain-surface); box-shadow: 0 .5rem 2rem rgb(0 0 0 / 12%); }
 @media (max-width: 720px) {
