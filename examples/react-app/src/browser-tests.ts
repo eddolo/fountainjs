@@ -95,6 +95,31 @@ const splitTableContent = {
     ],
   }],
 };
+const oversizedTableContent = {
+  type: 'doc',
+  content: [{
+    type: 'table',
+    content: [
+      {
+        type: 'table_row',
+        content: [{
+          type: 'table_header',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Oversized record' }] }],
+        }],
+      },
+      {
+        type: 'table_row',
+        content: [{
+          type: 'table_cell',
+          content: Array.from({ length: 16 }, (_, index) => ({
+            type: 'paragraph',
+            content: [{ type: 'text', text: `Unsplit row paragraph ${index + 1} remains canonical and editable.` }],
+          })),
+        }],
+      },
+    ],
+  }],
+};
 const splitPageIntegrationsFixture = browserFixture === 'split-page-integrations';
 const splitListPageIntegrationsFixture = browserFixture === 'split-list-page-integrations';
 const splitTablePageIntegrationsFixture = browserFixture === 'split-table-page-integrations';
@@ -386,10 +411,12 @@ const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page int
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
+const oversizedEditableTableFixture = browserFixture === 'editable-oversized-table-pages';
 const editablePagesFixture = (browserFixture === 'editable-pages'
   || splitEditablePagesFixture
   || splitEditableListFixture
-  || splitEditableTableFixture)
+  || splitEditableTableFixture
+  || oversizedEditableTableFixture)
   ? (() => {
       const pageEditor = createEditor({
         schema: pagesKit.schema,
@@ -404,7 +431,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
             }],
           }],
         } : splitEditableListFixture ? splitListContent
-          : splitEditableTableFixture ? splitTableContent : {
+          : splitEditableTableFixture ? splitTableContent
+            : oversizedEditableTableFixture ? oversizedTableContent : {
           type: 'doc',
           content: [
             { type: 'paragraph', content: [{ type: 'text', text: 'First editable page' }] },
@@ -423,6 +451,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
             ? 'Split list page editor'
             : splitEditableTableFixture
               ? 'Split table page editor'
+              : oversizedEditableTableFixture
+                ? 'Oversized table page editor'
             : 'Editable page canvas editor',
       });
       const geometry = createPageGeometry({
@@ -436,7 +466,8 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
         () => pageEditor.state.doc,
         geometry,
         {
-          measurement: splitEditablePagesFixture || splitEditableListFixture || splitEditableTableFixture
+          measurement: splitEditablePagesFixture || splitEditableListFixture
+            || splitEditableTableFixture || oversizedEditableTableFixture
             ? {}
             : { lineFragmentNodeTypes: [] },
         },

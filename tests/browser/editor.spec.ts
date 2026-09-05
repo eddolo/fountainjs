@@ -815,6 +815,48 @@ test('keeps one canonical table editable with repeated headers across page shell
   )).toBe(1);
 });
 
+test('reports an oversized table row without clipping or splitting its editable model', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-oversized-table-pages');
+  const editor = page.getByRole('textbox', { name: 'Oversized table page editor' });
+  const host = page.getByLabel('Editable pages browser contract').locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const table = editor.locator(':scope > table[data-fountain-node="table"]');
+  const rows = table.locator('tr[data-fountain-node="table_row"]');
+  await expect(table).toHaveCount(1);
+  await expect(rows).toHaveCount(2);
+  await expect(rows.nth(1).locator('[data-fountain-node="paragraph"]')).toHaveCount(16);
+  expect(await host.locator('[data-fountain-editable-page-overflow="true"]').count()).toBeGreaterThan(0);
+  expect(await table.locator('[data-fountain-editable-table-break]').count()).toBeGreaterThan(0);
+  const geometry = await page.evaluate(() => {
+    const row = document.querySelector<HTMLElement>('[aria-label="Oversized table page editor"] tr[data-fountain-path="0.1"]');
+    const body = document.querySelector<HTMLElement>('.fountain-editable-pages__body');
+    return { rowHeight: row?.getBoundingClientRect().height ?? 0, bodyHeight: body?.getBoundingClientRect().height ?? 0 };
+  });
+  expect(geometry.rowHeight).toBeGreaterThan(geometry.bodyHeight);
+
+  expect(await page.evaluate(() => {
+    const summary = (globalThis as any).fountainBrowserTest.pages.editable.summary();
+    return {
+      issues: summary.issues,
+      nodeCount: summary.document.content.length,
+      type: summary.document.content[0]?.type,
+      rowCount: summary.document.content[0]?.content.length,
+      paragraphCount: summary.document.content[0]?.content[1]?.content[0]?.content.length,
+      pageIntents: summary.document.content.filter((node: any) => node.type === 'page_break').length,
+    };
+  })).toEqual({ issues: [], nodeCount: 1, type: 'table', rowCount: 2, paragraphCount: 16, pageIntents: 0 });
+
+  await selectBlockEnd(rows.nth(1));
+  await page.keyboard.type(' OVERSIZED ROW EDIT');
+  await expect(rows.nth(1)).toContainText('OVERSIZED ROW EDIT');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(rows.nth(1)).not.toContainText('OVERSIZED ROW EDIT');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(rows.nth(1)).toContainText('OVERSIZED ROW EDIT');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  await expect(rows).toHaveCount(2);
+});
+
 test('keeps tracked review and Yjs live between list items split across pages', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=split-list-page-integrations');
   const left = page.getByRole('textbox', { name: 'Collaborative editor left' });
