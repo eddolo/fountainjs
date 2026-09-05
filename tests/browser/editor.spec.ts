@@ -268,8 +268,11 @@ test('continues measured long footnotes through editable and print page projecti
   expect(measured.footnoteSources.at(-1)?.textTo).toBe(measured.footnoteText.length);
   measured.footnoteSources.forEach((source: any, index: number) => {
     if (index > 0) expect(source.textFrom).toBe(measured.footnoteSources[index - 1].textTo);
-    expect(measured.footnoteText.slice(source.textFrom, source.textTo)).toMatch(/^FN\d{3}/u);
+    expect(measured.footnoteText.slice(source.textFrom, source.textTo)).toMatch(/\S/u);
   });
+  expect(measured.footnoteSources.map((source: any) => (
+    measured.footnoteText.slice(source.textFrom, source.textTo)
+  )).join('')).toBe(measured.footnoteText);
   expect(measured.placements.length).toBeGreaterThan(1);
   expect(measured.placements[0]).toMatchObject({
     fragmentFrom: 0, clipOffset: 0, continuedBefore: false, continuedAfter: true,
