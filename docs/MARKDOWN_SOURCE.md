@@ -174,13 +174,15 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The raw-label baseline, including container definitions, link precedence, full
-Unicode 17 case folding, opaque-token scanning, raw-source normalization, and
-nested-bracket rejection, is certified by the complete 502-test package gate and 295-pass
+The current Markdown baseline, including raw reference-label correctness,
+container definitions, link precedence, full Unicode 17 case folding,
+opaque-token scanning, nested image descriptions, nested emphasis,
+rule-of-three arithmetic, and unmatched-delimiter preservation, is certified
+by the complete 514-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
-[CI run for `3b6395e`](https://github.com/eddolo/fountainjs/actions/runs/33989652712),
+[CI run for `36fc481`](https://github.com/eddolo/fountainjs/actions/runs/33991664306),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33989652791).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33991664261).
 
 ## Security and collaboration
 

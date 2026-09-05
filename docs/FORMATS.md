@@ -165,6 +165,10 @@ span, and Fountain re-imports the exact mark order.
 Uneven opening and closing runs consume only the delimiter characters required
 for the chosen mark. Surplus stars or underscores remain literal outside the
 formatted span, including when canonical export must escape an adjacent marker.
+Delimiter characters shared by nested marks are assigned in parse order, so
+compact forms can create repeated emphasis or arbitrarily nested strong marks.
+When nested identical marks have no unambiguous Markdown serialization,
+canonical export uses the inert semantic span and re-imports every mark level.
 
 Inline destinations preserve optional titles. Full (`[text][id]`), collapsed
 (`[id][]`), and shortcut (`[id]`) reference links and reference images resolve

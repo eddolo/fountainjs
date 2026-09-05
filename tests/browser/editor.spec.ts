@@ -2316,6 +2316,13 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '**foo***',
       '*foo****',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
+    sharedDelimiterRuns: [
+      '__foo_ bar_',
+      '*foo *bar**',
+      '***foo* bar**',
+      '**foo *bar***',
+      'foo******bar*********baz',
+    ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2488,6 +2495,21 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       [{ text: '***', marks: [] }, { text: 'foo', marks: ['em'] }],
       [{ text: 'foo', marks: ['strong'] }, { text: '*', marks: [] }],
       [{ text: 'foo', marks: ['em'] }, { text: '***', marks: [] }],
+    ]);
+  expect(result.sharedDelimiterRuns.every((entry: any) => (
+    JSON.stringify(entry.document) === JSON.stringify(entry.roundTrip)
+      && entry.losses.length === 0
+  ))).toBe(true);
+  expect(result.sharedDelimiterRuns.map((entry: any) => entry.document.content[0].content
+    .map((node: any) => ({
+      text: node.text,
+      marks: node.marks?.map((mark: any) => mark.type) ?? [],
+    })))).toEqual([
+      [{ text: 'foo', marks: ['em', 'em'] }, { text: ' bar', marks: ['em'] }],
+      [{ text: 'foo ', marks: ['em'] }, { text: 'bar', marks: ['em', 'em'] }],
+      [{ text: 'foo', marks: ['strong', 'em'] }, { text: ' bar', marks: ['strong'] }],
+      [{ text: 'foo ', marks: ['strong'] }, { text: 'bar', marks: ['strong', 'em'] }],
+      [{ text: 'foo', marks: [] }, { text: 'bar', marks: ['strong', 'strong', 'strong'] }, { text: '***baz', marks: [] }],
     ]);
 });
 

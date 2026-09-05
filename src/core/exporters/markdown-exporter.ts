@@ -309,6 +309,7 @@ function inlineContent(node: Node, context: RenderContext, path: readonly number
       /^\s|\s$/u.test(child.text ?? '')
       || sharedEmphasis(node.content[index - 1], child)
       || sharedEmphasis(child, node.content[index + 1])
+      || child.marks.some((mark, markIndex) => child.marks.findIndex((candidate) => candidate.type === mark.type) < markIndex)
     );
     return inline(child, context, [...path, index], preserve);
   }).join('');

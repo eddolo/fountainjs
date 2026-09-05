@@ -465,6 +465,42 @@ describe('Markdown interchange', () => {
         ],
       },
       {
+        source: '__foo_ bar_',
+        nodes: [
+          { text: 'foo', marks: ['em', 'em'] },
+          { text: ' bar', marks: ['em'] },
+        ],
+      },
+      {
+        source: '*foo *bar**',
+        nodes: [
+          { text: 'foo ', marks: ['em'] },
+          { text: 'bar', marks: ['em', 'em'] },
+        ],
+      },
+      {
+        source: '***foo* bar**',
+        nodes: [
+          { text: 'foo', marks: ['strong', 'em'] },
+          { text: ' bar', marks: ['strong'] },
+        ],
+      },
+      {
+        source: '**foo *bar***',
+        nodes: [
+          { text: 'foo ', marks: ['strong'] },
+          { text: 'bar', marks: ['strong', 'em'] },
+        ],
+      },
+      {
+        source: 'foo******bar*********baz',
+        nodes: [
+          { text: 'foo', marks: [] },
+          { text: 'bar', marks: ['strong', 'strong', 'strong'] },
+          { text: '***baz', marks: [] },
+        ],
+      },
+      {
         source: '*foo _bar* baz_',
         nodes: [
           { text: 'foo _bar', marks: ['em'] },

@@ -278,6 +278,19 @@
         "marks": ["em"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-shared-emphasis-opener",
+      "source": "***foo* bar**",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "foo bar",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["strong", "em", "strong"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

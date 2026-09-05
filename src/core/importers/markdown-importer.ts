@@ -434,6 +434,7 @@ function matchingEmphasisRun(
   const marker = value[openerStart] as '*' | '_';
   const openerFlanking = emphasisFlanking(value, openerStart, openerLength, marker);
   const start = openerStart + openerLength;
+  let pendingRemainder = openerRemainder;
   for (let index = start; index <= value.length - delimiterLength; index++) {
     if (value[index] === '\\') { index++; continue; }
     const opaqueEnd = opaqueInlineEnd(value, index);
@@ -448,12 +449,17 @@ function matchingEmphasisRun(
     while (value[runEnd] === marker) runEnd += 1;
     const runLength = runEnd - index;
     const flanking = emphasisFlanking(value, index, runLength, marker);
+    if ((flanking & 2) && pendingRemainder > 0 && runLength <= pendingRemainder) {
+      pendingRemainder -= runLength;
+      index = runEnd - 1;
+      continue;
+    }
     const canClose = Boolean(flanking & 2)
-      && runLength >= delimiterLength
+      && runLength >= delimiterLength + pendingRemainder
       && !violatesEmphasisRuleOfThree(openerLength, openerFlanking, runLength, flanking);
 
-    if (canClose && !(openerRemainder > 0 && runLength <= openerRemainder)) {
-      const closeStart = index + Math.min(openerRemainder, runLength - delimiterLength);
+    if (canClose) {
+      const closeStart = index + pendingRemainder;
       return { start: closeStart, end: closeStart + delimiterLength, runStart: index, runEnd };
     }
 
@@ -492,7 +498,7 @@ function matchingEmphasisRun(
     // serialization when a marked node ends in whitespace. It is intentionally
     // narrower than ordinary delimiter recognition; opening delimiters still
     // obey CommonMark flanking rules.
-    if (runEnd === value.length && runLength === delimiterLength) {
+    if (pendingRemainder === 0 && runEnd === value.length && runLength === delimiterLength) {
       return { start: index, end: runEnd, runStart: index, runEnd };
     }
     index = runEnd - 1;
@@ -730,7 +736,9 @@ function generatedStyledNodes(
       const type = schema.marks[tag === 'a' ? 'link' : markNames[tag] ?? ''];
       const hasRequiredAttributes = tag !== 'a' || /\shref\s*=/iu.test(token);
       let next = current;
-      if (type && hasRequiredAttributes && !current.some((mark) => mark.type === type)) {
+      if (type && hasRequiredAttributes && (
+        tag === 'em' || tag === 'strong' || !current.some((mark) => mark.type === type)
+      )) {
         try {
           const attrs = tag === 'a' ? {
             href: generatedAttribute(token, 'href'),
@@ -998,12 +1006,11 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       while (text[openingEnd] === marker) openingEnd += 1;
       const openingLength = openingEnd - index;
       const primaryLength = emphasisDelimiterLength(openingLength);
-      const attempts: readonly (1 | 2)[] = openingLength > 1
-        ? [primaryLength, primaryLength === 1 ? 2 : 1]
-        : [primaryLength];
       if (emphasisFlanking(text, index, openingLength, marker) & 1) {
-        for (const delimiterLength of attempts) {
-          const prefix = delimiterLength === primaryLength ? 0 : openingLength - delimiterLength;
+        const attemptCount = openingLength > 1 ? 3 : 1;
+        for (let attempt = 0; attempt < attemptCount; attempt++) {
+          const delimiterLength = attempt === 0 ? primaryLength : primaryLength === 1 ? 2 : 1;
+          const prefix = attempt === 2 ? openingLength - delimiterLength : 0;
           const type = schema.marks[delimiterLength === 2 ? 'strong' : 'em'];
           if (!type) continue;
           const match = matchingEmphasisRun(
@@ -1016,6 +1023,8 @@ function inline(text: string, schema: Schema, references: References, inheritedM
           );
           const contentStart = prefix === 0 ? index + delimiterLength : openingEnd;
           if (!match || match.start <= contentStart) continue;
+          if (attempt === 0 && openingLength === 3 && delimiterLength === 1
+            && match.runEnd - match.runStart === 2 && match.start > match.runStart) continue;
           if (prefix > 0) plain += marker.repeat(prefix);
           flush();
           result.push(...inline(text.slice(contentStart, match.start), schema, references, [
