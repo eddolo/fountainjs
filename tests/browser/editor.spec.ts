@@ -2275,6 +2275,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     destinations: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '[Angle](<docs/guide)v1>) and [Relative](guide.md "Guide") plus [Reference].\n\n[reference]:\n  docs/reference.md\n  "Reference title"',
     ),
+    precedence: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[foo](not a link) / [outer [inner](docs/inner.md)](docs/outer.md)\n\n[foo]: docs/reference.md',
+    ),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2305,6 +2308,16 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     })] }),
   ]));
   expect(result.destinations.losses).toEqual([]);
+  expect(result.precedence.document).toEqual(result.precedence.roundTrip);
+  expect(result.precedence.document.content[0].content).toEqual(expect.arrayContaining([
+    expect.objectContaining({ text: 'foo', marks: [expect.objectContaining({
+      type: 'link', attrs: expect.objectContaining({ href: 'docs/reference.md' }),
+    })] }),
+    expect.objectContaining({ text: 'inner', marks: [expect.objectContaining({
+      type: 'link', attrs: expect.objectContaining({ href: 'docs/inner.md' }),
+    })] }),
+  ]));
+  expect(result.precedence.losses).toEqual([]);
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

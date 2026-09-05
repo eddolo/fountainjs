@@ -103,6 +103,15 @@ Definitions inside one or more blockquote levels are discovered without
 letting fenced code or ordinary paragraph continuations inside that quote leak
 into the global reference map.
 
+Link recognition follows the documented CommonMark precedence for two subtle
+cases: malformed inline destination syntax leaves the closing label available
+for a matching shortcut reference, and an inner link suppresses an enclosing
+link rather than producing nested anchors. Code spans are opaque during this
+check, so link-looking code remains ordinary linked label text. Fountain's
+safe-URL policy still wins after syntax recognition; an empty or blocked inline
+destination is retained as literal text and cannot silently select a reference
+with the same label.
+
 The default background highlight uses `==highlight==`. Foreground/background
 colour, custom highlight values, font family, font size, and line height use a
 deterministic `<span data-fountain-text-style="true">` form when ordinary

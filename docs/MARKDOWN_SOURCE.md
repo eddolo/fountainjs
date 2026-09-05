@@ -123,7 +123,8 @@ an initial standards-oriented set of behaviors:
   escapes, excluding code spans and blocks;
 - safe absolute/relative links with balanced or angle-bracket destinations,
   strict title closers, bounded/escaped reference labels, and code-aware
-  single- or multiline definitions;
+  single- or multiline definitions, plus malformed-inline/shortcut and
+  nested-link precedence without treating link-looking code as a nested link;
 - safe URI and email autolinks inside angle brackets;
 - underscore or star emphasis, strong emphasis, strike, code, and highlights;
 - spaces or a backslash before a newline as a hard break;
@@ -160,12 +161,13 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The link-boundary baseline preceding multiline/container definitions is
-certified by the complete 486-test package gate and 295-pass
+The bounded multiline-definition baseline, including escaped labels and
+definitions discovered inside nested blockquotes, is certified by the complete
+489-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
-[CI run for `f88d10e`](https://github.com/eddolo/fountainjs/actions/runs/33986844427),
+[CI run for `14c4954`](https://github.com/eddolo/fountainjs/actions/runs/33987617973),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33986844442).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33987618001).
 
 ## Security and collaboration
 

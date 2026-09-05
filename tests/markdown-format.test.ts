@@ -129,6 +129,38 @@ describe('Markdown interchange', () => {
     expect(document.textContent).toContain('[invalid](guide.md "one "two" three")');
   });
 
+  it('applies CommonMark link precedence for malformed inline syntax and nested links', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '[foo](not a link) / [foo]()',
+      '',
+      '[outer [inner](docs/inner.md)](docs/outer.md)',
+      '',
+      '[outer `[inner](docs/code.md)`](docs/outer.md)',
+      '',
+      '[foo]: docs/reference.md',
+    ].join('\n'), schema);
+    const links: Array<{ text: string; href: unknown; code: boolean }> = [];
+    document.descendants((node) => {
+      const link = node.marks.find((mark) => mark.type.name === 'link');
+      if (node.isText && link) links.push({
+        text: node.textContent,
+        href: link.attrs.href,
+        code: node.marks.some((mark) => mark.type.name === 'code'),
+      });
+    });
+
+    expect(document.child(0).textContent).toBe('foo(not a link) / [foo]()');
+    expect(document.child(1).textContent).toBe('[outer inner](docs/outer.md)');
+    expect(document.child(2).textContent).toBe('outer [inner](docs/code.md)');
+    expect(links).toEqual([
+      { text: 'foo', href: 'docs/reference.md', code: false },
+      { text: 'inner', href: 'docs/inner.md', code: false },
+      { text: 'outer ', href: 'docs/outer.md', code: false },
+      { text: '[inner](docs/code.md)', href: 'docs/outer.md', code: true },
+    ]);
+  });
+
   it('does not extract reference definitions from code or paragraph continuations', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

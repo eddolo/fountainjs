@@ -377,9 +377,9 @@ function codeSpanToken(value: string, start: number): { readonly text: string; r
   return null;
 }
 
-function destinationParts(value: string): ReferenceDefinition | null {
+function destinationParts(value: string, allowEmpty = false): ReferenceDefinition | null {
   const source = value.trim();
-  if (!source) return null;
+  if (!source) return allowEmpty ? { href: '', title: '' } : null;
   let href = '';
   let cursor = 0;
   if (source[0] === '<') {
@@ -585,7 +585,28 @@ function styledTextToken(
   return nodes.length ? { nodes, end } : null;
 }
 
-function linkToken(value: string, start: number, references: References): LinkToken | null {
+function containsNestedLink(label: string, references: References): boolean {
+  for (let index = 0; index < label.length;) {
+    if (label[index] === '\\') { index += 2; continue; }
+    if (label[index] === '`') {
+      const code = codeSpanToken(label, index);
+      if (code) { index = code.end; continue; }
+    }
+    if (label[index] === '!' || label[index] === '[') {
+      const nested = linkToken(label, index, references, false);
+      if (nested && !nested.image) return true;
+    }
+    index += 1;
+  }
+  return false;
+}
+
+function linkToken(
+  value: string,
+  start: number,
+  references: References,
+  rejectNestedLinks = true,
+): LinkToken | null {
   const image = value.startsWith('![', start);
   const bracket = image ? start + 1 : start;
   if (value[bracket] !== '[') return null;
@@ -593,11 +614,23 @@ function linkToken(value: string, start: number, references: References): LinkTo
   if (labelEnd < 0) return null;
   const label = value.slice(bracket + 1, labelEnd);
   const following = labelEnd + 1;
+  const result = (definition: ReferenceDefinition, end: number): LinkToken | null => (
+    !image && rejectNestedLinks && containsNestedLink(label, references)
+      ? null
+      : { ...definition, label, image, end }
+  );
   if (value[following] === '(') {
     const destinationEnd = inlineLinkEnd(value, following);
-    if (destinationEnd < 0) return null;
-    const parsed = destinationParts(value.slice(following + 1, destinationEnd));
-    return parsed ? { ...parsed, label, image, end: destinationEnd + 1 } : null;
+    if (destinationEnd >= 0) {
+      const parsed = destinationParts(value.slice(following + 1, destinationEnd), true);
+      if (parsed) return result(parsed, destinationEnd + 1);
+    }
+    // Invalid inline-link syntax does not consume the label. CommonMark can
+    // therefore still resolve it as a shortcut reference and leave the
+    // malformed `(…)` suffix as literal text.
+    if (!label.trim() || label.length > 999) return null;
+    const definition = references.get(referenceName(label));
+    return definition ? result(definition, labelEnd + 1) : null;
   }
   if (value[following] === '[') {
     const referenceEnd = closingBracket(value, following);
@@ -606,11 +639,11 @@ function linkToken(value: string, start: number, references: References): LinkTo
     const referenceLabel = explicit || label;
     if (!referenceLabel.trim() || referenceLabel.length > 999) return null;
     const definition = references.get(referenceName(referenceLabel));
-    return definition ? { ...definition, label, image, end: referenceEnd + 1 } : null;
+    return definition ? result(definition, referenceEnd + 1) : null;
   }
   if (!label.trim() || label.length > 999) return null;
   const definition = references.get(referenceName(label));
-  return definition ? { ...definition, label, image, end: labelEnd + 1 } : null;
+  return definition ? result(definition, labelEnd + 1) : null;
 }
 
 function autolinkToken(value: string, start: number): (ReferenceDefinition & { readonly label: string; readonly end: number }) | null {

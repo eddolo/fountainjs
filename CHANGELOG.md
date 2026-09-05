@@ -54,6 +54,10 @@
   text. Destinations and titles can continue across nonblank definition lines,
   including multiline titles and escaped closing brackets in labels, and
   definitions nested in blockquotes remain global as CommonMark requires.
+  Malformed inline destinations can now fall back to a defined shortcut
+  reference without consuming their literal suffix, while syntactically valid
+  empty destinations keep inline precedence. A real link nested in link text
+  suppresses the outer link; link-looking text inside a code span does not.
 - A public `fountainjs-editor/core` entry for the platform-neutral document
   engine, logical selection, transactions, commands, history, portable
   extensions, collaboration lifecycle, formats, migrations, stable node IDs,

@@ -247,15 +247,19 @@ forms without claiming complete standards conformance. Entity-obfuscated URLs
 are decoded before protocol validation, while canonical export protects
 literal entity-shaped text. Safe path/query-relative destinations, balanced
 parentheses, strict title closers, bounded reference labels, and code/paragraph-
-aware reference extraction are also covered. Fail-closed
-aligned top-level spans ensure unchanged blocks and separators stay exact while
+aware single/multiline reference extraction, escaped definition labels, and
+global definitions nested in blockquotes are also covered. Malformed inline
+destinations now preserve shortcut-reference precedence, while actual nested
+links suppress their outer link without mistaking code spans for link syntax.
+Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate
-blocks remain deliberately unmapped. The complete 486-test package gate and 295-pass
-Chromium/Firefox/WebKit/mobile matrix passed in
-[CI run `f88d10e`](https://github.com/eddolo/fountainjs/actions/runs/33986844427),
+blocks remain deliberately unmapped. The multiline-definition baseline passed
+the complete 489-test package gate and 295-pass
+Chromium/Firefox/WebKit/mobile matrix in
+[CI run `14c4954`](https://github.com/eddolo/fountainjs/actions/runs/33987617973),
 and the corresponding
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33986844442)
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33987618001)
 succeeded. Identity-aware duplicate/deep-structure
 mapping and a larger standards corpus remain before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
@@ -270,7 +274,7 @@ mapping and a larger standards corpus remain before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, and safer relative/balanced link boundaries are certified in `f88d10e`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, and bounded multiline/container definitions are certified in `14c4954`; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing | Expand the CommonMark/GFM corpus and add identity-aware duplicate/deep-structure mapping before considering raw/visual UI. Exact source preservation and semantic preservation must remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node

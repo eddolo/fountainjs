@@ -135,6 +135,19 @@
         "marks": ["link", "link", "link"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "commonmark-link-precedence",
+      "source": "[foo](not a link) and [outer [inner](docs/inner.md)](docs/outer.md).\n\n[foo]: docs/reference.md",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "foo(not a link) and [outer inner](docs/outer.md).",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["docs/reference.md", "docs/inner.md"],
+        "marks": ["link", "link"],
+        "hardBreaks": 0
+      }
     }
   ]
 }
