@@ -478,6 +478,93 @@ const runPaginationIncrementalBudget = (options: {
   }
 };
 
+const runPaginationStructuralBudget = (blockCount = 5_000, iterations = 6) => {
+  const kit = composeExtensions([CoreExtension, PagesExtension]);
+  const largeEditor = createEditor({
+    schema: kit.schema,
+    plugins: kit.plugins,
+    content: {
+      type: 'doc',
+      content: Array.from({ length: blockCount }, (_, index) => ({
+        type: 'paragraph', content: [{ type: 'text', text: `Structural page block ${index}` }],
+      })),
+    },
+  });
+  const mount = document.createElement('div');
+  document.body.appendChild(mount);
+  const largeView = new EditorView(mount, largeEditor, { ariaLabel: 'Structural pagination fixture' });
+  largeView.dom.style.boxSizing = 'content-box';
+  largeView.dom.style.width = '300px';
+  const before = [...largeView.dom.children];
+  const controller = createDOMPageLayoutController(
+    largeView.dom,
+    () => largeEditor.state.doc,
+    createPageGeometry({ size: { width: 320, height: 1_000 }, margins: 10 }),
+    { observe: false, measurement: { lineFragmentNodeTypes: [] } },
+  );
+  try {
+    const initial = controller.refreshNow('initial');
+    const insertionReads: number[] = [];
+    const insertionDurations: number[] = [];
+    const removalReads: number[] = [];
+    const removalDurations: number[] = [];
+    let insertedRetainedBlocks = 0;
+    let insertedLastPath: string | undefined;
+    let insertedLastTextPath: string | undefined;
+    let insertedLastItem: string | undefined;
+    let insertedLastSourcePath: readonly number[] | undefined;
+    let warnings = 0;
+    for (let iteration = 0; iteration < iterations; iteration += 1) {
+      const leading = largeEditor.state.schema.node('paragraph', {}, [
+        largeEditor.state.schema.text(`Inserted page block ${iteration}`),
+      ]);
+      largeEditor.dispatch(largeEditor.state.createTransaction().replace(0, 0, [leading]));
+      const insertion = controller.refreshNow('mutation');
+      insertionReads.push(insertion.snapshot.measurement.measurementCount);
+      insertionDurations.push(insertion.durationMs);
+      warnings += insertion.snapshot.measurement.warnings.length;
+      const inserted = [...largeView.dom.children];
+      insertedRetainedBlocks = before.filter((node, index) => inserted[index + 1] === node).length;
+      const last = inserted.at(-1) as HTMLElement | undefined;
+      insertedLastPath = last?.dataset.fountainPath;
+      insertedLastTextPath = last?.querySelector<HTMLElement>('[data-fountain-text-path]')?.dataset.fountainTextPath;
+      insertedLastItem = insertion.snapshot.measurement.items.at(-1)?.id;
+      insertedLastSourcePath = insertion.snapshot.measurement.fragmentSources.at(-1)?.sourcePath;
+
+      largeEditor.dispatch(largeEditor.state.createTransaction().replace(0, 1));
+      const removal = controller.refreshNow('mutation');
+      removalReads.push(removal.snapshot.measurement.measurementCount);
+      removalDurations.push(removal.durationMs);
+      warnings += removal.snapshot.measurement.warnings.length;
+    }
+    const restored = [...largeView.dom.children];
+    return {
+      blockCount,
+      iterations,
+      initialReads: initial.snapshot.measurement.measurementCount,
+      insertionReads,
+      insertionDurations,
+      removalReads,
+      removalDurations,
+      insertedRetainedBlocks,
+      restoredRetainedBlocks: before.filter((node, index) => restored[index] === node).length,
+      insertedLastPath,
+      insertedLastTextPath,
+      insertedLastItem,
+      insertedLastSourcePath,
+      restoredLastPath: (restored.at(-1) as HTMLElement | undefined)?.dataset.fountainPath,
+      restoredLastTextPath: restored.at(-1)
+        ?.querySelector<HTMLElement>('[data-fountain-text-path]')?.dataset.fountainTextPath,
+      warnings,
+    };
+  } finally {
+    controller.destroy();
+    largeView.destroy();
+    largeEditor.destroy();
+    mount.remove();
+  }
+};
+
 Object.assign(globalThis, {
   fountainBrowserTest: {
     commands,
@@ -589,6 +676,7 @@ Object.assign(globalThis, {
         unitsPerMillimetre: 96 / 25.4,
       }), true),
       incrementalProbe: runPaginationIncrementalBudget,
+      structuralProbe: runPaginationStructuralBudget,
       controllerProbe: () => {
         const cycles: number[] = [];
         const controller = createDOMPageLayoutController(

@@ -268,6 +268,16 @@ export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderC
   return mounted;
 }
 
+function rebaseRenderedPath(element: HTMLElement, index: number): void {
+  const rebase = (target: HTMLElement, attribute: 'data-fountain-path' | 'data-fountain-text-path') => {
+    const path = target.getAttribute(attribute);
+    if (path) target.setAttribute(attribute, [index, ...path.split('.').slice(1)].join('.'));
+  };
+  rebase(element, 'data-fountain-path');
+  element.querySelectorAll<HTMLElement>('[data-fountain-path]').forEach((target) => rebase(target, 'data-fountain-path'));
+  element.querySelectorAll<HTMLElement>('[data-fountain-text-path]').forEach((target) => rebase(target, 'data-fountain-text-path'));
+}
+
 /**
  * Reconciles an undecorated document at its top-level immutable-node boundary.
  * Unchanged blocks keep their DOM identity; changed blocks are rendered in
@@ -282,12 +292,33 @@ export function reconcileDocument(
   onReuse?: (index: number) => void,
 ): MountedDocumentNode[] {
   const mounted: MountedDocumentNode[] = [];
+  const available = new Map<Node, number[]>();
+  const used = new Set<number>();
+  previous.forEach((entry, index) => {
+    const indexes = available.get(entry.node) ?? [];
+    indexes.push(index);
+    available.set(entry.node, indexes);
+  });
+  const reuseIndexes = doc.content.map((child, index) => {
+    let previousIndex = previous[index]?.node === child && !used.has(index) ? index : undefined;
+    if (previousIndex === undefined) {
+      previousIndex = available.get(child)?.find((candidate) => !used.has(candidate));
+    }
+    if (previousIndex !== undefined) used.add(previousIndex);
+    return previousIndex;
+  });
+  previous.forEach((entry, index) => {
+    if (!used.has(index) && entry.dom.parentNode === root) root.removeChild(entry.dom);
+  });
   let position = 0;
 
   doc.content.forEach((child, index) => {
-    const prior = previous[index];
+    const previousIndex = reuseIndexes[index];
+    const prior = previousIndex === undefined ? undefined : previous[previousIndex];
     const currentDOM = root.childNodes[index];
-    if (prior?.node === child && prior.dom === currentDOM) {
+    if (previousIndex !== undefined && prior?.node === child && prior.dom.parentNode === root) {
+      if (prior.dom !== currentDOM) root.insertBefore(prior.dom, currentDOM ?? null);
+      if (prior.dom.nodeType === 1) rebaseRenderedPath(prior.dom as HTMLElement, index);
       mounted.push(prior);
       onReuse?.(index);
       position += child.nodeSize;
@@ -295,10 +326,7 @@ export function reconcileDocument(
     }
 
     const dom = renderNode(child, [index], context, position);
-    if (currentDOM !== dom) {
-      if (currentDOM) currentDOM.replaceWith(dom);
-      else root.appendChild(dom);
-    }
+    if (currentDOM !== dom) root.insertBefore(dom, root.childNodes[index] ?? null);
     mounted.push({ node: child, dom });
     position += child.nodeSize;
   });

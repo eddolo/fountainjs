@@ -30,7 +30,10 @@
   improved keep-with-next rule that reserves a splittable block's required
   opening lines; plus indexed top-level lookup, identity/footnote-safe
   mutation-cycle measurement reuse, and 1,000-/5,000-block browser reflow budgets
-  covering repeated middle edits and alternating document-edge edits;
+  covering repeated middle edits and alternating document-edge edits; plus
+  identity-preserving top-level insertion/removal, exact rendered-path and
+  cached-source rebasing, and a 5,000-block structural budget that retains every
+  unchanged DOM block while limiting insertion/removal to two/one geometry reads;
   plus a guarded editable page-shell controller that retains one unchanged
   contenteditable/model-path tree, supports native cross-page selection and
   IME plus history across whole-block/manual boundaries, restores continuous

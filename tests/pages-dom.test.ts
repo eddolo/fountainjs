@@ -205,6 +205,91 @@ describe('DOM page measurement adapter', () => {
     uncached.destroy();
   });
 
+  it('reuses and rebases cached geometry when unchanged rendered blocks shift paths', () => {
+    const pageSchema = schema();
+    let document = pageSchema.nodeFromJSON({
+      type: 'doc',
+      content: [
+        { type: 'page_header', attrs: { variant: 'default' }, content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'Header' }] },
+        ] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'Body' }] },
+        { type: 'bullet_list', content: [
+          { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'One' }] }] },
+          { type: 'list_item', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Two' }] }] },
+        ] },
+        { type: 'page_break' },
+      ],
+    });
+    const root = window.document.createElement('div');
+    root.innerHTML = `
+      <header data-fountain-path="0" data-height="10">Header</header>
+      <p data-fountain-path="1" data-height="20">Body</p>
+      <ul data-fountain-path="2" data-height="30">
+        <li data-fountain-path="2.0" data-height="15">One</li>
+        <li data-fountain-path="2.1" data-height="15">Two</li>
+      </ul>
+      <hr data-fountain-path="3" data-height="0">
+    `;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(0, Number(this.dataset.height ?? 0));
+    });
+    const controller = createDOMPageLayoutController(
+      root,
+      () => document,
+      createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 }),
+      { observe: false, measurement: { lineFragmentNodeTypes: [] } },
+    );
+    controller.refreshNow('initial');
+
+    const rebaseRenderedPaths = () => [...root.children].forEach((child, index) => {
+      const element = child as HTMLElement;
+      element.querySelectorAll<HTMLElement>('[data-fountain-path]').forEach((descendant) => {
+        const path = descendant.dataset.fountainPath?.split('.') ?? [];
+        descendant.dataset.fountainPath = [index, ...path.slice(1)].join('.');
+      });
+      element.dataset.fountainPath = String(index);
+    });
+    const leading = pageSchema.nodeFromJSON({
+      type: 'paragraph', content: [{ type: 'text', text: 'Before' }],
+    });
+    const leadingElement = window.document.createElement('p');
+    leadingElement.dataset.fountainPath = '0';
+    leadingElement.dataset.height = '16';
+    leadingElement.textContent = 'Before';
+    root.prepend(leadingElement);
+    rebaseRenderedPaths();
+    document = document.copy([leading, ...document.content]);
+
+    const inserted = controller.refreshNow('mutation').snapshot.measurement;
+    expect(inserted.measurementCount).toBe(2);
+    expect(inserted.templates[0]?.path).toEqual([1]);
+    expect(inserted.items.map((item) => item.id)).toEqual([
+      'block:0:paragraph', 'block:2:paragraph', 'block:3:bullet_list', 'block:4:page_break',
+    ]);
+    expect(inserted.fragmentSources.filter((source) => source.itemId === 'block:3:bullet_list'))
+      .toMatchObject([
+        { sourcePath: [3], partPaths: [[3, 0]] },
+        { sourcePath: [3], partPaths: [[3, 1]] },
+      ]);
+
+    leadingElement.remove();
+    rebaseRenderedPaths();
+    document = document.copy(document.content.slice(1));
+    const removed = controller.refreshNow('mutation').snapshot.measurement;
+    expect(removed.measurementCount).toBe(1);
+    expect(removed.templates[0]?.path).toEqual([0]);
+    expect(removed.items.map((item) => item.id)).toEqual([
+      'block:1:paragraph', 'block:2:bullet_list', 'block:3:page_break',
+    ]);
+    expect(removed.fragmentSources.filter((source) => source.itemId === 'block:2:bullet_list'))
+      .toMatchObject([
+        { sourcePath: [2], partPaths: [[2, 0]] },
+        { sourcePath: [2], partPaths: [[2, 1]] },
+      ]);
+    controller.destroy();
+  });
+
   it('invalidates the owning top-level cache entry for observed DOM mutations', async () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

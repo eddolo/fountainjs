@@ -136,6 +136,7 @@ interface CachedDefinitionMeasurement {
 }
 
 interface CachedFlowMeasurement {
+  readonly index: number;
   readonly node: Node;
   readonly element: HTMLElement;
   readonly definitionSignature: string;
@@ -161,6 +162,56 @@ function clearMeasurementCache(cache: DOMPageMeasurementCache): void {
   cache.contentWidth = Number.NaN;
   cache.definitions.clear();
   cache.entries.clear();
+}
+
+function rebasePath(path: readonly number[], index: number): readonly number[] {
+  return Object.freeze([index, ...path.slice(1)]);
+}
+
+function rebaseBlockIdentifier(identifier: string, previousIndex: number, index: number): string {
+  const prefix = `block:${previousIndex}:`;
+  return identifier.startsWith(prefix) ? `block:${index}:${identifier.slice(prefix.length)}` : identifier;
+}
+
+function rebaseCachedFlowMeasurement(cached: CachedFlowMeasurement, index: number): CachedFlowMeasurement {
+  if (cached.index === index) return cached;
+  const item = cached.item
+    ? Object.freeze({
+        ...cached.item,
+        id: rebaseBlockIdentifier(cached.item.id, cached.index, index),
+        ...(cached.item.fragments
+          ? { fragments: Object.freeze(cached.item.fragments.map((fragment) => Object.freeze({
+              ...fragment,
+              id: rebaseBlockIdentifier(fragment.id, cached.index, index),
+            }))) }
+          : {}),
+      })
+    : undefined;
+  const sources = Object.freeze(cached.sources.map((source) => Object.freeze({
+    ...source,
+    itemId: rebaseBlockIdentifier(source.itemId, cached.index, index),
+    fragmentId: rebaseBlockIdentifier(source.fragmentId, cached.index, index),
+    sourcePath: rebasePath(source.sourcePath, index),
+    partPaths: Object.freeze(source.partPaths.map((path) => rebasePath(path, index))),
+  })));
+  const template = cached.template
+    ? Object.freeze({ ...cached.template, path: rebasePath(cached.template.path, index) })
+    : undefined;
+  const warnings = Object.freeze(cached.warnings.map((warning) => Object.freeze({
+    ...warning,
+    path: rebasePath(warning.path, index),
+    detail: warning.detail.replace(`at ${cached.index}`, `at ${index}`),
+  })));
+  return {
+    index,
+    node: cached.node,
+    element: cached.element,
+    definitionSignature: cached.definitionSignature,
+    ...(item ? { item } : {}),
+    sources,
+    ...(template ? { template } : {}),
+    warnings,
+  };
 }
 
 function finiteNonNegative(value: unknown): value is number {
@@ -496,6 +547,10 @@ function measureDOMPageFlowInternal(
     && Math.abs(cache.contentWidth - measuredContentWidth) <= .01;
   const priorDefinitions = cacheMatches ? cache.definitions : new Map<number, CachedDefinitionMeasurement>();
   const priorEntries = cacheMatches ? cache.entries : new Map<number, CachedFlowMeasurement>();
+  const priorDefinitionsByElement = new Map<HTMLElement, CachedDefinitionMeasurement>();
+  const priorEntriesByElement = new Map<HTMLElement, CachedFlowMeasurement>();
+  priorDefinitions.forEach((entry) => priorDefinitionsByElement.set(entry.element, entry));
+  priorEntries.forEach((entry) => priorEntriesByElement.set(entry.element, entry));
 
   const rendered = new Map<number, HTMLElement>();
   Array.from(root.children).forEach((child) => {
@@ -523,7 +578,10 @@ function measureDOMPageFlowInternal(
     if (node.type.name !== 'footnote_definition') return;
     const element = rendered.get(index);
     if (!element) return;
-    const cached = !invalidatedIndexes.has(index) ? priorDefinitions.get(index) : undefined;
+    const indexed = priorDefinitions.get(index);
+    const cached = !invalidatedIndexes.has(index)
+      ? indexed?.node === node && indexed.element === element ? indexed : priorDefinitionsByElement.get(element)
+      : undefined;
     const height = cached?.node === node && cached.element === element
       ? cached.height
       : outerHeight(element, count);
@@ -538,10 +596,15 @@ function measureDOMPageFlowInternal(
     const path = Object.freeze([index]);
     if (node.type.name === 'footnote_definition') return;
     const definitionSignature = referencedDefinitionSignature(node, definitionHeights);
-    const cached = !invalidatedIndexes.has(index) ? priorEntries.get(index) : undefined;
+    const indexed = priorEntries.get(index);
+    const candidate = !invalidatedIndexes.has(index)
+      ? indexed?.node === node && indexed.element === element ? indexed : priorEntriesByElement.get(element)
+      : undefined;
+    const cached = candidate?.node === node && candidate.element === element
+      ? rebaseCachedFlowMeasurement(candidate, index)
+      : undefined;
     if (
-      cached?.node === node
-      && cached.element === element
+      cached
       && cached.definitionSignature === definitionSignature
     ) {
       if (cached.template) templates.push(cached.template);
@@ -571,7 +634,7 @@ function measureDOMPageFlowInternal(
       }
       warnings.push(...entryWarnings);
       nextEntries.set(index, {
-        node, element, definitionSignature, sources: Object.freeze([]), template,
+        index, node, element, definitionSignature, sources: Object.freeze([]), template,
         warnings: Object.freeze(entryWarnings),
       });
       return;
@@ -592,7 +655,7 @@ function measureDOMPageFlowInternal(
       items.push(item);
       fragmentSources.push(...sources);
       nextEntries.set(index, {
-        node, element, definitionSignature, item, sources, warnings: Object.freeze([]),
+        index, node, element, definitionSignature, item, sources, warnings: Object.freeze([]),
       });
       return;
     }
@@ -647,6 +710,7 @@ function measureDOMPageFlowInternal(
     });
     warnings.push(...entryWarnings);
     nextEntries.set(index, {
+      index,
       node,
       element,
       definitionSignature,

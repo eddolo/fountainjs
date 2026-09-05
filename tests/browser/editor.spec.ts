@@ -273,6 +273,32 @@ test('bounds alternating edge reflow across 5,000 rendered page blocks', async (
   expect(p95).toBeLessThan(250);
 });
 
+test('keeps 5,000 unchanged page blocks cached through leading insertion and removal', async ({ page }) => {
+  const result = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.structuralProbe()
+  ));
+  const durations = [...result.insertionDurations, ...result.removalDurations]
+    .sort((left: number, right: number) => left - right);
+  const p95 = durations[Math.max(0, Math.ceil(durations.length * .95) - 1)];
+  expect(result).toMatchObject({
+    blockCount: 5_000,
+    iterations: 6,
+    initialReads: 5_001,
+    insertedRetainedBlocks: 5_000,
+    restoredRetainedBlocks: 5_000,
+    insertedLastPath: '5000',
+    insertedLastTextPath: '5000.0',
+    insertedLastItem: 'block:5000:paragraph',
+    insertedLastSourcePath: [5_000],
+    restoredLastPath: '4999',
+    restoredLastTextPath: '4999.0',
+    warnings: 0,
+  });
+  expect(result.insertionReads).toEqual(Array(6).fill(2));
+  expect(result.removalReads).toEqual(Array(6).fill(1));
+  expect(p95).toBeLessThan(500);
+});
+
 test('edits, selects, and composes across guarded page shells in one contenteditable', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=editable-pages');
   const editor = page.getByRole('textbox', { name: 'Editable page canvas editor' });

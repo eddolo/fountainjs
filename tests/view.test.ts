@@ -72,6 +72,40 @@ describe('EditorView', () => {
     view.destroy();
   });
 
+  it('preserves and rebases unchanged block DOM across leading insertion and deletion', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: Array.from({ length: 100 }, (_, index) => ({
+          type: 'paragraph',
+          content: [{ type: 'text', text: `Line ${index}` }],
+        })),
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const original = [...view.dom.children];
+    const leading = editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Before')]);
+
+    expect(editor.dispatch(editor.state.createTransaction().replace(0, 0, [leading]))).toBe(true);
+    const inserted = [...view.dom.children];
+    expect(inserted).toHaveLength(101);
+    expect(inserted[0]).not.toBe(original[0]);
+    original.forEach((block, index) => expect(inserted[index + 1]).toBe(block));
+    expect(inserted[100]?.getAttribute('data-fountain-path')).toBe('100');
+    expect(inserted[100]?.querySelector('[data-fountain-text-path]')?.getAttribute('data-fountain-text-path')).toBe('100.0');
+
+    expect(editor.dispatch(editor.state.createTransaction().replace(0, 1))).toBe(true);
+    const restored = [...view.dom.children];
+    expect(restored).toHaveLength(100);
+    original.forEach((block, index) => expect(restored[index]).toBe(block));
+    expect(restored[99]?.getAttribute('data-fountain-path')).toBe('99');
+    expect(restored[99]?.querySelector('[data-fountain-text-path]')?.getAttribute('data-fountain-text-path')).toBe('99.0');
+    view.destroy();
+  });
+
   it('adds focus to atomic chains while keeping capability checks side-effect free', () => {
     const updates: string[] = [];
     const editor = createEditor({
@@ -409,7 +443,12 @@ describe('EditorView', () => {
     button?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(currentPath).toEqual([1]);
 
-    expect(selectText(editor, [0, 0], 0)).toBe(true);
+    editor.dispatch(editor.state.createTransaction().replace(0, 1));
+    expect(view.dom.querySelector('[data-counter-view]')).toBe(original);
+    button?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(currentPath).toEqual([0]);
+
+    expect(selectText(editor, [1, 0], 0)).toBe(true);
     expect(deselected).toBe(1);
     expect(original?.dataset.hookSelected).toBeUndefined();
 

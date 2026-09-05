@@ -174,16 +174,20 @@ export class EditorView {
       && this.decorations.decorations.length === 0
       && decorations.decorations.length === 0;
     if (canReconcile) {
-      const nodeViewsByTopLevel = new Map<number, MountedNodeView[]>();
-      previous.forEach((entry) => {
-        const index = entry.path[0];
+      const mappedNodeViewsByTopLevel = new Map<number, MountedNodeView[]>();
+      reusableNodeViews.forEach((entry, key) => {
+        const path = key.split('.').map(Number);
+        const index = path[0];
         if (index === undefined) return;
-        const entries = nodeViewsByTopLevel.get(index) ?? [];
-        entries.push(entry);
-        nodeViewsByTopLevel.set(index, entries);
+        const mapped = { ...entry, path: Object.freeze(path) };
+        const entries = mappedNodeViewsByTopLevel.get(index) ?? [];
+        entries.push(mapped);
+        mappedNodeViewsByTopLevel.set(index, entries);
       });
       this.documentNodes = reconcileDocument(this.dom, document, this.documentNodes, context, (index) => {
-        mounted.push(...(nodeViewsByTopLevel.get(index) ?? []));
+        const mapped = mappedNodeViewsByTopLevel.get(index) ?? [];
+        mapped.forEach((entry) => { entry.pathReference.current = [...entry.path]; });
+        mounted.push(...mapped);
       });
     } else {
       this.documentNodes = renderDocument(this.dom, document, context);
