@@ -317,6 +317,32 @@
         "marks": ["em", "em", "strong", "em"],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "gfm-one-and-two-tilde-strikethrough",
+      "source": "~~Removed~~ plus ~withdrawn~.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Removed plus withdrawn.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": ["strike", "strike"],
+        "hardBreaks": 0
+      }
+    },
+    {
+      "id": "gfm-three-tilde-run-is-literal",
+      "source": "Keep ~~~this~~~ unchanged.",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "Keep ~~~this~~~ unchanged.",
+        "headings": [],
+        "codeBlocks": [],
+        "links": [],
+        "marks": [],
+        "hardBreaks": 0
+      }
     }
   ]
 }

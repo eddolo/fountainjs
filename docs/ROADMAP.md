@@ -243,7 +243,9 @@ CommonMark/GFM-oriented fixture subset also covers ATX/Setext headings,
 indented and variable fenced code, collision-safe variable-delimiter code
 spans, strict semicolon-terminated HTML5 character references, all ASCII
 punctuation escapes, URI/email autolinks, star emphasis, and both hard-break
-forms without claiming complete standards conformance. Entity-obfuscated URLs
+forms without claiming complete standards conformance. GFM one- and two-tilde
+strikethrough is exact-run aware, stops at paragraph boundaries, and keeps runs
+of three or more literal. Entity-obfuscated URLs
 are decoded before protocol validation, while canonical export protects
 literal entity-shaped text. Safe path/query-relative destinations, balanced
 parentheses, strict title closers, bounded reference labels, and code/paragraph-
@@ -276,17 +278,21 @@ semantic-span fallback preserves otherwise ambiguous adjacent text-node mark
 boundaries without giving up reference-style link output.
 CommonMark rule-of-three arithmetic now prevents an ambidextrous delimiter run
 from closing the wrong span, including compact nested forms with no separating
-whitespace. Earlier overlapping spans keep precedence. The broader delimiter
-stack is still an explicit compatibility target rather than a completed claim.
+whitespace. Earlier overlapping spans keep precedence, including when an
+otherwise competing same-marker opener sits inside a nested unlike strong span.
+The broader delimiter stack is still an explicit compatibility target rather
+than a completed claim.
 Uneven-run handling now leaves unmatched delimiter characters outside the
 formatted span and round-trips the otherwise ambiguous adjacent literal/mark
 boundary through escaped canonical Markdown.
 Shared opener/closer runs now preserve parse-order nesting, including repeated
-emphasis and multiple strong levels. Duplicate identical marks take the
-lossless semantic-span export path instead of being silently collapsed.
+emphasis, underscore surplus, and multiple strong levels. Duplicate identical
+marks take the lossless semantic-span export path instead of being silently collapsed.
 Indefinite mixed nesting now survives soft line breaks and link labels. The
 semantic fallback keeps a non-outermost link at its exact mark-stack position
 and applies the same URL safety policy on re-import.
+The GFM strikethrough baseline accepts matching runs of one or two tildes,
+rejects longer runs, and never matches across a paragraph boundary.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

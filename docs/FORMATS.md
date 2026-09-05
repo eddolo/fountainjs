@@ -146,6 +146,11 @@ both browsers and headless Node.js, preserves supported semantic marks nested
 inside it, and validates every recovered style or link before it enters the
 document. Other Markdown consumers still receive readable inline HTML.
 
+GFM strikethrough accepts matching runs of either one or two tildes. A blank
+line ends the candidate span, and a run of three or more tildes stays literal,
+matching the GFM 0.29 extension examples. Canonical export uses the broadly
+interoperable two-tilde form.
+
 Emphasis supports star and underscore delimiters, double-underscore strong,
 and triple-delimiter combined strong emphasis. Unicode-aware opening flanking
 keeps intraword underscores and runs followed by whitespace literal. Canonical
@@ -155,8 +160,9 @@ delimiter-stack conformance remains outside the currently claimed subset.
 The supported subset does apply CommonMark's rule-of-three arithmetic to
 ambiguous delimiter runs, including compact nested forms such as
 `*foo**bar**baz*`, and gives the earlier span precedence when unlike emphasis
-markers overlap. Ordinary strong/emphasis nesting is supported, and links, code,
-autolinks, and inline HTML group more tightly during delimiter search. If a
+markers overlap—even when the competing same-marker opener is inside a nested
+unlike strong span. Ordinary strong/emphasis nesting is supported, and links,
+code, autolinks, and inline HTML group more tightly during delimiter search. If a
 continuous mark is split across adjacent Fountain text nodes, or includes
 edge whitespace that independent Markdown delimiters cannot preserve safely,
 canonical export uses the same inert `data-fountain-text-style` span used by

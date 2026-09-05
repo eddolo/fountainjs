@@ -640,6 +640,36 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('follows GFM one- and two-tilde strikethrough boundaries', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '~~Removed~~ and ~also removed~.',
+      '',
+      'Three ~~~stays literal~~~ here.',
+      '',
+      'This ~~does not',
+      '',
+      'cross paragraphs~~.',
+    ].join('\n'), schema);
+
+    expect(document.content.map((block) => block.content.map((node) => ({
+      text: node.textContent,
+      marks: node.marks.map((mark) => mark.type.name),
+    })))).toEqual([
+      [
+        { text: 'Removed', marks: ['strike'] },
+        { text: ' and ', marks: [] },
+        { text: 'also removed', marks: ['strike'] },
+        { text: '.', marks: [] },
+      ],
+      [{ text: 'Three ~~~stays literal~~~ here.', marks: [] }],
+      [{ text: 'This ~~does not', marks: [] }],
+      [{ text: 'cross paragraphs~~.', marks: [] }],
+    ]);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON())
+      .toEqual(document.toJSON());
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

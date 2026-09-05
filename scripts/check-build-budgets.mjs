@@ -186,7 +186,9 @@ const limits = Object.freeze({
   // projection add about 1.8/1.4 KiB to that same shared format chunk.
   // Shared delimiter-run consumption and duplicate-mark semantic projection
   // add about 0.6/0.3 KiB without moving any public entry-point ceiling.
-  'all ESM runtime code': 1101 * kibibyte,
+  // Exact one/two-tilde GFM strikethrough adds about 0.2/0.1 KiB to the
+  // shared format chunk without moving any public entry-point ceiling.
+  'all ESM runtime code': 1102 * kibibyte,
   'all CommonJS runtime code': 924 * kibibyte,
 });
 

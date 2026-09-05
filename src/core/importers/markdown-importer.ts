@@ -364,10 +364,12 @@ function inlineLinkEnd(value: string, start: number): number {
   return -1;
 }
 
-function matchingDelimiter(value: string, start: number, delimiter: string): number {
+function matchingDelimiter(value: string, start: number, delimiter: string, exactRun = false): number {
   for (let index = start; index <= value.length - delimiter.length; index++) {
     if (value[index] === '\\') { index++; continue; }
-    if (value.startsWith(delimiter, index)) return index;
+    if (value.startsWith(delimiter, index)
+      && (!exactRun || (value[index - 1] !== delimiter[0]
+        && value[index + delimiter.length] !== delimiter[0]))) return index;
   }
   return -1;
 }
@@ -1103,11 +1105,14 @@ function inline(text: string, schema: Schema, references: References, inheritedM
 
     const delimiters: readonly [string, readonly string[]][] = [
       ['~~', ['strike']],
+      ['~', ['strike']],
       ['==', ['highlight']],
     ];
     for (const [delimiter, markNames] of delimiters) {
       if (!text.startsWith(delimiter, index)) continue;
-      const end = matchingDelimiter(text, index + delimiter.length, delimiter);
+      const exactRun = delimiter[0] === '~';
+      if (exactRun && (text[index - 1] === '~' || text[index + delimiter.length] === '~')) continue;
+      const end = matchingDelimiter(text, index + delimiter.length, delimiter, exactRun);
       const types = markNames.map((markName) => schema.marks[markName]);
       if (end <= index + delimiter.length || types.some((type) => !type)) continue;
       flush();

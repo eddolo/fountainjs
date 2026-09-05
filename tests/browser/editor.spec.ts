@@ -2328,6 +2328,11 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '**foo [*bar*](/url)**',
       '*foo __bar *baz bim__ bam*',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
+    strikethroughRuns: [
+      '~~Removed~~ and ~also removed~.',
+      'Three ~~~stays literal~~~ here.',
+      'This ~~does not\n\ncross paragraphs~~.',
+    ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
   expect(result.code.document).toEqual(result.code.roundTrip);
@@ -2535,6 +2540,27 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
         { text: 'foo ', marks: ['em'] },
         { text: 'bar *baz bim', marks: ['em', 'strong'] },
         { text: ' bam', marks: ['em'] },
+      ],
+    ]);
+  expect(result.strikethroughRuns.every((entry: any) => (
+    JSON.stringify(entry.document) === JSON.stringify(entry.roundTrip)
+      && entry.losses.length === 0
+  ))).toBe(true);
+  expect(result.strikethroughRuns.map((entry: any) => entry.document.content
+    .map((block: any) => block.content.map((node: any) => ({
+      text: node.text,
+      marks: node.marks?.map((mark: any) => mark.type) ?? [],
+    }))))).toEqual([
+      [[
+        { text: 'Removed', marks: ['strike'] },
+        { text: ' and ', marks: [] },
+        { text: 'also removed', marks: ['strike'] },
+        { text: '.', marks: [] },
+      ]],
+      [[{ text: 'Three ~~~stays literal~~~ here.', marks: [] }]],
+      [
+        [{ text: 'This ~~does not', marks: [] }],
+        [{ text: 'cross paragraphs~~.', marks: [] }],
       ],
     ]);
 });

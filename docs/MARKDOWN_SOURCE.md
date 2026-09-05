@@ -133,11 +133,14 @@ an initial standards-oriented set of behaviors:
   spaces/tabs/line endings, counts its bound by Unicode code point, and honors
   adjacent full/collapsed/shortcut precedence;
 - safe URI and email autolinks inside angle brackets;
-- underscore or star emphasis, strong emphasis, strike, code, and highlights;
+- underscore or star emphasis, strong emphasis, exact one/two-tilde GFM
+  strikethrough, code, and highlights;
 - Unicode-aware emphasis opening flanking, double-underscore strong, and
   triple-delimiter combined strong emphasis;
 - unambiguous nested emphasis plus link/code/HTML grouping precedence, with a
   semantic-span fallback for lossless adjacent marked-node boundaries;
+- delimiter arithmetic for surplus star/underscore runs, repeated emphasis or
+  strong levels, and earlier-span precedence across unlike overlapping marks;
 - spaces or a backslash before a newline as a hard break;
 - inline/reference links and images with titles;
 - plain-text image descriptions derived from nested emphasis, links, and images;
@@ -166,7 +169,7 @@ conformance. Important remaining work includes:
 - exact list marker, indentation, interruption, tight/loose, and lazy
   continuation rules;
 - full link destination/title/reference precedence;
-- GFM extended autolinks and strikethrough edge cases;
+- GFM extended autolinks and deeper strikethrough/code/link precedence cases;
 - a larger versioned subset tied to explicit specification examples;
 - identity-aware mapping for duplicate blocks and deeper structures without
   attaching raw text to the wrong node.
@@ -177,7 +180,9 @@ features,” not “fully CommonMark/GFM compliant.”
 The current Markdown baseline, including raw reference-label correctness,
 container definitions, link precedence, full Unicode 17 case folding,
 opaque-token scanning, nested image descriptions, nested emphasis,
-rule-of-three arithmetic, and unmatched-delimiter preservation, is certified
+rule-of-three arithmetic, repeated mark levels, unlike-marker overlap
+precedence, exact GFM tilde-run boundaries, and unmatched-delimiter
+preservation, is certified
 by the complete 514-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
 [CI run for `36fc481`](https://github.com/eddolo/fountainjs/actions/runs/33991664306),
