@@ -343,6 +343,19 @@
         "marks": [],
         "hardBreaks": 0
       }
+    },
+    {
+      "id": "gfm-strikethrough-opaque-token-precedence",
+      "source": "~~before `~~` and [label~~](docs.md) after~~",
+      "expected": {
+        "topLevelTypes": ["paragraph"],
+        "text": "before ~~ and label~~ after",
+        "headings": [],
+        "codeBlocks": [],
+        "links": ["docs.md"],
+        "marks": ["strike", "strike", "code", "strike", "strike", "link", "strike"],
+        "hardBreaks": 0
+      }
     }
   ]
 }

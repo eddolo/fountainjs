@@ -670,6 +670,46 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('keeps code and links tighter than surrounding strikethrough', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      {
+        source: '~~before `~~` after~~',
+        nodes: [
+          { text: 'before ', marks: ['strike'] },
+          { text: '~~', marks: ['strike', 'code'] },
+          { text: ' after', marks: ['strike'] },
+        ],
+      },
+      {
+        source: '~~before [label~~](docs.md) after~~',
+        nodes: [
+          { text: 'before ', marks: ['strike'] },
+          { text: 'label~~', marks: ['strike', 'link'] },
+          { text: ' after', marks: ['strike'] },
+        ],
+      },
+      {
+        source: '~~[linked](docs.md)~~ / [~~inside~~](docs.md)',
+        nodes: [
+          { text: 'linked', marks: ['strike', 'link'] },
+          { text: ' / ', marks: [] },
+          { text: 'inside', marks: ['link', 'strike'] },
+        ],
+      },
+    ];
+
+    for (const example of cases) {
+      const document = MarkdownImporter.parse(example.source, schema);
+      expect(document.child(0).content.map((node) => ({
+        text: node.textContent,
+        marks: node.marks.map((mark) => mark.type.name),
+      })), example.source).toEqual(example.nodes);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
+        .toEqual(document.toJSON());
+    }
+  });
+
   it('does not join a reference title across a blank line', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

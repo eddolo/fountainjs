@@ -149,7 +149,9 @@ document. Other Markdown consumers still receive readable inline HTML.
 GFM strikethrough accepts matching runs of either one or two tildes. A blank
 line ends the candidate span, and a run of three or more tildes stays literal,
 matching the GFM 0.29 extension examples. Canonical export uses the broadly
-interoperable two-tilde form.
+interoperable two-tilde form. Code spans, autolinks, inline HTML, and links bind
+more tightly during delimiter search; when a continuous strike crosses those
+node boundaries, lossless semantic HTML preserves the exact mark order.
 
 Emphasis supports star and underscore delimiters, double-underscore strong,
 and triple-delimiter combined strong emphasis. Unicode-aware opening flanking

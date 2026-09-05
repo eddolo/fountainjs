@@ -364,9 +364,23 @@ function inlineLinkEnd(value: string, start: number): number {
   return -1;
 }
 
-function matchingDelimiter(value: string, start: number, delimiter: string, exactRun = false): number {
+function matchingDelimiter(
+  value: string,
+  start: number,
+  delimiter: string,
+  exactRun = false,
+  references?: References,
+): number {
   for (let index = start; index <= value.length - delimiter.length; index++) {
     if (value[index] === '\\') { index++; continue; }
+    if (references) {
+      const opaqueEnd = opaqueInlineEnd(value, index);
+      if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
+      if (value[index] === '[' || value[index] === '!') {
+        const linkEnd = linkToken(value, index, references)?.end ?? -1;
+        if (linkEnd > index) { index = linkEnd - 1; continue; }
+      }
+    }
     if (value.startsWith(delimiter, index)
       && (!exactRun || (value[index - 1] !== delimiter[0]
         && value[index + delimiter.length] !== delimiter[0]))) return index;
@@ -1112,7 +1126,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       if (!text.startsWith(delimiter, index)) continue;
       const exactRun = delimiter[0] === '~';
       if (exactRun && (text[index - 1] === '~' || text[index + delimiter.length] === '~')) continue;
-      const end = matchingDelimiter(text, index + delimiter.length, delimiter, exactRun);
+      const end = matchingDelimiter(text, index + delimiter.length, delimiter, exactRun, references);
       const types = markNames.map((markName) => schema.marks[markName]);
       if (end <= index + delimiter.length || types.some((type) => !type)) continue;
       flush();

@@ -2332,6 +2332,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '~~Removed~~ and ~also removed~.',
       'Three ~~~stays literal~~~ here.',
       'This ~~does not\n\ncross paragraphs~~.',
+      '~~before `~~` and [label~~](docs.md) after~~',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
   }));
 
@@ -2562,6 +2563,13 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
         [{ text: 'This ~~does not', marks: [] }],
         [{ text: 'cross paragraphs~~.', marks: [] }],
       ],
+      [[
+        { text: 'before ', marks: ['strike'] },
+        { text: '~~', marks: ['strike', 'code'] },
+        { text: ' and ', marks: ['strike'] },
+        { text: 'label~~', marks: ['strike', 'link'] },
+        { text: ' after', marks: ['strike'] },
+      ]],
     ]);
 });
 

@@ -296,20 +296,22 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
   return text;
 }
 
-function sharedEmphasis(left: Node | undefined, right: Node | undefined): boolean {
+function sharedDelimitedMark(left: Node | undefined, right: Node | undefined): boolean {
   return Boolean(left?.isText && right?.isText && left.marks.some((mark) => (
-    (mark.type.name === 'strong' || mark.type.name === 'em')
+    (mark.type.name === 'strong' || mark.type.name === 'em' || mark.type.name === 'strike')
     && right.marks.some((candidate) => candidate.eq(mark))
   )));
 }
 
 function inlineContent(node: Node, context: RenderContext, path: readonly number[]): string {
   return node.content.map((child, index) => {
-    const marked = child.isText && child.marks.some((mark) => mark.type.name === 'strong' || mark.type.name === 'em');
+    const marked = child.isText && child.marks.some((mark) => (
+      mark.type.name === 'strong' || mark.type.name === 'em' || mark.type.name === 'strike'
+    ));
     const preserve = marked && (
       /^\s|\s$/u.test(child.text ?? '')
-      || sharedEmphasis(node.content[index - 1], child)
-      || sharedEmphasis(child, node.content[index + 1])
+      || sharedDelimitedMark(node.content[index - 1], child)
+      || sharedDelimitedMark(child, node.content[index + 1])
       || child.marks.some((mark, markIndex) => child.marks.findIndex((candidate) => candidate.type === mark.type) < markIndex)
     );
     return inline(child, context, [...path, index], preserve);

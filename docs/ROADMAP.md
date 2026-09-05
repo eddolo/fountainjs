@@ -292,7 +292,10 @@ Indefinite mixed nesting now survives soft line breaks and link labels. The
 semantic fallback keeps a non-outermost link at its exact mark-stack position
 and applies the same URL safety policy on re-import.
 The GFM strikethrough baseline accepts matching runs of one or two tildes,
-rejects longer runs, and never matches across a paragraph boundary.
+rejects longer runs, never matches across a paragraph boundary, and treats
+code, autolinks, inline HTML, and links as tighter-bound tokens. Lossless
+semantic fallback preserves the exact mark stack when strike continues across
+adjacent nodes with different inner marks.
 Fail-closed aligned top-level spans ensure unchanged blocks and separators stay exact while
 changed blocks are canonical. Unique semantic matches now retain their source
 through insertion, deletion, and movement with canonical separators; duplicate

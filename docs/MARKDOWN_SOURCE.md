@@ -141,6 +141,8 @@ an initial standards-oriented set of behaviors:
   semantic-span fallback for lossless adjacent marked-node boundaries;
 - delimiter arithmetic for surplus star/underscore runs, repeated emphasis or
   strong levels, and earlier-span precedence across unlike overlapping marks;
+- strike delimiter search that treats code, autolinks, inline HTML, and links
+  as opaque while preserving continuous strike around their parsed content;
 - spaces or a backslash before a newline as a hard break;
 - inline/reference links and images with titles;
 - plain-text image descriptions derived from nested emphasis, links, and images;
@@ -169,7 +171,7 @@ conformance. Important remaining work includes:
 - exact list marker, indentation, interruption, tight/loose, and lazy
   continuation rules;
 - full link destination/title/reference precedence;
-- GFM extended autolinks and deeper strikethrough/code/link precedence cases;
+- GFM extended autolinks and additional strikethrough delimiter-stack cases;
 - a larger versioned subset tied to explicit specification examples;
 - identity-aware mapping for duplicate blocks and deeper structures without
   attaching raw text to the wrong node.
