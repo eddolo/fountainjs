@@ -62,6 +62,101 @@ test('keeps editable page content continuous on a narrow screen', async ({ page 
   expect(sizes.width).toBeLessThanOrEqual(sizes.parentWidth);
 });
 
+test('preserves split-paragraph selection and composition through mobile page fallback', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 900 });
+  await page.goto('/browser-tests.html?fixture=editable-split-pages');
+  const region = page.getByLabel('Editable pages browser contract');
+  const host = region.locator('.fountain-editable-pages');
+  const editor = page.getByRole('textbox', { name: 'Split paragraph page editor' });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const gap = editor.locator('[data-fountain-editable-page-break]').first();
+  await expect(gap).toBeAttached();
+  const initialText = await page.evaluate(() => {
+    const document = (globalThis as any).fountainBrowserTest.pages.editable.summary().document;
+    return document.content[0]?.content?.map((node: any) => node.text ?? '').join('') ?? '';
+  });
+  const boundary = await gap.evaluate((element) => {
+    const wrapper = element.closest<HTMLElement>('[data-fountain-text-path]');
+    if (!wrapper) throw new Error('Expected the page gap inside a text-path wrapper.');
+    const range = document.createRange();
+    range.selectNodeContents(wrapper);
+    range.setEndBefore(element);
+    const fragment = range.cloneContents();
+    fragment.querySelectorAll('[data-fountain-widget]').forEach((widget) => widget.remove());
+    return fragment.textContent?.length ?? 0;
+  });
+  await gap.evaluate((element) => {
+    const parent = element.parentNode;
+    if (!parent) throw new Error('Expected a mounted page gap.');
+    const index = Array.prototype.indexOf.call(parent.childNodes, element) as number;
+    const range = document.createRange();
+    range.setStart(parent, index + 1);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  const selection = () => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
+  ));
+  await expect.poll(selection).toMatchObject({
+    type: 'text', path: [0, 0], from: boundary, endPath: [0, 0], to: boundary,
+  });
+  const compositionPrevented = await editor.evaluate((element) => {
+    element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    const input = new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertCompositionText', data: '携',
+    });
+    element.dispatchEvent(input);
+    element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '携' }));
+    return input.defaultPrevented;
+  });
+  expect(compositionPrevented).toBe(true);
+  await expect(editor).toHaveText(`${initialText.slice(0, boundary)}携${initialText.slice(boundary)}`);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(editor).toHaveText(initialText);
+
+  const selected = await editor.evaluate((element) => {
+    const pageGap = element.querySelector<HTMLElement>('[data-fountain-editable-page-break]');
+    const wrapper = pageGap?.closest<HTMLElement>('[data-fountain-text-path]');
+    if (!pageGap || !wrapper) throw new Error('Expected a page gap inside a text-path wrapper.');
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    const textNodes: Text[] = [];
+    let current = walker.nextNode();
+    while (current) {
+      if (current.textContent) textNodes.push(current as Text);
+      current = walker.nextNode();
+    }
+    const before = textNodes.filter((node) => (
+      Boolean(node.compareDocumentPosition(pageGap) & Node.DOCUMENT_POSITION_FOLLOWING)
+    )).at(-1);
+    const after = textNodes.find((node) => (
+      Boolean(pageGap.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)
+    ));
+    if (!before || !after) throw new Error('Expected text on both sides of the page gap.');
+    const range = document.createRange();
+    range.setStart(before, before.data.length - 1);
+    range.setEnd(after, 1);
+    const domSelection = document.getSelection();
+    domSelection?.removeAllRanges();
+    domSelection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+    return true;
+  });
+  expect(selected).toBe(true);
+  await expect.poll(selection).toMatchObject({ from: boundary - 1, to: boundary + 1 });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');
+  await expect(editor.locator('[data-fountain-editable-page-break]')).toHaveCount(0);
+  await expect.poll(selection).toMatchObject({ from: boundary - 1, to: boundary + 1 });
+  await expect(editor).toHaveText(initialText);
+});
+
 test('keeps the public editor usable without horizontal overflow at a phone viewport', async ({ page }) => {
   await page.goto('/');
   const primary = page.getByRole('navigation', { name: 'Primary navigation' });

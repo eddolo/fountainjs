@@ -647,6 +647,109 @@ test('keeps one paragraph editable when its measured lines span page shells', as
   )).toBe(1);
 });
 
+test('maps carets, ranges, and composition around injected paragraph page gaps', async ({ page }) => {
+  await page.goto('/browser-tests.html?fixture=editable-split-pages');
+  const editor = page.getByRole('textbox', { name: 'Split paragraph page editor' });
+  const gap = editor.locator('[data-fountain-editable-page-break]').first();
+  await expect(gap).toBeAttached();
+  const initialText = await page.evaluate(() => {
+    const document = (globalThis as any).fountainBrowserTest.pages.editable.summary().document;
+    return document.content[0]?.content?.map((node: any) => node.text ?? '').join('') ?? '';
+  });
+  const boundary = await gap.evaluate((element) => {
+    const wrapper = element.closest<HTMLElement>('[data-fountain-text-path]');
+    if (!wrapper) throw new Error('Expected the page gap inside a text-path wrapper.');
+    const range = document.createRange();
+    range.selectNodeContents(wrapper);
+    range.setEndBefore(element);
+    const fragment = range.cloneContents();
+    fragment.querySelectorAll('[data-fountain-widget]').forEach((widget) => widget.remove());
+    return {
+      path: wrapper.dataset.fountainTextPath,
+      offset: fragment.textContent?.length ?? 0,
+    };
+  });
+  expect(boundary.path).toBe('0.0');
+  expect(boundary.offset).toBeGreaterThan(1);
+  expect(boundary.offset).toBeLessThan(initialText.length - 1);
+
+  const placeAtGap = async (side: 'before' | 'after') => editor.evaluate((element, position) => {
+    const pageGap = element.querySelector<HTMLElement>('[data-fountain-editable-page-break]');
+    const parent = pageGap?.parentNode;
+    if (!pageGap || !parent) throw new Error('Expected a mounted paragraph page gap.');
+    const index = Array.prototype.indexOf.call(parent.childNodes, pageGap) as number;
+    const range = document.createRange();
+    range.setStart(parent, index + (position === 'after' ? 1 : 0));
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  }, side);
+  const selection = () => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
+  ));
+
+  for (const side of ['before', 'after'] as const) {
+    await placeAtGap(side);
+    await expect.poll(selection).toMatchObject({
+      type: 'text', path: [0, 0], from: boundary.offset, endPath: [0, 0], to: boundary.offset,
+    });
+  }
+
+  await editor.evaluate((element) => {
+    const pageGap = element.querySelector<HTMLElement>('[data-fountain-editable-page-break]');
+    const wrapper = pageGap?.closest<HTMLElement>('[data-fountain-text-path]');
+    if (!pageGap || !wrapper) throw new Error('Expected a page gap inside a text-path wrapper.');
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+        ? NodeFilter.FILTER_REJECT
+        : NodeFilter.FILTER_ACCEPT,
+    });
+    const textNodes: Text[] = [];
+    let current = walker.nextNode();
+    while (current) {
+      if (current.textContent) textNodes.push(current as Text);
+      current = walker.nextNode();
+    }
+    const before = textNodes.filter((node) => (
+      Boolean(node.compareDocumentPosition(pageGap) & Node.DOCUMENT_POSITION_FOLLOWING)
+    )).at(-1);
+    const after = textNodes.find((node) => (
+      Boolean(pageGap.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)
+    ));
+    if (!before || !after) throw new Error('Expected non-widget text on both sides of the page gap.');
+    const range = document.createRange();
+    range.setStart(before, Math.max(0, before.data.length - 1));
+    range.setEnd(after, Math.min(1, after.data.length));
+    const domSelection = document.getSelection();
+    domSelection?.removeAllRanges();
+    domSelection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await expect.poll(selection).toMatchObject({
+    type: 'text', path: [0, 0], from: boundary.offset - 1,
+    endPath: [0, 0], to: boundary.offset + 1,
+  });
+
+  for (const [side, text] of [['before', '前'], ['after', '後']] as const) {
+    await placeAtGap(side);
+    await expect.poll(selection).toMatchObject({ from: boundary.offset, to: boundary.offset });
+    await editor.evaluate((element, data) => {
+      element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+      element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data }));
+    }, text);
+    const expected = `${initialText.slice(0, boundary.offset)}${text}${initialText.slice(boundary.offset)}`;
+    await expect(editor).toHaveText(expected);
+    expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+    await expect(editor).toHaveText(initialText);
+  }
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.editable.summary().document.content
+      .filter((node: any) => node.type === 'page_break').length
+  ))).toBe(0);
+});
+
 test('keeps one canonical ordered list editable and numbered across page shells', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=editable-list-pages');
   const editor = page.getByRole('textbox', { name: 'Split list page editor' });

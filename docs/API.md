@@ -1438,7 +1438,10 @@ that measured lifecycle to `DOMEditablePageSurface`. The surface inserts
 non-interactive sibling sheets, keeps one continuous contenteditable tree, and
 uses transient visual offsets plus non-model continuation spacing. Paragraphs
 split at measured line boundaries, lists split between canonical list items,
-and tables split at rowspan-safe row groups. A split table remains one editable
+and tables split at rowspan-safe row groups. Paragraph gap widgets are excluded
+from DOM-to-model offsets and model-to-DOM traversal, so carets on either side
+resolve to one logical boundary and a range crossing the widget retains its
+document offsets. A split table remains one editable
 table with the same row nodes; page shells render read-only, accessibility-hidden
 copies of its canonical leading header rows. Multi-row headers preserve
 `rowspan` and `colspan` only when each rowspan closes within the leading header

@@ -74,15 +74,15 @@ browser global at module evaluation or during geometry/layout, schema,
 transaction, history, JSON, or collaboration use. The `parseDOM` callbacks on
 the optional nodes execute only when a host explicitly invokes HTML import.
 
-The latest immutable public certification is the 368-test package suite plus
+The latest immutable public certification is the 369-test package suite plus
 the whole-block, paragraph, list, table, mapped-comment, top-level-movement, and
 oversized-row browser matrix, plus canonical page-intent rail/projection
 and atomic media/custom-NodeView coverage, including complex merged-table
-fragmentation, in the
-[CI run for `dc2f013`](https://github.com/eddolo/fountainjs/actions/runs/33953541150).
-The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33953540773)
-is also green. The physical three-engine A4/Letter print contract is the next
-immutable gate and is not counted in that earlier run.
+fragmentation and the physical three-engine A4/Letter print contract, in the
+[CI run for `678886a`](https://github.com/eddolo/fountainjs/actions/runs/33954387906).
+The corresponding [playground deployment](https://github.com/eddolo/fountainjs/actions/runs/33954387903)
+is also green. The gap-adjacent selection/IME and mobile-fallback contracts are
+the next immutable gate and are not counted in that earlier run.
 
 ```ts
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
@@ -113,7 +113,12 @@ top-level DOM/model paths, preserves unchanged block identity, commits IME on a
 second page, maps one selection across page one and page two, and removes page
 decoration on narrow Chrome/Safari surfaces. The desktop fixture also proves
 history undo/redo and a narrow-container → paged-container transition without
-remounting or losing that cross-page selection. Lists use reversible spacing on
+remounting or losing that cross-page selection. For injected paragraph gaps,
+carets on the DOM sides immediately before and after the widget map to one
+logical offset; a range across it and composition from either side are verified
+in Chromium, Firefox, and WebKit. Mobile Chrome/Safari emulation additionally
+verifies composition at the boundary and keeps the logical range while narrow
+fallback removes the widget. Lists use reversible spacing on
 their real continuation items and keep ordered-list starts, selection, IME,
 history, review, and collaboration intact. Tables use reversible non-model
 spacer rows at measured rowspan-safe boundaries while the one canonical table

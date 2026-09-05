@@ -140,4 +140,54 @@ describe('semantic selection DOM bridge', () => {
     expect(editor.getText()).toBe('A\nBetween\nB');
     view.destroy();
   });
+
+  it('maps both DOM sides of a view widget to one logical text boundary', async () => {
+    const editor = createEditor({
+      schema: StarterKit.schema,
+      plugins: StarterKit.plugins,
+      content: { type: 'doc', content: [paragraph('ABCDE')] },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const wrapper = view.dom.querySelector<HTMLElement>('[data-fountain-text-path="0.0"]');
+    const text = wrapper?.firstChild;
+    if (!wrapper || !text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected rendered text.');
+    const widget = document.createElement('span');
+    widget.dataset.fountainWidget = 'page-gap';
+    widget.contentEditable = 'false';
+    widget.textContent = 'ignored';
+    const insertion = document.createRange();
+    insertion.setStart(text, 2);
+    insertion.collapse(true);
+    insertion.insertNode(widget);
+
+    for (const side of ['before', 'after'] as const) {
+      const index = Array.prototype.indexOf.call(wrapper.childNodes, widget) as number;
+      const range = document.createRange();
+      range.setStart(wrapper, index + (side === 'after' ? 1 : 0));
+      range.collapse(true);
+      const selection = document.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      document.dispatchEvent(new Event('selectionchange'));
+      await settleSelection();
+      expect(editor.state.selection).toMatchObject({ path: [0, 0], from: 2, to: 2 });
+    }
+
+    const before = widget.previousSibling;
+    const after = widget.nextSibling;
+    if (!before || !after) throw new Error('Expected text on both sides of the widget.');
+    const range = document.createRange();
+    range.setStart(before, 1);
+    range.setEnd(after, 1);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+    await settleSelection();
+    expect(editor.state.selection).toMatchObject({ path: [0, 0], from: 1, to: 3 });
+    expect(editor.state.doc.textContent).toBe('ABCDE');
+    view.destroy();
+  });
 });

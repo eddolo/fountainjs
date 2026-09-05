@@ -359,7 +359,13 @@ non-model gap widgets at measured line boundaries, marks them as Fountain
 widgets so selection mapping ignores them, and removes them before every fresh
 measurement. The paragraph remains one model node inside the same
 `contenteditable`; selection, IME, undo/redo, tracked-change decisions, and Yjs
-convergence are covered across its page boundaries. Lists continue between
+convergence are covered across its page boundaries. Carets immediately before
+or after an injected gap map to the same logical text offset; cross-gap ranges
+and composition from either DOM side are verified in every desktop engine.
+Mobile Chrome/Safari emulation also preserves that selection and composition
+while responsive fallback removes the gaps; physical device testing remains a
+separate release gate.
+Lists continue between
 canonical list items without cloning them. Tables continue only at
 rowspan-safe row-group boundaries: the one canonical table and every real row
 stay editable, while transient non-model spacer rows align each continuation

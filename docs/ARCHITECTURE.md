@@ -776,7 +776,9 @@ The suites are organized by boundary:
   node with exact rendered/source paths and two/one geometry reads. The editable
   fixtures also prove one unchanged contenteditable, retained block identity,
   native composition on page two, selection mapping and undo/redo across manual
-  and measured paragraph boundaries, stable repeated continuation cleanup,
+  and measured paragraph boundaries, identical logical caret mapping on both
+  DOM sides of paragraph gap widgets, cross-gap ranges and composition,
+  stable repeated continuation cleanup,
   exact gap-to-page-body alignment, reversible container-responsive
   page/continuous modes, tracked decisions plus bidirectional Yjs convergence
   across automatic whole-block, paragraph-line, list-item, and table-row-group
@@ -786,7 +788,9 @@ The suites are organized by boundary:
   edits and unique sanitized projections, canonical keep-together
   image/audio/details/code/custom-NodeView placement with non-clipping oversized
   overflow and retained interaction/history, and continuous Chrome/Safari
-  behavior on narrow screens;
+  behavior on narrow screens. Mobile Chrome/Safari emulation also composes at a
+  paragraph gap and preserves the cross-gap selection while narrow fallback
+  removes every widget;
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 

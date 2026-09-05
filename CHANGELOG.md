@@ -66,6 +66,11 @@
   every header rowspan remains inside the header band; a rowspan leaking into
   body rows disables the unsafe repeated copy. A real-browser fixture keeps the
   canonical merged table editable with history across continuation pages.
+  Carets on either DOM side of an injected paragraph page gap now map to the
+  same logical text offset; cross-gap ranges and composition from both sides are
+  covered in Chromium, Firefox, and WebKit without persisting the widget.
+  Mobile Chrome/Safari emulation additionally verifies composition at that
+  boundary and selection preservation while responsive fallback removes gaps.
   A physical print-media contract now verifies A4/Letter sheet rectangles,
   stable normalized page names, headers/page numbers, page-local footnotes,
   forced breaks, accessibility isolation, and transient-editor-state removal in
