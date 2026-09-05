@@ -1272,6 +1272,46 @@ Schema is available as `fountainjs-editor/schema/document.json`. See
 [MIGRATIONS.md](MIGRATIONS.md) for extension-version separation and safe
 deployment order.
 
+## Print-aware page foundation
+
+The opt-in, runtime-DOM-independent `fountainjs-editor/pages` entry separates
+persisted page intent from automatic layout. Compose `PagesExtension` to add manual page
+breaks plus inline footnote references and top-level rich footnote definitions:
+
+```ts
+import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import {
+  PagesExtension,
+  createPageGeometry,
+  insertFootnote,
+  layoutPages,
+} from 'fountainjs-editor/pages'
+
+const kit = composeExtensions([CoreExtension, PagesExtension])
+insertFootnote(editor, { id: 'source-1', content: 'Source text' })
+
+const geometry = createPageGeometry({ size: 'letter', margins: 25.4 })
+const pages = layoutPages(measuredFlowItems, geometry)
+```
+
+`inspectFootnotes(document)` reports duplicate, missing, nested, and
+unreferenced definitions. `assertFootnotes(document)` enforces the same graph
+when a product requires it. `createPagesExtension({ footnoteIdFactory })` lets
+collaborative hosts inject their own collision-resistant identifier policy.
+`insertPageBreak`, `insertFootnote`, `selectFootnoteDefinition`, and
+`removeFootnote` use ordinary validated transactions, so history and Yjs carry
+them without a page-specific collaboration protocol.
+
+`layoutPages(items, geometry, options?)` consumes measured legal fragments and
+returns frozen pages, placements, reserved footnotes, used/available height,
+and explicit overflow/constraint warnings. It never reads `document`, CSS, or
+viewport state and never writes automatic page membership into JSON.
+
+This is the page-model foundation, not a completed visual paginator. DOM
+measurement, editable repeated headers/footers, page-number fields, page-shell
+rendering, accessibility fallback, and print/PDF fidelity remain active work.
+See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
+
 ## React
 
 Import React bindings from `fountainjs-editor/react`:

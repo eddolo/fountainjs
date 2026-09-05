@@ -57,6 +57,9 @@
       ],
       "migrations": [
         "dist/migrations/index.d.ts"
+      ],
+      "pages": [
+        "dist/pages/index.d.ts"
       ]
     }
   },
@@ -221,6 +224,16 @@
         "default": "./dist/migrations.cjs"
       }
     },
+    "./pages": {
+      "import": {
+        "types": "./dist/pages/index.d.ts",
+        "default": "./dist/pages.js"
+      },
+      "require": {
+        "types": "./dist/pages/index.d.cts",
+        "default": "./dist/pages.cjs"
+      }
+    },
     "./schema/document.json": "./schemas/fountain-document.schema.json",
     "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
@@ -280,6 +293,10 @@
     "review-workflow",
     "version-history",
     "document-versions",
+    "pagination",
+    "page-layout",
+    "footnotes",
+    "print",
     "collapsible-content",
     "details-summary",
     "ruby-annotation",

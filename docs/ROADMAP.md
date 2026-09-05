@@ -52,13 +52,17 @@ in [MIGRATIONS.md](MIGRATIONS.md) and [RELEASES.md](RELEASES.md).
 DOC-14 owns the first post-foundation capability. It must begin with a measured
 layout/persistence architecture and fixtures for pages, headers, footers,
 footnotes, tables, lists, media, manual breaks, and continuous accessibility.
-CSS page-shaped boxes or destructive document splitting do not qualify.
+Its first platform-neutral milestone now ships in source: physical geometry,
+legal-fragment flow, non-persisted automatic boundaries, manual breaks,
+footnote intent/integrity, undo, HTML/JSON, and Yjs. The editable DOM/print
+renderer and the remaining evidence are still active. CSS page-shaped boxes or
+destructive document splitting do not qualify.
 
 ## Prioritized after release foundations
 
 | Priority | Outcome | Current baseline | Required proof before “Delivered” |
 | --- | --- | --- | --- |
-| 1 | Print-aware pages and pagination | `DOC-14` is missing | A4/Letter and custom sizes; margins; manual/automatic breaks; editable headers/footers/page numbers; footnotes; non-destructive table/list/media splitting; widow/orphan policy; print/PDF fidelity; measurable reflow cost; accessible continuous fallback. CSS boxes alone do not qualify. |
+| 1 | Print-aware pages and pagination | `DOC-14` has a tested platform-neutral layout and page-intent foundation; the visual/print outcome is still partial | Add DOM measurement and editable page shells; rich repeated headers/footers/page numbers; non-destructive paragraph/list/table/media rendering; selection/IME/review behavior; print/PDF fidelity; measurable reflow cost; and accessible continuous fallback. CSS boxes alone do not qualify. |
 | 2 | Stable node identities and lookup | `DOC-17` is missing | Configurable IDs; indexed lookup/update/select APIs; deterministic paste and collaboration collision repair; undo/mapping; schema filtering; JSON migrations; comments/suggestions compatibility. |
 | 3 | First-class interactive widgets | NodeViews are delivered, but product authors assemble form behavior themselves | A framework-neutral widget state contract for controls, focus/cursor handoff, Tab/Enter/Escape policy, validation, undo, remote changes, read-only rendering, teardown, React and plain-DOM examples. |
 | 4 | Granular collaborative structured attributes | Yjs maps node attributes independently, but a nested object remains one attribute value | Typed path updates into nested maps/arrays; schema validation at the changed path and whole-node boundary; concurrent non-overlapping edits; undo; JSON portability; malicious-depth/size limits. |

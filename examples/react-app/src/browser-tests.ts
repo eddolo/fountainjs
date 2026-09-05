@@ -26,6 +26,14 @@ import {
 import * as Y from 'yjs';
 import { createYjsCollaborationExtension } from '../../../src/yjs';
 import {
+  PagesExtension,
+  inspectFootnotes,
+  insertFootnote,
+  insertPageBreak,
+  removeFootnote,
+  selectFootnoteDefinition,
+} from '../../../src/pages';
+import {
   acceptTrackedSuggestion,
   createTrackedChangesExtension,
   getTrackedChangesState,
@@ -196,6 +204,15 @@ if (!trackedMount) throw new Error('Tracked changes fixture failed to mount.');
 const trackedView = new EditorView(trackedMount, trackedEditor, { ariaLabel: 'Tracked changes contract editor' });
 const trackedCommands = trackedView.commandManager(trackedKit.commands);
 
+const pagesKit = composeExtensions([CoreExtension, PagesExtension]);
+const pagesEditor = createEditor({
+  schema: pagesKit.schema,
+  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Browser pages' }] }] },
+});
+const pagesMount = document.querySelector<HTMLElement>('#pages-editor');
+if (!pagesMount) throw new Error('Pages fixture failed to mount.');
+const pagesView = new EditorView(pagesMount, pagesEditor, { ariaLabel: 'Page intent contract editor' });
+
 const resumeCollaboration = () => {
   const leftUpdate = Y.encodeStateAsUpdate(leftYDocument);
   const rightUpdate = Y.encodeStateAsUpdate(rightYDocument);
@@ -287,6 +304,18 @@ Object.assign(globalThis, {
       state: () => getTrackedChangesState(trackedEditor),
       accept: (id: string) => acceptTrackedSuggestion(trackedEditor, id),
       reject: (id: string) => rejectTrackedSuggestion(trackedEditor, id),
+    },
+    pages: {
+      editor: pagesEditor,
+      view: pagesView,
+      insertBreak: () => insertPageBreak(pagesEditor),
+      insertFootnote: () => {
+        pagesEditor.dispatch(pagesEditor.state.createTransaction().setSelection(Selection.cursor([0, 0], 13)));
+        return insertFootnote(pagesEditor, { id: 'browser-note', content: 'Browser footnote definition' });
+      },
+      inspect: () => inspectFootnotes(pagesEditor.state.doc),
+      selectDefinition: () => selectFootnoteDefinition(pagesEditor, 'browser-note'),
+      removeFootnote: () => removeFootnote(pagesEditor, 'browser-note'),
     },
   },
 });

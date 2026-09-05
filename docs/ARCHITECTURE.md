@@ -736,7 +736,11 @@ The suites are organized by boundary:
 - `tests/mcp.test.ts`: protocol behavior plus a real loopback HTTP lifecycle;
 - `tests/migrations.test.ts`: envelope encoding, legacy reads, deterministic
   sequential migration, schema validation, immutability, and hostile input;
-- `tests/release.test.ts`: version/tag/changelog release-metadata contracts.
+- `tests/release.test.ts`: version/tag/changelog release-metadata contracts;
+- `tests/page-layout.test.ts`: DOM-independent physical geometry, legal
+  fragmentation, constraints, continuation, footnotes, and hostile values;
+- `tests/pages.test.ts` and `tests/pages-html.test.ts`: optional page intent,
+  integrity diagnostics, commands, history, JSON/HTML, and Yjs convergence.
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
@@ -749,8 +753,8 @@ optional Yjs adapter, 30/25 KiB for the isolated comments engine, 11/8 KiB for
 its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
 review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
 10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
-the text-style facade, 8/7 KiB for document migrations, 54 KiB for CSS, and
-657/554 KiB for all emitted
+the text-style facade, 8/7 KiB for document migrations, 16/13 KiB for the
+isolated page foundation, 54 KiB for CSS, and 674/568 KiB for all emitted
 ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
 an external peer. Source maps are
 excluded. Media lifecycle tests also assert that cancelled or discarded upload
@@ -778,6 +782,7 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/editor.ts` | Dispatch, subscriptions, lifecycle, JSON/text access |
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
+| `src/pages/` | DOM-free physical page layout plus optional portable manual-break and footnote semantics |
 | `src/view/` | DOM projection, input, selection/menu geometry, media, Custom Element |
 | `src/extensions/` | Composition contract, contextual-menu state, and supplied capabilities |
 | `src/document-utilities.ts` | Isolated mention, emoji, typography, count, suggestion, and slash exports |

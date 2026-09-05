@@ -10,6 +10,13 @@
 
 ### Added
 
+- An isolated `fountainjs-editor/pages` foundation with DOM-independent
+  A4/Letter/custom geometry and legal-fragment flow; manual page-break and rich
+  footnote schema intent; integrity diagnostics; atomic commands; explicit
+  overflow/constraint results; JSON and semantic HTML interchange; generic
+  history/Yjs behavior; package budgets; and an honest staged pagination
+  contract. Editable page-shell rendering, repeated furniture, and print/PDF
+  fidelity remain active work rather than claimed capabilities.
 - A DOM-independent versioned document envelope and deterministic sequential
   migration runner, historical bare-JSON compatibility, typed fail-closed
   diagnostics, a published structural JSON Schema, schema-validation hooks,

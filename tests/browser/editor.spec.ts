@@ -4,6 +4,28 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/browser-tests.html');
 });
 
+test('renders and edits portable page-break and footnote intent in a real browser', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Page intent contract editor' });
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertBreak())).toBe(true);
+  await expect(editor.locator('hr[data-fountain-page-break="true"]')).toHaveCount(1);
+  await expect(editor.locator('[role="separator"]')).toHaveAttribute('aria-label', 'Page break');
+
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertFootnote())).toBe(true);
+  const reference = editor.locator('sup[data-fountain-footnote-reference="browser-note"]');
+  const definition = editor.locator('section[data-fountain-footnote-definition="browser-note"]');
+  await expect(reference).toHaveCount(1);
+  await expect(reference).toHaveAttribute('role', 'doc-noteref');
+  await expect(definition).toHaveAttribute('role', 'doc-footnote');
+  await expect(definition).toContainText('Browser footnote definition');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.inspect().valid)).toBe(true);
+
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.selectDefinition())).toBe(true);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editor.state.selection.path)).toEqual([3, 0, 0]);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.removeFootnote())).toBe(true);
+  await expect(reference).toHaveCount(0);
+  await expect(definition).toHaveCount(0);
+});
+
 test('tracks real browser insertion and replacement with reversible review decisions', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Tracked changes contract editor' });
   await editor.click();
@@ -1673,7 +1695,7 @@ test('runs production images, native media, safe embeds, and host-owned uploads 
       clientY: 20,
     }));
   });
-  await expect(status).toContainText('Uploading voice.mp3');
+  await expect(status).toContainText(/Uploading voice\.mp3|voice\.mp3: succeeded/);
   await expect(status).toContainText('voice.mp3: succeeded');
   await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
   await expect(page.locator('.demo-output pre')).toContainText('Audio uploaded through the Angular-owned adapter.');

@@ -38,6 +38,7 @@ const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRub
 const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'getActiveTextStyle'];
 const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
+const pagesNames = ['PagesExtension', 'createPagesExtension', 'createPageGeometry', 'layoutPages', 'insertPageBreak', 'insertFootnote', 'inspectFootnotes', 'removeFootnote'];
 
 assertExports(await import('fountainjs-editor'), coreNames, 'ESM package root');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
@@ -57,6 +58,7 @@ assertExports(await import('fountainjs-editor/ruby'), rubyNames, 'ESM ruby entry
 assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM text style entry');
 assertExports(await import('fountainjs-editor/testing'), testingNames, 'ESM extension testing entry');
 assertExports(await import('fountainjs-editor/migrations'), migrationNames, 'ESM document migrations entry');
+assertExports(await import('fountainjs-editor/pages'), pagesNames, 'ESM pages entry');
 assertExports(require('fountainjs-editor'), coreNames, 'CommonJS package root');
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
@@ -74,6 +76,7 @@ assertExports(require('fountainjs-editor/ruby'), rubyNames, 'CommonJS ruby entry
 assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS text style entry');
 assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS extension testing entry');
 assertExports(require('fountainjs-editor/migrations'), migrationNames, 'CommonJS document migrations entry');
+assertExports(require('fountainjs-editor/pages'), pagesNames, 'CommonJS pages entry');
 const documentSchema = require('fountainjs-editor/schema/document.json');
 if (documentSchema.properties?.format?.const !== 'fountainjs' || documentSchema.properties?.version?.minimum !== 1) {
   throw new Error('Published FountainJS document JSON Schema is invalid.');
@@ -109,4 +112,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, pages, document schema, Yjs, and Web Component package exports loaded successfully.');

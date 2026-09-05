@@ -263,6 +263,36 @@ Fountain Markdown round-trip the complete suite, generic Yjs synchronization
 carries the marks unchanged, and the React toolbar supplies a responsive
 `Text styles` panel. See the [text-style guide](docs/TEXT_STYLE.md).
 
+## Print-aware page foundation (active)
+
+The isolated `fountainjs-editor/pages` entry provides a runtime-DOM-independent
+page-flow algorithm and portable manual page-break/footnote document semantics.
+Automatic page boundaries are measurements, not JSON, so two collaborators
+with different fonts or viewports cannot overwrite each other's document.
+
+```ts
+import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import {
+  PagesExtension,
+  createPageGeometry,
+  insertFootnote,
+  layoutPages,
+} from 'fountainjs-editor/pages'
+
+const kit = composeExtensions([CoreExtension, PagesExtension])
+insertFootnote(editor, { id: 'source-1', content: 'Source text' })
+
+const geometry = createPageGeometry({ size: 'a4', margins: 20 })
+const result = layoutPages(measuredFlowItems, geometry)
+```
+
+The foundation covers legal fragments, keep-with-next, widow/orphan minima,
+continuation overhead, page-local footnote reservation, overflow diagnostics,
+undo, JSON, semantic HTML, and Yjs. It does **not** yet claim a complete visual
+paginator, editable repeated headers/footers, or print/PDF fidelity. Those
+remain active `DOC-14` work with explicit browser and accessibility gates in
+[the pagination contract](docs/PAGINATION.md).
+
 ## Optional clipboard history
 
 `ClipboardHistoryExtension` adds a bounded, searchable list of text copied
@@ -947,6 +977,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)
 - [Document versions and migrations](docs/MIGRATIONS.md)
+- [Print-aware page foundation and pagination gates](docs/PAGINATION.md)
 - [Release and API stability policy](docs/RELEASES.md)
 - [Platform-portability audit](docs/PORTABILITY_AUDIT.md)
 - [Optional AI and MCP](docs/MCP.md)
