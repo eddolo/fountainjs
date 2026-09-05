@@ -83,7 +83,7 @@ long-lived npm token belongs in GitHub or the repository.
    deno run --allow-read scripts/smoke-server-html-runtime.mjs
    pnpm test:browser
    pnpm dlx publint@0.3.24
-   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
    pnpm pack --dry-run
    ```
 
