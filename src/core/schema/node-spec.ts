@@ -1,4 +1,5 @@
 import type { Node } from './node';
+import type { GlobalConstructorInstance } from '../platform';
 
 export type Attributes = Record<string, unknown>;
 export type DOMOutputSpec = string | [string, ...(Attributes | DOMOutputSpec | 0)[]];
@@ -66,33 +67,48 @@ export interface HTMLParseRule {
  * Returning `false` from `getAttrs` declines the rule. Parsed attributes still
  * pass through the normal schema validators before a node enters a document.
  */
-export interface DOMParseRule {
+export interface DOMParseRule<ElementType = GlobalConstructorInstance<'HTMLElement', any>> {
   /** CSS selector matched against the candidate element. */
   tag: string;
   /** Higher-priority rules are tried first. Defaults to 50. */
   priority?: number;
   /** Extract portable attributes, use defaults, or decline this match. */
-  getAttrs?: (element: HTMLElement) => Attributes | null | false;
+  getAttrs?: (element: ElementType) => Attributes | null | false;
   /** Optional descendant selector whose children provide the node content. */
   contentElement?: string;
 }
 
-export interface NodeViewLike {
-  dom: HTMLElement;
-  contentDOM?: HTMLElement;
+/**
+ * Renderer-owned node-view contract.
+ *
+ * The default parameters deliberately remain permissive for compatibility
+ * with the original DOM API. Platform-specific entries can narrow all three
+ * types without making the document engine depend on browser declarations.
+ */
+export interface NodeViewLike<
+  RenderNode = GlobalConstructorInstance<'HTMLElement', any>,
+  ViewEvent = GlobalConstructorInstance<'Event', any>,
+  ViewMutation = GlobalConstructorInstance<'MutationRecord', any>,
+> {
+  dom: RenderNode;
+  contentDOM?: RenderNode;
   update?(node: Node): boolean;
   selectNode?(): void;
   deselectNode?(): void;
-  stopEvent?(event: Event): boolean;
-  ignoreMutation?(mutation: MutationRecord): boolean;
+  stopEvent?(event: ViewEvent): boolean;
+  ignoreMutation?(mutation: ViewMutation): boolean;
   destroy?(): void;
 }
 
-export type NodeViewConstructor = new (
+export type NodeViewConstructor<
+  RenderNode = GlobalConstructorInstance<'HTMLElement', any>,
+  ViewEvent = GlobalConstructorInstance<'Event', any>,
+  ViewMutation = GlobalConstructorInstance<'MutationRecord', any>,
+> = new (
   node: Node,
   view: unknown,
   getPath: () => number[],
-) => NodeViewLike;
+) => NodeViewLike<RenderNode, ViewEvent, ViewMutation>;
 
 export interface NodeSpec {
   content?: string;

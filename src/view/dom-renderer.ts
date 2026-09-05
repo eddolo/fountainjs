@@ -139,7 +139,7 @@ function renderMarkedText(node: Node, text: string): globalThis.Node {
 }
 
 function renderWidget(decoration: Decoration): globalThis.Node {
-  const produced = decoration.toDOM?.();
+  const produced = decoration.toDOM?.() as globalThis.Node | undefined;
   if (!produced) throw new Error('A widget decoration factory must return a DOM node.');
   const dom = produced.nodeType === globalThis.Node.ELEMENT_NODE
     ? produced as HTMLElement

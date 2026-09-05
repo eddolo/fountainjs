@@ -87,8 +87,12 @@ function normalizeManifest(manifest: FountainExtensionManifest | undefined): Fou
   }
   if (manifest.homepage !== undefined) {
     if (typeof manifest.homepage !== 'string') throw new Error('Extension manifest homepage must be an absolute HTTPS URL.');
-    let url: URL;
-    try { url = new URL(manifest.homepage); }
+    const URLConstructor = (globalThis as unknown as {
+      URL?: new (value: string) => { protocol: string };
+    }).URL;
+    if (!URLConstructor) throw new Error('Extension manifest homepage requires a runtime URL implementation.');
+    let url: { protocol: string };
+    try { url = new URLConstructor(manifest.homepage); }
     catch { throw new Error('Extension manifest homepage must be an absolute HTTPS URL.'); }
     if (url.protocol !== 'https:') throw new Error('Extension manifest homepage must be an absolute HTTPS URL.');
   }

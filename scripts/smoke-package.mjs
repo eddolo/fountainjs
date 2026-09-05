@@ -17,6 +17,14 @@ const coreNames = [
   'BlockHandleManager', 'FOUNTAIN_NODE_DRAG_TYPE',
   'getCollaborationAdapter', 'replaceCollaborationAdapter',
 ];
+const headlessCoreNames = [
+  'Schema', 'Editor', 'createEditor', 'Selection', 'Transaction', 'Plugin',
+  'composeExtensions', 'defineExtension', 'createCommandManager',
+  'createHistoryPlugin', 'MarkdownImporter', 'MarkdownExporter',
+  'HTMLExporter', 'JSONExporter', 'TextExporter', 'FountainDocumentMigrator',
+  'StableNodeIdIndex', 'defineStructuredAttribute',
+  'createCoreCollaborationExtension', 'getCollaborationState',
+];
 const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
@@ -50,12 +58,15 @@ const pagesPreviewNames = ['renderDOMPagePreview'];
 
 const esmCore = await import('fountainjs-editor');
 assertExports(esmCore, coreNames, 'ESM package root');
+const esmHeadlessCore = await import('fountainjs-editor/core');
+assertExports(esmHeadlessCore, headlessCoreNames, 'ESM headless core entry');
 assertExports(await import('fountainjs-editor/document-utilities'), documentUtilityNames, 'ESM document utilities entry');
 const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');
 if (esmEmojiData.unicodeEmojis.length < 1_900) throw new Error('ESM Unicode emoji data entry is incomplete.');
 assertExports(await import('fountainjs-editor/react'), reactNames, 'ESM React entry');
-assertExports(await import('fountainjs-editor/yjs'), yjsNames, 'ESM Yjs entry');
+const esmYjs = await import('fountainjs-editor/yjs');
+assertExports(esmYjs, yjsNames, 'ESM Yjs entry');
 assertExports(await import('fountainjs-editor/comments'), commentsNames, 'ESM comments entry');
 assertExports(await import('fountainjs-editor/react/comments'), reactCommentsNames, 'ESM React comments entry');
 assertExports(await import('fountainjs-editor/tracked-changes'), trackedChangesNames, 'ESM tracked changes entry');
@@ -79,8 +90,51 @@ assertExports(await import('fountainjs-editor/react/widgets'), reactWidgetNames,
 assertExports(await import('fountainjs-editor/pages'), pagesNames, 'ESM pages entry');
 assertExports(await import('fountainjs-editor/pages/dom'), pagesDOMNames, 'ESM DOM page measurement entry');
 assertExports(await import('fountainjs-editor/pages/preview'), pagesPreviewNames, 'ESM page preview entry');
+if ('document' in globalThis || 'window' in globalThis) {
+  throw new Error('Package smoke unexpectedly has browser globals.');
+}
+const portableDocumentExtension = esmHeadlessCore.defineExtension({
+  name: 'package-headless-document',
+  nodes: {
+    doc: { content: 'block+' },
+    paragraph: { content: 'inline*', group: 'block', toDOM: () => ['p', 0] },
+    text: { group: 'inline', inline: true },
+  },
+  commands: { insertText: esmHeadlessCore.insertText },
+});
+let collaborationContext;
+const headlessCollaboration = esmHeadlessCore.createCoreCollaborationExtension({
+  adapter: () => ({ connect(context) { collaborationContext = context; } }),
+});
+const headlessKit = esmHeadlessCore.composeExtensions([portableDocumentExtension, headlessCollaboration]);
+const headlessEditor = esmHeadlessCore.createEditor({
+  schema: headlessKit.schema,
+  plugins: headlessKit.plugins,
+  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Packed core' }] }] },
+});
+if (!collaborationContext || esmHeadlessCore.getCollaborationState(headlessEditor)?.status !== 'connected') {
+  throw new Error('Packed core collaboration did not connect in pure Node.');
+}
+headlessEditor.destroy();
+
+const Y = await import('yjs');
+const ydoc = new Y.Doc();
+const yjsExtension = esmYjs.createYjsCollaborationExtension({
+  document: ydoc,
+  user: { id: 'package-smoke', name: 'Package smoke', color: '#6d45ff' },
+});
+const yjsKit = esmHeadlessCore.composeExtensions([portableDocumentExtension, yjsExtension]);
+const yjsEditor = esmHeadlessCore.createEditor({
+  schema: yjsKit.schema,
+  plugins: yjsKit.plugins,
+  content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Packed Yjs' }] }] },
+});
+if (ydoc.getXmlFragment('fountain').length === 0) throw new Error('Packed Yjs did not initialize in pure Node.');
+yjsEditor.destroy();
+ydoc.destroy();
 const cjsCore = require('fountainjs-editor');
 assertExports(cjsCore, coreNames, 'CommonJS package root');
+assertExports(require('fountainjs-editor/core'), headlessCoreNames, 'CommonJS headless core entry');
 assertExports(require('fountainjs-editor/document-utilities'), documentUtilityNames, 'CommonJS document utilities entry');
 const cjsEmojiData = require('fountainjs-editor/emoji-data');
 assertExports(cjsEmojiData, emojiDataNames, 'CommonJS Unicode emoji data entry');
@@ -144,4 +198,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, headless core, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

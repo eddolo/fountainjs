@@ -200,13 +200,15 @@ are explicit in [VIRTUALIZATION.md](VIRTUALIZATION.md).
 The portability audit proved that the model, schema, logical selections,
 transactions, history, extension composition, collaboration state, Yjs, and
 serializers run without a browser, and the isolated server HTML entry is already
-runtime-certified. The remaining gap is ownership and types: the aggregate core
-declarations still expose DOM hooks. The next milestone is an additive
-`fountainjs-editor/core` entry compiled and consumed with no `lib.dom`, backed by
-an import-boundary gate and a deliberately small portable starter surface. It
-must preserve the existing web root and StarterKit. This designs for future
-native renderers now; it does not start React Native, Flutter, SwiftUI, or
-Compose implementations.
+runtime-certified. The additive `fountainjs-editor/core` implementation now
+compiles and is consumed with no `lib.dom`; a source-graph gate rejects DOM,
+React, browser-parser, and aggregate-web imports; Node tests cover generic and
+Yjs collaboration without fake browser globals; and the compatible web root and
+StarterKit remain unchanged. The complete local package gate (455 tests) and
+five-surface browser/mobile matrix (289 passed, two intentional Chromium-only
+PDF skips) are green; public CI certification remains before “Delivered.”
+This designs for future native renderers now; it does not start React Native,
+Flutter, SwiftUI, or Compose implementations.
 
 ## Prioritized after release foundations
 
@@ -216,7 +218,7 @@ Compose implementations.
 | 2 | Granular collaborative structured attributes | Delivered and certified in `0a33c87` | Continue adversarial mixed-version, nested-array, collaboration, and storage regression coverage. |
 | 3 | Truly server-native document conversion | Delivered and certified in `ebc3194` | Continue malformed-input, custom-rule, runtime, package, CPU, and memory regression coverage. The future no-DOM core declaration entry remains tracked separately. |
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
-| 5 | Enforced platform-neutral core boundary | Runtime-neutral engine and server HTML exist; declarations and convenience extensions still mix DOM contracts | A public `fountainjs-editor/core` entry that compiles and is consumed without `lib.dom`, import-boundary enforcement, portable schema/extension contracts, compatibility adapters, and unchanged web behavior. Native UI packages remain postponed. |
+| 5 | Enforced platform-neutral core boundary | Implemented and locally certified: public no-DOM entry, source/declaration gates, portable collaboration lifecycle, browser presence adapter, package smoke, 455 tests, and 289-pass browser/mobile coverage | Publish the public CI evidence and keep every gate permanent. Native UI packages remain postponed. |
 | 6 | Native renderer feasibility | Portability audit and model/view separation exist; DOM, Web Component, and React are web surfaces | After the neutral boundary stabilizes, a written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A WebView does not count as native. |
 | 7 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
 

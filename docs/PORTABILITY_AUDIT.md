@@ -2,35 +2,55 @@
 
 Audit date: 2026-09-05  
 Audited revision: `b11eb75` (`feat: add extension authoring conformance tooling`)  
-Scope: architecture and dependency inspection only. No portability refactor is included in this audit.
+Original scope: architecture and dependency inspection only. Subsequent
+implementation results are recorded explicitly below.
 
 Implementation update (2026-09-05): the audit's server-conversion recommendation
 now has an additive implementation. [`src/html/server.ts`](../src/html/server.ts)
 ships as `fountainjs-editor/html/server`, parses HTML without browser globals or
 a fake DOM, and uses the new platform-neutral `HTMLParseRule` attribute surface.
 The original root `HTMLImporter` and all browser APIs remain compatible. This
-closes the runtime HTML-conversion blocker; it does **not** yet create a no-DOM
-core declaration/package boundary or native renderer. The emitted path is
+closed the runtime HTML-conversion blocker. The emitted path is
 permanently exercised in Node ESM/CommonJS, Bun, Deno, and Cloudflare `workerd`;
 the complete 439-test package suite and 284-pass browser/mobile matrix passed in
 [CI run `ebc3194`](https://github.com/eddolo/fountainjs/actions/runs/33974721733),
 with a successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33974721742).
 
+Implementation update (2026-09-05): the additive
+[`src/headless/index.ts`](../src/headless/index.ts) facade is now emitted as
+`fountainjs-editor/core`. A source-graph walker rejects imports into the DOM
+view, React, browser HTML parser, or aggregate web extensions; a real package
+consumer compiles with only `ES2023`, no ambient types, and
+`skipLibCheck: false`; ESM/CommonJS smoke tests load the emitted entry. Core
+collaboration moved to
+[`collaboration-core.ts`](../src/extensions/collaboration-core.ts), while
+[`collaboration.ts`](../src/extensions/collaboration.ts) is the compatible DOM
+presence wrapper. Pure-Node tests cover document editing, history, formats,
+remote/local collaboration, and the first-party Yjs adapter with `document` and
+`window` absent. Native renderers remain deliberately unimplemented.
+
 ## Executive verdict
 
-FountainJS already has a genuinely platform-neutral document engine at runtime, but it does **not** yet expose a clean platform-neutral package boundary.
+FountainJS now exposes and enforces a platform-neutral document-engine package
+boundary without replacing the working browser engine.
 
 - The immutable document model, schema validation, logical selections, transactions, commands, history, extension composition, JSON/text/Markdown/HTML serialization, and Yjs document synchronization can run in pure Node.js without jsdom or another fake DOM.
 - The package root can be imported in pure Node.js because browser globals are generally accessed only when a DOM view, parser, widget, or node view is used.
 - The root `HTMLImporter` still requires `DOMParser`; the isolated
   `ServerHTMLImporter` now performs the same supported semantic conversion in
   pure Node.js with resource limits and fail-explicit extension diagnostics.
-- Plain Markdown import runs in Node. Two richer Markdown paths optionally call `HTMLImporter` when `DOMParser` exists and otherwise use dependency-free fallbacks.
-- Collaboration state and Yjs synchronization run in Node. Collaborator caret rendering is browser-only and deliberately returns no decorations when `document` is unavailable.
-- The current public core types are not platform-neutral: `NodeSpec`, `MarkSpec`, `PluginProps`, and `Decoration` directly mention DOM types.
-- `CoreExtension` mixes semantic schema definitions with `toDOM`, `parseDOM`, and DOM `nodeView` implementations. That does not prevent headless execution, but it prevents a clean renderer-independent ownership boundary.
-- There is no public `fountainjs-editor/core` or `@fountain/core` entry. The root intentionally aggregates core, DOM view, browser extensions, HTML parsing, AI, Lean, and text-style exports.
+- Markdown import now follows dependency-free paths and has no browser-parser import edge.
+- Collaboration state and Yjs synchronization run in Node. Core collaboration
+  has no presence renderer; the compatible browser wrapper owns colored carets.
+- `NodeSpec`, `PluginProps`, decorations, and node-view contracts no longer
+  require ambient DOM declarations. Compatibility presentation hooks remain
+  parameterized/opaque so the established browser API does not break.
+- `CoreExtension` still mixes semantic schema definitions with browser
+  presentation, so it stays out of `fountainjs-editor/core`; headless consumers
+  compose only the schema and behavior they need.
+- The root intentionally remains a web convenience aggregate. The new
+  `fountainjs-editor/core` entry is the constrained engine surface.
 
 The correct decision is **A: establish and enforce the boundary now, implement native renderers later**. The boundary work should be additive and compatibility-preserving; attempting React Native, Flutter, SwiftUI, or Compose editors now would destabilize the web editor and spread the project too thin.
 
@@ -79,38 +99,42 @@ This proves runtime behavior. It does not erase the declaration-level and owners
 
 | Layer | Classification | Evidence | Conclusion |
 | --- | --- | --- | --- |
-| 1. Document model/schema | **Browser-dependent but separable** | The model and validators in `src/core/schema` are runtime-neutral, but [`node-spec.ts`](../src/core/schema/node-spec.ts) owns `DOMOutputSpec`, `DOMParseRule`, `HTMLElement`, `MutationRecord`, and `nodeView`; [`mark-spec.ts`](../src/core/schema/mark-spec.ts) imports those DOM contracts. | Keep semantic node/mark specs in core; move renderer/parser/node-view contributions behind a DOM contract. |
+| 1. Document model/schema | **Platform-neutral through the core entry; compatibility presentation hooks remain separable** | The model and validators in `src/core/schema` are runtime-neutral. [`node-spec.ts`](../src/core/schema/node-spec.ts) now uses generic renderer/event/mutation parameters instead of ambient DOM types, and declarative HTML output remains data. | The enforced package boundary is complete. A future major-version cleanup may move legacy `parseDOM`/`nodeView` fields into explicit renderer contributions, but native support does not require rewriting the model. |
 | 2. Transactions/operations | **Already platform-neutral** | Files under [`src/core/transaction`](../src/core/transaction), plus logical commands and mappings, import only Fountain model/state modules. Existing Node tests cover editing, mapping, structure, tables, and command batches. | No architectural rewrite required. Add an import-boundary test to keep it neutral. |
 | 3. History/undo | **Already platform-neutral** | [`history.ts`](../src/extensions/plugins/history.ts) imports only core editor/model/plugin types and stores immutable transactions/selections. It passed in the Node probe. | Keep in the headless layer. Collaboration-specific undo remains with its collaboration adapter. |
-| 4. Collaboration/Yjs | **Browser-dependent but separable** | [`src/yjs/index.ts`](../src/yjs/index.ts) uses Yjs and Fountain logical nodes/selections only. [`collaboration.ts`](../src/extensions/collaboration.ts) mixes adapter lifecycle with browser caret widgets at lines 411-441, guarded by `typeof globalThis.document`. | Synchronization is already headless-capable. Move presence decorations to the DOM adapter; keep adapter state and commands in core/collaboration. |
-| 5. Extension system | **Browser-dependent but separable** | [`extension.ts`](../src/extensions/extension.ts) performs platform-neutral composition, manifests, conflicts, formats, commands, and services, but consumes `NodeSpec` and `Plugin`, whose current public contracts contain DOM types. | Composition needs no rewrite; parameterize or split platform contributions so a core extension need not import DOM contracts. |
-| 6. Parsing/serialization | **Browser-dependent but separated** | JSON, text, Markdown export, and string-based HTML export are neutral. [`html-importer.ts`](../src/core/importers/html-importer.ts) remains the browser parser. [`src/html/server.ts`](../src/html/server.ts) is an isolated DOM-free parser with equivalent validation, portable extension rules, reports, and limits. [`markdown-importer.ts`](../src/core/importers/markdown-importer.ts) still conditionally imports the browser parser for two generated inline subsets and has dependency-free fallbacks. | Server HTML conversion is implemented without destabilizing the browser path. Keep closing declaration/package ownership leaks separately. |
+| 4. Collaboration/Yjs | **Platform-neutral core; browser presence renderer separated** | [`collaboration-core.ts`](../src/extensions/collaboration-core.ts) owns adapter lifecycle, state, commands, and transactions. [`collaboration.ts`](../src/extensions/collaboration.ts) injects the DOM decoration renderer. [`src/yjs/index.ts`](../src/yjs/index.ts) passes a pure-Node runtime test. | Keep this split permanent; other renderers can supply their own presence projection. |
+| 5. Extension system | **Platform-neutral through the core entry** | [`extension.ts`](../src/extensions/extension.ts) performs composition, manifests, conflicts, formats, commands, and services and compiles under the no-DOM consumer gate. Browser event payloads remain intentionally opaque in the compatibility plugin contract. | Continue splitting mixed first-party convenience extensions only when a headless/native use case needs them; do not break the web contract speculatively. |
+| 6. Parsing/serialization | **Platform-neutral paths explicitly separated** | JSON, text, Markdown and string HTML export are neutral. [`markdown-importer.ts`](../src/core/importers/markdown-importer.ts) now uses dependency-free ruby/style parsing. [`html-importer.ts`](../src/core/importers/html-importer.ts) remains browser-only, while [`src/html/server.ts`](../src/html/server.ts) is the bounded DOM-free parser. | Keep both HTML implementations parity-tested and browser parsing outside the core entry. |
 | 7. Selection/cursor model | **Already platform-neutral in core; DOM mapping is correctly separate** | [`selection.ts`](../src/core/selection.ts) and transaction mappings use paths and offsets. [`selection-handler.ts`](../src/view/selection-handler.ts) owns browser `Selection`, `Range`, tree walking, and `selectionchange`. | Preserve the logical model. A native renderer must implement its own logical-to-native selection bridge. |
 | 8. Rendering/view layer | **Fundamentally DOM-specific as currently implemented** | [`src/view`](../src/view) creates elements, uses `contentEditable`, node views, `MutationObserver`, measurements, and Custom Elements. | This is appropriate for a future `@fountain/dom`; it must not define the engine's core contracts. Native platforms need independent renderers. |
-| 9. Input/event handling | **Fundamentally DOM-specific as currently implemented** | [`input.ts`](../src/view/input.ts) consumes `beforeinput`, keyboard, composition, clipboard, drag/drop, pointer, change, and click events. Core [`PluginProps`](../src/core/plugin.ts) currently exposes these browser event classes. | Keep the implementation in the DOM adapter; move its event-hook types out of the core plugin contract. |
+| 9. Input/event handling | **Fundamentally DOM-specific implementation behind a neutral boundary** | [`input.ts`](../src/view/input.ts) consumes `beforeinput`, keyboard, composition, clipboard, drag/drop, pointer, change, and click events. Core [`PluginProps`](../src/core/plugin.ts) treats renderer event payloads as opaque compatibility values, so its declaration graph has no browser event classes. | Keep browser interpretation in the DOM adapter. A native adapter must translate its own input system into logical transactions. |
 
 ## Browser dependency inventory
 
 ### 1. Browser types and renderer hooks inside `src/core`
 
-These are the most important layering violations because they make the nominal core declaration graph depend on `lib.dom`.
+These were the most important audited leaks. The table records their current
+implementation status.
 
 | Owner | Concrete dependency | Runtime necessity | Smallest boundary change |
 | --- | --- | --- | --- |
-| [`src/core/schema/node-spec.ts`](../src/core/schema/node-spec.ts) | Defines `DOMOutputSpec`; `DOMParseRule.getAttrs(HTMLElement)`; `NodeViewLike.dom/contentDOM: HTMLElement`; `Event`; `MutationRecord`; and `NodeSpec.parseDOM`, `toDOM`, `nodeView`. | None of these are required to create, validate, or transform a document. They are required by the current DOM parser/renderer. | Leave semantic fields in `NodeSpec`; move the three DOM hooks and node-view interfaces to a DOM contribution contract. |
-| [`src/core/schema/mark-spec.ts`](../src/core/schema/mark-spec.ts) | Imports `DOMOutputSpec` and `DOMParseRule` from `node-spec.ts`, then exposes `parseDOM`/`toDOM`. | Required only for HTML/DOM integration. | Give marks a separate DOM contribution just like nodes. |
-| [`src/core/plugin.ts`](../src/core/plugin.ts) | `PluginProps` exposes `KeyboardEvent`, `InputEvent`, `ClipboardEvent`, `DragEvent`, and `MouseEvent`. It also combines DOM event hooks/decorations with core `onCreate`/`onDestroy` lifecycle. | Browser events are unnecessary to state plugins. Core lifecycle hooks are used by headless collaboration/comments controllers. | Retain lifecycle and state hooks in core. Move DOM event/decorations hooks to `DOMPluginProps`, or parameterize `Plugin<TState, TViewProps>` with a neutral default. |
-| [`src/core/decoration.ts`](../src/core/decoration.ts) | `WidgetFactory = () => globalThis.Node`; widget validation says “DOM factory.” | Position mapping is portable; a DOM node factory is not. | Make the mapped annotation/decorations payload generic, or move widget rendering to the DOM adapter while retaining portable ranges/keys. |
-| [`tsconfig.json`](../tsconfig.json) | Globally includes `DOM` and `DOM.Iterable`; `skipLibCheck` is enabled. | Necessary for the current combined source tree, not for a headless core. | Add a second no-DOM TypeScript project for the core boundary with only `ES2023` (and required non-DOM libs), with `skipLibCheck: false`. |
+| [`src/core/schema/node-spec.ts`](../src/core/schema/node-spec.ts) | Renderer element/event/mutation contracts are generic; no `HTMLElement`, `Event`, or `MutationRecord` is required. Declarative HTML tuples remain portable data. | The browser narrows the compatibility types; the engine does not. | Implemented without changing existing `NodeSpec` consumers. A cleaner major-version contribution split remains optional. |
+| [`src/core/schema/mark-spec.ts`](../src/core/schema/mark-spec.ts) | Uses the same generic parse/output contracts. | Declarative serialization remains useful on servers. | No ambient DOM declaration remains in the core graph. |
+| [`src/core/plugin.ts`](../src/core/plugin.ts) | State/lifecycle are neutral; legacy renderer event hooks accept opaque payloads instead of browser event classes. | Browser event interpretation remains view-owned. | Implemented compatibly. A future typed renderer-specific plugin facade can improve event autocomplete. |
+| [`src/core/decoration.ts`](../src/core/decoration.ts) | `WidgetFactory<Widget = unknown>` carries a renderer-owned payload; positions, mapping, attributes, and keys are neutral. | DOM views narrow the payload to a DOM node. | Implemented. |
+| [`tsconfig.headless.json`](../tsconfig.headless.json) | Compiles source plus a package-self-reference consumer with only `ES2023`, no ambient types, and `skipLibCheck: false`. | This is stricter than the combined web project. | Implemented and included in `pnpm check`. |
 
-The emitted declarations confirm the leak. `dist/core/schema/node-spec.d.ts`, `dist/core/plugin.d.ts`, and `dist/core/decoration.d.ts` contain the same DOM names. `dist/yjs/index.d.ts` imports `../core/index.js`, and that core index re-exports the DOM-bearing declarations. Therefore a runtime-safe Yjs consumer does not yet receive a DOM-free TypeScript graph.
+The emitted `fountainjs-editor/core` declaration graph now passes the no-DOM
+consumer compiler. Yjs's own upstream declarations still mention the DOM in
+optional XML-to-DOM helpers; that external typing detail does not affect its
+verified pure-Node runtime or the Fountain core declaration gate.
 
 ### 2. HTML and Markdown parsing
 
 | Owner/import edge | Browser dependency | Necessary? | Boundary change |
 | --- | --- | --- | --- |
 | [`src/core/importers/html-importer.ts`](../src/core/importers/html-importer.ts) imports schema/content-expression/URL helpers | `DOMParser`, `Element`, `HTMLElement`, specialized HTML element classes, `globalThis.Node`, selectors, `ownerDocument`, fragments, and DOM style/dataset APIs. Line 580 explicitly throws without `DOMParser`. | Necessary for this implementation, not fundamentally necessary for HTML-to-Fountain conversion. | Move the current implementation out of core. Expose a parser adapter, then add a security-reviewed DOM-free tokenizer/tree parser for Node/Bun/Deno/Workers. |
-| [`src/core/importers/markdown-importer.ts`](../src/core/importers/markdown-importer.ts) imports `HTMLImporter` at line 3 | Checks `typeof DOMParser` at lines 209 and 245 for ruby and styled-span parsing, then falls back to dependency-free parsing. | The dependency is optional and unnecessary for ordinary Markdown. | Inject an embedded-HTML decoder or move the optional bridge to an HTML integration module so the base Markdown importer has no DOM import edge. |
+| [`src/core/importers/markdown-importer.ts`](../src/core/importers/markdown-importer.ts) | Ruby and styled-span parsing use the dependency-free paths in every runtime; there is no `HTMLImporter` edge. | No browser dependency remains. | Implemented and covered by Markdown plus no-DOM package tests. |
 | [`src/extensions/index.ts`](../src/extensions/index.ts) imports `HTMLImporter` and builds `HTMLFormatExtension` | Pulls the DOM parser into the aggregate extension module and `StarterKit`. | Necessary only for the HTML input format. | Keep it in the compatibility/web starter kit; create a headless starter kit that excludes it until a DOM-free implementation exists. |
 
 The exporters do not create DOM nodes. [`html-exporter.ts`](../src/core/exporters/html-exporter.ts) serializes declarative specs to strings and passed in pure Node. JSON, Markdown, and text exporters are also platform-neutral.
@@ -139,7 +163,7 @@ These modules can often be loaded in Node because their DOM work is deferred, bu
 
 | Owner | Browser dependency | Is it necessary to the feature? | Smallest split |
 | --- | --- | --- | --- |
-| [`src/extensions/collaboration.ts`](../src/extensions/collaboration.ts) | Collaborator caret/label widgets call `globalThis.document.createElement`; decoration provider is installed on the same plugin as adapter state/lifecycle. | Not necessary to synchronization, awareness normalization, commands, or lifecycle. | Export a core collaboration extension and a DOM presence-decoration extension. Preserve a composed compatibility export. |
+| [`src/extensions/collaboration-core.ts`](../src/extensions/collaboration-core.ts) and [`collaboration.ts`](../src/extensions/collaboration.ts) | The core file has no DOM creation. The wrapper alone creates collaborator caret/label widgets and injects the renderer. | Presence rendering is not necessary to synchronization, awareness normalization, commands, or lifecycle. | Implemented: `createCoreCollaborationExtension()` is neutral and `createCollaborationExtension()` preserves the browser behavior. |
 | [`src/comments/index.ts`](../src/comments/index.ts) | Comment point widgets create buttons; `handleClick` uses `Element.closest`. Both live beside portable anchors, stores, operations, and controller state. | Not necessary to comment persistence/mapping. | Split comments model/controller from DOM decorations and click behavior. |
 | [`src/lean/diagnostics.ts`](../src/lean/diagnostics.ts) | Point-diagnostic widget factory calls `document.createElement`; decoration state is combined with logical diagnostic mapping. | Not necessary to Lean requests/results or source-range mapping. | Keep diagnostic data/mapping in core; add a DOM decoration presenter. |
 | [`src/lean/info-view.ts`](../src/lean/info-view.ts) | `Document`, `HTMLElement`, buttons, focus, owner document. [`src/lean/index.ts`](../src/lean/index.ts) re-exports it beside the controller. | Necessary only for the supplied browser panel. | Give the info view a DOM-only entry; keep controller/types/diagnostics-data headless. |
@@ -237,6 +261,14 @@ src/yjs/index.ts
   -> ../core
   -> ../extensions/collaboration
   -> ../extensions/extension
+
+src/headless/index.ts -> emitted as fountainjs-editor/core
+  -> core model/state/transaction/selection
+  -> portable extension composition/commands/history
+  -> collaboration-core (never collaboration DOM wrapper)
+  -> portable exporters + Markdown importer
+  -> migrations/node IDs/structured attributes
+  -X-> view, React, browser HTML importer, aggregate extensions
 ```
 
 The package root remains import-safe in Node because these modules defer DOM operations until a view, parser, decoration factory, or node-view instance is used. Import safety is valuable, but it is weaker than a dependency-enforced headless core.
@@ -250,11 +282,11 @@ The package root remains import-safe in Node because these modules defer DOM ope
 | Logical selections and mappings | **Yes** | Path/offset model is neutral. DOM selection synchronization is separate. |
 | Transactions, transforms, commands, tables, lists, search | **Yes** | Covered extensively by `tests/core.test.ts` in Node. |
 | History/undo/redo | **Yes** | Verified in Node. |
-| Extension definition, composition, manifests, doctor/conformance | **Yes** | Verified in Node and package smoke. A TypeScript consumer still sees DOM-bearing core declarations. |
+| Extension definition, composition, manifests, doctor/conformance | **Yes** | Verified in Node and package smoke. The dedicated core consumer also compiles without DOM declarations. |
 | JSON/text/Markdown/HTML serialization | **Yes** | HTML export is string-based; no DOM is constructed. |
 | Plain Markdown import | **Yes** | Verified. Ruby/styled-span paths have dependency-free fallback behavior. |
 | Arbitrary HTML import | **Yes, through the isolated server entry** | `ServerHTMLImporter` runs without browser globals or a shim; the root `HTMLImporter` remains the browser implementation. Schema-defined `parseHTML` rules are portable, while matching browser-only attribute callbacks are reported and skipped. |
-| Collaboration adapter state/lifecycle | **Yes** | Adapter plugin runs headlessly. DOM presence decorations become empty without `document`. |
+| Collaboration adapter state/lifecycle | **Yes** | `createCoreCollaborationExtension()` runs headlessly and has no DOM presence renderer; the root wrapper adds the browser decoration provider. |
 | Yjs document synchronization and local undo | **Yes** | Two-editor convergence was verified in pure Node. |
 | Comments/versions/tracked-change models | **Mostly yes** | Their data operations are portable. Comments mixes in DOM presentation; tracked changes carries declarative HTML presentation. Separate headless entries are not yet enforced. |
 | DOM editor, Web Component, ReactDOM UI | **No, by design** | These require a browser or compatible DOM host. |
@@ -263,18 +295,17 @@ The package root remains import-safe in Node because these modules defer DOM ope
 
 Do not rewrite the engine or replace working DOM code. Establish an additive boundary in this order:
 
-1. **Add an enforced headless source and package entry.** Introduce `fountainjs-editor/core` first; use `@fountain/core` only if/when the repository intentionally becomes a multi-package workspace. Export only model/schema semantics, transactions, logical selections, state/editor, core lifecycle plugins, commands, portable extensions, and JSON/text/Markdown serializers.
-2. **Make core compile without `lib.dom`.** Add a no-DOM TypeScript configuration and an import rule/test that rejects `core -> view|react|dom` edges. This is the objective acceptance criterion—not folder naming.
-3. **Separate semantic schema from DOM contributions.** Keep `NodeSpec`/`MarkSpec` semantic. Move `parseDOM`, `toDOM`, and `nodeView` to a `DOMNodeContribution`/`DOMMarkContribution` owned by the DOM adapter. Preserve existing web APIs through a compatibility composition layer for at least one release.
-4. **Separate state plugins from DOM plugin props.** Keep state, transaction filtering/appending, and lifecycle in core. Put keyboard/input/clipboard/drop/click/decorations into a DOM view-props contract. A generic `Plugin<TState, TViewProps = unknown>` can minimize churn.
-5. **Make widget payloads renderer-neutral.** Either move decorations entirely to the DOM layer or make mapped annotations generic and let DOM specialize the widget payload to `Node`. Do not require native renderers to manufacture DOM nodes.
+1. **Implemented: add an enforced headless source and package entry.** `fountainjs-editor/core` exports model/schema, transactions, logical selections, state/editor, lifecycle plugins, commands, portable extensions, collaboration, and portable formats.
+2. **Implemented: make core compile without `lib.dom`.** The no-DOM TypeScript consumer and source import walker are permanent `pnpm check` gates.
+3. **Compatibility boundary implemented; deeper cleanup optional.** Semantic schema behavior compiles without DOM types; legacy `parseDOM`/`nodeView` hooks remain generic compatibility fields so the web API is unchanged. A major-version renderer-contribution split should happen only with a concrete renderer need.
+4. **Compatibility boundary implemented.** State, filtering/appending, and lifecycle remain core; renderer events are opaque at that boundary and browser interpretation stays in the view. A future renderer-specific typed facade can improve platform autocomplete without blocking portability.
+5. **Implemented: widget payloads are renderer-neutral.** Mapped decorations use `WidgetFactory<Widget = unknown>` and the DOM renderer narrows the result.
 6. **Split mixed extensions without changing their public convenience exports.** Collaboration, comments, Lean diagnostics, syntax highlighting, links, clipboard history, suggestions, paste rules, math, media, details, ruby, images, and resizable tables should each expose portable logic plus an optional DOM presenter/binding. Existing `StarterKit` can compose both for web users.
-7. **Isolate HTML parsing.** **Runtime portion implemented:** the current
+7. **Implemented: isolate HTML parsing.** The current
    `DOMParser` path remains browser-only and `fountainjs-editor/html/server`
-   provides bounded DOM-free conversion plus `parseHTML` extension rules.
-   Remaining ownership work is a future headless/core declaration boundary and
-   an injectable Markdown embedded-HTML decoder.
-8. **Keep permanent server-runtime gates.** The emitted HTML path now executes with browser globals absent in Node, Bun, Deno, and Cloudflare `workerd`; packed ESM/CommonJS and Node Yjs convergence remain covered too. Still add a no-`DOM` TypeScript consumer gate when the dedicated core declaration entry is introduced. Keep browser matrices for the DOM adapter.
+   provides bounded DOM-free conversion plus `parseHTML` extension rules; the
+   Markdown importer no longer imports the browser parser.
+8. **Implemented and permanent: server/runtime gates.** Emitted HTML runs with browser globals absent in Node, Bun, Deno, and Cloudflare `workerd`; packed ESM/CommonJS, no-DOM TypeScript, generic collaboration, and Node Yjs are covered. Keep browser matrices for the DOM adapter.
 
 A useful target graph is:
 
@@ -293,8 +324,8 @@ fountainjs-editor/core
           +-- fountainjs-editor/yjs
           |     Yjs adapter over core collaboration contracts
           |
-          +-- fountainjs-editor/headless
-                server-safe starter kit and conversions
+          +-- fountainjs-editor/html/server
+                bounded server-safe HTML conversion
 ```
 
 This can later become scoped packages (`@fountain/core`, `@fountain/dom`, and so on) without making package splitting a prerequisite for architectural correctness.
@@ -310,7 +341,11 @@ This can later become scoped packages (`@fountain/core`, `@fountain/dom`, and so
 | React Native renderer/input | Very high | Native text input, IME, selection, accessibility, bidi, clipboard, and performance | Separate product-scale adapter; should not block web 1.0. |
 | Flutter/SwiftUI/Compose adapters | Very high | Cross-language bridge/state synchronization plus each platform's text system | Likely months of platform work and dedicated maintainers. |
 
-The current combined ESM root built at approximately 61.6 kB uncompressed during this audit. A headless entry should be materially smaller, but no size claim should be made until that entry exists and is measured. Keeping the existing root and `StarterKit` as compatibility surfaces limits migration cost.
+The original combined ESM root measured approximately 61.6 kB during the
+audit. The current additive `core` facade is 7.55 kB ESM / 6.90 kB CommonJS
+before shared chunks and has individual plus aggregate build budgets. The web
+root and `StarterKit` remain compatibility surfaces, so existing applications
+do not migrate merely to preserve behavior.
 
 The highest destabilization risk is changing schema and plugin contracts while the web editor is still hardening. The safe approach is additive: introduce neutral contracts and adapters, migrate built-ins, maintain compatibility shims, add conformance checks, and only then deprecate the mixed fields.
 
@@ -319,8 +354,8 @@ The highest destabilization risk is changing schema and plugin contracts while t
 | Platform | Current status | Recommendation |
 | --- | --- | --- |
 | Browser DOM | Working primary platform | Continue hardening now. Move it behind an explicit adapter without rewriting it. |
-| Node.js/server-only | Core behavior and bounded HTML import work without a fake DOM; the public core declaration/package boundary is still mixed | Keep the server conversion gate permanent, then formalize a no-DOM core entry without rewriting the web editor. |
-| Bun/Deno/serverless/Workers | Emitted server HTML import/export is certified in Bun, Deno, and Cloudflare `workerd`; the broader core declaration graph is still mixed | Keep the runtime gates permanent, avoid Node built-ins in server entries, and certify the future no-DOM core declaration boundary separately. |
+| Node.js/server-only | Public `fountainjs-editor/core`, generic collaboration, Yjs runtime, and bounded HTML import work without a fake DOM | Keep source, declaration, package, runtime, and performance gates permanent. |
+| Bun/Deno/serverless/Workers | Emitted server HTML import/export is certified in Bun, Deno, and Cloudflare `workerd`; the core entry avoids browser and Node built-ins | Extend packed core runtime smoke to these engines when their package resolvers can exercise the exact subpath consistently. |
 | Electron/Tauri | Browser renderer should work naturally | Treat as web deployment targets, not new editor engines. Validate packaging later. |
 | React Native without WebView | Not supported | Preserve architectural possibility now; implement much later with a dedicated native input/render adapter. |
 | Flutter without WebView | Not supported | Requires a Dart bridge/implementation plus native editing surface. Post-1.0 work. |
@@ -331,8 +366,13 @@ The highest destabilization risk is changing schema and plugin contracts while t
 
 Choose **A: design it into the architecture now, implement native later**.
 
-The evidence does not justify rewriting the editor. FountainJS owns a portable model/transaction engine already, and the existing view folder is a good start. The work now is to turn an informal runtime property into an enforced dependency and package property:
+The evidence does not justify rewriting the editor. FountainJS owns a portable
+model/transaction engine, and the former informal runtime property is now an
+enforced dependency, declaration, and package property:
 
 > FountainJS core must compile, import, and execute without DOM libraries or browser globals; DOM behavior must enter through explicit parser, renderer, view-plugin, and input adapters.
 
-Implement the server/headless boundary relatively soon because most of its engine already works and it creates immediate value. Deliberately postpone native UI renderers until the web editor, extension contract, and headless boundary are stable.
+Keep hardening the server/headless boundary as normal release work. Deliberately
+postpone native UI renderers until the web editor, extension contract, and this
+boundary are stable; the next native milestone is a written bridge design and a
+small feasibility prototype, not four production renderers.

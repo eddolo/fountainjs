@@ -18,6 +18,13 @@
 
 ### Added
 
+- A public `fountainjs-editor/core` entry for the platform-neutral document
+  engine, logical selection, transactions, commands, history, portable
+  extensions, collaboration lifecycle, formats, migrations, stable node IDs,
+  and structured attributes; the source graph is import-gated, the package
+  declarations compile with `ES2023` and no DOM library, ESM/CommonJS exports
+  are smoke-tested, and pure-Node behavior includes collaboration and Yjs with
+  no fake DOM. Browser presence rendering remains in the compatible root entry.
 - Opt-in top-level `EditorView` virtualization with a renderer-independent
   measured-height/position index, viewport and semantic-selection islands,
   stable structural scroll anchoring, full-model decoration positions,

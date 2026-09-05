@@ -1,5 +1,22 @@
 # FountainJS API
 
+## Platform-neutral package entry
+
+`fountainjs-editor/core` is the enforced no-DOM engine entry. It exports the
+document model and schema, logical selections, transactions and mappings,
+editor state, plugins and lifecycle, extension composition, command manager,
+history, collaboration contracts and `createCoreCollaborationExtension()`,
+portable exporters/importer, migrations, stable node IDs, and structured
+attributes. Its public declarations compile with only `ES2023`, and its source
+graph is forbidden from importing the DOM view, React, or browser HTML parser.
+
+The package root remains the compatible browser convenience entry.
+`createCollaborationExtension()` adds browser caret/range decoration;
+`createCoreCollaborationExtension()` keeps the same adapter lifecycle and
+remote-update commands without a presence renderer. Parse arbitrary HTML on a
+server with `fountainjs-editor/html/server`. See
+[HEADLESS_CORE.md](HEADLESS_CORE.md) for examples, exclusions, and verification.
+
 ## Document model
 
 `Schema` compiles a `SchemaSpec` into node and mark types. Use `schema.node()`, `schema.text()`, and `schema.mark()` to create values with attribute defaults and validation. `schema.validate()` enforces ownership, attributes, atom rules, mark placement, and node content expressions at every editor-state boundary. `Node` values are immutable and provide `textContent`, `nodeSize`, `child()`, `descendants()`, `eq()`, and `toJSON()`.

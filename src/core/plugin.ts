@@ -2,6 +2,7 @@ import type { Editor } from './editor';
 import type { EditorState } from './state';
 import type { Transaction } from './transaction';
 import type { Decoration, DecorationSet } from './decoration';
+import type { GlobalConstructorInstance } from './platform';
 
 let pluginId = 0;
 
@@ -30,14 +31,15 @@ export interface PluginStateSpec<T> {
 
 export interface PluginProps {
   decorations?: (state: EditorState) => DecorationSet | readonly Decoration[] | null | undefined;
-  handleKeyDown?: (editor: Editor, event: KeyboardEvent) => boolean;
-  handleBeforeInput?: (editor: Editor, event: InputEvent) => boolean;
+  /** Browser projects infer native event types; no-DOM projects receive an opaque compatibility payload. */
+  handleKeyDown?: (editor: Editor, event: GlobalConstructorInstance<'KeyboardEvent', any>) => boolean;
+  handleBeforeInput?: (editor: Editor, event: GlobalConstructorInstance<'InputEvent', any>) => boolean;
   handleTextInput?: (editor: Editor, from: number, to: number, text: string) => boolean;
-  handleCopy?: (editor: Editor, event: ClipboardEvent) => boolean;
-  handleCut?: (editor: Editor, event: ClipboardEvent) => boolean;
-  handlePaste?: (editor: Editor, event: ClipboardEvent) => boolean;
-  handleDrop?: (editor: Editor, event: DragEvent) => boolean;
-  handleClick?: (editor: Editor, event: MouseEvent) => boolean;
+  handleCopy?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
+  handleCut?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
+  handlePaste?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
+  handleDrop?: (editor: Editor, event: GlobalConstructorInstance<'DragEvent', any>) => boolean;
+  handleClick?: (editor: Editor, event: GlobalConstructorInstance<'MouseEvent', any>) => boolean;
   onCreate?: (editor: Editor) => void;
   onDestroy?: (editor: Editor) => void;
 }

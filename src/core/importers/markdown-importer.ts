@@ -1,6 +1,5 @@
 import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
-import { HTMLImporter } from './html-importer';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 const REFERENCE_DEFINITION = /^\s{0,3}\[([^\]]+)\]:\s*(<[^>]*>|\S+)(?:\s+(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)'|\(((?:\\.|[^)\\])*)\)))?\s*$/;
@@ -114,16 +113,6 @@ interface StyledTextToken {
   readonly end: number;
 }
 
-function mergeTextMarks(node: Node, inheritedMarks: readonly Mark[]): Node {
-  if (node.isText) {
-    return node.withMarks([
-      ...inheritedMarks,
-      ...node.marks.filter((mark) => !inheritedMarks.some((candidate) => candidate.type === mark.type)),
-    ]);
-  }
-  return node.copy(node.content.map((child) => mergeTextMarks(child, inheritedMarks)));
-}
-
 function decodeHTMLEntities(value: string): string {
   return value
     .replace(/&#x([\da-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
@@ -206,25 +195,17 @@ function rubyToken(
   const end = start + close.index + close[0].length;
   const source = value.slice(start, end);
 
-  if (typeof DOMParser !== 'undefined') {
-    try {
-      const document = HTMLImporter.parse(`<p>${source}</p>`, schema);
-      const candidate = document.content[0]?.content.find((node) => node.type.name === 'ruby');
-      if (candidate) return { node: mergeTextMarks(candidate, inheritedMarks), end };
-    } catch { /* Fall through to the dependency-free readable parser. */ }
-  }
-
   const annotation = /<rt(?:\s[^>]*)?>([\s\S]*?)<\/rt\s*>/i.exec(source)?.[1];
   const body = /^<ruby(?:\s[^>]*)?>([\s\S]*)<\/ruby\s*>$/i.exec(source)?.[1] ?? '';
   const explicitBase = /<rb(?:\s[^>]*)?>([\s\S]*?)<\/rb\s*>/i.exec(body)?.[1];
   const baseSource = explicitBase ?? body
     .replace(/<rt(?:\s[^>]*)?>[\s\S]*?<\/rt\s*>/gi, '')
     .replace(/<rp(?:\s[^>]*)?>[\s\S]*?<\/rp\s*>/gi, '');
-  const base = decodeHTMLEntities(baseSource.replace(/<[^>]*>/g, ''));
+  const base = generatedStyledNodes(baseSource, schema, inheritedMarks);
   const rt = decodeHTMLEntities((annotation ?? '').replace(/<[^>]*>/g, '')).trim();
   try {
-    if (!base || !rt) return null;
-    return { node: schema.node('ruby', { rt }, [schema.text(base, inheritedMarks)]), end };
+    if (!base.some((node) => node.textContent) || !rt) return null;
+    return { node: schema.node('ruby', { rt }, base), end };
   } catch { return null; }
 }
 
@@ -241,14 +222,6 @@ function styledTextToken(
   if (!closing) return null;
   const end = contentStart + closing.index + closing[0].length;
   const source = value.slice(start, end);
-
-  if (typeof DOMParser !== 'undefined') {
-    try {
-      const document = HTMLImporter.parse(`<p>${source}</p>`, schema);
-      const nodes = document.content[0]?.content.map((node) => mergeTextMarks(node, inheritedMarks)) ?? [];
-      if (nodes.length) return { nodes, end };
-    } catch { /* Fall through to the dependency-free style parser. */ }
-  }
 
   const style = decodeHTMLEntities(opening[1]);
   const marks = [...inheritedMarks];

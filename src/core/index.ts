@@ -12,3 +12,4 @@ export * from './table-map';
 export * from './table-commands';
 export * from './search';
 export * from './url';
+export * from './platform';

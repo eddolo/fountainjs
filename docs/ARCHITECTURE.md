@@ -453,6 +453,23 @@ causes continuous-mode fallback rather than an unsafe duplicate NodeView. This
 keeps custom continuation policy browser-side and leaves `src/pages/layout.ts`
 platform-neutral.
 
+## Enforced platform-neutral entry
+
+`src/headless/index.ts` is emitted as `fountainjs-editor/core`. It is a
+conservative facade over the existing engine rather than a second engine. Its
+reachable source graph contains model/schema, logical selection, transactions,
+state/editor, mapped annotations, extension composition, command management,
+history, collaboration lifecycle, portable formats, migrations, stable IDs,
+and structured attributes. It deliberately cannot reach `src/view`,
+`src/react`, the browser `HTMLImporter`, or the aggregate web extension kit.
+
+`scripts/check-headless-boundary.mjs` enforces those import edges, while
+`tsconfig.headless.json` compiles a package-self-reference consumer with
+`lib: ["ES2023"]`, no ambient types, and `skipLibCheck: false`. Runtime tests
+execute editing, history, conversion, generic collaboration, and the Yjs
+adapter while `document` and `window` are absent. The browser root stays
+compatible; this boundary does not instantiate or promise a native renderer.
+
 ## Extension composition
 
 `defineExtension` creates a named, frozen extension description. A public
@@ -490,11 +507,13 @@ Services are deliberately open-ended. A host can use them for analytics, collabo
 ## Collaboration boundary
 
 Collaboration is layered so neither a network vendor nor Yjs becomes editor
-architecture. `createCollaborationExtension` is a normal framework-neutral
-plugin plus lifecycle commands. It subscribes to accepted editor transactions,
-separates local from remote origins, validates complete incoming documents,
-keeps presence out of persisted content, and renders normalized carets/ranges
-through the ordinary decoration system.
+architecture. `createCoreCollaborationExtension` owns the platform-neutral
+plugin, adapter lifecycle, commands, state, and remote/local transaction
+boundary. `createCollaborationExtension` is the compatible browser wrapper and
+injects normalized caret/range rendering through the ordinary decoration
+system. Both subscribe to accepted editor transactions, separate local from
+remote origins, validate complete incoming documents, and keep presence out of
+persisted content.
 
 The adapter boundary receives before/after documents and selections. This is
 enough for a CRDT implementation to reconcile retained nodes without teaching

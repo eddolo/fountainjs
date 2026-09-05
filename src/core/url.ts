@@ -18,7 +18,11 @@ export function isSafeURL(value: unknown, options: SafeURLOptions = {}): value i
   if (/^tel:/i.test(url)) return /^tel:[+\d][\d().\- ]*$/i.test(url);
   if (!/^https?:\/\//i.test(url)) return false;
   try {
-    const parsed = new URL(url);
+    const URLConstructor = (globalThis as unknown as {
+      URL?: new (value: string) => { protocol: string; hostname: string };
+    }).URL;
+    if (!URLConstructor) return false;
+    const parsed = new URLConstructor(url);
     return (parsed.protocol === 'http:' || parsed.protocol === 'https:') && Boolean(parsed.hostname);
   } catch {
     return false;

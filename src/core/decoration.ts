@@ -1,9 +1,11 @@
 import type { Node } from './schema';
 import type { MapAssociation, MapResult } from './transaction';
+import type { GlobalConstructorInstance } from './platform';
 
 export type DecorationType = 'inline' | 'node' | 'widget';
 export type DecorationAttributes = Readonly<Record<string, string | number | boolean | null | undefined>>;
-export type WidgetFactory = () => globalThis.Node;
+/** Renderer-owned widget payload; the DOM adapter narrows it to a DOM Node. */
+export type WidgetFactory<Widget = GlobalConstructorInstance<'Node', unknown>> = () => Widget;
 
 export interface DecorationSpec {
   /** Stable identity used when comparing decorations across state updates. */
@@ -59,7 +61,7 @@ export class Decoration {
   }
 
   static widget(position: number, toDOM: WidgetFactory, spec: DecorationSpec = {}): Decoration {
-    if (typeof toDOM !== 'function') throw new TypeError('Widget decorations require a DOM factory.');
+    if (typeof toDOM !== 'function') throw new TypeError('Widget decorations require a renderer factory.');
     return new Decoration('widget', position, position, {}, spec, toDOM);
   }
 

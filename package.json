@@ -13,6 +13,9 @@
   },
   "typesVersions": {
     "*": {
+      "core": [
+        "dist/headless/index.d.ts"
+      ],
       "document-utilities": [
         "dist/document-utilities.d.ts"
       ],
@@ -96,6 +99,16 @@
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
+      }
+    },
+    "./core": {
+      "import": {
+        "types": "./dist/headless/index.d.ts",
+        "default": "./dist/core.js"
+      },
+      "require": {
+        "types": "./dist/headless/index.d.cts",
+        "default": "./dist/core.cjs"
       }
     },
     "./document-utilities": {
@@ -426,10 +439,11 @@
     "test:budget": "node scripts/check-build-budgets.mjs",
     "test:performance": "node --expose-gc scripts/check-performance-budgets.mjs",
     "test:server-runtimes": "node scripts/smoke-server-html-runtime.mjs && node scripts/check-server-html-worker.mjs",
+    "test:headless": "node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "test:watch": "vitest",
-    "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
+    "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",
     "prepublishOnly": "pnpm check"
   },

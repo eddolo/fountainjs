@@ -53,6 +53,14 @@ React is an optional peer dependency. Install `react` and `react-dom` only when 
 Yjs is also optional. Install `yjs` only when importing
 `fountainjs-editor/yjs` for real-time collaboration.
 
+Server and tooling code can import `fountainjs-editor/core`. That entry exposes
+the model, schema, transactions, commands, history, portable extension
+composition, collaboration lifecycle, and string/JSON/Markdown formats while
+compiling without `lib.dom` and running without browser globals or jsdom. Use
+`fountainjs-editor/html/server` when a server must parse arbitrary HTML. The
+[platform-neutral core guide](docs/HEADLESS_CORE.md) defines the exact boundary
+and its permanent tests.
+
 ## Compose an editor
 
 Use the supplied rich-document extension, add behavior, and define your own capability:
@@ -1268,6 +1276,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [API guide](docs/API.md)
 - [Format boundaries](docs/FORMATS.md)
 - [Server-native HTML conversion](docs/SERVER_HTML.md)
+- [Platform-neutral core and headless collaboration](docs/HEADLESS_CORE.md)
 - [Document versions and migrations](docs/MIGRATIONS.md)
 - [Print-aware page foundation and pagination gates](docs/PAGINATION.md)
 - [Release and API stability policy](docs/RELEASES.md)
