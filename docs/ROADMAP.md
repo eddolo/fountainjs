@@ -176,16 +176,37 @@ and the corresponding
 succeeded. A clean no-DOM core declaration package is still a separate
 portability task and is not implied by this conversion milestone.
 
-## Active now: virtualized rendering for huge documents
+## Delivered: virtualized rendering for huge documents
 
-Fountain's immutable model and transaction gates already cover 10,000 blocks,
-and pagination incrementally remeasures 5,000 rendered blocks, but the DOM view
-still mounts every top-level node. The next milestone starts at that honest
-boundary: an opt-in windowed renderer with measured height reuse, stable scroll
-anchoring, selection/IME pinning, complete model-backed copy/search, NodeView and
-decoration lifecycle rules, full-render printing, accessibility behavior, and a
-real 100,000-block browser budget. It remains Active until those behaviors pass
-across Chromium, Firefox, WebKit, Pixel, and iPhone projects.
+The opt-in top-level window keeps the complete immutable model while mounting
+only the viewport, overscan, and semantic selection islands. Its neutral height
+index reuses measurements by node identity and preserves absolute model
+positions. Stable structural scroll anchoring, distant model-backed search and
+editing, Japanese IME, decorations, deterministic NodeView lifecycle, remote
+transactions, wide rich copy/cut preparation, explicit accessibility/export
+suspension, and automatic full-render printing are covered without weakening
+the ordinary non-virtual editor. A real 100,000-block contract keeps fewer than
+100 top-level blocks mounted across Chromium, Firefox, WebKit, Pixel/Chromium,
+and iPhone/WebKit. The complete 452-test package gate and 289-pass browser/mobile
+matrix passed in
+[CI run `8a6264e`](https://github.com/eddolo/fountainjs/actions/runs/33977243766),
+and the corresponding
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33977243779)
+succeeded. Scope, accessibility policy, and the one-enormous-block limitation
+are explicit in [VIRTUALIZATION.md](VIRTUALIZATION.md).
+
+## Active now: enforced platform-neutral core boundary
+
+The portability audit proved that the model, schema, logical selections,
+transactions, history, extension composition, collaboration state, Yjs, and
+serializers run without a browser, and the isolated server HTML entry is already
+runtime-certified. The remaining gap is ownership and types: the aggregate core
+declarations still expose DOM hooks. The next milestone is an additive
+`fountainjs-editor/core` entry compiled and consumed with no `lib.dom`, backed by
+an import-boundary gate and a deliberately small portable starter surface. It
+must preserve the existing web root and StarterKit. This designs for future
+native renderers now; it does not start React Native, Flutter, SwiftUI, or
+Compose implementations.
 
 ## Prioritized after release foundations
 
@@ -194,9 +215,10 @@ across Chromium, Firefox, WebKit, Pixel, and iPhone projects.
 | 1 | First-class interactive widgets | Delivered and certified in `cced9e2` | Continue browser, accessibility, format, and extension-composition regression coverage as products adopt the contract. |
 | 2 | Granular collaborative structured attributes | Delivered and certified in `0a33c87` | Continue adversarial mixed-version, nested-array, collaboration, and storage regression coverage. |
 | 3 | Truly server-native document conversion | Delivered and certified in `ebc3194` | Continue malformed-input, custom-rule, runtime, package, CPU, and memory regression coverage. The future no-DOM core declaration entry remains tracked separately. |
-| 4 | Virtualized or paged rendering for huge documents | Active; 10,000-block engine budgets exist, but the view still renders the complete document | Retained selection and IME correctness across mounted windows, search/decorations/NodeViews, scroll anchoring, accessibility, printing, collaboration, and real 100k-block performance evidence. |
-| 5 | Native renderer feasibility | Core/view separation exists; DOM/Web Component/React are web surfaces | A written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A web view does not count as native. |
-| 6 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
+| 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
+| 5 | Enforced platform-neutral core boundary | Runtime-neutral engine and server HTML exist; declarations and convenience extensions still mix DOM contracts | A public `fountainjs-editor/core` entry that compiles and is consumed without `lib.dom`, import-boundary enforcement, portable schema/extension contracts, compatibility adapters, and unchanged web behavior. Native UI packages remain postponed. |
+| 6 | Native renderer feasibility | Portability audit and model/view separation exist; DOM, Web Component, and React are web surfaces | After the neutral boundary stabilizes, a written coordinate/input/IME/accessibility bridge design and a prototype for either React Native or Flutter before promising native packages. A WebView does not count as native. |
+| 7 | Higher-fidelity Markdown source preservation | Semantic round-trips and loss reports exist | CommonMark/GFM corpus, frontmatter, footnotes, raw/parsed switching, source-span preservation where safe, unknown-syntax policy, and format-stability fixtures. Exact source preservation and semantic preservation must be named separately. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
