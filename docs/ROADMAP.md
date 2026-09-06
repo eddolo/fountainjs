@@ -447,7 +447,8 @@ performance, and browser behavior:
   recognizable replacement-workflow test rather than a visual clone;
 - table captions and advanced image/text wrapping;
 - cross-editor schema-aware drag and drop; the local general inline/block drop
-  cursor is implemented under UI-06 and remains subject to release evidence;
+  cursor is delivered and publicly certified under UI-06, while accepting and
+  translating content from another schema remains separate research;
 - footnote/endnote interchange independent of paged rendering;
 - configurable soft limits in addition to enforced hard character limits;
 - iframe/isolated-surface editing and host focus coordination;

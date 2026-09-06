@@ -377,7 +377,7 @@ Resize/scroll observation affects only transient positioning. React and the Web
 Component forward the same `EditorView` option rather than reimplementing it.
 
 `DropCursorManager` is the independent general-drag presentation concern.
-`InputManager` tells it about accepted native drag targets; it resolves browser
+`InputManager` tells it about data-bearing native drag targets; it resolves browser
 caret geometry for inline text and block geometry for atomic targets, then
 mounts one inert overlay outside `contenteditable`. It does not modify state,
 selection, clipboard data, or drop behavior. During path-based block moves the
