@@ -84,6 +84,7 @@ export interface AIConversationSnapshot {
   readonly status: 'idle' | 'loading' | 'requesting' | 'streaming' | 'error';
   readonly thread?: AIConversationThread;
   readonly activeRequest?: AIConversationRequest;
+  readonly lastRequest?: AIConversationRequest;
   /** Transient adapter output. It is not persisted until the response completes. */
   readonly streamingContent?: string;
   readonly error?: string;
@@ -228,6 +229,10 @@ export function normalizeAIConversationThread(value: AIConversationThread, expec
   const messages = Object.freeze(value.messages.map(normalizeAIConversationMessage));
   const ids = new Set(messages.map((message) => message.id));
   if (ids.size !== messages.length) throw new TypeError('AI conversation message ids must be unique.');
+  if (messages.some((message, index) => index > 0
+    && Date.parse(message.createdAt) < Date.parse((messages[index - 1] as AIConversationMessage).createdAt))) {
+    throw new TypeError('AI conversation messages must be ordered by creation time.');
+  }
   return Object.freeze({
     id: value.id,
     revision: value.revision,
@@ -305,7 +310,10 @@ export function createStreamingAIConversationAdapter(
 
 export class InMemoryAIConversationStore implements AIConversationStore {
   private readonly threads = new Map<string, AIConversationThread>();
-  private readonly operations = new Map<string, AIConversationThread>();
+  private readonly operations = new Map<string, {
+    readonly thread: AIConversationThread;
+    readonly expectedRevision: number | null;
+  }>();
 
   load(request: AIConversationLoadRequest): AIConversationThread | undefined {
     abortIfNeeded(request.signal);
@@ -319,7 +327,8 @@ export class InMemoryAIConversationStore implements AIConversationStore {
     const thread = normalizeAIConversationThread(request.thread);
     const repeated = this.operations.get(request.operationId);
     if (repeated) {
-      if (JSON.stringify(repeated) === JSON.stringify(thread)) return repeated;
+      if (repeated.expectedRevision === request.expectedRevision
+        && JSON.stringify(repeated.thread) === JSON.stringify(thread)) return repeated.thread;
       throw new AIConversationConflictError('The operation id was already used for a different conversation save.');
     }
     const current = this.threads.get(thread.id);
@@ -328,7 +337,7 @@ export class InMemoryAIConversationStore implements AIConversationStore {
       throw new AIConversationConflictError('Conversation revisions must increase by one.');
     }
     this.threads.set(thread.id, thread);
-    this.operations.set(request.operationId, thread);
+    this.operations.set(request.operationId, { thread, expectedRevision: request.expectedRevision });
     while (this.operations.size > 10_000) {
       const oldest = this.operations.keys().next().value as string | undefined;
       if (!oldest) break;
@@ -445,7 +454,10 @@ export class AIConversationController {
       const completed = await this.persist([...withUser.messages, assistantMessage], withUser, abort.signal);
       this.thread = completed;
       this.activeAbort = undefined;
-      this.publish({ status: 'idle', thread: completed, activeRequest: undefined, streamingContent: undefined, error: undefined });
+      this.publish({
+        status: 'idle', thread: completed, activeRequest: undefined, lastRequest: request,
+        streamingContent: undefined, error: undefined,
+      });
       return assistantMessage;
     } catch (error) {
       if (this.activeAbort === abort) {
@@ -543,7 +555,11 @@ export class AIConversationController {
       signal,
     });
     abortIfNeeded(signal);
-    return normalizeAIConversationThread(saved, this.options.threadId);
+    const normalized = normalizeAIConversationThread(saved, this.options.threadId);
+    if (JSON.stringify(normalized) !== JSON.stringify(candidate)) {
+      throw new TypeError('The AI conversation store returned a record different from the requested save.');
+    }
+    return normalized;
   }
 
   private async runAdapter(request: AIConversationRequest, abort: AbortController): Promise<AIConversationResult> {

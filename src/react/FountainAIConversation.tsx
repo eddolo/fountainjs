@@ -4,6 +4,7 @@ import {
   type AIConversationSnapshot,
   type AIPromptStore,
   type AIPromptTemplate,
+  defineAIPromptTemplate,
 } from '../ai/conversation';
 
 const EMPTY_SNAPSHOT: AIConversationSnapshot = Object.freeze({ status: 'idle' });
@@ -55,8 +56,9 @@ export function FountainAIConversation({
     void Promise.resolve(promptStore.list({ signal: abort.signal }))
       .then((items) => {
         if (abort.signal.aborted) return;
-        setPrompts(items);
-        setPromptId((current) => items.some((prompt) => prompt.id === current) ? current : items[0]?.id ?? '');
+        const normalized = Object.freeze(items.map(defineAIPromptTemplate));
+        setPrompts(normalized);
+        setPromptId((current) => normalized.some((prompt) => prompt.id === current) ? current : normalized[0]?.id ?? '');
       })
       .catch((error) => { if (!abort.signal.aborted) onError?.(error); });
     return () => abort.abort();
@@ -72,6 +74,7 @@ export function FountainAIConversation({
   if (!controller) return null;
   const busy = snapshot.status === 'loading' || snapshot.status === 'requesting' || snapshot.status === 'streaming';
   const selectedPrompt = prompts.find((prompt) => prompt.id === promptId);
+  const displayedRequest = snapshot.activeRequest ?? snapshot.lastRequest;
 
   const send = async (event: FormEvent) => {
     event.preventDefault();
@@ -151,9 +154,9 @@ export function FountainAIConversation({
       </div>
     </form>
 
-    {snapshot.activeRequest ? <details className="fountain-ai-conversation__payload">
-      <summary>Inspect context sent for this reply</summary>
-      <pre><code>{JSON.stringify(snapshot.activeRequest, null, 2)}</code></pre>
+    {displayedRequest ? <details className="fountain-ai-conversation__payload">
+      <summary>Inspect context sent for {snapshot.activeRequest ? 'this' : 'the last'} reply</summary>
+      <pre><code>{JSON.stringify(displayedRequest, null, 2)}</code></pre>
     </details> : null}
   </section>;
 }

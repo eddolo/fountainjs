@@ -3,8 +3,8 @@
   "files": {
     "dist/ai/controller.d.cts": "2b4531f66b2c8228d7829529734d88e6f54ad5b7c40e0b54a656197274ecd655",
     "dist/ai/controller.d.ts": "3eb7ee205d23f3c506f92a531329c131c30b597d1588d1d92ff94d28bbafd457",
-    "dist/ai/conversation.d.cts": "35cc6c71e3cc998cb1eb8037d40b89bda2047a80d321d7bc601605e76b1d6eda",
-    "dist/ai/conversation.d.ts": "35cc6c71e3cc998cb1eb8037d40b89bda2047a80d321d7bc601605e76b1d6eda",
+    "dist/ai/conversation.d.cts": "306e1cd451922e26140cee1c98c5c40ff51249545dfb79725ca346eedb25a40a",
+    "dist/ai/conversation.d.ts": "306e1cd451922e26140cee1c98c5c40ff51249545dfb79725ca346eedb25a40a",
     "dist/ai/document-tools.d.cts": "3742a0c734aaba25c494a6418812a0b005ec1a79bdf700fec10d6069ffccf130",
     "dist/ai/document-tools.d.ts": "f843f9cef90884e4ccac6b545966d6738019d80ab039503d3d6149bc06dd49bf",
     "dist/ai/index.d.cts": "79335ed4c2ab728e605ac9004c5503d771d773f7bf88cfcc905f5b8610ab39bf",

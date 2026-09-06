@@ -45,6 +45,7 @@ describe('host-owned AI conversations', () => {
       'First question', 'Reply 1', 'Second question',
     ]);
     expect(requests[1]?.privacy).toEqual({ includedMessages: 3, totalThreadMessages: 3 });
+    expect(controller.getSnapshot().lastRequest?.id).toBe(requests[1]?.id);
 
     const secondController = new AIConversationController({
       threadId: 'thread-1', store, adapter: createAIConversationAdapter(async () => 'unused'), autoLoad: false,
@@ -157,6 +158,19 @@ describe('host-owned AI conversations', () => {
     release();
     await first;
     expect(controller.getSnapshot().thread?.messages.map((message) => message.content)).toEqual(['First', 'Reply']);
+  });
+
+  it('rejects a host store that acknowledges different data than it was asked to save', async () => {
+    const controller = new AIConversationController({
+      threadId: 'bad-store',
+      autoLoad: false,
+      store: {
+        load: () => undefined,
+        save: (request) => ({ ...request.thread, title: 'Unexpected server rewrite' }),
+      },
+      adapter: createAIConversationAdapter(async () => 'unused'),
+    });
+    await expect(controller.send('Do not rewrite this')).rejects.toThrow(/different from the requested save/);
   });
 });
 
