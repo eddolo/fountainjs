@@ -80,6 +80,79 @@ describe('external clipboard normalization', () => {
     expect(document.textContent).not.toContain('gone');
   });
 
+  it('preserves Word ordered-list starts and separates adjacent Office list identities', () => {
+    const result = normalizeExternalPasteHTML(`
+      <p class="MsoListParagraph" style="mso-list:l0 level1 lfo1">
+        <span style="mso-list:Ignore">4. </span>Fourth
+      </p>
+      <p class="MsoListParagraph" style="mso-list:l0 level1 lfo1">
+        <span style="mso-list:Ignore">5. </span>Fifth
+      </p>
+      <p class="MsoListParagraph" style="mso-list:l1 level1 lfo2">
+        <span style="mso-list:Ignore">1. </span>Independent first
+      </p>
+    `);
+
+    const document = HTMLImporter.parse(result.html, richSchema());
+    expect(document.childCount).toBe(2);
+    expect(document.child(0).type.name).toBe('ordered_list');
+    expect(document.child(0).attrs.start).toBe(4);
+    expect(document.child(0).childCount).toBe(2);
+    expect(document.child(1).type.name).toBe('ordered_list');
+    expect(document.child(1).attrs.start).toBe(1);
+    expect(document.child(1).childCount).toBe(1);
+    expect(document.textContent.replace(/\s+/gu, ' ').trim()).toBe('Fourth Fifth Independent first');
+  });
+
+  it('normalizes representative Word footnotes, endnotes, and comment markers with explicit loss', () => {
+    const result = normalizeExternalPasteHTML(`
+      <p class="MsoNormal">Claim<a href="#_ftn2" data-comment="word-thread-7">2</a>
+        and appendix<a href="#_edn3">3</a>.</p>
+      <div style="mso-element:footnote" id="_ftn2"><p>Footnote body</p></div>
+      <div style="mso-element:endnote" id="_edn3"><p>Endnote body</p></div>
+      <!--[if supportFields]><span>Office-only field</span><![endif]-->
+    `);
+
+    expect(result.source).toBe('microsoft-word');
+    expect(result.html).toContain('role="doc-noteref"');
+    expect(result.html).toContain('role="doc-footnote"');
+    expect(result.html).toContain('id="word-ftn2"');
+    expect(result.html).toContain('id="word-edn3"');
+    expect(result.html).not.toContain('data-comment');
+    expect(result.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ code: 'word-footnote-normalized', lossy: false }),
+      expect.objectContaining({ code: 'external-comments-not-imported', lossy: true }),
+      expect.objectContaining({ code: 'source-metadata-removed', lossy: false }),
+    ]));
+    const document = HTMLImporter.parse(result.html, richSchema());
+    expect(JSON.stringify(document.toJSON())).toContain('Footnote body');
+    expect(JSON.stringify(document.toJSON())).toContain('Endnote body');
+  });
+
+  it('keeps Google Docs semantic structure while removing editor-only metadata', () => {
+    const result = normalizeExternalPasteHTML(`
+      <div id="docs-internal-guid-abc" data-docs-foo="opaque">
+        <h2><span style="font-weight:700">Release notes</span></h2>
+        <ul><li><strong>Kept bold</strong><ol start="3"><li>Nested third</li></ol></li></ul>
+        <p data-comment="docs-thread-1"><a href="https://example.com/guide">Guide</a></p>
+      </div>
+    `);
+
+    expect(result.source).toBe('google-docs');
+    expect(result.html).not.toContain('docs-internal-guid');
+    expect(result.html).not.toContain('data-docs-foo');
+    expect(result.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ code: 'source-metadata-removed', lossy: false }),
+      expect.objectContaining({ code: 'external-comments-not-imported', lossy: true }),
+    ]));
+    const document = HTMLImporter.parse(result.html, richSchema());
+    const json = JSON.stringify(document.toJSON());
+    expect(json).toContain('Release notes');
+    expect(json).toContain('Kept bold');
+    expect(json).toContain('"start":3');
+    expect(json).toContain('https://example.com/guide');
+  });
+
   it('supports explicit tracked-change rejection and a visible lossy fallback', () => {
     const rejected = normalizeExternalPasteHTML(
       '<p style="mso-list:none"><ins>new</ins><del>old</del></p>',

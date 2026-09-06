@@ -25,6 +25,7 @@ import {
   startImageUpload,
   setNodeAttributes,
   textPasteRule,
+  type ExternalPasteReport,
   type Node,
 } from '../../../src';
 import * as Y from 'yjs';
@@ -401,7 +402,12 @@ const mount = document.querySelector<HTMLElement>('#editor');
 const output = document.querySelector<HTMLOutputElement>('#document-json');
 if (!mount || !output) throw new Error('Browser contract fixture failed to mount.');
 
-const view = new EditorView(mount, editor, { ariaLabel: 'Browser contract editor', blockHandles: true });
+const pasteReports: ExternalPasteReport[] = [];
+const view = new EditorView(mount, editor, {
+  ariaLabel: 'Browser contract editor',
+  blockHandles: true,
+  paste: { onReport: (report) => pasteReports.push(report) },
+});
 const commands = view.commandManager(browserKit.commands);
 const leanController = new LeanController(editor, createLeanProvider({
   descriptor: { id: 'browser-one-shot', label: 'Browser one-shot checker', mode: 'one-shot', dataDestination: 'device' },
@@ -1205,6 +1211,8 @@ Object.assign(globalThis, {
     view,
     leanController,
     nodeViewMetrics,
+    pasteReports: () => [...pasteReports],
+    clearPasteReports: () => { pasteReports.length = 0; },
     clipboardHistory: () => getClipboardHistoryState(editor),
     inspectMarkdown,
     inspectMarkdownSource,

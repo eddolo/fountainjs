@@ -1509,6 +1509,12 @@ Google Docs, MathML, generic HTML, or plain text; name the inserted outcome;
 count UTF-8 input/output bytes; and list immutable loss/normalization issues.
 Cleanup removes executable content, normalizes supported Office structures, and
 never claims to reconstruct external comments or unknown proprietary metadata.
+Word visual-list paragraphs retain numeric ordered starts, nested levels, and
+separate Office list identities; comment/annotation identifiers are reported as
+loss and removed rather than leaking application-private metadata into portable
+HTML. The fixture corpus also covers Word footnotes/endnotes and revisions,
+Google Docs structure, Excel spans and supported cell styling, annotated MathML,
+ruby, semantic footnotes, unsafe HTML, and schema-safe fallback.
 React passes this option through its view options and
 `registerFountainElement({ paste })` exposes the same policy to Custom Elements.
 

@@ -2186,7 +2186,9 @@ test('edits and persists package-backed collapsible details in the public playgr
   await summary.click();
   await expect(disclosure).toHaveAttribute('open', '');
   await expect(disclosure).toContainText('editable document content');
-  await page.locator('.format-tabs').getByRole('button', { name: 'json' }).click();
+  const jsonTab = page.locator('.format-tabs').getByRole('button', { name: 'json' });
+  await jsonTab.click();
+  await expect(jsonTab).toHaveClass(/\bactive\b/, { timeout: 15_000 });
   await expect(page.locator('.studio__export pre')).toContainText('"type": "details"');
   await expect(page.locator('.studio__export pre')).toContainText('"open": true');
 
@@ -3056,6 +3058,59 @@ test('preserves structured rich HTML from a real browser clipboard event', async
   expect(prevented).toBe(true);
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('h2')).toHaveText('Imported heading');
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('strong')).toHaveText('rich');
+});
+
+test('normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine', async ({ page }) => {
+  await page.goto('/browser-tests.html');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const payloads = [
+    {
+      html: '<p class="MsoListParagraph" style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">4. </span>Fourth</p><p class="MsoListParagraph" style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">5. </span>Fifth</p>',
+      text: '4. Fourth\n5. Fifth',
+      source: 'microsoft-word',
+    },
+    {
+      html: '<div id="docs-internal-guid-browser" data-docs-foo="opaque"><h2>Docs heading</h2><ul><li><strong>Docs item</strong></li></ul></div>',
+      text: 'Docs heading\nDocs item',
+      source: 'google-docs',
+    },
+    {
+      html: '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><body><table style="mso-number-format:General"><tr><th colspan="2">Quarter</th></tr><tr><td>North</td><td style="background-color:#ffeeaa">10</td></tr></table></body></html>',
+      text: 'Quarter\nNorth\t10',
+      source: 'microsoft-excel',
+    },
+  ];
+
+  for (const payload of payloads) {
+    await page.evaluate(() => {
+      const contract = (globalThis as any).fountainBrowserTest;
+      contract.clearPasteReports();
+      contract.commands.commands.selectAll();
+    });
+    const prevented = await editor.evaluate((target, value) => {
+      const event = new Event('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'clipboardData', { value: {
+        files: [],
+        getData: (type: string) => type === 'text/html' ? value.html : type === 'text/plain' ? value.text : '',
+      } });
+      target.dispatchEvent(event);
+      return event.defaultPrevented;
+    }, payload);
+    expect(prevented).toBe(true);
+    const report = await page.evaluate(() => (globalThis as any).fountainBrowserTest.pasteReports().at(-1));
+    expect(report).toMatchObject({ source: payload.source, outcome: 'inserted-rich-html' });
+    if (payload.source === 'microsoft-word') {
+      await expect(editor.locator('ol')).toHaveAttribute('start', '4');
+      await expect(editor.locator('ol > li')).toHaveCount(2);
+    } else if (payload.source === 'google-docs') {
+      await expect(editor.locator('h2')).toHaveText('Docs heading');
+      await expect(editor.locator('strong')).toHaveText('Docs item');
+    } else {
+      await expect(editor.locator('table')).toHaveCount(1);
+      await expect(editor.locator('th[colspan="2"]')).toHaveText('Quarter');
+      await expect(editor.locator('td').last()).toContainText('10');
+    }
+  }
 });
 
 test('imports an extension-defined HTML node through the schema contract', async ({ page }) => {

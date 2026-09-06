@@ -126,7 +126,15 @@ function removeTextPrefix(element: Element, length: number): void {
   }
 }
 
-function wordListInfo(element: Element): { level: number; ordered: boolean; markerLength: number } | null {
+interface WordListInfo {
+  readonly level: number;
+  readonly ordered: boolean;
+  readonly markerLength: number;
+  readonly listKey: string;
+  readonly start: number;
+}
+
+function wordListInfo(element: Element): WordListInfo | null {
   if (element.tagName.toLowerCase() !== 'p') return null;
   const style = element.getAttribute('style') ?? '';
   const className = element.getAttribute('class') ?? '';
@@ -136,10 +144,15 @@ function wordListInfo(element: Element): { level: number; ordered: boolean; mark
   const visible = ignored?.textContent ?? element.textContent ?? '';
   const marker = WORD_MARKER.exec(visible);
   const level = Math.max(1, Number(/\blevel(\d+)\b/i.exec(style)?.[1] ?? 1));
+  const listId = /\bmso-list\s*:\s*([^\s;]+)/i.exec(style)?.[1] ?? 'anonymous';
+  const override = /\blfo\d+\b/i.exec(style)?.[0] ?? 'default';
+  const numericMarker = marker?.[1] && /^\d+$/u.test(marker[1]) ? Number(marker[1]) : 1;
   return {
     level,
     ordered: Boolean(marker?.[1]),
     markerLength: ignored ? 0 : marker?.[0].length ?? 0,
+    listKey: `${listId.toLowerCase()}:${override.toLowerCase()}`,
+    start: Number.isSafeInteger(numericMarker) && numericMarker >= 0 ? numericMarker : 1,
   };
 }
 
@@ -172,6 +185,7 @@ function normalizeWordListGroup(
     let current = stack.at(-1);
     if (!current || info.level > current.level) {
       const list = document.createElement(tagName);
+      if (tagName === 'ol' && info.start !== 1) list.setAttribute('start', String(info.start));
       if (current?.lastItem) current.lastItem.appendChild(list);
       else fragment.appendChild(list);
       current = { level: info.level, list };
@@ -179,6 +193,7 @@ function normalizeWordListGroup(
     } else if (current.list.tagName.toLowerCase() !== tagName) {
       stack.pop();
       const list = document.createElement(tagName);
+      if (tagName === 'ol' && info.start !== 1) list.setAttribute('start', String(info.start));
       const parentItem = stack.at(-1)?.lastItem;
       if (parentItem) parentItem.appendChild(list);
       else fragment.appendChild(list);
@@ -202,9 +217,12 @@ function normalizeWordLists(root: HTMLElement, issues: Map<ExternalPasteIssueCod
     const children = Array.from(parent.children);
     let index = 0;
     while (index < children.length) {
-      if (!wordListInfo(children[index] as Element)) { index += 1; continue; }
+      const firstInfo = wordListInfo(children[index] as Element);
+      if (!firstInfo) { index += 1; continue; }
       const group: Element[] = [];
-      while (index < children.length && wordListInfo(children[index] as Element)) {
+      while (index < children.length) {
+        const info = wordListInfo(children[index] as Element);
+        if (!info || info.listKey !== firstInfo.listKey) break;
         group.push(children[index] as Element);
         index += 1;
       }
@@ -356,7 +374,7 @@ function stripMetadata(
           else element.removeAttribute('class');
           count += 1;
         }
-      } else if (/^(?:xmlns(?::|$)|data-(?:docs|mce|cke)-)/i.test(name)) {
+      } else if (/^(?:xmlns(?::|$)|data-(?:docs|mce|cke)-|data-(?:comment|annotation)(?:-|$))/i.test(name)) {
         element.removeAttribute(attribute.name); count += 1;
       }
     });

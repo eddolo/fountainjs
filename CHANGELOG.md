@@ -10,6 +10,9 @@
   when the active heading is unchanged.
 - React's `FountainEditor` now forwards its declared source-aware `paste`
   policy to the DOM view instead of silently dropping that option.
+- Word clipboard normalization now keeps numeric ordered-list starts, separates
+  adjacent Office list identities instead of merging them, and removes reported
+  external comment/annotation attributes from the portable HTML.
 
 - Documents using `StarterKit` now retain a real editable paragraph after a
   terminal table, media item, divider, widget, quote, list, or other non-text

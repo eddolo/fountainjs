@@ -307,6 +307,16 @@ threads, collaboration awareness, versions, upload tasks, and host-owned records
 are outside all document clipboard formats. Use application-level export/import
 when those objects must travel together.
 
+Inbound browser paste has a separate source-aware normalization boundary.
+Representative fixtures cover Word numeric and nested lists, independent list
+identities, footnotes/endnotes and revision policy; Google Docs headings, nested
+lists, links, and private metadata; Excel row/column spans and supported cell
+styling; annotated MathML, ruby, semantic footnotes, unsafe HTML, and generic
+fallback. Numeric Word list starts are portable. Proprietary comment threads,
+formulas, and unknown application state are not reconstructed: the immutable
+paste report identifies known normalization and loss, while visible supported
+content proceeds through schema validation.
+
 ## Security boundary
 
 Treat imported content and AI output as untrusted. The included AI controller only accepts replacement text, and the HTML exporter escapes document data. The default media module denies arbitrary iframes and validates playback, track, file, sandbox, and permission attributes; a custom embed resolver and every upload adapter remain trusted application code. Hosts must enforce their own storage authorization, content-type verification, malware scanning, and retention policies.

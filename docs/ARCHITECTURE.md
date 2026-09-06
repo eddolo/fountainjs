@@ -361,7 +361,11 @@ and text for text-only destinations. Neither external fallback claims private
 plugin state such as comments, clipboard history, upload tasks, or collaboration
 awareness. Source-aware HTML normalization handles Word, Docs, Excel, MathML,
 revision, metadata, and unsafe-content differences and emits a bounded,
-immutable report rather than claiming invisible fidelity.
+immutable report rather than claiming invisible fidelity. Word list conversion
+keys adjacent paragraphs by their Office list identity, preserves a numeric
+ordered start, and removes reported external comment/annotation identifiers.
+The React and Custom Element surfaces forward this one view policy; they do not
+reimplement normalization.
 
 `BlockHandleManager` is an optional fourth view concern. It discovers eligible
 top-level and nested node DOM from model paths, but mounts one accessible control
