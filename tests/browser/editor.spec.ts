@@ -4459,10 +4459,30 @@ test('turns multi-format and multi-block selections into visible paragraph bound
   await page.reload();
   const freshEditor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => {
-    const contract = (globalThis as any).fountainBrowserTest;
-    contract.commands.commands.selectTextRange([0, 0], 5, [1, 0], 6);
-    contract.view.focus();
+    const textPoint = (path: string, offset: number) => {
+      const wrapper = document.querySelector<HTMLElement>(`[data-fountain-text-path="${path}"]`);
+      const walker = wrapper && document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
+          ? NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_ACCEPT,
+      });
+      let remaining = offset;
+      for (let text = walker?.nextNode(); text; text = walker?.nextNode()) {
+        const length = text.textContent?.length ?? 0;
+        if (remaining <= length) return { wrapper, text, offset: remaining };
+        remaining -= length;
+      }
+      return { wrapper, text: null, offset: 0 };
+    };
+    const start = textPoint('0.0', 5);
+    const end = textPoint('1.0', 6);
+    if (!start.wrapper || !start.text || !end.text) throw new Error('Expected both paragraph text nodes.');
+    start.wrapper.closest<HTMLElement>('[contenteditable="true"]')?.focus();
+    const selection = document.getSelection();
+    selection?.setBaseAndExtent(end.text, end.offset, start.text, start.offset);
+    document.dispatchEvent(new Event('selectionchange'));
   });
+  await expect.poll(() => page.evaluate(() => document.getSelection()?.anchorOffset)).toBe(6);
   await page.keyboard.press('Enter');
   await expect(freshEditor.locator(':scope > p')).toHaveCount(2);
   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
