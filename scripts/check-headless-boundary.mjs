@@ -2,7 +2,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, relative, resolve, sep } from 'node:path';
 
 const root = resolve('.');
-const entries = [resolve('src/headless/index.ts'), resolve('src/ai/document-tools.ts'), resolve('src/ai/conversation.ts')];
+const entries = [
+  resolve('src/headless/index.ts'),
+  resolve('src/ai/document-tools.ts'),
+  resolve('src/ai/conversation.ts'),
+  resolve('src/ai/generated-media.ts'),
+];
 const forbidden = [
   `${resolve('src/view')}${sep}`,
   `${resolve('src/react')}${sep}`,

@@ -18,6 +18,7 @@ const coreNames = [
   'getCollaborationAdapter', 'replaceCollaborationAdapter',
   'createLeanLoopbackProvider',
   'createStreamingAIAdapter',
+  'AIGeneratedMediaController', 'createAIGeneratedMediaCommitter',
 ];
 const headlessCoreNames = [
   'Schema', 'Editor', 'createEditor', 'Selection', 'Transaction', 'Plugin',
@@ -29,12 +30,13 @@ const headlessCoreNames = [
 ];
 const aiDocumentToolNames = ['AI_DOCUMENT_TOOL_NAMES', 'AI_DOCUMENT_TOOL_DEFINITIONS', 'AIDocumentToolbox', 'createAIDocumentToolbox'];
 const aiConversationNames = ['AIConversationController', 'InMemoryAIConversationStore', 'InMemoryAIPromptStore', 'createAIConversationAdapter', 'createStreamingAIConversationAdapter', 'defineAIPromptTemplate', 'renderAIPrompt'];
+const aiGeneratedMediaNames = ['AIGeneratedMediaController', 'createAIGeneratedMediaAdapter', 'MAX_AI_MEDIA_ASSETS', 'DEFAULT_MAX_AI_MEDIA_ASSET_BYTES'];
 const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
   'defaultFountainToolbarGroups', 'FountainSlashCommandMenu', 'FountainBubbleMenu',
   'FountainFloatingMenu', 'Navigator', 'useNavigatorState',
-  'useNavigatorTableOfContentsState', 'useFountain', 'FountainAIConversation',
+  'useNavigatorTableOfContentsState', 'useFountain', 'FountainAIConversation', 'FountainAIGeneratedMedia',
 ];
 const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
@@ -72,6 +74,8 @@ const esmAIDocumentTools = await import('fountainjs-editor/ai/document-tools');
 assertExports(esmAIDocumentTools, aiDocumentToolNames, 'ESM AI document tools entry');
 const esmAIConversation = await import('fountainjs-editor/ai/conversation');
 assertExports(esmAIConversation, aiConversationNames, 'ESM AI conversation entry');
+const esmAIGeneratedMedia = await import('fountainjs-editor/ai/generated-media');
+assertExports(esmAIGeneratedMedia, aiGeneratedMediaNames, 'ESM AI generated media entry');
 const markdownSource = '\uFEFF---\r\ntitle: Packed source\r\n---\r\n# Exact\r\n';
 const markdownSchema = new esmHeadlessCore.Schema(esmCore.CoreSchemaSpec);
 const sourcedMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, markdownSchema);
@@ -219,6 +223,17 @@ const packedPrompt = esmAIConversation.defineAIPromptTemplate({
 if (esmAIConversation.renderAIPrompt(packedPrompt, { topic: 'Fountain' }) !== 'Explain Fountain.') {
   throw new Error('Packed reusable AI prompt did not render in pure Node.');
 }
+const packedGeneratedMedia = new esmAIGeneratedMedia.AIGeneratedMediaController({
+  idFactory: () => 'packed-media-request',
+  adapter: esmAIGeneratedMedia.createAIGeneratedMediaAdapter(async () => ({ assets: [{
+    id: 'packed-media', kind: 'image', name: 'packed.png', mimeType: 'image/png', bytes: new Uint8Array([1, 2, 3]),
+  }] })),
+});
+await packedGeneratedMedia.generate({ kind: 'image', prompt: 'Pure Node media generation' });
+await packedGeneratedMedia.accept('packed-media', async (asset) => asset.bytes.byteLength === 3);
+if (packedGeneratedMedia.getSnapshot().assets[0]?.status !== 'accepted') {
+  throw new Error('Packed generated-media review did not complete in pure Node.');
+}
 packedConversation.destroy();
 headlessEditor.destroy();
 
@@ -243,6 +258,7 @@ const cjsHeadlessCore = require('fountainjs-editor/core');
 assertExports(cjsHeadlessCore, headlessCoreNames, 'CommonJS headless core entry');
 assertExports(require('fountainjs-editor/ai/document-tools'), aiDocumentToolNames, 'CommonJS AI document tools entry');
 assertExports(require('fountainjs-editor/ai/conversation'), aiConversationNames, 'CommonJS AI conversation entry');
+assertExports(require('fountainjs-editor/ai/generated-media'), aiGeneratedMediaNames, 'CommonJS AI generated media entry');
 const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
 const cjsSourcedMarkdown = cjsHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, cjsMarkdownSchema);
 if (cjsHeadlessCore.MarkdownExporter.exportWithSource(cjsSourcedMarkdown.document, cjsSourcedMarkdown.source).markdown !== markdownSource) {
@@ -315,4 +331,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, headless core, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, headless core, AI document tools, conversations, generated media, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

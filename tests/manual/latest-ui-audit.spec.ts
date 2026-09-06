@@ -106,6 +106,29 @@ test('human release journey: writing, AI review, conversation, structured tools,
     await pause(page, 500);
   });
 
+  await test.step('generate, visually review, upload, insert, and undo a real image candidate', async () => {
+    const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+    const workflow = page.getByRole('region', { name: 'Generated asset review' });
+    const before = await editor.textContent();
+    await workflow.getByRole('button', { name: 'Generate preview' }).click();
+    await expect(workflow.locator('.fountain-ai-media__status')).toHaveText('Review required');
+    expect(await editor.textContent()).toBe(before);
+    await workflow.scrollIntoViewIfNeeded();
+    await capture(page, testInfo, '10-generated-media-review');
+    await pause(page, 700);
+
+    await workflow.getByRole('button', { name: 'Upload and insert' }).click();
+    await expect(workflow.getByText('Inserted', { exact: true })).toBeVisible();
+    await expect(editor.locator(':scope > figure.fountain-image')).toHaveCount(1);
+    await editor.locator(':scope > figure.fountain-image').scrollIntoViewIfNeeded();
+    await capture(page, testInfo, '11-generated-media-inserted');
+    await pause(page, 700);
+
+    await page.getByRole('button', { name: 'Undo' }).first().click();
+    await expect(editor.locator(':scope > figure.fountain-image')).toHaveCount(0);
+    expect(await editor.textContent()).toBe(before);
+  });
+
   expect(pageErrors).toEqual([]);
   expect(consoleErrors).toEqual([]);
 });

@@ -1324,6 +1324,16 @@ reusable-prompt contracts without providing a Fountain account or cloud.
 `FountainAIConversation` is the optional React surface. See the
 [conversation and prompt guide](docs/AI_CONVERSATIONS.md).
 
+Generated images, audio, video, and files use a third optional DOM-free entry:
+`fountainjs-editor/ai/generated-media`. The controller builds an inspectable
+private-by-default request, validates bounded byte-backed candidates, and keeps
+them outside the document until a person accepts one. In the browser,
+`createAIGeneratedMediaCommitter` sends accepted bytes through the existing
+host-owned image/media upload handler; only its final schema-valid URL and
+metadata enter the document. The optional `FountainAIGeneratedMedia` React UI
+shows local previews, distinct generation/upload progress, provenance, and
+explicit insert/reject decisions. See the [generated-media guide](docs/AI_GENERATED_MEDIA.md).
+
 Full-document context is off by default. The included `MCPAIAdapter` connects the same workflow to a compatible MCP Streamable HTTP tool; MCP is a transport option, not the AI itself. Never ship permanent provider credentials in browser code.
 
 React applications can render the optional workflow with `<FountainAIReview controller={ai} />`.
@@ -1362,6 +1372,7 @@ comparison](docs/PROSEMIRROR_COMPARISON.md).
 - `Navigator`, `useNavigatorState`, and `useNavigatorTableOfContentsState`
 - `FountainAIReview` and `useAIControllerState`
 - `FountainAIConversation` and `useAIConversationState`
+- `FountainAIGeneratedMedia` and `useAIGeneratedMediaState`
 - `createReactNodeView` and `ReactNodeViewProps`
 
 ## Development
@@ -1384,8 +1395,9 @@ playground and Go-documentation demo through ordinary input, backward
 selection, quote toggling, sized table creation/deletion, direct and new math,
 Lean source shortcuts, live outline/integrity/reordering feedback, real browser
 clipboard exchange from an external rich editor into Fountain and back out,
-streamed proposal review, formatting-boundary acceptance, schema-aware
-structural preview/apply, and undo. Its local WebM, screenshots, and trace are
+streamed proposal review, formatting-boundary acceptance, multi-turn chat,
+generated-media preview/upload/insertion, schema-aware structural preview/apply,
+and undo. Its local WebM, screenshots, and trace are
 written under
 `artifacts/manual-ui-audit/` for visual inspection and are intentionally not
 published in the package.
@@ -1447,6 +1459,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Optional AI and MCP](docs/MCP.md)
 - [Schema-aware AI document tools](docs/AI_DOCUMENT_TOOLS.md)
 - [Host-owned AI conversations and prompts](docs/AI_CONVERSATIONS.md)
+- [Generated media review and upload](docs/AI_GENERATED_MEDIA.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 - [Changelog](CHANGELOG.md)

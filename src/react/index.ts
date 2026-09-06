@@ -8,6 +8,7 @@ export * from './Navigator';
 export * from './useNavigatorState';
 export * from './FountainAIReview';
 export * from './FountainAIConversation';
+export * from './FountainAIGeneratedMedia';
 export * from './ReactNodeView';
 export * from './FountainSuggestionMenu';
 export * from './FountainCharacterCount';

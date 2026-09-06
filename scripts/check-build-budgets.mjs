@@ -18,6 +18,10 @@ const limits = Object.freeze({
   // DOM-free opt-in entry rather than adding a provider or persistence SDK.
   'dist/ai-conversation.js': 17 * kibibyte,
   'dist/ai-conversation.cjs': 14 * kibibyte,
+  // Generated candidates are bounded and reviewed in a DOM-free entry. The
+  // root browser bridge reuses the existing host-owned upload pipeline.
+  'dist/ai-generated-media.js': 11 * kibibyte,
+  'dist/ai-generated-media.cjs': 10 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -35,8 +39,8 @@ const limits = Object.freeze({
   // selection-aware controls while retaining an explicit compact allowance.
   // Live AI review plus the optional host-owned conversation surface remain
   // dependency-free and add no provider client or persistence SDK.
-  'dist/react.js': 82 * kibibyte,
-  'dist/react.cjs': 62 * kibibyte,
+  'dist/react.js': 90 * kibibyte,
+  'dist/react.cjs': 67 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
   // adapter remains a separately loaded peer-backed entry. Granular structured
   // attributes add nested Y.Map/Y.Array reconciliation and validation only to
@@ -146,7 +150,9 @@ const limits = Object.freeze({
   // overlay add about 1.1 KiB to the single supplied stylesheet.
   // The optional multi-turn conversation surface adds about 4.5 KiB of fully
   // themeable, responsive, accessible states to the shared stylesheet.
-  'dist/styles.css': 80 * kibibyte,
+  // Generated-media review adds preview, state, and responsive decision styles
+  // without importing a model/provider SDK or changing document rendering.
+  'dist/styles.css': 86 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -248,8 +254,10 @@ const limits = Object.freeze({
   // validation; the default editor entry grows by only 0.3 KiB.
   // Host-owned conversation orchestration and prompt contracts add about
   // 19/15.5 KiB across one isolated entry and the optional React surface.
-  'all ESM runtime code': 1228 * kibibyte,
-  'all CommonJS runtime code': 1028 * kibibyte,
+  // Generated-media review adds about 17/14 KiB across its isolated controller,
+  // the normal upload bridge, and optional React review surface.
+  'all ESM runtime code': 1250 * kibibyte,
+  'all CommonJS runtime code': 1050 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -262,7 +270,7 @@ if (!esmEntityDecoder || !cjsEntityDecoder) throw new Error('HTML5 entity decode
 measured.set('HTML5 entity decoder ESM', await sizeOf(join('dist', esmEntityDecoder.name)));
 measured.set('HTML5 entity decoder CommonJS', await sizeOf(join('dist', cjsEntityDecoder.name)));
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/core.js', 'dist/core.cjs', 'dist/ai-document-tools.js', 'dist/ai-document-tools.cjs', 'dist/ai-conversation.js', 'dist/ai-conversation.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/react-integrity.js', 'dist/react-integrity.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/table-of-contents.js', 'dist/table-of-contents.cjs', 'dist/integrity.js', 'dist/integrity.cjs', 'dist/integrity-dom.js', 'dist/integrity-dom.cjs', 'dist/structured-attributes.js', 'dist/structured-attributes.cjs', 'dist/html-server.js', 'dist/html-server.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/core.js', 'dist/core.cjs', 'dist/ai-document-tools.js', 'dist/ai-document-tools.cjs', 'dist/ai-conversation.js', 'dist/ai-conversation.cjs', 'dist/ai-generated-media.js', 'dist/ai-generated-media.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/react-integrity.js', 'dist/react-integrity.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/table-of-contents.js', 'dist/table-of-contents.cjs', 'dist/integrity.js', 'dist/integrity.cjs', 'dist/integrity-dom.js', 'dist/integrity-dom.cjs', 'dist/structured-attributes.js', 'dist/structured-attributes.cjs', 'dist/html-server.js', 'dist/html-server.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

@@ -3,6 +3,7 @@ import * as Y from 'yjs';
 import {
   AIConversationController,
   AIController,
+  AIGeneratedMediaController,
   ClipboardHistoryExtension,
   CoreExtension,
   HTMLExporter,
@@ -17,6 +18,8 @@ import {
   createBubbleMenuExtension,
   createStreamingAIConversationAdapter,
   createStreamingAIAdapter,
+  createAIGeneratedMediaAdapter,
+  createAIGeneratedMediaCommitter,
   defineAIPromptTemplate,
   defineExtension,
   historyPlugin,
@@ -31,6 +34,7 @@ import {
   setBlockType,
   toggleMark,
   type AssetUploadHandler,
+  type ImageUploadHandler,
   type FountainMenuService,
   InMemoryAIConversationStore,
   InMemoryAIPromptStore,
@@ -73,6 +77,7 @@ import {
 } from 'fountainjs-editor/document-utilities';
 import {
   FountainAIConversation,
+  FountainAIGeneratedMedia,
   FountainAIReview,
   FountainBubbleMenu,
   FountainCharacterCount,
@@ -182,6 +187,70 @@ const demoConversationAdapter = createStreamingAIConversationAdapter(async funct
   });
   yield { contentDelta: reply.slice(split), model: 'local-demo (no network)' };
 });
+
+const demoGeneratedMediaAdapter = createAIGeneratedMediaAdapter(async (request, { signal, reportProgress }) => {
+  if (request.kind !== 'image') throw new Error('This local proof generates images only. Applications can connect audio, video, or file generators through the same adapter.');
+  reportProgress(.2);
+  await new Promise<void>((resolve, reject) => {
+    const finish = () => { signal.removeEventListener('abort', cancel); resolve(); };
+    const cancel = () => { window.clearTimeout(timer); reject(signal.reason ?? new DOMException('Cancelled', 'AbortError')); };
+    const timer = window.setTimeout(finish, 380);
+    signal.addEventListener('abort', cancel, { once: true });
+  });
+  const canvas = document.createElement('canvas');
+  canvas.width = 960;
+  canvas.height = 540;
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('This browser could not create the local image preview.');
+  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#171326');
+  gradient.addColorStop(1, '#6d4aff');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = '#9cf6c9';
+  context.font = '700 26px ui-monospace, monospace';
+  context.fillText('FOUNTAINJS · LOCAL GENERATION PROOF', 64, 78);
+  context.fillStyle = '#ffffff';
+  context.font = '700 48px ui-sans-serif, sans-serif';
+  const words = request.prompt.trim().split(/\s+/);
+  const lines: string[] = [];
+  while (words.length && lines.length < 4) {
+    let line = words.shift() ?? '';
+    while (words.length && `${line} ${words[0]}`.length <= 32) line += ` ${words.shift()}`;
+    lines.push(line);
+  }
+  lines.forEach((line, index) => context.fillText(line, 64, 180 + index * 62));
+  reportProgress(.8);
+  const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((value) => (
+    value ? resolve(value) : reject(new Error('The local image preview could not be encoded.'))
+  ), 'image/png'));
+  return {
+    provider: 'local canvas adapter',
+    model: 'deterministic browser demo',
+    assets: [{
+      id: `generated-${request.id}`,
+      kind: 'image',
+      name: 'fountain-generated-preview.png',
+      mimeType: 'image/png',
+      bytes: new Uint8Array(await blob.arrayBuffer()),
+      alt: request.prompt,
+      title: 'Generated preview',
+      caption: 'Reviewed first, then inserted through the normal host-owned image upload boundary.',
+    }],
+  };
+});
+
+const demoGeneratedImageUpload: ImageUploadHandler = async (file, { signal, reportProgress }) => {
+  reportProgress(.25);
+  if (signal.aborted) throw signal.reason;
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let binary = '';
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
+  }
+  reportProgress(1);
+  return { src: `data:${file.type};base64,${window.btoa(binary)}` };
+};
 
 const demoAssetUpload: AssetUploadHandler = async (file, { kind, signal, reportProgress }) => {
   reportProgress(.25);
@@ -793,6 +862,10 @@ function App() {
     adapter: demoConversationAdapter,
     title: 'Public demo conversation',
   }), [conversationStore]);
+  const generatedMediaController = useMemo(() => new AIGeneratedMediaController({ adapter: demoGeneratedMediaAdapter }), []);
+  const generatedMediaCommitter = useMemo(() => createAIGeneratedMediaCommitter(editor, {
+    imageUpload: demoGeneratedImageUpload,
+  }), [editor]);
   const agentTools = useMemo(() => createAIDocumentToolbox(editor), [editor]);
   const mentionController = useMemo(
     () => (demoKit.services.mentions as MentionService).getController(editor),
@@ -1038,6 +1111,14 @@ function App() {
                 promptStore={promptStore}
                 title="Multi-turn conversation"
                 placeholder="Ask a first question, then a follow-up…"
+              />
+              <FountainAIGeneratedMedia
+                controller={generatedMediaController}
+                onAccept={generatedMediaCommitter}
+                kinds={['image']}
+                title="Generated asset review"
+                initialPrompt="A clear launch diagram for a modular editor"
+                onError={(error) => console.error(error)}
               />
               <section className="agent-tools-demo" aria-label="Schema-aware agent document tools">
                 <span>STRUCTURED DOCUMENT TOOLS</span>

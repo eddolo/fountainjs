@@ -742,7 +742,7 @@ Create an `Editor`, mount `EditorView`, and connect controls to commands. Destro
 
 ### React
 
-The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and the optional AI review UI. `useFountain` shares one pending editor across React Strict Mode's duplicate initializer probe, releases an abandoned render, and destroys a committed editor once after its final unmount. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`; and version-history UI is isolated in `fountainjs-editor/react/versions`. Products that need ordinary React editing controls do not automatically load these review surfaces. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
+The separate `fountainjs-editor/react` entry contains `useFountain`, `useFountainState`, `FountainEditor`, the configurable `FountainToolbar`, reusable toolbar root/group/button/icon primitives, `FountainComposer`, `Navigator`, `ClipboardHistoryMenu`, accessible suggestion/slash/count renderers, `createReactNodeView`, and optional AI text, conversation, and generated-media review UIs. `useFountain` shares one pending editor across React Strict Mode's duplicate initializer probe, releases an abandoned render, and destroys a committed editor once after its final unmount. Threaded discussion UI is isolated in `fountainjs-editor/react/comments`; tracked-review UI is isolated in `fountainjs-editor/react/tracked-changes`; and version-history UI is isolated in `fountainjs-editor/react/versions`. Products that need ordinary React editing controls do not automatically load these review surfaces. Keeping these boundaries separate prevents the framework-neutral root from loading React. Toolbar action IDs map presentation onto existing root-package commands; they are not a second command registry or persisted editor state. See [TOOLBAR.md](TOOLBAR.md).
 
 A new framework adapter needs four operations: create an editor, subscribe to state, mount or represent the view, and destroy resources on unmount.
 
@@ -821,6 +821,15 @@ Completed turns are stored through optimistic revisions; partial streams remain
 transient. Reusable prompts use a separate host-store contract. Conversation
 output cannot mutate the document directly and must cross the ordinary reviewed
 proposal boundary to do so. See [AI_CONVERSATIONS.md](AI_CONVERSATIONS.md).
+
+Generated media follows the same rule at a byte boundary. The DOM-free
+`ai/generated-media` controller requests and validates bounded candidates but
+cannot insert them. Explicit acceptance invokes a host committer; the supplied
+browser committer materializes a `File` and delegates to the existing image or
+asset upload task. The document therefore receives only the host-persisted,
+schema-valid media node, while transient bytes, provider credentials, billing,
+moderation, and storage stay outside editor state. See
+[AI_GENERATED_MEDIA.md](AI_GENERATED_MEDIA.md).
 
 ## Persistence and release boundaries
 

@@ -70,6 +70,13 @@
 
 ### Added
 
+- A DOM-free `fountainjs-editor/ai/generated-media` entry now provides
+  inspectable private-by-default requests, bounded byte-backed candidates,
+  generation progress, cancellation, provenance, and explicit accept/reject
+  decisions. Accepted candidates cross the existing host-owned image/media
+  upload boundary before a portable node enters the document; an optional React
+  surface provides local previews and distinct generation/upload status without
+  bundling a model or storage SDK.
 - A DOM-free `fountainjs-editor/ai/conversation` entry now supplies bounded
   multi-turn context, cancellable streaming, inspectable requests, optimistic
   host-store revisions, and reusable prompt-store contracts. The optional

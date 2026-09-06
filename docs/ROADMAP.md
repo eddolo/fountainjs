@@ -462,6 +462,19 @@ performance, and browser behavior:
   hosts own process/kernel access, credentials, authorization, sandboxing, and
   network transport. Research a Fountain-native code surface only if concrete
   adapter limitations justify a separate Monaco-class engineering programme.
+- a post-parity structured-workspace programme spanning documents, spreadsheet
+  computation, code, notebooks, terminals, forms, files, charts, and result
+  nodes. Start with an adapter-backed spreadsheet block for the useful core of
+  typed cells, stable ranges, formulas, formatting, sorting/filtering, tables,
+  and charts rather than attempting to clone Excel. Give agents bounded,
+  schema-aware operations such as `readRange`, `setFormula`, `fillFormula`,
+  `sortRange`, `filter`, `insertColumn`, and `createChart`; route those changes
+  through Fountain transactions so they remain inspectable, permissioned,
+  reviewable, collaborative, versioned, and undoable. Preserve specialist
+  engines behind explicit adapters—calculation engines, Monaco/CodeMirror,
+  Jupyter kernels, and xterm/PTY—while Fountain owns cross-surface identity,
+  provenance, orchestration, and portable structured state. This is a future
+  architectural direction, not part of the current editor-parity promise.
 
 ## Broader editor landscape audit
 

@@ -1255,6 +1255,26 @@ values. `InMemoryAIConversationStore` is an ephemeral reference store. The
 optional `FountainAIConversation` React component consumes the same contracts.
 See [AI_CONVERSATIONS.md](AI_CONVERSATIONS.md).
 
+### Generated media
+
+The isolated DOM-free `fountainjs-editor/ai/generated-media` entry exports
+`AIGeneratedMediaController`, `createAIGeneratedMediaAdapter`, the request,
+candidate, snapshot, committer, and decision types, and explicit resource-limit
+constants. `inspectRequest()` discloses a private-by-default generation request
+without calling its adapter. `generate()` validates one to eight copied
+byte-backed candidates and exposes them for review without changing a document.
+`accept()` invokes only a supplied committer and marks an asset accepted after
+that committer returns `true`; `reject()`, `cancel()`, `clear()`, `subscribe()`,
+and `getSnapshot()` complete the framework-neutral lifecycle.
+
+The root browser entry exports `aiGeneratedMediaFile`,
+`insertAIGeneratedMedia`, and `createAIGeneratedMediaCommitter`. These convert a
+reviewed candidate to a browser `File` and call the ordinary
+`ImageUploadHandler` or `AssetUploadHandler`, preserving mapped targets,
+progress, abort, schema validation, and undo. The optional React entry exports
+`FountainAIGeneratedMedia` and `useAIGeneratedMediaState`. See
+[AI_GENERATED_MEDIA.md](AI_GENERATED_MEDIA.md).
+
 ## Commands
 
 Commands return whether they handled the operation:
@@ -1945,6 +1965,7 @@ Import React bindings from `fountainjs-editor/react`:
 - `Navigator`, `useNavigatorState`, and `useNavigatorTableOfContentsState`
 - `FountainAIReview` and `useAIControllerState`
 - `FountainAIConversation` and `useAIConversationState`
+- `FountainAIGeneratedMedia` and `useAIGeneratedMediaState`
 - `createReactNodeView(Component, options?)` and `ReactNodeViewProps`
 
 `useFountain(config)` creates one editor for the component lifetime. Its config

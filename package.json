@@ -23,6 +23,9 @@
       "ai/conversation": [
         "dist/ai/conversation.d.ts"
       ],
+      "ai/generated-media": [
+        "dist/ai/generated-media.d.ts"
+      ],
       "document-utilities": [
         "dist/document-utilities.d.ts"
       ],
@@ -148,6 +151,16 @@
       "require": {
         "types": "./dist/ai/conversation.d.cts",
         "default": "./dist/ai-conversation.cjs"
+      }
+    },
+    "./ai/generated-media": {
+      "import": {
+        "types": "./dist/ai/generated-media.d.ts",
+        "default": "./dist/ai-generated-media.js"
+      },
+      "require": {
+        "types": "./dist/ai/generated-media.d.cts",
+        "default": "./dist/ai-generated-media.cjs"
       }
     },
     "./document-utilities": {

@@ -4,6 +4,7 @@ export * from './dom-renderer';
 export * from './selection-handler';
 export * from './web-component';
 export * from './media';
+export * from './generated-media';
 export * from './menu-position';
 export * from './block-handles';
 export * from './drop-cursor';

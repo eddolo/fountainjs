@@ -621,6 +621,47 @@
 @media (max-width: 560px) { .fountain-ai-conversation__prompts { align-items: stretch; flex-direction: column; } .fountain-ai-conversation__messages article { width: 94%; } }
 @media (pointer: coarse) { .fountain-ai-conversation button, .fountain-ai-conversation select { min-height: 44px; } }
 
+.fountain-ai-media { container: fountain-ai-media / inline-size; display: grid; gap: 14px; padding: 18px; color: var(--fountain-ink); font: 14px/1.5 ui-sans-serif, system-ui, sans-serif; background: var(--fountain-surface); border: 1px solid var(--fountain-border); border-radius: 14px; }
+.fountain-ai-media__header { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
+.fountain-ai-media__header > div > span { color: var(--fountain-accent); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.fountain-ai-media h3 { margin: 3px 0 0; font-size: 17px; }
+.fountain-ai-media__status { flex: none; padding: 5px 8px; color: var(--fountain-muted); font-size: 11px; font-weight: 700; background: #f4f5f7; border-radius: 999px; }
+.fountain-ai-media__status.is-generating, .fountain-ai-media__status.is-accepting { color: #854d0e; background: #fef9c3; }
+.fountain-ai-media__status.is-review { color: #5b21b6; background: var(--fountain-accent-soft); }
+.fountain-ai-media__status.is-error { color: #b42318; background: #fff0ee; }
+.fountain-ai-media__hint, .fountain-ai-media__error { margin: 0; color: var(--fountain-muted); }
+.fountain-ai-media__error { color: #b42318; }
+.fountain-ai-media__form { display: grid; grid-template-columns: minmax(110px, .3fr) minmax(220px, 1fr); gap: 9px; align-items: end; }
+.fountain-ai-media__form label { display: grid; gap: 5px; color: var(--fountain-muted); font-size: 11px; font-weight: 700; }
+.fountain-ai-media__form select, .fountain-ai-media__form textarea { width: 100%; box-sizing: border-box; min-height: 42px; padding: 9px 10px; color: var(--fountain-ink); font: 13px/1.4 system-ui, sans-serif; background: #fff; border: 1px solid var(--fountain-border); border-radius: 8px; }
+.fountain-ai-media__form textarea { min-height: 68px; resize: vertical; }
+.fountain-ai-media__form > div { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 7px; }
+.fountain-ai-media button { padding: 8px 10px; color: var(--fountain-ink); font: 700 12px/1 system-ui, sans-serif; background: #f7f7f8; border: 1px solid var(--fountain-border); border-radius: 8px; cursor: pointer; }
+.fountain-ai-media button:hover:not(:disabled), .fountain-ai-media button:focus-visible { color: var(--fountain-accent); border-color: color-mix(in srgb, var(--fountain-accent) 35%, var(--fountain-border)); }
+.fountain-ai-media button.is-primary, .fountain-ai-media button.is-accept { color: #fff; background: var(--fountain-accent); border-color: var(--fountain-accent); }
+.fountain-ai-media button.is-primary:hover:not(:disabled), .fountain-ai-media button.is-primary:focus-visible, .fountain-ai-media button.is-accept:hover:not(:disabled), .fountain-ai-media button.is-accept:focus-visible { color: #fff; background: color-mix(in srgb, var(--fountain-accent) 88%, #000); }
+.fountain-ai-media button:disabled { cursor: wait; opacity: .55; }
+.fountain-ai-media button:focus-visible, .fountain-ai-media textarea:focus-visible, .fountain-ai-media select:focus-visible, .fountain-ai-media summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 28%, transparent); outline-offset: 2px; }
+.fountain-ai-media__assets { display: grid; gap: 10px; }
+.fountain-ai-media__assets article { display: grid; grid-template-columns: minmax(120px, 180px) 1fr auto; gap: 12px; align-items: center; padding: 10px; border: 1px solid var(--fountain-border); border-radius: 10px; }
+.fountain-ai-media__assets article.is-accepted { border-color: #75c89e; background: #f0fbf5; }
+.fountain-ai-media__assets article.is-rejected { opacity: .62; }
+.fountain-ai-media__preview { display: grid; min-height: 92px; place-items: center; overflow: hidden; color: var(--fountain-muted); background: #f4f5f7; border-radius: 8px; }
+.fountain-ai-media__preview img, .fountain-ai-media__preview video { display: block; width: 100%; max-height: 180px; object-fit: contain; }
+.fountain-ai-media__preview audio { width: calc(100% - 12px); }
+.fountain-ai-media__file { font: 800 12px/1 ui-monospace, monospace; letter-spacing: .12em; }
+.fountain-ai-media__details { display: grid; gap: 3px; min-width: 0; }
+.fountain-ai-media__details > span, .fountain-ai-media__details small { color: var(--fountain-muted); font-size: 11px; overflow-wrap: anywhere; }
+.fountain-ai-media__details p { margin: 3px 0 0; }
+.fountain-ai-media__decisions { display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }
+.fountain-ai-media__decisions > span { color: var(--fountain-muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.fountain-ai-media__payload { padding-top: 10px; border-top: 1px solid var(--fountain-border); }
+.fountain-ai-media__payload summary { color: var(--fountain-muted); font-size: 11px; font-weight: 700; cursor: pointer; }
+.fountain-ai-media__payload pre { max-height: 240px; margin: 10px 0 0; padding: 12px; overflow: auto; color: #d6daf0; font: 11px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; background: #171923; border-radius: 8px; }
+@media (max-width: 660px) { .fountain-ai-media__form { grid-template-columns: 1fr; } .fountain-ai-media__assets article { grid-template-columns: 1fr; } .fountain-ai-media__decisions { justify-content: flex-start; } }
+@container fountain-ai-media (max-width: 620px) { .fountain-ai-media__form { grid-template-columns: 1fr; } .fountain-ai-media__assets article { grid-template-columns: 1fr; } .fountain-ai-media__decisions { justify-content: flex-start; } }
+@media (pointer: coarse) { .fountain-ai-media button, .fountain-ai-media select { min-height: 44px; } }
+
 @media (prefers-reduced-motion: no-preference) {
   .fountain-toolbar__button, .fountain-navigator button { transition: color 120ms ease, background-color 120ms ease; }
 }

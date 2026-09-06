@@ -5668,6 +5668,32 @@ test('runs a host-owned multi-turn AI conversation with reusable prompts and cle
   await expect(conversation.getByText('No messages yet.', { exact: false })).toBeVisible();
 });
 
+test('reviews generated media before the normal host upload inserts one undoable node', async ({ page }) => {
+  await page.goto('/');
+  const panel = page.locator('.optional-ai');
+  await panel.locator(':scope > summary').click();
+  const workflow = panel.getByRole('region', { name: 'Generated asset review' });
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const before = await editor.textContent();
+  await expect(workflow.locator('details')).toContainText('"includesDocumentContent": false');
+
+  await workflow.getByRole('button', { name: 'Generate preview' }).click();
+  await expect(workflow.locator('.fountain-ai-media__status')).toContainText('Generating');
+  await expect(workflow.locator('.fountain-ai-media__status')).toHaveText('Review required');
+  await expect(workflow.getByRole('img', { name: 'A clear launch diagram for a modular editor' })).toBeVisible();
+  await expect(workflow.getByText('local canvas adapter · deterministic browser demo')).toBeVisible();
+  expect(await editor.textContent()).toBe(before);
+  await expect(editor.locator(':scope > figure.fountain-image')).toHaveCount(0);
+
+  await workflow.getByRole('button', { name: 'Upload and insert' }).click();
+  await expect(workflow.getByText('Inserted', { exact: true })).toBeVisible();
+  await expect(editor.locator(':scope > figure.fountain-image')).toHaveCount(1);
+  await expect(editor.locator(':scope > figure.fountain-image img')).toHaveAttribute('src', /^data:image\/png;base64,/);
+  await page.getByRole('button', { name: 'Undo' }).first().click();
+  await expect(editor.locator(':scope > figure.fountain-image')).toHaveCount(0);
+  expect(await editor.textContent()).toBe(before);
+});
+
 test('reviews a schema-aware agent tool proposal before one-step apply and undo', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
