@@ -4434,6 +4434,44 @@ test('preserves a backward selection made with real keyboard input', async ({ pa
   })).toEqual({ text: 'agraph', backward: true });
 });
 
+test('turns multi-format and multi-block selections into visible paragraph boundaries', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectText([0, 0], 0, 5);
+    contract.commands.commands.toggleMark('strong');
+    contract.commands.commands.closeHistory();
+    contract.commands.commands.selectTextRange([0, 0], 2, [0, 1], 3);
+    contract.view.focus();
+  });
+  await page.keyboard.press('Enter');
+  await expect(editor.locator(':scope > p')).toHaveCount(3);
+  await expect(editor.locator(':scope > p').nth(0)).toHaveText('Al');
+  await expect(editor.locator(':scope > p').nth(1)).toHaveText('ta');
+  const firstGeometry = await editor.locator(':scope > p').nth(0).evaluate((element) => element.getBoundingClientRect());
+  const secondGeometry = await editor.locator(':scope > p').nth(1).evaluate((element) => element.getBoundingClientRect());
+  expect(secondGeometry.top).toBeGreaterThan(firstGeometry.top);
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(editor.locator(':scope > p')).toHaveCount(2);
+  await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+  await expect(editor.locator(':scope > p').first().locator('strong')).toHaveText('Alpha');
+
+  await page.reload();
+  const freshEditor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    contract.commands.commands.selectTextRange([0, 0], 5, [1, 0], 6);
+    contract.view.focus();
+  });
+  await page.keyboard.press('Enter');
+  await expect(freshEditor.locator(':scope > p')).toHaveCount(2);
+  await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
+  await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText(' paragraph');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+  await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+});
+
 test('unwraps and exits an inserted quote with ordinary browser keys', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

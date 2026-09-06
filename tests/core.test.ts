@@ -80,6 +80,20 @@ describe('document model and transactions', () => {
     expect(update).toHaveBeenCalledTimes(1);
   });
 
+  it('composes nested commands into one atomic outer batch', () => {
+    const update = vi.fn();
+    const editor = createEditor({ schema: CoreSchemaSpec, onUpdate: update });
+    expect(editor.runCommandBatch(() => editor.runCommandBatch(() => insertText(editor, '!')))).toBe(true);
+    expect(editor.getText()).toBe('!');
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(editor.runCommandBatch(() => {
+      editor.runCommandBatch(() => insertText(editor, '?'));
+      return false;
+    })).toBe(false);
+    expect(editor.getText()).toBe('!');
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
   it('creates immutable, JSON-round-trippable documents', () => {
     const schema = new Schema(CoreSchemaSpec);
     const doc = schema.node('doc', {}, [
@@ -348,6 +362,43 @@ describe('document model and transactions', () => {
     expect(splitBlock(editor)).toBe(true);
     expect(editor.state.doc.content.map((node) => node.textContent)).toEqual(['Hello', ' world']);
     expect(editor.state.selection.path).toEqual([1, 0]);
+  });
+
+  it('replaces selected marked fragments and top-level blocks with a real block boundary', () => {
+    const fragments = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [{ type: 'paragraph', content: [
+          { type: 'text', text: 'Left ' },
+          { type: 'text', text: 'marked', marks: [{ type: 'strong' }] },
+          { type: 'text', text: ' right' },
+        ] }],
+      },
+    });
+    fragments.dispatch(fragments.state.createTransaction().setSelection(
+      Selection.range([0, 0], 2, [0, 2], 3),
+    ));
+    expect(splitBlock(fragments)).toBe(true);
+    expect(fragments.state.doc.content.map((node) => node.textContent)).toEqual(['Le', 'ght']);
+    expect(fragments.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
+
+    const blocks = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'One' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Two' }] },
+        ],
+      },
+    });
+    blocks.dispatch(blocks.state.createTransaction().setSelection(
+      Selection.range([0, 0], 1, [1, 0], 2),
+    ));
+    expect(splitBlock(blocks)).toBe(true);
+    expect(blocks.state.doc.content.map((node) => node.textContent)).toEqual(['O', 'o']);
+    expect(blocks.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
   });
 
   it('formats a selection across existing mark boundaries', () => {

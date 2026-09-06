@@ -80,7 +80,7 @@ export class Editor {
         appended = true;
       }
       if (!appended) break;
-      if (pass === 19) throw new Error('Plugin appendTransaction loop exceeded 20 passes.');
+      if (pass === 19) throw new Error('Plugin append loop exceeded 20 passes.');
     }
     const notification = composeAppliedTransactions(oldState, applied);
     this.subscribers.forEach((callback) => callback(this.currentState, notification));
@@ -94,7 +94,10 @@ export class Editor {
    */
   runCommandBatch(execute: () => boolean, options: CommandBatchOptions = {}): boolean {
     this.assertAlive();
-    if (this.commandBatch) throw new Error('FountainJS command batches cannot be nested.');
+    if (this.commandBatch) {
+      if (options.dryRun) return false;
+      return execute();
+    }
     const initialState = this.currentState;
     const batch: CommandBatch = { transactions: [] };
     this.commandBatch = batch;

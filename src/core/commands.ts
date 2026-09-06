@@ -950,6 +950,9 @@ export function splitBlock(editor: Editor): boolean {
     return insertTextAtGap(editor, new GapSelection(state.doc, state.selection.structuralTo), '');
   }
   if (state.selection.kind !== 'text') return false;
+  if (!state.selection.isCollapsed) {
+    return editor.runCommandBatch(() => deleteSelection(editor) && splitBlock(editor));
+  }
   const { path, from, to } = state.selection;
   if (path.length < 2 || !state.selection.isSingleText) return false;
   const blockPath = path.slice(0, -1);
