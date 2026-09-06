@@ -1236,6 +1236,25 @@ marks, total payload, read size, proposal count, operation count, and tool
 allowlists are checked before mutation. See
 [AI_DOCUMENT_TOOLS.md](AI_DOCUMENT_TOOLS.md) for the complete trust boundary.
 
+### Multi-turn conversations and prompts
+
+The DOM-free `fountainjs-editor/ai/conversation` entry exports
+`AIConversationController`, `AIConversationStore`, `AIConversationAdapter`,
+`createAIConversationAdapter`, and `createStreamingAIConversationAdapter`.
+`load()` retrieves a host-owned thread; `inspectRequest(input)` shows bounded
+context without saving or calling the adapter; `send(input)` persists the user
+turn, streams a transient reply, then persists only the completed assistant
+turn; `cancel()` discards partial assistant output; and `clear()` writes a new
+empty revision. Stores receive `expectedRevision` and `operationId` for
+conflict detection and safe retries.
+
+`defineAIPromptTemplate`, `renderAIPrompt`, `AIPromptStore`, and
+`InMemoryAIPromptStore` provide reusable prompt data. Declared variables must
+exactly match `{{placeholder}}` tokens, and rendering rejects missing or unknown
+values. `InMemoryAIConversationStore` is an ephemeral reference store. The
+optional `FountainAIConversation` React component consumes the same contracts.
+See [AI_CONVERSATIONS.md](AI_CONVERSATIONS.md).
+
 ## Commands
 
 Commands return whether they handled the operation:
@@ -1925,6 +1944,7 @@ Import React bindings from `fountainjs-editor/react`:
 - `ClipboardHistoryMenu`
 - `Navigator`, `useNavigatorState`, and `useNavigatorTableOfContentsState`
 - `FountainAIReview` and `useAIControllerState`
+- `FountainAIConversation` and `useAIConversationState`
 - `createReactNodeView(Component, options?)` and `ReactNodeViewProps`
 
 `useFountain(config)` creates one editor for the component lifetime. Its config

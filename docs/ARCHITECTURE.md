@@ -814,6 +814,14 @@ AI is downstream from the transaction system. `AIController` extracts the curren
 
 `MCPAIAdapter` implements an adapter over MCP Streamable HTTP: initialization, session headers, tool pagination/discovery, tool calls, JSON/SSE decoding, timeout/error handling, and close. The full route is tested against a real local HTTP server. See [MCP.md](MCP.md).
 
+Multi-turn conversation state is also downstream and optional. The DOM-free
+`ai/conversation` entry owns orchestration and validation only: applications own
+the model adapter, persistence, authorization, retention, and encryption.
+Completed turns are stored through optimistic revisions; partial streams remain
+transient. Reusable prompts use a separate host-store contract. Conversation
+output cannot mutate the document directly and must cross the ordinary reviewed
+proposal boundary to do so. See [AI_CONVERSATIONS.md](AI_CONVERSATIONS.md).
+
 ## Persistence and release boundaries
 
 Package SemVer, the extension API integer, and the persisted document format

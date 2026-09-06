@@ -87,7 +87,7 @@ long-lived npm token belongs in GitHub or the repository.
    pnpm test:browser
    pnpm audit:ui
    pnpm dlx publint@0.3.24
-   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
    pnpm pack --dry-run
    ```
 

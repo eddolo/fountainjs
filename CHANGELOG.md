@@ -70,6 +70,12 @@
 
 ### Added
 
+- A DOM-free `fountainjs-editor/ai/conversation` entry now supplies bounded
+  multi-turn context, cancellable streaming, inspectable requests, optimistic
+  host-store revisions, and reusable prompt-store contracts. The optional
+  `FountainAIConversation` React surface exposes persisted turns, live output,
+  prompt selection, stopping, and guarded history clearing without bundling a
+  model client, database, account, or Fountain cloud.
 - `pnpm audit:ui` now records repeatable human-style release journeys across
   the public playground and Go-documentation demo, covering ordinary editing,
   backward selection, quotes, tables, math, Lean source, real clipboard paste,

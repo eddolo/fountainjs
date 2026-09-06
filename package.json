@@ -20,6 +20,9 @@
       "ai/document-tools": [
         "dist/ai/document-tools.d.ts"
       ],
+      "ai/conversation": [
+        "dist/ai/conversation.d.ts"
+      ],
       "document-utilities": [
         "dist/document-utilities.d.ts"
       ],
@@ -135,6 +138,16 @@
       "require": {
         "types": "./dist/ai/document-tools.d.cts",
         "default": "./dist/ai-document-tools.cjs"
+      }
+    },
+    "./ai/conversation": {
+      "import": {
+        "types": "./dist/ai/conversation.d.ts",
+        "default": "./dist/ai-conversation.js"
+      },
+      "require": {
+        "types": "./dist/ai/conversation.d.cts",
+        "default": "./dist/ai-conversation.cjs"
       }
     },
     "./document-utilities": {

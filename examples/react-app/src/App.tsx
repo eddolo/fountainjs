@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Y from 'yjs';
 import {
+  AIConversationController,
   AIController,
   ClipboardHistoryExtension,
   CoreExtension,
@@ -14,7 +15,9 @@ import {
   TrailingEditableBlockExtension,
   composeExtensions,
   createBubbleMenuExtension,
+  createStreamingAIConversationAdapter,
   createStreamingAIAdapter,
+  defineAIPromptTemplate,
   defineExtension,
   historyPlugin,
   canRedoCollaboration,
@@ -29,6 +32,8 @@ import {
   toggleMark,
   type AssetUploadHandler,
   type FountainMenuService,
+  InMemoryAIConversationStore,
+  InMemoryAIPromptStore,
 } from 'fountainjs-editor';
 import {
   YjsCollaborationAdapter,
@@ -67,6 +72,7 @@ import {
   type SlashCommandService,
 } from 'fountainjs-editor/document-utilities';
 import {
+  FountainAIConversation,
   FountainAIReview,
   FountainBubbleMenu,
   FountainCharacterCount,
@@ -158,6 +164,23 @@ const demoAdapter = createStreamingAIAdapter(async function* (request, { signal 
     explanationDelta: 'This local demo streams a deterministic proposal. A production app supplies its own model or MCP adapter.',
     model: 'local-demo (no network)',
   };
+});
+
+const demoConversationAdapter = createStreamingAIConversationAdapter(async function* (request, { signal }) {
+  const userMessages = request.messages.filter((message) => message.role === 'user');
+  const latest = userMessages.at(-1)?.content ?? '';
+  const reply = userMessages.length === 1
+    ? `I can keep this discussion across turns. You asked: “${latest}”`
+    : `This is follow-up ${userMessages.length}. I received the earlier turns plus: “${latest}”`;
+  const split = Math.max(1, Math.ceil(reply.length / 2));
+  yield { contentDelta: reply.slice(0, split) };
+  await new Promise<void>((resolve, reject) => {
+    const finish = () => { signal.removeEventListener('abort', cancel); resolve(); };
+    const cancel = () => { window.clearTimeout(timer); reject(signal.reason); };
+    const timer = window.setTimeout(finish, 500);
+    signal.addEventListener('abort', cancel, { once: true });
+  });
+  yield { contentDelta: reply.slice(split), model: 'local-demo (no network)' };
 });
 
 const demoAssetUpload: AssetUploadHandler = async (file, { kind, signal, reportProgress }) => {
@@ -748,6 +771,28 @@ function App() {
   const state = useFountainState(editor);
   const editorHandle = useRef<FountainEditorHandle>(null);
   const aiController = useMemo(() => new AIController(editor, demoAdapter), [editor]);
+  const conversationStore = useMemo(() => new InMemoryAIConversationStore(), []);
+  const promptStore = useMemo(() => new InMemoryAIPromptStore([
+    defineAIPromptTemplate({
+      id: 'explain-selection',
+      title: 'Explain the current idea',
+      template: 'Explain the current idea in plain language, including one concrete example.',
+      description: 'A reusable host-stored prompt.',
+      updatedAt: '2026-09-06T12:00:00.000Z',
+    }),
+    defineAIPromptTemplate({
+      id: 'challenge-assumption',
+      title: 'Challenge an assumption',
+      template: 'Challenge the strongest assumption in this discussion and suggest a safer alternative.',
+      updatedAt: '2026-09-06T12:00:00.000Z',
+    }),
+  ]), []);
+  const conversationController = useMemo(() => new AIConversationController({
+    threadId: 'public-demo-conversation',
+    store: conversationStore,
+    adapter: demoConversationAdapter,
+    title: 'Public demo conversation',
+  }), [conversationStore]);
   const agentTools = useMemo(() => createAIDocumentToolbox(editor), [editor]);
   const mentionController = useMemo(
     () => (demoKit.services.mentions as MentionService).getController(editor),
@@ -762,6 +807,15 @@ function App() {
   const [compactToolbar, setCompactToolbar] = useState(false);
   const [agentProposal, setAgentProposal] = useState<AIDocumentProposal>();
   const [agentToolMessage, setAgentToolMessage] = useState('No document-tool call has run.');
+  const conversationOwner = useRef(0);
+
+  useEffect(() => {
+    conversationOwner.current += 1;
+    const owner = conversationOwner.current;
+    return () => queueMicrotask(() => {
+      if (conversationOwner.current === owner) conversationController.destroy();
+    });
+  }, [conversationController]);
 
   const output = useMemo(() => {
     if (!state) return '';
@@ -979,6 +1033,12 @@ function App() {
             <details className="optional-ai">
               <summary>Optional AI review examples</summary>
               <FountainAIReview controller={aiController} title="Text proposal stream" />
+              <FountainAIConversation
+                controller={conversationController}
+                promptStore={promptStore}
+                title="Multi-turn conversation"
+                placeholder="Ask a first question, then a follow-up…"
+              />
               <section className="agent-tools-demo" aria-label="Schema-aware agent document tools">
                 <span>STRUCTURED DOCUMENT TOOLS</span>
                 <h3>Agents propose. You decide.</h3>

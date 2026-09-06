@@ -114,6 +114,7 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .optional-ai { color: #c9c5d6; background: #282438; border: 1px solid #3b364d; border-radius: 12px; }
 .optional-ai summary { padding: 14px; color: #c9c1fa; font: 600 11px DM Mono, monospace; cursor: pointer; }
 .optional-ai .fountain-ai-review { border: 0; border-top: 1px solid #3b364d; border-radius: 0; }
+.optional-ai .fountain-ai-conversation { border: 0; border-top: 1px solid #3b364d; border-radius: 0; }
 .agent-tools-demo { display: grid; gap: 9px; padding: 16px; color: #272333; background: #fff; border-top: 1px solid #e4e0ec; border-radius: 0 0 12px 12px; }
 .agent-tools-demo > span { color: #6d4aff; font: 600 9px DM Mono, monospace; letter-spacing: .11em; }
 .agent-tools-demo h3, .agent-tools-demo p { margin: 0; }

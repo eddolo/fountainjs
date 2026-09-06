@@ -7,6 +7,7 @@ export * from './FountainComposer';
 export * from './Navigator';
 export * from './useNavigatorState';
 export * from './FountainAIReview';
+export * from './FountainAIConversation';
 export * from './ReactNodeView';
 export * from './FountainSuggestionMenu';
 export * from './FountainCharacterCount';

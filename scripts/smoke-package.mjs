@@ -28,12 +28,13 @@ const headlessCoreNames = [
   'createCoreCollaborationExtension', 'getCollaborationState',
 ];
 const aiDocumentToolNames = ['AI_DOCUMENT_TOOL_NAMES', 'AI_DOCUMENT_TOOL_DEFINITIONS', 'AIDocumentToolbox', 'createAIDocumentToolbox'];
+const aiConversationNames = ['AIConversationController', 'InMemoryAIConversationStore', 'InMemoryAIPromptStore', 'createAIConversationAdapter', 'createStreamingAIConversationAdapter', 'defineAIPromptTemplate', 'renderAIPrompt'];
 const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
   'defaultFountainToolbarGroups', 'FountainSlashCommandMenu', 'FountainBubbleMenu',
   'FountainFloatingMenu', 'Navigator', 'useNavigatorState',
-  'useNavigatorTableOfContentsState', 'useFountain',
+  'useNavigatorTableOfContentsState', 'useFountain', 'FountainAIConversation',
 ];
 const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
@@ -69,6 +70,8 @@ const esmHeadlessCore = await import('fountainjs-editor/core');
 assertExports(esmHeadlessCore, headlessCoreNames, 'ESM headless core entry');
 const esmAIDocumentTools = await import('fountainjs-editor/ai/document-tools');
 assertExports(esmAIDocumentTools, aiDocumentToolNames, 'ESM AI document tools entry');
+const esmAIConversation = await import('fountainjs-editor/ai/conversation');
+assertExports(esmAIConversation, aiConversationNames, 'ESM AI conversation entry');
 const markdownSource = '\uFEFF---\r\ntitle: Packed source\r\n---\r\n# Exact\r\n';
 const markdownSchema = new esmHeadlessCore.Schema(esmCore.CoreSchemaSpec);
 const sourcedMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, markdownSchema);
@@ -201,6 +204,22 @@ if (headlessEditor.getText() !== 'Packed core'
 }
 packedAgentTools.accept(packedAgentProposal);
 if (headlessEditor.getText() !== 'Reviewed core') throw new Error('Packed AI document tools did not apply in pure Node.');
+const packedConversationStore = new esmAIConversation.InMemoryAIConversationStore();
+const packedConversation = new esmAIConversation.AIConversationController({
+  threadId: 'packed-thread', store: packedConversationStore, autoLoad: false,
+  adapter: esmAIConversation.createAIConversationAdapter(async (request) => `Messages: ${request.messages.length}`),
+});
+await packedConversation.send('Pure Node conversation');
+if (packedConversation.getSnapshot().thread?.messages[1]?.content !== 'Messages: 1') {
+  throw new Error('Packed AI conversation did not preserve host-owned multi-turn history in pure Node.');
+}
+const packedPrompt = esmAIConversation.defineAIPromptTemplate({
+  id: 'packed-prompt', title: 'Packed prompt', template: 'Explain {{topic}}.', updatedAt: new Date().toISOString(),
+});
+if (esmAIConversation.renderAIPrompt(packedPrompt, { topic: 'Fountain' }) !== 'Explain Fountain.') {
+  throw new Error('Packed reusable AI prompt did not render in pure Node.');
+}
+packedConversation.destroy();
 headlessEditor.destroy();
 
 const Y = await import('yjs');
@@ -223,6 +242,7 @@ assertExports(cjsCore, coreNames, 'CommonJS package root');
 const cjsHeadlessCore = require('fountainjs-editor/core');
 assertExports(cjsHeadlessCore, headlessCoreNames, 'CommonJS headless core entry');
 assertExports(require('fountainjs-editor/ai/document-tools'), aiDocumentToolNames, 'CommonJS AI document tools entry');
+assertExports(require('fountainjs-editor/ai/conversation'), aiConversationNames, 'CommonJS AI conversation entry');
 const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
 const cjsSourcedMarkdown = cjsHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, cjsMarkdownSchema);
 if (cjsHeadlessCore.MarkdownExporter.exportWithSource(cjsSourcedMarkdown.document, cjsSourcedMarkdown.source).markdown !== markdownSource) {

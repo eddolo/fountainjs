@@ -5641,6 +5641,33 @@ test('preserves whitespace when an AI proposal ends at a formatting boundary', a
   await expect(page.locator('.studio__export pre')).toContainText('the **real npm package**');
 });
 
+test('runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation', async ({ page }) => {
+  await page.goto('/');
+  const panel = page.locator('.optional-ai');
+  await panel.locator(':scope > summary').click();
+  const conversation = panel.getByRole('region', { name: 'Multi-turn conversation' });
+  const message = conversation.getByRole('textbox', { name: 'Message' });
+
+  await expect(conversation.getByText('No messages yet.', { exact: false })).toBeVisible();
+  await conversation.getByRole('button', { name: 'Use prompt' }).click();
+  await expect(message).toHaveValue('Challenge the strongest assumption in this discussion and suggest a safer alternative.');
+  await conversation.getByRole('button', { name: 'Send' }).click();
+  await expect(conversation.getByText('Responding…')).toBeVisible();
+  await expect(conversation.getByText('I can keep this discussion across turns.', { exact: false })).toBeVisible();
+  await expect(conversation.getByText('Ready', { exact: true })).toBeVisible();
+
+  await message.fill('What did I ask before?');
+  await conversation.getByRole('button', { name: 'Send' }).click();
+  await expect(conversation.getByText('This is follow-up 2.', { exact: false })).toBeVisible();
+  await expect(conversation.locator('.fountain-ai-conversation__messages article')).toHaveCount(4);
+
+  await conversation.getByRole('button', { name: 'Clear history' }).click();
+  await expect(conversation.getByRole('button', { name: 'Confirm clear' })).toBeVisible();
+  await conversation.getByRole('button', { name: 'Confirm clear' }).click();
+  await expect(conversation.locator('.fountain-ai-conversation__messages article')).toHaveCount(0);
+  await expect(conversation.getByText('No messages yet.', { exact: false })).toBeVisible();
+});
+
 test('reviews a schema-aware agent tool proposal before one-step apply and undo', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

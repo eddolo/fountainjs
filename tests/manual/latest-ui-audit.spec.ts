@@ -9,8 +9,8 @@ async function capture(page: Page, testInfo: TestInfo, name: string) {
   });
 }
 
-test('human release journey: writing, AI review, structured tools, and undo', async ({ page }, testInfo) => {
-  test.setTimeout(45_000);
+test('human release journey: writing, AI review, conversation, structured tools, and undo', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
   const pageErrors: string[] = [];
   const consoleErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
@@ -85,6 +85,25 @@ test('human release journey: writing, AI review, structured tools, and undo', as
     await tools.scrollIntoViewIfNeeded();
     await capture(page, testInfo, '07-structured-change-undone');
     await pause(page, 700);
+  });
+
+  await test.step('use a reusable prompt and continue a real multi-turn conversation', async () => {
+    const conversation = page.getByRole('region', { name: 'Multi-turn conversation' });
+    await conversation.getByRole('button', { name: 'Use prompt' }).click();
+    await conversation.getByRole('button', { name: 'Send' }).click();
+    await expect(conversation.getByText('I can keep this discussion across turns.', { exact: false })).toBeVisible();
+    await expect(conversation.getByText('Ready', { exact: true })).toBeVisible();
+    await conversation.scrollIntoViewIfNeeded();
+    await capture(page, testInfo, '08-conversation-first-turn');
+    await pause(page, 500);
+
+    await conversation.getByRole('textbox', { name: 'Message' }).fill('What context did you keep?');
+    await conversation.getByRole('button', { name: 'Send' }).click();
+    await expect(conversation.getByText('This is follow-up 2.', { exact: false })).toBeVisible();
+    await expect(conversation.locator('.fountain-ai-conversation__messages article')).toHaveCount(4);
+    await conversation.scrollIntoViewIfNeeded();
+    await capture(page, testInfo, '09-conversation-follow-up');
+    await pause(page, 500);
   });
 
   expect(pageErrors).toEqual([]);

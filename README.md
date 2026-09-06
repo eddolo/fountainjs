@@ -1316,6 +1316,14 @@ proposal bounds, declared-attribute policy, and stale-document refusal are
 configurable; no model SDK or Fountain service is required. See the
 [schema-aware document tools guide](docs/AI_DOCUMENT_TOOLS.md).
 
+For multi-turn chat, the separate DOM-free
+`fountainjs-editor/ai/conversation` entry accepts a host-provided conversation
+store and model adapter. It supplies bounded context windows, cancellable
+streaming, optimistic revision checks, inspectable requests, and portable
+reusable-prompt contracts without providing a Fountain account or cloud.
+`FountainAIConversation` is the optional React surface. See the
+[conversation and prompt guide](docs/AI_CONVERSATIONS.md).
+
 Full-document context is off by default. The included `MCPAIAdapter` connects the same workflow to a compatible MCP Streamable HTTP tool; MCP is a transport option, not the AI itself. Never ship permanent provider credentials in browser code.
 
 React applications can render the optional workflow with `<FountainAIReview controller={ai} />`.
@@ -1353,6 +1361,7 @@ comparison](docs/PROSEMIRROR_COMPARISON.md).
 - `ClipboardHistoryMenu`
 - `Navigator`, `useNavigatorState`, and `useNavigatorTableOfContentsState`
 - `FountainAIReview` and `useAIControllerState`
+- `FountainAIConversation` and `useAIConversationState`
 - `createReactNodeView` and `ReactNodeViewProps`
 
 ## Development
@@ -1437,6 +1446,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Native renderer feasibility and host-boundary design](docs/NATIVE_RENDERER_FEASIBILITY.md)
 - [Optional AI and MCP](docs/MCP.md)
 - [Schema-aware AI document tools](docs/AI_DOCUMENT_TOOLS.md)
+- [Host-owned AI conversations and prompts](docs/AI_CONVERSATIONS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 - [Changelog](CHANGELOG.md)

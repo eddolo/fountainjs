@@ -10,6 +10,7 @@ export default defineConfig({
         index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
         core: fileURLToPath(new URL('./src/headless/index.ts', import.meta.url)),
         'ai-document-tools': fileURLToPath(new URL('./src/ai/document-tools.ts', import.meta.url)),
+        'ai-conversation': fileURLToPath(new URL('./src/ai/conversation.ts', import.meta.url)),
         react: fileURLToPath(new URL('./src/react/index.ts', import.meta.url)),
         'document-utilities': fileURLToPath(new URL('./src/document-utilities.ts', import.meta.url)),
         'emoji-data': fileURLToPath(new URL('./src/emoji-data.ts', import.meta.url)),
