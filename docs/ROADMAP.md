@@ -145,6 +145,25 @@ plus its successful
 certify the package and rendered workflow; see
 [TABLE_OF_CONTENTS.md](TABLE_OF_CONTENTS.md).
 
+## Delivered: text integrity and invisible characters
+
+`DOC-16` now separates non-mutating Unicode inspection, view-only invisible
+markers, integrity-sensitive input, and deliberate cleanup. Its isolated
+headless entry reports exact UTF-16 positions, code points, UTF-8 bytes,
+LF/CRLF/CR differences, normalization, whitespace, zero-width/BOM/bidi
+controls, soft hyphens, and invalid surrogates without browser globals. The DOM
+extension adds bounded transient markers plus literal input for eligible
+code/verbatim blocks. Sanitization requires explicit per-category choices, an
+immutable before/after preview, and an unchanged selection/source before one
+undoable transaction can apply. The optional React inspector is a replaceable
+surface and does not enter the default React bundle. The complete 612-test
+package gate and 353-pass Chromium/Firefox/WebKit/mobile
+[CI run for `734f151`](https://github.com/eddolo/fountainjs/actions/runs/34039546987),
+successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34039547002),
+and live rendered inspection certify the package and workflow. Original-byte
+verification deliberately remains at the host import/hash boundary; see
+[TEXT_INTEGRITY.md](TEXT_INTEGRITY.md).
+
 ## Delivered: first-class interactive widget contract
 
 The first-class widget implementation keeps validated values in
@@ -433,14 +452,6 @@ performance, and browser behavior:
 - iframe/isolated-surface editing and host focus coordination;
 - vertical Japanese writing with logical selection/navigation evidence;
 - spell-check, dictionaries, thesaurus, and replaceable language-service hooks;
-- certify the active invisible-character integrity implementation (`DOC-16`):
-  its DOM-free scanner/raw inspector, bounded view-only decorations, eligible
-  literal-input mode, preview-first per-category sanitizer, stale-selection
-  guard, optional React surface, package exports, and live workflow are built.
-  The complete all-engine release matrix and deployed-site verification remain
-  before this moves into the delivered ledger. Byte-for-byte fidelity continues
-  to require an explicit byte import/hash boundary because a DOM editor cannot
-  reconstruct bytes after OS, clipboard, decoder, or browser text conversion;
 - YAML frontmatter and raw/visual Markdown switching.
 
 ## Broader editor landscape audit

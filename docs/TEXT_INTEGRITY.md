@@ -109,3 +109,7 @@ replaced.
 The repository tests non-mutation, exact offsets and UTF-8 replacement behavior,
 category-specific cleanup, stale-preview refusal, decoration-only display,
 literal input ordering, package imports, and the public browser workflow.
+The complete 612-test package gate and 353-pass Chromium/Firefox/WebKit/mobile
+[CI run for `734f151`](https://github.com/eddolo/fountainjs/actions/runs/34039546987),
+successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34039547002),
+and live rendered inspection certify the delivered contract.
