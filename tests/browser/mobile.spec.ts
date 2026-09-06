@@ -110,7 +110,9 @@ test('preserves split-paragraph selection and composition through mobile page fa
   const host = region.locator('.fountain-editable-pages');
   const editor = page.getByRole('textbox', { name: 'Split paragraph page editor' });
   await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
-  const gap = editor.locator('[data-fountain-editable-page-break]').first();
+  // Page geometry can legitimately place an earlier boundary between whole
+  // blocks. This journey specifically needs the injected split-text widget.
+  const gap = editor.locator('[data-fountain-text-path] [data-fountain-editable-page-break]').first();
   await expect(gap).toBeAttached();
   const initialText = await page.evaluate(() => {
     const document = (globalThis as any).fountainBrowserTest.pages.editable.summary().document;
