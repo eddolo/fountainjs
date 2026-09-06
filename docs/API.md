@@ -656,6 +656,14 @@ Pass `onConfigureProvider` to expose a host-owned trusted-provider picker from
 source-only mode.
 
 `createLeanProvider` validates provider trust metadata and optional operations.
+`createLeanLoopbackProvider({ endpoint, sessionToken, label?, timeoutMs?,
+fetch? })` is the matching browser-side adapter for the separately launched
+`fountainjs-lean-bridge`. It accepts only loopback HTTP(S), retains the secret in
+the provider closure rather than its descriptor, sends a bounded one-block
+check request with credentials omitted, refuses redirects, propagates aborts,
+and rejects invalid or oversized JSON. The executable exposes only one-shot
+proof checking; it is not an arbitrary command or complete LSP endpoint. See
+[LEAN.md](LEAN.md) for setup and the project trust boundary.
 Its descriptor declares `local`, `remote`, `managed`, or `one-shot` mode and a
 `device`, `self-hosted`, or `third-party` data destination. Source-only mode is
 represented by the absence of a provider. See [LEAN.md](LEAN.md) for provider

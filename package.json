@@ -9,7 +9,8 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "fountainjs-editor": "./scripts/create-extension.mjs"
+    "fountainjs-editor": "./scripts/create-extension.mjs",
+    "fountainjs-lean-bridge": "./scripts/lean-loopback-bridge.mjs"
   },
   "typesVersions": {
     "*": {
@@ -417,6 +418,7 @@
     "scripts/check-api-surface.mjs",
     "scripts/create-extension.mjs",
     "scripts/check-release.mjs",
+    "scripts/lean-loopback-bridge.mjs",
     "api-surface.json",
     "README.md",
     "CHANGELOG.md",
@@ -495,6 +497,7 @@
     "test:markdown-conformance": "node scripts/check-markdown-conformance.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
+    "test:lean-integration": "node scripts/test-lean-loopback.mjs",
     "test:watch": "vitest",
     "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",

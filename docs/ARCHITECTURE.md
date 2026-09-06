@@ -721,7 +721,14 @@ execution location and data destination inspectable. Diagnostics and proof
 state remain transient controller state, and stale provider responses are
 discarded rather than attached to changed content. Valid diagnostics enter a
 plugin only as mapped decorations; `LeanInfoView` subscribes to the same
-controller without putting a framework dependency in core. See [LEAN.md](LEAN.md).
+controller without putting a framework dependency in core. The optional
+`createLeanLoopbackProvider` transport and
+separately launched Node bridge sit outside the document/state/extension
+layers. The browser adapter knows only a loopback HTTP check protocol. The
+bridge owns the fixed Lean process invocation, exact-origin authentication,
+project scope, time/output/concurrency bounds, and temporary-file cleanup. No
+process, file-system, credential, or network concern enters document JSON or
+the platform-neutral core. See [LEAN.md](LEAN.md).
 
 ## Framework surfaces
 

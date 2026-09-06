@@ -39,6 +39,26 @@ jobs:
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
       - run: pnpm exec vite build --base /fountainjs/
       - run: pnpm pack --dry-run
+  lean-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test:lean-integration
   browser:
     runs-on: ubuntu-latest
     steps:

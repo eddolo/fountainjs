@@ -49,14 +49,55 @@ global default.
 | Managed | A named third-party service | Users who want zero setup |
 | One-shot | A callable checker, local or remote | Verify/save workflows without a persistent LSP |
 
-A local web application normally needs a small authenticated loopback bridge
-to the user's Lean installation. Desktop shells and IDE extensions may invoke
-Lean directly. Lean's server mode can be launched in the selected Lake project
-environment with `lake env lean --server`; the bridge—not FountainJS core—owns
-process lifecycle, workspace access, and conversion between transport and the
-provider interface. See Lean's official [server protocol
+A local web application can use the supplied `fountainjs-lean-bridge` executable
+with the user's Lean installation. It is a reference one-shot **check** provider,
+not a general shell and not a full language server. Goals, hover, expected types,
+and completion remain available through host-provided adapters. Desktop shells
+and IDE extensions may invoke Lean directly. Lean's server mode can be launched
+in the selected Lake project environment with `lake env lean --server`; that
+adapter—not FountainJS core—owns process lifecycle, workspace access, and
+conversion between transport and the provider interface. See Lean's official [server protocol
 documentation](https://github.com/leanprover/lean4/blob/master/src/Lean/Server/README.md)
 and [installation guide](https://lean-lang.org/install/).
+
+## Local one-shot checker
+
+Install Lean and FountainJS, then launch the bridge from a terminal. The project
+and browser origin are explicit; repeat `--origin` when developing from more
+than one exact origin.
+
+```sh
+fountainjs-lean-bridge --project /absolute/path/to/project --origin http://localhost:5173
+```
+
+The process prints one JSON record containing a loopback endpoint and random
+session token. Keep the terminal open and pass those two runtime values to the
+browser application. Do not put the token in source control, document content,
+URLs, or persistent browser storage.
+
+```ts
+import { createLeanExtension, createLeanLoopbackProvider } from 'fountainjs-editor'
+
+const provider = createLeanLoopbackProvider({
+  endpoint: bridgeSession.endpoint,
+  sessionToken: bridgeSession.sessionToken,
+})
+const lean = createLeanExtension({ provider })
+```
+
+For a Lake project, checks run as the fixed command `lake env lean <temporary
+file>`; otherwise they run as `lean <temporary file>`. Request data cannot select
+the executable, arguments, working directory, or file path. The bridge binds to
+`127.0.0.1`, accepts only `POST /v1/check`, requires its per-process Bearer
+secret and protocol header, verifies an exact Origin allowlist, rejects unknown
+request fields, and bounds source, response, concurrency, and execution time.
+Temporary source is created with restrictive permissions and removed after the
+check. No request source is logged.
+
+The bridge deliberately needs a user-approved project directory because Lean
+imports can execute project build/plugin code. Use only a project you trust;
+the origin and session secret prevent unrelated web pages from silently using
+the local process, but they do not make an untrusted Lean project safe.
 
 ## Attaching a provider
 
@@ -116,6 +157,10 @@ secret, validate browser origins, scope the process to a user-approved project,
 and expose fixed Lean operations rather than arbitrary shell or file-system
 access. Keep tokens in application runtime storage or an operating-system
 credential store—not in FountainJS JSON, HTML, Markdown, or provider metadata.
+The supplied bridge implements those minimums. Its token may alternatively be
+provided through the process-only `FOUNTAIN_LEAN_SESSION_TOKEN` environment
+variable; there is intentionally no command-line token flag that would expose
+it in process listings.
 
 The official `lean4web` project also uses a server-side Lean process rather than
 turning the full current toolchain into an in-browser drop-in replacement; see

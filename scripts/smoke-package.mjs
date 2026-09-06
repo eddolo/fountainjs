@@ -16,6 +16,7 @@ const coreNames = [
   'FloatingMenuExtension', 'getEditorMenuAnchorRect', 'moveNode', 'canMoveNode',
   'BlockHandleManager', 'FOUNTAIN_NODE_DRAG_TYPE',
   'getCollaborationAdapter', 'replaceCollaborationAdapter',
+  'createLeanLoopbackProvider',
 ];
 const headlessCoreNames = [
   'Schema', 'Editor', 'createEditor', 'Selection', 'Transaction', 'Plugin',

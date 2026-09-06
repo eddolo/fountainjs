@@ -63,6 +63,13 @@
 
 ### Added
 
+- A hardened optional Lean 4 loopback workflow now pairs the browser-side
+  `createLeanLoopbackProvider` with a separately launched
+  `fountainjs-lean-bridge`. It binds only to loopback, uses exact-origin and
+  per-session-secret checks, exposes no arbitrary command/path operation,
+  bounds requests/output/time/concurrency, removes temporary source, and has a
+  dedicated real-Lean CI proof gate. Source-only Lean remains the default.
+
 - A default-on, framework-neutral general drop cursor now renders an inline
   caret or atomic/block boundary for native drags carrying data.
   It is state/selection-neutral, yields to schema-valid block reordering, is

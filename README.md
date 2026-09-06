@@ -759,6 +759,10 @@ const lean = kit.services.lean.createController(editor)
 await lean.check() // explicit `not-checked` result in source-only mode
 ```
 
+For local checking without hosting a service, launch the packaged
+`fountainjs-lean-bridge` against a trusted Lean project and connect with
+`createLeanLoopbackProvider`. It exposes fixed, bounded one-shot checking—not a
+shell or a complete LSP—and is optional; source-only editing remains the default.
 See [Lean integration and trust boundaries](docs/LEAN.md) for local bridge and
 provider examples.
 

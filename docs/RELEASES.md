@@ -58,6 +58,9 @@ A release is eligible for npm staging only when all of the following are true:
    boundaries.
 9. the emitted server HTML entry runs without browser globals in Node, Bun,
    Deno, and Cloudflare `workerd`.
+10. changes to the reference Lean checker pass `pnpm test:lean-integration`
+    against the pinned real Lean toolchain; mocked provider tests alone are not
+    release evidence.
 
 `scripts/check-release.mjs` enforces items 1 and 2. The GitHub Publish npm
 workflow runs it from a published release event before the complete package
