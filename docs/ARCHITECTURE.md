@@ -304,7 +304,9 @@ the clipboard's complete plain-text form, preserves every match for the handler,
 and accepts a transaction, schema document, or transformed text as its result.
 Text, mark, and wrapping helpers cover the common cases; schema construction and
 the normal insertion commands remain the enforcement boundary. Rules run before
-the default rich-HTML/plain-text import path and the first handled rule wins.
+the default external rich-HTML/plain-text import path and the first handled rule
+wins. They do not reinterpret a structured Fountain clipboard document or its
+rich HTML fallback as newly typed text.
 
 ## DOM view and input pipeline
 
@@ -327,13 +329,29 @@ Input is exercised at logical offsets in bidirectional and deeply nested text.
 Mobile Chromium and WebKit emulation run focused virtual-keyboard and responsive
 layout contracts; physical-device coverage remains a separate production gate.
 
+Copy has three deliberately different interchange layers. A private, versioned
+`application/x-fountainjs+json` flavor carries the selected schema document for
+exact same-schema Fountain-to-Fountain transfer. The receiving schema constructs
+and validates every node and attribute; an unknown extension, malformed payload,
+or bounded-size rejection falls through safely. Standards-based semantic HTML
+is written alongside it for rich external editors, and a readable plain-text
+projection preserves list markers, table cell boundaries, quotes, media labels,
+and text for text-only destinations. Neither external fallback claims private
+plugin state such as comments, clipboard history, upload tasks, or collaboration
+awareness. Source-aware HTML normalization handles Word, Docs, Excel, MathML,
+revision, metadata, and unsafe-content differences and emits a bounded,
+immutable report rather than claiming invisible fidelity.
+
 `BlockHandleManager` is an optional fourth view concern. It discovers eligible
 top-level and nested node DOM from model paths, but mounts one accessible control
 toolbar beside the contenteditable so interactive buttons never enter text,
 clipboard, list/table structure, or NodeView-owned DOM. Pointer/selection changes
 only choose the active model path. Drag geometry produces a candidate
 `NodeMove`; `canMoveNode` validates the complete tree before an indicator is
-shown, and `moveNode` commits one transaction on drop or button activation.
+shown, and `moveNode` commits one transaction on drop or button activation. Its
+transient state distinguishes the whole active block, an engaged/grabbed source,
+and the independent before/after destination rule. Space/Enter grab, Arrow
+movement, and Escape release project the same state used by pointer dragging.
 Resize/scroll observation affects only transient positioning. React and the Web
 Component forward the same `EditorView` option rather than reimplementing it.
 

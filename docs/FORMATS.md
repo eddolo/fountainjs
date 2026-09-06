@@ -288,6 +288,25 @@ required.
 
 `TextExporter` joins block text with configurable separators. It intentionally discards marks and structure, but preserves math as its TeX source, mentions and emoji as readable inline text, and media as `[Audio: …]`, `[Video: …]`, `[File: …]`, or `[Embed: …]` projections. It is suitable for search indexing, previews, and explicit AI context.
 
+## Clipboard formats
+
+The DOM editor does not confuse persistence with interoperability. Copy/cut
+writes an exact, versioned Fountain document flavor for another compatible
+Fountain schema, semantic HTML for an unrelated rich editor, and readable text
+for terminals, textareas, and other text-only destinations. The clipboard text
+projection additionally represents lists, quotes, and table boundaries because
+human paste readability has different requirements from search indexing.
+
+The exact flavor is accepted only after the receiving schema reconstructs and
+validates it. A missing custom extension or rejected attribute falls back to the
+HTML/text flavors. Context-sensitive document invariants still run after paste;
+for example, an installed stable-ID extension may repair an ID duplicated inside
+the receiving document. HTML is best-effort across destination applications: a target
+may deliberately strip styles, media, attributes, or unsupported tags. Comment
+threads, collaboration awareness, versions, upload tasks, and host-owned records
+are outside all document clipboard formats. Use application-level export/import
+when those objects must travel together.
+
 ## Security boundary
 
 Treat imported content and AI output as untrusted. The included AI controller only accepts replacement text, and the HTML exporter escapes document data. The default media module denies arbitrary iframes and validates playback, track, file, sandbox, and permission attributes; a custom embed resolver and every upload adapter remain trusted application code. Hosts must enforce their own storage authorization, content-type verification, malware scanning, and retention policies.

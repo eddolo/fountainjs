@@ -32,6 +32,7 @@ import {
 import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
+import type { ExternalPasteOptions } from './paste';
 import { SelectionHandler } from './selection-handler';
 import {
   VirtualBlockLayout,
@@ -60,6 +61,8 @@ export interface EditorViewOptions {
   /** Opt-in viewport rendering for very large documents. */
   virtualization?: boolean | EditorViewVirtualizationOptions;
   onError?: (error: unknown) => void;
+  /** Source-aware Word, Docs, spreadsheet, MathML, and generic HTML paste policy. */
+  paste?: ExternalPasteOptions;
 }
 
 export type EditorFocusPosition = 'current' | 'start' | 'end';
@@ -156,6 +159,7 @@ export class EditorView {
       shouldStopEvent: this.shouldStopNodeViewEvent,
       blockHandles: this.blockHandles,
       prepareClipboard: this.prepareVirtualClipboard,
+      paste: options.paste,
     });
     if (typeof MutationObserver !== 'undefined') {
       this.mutationObserver = new MutationObserver(this.onMutations);
@@ -650,6 +654,9 @@ export class EditorView {
         'data-fountain-selected-cell',
         'data-fountain-gap',
         'data-fountain-block-reorderable',
+        'data-fountain-block-active',
+        'data-fountain-block-handle-active',
+        'data-fountain-block-grabbed',
         'data-fountain-drop-position',
         'data-fountain-dragging',
         'data-fountain-editable-page',

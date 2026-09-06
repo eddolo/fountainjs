@@ -939,10 +939,18 @@ const runVirtualizationBudget = async (blockCount = 100_000) => {
   ));
   await Promise.resolve();
   const copyMiddleBefore = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"]'));
-  virtualView.dom.dispatchEvent(new ClipboardEvent('copy', { bubbles: true, cancelable: true }));
+  const clipboard = new Map<string, string>();
+  const copyEvent = new Event('copy', { bubbles: true, cancelable: true }) as ClipboardEvent;
+  Object.defineProperty(copyEvent, 'clipboardData', { value: {
+    files: [],
+    getData: (format: string) => clipboard.get(format) ?? '',
+    setData: (format: string, value: string) => { clipboard.set(format, value); },
+  } });
+  virtualView.dom.dispatchEvent(copyEvent);
   const copyMiddleDuring = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"]'));
   const copyRichMiddleDuring = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"] strong'));
-  const copySelectionDuring = document.getSelection()?.toString() ?? '';
+  const copySelectionDuring = clipboard.get('text/plain') ?? '';
+  const copyRichSelectionDuring = clipboard.get('text/html') ?? '';
   await new Promise<void>((resolve) => setTimeout(resolve, 0));
   const copyMiddleAfter = Boolean(virtualView.dom.querySelector('[data-fountain-path="300"]'));
 
@@ -988,9 +996,13 @@ const runVirtualizationBudget = async (blockCount = 100_000) => {
     copyMiddleBefore,
     copyMiddleDuring,
     copyRichMiddleDuring,
+    copyHandled: copyEvent.defaultPrevented,
     copySelectionComplete: copySelectionDuring.includes('Virtual browser block 100')
       && copySelectionDuring.includes('Virtual browser block 300')
       && copySelectionDuring.includes('Virtual browser block 500'),
+    copyRichSelectionComplete: copyRichSelectionDuring.includes('Virtual browser block 100')
+      && copyRichSelectionDuring.includes('<strong>Virtual browser block 300</strong>')
+      && copyRichSelectionDuring.includes('Virtual browser block 500'),
     copyMiddleAfter,
     finalMounted,
     totalHeight,

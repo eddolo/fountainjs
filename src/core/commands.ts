@@ -221,7 +221,9 @@ function replaceSemanticSelectionWithDocument(editor: Editor, selection: Exclude
       const parentPath = selection.nodePath.slice(0, -1);
       const index = selection.nodePath.at(-1) as number;
       const selected = getNodeAtPath(editor.state.doc, selection.nodePath);
-      const inline = content.length === 1 && content[0]?.content.every((node) => node.type.isInline)
+      const inline = content.length === 1
+        && content[0]?.type === editor.state.schema.nodes.paragraph
+        && content[0].content.every((node) => node.type.isInline)
         ? [...content[0].content]
         : null;
       if (selected.type.isInline && inline) {
@@ -479,7 +481,13 @@ export function insertDocument(editor: Editor, document: Node): boolean {
   const blocks = [...document.content];
   const single = blocks.length === 1 ? blocks[0] : undefined;
   const parent = getNodeAtPath(state.doc, path.slice(0, -1));
-  if (single && single.content.every((node) => node.type.isInline) && parent.content.every((node) => node.type.isInline)) {
+  // HTML import wraps an inline clipboard fragment in the schema's paragraph.
+  // Only unwrap that known text container. Atomic/leaf blocks have no children,
+  // so a generic `every(isInline)` check is vacuously true and used to report a
+  // successful paste while silently inserting nothing.
+  if (single?.type === state.schema.nodes.paragraph
+    && single.content.every((node) => node.type.isInline)
+    && parent.content.every((node) => node.type.isInline)) {
     const text = target.text ?? '';
     const prefix = text.slice(0, from);
     const suffix = text.slice(from);

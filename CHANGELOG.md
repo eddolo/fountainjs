@@ -21,6 +21,16 @@
   atoms with inline content, and turns multiline text pasted over a structural
   selection into real visible blocks instead of embedding collapsed newline
   characters in one paragraph.
+- A copied Fountain selection now carries exact schema document JSON alongside
+  clean semantic HTML and readable plain text. Compatible Fountain editors keep
+  nested blocks, marks, attributes, table spans, media tracks, and custom atoms;
+  differently configured editors fall back safely, while unrelated rich and
+  text-only editors receive standard usable clipboard content. Single atomic
+  blocks are no longer misclassified as empty inline fragments during paste.
+- Block handles now highlight the complete active block, show a stronger grabbed
+  state for pointer and keyboard interaction, and render the before/after drop
+  position as a separate overlay. Space/Enter grab, Arrow movement, and Escape
+  release expose the same visual state as pointer dragging.
 - Empty paragraphs now render a real caret line, repeated Enter/Backspace
   creates and removes visibly distinct lines without leaving phantom height,
   backward keyboard and pointer selections retain their direction, Enter
@@ -42,6 +52,11 @@
   breaking ESM import or silently inflating release assets.
 
 ### Added
+
+- Source-aware external paste normalization for Microsoft Word, Excel, Google
+  Docs, MathML, and generic HTML, with configurable list/revision/metadata
+  policy, executable-content removal, schema validation, safe fallback, and an
+  immutable report describing normalization and loss.
 
 - The supplied toolbar now presents table editing through one contextual,
   labelled menu by default, with explicit selection, row, column, cell, header,

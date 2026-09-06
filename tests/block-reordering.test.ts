@@ -207,6 +207,49 @@ describe('framework-neutral block handles', () => {
     mount.remove();
   });
 
+  it('exposes whole-block hover, focus, keyboard-grab, and moved-block state', async () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      plugins: [historyPlugin],
+      content: { type: 'doc', content: [paragraph('First line\nwrap'), paragraph('Second block')] },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor, { blockHandles: true });
+    const second = view.dom.querySelector<HTMLElement>('[data-fountain-path="1"]') as HTMLElement;
+    second.dispatchEvent(new MouseEvent('pointermove', { bubbles: true }));
+    expect(second.dataset.fountainBlockActive).toBe('true');
+
+    const controls = mount.querySelector<HTMLElement>('[data-fountain-block-controls]') as HTMLElement;
+    const drag = controls.querySelector<HTMLButtonElement>('[data-fountain-block-action="drag"]') as HTMLButtonElement;
+    controls.dispatchEvent(new MouseEvent('pointerenter'));
+    expect(second.dataset.fountainBlockHandleActive).toBe('true');
+    controls.dispatchEvent(new MouseEvent('pointerleave'));
+    expect(second.dataset.fountainBlockHandleActive).toBeUndefined();
+
+    drag.focus();
+    expect(second.dataset.fountainBlockHandleActive).toBe('true');
+    drag.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: ' ' }));
+    expect(drag.getAttribute('aria-pressed')).toBe('true');
+    expect(controls.dataset.fountainBlockGrabbed).toBe('keyboard');
+    expect(second.dataset.fountainBlockGrabbed).toBe('true');
+
+    drag.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'ArrowUp' }));
+    await Promise.resolve();
+    expect(editor.state.doc.content.map((node) => node.textContent)).toEqual(['Second block', 'First line\nwrap']);
+    const moved = view.dom.querySelector<HTMLElement>('[data-fountain-path="0"]') as HTMLElement;
+    expect(moved.dataset.fountainBlockActive).toBe('true');
+    expect(moved.dataset.fountainBlockGrabbed).toBe('true');
+    expect(document.activeElement).toBe(drag);
+
+    drag.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Escape' }));
+    expect(drag.getAttribute('aria-pressed')).toBe('false');
+    expect(moved.dataset.fountainBlockGrabbed).toBeUndefined();
+    expect(controls.dataset.fountainBlockGrabbed).toBeUndefined();
+    view.destroy();
+    mount.remove();
+  });
+
   it('forwards the same controls through the Web Component registration boundary', () => {
     registerFountainElement({ tagName: 'reorder-fountain-editor', blockHandles: true });
     const element = document.createElement('reorder-fountain-editor') as HTMLElement & {

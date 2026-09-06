@@ -1268,7 +1268,7 @@ return its own transaction or document for more specialized structures.
 
 ## DOM view
 
-`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, `virtualization`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, `virtualization`, source-aware `paste`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
 
 `virtualization: true` uses the window viewport and starts at 250 top-level
 blocks. `EditorViewVirtualizationOptions` configures `scrollContainer`,
@@ -1408,6 +1408,38 @@ inset borders, or insertion rules in addition to colour. The view mirrors each
 state into a native DOM range while the model selection remains authoritative.
 Hosts can add their own labelled controls around `selectNode`, `selectGap`, or
 `selectCells` when a product needs a more explicit screen-reader workflow.
+
+### Clipboard interoperability
+
+Copy/cut from Fountain writes three representations when the selected model
+fragment is schema-valid:
+
+- `application/x-fountainjs+json`: a bounded version-1 `{ document }` payload
+  for exact transfer between Fountain editors that share the required schema;
+- `text/html`: clean semantic HTML for other rich editors, with no renderer
+  paths, selection markers, block-handle controls, or pagination widgets;
+- `text/plain`: readable text with list markers, quote markers, tab-separated
+  table cells, line-separated rows, and each node's `toText` projection.
+
+The exact representation preserves document nodes, marks, attributes, nested
+blocks, spans, media tracks, and extension-defined atoms. It is still untrusted
+input: the receiving schema recreates and validates the document. If that schema
+does not include a copied extension, Fountain tries semantic HTML and then plain
+text. Post-transaction invariant plugins may still repair context-sensitive
+values—for example, a stable-ID extension can replace duplicate IDs created by
+copying a node inside the same document. Private plugin/service state—comment threads, presence, host records,
+uploads, credentials, and clipboard history—is never smuggled into document
+clipboard JSON.
+
+`EditorViewOptions.paste` accepts `ExternalPasteOptions`: `normalize`,
+`wordLists`, `trackedChanges` (`accept`, `reject`, or `preserve-visible`),
+`stripSourceMetadata`, and `onReport`. Reports identify Fountain, Word, Excel,
+Google Docs, MathML, generic HTML, or plain text; name the inserted outcome;
+count UTF-8 input/output bytes; and list immutable loss/normalization issues.
+Cleanup removes executable content, normalizes supported Office structures, and
+never claims to reconstruct external comments or unknown proprietary metadata.
+React passes this option through its view options and
+`registerFountainElement({ paste })` exposes the same policy to Custom Elements.
 
 `registerFountainElement(options?)` registers `<fountain-editor>` as a standards-based Custom Element. Configure a schema and plugins once, assign document JSON through its `value` property, and listen for the bubbling `fountain-change` event. Event detail includes `state`, `transaction`, and portable `value` JSON.
 

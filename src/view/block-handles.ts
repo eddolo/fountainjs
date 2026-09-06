@@ -108,6 +108,7 @@ function defaultCandidate(context: BlockHandleContext): boolean {
 /** Owns the optional, framework-neutral DOM controls for model-backed node moves. */
 export class BlockHandleManager {
   private readonly controls = document.createElement('div');
+  private readonly dropIndicator = document.createElement('div');
   private readonly dragButton = button('drag', 'Drag block');
   private readonly beforeButton = button('before', 'Move block before');
   private readonly afterButton = button('after', 'Move block after');
@@ -116,6 +117,13 @@ export class BlockHandleManager {
   private activeKey?: string;
   private draggedKey?: string;
   private dropElement?: HTMLElement;
+  private dropPosition?: 'before' | 'after';
+  private pointerEngaged = false;
+  private focusEngaged = false;
+  private keyboardGrabbed = false;
+  private focusResetTimer?: ReturnType<typeof setTimeout>;
+  private keyboardFocusRestorePending = false;
+  private keyboardFocusFrame?: number;
   private destroyed = false;
 
   constructor(
@@ -129,17 +137,26 @@ export class BlockHandleManager {
     this.controls.contentEditable = 'false';
     this.controls.setAttribute('role', 'toolbar');
     this.controls.setAttribute('aria-label', 'Block controls');
+    this.dropIndicator.className = 'fountain-block-drop-indicator';
+    this.dropIndicator.dataset.fountainBlockDropIndicator = '';
+    this.dropIndicator.hidden = true;
+    this.dropIndicator.setAttribute('aria-hidden', 'true');
     this.dragButton.draggable = true;
+    this.dragButton.setAttribute('aria-pressed', 'false');
     this.controls.append(this.dragButton, this.beforeButton, this.afterButton);
     if (getComputedStyle(this.mount).position === 'static') this.mount.dataset.fountainBlockHandlesStatic = '';
     this.mount.dataset.fountainBlockHandles = '';
     this.dom.dataset.fountainBlockHandlesEnabled = '';
-    this.mount.appendChild(this.controls);
+    this.mount.append(this.controls, this.dropIndicator);
     this.dom.addEventListener('pointermove', this.onPointerMove);
     this.dom.addEventListener('focusin', this.onFocusIn);
     this.dom.addEventListener('pointerdown', this.onPointerDown);
     this.controls.addEventListener('click', this.onControlClick);
     this.controls.addEventListener('keydown', this.onControlKeyDown);
+    this.controls.addEventListener('pointerenter', this.onControlsPointerEnter);
+    this.controls.addEventListener('pointerleave', this.onControlsPointerLeave);
+    this.controls.addEventListener('focusin', this.onControlsFocusIn);
+    this.controls.addEventListener('focusout', this.onControlsFocusOut);
     this.dragButton.addEventListener('dragstart', this.onDragStart);
     this.dragButton.addEventListener('dragend', this.onDragEnd);
     globalThis.addEventListener?.('resize', this.position);
@@ -157,8 +174,13 @@ export class BlockHandleManager {
 
   refresh(documentNode: Node, selection: AnySelection): void {
     if (this.destroyed) return;
-    this.dom.querySelectorAll<HTMLElement>('[data-fountain-block-reorderable]')
-      .forEach((element) => { delete element.dataset.fountainBlockReorderable; });
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-block-reorderable], [data-fountain-block-active], [data-fountain-block-handle-active], [data-fountain-block-grabbed]')
+      .forEach((element) => {
+        delete element.dataset.fountainBlockReorderable;
+        delete element.dataset.fountainBlockActive;
+        delete element.dataset.fountainBlockHandleActive;
+        delete element.dataset.fountainBlockGrabbed;
+      });
     this.candidates.clear();
     const elements = new Map(Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-path]'))
       .map((element) => [element.dataset.fountainPath ?? '', element] as const));
@@ -193,6 +215,8 @@ export class BlockHandleManager {
     if (!target) return false;
     target.element.dataset.fountainDropPosition = target.position;
     this.dropElement = target.element;
+    this.dropPosition = target.position;
+    this.positionDropIndicator();
     return true;
   }
 
@@ -208,6 +232,7 @@ export class BlockHandleManager {
     this.clearDropIndicator();
     this.dom.querySelectorAll<HTMLElement>('[data-fountain-dragging]')
       .forEach((element) => { delete element.dataset.fountainDragging; });
+    this.syncGrabbedState();
   }
 
   destroy(): void {
@@ -215,18 +240,27 @@ export class BlockHandleManager {
     this.destroyed = true;
     this.clearDrag();
     this.resizeObserver?.disconnect();
+    if (this.focusResetTimer !== undefined) clearTimeout(this.focusResetTimer);
+    if (this.keyboardFocusFrame !== undefined) cancelAnimationFrame(this.keyboardFocusFrame);
     this.dom.removeEventListener('pointermove', this.onPointerMove);
     this.dom.removeEventListener('focusin', this.onFocusIn);
     this.dom.removeEventListener('pointerdown', this.onPointerDown);
     this.controls.removeEventListener('click', this.onControlClick);
     this.controls.removeEventListener('keydown', this.onControlKeyDown);
+    this.controls.removeEventListener('pointerenter', this.onControlsPointerEnter);
+    this.controls.removeEventListener('pointerleave', this.onControlsPointerLeave);
+    this.controls.removeEventListener('focusin', this.onControlsFocusIn);
+    this.controls.removeEventListener('focusout', this.onControlsFocusOut);
     this.dragButton.removeEventListener('dragstart', this.onDragStart);
     this.dragButton.removeEventListener('dragend', this.onDragEnd);
     globalThis.removeEventListener?.('resize', this.position);
     globalThis.removeEventListener?.('scroll', this.position, true);
-    this.dom.querySelectorAll<HTMLElement>('[data-fountain-block-reorderable], [data-fountain-drop-position], [data-fountain-dragging]')
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-block-reorderable], [data-fountain-block-active], [data-fountain-block-handle-active], [data-fountain-block-grabbed], [data-fountain-drop-position], [data-fountain-dragging]')
       .forEach((element) => {
         delete element.dataset.fountainBlockReorderable;
+        delete element.dataset.fountainBlockActive;
+        delete element.dataset.fountainBlockHandleActive;
+        delete element.dataset.fountainBlockGrabbed;
         delete element.dataset.fountainDropPosition;
         delete element.dataset.fountainDragging;
       });
@@ -234,21 +268,30 @@ export class BlockHandleManager {
     delete this.mount.dataset.fountainBlockHandlesStatic;
     delete this.dom.dataset.fountainBlockHandlesEnabled;
     this.controls.remove();
+    this.dropIndicator.remove();
     this.candidates.clear();
   }
 
   private activate(key: string | undefined, force = false): void {
+    const previous = this.activeKey ? this.candidates.get(this.activeKey)?.element : undefined;
     if (!key || !this.candidates.has(key)) {
+      if (previous) this.clearActiveMarkers(previous);
       this.activeKey = undefined;
+      this.keyboardGrabbed = false;
       this.controls.hidden = true;
+      this.syncGrabbedState();
       return;
     }
     if (!force && this.activeKey === key && !this.controls.hidden) {
       return;
     }
+    if (previous && previous !== this.candidates.get(key)?.element) this.clearActiveMarkers(previous);
     this.activeKey = key;
     this.controls.hidden = false;
     const candidate = this.candidates.get(key) as BlockHandleCandidate;
+    candidate.element.dataset.fountainBlockActive = 'true';
+    this.syncEngagedState();
+    this.syncGrabbedState();
     const name = humanize(candidate.node.type.name);
     const subject = /\bblock$/i.test(name) ? name : `${name} block`;
     const labels = this.options.labels;
@@ -315,6 +358,87 @@ export class BlockHandleManager {
   private clearDropIndicator(): void {
     if (this.dropElement) delete this.dropElement.dataset.fountainDropPosition;
     this.dropElement = undefined;
+    this.dropPosition = undefined;
+    this.dropIndicator.hidden = true;
+    delete this.dropIndicator.dataset.fountainDropPath;
+    delete this.dropIndicator.dataset.fountainDropPosition;
+  }
+
+  private clearActiveMarkers(element: HTMLElement): void {
+    delete element.dataset.fountainBlockActive;
+    delete element.dataset.fountainBlockHandleActive;
+    delete element.dataset.fountainBlockGrabbed;
+  }
+
+  private syncEngagedState(): void {
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-block-handle-active]')
+      .forEach((element) => { delete element.dataset.fountainBlockHandleActive; });
+    const candidate = this.activeKey ? this.candidates.get(this.activeKey) : undefined;
+    if (candidate && (this.pointerEngaged || this.focusEngaged)) {
+      candidate.element.dataset.fountainBlockHandleActive = 'true';
+    }
+  }
+
+  private syncGrabbedState(): void {
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-block-grabbed]')
+      .forEach((element) => { delete element.dataset.fountainBlockGrabbed; });
+    const grabbed = Boolean(this.draggedKey) || this.keyboardGrabbed;
+    const key = this.draggedKey ?? this.activeKey;
+    const candidate = key ? this.candidates.get(key) : undefined;
+    if (grabbed && candidate) candidate.element.dataset.fountainBlockGrabbed = 'true';
+    if (grabbed) this.controls.dataset.fountainBlockGrabbed = this.keyboardGrabbed ? 'keyboard' : 'pointer';
+    else delete this.controls.dataset.fountainBlockGrabbed;
+    this.dragButton.setAttribute('aria-pressed', String(grabbed));
+  }
+
+  private setKeyboardGrabbed(value: boolean): void {
+    this.keyboardGrabbed = value && Boolean(this.activeKey) && this.editor.editable;
+    if (!this.keyboardGrabbed) {
+      this.keyboardFocusRestorePending = false;
+      if (this.keyboardFocusFrame !== undefined) cancelAnimationFrame(this.keyboardFocusFrame);
+      this.keyboardFocusFrame = undefined;
+    }
+    this.syncGrabbedState();
+  }
+
+  private moveActive(direction: -1 | 1): boolean {
+    const candidate = this.activeKey ? this.candidates.get(this.activeKey) : undefined;
+    if (!candidate) return false;
+    const index = candidate.path.at(-1) as number;
+    this.keyboardFocusRestorePending = this.keyboardGrabbed;
+    const moved = moveNode(this.editor, {
+      fromPath: candidate.path,
+      toParentPath: candidate.path.slice(0, -1),
+      toIndex: index + direction,
+    });
+    if (!moved) this.keyboardFocusRestorePending = false;
+    if (moved) {
+      if (this.keyboardFocusFrame !== undefined) cancelAnimationFrame(this.keyboardFocusFrame);
+      this.keyboardFocusFrame = requestAnimationFrame(() => {
+        this.keyboardFocusFrame = undefined;
+        this.keyboardFocusRestorePending = false;
+        if (!this.keyboardGrabbed || this.destroyed) return;
+        this.dragButton.focus({ preventScroll: true });
+        this.focusEngaged = true;
+        this.syncEngagedState();
+        this.syncGrabbedState();
+      });
+    }
+    return moved;
+  }
+
+  private positionDropIndicator(): void {
+    if (!this.dropElement || !this.dropPosition || !this.dropElement.isConnected) return;
+    const target = this.dropElement.getBoundingClientRect();
+    const container = this.mount.getBoundingClientRect();
+    const top = (this.dropPosition === 'before' ? target.top : target.bottom)
+      - container.top + this.mount.scrollTop;
+    this.dropIndicator.style.left = `${target.left - container.left + this.mount.scrollLeft}px`;
+    this.dropIndicator.style.top = `${top}px`;
+    this.dropIndicator.style.width = `${target.width}px`;
+    this.dropIndicator.dataset.fountainDropPath = this.dropElement.dataset.fountainPath ?? '';
+    this.dropIndicator.dataset.fountainDropPosition = this.dropPosition;
+    this.dropIndicator.hidden = false;
   }
 
   private position = (): void => {
@@ -332,6 +456,43 @@ export class BlockHandleManager {
     const maximumTop = Math.max(4, this.mount.scrollHeight - this.controls.offsetHeight - 4);
     this.controls.style.insetInlineStart = `${Math.max(0, inlineOffset)}px`;
     this.controls.style.top = `${Math.min(maximumTop, Math.max(4, wantedTop))}px`;
+    this.positionDropIndicator();
+  };
+
+  private onControlsPointerEnter = (): void => {
+    this.pointerEngaged = true;
+    this.syncEngagedState();
+  };
+
+  private onControlsPointerLeave = (): void => {
+    this.pointerEngaged = false;
+    this.syncEngagedState();
+  };
+
+  private onControlsFocusIn = (): void => {
+    if (this.focusResetTimer !== undefined) {
+      clearTimeout(this.focusResetTimer);
+      this.focusResetTimer = undefined;
+    }
+    this.focusEngaged = true;
+    this.syncEngagedState();
+  };
+
+  private onControlsFocusOut = (event: FocusEvent): void => {
+    if (event.relatedTarget instanceof globalThis.Node && this.controls.contains(event.relatedTarget)) return;
+    if (this.focusResetTimer !== undefined) clearTimeout(this.focusResetTimer);
+    // Firefox temporarily focuses the contenteditable while a model move maps
+    // selection, then the keyboard handle is restored in a microtask. Defer the
+    // real-blur decision so that internal focus handoff cannot cancel a grab.
+    this.focusResetTimer = setTimeout(() => {
+      this.focusResetTimer = undefined;
+      if (this.keyboardFocusRestorePending) return;
+      if (this.controls.contains(document.activeElement)) return;
+      this.focusEngaged = false;
+      this.pointerEngaged = false;
+      this.setKeyboardGrabbed(false);
+      this.syncEngagedState();
+    }, 0);
   };
 
   private onPointerMove = (event: PointerEvent): void => {
@@ -371,6 +532,23 @@ export class BlockHandleManager {
     const buttons = [this.dragButton, this.beforeButton, this.afterButton].filter((control) => !control.disabled);
     const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
     if (current < 0) return;
+    if (document.activeElement === this.dragButton && (event.key === 'Enter' || event.key === ' ' || event.key === 'Space')) {
+      event.preventDefault();
+      this.setKeyboardGrabbed(!this.keyboardGrabbed);
+      return;
+    }
+    if (this.keyboardGrabbed) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.setKeyboardGrabbed(false);
+        return;
+      }
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.moveActive(event.key === 'ArrowUp' ? -1 : 1);
+        return;
+      }
+    }
     const rtl = getComputedStyle(this.controls).direction === 'rtl';
     const direction = event.key === 'ArrowDown' ? 1
       : event.key === 'ArrowUp' ? -1
@@ -397,6 +575,7 @@ export class BlockHandleManager {
     event.dataTransfer.setData('text/plain', candidate.node.textContent);
     this.draggedKey = candidate.path.join('.');
     candidate.element.dataset.fountainDragging = 'true';
+    this.syncGrabbedState();
     const selection = new NodeSelection(this.editor.state.doc, candidate.path);
     if (!this.editor.state.selection.eq(selection)) this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
   };

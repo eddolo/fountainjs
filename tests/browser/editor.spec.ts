@@ -3239,6 +3239,102 @@ test('reorders nested blocks with accessible controls, drop indicators, drag, an
   expect(external).toEqual({ prevented: true, content: ['Outside', 'Nested oneNested two', 'Tail'] });
 });
 
+test('shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes', async ({ page }) => {
+  test.slow();
+  await page.goto('/browser-tests.html');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const instance = (globalThis as any).fountainBrowserTest.editor;
+    const { schema } = instance.state;
+    const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const cell = (text: string) => schema.node('table_cell', {}, [paragraph(text)]);
+    instance.dispatch(instance.state.createTransaction().replace(0, instance.state.doc.childCount, [
+      paragraph('A deliberately long multi-line paragraph identifies the entire structural block even when browser layout wraps its words across several visible lines in the editing surface.'),
+      schema.node('heading', { level: 2 }, [schema.text('Structural heading')]),
+      schema.node('bullet_list', {}, [
+        schema.node('list_item', {}, [paragraph('First list item')]),
+        schema.node('list_item', {}, [paragraph('Second list item')]),
+      ]),
+      schema.node('table', {}, [
+        schema.node('table_row', {}, [cell('A'), cell('B')]),
+        schema.node('table_row', {}, [cell('C'), cell('D')]),
+      ]),
+      schema.node('image_super', {
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+        alt: 'Reorder image', caption: 'Media block', width: '160px', height: '72px',
+      }),
+      schema.node('audio', { src: '/reorder-audio.mp3', title: 'Reorder audio', caption: 'Audio media block' }),
+      schema.node('browser_counter', { count: 4 }),
+      paragraph('Trailing target'),
+    ]));
+  });
+  await editor.evaluate((element) => { element.style.width = '460px'; });
+
+  const types = ['paragraph', 'heading', 'bullet_list', 'table', 'image_super', 'audio', 'browser_counter'];
+  for (let index = 0; index < types.length; index += 1) {
+    const block = editor.locator(`:scope > [data-fountain-path="${index}"]`);
+    await block.hover();
+    await expect(block).toHaveAttribute('data-fountain-node', types[index] as string);
+    await expect(block).toHaveAttribute('data-fountain-block-active', 'true');
+    await expect(block).not.toHaveCSS('box-shadow', 'none');
+    const label = `${types[index]?.replace(/_/g, ' ')} block controls`;
+    await expect(page.getByRole('toolbar', { name: new RegExp(label, 'i') })).toBeVisible();
+  }
+  expect((await editor.locator(':scope > [data-fountain-path="0"]').boundingBox())?.height ?? 0).toBeGreaterThan(45);
+
+  const custom = editor.locator(':scope > [data-fountain-path="6"]');
+  await custom.hover();
+  const controls = page.getByRole('toolbar', { name: 'Browser Counter block controls' });
+  const drag = controls.getByRole('button', { name: 'Drag Browser Counter block' });
+  await drag.focus();
+  await expect(custom).toHaveAttribute('data-fountain-block-handle-active', 'true');
+  await drag.press('Space');
+  await expect(drag).toHaveAttribute('aria-pressed', 'true');
+  await expect(custom).toHaveAttribute('data-fountain-block-grabbed', 'true');
+  await expect(controls).toHaveAttribute('data-fountain-block-grabbed', 'keyboard');
+  await drag.press('ArrowUp');
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.type.name)
+  ))).toEqual(['paragraph', 'heading', 'bullet_list', 'table', 'image_super', 'browser_counter', 'audio', 'paragraph']);
+  await expect(editor.locator(':scope > [data-fountain-path="5"]')).toHaveAttribute('data-fountain-block-grabbed', 'true');
+  await drag.press('Escape');
+  await expect(editor.locator('[data-fountain-block-grabbed]')).toHaveCount(0);
+
+  const pointerState = await page.evaluate(() => {
+    const source = document.querySelector<HTMLElement>('[data-fountain-path="5"]');
+    source?.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
+    const dragControl = document.querySelector<HTMLElement>('[data-fountain-block-action="drag"]');
+    const target = document.querySelector<HTMLElement>('[data-fountain-path="1"]');
+    if (!source || !dragControl || !target) throw new Error('Missing visual reorder fixture.');
+    const transfer = new DataTransfer();
+    dragControl.dispatchEvent(new DragEvent('dragstart', { bubbles: true, cancelable: true, dataTransfer: transfer }));
+    const bounds = target.getBoundingClientRect();
+    target.dispatchEvent(new DragEvent('dragover', {
+      bubbles: true, cancelable: true, dataTransfer: transfer,
+      clientX: bounds.left + 20, clientY: bounds.top + 1,
+    }));
+    const indicator = document.querySelector<HTMLElement>('[data-fountain-block-drop-indicator]');
+    return {
+      sourceGrabbed: source.dataset.fountainBlockGrabbed,
+      sourceDragging: source.dataset.fountainDragging,
+      targetPosition: target.dataset.fountainDropPosition,
+      indicatorHidden: indicator?.hidden,
+      indicatorPath: indicator?.dataset.fountainDropPath,
+      indicatorPosition: indicator?.dataset.fountainDropPosition,
+      indicatorOutsideEditor: indicator ? !document.querySelector('[role="textbox"]')?.contains(indicator) : false,
+    };
+  });
+  expect(pointerState).toEqual({
+    sourceGrabbed: 'true',
+    sourceDragging: 'true',
+    targetPosition: 'before',
+    indicatorHidden: false,
+    indicatorPath: '1',
+    indicatorPosition: 'before',
+    indicatorOutsideEditor: true,
+  });
+});
+
 test('replaces a DOM selection that crosses block boundaries', async ({ page }) => {
   await page.evaluate(() => {
     const wrappers = document.querySelectorAll<HTMLElement>('[data-fountain-text-path]');
@@ -4565,6 +4661,348 @@ test('keeps rich and multiline paste structurally predictable in the public edit
   await expect(editor.locator(':scope > p', { hasText: 'Third pasted line' })).toBeVisible();
 });
 
+test('round-trips a Fountain multi-block selection through Chromium clipboard HTML', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium\'s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/browser-tests.html');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const instance = (globalThis as any).fountainBrowserTest.editor;
+    const { schema } = instance.state;
+    instance.dispatch(instance.state.createTransaction().replace(0, instance.state.doc.childCount, [
+      schema.node('heading', { level: 1 }, [schema.text('Alpha title', [schema.mark('strong')])]),
+      schema.node('paragraph', {}, [schema.text('Middle paragraph')]),
+      schema.node('browser_counter', { count: 5, pageHeight: 0 }),
+      schema.node('heading', { level: 2 }, [schema.text('Omega title')]),
+      schema.node('paragraph', {}, [schema.text('Destination')]),
+    ]));
+  });
+  await page.evaluate(() => {
+    const textNode = (selector: string) => {
+      const container = document.querySelector<HTMLElement>(selector);
+      return container ? document.createTreeWalker(container, NodeFilter.SHOW_TEXT).nextNode() : null;
+    };
+    const start = textNode('[data-fountain-path="0"] [data-fountain-text-path]');
+    const end = textNode('[data-fountain-path="3"] [data-fountain-text-path]');
+    if (!start || !end) throw new Error('Missing internal clipboard fixture text.');
+    const range = document.createRange();
+    range.setStart(start, 6);
+    range.setEnd(end, 5);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('Control+c');
+  await editor.locator('[data-fountain-path="4"] [data-fountain-text-path]').evaluate((element) => {
+    const text = element.firstChild;
+    if (!text) throw new Error('Missing clipboard destination text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('Control+v');
+
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => ({
+      type: node.type.name,
+      text: node.textContent,
+    }))
+  ))).toEqual([
+    { type: 'heading', text: 'Alpha title' },
+    { type: 'paragraph', text: 'Middle paragraph' },
+    { type: 'browser_counter', text: '' },
+    { type: 'heading', text: 'Omega title' },
+    { type: 'paragraph', text: 'Destination' },
+    { type: 'heading', text: 'title' },
+    { type: 'paragraph', text: 'Middle paragraph' },
+    { type: 'browser_counter', text: '' },
+    { type: 'heading', text: 'Omega' },
+    { type: 'paragraph', text: '' },
+  ]);
+  await expect(editor.locator('[data-fountain-path="5"] strong')).toHaveText('title');
+  await expect(editor.locator('[data-fountain-path="7"]')).toContainText('Count 5');
+});
+
+test('round-trips an extension-owned Fountain atom through the Chromium clipboard', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium\'s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/browser-tests.html');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { schema } = contract.editor.state;
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, contract.editor.state.doc.childCount, [
+      schema.node('browser_counter', { count: 17, pageHeight: 0 }),
+      schema.node('paragraph', {}, [schema.text('Destination')]),
+    ]));
+    contract.view.focus();
+    contract.commands.commands.selectNode([0]);
+  });
+  await expect(editor.locator('[data-fountain-path="0"]')).toHaveAttribute('data-fountain-selected-node', 'true');
+  await page.keyboard.press('Control+c');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('Count 17');
+  await editor.locator('[data-fountain-path="1"] [data-fountain-text-path]').evaluate((element) => {
+    const text = element.firstChild;
+    if (!text) throw new Error('Missing atom clipboard destination text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await expect.poll(() => page.evaluate(() => {
+    const selection = (globalThis as any).fountainBrowserTest.editor.state.selection;
+    return { kind: selection.kind, path: selection.path, from: selection.from };
+  })).toEqual({ kind: 'text', path: [1, 0], from: 'Destination'.length });
+  await page.keyboard.press('Control+v');
+
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => ({
+      type: node.type.name,
+      attrs: node.attrs,
+      text: node.textContent,
+    }))
+  ))).toEqual([
+    { type: 'browser_counter', attrs: { count: 17, pageHeight: 0 }, text: '' },
+    { type: 'paragraph', attrs: { align: 'left' }, text: 'Destination' },
+    { type: 'browser_counter', attrs: { count: 17, pageHeight: 0 }, text: '' },
+    { type: 'paragraph', attrs: { align: 'left' }, text: '' },
+  ]);
+});
+
+test('round-trips a complex whole Fountain document through the Chromium clipboard exactly', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium\'s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/browser-tests.html');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const source = await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { schema } = contract.editor.state;
+    const paragraph = (content: any[]) => schema.node('paragraph', { align: 'left' }, content);
+    const textParagraph = (text: string) => paragraph([schema.text(text)]);
+    const cell = (type: 'table_header' | 'table_cell', text: string, attrs: Record<string, unknown> = {}) => (
+      schema.node(type, attrs, [textParagraph(text)])
+    );
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, contract.editor.state.doc.childCount, [
+      schema.node('heading', { level: 1, align: 'center' }, [
+        schema.text('Portable ', [schema.mark('strong')]),
+        schema.text('release', [schema.mark('em'), schema.mark('link', {
+          href: '/release', title: 'Release details', target: '_self',
+        })]),
+      ]),
+      schema.node('ordered_list', { start: 3 }, [
+        schema.node('list_item', {}, [textParagraph('First ordered item')]),
+        schema.node('list_item', {}, [
+          textParagraph('Parent item'),
+          schema.node('bullet_list', {}, [
+            schema.node('list_item', {}, [textParagraph('Nested child')]),
+          ]),
+        ]),
+      ]),
+      schema.node('table', {}, [
+        schema.node('table_row', {}, [
+          cell('table_header', 'Quarter', { colspan: 2, rowspan: 1, colwidth: [120, 180], scope: 'colgroup' }),
+        ]),
+        schema.node('table_row', {}, [
+          cell('table_cell', 'North', { colspan: 1, rowspan: 2, colwidth: [120] }),
+          cell('table_cell', '10', { colspan: 1, rowspan: 1, colwidth: [180] }),
+        ]),
+        schema.node('table_row', {}, [
+          cell('table_cell', '20', { colspan: 1, rowspan: 1, colwidth: [180] }),
+        ]),
+      ]),
+      schema.node('image_super', {
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+        alt: 'Portable diagram', title: 'Architecture', caption: 'The whole image node survives.',
+        width: '320px', height: '180px', align: 'right', srcset: '', sizes: '', loading: 'eager', decoding: 'sync',
+      }),
+      schema.node('audio', {
+        src: '/briefing.mp3', title: 'Release briefing', caption: 'Timestamped briefing',
+        controls: true, autoplay: false, loop: true, muted: false, preload: 'none',
+        controlsList: 'nodownload', crossOrigin: 'anonymous', disableRemotePlayback: true,
+        tracks: [{ src: '/briefing-en.vtt', kind: 'captions', srclang: 'en', label: 'English', default: true }],
+      }),
+      schema.node('browser_counter', { count: 29, pageHeight: 0 }),
+      paragraph([
+        schema.text('Inline image: '),
+        schema.node('inline_image', {
+          src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+          alt: 'badge', title: 'Inline badge', width: '1em', height: '1em', align: 'center',
+          srcset: '', sizes: '', loading: 'lazy', decoding: 'async',
+        }),
+        schema.text(' complete.'),
+      ]),
+    ]));
+    contract.view.focus();
+    contract.commands.commands.selectAll();
+    return contract.editor.getJSON();
+  });
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('all');
+  await page.keyboard.press('Control+c');
+
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { schema } = contract.editor.state;
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, contract.editor.state.doc.childCount, [
+      schema.node('paragraph', {}, [schema.text('Replace this destination')]),
+    ]));
+    contract.view.focus();
+    contract.commands.commands.selectAll();
+  });
+  await page.keyboard.press('Control+v');
+
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(source);
+  await expect(editor.locator('[data-fountain-node="browser_counter"]')).toContainText('Count 29');
+  await expect(editor.locator('audio track[kind="captions"][srclang="en"]')).toHaveCount(1);
+  await expect(editor.locator('td[rowspan="2"]')).toContainText('North');
+});
+
+test('copies clean semantic Fountain HTML into an external browser editor', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium\'s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/browser-tests.html');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { schema } = contract.editor.state;
+    const paragraph = (content: any[]) => schema.node('paragraph', {}, content);
+    const cell = (text: string) => schema.node('table_cell', {}, [paragraph([schema.text(text)])]);
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, contract.editor.state.doc.childCount, [
+      schema.node('heading', { level: 2 }, [schema.text('Release notes')]),
+      paragraph([
+        schema.text('Portable ', [schema.mark('strong')]),
+        schema.text('documentation', [schema.mark('link', { href: '/docs', title: 'Docs', target: '_self' })]),
+      ]),
+      schema.node('ordered_list', { start: 4 }, [
+        schema.node('list_item', {}, [paragraph([schema.text('Preserve structure')])]),
+        schema.node('list_item', {}, [paragraph([schema.text('Use standard HTML')])]),
+      ]),
+      schema.node('table', {}, [schema.node('table_row', {}, [cell('Feature'), cell('Ready')])]),
+      schema.node('image_super', {
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+        alt: 'Portable diagram', caption: 'Architecture preview', width: '120px', height: '80px',
+      }),
+      paragraph([schema.text('')]),
+    ]));
+    contract.view.focus();
+  });
+  await editor.press('Control+a');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('all');
+  await page.keyboard.press('Control+c');
+
+  const external = await page.evaluateHandle(() => {
+    const target = document.createElement('div');
+    target.contentEditable = 'true';
+    target.setAttribute('role', 'textbox');
+    target.setAttribute('aria-label', 'External browser editor');
+    document.body.appendChild(target);
+    target.focus();
+    return target;
+  });
+  await page.keyboard.press('Control+v');
+  const target = page.getByRole('textbox', { name: 'External browser editor' });
+  await expect(target.getByRole('heading', { name: 'Release notes', level: 2 })).toBeVisible();
+  await expect(target.locator('strong')).toHaveText('Portable ');
+  await expect(target.locator('a[href="/docs"]')).toHaveText('documentation');
+  await expect(target.locator('ol[start="4"] li')).toHaveText(['Preserve structure', 'Use standard HTML']);
+  await expect(target.locator('td')).toHaveText(['Feature', 'Ready']);
+  await expect(target.locator('figure img[alt="Portable diagram"]')).toHaveCount(1);
+  await expect(target.locator('figcaption')).toHaveText('Architecture preview');
+  await expect(target.locator('[data-fountain-path], [data-fountain-widget], [data-fountain-selected-node], [data-fountain-clipboard]')).toHaveCount(0);
+  await external.dispose();
+});
+
+test('copies readable Fountain text into a plain-text external editor', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium\'s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/browser-tests.html');
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { schema } = contract.editor.state;
+    const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const item = (text: string) => schema.node('list_item', {}, [paragraph(text)]);
+    const cell = (text: string) => schema.node('table_cell', {}, [paragraph(text)]);
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, contract.editor.state.doc.childCount, [
+      schema.node('heading', { level: 2 }, [schema.text('Clipboard checklist')]),
+      schema.node('bullet_list', {}, [item('Copy structure'), item('Keep it readable')]),
+      schema.node('table', {}, [
+        schema.node('table_row', {}, [cell('Format'), cell('Result')]),
+        schema.node('table_row', {}, [cell('Text'), cell('Ready')]),
+      ]),
+      schema.node('image_super', {
+        src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+        alt: 'Clipboard diagram', caption: '',
+      }),
+    ]));
+    contract.view.focus();
+    contract.commands.commands.selectAll();
+  });
+  await page.keyboard.press('Control+c');
+  await page.evaluate(() => {
+    const textarea = document.createElement('textarea');
+    textarea.setAttribute('aria-label', 'External plain-text editor');
+    document.body.appendChild(textarea);
+    textarea.focus();
+  });
+  await page.keyboard.press('Control+v');
+  await expect(page.getByRole('textbox', { name: 'External plain-text editor' })).toHaveValue([
+    'Clipboard checklist',
+    '- Copy structure',
+    '- Keep it readable',
+    'Format\tResult',
+    'Text\tReady',
+    '[Image: Clipboard diagram]',
+    '',
+  ].join('\n'));
+});
+
+test('copies math to external rich and plain-text editors without renderer controls', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium\'s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const source = editor.locator('[data-fountain-math="block"]').filter({ hasText: '\\sum_{i=1}^{n} i' });
+  await source.click();
+  await expect(page.locator('[aria-label="Edit math source"]:visible')).toBeVisible();
+  await page.keyboard.press('Control+c');
+
+  await page.evaluate(() => {
+    const target = document.createElement('div');
+    target.contentEditable = 'true';
+    target.setAttribute('role', 'textbox');
+    target.setAttribute('aria-label', 'External math rich editor');
+    document.body.appendChild(target);
+    target.focus();
+  });
+  await page.keyboard.press('Control+v');
+  const richTarget = page.getByRole('textbox', { name: 'External math rich editor' });
+  await expect(richTarget.locator('[data-fountain-math="block"]')).toHaveAttribute(
+    'data-latex',
+    '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}',
+  );
+  await expect(richTarget.locator('code')).toHaveText('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
+  await expect(richTarget.locator('input, button, [data-fountain-path], [data-fountain-selected-node]')).toHaveCount(0);
+
+  await source.click();
+  await page.keyboard.press('Control+c');
+  await page.evaluate(() => {
+    const target = document.createElement('textarea');
+    target.setAttribute('aria-label', 'External math plain-text editor');
+    document.body.appendChild(target);
+    target.focus();
+  });
+  await page.keyboard.press('Control+v');
+  await expect(page.getByRole('textbox', { name: 'External math plain-text editor' }))
+    .toHaveValue('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
+});
+
 test('renders repeated empty paragraphs and removes each visible line', async ({ page }) => {
   await page.goto('/demos/go-docs-service.html');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
@@ -4995,7 +5433,9 @@ test('virtualizes 100,000 blocks while preserving scrolling, distant selection, 
       copyMiddleBefore: boolean;
       copyMiddleDuring: boolean;
       copyRichMiddleDuring: boolean;
+      copyHandled: boolean;
       copySelectionComplete: boolean;
+      copyRichSelectionComplete: boolean;
       copyMiddleAfter: boolean;
       finalMounted: number;
       totalHeight: number;
@@ -5009,9 +5449,11 @@ test('virtualizes 100,000 blocks while preserving scrolling, distant selection, 
     blockCount: 100_000,
     selectedMounted: true,
     copyMiddleBefore: false,
-    copyMiddleDuring: true,
-    copyRichMiddleDuring: true,
+    copyMiddleDuring: false,
+    copyRichMiddleDuring: false,
+    copyHandled: true,
     copySelectionComplete: true,
+    copyRichSelectionComplete: true,
     copyMiddleAfter: false,
     remainingDOM: 0,
     printMounted: 300,

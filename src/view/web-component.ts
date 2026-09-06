@@ -3,6 +3,7 @@ import { createEditor, setContent, type Editor, type EditorState } from '../core
 import { CoreSchemaSpec } from '../extensions';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import type { BlockHandleOptions } from './block-handles';
+import type { ExternalPasteOptions } from './paste';
 import { EditorView, type EditorFocusPosition, type EditorViewVirtualizationOptions } from './view';
 
 export interface FountainElementChangeDetail {
@@ -29,6 +30,7 @@ export interface RegisterFountainElementOptions {
   blockHandles?: boolean | BlockHandleOptions;
   virtualization?: boolean | EditorViewVirtualizationOptions;
   onError?: (error: unknown) => void;
+  paste?: ExternalPasteOptions;
 }
 
 /**
@@ -85,6 +87,7 @@ export function registerFountainElement(
         blockHandles: options.blockHandles,
         virtualization: options.virtualization,
         onError: options.onError,
+        paste: options.paste,
       });
       this.unsubscribe = this.currentEditor.subscribe((state, transaction) => {
         this.pendingValue = state.doc.toJSON();

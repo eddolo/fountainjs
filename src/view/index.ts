@@ -7,3 +7,4 @@ export * from './media';
 export * from './menu-position';
 export * from './block-handles';
 export * from './virtual-layout';
+export * from './paste';

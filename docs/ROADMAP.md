@@ -380,9 +380,23 @@ These are useful, narrower ideas. They should become ledger rows only after an
 owner defines persistence, selection, accessibility, collaboration, format,
 performance, and browser behavior:
 
-- explicit Word, Google Docs, and Excel paste normalization (`DOC-19`), plus
-  property-by-property fixtures for MathML/LaTeX, semantic ruby/footnotes,
-  tracked changes, comments, and unknown application clipboard formats;
+- maintain the DOC-19 normalization contract with property-by-property fixtures
+  captured from more Word, Google Docs, Excel, MathML/LaTeX, semantic
+  ruby/footnote, revision, comment, and unknown application clipboard variants;
+- optional provider-neutral audio/video transcription: Fountain owns commands,
+  progress/error state, timestamped transcript nodes or attributes, portable
+  JSON, selection, and undo; the host chooses a local model, its own server, or
+  an external service. No account, credential, upload destination, or paid SaaS
+  becomes a core dependency;
+- a complete interaction laboratory that mounts an editor capable of every
+  supplied document/UI behavior, drives scripted real-browser journeys through
+  each action and transition, records screenshots/video where useful, and checks
+  both model state and rendered outcome. This complements focused unit and
+  browser matrices; a recording alone is not a correctness assertion;
+- pair every public capability demo with its developer-guide/API recipe and link
+  both directions. Keep the ten environment demos as the portability proof and
+  add focused capability labs—starting with block reordering—without pretending
+  an environment count is a feature count;
 - a visible privacy-aware “Report a bug” route on the website and every demo,
   backed by the existing structured GitHub form; request Fountain version,
   framework/runtime, browser/OS, minimal reproduction, expected/actual behavior,

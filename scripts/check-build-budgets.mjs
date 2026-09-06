@@ -119,7 +119,9 @@ const limits = Object.freeze({
   // Generated footnote labels add a small marker rule without affecting hosts
   // that omit the optional pages schema. Contextual table controls and image
   // attachment previews add the labelled interaction and responsive states.
-  'dist/styles.css': 67 * kibibyte,
+  // Whole-block hover/focus/grab treatment and the independent drop-position
+  // overlay add about 1.1 KiB to the single supplied stylesheet.
+  'dist/styles.css': 69 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -207,8 +209,11 @@ const limits = Object.freeze({
   // selection add about 5.3/3.7 KiB across the normal React and core chunks.
   // The default schema-aware trailing-block invariant and cell-focus retention
   // add about 2.2/2.5 KiB while every consumer entry remains below its own cap.
-  'all ESM runtime code': 1124 * kibibyte,
-  'all CommonJS runtime code': 941 * kibibyte,
+  // Source-aware Office/Docs/MathML normalization plus exact Fountain and
+  // standards-based external clipboard flavors add about 20.2/17.9 KiB. The
+  // root, React, and every optional consumer-facing entry keep their own caps.
+  'all ESM runtime code': 1150 * kibibyte,
+  'all CommonJS runtime code': 965 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

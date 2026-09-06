@@ -69,7 +69,19 @@ Home/End traverse enabled toolbar controls, including right-to-left layouts. But
 accessible names and hover titles, and disabled directions are real `disabled`
 states. Coarse-pointer targets are at least 44 by 44 CSS pixels.
 
-While dragging, only schema-valid targets show a visible before/after rule.
+The active model block—not merely its handle—receives a subtle full-box visual
+target while the block or its handle is hovered or focused. Grabbing the handle
+adds a stronger state to that same whole block. Press Space or Enter to grab it,
+Arrow Up/Down to perform validated moves while it remains grabbed, and Escape
+to release it. `aria-pressed` and the visible block state change together, so
+keyboard and pointer users receive the same structural feedback. This applies
+to wrapped multi-line paragraphs, headings, whole lists and tables, media,
+widgets, and custom block NodeViews.
+
+While dragging, only schema-valid targets show a visible before/after rule. The
+rule is a separate overlay from both the target-block highlight and the grabbed
+source state; it answers where the block will land rather than which block is
+being moved.
 The input layer climbs from the deepest hovered block to an eligible ancestor,
 so dragging a list item over its own paragraph cannot create an invalid tree.
 A successful drop is one normal transaction and one undo step. Drag state,
@@ -88,8 +100,17 @@ semantics, clipboard output, and mutation reconciliation. Node DOM retains
 stable `data-fountain-path` and `data-fountain-block-reorderable` hooks so a host
 may provide entirely different CSS or controls.
 
+The supplied DOM implementation also projects transient
+`data-fountain-block-active`, `data-fountain-block-handle-active`,
+`data-fountain-block-grabbed`, and drop-indicator attributes for custom themes
+and automated accessibility tests. These are view state only: mutation
+reconciliation ignores them and preview/export code removes them.
+
 Import `fountainjs-editor/styles.css` for the supplied layout, focus treatment,
 drag state, and drop indicators.
+
+Try the same public option in the [homepage editor](https://eddolo.github.io/fountainjs/#playground),
+then use this guide as the API counterpart to that live behavior.
 
 ## Candidate and label policy
 

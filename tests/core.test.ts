@@ -886,6 +886,21 @@ describe('document model and transactions', () => {
     expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'table']);
     expect(editor.state.selection.eq(Selection.cursor([1, 0, 0, 2, 0], 10))).toBe(true);
   });
+
+  it('inserts a single leaf block instead of mistaking its empty content for inline content', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Destination' }] }] },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0], 'Destination'.length)));
+    const divider = editor.state.schema.node('doc', {}, [editor.state.schema.node('horizontal_rule')]);
+
+    expect(insertDocument(editor, divider)).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual([
+      'paragraph', 'horizontal_rule', 'paragraph',
+    ]);
+    expect(editor.state.doc.content.map((node) => node.textContent)).toEqual(['Destination', '', '']);
+  });
 });
 
 describe('formats', () => {

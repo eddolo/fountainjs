@@ -957,11 +957,21 @@ remains absent from the package root. See the [NodeView API](docs/API.md#custom-
 
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME
-input; configurable input/paste rules; multiline and rich-HTML paste; image and
-asset paste/drop/upload; schema-safe nested drag/button reordering; find/replace; Markdown shortcuts;
+input; configurable input/paste rules; exact same-schema Fountain clipboard
+documents; clean semantic HTML and readable external-editor copy; source-aware
+Word/Docs/Excel/MathML paste normalization and loss reports; multiline and
+rich-HTML paste; image and asset paste/drop/upload; schema-safe nested
+drag/button reordering; find/replace; Markdown shortcuts;
 and configurable undo/redo that groups adjacent browser input.
 JSON is the lossless source of truth; Markdown, safe HTML, and plain text are
 interoperability boundaries.
+
+Copy therefore writes three clipboard flavors: versioned Fountain JSON for an
+exact compatible Fountain destination, semantic HTML for another rich editor,
+and readable text for a text-only editor. The receiving Fountain schema still
+validates the exact payload and falls back to HTML/text when an extension is not
+installed. Private comments, presence, versions, upload state, credentials, and
+other host records are never copied as document content.
 
 ```ts
 const schema = new Schema(CoreSchemaSpec);
@@ -1266,7 +1276,7 @@ behavioural tests, production and package builds, plus Playwright contracts in
 Chromium, Firefox, WebKit, emulated Pixel Chrome, and emulated iPhone Safari.
 Failed browser runs retain traces and screenshots.
 
-The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes.
+The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes. Capability-focused labs are paired with matching developer/API explanations so live behavior and its integration contract can be read in either direction.
 
 ## Project status
 
@@ -1274,7 +1284,8 @@ The tested release supports multi-paragraph text selection plus mapped node,
 gap, all-document, and rectangular cell selections; formatting across marked
 and nested text; block splitting and joining; attributed text and alignment;
 find/replace; rich content insertion; image URL/upload/paste/drop workflows;
-reusable input and paste rules; links, lists, tasks, code, tables, local history,
+exact internal and semantic external clipboard exchange; source-aware external
+paste normalization; reusable input and paste rules; links, lists, tasks, code, tables, local history,
 interactive NodeViews, grouped browser input, structured clipboard and selected-
 nested block drag/button reordering, mentions, emoji, typography, character limits, a live extensible
 slash-command registry, framework-neutral bubble/floating menus, browser-event

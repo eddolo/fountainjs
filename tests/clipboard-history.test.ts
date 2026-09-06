@@ -32,7 +32,7 @@ function clipboardEvent(type: 'copy' | 'cut' | 'paste', text = ''): ClipboardEve
 }
 
 describe('optional clipboard history', () => {
-  it('captures only editor copy events, deduplicates entries, and leaves native copy alone', async () => {
+  it('captures only editor copy events and deduplicates entries without owning paste', async () => {
     const kit = composeExtensions([...StarterKit.extensions, ClipboardHistoryExtension]);
     const editor = createEditor({
       schema: kit.schema,
@@ -45,7 +45,7 @@ describe('optional clipboard history', () => {
     editor.dispatch(editor.state.createTransaction().setSelection(Selection.range([0, 0], 0, [0, 0], 5)));
     const copy = clipboardEvent('copy');
     view.dom.dispatchEvent(copy);
-    expect(copy.defaultPrevented).toBe(false);
+    expect(copy.defaultPrevented).toBe(true);
     await waitForCapture();
     expect(getClipboardHistoryState(editor)?.entries.map((entry) => entry.text)).toEqual(['First']);
 

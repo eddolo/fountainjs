@@ -496,7 +496,9 @@ test('keeps a 100,000-block virtual document bounded on mobile engines', async (
       composedText: string;
       copyMiddleDuring: boolean;
       copyRichMiddleDuring: boolean;
+      copyHandled: boolean;
       copySelectionComplete: boolean;
+      copyRichSelectionComplete: boolean;
       copyMiddleAfter: boolean;
       finalMounted: number;
       remainingDOM: number;
@@ -510,9 +512,11 @@ test('keeps a 100,000-block virtual document bounded on mobile engines', async (
   expect(metrics.finalMounted).toBeLessThan(100);
   expect(metrics.selectedMounted).toBe(true);
   expect(metrics.composedText).toBe('東京Virtual browser block 75000');
-  expect(metrics.copyMiddleDuring).toBe(true);
-  expect(metrics.copyRichMiddleDuring).toBe(true);
+  expect(metrics.copyMiddleDuring).toBe(false);
+  expect(metrics.copyRichMiddleDuring).toBe(false);
+  expect(metrics.copyHandled).toBe(true);
   expect(metrics.copySelectionComplete).toBe(true);
+  expect(metrics.copyRichSelectionComplete).toBe(true);
   expect(metrics.copyMiddleAfter).toBe(false);
   expect(metrics.remainingDOM).toBe(0);
   expect(metrics.printMounted).toBe(300);

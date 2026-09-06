@@ -21,12 +21,15 @@ import {
   serializeTableSelection,
   type Editor,
   type AnySelection,
+  AllSelection,
   NodeSelection,
   CellSelection,
+  Node,
   Selection,
 } from '../core';
+import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
-import { getNodeAtPath } from '../core/transaction/path';
+import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
   insertAssetFile,
@@ -40,6 +43,78 @@ import {
   type BlockHandleManager,
 } from './block-handles';
 import type { SelectionHandler } from './selection-handler';
+import {
+  createExternalPasteReport,
+  detectExternalPasteSource,
+  normalizeExternalPasteHTML,
+  type ExternalPasteIssue,
+  type ExternalPasteOptions,
+  type ExternalPasteReport,
+} from './paste';
+
+const FOUNTAIN_CLIPBOARD_MIME = 'application/x-fountainjs+json';
+const MAX_FOUNTAIN_CLIPBOARD_CHARACTERS = 5_000_000;
+
+interface FountainClipboardPayload {
+  readonly version: 1;
+  readonly document: import('../core').NodeJSON;
+}
+
+function clipboardText(node: Node): string {
+  if (node.isText) return node.text ?? '';
+  const childText = () => node.content.map(clipboardText).join('');
+  switch (node.type.name) {
+    case 'doc': return node.content.map(clipboardText).join('\n');
+    case 'hard_break': return '\n';
+    case 'horizontal_rule': return '---';
+    case 'blockquote': return node.content.map(clipboardText).join('\n')
+      .split('\n').map((line) => `> ${line}`).join('\n');
+    case 'bullet_list': return node.content.map((item) => (
+      `- ${clipboardText(item).split('\n').join('\n  ')}`
+    )).join('\n');
+    case 'ordered_list': {
+      const start = Number(node.attrs.start) || 1;
+      return node.content.map((item, index) => (
+        `${start + index}. ${clipboardText(item).split('\n').join('\n   ')}`
+      )).join('\n');
+    }
+    case 'task_list': return node.content.map((item) => (
+      `${item.attrs.checked ? '[x]' : '[ ]'} ${clipboardText(item).split('\n').join('\n    ')}`
+    )).join('\n');
+    case 'list_item': case 'task_item': return node.content.map(clipboardText).join('\n');
+    case 'table': return node.content.map(clipboardText).join('\n');
+    case 'table_row': return node.content.map(clipboardText).join('\t');
+    case 'table_header': case 'table_cell': return node.content.map(clipboardText).join('\n');
+    case 'paragraph': case 'heading': case 'code_block': case 'figcaption': return childText();
+    default: return node.textContent;
+  }
+}
+
+function selectedTextDocument(document: Node, selection: Selection): Node | null {
+  if (selection.isCollapsed) return null;
+  const visit = (node: Node, path: readonly number[]): Node | null => {
+    if (node.isText) {
+      if (comparePaths(path, selection.path) < 0 || comparePaths(path, selection.endPath) > 0) return null;
+      const from = comparePaths(path, selection.path) === 0 ? selection.from : 0;
+      const to = comparePaths(path, selection.endPath) === 0 ? selection.to : node.text?.length ?? 0;
+      if (to < from || (to === from && selection.isSingleText)) return null;
+      return node.withText((node.text ?? '').slice(from, to));
+    }
+    const content = node.content.flatMap((child, index) => {
+      const selected = visit(child, [...path, index]);
+      return selected ? [selected] : [];
+    });
+    if (content.length) return node.copy(content);
+    const afterStart = comparePaths(path, selection.path) > 0;
+    const beforeEnd = comparePaths(path, selection.endPath) < 0;
+    return node.childCount === 0 && afterStart && beforeEnd ? node : null;
+  };
+  const content = document.content.flatMap((child, index) => {
+    const selected = visit(child, [index]);
+    return selected ? [selected] : [];
+  });
+  return content.length ? document.copy(content) : null;
+}
 
 function sameMarks(left: readonly import('../core').Mark[], right: readonly import('../core').Mark[]): boolean {
   return left.length === right.length && left.every((mark) => right.some((candidate) => candidate.eq(mark)));
@@ -54,6 +129,7 @@ export interface InputManagerOptions {
   blockHandles?: BlockHandleManager;
   /** Mounts any virtualized selection content before the native clipboard reads it. */
   prepareClipboard?: () => void;
+  paste?: ExternalPasteOptions;
 }
 
 export class InputManager {
@@ -251,15 +327,59 @@ export class InputManager {
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
     this.selections.capture();
-    for (const plugin of this.editor.state.plugins) {
-      if (plugin.spec.props?.handlePaste?.(this.editor, event)) {
-        event.preventDefault();
-        return;
+    const fountain = event.clipboardData?.getData(FOUNTAIN_CLIPBOARD_MIME) ?? '';
+    let fountainFallback: ExternalPasteIssue | null = null;
+    if (fountain && fountain.length <= MAX_FOUNTAIN_CLIPBOARD_CHARACTERS) {
+      try {
+        const payload = JSON.parse(fountain) as Partial<FountainClipboardPayload>;
+        if (payload.version !== 1 || !payload.document) throw new TypeError('Unsupported Fountain clipboard payload.');
+        const document = this.editor.state.schema.nodeFromJSON(payload.document);
+        if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
+          event.preventDefault();
+          this.reportPaste(createExternalPasteReport(
+            'fountain',
+            'inserted-fountain-document',
+            fountain,
+            fountain,
+          ));
+          return;
+        }
+      } catch { /* The receiving schema can legitimately omit the copied extension. */ }
+      fountainFallback = Object.freeze({
+        code: 'fountain-document-fallback',
+        count: 1,
+        message: 'The exact Fountain document was incompatible with this editor schema; portable HTML or text was used instead.',
+        lossy: true,
+      });
+    } else if (fountain) {
+      fountainFallback = Object.freeze({
+        code: 'fountain-document-fallback',
+        count: 1,
+        message: 'The exact Fountain clipboard document exceeded the safe import limit; portable HTML or text was used instead.',
+        lossy: true,
+      });
+    }
+    const clipboardHTML = event.clipboardData?.getData('text/html') ?? '';
+    // Fountain's own rendered HTML is the lossless source of truth. Text paste
+    // rules must not reinterpret it (for example, `$x$` as newly typed math).
+    const internalRichPaste = clipboardHTML.includes('data-fountain-');
+    if (!internalRichPaste) {
+      for (const plugin of this.editor.state.plugins) {
+        if (plugin.spec.props?.handlePaste?.(this.editor, event)) {
+          event.preventDefault();
+          return;
+        }
       }
     }
     const text = event.clipboardData?.getData('text/plain');
     if (this.editor.state.selection instanceof CellSelection && text !== undefined && pasteTableCells(this.editor, text)) {
       event.preventDefault();
+      this.reportPaste(createExternalPasteReport(
+        clipboardHTML ? detectExternalPasteSource(clipboardHTML) : 'plain-text',
+        'inserted-table-grid',
+        text,
+        text,
+      ));
       return;
     }
     const files = Array.from(event.clipboardData?.files ?? [])
@@ -269,22 +389,56 @@ export class InputManager {
       void this.insertFiles(files);
       return;
     }
-    const html = event.clipboardData?.getData('text/html');
+    const html = clipboardHTML;
+    let richIssues: readonly ExternalPasteIssue[] = fountainFallback ? [fountainFallback] : [];
+    let richSource = fountain ? 'fountain' as const : html ? detectExternalPasteSource(html) : 'generic-html' as const;
+    let normalizedHTML = html;
     if (html?.trim()) {
       try {
-        const document = HTMLImporter.parse(html, this.editor.state.schema);
+        if (this.options.paste?.normalize !== false) {
+          const normalized = normalizeExternalPasteHTML(html, this.options.paste);
+          normalizedHTML = normalized.html;
+          if (!fountain) richSource = normalized.source;
+          richIssues = Object.freeze([...richIssues, ...normalized.issues]);
+        }
+        const document = HTMLImporter.parse(normalizedHTML, this.editor.state.schema);
         if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
           event.preventDefault();
+          this.reportPaste(createExternalPasteReport(
+            richSource,
+            'inserted-rich-html',
+            html,
+            normalizedHTML,
+            richIssues,
+          ));
           return;
         }
       } catch (error) {
         this.options.onError?.(error);
+        richIssues = Object.freeze([...richIssues, Object.freeze({
+          code: 'rich-html-import-failed',
+          count: 1,
+          message: 'Rich clipboard HTML could not be imported; Fountain used its plain-text representation.',
+          lossy: true,
+        })]);
       }
     }
     if (text === undefined) return;
     event.preventDefault();
     this.editor.runCommandBatch(() => insertPlainText(this.editor, text));
+    this.reportPaste(createExternalPasteReport(
+      html ? richSource : 'plain-text',
+      'inserted-plain-text',
+      html || text,
+      text,
+      richIssues,
+    ));
   };
+
+  private reportPaste(report: ExternalPasteReport): void {
+    try { this.options.paste?.onReport?.(report); }
+    catch (error) { this.options.onError?.(error); }
+  }
 
   private writeCellSelection(event: ClipboardEvent): boolean {
     const selection = this.editor.state.selection;
@@ -297,27 +451,70 @@ export class InputManager {
     return true;
   }
 
+  private selectedFountainDocument(): Node | null {
+    const { doc, schema, selection } = this.editor.state;
+    let document: Node | null = null;
+    if (selection instanceof AllSelection) document = doc;
+    else if (selection instanceof Selection) document = selectedTextDocument(doc, selection);
+    else if (selection instanceof NodeSelection) {
+      const selected = getNodeAtPath(doc, selection.nodePath);
+      if (selected.type.isInline && schema.nodes.paragraph) {
+        document = schema.topNodeType.create({}, [schema.nodes.paragraph.create({}, [selected])]);
+      } else document = schema.topNodeType.create({}, [selected]);
+    }
+    if (!document) return null;
+    try { schema.validate(document); }
+    catch { return null; }
+    return document;
+  }
+
+  private writeFountainSelection(event: ClipboardEvent): boolean {
+    if (!event.clipboardData) return false;
+    const document = this.selectedFountainDocument();
+    if (!document) return false;
+    const html = HTMLExporter.export(document, { document: false });
+    const payload: FountainClipboardPayload = { version: 1, document: document.toJSON() };
+    let plainText = clipboardText(document);
+    const selection = this.editor.state.selection;
+    if (!plainText && selection instanceof NodeSelection) {
+      const visual = Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-path]'))
+        .find((element) => element.dataset.fountainPath === selection.nodePath.join('.'));
+      plainText = visual?.innerText.trim() || visual?.textContent?.trim()
+        || `[${selection.nodeType.replace(/_/g, ' ')}]`;
+    }
+    event.clipboardData.setData('text/plain', plainText);
+    event.clipboardData.setData('text/html', html);
+    try { event.clipboardData.setData(FOUNTAIN_CLIPBOARD_MIME, JSON.stringify(payload)); }
+    catch { /* Standards-based rich HTML remains available to every paste target. */ }
+    event.preventDefault();
+    return true;
+  }
+
   private onCopy = (event: ClipboardEvent): void => {
-    if (this.options.shouldStopEvent?.(event)) return;
+    const semanticSelection = this.editor.state.selection instanceof NodeSelection
+      || this.editor.state.selection instanceof AllSelection;
+    if (this.options.shouldStopEvent?.(event) && !semanticSelection) return;
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleCopy?.(this.editor, event)) {
         event.preventDefault();
         return;
       }
     }
-    if (!this.writeCellSelection(event)) this.options.prepareClipboard?.();
+    if (!this.writeCellSelection(event) && !this.writeFountainSelection(event)) this.options.prepareClipboard?.();
   };
 
   private onCut = (event: ClipboardEvent): void => {
     this.selections.requestDOMSync();
-    if (this.options.shouldStopEvent?.(event) || !this.editor.editable) return;
+    const semanticSelection = this.editor.state.selection instanceof NodeSelection
+      || this.editor.state.selection instanceof AllSelection;
+    if ((this.options.shouldStopEvent?.(event) && !semanticSelection) || !this.editor.editable) return;
     for (const plugin of this.editor.state.plugins) {
       if (plugin.spec.props?.handleCut?.(this.editor, event)) {
         event.preventDefault();
         return;
       }
     }
-    if (this.writeCellSelection(event)) deleteSelection(this.editor);
+    if (this.writeCellSelection(event) || this.writeFountainSelection(event)) deleteSelection(this.editor);
     else this.options.prepareClipboard?.();
   };
 
