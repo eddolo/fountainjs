@@ -133,34 +133,40 @@ test('preserves split-paragraph selection and composition through mobile page fa
   await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
   // Page geometry can legitimately place an earlier boundary between whole
   // blocks. This journey specifically needs the injected split-text widget.
-  const gap = editor.locator('[data-fountain-text-path] [data-fountain-editable-page-break]').first();
-  await expect(gap).toBeAttached();
   const initialText = await page.evaluate(() => {
     const document = (globalThis as any).fountainBrowserTest.pages.editable.summary().document;
     return document.content[0]?.content?.map((node: any) => node.text ?? '').join('') ?? '';
   });
-  const boundary = await gap.evaluate((element) => {
-    const wrapper = element.closest<HTMLElement>('[data-fountain-text-path]');
-    if (!wrapper) throw new Error('Expected the page gap inside a text-path wrapper.');
-    const range = document.createRange();
-    range.selectNodeContents(wrapper);
-    range.setEndBefore(element);
-    const fragment = range.cloneContents();
-    fragment.querySelectorAll('[data-fountain-widget]').forEach((widget) => widget.remove());
-    return fragment.textContent?.length ?? 0;
-  });
-  await gap.evaluate((element) => {
-    const parent = element.parentNode;
-    if (!parent) throw new Error('Expected a mounted page gap.');
-    const index = Array.prototype.indexOf.call(parent.childNodes, element) as number;
-    const range = document.createRange();
-    range.setStart(parent, index + 1);
-    range.collapse(true);
-    const selection = document.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-    document.dispatchEvent(new Event('selectionchange'));
-  });
+  let boundary: number | null = null;
+  await expect.poll(async () => {
+    boundary = await editor.evaluate((root) => {
+      const element = root.querySelector<HTMLElement>('[data-fountain-text-path] [data-fountain-editable-page-break]');
+      if (!element) return null;
+      const wrapper = element.closest<HTMLElement>('[data-fountain-text-path]');
+      if (!wrapper) return null;
+      const range = document.createRange();
+      range.selectNodeContents(wrapper);
+      range.setEndBefore(element);
+      const fragment = range.cloneContents();
+      fragment.querySelectorAll('[data-fountain-widget]').forEach((widget) => widget.remove());
+      const parent = element.parentNode;
+      if (!parent) return null;
+      const index = Array.prototype.indexOf.call(parent.childNodes, element) as number;
+      const caret = document.createRange();
+      caret.setStart(parent, index + 1);
+      caret.collapse(true);
+      const selection = document.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(caret);
+      document.dispatchEvent(new Event('selectionchange'));
+      return fragment.textContent?.length ?? 0;
+    });
+    return boundary;
+  }).not.toBeNull();
+  if (boundary === null) throw new Error('Expected a stable split-text page gap.');
+  /* The query, boundary read, and caret placement above are deliberately one
+     browser task. Reflow may replace page widgets between separate locator
+     operations while leaving the canonical document and selection intact. */
   const selection = () => page.evaluate(() => (
     (globalThis as any).fountainBrowserTest.pages.editable.summary().selection
   ));
@@ -181,11 +187,15 @@ test('preserves split-paragraph selection and composition through mobile page fa
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
   await expect(editor).toHaveText(initialText);
   await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
-  await expect(gap).toBeAttached();
+  await expect.poll(() => editor.evaluate((root) => Boolean(
+    root.querySelector('[data-fountain-text-path] [data-fountain-editable-page-break]'),
+  ))).toBe(true);
 
-  const selected = await gap.evaluate((pageGap) => {
+  const selectAcrossCurrentGap = () => editor.evaluate((root) => {
+    const pageGap = root.querySelector<HTMLElement>('[data-fountain-text-path] [data-fountain-editable-page-break]');
+    if (!pageGap) return false;
     const wrapper = pageGap.closest<HTMLElement>('[data-fountain-text-path]');
-    if (!wrapper) throw new Error('Expected a page gap inside a text-path wrapper.');
+    if (!wrapper) return false;
     const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
       acceptNode: (node) => node.parentElement?.closest('[data-fountain-widget]')
         ? NodeFilter.FILTER_REJECT
@@ -203,7 +213,7 @@ test('preserves split-paragraph selection and composition through mobile page fa
     const after = textNodes.find((node) => (
       Boolean(pageGap.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)
     ));
-    if (!before || !after) throw new Error('Expected text on both sides of the page gap.');
+    if (!before || !after) return false;
     const range = document.createRange();
     range.setStart(before, before.data.length - 1);
     range.setEnd(after, 1);
@@ -213,7 +223,7 @@ test('preserves split-paragraph selection and composition through mobile page fa
     document.dispatchEvent(new Event('selectionchange'));
     return true;
   });
-  expect(selected).toBe(true);
+  await expect.poll(selectAcrossCurrentGap).toBe(true);
   await expect.poll(selection).toMatchObject({ from: boundary - 1, to: boundary + 1 });
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'continuous');

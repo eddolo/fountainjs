@@ -227,10 +227,11 @@ test('human homepage journey: live outline, invisible text review, and structura
     await drag.press('Escape');
     await expect(editor.locator('[data-fountain-block-grabbed]')).toHaveCount(0);
 
+    const target = editor.locator(':scope > p').first();
+    await target.scrollIntoViewIfNeeded();
     const currentHeading = editor.locator(':scope > h2').first();
     await currentHeading.hover();
     const pointerDrag = page.getByRole('button', { name: 'Drag Heading block' });
-    const target = editor.locator(':scope > p').first();
     const dragBox = await pointerDrag.boundingBox();
     const targetBox = await target.boundingBox();
     expect(dragBox).not.toBeNull();

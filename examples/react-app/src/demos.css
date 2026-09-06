@@ -81,6 +81,7 @@
 .demo-priority-control select { min-width: 110px; padding: 7px 9px; color: #34236f; background: white; border: 1px solid #a995e6; border-radius: 6px; font: inherit; }
 .demo-priority-widget[data-selected='true'] { box-shadow: 0 0 0 3px rgb(109 74 255 / 24%); }
 .demo-controls { display: flex; flex-wrap: wrap; gap: 6px; padding: 9px; margin-bottom: 8px; background: #f8f7fb; border: 1px solid #ddd9e8; border-radius: 9px; }
+.demo-controls button, .demo-controls input, .demo-controls textarea, .demo-controls select { scroll-margin-top: 88px; }
 .demo-controls button { padding: 6px 9px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font-size: 10px; font-weight: 700; }
 .demo-controls button:hover:not(:disabled) { color: white; background: var(--demo-accent); }
 .demo-controls button[aria-pressed="true"] { color: white; background: var(--demo-accent); border-color: var(--demo-accent); }

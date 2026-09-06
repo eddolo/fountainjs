@@ -222,12 +222,12 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor} onClick={() => editor && insertList(editor, 'task', ['A new task'])}>+ Task</button>
     <label className="demo-table-control"><span>Table</span><input aria-label="Table rows" type="number" min="1" max="50" value={tableRows} onChange={(event) => setTableRows(event.target.value)} /><b>×</b><input aria-label="Table columns" type="number" min="1" max="20" value={tableColumns} onChange={(event) => setTableColumns(event.target.value)} /></label>
     <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })}>+ Table</button>
-    {editor?.state.schema.nodes.math_block && <label className="demo-math-control">
-      <span>LaTeX</span>
+    {editor?.state.schema.nodes.math_block && <div className="demo-math-control" role="group" aria-label="LaTeX controls">
+      <span aria-hidden="true">LaTeX</span>
       <input aria-label="Math source" value={mathSource} onChange={(event) => setMathInput(event.target.value)} />
       <button disabled={!mathSource.trim()} onClick={() => insertMathBlock(editor, mathSource, 'Editable math expression')}>+ New Math</button>
-      {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource, '')}>Update selected</button>}
-    </label>}
+      {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource, '', selectedMath.path)}>Update selected</button>}
+    </div>}
     {activeTable && <button aria-expanded={tableToolsOpen} onClick={() => setTableToolsOpen((open) => !open)}>Table options</button>}
     {activeTable && tableToolsOpen && <div className="demo-table-tools" role="group" aria-label="Table options">
       <p>Select adjacent cells with Shift-click before merging.</p>
