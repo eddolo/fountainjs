@@ -41,6 +41,10 @@ function normalizedText(value) {
   return value.replace(/[\t\n\r ]+/g, ' ');
 }
 
+function normalizedURL(value) {
+  try { return encodeURI(decodeURI(value)); } catch { return value; }
+}
+
 function normalizeInline(tokens) {
   const merged = [];
   for (const sourceToken of tokens) {
@@ -70,13 +74,13 @@ function inline(node) {
   if (tag === 'br') return [['hard-break']];
   if (tag === 'a') return [[
     'link',
-    attribute(node, 'href'),
+    normalizedURL(attribute(node, 'href')),
     attribute(node, 'title') || null,
     children(),
   ]];
   if (tag === 'img') return [[
     'image',
-    attribute(node, 'src'),
+    normalizedURL(attribute(node, 'src')),
     attribute(node, 'title') || null,
     attribute(node, 'alt'),
   ]];
@@ -183,7 +187,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 3) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 4) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)

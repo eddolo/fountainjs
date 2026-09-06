@@ -197,11 +197,13 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 449 currently match, 194 remain pending, and nine are
+classifies every example: 464 currently match, 179 remain pending, and nine are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 The harness also materializes the specification's visible tab notation before
 either side is parsed, so those cases exercise real tab characters.
+Equivalent decoded and percent-encoded link destinations are canonicalized as
+URIs so representation spelling is not mistaken for a semantic failure.
 
 Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
