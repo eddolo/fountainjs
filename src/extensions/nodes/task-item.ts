@@ -1,6 +1,6 @@
 import type { NodeSpec } from '../../core';
 export const taskItem: NodeSpec = {
-  content: 'paragraph+ block*', attrs: { checked: { default: false, validate: (value) => typeof value === 'boolean' } },
+  content: 'block+', attrs: { checked: { default: false, validate: (value) => typeof value === 'boolean' } },
   toDOM: (node) => ['li', { 'data-type': 'task-item', 'data-checked': String(Boolean(node.attrs.checked)) },
     ['input', {
       type: 'checkbox',

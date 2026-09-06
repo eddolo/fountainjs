@@ -1307,13 +1307,13 @@ interface ListMarker {
 }
 
 function listMarker(line: string): ListMarker | null {
-  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\]|([-*+])|(\d{1,9})([.)]))(?:[ \t]+(.*)|[ \t]*)$/.exec(line);
+  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\]|([-*+])|(\d{1,9})([.)]))(?:([ \t]+)(.*)|[ \t]*)$/.exec(line);
   if (!match) return null;
   return {
     indent: match[1].length,
     kind: match[2] ? 'task' : match[4] ? 'bullet' : 'ordered',
     m: (match[2] || match[4] || match[6]) as ListMarker['m'],
-    value: match[7] || '',
+    value: match[8] ? `${match[7].length > 4 ? match[7].slice(1) : ''}${match[8]}` : '',
     checked: match[3]?.toLowerCase() === 'x',
     start: +(match[5] || 1),
   };
@@ -1343,8 +1343,18 @@ function parseList(
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
     if (!marker || marker.indent !== indent || marker.kind !== first.kind || marker.m !== first.m) break;
-    const content: Node[] = [paragraph(schema, marker.value, references)];
+    const content = marker.value
+      ? parseBlocks([marker.value], schema, references)
+      : [paragraph(schema, '', references)];
     index++;
+    const fence = markdownFence(marker.value);
+    while (fence && index < lines.length) {
+      const value = lines[index].slice(Math.min(lines[index].length, indent + 2));
+      index++;
+      if (closesMarkdownFence(value, fence)) break;
+      const last = content.at(-1) as Node;
+      content[content.length - 1] = last.copy([schema.text(`${last.textContent}${last.textContent ? '\n' : ''}${value}`)]);
+    }
     while (index < lines.length) {
       const next = listMarker(lines[index]);
       if (next && next.indent > indent) {
@@ -1632,7 +1642,9 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
 function references(markdown: string): { lines: string[]; definitions: References } {
   const definitions = new Map<string, ReferenceDefinition>();
   const sourceLines = markdown.replace(/\r\n?/g, '\n').split('\n')
-    .map((line) => line.replace(/^\t+/u, (tabs) => '    '.repeat(tabs.length)));
+    .map((line) => line.replace(/^((?: {0,3}>| *(?:[-*+]|\d{1,9}[.)]))?)(\t+)/u, (_, marker, tabs) => (
+      marker + ' '.repeat(tabs.length * 4 - marker.length % 4)
+    )));
   const lines: string[] = [];
   let fence: MarkdownFence | null = null;
   let paragraphOpen = false;

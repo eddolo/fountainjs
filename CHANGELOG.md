@@ -44,8 +44,10 @@
   plus ATX/Setext headings, indented and variable backtick/tilde code fences,
   variable-delimiter code spans with standard whitespace normalization, safe
   angle-bracket URI/email autolinks, star emphasis, backslash hard breaks, and
-  collision-safe code export. This is documented as a supported subset, not a
-  false claim of complete standards conformance.
+  collision-safe code export. Tab-stop code now works inside blockquotes and
+  list items, and list items may begin with nested lists or thematic breaks.
+  This is documented as a supported subset, not a false claim of complete
+  standards conformance.
 - Strict semicolon-terminated HTML5 named, decimal, and hexadecimal character
   references now decode everywhere CommonMark permits them, including link
   destinations, titles, visible link text, and fence info strings, but remain

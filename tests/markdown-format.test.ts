@@ -1347,6 +1347,21 @@ describe('Markdown interchange', () => {
     expect(nested.child(0).child(0).child(1).child(0).child(1).child(0).textContent).toBe('baz');
   });
 
+  it('keeps CommonMark first-child blocks and tab-padded code inside containers', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const sources = ['>\t\tfoo', '-\t\tfoo', '- Foo\n- * * *', '- - foo', '1. - 2. foo'];
+    const documents = sources.map((source) => MarkdownImporter.parse(source, schema));
+
+    expect(documents[0]?.child(0).child(0).type.name).toBe('code_block');
+    expect(documents[1]?.child(0).child(0).child(0).type.name).toBe('code_block');
+    expect(documents[2]?.child(0).child(1).child(0).type.name).toBe('horizontal_rule');
+    expect(documents[3]?.child(0).child(0).child(0).type.name).toBe('bullet_list');
+    expect(documents[4]?.child(0).child(0).child(0).child(0).child(0).type.name).toBe('ordered_list');
+    documents.forEach((document) => {
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
+    });
+  });
+
   it('preserves loose list items containing multiple blocks', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [

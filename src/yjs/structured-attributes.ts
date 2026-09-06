@@ -13,9 +13,8 @@ const SAFE_NAME = /^[A-Za-z_][A-Za-z0-9_.:-]{0,127}$/;
 const SAFE_MAP_NAME = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const MAXIMUM_SHARED_ENTRIES = 100_000;
-const ATTRIBUTE = 'shared attribute';
-const ATTRIBUTE_ENTRY_LIMIT = 'Too many attribute entries.';
-const STORE_ENTRY_LIMIT = 'Too many shared attributes.';
+const ATTRIBUTE = 'attribute';
+const ENTRY_LIMIT = 'Attribute entry limit exceeded.';
 
 export interface YjsStructuredAttributesOptions {
   /** Structured node attributes that should merge below their JSON root. */
@@ -71,7 +70,7 @@ function safeStructuredKey(key: string, limits: ResolvedStructuredAttributeLimit
 function incrementEntries(state: DecodeState, count: number, limits: ResolvedStructuredAttributeLimits): void {
   state.entries += count;
   if (state.entries > limits.maxEntries) {
-    throw new Error(ATTRIBUTE_ENTRY_LIMIT);
+    throw new Error(ENTRY_LIMIT);
   }
 }
 
@@ -82,16 +81,16 @@ function decodeSharedValue(
   state: DecodeState,
 ): StructuredAttributeValue {
   if (depth > limits.maxDepth) {
-    throw new Error(`A ${ATTRIBUTE} exceeds its depth limit.`);
+    throw new Error(`An ${ATTRIBUTE} exceeds its depth limit.`);
   }
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
-    if (!Number.isFinite(value)) throw new Error(`A ${ATTRIBUTE} contains a non-finite number.`);
+    if (!Number.isFinite(value)) throw new Error(`${ATTRIBUTE} number must be finite.`);
     return value;
   }
   if (typeof value === 'string') {
     if (value.length > limits.maxStringLength) {
-      throw new Error(`A ${ATTRIBUTE} string exceeds its length limit.`);
+      throw new Error(`An ${ATTRIBUTE} string is too long.`);
     }
     return value;
   }
@@ -109,7 +108,7 @@ function decodeSharedValue(
     incrementEntries(state, items.length, limits);
     return Object.freeze(items.map((item) => decodeSharedValue(item, limits, depth + 1, state)));
   }
-  throw new Error('Structured attributes require Y.Map/Y.Array or JSON primitives.');
+  throw new Error('Expected Y.Map/Y.Array or JSON.');
 }
 
 function sharedValue(value: StructuredAttributeValue): unknown {
@@ -157,7 +156,7 @@ function synchronizeArray(
   limits: ResolvedStructuredAttributeLimits,
 ): void {
   const current = decodeSharedValue(array, limits, 0, { entries: 0 });
-  if (!Array.isArray(current)) throw new Error(`A ${ATTRIBUTE} array became invalid.`);
+  if (!Array.isArray(current)) throw new Error(`Invalid ${ATTRIBUTE} array.`);
 
   if (current.length === desired.length) {
     desired.forEach((value, index) => {
@@ -202,7 +201,7 @@ function synchronizeRoot(
 
 function normalizedDefinition(definition: StructuredAttributeDefinition): StructuredAttributeDefinition {
   if (!definition || typeof definition !== 'object') {
-    throw new TypeError('Yjs structured attribute definitions must be created with defineStructuredAttribute().');
+    throw new TypeError('Use defineStructuredAttribute().');
   }
   return defineStructuredAttribute({
     nodeType: definition.nodeType,
@@ -221,7 +220,7 @@ function nodeJSONAtPath(document: NodeJSON, path: readonly number[]): NodeJSON {
   let current = document;
   for (const index of path) {
     const child = current.content?.[index];
-    if (!child) throw new Error(`A ${ATTRIBUTE} points to a stale node path: ${path.join('.')}.`);
+    if (!child) throw new Error(`Stale ${ATTRIBUTE} node path: ${path.join('.')}.`);
     current = child;
   }
   return current;
@@ -240,20 +239,20 @@ export class YjsStructuredAttributeStore {
     defaultMapName: string,
   ) {
     if (!options || !Array.isArray(options.definitions) || options.definitions.length === 0) {
-      throw new TypeError('Yjs structured attributes require at least one definition.');
+      throw new TypeError('At least one structured attribute is required.');
     }
     this.identityAttribute = options.identityAttribute ?? 'nodeId';
     if (!SAFE_NAME.test(this.identityAttribute) || UNSAFE_KEYS.has(this.identityAttribute)) {
-      throw new TypeError('The Yjs structured attribute identity attribute must be a safe node attribute name.');
+      throw new TypeError('Identity must be a safe node attribute name.');
     }
     if (options.map !== undefined && !(options.map instanceof Y.Map)) {
-      throw new TypeError('The Yjs structured attribute map must be a Y.Map from the same Yjs installation.');
+      throw new TypeError('Attribute map must be a compatible Y.Map.');
     }
     if (options.map && options.map.doc !== document) {
-      throw new Error('The attribute map belongs to another Y.Doc.');
+      throw new Error('Attribute map uses another Y.Doc.');
     }
     if (options.mapName !== undefined && !SAFE_MAP_NAME.test(options.mapName)) {
-      throw new TypeError('The Yjs structured attribute map name must be a safe non-empty name of at most 200 characters.');
+      throw new TypeError('Map name must be safe and at most 200 characters.');
     }
     const definitions = options.definitions.map(normalizedDefinition);
     const keys = new Set<string>();
@@ -270,7 +269,7 @@ export class YjsStructuredAttributeStore {
     this.byNodeType = new Map([...byNodeType].map(([type, values]) => [type, Object.freeze(values)]));
     const mapName = options.mapName ?? defaultMapName;
     if (!SAFE_MAP_NAME.test(mapName)) {
-      throw new TypeError('The derived Yjs structured attribute map name is invalid; supply an explicit mapName.');
+      throw new TypeError('Derived map name is invalid; provide mapName.');
     }
     this.map = options.map ?? document.getMap(mapName);
   }
@@ -289,7 +288,7 @@ export class YjsStructuredAttributeStore {
 
   overlay(document: Node): NodeJSON {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
-      throw new Error(STORE_ENTRY_LIMIT);
+      throw new Error(ENTRY_LIMIT);
     }
     const json = document.toJSON();
     for (const entry of this.entries(document)) {
@@ -351,7 +350,7 @@ export class YjsStructuredAttributeStore {
 
   private synchronizeEntries(entries: readonly StructuredEntry[], onlyMissing: boolean, removeStale: boolean): void {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
-      throw new Error(STORE_ENTRY_LIMIT);
+      throw new Error(ENTRY_LIMIT);
     }
     const expected = new Set(entries.map((entry) => entry.key));
     if (removeStale) [...this.map.keys()].forEach((key) => {

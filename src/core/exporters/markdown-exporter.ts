@@ -421,13 +421,15 @@ function render(
     case 'task_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- [${child.attrs.checked ? 'x' : ' '}] ${render(child, context, [...path, index], depth + 1)}`).join('\n');
     case 'list_item': case 'task_item': return node.content.map((child, index) => {
       const value = render(child, context, [...path, index], depth);
-      if (index === 0) return value;
+      if (index === 0) return LIST_TYPES.has(child.type.name)
+        ? value.slice(depth * 2)
+        : value.replace(/\n/g, `\n${'  '.repeat(depth)}`);
       if (LIST_TYPES.has(child.type.name)) return `\n${value}`;
       const indentation = '  '.repeat(depth);
       return `\n\n${indentation}${value.replace(/\n/g, `\n${indentation}`)}`;
     }).join('');
     case 'code_block': return fencedCode(node);
-    case 'horizontal_rule': return '---';
+    case 'horizontal_rule': return '* * *';
     case 'hard_break': return '  \n';
     case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;
     case 'image_super': {

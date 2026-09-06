@@ -519,7 +519,7 @@ describe('document model and transactions', () => {
     expect(exit.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
   });
 
-  it('rejects invalid block conversions and attribute updates without changing state', () => {
+  it('allows valid list headings while rejecting invalid block conversions and attributes', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,
       content: {
@@ -532,8 +532,10 @@ describe('document model and transactions', () => {
     });
     editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0, 0, 0], 2)));
     const before = editor.getJSON();
-    expect(setBlockType(editor, 'heading', { level: 2 })).toBe(false);
+    expect(setBlockType(editor, 'blockquote')).toBe(false);
     expect(editor.getJSON()).toEqual(before);
+    expect(setBlockType(editor, 'heading', { level: 2 })).toBe(true);
+    expect(editor.state.doc.child(0).child(0).child(0).type.name).toBe('heading');
 
     const image = createEditor({ schema: CoreSchemaSpec });
     expect(insertImage(image, { src: 'https://example.com/safe.png' })).toBe(true);
