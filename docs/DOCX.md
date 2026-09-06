@@ -98,3 +98,11 @@ the human-facing executable companion to this guide. An independent
 `python-docx` 1.2.0 smoke check opens Fountain's generated file and Fountain
 imports a separately generated heading/marks/list/table document; this guards
 against relying only on self-round trips.
+
+The first bounded batch passed 665 behavioral tests, the real Lean 4.30
+integration gate, and 379 browser checks across Chromium, Firefox, WebKit, and
+mobile emulation (with 14 deliberate capability skips) in
+[CI run `bb078bb`](https://github.com/eddolo/fountainjs/actions/runs/34061065186).
+The corresponding
+[public playground deployment](https://github.com/eddolo/fountainjs/actions/runs/34061065270)
+also passed.

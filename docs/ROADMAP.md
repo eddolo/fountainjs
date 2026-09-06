@@ -224,6 +224,13 @@ independent `python-docx` compatibility checks, and a recorded browser
 download/re-import journey gate the work. The existing page pipeline supplies
 measured A4/Letter/custom print and inspected Chromium PDF output. Embedded
 DOCX media and deeper Word fidelity remain active; ODT and EPUB are not claimed.
+The bounded DOCX batch passed 665 behavioral tests, packed all-entry package
+checks, a real Lean 4.30 integration check, and the complete 379-pass/14-skip
+Chromium/Firefox/WebKit/mobile matrix in
+[CI run `bb078bb`](https://github.com/eddolo/fountainjs/actions/runs/34061065186);
+the matching
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34061065270)
+succeeded.
 See [DOCX.md](DOCX.md).
 
 ## Delivered: virtualized rendering for huge documents
