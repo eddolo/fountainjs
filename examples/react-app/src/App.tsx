@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Y from 'yjs';
 import {
   AIController,
-  BubbleMenuExtension,
   ClipboardHistoryExtension,
   CoreExtension,
   HTMLExporter,
@@ -12,7 +11,9 @@ import {
   FloatingMenuExtension,
   SyntaxHighlightExtension,
   TableEditingExtension,
+  TrailingEditableBlockExtension,
   composeExtensions,
+  createBubbleMenuExtension,
   createAIAdapter,
   defineExtension,
   historyPlugin,
@@ -207,6 +208,11 @@ const mentionExtension = createMentionExtension({
 });
 
 const characterCountExtension = createCharacterCountExtension({ limit: 5_000 });
+const textBubbleMenuExtension = createBubbleMenuExtension({
+  shouldShow: ({ selection, defaultOpen }) => defaultOpen
+    && selection.kind === 'text'
+    && !selection.isCollapsed,
+});
 const slashCommandExtension = createSlashCommandExtension({
   items: [{
     id: 'callout',
@@ -227,12 +233,13 @@ const demoKit = composeExtensions([
   characterCountExtension,
   TypographyExtension,
   slashCommandExtension,
-  BubbleMenuExtension,
+  textBubbleMenuExtension,
   FloatingMenuExtension,
   defineExtension({ name: 'history', plugins: [historyPlugin] }),
   defineExtension({ name: 'markdown-shortcuts', plugins: [markdownShortcutsPlugin] }),
   SyntaxHighlightExtension,
   TableEditingExtension,
+  TrailingEditableBlockExtension,
   ClipboardHistoryExtension,
   DetailsExtension,
   RubyExtension,

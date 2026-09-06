@@ -208,6 +208,16 @@ export class SelectionHandler {
   }
 
   private onSelectionChange = (): void => {
+    const activeElement = document.activeElement;
+    const activeEditingHost = activeElement instanceof Element
+      ? activeElement.closest<HTMLElement>('[contenteditable]')
+      : null;
+    if (activeElement instanceof HTMLElement
+      && activeElement !== this.dom
+      && this.dom.contains(activeElement)
+      && (activeElement.closest('[data-fountain-widget]') || activeEditingHost?.contentEditable === 'false')) {
+      return;
+    }
     if (!this.syncing) this.capture();
   };
 

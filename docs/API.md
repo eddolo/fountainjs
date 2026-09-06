@@ -65,7 +65,7 @@ changes; the context and flag affect only presentation, never JSON. Generic outp
 but strips executable tags, event/srcdoc attributes, unsafe URL protocols, and
 dangerous CSS URL/expression forms. See [FORMATS.md](FORMATS.md#html).
 
-`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Manifest requirements must already appear earlier in the list. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, and the HTML/Markdown/JSON/text format modules.
+`composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Manifest requirements must already appear earlier in the list. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, a guaranteed trailing editable block, and the HTML/Markdown/JSON/text format modules.
 
 The isolated `fountainjs-editor/testing` entry exports
 `checkExtensionConformance()` and `assertExtensionConformance()`. They verify
@@ -328,6 +328,26 @@ layer uses it for native copy/cut. Cells store optional per-logical-column
 `colwidth` values from 40 through 2,000 pixels. The default cell NodeView exposes
 a labelled separator handle: Left/Right resizes by 5 px and Shift modifies by
 25 px; dragging previews locally and commits one undoable transaction on release.
+
+### Trailing editable block
+
+`TrailingEditableBlockExtension`, included by `StarterKit`, maintains one small
+document invariant: each configured root must finish with a direct text-editable
+block. It recognizes any schema-valid block that accepts direct text, including
+paragraphs, headings, and code blocks. A terminal table, image, divider, media
+node, widget, quote, or list therefore gains one empty paragraph after it; a
+document that already ends editably is unchanged.
+
+`createTrailingEditableBlockExtension(options)` accepts `nodeType` (default
+`paragraph`), `nodeAttributes`, and `rootTypes` (default the schema top node).
+Nested configured roots are repaired deepest-first. Invalid node/root choices
+fail when the editor is created rather than producing an invalid document.
+`ensureTrailingEditableBlocks(editor, options?)` performs the same idempotent
+repair explicitly, and `createTrailingEditableBlockTransaction(state, options?)`
+returns the history-neutral transaction without dispatching it. Repairs emitted
+after collaborative changes are marked for one provider rebroadcast so peers
+converge without duplicate trailing blocks. See
+[TRAILING_EDITABLE_BLOCK.md](TRAILING_EDITABLE_BLOCK.md).
 
 ### Clipboard history
 

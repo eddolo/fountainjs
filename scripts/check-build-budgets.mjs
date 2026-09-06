@@ -205,8 +205,10 @@ const limits = Object.freeze({
   // 5.2/4.3 KiB while every consumer-facing entry remains below its own cap.
   // Contextual table/highlight controls, quote toggling, and explicit media
   // selection add about 5.3/3.7 KiB across the normal React and core chunks.
-  'all ESM runtime code': 1121 * kibibyte,
-  'all CommonJS runtime code': 938 * kibibyte,
+  // The default schema-aware trailing-block invariant and cell-focus retention
+  // add about 2.2/2.5 KiB while every consumer entry remains below its own cap.
+  'all ESM runtime code': 1124 * kibibyte,
+  'all CommonJS runtime code': 941 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

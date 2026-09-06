@@ -44,7 +44,8 @@ test('shows every empty line created and removed by repeated mobile Enter and Ba
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const blocks = editor.locator(':scope > [data-fountain-path]');
   const before = await blocks.count();
-  const wrapper = editor.locator(':scope > [data-fountain-node="paragraph"]').last().locator('[data-fountain-text-path]').last();
+  const initialPlaceholders = await editor.locator('[data-fountain-caret-placeholder]').count();
+  const wrapper = editor.locator(':scope > [data-fountain-node="paragraph"]', { hasText: /\S/ }).last().locator('[data-fountain-text-path]').last();
   await wrapper.evaluate((element) => {
     const text = element.lastChild;
     if (!text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected final text node.');
@@ -57,7 +58,7 @@ test('shows every empty line created and removed by repeated mobile Enter and Ba
   await page.keyboard.press('Enter');
   await expect(blocks).toHaveCount(before + 3);
   const emptyLines = blocks.filter({ has: page.locator('[data-fountain-caret-placeholder]') });
-  await expect(emptyLines).toHaveCount(3);
+  await expect(emptyLines).toHaveCount(initialPlaceholders + 3);
   expect(await emptyLines.evaluateAll((items) => items.every((item) => item.getBoundingClientRect().height >= 16))).toBe(true);
   await page.keyboard.press('Backspace');
   await page.keyboard.press('Backspace');

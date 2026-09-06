@@ -40,6 +40,7 @@ import { canRedo, canUndo, closeHistory, historyPlugin, redo, undo } from './plu
 import { markdownShortcutsPlugin } from './plugins/markdown-shortcuts';
 import { SyntaxHighlightExtension } from './plugins/syntax-highlight';
 import { TableEditingExtension } from './plugins/table-editing';
+import { TrailingEditableBlockExtension } from './trailing-editable-block';
 import { LinkBehaviorExtension } from './link-behavior';
 import { MediaExtension } from './media';
 import { composeExtensions, defineExtension } from './extension';
@@ -54,6 +55,7 @@ export * from './clipboard-history';
 export * from './collaboration';
 export * from './media';
 export * from './floating-menu';
+export * from './trailing-editable-block';
 
 export * from './nodes/blockquote';
 export * from './nodes/bullet-list';
@@ -158,6 +160,7 @@ export const StarterKit = composeExtensions([
   LinkBehaviorExtension,
   SyntaxHighlightExtension,
   TableEditingExtension,
+  TrailingEditableBlockExtension,
   MarkdownFormatExtension,
   HTMLFormatExtension,
   JSONFormatExtension,

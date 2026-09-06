@@ -4,6 +4,13 @@
 
 ### Fixed
 
+- Documents using `StarterKit` now retain a real editable paragraph after a
+  terminal table, media item, divider, widget, quote, list, or other non-text
+  block. The schema-aware repair is idempotent, history-neutral, configurable
+  for nested roots, and safely rebroadcast after collaborative transactions.
+  Focusing a table resize handle also keeps its owning cell active, so the next
+  merge, split, or header command does not unexpectedly target the trailing
+  paragraph.
 - Block-style changes now apply to every paragraph/heading in a cross-block
   selection instead of changing only its first block. The supplied quote
   control now wraps the current block range and unwraps an existing quote,

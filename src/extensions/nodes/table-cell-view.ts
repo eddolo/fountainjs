@@ -1,4 +1,5 @@
 import {
+  CellSelection,
   getActiveTableCell,
   resizeTableColumn,
   type Attributes,
@@ -66,6 +67,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       this.handle.setAttribute('aria-label', 'Resize table column');
       this.handle.addEventListener('pointerdown', this.onPointerDown);
       this.handle.addEventListener('keydown', this.onKeyDown);
+      this.handle.addEventListener('focus', this.onFocus);
       this.dom.append(this.contentDOM, this.handle);
       this.renderAttributes();
     }
@@ -87,6 +89,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       this.finishDrag(false);
       this.handle.removeEventListener('pointerdown', this.onPointerDown);
       this.handle.removeEventListener('keydown', this.onKeyDown);
+      this.handle.removeEventListener('focus', this.onFocus);
     }
 
     private get editor(): Editor | null {
@@ -147,6 +150,17 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
 
     private onPointerUp = (): void => { this.finishDrag(true); };
     private onPointerCancel = (): void => { this.finishDrag(false); };
+
+    private onFocus = (): void => {
+      const editor = this.editor;
+      if (!editor) return;
+      const path = this.getPath();
+      const active = getActiveTableCell(editor);
+      if (active?.cell.path.join('.') === path.join('.')) return;
+      try {
+        editor.dispatch(editor.state.createTransaction().setSelection(new CellSelection(editor.state.doc, path)));
+      } catch { /* Ignore a stale handle while the table is being redrawn. */ }
+    };
 
     private finishDrag(commit: boolean): void {
       if (!this.dragging) return;

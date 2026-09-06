@@ -2966,7 +2966,9 @@ test('runs a view-focused chain and checks it without preview side effects', asy
   });
   expect(ran).toBe(true);
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' })).toBeFocused();
-  await expect(page.locator('[data-fountain-path="1"]')).toContainText('Second paragraph chained');
+  await expect(page.locator('[data-fountain-path="1"]')).toHaveText('Second paragraph');
+  await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').last())
+    .toHaveText(' chained');
 });
 
 test('applies every configured paste-rule match through a browser paste event', async ({ page }) => {
@@ -3123,7 +3125,8 @@ test('edits bidirectional and deeply nested text by logical document positions',
     const { schema } = editor.state;
     const bidi = schema.node('paragraph', {}, [schema.text('שלום world مرحبا')]);
     const quote = schema.node('blockquote', {}, [schema.node('paragraph', {}, [schema.text('Nested text')])]);
-    editor.dispatch(editor.state.createTransaction().replace(editor.state.doc.childCount, editor.state.doc.childCount, [bidi, quote]));
+    const insertionIndex = editor.state.doc.childCount - 1;
+    editor.dispatch(editor.state.createTransaction().replace(insertionIndex, insertionIndex, [bidi, quote]));
   });
 
   await page.evaluate(() => {
@@ -3154,11 +3157,11 @@ test('moves a selected top-level block through native drag data', async ({ page 
 
   await expect.poll(() => page.evaluate(() => (
     (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent)
-  ))).toEqual(['Second paragraph', 'Alpha Beta', '']);
+  ))).toEqual(['Second paragraph', 'Alpha Beta', '', '']);
   await page.keyboard.press('Control+z');
   await expect.poll(() => page.evaluate(() => (
     (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent)
-  ))).toEqual(['Alpha Beta', 'Second paragraph', '']);
+  ))).toEqual(['Alpha Beta', 'Second paragraph', '', '']);
 });
 
 test('reorders nested blocks with accessible controls, drop indicators, drag, and undo', async ({ page }) => {
@@ -3268,10 +3271,33 @@ test('replaces a DOM selection that crosses block boundaries', async ({ page }) 
 
   await page.keyboard.type('joined ');
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
-  await expect(editor.locator('[data-fountain-node="paragraph"]')).toHaveCount(1);
+  await expect(editor.locator('[data-fountain-node="paragraph"]')).toHaveCount(2);
   const documentJSON = JSON.parse(await page.getByLabel('Document JSON').textContent() ?? '{}');
   expect(documentJSON.content[0].content.map((node: { text?: string }) => node.text ?? '').join('')).toBe('Alpha joined paragraph');
+  expect(documentJSON.content.at(-1)).toMatchObject({ type: 'paragraph', content: [{ type: 'text', text: '' }] });
   await expect(editor.locator('[data-fountain-widget="remote"]')).toHaveCount(1);
+});
+
+test('keeps a visible editable paragraph after a terminal non-text block', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const instance = contract.editor;
+    const paragraph = instance.state.schema.node('paragraph', {}, [instance.state.schema.text('Before divider')]);
+    const divider = instance.state.schema.node('horizontal_rule');
+    instance.dispatch(instance.state.createTransaction().replace(0, instance.state.doc.childCount, [paragraph, divider]));
+  });
+
+  expect(await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.type.name)
+  ))).toEqual(['paragraph', 'horizontal_rule', 'paragraph']);
+  const tail = editor.locator(':scope > p').last();
+  await expect(tail.locator('[data-fountain-caret-placeholder]')).toHaveCount(1);
+  expect((await tail.boundingBox())?.height ?? 0).toBeGreaterThan(0);
+
+  await tail.click();
+  await page.keyboard.type('Continue after divider');
+  await expect(tail).toHaveText('Continue after divider');
 });
 
 test('uses Ctrl+A as an explicit all-document selection and replaces the document', async ({ page }) => {
@@ -4545,7 +4571,7 @@ test('renders repeated empty paragraphs and removes each visible line', async ({
   const blocks = editor.locator(':scope > [data-fountain-path]');
   const before = await blocks.count();
   const initialPlaceholders = await editor.locator('[data-fountain-caret-placeholder]').count();
-  const target = editor.locator(':scope > [data-fountain-node="paragraph"]').last();
+  const target = editor.locator(':scope > [data-fountain-node="paragraph"]', { hasText: /\S/ }).last();
   const initialHeight = await target.evaluate((element) => element.getBoundingClientRect().height);
   await selectBlockEnd(target);
   await page.keyboard.press('Enter');
@@ -4553,13 +4579,13 @@ test('renders repeated empty paragraphs and removes each visible line', async ({
   await page.keyboard.press('Enter');
   await expect(blocks).toHaveCount(before + 3);
   const emptyLines = blocks.filter({ has: page.locator('[data-fountain-caret-placeholder]') });
-  await expect(emptyLines).toHaveCount(3);
+  await expect(emptyLines).toHaveCount(initialPlaceholders + 3);
   const geometry = await emptyLines.evaluateAll((items) => items.map((item) => {
     const box = item.getBoundingClientRect();
     return { top: box.top, height: box.height };
   }));
   expect(geometry.every(({ height }) => height > 0)).toBe(true);
-  expect(new Set(geometry.map(({ top }) => Math.round(top))).size).toBe(3);
+  expect(new Set(geometry.map(({ top }) => Math.round(top))).size).toBe(initialPlaceholders + 3);
   await page.keyboard.press('Backspace');
   await page.keyboard.press('Backspace');
   await page.keyboard.press('Backspace');
@@ -4672,14 +4698,14 @@ test('turns multi-format and multi-block selections into visible paragraph bound
     contract.view.focus();
   });
   await page.keyboard.press('Enter');
-  await expect(editor.locator(':scope > p')).toHaveCount(3);
+  await expect(editor.locator(':scope > p')).toHaveCount(4);
   await expect(editor.locator(':scope > p').nth(0)).toHaveText('Al');
   await expect(editor.locator(':scope > p').nth(1)).toHaveText('ta');
   const firstGeometry = await editor.locator(':scope > p').nth(0).evaluate((element) => element.getBoundingClientRect());
   const secondGeometry = await editor.locator(':scope > p').nth(1).evaluate((element) => element.getBoundingClientRect());
   expect(secondGeometry.top).toBeGreaterThan(firstGeometry.top);
   await page.keyboard.press('ControlOrMeta+z');
-  await expect(editor.locator(':scope > p')).toHaveCount(2);
+  await expect(editor.locator(':scope > p')).toHaveCount(3);
   await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
   await expect(editor.locator(':scope > p').first().locator('strong')).toHaveText('Alpha');
 
@@ -4711,7 +4737,7 @@ test('turns multi-format and multi-block selections into visible paragraph bound
   });
   await expect.poll(() => page.evaluate(() => document.getSelection()?.anchorOffset)).toBe(6);
   await page.keyboard.press('Enter');
-  await expect(freshEditor.locator(':scope > p')).toHaveCount(2);
+  await expect(freshEditor.locator(':scope > p')).toHaveCount(3);
   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText(' paragraph');
   await page.keyboard.press('ControlOrMeta+z');
@@ -4725,7 +4751,7 @@ test('visibly splits and joins ordinary paragraphs with both deletion directions
   await blocks.first().click();
   await page.keyboard.press('End');
   await page.keyboard.press('Enter');
-  await expect(blocks).toHaveCount(3);
+  await expect(blocks).toHaveCount(4);
   await expect(blocks.nth(1).locator('[data-fountain-caret-placeholder]')).toHaveCount(1);
   const emptyGeometry = await blocks.nth(1).evaluate((element) => element.getBoundingClientRect());
   expect(emptyGeometry.height).toBeGreaterThan(0);
@@ -4734,13 +4760,13 @@ test('visibly splits and joins ordinary paragraphs with both deletion directions
   await expect(blocks.nth(1)).toHaveText('Bridge');
   await page.keyboard.press('Home');
   await page.keyboard.press('Backspace');
-  await expect(blocks).toHaveCount(2);
+  await expect(blocks).toHaveCount(3);
   await expect(blocks.first()).toHaveText('Alpha BetaBridge');
 
   await blocks.first().click();
   await page.keyboard.press('End');
   await page.keyboard.press('Delete');
-  await expect(blocks).toHaveCount(1);
+  await expect(blocks).toHaveCount(2);
   await expect(blocks.first()).toHaveText('Alpha BetaBridgeSecond paragraph');
 });
 

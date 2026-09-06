@@ -183,6 +183,16 @@ toggleTableHeaderRow(editor)
 geometry after arbitrary host transactions without adding repair steps to local
 undo history.
 
+`StarterKit` also includes `TrailingEditableBlockExtension`. When a configured
+document root ends with a table, image, divider, widget, or another block that
+cannot accept text directly, it appends one ordinary paragraph so the user can
+always place the caret after that content and continue writing. Existing
+paragraphs, headings, and code blocks already satisfy the invariant, so they are
+not followed by an extra block. The repair is schema-validated, idempotent,
+history-neutral, and collaboration-safe. Core-only/custom-schema consumers can
+omit it or configure the block and root types explicitly; see
+[the trailing editable block guide](docs/TRAILING_EDITABLE_BLOCK.md).
+
 ## Nested block reordering
 
 `moveNode` is a framework-neutral, path-based command for same-parent or
@@ -943,7 +953,7 @@ remains absent from the package root. See the [NodeView API](docs/API.md#custom-
 
 ## Included document capabilities
 
-`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, block/inline images, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. Lists support multi-block wrapping, selected-range type conversion, mixed nesting, multi-item indent/lift, ordered starts, task state, boundary joins, and nested HTML/Markdown interchange; the React controls toggle types and expose lift/indent actions. Tables support span-aware merge/split, structural repair, header scopes, full-row/column selections, column resizing, and TSV/HTML clipboard exchange. `StarterKit` also adds `MediaExtension`, safe link behavior, live language-aware code highlighting, and automatic table repair. Code tokens and optional line numbers are view-only decorations, language metadata round-trips through JSON/Markdown/HTML, the React toolbar edits language and line-number settings, and `createSyntaxHighlightExtension` accepts any host tokenizer through validated ranges. Link behavior includes normalization and validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, host-owned activation, and complete React add/preview/edit/remove controls.
+`CoreExtension` supplies paragraphs, six heading levels, alignment, quotes, bullet/ordered/task lists, code blocks, tables, block/inline images, dividers, semantic hard breaks, links, highlights, text colour, subscript, superscript, and common text marks. Its commands are available both as named imports and through `kit.commands`. Lists support multi-block wrapping, selected-range type conversion, mixed nesting, multi-item indent/lift, ordered starts, task state, boundary joins, and nested HTML/Markdown interchange; the React controls toggle types and expose lift/indent actions. Tables support span-aware merge/split, structural repair, header scopes, full-row/column selections, column resizing, and TSV/HTML clipboard exchange. `StarterKit` also adds `MediaExtension`, safe link behavior, live language-aware code highlighting, automatic table repair, and an ordinary editable block after terminal non-text content. Code tokens and optional line numbers are view-only decorations, language metadata round-trips through JSON/Markdown/HTML, the React toolbar edits language and line-number settings, and `createSyntaxHighlightExtension` accepts any host tokenizer through validated ranges. Link behavior includes normalization and validation hooks, typed web/email autolinking, link-on-paste, whole-link editing around a caret, host-owned activation, and complete React add/preview/edit/remove controls.
 
 The editing core provides immutable state; mapped text, node, gap, all-document,
 and rectangular table-cell selections; typed transactions; keyboard and IME
