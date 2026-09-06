@@ -228,11 +228,11 @@ opaque-token scanning, nested image descriptions, nested emphasis,
 rule-of-three arithmetic, repeated mark levels, unlike-marker overlap
 precedence, exact GFM tilde-run boundaries, and unmatched-delimiter
 preservation, is certified
-by the complete 514-test package gate and 295-pass
+by the complete 561-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile
-[CI run for `36fc481`](https://github.com/eddolo/fountainjs/actions/runs/33991664306),
+[CI run for `4d253cf`](https://github.com/eddolo/fountainjs/actions/runs/34002115275),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33991664261).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34002115395).
 
 ## Security and collaboration
 

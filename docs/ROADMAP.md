@@ -345,11 +345,11 @@ now scans all 652 CommonMark 0.31.2 examples without shipping a reference parser
 or equating Fountain's AST with CommonMark's: 449 matches are regression-locked,
 194 cases are explicitly pending, and nine safe-URL/GFM/editor-model
 differences are intentional. The current Markdown baseline passed the
-complete 514-test package gate and 295-pass
+complete 561-test package gate and 295-pass
 Chromium/Firefox/WebKit/mobile matrix in
-[CI run `36fc481`](https://github.com/eddolo/fountainjs/actions/runs/33991664306),
+[CI run `4d253cf`](https://github.com/eddolo/fountainjs/actions/runs/34002115275),
 and the corresponding
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33991664261)
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34002115395)
 succeeded. Deeper-structure source mapping and a larger standards corpus remain
 before a source editor UI. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md).
