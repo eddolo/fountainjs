@@ -4472,6 +4472,31 @@ test('turns multi-format and multi-block selections into visible paragraph bound
   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
 });
 
+test('visibly splits and joins ordinary paragraphs with both deletion directions', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const blocks = editor.locator(':scope > p[data-fountain-path]');
+  await blocks.first().click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await expect(blocks).toHaveCount(3);
+  await expect(blocks.nth(1).locator('[data-fountain-caret-placeholder]')).toHaveCount(1);
+  const emptyGeometry = await blocks.nth(1).evaluate((element) => element.getBoundingClientRect());
+  expect(emptyGeometry.height).toBeGreaterThan(0);
+
+  await page.keyboard.type('Bridge');
+  await expect(blocks.nth(1)).toHaveText('Bridge');
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Backspace');
+  await expect(blocks).toHaveCount(2);
+  await expect(blocks.first()).toHaveText('Alpha BetaBridge');
+
+  await blocks.first().click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Delete');
+  await expect(blocks).toHaveCount(1);
+  await expect(blocks.first()).toHaveText('Alpha BetaBridgeSecond paragraph');
+});
+
 test('unwraps and exits an inserted quote with ordinary browser keys', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
