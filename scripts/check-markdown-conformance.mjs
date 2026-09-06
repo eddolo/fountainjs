@@ -147,6 +147,12 @@ function semanticProjection(html) {
   return blockChildren(parseFragment(html).childNodes);
 }
 
+// CommonMark's spec source uses a visible arrow as notation for a tab in both
+// halves of an example. The reference runners materialize it before parsing.
+function materializeTabs(value) {
+  return value.replaceAll('→', '\t');
+}
+
 function expandRanges(source) {
   const result = new Set();
   for (const part of source.split(',').map((value) => value.trim()).filter(Boolean)) {
@@ -177,7 +183,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 2) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 3) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -192,17 +198,18 @@ const schema = new Schema(CoreSchemaSpec);
 const matches = new Set();
 const mismatches = [];
 for (const example of commonmarkSpec.tests) {
-  const expected = semanticProjection(example.html);
+  const source = materializeTabs(example.markdown);
+  const expected = semanticProjection(materializeTabs(example.html));
   let actual;
   let error = null;
   try {
-    const document = MarkdownImporter.parse(example.markdown, schema);
+    const document = MarkdownImporter.parse(source, schema);
     actual = semanticProjection(HTMLExporter.export(document, { document: false }));
   } catch (cause) {
     error = cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause);
   }
   if (!error && JSON.stringify(actual) === JSON.stringify(expected)) matches.add(example.number);
-  else mismatches.push({ ...example, expected, actual, error });
+  else mismatches.push({ ...example, source, expected, actual, error });
 }
 
 const required = expandRanges(baseline.requiredMatchRanges);
@@ -241,9 +248,10 @@ for (const number of inspectedExamples) {
   const example = commonmarkSpec.tests.find((candidate) => candidate.number === number);
   const mismatch = mismatches.find((candidate) => candidate.number === number);
   if (!example) throw new Error(`Unknown CommonMark example ${number}.`);
-  console.log(`Example ${number} (${example.section}) source:\n${JSON.stringify(example.markdown)}`);
-  console.log(`Expected projection:\n${JSON.stringify(semanticProjection(example.html), null, 2)}`);
-  console.log(`Fountain projection:\n${JSON.stringify(mismatch?.actual ?? semanticProjection(HTMLExporter.export(MarkdownImporter.parse(example.markdown, schema), { document: false })), null, 2)}`);
+  const source = materializeTabs(example.markdown);
+  console.log(`Example ${number} (${example.section}) source:\n${JSON.stringify(source)}`);
+  console.log(`Expected projection:\n${JSON.stringify(semanticProjection(materializeTabs(example.html)), null, 2)}`);
+  console.log(`Fountain projection:\n${JSON.stringify(mismatch?.actual ?? semanticProjection(HTMLExporter.export(MarkdownImporter.parse(source, schema), { document: false })), null, 2)}`);
   if (mismatch?.error) console.log(`Fountain error: ${mismatch.error}`);
 }
 
