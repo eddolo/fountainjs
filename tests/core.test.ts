@@ -401,6 +401,31 @@ describe('document model and transactions', () => {
     expect(blocks.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
   });
 
+  it('deletes an adjacent inline atom instead of text on its far side', () => {
+    const createInlineBreakEditor = () => createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [{ type: 'paragraph', content: [
+          { type: 'text', text: 'Before' },
+          { type: 'hard_break' },
+          { type: 'text', text: 'After' },
+        ] }],
+      },
+    });
+    const backward = createInlineBreakEditor();
+    backward.dispatch(backward.state.createTransaction().setSelection(Selection.cursor([0, 2], 0)));
+    expect(deleteBackward(backward)).toBe(true);
+    expect(backward.state.doc.child(0).content.map((node) => node.type.name)).toEqual(['text', 'text']);
+    expect(backward.getText()).toBe('BeforeAfter');
+
+    const forward = createInlineBreakEditor();
+    forward.dispatch(forward.state.createTransaction().setSelection(Selection.cursor([0, 0], 6)));
+    expect(deleteForward(forward)).toBe(true);
+    expect(forward.state.doc.child(0).content.map((node) => node.type.name)).toEqual(['text', 'text']);
+    expect(forward.getText()).toBe('BeforeAfter');
+  });
+
   it('formats a selection across existing mark boundaries', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,

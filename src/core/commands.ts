@@ -85,6 +85,14 @@ function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: s
   return dispatchIfValid(editor, transaction);
 }
 
+function deleteInlineSibling(editor: Editor, path: readonly number[], index: number): boolean {
+  if (index < 0) return false;
+  const parentPath = path.slice(0, -1);
+  const sibling = getNodeAtPath(editor.state.doc, parentPath).content[index];
+  return Boolean(sibling?.type.isInline && !sibling.isText
+    && replaceNodeSelection(editor, new NodeSelection(editor.state.doc, [...parentPath, index])));
+}
+
 function replaceCellSelection(editor: Editor, selection: CellSelection, text?: string): boolean {
   const paragraph = editor.state.schema.nodes.paragraph;
   const firstPath = selection.cellPaths[0];
@@ -322,6 +330,7 @@ export function deleteBackward(editor: Editor): boolean {
     editor.dispatch(transaction);
     return true;
   }
+  if (deleteInlineSibling(editor, path, (path.at(-1) as number) - 1)) return true;
   const leaves = getTextLeaves(state.doc);
   const index = leaves.findIndex((leaf) => comparePaths(leaf.path, path) === 0);
   const previous = leaves[index - 1];
@@ -358,6 +367,7 @@ export function deleteForward(editor: Editor): boolean {
     editor.dispatch(transaction);
     return true;
   }
+  if (deleteInlineSibling(editor, path, (path.at(-1) as number) + 1)) return true;
   const leaves = getTextLeaves(state.doc);
   const index = leaves.findIndex((leaf) => comparePaths(leaf.path, path) === 0);
   const next = leaves[index + 1];

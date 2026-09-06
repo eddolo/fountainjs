@@ -80,7 +80,7 @@ export class Editor {
         appended = true;
       }
       if (!appended) break;
-      if (pass === 19) throw new Error('Plugin append loop exceeded 20 passes.');
+      if (pass === 19) throw new Error('Plugin appendTransaction loop exceeded 20 passes.');
     }
     const notification = composeAppliedTransactions(oldState, applied);
     this.subscribers.forEach((callback) => callback(this.currentState, notification));

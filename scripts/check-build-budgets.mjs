@@ -192,7 +192,9 @@ const limits = Object.freeze({
   // to the shared format chunk without moving public entry-point ceilings.
   // GFM bare-email domain/tail validation adds about 0.4/0.3 KiB more.
   // The strict XMPP safe-URL branch fits inside the existing shared-core margin.
-  'all ESM runtime code': 1104 * kibibyte,
+  // Atomic selected-Enter handling and safe adjacent-inline deletion add about
+  // 0.4 KiB to the aggregate ESM graph without moving any public entry ceiling.
+  'all ESM runtime code': 1105 * kibibyte,
   'all CommonJS runtime code': 925 * kibibyte,
 });
 

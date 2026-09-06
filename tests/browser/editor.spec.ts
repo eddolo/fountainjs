@@ -4497,6 +4497,36 @@ test('visibly splits and joins ordinary paragraphs with both deletion directions
   await expect(blocks.first()).toHaveText('Alpha BetaBridgeSecond paragraph');
 });
 
+test('deletes an adjacent inline atom without eating surrounding text', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const setFixture = async (direction: 'backward' | 'forward') => page.evaluate((value) => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { editor: instance } = contract;
+    const paragraph = instance.state.schema.node('paragraph', {}, [
+      instance.state.schema.text('Before'),
+      instance.state.schema.node('hard_break'),
+      instance.state.schema.text('After'),
+    ]);
+    const offset = value === 'backward' ? 0 : 6;
+    const path = value === 'backward' ? [0, 2] : [0, 0];
+    instance.dispatch(instance.state.createTransaction().replace(0, instance.state.doc.childCount, [paragraph]));
+    contract.commands.commands.selectText(path, offset);
+    contract.view.focus();
+  }, direction);
+
+  await setFixture('backward');
+  const hardBreak = editor.locator('br[data-fountain-node="hard_break"]');
+  await expect(hardBreak).toHaveCount(1);
+  await page.keyboard.press('Backspace');
+  await expect(hardBreak).toHaveCount(0);
+  await expect(editor).toHaveText('BeforeAfter');
+
+  await setFixture('forward');
+  await page.keyboard.press('Delete');
+  await expect(hardBreak).toHaveCount(0);
+  await expect(editor).toHaveText('BeforeAfter');
+});
+
 test('unwraps and exits an inserted quote with ordinary browser keys', async ({ page }) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

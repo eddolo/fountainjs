@@ -8,7 +8,8 @@
   creates and removes visibly distinct lines, backward DOM selections retain
   their direction, Enter replaces multi-format or multi-paragraph selections
   with a real block boundary, selected atomic blocks can be continued with
-  Enter, and blockquotes can be unwrapped or exited with ordinary editing keys.
+  Enter, adjacent inline atoms are deleted without eating surrounding text,
+  and blockquotes can be unwrapped or exited with ordinary editing keys.
 - Responsive block images now fall back from a failed `srcset` candidate to
   their ordinary `src` without triggering a NodeView remount loop; Retry
   deliberately restores the responsive candidates.
