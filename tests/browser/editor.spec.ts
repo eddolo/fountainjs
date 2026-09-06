@@ -5594,6 +5594,31 @@ test('uses the public React media workflow for native playback, provider-gated e
   await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
 });
 
+test('streams an optional AI proposal outside the document until review is ready', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const original = await editor.textContent();
+  const panel = page.locator('.optional-ai');
+  await panel.locator(':scope > summary').click();
+  await panel.getByRole('button', { name: 'Improve' }).click();
+
+  await expect(panel.locator('.fountain-ai-review__status')).toHaveText('Generating…');
+  const streamingState = await panel.evaluate((element) => ({
+    stop: [...element.querySelectorAll('button')].some((button) => button.textContent === 'Stop generating'),
+    accept: [...element.querySelectorAll('button')].some((button) => button.textContent === 'Accept change'),
+    partial: element.querySelector('[aria-busy="true"] ins')?.textContent ?? '',
+  }));
+  expect(streamingState.stop).toBe(true);
+  expect(streamingState.accept).toBe(false);
+  expect(streamingState.partial.length).toBeGreaterThan(0);
+  expect(await editor.textContent()).toBe(original);
+
+  await expect(panel.locator('.fountain-ai-review__status')).toHaveText('Review needed');
+  await expect(panel.getByRole('button', { name: 'Accept change' })).toBeVisible();
+  await expect(panel.locator('[aria-busy="true"]')).toHaveCount(0);
+  expect(await editor.textContent()).toBe(original);
+});
+
 test('keeps a 1,000-block input update local and paints within budget', async ({ page }) => {
   await page.goto('/browser-tests.html');
   const metrics = await page.evaluate(() => (globalThis as typeof globalThis & {

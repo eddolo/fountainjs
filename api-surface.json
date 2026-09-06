@@ -1,14 +1,14 @@
 {
   "version": 1,
   "files": {
-    "dist/ai/controller.d.cts": "b9c62bae433729802773eca5e8e4ea2c5cc811e26b4c79ff1fc229d73b944fa5",
-    "dist/ai/controller.d.ts": "ae7201fd08f3fe760d51941e26c85f0dd3d43318d9bab91c8de5542345980bf3",
+    "dist/ai/controller.d.cts": "2b4531f66b2c8228d7829529734d88e6f54ad5b7c40e0b54a656197274ecd655",
+    "dist/ai/controller.d.ts": "3eb7ee205d23f3c506f92a531329c131c30b597d1588d1d92ff94d28bbafd457",
     "dist/ai/index.d.cts": "15996c8e21c2974af606cf9507f3701c8507110a359554cd2308cbb35f359586",
     "dist/ai/index.d.ts": "9fc2bc1e63debadc2a53d49684f00a1d2ebceb791cedac76ca198ae2f2db870c",
     "dist/ai/mcp-adapter.d.cts": "bbbc61aff798c97856d60f274ffab9725f7f394b69f43c477dd2769ef3b65e5e",
     "dist/ai/mcp-adapter.d.ts": "48d7c23ab7c7636f7970062eb7b7235e9cc46be88efea89dbac964d9be9f7a78",
-    "dist/ai/types.d.cts": "41215ea8742ce7a9ae98d38109bce7c4873f16d0ecbfe02f605c49f1d914c871",
-    "dist/ai/types.d.ts": "41215ea8742ce7a9ae98d38109bce7c4873f16d0ecbfe02f605c49f1d914c871",
+    "dist/ai/types.d.cts": "52d4a2756269f1a931b745557cb355d29b9b8880831156448b48d827c1c20b70",
+    "dist/ai/types.d.ts": "52d4a2756269f1a931b745557cb355d29b9b8880831156448b48d827c1c20b70",
     "dist/comments/index.d.cts": "792cde82ac9e88e4644726f5aafe1a5391109caa057db0fecaeca8414cb17bf5",
     "dist/comments/index.d.ts": "58cdeb970aec1083b7fd818206b84c9a20770741d0fa5d20656294fbf20af3ad",
     "dist/core/commands.d.cts": "fb4ea490e56066585d37e9c0ad47ac7308af7d6773818e5f09b42e6aaee31049",

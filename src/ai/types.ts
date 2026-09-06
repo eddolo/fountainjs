@@ -40,6 +40,14 @@ export interface AITransformResult {
   metadata?: Readonly<Record<string, unknown>>;
 }
 
+/** One append-only update from a streaming adapter. */
+export interface AIStreamChunk {
+  readonly replacementDelta?: string;
+  readonly explanationDelta?: string;
+  readonly model?: string;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+}
+
 export interface AIAdapterContext {
   signal: AbortSignal;
 }
@@ -49,6 +57,10 @@ export interface AIAdapter {
     request: AIRequestEnvelope,
     context: AIAdapterContext,
   ): Promise<AITransformResult | string>;
+  stream?(
+    request: AIRequestEnvelope,
+    context: AIAdapterContext,
+  ): AsyncIterable<AIStreamChunk>;
 }
 
 export interface AISuggestOptions {
@@ -74,9 +86,22 @@ export interface AISuggestion {
   createdAt: number;
 }
 
+/** Transient preview only. It is never written into editor state. */
+export interface AIStreamingProposal {
+  readonly request: AIRequestEnvelope;
+  readonly original: string;
+  readonly replacement: string;
+  readonly explanation?: string;
+  readonly model?: string;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+  readonly chunkCount: number;
+  readonly createdAt: number;
+}
+
 export interface AIControllerSnapshot {
-  status: 'idle' | 'requesting' | 'review' | 'error';
+  status: 'idle' | 'requesting' | 'streaming' | 'review' | 'error';
   activeRequest?: AIRequestEnvelope;
+  streamingProposal?: AIStreamingProposal;
   suggestions: readonly AISuggestion[];
   error?: string;
 }

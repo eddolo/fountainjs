@@ -1174,6 +1174,18 @@ security, failure semantics, and framework-neutral integration.
 - `cancel()` aborts an active adapter call.
 - `subscribe()` and `getSnapshot()` form an external store for UI integrations.
 
+An adapter may additionally implement `stream(request, context)` as an
+`AsyncIterable<AIStreamChunk>`. `createStreamingAIAdapter(stream)` is the
+convenience constructor. Each chunk append-only contributes
+`replacementDelta` and/or `explanationDelta`, and may update bounded `model`
+and JSON-serializable `metadata`. `AIControllerSnapshot.streamingProposal`
+exposes a frozen transient preview while status is `streaming`; it never enters
+the document or suggestion history. Completion creates the normal pending
+suggestion. Cancellation, adapter failure, malformed/empty chunks, more than
+10,000 chunks, a replacement over 1,000,000 characters, or an explanation over
+100,000 characters clears the preview without editing. A stream-capable adapter
+is preferred when it also supplies `transform`.
+
 `AISuggestOptions` accepts `action`, optional `instructions`, `scope`, and `includeDocumentContext`. Scope defaults to `auto`: selected text when a range exists, otherwise the current text node. Document context is disabled by default.
 
 AI review deliberately accepts only `Selection` text carets/ranges. Node, gap,
@@ -1193,10 +1205,17 @@ interface AIAdapter {
     model?: string;
     metadata?: Readonly<Record<string, unknown>>;
   }>;
+  stream?(
+    request: AIRequestEnvelope,
+    context: { signal: AbortSignal },
+  ): AsyncIterable<AIStreamChunk>;
 }
 ```
 
-`MCPAIAdapter` is the included bridge to `MCPIntegration`. `createAIAdapter(fn)` is a convenience for custom adapters.
+`MCPAIAdapter` is the included bridge to `MCPIntegration`. `createAIAdapter(fn)`
+is the convenience for complete results. `createStreamingAIAdapter(fn)` returns
+both the streaming operation and a conventional transform that safely collects
+the same chunks, preserving the established adapter contract.
 
 ## Commands
 

@@ -1292,6 +1292,20 @@ ai.accept(proposal); // one undoable editor transaction
 // or: ai.reject(proposal);
 ```
 
+Streaming is the same review contract, not direct model writes into the editor:
+
+```ts
+const adapter = createStreamingAIAdapter(async function* (request, { signal }) {
+  for await (const token of myProvider.stream(request, { signal })) {
+    yield { replacementDelta: token }
+  }
+})
+```
+
+Partial output is transient and cancellable. `FountainAIReview` shows it live but
+does not offer Accept until the stream finishes; the completed proposal still
+passes the ordinary stale-target check and applies as one undoable transaction.
+
 Full-document context is off by default. The included `MCPAIAdapter` connects the same workflow to a compatible MCP Streamable HTTP tool; MCP is a transport option, not the AI itself. Never ship permanent provider credentials in browser code.
 
 React applications can render the optional workflow with `<FountainAIReview controller={ai} />`.

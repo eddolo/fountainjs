@@ -5,6 +5,7 @@ import {
   CoreSchemaSpec,
   Selection,
   createAIAdapter,
+  createStreamingAIAdapter,
   createEditor,
   historyPlugin,
   undo,
@@ -22,6 +23,86 @@ function makeEditor(text = 'A rough first sentence.') {
 }
 
 describe('AI review controller', () => {
+  it('requires an adapter operation', () => {
+    expect(() => new AIController(makeEditor(), {} as never)).toThrow(/transform or stream/);
+  });
+
+  it('keeps a conventional transform fallback on a streaming adapter', async () => {
+    const adapter = createStreamingAIAdapter(async function* () {
+      yield { replacementDelta: 'Collected', explanationDelta: 'Fallback ' };
+      yield { replacementDelta: ' result', explanationDelta: 'works.' };
+    });
+    await expect(adapter.transform({} as never, { signal: new AbortController().signal })).resolves.toEqual({
+      replacement: 'Collected result',
+      explanation: 'Fallback works.',
+    });
+  });
+  it('streams a live proposal without mutating the document, then accepts once', async () => {
+    const editor = makeEditor('Draft words.');
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const controller = new AIController(editor, createStreamingAIAdapter(async function* () {
+      yield { replacementDelta: 'Clear', explanationDelta: 'Making it ' };
+      await gate;
+      yield { replacementDelta: ' words.', explanationDelta: 'direct.', model: 'stream-test' };
+    }));
+
+    const pending = controller.suggest({ action: 'improve' });
+    await vi.waitFor(() => expect(controller.getSnapshot().streamingProposal?.replacement).toBe('Clear'));
+    expect(controller.getSnapshot()).toMatchObject({ status: 'streaming' });
+    expect(editor.getText()).toBe('Draft words.');
+    expect(controller.getSnapshot().suggestions).toHaveLength(0);
+
+    release();
+    const suggestion = await pending;
+    expect(suggestion).toMatchObject({
+      replacement: 'Clear words.',
+      explanation: 'Making it direct.',
+      model: 'stream-test',
+      status: 'pending',
+    });
+    expect(controller.getSnapshot().streamingProposal).toBeUndefined();
+    expect(editor.getText()).toBe('Draft words.');
+    controller.accept(suggestion);
+    expect(editor.getText()).toBe('Clear words.');
+    expect(undo(editor)).toBe(true);
+    expect(editor.getText()).toBe('Draft words.');
+  });
+
+  it('cancels an in-flight stream without retaining or applying partial output', async () => {
+    const editor = makeEditor('Untouched');
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const controller = new AIController(editor, createStreamingAIAdapter(async function* () {
+      yield { replacementDelta: 'Partial' };
+      await gate;
+      yield { replacementDelta: ' output' };
+    }));
+    const pending = controller.suggest({ action: 'expand' });
+    await vi.waitFor(() => expect(controller.getSnapshot().streamingProposal?.replacement).toBe('Partial'));
+    controller.cancel();
+    release();
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+    expect(controller.getSnapshot()).toEqual({ status: 'idle', suggestions: [] });
+    expect(editor.getText()).toBe('Untouched');
+  });
+
+  it('fails closed on empty, malformed, and over-limit streaming output', async () => {
+    const editor = makeEditor('Still safe');
+    const empty = new AIController(editor, createStreamingAIAdapter(async function* () {
+      yield { model: 'metadata-only' };
+    }));
+    await expect(empty.suggest({ action: 'custom' })).rejects.toThrow(/empty replacement/);
+    expect(editor.getText()).toBe('Still safe');
+
+    const oversized = new AIController(editor, createStreamingAIAdapter(async function* () {
+      yield { replacementDelta: 'x'.repeat(1_000_001) };
+    }));
+    await expect(oversized.suggest({ action: 'custom' })).rejects.toThrow(/1000000/);
+    expect(oversized.getSnapshot()).toMatchObject({ status: 'error' });
+    expect(editor.getText()).toBe('Still safe');
+  });
+
   it('exposes the exact minimal request before calling an adapter', () => {
     const editor = makeEditor();
     editor.dispatch(editor.state.createTransaction().setSelection(new Selection([0, 0], 2, 7)));

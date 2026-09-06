@@ -14,7 +14,7 @@ import {
   TrailingEditableBlockExtension,
   composeExtensions,
   createBubbleMenuExtension,
-  createAIAdapter,
+  createStreamingAIAdapter,
   defineExtension,
   historyPlugin,
   canRedoCollaboration,
@@ -118,7 +118,7 @@ const initialContent = {
   ],
 } as const;
 
-const demoAdapter = createAIAdapter(async (request, { signal }) => {
+const demoAdapter = createStreamingAIAdapter(async function* (request, { signal }) {
   if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
   const source = request.input.trim();
   const replacement = request.action === 'shorten'
@@ -130,9 +130,23 @@ const demoAdapter = createAIAdapter(async (request, { signal }) => {
         : source === 'Try FountainJS in this document.'
           ? 'Edit this document to test FountainJS directly in your browser.'
           : `Make it unmistakably clear: ${source.charAt(0).toLowerCase()}${source.slice(1)}`;
-  return {
-    replacement,
-    explanation: 'This local demo adapter returns a deterministic proposal. A production app supplies its own model or MCP adapter.',
+  const split = Math.max(1, Math.ceil(replacement.length / 2));
+  yield { replacementDelta: replacement.slice(0, split) };
+  await new Promise<void>((resolve, reject) => {
+    const finish = () => {
+      signal.removeEventListener('abort', cancel);
+      resolve();
+    };
+    const cancel = () => {
+      window.clearTimeout(timer);
+      reject(new DOMException('Cancelled', 'AbortError'));
+    };
+    const timer = window.setTimeout(finish, 800);
+    signal.addEventListener('abort', cancel, { once: true });
+  });
+  yield {
+    replacementDelta: replacement.slice(split),
+    explanationDelta: 'This local demo streams a deterministic proposal. A production app supplies its own model or MCP adapter.',
     model: 'local-demo (no network)',
   };
 });

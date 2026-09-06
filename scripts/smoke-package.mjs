@@ -17,6 +17,7 @@ const coreNames = [
   'BlockHandleManager', 'FOUNTAIN_NODE_DRAG_TYPE',
   'getCollaborationAdapter', 'replaceCollaborationAdapter',
   'createLeanLoopbackProvider',
+  'createStreamingAIAdapter',
 ];
 const headlessCoreNames = [
   'Schema', 'Editor', 'createEditor', 'Selection', 'Transaction', 'Plugin',

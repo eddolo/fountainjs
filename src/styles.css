@@ -557,6 +557,7 @@
 .fountain-ai-review h3 { margin: 3px 0 0; font-size: 17px; }
 .fountain-ai-review__status { flex: none; padding: 5px 8px; color: var(--fountain-muted); font-size: 11px; font-weight: 700; background: #f4f5f7; border-radius: 999px; }
 .fountain-ai-review__status.is-requesting { color: #854d0e; background: #fef9c3; }
+.fountain-ai-review__status.is-streaming { color: #854d0e; background: #fef9c3; }
 .fountain-ai-review__status.is-review { color: #5b21b6; background: var(--fountain-accent-soft); }
 .fountain-ai-review__hint { margin: 12px 0; color: var(--fountain-muted); }
 .fountain-ai-review__actions { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -570,10 +571,13 @@
 .fountain-ai-review__proposal { margin-top: 14px; }
 .fountain-ai-review__diff { display: grid; gap: 8px; }
 .fountain-ai-review__diff > div { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: start; }
-.fountain-ai-review__diff span { padding-top: 8px; color: var(--fountain-muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.fountain-ai-review__diff > div > span { padding-top: 8px; color: var(--fountain-muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .fountain-ai-review__diff del, .fountain-ai-review__diff ins { padding: 8px 10px; text-decoration: none; border-radius: 8px; }
 .fountain-ai-review__diff del { color: #8a2c24; background: #fff0ee; }
 .fountain-ai-review__diff ins { color: #146c43; background: #ecfdf3; }
+.fountain-ai-review__cursor { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -.12em; background: currentColor; animation: fountain-ai-cursor 1s steps(1) infinite; }
+@keyframes fountain-ai-cursor { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fountain-ai-review__cursor { animation: none; } }
 .fountain-ai-review__decision { display: flex; gap: 7px; margin-top: 12px; }
 .fountain-ai-review__decision .is-accept { color: #fff; background: var(--fountain-accent); border-color: var(--fountain-accent); }
 .fountain-ai-review__decision .is-accept:hover:not(:disabled), .fountain-ai-review__decision .is-accept:focus-visible { color: #fff; background: color-mix(in srgb, var(--fountain-accent) 88%, #000); border-color: color-mix(in srgb, var(--fountain-accent) 88%, #000); }

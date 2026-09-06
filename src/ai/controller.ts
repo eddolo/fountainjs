@@ -7,11 +7,18 @@ import type {
   AIControllerSnapshot,
   AIRequestEnvelope,
   AIReviewEvent,
+  AIStreamChunk,
+  AIStreamingProposal,
   AISuggestOptions,
   AISuggestion,
+  AITransformResult,
 } from './types';
 
 let requestCounter = 0;
+export const MAX_AI_REPLACEMENT_LENGTH = 1_000_000;
+export const MAX_AI_EXPLANATION_LENGTH = 100_000;
+export const MAX_AI_STREAM_CHUNKS = 10_000;
+const MAX_AI_METADATA_LENGTH = 100_000;
 
 function nextId(prefix: string): string {
   requestCounter += 1;
@@ -61,6 +68,79 @@ function freezeSuggestion(suggestion: AISuggestion): AISuggestion {
   });
 }
 
+function optionalText(value: unknown, name: string, maximum: number): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'string' || value.length > maximum || value.includes('\0')) {
+    throw new TypeError(`Invalid ${name} (max ${maximum}).`);
+  }
+  return value;
+}
+
+function normalizeMetadata(value: unknown): Readonly<Record<string, unknown>> | undefined {
+  if (value === undefined) return undefined;
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid AI metadata.');
+  let serialized: string | undefined;
+  try { serialized = JSON.stringify(value); }
+  catch { throw new TypeError('AI metadata must be JSON-serializable.'); }
+  if (serialized === undefined || serialized.length > MAX_AI_METADATA_LENGTH || serialized.includes('\0')) {
+    throw new TypeError(`Invalid AI metadata (max ${MAX_AI_METADATA_LENGTH}).`);
+  }
+  return Object.freeze({ ...(value as Readonly<Record<string, unknown>>) });
+}
+
+function normalizeResult(value: AITransformResult | string): AITransformResult {
+  const candidate = typeof value === 'string' ? { replacement: value } : value;
+  if (!candidate || typeof candidate !== 'object') throw new TypeError('The AI adapter returned an invalid result.');
+  const replacement = optionalText(candidate.replacement, 'AI replacement', MAX_AI_REPLACEMENT_LENGTH);
+  if (!replacement?.trim()) throw new Error('The AI adapter returned an empty replacement.');
+  const explanation = optionalText(candidate.explanation, 'AI explanation', MAX_AI_EXPLANATION_LENGTH);
+  const model = optionalText(candidate.model, 'AI model', 500);
+  const metadata = normalizeMetadata(candidate.metadata);
+  return Object.freeze({
+    replacement,
+    ...(explanation !== undefined ? { explanation } : {}),
+    ...(model !== undefined ? { model } : {}),
+    ...(metadata !== undefined ? { metadata } : {}),
+  });
+}
+
+interface AIStreamAccumulator {
+  replacement: string;
+  explanation: string;
+  model?: string;
+  metadata?: Readonly<Record<string, unknown>>;
+  chunkCount: number;
+}
+
+function appendStreamChunk(state: AIStreamAccumulator, rawChunk: AIStreamChunk): void {
+  if (!rawChunk || typeof rawChunk !== 'object') throw new TypeError('The AI stream returned an invalid chunk.');
+  if (rawChunk.replacementDelta === undefined && rawChunk.explanationDelta === undefined
+    && rawChunk.model === undefined && rawChunk.metadata === undefined) {
+    throw new TypeError('The AI stream returned an empty chunk.');
+  }
+  state.chunkCount += 1;
+  if (state.chunkCount > MAX_AI_STREAM_CHUNKS) throw new Error('The AI stream exceeded the chunk limit.');
+  state.replacement += optionalText(rawChunk.replacementDelta, 'AI replacement delta', MAX_AI_REPLACEMENT_LENGTH) ?? '';
+  state.explanation += optionalText(rawChunk.explanationDelta, 'AI explanation delta', MAX_AI_EXPLANATION_LENGTH) ?? '';
+  if (state.replacement.length > MAX_AI_REPLACEMENT_LENGTH) throw new Error('The AI stream exceeded the replacement limit.');
+  if (state.explanation.length > MAX_AI_EXPLANATION_LENGTH) throw new Error('The AI stream exceeded the explanation limit.');
+  if (rawChunk.model !== undefined) state.model = optionalText(rawChunk.model, 'AI model', 500);
+  if (rawChunk.metadata !== undefined) state.metadata = normalizeMetadata(rawChunk.metadata);
+}
+
+function streamResult(state: AIStreamAccumulator): AITransformResult {
+  return normalizeResult({
+    replacement: state.replacement,
+    ...(state.explanation ? { explanation: state.explanation } : {}),
+    ...(state.model ? { model: state.model } : {}),
+    ...(state.metadata ? { metadata: state.metadata } : {}),
+  });
+}
+
+function freezeStreamingProposal(proposal: AIStreamingProposal): AIStreamingProposal {
+  return Object.freeze({ ...proposal });
+}
+
 export class AIController {
   private readonly listeners = new Set<AIControllerListener>();
   private suggestions: AISuggestion[] = [];
@@ -70,7 +150,11 @@ export class AIController {
   constructor(
     public readonly editor: Editor,
     public readonly adapter: AIAdapter,
-  ) {}
+  ) {
+    if (!adapter || (typeof adapter.transform !== 'function' && typeof adapter.stream !== 'function')) {
+      throw new TypeError('AI adapter needs transform or stream.');
+    }
+  }
 
   getSnapshot = (): AIControllerSnapshot => this.snapshot;
 
@@ -131,12 +215,16 @@ export class AIController {
     this.updateSnapshot('requesting', request);
 
     try {
-      const rawResult = await this.adapter.transform(request, { signal: abort.signal });
-      if (abort.signal.aborted) throw new DOMException('The AI request was cancelled.', 'AbortError');
-      const result = typeof rawResult === 'string' ? { replacement: rawResult } : rawResult;
-      if (typeof result.replacement !== 'string' || !result.replacement.trim()) {
-        throw new Error('The AI adapter returned an empty replacement.');
+      let rawResult: AITransformResult | string;
+      if (this.adapter.stream) {
+        rawResult = await this.consumeStream(request, abort);
+      } else if (this.adapter.transform) {
+        rawResult = await this.adapter.transform(request, { signal: abort.signal });
+      } else {
+        throw new TypeError('AI adapter needs transform or stream.');
       }
+      if (abort.signal.aborted) throw new DOMException('The AI request was cancelled.', 'AbortError');
+      const result = normalizeResult(rawResult);
       const suggestion = freezeSuggestion({
         id: nextId('suggestion'),
         status: 'pending',
@@ -206,6 +294,38 @@ export class AIController {
     this.updateSnapshot(this.suggestions.some((suggestion) => suggestion.status === 'pending') ? 'review' : 'idle');
   }
 
+  private async consumeStream(request: AIRequestEnvelope, abort: AbortController): Promise<AITransformResult> {
+    const stream = this.adapter.stream;
+    if (!stream) throw new TypeError('AI streaming adapter is unavailable.');
+    const state: AIStreamAccumulator = { replacement: '', explanation: '', chunkCount: 0 };
+    const createdAt = Date.now();
+    const publish = () => {
+      const proposal = freezeStreamingProposal({
+        request,
+        original: request.input,
+        replacement: state.replacement,
+        ...(state.explanation ? { explanation: state.explanation } : {}),
+        ...(state.model ? { model: state.model } : {}),
+        ...(state.metadata ? { metadata: state.metadata } : {}),
+        chunkCount: state.chunkCount,
+        createdAt,
+      });
+      this.updateSnapshot('streaming', request, undefined, proposal);
+    };
+    publish();
+    for await (const rawChunk of stream(request, { signal: abort.signal })) {
+      if (abort.signal.aborted || this.activeAbort !== abort) {
+        throw new DOMException('The AI request was cancelled.', 'AbortError');
+      }
+      appendStreamChunk(state, rawChunk);
+      publish();
+    }
+    if (abort.signal.aborted || this.activeAbort !== abort) {
+      throw new DOMException('The AI request was cancelled.', 'AbortError');
+    }
+    return streamResult(state);
+  }
+
   private findPending(suggestionOrId: AISuggestion | string): AISuggestion {
     const id = typeof suggestionOrId === 'string' ? suggestionOrId : suggestionOrId.id;
     const suggestion = this.suggestions.find((candidate) => candidate.id === id);
@@ -228,10 +348,12 @@ export class AIController {
     status: AIControllerSnapshot['status'],
     activeRequest?: AIRequestEnvelope,
     error?: string,
+    streamingProposal?: AIStreamingProposal,
   ): void {
     this.snapshot = Object.freeze({
       status,
       ...(activeRequest ? { activeRequest } : {}),
+      ...(streamingProposal ? { streamingProposal } : {}),
       suggestions: Object.freeze([...this.suggestions]),
       ...(error ? { error } : {}),
     });
@@ -240,7 +362,26 @@ export class AIController {
 }
 
 export function createAIAdapter(
-  transform: AIAdapter['transform'],
+  transform: NonNullable<AIAdapter['transform']>,
 ): AIAdapter {
+  if (typeof transform !== 'function') throw new TypeError('AI transform must be a function.');
   return { transform };
+}
+
+export function createStreamingAIAdapter(
+  stream: NonNullable<AIAdapter['stream']>,
+): AIAdapter {
+  if (typeof stream !== 'function') throw new TypeError('AI stream must be a function.');
+  return {
+    stream,
+    async transform(request, context) {
+      const state: AIStreamAccumulator = { replacement: '', explanation: '', chunkCount: 0 };
+      for await (const chunk of stream(request, context)) {
+        if (context.signal.aborted) throw new DOMException('The AI request was cancelled.', 'AbortError');
+        appendStreamChunk(state, chunk);
+      }
+      if (context.signal.aborted) throw new DOMException('The AI request was cancelled.', 'AbortError');
+      return streamResult(state);
+    },
+  };
 }

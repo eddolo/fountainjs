@@ -24,7 +24,9 @@ const limits = Object.freeze({
   // changing the framework-neutral command surface. The contextual table and
   // highlight panels replace ambiguous icon-only interactions with labelled,
   // selection-aware controls while retaining an explicit compact allowance.
-  'dist/react.js': 73 * kibibyte,
+  // Live AI stream state and a cancellable proposal preview add less than
+  // 1 KiB to the existing optional review component.
+  'dist/react.js': 74 * kibibyte,
   'dist/react.cjs': 55 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
   // adapter remains a separately loaded peer-backed entry. Granular structured
@@ -228,8 +230,10 @@ const limits = Object.freeze({
   // independent integrity scanner/sanitizer and DOM renderer add about
   // 16.6/13.8 KiB without entering the root package. Its optional React
   // inspector adds about 8/6 KiB in a separate entry; default React is intact.
-  'all ESM runtime code': 1184 * kibibyte,
-  'all CommonJS runtime code': 992 * kibibyte,
+  // Bounded provider-neutral streaming proposals add about 4/3 KiB across the
+  // existing AI controller and React review UI, with no model SDK dependency.
+  'all ESM runtime code': 1189 * kibibyte,
+  'all CommonJS runtime code': 996 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

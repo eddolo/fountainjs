@@ -13,6 +13,23 @@ FountainJS separates the editor review lifecycle from model transport. Use any `
 
 Full-document context is absent unless the application sets `includeDocumentContext: true`.
 
+## Incremental proposals
+
+Provider streaming is represented independently from MCP. Supply
+`createStreamingAIAdapter(async function* (...) { ... })` and yield bounded
+`replacementDelta` chunks from any SDK, HTTP stream, worker, or local model.
+Fountain publishes a frozen `streamingProposal` to subscribers but never
+dispatches streamed tokens into the editor. Cancellation or failure discards
+the partial proposal. Only iterator completion creates an accept/reject
+suggestion, which still needs an unchanged target and one explicit human
+acceptance before a single undoable transaction is dispatched.
+
+MCP's Streamable HTTP name describes its transport response formats; it does
+not guarantee that a particular tool emits token deltas. `MCPAIAdapter` keeps
+its ordinary complete-result behavior. A host whose MCP tool defines an
+incremental result protocol can adapt those events through the generic
+streaming interface without changing Fountain's document contract.
+
 ## MCP transport
 
 The included browser-and-Node client implements the Model Context Protocol `2025-11-25` Streamable HTTP lifecycle:

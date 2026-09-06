@@ -63,6 +63,13 @@
 
 ### Added
 
+- Provider-neutral AI adapters may now stream bounded append-only proposal and
+  explanation deltas. Partial output remains transient, inspectable, and
+  cancellable; it never mutates the document, cannot be accepted before
+  completion, and becomes the same stale-checked one-transaction proposal only
+  when the stream finishes. The optional React review UI exposes live progress
+  and a Stop action, while the public demo uses a deterministic local stream.
+
 - A hardened optional Lean 4 loopback workflow now pairs the browser-side
   `createLeanLoopbackProvider` with a separately launched
   `fountainjs-lean-bridge`. It binds only to loopback, uses exact-origin and

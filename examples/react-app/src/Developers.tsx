@@ -839,7 +839,7 @@ function Developers() {
           <section className="dev-section" id="ai-mcp">
             <p className="dev-label">11 · OPTIONAL AI & MCP</p>
             <h2>AI proposes. The transaction system decides.</h2>
-            <p>The core editor has no model dependency. <code>AIController</code> reads the current selection, sends a provider-neutral request to an adapter, and creates a before/after proposal. Accept applies a normal undoable transaction; reject changes nothing; stale proposals are refused if their target text has changed.</p>
+            <p>The core editor has no model dependency. <code>AIController</code> reads the current selection, sends a provider-neutral request to an adapter, and creates a before/after proposal. Ordinary adapters return once; streaming adapters yield bounded append-only deltas into a cancellable transient preview. Neither route edits the document while generating. Accept appears only after completion and applies one normal undoable transaction; reject changes nothing; stale proposals are refused if their target text has changed.</p>
             <p><code>MCPAIAdapter</code> is one adapter. It negotiates an MCP Streamable HTTP session, discovers tools, calls the selected tool, handles JSON or server-sent-event responses, and closes the session. Your product can instead provide a local function, HTTP service, worker, or any model SDK.</p>
             <div className="dev-callout"><b>Privacy posture</b><span>The default request contains the selected text and minimal action context—not the whole document. The host owns the adapter, endpoint, authentication, logging, and retention policy.</span></div>
           </section>

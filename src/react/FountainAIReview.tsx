@@ -36,6 +36,7 @@ export function FountainAIReview({
   const [selectedAction, setSelectedAction] = useState<AIAction>('improve');
   const [instructions, setInstructions] = useState('');
   const pending = [...snapshot.suggestions].reverse().find((suggestion) => suggestion.status === 'pending');
+  const streaming = snapshot.streamingProposal;
 
   const requestPreview = useMemo<AIRequestEnvelope | undefined>(() => {
     try {
@@ -69,11 +70,13 @@ export function FountainAIReview({
           <h3 id="fountain-ai-title">{title}</h3>
         </div>
         <span className={`fountain-ai-review__status is-${snapshot.status}`}>
-          {snapshot.status === 'requesting' ? 'Thinking…' : pending ? 'Review needed' : 'Ready'}
+          {snapshot.status === 'requesting' ? 'Thinking…'
+            : snapshot.status === 'streaming' ? 'Generating…'
+              : pending ? 'Review needed' : 'Ready'}
         </span>
       </div>
 
-      {!pending && (
+      {!pending && !streaming && (
         <>
           <p className="fountain-ai-review__hint">
             Select text—or leave the cursor in a text fragment—then request a change.
@@ -83,7 +86,7 @@ export function FountainAIReview({
               <button
                 key={action}
                 type="button"
-                disabled={snapshot.status === 'requesting'}
+                disabled={snapshot.status === 'requesting' || snapshot.status === 'streaming'}
                 onClick={() => void run(action)}
               >
                 {label}
@@ -102,6 +105,19 @@ export function FountainAIReview({
       )}
 
       {snapshot.error && <p className="fountain-ai-review__error" role="alert">{snapshot.error}</p>}
+
+      {streaming && (
+        <div className="fountain-ai-review__proposal" aria-live="polite" aria-busy="true">
+          <div className="fountain-ai-review__diff">
+            <div><span>Before</span><del>{streaming.original}</del></div>
+            <div><span>Generating</span><ins>{streaming.replacement}<span className="fountain-ai-review__cursor" aria-hidden="true" /></ins></div>
+          </div>
+          {streaming.explanation && <p>{streaming.explanation}</p>}
+          <div className="fountain-ai-review__decision">
+            <button type="button" onClick={() => controller.cancel()}>Stop generating</button>
+          </div>
+        </div>
+      )}
 
       {pending && (
         <div className="fountain-ai-review__proposal" aria-live="polite">
