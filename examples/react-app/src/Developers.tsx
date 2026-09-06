@@ -436,6 +436,24 @@ selectNodeById(editor, nodeId)
 // Duplicate IDs never silently resolve to the first match.
 if (!entry) showMissingOrAmbiguousReference(nodeId)`;
 
+const tableOfContentsExample = `import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids'
+import {
+  TableOfContentsExtension,
+  getTableOfContentsState,
+  navigateTableOfContents,
+} from 'fountainjs-editor/table-of-contents'
+
+const kit = composeExtensions([
+  CoreExtension,
+  StableNodeIdsExtension,
+  TableOfContentsExtension,
+])
+
+const outline = getTableOfContentsState(editor)
+renderOutline(outline?.tree ?? [], entry => {
+  navigateTableOfContents(editor, entry.id)
+})`;
+
 const structuredAttributesExample = `import {
   defineStructuredAttribute,
   insertStructuredAttributeItems,
@@ -709,6 +727,10 @@ function Developers() {
             <p>The opt-in <code>fountainjs-editor/node-ids</code> entry assigns portable <code>nodeId</code> values to blocks, maintains an immutable O(1) lookup index, and exposes path-independent update and selection commands. Missing, malformed, or copied duplicate IDs repair in one position-neutral step without becoming a second undo action. Duplicate lookup fails closed. Hosts may choose node types, filter extension nodes, and inject their own ID generator.</p>
             <Code>{stableIdentityExample}</Code>
             <p>Canonical JSON and generic Yjs preserve identities as ordinary validated attributes. If an older peer introduces a duplicate, an identity-aware peer deterministically repairs the shared document and publishes the correction. Stored JSON can be inspected and normalized in pure Node without jsdom; HTML and Markdown deliberately do not claim to preserve private application IDs. Try the IDs in the live JSON output of the <a href="./demos/go-docs-service.html">Go documentation-service demo</a>, or read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/NODE_IDS.md">complete identity and migration contract</a>.</p>
+            <h3>The live outline is derived, not duplicated document state</h3>
+            <p>The optional <code>fountainjs-editor/table-of-contents</code> entry builds immutable flat and hierarchical heading indexes, stable anchors, current paths and positions, and selection-driven active state without reading the DOM. Compose it after stable node IDs so editing or moving a heading changes its title and location without breaking external links. Custom renderers call the same model navigation command.</p>
+            <Code>{tableOfContentsExample}</Code>
+            <p>The outline beside the <a href="./#playground">homepage editor</a> is the working React adapter: it exposes normalized hierarchy, complete hover titles, <code>aria-current</code>, and scroll-to-heading behavior over the shared state. Headless Node applications can build the same index without jsdom. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TABLE_OF_CONTENTS.md">complete state, renderer, identity, and persistence contract</a>.</p>
             <h3>Nested product state can merge field by field</h3>
             <p>The isolated <code>fountainjs-editor/structured-attributes</code> entry defines bounded object/array attributes and path-based set, delete, insert, and range-delete commands without importing Yjs or a browser. Every accepted change remains one schema-validated Fountain transaction and ordinary JSON.</p>
             <Code>{structuredAttributesExample}</Code>
@@ -751,6 +773,8 @@ function Developers() {
           <section className="dev-section" id="surfaces">
             <p className="dev-label">08 · FRAMEWORK SURFACES</p>
             <h2>Pick an adapter without changing the document.</h2>
+            <h3>The visible editor is yours</h3>
+            <p>FountainJS does not impose a visual shell. The supplied components and stylesheet are optional implementations of public state and commands. Keep and restyle them, replace individual controls, or supply every toolbar, menu, dialog, outline, block handle, icon, and NodeView yourself. Omitting Fountain CSS or changing the complete interface never changes the document model or portable JSON.</p>
             <Code>{surfacesExample}</Code>
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>

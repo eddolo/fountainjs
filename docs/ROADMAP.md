@@ -128,6 +128,19 @@ plus its successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33967296119),
 certify the public package and rendered demo.
 
+## Implemented, certification pending: live table of contents
+
+`DOC-15` now derives immutable flat and hierarchical heading indexes from the
+platform-neutral document, uses stable node identity for durable anchors,
+tracks the active section from the logical selection, and navigates with a
+model transaction. Heading edits and movement update their titles and paths
+without changing their IDs. A DOM view receives only stable transient anchor
+decorations, while the supplied React Navigator adds active state, normalized
+indentation, `aria-current`, complete-title hover text, and scrolling. Pure
+builders run in Node.js without browser globals. Package and all-engine release
+evidence remain before this section can be promoted to Delivered; see
+[TABLE_OF_CONTENTS.md](TABLE_OF_CONTENTS.md).
+
 ## Delivered: first-class interactive widget contract
 
 The first-class widget implementation keeps validated values in

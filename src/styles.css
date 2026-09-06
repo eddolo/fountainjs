@@ -308,8 +308,10 @@
 .fountain-navigator { display: grid; gap: 2px; font: 14px/1.35 system-ui, sans-serif; }
 .fountain-navigator__title { margin-bottom: 6px; font-weight: 700; }
 .fountain-navigator__empty { color: var(--fountain-muted); }
-.fountain-navigator button { width: 100%; padding-block: 7px; overflow-wrap: anywhere; color: var(--fountain-muted); text-align: start; white-space: normal; background: transparent; border: 0; border-radius: 6px; cursor: pointer; }
+.fountain-navigator button { width: 100%; padding-block: 7px; overflow-wrap: anywhere; color: var(--fountain-muted); text-align: start; white-space: normal; background: transparent; border: 0; border-inline-start: 3px solid transparent; border-radius: 6px; cursor: pointer; }
 .fountain-navigator button:hover { color: var(--fountain-accent); background: var(--fountain-accent-soft); }
+.fountain-navigator button[aria-current="location"] { color: var(--fountain-accent); font-weight: 700; background: var(--fountain-accent-soft); border-inline-start-color: var(--fountain-accent); }
+.fountain-toc-heading { scroll-margin-block: 24px; }
 
 .fountain-toolbar__check { display: inline-flex; gap: 6px; align-items: center; color: var(--fountain-muted); font: 700 12px/1.2 system-ui, sans-serif; white-space: nowrap; }
 .fountain-toolbar__check input { min-width: 0; accent-color: var(--fountain-accent); }

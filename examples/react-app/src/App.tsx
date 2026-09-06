@@ -35,6 +35,8 @@ import {
   createYjsCollaborationExtension,
   type YjsAwareness,
 } from 'fountainjs-editor/yjs';
+import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
+import { TableOfContentsExtension } from 'fountainjs-editor/table-of-contents';
 import {
   defineStructuredAttribute,
   insertStructuredAttributeItems,
@@ -227,6 +229,8 @@ const slashCommandExtension = createSlashCommandExtension({
 
 const demoKit = composeExtensions([
   CoreExtension,
+  StableNodeIdsExtension,
+  TableOfContentsExtension,
   MediaExtension,
   mentionExtension,
   EmojiExtension,

@@ -193,6 +193,14 @@ export class DetailsNodeView implements NodeViewLike {
 
   update(node: Node): boolean {
     if (node.type !== this.current.type) return false;
+    // A selection/decorations-only view update can arrive between the native
+    // <details> element changing `open` and its asynchronous `toggle` event.
+    // Re-applying an equivalent model node here would erase that native state
+    // before the event can persist it. Attribute/content changes still render.
+    if (node.eq(this.current)) {
+      this.current = node;
+      return true;
+    }
     this.current = node;
     this.render();
     return true;

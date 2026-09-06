@@ -27,6 +27,8 @@ import {
   wrapInDetails,
 } from '../src/details';
 import { createYjsCollaborationExtension } from '../src/yjs';
+import { StableNodeIdsExtension } from '../src/node-ids';
+import { TableOfContentsExtension } from '../src/table-of-contents';
 
 function paragraph(text: string) {
   return { type: 'paragraph', content: [{ type: 'text', text }] } as const;
@@ -192,6 +194,44 @@ describe('collapsible details', () => {
     expect(reader.state.doc.child(0).attrs.open).toBe(false);
     expect(readerDisclosure.open).toBe(true);
     readerView.destroy();
+  });
+
+  it('does not erase a native toggle during a table-of-contents decoration update', () => {
+    const composed = composeExtensions([
+      CoreExtension,
+      DetailsExtension,
+      StableNodeIdsExtension,
+      TableOfContentsExtension,
+    ]);
+    const editor = createEditor({
+      schema: composed.schema,
+      plugins: composed.plugins,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'First' }] },
+          { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Second' }] },
+          {
+            type: 'details', attrs: { open: false }, content: [
+              { type: 'details_summary', content: [{ type: 'text', text: 'Toggle me' }] },
+              paragraph('Body'),
+            ],
+          },
+        ],
+      },
+    });
+    const mount = document.createElement('div');
+    const view = new EditorView(mount, editor);
+    const disclosure = mount.querySelector('details') as HTMLDetailsElement;
+
+    disclosure.open = true;
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([2, 0, 0], 0)));
+    expect(mount.querySelector('details')).toBe(disclosure);
+    expect(disclosure.open).toBe(true);
+    disclosure.dispatchEvent(new Event('toggle'));
+    expect(editor.state.doc.child(2).attrs.open).toBe(true);
+
+    view.destroy();
   });
 
   it('synchronizes disclosure state and nested edits through the optional Yjs adapter', () => {

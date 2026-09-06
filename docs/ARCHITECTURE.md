@@ -95,6 +95,17 @@ the appended local correction without echoing ordinary remote work. The Yjs
 adapter needs no identity-specific representation because it already stores
 each node attribute independently. See [NODE_IDS.md](NODE_IDS.md).
 
+### Derived heading navigation
+
+`src/table-of-contents/` is a DOM-free projection over the document, stable
+node identities, and logical selection. It builds immutable flat and
+hierarchical heading indexes, derives the active section, and navigates by
+dispatching a model selection. The plugin optionally contributes node
+decorations for DOM anchors, but the index and command never inspect DOM nodes
+or layout. `src/react/Navigator.tsx` is only a presentation adapter over that
+shared state. Anchors remain out of persistence, history, collaboration, and
+format output. See [TABLE_OF_CONTENTS.md](TABLE_OF_CONTENTS.md).
+
 ## Schema and validation
 
 `Schema` converts a `SchemaSpec` into owned node and mark types. Node specs declare groups, content expressions, attributes, atoms, code behavior, DOM output, and optional NodeViews. Mark specs declare attributes and DOM output.

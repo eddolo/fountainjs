@@ -783,6 +783,33 @@ published back through the adapter so generic Yjs documents converge. Canonical
 JSON/Yjs preserve IDs; HTML and Markdown do not claim to preserve application
 identity. See [NODE_IDS.md](NODE_IDS.md) for policy, examples, and limits.
 
+## Live table of contents
+
+Import table-of-contents APIs from `fountainjs-editor/table-of-contents`. This
+entry is framework-neutral and does not import the DOM view or React.
+
+`buildTableOfContents(document, options?)` returns immutable `entries` and
+`tree` projections. Entries contain `id`, `anchor`, `title`, source heading
+`level`, normalized hierarchy `depth`, current `path`/`from`/`to`, and a
+`stable` flag. `createTableOfContentsState(document, selection, options?)` also
+derives the closest active heading. Both APIs run in pure Node.js.
+
+`createTableOfContentsExtension(options?)` installs live plugin state and
+view-only heading decorations. `TableOfContentsExtension` is the default
+instance and requires `StableNodeIdsExtension` to precede it. Configure
+`types`, `minLevel`, `maxLevel`, `identityAttribute`, `anchorPrefix`, or
+`maxTitleLength` for another schema. `getTableOfContentsState(editor)` reads the
+live immutable snapshot. `navigateTableOfContents(editor, idOrAnchor)` resolves
+the current entry and selects its heading through the model without a DOM
+query.
+
+DOM decorations expose the stable derived anchor, node ID, and level without
+changing on selection-only updates; they never enter stored JSON, exported
+HTML/Markdown, clipboard payloads, history, or collaboration. React hosts can use the supplied `Navigator`,
+`useNavigatorTableOfContentsState`, or the backward-compatible
+`useNavigatorState`. See [TABLE_OF_CONTENTS.md](TABLE_OF_CONTENTS.md) for
+composition, renderer, identity, and accessibility details.
+
 ## Structured attributes
 
 Import renderer-independent nested value APIs from
@@ -1800,7 +1827,7 @@ Import React bindings from `fountainjs-editor/react`:
 - `FountainSuggestionMenu`, `FountainSlashCommandMenu`, `FountainBubbleMenu`,
   `FountainFloatingMenu`, and `FountainCharacterCount`
 - `ClipboardHistoryMenu`
-- `Navigator` and `useNavigatorState`
+- `Navigator`, `useNavigatorState`, and `useNavigatorTableOfContentsState`
 - `FountainAIReview` and `useAIControllerState`
 - `createReactNodeView(Component, options?)` and `ReactNodeViewProps`
 

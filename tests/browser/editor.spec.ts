@@ -1,6 +1,11 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 
+// This file deliberately combines browser layout, PDF parsing, 100k-block
+// virtualization, and collaboration tests. Parallel Firefox on Windows can
+// exceed Playwright's 30-second default despite the same case passing serially.
+test.setTimeout(60_000);
+
 async function selectBlockEnd(block: Locator): Promise<void> {
   await block.evaluate((element) => {
     const editor = element.closest<HTMLElement>('[contenteditable="true"]');
@@ -36,7 +41,19 @@ async function extractPDFPageText(pdf: Buffer): Promise<readonly string[]> {
   }
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, browserName }, testInfo) => {
+  if (
+    browserName !== 'chromium'
+    && (
+      testInfo.title.includes('PDF pages for every projected sheet in Chromium')
+      || testInfo.title.includes('through Chromium clipboard')
+      || testInfo.title.includes('into an external browser editor')
+      || testInfo.title.includes('into a plain-text external editor')
+      || testInfo.title.includes('copies math to external rich and plain-text editors')
+    )
+  ) {
+    test.skip(true, 'This browser-specific bridge is exercised in Chromium.');
+  }
   await page.goto('/browser-tests.html');
 });
 
@@ -4382,6 +4399,31 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   await picker.getByRole('button', { name: 'Paste' }).click();
   await expect(picker).toHaveCount(0);
   await expect(paragraph).toContainText('the real npm package, not a picture');
+});
+
+test('keeps the public outline stable, hierarchical, active, and navigable', async ({ page }) => {
+  await page.goto('/');
+  const outline = page.getByRole('navigation', { name: 'Document outline' });
+  const first = outline.getByRole('button', { name: 'Try FountainJS in this document.' });
+  const second = outline.getByRole('button', { name: 'What you can test here' });
+  await expect(first).toHaveAttribute('data-depth', '0');
+  await expect(second).toHaveAttribute('data-depth', '1');
+  await expect(first).toHaveAttribute('aria-current', 'location');
+
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstHeading = editor.locator(':scope > h1');
+  const originalAnchor = await firstHeading.getAttribute('id');
+  expect(originalAnchor).toMatch(/^fountain-heading-fjs-/);
+  await expect(firstHeading).toHaveAttribute('data-fountain-toc-id', /fjs-/);
+
+  await second.click();
+  await expect(second).toHaveAttribute('aria-current', 'location');
+  await expect(editor.locator(':scope > h2').first()).toHaveAttribute('id', /^fountain-heading-fjs-/);
+
+  await selectBlockEnd(firstHeading);
+  await page.keyboard.type(' Updated');
+  await expect(outline.getByRole('button', { name: 'Try FountainJS in this document. Updated' })).toBeVisible();
+  await expect(firstHeading).toHaveAttribute('id', originalAnchor ?? '');
 });
 
 test('runs the public plain-DOM first-class widget demo', async ({ page }) => {

@@ -1,30 +1,32 @@
-import { Selection, type Editor } from '../core';
-import { useNavigatorState } from './useNavigatorState';
+import { useRef } from 'react';
+import type { Editor } from '../core';
+import { navigateTableOfContents } from '../table-of-contents';
+import { useNavigatorTableOfContentsState } from './useNavigatorState';
 
 export interface NavigatorProps { editor: Editor | null; className?: string; }
 
-function firstTextPath(editor: Editor, blockPath: readonly number[]): number[] {
-  let result = [...blockPath];
-  let node = editor.state.doc;
-  blockPath.forEach((index) => { node = node.child(index); });
-  while (!node.isText && node.childCount) {
-    result.push(0);
-    node = node.child(0);
-  }
-  return result;
-}
-
 export function Navigator({ editor, className }: NavigatorProps) {
-  const outline = useNavigatorState(editor);
+  const navigation = useNavigatorTableOfContentsState(editor);
+  const root = useRef<HTMLElement>(null);
   if (!editor) return null;
-  const select = (path: readonly number[]) => {
-    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor(firstTextPath(editor, path), 0)));
+  const select = (id: string, anchor: string) => {
+    if (!navigateTableOfContents(editor, id)) return;
+    const ownerDocument = root.current?.ownerDocument;
+    ownerDocument?.getElementById(anchor)?.scrollIntoView({ block: 'nearest' });
   };
   return (
-    <nav className={['fountain-navigator', className].filter(Boolean).join(' ')} aria-label="Document outline">
+    <nav ref={root} className={['fountain-navigator', className].filter(Boolean).join(' ')} aria-label="Document outline">
       <div className="fountain-navigator__title">Outline</div>
-      {outline.length === 0 ? <p className="fountain-navigator__empty">Add a heading to build an outline.</p> : outline.map((item) => (
-        <button key={item.id} type="button" title={item.text} style={{ paddingInlineStart: `${(item.level - 1) * 12 + 8}px` }} onClick={() => select(item.path)}>
+      {navigation.entries.length === 0 ? <p className="fountain-navigator__empty">Add a heading to build an outline.</p> : navigation.entries.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          title={item.text}
+          aria-current={item.id === navigation.activeId ? 'location' : undefined}
+          data-depth={item.depth}
+          style={{ paddingInlineStart: `${item.depth * 12 + 8}px` }}
+          onClick={() => select(item.id, item.anchor)}
+        >
           {item.text}
         </button>
       ))}

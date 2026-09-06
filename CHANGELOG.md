@@ -4,6 +4,11 @@
 
 ### Fixed
 
+- Native disclosure toggles now survive an equivalent selection/decorations
+  view update that occurs before the browser's asynchronous `toggle` event.
+  Selection-only table-of-contents updates also preserve the existing index
+  when the active heading is unchanged.
+
 - Documents using `StarterKit` now retain a real editable paragraph after a
   terminal table, media item, divider, widget, quote, list, or other non-text
   block. The schema-aware repair is idempotent, history-neutral, configurable
@@ -52,6 +57,11 @@
   breaking ESM import or silently inflating release assets.
 
 ### Added
+
+- An isolated `fountainjs-editor/table-of-contents` module with DOM-free flat
+  and hierarchical heading indexes, stable identity-backed anchors,
+  active-section state, framework-neutral navigation, validated configuration,
+  view-only heading decorations, and an accessible React Navigator adapter.
 
 - Source-aware external paste normalization for Microsoft Word, Excel, Google
   Docs, MathML, and generic HTML, with configurable list/revision/metadata

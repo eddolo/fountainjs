@@ -307,6 +307,36 @@ eligibility and ID generators are supported, and the generic Yjs adapter writes
 remote repairs back so peers converge. Pure inspection and JSON normalization
 run in Node.js without a fake DOM. See the [stable identity guide](docs/NODE_IDS.md).
 
+## Live table of contents
+
+The optional `fountainjs-editor/table-of-contents` entry derives stable flat and
+hierarchical heading indexes, current paths/positions, active-section state,
+view-only DOM anchors, and framework-neutral navigation from the document:
+
+```ts
+import { CoreExtension, composeExtensions } from 'fountainjs-editor'
+import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids'
+import {
+  TableOfContentsExtension,
+  getTableOfContentsState,
+  navigateTableOfContents,
+} from 'fountainjs-editor/table-of-contents'
+
+const kit = composeExtensions([
+  CoreExtension,
+  StableNodeIdsExtension,
+  TableOfContentsExtension,
+])
+
+const first = getTableOfContentsState(editor)?.entries[0]
+if (first) navigateTableOfContents(editor, first.id)
+```
+
+The index runs in Node.js without a fake DOM. Titles and paths update while
+stable anchors survive heading edits and movement. The supplied React
+`Navigator` adds hierarchy, `aria-current`, full-title hover text, and scrolling
+on top of the same state. See [TABLE_OF_CONTENTS.md](docs/TABLE_OF_CONTENTS.md).
+
 ## Granular structured attributes
 
 The DOM-free `fountainjs-editor/structured-attributes` entry updates validated
@@ -704,6 +734,13 @@ See [Lean integration and trust boundaries](docs/LEAN.md) for local bridge and
 provider examples.
 
 ## Use any UI surface
+
+FountainJS does not impose a visual shell. The supplied React components and
+styles are optional examples built on public state and commands: an application
+may restyle them, reorder or replace every control, substitute its own icons,
+menus, dialogs, outline, block handles, and NodeViews, or omit Fountain CSS and
+render an entirely product-owned interface. Changing that interface does not
+fork the document model or alter portable Fountain JSON.
 
 ### Plain DOM
 
@@ -1257,7 +1294,7 @@ comparison](docs/PROSEMIRROR_COMPARISON.md).
   `fountainjs-editor/react/tracked-changes` entry
 - `FountainVersions` from the isolated `fountainjs-editor/react/versions` entry
 - `ClipboardHistoryMenu`
-- `Navigator` and `useNavigatorState`
+- `Navigator`, `useNavigatorState`, and `useNavigatorTableOfContentsState`
 - `FountainAIReview` and `useAIControllerState`
 - `createReactNodeView` and `ReactNodeViewProps`
 

@@ -69,14 +69,15 @@ recorded destroyed-editor sample retained 0.13 MiB.
 
 The build gate currently limits the independently loadable production entries,
 including 111/93 KiB raw for the ESM/CommonJS root, 30/25 KiB for the optional
-Yjs adapter, 54/45 KiB for the isolated DOM pagination entry, and 270/225 KiB
-for the self-contained server HTML entry (about 72/68 KiB gzip). Aggregate
-ceilings are 1,150/965 KiB for all emitted ESM/CommonJS runtime code excluding
-the isolated full emoji catalogue. Gzip sizes are printed by the build but raw
-sizes are enforced because they are deterministic. The self-contained server
-parser and source-aware browser paste pipeline intentionally affect aggregate
-code; exact per-entry ceilings remain independent, so adding a feature cannot
-hide growth in a consumer-facing package surface.
+Yjs adapter, 54/45 KiB for the isolated DOM pagination entry, 7/6 KiB for the
+DOM-free table-of-contents entry, and 270/225 KiB for the self-contained server
+HTML entry (about 72/68 KiB gzip). Aggregate ceilings are 1,158/972 KiB for all
+emitted ESM/CommonJS runtime code excluding the isolated full emoji catalogue.
+Gzip sizes are printed by the build but raw sizes are enforced because they are
+deterministic. The self-contained server parser and source-aware browser paste
+pipeline intentionally affect aggregate code; exact per-entry ceilings remain
+independent, so adding a feature cannot hide growth in a consumer-facing package
+surface.
 
 ## Why small edits stay local
 

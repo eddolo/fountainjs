@@ -29,8 +29,8 @@ const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
   'defaultFountainToolbarGroups', 'FountainSlashCommandMenu', 'FountainBubbleMenu',
-  'FountainFloatingMenu',
-  'useFountain',
+  'FountainFloatingMenu', 'Navigator', 'useNavigatorState',
+  'useNavigatorTableOfContentsState', 'useFountain',
 ];
 const documentUtilityNames = ['MentionExtension', 'EmojiExtension', 'TypographyExtension', 'CharacterCountExtension', 'SlashCommandExtension', 'SuggestionController'];
 const emojiDataNames = ['unicodeEmojis', 'UnicodeEmojiExtension'];
@@ -47,6 +47,7 @@ const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColo
 const testingNames = ['checkExtensionConformance', 'assertExtensionConformance', 'checkExtensionCompatibility', 'assertExtensionCompatibility'];
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
 const nodeIdNames = ['StableNodeIdsExtension', 'StableNodeIdIndex', 'createStableNodeIdsExtension', 'createStableNodeIdIndex', 'normalizeStableNodeIds', 'normalizeStableNodeIdJSON', 'getNodeById', 'updateNodeById', 'selectNodeById'];
+const tableOfContentsNames = ['TableOfContentsExtension', 'createTableOfContentsExtension', 'buildTableOfContents', 'createTableOfContentsState', 'getTableOfContentsState', 'navigateTableOfContents', 'tableOfContentsKey'];
 const structuredAttributeNames = ['STRUCTURED_ATTRIBUTE_TRANSACTION_META', 'defineStructuredAttribute', 'validateStructuredAttributeValue', 'getStructuredAttribute', 'setStructuredAttribute', 'deleteStructuredAttribute', 'insertStructuredAttributeItems', 'deleteStructuredAttributeItems'];
 const serverHTMLNames = ['ServerHTMLImporter', 'HTMLImportLimitError'];
 const widgetNames = ['WIDGET_TRANSACTION_META', 'DEFAULT_WIDGET_KEY_POLICY', 'defineWidget', 'validateWidgetAttributes', 'createWidgetNode', 'insertWidget', 'getWidgetNode', 'updateWidget', 'removeWidget', 'exitWidget', 'createWidgetController', 'createWidgetExtension'];
@@ -129,6 +130,14 @@ assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM
 assertExports(await import('fountainjs-editor/testing'), testingNames, 'ESM extension testing entry');
 assertExports(await import('fountainjs-editor/migrations'), migrationNames, 'ESM document migrations entry');
 assertExports(await import('fountainjs-editor/node-ids'), nodeIdNames, 'ESM stable node IDs entry');
+const esmTableOfContents = await import('fountainjs-editor/table-of-contents');
+assertExports(esmTableOfContents, tableOfContentsNames, 'ESM table of contents entry');
+const packedOutline = esmTableOfContents.buildTableOfContents(markdownSchema.node('doc', {}, [
+  markdownSchema.node('heading', { level: 1 }, [markdownSchema.text('Packed outline')]),
+]));
+if (packedOutline.entries.length !== 1 || packedOutline.entries[0]?.title !== 'Packed outline') {
+  throw new Error('ESM table of contents did not index a document in pure Node.');
+}
 assertExports(await import('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'ESM structured attributes entry');
 const esmServerHTML = await import('fountainjs-editor/html/server');
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
@@ -208,6 +217,7 @@ assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS
 assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS extension testing entry');
 assertExports(require('fountainjs-editor/migrations'), migrationNames, 'CommonJS document migrations entry');
 assertExports(require('fountainjs-editor/node-ids'), nodeIdNames, 'CommonJS stable node IDs entry');
+assertExports(require('fountainjs-editor/table-of-contents'), tableOfContentsNames, 'CommonJS table of contents entry');
 assertExports(require('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'CommonJS structured attributes entry');
 const cjsServerHTML = require('fountainjs-editor/html/server');
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
@@ -254,4 +264,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, headless core, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, headless core, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
