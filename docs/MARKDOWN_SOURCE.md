@@ -162,13 +162,16 @@ an initial standards-oriented set of behaviors:
 - recursive blockquotes, including up-to-three-space markers and lazy paragraph
   continuation through nested quote depths; tight/loose nested lists; and
   GFM-style tasks;
-- tab-stop-aware leading indentation for code and list containers;
+- tab-stop-aware leading indentation plus marker-relative tab stops for code and
+  list containers;
 - `-`, `*`, and `+` bullet markers plus both ordered-list delimiters, with a
   marker-style change preserving the boundary between adjacent lists and only
   a `1`-starting ordered list allowed to interrupt an open paragraph; ordered
   markers use one to nine digits, preserve a zero start through Markdown and
   browser/server HTML, keep continuation markers inside that bound, and accept
-  empty list items without requiring whitespace after a bare marker;
+  empty list items without requiring whitespace after a bare marker; list items
+  may begin with any valid block, including nested lists, thematic breaks, and
+  indented or fenced code;
 - ASCII-space/tab-only list-marker separation, leaving non-breaking spaces as
   literal document content;
 - compact or spaced thematic breaks with up to three leading spaces and
@@ -197,7 +200,7 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 464 currently match, 179 remain pending, and nine are
+classifies every example: 469 currently match, 174 remain pending, and nine are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 The harness also materializes the specification's visible tab notation before
@@ -230,11 +233,10 @@ opaque-token scanning, nested image descriptions, nested emphasis,
 rule-of-three arithmetic, repeated mark levels, unlike-marker overlap
 precedence, exact GFM tilde-run boundaries, and unmatched-delimiter
 preservation, is certified
-by the complete 561-test package gate and 295-pass
-Chromium/Firefox/WebKit/mobile
-[CI run for `4d253cf`](https://github.com/eddolo/fountainjs/actions/runs/34002115275),
+by the complete 564-test package gate and green Chromium/Firefox/WebKit/mobile
+[CI run for `0a7aef6`](https://github.com/eddolo/fountainjs/actions/runs/34004963074),
 plus the corresponding successful
-[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34002115395).
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34004963046).
 
 ## Security and collaboration
 
