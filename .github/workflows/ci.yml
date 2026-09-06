@@ -56,6 +56,8 @@ jobs:
           build: false
           test: false
           lint: false
+          use-github-cache: false
+          use-mathlib-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test:lean-integration
