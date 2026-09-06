@@ -85,6 +85,8 @@ describe('language-aware code blocks', () => {
     expect(setCodeBlockLanguage(editor, 'PY')).toBe(true);
     expect(editor.state.doc.child(0).attrs.language).toBe('python');
     expect(view.dom.querySelector('pre')?.dataset.language).toBe('python');
+    expect(setCodeBlockLanguage(editor, ';')).toBe(true);
+    expect(view.dom.querySelector('pre')?.dataset.language).toBe(';');
     expect(toggleCodeBlockLineNumbers(editor, false)).toBe(true);
     expect(view.dom.querySelectorAll('.fjs-code-line-number')).toHaveLength(0);
     expect(setCodeBlockLanguage(editor, '<script>')).toBe(false);

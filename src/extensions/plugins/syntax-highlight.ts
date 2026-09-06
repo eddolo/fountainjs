@@ -282,7 +282,7 @@ export function setCodeBlockLanguage(editor: Editor, language: string): boolean 
   const active = getActiveCodeBlock(editor);
   if (!active) return false;
   const normalized = normalizeCodeLanguage(language);
-  if (!/^[\w.+#-]{1,50}$/.test(normalized)) return false;
+  if (!/^[^\s<>&"']{1,50}$/.test(normalized)) return false;
   return setNodeAttributes(editor, active.path, { language: normalized });
 }
 

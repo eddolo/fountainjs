@@ -2330,6 +2330,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     lazyBlockquotes: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '   > # Foo\n   > bar\n > baz\n\n> > > nested\ncontinuation',
     ),
+    opaqueCodeLanguage: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '````;\ncode\n````',
+    ),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2593,6 +2596,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   expect(result.lazyBlockquotes.document.content[1].content[0].content[0].content[0].content[0].text)
     .toBe('nested continuation');
   expect(result.lazyBlockquotes.losses).toEqual([]);
+  expect(result.opaqueCodeLanguage.document).toEqual(result.opaqueCodeLanguage.roundTrip);
+  expect(result.opaqueCodeLanguage.document.content[0].attrs.language).toBe(';');
+  expect(result.opaqueCodeLanguage.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

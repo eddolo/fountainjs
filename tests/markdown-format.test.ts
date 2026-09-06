@@ -55,6 +55,18 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 
+  it('accepts bounded opaque code-language identifiers without accepting markup', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = '````;\ncode\n````';
+    const document = MarkdownImporter.parse(source, schema);
+
+    expect(document.child(0).attrs.language).toBe(';');
+    expect(MarkdownExporter.export(document)).toBe('```;\ncode\n```');
+    expect(() => schema.node('code_block', {
+      language: '<script>', lineNumbers: true,
+    })).toThrow('Invalid value for attribute: language');
+  });
+
   it('round-trips code spans with delimiter collisions and significant edge spaces', () => {
     const schema = new Schema(CoreSchemaSpec);
     const code = schema.marks.code.create();
