@@ -1,4 +1,5 @@
 import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
+import { getNodeAtPath } from '../core/transaction/path';
 import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
 
 export interface DOMRenderContext {
@@ -157,6 +158,19 @@ function appendWidgets(target: globalThis.Node, position: number, context: DOMRe
   widgetsAt(position, context).forEach((decoration) => target.appendChild(renderWidget(decoration)));
 }
 
+function needsCaretPlaceholder(path: readonly number[], context: DOMRenderContext): boolean {
+  if (!context.document || !path.length) return true;
+  let parent: Node;
+  try { parent = getNodeAtPath(context.document, path.slice(0, -1)); }
+  catch { return true; }
+  const index = path.at(-1) as number;
+  const hasVisibleSibling = parent.content.some((child) => !child.isText || (child.text?.length ?? 0) > 0);
+  if (!hasVisibleSibling) {
+    return parent.content.findIndex((child) => child.isText && (child.text?.length ?? 0) === 0) === index;
+  }
+  return index === parent.childCount - 1 && parent.content[index - 1]?.type.name === 'hard_break';
+}
+
 function renderText(node: Node, path: readonly number[], position: number, context: DOMRenderContext): HTMLElement {
   const wrapper = document.createElement('span');
   wrapper.dataset.fountainTextPath = path.join('.');
@@ -201,10 +215,12 @@ function renderText(node: Node, path: readonly number[], position: number, conte
   )).forEach((decoration) => applyDecorationAttributes(wrapper, decoration));
   if (value.length === 0) {
     wrapper.appendChild(document.createTextNode(''));
-    const placeholder = document.createElement('br');
-    placeholder.dataset.fountainCaretPlaceholder = '';
-    placeholder.setAttribute('aria-hidden', 'true');
-    wrapper.appendChild(placeholder);
+    if (needsCaretPlaceholder(path, context)) {
+      const placeholder = document.createElement('br');
+      placeholder.dataset.fountainCaretPlaceholder = '';
+      placeholder.setAttribute('aria-hidden', 'true');
+      wrapper.appendChild(placeholder);
+    }
   }
   return wrapper;
 }

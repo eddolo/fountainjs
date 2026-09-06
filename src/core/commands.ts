@@ -93,6 +93,52 @@ function deleteInlineSibling(editor: Editor, path: readonly number[], index: num
     && replaceNodeSelection(editor, new NodeSelection(editor.state.doc, [...parentPath, index])));
 }
 
+interface JoinedTextBlockContent {
+  readonly content: readonly Node[];
+  readonly caretIndex: number;
+  readonly caretOffset: number;
+}
+
+/**
+ * Joins two text blocks without retaining their empty caret sentinels as
+ * additional visual lines. A single empty text node is kept at the exact
+ * boundary only when neither adjacent inline node can own the caret.
+ */
+function joinTextBlockContent(left: Node, right: Node): JoinedTextBlockContent {
+  const leftContent = [...left.content];
+  const rightContent = [...right.content];
+  let emptyBoundary: Node | undefined;
+  while (leftContent.at(-1)?.isText && (leftContent.at(-1)?.text?.length ?? 0) === 0) {
+    const removed = leftContent.pop();
+    emptyBoundary ??= removed;
+  }
+  while (rightContent[0]?.isText && (rightContent[0]?.text?.length ?? 0) === 0) {
+    const removed = rightContent.shift();
+    emptyBoundary ??= removed;
+  }
+
+  const boundaryIndex = leftContent.length;
+  const before = leftContent.at(-1);
+  const after = rightContent[0];
+  if (before?.isText) {
+    return {
+      content: [...leftContent, ...rightContent],
+      caretIndex: boundaryIndex - 1,
+      caretOffset: before.text?.length ?? 0,
+    };
+  }
+  if (after?.isText) {
+    return { content: [...leftContent, ...rightContent], caretIndex: boundaryIndex, caretOffset: 0 };
+  }
+
+  const caret = emptyBoundary ?? left.type.schema.text('');
+  return {
+    content: [...leftContent, caret, ...rightContent],
+    caretIndex: boundaryIndex,
+    caretOffset: 0,
+  };
+}
+
 function replaceCellSelection(editor: Editor, selection: CellSelection, text?: string): boolean {
   const paragraph = editor.state.schema.nodes.paragraph;
   const firstPath = selection.cellPaths[0];
@@ -1045,9 +1091,8 @@ export function joinBackward(editor: Editor): boolean {
     const previousBlock = previousItem.content[previousBlockIndex];
     const currentBlock = item.content[0];
     if (!previousBlock || !currentBlock || !TEXT_BLOCKS.includes(previousBlock.type.name) || !TEXT_BLOCKS.includes(currentBlock.type.name)) return false;
-    const leaves = getTextLeaves(previousBlock);
-    const leaf = leaves.at(-1);
-    const mergedBlock = previousBlock.copy([...previousBlock.content, ...currentBlock.content]);
+    const joined = joinTextBlockContent(previousBlock, currentBlock);
+    const mergedBlock = previousBlock.copy(joined.content);
     const mergedItem = previousItem.copy([
       ...previousItem.content.slice(0, previousBlockIndex),
       mergedBlock,
@@ -1061,8 +1106,8 @@ export function joinBackward(editor: Editor): boolean {
       .setSelection(Selection.cursor([
         ...previousItemPath,
         previousBlockIndex,
-        ...(leaf?.path ?? [0]),
-      ], leaf?.node.text?.length ?? 0));
+        joined.caretIndex,
+      ], joined.caretOffset));
     editor.dispatch(transaction);
     return true;
   }
@@ -1072,18 +1117,16 @@ export function joinBackward(editor: Editor): boolean {
   const previous = parent.child(previousIndex);
   const current = parent.child(currentIndex);
   if (!TEXT_BLOCKS.includes(previous.type.name) || !TEXT_BLOCKS.includes(current.type.name)) return false;
-  const previousLeaves = getTextLeaves(previous);
-  const previousLeaf = previousLeaves.at(-1);
-  const previousLength = previousLeaf?.node.text?.length ?? 0;
-  const merged = previous.copy([...previous.content, ...current.content]);
+  const joined = joinTextBlockContent(previous, current);
+  const merged = previous.copy(joined.content);
   const previousPath = [...parentPath, previousIndex];
   const transaction = state.createTransaction()
     .replaceNode(previousPath, [merged])
     .replaceNode(currentPath, [])
     .setSelection(Selection.cursor([
       ...previousPath,
-      ...(previousLeaf?.path ?? [Math.max(0, previous.childCount - 1)]),
-    ], previousLength));
+      joined.caretIndex,
+    ], joined.caretOffset));
   editor.dispatch(transaction);
   return true;
 }
@@ -1108,10 +1151,11 @@ export function joinForward(editor: Editor): boolean {
   if (blockIndex < parent.childCount - 1) {
     const next = parent.child(blockIndex + 1);
     if (!TEXT_BLOCKS.includes(block.type.name) || !TEXT_BLOCKS.includes(next.type.name)) return false;
+    const joined = joinTextBlockContent(block, next);
     const transaction = state.createTransaction()
-      .replaceNode(blockPath, [block.copy([...block.content, ...next.content])])
+      .replaceNode(blockPath, [block.copy(joined.content)])
       .replaceNode([...parentPath, blockIndex + 1], [])
-      .setSelection(Selection.cursor(path, from));
+      .setSelection(Selection.cursor([...blockPath, joined.caretIndex], joined.caretOffset));
     editor.dispatch(transaction);
     return true;
   }
@@ -1127,16 +1171,17 @@ export function joinForward(editor: Editor): boolean {
     const nextRoot = state.doc.content[listIndex + 1];
     if (!nextRoot) return false;
     if (TEXT_BLOCKS.includes(nextRoot.type.name)) {
+      const joined = joinTextBlockContent(block, nextRoot);
       const mergedItem = parent.copy([
         ...parent.content.slice(0, blockIndex),
-        block.copy([...block.content, ...nextRoot.content]),
+        block.copy(joined.content),
         ...parent.content.slice(blockIndex + 1),
       ]);
       const updatedList = list.copy([...list.content.slice(0, itemIndex), mergedItem]);
       const transaction = state.createTransaction()
         .replaceNode(listPath, [updatedList])
         .replaceNode([listIndex + 1], [])
-        .setSelection(Selection.cursor(path, from));
+        .setSelection(Selection.cursor([...blockPath, joined.caretIndex], joined.caretOffset));
       editor.dispatch(transaction);
       return true;
     }
@@ -1144,9 +1189,10 @@ export function joinForward(editor: Editor): boolean {
       const nextItem = nextRoot.child(0);
       const nextBlock = nextItem.content[0];
       if (!nextBlock || !TEXT_BLOCKS.includes(nextBlock.type.name)) return false;
+      const joined = joinTextBlockContent(block, nextBlock);
       const mergedItem = parent.copy([
         ...parent.content.slice(0, blockIndex),
-        block.copy([...block.content, ...nextBlock.content]),
+        block.copy(joined.content),
         ...parent.content.slice(blockIndex + 1),
         ...nextItem.content.slice(1),
       ]);
@@ -1158,7 +1204,7 @@ export function joinForward(editor: Editor): boolean {
       const transaction = state.createTransaction()
         .replaceNode(listPath, [updatedList])
         .replaceNode([listIndex + 1], [])
-        .setSelection(Selection.cursor(path, from));
+        .setSelection(Selection.cursor([...blockPath, joined.caretIndex], joined.caretOffset));
       editor.dispatch(transaction);
       return true;
     }
@@ -1167,15 +1213,16 @@ export function joinForward(editor: Editor): boolean {
   const nextItem = list.child(itemIndex + 1);
   const nextBlock = nextItem.content[0];
   if (!nextBlock || !TEXT_BLOCKS.includes(block.type.name) || !TEXT_BLOCKS.includes(nextBlock.type.name)) return false;
+  const joined = joinTextBlockContent(block, nextBlock);
   const mergedItem = parent.copy([
     ...parent.content.slice(0, blockIndex),
-    block.copy([...block.content, ...nextBlock.content]),
+    block.copy(joined.content),
     ...nextItem.content.slice(1),
   ]);
   const transaction = state.createTransaction()
     .replaceNode(itemPath, [mergedItem])
     .replaceNode([...listPath, itemIndex + 1], [])
-    .setSelection(Selection.cursor(path, from));
+    .setSelection(Selection.cursor([...blockPath, joined.caretIndex], joined.caretOffset));
   editor.dispatch(transaction);
   return true;
 }

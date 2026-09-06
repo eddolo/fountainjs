@@ -5,11 +5,13 @@
 ### Fixed
 
 - Empty paragraphs now render a real caret line, repeated Enter/Backspace
-  creates and removes visibly distinct lines, backward DOM selections retain
-  their direction, Enter replaces multi-format or multi-paragraph selections
-  with a real block boundary, selected atomic blocks can be continued with
-  Enter, adjacent inline atoms are deleted without eating surrounding text,
-  and blockquotes can be unwrapped or exited with ordinary editing keys.
+  creates and removes visibly distinct lines without leaving phantom height,
+  backward keyboard and pointer selections retain their direction, Enter
+  replaces multi-format or multi-paragraph selections with a real block
+  boundary, selected atomic blocks can be continued with Enter, adjacent
+  inline atoms are deleted without eating surrounding text, blockquotes can be
+  unwrapped or exited with ordinary editing keys, and both Ctrl/Cmd+Shift+Z
+  and Ctrl+Y perform redo.
 - Responsive block images now fall back from a failed `srcset` candidate to
   their ordinary `src` without triggering a NodeView remount loop; Retry
   deliberately restores the responsive candidates.

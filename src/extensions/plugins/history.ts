@@ -72,9 +72,10 @@ export function createHistoryPlugin(options: HistoryOptions = {}): Plugin<Histor
     props: {
       handleKeyDown: (editor, event) => {
         const modifier = event.ctrlKey || event.metaKey;
-        if (!modifier || event.altKey || event.key.toLowerCase() !== 'z') return false;
+        const key = event.key.toLowerCase();
+        if (!modifier || event.altKey || (key !== 'z' && key !== 'y')) return false;
         event.preventDefault();
-        return event.shiftKey ? redo(editor) : undo(editor);
+        return key === 'y' || event.shiftKey ? redo(editor) : undo(editor);
       },
     },
   });

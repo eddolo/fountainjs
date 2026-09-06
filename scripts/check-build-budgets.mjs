@@ -194,8 +194,10 @@ const limits = Object.freeze({
   // The strict XMPP safe-URL branch fits inside the existing shared-core margin.
   // Atomic selected-Enter handling and safe adjacent-inline deletion add about
   // 0.4 KiB to the aggregate ESM graph without moving any public entry ceiling.
-  'all ESM runtime code': 1105 * kibibyte,
-  'all CommonJS runtime code': 925 * kibibyte,
+  // Exact blank-line joining, defensive placeholder rendering, and the native
+  // Windows redo chord add about 0.7/0.4 KiB, again without moving an entry ceiling.
+  'all ESM runtime code': 1106 * kibibyte,
+  'all CommonJS runtime code': 926 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

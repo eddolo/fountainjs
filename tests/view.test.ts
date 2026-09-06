@@ -45,6 +45,36 @@ describe('EditorView', () => {
     expect(mount.childElementCount).toBe(0);
   });
 
+  it('renders only semantically necessary empty-text caret placeholders', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [
+            { type: 'text', text: '' },
+            { type: 'text', text: '' },
+            { type: 'text', text: 'Visible' },
+          ] },
+          { type: 'paragraph', content: [{ type: 'text', text: '' }, { type: 'text', text: '' }] },
+          { type: 'paragraph', content: [
+            { type: 'text', text: 'Break' },
+            { type: 'hard_break' },
+            { type: 'text', text: '' },
+          ] },
+        ],
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const paragraphs = view.dom.querySelectorAll(':scope > p');
+    expect(paragraphs[0]?.querySelectorAll('[data-fountain-caret-placeholder]')).toHaveLength(0);
+    expect(paragraphs[1]?.querySelectorAll('[data-fountain-caret-placeholder]')).toHaveLength(1);
+    expect(paragraphs[2]?.querySelectorAll('[data-fountain-caret-placeholder]')).toHaveLength(1);
+    view.destroy();
+  });
+
   it('reconciles a small edit without replacing unrelated block DOM', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,
@@ -727,6 +757,33 @@ describe('EditorView', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('supports both standard redo keyboard chords', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin()] });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const type = (value: string) => view.dom.dispatchEvent(new InputEvent('beforeinput', {
+      bubbles: true, cancelable: true, inputType: 'insertText', data: value,
+    }));
+    const key = (value: string, shiftKey = false) => {
+      const event = new KeyboardEvent('keydown', {
+        bubbles: true, cancelable: true, key: value, ctrlKey: true, shiftKey,
+      });
+      view.dom.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    };
+
+    type('A');
+    key('z');
+    expect(editor.getText()).toBe('');
+    key('y');
+    expect(editor.getText()).toBe('A');
+    key('z');
+    key('z', true);
+    expect(editor.getText()).toBe('A');
+    view.destroy();
   });
 
   it('accepts composition commit ordering and mobile beforeinput variants exactly once', () => {

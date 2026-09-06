@@ -506,6 +506,50 @@ describe('document model and transactions', () => {
     expect(forward.state.selection.eq(Selection.cursor([0, 0], 3))).toBe(true);
   });
 
+  it('removes empty caret sentinels when visible blank paragraphs are joined', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: 'One' }] }],
+      },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(splitBlock(editor)).toBe(true);
+    expect(splitBlock(editor)).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.textContent)).toEqual(['', '', 'One']);
+    expect(deleteBackward(editor)).toBe(true);
+    expect(deleteBackward(editor)).toBe(true);
+    expect(editor.state.doc.childCount).toBe(1);
+    expect(editor.state.doc.child(0).content.map((node) => node.text)).toEqual(['One']);
+    expect(editor.state.selection.eq(Selection.cursor([0, 0], 0))).toBe(true);
+  });
+
+  it('keeps the caret at an exact hard-break boundary while joining paragraphs', () => {
+    const content = {
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [
+          { type: 'text', text: 'One' },
+          { type: 'hard_break' },
+          { type: 'text', text: '' },
+        ] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'Two' }] },
+      ],
+    } as const;
+    const backward = createEditor({ schema: CoreSchemaSpec, content });
+    backward.dispatch(backward.state.createTransaction().setSelection(Selection.cursor([1, 0], 0)));
+    expect(deleteBackward(backward)).toBe(true);
+    expect(backward.state.doc.child(0).content.map((node) => node.type.name)).toEqual(['text', 'hard_break', 'text']);
+    expect(backward.state.selection.eq(Selection.cursor([0, 2], 0))).toBe(true);
+
+    const forward = createEditor({ schema: CoreSchemaSpec, content });
+    forward.dispatch(forward.state.createTransaction().setSelection(Selection.cursor([0, 2], 0)));
+    expect(deleteForward(forward)).toBe(true);
+    expect(forward.state.doc.child(0).content.map((node) => node.type.name)).toEqual(['text', 'hard_break', 'text']);
+    expect(forward.state.selection.eq(Selection.cursor([0, 2], 0))).toBe(true);
+  });
+
   it('unwraps a quote with Backspace and exits its empty final line with Enter', () => {
     const unwrapped = createEditor({ schema: CoreSchemaSpec });
     expect(insertQuote(unwrapped, 'Quoted')).toBe(true);

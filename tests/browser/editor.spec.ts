@@ -4376,7 +4376,10 @@ test('renders repeated empty paragraphs and removes each visible line', async ({
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const blocks = editor.locator(':scope > [data-fountain-path]');
   const before = await blocks.count();
-  await selectBlockEnd(editor.locator(':scope > [data-fountain-node="paragraph"]').last());
+  const initialPlaceholders = await editor.locator('[data-fountain-caret-placeholder]').count();
+  const target = editor.locator(':scope > [data-fountain-node="paragraph"]').last();
+  const initialHeight = await target.evaluate((element) => element.getBoundingClientRect().height);
+  await selectBlockEnd(target);
   await page.keyboard.press('Enter');
   await page.keyboard.press('Enter');
   await page.keyboard.press('Enter');
@@ -4393,6 +4396,26 @@ test('renders repeated empty paragraphs and removes each visible line', async ({
   await page.keyboard.press('Backspace');
   await page.keyboard.press('Backspace');
   await expect(blocks).toHaveCount(before);
+  await expect(editor.locator('[data-fountain-caret-placeholder]')).toHaveCount(initialPlaceholders);
+  const restoredHeight = await target.evaluate((element) => element.getBoundingClientRect().height);
+  expect(Math.abs(restoredHeight - initialHeight)).toBeLessThan(1);
+});
+
+test('undoes and redoes real typing with both common browser keyboard chords', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await selectBlockEnd(editor.locator(':scope > p').first());
+  const firstText = () => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).textContent
+  ));
+  await page.keyboard.type('!');
+  await expect.poll(firstText).toBe('Alpha Beta!');
+  await page.keyboard.press('Control+z');
+  await expect.poll(firstText).toBe('Alpha Beta');
+  await page.keyboard.press('Control+y');
+  await expect.poll(firstText).toBe('Alpha Beta!');
+  await page.keyboard.press('Control+z');
+  await page.keyboard.press('Control+Shift+z');
+  await expect.poll(firstText).toBe('Alpha Beta!');
 });
 
 test('keeps a backward DOM selection backward after model synchronization', async ({ page }) => {
@@ -4432,6 +4455,42 @@ test('preserves a backward selection made with real keyboard input', async ({ pa
       backward: Boolean(selection && selection.anchorOffset > selection.focusOffset),
     };
   })).toEqual({ text: 'agraph', backward: true });
+});
+
+test('replaces a backward selection made by a real reverse pointer drag', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const wrapper = editor.locator('[data-fountain-text-path="1.0"]');
+  const box = await wrapper.boundingBox();
+  expect(box).not.toBeNull();
+  if (!box) return;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width - 2, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.3, y, { steps: 12 });
+  await page.mouse.up();
+
+  const selected = await page.evaluate(() => {
+    const dom = document.getSelection();
+    const model = (globalThis as any).fountainBrowserTest.editor.state.selection;
+    return {
+      text: dom?.toString() ?? '',
+      backward: Boolean(dom && dom.anchorNode === dom.focusNode && dom.anchorOffset > dom.focusOffset),
+      path: model.path,
+      from: model.from,
+      to: model.to,
+    };
+  });
+  expect(selected.text.length).toBeGreaterThan(3);
+  expect(selected.backward).toBe(true);
+  expect(selected.path).toEqual([1, 0]);
+  expect(selected.to).toBeGreaterThan(selected.from);
+
+  const original = 'Second paragraph';
+  const expected = `${original.slice(0, selected.from)}X${original.slice(selected.to)}`;
+  await page.keyboard.type('X');
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(1).textContent
+  ))).toBe(expected);
 });
 
 test('turns multi-format and multi-block selections into visible paragraph boundaries', async ({ page }) => {
