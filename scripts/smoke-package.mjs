@@ -27,6 +27,7 @@ const headlessCoreNames = [
   'StableNodeIdIndex', 'defineStructuredAttribute',
   'createCoreCollaborationExtension', 'getCollaborationState',
 ];
+const aiDocumentToolNames = ['AI_DOCUMENT_TOOL_NAMES', 'AI_DOCUMENT_TOOL_DEFINITIONS', 'AIDocumentToolbox', 'createAIDocumentToolbox'];
 const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
@@ -66,6 +67,8 @@ const esmCore = await import('fountainjs-editor');
 assertExports(esmCore, coreNames, 'ESM package root');
 const esmHeadlessCore = await import('fountainjs-editor/core');
 assertExports(esmHeadlessCore, headlessCoreNames, 'ESM headless core entry');
+const esmAIDocumentTools = await import('fountainjs-editor/ai/document-tools');
+assertExports(esmAIDocumentTools, aiDocumentToolNames, 'ESM AI document tools entry');
 const markdownSource = '\uFEFF---\r\ntitle: Packed source\r\n---\r\n# Exact\r\n';
 const markdownSchema = new esmHeadlessCore.Schema(esmCore.CoreSchemaSpec);
 const sourcedMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, markdownSchema);
@@ -187,6 +190,17 @@ const headlessEditor = esmHeadlessCore.createEditor({
 if (!collaborationContext || esmHeadlessCore.getCollaborationState(headlessEditor)?.status !== 'connected') {
   throw new Error('Packed core collaboration did not connect in pure Node.');
 }
+const packedAgentTools = esmAIDocumentTools.createAIDocumentToolbox(headlessEditor);
+const packedAgentProposal = packedAgentTools.preview([{
+  kind: 'replace', target: 'text',
+  from: { path: [0, 0], offset: 0 }, to: { path: [0, 0], offset: 6 }, text: 'Reviewed',
+}]);
+if (headlessEditor.getText() !== 'Packed core'
+  || packedAgentTools.read({ proposalId: packedAgentProposal.id, path: [0, 0] }).records[0]?.text !== 'Reviewed core') {
+  throw new Error('Packed AI document tools mutated before human acceptance or returned a bad preview.');
+}
+packedAgentTools.accept(packedAgentProposal);
+if (headlessEditor.getText() !== 'Reviewed core') throw new Error('Packed AI document tools did not apply in pure Node.');
 headlessEditor.destroy();
 
 const Y = await import('yjs');
@@ -208,6 +222,7 @@ const cjsCore = require('fountainjs-editor');
 assertExports(cjsCore, coreNames, 'CommonJS package root');
 const cjsHeadlessCore = require('fountainjs-editor/core');
 assertExports(cjsHeadlessCore, headlessCoreNames, 'CommonJS headless core entry');
+assertExports(require('fountainjs-editor/ai/document-tools'), aiDocumentToolNames, 'CommonJS AI document tools entry');
 const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
 const cjsSourcedMarkdown = cjsHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, cjsMarkdownSchema);
 if (cjsHeadlessCore.MarkdownExporter.exportWithSource(cjsSourcedMarkdown.document, cjsSourcedMarkdown.source).markdown !== markdownSource) {

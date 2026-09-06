@@ -841,6 +841,8 @@ function Developers() {
             <h2>AI proposes. The transaction system decides.</h2>
             <p>The core editor has no model dependency. <code>AIController</code> reads the current selection, sends a provider-neutral request to an adapter, and creates a before/after proposal. Ordinary adapters return once; streaming adapters yield bounded append-only deltas into a cancellable transient preview. Neither route edits the document while generating. Accept appears only after completion and applies one normal undoable transaction; reject changes nothing; stale proposals are refused if their target text has changed.</p>
             <p><code>MCPAIAdapter</code> is one adapter. It negotiates an MCP Streamable HTTP session, discovers tools, calls the selected tool, handles JSON or server-sent-event responses, and closes the session. Your product can instead provide a local function, HTTP service, worker, or any model SDK.</p>
+            <h3>Structured agents get tools, not unrestricted editor access</h3>
+            <p>The isolated DOM-free <code>fountainjs-editor/ai/document-tools</code> entry describes five portable calls: bounded path/schema reads plus insert, replace, format, and structure proposals. Mutation calls run against an isolated transaction and validate the actual host schema, but cannot touch the editor. The host reviews a proposal and explicitly accepts it as one stale-checked undoable transaction or rejects it without change. Allowlists, payload/read/operation/proposal limits, and declared-attribute policy stay application-owned. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/AI_DOCUMENT_TOOLS.md">complete guide</a> includes the adapter and security contract.</p>
             <div className="dev-callout"><b>Privacy posture</b><span>The default request contains the selected text and minimal action context—not the whole document. The host owns the adapter, endpoint, authentication, logging, and retention policy.</span></div>
           </section>
 
@@ -889,7 +891,7 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/extensions/math.ts"><code>src/extensions/math.ts</code><span>Opt-in TeX nodes, commands, input/paste rules, NodeViews, and renderer adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/lean"><code>src/lean/</code><span>Provider-neutral Lean requests, proof-service results, validation, and stale protection.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/react"><code>src/react/</code><span>Optional React hooks and product-ready interface components.</span></a>
-              <a href="https://github.com/eddolo/fountainjs/tree/master/src/ai"><code>src/ai/</code><span>Provider-neutral review controller and MCP adapter.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/ai"><code>src/ai/</code><span>Provider-neutral review, streaming, schema-aware document tools, and MCP adapter.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/tests"><code>tests/</code><span>Core, extension, view, AI, and live loopback MCP behavior.</span></a>
             </div>
           </section>

@@ -39,6 +39,10 @@ import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { TableOfContentsExtension } from 'fountainjs-editor/table-of-contents';
 import { InvisibleCharacterExtension } from 'fountainjs-editor/integrity/dom';
 import {
+  createAIDocumentToolbox,
+  type AIDocumentProposal,
+} from 'fountainjs-editor/ai/document-tools';
+import {
   defineStructuredAttribute,
   insertStructuredAttributeItems,
   setStructuredAttribute,
@@ -120,8 +124,10 @@ const initialContent = {
 
 const demoAdapter = createStreamingAIAdapter(async function* (request, { signal }) {
   if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
-  const source = request.input.trim();
-  const replacement = request.action === 'shorten'
+  const leadingWhitespace = request.input.match(/^\s*/)?.[0] ?? '';
+  const trailingWhitespace = request.input.slice(leadingWhitespace.length).match(/\s*$/)?.[0] ?? '';
+  const source = request.input.slice(leadingWhitespace.length, request.input.length - trailingWhitespace.length);
+  const transformed = request.action === 'shorten'
     ? source.split(/\s+/).slice(0, Math.max(4, Math.ceil(source.split(/\s+/).length * 0.6))).join(' ').replace(/[,:;]$/, '') + '.'
     : request.action === 'expand'
       ? `${source.replace(/[.!?]$/, '')}—with clearer intent, stronger structure, and no loss of the author’s voice.`
@@ -130,6 +136,9 @@ const demoAdapter = createStreamingAIAdapter(async function* (request, { signal 
         : source === 'Try FountainJS in this document.'
           ? 'Edit this document to test FountainJS directly in your browser.'
           : `Make it unmistakably clear: ${source.charAt(0).toLowerCase()}${source.slice(1)}`;
+  // Text fragments often end at a mark boundary. Keep their boundary whitespace
+  // so accepting a proposal cannot join the replacement to the adjacent mark.
+  const replacement = `${leadingWhitespace}${transformed}${trailingWhitespace}`;
   const split = Math.max(1, Math.ceil(replacement.length / 2));
   yield { replacementDelta: replacement.slice(0, split) };
   await new Promise<void>((resolve, reject) => {
@@ -739,6 +748,7 @@ function App() {
   const state = useFountainState(editor);
   const editorHandle = useRef<FountainEditorHandle>(null);
   const aiController = useMemo(() => new AIController(editor, demoAdapter), [editor]);
+  const agentTools = useMemo(() => createAIDocumentToolbox(editor), [editor]);
   const mentionController = useMemo(
     () => (demoKit.services.mentions as MentionService).getController(editor),
     [editor],
@@ -750,6 +760,8 @@ function App() {
   const [format, setFormat] = useState<ExportFormat>('markdown');
   const [copied, setCopied] = useState(false);
   const [compactToolbar, setCompactToolbar] = useState(false);
+  const [agentProposal, setAgentProposal] = useState<AIDocumentProposal>();
+  const [agentToolMessage, setAgentToolMessage] = useState('No document-tool call has run.');
 
   const output = useMemo(() => {
     if (!state) return '';
@@ -768,6 +780,41 @@ function App() {
     else if (kind === 'quote') demoKit.commands.insertQuote?.(editor, 'A thought worth keeping…');
     else if (kind === 'task') demoKit.commands.insertList?.(editor, 'task', ['Review the document', 'Publish when ready']);
     else demoKit.commands.insertTable?.(editor, { rows: 3, columns: 2, headerRow: true });
+  };
+
+  const planStructuredSection = () => {
+    try {
+      const proposal = agentTools.preview([{
+        kind: 'insert',
+        parentPath: [],
+        index: editor.state.doc.childCount,
+        content: [
+          { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Agent-proposed next step' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'This structured section stays outside the document until you accept it.' }] },
+        ],
+      }], { label: 'Add a next-step section' });
+      setAgentProposal(proposal);
+      setAgentToolMessage('Preview ready. The live document is still unchanged.');
+    } catch (error) {
+      setAgentToolMessage(error instanceof Error ? error.message : 'The proposal could not be created.');
+    }
+  };
+
+  const decideAgentProposal = (decision: 'accept' | 'reject') => {
+    if (!agentProposal) return;
+    try {
+      if (decision === 'accept') {
+        agentTools.accept(agentProposal);
+        setAgentToolMessage('Accepted as one undoable editor transaction.');
+      } else {
+        agentTools.reject(agentProposal);
+        setAgentToolMessage('Rejected without changing the document.');
+      }
+      setAgentProposal(agentTools.getProposal(agentProposal.id));
+    } catch (error) {
+      setAgentProposal(agentTools.getProposal(agentProposal.id));
+      setAgentToolMessage(error instanceof Error ? error.message : 'The proposal could not be applied.');
+    }
   };
 
   const copy = async () => {
@@ -929,7 +976,28 @@ function App() {
               <div className="format-tabs">{(['markdown', 'html', 'json'] as ExportFormat[]).map((item) => <button type="button" key={item} className={format === item ? 'active' : ''} onClick={() => setFormat(item)}>{item}</button>)}</div>
               <pre><code>{output}</code></pre>
             </section>
-            <details className="optional-ai"><summary>Optional AI review example</summary><FountainAIReview controller={aiController} title="Optional AI module" /></details>
+            <details className="optional-ai">
+              <summary>Optional AI review examples</summary>
+              <FountainAIReview controller={aiController} title="Text proposal stream" />
+              <section className="agent-tools-demo" aria-label="Schema-aware agent document tools">
+                <span>STRUCTURED DOCUMENT TOOLS</span>
+                <h3>Agents propose. You decide.</h3>
+                <p>The demo reads the live schema and prepares two real Fountain nodes. The tool call itself cannot modify the editor.</p>
+                <button type="button" disabled={agentProposal?.status === 'pending'} onClick={planStructuredSection}>Plan structured section</button>
+                {agentProposal && <div className="agent-tools-demo__proposal">
+                  <code>{agentProposal.operations.length} operation · {agentProposal.affectedPaths.length} affected path</code>
+                  <strong>{agentProposal.label}</strong>
+                  <span>Heading: Agent-proposed next step</span>
+                  <span>Paragraph: This structured section stays outside the document until you accept it.</span>
+                  {agentProposal.status === 'pending' && <div>
+                    <button type="button" className="is-accept" onClick={() => decideAgentProposal('accept')}>Accept structured change</button>
+                    <button type="button" onClick={() => decideAgentProposal('reject')}>Reject structured change</button>
+                  </div>}
+                  <em>Status: {agentProposal.status}</em>
+                </div>}
+                <p role="status">{agentToolMessage}</p>
+              </section>
+            </details>
           </aside>
         </div>
       </section>

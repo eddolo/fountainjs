@@ -17,6 +17,9 @@
       "core": [
         "dist/headless/index.d.ts"
       ],
+      "ai/document-tools": [
+        "dist/ai/document-tools.d.ts"
+      ],
       "document-utilities": [
         "dist/document-utilities.d.ts"
       ],
@@ -122,6 +125,16 @@
       "require": {
         "types": "./dist/headless/index.d.cts",
         "default": "./dist/core.cjs"
+      }
+    },
+    "./ai/document-tools": {
+      "import": {
+        "types": "./dist/ai/document-tools.d.ts",
+        "default": "./dist/ai-document-tools.js"
+      },
+      "require": {
+        "types": "./dist/ai/document-tools.d.cts",
+        "default": "./dist/ai-document-tools.cjs"
       }
     },
     "./document-utilities": {
@@ -497,6 +510,7 @@
     "test:markdown-conformance": "node scripts/check-markdown-conformance.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
+    "audit:ui": "playwright test -c playwright.audit.config.ts",
     "test:lean-integration": "node scripts/test-lean-loopback.mjs",
     "test:watch": "vitest",
     "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",

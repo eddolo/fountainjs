@@ -3,8 +3,10 @@
   "files": {
     "dist/ai/controller.d.cts": "2b4531f66b2c8228d7829529734d88e6f54ad5b7c40e0b54a656197274ecd655",
     "dist/ai/controller.d.ts": "3eb7ee205d23f3c506f92a531329c131c30b597d1588d1d92ff94d28bbafd457",
-    "dist/ai/index.d.cts": "15996c8e21c2974af606cf9507f3701c8507110a359554cd2308cbb35f359586",
-    "dist/ai/index.d.ts": "9fc2bc1e63debadc2a53d49684f00a1d2ebceb791cedac76ca198ae2f2db870c",
+    "dist/ai/document-tools.d.cts": "3742a0c734aaba25c494a6418812a0b005ec1a79bdf700fec10d6069ffccf130",
+    "dist/ai/document-tools.d.ts": "f843f9cef90884e4ccac6b545966d6738019d80ab039503d3d6149bc06dd49bf",
+    "dist/ai/index.d.cts": "21cbc46f189ba94244466c1c53d365358fd964357687bce7e120031165c4a8cf",
+    "dist/ai/index.d.ts": "c82c391548c5d634f285ae8c58821c8a10055eeca2412fd5694db1853a0e7ef1",
     "dist/ai/mcp-adapter.d.cts": "bbbc61aff798c97856d60f274ffab9725f7f394b69f43c477dd2769ef3b65e5e",
     "dist/ai/mcp-adapter.d.ts": "48d7c23ab7c7636f7970062eb7b7235e9cc46be88efea89dbac964d9be9f7a78",
     "dist/ai/types.d.cts": "52d4a2756269f1a931b745557cb355d29b9b8880831156448b48d827c1c20b70",

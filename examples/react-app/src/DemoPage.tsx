@@ -225,7 +225,7 @@ function DemoControls({ editor }: { editor: Editor | null }) {
       <span>LaTeX</span>
       <input aria-label="Math source" value={mathSource} onChange={(event) => setMathInput(event.target.value)} />
       <button disabled={!mathSource.trim()} onClick={() => insertMathBlock(editor, mathSource, 'Editable math expression')}>+ New Math</button>
-      {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource)}>Update selected</button>}
+      {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource, '')}>Update selected</button>}
     </label>}
     {activeTable && <button aria-expanded={tableToolsOpen} onClick={() => setTableToolsOpen((open) => !open)}>Table options</button>}
     {activeTable && tableToolsOpen && <div className="demo-table-tools" role="group" aria-label="Table options">

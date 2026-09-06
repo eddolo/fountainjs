@@ -113,7 +113,22 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .studio__tools .fountain-ai-review { --fountain-accent: #6d4aff; }
 .optional-ai { color: #c9c5d6; background: #282438; border: 1px solid #3b364d; border-radius: 12px; }
 .optional-ai summary { padding: 14px; color: #c9c1fa; font: 600 11px DM Mono, monospace; cursor: pointer; }
-.optional-ai .fountain-ai-review { border: 0; border-top: 1px solid #3b364d; border-radius: 0 0 12px 12px; }
+.optional-ai .fountain-ai-review { border: 0; border-top: 1px solid #3b364d; border-radius: 0; }
+.agent-tools-demo { display: grid; gap: 9px; padding: 16px; color: #272333; background: #fff; border-top: 1px solid #e4e0ec; border-radius: 0 0 12px 12px; }
+.agent-tools-demo > span { color: #6d4aff; font: 600 9px DM Mono, monospace; letter-spacing: .11em; }
+.agent-tools-demo h3, .agent-tools-demo p { margin: 0; }
+.agent-tools-demo h3 { font-size: 16px; }
+.agent-tools-demo p { color: #6f687c; font-size: 12px; line-height: 1.5; }
+.agent-tools-demo button { justify-self: start; padding: 8px 10px; color: #433a56; background: #f7f5fc; border: 1px solid #ddd7e9; border-radius: 7px; font-size: 11px; font-weight: 700; }
+.agent-tools-demo button:disabled { cursor: wait; opacity: .55; }
+.agent-tools-demo__proposal { display: grid; gap: 6px; padding: 12px; background: #f2efff; border: 1px solid #d9d1ff; border-radius: 8px; }
+.agent-tools-demo__proposal code { color: #655d74; font: 9px DM Mono, monospace; text-transform: uppercase; }
+.agent-tools-demo__proposal strong { color: #33265f; }
+.agent-tools-demo__proposal span { color: #635c70; font-size: 11px; }
+.agent-tools-demo__proposal > div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.agent-tools-demo__proposal button.is-accept { color: #fff; background: #5b3ee6; border-color: #5b3ee6; }
+.agent-tools-demo__proposal button.is-accept:hover, .agent-tools-demo__proposal button.is-accept:focus-visible { color: #fff; background: #4328c6; }
+.agent-tools-demo__proposal em { color: #655d74; font: 600 10px DM Mono, monospace; font-style: normal; }
 .studio__export { display: flex; min-width: 0; min-height: 300px; max-height: 365px; flex-direction: column; overflow: hidden; color: #d8d4e4; background: #282438; border: 1px solid #3b364d; border-radius: 14px; }
 .export-head { display: flex; align-items: center; justify-content: space-between; padding: 15px; }
 .export-head strong { font-size: 12px; }

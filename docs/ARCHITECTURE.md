@@ -984,7 +984,11 @@ The suites are organized by boundary:
 - `tests/browser/`: real Chromium, Firefox, and WebKit editing contracts against
   a Vite-served editor and the public React playground.
 
-Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
+Before a release, run `pnpm check`, `pnpm test:browser`, and the recorded
+`pnpm audit:ui` human journey; watch the resulting video rather than relying on
+its assertions alone. Build the production example through the package
+self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and
+lint package exports.
 
 `pnpm test:budget` enforces raw production ceilings for every public entry and
 the complete emitted graph; `scripts/check-build-budgets.mjs` is the

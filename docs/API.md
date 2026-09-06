@@ -1217,6 +1217,25 @@ is the convenience for complete results. `createStreamingAIAdapter(fn)` returns
 both the streaming operation and a conventional transform that safely collects
 the same chunks, preserving the established adapter contract.
 
+### Schema-aware agent tools
+
+`createAIDocumentToolbox(editor, options)` from the isolated
+`fountainjs-editor/ai/document-tools` entry exposes five provider-neutral tool
+definitions and a generic `invoke()` dispatcher for bounded `fountain.read`,
+`fountain.insert`, `fountain.replace`, `fountain.format`, and
+`fountain.structure` calls. Reads return path-addressed node records plus the
+active schema. Mutation calls only create immutable pending proposals.
+
+`preview(operations, { label })` supports an atomic multi-operation plan.
+`read({ proposalId, path, depth, limit })` inspects its candidate document
+without revealing unrelated content through the mutation result. `accept()`
+requires an unchanged base document, replays the validated steps as one normal
+undoable transaction, and tags it with `fountain$aiDocumentTools`; `reject()`
+does not edit. JSON shape, schema content, declared attributes, paths, ranges,
+marks, total payload, read size, proposal count, operation count, and tool
+allowlists are checked before mutation. See
+[AI_DOCUMENT_TOOLS.md](AI_DOCUMENT_TOOLS.md) for the complete trust boundary.
+
 ## Commands
 
 Commands return whether they handled the operation:

@@ -276,6 +276,8 @@ describe('first-party mathematics extension', () => {
     input.value = 'x^3 + y^3';
     input.dispatchEvent(new Event('input', { bubbles: true }));
     expect(getActiveMath(editor)?.node.attrs.latex).toBe('x^3 + y^3');
+    expect(getActiveMath(editor)?.node.attrs.ariaLabel).toBe('');
+    expect(view.dom.querySelector('[data-fountain-math]')?.getAttribute('aria-label')).toBe('Math expression: x^3 + y^3');
     expect(view.dom.querySelector('[data-fountain-math] code')?.textContent).toBe('x^3 + y^3');
 
     editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([1, 0], 0)));

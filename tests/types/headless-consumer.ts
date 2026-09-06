@@ -15,6 +15,7 @@ import {
   insertText,
   type SchemaSpec,
 } from 'fountainjs-editor/core';
+import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
 
 const documentExtension = defineExtension({
   name: 'headless-document',
@@ -50,6 +51,17 @@ const editor = createEditor({
 });
 const commands = createCommandManager(editor, kit.commands);
 commands.commands.insertText(editor, ' core');
+const agentTools = createAIDocumentToolbox(editor);
+const agentRead = agentTools.read({ path: [0], depth: 1 });
+const agentProposal = agentTools.preview([{
+  kind: 'replace',
+  target: 'text',
+  from: { path: [0, 0], offset: 0 },
+  to: { path: [0, 0], offset: 8 },
+  text: 'headless',
+}]);
+void agentRead;
+void agentProposal;
 
 JSONExporter.export(editor.state);
 HTMLExporter.export(editor.state, { document: false });

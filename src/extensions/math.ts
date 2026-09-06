@@ -164,7 +164,10 @@ function createMathNodeView(
       const editor = this.editor;
       const latex = this.sourceInput.value;
       if (!editor || !validInsertionSource(latex)) return;
-      replaceMathSource(editor, latex, undefined, this.getPath(), `math-source:${this.getPath().join('.')}`);
+      // The inline editor changes only source. Clear an older hand-authored
+      // description rather than announcing semantics that may no longer match;
+      // the renderer immediately falls back to the new exact expression.
+      replaceMathSource(editor, latex, '', this.getPath(), `math-source:${this.getPath().join('.')}`);
     };
 
     private commitSource = (): void => {
@@ -174,7 +177,7 @@ function createMathNodeView(
         this.sourceInput.value = String(this.current.attrs.latex ?? '');
         return;
       }
-      replaceMathSource(editor, latex, undefined, this.getPath());
+      replaceMathSource(editor, latex, '', this.getPath());
     };
 
     private onSourceKeyDown = (event: KeyboardEvent): void => {

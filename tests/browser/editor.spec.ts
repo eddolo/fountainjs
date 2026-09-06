@@ -4721,7 +4721,9 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   await expect(directSource).toHaveValue('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
   await directSource.fill('\\int_0^1 x^2 dx');
   await directSource.press('Enter');
-  await expect(math.filter({ hasText: '\\int_0^1 x^2 dx' })).toHaveCount(1);
+  const editedBlock = math.filter({ hasText: '\\int_0^1 x^2 dx' });
+  await expect(editedBlock).toHaveCount(1);
+  await expect(editedBlock).toHaveAttribute('aria-label', 'Math expression: \\int_0^1 x^2 dx');
   await expect(output).toContainText('\\int_0^1 x^2 dx');
 
   await page.getByLabel('Math source', { exact: true }).fill('a^2 + b^2 = c^2');
@@ -5616,6 +5618,46 @@ test('streams an optional AI proposal outside the document until review is ready
   await expect(panel.locator('.fountain-ai-review__status')).toHaveText('Review needed');
   await expect(panel.getByRole('button', { name: 'Accept change' })).toBeVisible();
   await expect(panel.locator('[aria-busy="true"]')).toHaveCount(0);
+  expect(await editor.textContent()).toBe(original);
+});
+
+test('preserves whitespace when an AI proposal ends at a formatting boundary', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await editor.locator(':scope > p').first().click({ position: { x: 80, y: 12 } });
+  const panel = page.locator('.optional-ai');
+  await panel.locator(':scope > summary').click();
+  await panel.getByRole('button', { name: 'Improve' }).click();
+  await expect(panel.locator('.fountain-ai-review__status')).toHaveText('Review needed');
+  await panel.getByRole('button', { name: 'Accept change' }).click();
+
+  await expect(editor).toContainText('This is the real npm package');
+  await expect(editor).not.toContainText('This is thereal npm package');
+  await expect(page.locator('.studio__export pre')).toContainText('the **real npm package**');
+});
+
+test('reviews a schema-aware agent tool proposal before one-step apply and undo', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const original = await editor.textContent();
+  const panel = page.locator('.optional-ai');
+  await panel.locator(':scope > summary').click();
+  const tools = panel.getByRole('region', { name: 'Schema-aware agent document tools' });
+
+  await tools.getByRole('button', { name: 'Plan structured section' }).click();
+  await expect(tools.getByRole('status')).toHaveText('Preview ready. The live document is still unchanged.');
+  await expect(tools).toContainText('Status: pending');
+  expect(await editor.textContent()).toBe(original);
+  await expect(editor).not.toContainText('Agent-proposed next step');
+
+  await tools.getByRole('button', { name: 'Accept structured change' }).click();
+  await expect(tools.getByRole('status')).toHaveText('Accepted as one undoable editor transaction.');
+  await expect(tools).toContainText('Status: accepted');
+  await expect(editor).toContainText('Agent-proposed next step');
+  await expect(editor).toContainText('This structured section stays outside the document until you accept it.');
+
+  await page.getByRole('button', { name: 'Undo' }).first().click();
+  await expect(editor).not.toContainText('Agent-proposed next step');
   expect(await editor.textContent()).toBe(original);
 });
 

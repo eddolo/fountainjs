@@ -30,6 +30,22 @@ its ordinary complete-result behavior. A host whose MCP tool defines an
 incremental result protocol can adapt those events through the generic
 streaming interface without changing Fountain's document contract.
 
+## Structured document tool calls
+
+Text transformation is not the only AI boundary. The isolated
+`fountainjs-editor/ai/document-tools` entry publishes portable definitions for
+bounded structured read, insert, replace, format, and structure calls. An MCP
+host may expose those definitions to an agent and route calls through
+`AIDocumentToolbox.invoke()`. Reads are explicit and path-addressed. Every
+mutation result is a proposal: it cannot change the editor until the host calls
+`accept()` after review or its own authorization policy. Fountain then performs
+one schema-valid, stale-checked, undoable transaction.
+
+This is not automatic MCP server access and is not an authorization system.
+The application decides which tools to publish, which document/path a user may
+read, whether a proposal can be accepted, and what it records in its audit log.
+See [AI_DOCUMENT_TOOLS.md](AI_DOCUMENT_TOOLS.md).
+
 ## MCP transport
 
 The included browser-and-Node client implements the Model Context Protocol `2025-11-25` Streamable HTTP lifecycle:

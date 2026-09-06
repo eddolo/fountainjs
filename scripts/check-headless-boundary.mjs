@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, relative, resolve, sep } from 'node:path';
 
 const root = resolve('.');
-const entry = resolve('src/headless/index.ts');
+const entries = [resolve('src/headless/index.ts'), resolve('src/ai/document-tools.ts')];
 const forbidden = [
   `${resolve('src/view')}${sep}`,
   `${resolve('src/react')}${sep}`,
@@ -37,5 +37,5 @@ function visit(file, chain = []) {
   }
 }
 
-visit(entry);
+entries.forEach((entry) => visit(entry));
 console.log(`Headless source boundary verified across ${visited.size} modules.`);

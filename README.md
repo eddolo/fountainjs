@@ -1306,6 +1306,16 @@ Partial output is transient and cancellable. `FountainAIReview` shows it live bu
 does not offer Accept until the stream finishes; the completed proposal still
 passes the ordinary stale-target check and applies as one undoable transaction.
 
+For structured agent work, the isolated DOM-free
+`fountainjs-editor/ai/document-tools` entry exposes bounded schema/path reads and
+five portable tool descriptors: read, insert, replace, format, and structure.
+Mutation calls create inspectable proposals without editing. The host can read
+the proposed tree, then accept a fresh schema-valid batch as one undoable
+transaction or reject it without change. Tool allowlists, total payload/read/
+proposal bounds, declared-attribute policy, and stale-document refusal are
+configurable; no model SDK or Fountain service is required. See the
+[schema-aware document tools guide](docs/AI_DOCUMENT_TOOLS.md).
+
 Full-document context is off by default. The included `MCPAIAdapter` connects the same workflow to a compatible MCP Streamable HTTP tool; MCP is a transport option, not the AI itself. Never ship permanent provider credentials in browser code.
 
 React applications can render the optional workflow with `<FountainAIReview controller={ai} />`.
@@ -1352,6 +1362,7 @@ pnpm install
 pnpm dev
 pnpm check
 pnpm test:browser
+pnpm audit:ui
 pnpm pack:check
 ```
 
@@ -1359,6 +1370,16 @@ Generated bundles and dependencies are not committed. CI runs type checks,
 behavioural tests, production and package builds, plus Playwright contracts in
 Chromium, Firefox, WebKit, emulated Pixel Chrome, and emulated iPhone Safari.
 Failed browser runs retain traces and screenshots.
+`pnpm audit:ui` is the recorded human-journey gate: it drives the real public
+playground and Go-documentation demo through ordinary input, backward
+selection, quote toggling, sized table creation/deletion, direct and new math,
+Lean source shortcuts, live outline/integrity/reordering feedback, real browser
+clipboard exchange from an external rich editor into Fountain and back out,
+streamed proposal review, formatting-boundary acceptance, schema-aware
+structural preview/apply, and undo. Its local WebM, screenshots, and trace are
+written under
+`artifacts/manual-ui-audit/` for visual inspection and are intentionally not
+published in the package.
 
 The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes. Capability-focused labs are paired with matching developer/API explanations so live behavior and its integration contract can be read in either direction.
 
@@ -1415,6 +1436,7 @@ FountainJS is open about integration boundaries: host applications choose their 
 - [Platform-portability audit](docs/PORTABILITY_AUDIT.md)
 - [Native renderer feasibility and host-boundary design](docs/NATIVE_RENDERER_FEASIBILITY.md)
 - [Optional AI and MCP](docs/MCP.md)
+- [Schema-aware AI document tools](docs/AI_DOCUMENT_TOOLS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 - [Changelog](CHANGELOG.md)

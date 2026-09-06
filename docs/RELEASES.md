@@ -85,10 +85,16 @@ long-lived npm token belongs in GitHub or the repository.
    bun scripts/smoke-server-html-runtime.mjs
    deno run --allow-read scripts/smoke-server-html-runtime.mjs
    pnpm test:browser
+   pnpm audit:ui
    pnpm dlx publint@0.3.24
-   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
    pnpm pack --dry-run
    ```
+
+   Do not treat `pnpm audit:ui` as another assertion-only test. Watch the
+   generated WebM under `artifacts/manual-ui-audit/` and inspect its screenshots
+   for clipped controls, invisible state, unexpected scrolling, selection
+   discontinuities, or document/output disagreement before approving release.
 
 5. Commit the release, create the exact `v<version>` tag, and publish the GitHub
    release from that tag.

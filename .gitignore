@@ -1,6 +1,7 @@
 node_modules/
 playwright-report/
 test-results/
+artifacts/manual-ui-audit/
 tmp/
 dist/
 coverage/

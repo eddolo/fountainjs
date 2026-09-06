@@ -4,6 +4,13 @@
 
 ### Fixed
 
+- The public AI streaming demo now preserves leading and trailing whitespace at
+  mark boundaries, so accepting a proposal beside bold, italic, or another
+  adjacent fragment cannot silently join two words.
+- Direct or supplied-toolbar LaTeX source editing now clears a stale custom
+  accessibility description and falls back to announcing the new exact
+  expression; programmatic callers may still replace source and description
+  together.
 - Native disclosure toggles now survive an equivalent selection/decorations
   view update that occurs before the browser's asynchronous `toggle` event.
   Selection-only table-of-contents updates also preserve the existing index
@@ -62,6 +69,19 @@
   breaking ESM import or silently inflating release assets.
 
 ### Added
+
+- `pnpm audit:ui` now records repeatable human-style release journeys across
+  the public playground and Go-documentation demo, covering ordinary editing,
+  backward selection, quotes, tables, math, Lean source, real clipboard paste,
+  outline/integrity/reordering feedback, streamed review, structured agent
+  tools, and undo while failing on page or console errors.
+- An isolated DOM-free `fountainjs-editor/ai/document-tools` entry now exposes
+  bounded schema/path reads plus provider-neutral read, insert, replace, format,
+  and structure descriptors. Mutation calls create immutable review proposals,
+  validate portable JSON and the active schema, enforce allowlists and resource
+  limits, refuse stale documents, and apply only after explicit acceptance as
+  one ordinary undoable transaction. ESM/CommonJS package and no-DOM type/source
+  gates exercise the actual published boundary.
 
 - Provider-neutral AI adapters may now stream bounded append-only proposal and
   explanation deltas. Partial output remains transient, inspectable, and
