@@ -159,7 +159,9 @@ an initial standards-oriented set of behaviors:
 - plain-text image descriptions derived from nested emphasis, links, and images;
 - links and emphasis around inline image atoms, preserved through canonical
   Markdown plus browser/server HTML, JSON, DOM rendering, and Yjs;
-- recursive blockquotes, tight/loose nested lists, and GFM-style tasks;
+- recursive blockquotes, including up-to-three-space markers and lazy paragraph
+  continuation through nested quote depths; tight/loose nested lists; and
+  GFM-style tasks;
 - `-`, `*`, and `+` bullet markers plus both ordered-list delimiters, with a
   marker-style change preserving the boundary between adjacent lists and only
   a `1`-starting ordered list allowed to interrupt an open paragraph; ordered
@@ -194,7 +196,7 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 424 currently match, 222 remain pending, and six are
+classifies every example: 434 currently match, 210 remain pending, and eight are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 

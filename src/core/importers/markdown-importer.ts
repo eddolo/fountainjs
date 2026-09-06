@@ -1445,14 +1445,17 @@ function thematicBreak(line: string): boolean {
   return /^ {0,3}([*_-])(?:[ \t]*\1){2,}[ \t]*$/u.test(line);
 }
 
+const BLOCKQUOTE = /^ {0,3}>[ \t]?/u;
+
 function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
   const line = lines[index] ?? '';
   const marker = listMarker(line);
   return !!(markdownFence(line)
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
+    || /^ {0,3}(?:=+|-+)[\t ]*$/u.test(line)
     || thematicBreak(line)
-    || /^>\s?/.test(line)
+    || BLOCKQUOTE.test(line)
     || (marker?.value && !marker.indent && marker.start === 1)
     || tableStart(lines, index)
     || blockImage(line, references)
@@ -1567,9 +1570,35 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       blocks.push(schema.node('table', {}, rows));
       continue;
     }
-    if (/^>\s?/.test(line)) {
+    if (BLOCKQUOTE.test(line)) {
       const quote: string[] = [];
-      while (index < lines.length && /^>\s?/.test(lines[index])) quote.push(lines[index++].replace(/^>\s?/, ''));
+      let paragraphOpen = false;
+      let fence: MarkdownFence | null = null;
+      while (index < lines.length) {
+        const marked = BLOCKQUOTE.exec(lines[index]);
+        if (marked) {
+          const content = lines[index].slice(marked[0].length);
+          quote.push(content);
+          const deepest = content.replace(/^(?: {0,3}>[ \t]?)+/u, '');
+          if (fence) {
+            if (closesMarkdownFence(deepest, fence)) fence = null;
+            paragraphOpen = false;
+          } else {
+            fence = markdownFence(deepest);
+            paragraphOpen = !fence
+              && Boolean(deepest.trim())
+              && (paragraphOpen || indentedCodeLine(deepest) === null)
+              && !startsBlock([deepest], 0, references, schema);
+          }
+          index++;
+          continue;
+        }
+        if (!lines[index].trim()
+          || !paragraphOpen
+          || startsBlock(lines, index, references, schema)) break;
+        quote.push(lines[index]);
+        index++;
+      }
       const quoteBlocks = parseBlocks(quote, schema, references);
       blocks.push(schema.node('blockquote', {}, quoteBlocks.length ? quoteBlocks : [paragraph(schema, '', references)]));
       continue;
@@ -1608,16 +1637,16 @@ function references(markdown: string): { lines: string[]; definitions: Reference
   let paragraphOpen = false;
   for (let index = 0; index < sourceLines.length;) {
     const line = sourceLines[index];
-    const quote = /^( {0,3}>[\t ]?)(.*)$/u.exec(line);
+    const quote = BLOCKQUOTE.exec(line);
     if (quote && !fence) {
       const prefixes: string[] = [];
       const contents: string[] = [];
       let cursor = index;
       for (; cursor < sourceLines.length; cursor++) {
-        const nested = /^( {0,3}>[\t ]?)(.*)$/u.exec(sourceLines[cursor]);
+        const nested = BLOCKQUOTE.exec(sourceLines[cursor]);
         if (!nested) break;
-        prefixes.push(nested[1]);
-        contents.push(nested[2]);
+        prefixes.push(nested[0]);
+        contents.push(sourceLines[cursor].slice(nested[0].length));
       }
       const extracted = references(contents.join('\n'));
       extracted.definitions.forEach((definition, name) => {

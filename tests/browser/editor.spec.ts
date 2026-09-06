@@ -2327,6 +2327,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     emptyListItems: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '-\n- Filled\n\n1.\n2. Filled',
     ),
+    lazyBlockquotes: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '   > # Foo\n   > bar\n > baz\n\n> > > nested\ncontinuation',
+    ),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2581,6 +2584,15 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     node.content.map((item: any) => item.content[0].content?.[0]?.text ?? '')
   ))).toEqual([['', 'Filled'], ['', 'Filled']]);
   expect(result.emptyListItems.losses).toEqual([]);
+  expect(result.lazyBlockquotes.document).toEqual(result.lazyBlockquotes.roundTrip);
+  expect(result.lazyBlockquotes.document.content.map((node: any) => node.type)).toEqual([
+    'blockquote',
+    'blockquote',
+  ]);
+  expect(result.lazyBlockquotes.document.content[0].content[1].content[0].text).toBe('bar baz');
+  expect(result.lazyBlockquotes.document.content[1].content[0].content[0].content[0].content[0].text)
+    .toBe('nested continuation');
+  expect(result.lazyBlockquotes.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

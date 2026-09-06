@@ -13,6 +13,9 @@ const SAFE_NAME = /^[A-Za-z_][A-Za-z0-9_.:-]{0,127}$/;
 const SAFE_MAP_NAME = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const MAXIMUM_SHARED_ENTRIES = 100_000;
+const ATTRIBUTE = 'collaborative structured attribute';
+const ATTRIBUTE_ENTRY_LIMIT = `A ${ATTRIBUTE} exceeds its entry limit.`;
+const STORE_ENTRY_LIMIT = `The ${ATTRIBUTE} store exceeds its entry limit.`;
 
 export interface YjsStructuredAttributesOptions {
   /** Structured node attributes that should merge below their JSON root. */
@@ -68,7 +71,7 @@ function safeStructuredKey(key: string, limits: ResolvedStructuredAttributeLimit
 function incrementEntries(state: DecodeState, count: number, limits: ResolvedStructuredAttributeLimits): void {
   state.entries += count;
   if (state.entries > limits.maxEntries) {
-    throw new Error('A collaborative structured attribute exceeds its entry limit.');
+    throw new Error(ATTRIBUTE_ENTRY_LIMIT);
   }
 }
 
@@ -79,16 +82,16 @@ function decodeSharedValue(
   state: DecodeState,
 ): StructuredAttributeValue {
   if (depth > limits.maxDepth) {
-    throw new Error('A collaborative structured attribute exceeds its depth limit.');
+    throw new Error(`A ${ATTRIBUTE} exceeds its depth limit.`);
   }
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
-    if (!Number.isFinite(value)) throw new Error('A collaborative structured attribute contains a non-finite number.');
+    if (!Number.isFinite(value)) throw new Error(`A ${ATTRIBUTE} contains a non-finite number.`);
     return value;
   }
   if (typeof value === 'string') {
     if (value.length > limits.maxStringLength) {
-      throw new Error('A collaborative structured attribute string exceeds its length limit.');
+      throw new Error(`A ${ATTRIBUTE} string exceeds its length limit.`);
     }
     return value;
   }
@@ -96,7 +99,7 @@ function decodeSharedValue(
     incrementEntries(state, value.size, limits);
     const result: Record<string, StructuredAttributeValue> = Object.create(null) as Record<string, StructuredAttributeValue>;
     value.forEach((item, key) => {
-      if (!safeStructuredKey(key, limits)) throw new Error(`Unsafe collaborative structured attribute key: ${key || '(empty)'}.`);
+      if (!safeStructuredKey(key, limits)) throw new Error(`Unsafe ${ATTRIBUTE} key: ${key || '(empty)'}.`);
       result[key] = decodeSharedValue(item, limits, depth + 1, state);
     });
     return Object.freeze(result);
@@ -106,7 +109,7 @@ function decodeSharedValue(
     incrementEntries(state, items.length, limits);
     return Object.freeze(items.map((item) => decodeSharedValue(item, limits, depth + 1, state)));
   }
-  throw new Error('Collaborative structured attributes may contain only nested Y.Map/Y.Array values and JSON primitives.');
+  throw new Error('Structured attributes require Y.Map/Y.Array or JSON primitives.');
 }
 
 function sharedValue(value: StructuredAttributeValue): unknown {
@@ -154,7 +157,7 @@ function synchronizeArray(
   limits: ResolvedStructuredAttributeLimits,
 ): void {
   const current = decodeSharedValue(array, limits, 0, { entries: 0 });
-  if (!Array.isArray(current)) throw new Error('A collaborative structured attribute array became invalid.');
+  if (!Array.isArray(current)) throw new Error(`A ${ATTRIBUTE} array became invalid.`);
 
   if (current.length === desired.length) {
     desired.forEach((value, index) => {
@@ -218,7 +221,7 @@ function nodeJSONAtPath(document: NodeJSON, path: readonly number[]): NodeJSON {
   let current = document;
   for (const index of path) {
     const child = current.content?.[index];
-    if (!child) throw new Error(`A collaborative structured attribute points to a stale node path: ${path.join('.')}.`);
+    if (!child) throw new Error(`A ${ATTRIBUTE} points to a stale node path: ${path.join('.')}.`);
     current = child;
   }
   return current;
@@ -247,7 +250,7 @@ export class YjsStructuredAttributeStore {
       throw new TypeError('The Yjs structured attribute map must be a Y.Map from the same Yjs installation.');
     }
     if (options.map && options.map.doc !== document) {
-      throw new Error('The Yjs structured attribute map must belong to the supplied Y.Doc.');
+      throw new Error('The attribute map must belong to the supplied Y.Doc.');
     }
     if (options.mapName !== undefined && !SAFE_MAP_NAME.test(options.mapName)) {
       throw new TypeError('The Yjs structured attribute map name must be a safe non-empty name of at most 200 characters.');
@@ -256,7 +259,7 @@ export class YjsStructuredAttributeStore {
     const keys = new Set<string>();
     definitions.forEach((definition) => {
       const key = `${definition.nodeType}:${definition.attribute}`;
-      if (keys.has(key)) throw new Error(`Duplicate Yjs structured attribute definition: ${key}.`);
+      if (keys.has(key)) throw new Error(`Duplicate attribute definition: ${key}.`);
       keys.add(key);
     });
     const byNodeType = new Map<string, StructuredAttributeDefinition[]>();
@@ -286,7 +289,7 @@ export class YjsStructuredAttributeStore {
 
   overlay(document: Node): NodeJSON {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
-      throw new Error('The collaborative structured attribute store exceeds its entry limit.');
+      throw new Error(STORE_ENTRY_LIMIT);
     }
     const json = document.toJSON();
     for (const entry of this.entries(document)) {
@@ -299,7 +302,7 @@ export class YjsStructuredAttributeStore {
         action: 'synchronize',
       });
       if (!report.valid || report.value === undefined) {
-        throw new Error(`Invalid collaborative structured attribute ${entry.definition.nodeType}.${entry.definition.attribute}: ${report.issues.join(' ')}`);
+        throw new Error(`Invalid ${ATTRIBUTE} ${entry.definition.nodeType}.${entry.definition.attribute}: ${report.issues.join(' ')}`);
       }
       const target = nodeJSONAtPath(json, entry.path);
       target.attrs = { ...(target.attrs ?? {}), [entry.definition.attribute]: report.value };
@@ -315,11 +318,11 @@ export class YjsStructuredAttributeStore {
       if (definitions?.length) {
         const id = node.attrs[this.identityAttribute];
         if (typeof id !== 'string' || !STABLE_NODE_ID_PATTERN.test(id)) {
-          throw new Error(`Node ${node.type.name} at ${path.join('.') || '(root)'} needs a valid ${this.identityAttribute} for granular collaboration.`);
+          throw new Error(`Node ${node.type.name} at ${path.join('.') || '(root)'} needs valid ${this.identityAttribute} for collaboration.`);
         }
         const duplicate = ids.get(id);
         if (duplicate) {
-          throw new Error(`Duplicate structured collaboration node ID ${id} at ${duplicate.join('.')} and ${path.join('.')}.`);
+          throw new Error(`Duplicate collaboration node ID ${id} at ${duplicate.join('.')} and ${path.join('.')}.`);
         }
         ids.set(id, path);
         definitions.forEach((definition) => {
@@ -348,7 +351,7 @@ export class YjsStructuredAttributeStore {
 
   private synchronizeEntries(entries: readonly StructuredEntry[], onlyMissing: boolean, removeStale: boolean): void {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
-      throw new Error('The collaborative structured attribute store exceeds its entry limit.');
+      throw new Error(STORE_ENTRY_LIMIT);
     }
     const expected = new Set(entries.map((entry) => entry.key));
     if (removeStale) [...this.map.keys()].forEach((key) => {

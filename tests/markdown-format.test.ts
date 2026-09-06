@@ -1289,6 +1289,20 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
   });
 
+  it('keeps lazy paragraph continuations inside spaced and recursively nested blockquotes', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const spaced = MarkdownImporter.parse('   > # Foo\n   > bar\n > baz', schema);
+    const interruptedMarkers = MarkdownImporter.parse('> bar\nbaz\n> foo', schema);
+    const nested = MarkdownImporter.parse('> > > foo\nbar', schema);
+
+    expect(spaced.content.map((node) => node.type.name)).toEqual(['blockquote']);
+    expect(spaced.child(0).content.map((node) => node.type.name)).toEqual(['heading', 'paragraph']);
+    expect(spaced.child(0).child(1).textContent).toBe('bar baz');
+    expect(interruptedMarkers.content.map((node) => node.type.name)).toEqual(['blockquote']);
+    expect(interruptedMarkers.child(0).textContent).toBe('bar baz foo');
+    expect(nested.child(0).child(0).child(0).textContent).toBe('foo bar');
+  });
+
   it('preserves loose list items containing multiple blocks', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [
