@@ -3926,6 +3926,27 @@ test('publishes actionable extension authoring, conformance, and doctor guidance
   expect(errors).toEqual([]);
 });
 
+test('pairs the optional AI demo with developer recipes for every public workflow', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/developers.html#ai-mcp');
+
+  await expect(page.getByRole('heading', { name: 'AI proposes. The transaction system decides.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Conversation history belongs to the host' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Generated media returns through ordinary uploads' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'conversation guide' })).toHaveAttribute(
+    'href',
+    'https://github.com/eddolo/fountainjs/blob/master/docs/AI_CONVERSATIONS.md',
+  );
+  await expect(page.getByRole('link', { name: 'generated-media guide' })).toHaveAttribute(
+    'href',
+    'https://github.com/eddolo/fountainjs/blob/master/docs/AI_GENERATED_MEDIA.md',
+  );
+  await expect(page.getByText('Generated-media requests exclude document content and reference assets by default.')).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
 test('runs the public two-editor collaboration demo with presence and author-local undo', async ({ page }) => {
   await page.goto('/');
   const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
