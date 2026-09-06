@@ -5,18 +5,22 @@ import {
   JSONExporter,
   LeanExtension,
   LeanInfoView,
+  GapSelection,
   MarkdownExporter,
   MarkdownImporter,
   MathExtension,
-  NodeSelection,
   Schema,
-  Selection,
   StarterKit,
   EditorView,
   addTableColumn,
   addTableRow,
   composeExtensions,
   createEditor,
+  deleteTable,
+  deleteTableColumn,
+  deleteTableRow,
+  getActiveMath,
+  getActiveTableCell,
   insertList,
   insertMathBlock,
   insertTable,
@@ -24,10 +28,12 @@ import {
   registerFountainElement,
   selectAll,
   selectGap,
+  setMark,
   setMathSource,
   setTextAlignment,
   topLevelPosition,
   toggleMark,
+  unsetMark,
   undo,
   type Editor,
   type FountainEditorElement,
@@ -138,50 +144,57 @@ function OutputPanel({ document }: { document: Node | undefined }) {
   </section>;
 }
 
-function runTableCommand(editor: Editor, command: (editor: Editor) => boolean): void {
-  if (command(editor)) return;
-  let target: number[] | undefined;
-  editor.state.doc.descendants((node, path) => {
-    if (target || (node.type.name !== 'table_cell' && node.type.name !== 'table_header')) return;
-    node.descendants((child, childPath) => {
-      if (!target && child.isText) target = [...path, ...childPath];
-    });
-  });
-  if (!target) return;
-  editor.dispatch(editor.createTransaction().setSelection(Selection.cursor(target, 0)));
-  command(editor);
-}
-
 function DemoControls({ editor }: { editor: Editor | null }) {
+  const state = useFountainState(editor);
   const [mathSource, setMathInput] = useState('a^2 + b^2 = c^2');
-  const selectedMath = editor?.state.selection instanceof NodeSelection
-    && ['inline_math', 'math_block'].includes(editor.state.selection.nodeType);
-  const applyMath = () => {
-    if (!editor) return;
-    if (editor.state.selection instanceof NodeSelection
-      && ['inline_math', 'math_block'].includes(editor.state.selection.nodeType)) {
-      setMathSource(editor, mathSource);
-    } else insertMathBlock(editor, mathSource, 'Editable math expression');
-  };
+  const [tableRows, setTableRows] = useState('2');
+  const [tableColumns, setTableColumns] = useState('2');
+  const [highlightColor, setHighlightColor] = useState('#fff3a3');
+  const selectedMath = editor ? getActiveMath(editor) : null;
+  const activeTable = editor ? getActiveTableCell(editor) : null;
+  const insertionGap = state?.selection instanceof GapSelection
+    && state.selection.parentPath.length === 0
+    && state.selection.index === 1;
+  const selectedMathPath = selectedMath?.path.join('.') ?? '';
+  const selectedMathSource = String(selectedMath?.node.attrs.latex ?? '');
+  useEffect(() => {
+    if (selectedMathPath) setMathInput(selectedMathSource);
+  }, [selectedMathPath, selectedMathSource]);
   return <div className="demo-controls" aria-label="Editor controls" onMouseDown={(event) => {
     if (!(event.target instanceof HTMLInputElement)) event.preventDefault();
   }}>
     <button disabled={!editor} onClick={() => editor && undo(editor)}>Undo</button>
     <button disabled={!editor} onClick={() => editor && redo(editor)}>Redo</button>
     <button disabled={!editor} onClick={() => editor && toggleMark(editor, 'strong')}>Bold</button>
-    <button disabled={!editor} onClick={() => editor && toggleMark(editor, 'highlight')}>Highlight</button>
+    <label className="demo-colour-control" title="Choose a highlight colour">
+      <span>Highlight</span>
+      <input aria-label="Highlight colour" type="color" value={highlightColor} onChange={(event) => setHighlightColor(event.target.value)} />
+    </label>
+    <button disabled={!editor} onClick={() => editor && setMark(editor, 'highlight', { color: highlightColor })}>Apply highlight</button>
+    <button disabled={!editor} onClick={() => editor && unsetMark(editor, 'highlight')}>Remove highlight</button>
     <button disabled={!editor} onClick={() => editor && setTextAlignment(editor, 'center')}>Centre</button>
     <button disabled={!editor} onClick={() => editor && selectAll(editor)}>Select all</button>
-    <button disabled={!editor || editor.state.doc.childCount < 2} onClick={() => editor && selectGap(editor, topLevelPosition(editor.state.doc, 1))}>Gap after first</button>
+    <button
+      aria-pressed={insertionGap}
+      disabled={!editor || editor.state.doc.childCount < 2}
+      title="Places the insertion point after the title; it does not insert a page break"
+      onClick={() => editor && selectGap(editor, topLevelPosition(editor.state.doc, 1))}
+    >Place cursor after title</button>
     <button disabled={!editor} onClick={() => editor && insertList(editor, 'task', ['A new task'])}>+ Task</button>
-    <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: 2, columns: 2, headerRow: true })}>+ Table</button>
+    <label className="demo-table-control"><span>Table</span><input aria-label="Table rows" type="number" min="1" max="50" value={tableRows} onChange={(event) => setTableRows(event.target.value)} /><b>×</b><input aria-label="Table columns" type="number" min="1" max="20" value={tableColumns} onChange={(event) => setTableColumns(event.target.value)} /></label>
+    <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })}>+ Table</button>
     {editor?.state.schema.nodes.math_block && <label className="demo-math-control">
       <span>LaTeX</span>
       <input aria-label="Math source" value={mathSource} onChange={(event) => setMathInput(event.target.value)} />
-      <button disabled={!mathSource.trim()} onClick={applyMath}>{selectedMath ? 'Update Math' : '+ Math'}</button>
+      <button disabled={!mathSource.trim()} onClick={() => insertMathBlock(editor, mathSource, 'Editable math expression')}>+ New Math</button>
+      {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource)}>Update selected</button>}
     </label>}
-    <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableRow)}>+ Row</button>
-    <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableColumn)}>+ Column</button>
+    <button disabled={!activeTable} onClick={() => editor && addTableRow(editor)}>+ Row</button>
+    <button disabled={!activeTable} onClick={() => editor && deleteTableRow(editor)}>− Row</button>
+    <button disabled={!activeTable} onClick={() => editor && addTableColumn(editor)}>+ Column</button>
+    <button disabled={!activeTable} onClick={() => editor && deleteTableColumn(editor)}>− Column</button>
+    <button className="is-danger" disabled={!activeTable} onClick={() => editor && deleteTable(editor)}>Delete table</button>
+    {insertionGap && <span className="demo-control-status" role="status">Insertion point ready — the next task, table, or math block will be placed here. This is not a page break.</span>}
   </div>;
 }
 

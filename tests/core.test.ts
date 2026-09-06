@@ -31,6 +31,7 @@ import {
   insertQuote,
   insertTable,
   insertText,
+  insertPlainText,
   deleteBackward,
   deleteForward,
   redo,
@@ -44,6 +45,7 @@ import {
   setLink,
   setMark,
   setTextAlignment,
+  selectNode,
   selectNextMatch,
   splitBlock,
   toggleMark,
@@ -807,6 +809,40 @@ describe('document model and transactions', () => {
     expect(insertDocument(editor, blocks)).toBe(true);
     expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'heading', 'paragraph', 'paragraph']);
     expect(MarkdownExporter.export(editor.state)).toContain('## Two\n\nParagraphs');
+  });
+
+  it('turns multiline plain text into visible blocks when replacing a selected node', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    expect(insertImage(editor, { src: '/selected.png', alt: 'selected' })).toBe(true);
+    expect(selectNode(editor, [1])).toBe(true);
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+    expect(insertPlainText(editor, 'First line\n\nThird line')).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual([
+      'paragraph', 'paragraph', 'paragraph', 'paragraph', 'paragraph',
+    ]);
+    expect(editor.state.doc.content.slice(1, 4).map((node) => node.textContent)).toEqual([
+      'First line', '', 'Third line',
+    ]);
+    expect(editor.state.selection.eq(Selection.cursor([3, 0], 10))).toBe(true);
+  });
+
+  it('keeps multi-block rich paste inside the nearest block container', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    expect(insertTable(editor, { rows: 1, columns: 1 })).toBe(true);
+    insertText(editor, 'Cell suffix');
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([1, 0, 0, 0, 0], 5)));
+    const schema = editor.state.schema;
+    const fragment = schema.node('doc', {}, [
+      schema.node('paragraph', {}, [schema.text('Pasted one')]),
+      schema.node('paragraph', {}, [schema.text('Pasted two', [schema.mark('strong')])]),
+    ]);
+    expect(insertDocument(editor, fragment)).toBe(true);
+    const cell = editor.state.doc.child(1).child(0).child(0);
+    expect(cell.content.map((node) => node.textContent)).toEqual([
+      'Cell ', 'Pasted one', 'Pasted two', 'suffix',
+    ]);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'table']);
+    expect(editor.state.selection.eq(Selection.cursor([1, 0, 0, 2, 0], 10))).toBe(true);
   });
 });
 

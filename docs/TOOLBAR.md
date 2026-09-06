@@ -57,7 +57,7 @@ outside the built-in registry.
 | `marks` | `bold`, `italic`, `underline`, `strike`, `inline-code`, `highlight`, `subscript`, `superscript`, `link`, `unlink`, `text-color`, `clear-text-color`, `text-style` |
 | `alignment` | `align-left`, `align-center`, `align-right`, `justify` |
 | `insert` | `quote`, `bullet-list`, `ordered-list`, `task-list`, `outdent-list`, `indent-list`, `code-block`, `insert-table`, `image`, `upload-image`, `media`, `upload-asset`, `divider`, `hard-break` |
-| `table` | `add-table-row`, `delete-table-row`, `add-table-column`, `delete-table-column`, `merge-cells`, `split-cell`, `toggle-header-row`, `toggle-header-column`, `toggle-header-cell`, `select-row`, `select-column`, `column-width` |
+| `table` | `add-table-row`, `delete-table-row`, `add-table-column`, `delete-table-column`, `delete-table`, `merge-cells`, `split-cell`, `toggle-header-row`, `toggle-header-column`, `toggle-header-cell`, `select-row`, `select-column`, `column-width` |
 
 `defaultFountainToolbarGroups` is the frozen default group order. TypeScript
 exports `FountainToolbarGroupId` and `FountainToolbarActionId` so configuration
@@ -69,6 +69,10 @@ installed; upload is disabled until the host supplies `assetUpload`. Contextual
 table/list actions remain visible but disabled when their command is not valid.
 This distinction lets users discover a capability without allowing an invalid
 transaction.
+
+`insert-table` opens explicit row and column fields before insertion (1–50
+rows, 1–20 columns). `delete-table` removes the complete table containing the
+active cell; row and column deletion remain separate actions.
 
 ## Build a completely custom toolbar
 

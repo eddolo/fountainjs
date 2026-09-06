@@ -312,7 +312,7 @@ untrusted content.
 expands automatically rather than cutting through a merged cell.
 
 The public commands are `addTableRow`, `deleteTableRow`, `addTableColumn`,
-`deleteTableColumn`, `moveTableCell`, `mergeTableCells`, `splitTableCell`,
+`deleteTableColumn`, `deleteTable`, `moveTableCell`, `mergeTableCells`, `splitTableCell`,
 `toggleTableHeaderRow`, `toggleTableHeaderColumn`, `toggleTableHeaderCell`,
 `selectTableRow`, `selectTableColumn`, `resizeTableColumn`, and `repairTable`.
 All structural commands operate on logical coordinates and preserve valid spans.
@@ -570,7 +570,9 @@ remains the lossless source of truth. The commands are:
 - `insertInlineMath(editor, latex?, ariaLabel?)`, which can use the current
   single-text selection when `latex` is omitted;
 - `insertMathBlock(editor, latex, ariaLabel?)`;
-- `setMathSource(editor, latex, ariaLabel?)` for a selected math node.
+- `getActiveMath(editor, path?)` to inspect the selected or requested node;
+- `setMathSource(editor, latex, ariaLabel?, path?)` for a selected or explicitly
+  addressed math node.
 
 Typing `$...$` or `$$...$$` creates a semantic node, and immediate Backspace
 restores the literal delimiters. Pasted math Markdown is parsed through an
@@ -580,7 +582,9 @@ computed accessible fallback does not change JSON on round trip.
 
 Without a renderer, the NodeView exposes source in a `<code>` fallback with
 `role="math"`, an accessible label, full-source hover text, and selection/error
-states. `createMathExtension({ renderer, onRenderError })` accepts any
+states. Selecting a math node reveals a direct source input; typing updates the
+portable TeX and participates in undo, Enter commits, and Escape restores the
+current source. `createMathExtension({ renderer, onRenderError, appearance })` accepts any
 framework-neutral `MathRenderer`; the renderer must return a DOM `Node`, never
 an HTML string. `createKaTeXRenderer(katex, options?)` adapts a caller-owned
 [KaTeX installation](https://katex.org/docs/api) with combined HTML/MathML
@@ -591,14 +595,15 @@ import katex from 'katex'
 
 const math = createMathExtension({
   renderer: createKaTeXRenderer(katex),
+  appearance: 'plain', // or 'tinted' / 'outlined'
   onRenderError: (error, latex) => report(error, { latex }),
 })
 const kit = composeExtensions([...StarterKit.extensions, math])
 ```
 
+`plain` is the neutral default, so a coloured container is never required.
 Set `inputRules: false` or `pasteRules: false` when the host wants commands
-without delimiter conversion. `MAX_MATH_SOURCE_LENGTH` exposes the validation
-limit.
+without delimiter conversion. `MAX_MATH_SOURCE_LENGTH` exposes the validation limit.
 
 ### Lean extension and controller
 
@@ -1116,7 +1121,7 @@ Commands return whether they handled the operation:
 - `setTextAlignment`, `splitBlock`, `joinBackward`, and `joinForward`
 - `getActiveImage`, `setImageAttributes`, `setImageAlignment`, and `deleteImage`
 - `setNodeAttributes`, `removeNode`, `canMoveNode`, `moveNode`, `moveBlock`, `toggleTaskItem`, `toggleList`, `indentListItem`, and `outdentListItem`
-- `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, and `moveTableCell`
+- `addTableRow`, `deleteTableRow`, `addTableColumn`, `deleteTableColumn`, `deleteTable`, and `moveTableCell`
 - `undo`, `redo`, `canUndo`, `canRedo`, and `closeHistory`
 
 Bind any extension registry once to get immediate, chained, and dry-run command
@@ -1216,7 +1221,9 @@ quotes, and language-labelled fenced code blocks.
 ### Paste rules
 
 `pasteRulesPlugin({ rules })` evaluates rules in registration order before the
-view's normal HTML/plain-text importer. Each `PasteRule` receives the complete
+view's normal plain-text importer. Structured `text/html` takes precedence and
+bypasses text rules so marks, links, tables, annotations, and extension nodes
+are not silently flattened. Each `PasteRule` receives the complete
 plain text, HTML, clipboard event, current editor state, and every regular-
 expression match. Its handler may return a `Transaction`, schema `Node`,
 transformed string, `true` after handling directly, or `false`/`null` to let the

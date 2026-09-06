@@ -253,6 +253,18 @@ describe('modular extension composition', () => {
     expect(editor.getText()).toBe('');
   });
 
+  it('defers to structured clipboard HTML instead of flattening it through text rules', () => {
+    const plugin = pasteRulesPlugin({ rules: [
+      textPasteRule({ find: /--/g, replace: '—' }),
+    ] });
+    const editor = createEditor({ schema: CoreSchemaSpec });
+    expect(plugin.spec.props?.handlePaste?.(
+      editor,
+      clipboardEvent('rich -- source', '<p><strong>rich -- source</strong></p>'),
+    )).toBe(false);
+    expect(editor.getText()).toBe('');
+  });
+
   it('creates marked fragments for every delimiter match in pasted text', () => {
     const plugin = pasteRulesPlugin({ rules: [
       markPasteRule({ find: /\*\*([^*]+)\*\*/g, mark: 'strong', name: 'strong-paste' }),

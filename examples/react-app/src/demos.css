@@ -83,9 +83,16 @@
 .demo-controls { display: flex; flex-wrap: wrap; gap: 6px; padding: 9px; margin-bottom: 8px; background: #f8f7fb; border: 1px solid #ddd9e8; border-radius: 9px; }
 .demo-controls button { padding: 6px 9px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font-size: 10px; font-weight: 700; }
 .demo-controls button:hover:not(:disabled) { color: white; background: var(--demo-accent); }
+.demo-controls button[aria-pressed="true"] { color: white; background: var(--demo-accent); border-color: var(--demo-accent); }
+.demo-controls button.is-danger:not(:disabled) { color: #a22542; border-color: #e6a9b6; }
+.demo-controls button.is-danger:hover:not(:disabled) { color: white; background: #a22542; border-color: #a22542; }
 .demo-controls button:disabled { opacity: .42; cursor: not-allowed; }
-.demo-math-control { display: flex; align-items: center; gap: 5px; color: #756d89; font: 700 9px 'DM Mono', monospace; }
-.demo-math-control input { width: 145px; min-width: 90px; padding: 6px 8px; color: #312b3e; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font: 10px 'DM Mono', monospace; }
+.demo-math-control, .demo-table-control, .demo-colour-control { display: flex; align-items: center; gap: 5px; color: #756d89; font: 700 9px 'DM Mono', monospace; }
+.demo-math-control input, .demo-table-control input { min-width: 52px; padding: 6px 8px; color: #312b3e; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font: 10px 'DM Mono', monospace; }
+.demo-math-control input { width: 145px; min-width: 90px; }
+.demo-table-control input { width: 52px; }
+.demo-colour-control input { width: 28px; height: 28px; padding: 2px; background: white; border: 1px solid #dcd8e4; border-radius: 6px; }
+.demo-control-status { flex: 1 0 100%; padding: 6px 8px; color: #4e3aa8; background: #eee9ff; border-radius: 6px; font: 9px/1.5 'DM Mono', monospace; }
 
 .demo-output { display: grid; grid-template-rows: auto auto minmax(0, 1fr); min-width: 0; color: #d8d4e4; background: #1d1a2b; border-left: 1px solid #38344c; }
 .demo-output header { display: flex; align-items: center; justify-content: space-between; padding: 21px 18px 13px; }

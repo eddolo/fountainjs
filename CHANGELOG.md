@@ -4,6 +4,12 @@
 
 ### Fixed
 
+- Clipboard insertion now keeps rich HTML ahead of plain-text paste rules,
+  commits a rich replacement as one editor action, keeps multi-block HTML
+  inside nested containers such as table cells and list items, replaces inline
+  atoms with inline content, and turns multiline text pasted over a structural
+  selection into real visible blocks instead of embedding collapsed newline
+  characters in one paragraph.
 - Empty paragraphs now render a real caret line, repeated Enter/Backspace
   creates and removes visibly distinct lines without leaving phantom height,
   backward keyboard and pointer selections retain their direction, Enter
@@ -26,6 +32,13 @@
 
 ### Added
 
+- Table insertion now accepts explicit row/column dimensions in the supplied
+  toolbar and public demos, while `deleteTable` removes the complete active
+  table. Math nodes can be edited directly when selected, external controls can
+  inspect them with `getActiveMath`, and `createMathExtension` offers neutral
+  `plain`, `tinted`, or `outlined` visual treatments; `plain` is the default.
+  The public demos also expose arbitrary highlight colours and label structural
+  gap insertion as an insertion point rather than a page break.
 - An immutable Markdown source snapshot for raw/visual workflows:
   `parseWithSource` retains exact input, line endings, and inert YAML
   frontmatter; `exportWithSource` returns unchanged source exactly or

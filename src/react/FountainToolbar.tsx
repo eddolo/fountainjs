@@ -4,6 +4,7 @@ import {
   addTableRow,
   deleteTableColumn,
   deleteTableRow,
+  deleteTable,
   getActiveTableCell,
   getActiveImage,
   insertBlock,
@@ -38,6 +39,7 @@ import {
   unsetMark,
   type Editor,
   CellSelection,
+  NodeSelection,
 } from '../core';
 import { getClipboardHistoryState, openClipboardHistory } from '../extensions/clipboard-history';
 import { canRedo, canUndo, redo, undo } from '../extensions/plugins/history';
@@ -141,7 +143,7 @@ export function FountainToolbar({
   const languageListId = useId();
   const fontFamilyListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'table' | 'text-style' | null>(null);
+  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'insert-table' | 'table' | 'text-style' | null>(null);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -181,6 +183,8 @@ export function FountainToolbar({
   const [query, setQuery] = useState('');
   const [replacement, setReplacement] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('text');
+  const [tableRows, setTableRows] = useState('3');
+  const [tableColumns, setTableColumns] = useState('3');
   const [tableWidth, setTableWidth] = useState('120');
   const [fontFamilyValue, setFontFamilyValue] = useState('');
   const [fontSizeValue, setFontSizeValue] = useState('');
@@ -205,6 +209,8 @@ export function FountainToolbar({
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
   const activeTable = getActiveTableCell(editor);
+  const tableSelected = Boolean(activeTable)
+    || (editor.state.selection instanceof NodeSelection && editor.state.selection.nodeType === 'table');
   const activeImage = getActiveImage(editor);
   const activeMedia = getActiveMedia(editor);
   const clipboardHistory = getClipboardHistoryState(editor);
@@ -583,7 +589,7 @@ export function FountainToolbar({
       entry('outdent-list', tool('outdent-list', 'Lift list item', () => outdentListItem(editor), { disabled: !isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item') })),
       entry('indent-list', tool('indent-list', 'Indent list item', () => indentListItem(editor), { disabled: !isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item') })),
       entry('code-block', tool('code-block', 'Code block and language', toggleCodePanel, { active: Boolean(activeCodeBlock) })),
-      entry('insert-table', tool('insert-table', 'Insert 3 by 3 table', () => insertTable(editor))),
+      entry('insert-table', tool('insert-table', 'Insert table', () => setPanel(panel === 'insert-table' ? null : 'insert-table'), { active: panel === 'insert-table' })),
       entry('image', tool('image', activeImage ? 'Edit selected image' : 'Insert image from URL', toggleImagePanel, { active: Boolean(activeImage) })),
       entry('upload-image', tool('upload-image', activeImage ? 'Replace selected image' : 'Upload image', () => fileInput.current?.click())),
       entry('media', editor.state.schema.nodes.audio && tool('media', activeMedia ? 'Edit selected media' : 'Insert audio, video, file, or embed', () => toggleMediaPanel(), { active: Boolean(activeMedia) })),
@@ -596,6 +602,7 @@ export function FountainToolbar({
       entry('delete-table-row', tool('delete-table-row', 'Delete table row', () => deleteTableRow(editor), { disabled: !isInsideNode(editor, 'table') })),
       entry('add-table-column', tool('add-table-column', 'Add table column', () => addTableColumn(editor), { disabled: !isInsideNode(editor, 'table') })),
       entry('delete-table-column', tool('delete-table-column', 'Delete table column', () => deleteTableColumn(editor), { disabled: !isInsideNode(editor, 'table') })),
+      entry('delete-table', tool('delete-table', 'Delete entire table', () => deleteTable(editor), { disabled: !tableSelected })),
       entry('merge-cells', tool('merge-cells', 'Merge selected table cells', () => mergeTableCells(editor), { disabled: !(editor.state.selection instanceof CellSelection) || editor.state.selection.cellPaths.length < 2 })),
       entry('split-cell', tool('split-cell', 'Split merged table cell', () => splitTableCell(editor), { disabled: !activeTable || (activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1) })),
       entry('toggle-header-row', tool('toggle-header-row', 'Toggle header row', () => toggleTableHeaderRow(editor), { disabled: !activeTable })),
@@ -842,6 +849,16 @@ export function FountainToolbar({
         <input aria-label="Table column width" required type="number" min="40" max="2000" step="1" value={tableWidth} onChange={(event) => setTableWidth(event.target.value)} />
         <span>px</span>
         <button type="submit">Apply</button>
+        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+      </form>}
+      {panel === 'insert-table' && <form className="fountain-toolbar__popover is-table" onSubmit={(event) => {
+        event.preventDefault();
+        if (insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })) setPanel(null);
+      }}>
+        <strong>Insert table</strong>
+        <label>Rows <input aria-label="Table rows" required type="number" min="1" max="50" step="1" value={tableRows} onChange={(event) => setTableRows(event.target.value)} /></label>
+        <label>Columns <input aria-label="Table columns" required type="number" min="1" max="20" step="1" value={tableColumns} onChange={(event) => setTableColumns(event.target.value)} /></label>
+        <button type="submit">Insert</button>
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
       {panel === 'search' && <form className="fountain-toolbar__popover is-search" onSubmit={(event) => { event.preventDefault(); selectNextMatch(editor, query); }}>

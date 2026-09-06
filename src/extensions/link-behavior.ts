@@ -280,7 +280,10 @@ export function createLinkBehaviorExtension(options: LinkBehaviorOptions = {}): 
         : (editor, from, to, input) => autolinkInput(editor, from, to, input, frozenOptions),
       handlePaste: options.linkOnPaste === false
         ? undefined
-        : (editor, event) => pasteLink(editor, event.clipboardData?.getData('text/plain') ?? '', frozenOptions),
+        : (editor, event) => {
+          if (event.clipboardData?.getData('text/html')?.trim()) return false;
+          return pasteLink(editor, event.clipboardData?.getData('text/plain') ?? '', frozenOptions);
+        },
       handleClick: (editor, event) => {
         const active = activatedLink(editor, event);
         if (!active) return false;

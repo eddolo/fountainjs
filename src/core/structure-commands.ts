@@ -146,6 +146,17 @@ export function removeNode(editor: Editor, path: readonly number[]): boolean {
   return true;
 }
 
+/** Removes the table containing the current cell or selected table node. */
+export function deleteTable(editor: Editor): boolean {
+  if (!editor.editable) return false;
+  const selection = editor.state.selection;
+  if (selection instanceof NodeSelection && selection.nodeType === 'table') {
+    return removeNode(editor, selection.nodePath);
+  }
+  const active = getActiveTableCell(editor);
+  return active ? removeNode(editor, active.tablePath) : false;
+}
+
 export interface NodeMove {
   /** Path of the node in the current document. The root document cannot move. */
   readonly fromPath: readonly number[];

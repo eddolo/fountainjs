@@ -7,6 +7,7 @@ import {
   Selection,
   type Editor,
   type NodeSpec,
+  type NodeViewConstructor,
   type NodeViewLike,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
@@ -17,6 +18,7 @@ import {
   inputRulesPlugin,
   type InputRulesState,
 } from './plugins/input-rules';
+import { setHistoryGroup } from './plugins/history';
 import { PasteRule, pasteRulesPlugin } from './plugins/paste-rules';
 
 export const MAX_MATH_SOURCE_LENGTH = 20_000;
@@ -74,6 +76,8 @@ export interface MathExtensionOptions {
   readonly inputRules?: boolean;
   /** Parses pasted `$...$` and `$$...$$` Markdown as math nodes. Defaults to true. */
   readonly pasteRules?: boolean;
+  /** Visual container treatment. Defaults to the neutral `plain` appearance. */
+  readonly appearance?: 'plain' | 'tinted' | 'outlined';
   readonly onRenderError?: (error: unknown, latex: string) => void;
 }
 
@@ -81,16 +85,37 @@ function createMathNodeView(
   displayMode: boolean,
   renderer?: MathRenderer,
   onRenderError?: MathExtensionOptions['onRenderError'],
-): new (node: Node) => NodeViewLike {
+  appearance: NonNullable<MathExtensionOptions['appearance']> = 'plain',
+): NodeViewConstructor {
   return class MathNodeView implements NodeViewLike {
     readonly dom = document.createElement(displayMode ? 'div' : 'span');
+    private readonly output = document.createElement(displayMode ? 'div' : 'span');
+    private readonly sourceEditor = document.createElement(displayMode ? 'div' : 'span');
+    private readonly sourceInput = document.createElement('input');
     private current: Node;
 
-    constructor(node: Node) {
+    constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
       this.current = node;
       this.dom.className = `fountain-math fountain-math--${displayMode ? 'display' : 'inline'}`;
       this.dom.dataset.fountainMath = displayMode ? 'block' : 'inline';
+      this.dom.dataset.fountainMathAppearance = appearance;
       this.dom.setAttribute('role', 'math');
+      this.output.className = 'fountain-math__output';
+      this.sourceEditor.className = 'fountain-math__source-editor';
+      this.sourceEditor.contentEditable = 'false';
+      this.sourceEditor.hidden = true;
+      this.sourceInput.className = 'fountain-math__source-input';
+      this.sourceInput.type = 'text';
+      this.sourceInput.maxLength = MAX_MATH_SOURCE_LENGTH;
+      this.sourceInput.autocomplete = 'off';
+      this.sourceInput.spellcheck = false;
+      this.sourceInput.placeholder = 'Enter LaTeX';
+      this.sourceInput.setAttribute('aria-label', 'Edit math source');
+      this.sourceInput.addEventListener('input', this.onSourceInput);
+      this.sourceInput.addEventListener('keydown', this.onSourceKeyDown);
+      this.sourceInput.addEventListener('blur', this.commitSource);
+      this.sourceEditor.append(this.sourceInput);
+      this.dom.append(this.output, this.sourceEditor);
       this.render();
     }
 
@@ -101,8 +126,67 @@ function createMathNodeView(
       return true;
     }
 
-    selectNode(): void { this.dom.dataset.fountainMathSelected = 'true'; }
-    deselectNode(): void { delete this.dom.dataset.fountainMathSelected; }
+    selectNode(): void {
+      this.dom.dataset.fountainMathSelected = 'true';
+      if (this.editor?.editable) {
+        this.sourceInput.value = String(this.current.attrs.latex ?? '');
+        this.sourceEditor.hidden = false;
+      }
+    }
+
+    deselectNode(): void {
+      this.commitSource();
+      delete this.dom.dataset.fountainMathSelected;
+      this.sourceEditor.hidden = true;
+    }
+
+    stopEvent(event: Event): boolean {
+      return this.sourceEditor.contains(event.target as globalThis.Node);
+    }
+
+    ignoreMutation(mutation: MutationRecord): boolean {
+      if (this.sourceEditor.contains(mutation.target)) return true;
+      return mutation.target === this.dom
+        && ['data-fountain-math-selected', 'data-latex', 'title', 'aria-label'].includes(mutation.attributeName ?? '');
+    }
+
+    destroy(): void {
+      this.sourceInput.removeEventListener('input', this.onSourceInput);
+      this.sourceInput.removeEventListener('keydown', this.onSourceKeyDown);
+      this.sourceInput.removeEventListener('blur', this.commitSource);
+    }
+
+    private get editor(): Editor | null {
+      return (this.view as { readonly editor?: Editor } | null)?.editor ?? null;
+    }
+
+    private onSourceInput = (): void => {
+      const editor = this.editor;
+      const latex = this.sourceInput.value;
+      if (!editor || !validInsertionSource(latex)) return;
+      replaceMathSource(editor, latex, undefined, this.getPath(), `math-source:${this.getPath().join('.')}`);
+    };
+
+    private commitSource = (): void => {
+      const editor = this.editor;
+      const latex = this.sourceInput.value;
+      if (!editor || !validInsertionSource(latex)) {
+        this.sourceInput.value = String(this.current.attrs.latex ?? '');
+        return;
+      }
+      replaceMathSource(editor, latex, undefined, this.getPath());
+    };
+
+    private onSourceKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.sourceInput.value = String(this.current.attrs.latex ?? '');
+        this.sourceInput.blur();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        this.sourceInput.blur();
+      }
+    };
 
     private render(): void {
       const latex = String(this.current.attrs.latex ?? '');
@@ -117,22 +201,27 @@ function createMathNodeView(
         if (!NodeConstructor || !(rendered instanceof NodeConstructor)) {
           throw new TypeError('Math renderers must return a DOM Node.');
         }
-        this.dom.replaceChildren(rendered);
+        this.output.replaceChildren(rendered);
       } catch (error) {
         if (renderer) onRenderError?.(error, latex);
         const source = this.dom.ownerDocument.createElement('code');
         source.dataset.fountainMathSource = 'true';
         source.textContent = latex;
-        this.dom.replaceChildren(source);
+        this.output.replaceChildren(source);
         if (renderer) this.dom.dataset.fountainMathError = 'true';
       }
+      if (this.sourceInput !== this.dom.ownerDocument.activeElement) this.sourceInput.value = latex;
     }
   };
 }
 
 function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; math_block: NodeSpec } {
-  const InlineMathView = createMathNodeView(false, options.renderer, options.onRenderError);
-  const MathBlockView = createMathNodeView(true, options.renderer, options.onRenderError);
+  const appearance = options.appearance ?? 'plain';
+  if (!['plain', 'tinted', 'outlined'].includes(appearance)) {
+    throw new TypeError(`Unknown math appearance: ${appearance}.`);
+  }
+  const InlineMathView = createMathNodeView(false, options.renderer, options.onRenderError, appearance);
+  const MathBlockView = createMathNodeView(true, options.renderer, options.onRenderError, appearance);
   return {
     inline_math: {
       group: 'inline',
@@ -144,6 +233,7 @@ function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; 
       toDOM: (node) => ['span', {
         class: 'fountain-math fountain-math--inline',
         'data-fountain-math': 'inline',
+        'data-fountain-math-appearance': appearance,
         'data-latex': node.attrs.latex,
         'data-math-aria-label': node.attrs.ariaLabel,
         role: 'math',
@@ -159,6 +249,7 @@ function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; 
       toDOM: (node) => ['div', {
         class: 'fountain-math fountain-math--display',
         'data-fountain-math': 'block',
+        'data-fountain-math-appearance': appearance,
         'data-latex': node.attrs.latex,
         'data-math-aria-label': node.attrs.ariaLabel,
         role: 'math',
@@ -241,21 +332,54 @@ export function insertMathBlock(editor: Editor, latex: string, ariaLabel = ''): 
   return true;
 }
 
-/** Updates the selected inline or display math node while preserving its selection. */
-export function setMathSource(editor: Editor, latex: string, ariaLabel?: string): boolean {
+export interface ActiveMath {
+  readonly path: readonly number[];
+  readonly node: Node;
+  readonly displayMode: boolean;
+}
+
+/** Returns the selected inline or display math node, or the requested math path. */
+export function getActiveMath(editor: Editor, requestedPath?: readonly number[]): ActiveMath | null {
+  const path = requestedPath
+    ?? (editor.state.selection instanceof NodeSelection ? editor.state.selection.nodePath : null);
+  if (!path) return null;
+  try {
+    const node = getNodeAtPath(editor.state.doc, path);
+    if (node.type.name !== 'inline_math' && node.type.name !== 'math_block') return null;
+    return { path: Object.freeze([...path]), node, displayMode: node.type.name === 'math_block' };
+  } catch { return null; }
+}
+
+function replaceMathSource(
+  editor: Editor,
+  latex: string,
+  ariaLabel?: string,
+  requestedPath?: readonly number[],
+  historyGroup?: string,
+): boolean {
   if (!editor.editable || !validInsertionSource(latex)) return false;
-  const selection = editor.state.selection;
-  if (!(selection instanceof NodeSelection)) return false;
-  const node = getNodeAtPath(editor.state.doc, selection.nodePath);
-  if (node.type.name !== 'inline_math' && node.type.name !== 'math_block') return false;
+  const active = getActiveMath(editor, requestedPath);
+  if (!active) return false;
+  const { node, path } = active;
   const attrs = { ...node.attrs, latex, ...(ariaLabel === undefined ? {} : { ariaLabel }) };
+  if (String(node.attrs.latex) === latex
+    && (ariaLabel === undefined || node.attrs.ariaLabel === ariaLabel)) return false;
   let replacement: Node;
   try { replacement = node.type.create(attrs); }
   catch { return false; }
-  const transaction = editor.state.createTransaction().replaceNode(selection.nodePath, [replacement]);
-  transaction.setSelection(new NodeSelection(transaction.doc, selection.nodePath));
+  const transaction = editor.state.createTransaction().replaceNode(path, [replacement]);
+  if (historyGroup) setHistoryGroup(transaction, historyGroup);
+  if (editor.state.selection instanceof NodeSelection
+    && editor.state.selection.nodePath.join('.') === path.join('.')) {
+    transaction.setSelection(new NodeSelection(transaction.doc, path));
+  }
   editor.dispatch(transaction);
   return true;
+}
+
+/** Updates the selected inline or display math node, or an explicit math path. */
+export function setMathSource(editor: Editor, latex: string, ariaLabel?: string, path?: readonly number[]): boolean {
+  return replaceMathSource(editor, latex, ariaLabel, path);
 }
 
 function inlineMathRule(): InputRule {

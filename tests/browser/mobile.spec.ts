@@ -69,12 +69,12 @@ test('inserts and updates native math from the phone controls', async ({ page })
   await page.goto('/demos/go-docs-service.html');
   const math = page.locator('[data-fountain-math]');
   const before = await math.count();
-  const input = page.getByLabel('Math source');
+  const input = page.getByLabel('Math source', { exact: true });
   await expect(input).toBeVisible();
-  await page.getByRole('button', { name: '+ Math' }).tap();
+  await page.getByRole('button', { name: '+ New Math' }).tap();
   await expect(math).toHaveCount(before + 1);
   await input.fill('x^4 + y^4');
-  await page.getByRole('button', { name: 'Update Math' }).tap();
+  await page.getByRole('button', { name: 'Update selected' }).tap();
   await expect(math.filter({ hasText: 'x^4 + y^4' })).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

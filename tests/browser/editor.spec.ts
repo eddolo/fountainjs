@@ -4333,6 +4333,8 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   await page.goto('/demos/go-docs-service.html');
   const math = page.locator('[data-fountain-math]');
   await expect(math).toHaveCount(2);
+  await expect(math.first()).toHaveAttribute('data-fountain-math-appearance', 'plain');
+  await expect(math.first()).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await expect(math.filter({ hasText: 'T(n)=O(n \\log n)' })).toHaveAttribute('role', 'math');
   await expect(math.filter({ hasText: '\\sum_{i=1}^{n} i' })).toHaveAttribute('aria-label', 'Sum of the first n integers');
   await expect(page.locator('pre[data-language="lean"]')).toContainText('example : 1 = 1 := rfl');
@@ -4357,11 +4359,22 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   expect(before.length).toBeGreaterThan(10);
   expect(before.every((entry) => typeof entry.id === 'string' && entry.id.startsWith('fjs-'))).toBe(true);
   expect(new Set(before.map((entry) => entry.id)).size).toBe(before.length);
-  await page.getByRole('button', { name: '+ Math' }).click();
+  const existingBlock = math.filter({ hasText: '\\sum_{i=1}^{n} i' });
+  await existingBlock.click();
+  await expect(page.getByLabel('Math source', { exact: true })).toHaveValue('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
+  const directSource = page.locator('[aria-label="Edit math source"]:visible');
+  await expect(directSource).toHaveValue('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
+  await directSource.fill('\\int_0^1 x^2 dx');
+  await directSource.press('Enter');
+  await expect(math.filter({ hasText: '\\int_0^1 x^2 dx' })).toHaveCount(1);
+  await expect(output).toContainText('\\int_0^1 x^2 dx');
+
+  await page.getByLabel('Math source', { exact: true }).fill('a^2 + b^2 = c^2');
+  await page.getByRole('button', { name: '+ New Math' }).click();
   await expect(math).toHaveCount(3);
   await expect(output).toContainText('a^2 + b^2 = c^2');
-  await page.getByLabel('Math source').fill('x^3 + y^3 = z^3');
-  await page.getByRole('button', { name: 'Update Math' }).click();
+  await page.getByLabel('Math source', { exact: true }).fill('x^3 + y^3 = z^3');
+  await page.getByRole('button', { name: 'Update selected' }).click();
   await expect(math.filter({ hasText: 'x^3 + y^3 = z^3' })).toHaveCount(1);
   await expect(output).toContainText('x^3 + y^3 = z^3');
   const after = await identitySnapshot();
@@ -4369,6 +4382,126 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   expect(before.every((entry) => afterIds.has(entry.id))).toBe(true);
   expect(after.length).toBeGreaterThan(before.length);
   expect(new Set(after.map((entry) => entry.id)).size).toBe(after.length);
+});
+
+test('makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const tables = editor.locator('table');
+  await expect(tables).toHaveCount(1);
+
+  await page.getByLabel('Table rows').fill('3');
+  await page.getByLabel('Table columns').fill('4');
+  await page.getByRole('button', { name: '+ Table', exact: true }).click();
+  await expect(tables).toHaveCount(2);
+  const inserted = tables.first();
+  await expect(inserted.locator('tr')).toHaveCount(3);
+  expect(await inserted.locator('tr').first().locator('th, td').count()).toBe(4);
+
+  await page.getByRole('button', { name: '+ Row', exact: true }).click();
+  await expect(inserted.locator('tr')).toHaveCount(4);
+  await page.getByRole('button', { name: '− Column', exact: true }).click();
+  expect(await inserted.locator('tr').first().locator('th, td').count()).toBe(3);
+  await page.getByRole('button', { name: 'Delete table', exact: true }).click();
+  await expect(tables).toHaveCount(1);
+
+  const gap = page.getByRole('button', { name: 'Place cursor after title' });
+  await gap.click();
+  await expect(gap).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText('Insertion point ready')).toContainText('not a page break');
+  await page.getByRole('button', { name: '+ Task', exact: true }).click();
+  await expect(editor.locator(':scope > [data-fountain-node="task_list"]')).toHaveAttribute('data-fountain-path', '1');
+
+  const titleText = editor.locator(':scope > h1 [data-fountain-text-path]').first();
+  await titleText.evaluate((element) => {
+    const text = element.firstChild;
+    if (!text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected title text.');
+    const range = document.createRange();
+    range.setStart(text, 0);
+    range.setEnd(text, 6);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.getByLabel('Highlight colour').fill('#ff00aa');
+  await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+  await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+  await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+  await expect(editor.locator('h1 mark')).toHaveCount(0);
+});
+
+test('keeps rich and multiline paste structurally predictable in the public editor', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const technical = editor.locator('p').filter({ hasText: 'Technical prose' }).first();
+  await technical.locator('[data-fountain-text-path]').last().evaluate((element) => {
+    const text = element.firstChild;
+    if (!text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected editable text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  const richPrevented = await editor.evaluate((target) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/html'
+        ? '<p><strong> Rich $x$</strong> <a href="/guide" title="Guide">linked</a></p>'
+        : type === 'text/plain' ? ' Rich $x$ linked' : '',
+    } });
+    target.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(richPrevented).toBe(true);
+  await expect(technical.locator('strong')).toContainText('Rich $x$');
+  await expect(technical.locator('a[href="/guide"]')).toHaveAttribute('title', 'Guide');
+  await expect(editor.locator('[data-fountain-math]')).toHaveCount(2);
+
+  const cell = editor.locator('table').first().locator('th, td').first();
+  await cell.locator('[data-fountain-text-path]').first().evaluate((element) => {
+    const text = element.firstChild;
+    if (!text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected cell text.');
+    const range = document.createRange();
+    range.setStart(text, text.textContent?.length ?? 0);
+    range.collapse(true);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await editor.evaluate((target) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/html'
+        ? '<p>Nested <em>one</em></p><p>Nested two</p>'
+        : type === 'text/plain' ? 'Nested one\nNested two' : '',
+    } });
+    target.dispatchEvent(event);
+  });
+  await expect(cell).toContainText('Nested one');
+  await expect(cell).toContainText('Nested two');
+  await expect(cell.locator('em')).toHaveText('one');
+  await expect(editor.locator(':scope > p', { hasText: 'Nested one' })).toHaveCount(0);
+
+  const displayMath = editor.locator('[data-fountain-math="block"]').first();
+  await displayMath.click();
+  await editor.evaluate((target) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/plain' ? 'First pasted line\n\nThird pasted line' : '',
+    } });
+    target.dispatchEvent(event);
+  });
+  await expect(editor.locator('[data-fountain-math="block"]')).toHaveCount(0);
+  await expect(editor.locator(':scope > p', { hasText: 'First pasted line' })).toBeVisible();
+  await expect(editor.locator(':scope > p', { hasText: 'Third pasted line' })).toBeVisible();
 });
 
 test('renders repeated empty paragraphs and removes each visible line', async ({ page }) => {
@@ -4646,7 +4779,7 @@ test('publishes semantic selection controls and table interaction in the demo ga
   await page.locator('[data-fountain-path="2.1.2"]').click({ modifiers: ['Shift'] });
   await expect(page.locator('[data-fountain-selected-cell="true"]')).toHaveCount(6);
 
-  await page.getByRole('button', { name: 'Gap after first' }).click();
+  await page.getByRole('button', { name: 'Place cursor after title' }).click();
   await expect(page.locator('[data-fountain-path="1"]')).toHaveAttribute('data-fountain-gap', 'before');
   await page.getByRole('button', { name: 'Select all' }).click();
   await expect.poll(() => page.evaluate(() => document.getSelection()?.toString() ?? '')).toContain('Quarterly service report');

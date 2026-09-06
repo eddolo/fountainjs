@@ -59,7 +59,12 @@ function replaceAllSelection(editor: Editor, text: string): boolean {
 }
 
 function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: string): boolean {
-  const replacement = text === undefined ? [] : [paragraphWithText(editor, text)].filter((node): node is Node => Boolean(node));
+  const selected = getNodeAtPath(editor.state.doc, selection.nodePath);
+  const replacement = text === undefined
+    ? []
+    : selected.type.isInline
+      ? [editor.state.schema.text(text, editor.state.storedMarks)]
+      : [paragraphWithText(editor, text)].filter((node): node is Node => Boolean(node));
   if (text !== undefined && !replacement.length) return false;
   let transaction: ReturnType<Editor['createTransaction']>;
   try { transaction = editor.state.createTransaction().replaceNode(selection.nodePath, replacement); }
@@ -74,7 +79,10 @@ function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: s
     } catch { return false; }
     return dispatchIfValid(editor, transaction);
   }
-  if (text !== undefined) transaction = transaction.setSelection(Selection.cursor([...selection.nodePath, 0], text.length));
+  if (text !== undefined) {
+    const caretPath = selected.type.isInline ? selection.nodePath : [...selection.nodePath, 0];
+    transaction = transaction.setSelection(Selection.cursor(caretPath, text.length));
+  }
   if (dispatchIfValid(editor, transaction)) return true;
   if (text !== undefined) return false;
   const paragraph = paragraphWithText(editor, '');
@@ -212,8 +220,19 @@ function replaceSemanticSelectionWithDocument(editor: Editor, selection: Exclude
     } else if (selection instanceof NodeSelection) {
       const parentPath = selection.nodePath.slice(0, -1);
       const index = selection.nodePath.at(-1) as number;
-      transaction.replaceNode(selection.nodePath, content);
-      setSelectionAfterInserted(transaction, parentPath, index, content);
+      const selected = getNodeAtPath(editor.state.doc, selection.nodePath);
+      const inline = content.length === 1 && content[0]?.content.every((node) => node.type.isInline)
+        ? [...content[0].content]
+        : null;
+      if (selected.type.isInline && inline) {
+        transaction.replaceNode(selection.nodePath, inline);
+        const last = inline.at(-1);
+        if (last?.isText) transaction.setSelection(Selection.cursor([...parentPath, index + inline.length - 1], last.text?.length ?? 0));
+        else if (last) transaction.setSelection(new NodeSelection(transaction.doc, [...parentPath, index + inline.length - 1]));
+      } else {
+        transaction.replaceNode(selection.nodePath, content);
+        setSelectionAfterInserted(transaction, parentPath, index, content);
+      }
     } else if (selection instanceof GapSelection) {
       const { parentPath, index } = selection;
       if (!parentPath.length) transaction.replace(index, index, content);
@@ -331,6 +350,14 @@ export function insertText(editor: Editor, text: string): boolean {
 export function insertPlainText(editor: Editor, text: string): boolean {
   if (!editor.editable || text === '') return false;
   const normalized = text.replace(/\r\n?/g, '\n');
+  if (normalized.includes('\n') && editor.state.selection.kind !== 'text') {
+    const paragraph = editor.state.schema.nodes.paragraph;
+    if (!paragraph) return insertText(editor, normalized);
+    const document = editor.state.schema.topNodeType.create({}, normalized.split('\n').map((line) => (
+      paragraph.create({}, [editor.state.schema.text(line)])
+    )));
+    return replaceSemanticSelectionWithDocument(editor, editor.state.selection, document);
+  }
   const block = editor.state.doc.content[editor.state.selection.path[0]];
   if (!normalized.includes('\n') || block?.type.spec.code || editor.state.selection.path.length !== 2) {
     return insertText(editor, normalized);
@@ -473,21 +500,26 @@ export function insertDocument(editor: Editor, document: Node): boolean {
     return true;
   }
 
-  if (path.length === 2) {
-    const blockIndex = path[0] as number;
-    const textIndex = path[1] as number;
-    const block = state.doc.child(blockIndex);
+  const blockPath = path.slice(0, -1);
+  const containerPath = blockPath.slice(0, -1);
+  const blockIndex = blockPath.at(-1) as number;
+  if (blockPath.length) {
+    const textIndex = path.at(-1) as number;
+    const block = getNodeAtPath(state.doc, blockPath);
     const value = target.text ?? '';
     const left = block.copy([...block.content.slice(0, textIndex), target.withText(value.slice(0, from))]);
     const right = block.type.create(block.attrs, [target.withText(value.slice(from)), ...block.content.slice(textIndex + 1)]);
-    const transaction = state.createTransaction().replaceNode([blockIndex], [left, ...blocks, right]);
+    const transaction = state.createTransaction().replaceNode(blockPath, [left, ...blocks, right]);
     const lastInserted = blocks.at(-1);
     if (lastInserted) {
       const leaf = getTextLeaves(lastInserted).at(-1);
-      if (leaf) transaction.setSelection(Selection.cursor([blockIndex + blocks.length, ...leaf.path], leaf.node.text?.length ?? 0));
+      if (leaf) transaction.setSelection(Selection.cursor([
+        ...containerPath,
+        blockIndex + blocks.length,
+        ...leaf.path,
+      ], leaf.node.text?.length ?? 0));
     }
-    editor.dispatch(transaction);
-    return true;
+    return dispatchIfValid(editor, transaction);
   }
 
   const index = (path[0] as number) + 1;

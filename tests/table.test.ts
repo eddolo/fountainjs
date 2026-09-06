@@ -14,6 +14,7 @@ import {
   createEditor,
   deleteTableColumn,
   deleteTableRow,
+  deleteTable,
   mergeTableCells,
   pasteTableCells,
   selectCells,
@@ -103,6 +104,23 @@ describe('production table editing', () => {
     expect(TableMap.create(editor.state.doc.child(0)).valid).toBe(true);
     expect(deleteTableRow(editor)).toBe(true);
     expect(TableMap.create(editor.state.doc.child(0)).valid).toBe(true);
+  });
+
+  it('deletes the entire active table as one undoable command', () => {
+    const editor = createEditor({
+      schema: StarterKit.schema,
+      plugins: StarterKit.plugins,
+      content: {
+        type: 'doc',
+        content: [paragraph('Before'), table([[cell('A'), cell('B')]]), paragraph('After')],
+      },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([1, 0, 0, 0, 0], 0)));
+    expect(deleteTable(editor)).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'paragraph']);
+    expect(editor.state.doc.content.map((node) => node.textContent)).toEqual(['Before', 'After']);
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.child(1).type.name).toBe('table');
   });
 
   it('toggles accessible headers and selects complete logical rows and columns', () => {

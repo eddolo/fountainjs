@@ -273,8 +273,10 @@ export class InputManager {
     if (html?.trim()) {
       try {
         const document = HTMLImporter.parse(html, this.editor.state.schema);
-        event.preventDefault();
-        if (insertDocument(this.editor, document)) return;
+        if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
+          event.preventDefault();
+          return;
+        }
       } catch (error) {
         this.options.onError?.(error);
       }

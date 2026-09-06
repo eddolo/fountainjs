@@ -9,6 +9,7 @@ import {
   createEditor,
   insertText,
   selectText,
+  TableMap,
 } from '../src';
 import {
   FountainComposer,
@@ -103,6 +104,39 @@ describe('React toolbar primitives', () => {
 });
 
 describe('supplied React toolbar composition', () => {
+  it('chooses table dimensions and deletes the active table from supplied controls', async () => {
+    const kit = composeExtensions([CoreExtension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const root = createRoot(mount);
+    await act(async () => root.render(<FountainToolbar editor={editor} groups={['insert', 'table']} />));
+
+    const open = mount.querySelector<HTMLButtonElement>('[aria-label="Insert table"]')!;
+    await act(async () => open.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    const rows = mount.querySelector<HTMLInputElement>('[aria-label="Table rows"]')!;
+    const columns = mount.querySelector<HTMLInputElement>('[aria-label="Table columns"]')!;
+    const setValue = (input: HTMLInputElement, value: string) => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, value);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    await act(async () => { setValue(rows, '4'); setValue(columns, '5'); });
+    const insert = [...mount.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === 'Insert')!;
+    await act(async () => insert.click());
+    expect(editor.state.doc.child(1).type.name).toBe('table');
+    expect(TableMap.create(editor.state.doc.child(1)).height).toBe(4);
+    expect(TableMap.create(editor.state.doc.child(1)).width).toBe(5);
+
+    const remove = mount.querySelector<HTMLButtonElement>('[aria-label="Delete entire table"]')!;
+    expect(remove.disabled).toBe(false);
+    await act(async () => remove.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    expect(editor.state.doc.content.some((node) => node.type.name === 'table')).toBe(false);
+
+    await act(async () => root.unmount());
+    editor.destroy();
+    mount.remove();
+  });
+
   it('applies the complete text-style suite through one accessible panel', async () => {
     const kit = composeExtensions([CoreExtension]);
     const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });

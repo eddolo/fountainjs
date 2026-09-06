@@ -645,18 +645,23 @@ import {
   createKaTeXRenderer, createMathExtension,
 } from 'fountainjs-editor'
 
-// Source-only fallback (no rendering dependency):
+// Source-only fallback with a neutral, unboxed surface:
 const portable = composeExtensions([...StarterKit.extensions, MathExtension])
 
 // Or pass a caller-owned renderer:
-const math = createMathExtension({ renderer: createKaTeXRenderer(katex) })
+const math = createMathExtension({
+  renderer: createKaTeXRenderer(katex),
+  appearance: 'outlined', // optional: 'plain' (default), 'tinted', or 'outlined'
+})
 const rendered = composeExtensions([...StarterKit.extensions, math])
 ```
 
 The editor stores TeX source—not renderer HTML. KaTeX is deliberately not a
 runtime dependency: applications choose their renderer/version and may provide
 another `MathRenderer` that returns a DOM node. Renderer errors keep the source
-visible and editable through `setMathSource`.
+visible and editable through `setMathSource`, and selecting a formula reveals
+an in-place TeX input. The coloured math box is optional presentation, not part
+of the stored equation.
 
 ## Lean 4 without mandatory hosting
 

@@ -32,6 +32,7 @@ export type FountainToolbarActionId =
   | 'code-block' | 'insert-table' | 'image' | 'upload-image' | 'media' | 'upload-asset'
   | 'divider' | 'hard-break'
   | 'add-table-row' | 'delete-table-row' | 'add-table-column' | 'delete-table-column'
+  | 'delete-table'
   | 'merge-cells' | 'split-cell' | 'toggle-header-row' | 'toggle-header-column'
   | 'toggle-header-cell' | 'select-row' | 'select-column' | 'column-width';
 

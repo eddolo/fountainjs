@@ -91,10 +91,22 @@
   .fountain-block-controls { gap: 3px; padding: 4px; }
   .fountain-block-controls__button { width: 44px; height: 44px; }
 }
-.fountain-editor .fountain-math { border-radius: .38rem; color: inherit; background: color-mix(in srgb, var(--fountain-accent) 8%, transparent); }
-.fountain-editor .fountain-math--inline { display: inline-block; margin: 0 .12em; padding: .08em .32em; vertical-align: baseline; }
-.fountain-editor .fountain-math--display { display: block; margin: 1rem 0; padding: 1rem; overflow-x: auto; text-align: center; }
+.fountain-editor .fountain-math { border-radius: .38rem; color: inherit; background: transparent; }
+.fountain-editor .fountain-math--inline { display: inline-block; margin: 0 .12em; padding: .08em 0; vertical-align: baseline; }
+.fountain-editor .fountain-math--display { display: block; margin: 1rem 0; padding: .25rem 0; overflow-x: auto; text-align: center; }
+.fountain-editor .fountain-math[data-fountain-math-appearance="tinted"] { background: color-mix(in srgb, var(--fountain-accent) 8%, transparent); }
+.fountain-editor .fountain-math--inline[data-fountain-math-appearance="tinted"] { padding-inline: .32em; }
+.fountain-editor .fountain-math--display[data-fountain-math-appearance="tinted"] { padding: 1rem; }
+.fountain-editor .fountain-math[data-fountain-math-appearance="outlined"] { border: 1px solid color-mix(in srgb, var(--fountain-accent) 32%, var(--fountain-border)); }
+.fountain-editor .fountain-math--inline[data-fountain-math-appearance="outlined"] { padding-inline: .32em; }
+.fountain-editor .fountain-math--display[data-fountain-math-appearance="outlined"] { padding: 1rem; }
 .fountain-editor .fountain-math code { color: inherit; background: transparent; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.fountain-editor .fountain-math__source-editor { display: block; margin-top: .55rem; }
+.fountain-editor .fountain-math--inline .fountain-math__source-editor { display: inline-block; margin: 0 0 0 .35rem; vertical-align: middle; }
+.fountain-editor .fountain-math__source-editor[hidden] { display: none; }
+.fountain-editor .fountain-math__source-input { box-sizing: border-box; width: min(100%, 34rem); padding: .45rem .6rem; color: inherit; background: var(--fountain-surface); border: 1px solid color-mix(in srgb, var(--fountain-accent) 45%, var(--fountain-border)); border-radius: .35rem; font: .82rem/1.35 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.fountain-editor .fountain-math--inline .fountain-math__source-input { width: min(16rem, 42vw); padding: .2rem .4rem; }
+.fountain-editor .fountain-math__source-input:focus { outline: 2px solid color-mix(in srgb, var(--fountain-accent) 55%, transparent); outline-offset: 1px; }
 .fountain-editor [data-fountain-math-selected="true"] { outline: 3px solid color-mix(in srgb, var(--fountain-accent) 72%, transparent); outline-offset: 3px; }
 .fountain-editor [data-fountain-math-error="true"] { text-decoration: underline wavy #c43d54; text-underline-offset: .2em; }
 .fountain-editor .fountain-lean-diagnostic { text-decoration-line: underline; text-decoration-style: wavy; text-decoration-thickness: 1.5px; text-underline-offset: .2em; }

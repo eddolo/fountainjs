@@ -112,10 +112,11 @@ const limits = Object.freeze({
   'dist/pages-preview.js': 12 * kibibyte,
   'dist/pages-preview.cjs': 10 * kibibyte,
   // Accessible block handles, visible drop states, page-preview print rules,
-  // and responsive editable page shells remain inside one measured stylesheet.
+  // responsive editable page shells, and the three opt-in math appearances
+  // remain inside one measured stylesheet.
   // Generated footnote labels add a small marker rule without affecting hosts
   // that omit the optional pages schema.
-  'dist/styles.css': 63 * kibibyte,
+  'dist/styles.css': 65 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -196,8 +197,11 @@ const limits = Object.freeze({
   // 0.4 KiB to the aggregate ESM graph without moving any public entry ceiling.
   // Exact blank-line joining, defensive placeholder rendering, and the native
   // Windows redo chord add about 0.7/0.4 KiB, again without moving an entry ceiling.
-  'all ESM runtime code': 1106 * kibibyte,
-  'all CommonJS runtime code': 926 * kibibyte,
+  // Direct math-source editing, configurable math presentation, explicit table
+  // sizing/deletion, and structure-preserving clipboard insertion add about
+  // 5.2/4.3 KiB while every consumer-facing entry remains below its own cap.
+  'all ESM runtime code': 1114 * kibibyte,
+  'all CommonJS runtime code': 933 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

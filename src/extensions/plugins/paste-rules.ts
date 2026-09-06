@@ -54,12 +54,16 @@ export function pasteRulesPlugin(config: PasteRulesConfig): Plugin {
       handlePaste: (editor, event) => {
         const text = event.clipboardData?.getData('text/plain') ?? '';
         const html = event.clipboardData?.getData('text/html') ?? '';
+        // A structured clipboard representation is the higher-fidelity source.
+        // Plain-text rules must not silently discard its marks, links, tables,
+        // annotations, or extension-defined nodes.
+        if (html.trim()) return false;
         for (const rule of rules) {
           const matches = findMatches(rule.find, text);
           if (!matches.length) continue;
           const result = rule.handler({ editor, state: editor.state, event, text, html, matches });
           if (result === null || result === false) continue;
-          if (result instanceof Node) return insertDocument(editor, result);
+          if (result instanceof Node) return editor.runCommandBatch(() => insertDocument(editor, result));
           if (typeof result === 'string') {
             return result === '' || editor.runCommandBatch(() => insertPlainText(editor, result));
           }

@@ -18,6 +18,7 @@ import {
   createEditor,
   createKaTeXRenderer,
   createMathExtension,
+  getActiveMath,
   insertInlineMath,
   insertMathBlock,
   selectText,
@@ -102,6 +103,7 @@ describe('first-party mathematics extension', () => {
     const html = HTMLExporter.export(document, { document: false });
     expect(html).toContain('data-fountain-math="inline"');
     expect(html).toContain('data-latex="E=mc^2"');
+    expect(HTMLExporter.export(document)).not.toContain('.fountain-math--display{overflow:auto;margin:1em 0;padding:1em;text-align:center;background:');
     const imported = HTMLImporter.parse(html, schema);
     expect(imported.toJSON()).toEqual(document.toJSON());
 
@@ -225,5 +227,61 @@ describe('first-party mathematics extension', () => {
     expect(brokenView.dom.querySelector('[data-fountain-math-error="true"] code')?.textContent).toBe('\\bad');
     expect(onRenderError).toHaveBeenCalledOnce();
     brokenView.destroy();
+  });
+
+  it('uses a plain math surface by default and lets hosts opt into visual containers', () => {
+    const plain = mathKit();
+    const plainEditor = createEditor({
+      schema: plain.schema,
+      plugins: plain.plugins,
+      content: { type: 'doc', content: [{ type: 'math_block', attrs: { latex: 'x+y', ariaLabel: '' } }] },
+    });
+    const plainView = new EditorView(document.createElement('div'), plainEditor);
+    expect(plainView.dom.querySelector('[data-fountain-math]')?.getAttribute('data-fountain-math-appearance')).toBe('plain');
+
+    const outlined = mathKit(createMathExtension({ appearance: 'outlined' }));
+    const outlinedEditor = createEditor({
+      schema: outlined.schema,
+      plugins: outlined.plugins,
+      content: { type: 'doc', content: [{ type: 'math_block', attrs: { latex: 'x+y', ariaLabel: '' } }] },
+    });
+    const outlinedView = new EditorView(document.createElement('div'), outlinedEditor);
+    expect(outlinedView.dom.querySelector('[data-fountain-math]')?.getAttribute('data-fountain-math-appearance')).toBe('outlined');
+    expect(() => createMathExtension({ appearance: 'neon' as 'plain' })).toThrow('Unknown math appearance');
+    plainView.destroy();
+    outlinedView.destroy();
+  });
+
+  it('edits selected math directly inside its node view and supports explicit-path updates', () => {
+    const kit = mathKit();
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'math_block', attrs: { latex: 'x^2', ariaLabel: '' } },
+          { type: 'paragraph', content: [{ type: 'text', text: 'After' }] },
+        ],
+      },
+    });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, [0])));
+
+    const input = view.dom.querySelector<HTMLInputElement>('[aria-label="Edit math source"]')!;
+    expect(input.closest<HTMLElement>('.fountain-math__source-editor')?.hidden).toBe(false);
+    expect(input.value).toBe('x^2');
+    input.value = 'x^3 + y^3';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(getActiveMath(editor)?.node.attrs.latex).toBe('x^3 + y^3');
+    expect(view.dom.querySelector('[data-fountain-math] code')?.textContent).toBe('x^3 + y^3');
+
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([1, 0], 0)));
+    expect(input.closest<HTMLElement>('.fountain-math__source-editor')?.hidden).toBe(true);
+    expect(setMathSource(editor, 'z^4', undefined, [0])).toBe(true);
+    expect(editor.state.doc.child(0).attrs.latex).toBe('z^4');
+    view.destroy();
   });
 });
