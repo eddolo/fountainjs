@@ -37,6 +37,7 @@ import {
 } from 'fountainjs-editor/yjs';
 import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { TableOfContentsExtension } from 'fountainjs-editor/table-of-contents';
+import { InvisibleCharacterExtension } from 'fountainjs-editor/integrity/dom';
 import {
   defineStructuredAttribute,
   insertStructuredAttributeItems,
@@ -85,6 +86,7 @@ import {
 import { FountainTrackedChanges } from 'fountainjs-editor/react/tracked-changes';
 import { InMemoryVersionProvider, VersionController } from 'fountainjs-editor/versions';
 import { FountainVersions } from 'fountainjs-editor/react/versions';
+import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity';
 import { DetailsExtension, insertDetails } from 'fountainjs-editor/details';
 import { RubyExtension, setRuby } from 'fountainjs-editor/ruby';
 import { SitePageLink } from './SitePageLink';
@@ -112,6 +114,7 @@ const initialContent = {
       { type: 'paragraph', content: [{ type: 'text', text: 'Its summary and body are editable document content, not a pasted widget.' }] },
     ] },
     { type: 'code_block', attrs: { language: 'typescript', lineNumbers: true }, content: [{ type: 'text', text: "const kit = composeExtensions([\n  CoreExtension, history, callout, myIntegration\n]);\nconst editor = createEditor({ schema: kit.schema, plugins: kit.plugins });" }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Integrity sample: ABC123\u200Bxyz contains one deliberately invisible zero-width space. Select the value and inspect it.' }] },
   ],
 } as const;
 
@@ -229,6 +232,7 @@ const slashCommandExtension = createSlashCommandExtension({
 
 const demoKit = composeExtensions([
   CoreExtension,
+  InvisibleCharacterExtension,
   StableNodeIdsExtension,
   TableOfContentsExtension,
   MediaExtension,
@@ -832,7 +836,7 @@ function App() {
 
       <section className="playground" id="playground">
         <div className="section-heading"><div><span>LIVE PLAYGROUND</span><h2>Try the actual package in your browser.</h2></div><p>{words} words · {blocks} blocks · local demo adapter</p></div>
-        <div className="demo-note"><b>Try it:</b> select text and open <strong>Text styles</strong> to change its family, size, line height, foreground, and background. Insert a collapsible section, or click the reading above <strong>東京</strong> to edit its ruby annotation. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
+        <div className="demo-note"><b>Try it:</b> select text and open <strong>Text styles</strong> to change its family, size, line height, foreground, and background. Select the ABC123xyz integrity sample to expose its hidden character. Insert a collapsible section, or click the reading above <strong>東京</strong> to edit its ruby annotation. Hover or tap a block for move controls. Start an empty line with <kbd>/</kbd> for commands; type <kbd>@a</kbd>, <kbd>#re</kbd>, or <kbd>:rock</kbd> for suggestions. Typography converts <kbd>--</kbd>, <kbd>...</kbd>, arrows, fractions, and quotes as you type.</div>
         <div className="studio">
           <aside className="studio__outline"><Navigator editor={editor} /><div className="outline-tip">Markdown shortcuts<br /><kbd>##</kbd> heading · <kbd>-</kbd> list · <kbd>&gt;</kbd> quote</div></aside>
           <div className="studio__canvas">
@@ -905,6 +909,7 @@ function App() {
           </div>
           <aside className="studio__tools">
             <div className="module-stack"><span>COMPOSED FOR THIS DEMO</span><div>{demoKit.extensions.map((extension) => <code key={extension.name}>{extension.name}</code>)}</div></div>
+            <FountainIntegrityInspector editor={editor} />
             <section className="studio__export">
               <div className="export-head"><strong>Live document output</strong><button onClick={copy}>{copied ? 'Copied!' : 'Copy'}</button></div>
               <div className="format-tabs">{(['markdown', 'html', 'json'] as ExportFormat[]).map((item) => <button type="button" key={item} className={format === item ? 'active' : ''} onClick={() => setFormat(item)}>{item}</button>)}</div>

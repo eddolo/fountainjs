@@ -78,6 +78,14 @@ const limits = Object.freeze({
   // view-only anchor decorations stay in one opt-in, DOM-free entry.
   'dist/table-of-contents.js': 7 * kibibyte,
   'dist/table-of-contents.cjs': 6 * kibibyte,
+  // Raw Unicode inspection/sanitization is headless; DOM markers and verbatim
+  // input stay in a second opt-in renderer entry.
+  'dist/integrity.js': 13 * kibibyte,
+  'dist/integrity.cjs': 11 * kibibyte,
+  'dist/integrity-dom.js': 6 * kibibyte,
+  'dist/integrity-dom.cjs': 5 * kibibyte,
+  'dist/react-integrity.js': 12 * kibibyte,
+  'dist/react-integrity.cjs': 10 * kibibyte,
   // Bounded portable values and typed-path commands remain DOM/Yjs independent.
   'dist/structured-attributes.js': 11 * kibibyte,
   'dist/structured-attributes.cjs': 9 * kibibyte,
@@ -125,7 +133,7 @@ const limits = Object.freeze({
   // attachment previews add the labelled interaction and responsive states.
   // Whole-block hover/focus/grab treatment and the independent drop-position
   // overlay add about 1.1 KiB to the single supplied stylesheet.
-  'dist/styles.css': 69 * kibibyte,
+  'dist/styles.css': 75 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -216,10 +224,12 @@ const limits = Object.freeze({
   // Source-aware Office/Docs/MathML normalization plus exact Fountain and
   // standards-based external clipboard flavors add about 20.2/17.9 KiB. The
   // root, React, and every optional consumer-facing entry keep their own caps.
-  // The isolated live table-of-contents entry adds about 5.6/4.7 KiB and only
-  // a small React adapter delta. Keep a narrow regression allowance above it.
-  'all ESM runtime code': 1158 * kibibyte,
-  'all CommonJS runtime code': 972 * kibibyte,
+  // The isolated live table-of-contents entry adds about 5.6/4.7 KiB. The
+  // independent integrity scanner/sanitizer and DOM renderer add about
+  // 16.6/13.8 KiB without entering the root package. Its optional React
+  // inspector adds about 8/6 KiB in a separate entry; default React is intact.
+  'all ESM runtime code': 1184 * kibibyte,
+  'all CommonJS runtime code': 992 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -232,7 +242,7 @@ if (!esmEntityDecoder || !cjsEntityDecoder) throw new Error('HTML5 entity decode
 measured.set('HTML5 entity decoder ESM', await sizeOf(join('dist', esmEntityDecoder.name)));
 measured.set('HTML5 entity decoder CommonJS', await sizeOf(join('dist', cjsEntityDecoder.name)));
 
-for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/core.js', 'dist/core.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/table-of-contents.js', 'dist/table-of-contents.cjs', 'dist/structured-attributes.js', 'dist/structured-attributes.cjs', 'dist/html-server.js', 'dist/html-server.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
+for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/core.js', 'dist/core.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/react-integrity.js', 'dist/react-integrity.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/table-of-contents.js', 'dist/table-of-contents.cjs', 'dist/integrity.js', 'dist/integrity.cjs', 'dist/integrity-dom.js', 'dist/integrity-dom.cjs', 'dist/structured-attributes.js', 'dist/structured-attributes.cjs', 'dist/html-server.js', 'dist/html-server.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
 }
 measured.set('all ESM runtime code', (await Promise.all(

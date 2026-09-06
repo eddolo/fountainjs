@@ -337,6 +337,28 @@ stable anchors survive heading edits and movement. The supplied React
 `Navigator` adds hierarchy, `aria-current`, full-title hover text, and scrolling
 on top of the same state. See [TABLE_OF_CONTENTS.md](docs/TABLE_OF_CONTENTS.md).
 
+## Text integrity and invisible characters
+
+The isolated `fountainjs-editor/integrity` entry inspects exact Unicode code
+points, UTF-8 bytes, line endings, normalization, spaces/NBSP, tabs, zero-width
+characters, BOM, bidi controls, soft hyphens, and invalid surrogates in pure
+Node.js. It never changes its input. Cleanup requires an explicit per-category
+policy and returns a before/after preview first.
+
+```ts
+import { inspectTextIntegrity, previewTextSanitization } from 'fountainjs-editor/integrity'
+
+const report = inspectTextIntegrity('ABC123\u200bxyz')
+const preview = previewTextSanitization(report.text, { zeroWidthSpace: 'remove' })
+```
+
+`fountainjs-editor/integrity/dom` adds optional view-only markers and literal
+input for eligible code/verbatim blocks. `fountainjs-editor/react/integrity`
+adds a replaceable accessible inspector with preview-before-apply cleanup. None
+of these enter the default React bundle. Byte-for-byte verification still
+belongs at the original byte import/hash boundary. See
+[TEXT_INTEGRITY.md](docs/TEXT_INTEGRITY.md).
+
 ## Granular structured attributes
 
 The DOM-free `fountainjs-editor/structured-attributes` entry updates validated

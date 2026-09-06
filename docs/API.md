@@ -810,6 +810,40 @@ HTML/Markdown, clipboard payloads, history, or collaboration. React hosts can us
 `useNavigatorState`. See [TABLE_OF_CONTENTS.md](TABLE_OF_CONTENTS.md) for
 composition, renderer, identity, and accessibility details.
 
+## Text integrity and invisible characters
+
+Import platform-neutral inspection and cleanup from
+`fountainjs-editor/integrity`.
+
+`scanInvisibleCharacters(text, options?)` returns bounded immutable findings
+with a category, UTF-16 offset/length, code-point labels, Unicode name, visible
+marker, and severity. `inspectTextIntegrity(text, options?)` adds a code-point
+table, UTF-8 bytes/hex, LF/CRLF/CR counts, normalization-form facts,
+truncation state, and an accessible summary. Neither function mutates text or
+requires browser globals.
+
+`previewTextSanitization(text, policy)` and its `sanitizeText` alias return an
+immutable before/after result and exact edit list. Every removal, replacement,
+line-ending conversion, and normalization category is opt-in. The function
+never applies a change. `inspectSelectionIntegrity(editor)` and
+`previewSelectionSanitization(editor, policy)` operate on an exact single-text
+selection. `applySelectionSanitization(editor, preview)` dispatches one
+transaction only while the selection and source still match; stale previews
+return `false`.
+
+Import DOM display/input behavior from `fountainjs-editor/integrity/dom`.
+`createInvisibleCharacterExtension(options?)` contributes bounded view-only
+decorations and eligible literal input. `InvisibleCharacterExtension` is its
+default instance. `getIntegrityDisplayState`, `setShowInvisibles`,
+`toggleShowInvisibles`, and `setVerbatimMode` expose the state. Compose it
+directly after `CoreExtension` when it should intercept eligible literal input
+before text-rewriting plugins.
+
+React hosts may import `FountainIntegrityInspector` from
+`fountainjs-editor/react/integrity`. It is an optional reference UI, not a
+required shell. See [TEXT_INTEGRITY.md](TEXT_INTEGRITY.md) for exact categories,
+composition, security limits, byte provenance, and examples.
+
 ## Structured attributes
 
 Import renderer-independent nested value APIs from

@@ -4426,6 +4426,47 @@ test('keeps the public outline stable, hierarchical, active, and navigable', asy
   await expect(firstHeading).toHaveAttribute('id', originalAnchor ?? '');
 });
 
+test('exposes and explicitly cleans invisible text in the public playground', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const sample = editor.locator('p', { hasText: 'Integrity sample:' });
+  await sample.scrollIntoViewIfNeeded();
+  await sample.locator('[data-fountain-text-path]').evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text || text.nodeType !== Node.TEXT_NODE || !text.textContent) throw new Error('Expected integrity sample text.');
+    const start = text.textContent.indexOf('ABC123');
+    const end = text.textContent.indexOf('xyz') + 3;
+    const selection = document.getSelection();
+    wrapper.closest<HTMLElement>('[contenteditable="true"]')?.focus();
+    selection?.removeAllRanges();
+    const range = document.createRange();
+    range.setStart(text, start);
+    range.setEnd(text, end);
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+
+  const inspector = page.getByRole('region', { name: 'Text integrity' });
+  await expect(inspector).toContainText('ZERO WIDTH SPACE');
+  await expect(inspector).toContainText('U+200B');
+  await inspector.getByRole('button', { name: 'Show invisibles' }).click();
+  await expect(sample.locator('[data-fountain-invisible="zero-width-space"]')).toHaveCount(1);
+
+  await inspector.getByLabel('Remove zero-width characters and BOM').check();
+  await inspector.getByRole('button', { name: 'Preview cleanup' }).click();
+  await expect(inspector.getByRole('region', { name: 'Cleanup preview' })).toContainText('ABC123xyz');
+  await inspector.getByRole('button', { name: 'Apply reviewed cleanup' }).click();
+  await expect(sample).toContainText('ABC123xyz');
+  await expect(sample.locator('[data-fountain-invisible="zero-width-space"]')).toHaveCount(0);
+
+  await inspector.getByRole('button', { name: 'Verbatim input: off' }).click();
+  const code = editor.locator(':scope > pre').first();
+  await selectBlockEnd(code);
+  await page.keyboard.type('--');
+  await expect(code).toContainText(');--');
+  await expect(inspector).toContainText('Literal input is active');
+});
+
 test('runs the public plain-DOM first-class widget demo', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });

@@ -58,6 +58,13 @@
 
 ### Added
 
+- Isolated text-integrity entries now provide DOM-free Unicode/code-point,
+  UTF-8, line-ending, normalization, invisible-character, and invalid-surrogate
+  inspection; preview-first per-category sanitization with stale-selection
+  refusal; bounded view-only invisible markers; eligible literal code/verbatim
+  input; and an optional accessible React inspector. No cleanup is automatic,
+  and the default React bundle remains unchanged.
+
 - An isolated `fountainjs-editor/table-of-contents` module with DOM-free flat
   and hierarchical heading indexes, stable identity-backed anchors,
   active-section state, framework-neutral navigation, validated configuration,

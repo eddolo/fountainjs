@@ -46,6 +46,9 @@
       "react/versions": [
         "dist/react/versions.d.ts"
       ],
+      "react/integrity": [
+        "dist/react/integrity.d.ts"
+      ],
       "details": [
         "dist/details/index.d.ts"
       ],
@@ -66,6 +69,12 @@
       ],
       "table-of-contents": [
         "dist/table-of-contents/index.d.ts"
+      ],
+      "integrity": [
+        "dist/integrity/index.d.ts"
+      ],
+      "integrity/dom": [
+        "dist/integrity/dom.d.ts"
       ],
       "structured-attributes": [
         "dist/structured-attributes/index.d.ts"
@@ -214,6 +223,16 @@
         "default": "./dist/react-versions.cjs"
       }
     },
+    "./react/integrity": {
+      "import": {
+        "types": "./dist/react/integrity.d.ts",
+        "default": "./dist/react-integrity.js"
+      },
+      "require": {
+        "types": "./dist/react/integrity.d.cts",
+        "default": "./dist/react-integrity.cjs"
+      }
+    },
     "./details": {
       "import": {
         "types": "./dist/details/index.d.ts",
@@ -282,6 +301,26 @@
       "require": {
         "types": "./dist/table-of-contents/index.d.cts",
         "default": "./dist/table-of-contents.cjs"
+      }
+    },
+    "./integrity": {
+      "import": {
+        "types": "./dist/integrity/index.d.ts",
+        "default": "./dist/integrity.js"
+      },
+      "require": {
+        "types": "./dist/integrity/index.d.cts",
+        "default": "./dist/integrity.cjs"
+      }
+    },
+    "./integrity/dom": {
+      "import": {
+        "types": "./dist/integrity/dom.d.ts",
+        "default": "./dist/integrity-dom.js"
+      },
+      "require": {
+        "types": "./dist/integrity/dom.d.cts",
+        "default": "./dist/integrity-dom.cjs"
       }
     },
     "./structured-attributes": {

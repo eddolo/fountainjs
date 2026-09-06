@@ -454,6 +454,21 @@ renderOutline(outline?.tree ?? [], entry => {
   navigateTableOfContents(editor, entry.id)
 })`;
 
+const integrityExample = `import { inspectTextIntegrity } from 'fountainjs-editor/integrity'
+import { InvisibleCharacterExtension } from 'fountainjs-editor/integrity/dom'
+import { FountainIntegrityInspector } from 'fountainjs-editor/react/integrity'
+
+const kit = composeExtensions([
+  CoreExtension,
+  InvisibleCharacterExtension, // before typography and other input rewriters
+  TypographyExtension,
+])
+
+const report = inspectTextIntegrity('ABC123\\u200Bxyz') // pure Node or browser
+render(<FountainIntegrityInspector editor={editor} />)
+
+// The inspector previews explicit cleanup; it never removes text automatically.`;
+
 const structuredAttributesExample = `import {
   defineStructuredAttribute,
   insertStructuredAttributeItems,
@@ -731,6 +746,10 @@ function Developers() {
             <p>The optional <code>fountainjs-editor/table-of-contents</code> entry builds immutable flat and hierarchical heading indexes, stable anchors, current paths and positions, and selection-driven active state without reading the DOM. Compose it after stable node IDs so editing or moving a heading changes its title and location without breaking external links. Custom renderers call the same model navigation command.</p>
             <Code>{tableOfContentsExample}</Code>
             <p>The outline beside the <a href="./#playground">homepage editor</a> is the working React adapter: it exposes normalized hierarchy, complete hover titles, <code>aria-current</code>, and scroll-to-heading behavior over the shared state. Headless Node applications can build the same index without jsdom. Read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TABLE_OF_CONTENTS.md">complete state, renderer, identity, and persistence contract</a>.</p>
+            <h3>Invisible text is inspectable, never silently “fixed”</h3>
+            <p>The optional <code>fountainjs-editor/integrity</code> entry reports exact Unicode code points, UTF-8 bytes, line endings, normalization, zero-width characters, BOM, NBSP, bidi controls, tabs, and invalid surrogates without a DOM. Its sanitizer only creates an immutable preview from explicitly selected categories; applying a selection preview fails closed if the text or range changed.</p>
+            <Code>{integrityExample}</Code>
+            <p>The DOM extension adds bounded view-only markers and literal input in eligible code/verbatim blocks. The separately imported React inspector is a replaceable reference interface, not part of the default React entry. Select the integrity sample in the <a href="./#playground">live homepage editor</a>, or read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/TEXT_INTEGRITY.md">complete integrity, byte-provenance, and security contract</a>.</p>
             <h3>Nested product state can merge field by field</h3>
             <p>The isolated <code>fountainjs-editor/structured-attributes</code> entry defines bounded object/array attributes and path-based set, delete, insert, and range-delete commands without importing Yjs or a browser. Every accepted change remains one schema-validated Fountain transaction and ordinary JSON.</p>
             <Code>{structuredAttributesExample}</Code>
@@ -779,7 +798,7 @@ function Developers() {
             <div className="dev-two-column dev-two-column--cards">
               <div><h3>Core + DOM</h3><p>The lowest-level browser API. Own every surrounding control and subscribe directly to editor state.</p></div>
               <div><h3>Web Component</h3><p>A standards boundary with a <code>value</code> property, <code>fountain-change</code> event, and configurable schema/plugins.</p></div>
-              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>. Discussions, tracked review, and versions are isolated in <code>fountainjs-editor/react/comments</code>, <code>fountainjs-editor/react/tracked-changes</code>, and <code>fountainjs-editor/react/versions</code>.</p></div>
+              <div><h3>React</h3><p>Hooks, composer, toolbar, navigator, clipboard picker, accessible suggestion/slash/bubble/floating menus and character count, plus optional AI review UI from <code>fountainjs-editor/react</code>. Discussions, tracked review, versions, and text-integrity inspection are isolated in <code>fountainjs-editor/react/comments</code>, <code>fountainjs-editor/react/tracked-changes</code>, <code>fountainjs-editor/react/versions</code>, and <code>fountainjs-editor/react/integrity</code>.</p></div>
               <div><h3>Your framework</h3><p>Create one editor, subscribe on mount, dispatch commands from UI, and destroy both view and editor on unmount.</p></div>
             </div>
             <h3>The supplied toolbar is composable, not mandatory</h3>

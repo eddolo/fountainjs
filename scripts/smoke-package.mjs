@@ -41,6 +41,7 @@ const trackedChangesNames = ['createTrackedChangesExtension', 'acceptTrackedSugg
 const reactTrackedChangesNames = ['FountainTrackedChanges'];
 const versionsNames = ['InMemoryVersionProvider', 'VersionController', 'compareVersionDocuments', 'versionContentFingerprint'];
 const reactVersionsNames = ['FountainVersions'];
+const reactIntegrityNames = ['FountainIntegrityInspector'];
 const detailsNames = ['DetailsExtension', 'insertDetails', 'wrapInDetails', 'unwrapDetails', 'toggleDetailsOpen'];
 const rubyNames = ['RubyExtension', 'createRubyExtension', 'setRuby', 'updateRuby', 'unsetRuby', 'toggleRuby'];
 const textStyleNames = ['TextStyleExtension', 'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'getActiveTextStyle'];
@@ -48,6 +49,8 @@ const testingNames = ['checkExtensionConformance', 'assertExtensionConformance',
 const migrationNames = ['FOUNTAIN_DOCUMENT_FORMAT', 'FOUNTAIN_DOCUMENT_VERSION', 'FountainDocumentMigrator', 'defineFountainDocumentMigration', 'createFountainDocumentMigrator', 'encodeFountainDocument', 'migrateFountainDocument'];
 const nodeIdNames = ['StableNodeIdsExtension', 'StableNodeIdIndex', 'createStableNodeIdsExtension', 'createStableNodeIdIndex', 'normalizeStableNodeIds', 'normalizeStableNodeIdJSON', 'getNodeById', 'updateNodeById', 'selectNodeById'];
 const tableOfContentsNames = ['TableOfContentsExtension', 'createTableOfContentsExtension', 'buildTableOfContents', 'createTableOfContentsState', 'getTableOfContentsState', 'navigateTableOfContents', 'tableOfContentsKey'];
+const integrityNames = ['scanInvisibleCharacters', 'inspectTextIntegrity', 'previewTextSanitization', 'sanitizeText', 'inspectSelectionIntegrity', 'previewSelectionSanitization', 'applySelectionSanitization'];
+const integrityDOMNames = ['InvisibleCharacterExtension', 'createInvisibleCharacterExtension', 'getIntegrityDisplayState', 'setShowInvisibles', 'toggleShowInvisibles', 'setVerbatimMode', 'integrityDisplayKey'];
 const structuredAttributeNames = ['STRUCTURED_ATTRIBUTE_TRANSACTION_META', 'defineStructuredAttribute', 'validateStructuredAttributeValue', 'getStructuredAttribute', 'setStructuredAttribute', 'deleteStructuredAttribute', 'insertStructuredAttributeItems', 'deleteStructuredAttributeItems'];
 const serverHTMLNames = ['ServerHTMLImporter', 'HTMLImportLimitError'];
 const widgetNames = ['WIDGET_TRANSACTION_META', 'DEFAULT_WIDGET_KEY_POLICY', 'defineWidget', 'validateWidgetAttributes', 'createWidgetNode', 'insertWidget', 'getWidgetNode', 'updateWidget', 'removeWidget', 'exitWidget', 'createWidgetController', 'createWidgetExtension'];
@@ -124,6 +127,7 @@ assertExports(await import('fountainjs-editor/tracked-changes'), trackedChangesN
 assertExports(await import('fountainjs-editor/react/tracked-changes'), reactTrackedChangesNames, 'ESM React tracked changes entry');
 assertExports(await import('fountainjs-editor/versions'), versionsNames, 'ESM versions entry');
 assertExports(await import('fountainjs-editor/react/versions'), reactVersionsNames, 'ESM React versions entry');
+assertExports(await import('fountainjs-editor/react/integrity'), reactIntegrityNames, 'ESM React integrity entry');
 assertExports(await import('fountainjs-editor/details'), detailsNames, 'ESM details entry');
 assertExports(await import('fountainjs-editor/ruby'), rubyNames, 'ESM ruby entry');
 assertExports(await import('fountainjs-editor/text-style'), textStyleNames, 'ESM text style entry');
@@ -138,6 +142,13 @@ const packedOutline = esmTableOfContents.buildTableOfContents(markdownSchema.nod
 if (packedOutline.entries.length !== 1 || packedOutline.entries[0]?.title !== 'Packed outline') {
   throw new Error('ESM table of contents did not index a document in pure Node.');
 }
+const esmIntegrity = await import('fountainjs-editor/integrity');
+assertExports(esmIntegrity, integrityNames, 'ESM text integrity entry');
+const packedIntegrity = esmIntegrity.inspectTextIntegrity('safe\u200btext');
+if (packedIntegrity.invisibleCharacters[0]?.kind !== 'zero-width-space') {
+  throw new Error('ESM text integrity entry did not inspect Unicode in pure Node.');
+}
+assertExports(await import('fountainjs-editor/integrity/dom'), integrityDOMNames, 'ESM integrity DOM entry');
 assertExports(await import('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'ESM structured attributes entry');
 const esmServerHTML = await import('fountainjs-editor/html/server');
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
@@ -211,6 +222,7 @@ assertExports(require('fountainjs-editor/tracked-changes'), trackedChangesNames,
 assertExports(require('fountainjs-editor/react/tracked-changes'), reactTrackedChangesNames, 'CommonJS React tracked changes entry');
 assertExports(require('fountainjs-editor/versions'), versionsNames, 'CommonJS versions entry');
 assertExports(require('fountainjs-editor/react/versions'), reactVersionsNames, 'CommonJS React versions entry');
+assertExports(require('fountainjs-editor/react/integrity'), reactIntegrityNames, 'CommonJS React integrity entry');
 assertExports(require('fountainjs-editor/details'), detailsNames, 'CommonJS details entry');
 assertExports(require('fountainjs-editor/ruby'), rubyNames, 'CommonJS ruby entry');
 assertExports(require('fountainjs-editor/text-style'), textStyleNames, 'CommonJS text style entry');
@@ -218,6 +230,8 @@ assertExports(require('fountainjs-editor/testing'), testingNames, 'CommonJS exte
 assertExports(require('fountainjs-editor/migrations'), migrationNames, 'CommonJS document migrations entry');
 assertExports(require('fountainjs-editor/node-ids'), nodeIdNames, 'CommonJS stable node IDs entry');
 assertExports(require('fountainjs-editor/table-of-contents'), tableOfContentsNames, 'CommonJS table of contents entry');
+assertExports(require('fountainjs-editor/integrity'), integrityNames, 'CommonJS text integrity entry');
+assertExports(require('fountainjs-editor/integrity/dom'), integrityDOMNames, 'CommonJS integrity DOM entry');
 assertExports(require('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'CommonJS structured attributes entry');
 const cjsServerHTML = require('fountainjs-editor/html/server');
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
@@ -264,4 +278,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, headless core, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, headless core, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

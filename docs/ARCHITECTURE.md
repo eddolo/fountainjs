@@ -106,6 +106,16 @@ or layout. `src/react/Navigator.tsx` is only a presentation adapter over that
 shared state. Anchors remain out of persistence, history, collaboration, and
 format output. See [TABLE_OF_CONTENTS.md](TABLE_OF_CONTENTS.md).
 
+### Optional text-integrity boundary
+
+`src/integrity/index.ts` is a DOM-free Unicode/UTF-8 inspector and explicit
+preview-first sanitizer. Selection cleanup operates on the model and refuses a
+stale path, range, or source. `src/integrity/dom.ts` separately owns view-only
+invisible-character decorations and literal input interception for eligible
+code/verbatim blocks. `src/react/FountainIntegrityInspector.tsx` is an optional
+renderer over those public contracts. Neither DOM nor React is imported by the
+headless integrity entry. See [TEXT_INTEGRITY.md](TEXT_INTEGRITY.md).
+
 ## Schema and validation
 
 `Schema` converts a `SchemaSpec` into owned node and mark types. Node specs declare groups, content expressions, attributes, atoms, code behavior, DOM output, and optional NodeViews. Mark specs declare attributes and DOM output.
@@ -957,22 +967,16 @@ The suites are organized by boundary:
 
 Before a release, run `pnpm check` and `pnpm test:browser`, build the production example through the package self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and lint package exports.
 
-`pnpm test:budget` enforces raw production ceilings of 111 KiB for the ESM root,
-93 KiB for the CommonJS root, 36/30 KiB for document utilities, 340/280 KiB for
-the isolated full emoji data, 69/52 KiB for the React entries, 30/25 KiB for the
-optional Yjs adapter, 11/9 KiB for structured-attribute commands, 30/25 KiB for
-the isolated comments engine, 11/8 KiB for
-its optional React panel, 30/25 KiB for tracked changes, 9/7 KiB for its React
-review panel, 35/30 KiB for named versions, 18/14 KiB for its React panel,
-10/8 KiB for collapsible details, 12/10 KiB for ruby annotations, 2/2 KiB for
-the text-style facade, 8/7 KiB for document migrations, 9/8 KiB for stable node
-identities, 9/8 KiB for neutral widgets, 5/5 KiB for their DOM adapter, 2/2 KiB
-for their React adapter, 23/19 KiB for the isolated page foundation, 54/45 KiB for browser
-measurement/reflow and the guarded editable page surface, 12/10 KiB for
-read-only page preview/print projection, 63 KiB for CSS, and 799/672 KiB for all
-emitted ESM/CommonJS runtime chunks excluding the full emoji data. Yjs itself remains
-an external peer. Source maps are
-excluded. Media lifecycle tests also assert that cancelled or discarded upload
+`pnpm test:budget` enforces raw production ceilings for every public entry and
+the complete emitted graph; `scripts/check-build-budgets.mjs` is the
+authoritative list. Current highlights are 111/93 KiB for the ESM/CommonJS
+root, 73/55 KiB for the default React entry, 30/25 KiB for optional Yjs,
+13/11 KiB for headless integrity, 6/5 KiB for its DOM behavior, 12/10 KiB for
+its isolated React inspector, 54/45 KiB for browser pagination, 270/225 KiB for
+the self-contained server HTML parser, 75 KiB for CSS, and aggregate
+1,184/992 KiB ESM/CommonJS ceilings excluding the full emoji catalogue. Yjs
+remains an external peer and source maps are excluded. Media lifecycle tests
+also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on
 destruction. `pnpm test:performance` additionally enforces local, incremental
 remote, and full-JSON document-size curves through 10,000 blocks, a 2,000-edit
@@ -998,6 +1002,9 @@ NodeView rerenders. See [the performance contract](PERFORMANCE.md).
 | `src/core/state.ts` | Immutable state and plugin-state application |
 | `src/migrations/` | DOM-free versioned document envelopes and deterministic host-owned migrations |
 | `src/node-ids/` | Optional DOM-free stable identity policy, diagnostics, normalization, immutable lookup index, and editor commands |
+| `src/integrity/index.ts` | DOM-free Unicode/code-point/UTF-8 inspection and explicit preview-first sanitization |
+| `src/integrity/dom.ts` | Optional view-only invisible markers and literal code/verbatim input policy |
+| `src/react/FountainIntegrityInspector.tsx` | Optional accessible React inspector and reviewed-cleanup surface |
 | `src/structured-attributes/` | DOM-free structured-value definitions, safety limits, validation, typed-path commands, and transaction metadata |
 | `src/widgets/index.ts` | DOM-free widget definition, validation, commands, controller, transaction metadata, and extension composition |
 | `src/widgets/dom.ts` | Plain-DOM widget NodeView lifecycle, controls/content boundary, focus, read-only, and keyboard-exit policy |

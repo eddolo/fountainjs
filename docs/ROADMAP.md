@@ -433,16 +433,14 @@ performance, and browser behavior:
 - iframe/isolated-surface editing and host focus coordination;
 - vertical Japanese writing with logical selection/navigation evidence;
 - spell-check, dictionaries, thesaurus, and replaceable language-service hooks;
-- invisible-character integrity tools (`DOC-16`): non-mutating visualization of
-  spaces/NBSP, tabs, hard breaks, paragraphs, CR/LF differences, zero-width and
-  bidi controls, and BOM; raw code-point, UTF-8-byte, and Unicode-normalization
-  inspection; an opt-in verbatim mode that disables typography, normalization,
-  entity/Markdown interpretation, trimming, whitespace rewriting, and
-  autolinking for integrity-sensitive content; plus a separate explicit
-  sanitizer with preview/diff and per-category choices, never silent cleanup.
-  Byte-for-byte fidelity must use an explicit byte import/hash boundary because
-  a DOM editor cannot reconstruct bytes after OS, clipboard, decoder, or browser
-  text conversion;
+- certify the active invisible-character integrity implementation (`DOC-16`):
+  its DOM-free scanner/raw inspector, bounded view-only decorations, eligible
+  literal-input mode, preview-first per-category sanitizer, stale-selection
+  guard, optional React surface, package exports, and live workflow are built.
+  The complete all-engine release matrix and deployed-site verification remain
+  before this moves into the delivered ledger. Byte-for-byte fidelity continues
+  to require an explicit byte import/hash boundary because a DOM editor cannot
+  reconstruct bytes after OS, clipboard, decoder, or browser text conversion;
 - YAML frontmatter and raw/visual Markdown switching.
 
 ## Broader editor landscape audit
