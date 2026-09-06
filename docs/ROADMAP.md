@@ -416,9 +416,10 @@ These are useful, narrower ideas. They should become ledger rows only after an
 owner defines persistence, selection, accessibility, collaboration, format,
 performance, and browser behavior:
 
-- maintain the DOC-19 normalization contract with property-by-property fixtures
-  captured from more Word, Google Docs, Excel, MathML/LaTeX, semantic
-  ruby/footnote, revision, comment, and unknown application clipboard variants;
+- DOC-19 is delivered and publicly certified; maintain its normalization and
+  explicit-loss contract with property-by-property fixtures captured from more
+  Word, Google Docs, Excel, MathML/LaTeX, semantic ruby/footnote, revision,
+  comment, and unknown application clipboard variants;
 - optional provider-neutral audio/video transcription: Fountain owns commands,
   progress/error state, timestamped transcript nodes or attributes, portable
   JSON, selection, and undo; the host chooses a local model, its own server, or
