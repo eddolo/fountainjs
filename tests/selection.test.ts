@@ -113,6 +113,19 @@ describe('semantic selections', () => {
     expect((editor.state.selection as NodeSelection).nodePath).toEqual([2]);
   });
 
+  it('deletes an explicitly selected atom with either deletion key command', () => {
+    for (const command of [deleteBackward, deleteForward]) {
+      const editor = createEditor({
+        schema: CoreSchemaSpec,
+        content: { type: 'doc', content: [paragraph('Before'), image(), paragraph('After')] },
+      });
+      editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, [1])));
+      expect(command(editor)).toBe(true);
+      expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'paragraph']);
+      expect(editor.getText()).toBe('Before\nAfter');
+    }
+  });
+
   it('inserts and deletes adjacent blocks from an exact structural gap', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,

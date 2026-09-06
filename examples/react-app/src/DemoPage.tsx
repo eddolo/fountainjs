@@ -8,6 +8,7 @@ import {
   MarkdownExporter,
   MarkdownImporter,
   MathExtension,
+  NodeSelection,
   Schema,
   Selection,
   StarterKit,
@@ -23,6 +24,7 @@ import {
   registerFountainElement,
   selectAll,
   selectGap,
+  setMathSource,
   setTextAlignment,
   topLevelPosition,
   toggleMark,
@@ -151,7 +153,19 @@ function runTableCommand(editor: Editor, command: (editor: Editor) => boolean): 
 }
 
 function DemoControls({ editor }: { editor: Editor | null }) {
-  return <div className="demo-controls" aria-label="Editor controls" onMouseDown={(event) => event.preventDefault()}>
+  const [mathSource, setMathInput] = useState('a^2 + b^2 = c^2');
+  const selectedMath = editor?.state.selection instanceof NodeSelection
+    && ['inline_math', 'math_block'].includes(editor.state.selection.nodeType);
+  const applyMath = () => {
+    if (!editor) return;
+    if (editor.state.selection instanceof NodeSelection
+      && ['inline_math', 'math_block'].includes(editor.state.selection.nodeType)) {
+      setMathSource(editor, mathSource);
+    } else insertMathBlock(editor, mathSource, 'Editable math expression');
+  };
+  return <div className="demo-controls" aria-label="Editor controls" onMouseDown={(event) => {
+    if (!(event.target instanceof HTMLInputElement)) event.preventDefault();
+  }}>
     <button disabled={!editor} onClick={() => editor && undo(editor)}>Undo</button>
     <button disabled={!editor} onClick={() => editor && redo(editor)}>Redo</button>
     <button disabled={!editor} onClick={() => editor && toggleMark(editor, 'strong')}>Bold</button>
@@ -161,7 +175,11 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor || editor.state.doc.childCount < 2} onClick={() => editor && selectGap(editor, topLevelPosition(editor.state.doc, 1))}>Gap after first</button>
     <button disabled={!editor} onClick={() => editor && insertList(editor, 'task', ['A new task'])}>+ Task</button>
     <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: 2, columns: 2, headerRow: true })}>+ Table</button>
-    <button disabled={!editor?.state.schema.nodes.math_block} onClick={() => editor && insertMathBlock(editor, 'a^2 + b^2 = c^2', 'Pythagorean theorem')}>+ Math</button>
+    {editor?.state.schema.nodes.math_block && <label className="demo-math-control">
+      <span>LaTeX</span>
+      <input aria-label="Math source" value={mathSource} onChange={(event) => setMathInput(event.target.value)} />
+      <button disabled={!mathSource.trim()} onClick={applyMath}>{selectedMath ? 'Update Math' : '+ Math'}</button>
+    </label>}
     <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableRow)}>+ Row</button>
     <button disabled={!editor} onClick={() => editor && runTableCommand(editor, addTableColumn)}>+ Column</button>
   </div>;

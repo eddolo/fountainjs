@@ -91,7 +91,7 @@ interface PendingHistorySelection {
 function encodeAttribute(value: unknown): string {
   const encoded = JSON.stringify(value);
   if (encoded === undefined || encoded.length > MAXIMUM_ATTRIBUTE_LENGTH) {
-    throw new Error('A collaborative node attribute is not safely serializable.');
+    throw new Error('Unsafe collaborative attribute.');
   }
   return encoded;
 }
@@ -294,14 +294,14 @@ function synchronizeElement(element: SharedElement, before: Node, after: Node): 
 
 function parseSharedElement(element: SharedElement, depth: number, count: { nodes: number; text: number }): NodeJSON {
   if (depth > MAXIMUM_DEPTH || ++count.nodes > MAXIMUM_NODES) {
-    throw new Error('The collaborative document exceeds FountainJS safety limits.');
+    throw new Error('Document too large.');
   }
   const attributes = element.getAttributes();
   if (Object.keys(attributes).length > MAXIMUM_ATTRIBUTES) {
-    throw new Error('A collaborative node contains too many attributes.');
+    throw new Error('Too many collaborative attributes.');
   }
   const type = attributes[TYPE_ATTRIBUTE];
-  if (typeof type !== 'string' || !type) throw new Error('A collaborative node is missing its type.');
+  if (typeof type !== 'string' || !type) throw new Error('Collaborative node needs a type.');
   const attrs: Record<string, unknown> = {};
   let marks: NodeJSON['marks'];
   Object.entries(attributes).forEach(([name, value]) => {
@@ -323,11 +323,11 @@ function parseSharedElement(element: SharedElement, depth: number, count: { node
   const children = element.toArray();
   if (type === 'text') {
     if (children.length !== 1 || !(children[0] instanceof Y.XmlText)) {
-      throw new Error('A collaborative text node must contain exactly one shared text value.');
+      throw new Error('Invalid collaborative text node.');
     }
     const text = children[0].toString();
     count.text += text.length;
-    if (count.text > MAXIMUM_TEXT_LENGTH) throw new Error('Collaborative text exceeds the safety limit.');
+    if (count.text > MAXIMUM_TEXT_LENGTH) throw new Error('Collaborative text is too long.');
     return {
       type,
       text,
@@ -335,7 +335,7 @@ function parseSharedElement(element: SharedElement, depth: number, count: { node
     };
   }
   const content = children.map((child) => {
-    if (!isSharedElement(child)) throw new Error('Collaborative container nodes may contain only FountainJS nodes.');
+    if (!isSharedElement(child)) throw new Error('Invalid collaborative child.');
     return parseSharedElement(child, depth + 1, count);
   });
   return {
@@ -349,7 +349,7 @@ function parseSharedElement(element: SharedElement, depth: number, count: { node
 function readSharedDocument(fragment: Y.XmlFragment): NodeJSON {
   const children = fragment.toArray();
   if (children.length !== 1 || !isSharedElement(children[0])) {
-    throw new Error('The collaborative fragment must contain exactly one FountainJS document root.');
+    throw new Error('Expected one document root.');
   }
   return parseSharedElement(children[0], 0, { nodes: 0, text: 0 });
 }
@@ -407,7 +407,7 @@ function normalizeLocalUser(user: CollaborationUser | undefined): CollaborationU
       && (typeof user.avatar !== 'string'
         || user.avatar.length > 2_048
         || !isSafeURL(user.avatar, { allowDataImage: true })))) {
-    throw new TypeError('Yjs collaboration requires a valid local user identity.');
+    throw new TypeError('Invalid local user identity.');
   }
   return Object.freeze({
     id: user.id.trim(),
@@ -530,33 +530,33 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   };
 
   constructor(options: YjsCollaborationAdapterOptions) {
-    if (!(options?.document instanceof Y.Doc)) throw new TypeError('Yjs collaboration requires a Y.Doc.');
+    if (!(options?.document instanceof Y.Doc)) throw new TypeError('Yjs needs a Y.Doc.');
     if (options.fragment !== undefined && !(options.fragment instanceof Y.XmlFragment)) {
-      throw new TypeError('Yjs collaboration requires a Y.XmlFragment from the same Yjs installation.');
+      throw new TypeError('Yjs needs a compatible Y.XmlFragment.');
     }
     if (options.fragment && options.fragment.doc !== options.document) {
-      throw new Error('The supplied Y.XmlFragment must belong to the supplied Y.Doc.');
+      throw new Error('Y.XmlFragment belongs to another Y.Doc.');
     }
     if (options.awarenessField !== undefined
       && (typeof options.awarenessField !== 'string' || !/^[\w.-]{1,100}$/.test(options.awarenessField))) {
-      throw new TypeError('The Yjs awareness field must be a safe non-empty key.');
+      throw new TypeError('Invalid Yjs awareness field.');
     }
     if (options.fragmentName !== undefined
       && (typeof options.fragmentName !== 'string' || !options.fragmentName.trim())) {
-      throw new TypeError('The Yjs fragment name must not be empty.');
+      throw new TypeError('Yjs fragment name is empty.');
     }
     if (options.captureTimeout !== undefined
       && (typeof options.captureTimeout !== 'number'
         || !Number.isFinite(options.captureTimeout)
         || options.captureTimeout < 0)) {
-      throw new TypeError('The Yjs undo capture timeout must be a finite non-negative number.');
+      throw new TypeError('Invalid Yjs capture timeout.');
     }
     if (options.presenceThrottleMs !== undefined
       && (typeof options.presenceThrottleMs !== 'number'
         || !Number.isFinite(options.presenceThrottleMs)
         || options.presenceThrottleMs < 0
         || options.presenceThrottleMs > 1_000)) {
-      throw new TypeError('The Yjs presence throttle must be between 0 and 1000 milliseconds.');
+      throw new TypeError('Invalid Yjs presence throttle.');
     }
     this.document = options.document;
     this.fragment = options.fragment ?? options.document.getXmlFragment(options.fragmentName ?? 'fountain');

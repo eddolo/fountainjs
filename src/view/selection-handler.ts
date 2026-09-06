@@ -43,6 +43,10 @@ function locateOffset(root: HTMLElement, target: number): { node: globalThis.Nod
   return root.firstChild ? { node: root.firstChild, offset: 0 } : null;
 }
 
+interface DirectionState {
+  _b?: Selection;
+}
+
 export class SelectionHandler {
   private syncing = false;
   private pointerSelectionHandled = false;
@@ -61,6 +65,7 @@ export class SelectionHandler {
 
   read(): Selection | null {
     const domSelection = document.getSelection();
+    delete (this as SelectionHandler & DirectionState)._b;
     if (!domSelection?.anchorNode || !domSelection.focusNode || !this.dom.contains(domSelection.anchorNode)) return null;
     const anchorElement = (domSelection.anchorNode.nodeType === 1 ? domSelection.anchorNode as Element : domSelection.anchorNode.parentElement)
       ?.closest<HTMLElement>('[data-fountain-text-path]');
@@ -72,12 +77,16 @@ export class SelectionHandler {
     const anchorPath = parsePath(anchorElement);
     const focusPath = parsePath(focusElement);
     if (anchorElement === focusElement) {
-      return new Selection(anchorPath, Math.min(anchor, focus), Math.max(anchor, focus));
+      const result = new Selection(anchorPath, Math.min(anchor, focus), Math.max(anchor, focus));
+      if (anchor > focus) (this as SelectionHandler & DirectionState)._b = result;
+      return result;
     }
     const anchorComesFirst = Boolean(anchorElement.compareDocumentPosition(focusElement) & Node.DOCUMENT_POSITION_FOLLOWING);
-    return anchorComesFirst
+    const result = anchorComesFirst
       ? Selection.range(anchorPath, anchor, focusPath, focus)
       : Selection.range(focusPath, focus, anchorPath, anchor);
+    if (!anchorComesFirst) (this as SelectionHandler & DirectionState)._b = result;
+    return result;
   }
 
   capture(): Selection | null {
@@ -182,6 +191,10 @@ export class SelectionHandler {
     const start = locateOffset(wrapper, selection.from);
     const end = locateOffset(endWrapper, selection.to);
     if (!start || !end) return this.finishSync();
+    if ((this as SelectionHandler & DirectionState)._b?.eq(selection)) {
+      domSelection.setBaseAndExtent(end.node, end.offset, start.node, start.offset);
+      return this.finishSync();
+    }
     range.setStart(start.node, start.offset);
     range.setEnd(end.node, end.offset);
     this.applyDOMSelection(domSelection, range);

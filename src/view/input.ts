@@ -191,12 +191,10 @@ export class InputManager {
 
     if (event.inputType === 'insertParagraph') {
       event.preventDefault();
-      if (selection.kind !== 'text') {
-        insertText(this.editor, '');
-        return;
-      }
-      const textBlock = getNodeAtPath(state.doc, selection.path.slice(0, -1));
-      if (textBlock.type.spec.code) insertText(this.editor, '\n');
+      const textBlock = selection.kind === 'text'
+        ? getNodeAtPath(state.doc, selection.path.slice(0, -1))
+        : undefined;
+      if (textBlock?.type.spec.code) insertText(this.editor, '\n');
       else splitBlock(this.editor);
       return;
     }

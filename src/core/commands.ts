@@ -23,6 +23,8 @@ export interface TableOptions {
 }
 
 const SAFE_CONTENT_URL = /^(https?:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
+const TEXT_BLOCKS = ['paragraph', 'heading'];
+const LIST_ITEMS = ['list_item', 'task_item'];
 
 function dispatchTextSelection(editor: Editor, transaction: ReturnType<Editor['createTransaction']>, path: readonly number[], from: number, to: number): boolean {
   transaction.setSelection(new Selection(path, from, to));
@@ -372,7 +374,7 @@ export function deleteForward(editor: Editor): boolean {
 }
 
 export function setContent(editor: Editor, content: Node): boolean {
-  if (content.type !== editor.state.schema.topNodeType) throw new Error('Content must use the editor schema and top node type.');
+  if (content.type !== editor.state.schema.topNodeType) throw new Error('Invalid content');
   const transaction = editor.state.createTransaction()
     .replace(0, editor.state.doc.childCount, content.content)
     .setMeta('content$replace', true);
@@ -737,7 +739,7 @@ export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'rig
     ? editor.state.selection.nodePath
     : editor.state.selection.path.slice(0, -1);
   const block = getNodeAtPath(editor.state.doc, path);
-  if (!['paragraph', 'heading'].includes(block.type.name)) return false;
+  if (!TEXT_BLOCKS.includes(block.type.name)) return false;
   try { block.type.create({ ...block.attrs, align }, block.content); }
   catch { return false; }
   editor.dispatch(editor.state.createTransaction().setNodeAttrs(path, { ...block.attrs, align }));
@@ -926,6 +928,27 @@ export function insertTable(editor: Editor, options: TableOptions = {}): boolean
 export function splitBlock(editor: Editor): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
+  if (state.selection instanceof GapSelection) return insertTextAtGap(editor, state.selection, '');
+  if (state.selection instanceof AllSelection) return replaceAllSelection(editor, '');
+  if (state.selection instanceof NodeSelection) {
+    const selected = getNodeAtPath(state.doc, state.selection.nodePath);
+    if (selected.type.isInline) {
+      editor.dispatch(state.createTransaction().setSelection(Selection.cursor(state.selection.endPath, state.selection.to)));
+      return splitBlock(editor);
+    }
+    const parentPath = state.selection.nodePath.slice(0, -1);
+    const selectedIndex = state.selection.nodePath.at(-1) as number;
+    const parent = getNodeAtPath(state.doc, parentPath);
+    const next = parent.content[selectedIndex + 1];
+    const nextLeaf = next && next.textContent.length === 0 ? getTextLeaves(next)[0] : undefined;
+    if (nextLeaf) {
+      editor.dispatch(state.createTransaction().setSelection(Selection.cursor([
+        ...parentPath, selectedIndex + 1, ...nextLeaf.path,
+      ], 0)));
+      return true;
+    }
+    return insertTextAtGap(editor, new GapSelection(state.doc, state.selection.structuralTo), '');
+  }
   if (state.selection.kind !== 'text') return false;
   const { path, from, to } = state.selection;
   if (path.length < 2 || !state.selection.isSingleText) return false;
@@ -935,6 +958,21 @@ export function splitBlock(editor: Editor): boolean {
   const block = getNodeAtPath(state.doc, blockPath);
   const text = block.child(textIndex);
   if (!text.isText) return false;
+  const containerPath = blockPath.slice(0, -1);
+  const container = getNodeAtPath(state.doc, containerPath);
+  if (container.type.name === 'blockquote'
+    && blockIndex === container.childCount - 1
+    && block.textContent.length === 0) {
+    const paragraph = paragraphWithText(editor, '');
+    if (!paragraph) return false;
+    const replacements = container.childCount === 1
+      ? [paragraph]
+      : [container.copy(container.content.slice(0, -1)), paragraph];
+    const landing = [...containerPath.slice(0, -1), (containerPath.at(-1) as number) + replacements.length - 1, 0];
+    const transaction = state.createTransaction().replaceNode(containerPath, replacements)
+      .setSelection(Selection.cursor(landing, 0));
+    return dispatchIfValid(editor, transaction);
+  }
   const leftText = (text.text ?? '').slice(0, from);
   const rightText = (text.text ?? '').slice(to);
   const left = block.copy([...block.content.slice(0, textIndex), text.withText(leftText)]);
@@ -942,7 +980,7 @@ export function splitBlock(editor: Editor): boolean {
   const right = nextType.create(block.type === nextType ? block.attrs : {}, [text.withText(rightText), ...block.content.slice(textIndex + 1)]);
   const itemPath = blockPath.slice(0, -1);
   const item = itemPath.length ? getNodeAtPath(state.doc, itemPath) : undefined;
-  if (item && ['list_item', 'task_item'].includes(item.type.name)) {
+  if (item && LIST_ITEMS.includes(item.type.name)) {
     if (item.childCount === 1 && item.textContent.length === 0) return outdentListItem(editor);
     const paragraphIndex = blockPath.at(-1) as number;
     const itemIndex = itemPath.at(-1) as number;
@@ -975,16 +1013,25 @@ export function joinBackward(editor: Editor): boolean {
   if (currentIndex === 0) {
     const itemPath = currentPath.slice(0, -1);
     const item = itemPath.length ? getNodeAtPath(state.doc, itemPath) : undefined;
-    if (!item || !['list_item', 'task_item'].includes(item.type.name)) return false;
+    if (item?.type.name === 'blockquote') {
+      const replacements = item.childCount === 1
+        ? [item.child(0)]
+        : [item.child(0), item.copy(item.content.slice(1))];
+      const itemIndex = itemPath.at(-1) as number;
+      const transaction = state.createTransaction().replaceNode(itemPath, replacements)
+        .setSelection(Selection.cursor([...itemPath.slice(0, -1), itemIndex, ...path.slice(currentPath.length)], 0));
+      return dispatchIfValid(editor, transaction);
+    }
+    if (!item || !LIST_ITEMS.includes(item.type.name)) return false;
     const itemIndex = itemPath.at(-1) as number;
     if (itemIndex === 0) return outdentListItem(editor);
     const listPath = itemPath.slice(0, -1);
     const list = getNodeAtPath(state.doc, listPath);
     const previousItem = list.child(itemIndex - 1);
-    const previousBlockIndex = previousItem.content.findLastIndex((node) => ['paragraph', 'heading'].includes(node.type.name));
+    const previousBlockIndex = previousItem.content.findLastIndex((node) => TEXT_BLOCKS.includes(node.type.name));
     const previousBlock = previousItem.content[previousBlockIndex];
     const currentBlock = item.content[0];
-    if (!previousBlock || !currentBlock || !['paragraph', 'heading'].includes(previousBlock.type.name) || !['paragraph', 'heading'].includes(currentBlock.type.name)) return false;
+    if (!previousBlock || !currentBlock || !TEXT_BLOCKS.includes(previousBlock.type.name) || !TEXT_BLOCKS.includes(currentBlock.type.name)) return false;
     const leaves = getTextLeaves(previousBlock);
     const leaf = leaves.at(-1);
     const mergedBlock = previousBlock.copy([...previousBlock.content, ...currentBlock.content]);
@@ -1011,7 +1058,7 @@ export function joinBackward(editor: Editor): boolean {
   const previousIndex = currentIndex - 1;
   const previous = parent.child(previousIndex);
   const current = parent.child(currentIndex);
-  if (!['paragraph', 'heading'].includes(previous.type.name) || !['paragraph', 'heading'].includes(current.type.name)) return false;
+  if (!TEXT_BLOCKS.includes(previous.type.name) || !TEXT_BLOCKS.includes(current.type.name)) return false;
   const previousLeaves = getTextLeaves(previous);
   const previousLeaf = previousLeaves.at(-1);
   const previousLength = previousLeaf?.node.text?.length ?? 0;
@@ -1047,7 +1094,7 @@ export function joinForward(editor: Editor): boolean {
   const parent = getNodeAtPath(state.doc, parentPath);
   if (blockIndex < parent.childCount - 1) {
     const next = parent.child(blockIndex + 1);
-    if (!['paragraph', 'heading'].includes(block.type.name) || !['paragraph', 'heading'].includes(next.type.name)) return false;
+    if (!TEXT_BLOCKS.includes(block.type.name) || !TEXT_BLOCKS.includes(next.type.name)) return false;
     const transaction = state.createTransaction()
       .replaceNode(blockPath, [block.copy([...block.content, ...next.content])])
       .replaceNode([...parentPath, blockIndex + 1], [])
@@ -1057,7 +1104,7 @@ export function joinForward(editor: Editor): boolean {
   }
 
   const itemPath = parentPath;
-  if (!itemPath.length || !['list_item', 'task_item'].includes(parent.type.name)) return false;
+  if (!itemPath.length || !LIST_ITEMS.includes(parent.type.name)) return false;
   const listPath = itemPath.slice(0, -1);
   const list = getNodeAtPath(state.doc, listPath);
   const itemIndex = itemPath.at(-1) as number;
@@ -1066,7 +1113,7 @@ export function joinForward(editor: Editor): boolean {
     const listIndex = listPath[0] as number;
     const nextRoot = state.doc.content[listIndex + 1];
     if (!nextRoot) return false;
-    if (['paragraph', 'heading'].includes(nextRoot.type.name)) {
+    if (TEXT_BLOCKS.includes(nextRoot.type.name)) {
       const mergedItem = parent.copy([
         ...parent.content.slice(0, blockIndex),
         block.copy([...block.content, ...nextRoot.content]),
@@ -1083,7 +1130,7 @@ export function joinForward(editor: Editor): boolean {
     if (nextRoot.type === list.type && nextRoot.childCount) {
       const nextItem = nextRoot.child(0);
       const nextBlock = nextItem.content[0];
-      if (!nextBlock || !['paragraph', 'heading'].includes(nextBlock.type.name)) return false;
+      if (!nextBlock || !TEXT_BLOCKS.includes(nextBlock.type.name)) return false;
       const mergedItem = parent.copy([
         ...parent.content.slice(0, blockIndex),
         block.copy([...block.content, ...nextBlock.content]),
@@ -1106,7 +1153,7 @@ export function joinForward(editor: Editor): boolean {
   }
   const nextItem = list.child(itemIndex + 1);
   const nextBlock = nextItem.content[0];
-  if (!nextBlock || !['paragraph', 'heading'].includes(block.type.name) || !['paragraph', 'heading'].includes(nextBlock.type.name)) return false;
+  if (!nextBlock || !TEXT_BLOCKS.includes(block.type.name) || !TEXT_BLOCKS.includes(nextBlock.type.name)) return false;
   const mergedItem = parent.copy([
     ...parent.content.slice(0, blockIndex),
     block.copy([...block.content, ...nextBlock.content]),

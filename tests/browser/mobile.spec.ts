@@ -39,6 +39,46 @@ test('handles virtual-keyboard replacement, composition, deletion, and history i
   ))).toBe('Mobile大阪 Beta');
 });
 
+test('shows every empty line created and removed by repeated mobile Enter and Backspace', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const blocks = editor.locator(':scope > [data-fountain-path]');
+  const before = await blocks.count();
+  const wrapper = editor.locator(':scope > [data-fountain-node="paragraph"]').last().locator('[data-fountain-text-path]').last();
+  await wrapper.evaluate((element) => {
+    const text = element.lastChild;
+    if (!text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected final text node.');
+    const selection = document.getSelection();
+    selection?.setBaseAndExtent(text, text.textContent?.length ?? 0, text, text.textContent?.length ?? 0);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await expect(blocks).toHaveCount(before + 3);
+  const emptyLines = blocks.filter({ has: page.locator('[data-fountain-caret-placeholder]') });
+  await expect(emptyLines).toHaveCount(3);
+  expect(await emptyLines.evaluateAll((items) => items.every((item) => item.getBoundingClientRect().height >= 16))).toBe(true);
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await expect(blocks).toHaveCount(before);
+});
+
+test('inserts and updates native math from the phone controls', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const math = page.locator('[data-fountain-math]');
+  const before = await math.count();
+  const input = page.getByLabel('Math source');
+  await expect(input).toBeVisible();
+  await page.getByRole('button', { name: '+ Math' }).tap();
+  await expect(math).toHaveCount(before + 1);
+  await input.fill('x^4 + y^4');
+  await page.getByRole('button', { name: 'Update Math' }).tap();
+  await expect(math.filter({ hasText: 'x^4 + y^4' })).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('keeps editable page content continuous on a narrow screen', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=editable-pages');
   const region = page.getByLabel('Editable pages browser contract');

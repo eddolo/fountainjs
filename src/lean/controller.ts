@@ -26,7 +26,7 @@ let leanRequestCounter = 0;
 
 function nonEmpty(value: unknown, name: string, maximum = 10_000): string {
   if (typeof value !== 'string' || !value.trim() || value.length > maximum || value.includes('\0')) {
-    throw new TypeError(`${name} must be a non-empty string no longer than ${maximum} characters.`);
+    throw new TypeError(`Invalid ${name} (max ${maximum}).`);
   }
   return value;
 }
@@ -36,14 +36,14 @@ function validateEndpoint(descriptor: LeanProviderDescriptor): void {
   nonEmpty(descriptor.endpoint, 'Lean provider endpoint', 2_048);
   let url: URL;
   try { url = new URL(descriptor.endpoint); }
-  catch { throw new TypeError('Lean provider endpoints must be absolute URLs.'); }
+  catch { throw new TypeError('Lean endpoint must be absolute.'); }
   const loopback = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(url.hostname.toLowerCase());
   if (descriptor.mode === 'local') {
     if (!loopback || !['http:', 'https:', 'ws:', 'wss:'].includes(url.protocol)) {
-      throw new Error('Local Lean providers must use an HTTP(S) or WebSocket loopback endpoint.');
+      throw new Error('Local Lean endpoint must be loopback.');
     }
   } else if (!['https:', 'wss:'].includes(url.protocol)) {
-    throw new Error('Non-local Lean provider endpoints must use HTTPS or secure WebSockets.');
+    throw new Error('Remote Lean endpoint needs HTTPS/WSS.');
   }
 }
 
@@ -56,7 +56,7 @@ function freezeDescriptor(input: LeanProviderDescriptor): LeanProviderDescriptor
   if (!['local', 'remote', 'managed', 'one-shot'].includes(descriptor.mode)) throw new TypeError('Unknown Lean provider mode.');
   if (!['device', 'self-hosted', 'third-party'].includes(descriptor.dataDestination)) throw new TypeError('Unknown Lean data destination.');
   if (descriptor.mode === 'local' && descriptor.dataDestination !== 'device') {
-    throw new Error('Local Lean providers must keep source on the device.');
+    throw new Error('Local Lean source must stay on-device.');
   }
   if (descriptor.dataDestination === 'third-party') nonEmpty(descriptor.dataUseNotice, 'Third-party data-use notice', 2_000);
   validateEndpoint(descriptor);
@@ -65,10 +65,10 @@ function freezeDescriptor(input: LeanProviderDescriptor): LeanProviderDescriptor
 
 /** Validates and freezes a host-supplied provider; it never connects by itself. */
 export function createLeanProvider(provider: LeanProvider): LeanProvider {
-  if (!provider || typeof provider !== 'object') throw new TypeError('A Lean provider object is required.');
+  if (!provider || typeof provider !== 'object') throw new TypeError('Lean provider required.');
   const operations = ['check', 'goals', 'hover', 'expectedType', 'complete'] as const;
   if (!operations.some((name) => typeof provider[name] === 'function')) {
-    throw new TypeError('A Lean provider must implement at least one operation.');
+    throw new TypeError('Lean provider needs an operation.');
   }
   operations.forEach((name) => {
     if (provider[name] !== undefined && typeof provider[name] !== 'function') {
@@ -93,7 +93,7 @@ function isLeanBlock(node: Node): boolean {
 function resolveBlockPath(editor: Editor, supplied?: readonly number[]): readonly number[] {
   if (supplied) {
     const node = getNodeAtPath(editor.state.doc, supplied);
-    if (!isLeanBlock(node)) throw new Error('The requested path is not a Lean code block.');
+    if (!isLeanBlock(node)) throw new Error('Path is not a Lean block.');
     return Object.freeze([...supplied]);
   }
   const selection = editor.state.selection;
@@ -102,7 +102,7 @@ function resolveBlockPath(editor: Editor, supplied?: readonly number[]): readonl
     const path = candidate.slice(0, length);
     if (isLeanBlock(getNodeAtPath(editor.state.doc, path))) return Object.freeze([...path]);
   }
-  throw new Error('Place the selection inside a Lean code block or provide blockPath.');
+  throw new Error('Select a Lean block or provide blockPath.');
 }
 
 function positionAtSelection(editor: Editor, blockPath: readonly number[]): LeanPosition | undefined {
@@ -119,11 +119,11 @@ function positionAtSelection(editor: Editor, blockPath: readonly number[]): Lean
 
 function validPosition(value: LeanPosition, source: string): LeanPosition {
   if (!Number.isInteger(value.line) || !Number.isInteger(value.character) || value.line < 0 || value.character < 0) {
-    throw new RangeError('Lean positions require non-negative integer line and character values.');
+    throw new RangeError('Invalid Lean position.');
   }
   const lines = source.split('\n');
   if (value.line >= lines.length || value.character > (lines[value.line]?.length ?? 0)) {
-    throw new RangeError('Lean position exceeds the current source.');
+    throw new RangeError('Lean position exceeds source.');
   }
   return Object.freeze({ line: value.line, character: value.character });
 }
@@ -138,7 +138,7 @@ function freezeRange(value: LeanRange, source: string): LeanRange {
 }
 
 function normalizeDiagnostics(values: readonly LeanDiagnostic[], source: string): readonly LeanDiagnostic[] {
-  if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Lean diagnostics must be a bounded array.');
+  if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Invalid Lean diagnostics.');
   return Object.freeze(values.map((value) => Object.freeze({
     range: freezeRange(value.range, source),
     severity: ['error', 'warning', 'information', 'hint'].includes(value.severity) ? value.severity : 'error',
@@ -159,7 +159,7 @@ function normalizeCheck(value: LeanCheckResult, source: string): LeanCheckResult
 }
 
 function normalizeGoals(values: readonly LeanGoal[], source: string): readonly LeanGoal[] {
-  if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Lean goals must be a bounded array.');
+  if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Invalid Lean goals.');
   return Object.freeze(values.map((value) => Object.freeze({
     id: nonEmpty(value.id, 'Lean goal id', 500),
     target: nonEmpty(value.target, 'Lean goal target'),
@@ -185,7 +185,7 @@ function normalizeExpectedType(value: LeanExpectedType | null, source: string): 
 }
 
 function normalizeCompletions(values: readonly LeanCompletion[]): readonly LeanCompletion[] {
-  if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Lean completions must be a bounded array.');
+  if (!Array.isArray(values) || values.length > MAX_PROVIDER_ITEMS) throw new TypeError('Invalid Lean completions.');
   return Object.freeze(values.map((value) => Object.freeze({
     label: nonEmpty(value.label, 'Lean completion label', 2_000),
     ...(value.insertText !== undefined ? { insertText: String(value.insertText).slice(0, 100_000) } : {}),

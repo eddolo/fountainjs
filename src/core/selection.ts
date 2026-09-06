@@ -17,7 +17,7 @@ interface PositionedTextPoint extends TextPoint {
 
 function validatePath(path: readonly number[]): void {
   if (!path.every((part) => Number.isInteger(part) && part >= 0)) {
-    throw new RangeError('Selection paths must contain non-negative integers.');
+    throw new RangeError('Invalid selection path.');
   }
 }
 
@@ -127,7 +127,7 @@ export abstract class BaseSelection {
     validateOffset(to);
     const order = comparePaths(path, endPath);
     if (order > 0 || (order === 0 && to < from)) {
-      throw new RangeError('Selection ranges must be ordered from start to end.');
+      throw new RangeError('Selection range is reversed.');
     }
     this.path = Object.freeze([...path]);
     this.endPath = Object.freeze([...endPath]);
@@ -184,9 +184,9 @@ export class NodeSelection extends BaseSelection {
   readonly structuralTo: number;
 
   constructor(doc: Node, nodePath: readonly number[]) {
-    if (!nodePath.length) throw new RangeError('Use AllSelection for the root document.');
+    if (!nodePath.length) throw new RangeError('Use AllSelection for root.');
     const node = getNodeAtPath(doc, nodePath);
-    if (node.isText) throw new Error('Node selections cannot target text nodes; use Selection instead.');
+    if (node.isText) throw new Error('NodeSelection cannot target text.');
     const projection = projectionForNode(doc, nodePath);
     super(projection.start.path, projection.start.offset, projection.end.offset, projection.end.path);
     const range = structuralRangeAtPath(doc, nodePath);
@@ -266,21 +266,21 @@ function cellSelectionData(doc: Node, anchorPath: readonly number[], headPath: r
   const head = getNodeAtPath(doc, headPath);
   const cellNames = new Set(['table_cell', 'table_header']);
   if (!cellNames.has(anchor.type.name) || !cellNames.has(head.type.name)) {
-    throw new Error('Cell selections require table_cell or table_header paths.');
+    throw new Error('CellSelection requires table_cell paths.');
   }
   if (anchorPath.length < 3 || headPath.length !== anchorPath.length) {
-    throw new Error('Cell selections require cells in one table.');
+    throw new Error('CellSelection requires one table.');
   }
   const tablePath = anchorPath.slice(0, -2);
   if (comparePaths(tablePath, headPath.slice(0, -2)) !== 0) {
-    throw new Error('Cell selections cannot cross tables.');
+    throw new Error('CellSelection cannot cross tables.');
   }
   const table = getNodeAtPath(doc, tablePath);
-  if (table.type.name !== 'table') throw new Error('Cell selections require a table ancestor.');
+  if (table.type.name !== 'table') throw new Error('CellSelection requires a table.');
   const map = TableMap.create(table, tablePath);
   const rect = map.rectangleBetween(anchorPath, headPath);
   const paths = map.cellsInRect(rect).map((cell) => cell.path);
-  if (!paths.length) throw new Error('Cell selection rectangle is empty.');
+  if (!paths.length) throw new Error('CellSelection is empty.');
   const firstProjection = projectionForNode(doc, paths[0] as readonly number[]);
   const lastProjection = projectionForNode(doc, paths.at(-1) as readonly number[]);
   return {

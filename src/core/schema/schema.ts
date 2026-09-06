@@ -85,7 +85,7 @@ export class Schema {
     const topNodeName = spec.topNode ?? 'doc';
     const topNodeType = this.nodes[topNodeName];
     if (!topNodeType) throw new Error(`Schema is missing its top node type: ${topNodeName}`);
-    if (!this.nodes.text) throw new Error('Schema must define a text node type.');
+    if (!this.nodes.text) throw new Error('Schema needs a text node.');
     this.topNodeType = topNodeType;
   }
 
@@ -127,33 +127,33 @@ export class Schema {
       // A structurally shared subtree that passed this schema once cannot become
       // invalid, so transactions only need to revisit their newly-created path.
       if (this.validatedNodes.has(current)) return true;
-      if (current.type.schema !== this) throw new Error(`Node at ${path.join('.') || 'root'} belongs to another schema.`);
+      if (current.type.schema !== this) throw new Error(`Foreign node at ${path.join('.') || 'root'}.`);
       computeAttrs(current.type.spec.attrs, current.attrs);
       if (current.type.spec.validate && !current.type.spec.validate(current)) {
         throw new Error(`Invalid node invariant: ${current.type.name} at ${path.join('.') || 'root'}`);
       }
       current.marks.forEach((mark) => {
-        if (mark.type.schema !== this) throw new Error(`Mark on ${path.join('.') || 'root'} belongs to another schema.`);
+        if (mark.type.schema !== this) throw new Error(`Foreign mark at ${path.join('.') || 'root'}.`);
         computeAttrs(mark.type.spec.attrs, mark.attrs);
       });
       if (current.isText) {
-        if (current.content.length) throw new Error(`Text node at ${path.join('.')} cannot contain children.`);
+        if (current.content.length) throw new Error(`Text has children at ${path.join('.')}.`);
         const cacheable = isDeeplyImmutable(current.attrs)
           && current.marks.every((mark) => isDeeplyImmutable(mark.attrs));
         if (cacheable) this.validatedNodes.add(current);
         return cacheable;
       }
       if (current.marks.length && !current.type.isInline) {
-        throw new Error(`Only inline nodes may carry marks (${path.join('.') || 'root'}).`);
+        throw new Error('Only inline nodes may carry marks.');
       }
-      if (current.type.spec.atom && current.content.length) throw new Error(`Atom node ${current.type.name} cannot contain children.`);
+      if (current.type.spec.atom && current.content.length) throw new Error(`Atom ${current.type.name} has children.`);
       const expression = current.type.spec.content;
       if (expression) {
         if (!matchesContentExpression(current.content, expression)) {
-          throw new Error(`Content of ${current.type.name} at ${path.join('.') || 'root'} does not match "${expression}".`);
+          throw new Error(`Content of ${current.type.name} does not match "${expression}".`);
         }
       } else if (current.content.length) {
-        throw new Error(`Node ${current.type.name} does not allow child content.`);
+        throw new Error(`${current.type.name} cannot have children.`);
       }
       const childrenCacheable = current.content
         .map((child, index) => visit(child, [...path, index]))

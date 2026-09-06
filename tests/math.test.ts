@@ -11,6 +11,7 @@ import {
   MarkdownImporter,
   NodeSelection,
   Schema,
+  Selection,
   StarterKit,
   TextExporter,
   composeExtensions,
@@ -21,6 +22,7 @@ import {
   insertMathBlock,
   selectText,
   setMathSource,
+  splitBlock,
 } from '../src';
 
 function mathKit(extension = MathExtension) {
@@ -52,6 +54,8 @@ describe('first-party mathematics extension', () => {
     expect(editor.state.doc.child(1).type.name).toBe('math_block');
     expect(editor.state.selection.kind).toBe('node');
     expect(editor.state.doc.child(2).type.name).toBe('paragraph');
+    expect(splitBlock(editor)).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([2, 0], 0))).toBe(true);
     expect(editor.getText()).toContain('e^{i\\pi}=-1');
     expect(editor.getText()).toContain('\\int_0^1 x^2');
   });

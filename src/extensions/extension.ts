@@ -71,10 +71,10 @@ const semanticVersion = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]
 function normalizeManifest(manifest: FountainExtensionManifest | undefined): FountainExtensionManifest | undefined {
   if (!manifest) return undefined;
   if (typeof manifest.version !== 'string' || !semanticVersion.test(manifest.version)) {
-    throw new Error(`Extension manifest version must be semantic version syntax: ${manifest.version}`);
+    throw new Error(`Invalid semantic version: ${manifest.version}`);
   }
   if (manifest.apiVersion !== FOUNTAIN_EXTENSION_API_VERSION) {
-    throw new Error(`Extension API ${manifest.apiVersion} is incompatible with Fountain extension API ${FOUNTAIN_EXTENSION_API_VERSION}.`);
+    throw new Error(`Extension API ${manifest.apiVersion} != ${FOUNTAIN_EXTENSION_API_VERSION}.`);
   }
   for (const [name, value, maximum] of [
     ['displayName', manifest.displayName, 120],
@@ -82,26 +82,26 @@ function normalizeManifest(manifest: FountainExtensionManifest | undefined): Fou
     ['license', manifest.license, 100],
   ] as const) {
     if (value !== undefined && (typeof value !== 'string' || !value.trim() || value.length > maximum)) {
-      throw new Error(`Extension manifest ${name} must contain 1-${maximum} characters.`);
+      throw new Error(`Invalid manifest ${name} length (1-${maximum}).`);
     }
   }
   if (manifest.homepage !== undefined) {
-    if (typeof manifest.homepage !== 'string') throw new Error('Extension manifest homepage must be an absolute HTTPS URL.');
+    if (typeof manifest.homepage !== 'string') throw new Error('Manifest homepage needs HTTPS.');
     const URLConstructor = (globalThis as unknown as {
       URL?: new (value: string) => { protocol: string };
     }).URL;
-    if (!URLConstructor) throw new Error('Extension manifest homepage requires a runtime URL implementation.');
+    if (!URLConstructor) throw new Error('Homepage requires URL support.');
     let url: { protocol: string };
     try { url = new URLConstructor(manifest.homepage); }
-    catch { throw new Error('Extension manifest homepage must be an absolute HTTPS URL.'); }
-    if (url.protocol !== 'https:') throw new Error('Extension manifest homepage must be an absolute HTTPS URL.');
+    catch { throw new Error('Manifest homepage needs HTTPS.'); }
+    if (url.protocol !== 'https:') throw new Error('Manifest homepage needs HTTPS.');
   }
   if (manifest.requires !== undefined && !Array.isArray(manifest.requires)) {
-    throw new Error('Extension manifest requirements must be a list of unique valid extension names.');
+    throw new Error('Invalid manifest requirements.');
   }
   const requires = [...new Set(manifest.requires ?? [])];
   if (requires.length !== (manifest.requires?.length ?? 0) || requires.some((name) => typeof name !== 'string' || !validExtensionName(name))) {
-    throw new Error('Extension manifest requirements must be unique valid extension names.');
+    throw new Error('Invalid manifest requirements.');
   }
   return Object.freeze({
     ...manifest,
@@ -111,7 +111,7 @@ function normalizeManifest(manifest: FountainExtensionManifest | undefined): Fou
 
 export function defineExtension<T extends FountainExtension>(extension: T): T {
   if (!validExtensionName(extension.name)) {
-    throw new Error('Extension names must start with a lowercase letter and use lowercase letters, numbers, dot, colon, underscore, or hyphen.');
+    throw new Error('Invalid extension name.');
   }
   return Object.freeze({ ...extension, manifest: normalizeManifest(extension.manifest) }) as T;
 }
@@ -165,7 +165,7 @@ export function composeExtensions(
     plugins.push(...(extension.plugins ?? []));
   });
 
-  if (!nodes.doc || !nodes.text) throw new Error('A composed Fountain kit requires doc and text node types.');
+  if (!nodes.doc || !nodes.text) throw new Error('A kit needs doc and text nodes.');
   const frozenExtensions = Object.freeze([...extensions]);
   return Object.freeze({
     schema: Object.freeze({ nodes: Object.freeze(nodes), marks: Object.freeze(marks), topNode: options.topNode ?? 'doc' }),

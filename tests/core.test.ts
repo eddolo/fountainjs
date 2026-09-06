@@ -28,6 +28,7 @@ import {
   insertHardBreak,
   insertDocument,
   insertList,
+  insertQuote,
   insertTable,
   insertText,
   deleteBackward,
@@ -427,6 +428,35 @@ describe('document model and transactions', () => {
     expect(forward.state.doc.childCount).toBe(1);
     expect(forward.getText()).toBe('OneTwo');
     expect(forward.state.selection.eq(Selection.cursor([0, 0], 3))).toBe(true);
+  });
+
+  it('unwraps a quote with Backspace and exits its empty final line with Enter', () => {
+    const unwrapped = createEditor({ schema: CoreSchemaSpec });
+    expect(insertQuote(unwrapped, 'Quoted')).toBe(true);
+    expect(unwrapped.state.selection.eq(Selection.cursor([1, 0, 0], 0))).toBe(true);
+    expect(deleteBackward(unwrapped)).toBe(true);
+    expect(unwrapped.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'paragraph']);
+    expect(unwrapped.state.doc.child(1).textContent).toBe('Quoted');
+    expect(unwrapped.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
+
+    const exited = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [{
+          type: 'blockquote',
+          content: [
+            { type: 'paragraph', content: [{ type: 'text', text: 'Quoted' }] },
+            { type: 'paragraph', content: [{ type: 'text', text: '' }] },
+          ],
+        }],
+      },
+    });
+    exited.dispatch(exited.state.createTransaction().setSelection(Selection.cursor([0, 1, 0], 0)));
+    expect(splitBlock(exited)).toBe(true);
+    expect(exited.state.doc.content.map((node) => node.type.name)).toEqual(['blockquote', 'paragraph']);
+    expect(exited.state.doc.child(0).textContent).toBe('Quoted');
+    expect(exited.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
   });
 
   it('splits and rejoins list items without flattening their container', () => {

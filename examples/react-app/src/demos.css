@@ -84,6 +84,8 @@
 .demo-controls button { padding: 6px 9px; color: #5d586a; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font-size: 10px; font-weight: 700; }
 .demo-controls button:hover:not(:disabled) { color: white; background: var(--demo-accent); }
 .demo-controls button:disabled { opacity: .42; cursor: not-allowed; }
+.demo-math-control { display: flex; align-items: center; gap: 5px; color: #756d89; font: 700 9px 'DM Mono', monospace; }
+.demo-math-control input { width: 145px; min-width: 90px; padding: 6px 8px; color: #312b3e; background: white; border: 1px solid #dcd8e4; border-radius: 6px; font: 10px 'DM Mono', monospace; }
 
 .demo-output { display: grid; grid-template-rows: auto auto minmax(0, 1fr); min-width: 0; color: #d8d4e4; background: #1d1a2b; border-left: 1px solid #38344c; }
 .demo-output header { display: flex; align-items: center; justify-content: space-between; padding: 21px 18px 13px; }

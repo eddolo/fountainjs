@@ -199,7 +199,13 @@ function renderText(node: Node, path: readonly number[], position: number, conte
   context.decorations?.find(position, end, (decoration) => (
     decoration.type === 'node' && decoration.from === position && decoration.to === end
   )).forEach((decoration) => applyDecorationAttributes(wrapper, decoration));
-  if (value.length === 0) wrapper.appendChild(document.createTextNode(''));
+  if (value.length === 0) {
+    wrapper.appendChild(document.createTextNode(''));
+    const placeholder = document.createElement('br');
+    placeholder.dataset.fountainCaretPlaceholder = '';
+    placeholder.setAttribute('aria-hidden', 'true');
+    wrapper.appendChild(placeholder);
+  }
   return wrapper;
 }
 

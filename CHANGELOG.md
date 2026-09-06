@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Empty paragraphs now render a real caret line, repeated Enter/Backspace
+  creates and removes visibly distinct lines, backward DOM selections retain
+  their direction, selected atomic blocks can be continued with Enter, and
+  blockquotes can be unwrapped or exited with ordinary editing keys.
 - Responsive block images now fall back from a failed `srcset` candidate to
   their ordinary `src` without triggering a NodeView remount loop; Retry
   deliberately restores the responsive candidates.

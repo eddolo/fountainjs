@@ -4360,11 +4360,107 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   await page.getByRole('button', { name: '+ Math' }).click();
   await expect(math).toHaveCount(3);
   await expect(output).toContainText('a^2 + b^2 = c^2');
+  await page.getByLabel('Math source').fill('x^3 + y^3 = z^3');
+  await page.getByRole('button', { name: 'Update Math' }).click();
+  await expect(math.filter({ hasText: 'x^3 + y^3 = z^3' })).toHaveCount(1);
+  await expect(output).toContainText('x^3 + y^3 = z^3');
   const after = await identitySnapshot();
   const afterIds = new Set(after.map((entry) => entry.id));
   expect(before.every((entry) => afterIds.has(entry.id))).toBe(true);
   expect(after.length).toBeGreaterThan(before.length);
   expect(new Set(after.map((entry) => entry.id)).size).toBe(after.length);
+});
+
+test('renders repeated empty paragraphs and removes each visible line', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const blocks = editor.locator(':scope > [data-fountain-path]');
+  const before = await blocks.count();
+  await selectBlockEnd(editor.locator(':scope > [data-fountain-node="paragraph"]').last());
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await expect(blocks).toHaveCount(before + 3);
+  const emptyLines = blocks.filter({ has: page.locator('[data-fountain-caret-placeholder]') });
+  await expect(emptyLines).toHaveCount(3);
+  const geometry = await emptyLines.evaluateAll((items) => items.map((item) => {
+    const box = item.getBoundingClientRect();
+    return { top: box.top, height: box.height };
+  }));
+  expect(geometry.every(({ height }) => height > 0)).toBe(true);
+  expect(new Set(geometry.map(({ top }) => Math.round(top))).size).toBe(3);
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await expect(blocks).toHaveCount(before);
+});
+
+test('keeps a backward DOM selection backward after model synchronization', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const expected = await editor.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
+    const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT);
+    const leaves: Text[] = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) leaves.push(node as Text);
+    const start = leaves[0];
+    const end = leaves.at(-1);
+    if (!start || !end) throw new Error('Expected browser-test text.');
+    const selection = document.getSelection();
+    selection?.setBaseAndExtent(end, end.data.length, start, 1);
+    document.dispatchEvent(new Event('selectionchange'));
+    return { anchorText: end.data, anchorOffset: end.data.length, to: wrapper.textContent?.length ?? 0 };
+  });
+  await expect.poll(() => page.evaluate(() => {
+    const selection = document.getSelection();
+    return selection ? [selection.anchorNode?.textContent, selection.anchorOffset, selection.focusOffset] : [];
+  })).toEqual([expected.anchorText, expected.anchorOffset, 1]);
+  await expect.poll(() => page.evaluate(() => {
+    const selection = (globalThis as any).fountainBrowserTest.editor.state.selection;
+    return [selection.from, selection.to];
+  })).toEqual([1, 10]);
+});
+
+test('preserves a backward selection made with real keyboard input', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const paragraph = editor.locator('[data-fountain-path="1"]');
+  await paragraph.click();
+  await page.keyboard.press('End');
+  for (let index = 0; index < 6; index += 1) await page.keyboard.press('Shift+ArrowLeft');
+  await expect.poll(() => page.evaluate(() => {
+    const selection = document.getSelection();
+    return {
+      text: selection?.toString(),
+      backward: Boolean(selection && selection.anchorOffset > selection.focusOffset),
+    };
+  })).toEqual({ text: 'agraph', backward: true });
+});
+
+test('unwraps and exits an inserted quote with ordinary browser keys', async ({ page }) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const quotes = editor.locator(':scope > blockquote[data-fountain-path]');
+  const before = await quotes.count();
+  await page.getByRole('button', { name: '❝ Quote' }).click();
+  await expect(quotes).toHaveCount(before + 1);
+  const inserted = quotes.filter({ hasText: 'A thought worth keeping…' });
+  await expect(inserted).toHaveCount(1);
+  await inserted.locator('[data-fountain-text-path]').first().evaluate((wrapper) => {
+    const text = wrapper.firstChild;
+    if (!text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected quote text.');
+    document.getSelection()?.setBaseAndExtent(text, 0, text, 0);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('Backspace');
+  await expect(quotes).toHaveCount(before);
+  await expect(editor.locator(':scope > p[data-fountain-path]').filter({ hasText: 'A thought worth keeping…' })).toHaveCount(1);
+
+  await page.getByRole('button', { name: '❝ Quote' }).click();
+  const second = quotes.filter({ hasText: 'A thought worth keeping…' });
+  await selectBlockEnd(second);
+  await page.keyboard.press('Enter');
+  await expect(second.locator('[data-fountain-caret-placeholder]')).toHaveCount(1);
+  await page.keyboard.press('Enter');
+  await expect(quotes).toHaveCount(before + 1);
+  await expect(editor.locator(':scope > p[data-fountain-path] [data-fountain-caret-placeholder]')).toHaveCount(1);
 });
 
 test('publishes semantic selection controls and table interaction in the demo gallery', async ({ page }) => {
