@@ -194,7 +194,7 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 406 currently match, 240 remain pending, and six are
+classifies every example: 424 currently match, 222 remain pending, and six are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 

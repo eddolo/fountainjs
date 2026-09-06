@@ -18,6 +18,9 @@ const BASELINE_PATH = fileURLToPath(new URL(
 const baseline = JSON.parse(readFileSync(BASELINE_PATH, 'utf8'));
 const reportOnly = process.argv.includes('--report');
 const showMismatches = process.argv.includes('--show-mismatches');
+const inspectedExamples = new Set(process.argv
+  .filter((value) => value.startsWith('--example='))
+  .map((value) => Number(value.slice('--example='.length))));
 
 const BLOCK_TAGS = new Set([
   'address', 'article', 'aside', 'blockquote', 'div', 'dl', 'fieldset', 'figure',
@@ -40,8 +43,12 @@ function normalizedText(value) {
 
 function normalizeInline(tokens) {
   const merged = [];
-  for (const token of tokens.flat()) {
-    if (!token) continue;
+  for (const sourceToken of tokens) {
+    if (!sourceToken) continue;
+    const token = [...sourceToken];
+    if (token[0] === 'text' && merged.at(-1)?.[0] === 'hard-break') {
+      token[1] = token[1].replace(/^ +/, '');
+    }
     if (token[0] === 'text' && merged.at(-1)?.[0] === 'text') {
       merged[merged.length - 1][1] += token[1];
     } else merged.push(token);
@@ -170,7 +177,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 1) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 2) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -229,6 +236,15 @@ if (reportOnly) {
   for (const [section, examples] of [...mismatchSections].sort((left, right) => left[0].localeCompare(right[0]))) {
     console.log(`- ${section}: ${examples.length}${showMismatches ? ` (${compressRanges(examples)})` : ''}`);
   }
+}
+for (const number of inspectedExamples) {
+  const example = commonmarkSpec.tests.find((candidate) => candidate.number === number);
+  const mismatch = mismatches.find((candidate) => candidate.number === number);
+  if (!example) throw new Error(`Unknown CommonMark example ${number}.`);
+  console.log(`Example ${number} (${example.section}) source:\n${JSON.stringify(example.markdown)}`);
+  console.log(`Expected projection:\n${JSON.stringify(semanticProjection(example.html), null, 2)}`);
+  console.log(`Fountain projection:\n${JSON.stringify(mismatch?.actual ?? semanticProjection(HTMLExporter.export(MarkdownImporter.parse(example.markdown, schema), { document: false })), null, 2)}`);
+  if (mismatch?.error) console.log(`Fountain error: ${mismatch.error}`);
 }
 
 if (reportOnly) process.exit(0);
