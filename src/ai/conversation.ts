@@ -425,10 +425,11 @@ export class AIConversationController {
     const userMessage = normalizeAIConversationMessage({
       id: id(this.options, 'message'), role: 'user', content, createdAt,
     });
+    const request = this.requestFor(Object.freeze([...thread.messages, userMessage]));
+    this.publish({ status: 'requesting', thread, activeRequest: request, streamingContent: undefined, error: undefined });
     try {
       const withUser = await this.persist([...thread.messages, userMessage], thread, abort.signal);
       this.thread = withUser;
-      const request = this.requestFor(withUser.messages);
       this.publish({ status: 'requesting', thread: withUser, activeRequest: request, streamingContent: undefined, error: undefined });
       const result = await this.runAdapter(request, abort);
       abortIfNeeded(abort.signal);
@@ -469,6 +470,7 @@ export class AIConversationController {
     const thread = this.thread ?? await this.load();
     const abort = new AbortController();
     this.activeAbort = abort;
+    this.publish({ status: 'loading', thread, error: undefined });
     try {
       const cleared = await this.persist([], thread, abort.signal);
       this.thread = cleared;

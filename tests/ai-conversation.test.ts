@@ -134,6 +134,30 @@ describe('host-owned AI conversations', () => {
     await expect(loading).rejects.toMatchObject({ name: 'AbortError' });
     expect(controller.getSnapshot()).toEqual({ status: 'idle', error: undefined });
   });
+
+  it('becomes busy before an asynchronous host save can admit a duplicate send', async () => {
+    const backing = new InMemoryAIConversationStore();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const store = {
+      load: backing.load.bind(backing),
+      save: async (request: Parameters<typeof backing.save>[0]) => {
+        await gate;
+        return backing.save(request);
+      },
+    };
+    const controller = new AIConversationController({
+      threadId: 'single-flight', store, autoLoad: false,
+      adapter: createAIConversationAdapter(async () => 'Reply'),
+    });
+    await controller.load();
+    const first = controller.send('First');
+    expect(controller.getSnapshot().status).toBe('requesting');
+    await expect(controller.send('Duplicate')).rejects.toThrow(/active AI conversation response/);
+    release();
+    await first;
+    expect(controller.getSnapshot().thread?.messages.map((message) => message.content)).toEqual(['First', 'Reply']);
+  });
 });
 
 describe('host-owned reusable AI prompts', () => {
