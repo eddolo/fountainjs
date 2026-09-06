@@ -174,6 +174,17 @@ describe('first-party production media extension', () => {
 
     const escalated = HTMLImporter.parse('<figure data-fountain-media="embed" data-provider="vimeo"><iframe src="https://player.vimeo.com/video/12345678" title="Untrusted permissions" allow="clipboard-write" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe></figure>', editor.state.schema);
     expect(escalated.content.some((node) => node.type.name === 'embed')).toBe(false);
+
+    const imageFile = createEditor({
+      schema: StarterKit.schema,
+      content: { type: 'doc', content: [{ type: 'file_attachment', attrs: {
+        src: 'https://cdn.example.com/artwork.svg', name: 'artwork.svg', mimeType: 'image/svg+xml', size: 100,
+      } }] },
+    });
+    const imageFileHTML = HTMLExporter.export(imageFile.state, { document: false });
+    expect(imageFileHTML).toContain('class="fountain-file__preview"');
+    expect(imageFileHTML).toContain('alt="Preview of artwork.svg"');
+    expect(HTMLImporter.parse(imageFileHTML, imageFile.state.schema).child(0).attrs.name).toBe('artwork.svg');
   });
 
   it('updates and deletes selected media while preserving semantic selection', () => {
@@ -202,6 +213,7 @@ describe('first-party production media extension', () => {
         { type: 'audio', attrs: { src: 'https://cdn.example.com/audio.mp3', title: 'Accessible audio', caption: 'Transcript available', controls: true } },
         { type: 'video', attrs: { src: 'https://cdn.example.com/video.mp4', title: 'Inline video', controls: true, playsInline: true } },
         { type: 'file_attachment', attrs: { src: 'https://cdn.example.com/report.pdf', name: 'Report.pdf', mimeType: 'application/pdf', size: 2048 } },
+        { type: 'file_attachment', attrs: { src: 'https://cdn.example.com/artwork.svg', name: 'Artwork.svg', mimeType: 'image/svg+xml', size: 1024 } },
       ] },
     });
     const mount = document.createElement('div');
@@ -217,6 +229,13 @@ describe('first-party production media extension', () => {
     expect(figure?.dataset.fountainMediaError).toBe('true');
     expect(figure?.querySelector('[role="status"]')?.hasAttribute('hidden')).toBe(false);
     expect(view.dom.querySelector('.fountain-file')?.textContent).toContain('application/pdf · 2.0 KB');
+    expect(view.dom.querySelector('.fountain-media--file:nth-of-type(3) .fountain-file__preview')).toBeNull();
+    const imageFile = view.dom.querySelectorAll<HTMLElement>('.fountain-media--file')[1];
+    expect(imageFile?.querySelector('img')?.getAttribute('alt')).toBe('Preview of Artwork.svg');
+    expect(imageFile?.textContent).toContain('Download file');
+    imageFile?.querySelector<HTMLButtonElement>('.fountain-file__select')?.click();
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+    expect(getActiveMedia(editor)?.node.attrs.name).toBe('Artwork.svg');
 
     const load = vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => undefined);
     figure?.querySelector<HTMLButtonElement>('button')?.click();

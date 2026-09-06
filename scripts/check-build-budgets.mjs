@@ -21,9 +21,11 @@ const limits = Object.freeze({
   'dist/emoji-data.js': 340 * kibibyte,
   'dist/emoji-data.cjs': 280 * kibibyte,
   // The supplied text-style panel adds five validated controls without
-  // changing the framework-neutral command surface.
-  'dist/react.js': 69 * kibibyte,
-  'dist/react.cjs': 52 * kibibyte,
+  // changing the framework-neutral command surface. The contextual table and
+  // highlight panels replace ambiguous icon-only interactions with labelled,
+  // selection-aware controls while retaining an explicit compact allowance.
+  'dist/react.js': 73 * kibibyte,
+  'dist/react.cjs': 55 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
   // adapter remains a separately loaded peer-backed entry. Granular structured
   // attributes add nested Y.Map/Y.Array reconciliation and validation only to
@@ -115,8 +117,9 @@ const limits = Object.freeze({
   // responsive editable page shells, and the three opt-in math appearances
   // remain inside one measured stylesheet.
   // Generated footnote labels add a small marker rule without affecting hosts
-  // that omit the optional pages schema.
-  'dist/styles.css': 65 * kibibyte,
+  // that omit the optional pages schema. Contextual table controls and image
+  // attachment previews add the labelled interaction and responsive states.
+  'dist/styles.css': 67 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -200,8 +203,10 @@ const limits = Object.freeze({
   // Direct math-source editing, configurable math presentation, explicit table
   // sizing/deletion, and structure-preserving clipboard insertion add about
   // 5.2/4.3 KiB while every consumer-facing entry remains below its own cap.
-  'all ESM runtime code': 1114 * kibibyte,
-  'all CommonJS runtime code': 933 * kibibyte,
+  // Contextual table/highlight controls, quote toggling, and explicit media
+  // selection add about 5.3/3.7 KiB across the normal React and core chunks.
+  'all ESM runtime code': 1121 * kibibyte,
+  'all CommonJS runtime code': 938 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

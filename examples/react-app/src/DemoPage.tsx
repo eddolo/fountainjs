@@ -20,18 +20,30 @@ import {
   deleteTableColumn,
   deleteTableRow,
   getActiveMath,
+  getActiveMedia,
   getActiveTableCell,
+  isInsideNode,
   insertList,
   insertMathBlock,
   insertTable,
   redo,
   registerFountainElement,
+  mergeTableCells,
+  selectTableColumn,
+  selectTableRow,
   selectAll,
   selectGap,
   setMark,
   setMathSource,
+  setMediaAttributes,
   setTextAlignment,
   topLevelPosition,
+  splitTableCell,
+  deleteMedia,
+  toggleQuote,
+  toggleTableHeaderCell,
+  toggleTableHeaderColumn,
+  toggleTableHeaderRow,
   toggleMark,
   unsetMark,
   undo,
@@ -61,7 +73,10 @@ const demoStatusExtension = createDOMWidgetExtension(demoStatusWidget, (context)
   const button = context.dom.ownerDocument.createElement('button');
   button.type = 'button';
   button.className = 'demo-status-node';
-  const render = (status: unknown) => { button.textContent = `Incident status · ${String(status)}`; };
+  const render = (status: unknown) => {
+    button.textContent = `Incident status · ${String(status)} · Click to change`;
+    button.title = `Change incident status from ${String(status)}`;
+  };
   const onClick = () => {
     const current = context.controller.getAttributes()?.status;
     context.set('status', current === 'Resolved' ? 'Investigating' : 'Resolved');
@@ -84,7 +99,7 @@ const demoPriorityWidget = defineWidget({
 });
 function DemoPriorityWidget({ attributes, editable, selected, set }: ReactWidgetProps) {
   return <label className="demo-priority-control">
-    <span>Review priority{selected ? ' · selected' : ''}</span>
+    <span>Review priority · choose a value{selected ? ' · selected' : ''}</span>
     <select
       aria-label="Review priority"
       disabled={!editable}
@@ -150,8 +165,12 @@ function DemoControls({ editor }: { editor: Editor | null }) {
   const [tableRows, setTableRows] = useState('2');
   const [tableColumns, setTableColumns] = useState('2');
   const [highlightColor, setHighlightColor] = useState('#fff3a3');
+  const [tableToolsOpen, setTableToolsOpen] = useState(false);
+  const [mediaTitle, setMediaTitle] = useState('');
+  const [mediaDescription, setMediaDescription] = useState('');
   const selectedMath = editor ? getActiveMath(editor) : null;
   const activeTable = editor ? getActiveTableCell(editor) : null;
+  const activeMedia = editor ? getActiveMedia(editor) : null;
   const insertionGap = state?.selection instanceof GapSelection
     && state.selection.parentPath.length === 0
     && state.selection.index === 1;
@@ -160,8 +179,26 @@ function DemoControls({ editor }: { editor: Editor | null }) {
   useEffect(() => {
     if (selectedMathPath) setMathInput(selectedMathSource);
   }, [selectedMathPath, selectedMathSource]);
+  useEffect(() => {
+    if (!activeTable) setTableToolsOpen(false);
+  }, [activeTable]);
+  const activeMediaPath = activeMedia?.path.join('.') ?? '';
+  const activeMediaSignature = activeMedia
+    ? JSON.stringify([
+      activeMediaPath,
+      activeMedia.node.attrs.name,
+      activeMedia.node.attrs.title,
+      activeMedia.node.attrs.description,
+      activeMedia.node.attrs.caption,
+    ])
+    : '';
+  useEffect(() => {
+    if (!activeMedia) return;
+    setMediaTitle(String(activeMedia.node.attrs.name ?? activeMedia.node.attrs.title ?? ''));
+    setMediaDescription(String(activeMedia.node.attrs.description ?? activeMedia.node.attrs.caption ?? ''));
+  }, [activeMediaSignature]);
   return <div className="demo-controls" aria-label="Editor controls" onMouseDown={(event) => {
-    if (!(event.target instanceof HTMLInputElement)) event.preventDefault();
+    if (!(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement) && !(event.target instanceof HTMLSelectElement)) event.preventDefault();
   }}>
     <button disabled={!editor} onClick={() => editor && undo(editor)}>Undo</button>
     <button disabled={!editor} onClick={() => editor && redo(editor)}>Redo</button>
@@ -173,6 +210,7 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor} onClick={() => editor && setMark(editor, 'highlight', { color: highlightColor })}>Apply highlight</button>
     <button disabled={!editor} onClick={() => editor && unsetMark(editor, 'highlight')}>Remove highlight</button>
     <button disabled={!editor} onClick={() => editor && setTextAlignment(editor, 'center')}>Centre</button>
+    <button aria-pressed={Boolean(editor && isInsideNode(editor, 'blockquote'))} disabled={!editor} title="Turn the selected paragraph(s) into a quote, or remove the current quote" onClick={() => editor && toggleQuote(editor)}>{editor && isInsideNode(editor, 'blockquote') ? 'Remove quote' : 'Quote'}</button>
     <button disabled={!editor} onClick={() => editor && selectAll(editor)}>Select all</button>
     <button
       aria-pressed={insertionGap}
@@ -189,11 +227,25 @@ function DemoControls({ editor }: { editor: Editor | null }) {
       <button disabled={!mathSource.trim()} onClick={() => insertMathBlock(editor, mathSource, 'Editable math expression')}>+ New Math</button>
       {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource)}>Update selected</button>}
     </label>}
-    <button disabled={!activeTable} onClick={() => editor && addTableRow(editor)}>+ Row</button>
-    <button disabled={!activeTable} onClick={() => editor && deleteTableRow(editor)}>− Row</button>
-    <button disabled={!activeTable} onClick={() => editor && addTableColumn(editor)}>+ Column</button>
-    <button disabled={!activeTable} onClick={() => editor && deleteTableColumn(editor)}>− Column</button>
-    <button className="is-danger" disabled={!activeTable} onClick={() => editor && deleteTable(editor)}>Delete table</button>
+    {activeTable && <button aria-expanded={tableToolsOpen} onClick={() => setTableToolsOpen((open) => !open)}>Table options</button>}
+    {activeTable && tableToolsOpen && <div className="demo-table-tools" role="group" aria-label="Table options">
+      <p>Select adjacent cells with Shift-click before merging.</p>
+      <fieldset><legend>Selection</legend><button onClick={() => editor && selectTableRow(editor)}>Select row</button><button onClick={() => editor && selectTableColumn(editor)}>Select column</button><button disabled={state?.selection.kind !== 'cell' || state.selection.cellPaths.length < 2} onClick={() => editor && mergeTableCells(editor)}>Merge selected cells</button><button disabled={activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1} onClick={() => editor && splitTableCell(editor)}>Split merged cell</button></fieldset>
+      <fieldset><legend>Rows</legend><button onClick={() => editor && addTableRow(editor, 'before')}>Add row above</button><button onClick={() => editor && addTableRow(editor, 'after')}>Add row below</button><button onClick={() => editor && deleteTableRow(editor)}>Delete row</button><button onClick={() => editor && toggleTableHeaderRow(editor)}>Make/unmake header row</button></fieldset>
+      <fieldset><legend>Columns</legend><button onClick={() => editor && addTableColumn(editor, 'before')}>Add column left</button><button onClick={() => editor && addTableColumn(editor, 'after')}>Add column right</button><button onClick={() => editor && deleteTableColumn(editor)}>Delete column</button><button onClick={() => editor && toggleTableHeaderColumn(editor)}>Make/unmake header column</button></fieldset>
+      <fieldset><legend>Cell</legend><button onClick={() => editor && toggleTableHeaderCell(editor)}>Make/unmake this cell a header</button></fieldset>
+      <button className="is-danger" onClick={() => { if (editor) deleteTable(editor); setTableToolsOpen(false); }}>Delete entire table</button>
+      <button onClick={() => setTableToolsOpen(false)}>Close</button>
+    </div>}
+    {activeMedia && <div className="demo-object-tools" role="group" aria-label="Selected media details">
+      <strong>{activeMedia.kind === 'file_attachment' ? 'Selected attachment' : `Selected ${activeMedia.kind}`}</strong>
+      <label>{activeMedia.kind === 'file_attachment' ? 'File name' : 'Title'}<input value={mediaTitle} onChange={(event) => setMediaTitle(event.target.value)} /></label>
+      <label>{activeMedia.kind === 'file_attachment' ? 'Description' : 'Caption'}<textarea value={mediaDescription} onChange={(event) => setMediaDescription(event.target.value)} /></label>
+      <button disabled={activeMedia.kind === 'file_attachment' && !mediaTitle.trim()} onClick={() => editor && setMediaAttributes(editor, activeMedia.kind === 'file_attachment'
+        ? { name: mediaTitle, description: mediaDescription }
+        : { title: mediaTitle, caption: mediaDescription })}>Save details</button>
+      <button className="is-danger" onClick={() => editor && deleteMedia(editor)}>Delete selected item</button>
+    </div>}
     {insertionGap && <span className="demo-control-status" role="status">Insertion point ready — the next task, table, or math block will be placed here. This is not a page break.</span>}
   </div>;
 }
@@ -202,7 +254,7 @@ function ReactRuntime({ demo }: { demo: DemoDefinition }) {
   const editor = useFountain({ schema: reactDemoKit.schema, plugins: reactDemoKit.plugins, content: demo.content });
   const state = useFountainState(editor);
   return <div className="demo-workspace">
-    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>Try Ctrl/Cmd+A, click an image, Shift-click table cells, or use the explicit gap control.</i></div><DemoControls editor={editor} /><FountainComposer editor={editor} placeholder="Start writing…" /></section>
+    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>One supplied toolbar. Select text or a document object to reveal the relevant controls.</i></div><FountainComposer editor={editor} placeholder="Start writing…" /></section>
     <OutputPanel document={state?.doc} />
   </div>;
 }

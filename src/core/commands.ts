@@ -865,19 +865,34 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
   if (!editor.editable) return false;
   const { state } = editor;
   if (state.selection.kind !== 'text' && !(state.selection instanceof NodeSelection)) return false;
-  const blockPath = state.selection instanceof NodeSelection
-    ? state.selection.nodePath
-    : state.selection.path.slice(0, -1);
-  const block = getNodeAtPath(state.doc, blockPath);
   const type = state.schema.nodes[typeName];
-  if (!block || !type || !type.isBlock) return false;
-  let replacement: Node;
-  try { replacement = type.create(attrs, block.content); }
-  catch { return false; }
-  const transaction = state.createTransaction().replaceNode(blockPath, [replacement]);
-  if (state.selection instanceof NodeSelection) transaction.setSelection(new NodeSelection(transaction.doc, blockPath));
-  try { state.schema.validate(transaction.doc); }
-  catch { return false; }
+  if (!type || !type.isBlock) return false;
+  const blockPaths = state.selection instanceof NodeSelection
+    ? [state.selection.nodePath]
+    : getTextLeaves(state.doc)
+      .filter(({ path }) => comparePaths(path, state.selection.path) >= 0 && comparePaths(path, state.selection.endPath) <= 0)
+      .map(({ path }) => path.slice(0, -1))
+      .filter((path, index, paths) => index === 0 || comparePaths(path, paths[index - 1] as readonly number[]) !== 0);
+  if (!blockPaths.length) return false;
+  const transaction = state.createTransaction();
+  try {
+    for (const blockPath of blockPaths) {
+      const block = getNodeAtPath(transaction.doc, blockPath);
+      if (!TEXT_BLOCKS.includes(block.type.name)) return false;
+      transaction.replaceNode(blockPath, [type.create(attrs, block.content)]);
+    }
+    state.schema.validate(transaction.doc);
+  } catch { return false; }
+  if (state.selection instanceof NodeSelection) {
+    transaction.setSelection(new NodeSelection(transaction.doc, state.selection.nodePath));
+  } else {
+    transaction.setSelection(new Selection(
+      state.selection.path,
+      state.selection.from,
+      state.selection.to,
+      state.selection.endPath,
+    ));
+  }
   editor.dispatch(transaction);
   return true;
 }
@@ -982,6 +997,106 @@ export function insertQuote(editor: Editor, text = ''): boolean {
   return insertNode(editor, schema.node('blockquote', {}, [
     schema.node('paragraph', {}, [schema.text(text)]),
   ]));
+}
+
+function nearestBlockPath(document: Node, path: readonly number[]): number[] | null {
+  for (let length = path.length - 1; length > 0; length -= 1) {
+    const candidate = path.slice(0, length);
+    try {
+      if (getNodeAtPath(document, candidate).type.isBlock) return candidate;
+    } catch { return null; }
+  }
+  return null;
+}
+
+function sharedPrefix(left: readonly number[], right: readonly number[]): number[] {
+  const result: number[] = [];
+  for (let index = 0; index < Math.min(left.length, right.length); index += 1) {
+    if (left[index] !== right[index]) break;
+    result.push(left[index] as number);
+  }
+  return result;
+}
+
+function quoteAncestor(document: Node, path: readonly number[]): number[] | null {
+  for (let length = path.length - 1; length > 0; length -= 1) {
+    const candidate = path.slice(0, length);
+    if (getNodeAtPath(document, candidate).type.name === 'blockquote') return candidate;
+  }
+  return null;
+}
+
+/** Wraps the selected block range in a quote, or unwraps the quote containing the selection. */
+export function toggleQuote(editor: Editor): boolean {
+  if (!editor.editable || (editor.state.selection.kind !== 'text' && !(editor.state.selection instanceof NodeSelection))) return false;
+  const { state } = editor;
+  const quoteType = state.schema.nodes.blockquote;
+  if (!quoteType) return false;
+  const startQuote = quoteAncestor(state.doc, state.selection.path);
+  const endQuote = quoteAncestor(state.doc, state.selection.endPath);
+  if (startQuote && endQuote && comparePaths(startQuote, endQuote) === 0) {
+    const quote = getNodeAtPath(state.doc, startQuote);
+    const parentPath = startQuote.slice(0, -1);
+    const quoteIndex = startQuote.at(-1) as number;
+    const mapPoint = (path: readonly number[]): number[] => [
+      ...parentPath,
+      quoteIndex + Number(path[startQuote.length] ?? 0),
+      ...path.slice(startQuote.length + 1),
+    ];
+    try {
+      const transaction = state.createTransaction().replaceNode(startQuote, quote.content);
+      state.schema.validate(transaction.doc);
+      transaction.setSelection(new Selection(
+        mapPoint(state.selection.path),
+        state.selection.from,
+        state.selection.to,
+        mapPoint(state.selection.endPath),
+      ));
+      editor.dispatch(transaction);
+      return true;
+    } catch { return false; }
+  }
+
+  const startBlock = nearestBlockPath(state.doc, state.selection.path);
+  const endBlock = nearestBlockPath(state.doc, state.selection.endPath);
+  if (!startBlock || !endBlock) return false;
+  const common = sharedPrefix(startBlock, endBlock);
+  const sameBlock = comparePaths(startBlock, endBlock) === 0;
+  const parentPath = sameBlock ? startBlock.slice(0, -1) : common;
+  const startPath = sameBlock ? startBlock : [...parentPath, startBlock[parentPath.length] as number];
+  const endPath = sameBlock ? endBlock : [...parentPath, endBlock[parentPath.length] as number];
+  const startIndex = startPath.at(-1) as number;
+  const endIndex = endPath.at(-1) as number;
+  if (endIndex < startIndex) return false;
+  let parent: Node;
+  try { parent = getNodeAtPath(state.doc, parentPath); }
+  catch { return false; }
+  const blocks = parent.content.slice(startIndex, endIndex + 1);
+  let quote: Node;
+  try { quote = quoteType.create({}, blocks); }
+  catch { return false; }
+  const quotePath = [...parentPath, startIndex];
+  const startRelative = state.selection.path.slice(startPath.length);
+  const endRelative = state.selection.endPath.slice(endPath.length);
+  try {
+    const transaction = state.createTransaction();
+    if (!parentPath.length) transaction.replace(startIndex, endIndex + 1, [quote]);
+    else {
+      for (let index = endIndex; index > startIndex; index -= 1) {
+        transaction.replaceNode([...parentPath, index], []);
+      }
+      transaction.replaceNode(startPath, [quote]);
+    }
+    state.schema.validate(transaction.doc);
+    transaction.setSelection(new Selection(
+      [...quotePath, 0, ...startRelative],
+      state.selection.from,
+      state.selection.to,
+      [...quotePath, blocks.length - 1, ...endRelative],
+    ));
+    editor.dispatch(transaction);
+    return true;
+  } catch { return false; }
 }
 
 export function insertList(editor: Editor, kind: 'bullet' | 'ordered' | 'task', items: readonly string[] = ['']): boolean {

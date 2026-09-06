@@ -31,6 +31,8 @@ export type FountainToolbarActionId =
   | 'quote' | 'bullet-list' | 'ordered-list' | 'task-list' | 'outdent-list' | 'indent-list'
   | 'code-block' | 'insert-table' | 'image' | 'upload-image' | 'media' | 'upload-asset'
   | 'divider' | 'hard-break'
+  | 'table-menu'
+  | 'add-table-row-above' | 'add-table-row-below' | 'add-table-column-left' | 'add-table-column-right'
   | 'add-table-row' | 'delete-table-row' | 'add-table-column' | 'delete-table-column'
   | 'delete-table'
   | 'merge-cells' | 'split-cell' | 'toggle-header-row' | 'toggle-header-column'

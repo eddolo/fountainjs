@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Block-style changes now apply to every paragraph/heading in a cross-block
+  selection instead of changing only its first block. The supplied quote
+  control now wraps the current block range and unwraps an existing quote,
+  making the same visible control useful for creation and removal.
 - Clipboard insertion now keeps rich HTML ahead of plain-text paste rules,
   commits a rich replacement as one editor action, keeps multi-block HTML
   inside nested containers such as table cells and list items, replaces inline
@@ -32,6 +36,14 @@
 
 ### Added
 
+- The supplied toolbar now presents table editing through one contextual,
+  labelled menu by default, with explicit selection, row, column, cell, header,
+  sizing, merge/split, and whole-table deletion language. Products that prefer
+  every table icon can opt into `tableControls: 'expanded'`. Highlight colour
+  and removal are available from the Highlight control itself. Image-type file
+  attachments render a safe thumbnail beside metadata and a separate download
+  action; their editor NodeView also exposes an explicit selection action for
+  host-owned edit/delete controls.
 - Table insertion now accepts explicit row/column dimensions in the supplied
   toolbar and public demos, while `deleteTable` removes the complete active
   table. Math nodes can be edited directly when selected, external controls can

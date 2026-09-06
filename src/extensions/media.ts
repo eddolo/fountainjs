@@ -4,7 +4,9 @@ import {
   deleteSelection,
   insertNode,
   isSafeURL,
+  selectNode,
   type Attributes,
+  type DOMOutputSpec,
   type Editor,
   type NodeSpec,
   type NodeViewLike,
@@ -305,6 +307,10 @@ function mediaText(node: Node): string {
   return name ? `[${label}: ${name}]` : `[${label}]`;
 }
 
+function isPreviewableImage(attrs: Attributes): boolean {
+  return /^image\//i.test(String(attrs.mimeType ?? '').trim()) && safeWebURL(attrs.src);
+}
+
 interface MediaEditorView { readonly editor: Editor }
 
 /** Framework-neutral native media/file/embed NodeView with safe, accessible controls. */
@@ -316,7 +322,7 @@ class MediaNodeView implements NodeViewLike {
   private readonly error = document.createElement('div');
   private readonly retry = document.createElement('button');
 
-  constructor(node: Node, private readonly view: unknown) {
+  constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
     this.current = node;
     this.dom.className = `fountain-media fountain-media--${node.type.name.replace('_attachment', '')}`;
     this.dom.tabIndex = -1;
@@ -382,18 +388,46 @@ class MediaNodeView implements NodeViewLike {
   private createInteractive(): HTMLElement {
     const { attrs } = this.current;
     if (this.current.type.name === 'file_attachment') {
-      const card = document.createElement('a');
-      card.className = 'fountain-file';
-      card.href = String(attrs.src);
-      card.target = '_blank';
-      card.rel = 'noopener noreferrer';
-      if (attrs.downloadName) card.download = String(attrs.downloadName);
+      const card = document.createElement('div');
+      card.className = `fountain-file${isPreviewableImage(attrs) ? ' has-preview' : ''}`;
+      if (isPreviewableImage(attrs)) {
+        const preview = document.createElement('img');
+        preview.className = 'fountain-file__preview';
+        preview.src = String(attrs.src);
+        preview.alt = `Preview of ${String(attrs.name || 'attached image')}`;
+        preview.loading = 'lazy';
+        preview.decoding = 'async';
+        card.append(preview);
+      }
+      const details = document.createElement('div');
+      details.className = 'fountain-file__details';
       const name = document.createElement('strong');
       name.textContent = String(attrs.name || 'Download file');
       const meta = document.createElement('span');
       const bytes = Number(attrs.size || 0);
       meta.textContent = [String(attrs.mimeType || ''), bytes > 0 ? formatBytes(bytes) : ''].filter(Boolean).join(' · ');
-      card.append(name, meta);
+      details.append(name, meta);
+      const actions = document.createElement('div');
+      actions.className = 'fountain-file__actions';
+      const download = document.createElement('a');
+      download.className = 'fountain-file__download';
+      download.href = String(attrs.src);
+      download.target = '_blank';
+      download.rel = 'noopener noreferrer';
+      download.textContent = 'Download file';
+      if (attrs.downloadName) download.download = String(attrs.downloadName);
+      actions.append(download);
+      if (this.editable) {
+        const select = document.createElement('button');
+        select.type = 'button';
+        select.className = 'fountain-file__select';
+        select.textContent = 'Select attachment';
+        select.title = 'Select this attachment so the host toolbar can edit or delete it';
+        select.addEventListener('click', () => selectNode((this.view as MediaEditorView).editor, this.getPath()));
+        actions.append(select);
+      }
+      details.append(actions);
+      card.append(details);
       return card;
     }
     if (this.current.type.name === 'embed') {
@@ -517,12 +551,22 @@ function mediaNodeSpecs(providers: readonly EmbedProvider[]): Record<MediaNodeNa
         downloadName: { default: '', validate: (value: unknown) => boundedText(value, 1_000) && !/[\\/]/.test(value) },
       },
       toText: mediaText,
-      toDOM: (node) => ['figure', { class: 'fountain-media fountain-media--file' },
-        ['a', {
-          class: 'fountain-file', href: node.attrs.src, target: '_blank', rel: 'noopener noreferrer',
-          download: node.attrs.downloadName || undefined,
-        }, ['strong', String(node.attrs.name)], ['span', [String(node.attrs.mimeType || ''), Number(node.attrs.size) > 0 ? formatBytes(Number(node.attrs.size)) : ''].filter(Boolean).join(' · ')]],
-        ['figcaption', String(node.attrs.description ?? '')]],
+      toDOM: (node) => {
+        const preview: DOMOutputSpec[] = isPreviewableImage(node.attrs) ? [['img', {
+          class: 'fountain-file__preview', src: node.attrs.src, alt: `Preview of ${String(node.attrs.name)}`, loading: 'lazy', decoding: 'async',
+        }]] : [];
+        return ['figure', { class: 'fountain-media fountain-media--file' },
+          ['div', { class: `fountain-file${isPreviewableImage(node.attrs) ? ' has-preview' : ''}` },
+            ...preview,
+          ['div', { class: 'fountain-file__details' },
+            ['strong', String(node.attrs.name)],
+            ['span', [String(node.attrs.mimeType || ''), Number(node.attrs.size) > 0 ? formatBytes(Number(node.attrs.size)) : ''].filter(Boolean).join(' · ')],
+            ['a', {
+              class: 'fountain-file__download', href: node.attrs.src, target: '_blank', rel: 'noopener noreferrer',
+              download: node.attrs.downloadName || undefined,
+            }, 'Download file']]],
+          ['figcaption', String(node.attrs.description ?? '')]];
+      },
       nodeView: MediaNodeView,
     },
     embed: {

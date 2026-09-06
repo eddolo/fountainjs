@@ -111,6 +111,7 @@ describe('supplied React toolbar composition', () => {
     document.body.append(mount);
     const root = createRoot(mount);
     await act(async () => root.render(<FountainToolbar editor={editor} groups={['insert', 'table']} />));
+    expect(mount.querySelector('[data-fountain-toolbar-group="table"]')).toBeNull();
 
     const open = mount.querySelector<HTMLButtonElement>('[aria-label="Insert table"]')!;
     await act(async () => open.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
@@ -126,11 +127,54 @@ describe('supplied React toolbar composition', () => {
     expect(editor.state.doc.child(1).type.name).toBe('table');
     expect(TableMap.create(editor.state.doc.child(1)).height).toBe(4);
     expect(TableMap.create(editor.state.doc.child(1)).width).toBe(5);
+    expect(mount.querySelector('[data-fountain-toolbar-group="table"]')).not.toBeNull();
 
-    const remove = mount.querySelector<HTMLButtonElement>('[aria-label="Delete entire table"]')!;
+    await act(async () => root.render(<FountainToolbar editor={editor} groups={['insert', 'table']} tableControls="expanded" />));
+    expect(mount.querySelector('[data-fountain-toolbar-action="add-table-row"]')).not.toBeNull();
+    expect(mount.querySelector('[data-fountain-toolbar-action="table-menu"]')).toBeNull();
+
+    await act(async () => root.render(<FountainToolbar editor={editor} groups={['insert', 'table']} />));
+
+    const tableOptions = mount.querySelector<HTMLButtonElement>('[aria-label="Table options"]')!;
+    await act(async () => tableOptions.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    const remove = [...mount.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === 'Delete entire table')!;
     expect(remove.disabled).toBe(false);
-    await act(async () => remove.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    await act(async () => remove.click());
     expect(editor.state.doc.content.some((node) => node.type.name === 'table')).toBe(false);
+
+    await act(async () => root.unmount());
+    editor.destroy();
+    mount.remove();
+  });
+
+  it('chooses, applies, and removes a highlight colour without losing the selection', async () => {
+    const kit = composeExtensions([CoreExtension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    insertText(editor, 'Colour this text');
+    selectText(editor, [0, 0], 0, 6);
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const root = createRoot(mount);
+    await act(async () => root.render(<FountainToolbar editor={editor} groups={['marks']} />));
+
+    const open = mount.querySelector<HTMLButtonElement>('[aria-label="Highlight text and choose colour"]')!;
+    await act(async () => open.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    const colour = mount.querySelector<HTMLInputElement>('[aria-label="Highlight colour"]')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(colour, '#33cc99');
+      colour.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    const apply = [...mount.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === 'Apply highlight')!;
+    await act(async () => apply.click());
+
+    expect(editor.state.selection.from).toBe(0);
+    expect(editor.state.selection.to).toBe(6);
+    expect(editor.state.doc.child(0).content[0]?.marks.find((mark) => mark.type.name === 'highlight')?.attrs.color).toBe('#33cc99');
+
+    await act(async () => open.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
+    const remove = [...mount.querySelectorAll<HTMLButtonElement>('button')].find((button) => button.textContent === 'Remove highlight')!;
+    await act(async () => remove.click());
+    expect(editor.state.doc.child(0).content.some((node) => node.marks.some((mark) => mark.type.name === 'highlight'))).toBe(false);
 
     await act(async () => root.unmount());
     editor.destroy();

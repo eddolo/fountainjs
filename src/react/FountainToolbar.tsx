@@ -11,7 +11,6 @@ import {
   insertHardBreak,
   insertImage,
   insertInlineImage,
-  insertQuote,
   insertTable,
   indentListItem,
   isInsideNode,
@@ -35,6 +34,7 @@ import {
   toggleTableHeaderColumn,
   toggleTableHeaderRow,
   toggleMark,
+  toggleQuote,
   toggleList,
   unsetMark,
   type Editor,
@@ -113,6 +113,8 @@ export interface FountainToolbarProps {
   onError?: (error: unknown) => void;
   toolbarLabel?: string;
   groups?: readonly FountainToolbarGroupId[];
+  /** Uses one contextual, labelled menu by default; choose expanded for the complete icon row. */
+  tableControls?: 'menu' | 'expanded';
   /** Moves listed actions to the front of each group in the supplied order. List every action for an exact order. */
   actionOrder?: Readonly<Partial<Record<FountainToolbarGroupId, readonly FountainToolbarActionId[]>>>;
   hiddenActions?: readonly FountainToolbarActionId[];
@@ -131,6 +133,7 @@ export function FountainToolbar({
   onError,
   toolbarLabel = 'Formatting and rich content',
   groups = defaultFountainToolbarGroups,
+  tableControls = 'menu',
   actionOrder = {},
   hiddenActions = [],
   groupLabels = {},
@@ -143,7 +146,7 @@ export function FountainToolbar({
   const languageListId = useId();
   const fontFamilyListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'insert-table' | 'table' | 'text-style' | null>(null);
+  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'insert-table' | 'table' | 'text-style' | 'highlight' | null>(null);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -191,6 +194,7 @@ export function FountainToolbar({
   const [lineHeightValue, setLineHeightValue] = useState('');
   const [styleColor, setStyleColor] = useState('#171923');
   const [styleBackground, setStyleBackground] = useState('#fff3a3');
+  const [highlightColor, setHighlightColor] = useState('#fff3a3');
   const [textStyleError, setTextStyleError] = useState('');
   useEffect(() => {
     if (!imageTask) return;
@@ -510,6 +514,22 @@ export function FountainToolbar({
       onAction={onAction}
     />);
   };
+  const menuTool = (
+    actionId: FountainToolbarActionId,
+    defaultLabel: string,
+    onAction: () => void,
+    options: { disabled?: boolean; danger?: boolean } = {},
+  ): ReactNode => {
+    const label = actionLabels[actionId] ?? defaultLabel;
+    return customize(actionId, defaultLabel, <FountainToolbarButton
+      actionId={actionId}
+      label={label}
+      icon={<span>{label}</span>}
+      className={options.danger ? 'is-danger' : undefined}
+      disabled={options.disabled}
+      onAction={onAction}
+    />);
+  };
   const colorLabel = actionLabels['text-color'] ?? 'Text color';
   const colorControl = customize('text-color', 'Text color', <label
     className="fountain-toolbar__color"
@@ -564,7 +584,9 @@ export function FountainToolbar({
       entry('underline', tool('underline', 'Underline', mark('underline'), { active: isMarkActive(editor, 'underline') })),
       entry('strike', tool('strike', 'Strikethrough', mark('strike'), { active: isMarkActive(editor, 'strike') })),
       entry('inline-code', tool('inline-code', 'Inline code', mark('code'), { active: isMarkActive(editor, 'code') })),
-      entry('highlight', tool('highlight', 'Highlight', mark('highlight'), { active: isMarkActive(editor, 'highlight') })),
+      entry('highlight', tool('highlight', 'Highlight text and choose colour', () => setPanel(panel === 'highlight' ? null : 'highlight'), {
+        active: panel === 'highlight' || isMarkActive(editor, 'highlight'),
+      })),
       entry('subscript', tool('subscript', 'Subscript', mark('subscript'), { active: isMarkActive(editor, 'subscript') })),
       entry('superscript', tool('superscript', 'Superscript', mark('superscript'), { active: isMarkActive(editor, 'superscript') })),
       entry('link', tool('link', 'Add or edit link', toggleLinkPanel, { active: Boolean(activeLink) || isMarkActive(editor, 'link') })),
@@ -582,7 +604,7 @@ export function FountainToolbar({
       entry('justify', tool('justify', 'Justify', () => setTextAlignment(editor, 'justify'))),
     ]),
     insert: () => toolbarGroup('insert', [
-      entry('quote', tool('quote', 'Quote', () => insertQuote(editor))),
+      entry('quote', tool('quote', isInsideNode(editor, 'blockquote') ? 'Remove quote' : 'Quote selected blocks', () => toggleQuote(editor), { active: isInsideNode(editor, 'blockquote') })),
       entry('bullet-list', tool('bullet-list', 'Bullet list', () => toggleList(editor, 'bullet'), { active: isInsideNode(editor, 'bullet_list') })),
       entry('ordered-list', tool('ordered-list', 'Numbered list', () => toggleList(editor, 'ordered'), { active: isInsideNode(editor, 'ordered_list') })),
       entry('task-list', tool('task-list', 'Task list', () => toggleList(editor, 'task'), { active: isInsideNode(editor, 'task_list') })),
@@ -597,7 +619,7 @@ export function FountainToolbar({
       entry('divider', tool('divider', 'Divider', () => insertBlock(editor, 'horizontal_rule'))),
       entry('hard-break', tool('hard-break', 'Line break', () => insertHardBreak(editor))),
     ]),
-    table: () => toolbarGroup('table', [
+    table: () => tableControls === 'expanded' ? toolbarGroup('table', [
       entry('add-table-row', tool('add-table-row', 'Add table row', () => addTableRow(editor), { disabled: !isInsideNode(editor, 'table') })),
       entry('delete-table-row', tool('delete-table-row', 'Delete table row', () => deleteTableRow(editor), { disabled: !isInsideNode(editor, 'table') })),
       entry('add-table-column', tool('add-table-column', 'Add table column', () => addTableColumn(editor), { disabled: !isInsideNode(editor, 'table') })),
@@ -615,7 +637,13 @@ export function FountainToolbar({
         setTableWidth(String(width));
         setPanel(panel === 'table' ? null : 'table');
       }, { disabled: !activeTable })),
-    ]),
+    ]) : tableSelected ? toolbarGroup('table', [
+      entry('table-menu', tool('table-menu', 'Table options', () => {
+        const width = activeTable?.map.columnWidth(activeTable.cell.column) ?? 120;
+        setTableWidth(String(width));
+        setPanel(panel === 'table' ? null : 'table');
+      }, { active: panel === 'table' })),
+    ]) : null,
   };
   const visibleGroups = [...new Set(groups)].filter((group): group is FountainToolbarGroupId => group in groupRenderers);
 
@@ -697,6 +725,16 @@ export function FountainToolbar({
         </fieldset>
         {textStyleError && <p className="fountain-toolbar__error" role="alert">{textStyleError}</p>}
         <button type="button" onClick={() => setPanel(null)}>Close</button>
+      </form>}
+      {panel === 'highlight' && <form className="fountain-toolbar__popover is-highlight" onSubmit={(event) => {
+        event.preventDefault();
+        if (setMark(editor, 'highlight', { color: highlightColor })) setPanel(null);
+      }}>
+        <strong>Highlight text</strong>
+        <label>Colour <input aria-label="Highlight colour" type="color" value={highlightColor} onChange={(event) => setHighlightColor(event.target.value)} /></label>
+        <button type="submit">Apply highlight</button>
+        <button type="button" disabled={!isMarkActive(editor, 'highlight')} onClick={() => { unsetMark(editor, 'highlight'); setPanel(null); }}>Remove highlight</button>
+        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
       {panel === 'image' && <form className="fountain-toolbar__popover is-image" onSubmit={submitImage}>
         <strong>{activeImage ? 'Edit image' : 'Add image'}</strong>
@@ -841,15 +879,38 @@ export function FountainToolbar({
         <button type="submit">Apply</button>
         <button type="button" onClick={() => setPanel(null)}>Cancel</button>
       </form>}
-      {panel === 'table' && <form className="fountain-toolbar__popover is-table" onSubmit={(event) => {
-        event.preventDefault();
-        if (resizeTableColumn(editor, Number(tableWidth))) setPanel(null);
-      }}>
-        <strong>Column width</strong>
-        <input aria-label="Table column width" required type="number" min="40" max="2000" step="1" value={tableWidth} onChange={(event) => setTableWidth(event.target.value)} />
-        <span>px</span>
-        <button type="submit">Apply</button>
-        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+      {panel === 'table' && tableSelected && <form className="fountain-toolbar__popover is-table-tools" onSubmit={(event) => event.preventDefault()}>
+        <div className="fountain-toolbar__table-heading">
+          <strong>Table options</strong>
+          <p className="fountain-toolbar__hint">Changes apply to the cell containing the cursor. Select adjacent cells with Shift-click before merging.</p>
+        </div>
+        <fieldset><legend>Selection</legend>
+          {menuTool('select-row', 'Select row', () => selectTableRow(editor), { disabled: !activeTable })}
+          {menuTool('select-column', 'Select column', () => selectTableColumn(editor), { disabled: !activeTable })}
+          {menuTool('merge-cells', 'Merge selected cells', () => mergeTableCells(editor), { disabled: !(editor.state.selection instanceof CellSelection) || editor.state.selection.cellPaths.length < 2 })}
+          {menuTool('split-cell', 'Split merged cell', () => splitTableCell(editor), { disabled: !activeTable || (activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1) })}
+        </fieldset>
+        <fieldset><legend>Rows</legend>
+          {menuTool('add-table-row-above', 'Add row above', () => addTableRow(editor, 'before'), { disabled: !activeTable })}
+          {menuTool('add-table-row-below', 'Add row below', () => addTableRow(editor, 'after'), { disabled: !activeTable })}
+          {menuTool('delete-table-row', 'Delete current row', () => deleteTableRow(editor), { disabled: !activeTable })}
+          {menuTool('toggle-header-row', 'Make/unmake header row', () => toggleTableHeaderRow(editor), { disabled: !activeTable })}
+        </fieldset>
+        <fieldset><legend>Columns</legend>
+          {menuTool('add-table-column-left', 'Add column left', () => addTableColumn(editor, 'before'), { disabled: !activeTable })}
+          {menuTool('add-table-column-right', 'Add column right', () => addTableColumn(editor, 'after'), { disabled: !activeTable })}
+          {menuTool('delete-table-column', 'Delete current column', () => deleteTableColumn(editor), { disabled: !activeTable })}
+          {menuTool('toggle-header-column', 'Make/unmake header column', () => toggleTableHeaderColumn(editor), { disabled: !activeTable })}
+        </fieldset>
+        <fieldset><legend>Cell</legend>
+          {menuTool('toggle-header-cell', 'Make/unmake this cell a header', () => toggleTableHeaderCell(editor), { disabled: !activeTable })}
+          <label>Column width <input aria-label="Table column width" required type="number" min="40" max="2000" step="1" value={tableWidth} onChange={(event) => setTableWidth(event.target.value)} /></label>
+          {menuTool('column-width', 'Apply width', () => resizeTableColumn(editor, Number(tableWidth)), { disabled: !activeTable })}
+        </fieldset>
+        <div className="fountain-toolbar__table-footer">
+          {menuTool('delete-table', 'Delete entire table', () => { deleteTable(editor); setPanel(null); }, { danger: true })}
+          <button type="button" onClick={() => setPanel(null)}>Close</button>
+        </div>
       </form>}
       {panel === 'insert-table' && <form className="fountain-toolbar__popover is-table" onSubmit={(event) => {
         event.preventDefault();

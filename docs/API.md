@@ -1116,7 +1116,7 @@ Commands return whether they handled the operation:
 - `insertText`, `insertPlainText`, `insertHardBreak`, `deleteSelection`, `deleteBackward`, and `deleteForward`
 - `selectText`, `selectTextRange`, `selectNode`, `selectGap`, `selectAll`, `selectCells`, `selectAdjacentNode`, and `extendCellSelection`
 - `setContent`, `setBlockType`, and `insertBlock`
-- `insertNode`, `insertImage`, `insertInlineImage`, `insertQuote`, `insertList`, and `insertTable`
+- `insertNode`, `insertImage`, `insertInlineImage`, `insertQuote`, `toggleQuote`, `insertList`, and `insertTable`
 - `isMarkActive`, `toggleMark`, `setMark`, `unsetMark`, `setLink`, and `unsetLink`
 - `setTextAlignment`, `splitBlock`, `joinBackward`, and `joinForward`
 - `getActiveImage`, `setImageAttributes`, `setImageAlignment`, and `deleteImage`
@@ -1315,7 +1315,8 @@ any other extension. It contributes four atomic block nodes and their commands:
 - `video`: the audio fields plus a safe poster, width/height, alignment, and
   inline mobile playback;
 - `file_attachment`: URL, visible name, MIME type, byte size, description, and
-  an optional safe download filename;
+  an optional safe download filename. Image MIME types receive a lazy thumbnail
+  preview while retaining a separate, explicit download action;
 - `embed`: a provider-approved canonical HTTPS source, required accessible
   title, caption, dimensions/alignment, bounded permission tokens, sandbox
   tokens, and fullscreen policy.
@@ -1326,7 +1327,10 @@ operate on a `NodeSelection` or explicit path. `createMediaNode` validates a
 node without dispatching. Native controls remain interactive inside the atomic
 NodeView; the outer node/caption remains selectable. Audio/video load failures
 expose an accessible status and host-visible retry. File cards use safe new-tab
-link semantics and human-readable byte metadata.
+link semantics and human-readable byte metadata. In an editable DOM view they
+also provide a `Select attachment` action so a host toolbar can expose
+`setMediaAttributes` and `deleteMedia` without asking users to discover atomic
+node selection through a caption or empty margin.
 
 The default embed providers accept common YouTube, `youtu.be`, privacy-enhanced
 YouTube, and Vimeo URLs. They persist only canonical
@@ -1776,7 +1780,9 @@ const CounterView = createReactNodeView(({ node, selected, updateAttributes }) =
 `FountainToolbar` exposes stable `FountainToolbarGroupId` and
 `FountainToolbarActionId` contracts. Configure `groups`, `actionOrder`,
 `hiddenActions`, `groupLabels`, `actionLabels`, `actionIcons`, and
-`renderAction`; `FountainComposer.toolbarProps` forwards the same options.
+`renderAction`; choose the default contextual `tableControls: 'menu'` or the
+complete `tableControls: 'expanded'` icon group. `FountainComposer.toolbarProps`
+forwards the same options.
 The standalone toolbar primitives can compose product-owned commands without
 mounting the supplied toolbar. See [TOOLBAR.md](TOOLBAR.md) for the complete ID
 registry, render context, keyboard/focus contract, responsive behavior, and

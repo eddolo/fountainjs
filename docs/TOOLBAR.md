@@ -22,6 +22,7 @@ import { FountainComposer } from 'fountainjs-editor/react'
   toolbarProps={{
     toolbarLabel: 'Article formatting',
     groups: ['marks', 'block-types', 'history'],
+    tableControls: 'menu', // default; 'expanded' restores every table icon
     actionOrder: {
       marks: ['highlight', 'bold', 'italic', 'underline'],
     },
@@ -57,22 +58,32 @@ outside the built-in registry.
 | `marks` | `bold`, `italic`, `underline`, `strike`, `inline-code`, `highlight`, `subscript`, `superscript`, `link`, `unlink`, `text-color`, `clear-text-color`, `text-style` |
 | `alignment` | `align-left`, `align-center`, `align-right`, `justify` |
 | `insert` | `quote`, `bullet-list`, `ordered-list`, `task-list`, `outdent-list`, `indent-list`, `code-block`, `insert-table`, `image`, `upload-image`, `media`, `upload-asset`, `divider`, `hard-break` |
-| `table` | `add-table-row`, `delete-table-row`, `add-table-column`, `delete-table-column`, `delete-table`, `merge-cells`, `split-cell`, `toggle-header-row`, `toggle-header-column`, `toggle-header-cell`, `select-row`, `select-column`, `column-width` |
+| `table` | Contextual `table-menu`; its labelled panel exposes `add-table-row-above`, `add-table-row-below`, `add-table-column-left`, `add-table-column-right`, `delete-table-row`, `delete-table-column`, `delete-table`, `merge-cells`, `split-cell`, `toggle-header-row`, `toggle-header-column`, `toggle-header-cell`, `select-row`, `select-column`, and `column-width` |
 
 `defaultFountainToolbarGroups` is the frozen default group order. TypeScript
 exports `FountainToolbarGroupId` and `FountainToolbarActionId` so configuration
 can be checked without copying string unions.
 
+Set `tableControls: 'expanded'` to render the original always-present icon set:
+`add-table-row`, `delete-table-row`, `add-table-column`,
+`delete-table-column`, `delete-table`, `merge-cells`, `split-cell`, the three
+header toggles, row/column selection, and `column-width`. Those stable IDs and
+their `actionOrder` behavior remain available for dense application-specific
+toolbars.
+
 Availability follows the composed editor. Clipboard history appears only when
 its extension service exists. Media actions appear only when the media schema is
-installed; upload is disabled until the host supplies `assetUpload`. Contextual
-table/list actions remain visible but disabled when their command is not valid.
-This distinction lets users discover a capability without allowing an invalid
-transaction.
+installed; upload is disabled until the host supplies `assetUpload`. The
+default table group appears only for an active table and explains each
+operation in text; expanded table and list actions remain visible but disabled
+when their command is not valid.
 
 `insert-table` opens explicit row and column fields before insertion (1–50
 rows, 1–20 columns). `delete-table` removes the complete table containing the
 active cell; row and column deletion remain separate actions.
+`quote` wraps every selected compatible block and becomes Remove quote while
+the selection is already inside one. `highlight` opens a colour picker with
+explicit Apply and Remove actions.
 
 ## Build a completely custom toolbar
 

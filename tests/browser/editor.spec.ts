@@ -4270,13 +4270,13 @@ test('runs the public plain-DOM first-class widget demo', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Knowledge-base notes' })).toBeVisible();
   await expect(page.getByText('First-class portable widget', { exact: true })).toBeVisible();
 
-  const status = page.getByRole('button', { name: 'Incident status · Investigating' });
+  const status = page.getByRole('button', { name: /Incident status · Investigating/ });
   await expect(status).toBeVisible();
   await status.click();
-  await expect(page.getByRole('button', { name: 'Incident status · Resolved' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Incident status · Resolved/ })).toBeVisible();
   await expect(page.locator('.demo-output pre')).toContainText('"status": "Resolved"');
   await page.locator('.demo-controls').getByRole('button', { name: 'Undo' }).click();
-  const restored = page.getByRole('button', { name: 'Incident status · Investigating' });
+  const restored = page.getByRole('button', { name: /Incident status · Investigating/ });
   await expect(restored).toBeVisible();
   await restored.focus();
   await page.keyboard.press('Tab');
@@ -4290,6 +4290,8 @@ test('runs the public React first-class widget demo without losing control focus
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/demos/react-article.html');
   await expect(page.getByText('React portable widget', { exact: true })).toBeVisible();
+  await expect(page.getByRole('toolbar', { name: 'Formatting and rich content' })).toHaveCount(1);
+  await expect(page.locator('.demo-controls')).toHaveCount(0);
 
   const priority = page.getByRole('combobox', { name: 'Review priority' });
   await expect(priority).toHaveValue('Normal');
@@ -4297,9 +4299,41 @@ test('runs the public React first-class widget demo without losing control focus
   await priority.selectOption('High');
   await expect(priority).toBeFocused();
   await expect(page.locator('.demo-output pre')).toContainText('"priority": "High"');
-  await page.locator('.demo-controls').getByRole('button', { name: 'Undo' }).click();
+  await page.getByRole('toolbar', { name: 'Formatting and rich content' }).getByRole('button', { name: 'Undo' }).click();
   await expect(priority).toHaveValue('Normal');
+
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const firstHeading = editor.locator(':scope > h1 [data-fountain-text-path]').first();
+  const firstParagraph = editor.locator(':scope > p [data-fountain-text-path]').first();
+  await firstHeading.evaluate((start, end) => {
+    const startText = start.firstChild;
+    const endText = (end as HTMLElement).firstChild;
+    if (!startText || !endText) throw new Error('Expected two text leaves.');
+    const range = document.createRange();
+    range.setStart(startText, 0);
+    range.setEnd(endText, endText.textContent?.length ?? 0);
+    const selection = document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  }, await firstParagraph.elementHandle());
+  await page.getByRole('toolbar', { name: 'Formatting and rich content' }).getByRole('button', { name: 'Heading 2' }).click();
+  await expect(editor.locator(':scope > h2')).toHaveCount(3);
   expect(errors).toEqual([]);
+});
+
+test('makes the quote control discoverable and toggles an existing quote in the Java workflow demo', async ({ page }) => {
+  await page.goto('/demos/java-approval-workflow.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const quote = editor.locator(':scope > blockquote');
+  await expect(quote).toContainText('Portable content can travel');
+  await quote.locator('p').click();
+  await page.getByRole('button', { name: 'Remove quote', exact: true }).click();
+  await expect(editor.locator(':scope > blockquote')).toHaveCount(0);
+  const unwrapped = editor.locator(':scope > p').filter({ hasText: 'Portable content can travel' });
+  await unwrapped.click();
+  await page.getByRole('button', { name: 'Quote', exact: true }).click();
+  await expect(editor.locator(':scope > blockquote')).toContainText('Portable content can travel');
 });
 
 test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async ({ page }) => {
@@ -4398,11 +4432,12 @@ test('makes table sizing, complete deletion, insertion gaps, and highlight colou
   await expect(inserted.locator('tr')).toHaveCount(3);
   expect(await inserted.locator('tr').first().locator('th, td').count()).toBe(4);
 
-  await page.getByRole('button', { name: '+ Row', exact: true }).click();
+  await page.getByRole('button', { name: 'Table options', exact: true }).click();
+  await page.getByRole('button', { name: 'Add row below', exact: true }).click();
   await expect(inserted.locator('tr')).toHaveCount(4);
-  await page.getByRole('button', { name: '− Column', exact: true }).click();
+  await page.getByRole('button', { name: 'Delete column', exact: true }).click();
   expect(await inserted.locator('tr').first().locator('th, td').count()).toBe(3);
-  await page.getByRole('button', { name: 'Delete table', exact: true }).click();
+  await page.getByRole('button', { name: 'Delete entire table', exact: true }).click();
   await expect(tables).toHaveCount(1);
 
   const gap = page.getByRole('button', { name: 'Place cursor after title' });
@@ -4818,6 +4853,17 @@ test('runs production images, native media, safe embeds, and host-owned uploads 
   await expect(editor.locator('.fountain-media--audio audio[controls]')).toHaveCount(1);
   await expect(editor.locator('.fountain-media--video video[controls][playsinline]')).toHaveCount(1);
   await expect(editor.locator('.fountain-media--file .fountain-file')).toContainText('campaign-artwork.svg');
+  await expect(editor.locator('.fountain-media--file .fountain-file__preview')).toHaveAttribute('alt', 'Preview of campaign-artwork.svg');
+  await expect(editor.locator('.fountain-media--file .fountain-file__download')).toHaveText('Download file');
+  await editor.locator('.fountain-media--file').getByRole('button', { name: 'Select attachment' }).click();
+  const selectedMedia = page.getByRole('group', { name: 'Selected media details' });
+  await expect(selectedMedia).toContainText('Selected attachment');
+  await selectedMedia.getByLabel('File name').fill('campaign-preview.svg');
+  await selectedMedia.getByLabel('Description').fill('Editable attachment metadata with an image preview.');
+  await selectedMedia.getByRole('button', { name: 'Save details' }).click();
+  await expect(editor.locator('.fountain-media--file .fountain-file')).toContainText('campaign-preview.svg');
+  await expect(editor.locator('.fountain-media--file .fountain-file__preview')).toHaveAttribute('alt', 'Preview of campaign-preview.svg');
+  await expect(page.locator('.demo-output pre')).toContainText('Editable attachment metadata with an image preview.');
   const embed = editor.locator('.fountain-media--embed iframe');
   await expect(embed).toHaveAttribute('src', /youtube-nocookie\.com\/embed/);
   await expect(embed).toHaveAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');

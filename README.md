@@ -619,6 +619,7 @@ actions, hide controls, replace labels or icons, and wrap or replace any action.
 <FountainComposer editor={editor} toolbarProps={{
   toolbarLabel: 'Article formatting',
   groups: ['marks', 'block-types', 'history'],
+  tableControls: 'menu', // default; use 'expanded' for every table icon
   actionOrder: { marks: ['highlight', 'bold', 'italic'] },
   hiddenActions: ['strike', 'subscript', 'superscript'],
   actionLabels: { bold: 'Strong emphasis' },
@@ -630,6 +631,12 @@ Applications can instead assemble `FountainToolbarRoot`,
 product command. Arrow/Home/End navigation is RTL-aware, mouse activation
 preserves the model selection, and narrow toolbars scroll by intact groups.
 See the complete [toolbar composition guide](docs/TOOLBAR.md).
+
+The default table group appears only while a table is selected and opens a
+labelled menu for row/column placement, headers, merge/split, width, selection,
+and deletion. The Quote control transforms the selected block range and changes
+to Remove quote inside a quotation; it does not insert an unexplained empty
+block elsewhere. The Highlight control opens its own colour/apply/remove panel.
 
 ## Native LaTeX mathematics
 
@@ -782,7 +789,9 @@ on React. Native playback attributes include controls, autoplay, loop, mute,
 preload, remote-playback policy, CORS mode, captions/subtitle tracks, video
 posters, inline mobile playback, dimensions, alignment, titles, and captions.
 File nodes retain a safe URL, visible name, MIME type, byte size, description,
-and optional download name.
+and optional download name. Image MIME types show a lazy thumbnail preview next
+to the metadata and keep downloading as a separate explicit action; non-image
+files remain compact attachment cards.
 
 ```ts
 insertAudio(editor, {

@@ -49,6 +49,7 @@ import {
   selectNextMatch,
   splitBlock,
   toggleMark,
+  toggleQuote,
   undo,
   unsetLink,
   unsetMark,
@@ -581,6 +582,29 @@ describe('document model and transactions', () => {
     expect(exited.state.selection.eq(Selection.cursor([1, 0], 0))).toBe(true);
   });
 
+  it('toggles one or several selected blocks into an editable quote and back out', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'First' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Second' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Tail' }] },
+        ],
+      },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.range([0, 0], 1, [1, 0], 4)));
+    expect(toggleQuote(editor)).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['blockquote', 'paragraph']);
+    expect(editor.state.doc.child(0).content.map((node) => node.textContent)).toEqual(['First', 'Second']);
+    expect(editor.state.selection.eq(Selection.range([0, 0, 0], 1, [0, 1, 0], 4))).toBe(true);
+
+    expect(toggleQuote(editor)).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['paragraph', 'paragraph', 'paragraph']);
+    expect(editor.state.selection.eq(Selection.range([0, 0], 1, [1, 0], 4))).toBe(true);
+  });
+
   it('splits and rejoins list items without flattening their container', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,
@@ -663,6 +687,24 @@ describe('document model and transactions', () => {
     expect(insertImage(image, { src: 'https://example.com/safe.png' })).toBe(true);
     expect(setNodeAttributes(image, [1], { width: '100%;position:fixed' })).toBe(false);
     expect(image.state.doc.child(1).attrs.width).toBe('100%');
+  });
+
+  it('changes every selected text block instead of only the forward selection anchor', () => {
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      content: {
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'One' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Two' }] },
+          { type: 'paragraph', content: [{ type: 'text', text: 'Three' }] },
+        ],
+      },
+    });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.range([0, 0], 1, [2, 0], 3)));
+    expect(setBlockType(editor, 'heading', { level: 2 })).toBe(true);
+    expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['heading', 'heading', 'heading']);
+    expect(editor.state.selection.eq(Selection.range([0, 0], 1, [2, 0], 3))).toBe(true);
   });
 
   it('inserts images, lists, and tables with editable cursor landing points', () => {
