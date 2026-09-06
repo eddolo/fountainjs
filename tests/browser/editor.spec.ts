@@ -5170,7 +5170,11 @@ test('copies math to external rich and plain-text editors without renderer contr
   await page.goto('/demos/go-docs-service.html');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const source = editor.locator('[data-fountain-math="block"]').filter({ hasText: '\\sum_{i=1}^{n} i' });
-  await source.click();
+  const renderedFormula = source.locator('.fountain-math__output');
+  // Click the rendered formula rather than the whole NodeView. Once selected,
+  // the same NodeView also contains its source input and cross-platform layout
+  // can otherwise make a later parent click target that editor instead.
+  await renderedFormula.click();
   await expect(page.locator('[aria-label="Edit math source"]:visible')).toBeVisible();
   await page.keyboard.press('Control+c');
 
@@ -5191,7 +5195,8 @@ test('copies math to external rich and plain-text editors without renderer contr
   await expect(richTarget.locator('code')).toHaveText('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
   await expect(richTarget.locator('input, button, [data-fountain-path], [data-fountain-selected-node]')).toHaveCount(0);
 
-  await source.click();
+  await renderedFormula.click();
+  await expect(source).toHaveAttribute('data-fountain-math-selected', 'true');
   await page.keyboard.press('Control+c');
   await page.evaluate(() => {
     const target = document.createElement('textarea');
