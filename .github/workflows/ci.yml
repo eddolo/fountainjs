@@ -20,17 +20,22 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - uses: oven-sh/setup-bun@v2
       - uses: denoland/setup-deno@v2
         with:
           deno-version: lts
       - run: pnpm install --frozen-lockfile
+      - run: python -m pip install --disable-pip-version-check python-docx==1.2.0
       - run: pnpm build
       - run: bun scripts/smoke-server-html-runtime.mjs
       - run: deno run --allow-read scripts/smoke-server-html-runtime.mjs
       - run: pnpm test:package
       - run: pnpm test:headless
       - run: pnpm test:markdown-conformance
+      - run: pnpm test:docx-interoperability
       - run: pnpm test:budget
       - run: pnpm test:performance
       - run: pnpm typecheck

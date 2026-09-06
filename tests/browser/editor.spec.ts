@@ -4725,6 +4725,45 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(page.getByText('browser-round-trip.docx')).toBeVisible();
   await expect(output).toContainText('Formula');
   await expect(output).toContainText('alpha+\\\\beta');
+
+  const imageDownloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download embedded-image sample' }).click();
+  const imageDownload = await imageDownloadPromise;
+  expect(imageDownload.suggestedFilename()).toBe('fountainjs-embedded-image.docx');
+  const imageStream = await imageDownload.createReadStream();
+  const imageChunks: Buffer[] = [];
+  for await (const chunk of imageStream) imageChunks.push(Buffer.from(chunk));
+  await page.getByLabel('Import Word DOCX').setInputFiles({
+    name: 'embedded-image.docx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: Buffer.concat(imageChunks),
+  });
+  await expect(page.getByText('Valid document · 3 top-level blocks · bounded DOCX import')).toBeVisible();
+  await expect(output).toContainText('image_super');
+  await expect(output).toContainText('FountainJS violet sample');
+  await expect(output).toContainText('A verified raster image packaged inside the Word document.');
+  await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
+});
+
+test('renders exported DOCX beside the same Fountain document through an independent viewer', async ({ page }) => {
+  await page.goto('/browser-tests.html');
+  const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());
+  expect(summary).toMatchObject({ fidelity: 'bounded', issues: [], fountainImages: 1, docxImages: 1, docxPages: 1 });
+  for (const text of [
+    'Visual export parity',
+    'The same structured document is rendered on both sides.',
+    'Embedded image with a portable caption.',
+    'Readable structure must survive the file boundary.',
+    'Feature', 'Result', 'Embedded media', 'Visible',
+  ]) {
+    expect(summary.fountainText).toContain(text);
+    expect(summary.docxText).toContain(text);
+  }
+  const comparison = page.locator('#browser-docx-visual-comparison');
+  await expect(comparison.locator('img')).toHaveCount(2);
+  await expect(comparison.locator('[data-visual-fountain]').getByRole('img', { name: 'Purple FountainJS export card' })).toBeVisible();
+  const imageWidths = await comparison.locator('img').evaluateAll((images) => images.map((image) => Math.round(image.getBoundingClientRect().width)));
+  expect(imageWidths.every((width) => width >= 300 && width <= 340)).toBe(true);
 });
 
 test('renders and inserts native math in the public DOM integration', async ({ page }) => {

@@ -121,8 +121,12 @@
 .headless-docx-controls label { display: grid; gap: 12px; color: #312b3d; font-weight: 800; }
 .headless-docx-controls input { max-width: 100%; font: 12px 'DM Mono', monospace; }
 .headless-docx-controls span { color: #756d89; font: 10px/1.6 'DM Mono', monospace; }
-.headless-format-actions { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.headless-format-actions button { padding: 8px 11px; color: white; background: #1c1926; border: 0; border-radius: 7px; font-weight: 800; }
+.headless-image-previews { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; padding: 12px 0; }
+.headless-image-previews figure { display: grid; gap: 8px; padding: 10px; margin: 0; background: #fff; border: 1px solid #ded8ea; border-radius: 10px; }
+.headless-image-previews img { display: block; width: 100%; max-height: 220px; object-fit: contain; border-radius: 6px; }
+.headless-image-previews figcaption { color: #625a73; font: 11px/1.5 'DM Sans', sans-serif; }
+.headless-format-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 10px; }
+.headless-format-actions button { padding: 8px 11px; color: white; background: #1c1926; border: 0; border-radius: 7px; font-weight: 800; white-space: nowrap; }
 .headless-format-actions button:disabled { opacity: .45; }
 .headless-format-actions span { color: #756d89; font: 10px/1.5 'DM Mono', monospace; }
 .headless-status { margin: 10px 0 0; color: #267356; font: 10px 'DM Mono', monospace; }

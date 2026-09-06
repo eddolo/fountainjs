@@ -6,6 +6,8 @@ import { exportDOCX, importDOCX } from '../src/docx';
 import { StarterKit } from '../src/extensions';
 
 const schema = new Schema(StarterKit.schema);
+const ONE_PIXEL_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+const ONE_PIXEL_DATA_URL = `data:image/png;base64,${ONE_PIXEL_PNG}`;
 
 function documentFixture() {
   const strong = schema.marks.strong.create();
@@ -113,7 +115,111 @@ describe('DOCX interchange', () => {
     const image = schema.node('image_super', { src: 'https://example.com/image.png', alt: 'Diagram', title: '', width: '100%', height: 'auto', align: 'center', loading: 'lazy', decoding: 'async', srcset: '', sizes: '', caption: 'Architecture' });
     const result = exportDOCX(schema.node('doc', {}, [image]));
     expect(result.report.fidelity).toBe('lossy');
-    expect(result.report.issues[0]).toMatchObject({ code: 'block-fallback', path: [0] });
+    expect(result.report.issues[0]).toMatchObject({ code: 'image-source-unavailable', path: [0] });
     expect(importDOCX(result.bytes, schema).document.textContent).toContain('Diagram');
+  });
+
+  it('embeds verified raster images and round-trips block and inline image semantics', () => {
+    const block = schema.node('image_super', {
+      src: ONE_PIXEL_DATA_URL, alt: 'Architecture diagram', title: 'System map', width: '320px', height: '180px',
+      align: 'center', loading: 'lazy', decoding: 'async', srcset: '', sizes: '', caption: 'Portable architecture',
+    });
+    const inline = schema.node('inline_image', {
+      src: ONE_PIXEL_DATA_URL, alt: 'Status', title: '', width: '24px', height: '24px',
+      align: 'center', loading: 'lazy', decoding: 'async', srcset: '', sizes: '',
+    });
+    const original = schema.node('doc', {}, [
+      block,
+      schema.node('paragraph', {}, [schema.text('State '), inline, schema.text(' ready')]),
+    ]);
+
+    const exported = exportDOCX(original);
+    expect(exported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [] });
+    const archive = unzipSync(exported.bytes);
+    expect(archive['word/media/image1.png']).toEqual(new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')));
+    expect(strFromU8(archive['[Content_Types].xml']!)).toContain('Extension="png" ContentType="image/png"');
+    expect(strFromU8(archive['word/_rels/document.xml.rels']!)).toContain('Id="rIdImage1"');
+    const xml = strFromU8(archive['word/document.xml']!);
+    expect(xml.match(/r:embed="rIdImage1"/g)).toHaveLength(2);
+    expect(xml).toContain('descr="Architecture diagram"');
+    expect(xml).toContain('<w:pStyle w:val="Caption"/>');
+
+    const imported = importDOCX(exported.bytes, schema);
+    expect(imported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [] });
+    expect(imported.document.content.map((node) => node.type.name)).toEqual(['image_super', 'paragraph']);
+    expect(imported.document.child(0).attrs).toMatchObject({
+      src: ONE_PIXEL_DATA_URL, alt: 'Architecture diagram', title: 'System map', width: '320px', height: '180px',
+      caption: 'Portable architecture',
+    });
+    expect(imported.document.child(1).content.map((node) => node.type.name)).toEqual(['text', 'inline_image', 'text']);
+    expect(imported.document.child(1).content[1]?.attrs).toMatchObject({ src: ONE_PIXEL_DATA_URL, alt: 'Status', width: '24px', height: '24px' });
+  });
+
+  it('requires explicit host resolution for non-data images and validates the returned bytes', () => {
+    const remote = schema.node('image_super', {
+      src: 'https://cdn.example.com/diagram.png', alt: 'Remote diagram', title: '', width: '100px', height: '80px',
+      align: 'center', loading: 'lazy', decoding: 'async', srcset: '', sizes: '', caption: '',
+    });
+    const document = schema.node('doc', {}, [remote]);
+    const exported = exportDOCX(document, {
+      resolveImage: (source) => source.includes('diagram')
+        ? { bytes: new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')), contentType: 'image/png' }
+        : undefined,
+    });
+    expect(exported.report.fidelity).toBe('bounded');
+    expect(unzipSync(exported.bytes)['word/media/image1.png']).toBeDefined();
+
+    const mismatched = exportDOCX(document, {
+      resolveImage: () => ({ bytes: new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')), contentType: 'image/jpeg' }),
+    });
+    expect(mismatched.report).toMatchObject({ fidelity: 'lossy', issues: [{ code: 'image-type-mismatch', path: [0] }] });
+    expect(unzipSync(mismatched.bytes)['word/media/image1.png']).toBeUndefined();
+  });
+
+  it('does not fetch linked Word images and enforces media resource limits', () => {
+    const documentXML = `<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><w:body><w:p><w:r><w:drawing><wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><wp:docPr id="1" descr="External diagram"/><a:graphic><a:graphicData><a:blip r:embed="rId9"/></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p></w:body></w:document>`;
+    const relationships = `<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="https://example.com/image.png" TargetMode="External"/></Relationships>`;
+    const linked = importDOCX(zipSync({
+      'word/document.xml': strToU8(documentXML),
+      'word/_rels/document.xml.rels': strToU8(relationships),
+    }), schema);
+    expect(linked.document.textContent).toContain('External diagram');
+    expect(linked.report.issues[0]).toMatchObject({ code: 'external-image-omitted', path: [0] });
+
+    const withMedia = zipSync({
+      'word/document.xml': strToU8('<w:document><w:body><w:p/></w:body></w:document>'),
+      'word/media/image1.png': new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')),
+    });
+    expect(() => importDOCX(withMedia, schema, { maxMediaBytes: 16 })).toThrow(/media exceeds 16/);
+    const image = schema.node('image_super', { src: ONE_PIXEL_DATA_URL, alt: '', title: '', width: '10px', height: '10px', align: 'center', loading: 'lazy', decoding: 'async', srcset: '', sizes: '', caption: '' });
+    expect(() => exportDOCX(schema.node('doc', {}, [image]), { maxMediaBytes: 16 })).toThrow(/media exceeds 16/);
+  });
+
+  it('lets hosts map copied embedded bytes without trusting unsafe or escaping targets', () => {
+    const documentXML = `<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><w:body><w:p><w:r><w:drawing><wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><wp:extent cx="95250" cy="190500"/><wp:docPr id="1" descr="Mapped image" title="Trusted upload"/><a:graphic><a:graphicData><a:blip r:embed="rIdImage"/></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p></w:body></w:document>`;
+    const relationships = (target: string) => `<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdImage" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="${target}"/></Relationships>`;
+    const packageWith = (target: string) => zipSync({
+      'word/document.xml': strToU8(documentXML),
+      'word/_rels/document.xml.rels': strToU8(relationships(target)),
+      'word/media/pixel.png': new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')),
+    });
+    let receivedBytes = 0;
+    const mapped = importDOCX(packageWith('media/pixel.png'), schema, {
+      createImageSource: (image) => {
+        receivedBytes = image.bytes.byteLength;
+        expect(image).toMatchObject({ contentType: 'image/png', fileName: 'pixel.png', alt: 'Mapped image', title: 'Trusted upload', width: '10px', height: '20px' });
+        return '/authorized/media/pixel.png';
+      },
+    });
+    expect(receivedBytes).toBeGreaterThan(8);
+    expect(mapped.document.child(0).attrs.src).toBe('/authorized/media/pixel.png');
+
+    const unsafe = importDOCX(packageWith('media/pixel.png'), schema, { createImageSource: () => 'javascript:alert(1)' });
+    expect(unsafe.document.textContent).toContain('Mapped image');
+    expect(unsafe.report.issues[0]?.code).toBe('unsafe-image-source');
+
+    const escaping = importDOCX(packageWith('../../word/media/pixel.png'), schema);
+    expect(escaping.document.textContent).toContain('Mapped image');
+    expect(escaping.report.issues[0]?.code).toBe('missing-image-part');
   });
 });

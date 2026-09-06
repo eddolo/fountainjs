@@ -13,6 +13,7 @@ import {
   MarkdownImporter,
   Plugin,
   PluginKey,
+  Schema,
   Selection,
   StarterKit,
   composeExtensions,
@@ -58,6 +59,8 @@ import {
 } from '../../../src/comments';
 import { DetailsExtension } from '../../../src/details';
 import { RubyExtension } from '../../../src/ruby';
+import { exportDOCX } from '../../../src/docx';
+import { renderAsync as renderIndependentDOCX } from 'docx-preview';
 import '../../../src/styles.css';
 
 const browserFixture = new URLSearchParams(globalThis.location.search).get('fixture');
@@ -1204,6 +1207,72 @@ const runPaginationStructuralBudget = (blockCount = 5_000, iterations = 6) => {
   }
 };
 
+let docxVisualView: EditorView | undefined;
+let docxVisualEditor: ReturnType<typeof createEditor> | undefined;
+const renderDOCXVisualComparison = async () => {
+  docxVisualView?.destroy();
+  docxVisualEditor?.destroy();
+  document.querySelector('#browser-docx-visual-comparison')?.remove();
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 640;
+  canvas.height = 360;
+  const drawing = canvas.getContext('2d');
+  if (!drawing) throw new Error('Canvas is unavailable for the DOCX visual fixture.');
+  const gradient = drawing.createLinearGradient(0, 0, 640, 360);
+  gradient.addColorStop(0, '#7047ff');
+  gradient.addColorStop(1, '#27165e');
+  drawing.fillStyle = gradient;
+  drawing.fillRect(0, 0, 640, 360);
+  drawing.fillStyle = '#fff';
+  drawing.font = '700 48px sans-serif';
+  drawing.fillText('FountainJS', 52, 155);
+  drawing.font = '25px sans-serif';
+  drawing.fillText('visual DOCX export', 52, 207);
+
+  const schema = new Schema(StarterKit.schema);
+  const strong = schema.marks.strong.create();
+  const fixture = schema.node('doc', {}, [
+    schema.node('heading', { level: 1, align: 'left' }, [schema.text('Visual export parity')]),
+    schema.node('paragraph', {}, [schema.text('The same '), schema.text('structured document', [strong]), schema.text(' is rendered on both sides.')]),
+    schema.node('image_super', {
+      src: canvas.toDataURL('image/png'), alt: 'Purple FountainJS export card', title: 'Visual export fixture',
+      width: '320px', height: '180px', align: 'center', srcset: '', sizes: '', loading: 'lazy', decoding: 'async',
+      caption: 'Embedded image with a portable caption.',
+    }),
+    schema.node('blockquote', {}, [schema.node('paragraph', {}, [schema.text('Readable structure must survive the file boundary.')])]),
+    schema.node('table', {}, [
+      schema.node('table_row', {}, ['Feature', 'Result'].map((value) => schema.node('table_header', { colspan: 1, rowspan: 1, colwidth: null, background: '', scope: 'col' }, [schema.node('paragraph', {}, [schema.text(value)])]))),
+      schema.node('table_row', {}, ['Embedded media', 'Visible'].map((value) => schema.node('table_cell', { colspan: 1, rowspan: 1, colwidth: null, background: '' }, [schema.node('paragraph', {}, [schema.text(value)])]))),
+    ]),
+  ]);
+
+  const section = document.createElement('section');
+  section.id = 'browser-docx-visual-comparison';
+  section.innerHTML = '<h2>Fountain editor ↔ independent DOCX render</h2><div class="visual-export-grid"><article><h3>Fountain editor</h3><div data-visual-fountain></div></article><article><h3>DOCX renderer</h3><div data-visual-docx-styles></div><div data-visual-docx></div></article></div>';
+  const style = document.createElement('style');
+  style.textContent = '#browser-docx-visual-comparison{padding:24px;background:#eeeaf8;color:#181426;font-family:Arial,sans-serif}.visual-export-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.visual-export-grid>article{min-width:0;padding:16px;background:#fff;border:1px solid #cfc7df;border-radius:12px}.visual-export-grid h3{margin:0 0 12px}.visual-export-grid [data-visual-fountain]{min-height:760px;padding:48px}.visual-export-grid [data-visual-docx]{min-height:760px;overflow:hidden}.visual-export-grid .docx-wrapper{padding:0;background:#fff}.visual-export-grid .docx-wrapper>section.docx{margin:0 auto;box-shadow:none}';
+  section.prepend(style);
+  document.body.appendChild(section);
+  const fountainMount = section.querySelector<HTMLElement>('[data-visual-fountain]')!;
+  const docxMount = section.querySelector<HTMLElement>('[data-visual-docx]')!;
+  const styleMount = section.querySelector<HTMLElement>('[data-visual-docx-styles]')!;
+  docxVisualEditor = createEditor({ schema: StarterKit.schema, content: fixture.toJSON(), editable: false });
+  docxVisualView = new EditorView(fountainMount, docxVisualEditor, { ariaLabel: 'Fountain export source' });
+  const exported = exportDOCX(fixture);
+  await renderIndependentDOCX(exported.bytes, docxMount, styleMount, { inWrapper: true, breakPages: true, useBase64URL: true });
+  section.scrollIntoView({ block: 'start' });
+  return {
+    fidelity: exported.report.fidelity,
+    issues: exported.report.issues,
+    fountainText: fountainMount.textContent,
+    docxText: docxMount.textContent,
+    fountainImages: fountainMount.querySelectorAll('img').length,
+    docxImages: docxMount.querySelectorAll('img').length,
+    docxPages: docxMount.querySelectorAll('section.docx').length,
+  };
+};
+
 Object.assign(globalThis, {
   fountainBrowserTest: {
     commands,
@@ -1219,6 +1288,7 @@ Object.assign(globalThis, {
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     performanceBudget: runPerformanceBudget,
     virtualizationBudget: runVirtualizationBudget,
+    docxVisual: { render: renderDOCXVisualComparison },
     startImageUpload,
     collaboration: {
       leftEditor,

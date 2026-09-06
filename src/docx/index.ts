@@ -32,26 +32,105 @@ export interface DOCXLimits {
   readonly maxArchiveBytes?: number;
   readonly maxExpandedBytes?: number;
   readonly maxDocumentXmlBytes?: number;
+  readonly maxMediaBytes?: number;
+  readonly maxMediaFiles?: number;
   readonly maxXmlNodes?: number;
   readonly maxXmlDepth?: number;
 }
 
-export interface DOCXImportOptions extends DOCXLimits {}
+export type DOCXImageContentType = 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp';
 
-export interface DOCXExportOptions {
+export interface DOCXEmbeddedImage {
+  readonly bytes: Uint8Array;
+  readonly contentType: DOCXImageContentType;
+  readonly fileName: string;
+  readonly relationshipId: string;
+  readonly alt: string;
+  readonly title: string;
+  readonly width: string;
+  readonly height: string;
+}
+
+export interface DOCXExportImage {
+  readonly bytes: Uint8Array | ArrayBuffer;
+  readonly contentType?: DOCXImageContentType;
+}
+
+export interface DOCXImportOptions extends DOCXLimits {
+  /** Maps trusted embedded bytes to an application URL. Defaults to a bounded raster data URL. */
+  readonly createImageSource?: (image: DOCXEmbeddedImage) => string | undefined;
+}
+
+export interface DOCXExportOptions extends Pick<DOCXLimits, 'maxMediaBytes' | 'maxMediaFiles'> {
   readonly title?: string;
   readonly creator?: string;
   readonly description?: string;
   readonly page?: 'a4' | 'letter';
+  /** Resolves non-data image sources without giving the converter network access. */
+  readonly resolveImage?: (source: string, node: FountainNode, path: readonly number[]) => DOCXExportImage | undefined;
 }
 
 const DEFAULT_LIMITS: Required<DOCXLimits> = {
   maxArchiveBytes: 25 * 1024 * 1024,
   maxExpandedBytes: 80 * 1024 * 1024,
   maxDocumentXmlBytes: 25 * 1024 * 1024,
+  maxMediaBytes: 32 * 1024 * 1024,
+  maxMediaFiles: 100,
   maxXmlNodes: 500_000,
   maxXmlDepth: 128,
 };
+
+const BASE64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+function encodeBase64(bytes: Uint8Array): string {
+  let output = '';
+  for (let index = 0; index < bytes.length; index += 3) {
+    const first = bytes[index] ?? 0;
+    const second = bytes[index + 1] ?? 0;
+    const third = bytes[index + 2] ?? 0;
+    const value = (first << 16) | (second << 8) | third;
+    output += BASE64[(value >>> 18) & 63];
+    output += BASE64[(value >>> 12) & 63];
+    output += index + 1 < bytes.length ? BASE64[(value >>> 6) & 63] : '=';
+    output += index + 2 < bytes.length ? BASE64[value & 63] : '=';
+  }
+  return output;
+}
+
+function decodeBase64(source: string): Uint8Array | undefined {
+  const value = source.replace(/\s+/g, '');
+  if (!value || value.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value)) return undefined;
+  const padding = value.endsWith('==') ? 2 : value.endsWith('=') ? 1 : 0;
+  const output = new Uint8Array((value.length / 4) * 3 - padding);
+  let cursor = 0;
+  for (let index = 0; index < value.length; index += 4) {
+    const a = BASE64.indexOf(value[index]!);
+    const b = BASE64.indexOf(value[index + 1]!);
+    const c = value[index + 2] === '=' ? 0 : BASE64.indexOf(value[index + 2]!);
+    const d = value[index + 3] === '=' ? 0 : BASE64.indexOf(value[index + 3]!);
+    if (a < 0 || b < 0 || c < 0 || d < 0) return undefined;
+    const packed = (a << 18) | (b << 12) | (c << 6) | d;
+    if (cursor < output.length) output[cursor++] = (packed >>> 16) & 255;
+    if (cursor < output.length) output[cursor++] = (packed >>> 8) & 255;
+    if (cursor < output.length) output[cursor++] = packed & 255;
+  }
+  return output;
+}
+
+function rasterType(bytes: Uint8Array): DOCXImageContentType | undefined {
+  if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47
+    && bytes[4] === 0x0d && bytes[5] === 0x0a && bytes[6] === 0x1a && bytes[7] === 0x0a) return 'image/png';
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
+  if (bytes.length >= 6 && String.fromCharCode(...bytes.slice(0, 6)) === 'GIF87a') return 'image/gif';
+  if (bytes.length >= 6 && String.fromCharCode(...bytes.slice(0, 6)) === 'GIF89a') return 'image/gif';
+  if (bytes.length >= 12 && String.fromCharCode(...bytes.slice(0, 4)) === 'RIFF'
+    && String.fromCharCode(...bytes.slice(8, 12)) === 'WEBP') return 'image/webp';
+  return undefined;
+}
+
+function extensionFor(contentType: DOCXImageContentType): string {
+  return ({ 'image/png': 'png', 'image/jpeg': 'jpeg', 'image/gif': 'gif', 'image/webp': 'webp' } as const)[contentType];
+}
 
 type XMLChild = XMLElement | string;
 interface XMLElement {
@@ -63,6 +142,7 @@ interface XMLElement {
 interface ParsedParagraph {
   readonly node: FountainNode;
   readonly list?: { readonly level: number; readonly ordered: boolean; readonly start: number };
+  readonly caption?: boolean;
 }
 
 function localName(name: string): string {
@@ -202,7 +282,104 @@ function runMarks(run: XMLElement, schema: Schema, hyperlink?: string): Mark[] {
   return result;
 }
 
-function inlineContent(container: XMLElement, schema: Schema, relationships: ReadonlyMap<string, string>, issues: DOCXIssue[], path: readonly number[]): FountainNode[] {
+interface ImportedRelationship {
+  readonly target: string;
+  readonly type: 'hyperlink' | 'image';
+  readonly external: boolean;
+}
+
+interface ImportMediaContext {
+  readonly archive: Readonly<Record<string, Uint8Array>>;
+  readonly relationships: ReadonlyMap<string, ImportedRelationship>;
+  readonly options: DOCXImportOptions;
+}
+
+function wordPartPath(target: string): string | undefined {
+  const normalized = target.replace(/\\/g, '/');
+  if (!normalized || /^[A-Za-z][A-Za-z\d+.-]*:/.test(normalized) || normalized.startsWith('//')) return undefined;
+  const source = normalized.startsWith('/') ? normalized.slice(1) : `word/${normalized}`;
+  const parts: string[] = [];
+  for (const part of source.split('/')) {
+    if (!part || part === '.') continue;
+    if (part === '..') {
+      if (!parts.length) return undefined;
+      parts.pop();
+    } else parts.push(part);
+  }
+  const result = parts.join('/');
+  return /^word\/media\/[^/]+$/i.test(result) ? result : undefined;
+}
+
+function pxFromEMU(value: string | undefined): string {
+  const emu = Number(value);
+  return Number.isFinite(emu) && emu > 0 ? `${Math.max(1, Math.round(emu / 9525))}px` : 'auto';
+}
+
+function embeddedImageNode(
+  element: XMLElement,
+  schema: Schema,
+  media: ImportMediaContext,
+  issues: DOCXIssue[],
+  path: readonly number[],
+): FountainNode | undefined {
+  const blip = descendants(element, 'blip')[0];
+  const imageData = descendants(element, 'imagedata')[0];
+  const relationshipId = attr(blip, 'embed') ?? attr(blip, 'link') ?? attr(imageData, 'id');
+  const description = descendants(element, 'docPr')[0];
+  const alt = attr(description, 'descr') || attr(description, 'title') || 'Embedded image';
+  const title = attr(description, 'title') || '';
+  if (!relationshipId) {
+    issues.push({ code: 'missing-image-relationship', severity: 'warning', message: 'An embedded Word image had no readable relationship.', path });
+    return undefined;
+  }
+  const relationship = media.relationships.get(relationshipId);
+  if (!relationship || relationship.type !== 'image') {
+    issues.push({ code: 'missing-image-relationship', severity: 'warning', message: `Image ${relationshipId} has no readable embedded target.`, path });
+    return undefined;
+  }
+  if (relationship.external) {
+    issues.push({ code: 'external-image-omitted', severity: 'warning', message: 'A linked external Word image was not fetched; its description was preserved.', path });
+    return undefined;
+  }
+  const partPath = wordPartPath(relationship.target);
+  const bytes = partPath ? media.archive[partPath] : undefined;
+  if (!partPath || !bytes) {
+    issues.push({ code: 'missing-image-part', severity: 'warning', message: `Embedded image ${relationshipId} did not resolve to a packaged media file.`, path });
+    return undefined;
+  }
+  const contentType = rasterType(bytes);
+  if (!contentType) {
+    issues.push({ code: 'unsupported-image-type', severity: 'warning', message: 'An embedded Word image was not a verified PNG, JPEG, GIF, or WebP file.', path });
+    return undefined;
+  }
+  const extent = descendants(element, 'extent')[0];
+  const width = pxFromEMU(attr(extent, 'cx'));
+  const height = pxFromEMU(attr(extent, 'cy'));
+  const image: DOCXEmbeddedImage = Object.freeze({
+    bytes: new Uint8Array(bytes), contentType, fileName: partPath.slice(partPath.lastIndexOf('/') + 1),
+    relationshipId, alt, title, width, height,
+  });
+  let source: string | undefined;
+  try {
+    source = media.options.createImageSource?.(image) ?? `data:${contentType};base64,${encodeBase64(bytes)}`;
+  } catch {
+    issues.push({ code: 'image-source-failed', severity: 'warning', message: 'The host image-source callback failed; the image description was preserved.', path });
+    return undefined;
+  }
+  if (!isSafeURL(source, { allowDataImage: true })) {
+    issues.push({ code: 'unsafe-image-source', severity: 'warning', message: 'The host returned an unsafe image source; the image description was preserved.', path });
+    return undefined;
+  }
+  if (!schema.nodes.inline_image) {
+    issues.push({ code: 'missing-image-node', severity: 'warning', message: 'The active schema has no inline_image node; the image description was preserved.', path });
+    return undefined;
+  }
+  return schema.node('inline_image', {
+    src: source, alt, title, width, height, align: 'center', srcset: '', sizes: '', loading: 'lazy', decoding: 'async',
+  });
+}
+
+function inlineContent(container: XMLElement, schema: Schema, media: ImportMediaContext, issues: DOCXIssue[], path: readonly number[]): FountainNode[] {
   const output: FountainNode[] = [];
   const appendText = (value: string, marks: readonly Mark[]) => {
     if (!value) return;
@@ -215,7 +392,8 @@ function inlineContent(container: XMLElement, schema: Schema, relationships: Rea
     const name = localName(element.name);
     if (name === 'hyperlink') {
       const id = attr(element, 'id');
-      const target = id ? relationships.get(id) : undefined;
+      const relationship = id ? media.relationships.get(id) : undefined;
+      const target = relationship?.type === 'hyperlink' && relationship.external ? relationship.target : undefined;
       if (id && !target) issues.push({ code: 'missing-hyperlink-relationship', severity: 'warning', message: `Hyperlink ${id} has no readable external target.`, path });
       const safeTarget = target && isSafeURL(target, { allowEmpty: false }) ? target : undefined;
       if (target && !safeTarget) issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe Word hyperlink target was omitted while its text was preserved.', path });
@@ -234,8 +412,12 @@ function inlineContent(container: XMLElement, schema: Schema, relationships: Rea
         } else if (itemName === 'drawing' || itemName === 'pict' || itemName === 'object') {
           const description = descendants(item, 'docPr')[0];
           const alt = attr(description, 'descr') || attr(description, 'title') || 'Embedded object';
-          appendText(`[${alt}]`, marks);
-          issues.push({ code: 'embedded-object-fallback', severity: 'warning', message: 'An embedded Word object was imported as readable fallback text.', path });
+          const image = embeddedImageNode(item, schema, media, issues, path);
+          if (image) {
+            output.push(image);
+            if (itemName === 'object') issues.push({ code: 'embedded-object-preview', severity: 'warning', message: 'An embedded Word object was omitted and its raster preview was imported.', path });
+          }
+          else appendText(`[${alt}]`, marks);
         }
       }
       return;
@@ -282,12 +464,12 @@ function readNumbering(root: XMLElement | undefined): ReadonlyMap<string, Number
   return levels;
 }
 
-function parseParagraph(element: XMLElement, schema: Schema, relationships: ReadonlyMap<string, string>, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): ParsedParagraph {
+function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaContext, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): ParsedParagraph {
   const properties = child(element, 'pPr');
   const style = attr(child(properties, 'pStyle'), 'val') ?? '';
   const alignment = attr(child(properties, 'jc'), 'val');
   const align = alignment === 'both' ? 'justify' : ['left', 'center', 'right', 'justify'].includes(alignment ?? '') ? alignment : 'left';
-  const content = inlineContent(element, schema, relationships, issues, path);
+  const content = inlineContent(element, schema, media, issues, path);
   let type = 'paragraph';
   let attrs: Record<string, unknown> = { align };
   const heading = /^heading([1-6])$/i.exec(style);
@@ -299,6 +481,9 @@ function parseParagraph(element: XMLElement, schema: Schema, relationships: Read
     return { node: schema.node('blockquote', {}, [paragraph]) };
   } else if (/code/i.test(style) && schema.nodes.code_block) {
     return { node: schema.node('code_block', { language: '' }, content) };
+  }
+  if (type === 'paragraph' && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
+    return { node: schema.node('image_super', { ...content[0].attrs, caption: '' }) };
   }
   const paragraph = schema.node(type, attrs, content);
   const numPr = child(properties, 'numPr');
@@ -315,7 +500,7 @@ function parseParagraph(element: XMLElement, schema: Schema, relationships: Read
       start: 1,
     },
   };
-  return { node: paragraph };
+  return { node: paragraph, caption: /^caption$/i.test(style) };
 }
 
 function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: DOCXIssue[]): FountainNode[] {
@@ -355,7 +540,7 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
   return output;
 }
 
-function parseTable(element: XMLElement, schema: Schema, relationships: ReadonlyMap<string, string>, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): FountainNode {
+function parseTable(element: XMLElement, schema: Schema, media: ImportMediaContext, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): FountainNode {
   interface MutableCell { content: FountainNode[]; colspan: number; rowspan: number; header: boolean; continuation: boolean }
   const rows: MutableCell[][] = [];
   const active = new Map<number, MutableCell>();
@@ -384,10 +569,17 @@ function parseTable(element: XMLElement, schema: Schema, relationships: Readonly
       };
       elements(cell).filter((item) => ['p', 'tbl'].includes(localName(item.name))).forEach((item, index) => {
         if (localName(item.name) === 'p') {
-          pendingParagraphs.push(parseParagraph(item, schema, relationships, numbering, issues, [...path, rowIndex, cellIndex, index]));
+          const parsed = parseParagraph(item, schema, media, numbering, issues, [...path, rowIndex, cellIndex, index]);
+          if (parsed.caption) {
+            flushParagraphs();
+            const image = paragraphs.at(-1);
+            if (image?.type.name === 'image_super' && parsed.node.textContent.trim()) {
+              paragraphs[paragraphs.length - 1] = schema.node('image_super', { ...image.attrs, caption: parsed.node.textContent });
+            } else pendingParagraphs.push({ node: parsed.node });
+          } else pendingParagraphs.push(parsed);
         } else {
           flushParagraphs();
-          paragraphs.push(parseTable(item, schema, relationships, numbering, issues, [...path, rowIndex, cellIndex, index]));
+          paragraphs.push(parseTable(item, schema, media, numbering, issues, [...path, rowIndex, cellIndex, index]));
         }
       });
       flushParagraphs();
@@ -410,20 +602,29 @@ function parseTable(element: XMLElement, schema: Schema, relationships: Readonly
   return schema.node('table', {}, rowNodes.length ? rowNodes : [schema.node('table_row', {}, [schema.node('table_cell', {}, [schema.node('paragraph')])])]);
 }
 
-function relationshipMap(root: XMLElement | undefined): ReadonlyMap<string, string> {
-  const map = new Map<string, string>();
+function relationshipMap(root: XMLElement | undefined): ReadonlyMap<string, ImportedRelationship> {
+  const map = new Map<string, ImportedRelationship>();
   if (!root) return map;
   for (const relationship of descendants(root, 'Relationship')) {
     const id = attr(relationship, 'Id');
     const target = attr(relationship, 'Target');
-    const mode = attr(relationship, 'TargetMode');
-    if (id && target && mode === 'External' && /\/hyperlink$/i.test(attr(relationship, 'Type') ?? '')) map.set(id, target);
+    const type = attr(relationship, 'Type') ?? '';
+    const kind = /\/hyperlink$/i.test(type) ? 'hyperlink' : /\/image$/i.test(type) ? 'image' : undefined;
+    if (id && target && kind) map.set(id, { target, type: kind, external: attr(relationship, 'TargetMode') === 'External' });
   }
   return map;
 }
 
 function requiredLimits(options: DOCXLimits): Required<DOCXLimits> {
-  const value = { ...DEFAULT_LIMITS, ...options };
+  const value: Required<DOCXLimits> = {
+    maxArchiveBytes: options.maxArchiveBytes ?? DEFAULT_LIMITS.maxArchiveBytes,
+    maxExpandedBytes: options.maxExpandedBytes ?? DEFAULT_LIMITS.maxExpandedBytes,
+    maxDocumentXmlBytes: options.maxDocumentXmlBytes ?? DEFAULT_LIMITS.maxDocumentXmlBytes,
+    maxMediaBytes: options.maxMediaBytes ?? DEFAULT_LIMITS.maxMediaBytes,
+    maxMediaFiles: options.maxMediaFiles ?? DEFAULT_LIMITS.maxMediaFiles,
+    maxXmlNodes: options.maxXmlNodes ?? DEFAULT_LIMITS.maxXmlNodes,
+    maxXmlDepth: options.maxXmlDepth ?? DEFAULT_LIMITS.maxXmlDepth,
+  };
   for (const [name, limit] of Object.entries(value)) if (!Number.isSafeInteger(limit) || limit <= 0) throw new RangeError(`${name} must be a positive safe integer.`);
   return value;
 }
@@ -433,9 +634,18 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
   if (bytes.byteLength > limits.maxArchiveBytes) throw new RangeError(`DOCX archive exceeds ${limits.maxArchiveBytes} bytes.`);
   let expanded = 0;
+  let mediaBytes = 0;
+  let mediaFiles = 0;
   const wanted = new Set(['word/document.xml', 'word/numbering.xml', 'word/_rels/document.xml.rels']);
   const archive = unzipSync(bytes, { filter: (file) => {
-    if (!wanted.has(file.name)) return false;
+    const isMedia = /^word\/media\/[^/]+$/i.test(file.name);
+    if (!wanted.has(file.name) && !isMedia) return false;
+    if (isMedia) {
+      mediaFiles += 1;
+      mediaBytes += file.originalSize;
+      if (mediaFiles > limits.maxMediaFiles) throw new RangeError(`DOCX contains more than ${limits.maxMediaFiles} selected media files.`);
+      if (mediaBytes > limits.maxMediaBytes) throw new RangeError(`DOCX media exceeds ${limits.maxMediaBytes} expanded bytes.`);
+    }
     expanded += file.originalSize;
     if (file.name === 'word/document.xml' && file.originalSize > limits.maxDocumentXmlBytes) throw new RangeError(`DOCX document.xml exceeds ${limits.maxDocumentXmlBytes} bytes.`);
     if (expanded > limits.maxExpandedBytes) throw new RangeError(`DOCX selected content exceeds ${limits.maxExpandedBytes} expanded bytes.`);
@@ -447,6 +657,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const documentXML = parseXML(strFromU8(documentBytes), limits);
   const numbering = readNumbering(parse('word/numbering.xml'));
   const relationships = relationshipMap(parse('word/_rels/document.xml.rels'));
+  const media: ImportMediaContext = { archive, relationships, options };
   const body = descendants(documentXML, 'body')[0];
   if (!body) throw new Error('Invalid DOCX: document body is missing.');
   const issues: DOCXIssue[] = [];
@@ -455,8 +666,17 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const flush = () => { if (paragraphs.length) blocks.push(...groupLists(paragraphs.splice(0), schema, issues)); };
   for (const [index, item] of elements(body).entries()) {
     const name = localName(item.name);
-    if (name === 'p') paragraphs.push(parseParagraph(item, schema, relationships, numbering, issues, [index]));
-    else if (name === 'tbl') { flush(); blocks.push(parseTable(item, schema, relationships, numbering, issues, [index])); }
+    if (name === 'p') {
+      const parsed = parseParagraph(item, schema, media, numbering, issues, [index]);
+      if (parsed.caption) {
+        flush();
+        const image = blocks.at(-1);
+        if (image?.type.name === 'image_super' && parsed.node.textContent.trim()) {
+          blocks[blocks.length - 1] = schema.node('image_super', { ...image.attrs, caption: parsed.node.textContent });
+        } else paragraphs.push({ node: parsed.node });
+      } else paragraphs.push(parsed);
+    }
+    else if (name === 'tbl') { flush(); blocks.push(parseTable(item, schema, media, numbering, issues, [index])); }
     else if (name !== 'sectPr') issues.push({ code: 'unsupported-block', severity: 'warning', message: `Unsupported Word block ${name} was omitted.`, path: [index] });
   }
   flush();
@@ -464,6 +684,105 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const document = schema.node('doc', {}, blocks.length ? blocks : fallback ? [fallback] : []);
   schema.validate(document);
   return Object.freeze({ document, report: report(issues) });
+}
+
+interface ExportedMedia {
+  readonly relationshipId: string;
+  readonly fileName: string;
+  readonly bytes: Uint8Array;
+  readonly contentType: DOCXImageContentType;
+}
+
+interface ExportContext {
+  readonly hyperlinks: Map<string, string>;
+  readonly mediaBySource: Map<string, ExportedMedia>;
+  readonly media: ExportedMedia[];
+  readonly issues: DOCXIssue[];
+  readonly options: DOCXExportOptions;
+  readonly maxMediaBytes: number;
+  readonly maxMediaFiles: number;
+  mediaBytes: number;
+  nextDrawingId: number;
+}
+
+function exportLimit(value: number | undefined, fallback: number, name: string): number {
+  const result = value ?? fallback;
+  if (!Number.isSafeInteger(result) || result <= 0) throw new RangeError(`${name} must be a positive safe integer.`);
+  return result;
+}
+
+function dataImage(source: string, maxBytes: number): { bytes: Uint8Array; contentType: DOCXImageContentType } | undefined {
+  const match = /^data:(image\/(?:png|jpeg|gif|webp));base64,([\s\S]+)$/i.exec(source.trim());
+  if (!match) return undefined;
+  const encodedLength = match[2]!.replace(/\s+/g, '').length;
+  if (Math.floor(encodedLength / 4) * 3 > maxBytes + 2) throw new RangeError(`DOCX export media exceeds ${maxBytes} bytes.`);
+  const bytes = decodeBase64(match[2]!);
+  if (!bytes) return undefined;
+  const contentType = match[1]!.toLowerCase() as DOCXImageContentType;
+  return { bytes, contentType };
+}
+
+function imageMedia(node: FountainNode, context: ExportContext, path: readonly number[]): ExportedMedia | undefined {
+  const source = String(node.attrs.src ?? '');
+  const existing = context.mediaBySource.get(source);
+  if (existing) return existing;
+  let supplied: DOCXExportImage | undefined;
+  const encoded = dataImage(source, context.maxMediaBytes);
+  if (encoded) supplied = encoded;
+  else {
+    try { supplied = context.options.resolveImage?.(source, node, path); }
+    catch {
+      context.issues.push({ code: 'image-resolver-failed', severity: 'warning', message: 'The host image resolver failed; readable image text was exported instead.', path });
+      return undefined;
+    }
+  }
+  if (!supplied) {
+    context.issues.push({ code: 'image-source-unavailable', severity: 'warning', message: 'DOCX export does not fetch image URLs. Supply resolveImage or use a raster data URL; readable image text was exported instead.', path });
+    return undefined;
+  }
+  const bytes = supplied.bytes instanceof Uint8Array ? new Uint8Array(supplied.bytes) : new Uint8Array(supplied.bytes);
+  const detected = rasterType(bytes);
+  if (!detected) {
+    context.issues.push({ code: 'unsupported-image-type', severity: 'warning', message: 'The supplied image was not a verified PNG, JPEG, GIF, or WebP file; readable image text was exported instead.', path });
+    return undefined;
+  }
+  if (supplied.contentType && supplied.contentType !== detected) {
+    context.issues.push({ code: 'image-type-mismatch', severity: 'warning', message: `The supplied ${supplied.contentType} label did not match its ${detected} bytes; readable image text was exported instead.`, path });
+    return undefined;
+  }
+  if (context.media.length >= context.maxMediaFiles) throw new RangeError(`DOCX export exceeds ${context.maxMediaFiles} media files.`);
+  if (context.mediaBytes + bytes.byteLength > context.maxMediaBytes) throw new RangeError(`DOCX export media exceeds ${context.maxMediaBytes} bytes.`);
+  const number = context.media.length + 1;
+  const media: ExportedMedia = Object.freeze({
+    relationshipId: `rIdImage${number}`,
+    fileName: `image${number}.${extensionFor(detected)}`,
+    bytes,
+    contentType: detected,
+  });
+  context.mediaBytes += bytes.byteLength;
+  context.media.push(media);
+  context.mediaBySource.set(source, media);
+  return media;
+}
+
+function imagePixels(value: unknown, fallback: number): number {
+  const match = /^(\d+(?:\.\d+)?)px$/.exec(String(value ?? ''));
+  const pixels = match ? Number(match[1]) : fallback;
+  return Math.max(1, Math.min(4096, Math.round(pixels)));
+}
+
+function imageRun(node: FountainNode, context: ExportContext, path: readonly number[]): string | undefined {
+  const media = imageMedia(node, context, path);
+  if (!media) return undefined;
+  const block = node.type.name === 'image_super';
+  const width = imagePixels(node.attrs.width, block ? 640 : 160);
+  const height = imagePixels(node.attrs.height, block ? 360 : 120);
+  const cx = width * 9525;
+  const cy = height * 9525;
+  const drawingId = context.nextDrawingId++;
+  const alt = xmlEscape(node.attrs.alt ?? '');
+  const title = xmlEscape(node.attrs.title ?? '');
+  return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${drawingId}" name="${xmlEscape(media.fileName)}" descr="${alt}" title="${title}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${xmlEscape(media.fileName)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${media.relationshipId}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
 }
 
 function runProperties(marks: readonly Mark[]): { xml: string; hyperlink?: string; unsupported: string[] } {
@@ -496,40 +815,44 @@ function runProperties(marks: readonly Mark[]): { xml: string; hyperlink?: strin
   return { xml: properties.length ? `<w:rPr>${properties.join('')}</w:rPr>` : '', hyperlink, unsupported };
 }
 
-function textRuns(node: FountainNode, relationships: Map<string, string>, issues: DOCXIssue[], path: readonly number[]): string {
+function textRuns(node: FountainNode, context: ExportContext, path: readonly number[]): string {
   return node.content.map((inline, index) => {
     if (inline.type.name === 'hard_break') return '<w:r><w:br/></w:r>';
+    if (inline.type.name === 'inline_image') {
+      const drawing = imageRun(inline, context, [...path, index]);
+      if (drawing) return drawing;
+    }
     if (!inline.isText) {
-      issues.push({ code: 'inline-fallback', severity: 'warning', message: `${inline.type.name} was exported as readable fallback text.`, path: [...path, index] });
+      context.issues.push({ code: 'inline-fallback', severity: 'warning', message: `${inline.type.name} was exported as readable fallback text.`, path: [...path, index] });
     }
     const value = inline.textContent;
     const { xml, hyperlink, unsupported } = runProperties(inline.marks);
-    unsupported.forEach((name) => issues.push({ code: 'unsupported-mark', severity: 'warning', message: `Word export omitted the ${name} mark.`, path: [...path, index] }));
+    unsupported.forEach((name) => context.issues.push({ code: 'unsupported-mark', severity: 'warning', message: `Word export omitted the ${name} mark.`, path: [...path, index] }));
     const preserve = /^\s|\s$|\s{2,}|\t/.test(value) ? ' xml:space="preserve"' : '';
     const pieces = value.split('\t').map((part, pieceIndex) => `${pieceIndex ? '<w:tab/>' : ''}${part ? `<w:t${preserve}>${xmlEscape(part)}</w:t>` : ''}`).join('');
     const run = `<w:r>${xml}${pieces}</w:r>`;
     if (!hyperlink) return run;
     if (!isSafeURL(hyperlink, { allowEmpty: false })) {
-      issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe hyperlink target was omitted from Word output while its text was preserved.', path: [...path, index] });
+      context.issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe hyperlink target was omitted from Word output while its text was preserved.', path: [...path, index] });
       return run;
     }
-    let id = [...relationships.entries()].find(([, target]) => target === hyperlink)?.[0];
-    if (!id) { id = `rId${relationships.size + 1}`; relationships.set(id, hyperlink); }
+    let id = [...context.hyperlinks.entries()].find(([, target]) => target === hyperlink)?.[0];
+    if (!id) { id = `rId${context.hyperlinks.size + 1}`; context.hyperlinks.set(id, hyperlink); }
     return `<w:hyperlink r:id="${id}" w:history="1">${run}</w:hyperlink>`;
   }).join('');
 }
 
-function paragraphXML(node: FountainNode, relationships: Map<string, string>, issues: DOCXIssue[], path: readonly number[], list?: { numId: number; level: number }): string {
+function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: { numId: number; level: number }): string {
   const properties: string[] = [];
   if (node.type.name === 'heading') properties.push(`<w:pStyle w:val="Heading${Math.max(1, Math.min(6, Number(node.attrs.level) || 1))}"/>`);
   if (node.type.name === 'code_block') properties.push('<w:pStyle w:val="Code"/>');
   const align = String(node.attrs.align ?? 'left');
   if (align !== 'left') properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
   if (list) properties.push(`<w:numPr><w:ilvl w:val="${list.level}"/><w:numId w:val="${list.numId}"/></w:numPr>`);
-  return `<w:p>${properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : ''}${textRuns(node, relationships, issues, path)}</w:p>`;
+  return `<w:p>${properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : ''}${textRuns(node, context, path)}</w:p>`;
 }
 
-function tableXML(node: FountainNode, relationships: Map<string, string>, issues: DOCXIssue[], path: readonly number[]): string {
+function tableXML(node: FountainNode, context: ExportContext, path: readonly number[]): string {
   const continuations = new Map<number, Array<{ column: number; colspan: number }>>();
   const rows = node.content.map((row, rowIndex) => {
     const pending = [...(continuations.get(rowIndex) ?? [])].sort((left, right) => left.column - right.column);
@@ -555,10 +878,10 @@ function tableXML(node: FountainNode, relationships: Map<string, string>, issues
         rowspan > 1 ? '<w:vMerge w:val="restart"/>' : '',
         cell.type.name === 'table_header' ? '<w:shd w:val="clear" w:color="auto" w:fill="EDE9FE"/>' : '',
       ].join('');
-      cells.push(`<w:tc><w:tcPr>${properties}</w:tcPr>${cell.content.map((block, blockIndex) => blockXML(block, relationships, issues, [...path, rowIndex, sourceIndex - 1, blockIndex])).join('') || '<w:p/>'}</w:tc>`);
+      cells.push(`<w:tc><w:tcPr>${properties}</w:tcPr>${cell.content.map((block, blockIndex) => blockXML(block, context, [...path, rowIndex, sourceIndex - 1, blockIndex])).join('') || '<w:p/>'}</w:tc>`);
       for (let offset = 1; offset < rowspan; offset += 1) {
         if (rowIndex + offset >= node.content.length) {
-          issues.push({ code: 'table-rowspan-clipped', severity: 'warning', message: 'A table rowspan extending beyond the final row was clipped.', path: [...path, rowIndex, sourceIndex - 1] });
+          context.issues.push({ code: 'table-rowspan-clipped', severity: 'warning', message: 'A table rowspan extending beyond the final row was clipped.', path: [...path, rowIndex, sourceIndex - 1] });
           break;
         }
         const target = continuations.get(rowIndex + offset) ?? [];
@@ -575,39 +898,51 @@ function tableXML(node: FountainNode, relationships: Map<string, string>, issues
   }).join('');
   const columnCount = Math.max(1, ...node.content.map((row) => row.content.reduce((total, cell) => total + Math.max(1, Number(cell.attrs.colspan) || 1), 0)));
   const grid = `<w:tblGrid>${Array.from({ length: columnCount }, () => '<w:gridCol w:w="2400"/>').join('')}</w:tblGrid>`;
-  return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/></w:tblPr>${grid}${rows}</w:tbl>`;
+  return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="C9C2D8"/><w:left w:val="single" w:sz="6" w:color="C9C2D8"/><w:bottom w:val="single" w:sz="6" w:color="C9C2D8"/><w:right w:val="single" w:sz="6" w:color="C9C2D8"/><w:insideH w:val="single" w:sz="6" w:color="D9D3E5"/><w:insideV w:val="single" w:sz="6" w:color="D9D3E5"/></w:tblBorders><w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr>${grid}${rows}</w:tbl>`;
 }
 
-function blockXML(node: FountainNode, relationships: Map<string, string>, issues: DOCXIssue[], path: readonly number[], level = 0): string {
+function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0): string {
   switch (node.type.name) {
-    case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, relationships, issues, path);
+    case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, context, path);
     case 'blockquote': return node.content.map((item, index) => {
-      const base = paragraphXML(item.type.name === 'paragraph' ? item : item.type.schema.node('paragraph', {}, [item]), relationships, issues, [...path, index]);
+      const base = paragraphXML(item.type.name === 'paragraph' ? item : item.type.schema.node('paragraph', {}, [item]), context, [...path, index]);
       return base.replace('<w:p>', '<w:p><w:pPr><w:pStyle w:val="Quote"/></w:pPr>');
     }).join('');
     case 'bullet_list': case 'ordered_list': {
       const numId = node.type.name === 'ordered_list' ? 2 : 1;
       if (node.type.name === 'ordered_list' && Number(node.attrs.start) !== 1) {
-        issues.push({ code: 'ordered-list-start-normalized', severity: 'warning', message: 'DOCX export currently normalizes a custom ordered-list start to 1.', path });
+        context.issues.push({ code: 'ordered-list-start-normalized', severity: 'warning', message: 'DOCX export currently normalizes a custom ordered-list start to 1.', path });
       }
       return node.content.map((item, index) => item.content.map((block, childIndex) => {
-        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, relationships, issues, [...path, index, childIndex], Math.min(8, level + 1));
-        return paragraphXML(block, relationships, issues, [...path, index, childIndex], { numId: block.type.name === 'paragraph' ? numId : numId, level });
+        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1));
+        return paragraphXML(block, context, [...path, index, childIndex], { numId, level });
       }).join('')).join('');
     }
-    case 'table': return tableXML(node, relationships, issues, path);
+    case 'table': return tableXML(node, context, path);
+    case 'image_super': {
+      const drawing = imageRun(node, context, path);
+      if (!drawing) return `<w:p><w:r><w:t>${xmlEscape(node.textContent)}</w:t></w:r></w:p>`;
+      const caption = String(node.attrs.caption ?? '').trim();
+      const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? String(node.attrs.align) : 'center';
+      return `<w:p><w:pPr><w:jc w:val="${align}"/><w:spacing w:before="120" w:after="80"/></w:pPr>${drawing}</w:p>${caption ? `<w:p><w:pPr><w:pStyle w:val="Caption"/></w:pPr><w:r><w:t>${xmlEscape(caption)}</w:t></w:r></w:p>` : ''}`;
+    }
     case 'horizontal_rule': return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/></w:pBdr></w:pPr></w:p>';
     default:
-      issues.push({ code: 'block-fallback', severity: 'warning', message: `${node.type.name} was exported as readable fallback text.`, path });
+      context.issues.push({ code: 'block-fallback', severity: 'warning', message: `${node.type.name} was exported as readable fallback text.`, path });
       return `<w:p><w:r><w:t>${xmlEscape(node.textContent)}</w:t></w:r></w:p>`;
   }
 }
 
-const CONTENT_TYPES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`;
+function contentTypes(media: readonly ExportedMedia[]): string {
+  const defaults = [...new Map(media.map((item) => [extensionFor(item.contentType), item.contentType])).entries()]
+    .map(([extension, contentType]) => `<Default Extension="${extension}" ContentType="${contentType}"/>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${defaults}<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`;
+}
 
 const ROOT_RELS = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>`;
 
-const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults/><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>${[1, 2, 3, 4, 5, 6].map((level) => `<w:style w:type="paragraph" w:styleId="Heading${level}"><w:name w:val="heading ${level}"/><w:basedOn w:val="Normal"/><w:qFormat/></w:style>`).join('')}<w:style w:type="paragraph" w:styleId="Quote"><w:name w:val="Quote"/><w:basedOn w:val="Normal"/></w:style><w:style w:type="paragraph" w:styleId="Code"><w:name w:val="Code"/><w:basedOn w:val="Normal"/></w:style><w:style w:type="character" w:styleId="CodeChar"><w:name w:val="Code Char"/></w:style><w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/></w:style></w:styles>`;
+const HEADING_SIZES = [64, 52, 44, 36, 30, 26] as const;
+const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr></w:style>${HEADING_SIZES.map((size, index) => `<w:style w:type="paragraph" w:styleId="Heading${index + 1}"><w:name w:val="heading ${index + 1}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="${index === 0 ? 360 : 240}" w:after="160"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:color w:val="181426"/><w:sz w:val="${size}"/><w:szCs w:val="${size}"/></w:rPr></w:style>`).join('')}<w:style w:type="paragraph" w:styleId="Quote"><w:name w:val="Quote"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="left"/><w:ind w:left="360" w:right="360"/><w:pBdr><w:left w:val="single" w:sz="18" w:space="12" w:color="7047FF"/></w:pBdr><w:spacing w:before="160" w:after="200"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:color w:val="51476A"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Caption"><w:name w:val="Caption"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:after="200"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:i/><w:color w:val="6B6378"/><w:sz w:val="19"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Code"><w:name w:val="Code"/><w:basedOn w:val="Normal"/><w:pPr><w:shd w:val="clear" w:fill="F2EFF8"/><w:spacing w:before="120" w:after="160"/></w:pPr><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:sz w:val="20"/></w:rPr></w:style><w:style w:type="character" w:styleId="CodeChar"><w:name w:val="Code Char"/><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:shd w:val="clear" w:fill="F2EFF8"/></w:rPr></w:style><w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/></w:style></w:styles>`;
 
 const NUMBERING = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="1">${Array.from({ length: 9 }, (_, level) => `<w:lvl w:ilvl="${level}"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/></w:lvl>`).join('')}</w:abstractNum><w:abstractNum w:abstractNumId="2">${Array.from({ length: 9 }, (_, level) => `<w:lvl w:ilvl="${level}"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%${level + 1}."/></w:lvl>`).join('')}</w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="1"/></w:num><w:num w:numId="2"><w:abstractNumId w:val="2"/></w:num></w:numbering>`;
 
@@ -615,17 +950,22 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   if (node.type.name !== 'doc') throw new TypeError('exportDOCX requires a document node.');
   node.type.schema.validate(node);
   const issues: DOCXIssue[] = [];
-  const relationships = new Map<string, string>();
-  const body = node.content.map((block, index) => blockXML(block, relationships, issues, [index])).join('');
+  const context: ExportContext = {
+    hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options,
+    maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
+    maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
+    mediaBytes: 0, nextDrawingId: 1,
+  };
+  const body = node.content.map((block, index) => blockXML(block, context, [index])).join('');
   const letter = options.page === 'letter';
   const section = `<w:sectPr><w:pgSz w:w="${letter ? 12240 : 11906}" w:h="${letter ? 15840 : 16838}"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr>`;
-  const documentXML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body>${body}${section}</w:body></w:document>`;
-  const documentRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdNumbering" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${[...relationships].map(([id, target]) => `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}</Relationships>`;
+  const documentXML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>${body}${section}</w:body></w:document>`;
+  const documentRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdNumbering" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map((item) => `<Relationship Id="${item.relationshipId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`;
   const now = new Date().toISOString();
   const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEscape(options.title)}</dc:title><dc:creator>${xmlEscape(options.creator ?? 'FountainJS')}</dc:creator><dc:description>${xmlEscape(options.description)}</dc:description><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`;
   const app = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>FountainJS</Application></Properties>`;
-  const bytes = zipSync({
-    '[Content_Types].xml': strToU8(CONTENT_TYPES),
+  const parts: Record<string, Uint8Array> = {
+    '[Content_Types].xml': strToU8(contentTypes(context.media)),
     '_rels/.rels': strToU8(ROOT_RELS),
     'word/document.xml': strToU8(documentXML),
     'word/styles.xml': strToU8(STYLES),
@@ -633,6 +973,8 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     'word/_rels/document.xml.rels': strToU8(documentRels),
     'docProps/core.xml': strToU8(core),
     'docProps/app.xml': strToU8(app),
-  }, { level: 6 });
+  };
+  for (const item of context.media) parts[`word/media/${item.fileName}`] = item.bytes;
+  const bytes = zipSync(parts, { level: 6 });
   return Object.freeze({ bytes, report: report(issues) });
 }

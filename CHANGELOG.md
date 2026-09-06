@@ -73,10 +73,19 @@
 - An isolated DOM-free `fountainjs-editor/docx` entry now imports and exports
   bounded Word OOXML in browsers and server runtimes. It preserves common
   paragraphs, headings, marks, links, nested lists, quotes, code, table spans,
-  header rows, and A4/Letter geometry; rejects oversized ZIP/XML input; and
-  returns immutable fidelity reports for tracked revisions and unsupported
-  content. The public Node conversion demo provides real DOCX download and
-  re-import controls, and the recorded human audit exercises the round trip.
+  header rows, A4/Letter geometry, and verified embedded PNG/JPEG/GIF/WebP
+  block or inline images with alternatives, dimensions, and captions. Import
+  and export enforce media byte/file limits; data images embed directly, while
+  application URLs require an explicit host-owned byte resolver and are never
+  fetched by Fountain. Oversized ZIP/XML/media input fails closed, and immutable
+  fidelity reports cover tracked revisions and unsupported content. The public
+  Node conversion demo provides real DOCX download and re-import controls, and
+  the recorded human audit exercises the round trip.
+- Export verification now includes a recorded side-by-side rendering of the
+  same document in Fountain and an independent DOCX viewer, plus a real A4 PDF
+  rasterized page by page with Poppler. The visual comparison corrected heading
+  scale, paragraph spacing, raster-image alignment, quote treatment, table
+  borders, and portable font fallback instead of relying on XML/text equality.
 - A DOM-free `fountainjs-editor/ai/generated-media` entry now provides
   inspectable private-by-default requests, bounded byte-backed candidates,
   generation progress, cancellation, provenance, and explicit accept/reject

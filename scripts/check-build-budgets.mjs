@@ -22,10 +22,10 @@ const limits = Object.freeze({
   // root browser bridge reuses the existing host-owned upload pipeline.
   'dist/ai-generated-media.js': 11 * kibibyte,
   'dist/ai-generated-media.cjs': 10 * kibibyte,
-  // Bounded OOXML import/export and its ZIP codec are isolated from every
-  // editor, React, collaboration, page, and core entry.
-  'dist/docx.js': 45 * kibibyte,
-  'dist/docx.cjs': 35 * kibibyte,
+  // Bounded OOXML import/export, verified embedded raster media, and the ZIP
+  // codec are isolated from every editor, React, collaboration, page, and core entry.
+  'dist/docx.js': 56 * kibibyte,
+  'dist/docx.cjs': 44 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -260,9 +260,11 @@ const limits = Object.freeze({
   // 19/15.5 KiB across one isolated entry and the optional React surface.
   // Generated-media review adds about 17/14 KiB across its isolated controller,
   // the normal upload bridge, and optional React review surface.
-  // DOM-free DOCX interchange adds about 43/33 KiB as an isolated opt-in entry,
-  // including the bundled ZIP codec. Existing consumer entries do not grow.
-  'all ESM runtime code': 1300 * kibibyte,
+  // DOM-free DOCX interchange, verified raster relationships, and explicit
+  // portable Word styles add about 56/44 KiB as an isolated opt-in entry,
+  // including the bundled ZIP codec.
+  // Existing consumer entries do not grow.
+  'all ESM runtime code': 1302 * kibibyte,
   'all CommonJS runtime code': 1090 * kibibyte,
 });
 

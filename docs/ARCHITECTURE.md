@@ -783,7 +783,11 @@ or application persistence. The bundled ZIP codec is reachable only through
 `fountainjs-editor/docx`; importing the core, root, React, collaboration, or
 page entries does not load it. Unsupported Word/Fountain structures are
 reported and either omitted or projected to readable text rather than becoming
-unvalidated pseudo-nodes. See [DOCX.md](DOCX.md).
+unvalidated pseudo-nodes. Embedded raster parts stay inside bounded
+`word/media` paths, are magic-byte checked, and become copied data URLs or a
+host-mapped safe source. Export embeds data-image bytes directly and delegates
+other sources to an optional synchronous host resolver; the converter never
+fetches or follows a relationship. See [DOCX.md](DOCX.md).
 
 Media insertion accepts remote URLs or browser `File` objects. Block images use
 an accessible NodeView for editable captions, load recovery, alignment, and

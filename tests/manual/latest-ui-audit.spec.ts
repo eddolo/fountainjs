@@ -172,5 +172,65 @@ test('human document-conversion journey: edit, download Word, re-import, and ins
   await capture(page, testInfo, '03-word-round-trip-inspected');
   await pause(page, 800);
 
+  const imageDownloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download embedded-image sample' }).click();
+  const imageDownload = await imageDownloadPromise;
+  const imageStream = await imageDownload.createReadStream();
+  const imageChunks: Buffer[] = [];
+  for await (const chunk of imageStream) imageChunks.push(Buffer.from(chunk));
+  await page.getByLabel('Import Word DOCX').setInputFiles({
+    name: 'embedded-image-proof.docx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: Buffer.concat(imageChunks),
+  });
+  await expect(page.getByText('Valid document · 3 top-level blocks · bounded DOCX import')).toBeVisible();
+  await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
+  await expect(page.locator('.headless-image-previews figcaption')).toHaveText('A verified raster image packaged inside the Word document.');
+  await capture(page, testInfo, '04-embedded-word-image-reimported');
+  await pause(page, 800);
+
+  expect(errors).toEqual([]);
+});
+
+test('human visual-export journey: compare Fountain with an independent DOCX render', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.goto('/browser-tests.html');
+  const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());
+  expect(summary).toMatchObject({ fidelity: 'bounded', issues: [], fountainImages: 1, docxImages: 1, docxPages: 1 });
+  const comparison = page.locator('#browser-docx-visual-comparison');
+  await expect(comparison.locator('[data-visual-fountain]')).toContainText('Visual export parity');
+  await expect(comparison.locator('[data-visual-docx]')).toContainText('Visual export parity');
+  await expect(comparison.locator('img')).toHaveCount(2);
+  await capture(page, testInfo, '01-fountain-and-independent-docx-render');
+  await pause(page, 1000);
+  expect(errors).toEqual([]);
+});
+
+test('human visual-export journey: render the paged editor as a real PDF', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.setHeader())).toBe(true);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.insertPageNumber())).toBe(true);
+  const preview = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.previewPhysical('a4')
+  ));
+  expect(preview.pageCount).toBeGreaterThan(1);
+  await page.locator('#browser-page-preview').scrollIntoViewIfNeeded();
+  await capture(page, testInfo, '01-fountain-a4-page-preview');
+
+  const pdfPath = testInfo.outputPath('fountain-a4-export.pdf');
+  await page.emulateMedia({ media: 'print' });
+  await page.pdf({ path: pdfPath, printBackground: true, preferCSSPageSize: true });
+  await page.emulateMedia({ media: 'screen' });
+  await testInfo.attach('fountain-a4-export', {
+    path: pdfPath,
+    contentType: 'application/pdf',
+  });
   expect(errors).toEqual([]);
 });

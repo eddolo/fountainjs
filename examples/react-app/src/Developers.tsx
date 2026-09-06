@@ -404,12 +404,16 @@ const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
 const docxBoundaryExample = `import { exportDOCX, importDOCX } from 'fountainjs-editor/docx'
 
 // Browser, Node.js, Bun, Deno, or a worker; no DOM or Word process required.
-const imported = importDOCX(await uploadedFile.arrayBuffer(), schema)
+const imported = importDOCX(await uploadedFile.arrayBuffer(), schema, {
+  createImageSource: image => mediaStore.put(image.bytes, image.contentType),
+})
 render(imported.document)
 showConversionDetails(imported.report.issues)
 
 const generated = exportDOCX(editor.state.doc, {
   title: 'Release brief', creator: currentUser.name, page: 'a4',
+  // Return bytes already authorized by your application; Fountain never fetches.
+  resolveImage: source => authorizedMedia.read(source),
 })
 await saveFile('release-brief.docx', generated.bytes)
 
@@ -834,7 +838,7 @@ function Developers() {
             <p>Markdown accepts titled inline links and full, collapsed, or shortcut references; recursive quotes; loose nested lists; and aligned tables with escaped pipes. Reference export is stable and deduplicated. Because Markdown cannot encode every schema, <code>exportWithReport</code> returns path-based losses for projected nodes, marks, and attributes instead of silently pretending the conversion is exact. The callback is observational and cannot break serialization.</p>
             <Code>{markdownBoundaryExample}</Code>
             <h3>Word files use a bounded, DOM-free OOXML boundary</h3>
-            <p>The optional <code>fountainjs-editor/docx</code> entry imports and exports real <code>.docx</code> packages in browsers and server runtimes without Word, <code>DOMParser</code>, jsdom, or a conversion SaaS. It preserves common headings, paragraphs, alignment, bold/italic/underline/strike, safe links, colour/highlight, hard breaks, nested bullet and numbered lists, quotes, code, tables, merged cells, and A4/Letter page geometry. Resource limits reject oversized archives and XML trees before they enter the schema. Tracked insertions are accepted, tracked deletions are omitted, and unsupported media/custom nodes become readable fallback text; every such choice appears in the immutable report. Try the real upload/download flow in the <a href="./demos/node-markdown.html">server document conversion demo</a>, then read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCX.md">support and security contract</a>.</p>
+            <p>The optional <code>fountainjs-editor/docx</code> entry imports and exports real <code>.docx</code> packages in browsers and server runtimes without Word, <code>DOMParser</code>, jsdom, or a conversion SaaS. It preserves common headings, paragraphs, alignment, bold/italic/underline/strike, safe links, colour/highlight, hard breaks, nested bullet and numbered lists, quotes, code, tables, merged cells, A4/Letter geometry, and verified embedded PNG/JPEG/GIF/WebP block or inline images with alternative text, dimensions, and captions. Resource limits reject oversized archives, media, and XML trees before they enter the schema. Raster data URLs embed directly; for application URLs, the host may supply already-authorized bytes through <code>resolveImage</code> because Fountain never fetches. Tracked insertions are accepted, tracked deletions are omitted, and unsupported or external content becomes readable fallback text; every such choice appears in the immutable report. Try the real upload/download flow in the <a href="./demos/node-markdown.html">server document conversion demo</a>, then read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCX.md">support and security contract</a>.</p>
             <Code>{docxBoundaryExample}</Code>
             <Code>{formatExample}</Code>
             <p>Block images support editable captions, alt text, titles, alignment, responsive source sets, explicit dimensions, load recovery, and pointer, touch, or keyboard resizing. <code>inline_image</code> is a separate typed node that can sit between text. Both are selectable and portable through JSON and HTML.</p>

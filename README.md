@@ -1038,9 +1038,12 @@ interoperability boundaries.
 
 The optional `fountainjs-editor/docx` entry imports and exports bounded Word
 OOXML in browsers and pure Node, with no Word process, fake DOM, or conversion
-service. It preserves common document structure and returns explicit issues for
-tracked revisions, media, custom content, or formatting outside its declared
-subset. Fountain JSON remains the exact source of truth. See the
+service. It preserves common document structure plus verified embedded raster
+images and returns explicit issues for tracked revisions, external/unsupported
+media, custom content, or formatting outside its declared subset. Data-image
+sources embed directly; hosts can resolve already-authorized URL bytes through
+an explicit callback, while the converter itself never fetches. Fountain JSON
+remains the exact source of truth. See the
 [DOCX interchange contract](docs/DOCX.md). Measured page preview and print/PDF
 output remain isolated in the `pages` entries; ODT and EPUB are not yet claimed.
 

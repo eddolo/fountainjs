@@ -222,8 +222,19 @@ tracked revisions and unsupported content produce immutable path-bearing
 reports. ZIP/XML resource limits, packed ESM/CommonJS execution, package budgets,
 independent `python-docx` compatibility checks, and a recorded browser
 download/re-import journey gate the work. The existing page pipeline supplies
-measured A4/Letter/custom print and inspected Chromium PDF output. Embedded
-DOCX media and deeper Word fidelity remain active; ODT and EPUB are not claimed.
+measured A4/Letter/custom print and inspected Chromium PDF output. Verified
+embedded PNG/JPEG/GIF/WebP import/export now has resource limits, safe default
+data URLs, host-controlled URL resolution, captions, dimensions, relationship
+deduplication, and explicit external/unsupported fallback. Deeper Word fidelity
+remains active; ODT and EPUB are not claimed. The current visual gate renders a
+generated DOCX independently beside its Fountain source and records a real A4
+PDF that is rasterized page by page with Poppler. That audit already caught and
+corrected Word heading scale, paragraph spacing, image alignment, quote styling,
+table borders, and font fallback that semantic round trips could not detect.
+Before claiming comparative export superiority, build a neutral representative
+corpus and run identical documents through Fountain and competing conversion
+stacks; independently render every DOCX/PDF result and score content survival,
+layout, reported loss, local/offline execution, and custom-node handling.
 The bounded DOCX batch passed 665 behavioral tests, packed all-entry package
 checks, a real Lean 4.30 integration check, and the complete 379-pass/14-skip
 Chromium/Firefox/WebKit/mobile matrix in
@@ -477,6 +488,15 @@ performance, and browser behavior:
 - vertical Japanese writing with logical selection/navigation evidence;
 - spell-check, dictionaries, thesaurus, and replaceable language-service hooks;
 - YAML frontmatter and raw/visual Markdown switching;
+- a post-parity language-neutral Fountain protocol: specify versioned document
+  JSON, schemas, stable identities, logical selections, operations/steps,
+  mappings, validation failures, comments, revisions, and collaboration payloads
+  without relying on JavaScript object identity or runtime-only behavior.
+  FountainJS remains the reference implementation. A Node/IPC/HTTP service can
+  provide the first cross-language bridge; React Native/Flutter bridges,
+  Python/Rust/server bindings, WASM, and independent Swift/Kotlin/other engines
+  are demand-led later projects, not current promises. Interoperable JSON alone
+  must never be described as another language natively executing Fountain;
 - post-parity workspace adapters: Monaco or CodeMirror code-cell NodeViews,
   Jupyter-kernel execution, and xterm/PTY terminal blocks. Fountain owns the
   portable document, identity, review, collaboration, and output-node boundary;

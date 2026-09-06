@@ -296,9 +296,9 @@ export class CampaignEditor {
     host: 'Node.js',
     surface: 'Headless core + formats',
     runtime: 'headless',
-    summary: 'DOM-free Markdown, standards-oriented HTML, and bounded Word DOCX conversion to validated FountainJS documents.',
+    summary: 'DOM-free Markdown, standards-oriented HTML, and bounded Word DOCX conversion—including verified embedded images—to validated FountainJS documents.',
     boundary: 'Only the document/schema/format modules run; no editor view or frontend framework is required.',
-    capabilities: ['Headless schema', 'Pure-Node HTML without jsdom', 'Word DOCX import/export', 'Reference links + titles', 'Aligned tables', 'Explicit conversion reports'],
+    capabilities: ['Headless schema', 'Pure-Node HTML without jsdom', 'Word DOCX + embedded images', 'Reference links + titles', 'Aligned tables', 'Explicit conversion reports'],
     markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$, [reference links][formats], and Lean source in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n```lean\nexample : 1 = 1 := rfl\n```\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n| Boundary | Behavior |\n| :--- | :---: |\n| Markdown \\| text | Portable |\n\n> The portable document stays in the middle.\n>\n> - Nested structure stays nested.\n> - Reference titles survive.\n\n[formats]: https://github.com/eddolo/fountainjs/blob/master/docs/FORMATS.md "Format boundary guide"',
     content: doc(paragraph(text('Headless Markdown content'))),
     code: `import {
@@ -318,8 +318,13 @@ const importedHTML = ServerHTMLImporter.parseWithReport(htmlSource, schema)
 
 // The same bounded OOXML entry runs in Node and browsers.
 const { importDOCX, exportDOCX } = await import('fountainjs-editor/docx')
-const importedWord = importDOCX(uploadedBytes, schema)
-const generatedWord = exportDOCX(document, { title: 'Release notes' })
+const importedWord = importDOCX(uploadedBytes, schema, {
+  createImageSource: image => mediaStore.put(image.bytes, image.contentType),
+})
+const generatedWord = exportDOCX(document, {
+  title: 'Release notes',
+  resolveImage: source => authorizedMedia.read(source),
+})
 
 await database.save(document.toJSON())
 const { markdown, losses } = MarkdownExporter.exportWithReport(document, {

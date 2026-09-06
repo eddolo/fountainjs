@@ -63,6 +63,36 @@ import { SitePageLink } from './SitePageLink';
 
 type OutputFormat = 'json' | 'markdown' | 'html';
 
+function createDOCXSampleImage(): string {
+  const canvas = document.createElement('canvas');
+  canvas.width = 640;
+  canvas.height = 360;
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('This browser cannot create the DOCX sample image.');
+  const gradient = context.createLinearGradient(0, 0, 640, 360);
+  gradient.addColorStop(0, '#6c43ff');
+  gradient.addColorStop(1, '#2e1c70');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 640, 360);
+  context.fillStyle = '#ffffff';
+  context.font = '700 44px sans-serif';
+  context.fillText('FountainJS', 52, 155);
+  context.font = '24px sans-serif';
+  context.fillText('embedded DOCX image', 52, 205);
+  return canvas.toDataURL('image/png');
+}
+
+function documentImages(root: Node | undefined): Node[] {
+  if (!root) return [];
+  const result: Node[] = [];
+  const visit = (node: Node) => {
+    if (node.type.name === 'image_super' || node.type.name === 'inline_image') result.push(node);
+    node.content.forEach(visit);
+  };
+  visit(root);
+  return result;
+}
+
 const demoStatusWidget = defineWidget({
   name: 'status_panel',
   label: 'Incident status',
@@ -412,6 +442,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     error: string;
     fileName: string;
   }>({ document: undefined, details: 0, error: '', fileName: '' });
+  const [docxExportStatus, setDOCXExportStatus] = useState('');
   useEffect(() => {
     if (inputFormat !== 'html') return undefined;
     let active = true;
@@ -429,6 +460,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const parsed = inputFormat === 'html' ? htmlParsed : inputFormat === 'docx'
     ? { ...docxParsed, loading: false }
     : markdownParsed;
+  const importedImages = useMemo(() => documentImages(inputFormat === 'docx' ? docxParsed.document : undefined), [docxParsed.document, inputFormat]);
   const source = inputFormat === 'html' ? htmlSource : markdownSource;
   const setSource = inputFormat === 'html' ? setHTMLSource : setMarkdownSource;
   const detailLabel = inputFormat === 'docx'
@@ -436,16 +468,28 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     : inputFormat === 'html'
     ? `${parsed.details ? `${parsed.details} recovered HTML issue${parsed.details === 1 ? '' : 's'}` : 'no recovered HTML issues'}`
     : `${parsed.details ? `${parsed.details} projected Markdown detail${parsed.details === 1 ? '' : 's'}` : 'no reported Markdown losses'}`;
-  const downloadDOCX = () => {
-    if (!parsed.document) return;
-    const result = exportDOCX(parsed.document, { title: demo.title, creator: 'FountainJS demo' });
+  const downloadDOCX = (sourceDocument = parsed.document, fileName = 'fountainjs-document.docx') => {
+    if (!sourceDocument) return;
+    const result = exportDOCX(sourceDocument, { title: demo.title, creator: 'FountainJS demo' });
     const url = URL.createObjectURL(new Blob([result.bytes as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }));
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = 'fountainjs-document.docx';
+    anchor.download = fileName;
     anchor.click();
     URL.revokeObjectURL(url);
+    setDOCXExportStatus(result.report.issues.length
+      ? `Downloaded with ${result.report.issues.length} reported conversion detail${result.report.issues.length === 1 ? '' : 's'}.`
+      : 'Downloaded with bounded conversion and no reported losses.');
   };
+  const downloadImageSample = () => downloadDOCX(schema.node('doc', {}, [
+    schema.node('heading', { level: 1, align: 'left' }, [schema.text('Embedded image handoff')]),
+    schema.node('image_super', {
+      src: createDOCXSampleImage(), alt: 'FountainJS violet sample', title: 'Embedded raster proof',
+      width: '320px', height: '180px', align: 'center', srcset: '', sizes: '', loading: 'lazy', decoding: 'async',
+      caption: 'A verified raster image packaged inside the Word document.',
+    }),
+    schema.node('paragraph', {}, [schema.text('Re-import this file to inspect the image node, dimensions, alternative text, and caption.')]),
+  ]), 'fountainjs-embedded-image.docx');
 
   return <div className="demo-workspace">
     <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>{inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
@@ -457,7 +501,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       } catch (error) {
         setDOCXParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), fileName: file.name });
       }
-    }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={downloadDOCX}>Download as Word DOCX</button><span>Uses the same DOM-free import/export entry in browsers and servers.</span></div><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
+    }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={() => downloadDOCX()}>Download as Word DOCX</button><button onClick={downloadImageSample}>Download embedded-image sample</button><span>Uses the same DOM-free import/export entry in browsers and servers. Fountain never fetches image URLs.</span></div>{docxExportStatus && <p className="headless-status" role="status">{docxExportStatus}</p>}{importedImages.length > 0 && <div className="headless-image-previews" aria-label="Imported DOCX image previews">{importedImages.map((image, index) => <figure key={`${String(image.attrs.src).slice(0, 40)}-${index}`}><img src={String(image.attrs.src)} alt={String(image.attrs.alt)} /><figcaption>{String(image.attrs.caption || image.attrs.alt || `Image ${index + 1}`)}</figcaption></figure>)}</div>}<p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
     <OutputPanel document={parsed.document} />
   </div>;
 }

@@ -1960,20 +1960,29 @@ const imported = importDOCX(bytes, schema, {
   maxArchiveBytes: 25 * 1024 * 1024,
   maxExpandedBytes: 80 * 1024 * 1024,
   maxDocumentXmlBytes: 25 * 1024 * 1024,
+  maxMediaBytes: 32 * 1024 * 1024,
+  maxMediaFiles: 100,
   maxXmlNodes: 500_000,
   maxXmlDepth: 128,
+  createImageSource: image => mediaStore.put(image.bytes, image.contentType),
 })
 
 const generated = exportDOCX(editor.state.doc, {
   title: 'Project brief', creator: 'Example product', page: 'a4',
+  resolveImage: source => authorizedMedia.read(source),
 })
 ```
 
 `importDOCX(input, schema, options?)` accepts `Uint8Array` or `ArrayBuffer`,
-extracts only the document, numbering, and document-relationship parts, builds
-content through the receiving schema, and returns `{ document, report }`.
+extracts only the document, numbering, document-relationship, and bounded
+`word/media` parts, builds content through the receiving schema, and returns
+`{ document, report }`. Verified raster images become bounded data URLs by
+default; `createImageSource` can persist their copied bytes and return another
+safe schema URL.
 `exportDOCX(document, options?)` requires a validated Fountain `doc` node and
-returns `{ bytes, report }`. Reports contain immutable path-bearing issues and
+returns `{ bytes, report }`. Raster data URLs embed directly; the optional
+`resolveImage` supplies already-authorized bytes for other sources because the
+converter never fetches URLs. Reports contain immutable path-bearing issues and
 a `bounded` or `lossy` fidelity value. See [DOCX.md](DOCX.md) for the precise
 supported subset, fallback policy, resource limits, and security boundary.
 
