@@ -3181,6 +3181,67 @@ test('moves a selected top-level block through native drag data', async ({ page 
   ))).toEqual(['Alpha Beta', 'Second paragraph', '', '']);
 });
 
+test('shows a host-replaceable drop cursor for inline text and atomic block targets', async ({ page }) => {
+  const result = await page.evaluate(() => {
+    const editor = document.querySelector<HTMLElement>('[aria-label="Browser contract editor"]');
+    const text = editor?.querySelector<HTMLElement>('[data-fountain-text-path="0.0"]');
+    if (!editor || !text) throw new Error('Missing general drop-cursor text fixture.');
+    const transfer = new DataTransfer();
+    transfer.setData('text/plain', 'portable text');
+    const bounds = text.getBoundingClientRect();
+    text.dispatchEvent(new DragEvent('dragover', {
+      bubbles: true,
+      cancelable: true,
+      clientX: bounds.left + Math.min(12, bounds.width / 2),
+      clientY: bounds.top + bounds.height / 2,
+      dataTransfer: transfer,
+    }));
+    const cursor = document.querySelector<HTMLElement>('[data-fountain-drop-cursor]');
+    const inline = {
+      orientation: cursor?.dataset.fountainDropCursor,
+      path: cursor?.dataset.fountainDropPath,
+      hidden: cursor?.hidden,
+      ariaHidden: cursor?.getAttribute('aria-hidden'),
+    };
+    editor.dispatchEvent(new DragEvent('dragleave', { bubbles: true, relatedTarget: document.body }));
+    return { inline, cleared: cursor?.hidden };
+  });
+  expect(result).toEqual({
+    inline: { orientation: 'inline', path: '0', hidden: false, ariaHidden: 'true' },
+    cleared: true,
+  });
+
+  await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const index = editor.state.doc.childCount - 1;
+    editor.dispatch(editor.state.createTransaction().replace(index, index, [editor.state.schema.node('horizontal_rule')]));
+  });
+  const block = await page.evaluate(() => {
+    const editorDom = document.querySelector<HTMLElement>('[aria-label="Browser contract editor"]');
+    const atom = editorDom?.querySelector<HTMLElement>('hr[data-fountain-path]');
+    if (!editorDom || !atom) throw new Error('Missing general drop-cursor atom fixture.');
+    const transfer = new DataTransfer();
+    transfer.setData('text/html', '<p>portable</p>');
+    const bounds = atom.getBoundingClientRect();
+    const over = new DragEvent('dragover', {
+      bubbles: true,
+      cancelable: true,
+      clientX: bounds.left + bounds.width / 2,
+      clientY: bounds.bottom - 1,
+      dataTransfer: transfer,
+    });
+    atom.dispatchEvent(over);
+    const cursor = editorDom.parentElement?.querySelector<HTMLElement>('[data-fountain-drop-cursor]');
+    return {
+      orientation: cursor?.dataset.fountainDropCursor,
+      position: cursor?.dataset.fountainDropPosition,
+      path: cursor?.dataset.fountainDropPath,
+      hidden: cursor?.hidden,
+    };
+  });
+  expect(block).toEqual({ orientation: 'block', position: 'before', path: expect.any(String), hidden: false });
+});
+
 test('reorders nested blocks with accessible controls, drop indicators, drag, and undo', async ({ page }) => {
   await page.evaluate(() => {
     const { editor } = (globalThis as any).fountainBrowserTest;

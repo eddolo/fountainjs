@@ -13,7 +13,7 @@ export interface FountainEditorProps extends EditorViewOptions {
 }
 
 export const FountainEditor = forwardRef<FountainEditorHandle, FountainEditorProps>(function FountainEditor(
-  { editor, containerClassName, ariaLabel, className, placeholder, attributes, imageUpload, assetUpload, maxInlineImageBytes, blockHandles, virtualization, onError },
+  { editor, containerClassName, ariaLabel, className, placeholder, attributes, imageUpload, assetUpload, maxInlineImageBytes, blockHandles, dropCursor, virtualization, onError, paste },
   ref,
 ) {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -27,14 +27,14 @@ export const FountainEditor = forwardRef<FountainEditorHandle, FountainEditorPro
   useEffect(() => {
     if (!editor || !mountRef.current) return;
     const view = new EditorView(mountRef.current, editor, {
-      ariaLabel, className, placeholder, attributes, imageUpload, assetUpload, maxInlineImageBytes, blockHandles, virtualization, onError,
+      ariaLabel, className, placeholder, attributes, imageUpload, assetUpload, maxInlineImageBytes, blockHandles, dropCursor, virtualization, onError, paste,
     });
     viewRef.current = view;
     return () => {
       view.destroy();
       viewRef.current = null;
     };
-  }, [editor, ariaLabel, className, placeholder, attributes, imageUpload, assetUpload, maxInlineImageBytes, blockHandles, virtualization, onError]);
+  }, [editor, ariaLabel, className, placeholder, attributes, imageUpload, assetUpload, maxInlineImageBytes, blockHandles, dropCursor, virtualization, onError, paste]);
 
   return <div className={containerClassName} data-fountain-root ref={mountRef} />;
 });

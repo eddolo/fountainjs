@@ -8,6 +8,8 @@
   view update that occurs before the browser's asynchronous `toggle` event.
   Selection-only table-of-contents updates also preserve the existing index
   when the active heading is unchanged.
+- React's `FountainEditor` now forwards its declared source-aware `paste`
+  policy to the DOM view instead of silently dropping that option.
 
 - Documents using `StarterKit` now retain a real editable paragraph after a
   terminal table, media item, divider, widget, quote, list, or other non-text
@@ -57,6 +59,12 @@
   breaking ESM import or silently inflating release assets.
 
 ### Added
+
+- A default-on, framework-neutral general drop cursor now renders an inline
+  caret or atomic/block boundary for native drags carrying data.
+  It is state/selection-neutral, yields to schema-valid block reordering, is
+  forwarded by React and Custom Elements, and can be restyled, replaced, or
+  disabled by the host.
 
 - Isolated text-integrity entries now provide DOM-free Unicode/code-point,
   UTF-8, line-ending, normalization, invisible-character, and invalid-surrogate

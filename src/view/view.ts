@@ -31,6 +31,7 @@ import {
 } from './dom-renderer';
 import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
+import { DropCursorManager, type DropCursorOptions } from './drop-cursor';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import type { ExternalPasteOptions } from './paste';
 import { SelectionHandler } from './selection-handler';
@@ -58,6 +59,8 @@ export interface EditorViewOptions {
   maxInlineImageBytes?: number;
   /** Enables framework-neutral drag, keyboard, and touch block controls. */
   blockHandles?: boolean | BlockHandleOptions;
+  /** Native drag feedback. Enabled by default; pass false to replace or remove it. */
+  dropCursor?: boolean | DropCursorOptions;
   /** Opt-in viewport rendering for very large documents. */
   virtualization?: boolean | EditorViewVirtualizationOptions;
   onError?: (error: unknown) => void;
@@ -102,6 +105,7 @@ export class EditorView {
   private readonly selections: SelectionHandler;
   private readonly input: InputManager;
   private readonly blockHandles?: BlockHandleManager;
+  private readonly dropCursor?: DropCursorManager;
   private readonly unsubscribe: () => void;
   private nodeViews: MountedNodeView[] = [];
   private documentNodes: MountedDocumentNode[] = [];
@@ -148,6 +152,9 @@ export class EditorView {
     this.blockHandles = options.blockHandles
       ? new BlockHandleManager(mount, this.dom, editor, options.blockHandles === true ? {} : options.blockHandles)
       : undefined;
+    this.dropCursor = options.dropCursor === false
+      ? undefined
+      : new DropCursorManager(mount, this.dom, options.dropCursor === true || options.dropCursor === undefined ? {} : options.dropCursor);
     this.decorations = this.collectDecorations(editor.state);
     this.render(editor.state.doc, this.decorations);
     this.selections = new SelectionHandler(editor, this.dom, this.shouldStopNodeViewEvent);
@@ -158,6 +165,7 @@ export class EditorView {
       onError: options.onError,
       shouldStopEvent: this.shouldStopNodeViewEvent,
       blockHandles: this.blockHandles,
+      dropCursor: this.dropCursor,
       prepareClipboard: this.prepareVirtualClipboard,
       paste: options.paste,
     });
@@ -230,6 +238,7 @@ export class EditorView {
     this.input.destroy();
     this.selections.destroy();
     this.blockHandles?.destroy();
+    this.dropCursor?.destroy();
     this.destroyNodeViews();
     this.dom.remove();
   }

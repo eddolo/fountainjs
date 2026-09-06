@@ -446,13 +446,20 @@ performance, and browser behavior:
   that its real rich editor uses Tiptap/ProseMirror, and present this as a
   recognizable replacement-workflow test rather than a visual clone;
 - table captions and advanced image/text wrapping;
-- cross-editor schema-aware drag and drop plus a general inline/block drop cursor;
+- cross-editor schema-aware drag and drop; the local general inline/block drop
+  cursor is implemented under UI-06 and remains subject to release evidence;
 - footnote/endnote interchange independent of paged rendering;
 - configurable soft limits in addition to enforced hard character limits;
 - iframe/isolated-surface editing and host focus coordination;
 - vertical Japanese writing with logical selection/navigation evidence;
 - spell-check, dictionaries, thesaurus, and replaceable language-service hooks;
-- YAML frontmatter and raw/visual Markdown switching.
+- YAML frontmatter and raw/visual Markdown switching;
+- post-parity workspace adapters: Monaco or CodeMirror code-cell NodeViews,
+  Jupyter-kernel execution, and xterm/PTY terminal blocks. Fountain owns the
+  portable document, identity, review, collaboration, and output-node boundary;
+  hosts own process/kernel access, credentials, authorization, sandboxing, and
+  network transport. Research a Fountain-native code surface only if concrete
+  adapter limitations justify a separate Monaco-class engineering programme.
 
 ## Broader editor landscape audit
 

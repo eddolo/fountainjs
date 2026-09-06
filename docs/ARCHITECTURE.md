@@ -376,6 +376,14 @@ movement, and Escape release project the same state used by pointer dragging.
 Resize/scroll observation affects only transient positioning. React and the Web
 Component forward the same `EditorView` option rather than reimplementing it.
 
+`DropCursorManager` is the independent general-drag presentation concern.
+`InputManager` tells it about accepted native drag targets; it resolves browser
+caret geometry for inline text and block geometry for atomic targets, then
+mounts one inert overlay outside `contenteditable`. It does not modify state,
+selection, clipboard data, or drop behavior. During path-based block moves the
+schema-aware `BlockHandleManager` indicator takes precedence. Hosts may disable,
+style, wrap, or replace this view concern without touching core.
+
 Rendered text is wrapped with `data-fountain-text-path`; block DOM carries node type and path attributes. These anchors let selection synchronization survive marks and nested DOM wrappers. The document—not browser-generated HTML—still decides the resulting state.
 
 The optional virtual view keeps this same DOM contract for mounted top-level

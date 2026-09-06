@@ -43,6 +43,7 @@ import {
   type BlockHandleManager,
 } from './block-handles';
 import type { SelectionHandler } from './selection-handler';
+import type { DropCursorManager } from './drop-cursor';
 import {
   createExternalPasteReport,
   detectExternalPasteSource,
@@ -127,6 +128,7 @@ export interface InputManagerOptions {
   onError?: (error: unknown) => void;
   shouldStopEvent?: (event: Event) => boolean;
   blockHandles?: BlockHandleManager;
+  dropCursor?: DropCursorManager;
   /** Mounts any virtualized selection content before the native clipboard reads it. */
   prepareClipboard?: () => void;
   paste?: ExternalPasteOptions;
@@ -155,6 +157,7 @@ export class InputManager {
     dom.addEventListener('dragover', this.onDragOver);
     dom.addEventListener('dragstart', this.onDragStart);
     dom.addEventListener('dragend', this.onDragEnd);
+    dom.addEventListener('dragleave', this.onDragLeave);
     dom.addEventListener('drop', this.onDrop);
     dom.addEventListener('compositionstart', this.onCompositionStart);
     dom.addEventListener('compositionend', this.onCompositionEnd);
@@ -176,6 +179,7 @@ export class InputManager {
     this.dom.removeEventListener('dragover', this.onDragOver);
     this.dom.removeEventListener('dragstart', this.onDragStart);
     this.dom.removeEventListener('dragend', this.onDragEnd);
+    this.dom.removeEventListener('dragleave', this.onDragLeave);
     this.dom.removeEventListener('drop', this.onDrop);
     this.dom.removeEventListener('compositionstart', this.onCompositionStart);
     this.dom.removeEventListener('compositionend', this.onCompositionEnd);
@@ -605,8 +609,14 @@ export class InputManager {
   };
 
   private onDragOver = (event: DragEvent): void => {
-    if (this.options.shouldStopEvent?.(event)) return;
     const types = Array.from(event.dataTransfer?.types ?? []);
+    if (this.options.shouldStopEvent?.(event)) {
+      const hasData = types.length > 0 || (event.dataTransfer?.items.length ?? 0) > 0;
+      if (this.editor.editable && hasData) {
+        this.options.dropCursor?.show(event);
+      }
+      return;
+    }
     const sourcePath = this.options.blockHandles?.draggedPath ?? this.draggedNodePath;
     const internal = sourcePath !== undefined
       || types.includes(FOUNTAIN_NODE_DRAG_TYPE)
@@ -617,8 +627,14 @@ export class InputManager {
     if (this.editor.editable && (internal || uploadable)) {
       event.preventDefault();
       if (event.dataTransfer) event.dataTransfer.dropEffect = internal ? 'move' : 'copy';
-      if (internal && sourcePath) this.options.blockHandles?.showDrop(event, sourcePath);
+      if (internal && sourcePath && this.options.blockHandles) {
+        this.options.dropCursor?.clear();
+        this.options.blockHandles.showDrop(event, sourcePath);
+      } else this.options.dropCursor?.show(event);
+      return;
     }
+    const general = types.length > 0 || (event.dataTransfer?.items.length ?? 0) > 0;
+    if (this.editor.editable && general) this.options.dropCursor?.show(event);
   };
 
   private onDragStart = (event: DragEvent): void => {
@@ -640,12 +656,19 @@ export class InputManager {
   private onDragEnd = (): void => {
     this.draggedNodePath = undefined;
     this.options.blockHandles?.clearDrag();
+    this.options.dropCursor?.clear();
     this.suppressNativeDragDeleteUntil = Math.min(this.suppressNativeDragDeleteUntil, Date.now() + 1_000);
     this.dom.querySelectorAll<HTMLElement>('[data-fountain-dragging]')
       .forEach((element) => { delete element.dataset.fountainDragging; });
   };
 
+  private onDragLeave = (event: DragEvent): void => {
+    const next = event.relatedTarget;
+    if (!(next instanceof globalThis.Node) || !this.dom.contains(next)) this.options.dropCursor?.clear();
+  };
+
   private onDrop = (event: DragEvent): void => {
+    this.options.dropCursor?.clear();
     this.selections.requestDOMSync();
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;

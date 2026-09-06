@@ -1329,7 +1329,7 @@ return its own transaction or document for more specialized structures.
 
 ## DOM view
 
-`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, `virtualization`, source-aware `paste`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
+`new EditorView(mount, editor, options?)` mounts a `contenteditable` view. Options include `ariaLabel`, `className`, `placeholder`, safe string attributes, optional `imageUpload(file, context)` and `assetUpload(file, context)` adapters, an inline-image byte limit, `blockHandles`, the default-on `dropCursor`, `virtualization`, source-aware `paste`, and error handling. Without an image adapter, local images up to the configured limit are embedded as data URLs. Other assets always require a host adapter. The view supports multi-block selection, IME composition, multiline/plain and rich-HTML paste, image/asset upload, paste and drop, task checkboxes, Tab/Shift-Tab list indentation and table navigation, and extension NodeViews. Call `focus('current' | 'start' | 'end')`, `commandManager()`, and `destroy()` on the view as needed.
 
 `virtualization: true` uses the window viewport and starts at 250 top-level
 blocks. `EditorViewVirtualizationOptions` configures `scrollContainer`,
@@ -1347,6 +1347,16 @@ functions. Controls mount outside the contenteditable, follow nested selection
 and pointer targets, expose touch-sized and keyboard-operable movement buttons,
 and show schema-valid before/after drop indicators. React's `FountainEditor` and
 `FountainComposer`, plus `registerFountainElement`, forward this same option.
+
+`dropCursor` defaults to `true`. Native drags carrying data receive a
+view-only inline caret when the browser resolves a text position, or a
+before/after block rule over atomic content. Fountain block-handle drags retain
+their stricter schema-valid move indicator. Pass `false` to omit the supplied
+cursor or `{ color, className }` to brand it; products may style or replace
+`.fountain-drop-cursor` and its `data-fountain-drop-cursor`,
+`data-fountain-drop-path`, and `data-fountain-drop-position` hooks. The exported
+`DropCursorManager` never dispatches, moves selection, or interprets dropped
+data. React and Custom Element surfaces forward the same option.
 
 ### Images and uploads
 

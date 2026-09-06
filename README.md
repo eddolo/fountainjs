@@ -213,6 +213,13 @@ for keyboard and touch users. Hosts can filter candidates and replace every
 label, or call the same commands from wholly custom UI. See the
 [block-reordering guide](docs/BLOCK_REORDERING.md).
 
+Every DOM view also gets a general drag target cursor by default: text targets
+show an inline caret and atomic/block targets show a separate before/after rule.
+It is transient, never changes the model or browser selection, and yields to
+the schema-aware block-reordering indicator during a Fountain block move. Pass
+`dropCursor: false` to omit it, or provide `DropCursorOptions`/custom CSS to
+replace its presentation; the public `DropCursorManager` is framework-neutral.
+
 ## Collapsible details
 
 `DetailsExtension` adds native, editable `<details>` / `<summary>` disclosures

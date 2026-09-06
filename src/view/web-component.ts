@@ -3,6 +3,7 @@ import { createEditor, setContent, type Editor, type EditorState } from '../core
 import { CoreSchemaSpec } from '../extensions';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import type { BlockHandleOptions } from './block-handles';
+import type { DropCursorOptions } from './drop-cursor';
 import type { ExternalPasteOptions } from './paste';
 import { EditorView, type EditorFocusPosition, type EditorViewVirtualizationOptions } from './view';
 
@@ -28,6 +29,7 @@ export interface RegisterFountainElementOptions {
   assetUpload?: AssetUploadHandler;
   maxInlineImageBytes?: number;
   blockHandles?: boolean | BlockHandleOptions;
+  dropCursor?: boolean | DropCursorOptions;
   virtualization?: boolean | EditorViewVirtualizationOptions;
   onError?: (error: unknown) => void;
   paste?: ExternalPasteOptions;
@@ -85,6 +87,7 @@ export function registerFountainElement(
         assetUpload: options.assetUpload,
         maxInlineImageBytes: options.maxInlineImageBytes,
         blockHandles: options.blockHandles,
+        dropCursor: options.dropCursor,
         virtualization: options.virtualization,
         onError: options.onError,
         paste: options.paste,
