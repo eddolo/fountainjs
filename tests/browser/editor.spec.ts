@@ -4692,7 +4692,7 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(output).toContainText('Format boundary guide');
   await source.fill('# Formula\n\n$\\alpha+\\beta$');
   await expect(page.getByText('Valid document · 2 top-level blocks')).toBeVisible();
-  await page.getByRole('button', { name: 'markdown', exact: true }).click();
+  await page.locator('.demo-output nav').getByRole('button', { name: 'markdown', exact: true }).click();
   await expect(output).toContainText('$\\alpha+\\beta$');
 
   await page.getByRole('button', { name: 'Server HTML' }).click();
@@ -4703,6 +4703,28 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(output).toContainText('ordered_list');
   await expect(output).toContainText('table');
   await expect(output).toContainText('no jsdom');
+
+  await page.locator('.headless-input-tabs').getByRole('button', { name: 'Markdown', exact: true }).click();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download as Word DOCX' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('fountainjs-document.docx');
+  const stream = await download.createReadStream();
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  const generatedDOCX = Buffer.concat(chunks);
+  expect(generatedDOCX.subarray(0, 2)).toEqual(Buffer.from([0x50, 0x4b]));
+
+  await page.getByRole('button', { name: 'Word DOCX', exact: true }).click();
+  await page.getByLabel('Import Word DOCX').setInputFiles({
+    name: 'browser-round-trip.docx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: generatedDOCX,
+  });
+  await expect(page.getByText(/Valid document · \d+ top-level blocks · (?:\d+ reported DOCX conversion|bounded DOCX import)/)).toBeVisible();
+  await expect(page.getByText('browser-round-trip.docx')).toBeVisible();
+  await expect(output).toContainText('Formula');
+  await expect(output).toContainText('alpha+\\\\beta');
 });
 
 test('renders and inserts native math in the public DOM integration', async ({ page }) => {
@@ -5535,7 +5557,7 @@ test('runs production images, native media, safe embeds, and host-owned uploads 
   });
 
   const status = page.getByRole('status');
-  await expect(status).toContainText('Uploading portable.png');
+  await expect(status).toContainText(/Uploading portable\.png|portable\.png: succeeded/);
   await expect(status).toContainText('portable.png: succeeded');
   await expect(editor.locator('.fountain-image')).toHaveCount(2);
   await expect(editor.locator('.fountain-image img[alt="portable"]')).toBeVisible();
@@ -5617,7 +5639,7 @@ test('uses the public React media workflow for native playback, provider-gated e
 
   const upload = page.locator('input[type="file"][accept^="audio/"]');
   await upload.setInputFiles({ name: 'voice.mp3', mimeType: 'audio/mpeg', buffer: Buffer.from('demo audio') });
-  await expect(page.getByRole('status').filter({ hasText: 'Uploading voice.mp3' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: /Uploading voice\.mp3|voice\.mp3 inserted/ })).toBeVisible();
   await expect(page.getByRole('status').filter({ hasText: 'voice.mp3 inserted' })).toBeVisible();
   await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
 });

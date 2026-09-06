@@ -212,6 +212,20 @@ and the corresponding
 succeeded. A clean no-DOM core declaration package is still a separate
 portability task and is not implied by this conversion milestone.
 
+## In progress: open document interchange
+
+The isolated `fountainjs-editor/docx` entry now reads and writes bounded Word
+OOXML without a DOM, Office process, network request, or conversion SaaS.
+Common paragraphs, headings, marks, safe links, nested lists, quotes, code,
+tables/spans/header rows, and page geometry map through the receiving schema;
+tracked revisions and unsupported content produce immutable path-bearing
+reports. ZIP/XML resource limits, packed ESM/CommonJS execution, package budgets,
+independent `python-docx` compatibility checks, and a recorded browser
+download/re-import journey gate the work. The existing page pipeline supplies
+measured A4/Letter/custom print and inspected Chromium PDF output. Embedded
+DOCX media and deeper Word fidelity remain active; ODT and EPUB are not claimed.
+See [DOCX.md](DOCX.md).
+
 ## Delivered: virtualized rendering for huge documents
 
 The opt-in top-level window keeps the complete immutable model while mounting

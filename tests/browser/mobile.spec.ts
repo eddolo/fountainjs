@@ -80,6 +80,27 @@ test('inserts and updates native math from the phone controls', async ({ page })
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });
 
+test('keeps Word export and re-import understandable on a phone viewport', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  const source = page.getByLabel('Markdown input');
+  await source.fill('# Mobile handoff\n\n- Open the file\n- Review the result');
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download as Word DOCX' }).tap();
+  const stream = await (await downloadPromise).createReadStream();
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  await page.getByRole('button', { name: 'Word DOCX', exact: true }).tap();
+  await page.getByLabel('Import Word DOCX').setInputFiles({
+    name: 'mobile-handoff.docx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: Buffer.concat(chunks),
+  });
+  await expect(page.getByText('mobile-handoff.docx')).toBeVisible();
+  await expect(page.getByText(/Valid document · 2 top-level blocks · bounded DOCX import/)).toBeVisible();
+  await expect(page.locator('.demo-output pre')).toContainText('bullet_list');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
+});
+
 test('keeps editable page content continuous on a narrow screen', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=editable-pages');
   const region = page.getByLabel('Editable pages browser contract');

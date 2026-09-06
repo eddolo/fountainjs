@@ -7,6 +7,7 @@ const entries = [
   resolve('src/ai/document-tools.ts'),
   resolve('src/ai/conversation.ts'),
   resolve('src/ai/generated-media.ts'),
+  resolve('src/docx/index.ts'),
 ];
 const forbidden = [
   `${resolve('src/view')}${sep}`,

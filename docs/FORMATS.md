@@ -2,6 +2,12 @@
 
 FountainJS keeps one typed document tree and treats external formats as boundaries. Presentation HTML is not the application state.
 
+The optional [Word DOCX boundary](DOCX.md) reads and writes bounded OOXML in
+browsers and servers without a DOM, Word process, or conversion SaaS. It returns
+explicit fidelity reports and never replaces validated Fountain JSON as the
+lossless persistence format. Print-quality PDF uses the separately measured
+[page and print pipeline](PAGINATION.md). ODT and EPUB remain unclaimed.
+
 ## JSON
 
 JSON is the lossless persistence format. Nodes use stable type names, optional attributes, child content, and marks. Always import through the receiving `Schema`; unknown types and invalid attributes are rejected.

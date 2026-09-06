@@ -70,6 +70,13 @@
 
 ### Added
 
+- An isolated DOM-free `fountainjs-editor/docx` entry now imports and exports
+  bounded Word OOXML in browsers and server runtimes. It preserves common
+  paragraphs, headings, marks, links, nested lists, quotes, code, table spans,
+  header rows, and A4/Letter geometry; rejects oversized ZIP/XML input; and
+  returns immutable fidelity reports for tracked revisions and unsupported
+  content. The public Node conversion demo provides real DOCX download and
+  re-import controls, and the recorded human audit exercises the round trip.
 - A DOM-free `fountainjs-editor/ai/generated-media` entry now provides
   inspectable private-by-default requests, bounded byte-backed candidates,
   generation progress, cancellation, provenance, and explicit accept/reject

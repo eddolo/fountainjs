@@ -53,6 +53,7 @@ import {
   type Node,
 } from 'fountainjs-editor';
 import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
+import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 import { createReactWidgetExtension, type ReactWidgetProps } from 'fountainjs-editor/react/widgets';
 import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { defineWidget } from 'fountainjs-editor/widgets';
@@ -388,7 +389,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const schema = useMemo(() => new Schema(
     demo.slug === 'node-markdown' ? headlessDemoKit.schema : StarterKit.schema,
   ), [demo.slug]);
-  const [inputFormat, setInputFormat] = useState<'markdown' | 'html'>('markdown');
+  const [inputFormat, setInputFormat] = useState<'markdown' | 'html' | 'docx'>('markdown');
   const [markdownSource, setMarkdownSource] = useState(demo.markdown ?? '');
   const [htmlSource, setHTMLSource] = useState(HEADLESS_HTML_SOURCE);
   const markdownParsed = useMemo(() => {
@@ -405,6 +406,12 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     error: string;
     loading: boolean;
   }>({ document: undefined, details: 0, error: '', loading: false });
+  const [docxParsed, setDOCXParsed] = useState<{
+    document: Node | undefined;
+    details: number;
+    error: string;
+    fileName: string;
+  }>({ document: undefined, details: 0, error: '', fileName: '' });
   useEffect(() => {
     if (inputFormat !== 'html') return undefined;
     let active = true;
@@ -419,15 +426,38 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     });
     return () => { active = false; };
   }, [htmlSource, inputFormat, schema]);
-  const parsed = inputFormat === 'html' ? htmlParsed : markdownParsed;
+  const parsed = inputFormat === 'html' ? htmlParsed : inputFormat === 'docx'
+    ? { ...docxParsed, loading: false }
+    : markdownParsed;
   const source = inputFormat === 'html' ? htmlSource : markdownSource;
   const setSource = inputFormat === 'html' ? setHTMLSource : setMarkdownSource;
-  const detailLabel = inputFormat === 'html'
+  const detailLabel = inputFormat === 'docx'
+    ? `${parsed.details ? `${parsed.details} reported DOCX conversion detail${parsed.details === 1 ? '' : 's'}` : 'bounded DOCX import with no reported losses'}`
+    : inputFormat === 'html'
     ? `${parsed.details ? `${parsed.details} recovered HTML issue${parsed.details === 1 ? '' : 's'}` : 'no recovered HTML issues'}`
     : `${parsed.details ? `${parsed.details} projected Markdown detail${parsed.details === 1 ? '' : 's'}` : 'no reported Markdown losses'}`;
+  const downloadDOCX = () => {
+    if (!parsed.document) return;
+    const result = exportDOCX(parsed.document, { title: demo.title, creator: 'FountainJS demo' });
+    const url = URL.createObjectURL(new Blob([result.bytes as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'fountainjs-document.docx';
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
 
   return <div className="demo-workspace">
-    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button></nav><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
+    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>{inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        const result = importDOCX(await file.arrayBuffer(), schema);
+        setDOCXParsed({ document: result.document, details: result.report.issues.length, error: '', fileName: file.name });
+      } catch (error) {
+        setDOCXParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), fileName: file.name });
+      }
+    }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={downloadDOCX}>Download as Word DOCX</button><span>Uses the same DOM-free import/export entry in browsers and servers.</span></div><p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
     <OutputPanel document={parsed.document} />
   </div>;
 }

@@ -35,6 +35,15 @@ with a successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33979389243).
 Native renderers remain deliberately unimplemented.
 
+Implementation update (2026-09-06): [`src/docx/index.ts`](../src/docx/index.ts)
+adds bounded OOXML import/export as an isolated `fountainjs-editor/docx` entry.
+The implementation uses only typed arrays, strings, the caller's Fountain
+schema, and an internally bundled ZIP codec. It has no browser, filesystem,
+Office-process, or network dependency and is included in the same source-graph,
+declaration, packed ESM/CommonJS, browser, and human-journey gates. This extends
+the platform-neutral format layer; it does not move document conversion into
+the core facade.
+
 ## Executive verdict
 
 FountainJS now exposes and enforces a platform-neutral document-engine package
@@ -109,7 +118,7 @@ This proves runtime behavior. It does not erase the declaration-level and owners
 | 3. History/undo | **Already platform-neutral** | [`history.ts`](../src/extensions/plugins/history.ts) imports only core editor/model/plugin types and stores immutable transactions/selections. It passed in the Node probe. | Keep in the headless layer. Collaboration-specific undo remains with its collaboration adapter. |
 | 4. Collaboration/Yjs | **Platform-neutral core; browser presence renderer separated** | [`collaboration-core.ts`](../src/extensions/collaboration-core.ts) owns adapter lifecycle, state, commands, and transactions. [`collaboration.ts`](../src/extensions/collaboration.ts) injects the DOM decoration renderer. [`src/yjs/index.ts`](../src/yjs/index.ts) passes a pure-Node runtime test. | Keep this split permanent; other renderers can supply their own presence projection. |
 | 5. Extension system | **Platform-neutral through the core entry** | [`extension.ts`](../src/extensions/extension.ts) performs composition, manifests, conflicts, formats, commands, and services and compiles under the no-DOM consumer gate. Browser event payloads remain intentionally opaque in the compatibility plugin contract. | Continue splitting mixed first-party convenience extensions only when a headless/native use case needs them; do not break the web contract speculatively. |
-| 6. Parsing/serialization | **Platform-neutral paths explicitly separated** | JSON, text, Markdown and string HTML export are neutral. [`markdown-importer.ts`](../src/core/importers/markdown-importer.ts) now uses dependency-free ruby/style parsing. [`html-importer.ts`](../src/core/importers/html-importer.ts) remains browser-only, while [`src/html/server.ts`](../src/html/server.ts) is the bounded DOM-free parser. | Keep both HTML implementations parity-tested and browser parsing outside the core entry. |
+| 6. Parsing/serialization | **Platform-neutral paths explicitly separated** | JSON, text, Markdown and string HTML export are neutral. [`markdown-importer.ts`](../src/core/importers/markdown-importer.ts) uses dependency-free ruby/style parsing. [`html-importer.ts`](../src/core/importers/html-importer.ts) remains browser-only, while [`src/html/server.ts`](../src/html/server.ts) is the bounded DOM-free parser. [`src/docx/index.ts`](../src/docx/index.ts) separately maps bounded OOXML archives to/from a caller-supplied schema without a DOM or Office process. | Keep browser HTML, server HTML, and DOCX implementations isolated and parity-tested at the schema boundary. |
 | 7. Selection/cursor model | **Already platform-neutral in core; DOM mapping is correctly separate** | [`selection.ts`](../src/core/selection.ts) and transaction mappings use paths and offsets. [`selection-handler.ts`](../src/view/selection-handler.ts) owns browser `Selection`, `Range`, tree walking, and `selectionchange`. | Preserve the logical model. A native renderer must implement its own logical-to-native selection bridge. |
 | 8. Rendering/view layer | **Fundamentally DOM-specific as currently implemented** | [`src/view`](../src/view) creates elements, uses `contentEditable`, node views, `MutationObserver`, measurements, and Custom Elements. | This is appropriate for a future `@fountain/dom`; it must not define the engine's core contracts. Native platforms need independent renderers. |
 | 9. Input/event handling | **Fundamentally DOM-specific implementation behind a neutral boundary** | [`input.ts`](../src/view/input.ts) consumes `beforeinput`, keyboard, composition, clipboard, drag/drop, pointer, change, and click events. Core [`PluginProps`](../src/core/plugin.ts) treats renderer event payloads as opaque compatibility values, so its declaration graph has no browser event classes. | Keep browser interpretation in the DOM adapter. A native adapter must translate its own input system into logical transactions. |

@@ -296,9 +296,9 @@ export class CampaignEditor {
     host: 'Node.js',
     surface: 'Headless core + formats',
     runtime: 'headless',
-    summary: 'DOM-free Markdown and standards-oriented HTML conversion to validated FountainJS JSON, HTML, and text.',
+    summary: 'DOM-free Markdown, standards-oriented HTML, and bounded Word DOCX conversion to validated FountainJS documents.',
     boundary: 'Only the document/schema/format modules run; no editor view or frontend framework is required.',
-    capabilities: ['Headless schema', 'Pure-Node HTML without jsdom', 'Reference links + titles', 'Aligned tables', 'Recursive structure', 'Explicit conversion reports'],
+    capabilities: ['Headless schema', 'Pure-Node HTML without jsdom', 'Word DOCX import/export', 'Reference links + titles', 'Aligned tables', 'Explicit conversion reports'],
     markdown: '# Release notes\n\nFountainJS can keep inline math such as $E=mc^2$, [reference links][formats], and Lean source in its portable document without mounting a view.\n\n$$\n\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}\n$$\n\n```lean\nexample : 1 = 1 := rfl\n```\n\n- Parse content\n- Validate the schema\n- Emit several formats\n\n| Boundary | Behavior |\n| :--- | :---: |\n| Markdown \\| text | Portable |\n\n> The portable document stays in the middle.\n>\n> - Nested structure stays nested.\n> - Reference titles survive.\n\n[formats]: https://github.com/eddolo/fountainjs/blob/master/docs/FORMATS.md "Format boundary guide"',
     content: doc(paragraph(text('Headless Markdown content'))),
     code: `import {
@@ -315,6 +315,11 @@ const document = MarkdownImporter.parse(markdownSource, schema)
 // The optional entry is isolated from browser/editor bundles.
 const { ServerHTMLImporter } = await import('fountainjs-editor/html/server')
 const importedHTML = ServerHTMLImporter.parseWithReport(htmlSource, schema)
+
+// The same bounded OOXML entry runs in Node and browsers.
+const { importDOCX, exportDOCX } = await import('fountainjs-editor/docx')
+const importedWord = importDOCX(uploadedBytes, schema)
+const generatedWord = exportDOCX(document, { title: 'Release notes' })
 
 await database.save(document.toJSON())
 const { markdown, losses } = MarkdownExporter.exportWithReport(document, {

@@ -101,6 +101,8 @@
     "dist/details/index.d.ts": "e5e9647fa4f9a415d0ed16112ba519b742dbadf1eff72773bb8ea4ee776fb4d0",
     "dist/document-utilities.d.cts": "d15810193cdf95a0bc5261f3e1ff7b606a24096eb0901fa7e3563eea1bd87c78",
     "dist/document-utilities.d.ts": "8541fa024f04ec3b25f8a006903ddd0c2e8ba01b4f7740ee590f9de28141ca86",
+    "dist/docx/index.d.cts": "235e33027b1897af16f4ff34125a3185612982ec500fa4c353faad3aeee42f19",
+    "dist/docx/index.d.ts": "add42c83f1e4c4b84cb8f3a41a43c1633bf9d926aed23a3e506203d865282538",
     "dist/emoji-data.d.cts": "9d42510b0909c86774bb113f0bcb34822e48c6864e08d60fb4329857bbf33c75",
     "dist/emoji-data.d.ts": "4766d0d4144d1b5ce82d2190d52ec15b8c2a64699e067c2bac185dc83f55bf49",
     "dist/extensions/character-count.d.cts": "45281a94dff6b50949707055b6dae63eb78d0a86a00992eeb1316b723eaa9251",

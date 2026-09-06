@@ -31,6 +31,7 @@ const headlessCoreNames = [
 const aiDocumentToolNames = ['AI_DOCUMENT_TOOL_NAMES', 'AI_DOCUMENT_TOOL_DEFINITIONS', 'AIDocumentToolbox', 'createAIDocumentToolbox'];
 const aiConversationNames = ['AIConversationController', 'InMemoryAIConversationStore', 'InMemoryAIPromptStore', 'createAIConversationAdapter', 'createStreamingAIConversationAdapter', 'defineAIPromptTemplate', 'renderAIPrompt'];
 const aiGeneratedMediaNames = ['AIGeneratedMediaController', 'createAIGeneratedMediaAdapter', 'MAX_AI_MEDIA_ASSETS', 'DEFAULT_MAX_AI_MEDIA_ASSET_BYTES'];
+const docxNames = ['importDOCX', 'exportDOCX'];
 const reactNames = [
   'FountainComposer', 'FountainEditor', 'FountainToolbar', 'FountainToolbarRoot',
   'FountainToolbarGroup', 'FountainToolbarButton', 'FountainToolbarIcon',
@@ -76,8 +77,18 @@ const esmAIConversation = await import('fountainjs-editor/ai/conversation');
 assertExports(esmAIConversation, aiConversationNames, 'ESM AI conversation entry');
 const esmAIGeneratedMedia = await import('fountainjs-editor/ai/generated-media');
 assertExports(esmAIGeneratedMedia, aiGeneratedMediaNames, 'ESM AI generated media entry');
+const esmDOCX = await import('fountainjs-editor/docx');
+assertExports(esmDOCX, docxNames, 'ESM DOCX entry');
 const markdownSource = '\uFEFF---\r\ntitle: Packed source\r\n---\r\n# Exact\r\n';
 const markdownSchema = new esmHeadlessCore.Schema(esmCore.CoreSchemaSpec);
+const packedDOCX = esmDOCX.exportDOCX(markdownSchema.node('doc', {}, [
+  markdownSchema.node('heading', { level: 2 }, [markdownSchema.text('Packed Word')]),
+  markdownSchema.node('paragraph', {}, [markdownSchema.text('Pure Node DOCX')]),
+]));
+const packedDOCXRoundTrip = esmDOCX.importDOCX(packedDOCX.bytes, markdownSchema);
+if (packedDOCXRoundTrip.document.textContent !== 'Packed WordPure Node DOCX' || packedDOCX.report.fidelity !== 'bounded') {
+  throw new Error('ESM DOCX entry did not round-trip in pure Node.');
+}
 const sourcedMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, markdownSchema);
 const exactMarkdown = esmHeadlessCore.MarkdownExporter.exportWithSource(sourcedMarkdown.document, sourcedMarkdown.source);
 if (exactMarkdown.markdown !== markdownSource || exactMarkdown.preservation !== 'exact') {
@@ -259,7 +270,13 @@ assertExports(cjsHeadlessCore, headlessCoreNames, 'CommonJS headless core entry'
 assertExports(require('fountainjs-editor/ai/document-tools'), aiDocumentToolNames, 'CommonJS AI document tools entry');
 assertExports(require('fountainjs-editor/ai/conversation'), aiConversationNames, 'CommonJS AI conversation entry');
 assertExports(require('fountainjs-editor/ai/generated-media'), aiGeneratedMediaNames, 'CommonJS AI generated media entry');
+const cjsDOCX = require('fountainjs-editor/docx');
+assertExports(cjsDOCX, docxNames, 'CommonJS DOCX entry');
 const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
+const cjsDOCXRoundTrip = cjsDOCX.importDOCX(cjsDOCX.exportDOCX(cjsMarkdownSchema.node('doc', {}, [
+  cjsMarkdownSchema.node('paragraph', {}, [cjsMarkdownSchema.text('CommonJS Word')]),
+])).bytes, cjsMarkdownSchema);
+if (cjsDOCXRoundTrip.document.textContent !== 'CommonJS Word') throw new Error('CommonJS DOCX entry did not round-trip in pure Node.');
 const cjsSourcedMarkdown = cjsHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, cjsMarkdownSchema);
 if (cjsHeadlessCore.MarkdownExporter.exportWithSource(cjsSourcedMarkdown.document, cjsSourcedMarkdown.source).markdown !== markdownSource) {
   throw new Error('CommonJS headless core did not preserve unchanged Markdown source.');
@@ -331,4 +348,4 @@ try {
   rmSync(doctorDirectory, { recursive: true, force: true });
 }
 
-console.log('ESM, CommonJS, headless core, AI document tools, conversations, generated media, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');
+console.log('ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

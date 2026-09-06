@@ -401,6 +401,21 @@ const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
 // Each immutable loss names its kind, schema type, document path, and detail.
 // Persist document.toJSON() when exact extension data must survive.`;
 
+const docxBoundaryExample = `import { exportDOCX, importDOCX } from 'fountainjs-editor/docx'
+
+// Browser, Node.js, Bun, Deno, or a worker; no DOM or Word process required.
+const imported = importDOCX(await uploadedFile.arrayBuffer(), schema)
+render(imported.document)
+showConversionDetails(imported.report.issues)
+
+const generated = exportDOCX(editor.state.doc, {
+  title: 'Release brief', creator: currentUser.name, page: 'a4',
+})
+await saveFile('release-brief.docx', generated.bytes)
+
+// Fountain JSON remains the exact source of truth. DOCX is an interchange
+// boundary, so unsupported content is readable and explicitly reported.`;
+
 const migrationExample = `import { CoreSchemaSpec, Schema, createEditor } from 'fountainjs-editor'
 import { encodeFountainDocument, migrateFountainDocument } from 'fountainjs-editor/migrations'
 
@@ -818,6 +833,9 @@ function Developers() {
             <p>Import <code>ServerHTMLImporter</code> from <code>fountainjs-editor/html/server</code> to turn HTML into the same schema-validated document in Node.js without <code>window</code>, <code>document</code>, <code>DOMParser</code>, jsdom, or another fake DOM. The isolated entry is dynamically loadable, reports unsupported legacy DOM callbacks instead of executing them, and enforces explicit input, node, depth, attribute, and parser-error limits. Browser and server fixtures must produce identical JSON for every portable rule. Try it in the <a href="./demos/node-markdown.html">server document conversion demo</a>, then read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/SERVER_HTML.md">complete API, limits, compatibility, and security contract</a>.</p>
             <p>Markdown accepts titled inline links and full, collapsed, or shortcut references; recursive quotes; loose nested lists; and aligned tables with escaped pipes. Reference export is stable and deduplicated. Because Markdown cannot encode every schema, <code>exportWithReport</code> returns path-based losses for projected nodes, marks, and attributes instead of silently pretending the conversion is exact. The callback is observational and cannot break serialization.</p>
             <Code>{markdownBoundaryExample}</Code>
+            <h3>Word files use a bounded, DOM-free OOXML boundary</h3>
+            <p>The optional <code>fountainjs-editor/docx</code> entry imports and exports real <code>.docx</code> packages in browsers and server runtimes without Word, <code>DOMParser</code>, jsdom, or a conversion SaaS. It preserves common headings, paragraphs, alignment, bold/italic/underline/strike, safe links, colour/highlight, hard breaks, nested bullet and numbered lists, quotes, code, tables, merged cells, and A4/Letter page geometry. Resource limits reject oversized archives and XML trees before they enter the schema. Tracked insertions are accepted, tracked deletions are omitted, and unsupported media/custom nodes become readable fallback text; every such choice appears in the immutable report. Try the real upload/download flow in the <a href="./demos/node-markdown.html">server document conversion demo</a>, then read the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCX.md">support and security contract</a>.</p>
+            <Code>{docxBoundaryExample}</Code>
             <Code>{formatExample}</Code>
             <p>Block images support editable captions, alt text, titles, alignment, responsive source sets, explicit dimensions, load recovery, and pointer, touch, or keyboard resizing. <code>inline_image</code> is a separate typed node that can sit between text. Both are selectable and portable through JSON and HTML.</p>
             <Code>{mediaExample}</Code>
@@ -858,6 +876,8 @@ function Developers() {
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/core/transaction"><code>src/core/transaction/</code><span>Immutable steps, paths, ranges, transforms, transaction metadata.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/html/server.ts"><code>src/html/server.ts</code><span>DOM-free HTML parsing, portable extension rules, bounded traversal, recovery reports, and final schema validation.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/docs/SERVER_HTML.md"><code>docs/SERVER_HTML.md</code><span>Server entry point, custom-rule contract, resource limits, compatibility, security, and runtime support.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/tree/master/src/docx"><code>src/docx/</code><span>DOM-free bounded OOXML parsing/export, list and table mapping, conversion reports, and archive/XML limits.</span></a>
+              <a href="https://github.com/eddolo/fountainjs/blob/master/docs/DOCX.md"><code>docs/DOCX.md</code><span>Word import/export support matrix, fallbacks, security boundary, package usage, and verification contract.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/core/commands.ts"><code>src/core/commands.ts</code><span>Text, marks, blocks, selection, document insertion, table and list commands.</span></a>
               <a href="https://github.com/eddolo/fountainjs/tree/master/src/view"><code>src/view/</code><span>DOM renderer, input normalization, selection bridge, media, Web Component.</span></a>
               <a href="https://github.com/eddolo/fountainjs/blob/master/src/view/block-handles.ts"><code>src/view/block-handles.ts</code><span>Optional contextual controls, nested path targeting, schema-valid indicators, and touch/keyboard movement.</span></a>

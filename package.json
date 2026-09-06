@@ -26,6 +26,9 @@
       "ai/generated-media": [
         "dist/ai/generated-media.d.ts"
       ],
+      "docx": [
+        "dist/docx/index.d.ts"
+      ],
       "document-utilities": [
         "dist/document-utilities.d.ts"
       ],
@@ -161,6 +164,16 @@
       "require": {
         "types": "./dist/ai/generated-media.d.cts",
         "default": "./dist/ai-generated-media.cjs"
+      }
+    },
+    "./docx": {
+      "import": {
+        "types": "./dist/docx/index.d.ts",
+        "default": "./dist/docx.js"
+      },
+      "require": {
+        "types": "./dist/docx/index.d.cts",
+        "default": "./dist/docx.cjs"
       }
     },
     "./document-utilities": {
@@ -568,6 +581,7 @@
     "commonmark-spec": "0.31.2",
     "css-select": "7.0.0",
     "entities": "8.0.0",
+    "fflate": "0.8.3",
     "jsdom": "^30.0.1",
     "miniflare": "3.20250718.3",
     "parse5": "8.0.1",

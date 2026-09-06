@@ -1036,6 +1036,14 @@ and configurable undo/redo that groups adjacent browser input.
 JSON is the lossless source of truth; Markdown, safe HTML, and plain text are
 interoperability boundaries.
 
+The optional `fountainjs-editor/docx` entry imports and exports bounded Word
+OOXML in browsers and pure Node, with no Word process, fake DOM, or conversion
+service. It preserves common document structure and returns explicit issues for
+tracked revisions, media, custom content, or formatting outside its declared
+subset. Fountain JSON remains the exact source of truth. See the
+[DOCX interchange contract](docs/DOCX.md). Measured page preview and print/PDF
+output remain isolated in the `pages` entries; ODT and EPUB are not yet claimed.
+
 Copy therefore writes three clipboard flavors: versioned Fountain JSON for an
 exact compatible Fountain destination, semantic HTML for another rich editor,
 and readable text for a text-only editor. The receiving Fountain schema still

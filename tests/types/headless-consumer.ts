@@ -16,6 +16,7 @@ import {
   type SchemaSpec,
 } from 'fountainjs-editor/core';
 import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
+import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 
 const documentExtension = defineExtension({
   name: 'headless-document',
@@ -78,4 +79,7 @@ void sourceBlock;
 void mappedSourceBlocks;
 MarkdownImporter.parse('**portable**', schema);
 TextExporter.export(editor.state);
+const word = exportDOCX(editor.state.doc, { page: 'letter' });
+const importedWord = importDOCX(word.bytes, schema, { maxArchiveBytes: 1_000_000 });
+void importedWord.report;
 editor.destroy();

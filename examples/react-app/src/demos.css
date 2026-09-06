@@ -116,6 +116,14 @@
 .headless-input-tabs button { padding: 7px 10px; color: #756d89; background: white; border: 1px solid #d9d4df; border-radius: 7px; font: 700 10px 'DM Mono', monospace; }
 .headless-input-tabs button.active { color: white; background: var(--demo-accent); border-color: var(--demo-accent); }
 .headless-surface textarea { min-height: 500px; padding: 25px; resize: vertical; color: #2b2736; background: white; border: 1px solid #d9d4df; border-radius: 12px; font: 13px/1.8 'DM Mono', monospace; }
+.headless-docx-controls { display: grid; place-items: center; min-height: 240px; margin-top: 12px; padding: 32px; text-align: center; background: white; border: 1px dashed #c8c1d4; border-radius: 12px; }
+.headless-docx-controls label { display: grid; gap: 12px; color: #312b3d; font-weight: 800; }
+.headless-docx-controls input { max-width: 100%; font: 12px 'DM Mono', monospace; }
+.headless-docx-controls span { color: #756d89; font: 10px/1.6 'DM Mono', monospace; }
+.headless-format-actions { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.headless-format-actions button { padding: 8px 11px; color: white; background: #1c1926; border: 0; border-radius: 7px; font-weight: 800; }
+.headless-format-actions button:disabled { opacity: .45; }
+.headless-format-actions span { color: #756d89; font: 10px/1.5 'DM Mono', monospace; }
 .headless-status { margin: 10px 0 0; color: #267356; font: 10px 'DM Mono', monospace; }
 .headless-status.error { color: #b03656; }
 

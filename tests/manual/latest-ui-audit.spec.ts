@@ -132,3 +132,45 @@ test('human release journey: writing, AI review, conversation, structured tools,
   expect(pageErrors).toEqual([]);
   expect(consoleErrors).toEqual([]);
 });
+
+test('human document-conversion journey: edit, download Word, re-import, and inspect output', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+
+  await page.goto('/demos/node-markdown.html');
+  const source = page.getByLabel('Markdown input');
+  await source.fill('# Customer handoff\n\nThe **release candidate** is ready.\n\n- Verify the package\n- Send the report\n\n| Owner | State |\n| :--- | :---: |\n| Paolo | Ready |');
+  await expect(page.getByText('Valid document · 4 top-level blocks · no reported Markdown losses')).toBeVisible();
+  await capture(page, testInfo, '01-edited-source-before-word-export');
+  await pause(page, 600);
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download as Word DOCX' }).click();
+  const download = await downloadPromise;
+  const stream = await download.createReadStream();
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  const bytes = Buffer.concat(chunks);
+  expect(bytes.subarray(0, 2)).toEqual(Buffer.from([0x50, 0x4b]));
+
+  await page.getByRole('button', { name: 'Word DOCX', exact: true }).click();
+  await capture(page, testInfo, '02-word-import-state-before-file');
+  await page.getByLabel('Import Word DOCX').setInputFiles({
+    name: 'customer-handoff.docx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: bytes,
+  });
+  await expect(page.getByText('customer-handoff.docx')).toBeVisible();
+  await expect(page.getByText(/Valid document · 4 top-level blocks · bounded DOCX import/)).toBeVisible();
+  const output = page.locator('.demo-output pre');
+  await expect(output).toContainText('Customer handoff');
+  await expect(output).toContainText('release candidate');
+  await expect(output).toContainText('bullet_list');
+  await expect(output).toContainText('table');
+  await capture(page, testInfo, '03-word-round-trip-inspected');
+  await pause(page, 800);
+
+  expect(errors).toEqual([]);
+});

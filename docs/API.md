@@ -1951,6 +1951,32 @@ forced page break, and exact once-only generated-PDF body text. Broader adversar
 fidelity remains active work.
 See [PAGINATION.md](PAGINATION.md) for the invariants and delivery gates.
 
+## Word DOCX interchange
+
+Import the optional platform-neutral entry from `fountainjs-editor/docx`:
+
+```ts
+const imported = importDOCX(bytes, schema, {
+  maxArchiveBytes: 25 * 1024 * 1024,
+  maxExpandedBytes: 80 * 1024 * 1024,
+  maxDocumentXmlBytes: 25 * 1024 * 1024,
+  maxXmlNodes: 500_000,
+  maxXmlDepth: 128,
+})
+
+const generated = exportDOCX(editor.state.doc, {
+  title: 'Project brief', creator: 'Example product', page: 'a4',
+})
+```
+
+`importDOCX(input, schema, options?)` accepts `Uint8Array` or `ArrayBuffer`,
+extracts only the document, numbering, and document-relationship parts, builds
+content through the receiving schema, and returns `{ document, report }`.
+`exportDOCX(document, options?)` requires a validated Fountain `doc` node and
+returns `{ bytes, report }`. Reports contain immutable path-bearing issues and
+a `bounded` or `lossy` fidelity value. See [DOCX.md](DOCX.md) for the precise
+supported subset, fallback policy, resource limits, and security boundary.
+
 ## React
 
 Import React bindings from `fountainjs-editor/react`:
