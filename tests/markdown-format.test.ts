@@ -1334,9 +1334,17 @@ describe('Markdown interchange', () => {
   it('uses a tab stop after up to three spaces as indented-code padding', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse('  \tfoo\tbar', schema);
+    const continuation = MarkdownImporter.parse('  - foo\n\n\tbar', schema);
+    const codeInItem = MarkdownImporter.parse('- foo\n\n\t\tbar', schema);
+    const nested = MarkdownImporter.parse(' - foo\n   - bar\n\t - baz', schema);
 
     expect(document.child(0).type.name).toBe('code_block');
     expect(document.child(0).textContent).toBe('foo\tbar');
+    expect(continuation.child(0).child(0).content.map((node) => node.type.name)).toEqual(['paragraph', 'paragraph']);
+    expect(continuation.child(0).child(0).child(1).textContent).toBe('bar');
+    expect(codeInItem.child(0).child(0).child(1).type.name).toBe('code_block');
+    expect(codeInItem.child(0).child(0).child(1).textContent).toBe('  bar');
+    expect(nested.child(0).child(0).child(1).child(0).child(1).child(0).textContent).toBe('baz');
   });
 
   it('preserves loose list items containing multiple blocks', () => {

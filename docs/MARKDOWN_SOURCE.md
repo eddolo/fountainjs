@@ -162,7 +162,7 @@ an initial standards-oriented set of behaviors:
 - recursive blockquotes, including up-to-three-space markers and lazy paragraph
   continuation through nested quote depths; tight/loose nested lists; and
   GFM-style tasks;
-- tab-stop-aware indented code after zero to three leading spaces;
+- tab-stop-aware leading indentation for code and list containers;
 - `-`, `*`, and `+` bullet markers plus both ordered-list delimiters, with a
   marker-style change preserving the boundary between adjacent lists and only
   a `1`-starting ordered list allowed to interrupt an open paragraph; ordered
@@ -197,7 +197,7 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 446 currently match, 197 remain pending, and nine are
+classifies every example: 449 currently match, 194 remain pending, and nine are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 The harness also materializes the specification's visible tab notation before

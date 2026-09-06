@@ -2337,6 +2337,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '  - foo\n\n    bar',
     ),
     tabIndentedCode: (globalThis as any).fountainBrowserTest.inspectMarkdown('  \tfoo\tbar'),
+    tabbedListContainer: (globalThis as any).fountainBrowserTest.inspectMarkdown('  - foo\n\n\tbar'),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2612,6 +2613,10 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     content: [{ type: 'text', text: 'foo\tbar' }],
   });
   expect(result.tabIndentedCode.losses).toEqual([]);
+  expect(result.tabbedListContainer.document).toEqual(result.tabbedListContainer.roundTrip);
+  expect(result.tabbedListContainer.document.content[0].content[0].content.map((node: any) => node.type))
+    .toEqual(['paragraph', 'paragraph']);
+  expect(result.tabbedListContainer.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

@@ -1307,8 +1307,7 @@ interface ListMarker {
 }
 
 function listMarker(line: string): ListMarker | null {
-  const normalized = line.replace(/^\t+/, (tabs) => '  '.repeat(tabs.length));
-  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\]|([-*+])|(\d{1,9})([.)]))(?:[ \t]+(.*)|[ \t]*)$/.exec(normalized);
+  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\]|([-*+])|(\d{1,9})([.)]))(?:[ \t]+(.*)|[ \t]*)$/.exec(line);
   if (!match) return null;
   return {
     indent: match[1].length,
@@ -1632,7 +1631,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
 
 function references(markdown: string): { lines: string[]; definitions: References } {
   const definitions = new Map<string, ReferenceDefinition>();
-  const sourceLines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const sourceLines = markdown.replace(/\r\n?/g, '\n').split('\n')
+    .map((line) => line.replace(/^\t+/u, (tabs) => '    '.repeat(tabs.length)));
   const lines: string[] = [];
   let fence: MarkdownFence | null = null;
   let paragraphOpen = false;
