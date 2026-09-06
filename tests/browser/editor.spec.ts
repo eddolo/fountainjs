@@ -2336,6 +2336,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     indentedListMarkers: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '  - foo\n\n    bar',
     ),
+    tabIndentedCode: (globalThis as any).fountainBrowserTest.inspectMarkdown('  \tfoo\tbar'),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2605,6 +2606,12 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   expect(result.indentedListMarkers.document).toEqual(result.indentedListMarkers.roundTrip);
   expect(result.indentedListMarkers.document.content.map((node: any) => node.type)).toEqual(['bullet_list']);
   expect(result.indentedListMarkers.losses).toEqual([]);
+  expect(result.tabIndentedCode.document).toEqual(result.tabIndentedCode.roundTrip);
+  expect(result.tabIndentedCode.document.content[0]).toMatchObject({
+    type: 'code_block',
+    content: [{ type: 'text', text: 'foo\tbar' }],
+  });
+  expect(result.tabIndentedCode.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

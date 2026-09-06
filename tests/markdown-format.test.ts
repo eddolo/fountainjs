@@ -1331,6 +1331,14 @@ describe('Markdown interchange', () => {
     expect(code.child(0).textContent).toBe('- code');
   });
 
+  it('uses a tab stop after up to three spaces as indented-code padding', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse('  \tfoo\tbar', schema);
+
+    expect(document.child(0).type.name).toBe('code_block');
+    expect(document.child(0).textContent).toBe('foo\tbar');
+  });
+
   it('preserves loose list items containing multiple blocks', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [

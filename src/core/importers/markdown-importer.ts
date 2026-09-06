@@ -1437,7 +1437,8 @@ function closesMarkdownFence(line: string, fence: MarkdownFence): boolean {
 }
 
 function indentedCodeLine(line: string): string | null {
-  if (line.startsWith('\t')) return line.slice(1);
+  const tab = /^ {0,3}\t/u.exec(line);
+  if (tab) return line.slice(tab[0].length);
   return line.startsWith('    ') ? line.slice(4) : null;
 }
 

@@ -13,9 +13,9 @@ const SAFE_NAME = /^[A-Za-z_][A-Za-z0-9_.:-]{0,127}$/;
 const SAFE_MAP_NAME = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const MAXIMUM_SHARED_ENTRIES = 100_000;
-const ATTRIBUTE = 'structured attribute';
-const ATTRIBUTE_ENTRY_LIMIT = `A ${ATTRIBUTE} exceeds its entry limit.`;
-const STORE_ENTRY_LIMIT = `The ${ATTRIBUTE} store exceeds its entry limit.`;
+const ATTRIBUTE = 'shared attribute';
+const ATTRIBUTE_ENTRY_LIMIT = 'Too many attribute entries.';
+const STORE_ENTRY_LIMIT = 'Too many shared attributes.';
 
 export interface YjsStructuredAttributesOptions {
   /** Structured node attributes that should merge below their JSON root. */
@@ -250,7 +250,7 @@ export class YjsStructuredAttributeStore {
       throw new TypeError('The Yjs structured attribute map must be a Y.Map from the same Yjs installation.');
     }
     if (options.map && options.map.doc !== document) {
-      throw new Error('The attribute map must belong to the supplied Y.Doc.');
+      throw new Error('The attribute map belongs to another Y.Doc.');
     }
     if (options.mapName !== undefined && !SAFE_MAP_NAME.test(options.mapName)) {
       throw new TypeError('The Yjs structured attribute map name must be a safe non-empty name of at most 200 characters.');
@@ -259,7 +259,7 @@ export class YjsStructuredAttributeStore {
     const keys = new Set<string>();
     definitions.forEach((definition) => {
       const key = `${definition.nodeType}:${definition.attribute}`;
-      if (keys.has(key)) throw new Error(`Duplicate attribute definition: ${key}.`);
+      if (keys.has(key)) throw new Error(`Duplicate attribute: ${key}.`);
       keys.add(key);
     });
     const byNodeType = new Map<string, StructuredAttributeDefinition[]>();
