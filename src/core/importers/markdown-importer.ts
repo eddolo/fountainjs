@@ -1456,7 +1456,7 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
     || /^ {0,3}(?:=+|-+)[\t ]*$/u.test(line)
     || thematicBreak(line)
     || BLOCKQUOTE.test(line)
-    || (marker?.value && !marker.indent && marker.start === 1)
+    || (marker?.value && marker.indent < 4 && marker.start === 1)
     || tableStart(lines, index)
     || blockImage(line, references)
     || (schema.nodes.details && schema.nodes.details_summary && detailsStart(line)));
@@ -1604,8 +1604,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       continue;
     }
     const marker = listMarker(line);
-    if (marker?.indent === 0) {
-      const parsed = parseList(lines, index, 0, schema, references);
+    if (marker && marker.indent < 4) {
+      const parsed = parseList(lines, index, marker.indent, schema, references);
       blocks.push(parsed.node);
       index = parsed.nextIndex;
       continue;

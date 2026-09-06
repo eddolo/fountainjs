@@ -2333,6 +2333,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     opaqueCodeLanguage: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '````;\ncode\n````',
     ),
+    indentedListMarkers: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '  - foo\n\n    bar',
+    ),
     multilineSetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Foo *bar\nbaz*\n====\n\nFoo\nBar\n---',
     ),
@@ -2599,6 +2602,9 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   expect(result.opaqueCodeLanguage.document).toEqual(result.opaqueCodeLanguage.roundTrip);
   expect(result.opaqueCodeLanguage.document.content[0].attrs.language).toBe(';');
   expect(result.opaqueCodeLanguage.losses).toEqual([]);
+  expect(result.indentedListMarkers.document).toEqual(result.indentedListMarkers.roundTrip);
+  expect(result.indentedListMarkers.document.content.map((node: any) => node.type)).toEqual(['bullet_list']);
+  expect(result.indentedListMarkers.losses).toEqual([]);
   expect(result.multilineSetext.document).toEqual(result.multilineSetext.roundTrip);
   expect(result.multilineSetext.document.content.map((node: any) => ({
     type: node.type,

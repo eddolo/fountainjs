@@ -1315,6 +1315,22 @@ describe('Markdown interchange', () => {
     expect(nested.child(0).child(0).child(0).textContent).toBe('foo bar');
   });
 
+  it('recognizes list markers indented by up to three spaces but keeps four-space code', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const document = MarkdownImporter.parse([
+      '  - foo',
+      '',
+      '    bar',
+    ].join('\n'), schema);
+    const code = MarkdownImporter.parse('    - code', schema);
+
+    expect(document.content.map((node) => node.type.name)).toEqual(['bullet_list']);
+    expect(document.child(0).child(0).content.map((node) => node.type.name)).toEqual(['paragraph', 'paragraph']);
+    expect(document.child(0).child(0).textContent).toBe('foobar');
+    expect(code.child(0).type.name).toBe('code_block');
+    expect(code.child(0).textContent).toBe('- code');
+  });
+
   it('preserves loose list items containing multiple blocks', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [

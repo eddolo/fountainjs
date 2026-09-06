@@ -13,7 +13,7 @@ const SAFE_NAME = /^[A-Za-z_][A-Za-z0-9_.:-]{0,127}$/;
 const SAFE_MAP_NAME = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const MAXIMUM_SHARED_ENTRIES = 100_000;
-const ATTRIBUTE = 'shared structured attribute';
+const ATTRIBUTE = 'structured attribute';
 const ATTRIBUTE_ENTRY_LIMIT = `A ${ATTRIBUTE} exceeds its entry limit.`;
 const STORE_ENTRY_LIMIT = `The ${ATTRIBUTE} store exceeds its entry limit.`;
 
