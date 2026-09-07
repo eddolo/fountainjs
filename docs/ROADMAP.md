@@ -5,6 +5,20 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Literal text line-ending repair (2026-09-07, Unreleased): LF/CR in text no longer
+become spaces or Markdown block syntax through canonical save/reopen. Nineteen
+unit cases cover text/marks, code, headings, quotes, lists, tables, ruby and
+source-mapped edits; twelve independent reference-parser checks compare exact
+characters. Full `pnpm check` passes 1,303 tests / 109 files and 385 declarations,
+including package/runtime/headless/type/performance gates. The issue workflow
+passes Chromium/Firefox/WebKit, with visual editor/reader/mobile screenshots and
+recording inspected under `artifacts/newline-export-20260907-recorded-v2/`;
+cross-browser results are under `artifacts/newline-export-20260907-browser-v2/`.
+Only the aggregate ESM ceiling increases by 1 KiB (1369.1 KiB measured, 1370 cap);
+CJS measures 1138.2 KiB within 1139. Public APIs and other gates are unchanged.
+CommonMark remains 563 default / 578 opt-in HTML matches out of 652. This is not
+full conformance and is not included in the published 0.4.0-beta.1 snapshot.
+
 Literal Markdown export repair (2026-09-07, Unreleased): canonical output no
 longer turns plain delimiter/address text into strike/highlight marks, math atoms,
 or links when reopened. Thirteen of fifteen new unit cases reproduced the old

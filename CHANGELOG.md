@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Fixed literal LF/CR text becoming spaces, headings, lists, or paragraphs on
+  Markdown export/reopen. Character references now decode after source soft-break
+  handling; canonical text encodes its own line endings, and multiline inline
+  code uses the existing inert style envelope. Structural hard breaks and normal
+  CommonMark code-span normalization are unchanged.
+
 - Fixed canonical Markdown export turning literal delimiters or unlinked
   addresses into formatting, math nodes, or links on reopen. The same protection
   applies to regenerated blocks in source-preserving export; actual structured

@@ -340,7 +340,9 @@ const limits = Object.freeze({
   // Full-document body projection and exact inline-node range preservation.
   // Standalone reference-definition provenance adds ~0.9 KiB ESM; measured
   // aggregate 1368.5 KiB. Individual entry and performance limits are unchanged.
-  'all ESM runtime code': 1369 * kibibyte,
+  // Literal text LF/CR retention adds ~0.2 KiB (1369.1 KiB measured).
+  // Only aggregate ESM grows by 1 KiB; CJS and entry/performance caps stay fixed.
+  'all ESM runtime code': 1370 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

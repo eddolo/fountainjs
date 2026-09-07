@@ -572,6 +572,31 @@ preview. See `tests/markdown-literal-export.test.ts` and
 `tests/browser/markdown-literal-journey.ts`. This does not claim complete Markdown
 interchange fidelity for every extension or arbitrary source language.
 
+### Literal text line endings versus Markdown line breaks
+
+Fountain text nodes may contain actual LF (`U+000A`) or CR (`U+000D`) characters.
+These are different from `hard_break` nodes and from physical newlines in a
+Markdown source file. Canonical export writes literal LF/CR as `&#10;`/`&#13;`,
+so a following `#`, list marker, or blank line cannot create new document blocks.
+Import collapses ordinary Markdown soft breaks **before** decoding entities,
+preserving the referenced characters. This includes `&NewLine;` and hexadecimal
+references. It does not change CommonMark's physical-line-ending normalization.
+
+Backtick code spans cannot retain literal newlines: CommonMark normalizes them
+and does not decode character references inside code. Multiline code-marked text
+therefore uses Fountain's existing inert `data-fountain-text-style` envelope.
+Colored/styled text and ruby base text also encode their literal line endings.
+Other Markdown consumers may discard the envelope or render whitespace
+differently; this is not a universal byte-exact interchange promise.
+
+The regression suite checks literal text, code, styled/link text, nested blocks,
+table cells, ruby, source-mapped edits, and distinct soft/hard breaks. Twelve
+additional reference-parser comparisons inspect exact text characters rather
+than normalizing them through the general semantic projection. The recorded
+issue workflow additionally checks actual line geometry, editing, undo/redo,
+download/reopen, and desktop/mobile reader display. These checks do not change
+the existing 652-example CommonMark classifications.
+
 ## Table captions through optional HTML conversion
 
 HTML table captions are no longer silently discarded by the browser/server

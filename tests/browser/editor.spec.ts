@@ -17,6 +17,11 @@ import { fullReportHTML, htmlDocumentJourney } from './html-document-journey';
 import { issueEditorJourney } from './issue-editor-journey';
 import { markdownAutolinkJourney } from './markdown-autolink-journey';
 import { markdownLiteralJourney } from './markdown-literal-journey';
+import { markdownNewlineJourney } from './markdown-newline-journey';
+
+test('retains literal text lines through editing and Markdown handoff', async ({ page }, info) => {
+  await markdownNewlineJourney(page, info);
+});
 
 test('keeps literal syntax unformatted through visual edits and Markdown reopen', async ({ page }, info) => {
   await markdownLiteralJourney(page, info);

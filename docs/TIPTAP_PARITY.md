@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest follow-through (2026-09-07, Unreleased): literal text LF/CR survives
+Markdown save/reopen without becoming spaces or structural blocks, including
+multiline code marks. Full local verification passes 1,303 tests / 109 files;
+twelve exact-character oracle checks supplement the unchanged CommonMark
+classification. The three desktop engines exercise edits/history/file handoff
+and actual line geometry; recorded desktop/mobile reader captures were inspected.
+This closes a concrete retention bug, not full Markdown or export parity.
+
 Latest repair (2026-09-07, Unreleased): canonical Markdown now protects literal
 delimiter/address text from becoming formatting, math atoms or new links on
 reopen. Full local verification passes 1,284 tests / 108 files; Chromium,

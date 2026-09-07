@@ -61,13 +61,17 @@ const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'fon
 const LIST_TYPES = new Set(['bullet_list', 'ordered_list', 'task_list']);
 
 function escapeInline(text: string, protectAutolinks = true): string {
-  const escaped = escapeMarkdownEntityOpeners(text.replace(/([\\`*_[\]<>~=$])/g, '\\$1'));
+  const escaped = encodeTextNewlines(escapeMarkdownEntityOpeners(text.replace(/([\\`*_[\]<>~=$])/g, '\\$1')));
   // Unmarked addresses are data, not link syntax. Escaping the trigger prevents
   // the default GFM-style importer from adding a mark that the document lacks.
   // Explicit link labels and image descriptions already have their own scope.
   return protectAutolinks
     ? escaped.replace(/https?:\/\/|www\.|@/g, value => value.replace(/[:.@]/, '\\$&'))
     : escaped;
+}
+
+function encodeTextNewlines(text: string): string {
+  return text.replace(/\r/g, '&#13;').replace(/\n/g, '&#10;');
 }
 
 function codeSpan(text: string): string {
@@ -189,7 +193,7 @@ function reportNodeAttributes(
 }
 
 function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[]): string {
-  let value = escapeHTML(node.text ?? '');
+  let value = encodeTextNewlines(escapeHTML(node.text ?? ''));
   for (const mark of [...node.marks].reverse()) {
     const name = mark.type.name;
     if (name === 'strong') value = `<strong>${value}</strong>`;
@@ -229,7 +233,7 @@ function textStyleHTML(node: Node, context: RenderContext, path: readonly number
     else if (mark.type.name === 'font_size') styles.push(`font-size:${String(mark.attrs.size)}`);
     else if (mark.type.name === 'line_height') styles.push(`line-height:${String(mark.attrs.lineHeight)}`);
   });
-  let value = escapeHTML(node.text ?? '');
+  let value = encodeTextNewlines(escapeHTML(node.text ?? ''));
   for (const mark of [...node.marks].reverse().filter((mark) => !TEXT_STYLE_MARKS.has(mark.type.name))) {
     const name = mark.type.name;
     if (name === 'strong') value = `<strong>${value}</strong>`;
@@ -315,7 +319,10 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
     const value = textStyleHTML(node.withMarks(node.marks.filter((mark) => mark !== linkMark)), context, path);
     return linkMark ? link(value, linkMark.attrs.href, linkMark.attrs.title, context) : value;
   }
-  if (needsTextStyleHTML(node)) return textStyleHTML(node, context, path);
+  // Code spans normalize physical line endings and do not decode entities.
+  // The existing inert style envelope retains literal code LF/CR instead.
+  if (needsTextStyleHTML(node) || (/\r|\n/u.test(node.text ?? '')
+    && node.marks.some(mark => mark.type.name === 'code'))) return textStyleHTML(node, context, path);
 
   const text = node.marks.some((mark) => mark.type.name === 'code')
     ? codeSpan(node.text ?? '')

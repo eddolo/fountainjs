@@ -370,6 +370,29 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 }
 
 const schema = new Schema(CoreSchemaSpec);
+// Compare actual text characters, without the general visible-whitespace
+// projection: a decoded LF entity is not a physical Markdown soft break.
+let entityNewlineContracts = 0;
+for (const entity of ['&#10;', '&#xA;', '&NewLine;', '&#13;', '&#xD;', '&#13;&#10;']) {
+  for (const wrapper of ['', '**']) {
+    const source = `${wrapper}a${entity}b\nc${wrapper}`;
+    const walker = referenceParser.parse(source).walker();
+    let expected = '';
+    for (let event; (event = walker.next());) {
+      if (!event.entering) continue;
+      if (event.node.type === 'text') expected += event.node.literal;
+      else if (event.node.type === 'softbreak') expected += ' ';
+    }
+    const actual = MarkdownImporter.parse(source, schema);
+    if (actual.textContent !== expected) throw new Error(`Entity/soft-break character mismatch: ${JSON.stringify(source)}`);
+    const reopened = MarkdownImporter.parse(MarkdownExporter.export(actual), schema);
+    if (JSON.stringify(reopened.toJSON()) !== JSON.stringify(actual.toJSON())) {
+      throw new Error(`Entity/soft-break round-trip mismatch: ${JSON.stringify(source)}`);
+    }
+    entityNewlineContracts += 1;
+  }
+}
+console.log(`Entity newlines: ${entityNewlineContracts} reference text-character and canonical round-trip contracts passed.`);
 // Independent newline contracts, including two identical oracle HTML strings
 // whose source provenance requires different normalized code payloads.
 const codeOriginCases = [

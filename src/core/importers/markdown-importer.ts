@@ -1144,7 +1144,9 @@ function inline(
   let plain = '';
   const flush = () => {
     if (plain) result.push(...textNodes(
-      decodeMarkdownText(plain).replace(/\n/gu, ' '),
+      // Only physical Markdown soft breaks collapse. Entity-decoded LF/CR
+      // characters belong to the text and must survive unchanged.
+      decodeMarkdownText(plain.replace(/\n/gu, ' ')),
       schema,
       inheritedMarks,
     ));

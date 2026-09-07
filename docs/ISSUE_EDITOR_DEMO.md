@@ -57,6 +57,14 @@ must remain text, and the address must remain unlinked. The regenerated Markdown
 contains protective escapes; actual links still use explicit link syntax. The
 recorded `markdown-literal-journey.ts` also checks undo/redo and reader preview.
 
+To test literal line endings, enter `Incident timeline&#10;# not a heading` in
+the source tab. The visual editor should show two lines inside one paragraph,
+not create a heading. Edit the first line, download/reopen the draft and check
+the reader. `markdown-newline-journey.ts` verifies exact characters and displayed
+line positions, including multiline code, history and a narrow reader viewport.
+See [literal text line endings](MARKDOWN_SOURCE.md#literal-text-line-endings-versus-markdown-line-breaks)
+for how these differ from Markdown soft breaks and structural hard-break nodes.
+
 The diagnostics count the actual document's top-level blocks. This page does
 **not** run 100k-block benchmarks, collaboration, pagination or Node/Bun/Deno/
 Workers; it labels those as inactive/unmeasured instead of presenting checkmarks.
