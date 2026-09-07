@@ -100,7 +100,7 @@ export function setHistoryGroup(
 
 function restore(editor: Editor, snapshot: HistorySnapshot, action: 'undo' | 'redo'): boolean {
   const transaction = editor.state.createTransaction()
-    .replace(0, editor.state.doc.childCount, snapshot.doc.content)
+    .replaceDocument(snapshot.doc)
     .setSelection(snapshot.selection)
     .setMeta(HISTORY_ACTION, action)
     .setMeta('addToHistory', false);

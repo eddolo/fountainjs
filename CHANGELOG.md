@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Whole-document opening, undo/redo, version restore and remote snapshots now
+  retain root-level metadata rather than replacing only children and keeping
+  stale attributes. `replaceDocument` validates same-schema roots, replaces
+  attributes exactly and preserves positions for metadata-only updates.
 - Transactions no longer throw when structural replacement removes every text
   leaf. Text carets/ranges and removed inline-node selections recover a nearby
   block gap; empty intermediate documents use an all-document selection.
@@ -12,6 +16,10 @@
 
 ### Added
 
+- Equation lab local JSON/Markdown downloads and validated JSON reopening,
+  including fresh-instance reference rebuilding, undoable opening, file bounds,
+  loss rejection and collision-free generated equation labels after reopening.
+  Portable document JSON only; asset packaging and an `.fjs` reader are not shipped.
 - Separate document-aware equation-reference lab with a host-owned MathJax SVG
   adapter, bundled TeX fonts/notices, namespaced reader links, source editing,
   reorder/renumbering and visible unresolved/duplicate-label failures. Optional

@@ -376,6 +376,46 @@ headless/server, format, size and performance checks after this repair.
 A combined final run passed both journeys in all three browser engines (6/6),
 without retries, under `artifacts/browser-math-and-textless-20260907final/results/`.
 
+### Portable equation file round trip
+
+The lab now downloads `.fountain.json` and Markdown, and opens local JSON after
+schema validation, byte/depth/object bounds and discarded-field checks. Empty
+canonical fields/defaults are accepted; unknown data is rejected, not silently
+dropped. Failed or superseded loads do not replace the live document. Imported
+media URLs retain the ordinary host/network boundary; this is not an offline
+asset package or a standalone `.fjs` reader.
+
+The recorded Chromium journey saves a reordered three-equation document,
+reloads the page, opens the downloaded file, verifies exact JSON and rebuilt
+reader references, and tests undo/redo of opening. It then repeats with nested
+root metadata, saves/reloads again, adds a collision-free fourth label, rejects
+an invalid file without losing the document/history, and downloads Markdown
+with the original TeX. Evidence:
+`artifacts/manual-math-files-20260907b/results/`; the reopened reader screenshot
+was visually inspected. The final combined file, reference-editing and textless
+replacement journeys passed 9/9 in Chromium, Firefox and WebKit without retries:
+`artifacts/browser-math-files-20260907final/results/`.
+
+This exposed a core retention defect: content-only document replacement kept
+the old root metadata, including on undo and remote/version restoration.
+`ReplaceDocumentStep` / `transaction.replaceDocument` now validate and replace
+the complete same-schema root. Root-only metadata edits keep an empty position
+map. History, version restoration and remote document snapshots use that
+boundary; tests cover exact metadata removal/restoration, local undo/redo,
+cross-peer version restore, rejected foreign/invalid roots and unchanged caret
+positions. Runtime totals are 1329.8 KiB ESM / 1109.2 KiB CJS, approximately
++0.6 KiB each. The aggregate CJS cap is 1110 KiB; ESM, individual-entry, CSS and
+performance caps are unchanged. This API addition has an updated declaration
+snapshot, not a new runtime dependency.
+The final `pnpm check` passed all 987 tests in 91 files and the existing package,
+API, headless/server, format, runtime-size and performance checks.
+
+**Still pending:** shared paged/PDF/DOCX math output. Code inspection identifies
+an export-boundary risk requiring a dedicated reproduction: preview clone
+IDs are renamed per block, while cross-block equation links can still refer
+to the original live surface; SVG link handling also needs explicit coverage.
+Source-file round trips do not prove printed formula placement or PDF links.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official

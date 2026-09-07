@@ -415,7 +415,7 @@ export class VersionController {
       }
 
       const transaction = this.options.editor.state.createTransaction()
-        .replace(0, this.options.editor.state.doc.childCount, target.content)
+        .replaceDocument(target)
         .setSelection(selectionAtStart(target))
         .setMeta(VERSION_RESTORE_META, Object.freeze({ versionId: source.id }))
         .setMeta(TRACKED_CHANGES_INTERNAL_META, true);

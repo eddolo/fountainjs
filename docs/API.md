@@ -819,6 +819,28 @@ editor.dispatch(transaction);
 
 Transforms include `replace`, `replaceNode`, `insertText`, `replaceText`, `replaceTextRange`, `addMark`, `removeMark`, and `setNodeAttrs`.
 
+Use `transaction.replaceDocument(documentNode)` (or `ReplaceDocumentStep`) when
+opening an entire saved document. Unlike replacing `doc.content`, it replaces
+root attributes as well as children; it does not merge metadata from the previous
+document. The node must be a valid root from the same schema instance. Parse
+portable JSON through `editor.state.schema.nodeFromJSON()` first. Invalid or
+foreign roots fail before the transaction is changed. Root-metadata-only updates
+produce an empty position map; content replacement maps the complete content
+range. A caller may set its intended final selection after this step.
+Local undo/redo, saved-version restoration and remote document snapshots use
+this operation to avoid dropping or retaining stale root metadata.
+
+The equation lab demonstrates local `Save JSON`, `Open JSON` and `Save Markdown`
+controls using [`math-document-files.ts`](../examples/react-app/src/math-document-files.ts).
+Its file boundary caps UTF-8 input at 2 MiB and bounds object count/nesting before
+recursive schema parsing. It rejects unknown/discarded data, while accepting
+omitted canonical empty fields and schema defaults. It does not mutate the editor
+until validation succeeds; concurrent edits during an asynchronous file read
+cancel that replacement. Opening is undoable. Files contain document data, not
+compiled SVG, transient view IDs or session history. External assets are not
+bundled, missing extensions are rejected rather than projected, and a native
+`.fjs` archive/standalone reader remains a proposal.
+
 Every document-changing step contributes a `StepMap` to
 `transaction.mapping`. A map describes changed structural ranges as
 `start, oldSize, newSize` triples and exposes `map()`, `mapResult()`, and

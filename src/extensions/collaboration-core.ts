@@ -241,7 +241,7 @@ function applyRemoteDocument(
         .setMeta('addToHistory', false));
     }
     const transaction = runtime.editor.state.createTransaction()
-      .replace(0, runtime.editor.state.doc.childCount, next.content)
+      .replaceDocument(next)
       .setMeta(COLLABORATION_REMOTE_META, true)
       .setMeta(COLLABORATION_ORIGIN_META, options.origin)
       .setMeta('addToHistory', false);

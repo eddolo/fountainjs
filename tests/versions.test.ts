@@ -245,15 +245,22 @@ describe('portable document versions', () => {
       idFactory: ids(),
       autoLoad: false,
     });
+    left.dispatch(left.state.createTransaction().setNodeAttrs([], { stage: 'original' }));
+    sync();
+    expect(right.state.doc.attrs).toEqual({ stage: 'original' });
     const original = await controller.save();
-    left.dispatch(left.state.createTransaction().replaceText([0, 0], 0, left.getText().length, 'Current shared draft'));
+    left.dispatch(left.state.createTransaction().replaceDocument(left.state.doc.withAttrs({ stage: 'current', transientNote: 'remove on restore' }))
+      .replaceText([0, 0], 0, left.getText().length, 'Current shared draft'));
     sync();
     expect(right.getText()).toBe('Current shared draft');
+    expect(right.state.doc.attrs).toEqual({ stage: 'current', transientNote: 'remove on restore' });
 
     await controller.restore(original.id);
     sync();
     expect(left.getText()).toBe('Original shared draft');
     expect(right.getText()).toBe('Original shared draft');
+    expect(left.state.doc.attrs).toEqual({ stage: 'original' });
+    expect(right.state.doc.attrs).toEqual({ stage: 'original' });
     controller.destroy();
     left.destroy();
     right.destroy();

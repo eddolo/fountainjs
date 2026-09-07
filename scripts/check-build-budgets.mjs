@@ -306,7 +306,9 @@ const limits = Object.freeze({
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
   // individual entries, ESM, CSS and performance ceilings stay unchanged.
-  'all CommonJS runtime code': 1109 * kibibyte,
+  // Whole-document replacement and restoration of root metadata add ~0.6 KiB
+  // CJS (1109.2 KiB total). Individual entries, ESM and CSS caps stay fixed.
+  'all CommonJS runtime code': 1110 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

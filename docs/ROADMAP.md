@@ -5,6 +5,38 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Native file opportunity (user discussion, 2026-09-07): preserve a proposed `.fjs`
+self-contained package as future work, distinct from plain `.fountain.json`
+interchange. Candidate contents are a versioned manifest, portable document,
+local assets, original imported sources and optional review data. Requirements:
+documented language-neutral structure, missing-extension data retention,
+explicit asset/conversion losses, safe archive limits/path handling, no automatic
+code execution or extension installation, and no embedded credentials or claimed
+file-enforced permissions. The extension/name and container design are not
+finalized; this is not implemented or a promise of arbitrary external-format
+fidelity. Full retention requires round-trip and missing-dependency tests.
+
+Portable-reader companion (user discussion, 2026-09-07): pair that future format
+with a local-first web reader requiring no developer tooling; consider an
+offline/PWA distribution and later desktop file associations. This is distinct
+from today's embedded read-only previews. Preserve unknown extension data and
+offer a clearly labelled, optional static preview/source fallback. Require
+explicit network permission, safe assets/archive handling, trusted renderer
+boundaries and no automatic execution, extension installation or document
+mutation. Checksums detect corruption, not signer authenticity. Source included
+unencrypted in a package cannot be protected merely by hiding inspection UI.
+Verify offline operation, accessibility/reflow, links and missing-dependency
+behaviour before claiming a portable reader. PDF remains a separate fixed-layout
+publication/export format; no reader application is being built in this increment.
+
+Equation file workflow (2026-09-07): the lab now saves portable JSON/Markdown
+files and reopens JSON after a fresh page load, rebuilding reader references.
+The audit found root metadata lost by content-only replacement and undo.
+Whole-document transactions now preserve root attributes through local history,
+version restore and remote collaboration snapshots. File bounds, schema
+validation and discarded-field checks precede replacement; failed loads leave
+the editor intact. This does not bundle external assets or implement `.fjs`.
+
 Academic rendering follow-through (2026-09-07): the separate equation-reference
 lab now uses a bounded host-owned MathJax SVG renderer for original labelled
 equations, forward links, reorder/renumber, source editing, history, visible

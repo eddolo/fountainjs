@@ -4,6 +4,7 @@ import { AddMarkRangeStep, RemoveMarkRangeStep } from './mark-range-step';
 import { InsertTextStep } from './insert-text-step';
 import { RemoveMarkStep } from './remove-mark-step';
 import { ReplaceStep } from './replace-step';
+import { ReplaceDocumentStep } from './replace-document-step';
 import { ReplaceNodeStep } from './replace-node-step';
 import { ReplaceTextStep } from './replace-text-step';
 import { ReplaceTextRangeStep } from './replace-text-range-step';
@@ -41,6 +42,10 @@ export class Transform {
 
   replace(from: number, to: number, content: readonly Node[] = []): this {
     return this.step(new ReplaceStep(from, to, content));
+  }
+
+  replaceDocument(document: Node): this {
+    return this.step(new ReplaceDocumentStep(document));
   }
 
   replaceNode(path: readonly number[], content: readonly Node[] = []): this {

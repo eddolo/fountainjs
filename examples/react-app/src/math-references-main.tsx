@@ -4,6 +4,7 @@ import { createEditor, EditorView, StarterKit, composeExtensions, createMathExte
 import { SitePageLink } from './SitePageLink';
 import { mathReferenceSamples } from './math-reference-samples';
 import { createDocumentMathJaxRenderer, type EquationSnapshot } from './mathjax-document-renderer';
+import { downloadDocumentFile, MAX_EQUATION_FILE_BYTES, nextEquationLabel, parseEquationDocument, replaceEquationDocument } from './math-document-files';
 import 'fountainjs-editor/styles.css';
 import './math-renderer.css';
 import './math-references.css';
@@ -16,6 +17,9 @@ function EquationReferencesLab() {
   const [selected, setSelected] = useState(false);
   const [snapshot, setSnapshot] = useState<EquationSnapshot>({ equationCount: 0, diagnostics: [] });
   const counter = useRef(0);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const openRequest = useRef(0);
+  const [fileMessage, setFileMessage] = useState('Files are read locally. Opening replaces the document and can be undone.');
   useEffect(() => {
     const renderer = createDocumentMathJaxRenderer(setSnapshot);
     const kit = composeExtensions([...StarterKit.extensions, createMathExtension({ documentRenderer: renderer })]);
@@ -29,18 +33,18 @@ function EquationReferencesLab() {
       setSelected(state.selection instanceof NodeSelection && ['math_block', 'inline_math'].includes(state.selection.nodePath.reduce((node, index) => node.child(index), state.doc).type.name));
       if (transaction.docChanged) {
         const copy = reader.state.schema.nodeFromJSON(state.doc.toJSON());
-        reader.dispatch(reader.state.createTransaction().replace(0, reader.state.doc.childCount, copy.content));
+        replaceEquationDocument(reader, copy);
       }
     });
     setEditor(next);
     setDoc(next.state.doc);
-    return () => { unsubscribe(); view.destroy(); readerView.destroy(); reader.destroy(); next.destroy(); };
+    return () => { openRequest.current++; unsubscribe(); view.destroy(); readerView.destroy(); reader.destroy(); next.destroy(); };
   }, []);
 
   function reset(target: Editor) {
     const { schema } = target.state;
     const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
-    target.dispatch(target.state.createTransaction().replace(0, target.state.doc.childCount, [
+    replaceEquationDocument(target, schema.node('doc', {}, [
       paragraph('The deterministic model and its stochastic extension'),
       schema.node('paragraph', {}, [schema.text('Compare equations '),
         schema.node('inline_math', { latex: String.raw`\eqref{eq:dNFE}` }), schema.text(' and '),
@@ -59,11 +63,32 @@ function EquationReferencesLab() {
 
   function addEquation() {
     if (!editor) return;
-    const latex = String.raw`\begin{equation}\label{eq:extra-${++counter.current}}E=mc^2\end{equation}`;
+    const identity = nextEquationLabel(editor.state.doc, counter.current);
+    counter.current = identity.counter;
+    const latex = String.raw`\begin{equation}\label{${identity.label}}E=mc^2\end{equation}`;
     const index = editor.state.doc.childCount - 1;
     const tr = editor.state.createTransaction().replace(index, index, [editor.state.schema.node('math_block', { latex })]);
     tr.setSelection(new NodeSelection(tr.doc, [index]));
     editor.dispatch(tr);
+  }
+
+  async function openFile(file?: File) {
+    if (!editor || !file) return;
+    const request = ++openRequest.current;
+    const before = editor.state.doc;
+    setFileMessage(`Opening ${file.name}…`);
+    try {
+      if (file.size > MAX_EQUATION_FILE_BYTES) throw new Error('Document exceeds the 2 MiB file limit.');
+      const source = await file.text();
+      if (request !== openRequest.current) return;
+      const parsed = parseEquationDocument(source, editor.state.schema);
+      if (editor.state.doc !== before) throw new Error('The document changed while the file was opening. Choose the file again to replace it.');
+      const accepted = replaceEquationDocument(editor, parsed);
+      if (!accepted && !parsed.eq(editor.state.doc)) throw new Error('The editor rejected this document.');
+      setFileMessage(`Opened ${file.name}. Equation numbers are rebuilt from the saved source; Undo restores the previous document.`);
+    } catch (error) {
+      if (request === openRequest.current) setFileMessage(`File not opened: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   return <main className="math-lab equation-lab">
@@ -84,6 +109,14 @@ function EquationReferencesLab() {
         <button disabled={!editor} onClick={() => editor && undo(editor)}>Undo</button>
         <button disabled={!editor} onClick={() => editor && redo(editor)}>Redo</button>
       </div>
+      <div className="math-lab__controls" role="group" aria-label="Document files">
+        <button disabled={!editor} onClick={() => editor && downloadDocumentFile(document, 'equations.fountain.json', JSON.stringify(editor.getJSON(), null, 2), 'application/json')}>Save JSON</button>
+        <button disabled={!editor} onClick={() => fileInput.current?.click()}>Open JSON</button>
+        <input ref={fileInput} type="file" accept=".json,application/json" aria-label="Open Fountain document JSON" hidden onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; void openFile(file); }} />
+        <button disabled={!editor} onClick={() => editor && downloadDocumentFile(document, 'equations.md', MarkdownExporter.export(editor.state.doc), 'text/markdown;charset=utf-8')}>Save Markdown</button>
+      </div>
+      <p aria-live="polite" data-file-message>{fileMessage}</p>
+      <p>JSON retains document data, not external image/attachment files or session history. Imported media URLs may contact their hosts. This is not an offline document package.</p>
       <p>Hover a block to find its movement controls. Click a formula to edit source; Enter inserts a line, Ctrl/Command+Enter finishes. The reader preview below follows your changes.</p>
       <div className={`math-lab__status${snapshot.diagnostics.length ? ' math-lab__status--error' : ''}`} role="status">
         {snapshot.diagnostics.length ? 'Equation diagnostics — check the source below.' : `${snapshot.equationCount} formulas rendered. References resolved; this does not certify the mathematics or paper layout.`}

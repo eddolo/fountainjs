@@ -5,6 +5,11 @@ import { academicTableValues } from '../../examples/react-app/src/academic-table
 import { mathReorderJourney } from './math-reorder-journey';
 import { mathReferencesJourney } from './math-references-journey';
 import { textlessReplacementJourney } from './textless-replacement-journey';
+import { mathFilesJourney } from './math-files-journey';
+
+test('saves and reopens equation files with source, references and history intact', async ({ page }, info) => {
+  await mathFilesJourney(page, info);
+});
 
 test('recovers from textless replacement for native typing, lines and history', async ({ page }, info) => {
   await textlessReplacementJourney(page, info);
