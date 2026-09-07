@@ -97,7 +97,7 @@ function convertListItem(editor: Editor, item: Node, targetName: string): Node |
 function copyListSlice(list: Node, content: readonly Node[], offset = 0): Node {
   return list.type.create(
     list.type.name === 'ordered_list'
-      ? { ...list.attrs, start: (Number(list.attrs.start) || 1) + offset }
+      ? { ...list.attrs, start: Number(list.attrs.start ?? 1) + offset }
       : list.attrs,
     content,
   );

@@ -43,6 +43,14 @@
 
 ### Fixed
 
+- Zero-based ordered lists keep their original numbering when selected items
+  are lifted or converted, including nested-list remainder slices. Browser and
+  server HTML imports now parse list starts as HTML integer prefixes with a
+  bounded native range instead of JavaScript numbers, avoiding an Infinity
+  validation failure. Server reports explicitly identify unsupported reversed,
+  negative, non-decimal and per-item override numbering; these are not yet
+  preserved by the supplied schema.
+
 - HTML import now uses native table section order (header, body, footer) in both
   browser and server paths, preserving stable row order within each section.
   Early footers and late headers no longer move to the wrong visible position

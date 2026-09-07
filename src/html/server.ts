@@ -19,6 +19,7 @@ import {
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
+import { htmlOrderedListStart } from '../core/importers/html-list';
 import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
@@ -1031,8 +1032,16 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       listItemContent(item, schema, context),
     ));
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
-    const start = +(element.getAttribute('start') || 1);
-    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 && !(start % 1) ? start : 1 } : {}, items)];
+    const start = htmlOrderedListStart(element.getAttribute('start'));
+    if (tag === 'ol' && (start < 0 || element.hasAttribute('reversed')
+      || (element.hasAttribute('type') && element.getAttribute('type') !== '1')
+      || element.children.some(child => child.tagName === 'li' && child.hasAttribute('value')))) {
+      reportOnce(context, {
+        code: 'block-html-projection',
+        message: 'Ordered-list numbering was normalized. Negative starts, reversed numbering, non-decimal marker types and per-item value overrides are not retained by the supplied list schema.',
+      });
+    }
+    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}, items)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

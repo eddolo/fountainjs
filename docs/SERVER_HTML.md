@@ -108,6 +108,24 @@ Row-group identity, header/footer layout behavior and unsupported attributes are
 not generally preserved merely because the span is correct. This does not claim
 arbitrary HTML table fidelity.
 
+## Ordered-list numbering contract
+
+Browser and server import share HTML signed-integer-prefix parsing for `ol`
+starts, within the native reflected signed 32-bit range. This follows the
+[HTML integer rules](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#rules-for-parsing-integers),
+not JavaScript numeric syntax: `3e2` starts at 3, `0x10` at 0, and ASCII
+whitespace plus `+0tail` at 0. Missing, invalid and out-of-range values use 1;
+arbitrarily long numeric attributes cannot inject Infinity into schema validation.
+
+The supplied list schema supports ascending, non-negative decimal starts.
+Negative starts normalize to 1. `parseWithReport` explicitly warns when negative
+starts, `reversed`, non-decimal `type`, or direct `li[value]` numbering is not
+retained. These remain capability gaps, not lossless conversions. Nested lists
+are checked independently; arbitrary CSS counters are outside this contract.
+An explicit adapter can supply a richer schema/projection through extension
+rules. HTML export/reimport preserves supported starts; lifting or converting
+part of a zero-based list keeps the remaining slices' original numbers.
+
 ## Portable extension rules
 
 Use `parseHTML` when attribute extraction only needs tag name, text, attributes,

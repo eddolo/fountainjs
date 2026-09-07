@@ -42,6 +42,17 @@ const fixtures = [
 ];
 
 describe('HTML fallback wrapper structure', () => {
+  it.each(['0', '  +0tail', '3e2', '0x10', '7.9', '\t+12more', '', 'bad', '\u00a02', '2147483647', '2147483648', '9'.repeat(400)])('matches the native supported ordered-list start for %j', value => {
+    const native = document.createElement('ol');
+    native.setAttribute('start', value);
+    native.innerHTML = '<li>First</li><li>Second</li>';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const parsed = importer.parse(native.outerHTML, schema);
+      expect(parsed.child(0).attrs.start).toBe(native.start);
+      expect(importer.parse(HTMLExporter.export(parsed, { document: false }), schema).toJSON()).toEqual(parsed.toJSON());
+    }
+  });
+
   it.each(['hbf', 'hfb', 'bhf', 'bfh', 'fhb', 'fbh'])('imports table rows in native section order for %s markup', order => {
     const sections: Record<string, string> = {
       h: '<thead><tr><th scope="col">Heading</th></tr></thead>',

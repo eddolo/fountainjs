@@ -11,6 +11,7 @@ import {
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
+import { htmlOrderedListStart } from './html-list';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 
@@ -535,8 +536,8 @@ function block(element: Element, schema: Schema): FountainNode[] {
       );
     });
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
-    const start = +(element.getAttribute('start') || 1);
-    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 && !(start % 1) ? start : 1 } : {}, items)];
+    const start = htmlOrderedListStart(element.getAttribute('start'));
+    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}, items)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

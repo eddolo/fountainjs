@@ -16,6 +16,25 @@ import { RubyExtension } from '../src/ruby';
 import { createWidgetExtension, defineWidget } from '../src/widgets';
 import { TableMap } from '../src/core/table-map';
 
+describe('server HTML list numbering', () => {
+  it.each(['start="-3"', 'reversed', 'type="A"', 'type="i"'])('reports unsupported list numbering: %s', attrs => {
+    const schema = new Schema(composeExtensions([CoreExtension]).schema);
+    const result = ServerHTMLImporter.parseWithReport(`<ol ${attrs}><li>First</li><li>Second</li></ol>`, schema);
+    expect(result.document.textContent).toBe('FirstSecond');
+    expect(result.issues).toContainEqual(expect.objectContaining({ message: expect.stringContaining('Ordered-list numbering was normalized') }));
+  });
+
+  it('reports per-item values and parses integer prefixes without browser globals', () => {
+    expect(typeof document).toBe('undefined');
+    const schema = new Schema(composeExtensions([CoreExtension]).schema);
+    const importer = new ServerHTMLImporter();
+    const result = importer.parseWithReport('<ol start="3e2"><li value="9">First</li><li>Second</li></ol>', schema);
+    expect(result.document.child(0).attrs.start).toBe(3);
+    expect(result.issues).toContainEqual(expect.objectContaining({ message: expect.stringContaining('per-item value overrides') }));
+    expect(importer.parseWithReport('<ol start="0"><li>Zero</li></ol>', schema).issues).toEqual([]);
+  });
+});
+
 describe('server HTML row-group spans', () => {
   it('places late headers first and early footers last without mixing nested tables or row groups', () => {
     expect(typeof document).toBe('undefined');

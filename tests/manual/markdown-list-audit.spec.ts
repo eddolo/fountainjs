@@ -1,4 +1,9 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
+import { listNumberingJourney } from '../browser/list-numbering-journey';
+
+test('zero-based procedure: real clipboard, keyboard outdent, undo, export and reopen', async ({ page }, info) => {
+  await listNumberingJourney(page, info, true);
+});
 
 const runbook = [
   '# Deployment runbook',

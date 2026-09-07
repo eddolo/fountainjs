@@ -10,6 +10,25 @@ import { mathPagesJourney } from './math-pages-journey';
 import { vueRunbookJourney } from './vue-runbook-journey';
 import { svelteReportJourney } from './svelte-report-journey';
 import { angularCampaignJourney } from './angular-campaign-journey';
+import { listNumberingJourney } from './list-numbering-journey';
+
+test('retains zero-based list numbers through keyboard outdent history and export', async ({ page }, info) => {
+  await listNumberingJourney(page, info);
+});
+
+test('imports ordered-list starts like the native browser integer parser', async ({ page }) => {
+  const values = ['  +0tail', '3e2', '0x10', '7.9', '\u00a02', '2147483648', '9'.repeat(400)];
+  await page.setContent(values.map(value => `<ol start="${value}"><li>Item</li></ol>`).join('\n'));
+  const expected = await page.locator('ol').evaluateAll(lists => lists.map(list => (list as HTMLOListElement).start));
+  const html = await page.locator('body').innerHTML();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(html);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(async () => {
+    const nodes = JSON.parse(await page.locator('.demo-output pre').innerText()).content;
+    expect(nodes.map((node: { attrs: { start: number } }) => node.attrs.start)).toEqual(expected);
+  }).toPass();
+});
 
 test('uses first-party Angular signals and directive for campaign editing and owner cleanup', async ({ page }, info) => {
   await angularCampaignJourney(page, info);

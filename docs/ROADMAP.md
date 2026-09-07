@@ -5,6 +5,29 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+List-numbering fidelity audit (2026-09-07): a real zero-based procedure exposed
+incorrect `0 → 1` renumbering when lifting/converting selected list items. Shared
+slice construction now preserves zero for prefixes and correct offsets for
+remainders, including nested lifting. HTML import in browser and pure Node now
+uses signed integer-prefix parsing within the native reflected range, rather
+than JavaScript number syntax. Huge numeric input no longer reaches schema
+validation as Infinity. Independent native `ol.start` comparisons run in all
+three desktop engines. The supplied schema still lacks negative starts,
+reversed lists, marker styles and per-item values; server conversion reports
+these losses explicitly. End-to-end support for those forms (editing, history,
+HTML/Markdown/DOCX export, pagination and reader output) remains required work.
+
+Before the repair, 12 focused regressions failed. Afterward `pnpm check` passes
+1,205 tests in 104 files, all API/package/server/type checks and unchanged
+performance thresholds. Measured runtime is 1364.1 KiB ESM / 1134.3 KiB CJS;
+aggregate ceilings rise 1 KiB each to 1365 / 1135, individual caps unchanged.
+Twelve focused Chromium/Firefox/WebKit checks pass. A recorded Chrome journey
+uses the real clipboard, Shift+Tab, undo/redo and Markdown export/reopen. Reviewed
+screenshots and recording frames show the zero-based list and correct remaining
+numbers after lifting. Evidence: `artifacts/list-numbering-20260907-recorded/`
+and `artifacts/list-numbering-20260907-browser/`. No CommonMark score is promoted
+and the overall publication gate remains open.
+
 HTML table section-order audit (2026-09-07): both importers now follow native
 header/body/footer row ordering, stable within each section. All six source
 arrangements are compared with the browser's independent `table.rows` result;

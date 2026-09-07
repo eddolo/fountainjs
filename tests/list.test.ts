@@ -19,6 +19,35 @@ const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'tex
 const item = (text: string) => ({ type: 'list_item', content: [paragraph(text)] });
 
 describe('professional list transforms', () => {
+  it.each(['outdent', 'bullet', 'task'] as const)('preserves zero-based numbering around a middle-item %s', action => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: {
+      type: 'doc', content: [{ type: 'ordered_list', attrs: { start: 0 }, content: [item('Zero'), item('One'), item('Two')] }],
+    } });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 1, 0, 0], 1)));
+    expect(action === 'outdent' ? outdentListItem(editor) : toggleList(editor, action)).toBe(true);
+    expect(editor.state.doc.child(0).attrs.start).toBe(0);
+    expect(editor.state.doc.child(2).attrs.start).toBe(2);
+    expect(editor.state.doc.content.map(node => node.textContent)).toEqual(['Zero', 'One', 'Two']);
+    const markdown = MarkdownExporter.export(editor.state.doc);
+    expect(markdown).toContain('0. Zero');
+    expect(markdown).toContain('2. Two');
+    expect(MarkdownImporter.parse(markdown, editor.state.schema).eq(editor.state.doc)).toBe(true);
+    editor.destroy();
+  });
+
+  it('preserves zero-based nested list prefixes and remaining-item numbers when lifting', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [{
+      type: 'bullet_list', content: [{ ...item('Parent'), content: [paragraph('Parent'), {
+        type: 'ordered_list', attrs: { start: 0 }, content: [item('Zero'), item('One'), item('Two')],
+      }] }],
+    }] } });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0, 1, 1, 0, 0], 0)));
+    expect(outdentListItem(editor)).toBe(true);
+    expect(editor.state.doc.child(0).child(0).child(1).attrs.start).toBe(0);
+    expect(editor.state.doc.child(0).child(1).child(1).attrs.start).toBe(2);
+    editor.destroy();
+  });
+
   it('wraps multiple text blocks and toggles the selected list range off', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,
