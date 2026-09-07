@@ -54,7 +54,8 @@ export interface ServerHTMLImporterOptions {
 export type ServerHTMLImportIssueCode =
   | 'html-parse-error'
   | 'invalid-selector'
-  | 'unsupported-dom-rule';
+  | 'unsupported-dom-rule'
+  | 'invalid-rule-result';
 
 export interface ServerHTMLImportIssue {
   readonly code: ServerHTMLImportIssueCode;
@@ -302,6 +303,15 @@ function reportOnce(context: ImportContext, issue: ServerHTMLImportIssue): void 
   context.issues.push(Object.freeze(issue));
 }
 
+function reportRuleFailure(context: ImportContext, rule: ParseRule, contribution: string, reason: string): void {
+  reportOnce(context, {
+    code: 'invalid-rule-result',
+    message: `Skipped HTML rule for ${contribution}: ${reason}.`,
+    selector: rule.tag,
+    contribution,
+  });
+}
+
 function unicodeEmojiName(value: string): string {
   return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
 }
@@ -370,10 +380,19 @@ function attrsFromRule(
       ? (rule.getAttrs as ((candidate: HTMLParseElement) => Attributes | null | false) | undefined)
       : undefined;
     const value = getAttrs?.(element) ?? {};
-    if (value === false || !value || typeof value !== 'object' || Array.isArray(value)) return false;
+    if (value === false) return false;
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      reportRuleFailure(context, rule, contribution, 'attribute reader did not return a plain attribute object');
+      return false;
+    }
     const prototype = Object.getPrototypeOf(value);
-    return prototype === Object.prototype || prototype === null ? value : false;
-  } catch { return false; }
+    if (prototype === Object.prototype || prototype === null) return value;
+    reportRuleFailure(context, rule, contribution, 'attribute reader did not return a plain attribute object');
+    return false;
+  } catch {
+    reportRuleFailure(context, rule, contribution, 'attribute reader threw an exception');
+    return false;
+  }
 }
 
 function configuredRules(
@@ -392,7 +411,11 @@ function ruleContentElement(
   context: ImportContext,
 ): SourceElement | null {
   if (!rule.contentElement) return element;
-  try { return element.querySelector(rule.contentElement); }
+  try {
+    const content = element.querySelector(rule.contentElement);
+    if (!content) reportRuleFailure(context, rule, contribution, 'content selector matched no element');
+    return content;
+  }
   catch {
     reportOnce(context, {
       code: 'invalid-selector',
@@ -434,7 +457,7 @@ function configuredMarks(element: SourceElement, schema: Schema, context: Import
     const attrs = attrsFromRule(element, rule, portable, `mark:${type.name}`, context);
     if (attrs === false) return;
     try { result.push(type.create(attrs)); }
-    catch { /* Invalid extension attributes decline this rule. */ }
+    catch { reportRuleFailure(context, rule, `mark:${type.name}`, 'attributes did not satisfy the mark schema'); }
   });
   return result;
 }
@@ -474,8 +497,9 @@ function configuredNode(
   for (const { type, rule, portable } of matches) {
     const contribution = `node:${type.name}`;
     const attrs = attrsFromRule(element, rule, portable, contribution, context);
+    if (attrs === false) continue;
     const contentRoot = ruleContentElement(element, rule, contribution, context);
-    if (attrs === false || !contentRoot) continue;
+    if (!contentRoot) continue;
     const expression = type.spec.content;
     const candidates: FountainNode[][] = type.spec.atom || !expression
       ? [[]]
@@ -491,6 +515,7 @@ function configuredNode(
         return node;
       } catch { /* Try the next content shape or parse rule. */ }
     }
+    reportRuleFailure(context, rule, contribution, 'no content and attribute projection satisfied the node schema');
   }
   return null;
 }

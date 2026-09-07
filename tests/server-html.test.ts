@@ -76,6 +76,68 @@ const schema = new Schema(composeExtensions([
 ]).schema);
 
 describe('DOM-free server HTML import', () => {
+  it.each(['throws', 'array', 'prototype', 'attributes', 'content', 'missing-content'] as const)('reports %s custom-node failures while retaining readable fallback', failure => {
+    const customSchema = new Schema(composeExtensions([CoreExtension, defineExtension({
+      name: 'invalid-html-rule',
+      nodes: {
+        card: {
+          group: 'block', atom: failure !== 'content',
+          ...(failure === 'content' ? { content: 'heading+' } : {}),
+          attrs: { level: { default: 1, validate: value => value === 1 } },
+          parseHTML: [{
+            tag: 'custom-card',
+            ...(failure === 'missing-content' ? { contentElement: '.missing' } : {}),
+            getAttrs: () => {
+              if (failure === 'throws') throw new Error('Private payload must not be included');
+              if (failure === 'array') return [] as unknown as Record<string, unknown>;
+              if (failure === 'prototype') return new Date() as unknown as Record<string, unknown>;
+              return { level: failure === 'attributes' ? 2 : 1 };
+            },
+          }],
+        },
+      },
+    })]).schema);
+    const result = ServerHTMLImporter.parseWithReport('<custom-card>Keep this text</custom-card><custom-card>And this</custom-card>', customSchema);
+    expect(result.document.textContent).toContain('Keep this text');
+    expect(result.document.textContent).toContain('And this');
+    expect(result.document.content.every(node => node.type.name === 'paragraph')).toBe(true);
+    expect(result.issues).toEqual([expect.objectContaining({
+      code: 'invalid-rule-result', contribution: 'node:card', selector: 'custom-card',
+    })]);
+    expect(result.issues[0].message).not.toContain('Private payload');
+    expect(Object.isFrozen(result.issues[0])).toBe(true);
+  });
+
+  it('reports invalid custom marks while keeping unmarked readable content', () => {
+    const customSchema = new Schema(composeExtensions([CoreExtension, defineExtension({
+      name: 'invalid-html-mark',
+      marks: { badge: {
+        attrs: { kind: { validate: value => value === 'known' } },
+        parseHTML: [{ tag: 'span[data-badge]', getAttrs: () => ({ kind: 'invalid' }) }],
+      } },
+    })]).schema);
+    const result = ServerHTMLImporter.parseWithReport('<p><span data-badge>Keep text</span></p>', customSchema);
+    expect(result.document.textContent).toBe('Keep text');
+    expect(result.document.child(0).child(0).marks).toHaveLength(0);
+    expect(result.issues).toEqual([expect.objectContaining({ code: 'invalid-rule-result', contribution: 'mark:badge' })]);
+  });
+
+  it('treats false as an intentional decline and proceeds to the next rule without a warning', () => {
+    const customSchema = new Schema(composeExtensions([CoreExtension, defineExtension({
+      name: 'declining-html-rule',
+      nodes: { card: {
+        group: 'block', atom: true,
+        parseHTML: [
+          { tag: 'custom-card', priority: 100, contentElement: '.missing', getAttrs: () => false },
+          { tag: 'custom-card', getAttrs: () => ({}) },
+        ],
+      } },
+    })]).schema);
+    const result = ServerHTMLImporter.parseWithReport('<custom-card>Used by fallback rule</custom-card>', customSchema);
+    expect(result.document.child(0).type.name).toBe('card');
+    expect(result.issues).toEqual([]);
+  });
+
   it('runs in the Node test environment without DOMParser, document, or window', () => {
     expect(globalThis).not.toHaveProperty('DOMParser');
     expect(globalThis).not.toHaveProperty('document');

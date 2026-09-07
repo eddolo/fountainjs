@@ -15,6 +15,13 @@
 
 ### Fixed
 
+- Server HTML import now reports invalid custom-rule projections instead of
+  silently disguising thrown attribute readers, malformed results, missing
+  content elements, or schema rejection as ordinary successful conversion.
+  The additive `invalid-rule-result` issue identifies the contribution and
+  selector, preserves readable fallback, and does not expose thrown payloads.
+  Intentional `false` declines remain quiet and still allow later rules.
+
 - Empty supported text marks survive Markdown and browser/server HTML
   interchange. Empty bold, emphasis, code, strike, underline, sub/superscript,
   highlight, nested marks, and formatted empty links no longer turn into

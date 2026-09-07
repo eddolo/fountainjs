@@ -88,7 +88,7 @@ being called with a partial DOM impersonation.
 ## Reports
 
 Use `parseWithReport` when a conversion pipeline must account for parser
-recovery or browser-only extension rules:
+recovery, browser-only extension rules, or failed custom-rule projections:
 
 ```ts
 const { document, issues } = ServerHTMLImporter.parseWithReport(source, schema)
@@ -103,7 +103,27 @@ Issue codes are:
 - `html-parse-error`: the standards parser recovered from malformed source;
 - `invalid-selector`: an extension supplied an invalid selector;
 - `unsupported-dom-rule`: a matching extension rule required a real
-  `HTMLElement` callback and did not provide `parseHTML`.
+  `HTMLElement` callback and did not provide `parseHTML`;
+- `invalid-rule-result`: a matching custom rule threw, returned a non-plain
+  attribute value, could not find its declared content element, or could not
+  produce a schema-valid node/mark. Other rules and readable fallback content
+  are still tried. An explicit `false` is an intentional decline and is not
+  reported as an error; `null`/`undefined` retain their default-attribute meaning.
+
+Rule diagnostics are immutable and deduplicated by code, contribution, selector,
+and reason, rather than repeated for every affected HTML element. They identify
+the extension contribution without copying thrown exception text or stacks into
+the report. A later rule may recover the same content, so a diagnostic is not
+necessarily a lost node. Conversely, an empty report is **not** proof of lossless
+HTML conversion: unsupported tags, attributes, CSS/layout, and some filtered
+content still require broader conversion-loss accounting.
+
+The custom-rule diagnostic increment is covered by eight new Node-only
+regressions (776 tests in the complete local gate). The combined change also
+passed all seven recorded Markdown import/edit/paste/undo/export workflows;
+videos, traces, and screenshots are under
+`artifacts/manual-markdown-combined-20260907a/results/`. Representative rendered
+empty-formatting and authored-spacing screenshots were visually inspected.
 
 Parser recovery does not mean a recovered tree is trusted. The recovered result
 must still satisfy the receiving Fountain schema or the import throws.
