@@ -34,7 +34,8 @@ It is separate from the ten environment integrations in the gallery.
 
 ## Try it
 
-1. Switch to Markdown source. Notice the tilde code fence and double underscores.
+1. Switch to Markdown source. Notice the tilde code fence, double underscores,
+   and the link's separate `[host-docs]` definition.
 2. Return to the visual editor and edit the reproduction paragraph only.
 3. Undo/redo, then inspect source: safely mapped untouched blocks retain their
    original source. Changed blocks are regenerated, not byte-preserved.
@@ -43,8 +44,10 @@ It is separate from the ten environment integrations in the gallery.
 6. Insert an image using the toolbar's local image control. Inspect its preview,
    alt text and exported Markdown before storing anything in a real product.
 
-Cross-block reference definitions and ambiguous mappings can force canonical
-export after a visual edit. Exact untouched-document source preservation does
+Standalone root reference definitions survive unrelated visual edits and block
+moves/deletions. Definitions mixed into paragraphs or containers, and other
+ambiguous mappings, can still force canonical export after an edit.
+Exact untouched-document source preservation does
 not mean Fountain understands all syntax. See [the full contract](MARKDOWN_SOURCE.md).
 
 The diagnostics count the actual document's top-level blocks. This page does

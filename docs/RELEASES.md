@@ -8,13 +8,17 @@ development.
 ## Stability levels
 
 The `0.4.0-beta.1` candidate is an incremental capability preview, not parity
-certification. Prereleases are staged explicitly under `next`; stable versions
-use `latest`. The GitHub release must be marked as a prerelease, and the same
-commit must pass full CI before staging. A maintainer still approves the stage
-using npm 2FA. Do not use a token previously shared in chat. npm's
+certification. By explicit maintainer choice, the current public beta targets
+`latest`, so the default install receives the current version. This tag does
+not imply stable maturity: keep the beta version suffix, prerelease GitHub flag,
+and open limitations in release notes. The same commit must pass full CI before
+approval. A maintainer still approves the stage using npm 2FA. Prefer the
+short-lived OIDC workflow; never commit authentication credentials. npm's
 [stage tag is immutable](https://docs.npmjs.com/cli/v11/commands/npm-stage/), so
-inspect the version and `next` tag before approval; do not move `latest` as a
-side effect of this preview.
+inspect the version and `latest` tag before approval. An already staged `next`
+candidate must be rejected by a maintainer and restaged; its tag cannot be
+edited in place. Registry state, not the presence of a staged tarball, proves
+publication. Keep ongoing Unreleased work separate from a verified candidate.
 
 | Surface | Current level | Compatibility rule |
 | --- | --- | --- |

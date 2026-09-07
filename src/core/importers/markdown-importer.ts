@@ -100,7 +100,7 @@ interface MarkdownSourceParts {
   readonly frontmatter?: MarkdownFrontmatter;
 }
 
-/** One conservatively mapped top-level source block and its following whitespace. */
+/** One conservatively mapped top-level source block and its following source trivia. */
 export interface MarkdownSourceBlockSnapshot {
   readonly source: string;
   readonly separatorAfter: string;
@@ -111,6 +111,7 @@ export interface MarkdownSourceBlockSnapshot {
 interface MarkdownBlockCapture {
   readonly leading: string;
   readonly blocks: readonly MarkdownSourceBlockSnapshot[];
+  readonly referenceDefinitions?: string;
 }
 
 /**
@@ -126,8 +127,10 @@ export class MarkdownSourceSnapshot {
   readonly body: string;
   readonly lineEnding: MarkdownLineEnding;
   readonly frontmatter?: MarkdownFrontmatter;
-  /** Exact whitespace before the first safely mapped block. */
+  /** Exact source trivia (whitespace/standalone definitions) before the first block. */
   readonly leading: string;
+  /** Standalone reference definitions in original order, retained after structural edits. */
+  readonly referenceDefinitions: string;
   /**
    * Conservatively mapped top-level blocks. An empty array means this source was
    * too structurally ambiguous for block-level preservation.
@@ -145,6 +148,7 @@ export class MarkdownSourceSnapshot {
     this.lineEnding = parts.lineEnding;
     this.frontmatter = parts.frontmatter;
     this.leading = capture?.leading ?? '';
+    this.referenceDefinitions = capture?.referenceDefinitions ?? '';
     this.blocks = Object.freeze([...(capture?.blocks ?? [])]);
     Object.freeze(this);
   }
@@ -289,23 +293,53 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
 
 /**
  * Capture only when blank-line-delimited source regions independently map
- * one-to-one to the parsed top-level nodes. Ambiguous lists, definitions,
- * fenced content with blank lines, and cross-block references fail closed.
+ * one-to-one to the parsed top-level nodes. Standalone root reference
+ * definitions are source trivia, shared with every block's inline parser.
+ * Mixed/container definitions and ambiguous block boundaries still fail closed.
  */
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   const segments = markdownBlockSegments(source);
-  if (!segments.blocks.length
-    || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS
-    || segments.blocks.length !== document.content.length) return undefined;
+  if (!segments.blocks.length || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
+  const quietOptions = { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
+    onHTMLFlowFallback: undefined, onTeXTableIssue: undefined };
+  const isDefinitionRegion = (value: string): boolean => {
+    if (!/^ {0,3}\[/u.test(value)) return false;
+    const lines = value.replace(/\r\n?/gu, '\n').split('\n');
+    for (let index = 0; index < lines.length;) {
+      if (footnoteDefinitionAt(lines, index, schema)) return false;
+      const definition = referenceDefinitionAt(lines, index);
+      if (!definition) return false;
+      index += definition.lineCount;
+    }
+    return true;
+  };
+  const definitionRegions = new Set(segments.blocks.filter(block => isDefinitionRegion(block.source)));
+  const referenceDefinitions = [...definitionRegions].map(block => block.source).join(`${sourceLineEnding(source)}${sourceLineEnding(source)}`);
+  // Parse the definition context once; appending every definition to every
+  // block would multiply large reference sets by the number of document blocks.
+  const context = referenceDefinitions ? references(referenceDefinitions, schema, quietOptions).definitions : null;
+  const contentRegions: Array<{ source: string; separatorAfter: string }> = [];
+  let leading = segments.leading;
+  for (const region of segments.blocks) {
+    if (!definitionRegions.has(region)) contentRegions.push({ ...region });
+    else if (contentRegions.length) contentRegions[contentRegions.length - 1].separatorAfter += region.source + region.separatorAfter;
+    else leading += region.source + region.separatorAfter;
+  }
+  if (contentRegions.length !== document.content.length) return undefined;
 
   const blocks: MarkdownSourceBlockSnapshot[] = [];
-  for (let index = 0; index < segments.blocks.length; index += 1) {
-    const segment = segments.blocks[index];
-    const parsed = new MarkdownImporter().parse(segment.source, schema, {
-      ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined, onHTMLFlowFallback: undefined, onTeXTableIssue: undefined,
-    });
+  for (let index = 0; index < contentRegions.length; index += 1) {
+    const segment = contentRegions[index];
+    let parsed: readonly Node[];
+    if (context) {
+      const local = references(segment.source, schema, quietOptions);
+      // Definitions embedded in a moved/deleted content region could change
+      // other blocks' destinations. Do not claim independent provenance there.
+      if (local.definitions.size) return undefined;
+      parsed = parseBlocks(local.lines, schema, context, quietOptions);
+    } else parsed = new MarkdownImporter().parse(segment.source, schema, quietOptions).content;
     const original = document.content[index];
-    if (parsed.content.length !== 1 || !parsed.content[0].eq(original)) return undefined;
+    if (parsed.length !== 1 || !parsed[0].eq(original)) return undefined;
     blocks.push(Object.freeze({
       source: segment.source,
       separatorAfter: segment.separatorAfter,
@@ -314,8 +348,9 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
   }
 
   return Object.freeze({
-    leading: segments.leading,
+    leading,
     blocks: Object.freeze(blocks),
+    referenceDefinitions,
   });
 }
 

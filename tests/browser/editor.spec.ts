@@ -20,7 +20,7 @@ test('writes and reopens an issue with visual Markdown source fidelity and reade
   await issueEditorJourney(page, info);
 });
 
-test('issue workflow reports source regeneration and validates local image files', async ({ page }) => {
+test('issue workflow preserves root references and validates local image files', async ({ page }) => {
   await page.goto('/issue-editor.html');
   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
   const source = page.getByRole('textbox', { name: 'Markdown description', exact: true });
@@ -34,7 +34,10 @@ test('issue workflow reports source regeneration and validates local image files
   await editor.getByText('Editable paragraph.', { exact: true }).click();
   await page.keyboard.press('End');
   await page.keyboard.type(' Changed.');
-  await expect(page.getByLabel('Fountain diagnostics')).toContainText('canonical');
+  await expect(page.getByLabel('Fountain diagnostics')).toContainText('blocks');
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  await expect(source).toHaveValue(reference.replace('Editable paragraph.', 'Editable paragraph. Changed.'));
+  await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
   const input = page.locator('input[type="file"][accept="image/*"]');
   await input.setInputFiles({ name: 'not-image.txt', mimeType: 'text/plain', buffer: Buffer.from('Not an image') });
   await expect(page.getByRole('alert')).toContainText('Choose a PNG');
@@ -46,6 +49,22 @@ test('issue workflow reports source regeneration and validates local image files
   await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBe(1);
   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
   await expect(source).toHaveValue(/data:image\/gif;base64,/);
+  await expect(source).toHaveValue(/\[doc\]: https:\/\/example.com\/docs/);
+});
+
+test('issue workflow reports canonical fallback for mixed reference definitions', async ({ page }) => {
+  await page.goto('/issue-editor.html');
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  const source = page.getByRole('textbox', { name: 'Markdown description', exact: true });
+  await source.fill('Editable paragraph.\n\n[doc]: https://example.com/docs\nA [reference][doc].\n\nAnother [doc].');
+  await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
+  const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+  await editor.getByText('Editable paragraph.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Changed.');
+  await expect(page.getByLabel('Fountain diagnostics')).toContainText('canonical');
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  await expect(source).toHaveValue(/\[reference\]\(https:\/\/example.com\/docs\)/);
 });
 
 test('reopens a full HTML report without promoting page metadata into editor content', async ({ page }, info) => {

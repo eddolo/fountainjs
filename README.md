@@ -12,7 +12,7 @@ Underneath those ready-made features is a modular editing engine: a typed docume
 
 > `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
 
-The repository is preparing `0.4.0-beta.1` as a `next`-tag preview. Publication
+The repository is preparing `0.4.0-beta.1` as the default (`latest`) public beta. Publication
 requires CI and npm staged approval; this is not a claim of completed parity.
 Try the [issue-editor workflow](https://eddolo.github.io/fountainjs/issue-editor.html)
 and read its [API walkthrough](docs/ISSUE_EDITOR_DEMO.md). Check npm's published

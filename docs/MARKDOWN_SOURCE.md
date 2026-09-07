@@ -407,7 +407,7 @@ features represented in the model and exporter.
 ## Safe block-level preservation
 
 `parseWithSource` attempts a deliberately conservative top-level mapping. A
-blank-line-delimited source region must independently parse to exactly one node,
+blank-line-delimited content region must independently parse to exactly one node,
 and the complete ordered set must equal the full parsed document. Only then are
 the block source, leading whitespace, separators, and trailing whitespace
 captured. On export, position-aligned equal nodes reuse their exact source and
@@ -421,12 +421,31 @@ to a different neighbor. Capture is capped at 10,000 top-level regions; larger
 source still gets exact whole-document preservation while unchanged, then
 canonical fallback.
 
+Standalone root link/image reference definitions are shared parsing context,
+not document nodes. Their exact source stays in `leading` or `separatorAfter`
+trivia for aligned edits. `referenceDefinitions` exposes the captured definition
+regions in original order; after a structural move/deletion they are appended
+once, in that order, with canonical separators. This keeps surviving references
+resolvable and preserves first-definition precedence. Unused definitions are not
+automatically removed. A single parsed definition map is shared across capture
+checks instead of reparsing every definition for every content block.
+
+Only regions entirely consisting of accepted root definitions qualify. Mixed
+paragraph/definition regions, container definitions, footnotes and ambiguous
+boundaries do not receive this guarantee. Rejected unsafe URL definitions remain
+visible literal content under the normal importer policy, not hidden trivia.
+Source preservation is not a sanitizer; raw unchanged source can contain syntax
+that the model does not activate. Newly generated plain text escapes brackets so
+retained definitions cannot turn literal text into unintended links.
+
 This preserves useful author choices such as Setext headings, closing ATX
 markers, deliberate spacing, and unknown literal directives in untouched
 blocks. Equal duplicates retain their own source only while their original node
 identity survives; duplicated references, reconstructed equal nodes, loose
-structures spanning blank lines, cross-block reference definitions, and changed
-reference-style links remain canonical. Fountain does not use fuzzy matching or
+structures spanning blank lines and mixed/container reference definitions can
+still force canonical output. Changed links are regenerated inline; requesting
+new reference-style output falls back if it would collide with source-owned
+definitions. Fountain does not use fuzzy matching or
 silently attach raw source to the wrong node.
 
 ## Current semantic baseline

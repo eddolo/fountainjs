@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest verified increment (2026-09-07, Unreleased): root Markdown reference
+definitions retain source and lookup precedence through unrelated edits and
+block movement/deletion. The issue workflow demonstrates visual editing,
+undo/redo, raw-source fidelity, read-only preview and local download/reopen.
+Evidence: 1,249 unit tests / 106 files in `pnpm check`, nine Chromium/Firefox/
+WebKit workflow checks, and a recorded journey with inspected source/reader/
+mobile screenshots under `artifacts/reference-source-20260907-recorded/`.
+This does not close CommonMark conformance or ambiguous/container provenance,
+and is not included in the earlier staged 0.4.0-beta.1 package.
+
 This document is the release gate for the work required to make FountainJS a
 credible independent alternative to the combined ProseMirror + Tiptap stack. It
 compares user outcomes rather than copying either implementation or API. The

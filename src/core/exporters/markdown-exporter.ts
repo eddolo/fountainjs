@@ -661,7 +661,10 @@ export class MarkdownExporter {
       // Structural output uses canonical separators. This avoids assigning
       // source-owned whitespace to a different neighbor after a move/delete.
       if (preservedBlocks > 0 && context.references.size === 0) {
-        const body = renderedBlocks.join(`${source.lineEnding}${source.lineEnding}`);
+        let body = renderedBlocks.join(`${source.lineEnding}${source.lineEnding}`);
+        // Definitions have document-wide scope. Moves/deletions must not strand
+        // an unchanged reference, or reorder duplicate-definition precedence.
+        if (source.referenceDefinitions) body += `${source.lineEnding}${source.lineEnding}${source.referenceDefinitions}`;
         return Object.freeze({
           markdown: withSourceFrontmatter(source, body),
           losses: Object.freeze([...context.losses]),

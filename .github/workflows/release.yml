@@ -50,9 +50,7 @@ jobs:
       # A maintainer must still inspect and approve the stage with npm 2FA.
       - name: Stage package on npm
         if: github.event_name == 'release'
-        run: |
-          if node --input-type=module -e "import p from './package.json' with { type: 'json' }; process.exit(p.version.includes('-') ? 0 : 1)"; then
-            npm stage publish . --access public --tag next
-          else
-            npm stage publish . --access public --tag latest
-          fi
+        # The maintainer explicitly wants the current public beta to be the
+        # default install. The version and release notes still identify beta
+        # maturity; the distribution tag does not certify production parity.
+        run: npm stage publish . --access public --tag latest

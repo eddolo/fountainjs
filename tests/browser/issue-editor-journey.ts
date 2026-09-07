@@ -3,6 +3,14 @@ import { issueMarkdown } from '../../examples/react-app/src/issue-example';
 
 export async function issueEditorJourney(page: Page, info: TestInfo): Promise<void> {
   await page.goto('/issue-editor.html');
+  const capture = async (filename: string): Promise<void> => {
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+    await page.screenshot({ path: info.outputPath(filename), fullPage: true });
+  };
   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
   const sourceTab = page.getByRole('button', { name: 'Markdown source', exact: true });
   const visualTab = page.getByRole('button', { name: 'Visual editor', exact: true });
@@ -27,17 +35,16 @@ export async function issueEditorJourney(page: Page, info: TestInfo): Promise<vo
   expect(edited).toContain('rooms. Confirmed locally.');
   expect(edited).toContain('~~~typescript\nswitchRoom("planning");\n~~~');
   expect(edited).toContain('__deliberate source formatting__');
-  expect(edited).toContain('[link](https://example.com/docs "Host documentation")');
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: info.outputPath('edited-source-fidelity.png'), fullPage: true });
+  expect(edited).toContain('[link][host-docs]');
+  expect(edited).toContain('[host-docs]: https://example.com/docs "Host documentation"');
+  await capture('edited-source-fidelity.png');
   await source.fill(edited.replace('Needs checking', 'Verified locally'));
   await previewTab.click();
   const preview = page.getByRole('textbox', { name: 'Issue preview', exact: true });
   await expect(preview).toHaveAttribute('contenteditable', 'false');
   await expect(preview).toContainText('Verified locally');
   await expect(page.getByRole('toolbar', { name: 'Formatting and rich content' })).not.toBeVisible();
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: info.outputPath('reader-preview.png'), fullPage: true });
+  await capture('reader-preview.png');
   const downloaded = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download Markdown draft', exact: true }).click();
   const download = await downloaded;
@@ -55,11 +62,10 @@ export async function issueEditorJourney(page: Page, info: TestInfo): Promise<vo
   await expect(checkbox).toBeChecked();
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(checkbox).not.toBeChecked();
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: info.outputPath('reopened-issue.png'), fullPage: true });
+  await capture('reopened-issue.png');
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(async () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   }).toPass();
-  await page.screenshot({ path: info.outputPath('mobile-issue.png'), fullPage: true });
+  await capture('mobile-issue.png');
 }

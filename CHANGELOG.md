@@ -2,9 +2,15 @@
 
 ## Unreleased
 
+- Markdown source snapshots retain standalone root reference definitions after
+  unrelated edits and block moves/deletions, including their duplicate-definition
+  precedence. Mixed/container definitions and ambiguous boundaries still fall
+  back to canonical output. The issue workflow now demonstrates reference-style
+  source retention. These changes are **not** in the staged 0.4.0-beta.1 tarball.
+
 ## 0.4.0-beta.1 — Capability preview
 
-Preview release candidate for the `next` npm tag; publication requires the
+Preview release candidate intended for the `latest` npm tag; publication requires the
 release verification workflow and maintainer approval of the staged package.
 This is not completion of the ProseMirror + Tiptap parity programme. Full
 CommonMark conformance, native Word/whole-paper export fidelity, physical-device
