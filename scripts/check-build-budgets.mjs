@@ -281,9 +281,13 @@ const limits = Object.freeze({
   // the optional server entry and all consumer-entry ceilings remain fixed.
   // Browser/server wrapper structure, its diagnostic, and pipe-table fixes add
   // ~0.8 KiB ESM / ~0.7 KiB CJS; no dependency or individual-entry cap changes.
-  'all ESM runtime code': 1313 * kibibyte,
+  // Shared deterministic raw-HTML lexical grammar adds ~0.8 KiB ESM / ~0.6
+  // KiB CJS, replacing two different heuristics; individual caps stay fixed.
+  // Equivalent selection-boundary handling adds ~0.6 KiB ESM / ~0.5 KiB CJS;
+  // caret/IME replacement keeps marks without changing consumer-entry caps.
+  'all ESM runtime code': 1315 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
-  'all CommonJS runtime code': 1096 * kibibyte,
+  'all CommonJS runtime code': 1097 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

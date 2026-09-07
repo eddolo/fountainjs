@@ -30,6 +30,7 @@ import {
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
+import { textReplacementSelection } from '../core/text-replacement-selection';
 import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
   insertAssetFile,
@@ -542,7 +543,7 @@ export class InputManager {
   };
 
   private commitComposition(data: string): boolean {
-    const selection = this.compositionSelection;
+    let selection = this.compositionSelection;
     if (this.compositionHandled || !selection || !data) return false;
     if (selection.kind !== 'text') {
       const inserted = this.runGroupedInput('composition', () => insertText(this.editor, data));
@@ -553,6 +554,7 @@ export class InputManager {
       return inserted;
     }
     const { state } = this.editor;
+    selection = textReplacementSelection(state.doc, selection);
     const transaction = state.createTransaction();
     const target = getNodeAtPath(state.doc, selection.path);
     let landingPath = selection.path;
@@ -570,7 +572,8 @@ export class InputManager {
     } else if (selection.isSingleText) transaction.replaceText(selection.path, selection.from, selection.to, data);
     else transaction.replaceTextRange(selection.path, selection.from, selection.endPath, selection.to, data);
     setHistoryGroup(transaction, 'composition');
-    transaction.setStoredMarks(state.storedMarks).setSelection(Selection.cursor(landingPath, landingOffset));
+    if (selection.isCollapsed) transaction.setStoredMarks(state.storedMarks);
+    transaction.setSelection(Selection.cursor(landingPath, landingOffset));
     this.editor.dispatch(transaction);
     this.compositionHandled = true;
     this.compositionSelection = undefined;

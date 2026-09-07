@@ -2,7 +2,7 @@ import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
-import { markdownHTMLBlock, markdownHTMLBlockEnd, markdownEmptyParagraph, type MarkdownHTMLBlock } from '../markdown-html';
+import { markdownHTMLBlock, markdownHTMLBlockEnd, markdownEmptyParagraph, markdownHTMLTokenEnd as inlineHTMLTokenEnd, type MarkdownHTMLBlock } from '../markdown-html';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
 const MAX_MARKDOWN_REFERENCE_LINES = 32;
@@ -632,37 +632,6 @@ function codeSpanToken(value: string, start: number): { readonly text: string; r
   return null;
 }
 
-function inlineHTMLTokenEnd(value: string, start: number): number {
-  if (value.startsWith('<!--', start)) {
-    const end = value.indexOf('-->', start + 4);
-    return end < 0 ? -1 : end + 3;
-  }
-  if (value.startsWith('<![CDATA[', start)) {
-    const end = value.indexOf(']]>', start + 9);
-    return end < 0 ? -1 : end + 3;
-  }
-  if (value.startsWith('<?', start)) {
-    const end = value.indexOf('?>', start + 2);
-    return end < 0 ? -1 : end + 2;
-  }
-  if (/^<![A-Z]/u.test(value.slice(start))) {
-    const end = value.indexOf('>', start + 2);
-    return end < 0 ? -1 : end + 1;
-  }
-  if (!/^<\/?[A-Za-z][A-Za-z\d-]*(?=[\t\n\f />])/u.test(value.slice(start))) return -1;
-
-  let quote = '';
-  for (let index = start + 1; index < value.length; index++) {
-    const character = value[index];
-    if (quote) {
-      if (character === quote) quote = '';
-      continue;
-    }
-    if (character === '"' || character === "'") { quote = character; continue; }
-    if (character === '>') return index + 1;
-  }
-  return -1;
-}
 
 function linkLabelEnd(value: string, start: number): number {
   let depth = 0;

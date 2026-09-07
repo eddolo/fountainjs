@@ -358,6 +358,41 @@ describe('document model and transactions', () => {
     expect(MarkdownExporter.export(editor.state)).toBe('**Bold** plain');
   });
 
+  it.each(['em', 'strong', 'code'])('keeps %s formatting throughout replacement typing, not just its first character', mark => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [{ type: 'paragraph', content: [
+      { type: 'text', text: 'Before ' }, { type: 'text', text: 'important', marks: [{ type: mark }] }, { type: 'text', text: ' after' },
+    ] }] } });
+    editor.dispatch(editor.state.createTransaction().setSelection(new Selection([0, 1], 0, 9)));
+    for (const character of 'critical') expect(insertText(editor, character)).toBe(true);
+    const paragraph = editor.state.doc.child(0);
+    expect(paragraph.textContent).toBe('Before critical after');
+    expect(paragraph.content.filter(node => node.marks.some(candidate => candidate.type.name === mark)).map(node => node.textContent).join('')).toBe('critical');
+    expect(editor.state.storedMarks.map(candidate => candidate.type.name)).toEqual([mark]);
+  });
+
+  it('continues with the actual insertion marks after replacing a mixed-mark range', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [{ type: 'paragraph', content: [
+      { type: 'text', text: 'marked', marks: [{ type: 'strong' }] }, { type: 'text', text: ' plain tail' },
+    ] }] } });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.range([0, 0], 0, [0, 1], 6)));
+    insertText(editor, 'N');
+    insertText(editor, 'ew');
+    expect(MarkdownExporter.export(editor.state)).toBe('**New** tail');
+  });
+
+  it('gives equivalent text-boundary representations the same replacement formatting', () => {
+    const results = [Selection.range([0, 0], 7, [0, 2], 1), Selection.range([0, 1], 0, [0, 2], 1)].map(selection => {
+      const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [{ type: 'paragraph', content: [
+        { type: 'text', text: 'Before ' }, { type: 'text', text: 'important', marks: [{ type: 'em' }] }, { type: 'text', text: ' after' },
+      ] }] } });
+      editor.dispatch(editor.state.createTransaction().setSelection(selection));
+      for (const letter of 'critical') insertText(editor, letter);
+      expect(MarkdownExporter.export(editor.state)).toBe('Before *critical*after');
+      return editor.state.doc.toJSON();
+    });
+    expect(results[0]).toEqual(results[1]);
+  });
+
   it('splits a block at the current selection', () => {
     const editor = createEditor({ schema: CoreSchemaSpec });
     insertText(editor, 'Hello world');

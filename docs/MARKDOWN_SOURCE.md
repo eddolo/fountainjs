@@ -386,6 +386,59 @@ just to make their reference-rendered HTML match. Empty caret hosts retain their
 explicit editor-model contract; blanket removal of empty paragraphs would erase
 real author-created spacing.
 
+Inline lexical recognition and type-7 complete-tag detection now share the
+same DOM-free scanner in `src/core/markdown-html.ts`, following the
+[CommonMark 0.31.2 raw-HTML grammar](https://spec.commonmark.org/0.31.2/#raw-html).
+Malformed attributes, missing separators, and attributes on closing tags no
+longer hide otherwise valid Markdown emphasis or code behind an opaque token.
+Valid raw tags remain inert literal content under the default policy. Short
+comments and lowercase declarations have their proper token boundaries, and
+ASCII HTML whitespace is distinguished from Unicode text inside attribute
+values. Type-6 block detection deliberately retains its separate prefix rule.
+
+This is a shared lexical foundation, not a general inline HTML-to-schema
+adapter. Inline projection still needs a coherent treatment of HTML scopes
+crossing Markdown links/emphasis, custom inline nodes, schema/security policy,
+unsupported content, and source provenance. The existing `parseHTMLBlock`
+callback must not be applied to isolated inline tags as if each were a complete
+document: doing so would lose the scope that determines subsequent content.
+
+The recorded lexical/editing workflow also exposed a core typing defect:
+replacing a selected formatted word retained formatting only for the first
+character. Range replacement now derives the following caret's marks from the
+inserted leaf in both `insertText` and composition commit, while collapsed-caret
+input retains explicit stored-mark choices. Tests cover emphasis, strong, code,
+mixed-mark replacement, native browser word selection, and synthetic IME commit
+followed by ordinary typing. Synthetic composition tests are not a claim of
+physical-device IME certification.
+
+Firefox word selection also exposed equivalent-boundary ambiguity: the start
+of the selected marked run can be expressed as the preceding text run's end.
+`src/core/text-replacement-selection.ts` resolves that boundary to the first
+actually selected nonempty text sibling before ordinary/IME replacement. It
+does not move collapsed carets, cross blocks or atoms, or move beyond the range
+endpoint. A core test verifies that both equivalent range representations
+produce identical replacement content and formatting.
+
+Verification (2026-09-07): the final `pnpm check` passed 857 tests in 81 files,
+plus package/runtime, API, semantic conformance, build, and performance checks.
+Fifteen sequential Chromium/Firefox/WebKit contracts passed under
+`artifacts/browser-lexical-mark-replacement-20260907c/results/`. All twelve
+recorded Markdown/HTML workflows passed under
+`artifacts/manual-html-lexical-20260907b/results/`; the conversion output and
+post-edit screenshot were visually inspected, including the entire replacement
+word remaining italic after typing and undo/redo. The original recordings and
+failing regressions exposed the stored-mark and Firefox boundary problems;
+those checks were retained with explicit assertions for the intended formatting.
+
+No public API or dependency changed. Aggregate runtime measured 1314.1 KiB ESM
+and 1096.6 KiB CommonJS, approximately 1.4/1.1 KiB above the preceding checkpoint.
+Aggregate caps are now 1315/1097 KiB; individual entry and performance limits
+remain unchanged. The CommonMark classification remains 563 matches, 72 pending,
+and 17 intentional differences. The preceding `8ec99e0` has successful
+[CI](https://github.com/eddolo/fountainjs/actions/runs/34083546807) and
+[site deployment](https://github.com/eddolo/fountainjs/actions/runs/34083546803).
+
 The optional block adapter is now implemented, including nested-container and
 source-snapshot propagation, a default-off public demo control, and a recorded
 HTML-block → rich editing → undo/redo → canonical Markdown → re-import workflow.

@@ -278,8 +278,16 @@ describe('EditorView', () => {
     view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'clean' }));
 
     expect(editor.getText()).toBe('A clean');
-    expect(editor.state.selection.path).toEqual([0, 0]);
-    expect(editor.state.selection.from).toBe(7);
+    // The DOM start is the end of "A ", but the first selected character
+    // belongs to the strong run. Preserve that formatting, not the preceding
+    // unselected run's marks or its old merged-leaf cursor representation.
+    expect(editor.state.selection.path).toEqual([0, 1]);
+    expect(editor.state.selection.from).toBe(5);
+    expect(editor.state.doc.child(0).child(1).marks.map(mark => mark.type.name)).toEqual(['strong']);
+    view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'er' }));
+    expect(editor.getText()).toBe('A cleaner');
+    expect(editor.state.doc.child(0).child(1).textContent).toBe('cleaner');
+    expect(editor.state.doc.child(0).child(1).marks.map(mark => mark.type.name)).toEqual(['strong']);
     view.destroy();
   });
 

@@ -2987,6 +2987,38 @@ test('groups adjacent browser typing and respects explicit undo boundaries', asy
   await expect.poll(firstText).toBe('Alpha Beta');
 });
 
+for (const mode of ['typing', 'composition'] as const) {
+  test(`preserves replacement formatting across subsequent ${mode} input`, async ({ page }) => {
+    await page.evaluate(() => {
+      const contract = (globalThis as any).fountainBrowserTest;
+      const editor = contract.editor;
+      const doc = editor.state.doc.constructor.fromJSON(editor.state.schema, contract.inspectMarkdown('Before *important* after').document);
+      editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, doc.content));
+    });
+    const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+    await editor.getByText('important', { exact: true }).dblclick();
+    // Windows Chromium/Firefox include the following space in a native word
+    // selection; WebKit selects only the word. Exercise the actual selection,
+    // including a cross-mark boundary, without silently trimming the result.
+    await expect.poll(() => page.evaluate(() => document.getSelection()?.toString())).toMatch(/^important ?$/);
+    const selectedSpace = await page.evaluate(() => document.getSelection()?.toString().endsWith(' '));
+    if (mode === 'typing') await page.keyboard.type('critical');
+    else {
+      await editor.evaluate(target => {
+        target.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+        target.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertCompositionText', data: '東', isComposing: true }));
+        target.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東京' }));
+        target.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertCompositionText', data: '東京' }));
+      });
+      await page.keyboard.type('X');
+    }
+    const replacement = mode === 'typing' ? 'critical' : '東京X';
+    await expect(editor.locator('em')).toHaveText(replacement);
+    await expect(editor.locator(':scope > p')).toHaveText(`Before ${replacement}${selectedSpace ? '' : ' '}after`);
+    await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.storedMarks.map((mark: any) => mark.type.name))).toEqual(['em']);
+  });
+}
+
 test('commits cross-browser composition sequences once and supports replacement input', async ({ page }) => {
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([0, 0], 0, 5));
   await page.waitForTimeout(0);
@@ -3174,6 +3206,23 @@ test('pastes unwrapped inline HTML without dropping surrounding text or formatti
   await expect(editor.locator('a[href="/target"]')).toHaveCSS('text-decoration-line', 'underline');
   await page.keyboard.press('Control+z');
   await expect(editor).not.toContainText('Before bold and link.');
+});
+
+test('honors strict raw HTML token boundaries in the public Markdown pipeline', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('Malformed <a x=="*important*">.\n\nValid <a x="*literal*"> and *outside*.\n\nShort <!--> *visible*.\n\nClose </a x="*editable*">.');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = output.locator('pre');
+  await expect(html).toContainText('<em>important</em>');
+  await expect(html).toContainText('<em>outside</em>');
+  await expect(html).toContainText('<em>visible</em>');
+  await expect(html).toContainText('<em>editable</em>');
+  await expect(html).not.toContainText('<em>literal</em>');
+  await expect(html).not.toContainText('<a ');
+  const original = await html.innerText();
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(html).toHaveText(original);
 });
 
 test('pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists', async ({ page }) => {

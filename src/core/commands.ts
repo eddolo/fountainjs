@@ -1,4 +1,5 @@
 import type { Editor } from './editor';
+import { textReplacementSelection } from './text-replacement-selection';
 import {
   AllSelection,
   CellSelection,
@@ -327,10 +328,11 @@ function preserveTextSelectionAfterMark(
 
 export function insertText(editor: Editor, text: string): boolean {
   if (!editor.editable) return false;
-  if (editor.state.selection.kind !== 'text') return replaceSemanticSelection(editor, editor.state.selection, text);
-  if (!text) return false;
   const { state } = editor;
-  const { path, endPath, from, to } = state.selection;
+  if (state.selection.kind !== 'text') return replaceSemanticSelection(editor, state.selection, text);
+  if (!text) return false;
+  const selection = textReplacementSelection(state.doc, state.selection);
+  const { path, endPath, from, to } = selection;
   const target = getNodeAtPath(state.doc, path);
   if (!target.isText) return false;
   const transaction = state.createTransaction();
@@ -347,9 +349,11 @@ export function insertText(editor: Editor, text: string): boolean {
       .setStoredMarks(state.storedMarks);
     return dispatchTextSelection(editor, transaction, insertedPath, text.length, text.length);
   }
-  if (state.selection.isSingleText) transaction.replaceText(path, from, to, text);
+  if (selection.isSingleText) transaction.replaceText(path, from, to, text);
   else transaction.replaceTextRange(path, from, endPath, to, text);
-  transaction.setStoredMarks(state.storedMarks);
+  // Range replacement inherits the insertion leaf's marks. Infer the new
+  // caret marks from that result instead of pinning the range's cleared marks.
+  if (state.selection.isCollapsed) transaction.setStoredMarks(state.storedMarks);
   return dispatchTextSelection(editor, transaction, path, from + text.length, from + text.length);
 }
 
