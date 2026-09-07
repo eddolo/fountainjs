@@ -3,6 +3,7 @@ import type { Node } from '../schema';
 import { fontFamilyCSS } from '../../text-style/values';
 import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/markdown-importer';
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
+import { HTMLExporter } from './html-exporter';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -19,6 +20,8 @@ export interface MarkdownExportOptions {
   linkStyle?: MarkdownLinkStyle;
   /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
   emptyParagraphs?: 'preserve' | 'omit';
+  /** Pipe tables (default), or safe HTML preserving supported block content and cell layout. */
+  tableFormat?: 'pipe' | 'html';
   /** Receives each lossy projection after it is recorded in the returned report. */
   onLoss?: (loss: MarkdownExportLoss) => void;
 }
@@ -528,6 +531,12 @@ function render(
       report(context, 'node', node.type.name, path, 'Provider and sandbox metadata are projected to a link and cannot be reconstructed from Markdown alone.');
       return `${link(`Embedded content: ${escapeInline(String(node.attrs.title || node.attrs.provider || 'Open'))}`, node.attrs.src, '', context)}${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
     case 'table': {
+      if (context.options.tableFormat === 'html') {
+        report(context, 'node', 'table', path, 'Table projected as HTML: re-import requires an HTML-enabled Markdown reader. Arbitrary schema metadata is not guaranteed to survive the HTML boundary.');
+        // CommonMark HTML blocks end at a blank physical line. Keep authored
+        // code/text newlines as HTML character references, not block terminators.
+        return HTMLExporter.export(node, { document: false }).replace(/\r/g, '&#13;').replace(/\n/g, '&#10;');
+      }
       const firstRow = node.content[0];
       const alignments = firstRow?.content.map(tableAlignment) ?? [];
       return node.content.map((row, rowIndex) => {

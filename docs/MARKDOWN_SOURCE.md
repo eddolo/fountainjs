@@ -68,6 +68,63 @@ appropriate safe output layer and retain normal application trust boundaries.
 Try the **Convert HTML blocks to rich content** checkbox in the
 [headless conversion demo](https://eddolo.github.io/fountainjs/demos/node-markdown.html).
 
+### Preserving rich tables in exported Markdown
+
+Pipe tables remain the portable default, with loss reports for merged cells,
+column widths, or multiple/non-paragraph cell blocks. Choose HTML explicitly
+when the receiving Markdown reader supports it:
+
+```ts
+const exported = MarkdownExporter.exportWithReport(document, {
+  tableFormat: 'html',
+})
+const restored = MarkdownImporter.parse(exported.markdown, schema, {
+  parseHTMLBlock: ServerHTMLImporter.parse,
+})
+```
+
+The option uses Fountain's existing safe HTML serializer, not arbitrary raw
+HTML injection. Supported cell paragraphs, empty paragraphs, headings, lists,
+quotes, code, nested tables, spans, widths, and header scope are retained.
+Text/attribute newlines use numeric HTML references, keeping the table on one
+physical line so a blank line inside code cannot end the Markdown HTML block.
+HTML tables work inside supported lists and quotes too.
+
+Each HTML table emits a conservative entry in `losses`: a compatible
+HTML-enabled reader is required and arbitrary schema metadata is not verified
+lossless through HTML. This is a compatibility/projection notice, not a claim
+that every cell lost content or an exhaustive HTML loss inventory. JSON remains
+the lossless storage format. Without `parseHTMLBlock`, the default importer
+keeps the table HTML as editable literal text. `linkStyle` and `emptyParagraphs`
+apply to ordinary Markdown rendering; content inside an HTML table follows the
+HTML serializer instead. Exact, unchanged source snapshots still take priority
+over canonical export options.
+
+The demo data panels expose **Keep table structure with HTML** in the Markdown
+tab and show expandable export notes. Re-import that output with **Convert HTML
+blocks to rich content** enabled.
+
+Verification (2026-09-07): the complete local gate passed 792 tests, package and
+server-runtime checks, headless-boundary checks, semantic conformance, API,
+build, and performance budgets. Three Chromium/Firefox/WebKit runs exercised
+the public export choice and re-import. The recorded workflow under
+`artifacts/manual-html-table-markdown-20260907b/results/` imports multiline HTML,
+shows both pipe-loss notes and the HTML compatibility note, copies the actual
+Markdown output, re-imports it with equal JSON, and edits the resulting rich
+table. Its export-control and rendered-table screenshots were visually
+inspected. Windows clipboard LF→CRLF normalization is allowed for physical
+Markdown separators; code newlines encoded inside the table must still restore
+exactly. This does not alter the CommonMark baseline or certify arbitrary HTML
+metadata fidelity.
+
+All nine recorded Markdown/HTML regressions also passed under
+`artifacts/manual-markdown-html-export-regression-20260907a/results/`, and the
+existing public headless Markdown/LaTeX/server-HTML journey passed in all three
+browser engines (six targeted browser runs including the new table workflow).
+The previous table-cell/Unicode increment `8582f38` passed both
+[remote CI](https://github.com/eddolo/fountainjs/actions/runs/34080837721) and
+[Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34080837727).
+
 ### Exact source snapshots
 
 ```ts

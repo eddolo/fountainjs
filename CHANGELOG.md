@@ -4,6 +4,15 @@
 
 ### Added
 
+- `MarkdownExportOptions.tableFormat: 'html'` emits safe HTML table fragments
+  through Fountain's existing serializer, preserving supported rich cell
+  blocks, spans, column widths, and header scope. Newlines are encoded as HTML
+  character references so code with blank lines cannot terminate a Markdown
+  HTML block. Pipe tables remain the default. A conservative compatibility
+  note documents the required HTML-enabled reader and unverified arbitrary
+  metadata boundary. Demo Markdown panels expose the choice and export notes
+  separately from import diagnostics.
+
 - Opt-in `MarkdownImportOptions.parseHTMLBlock` connects a host-owned,
   synchronous HTML importer to recognized raw HTML blocks without importing a
   DOM or HTML parser into the core. Nested lists, quotes, disclosures, and

@@ -4910,7 +4910,7 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   const source = page.getByLabel('Markdown input');
   await expect(source).toContainText('$E=mc^2$');
   await expect(source).toContainText('[reference links][formats]');
-  await expect(page.getByText('Valid document · 7 top-level blocks · no reported Markdown losses')).toBeVisible();
+  await expect(page.getByText('Valid document · 7 top-level blocks · no reported Markdown import issues')).toBeVisible();
   const output = page.locator('.demo-output pre');
   await expect(output).toContainText('inline_math');
   await expect(output).toContainText('math_block');
@@ -6105,6 +6105,28 @@ test('virtualizes 100,000 blocks while preserving scrolling, distant selection, 
   expect(metrics.composedText).toBe('東京Virtual browser block 75000');
   expect(metrics.totalHeight).toBeGreaterThan(1_000_000);
   expect(metrics.createDurationMs).toBeLessThan(5_000);
+});
+
+test('exports rich tables as HTML Markdown and exposes the compatibility note', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  const source = '<table><tr><th colspan="2" data-colwidth="120,160"><p>First</p><p>Second</p><pre><code>one()\n\ntwo()</code></pre></th></tr></table>';
+  await page.getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input', { exact: true }).fill(source);
+  const output = page.locator('.demo-output');
+  await expect(output.locator('pre')).toContainText('table_header');
+  const original = JSON.parse(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await expect(output.locator('details')).toContainText('flattened');
+  await output.getByRole('checkbox', { name: 'Keep table structure with HTML' }).check();
+  await expect(output.locator('details')).toContainText('HTML-enabled Markdown reader');
+  const exported = await output.locator('pre').innerText();
+  expect(exported).toContain('colspan="2"');
+  expect(exported).toContain('one()&#10;&#10;two()');
+  await page.locator('.headless-input-tabs').getByRole('button', { name: 'Markdown', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await page.getByLabel('Markdown input', { exact: true }).fill(exported);
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  await expect.poll(async () => JSON.parse(await output.locator('pre').innerText())).toEqual(original);
 });
 
 test('converts raw HTML blocks only when the headless demo option is enabled', async ({ page }) => {

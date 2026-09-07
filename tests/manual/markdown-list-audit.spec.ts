@@ -34,6 +34,56 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('rich table Markdown export keeps structure through the public controls', async ({ page, context }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  const html = '<h1>Release checks</h1><table><tr><th colspan="2" data-colwidth="140,180"><p>Release checklist</p><p>Owner: Ada</p><ul><li>Run smoke tests</li><li>Keep rollback ready</li></ul><pre><code>npm test\n\nnpm run build</code></pre><table><tr><td>Nested evidence</td></tr></table></th></tr></table>';
+  await page.getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input', { exact: true }).fill(html);
+  const output = page.locator('.demo-output');
+  await expect(output.locator('pre')).toContainText('table_header');
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await output.locator('summary').click();
+  await expect(output.getByText(/Multiple or non-paragraph cell blocks are flattened/)).toBeVisible();
+  await output.getByRole('checkbox', { name: 'Keep table structure with HTML' }).check();
+  await expect(output.getByText(/Table projected as HTML/)).toBeVisible();
+  await output.scrollIntoViewIfNeeded();
+  await capture(page, info, '19-html-table-markdown-choice-and-notes');
+  const markdown = await output.locator('pre').innerText();
+  expect(markdown).toContain('npm test&#10;&#10;npm run build');
+  await output.getByRole('button', { name: 'Copy', exact: true }).click();
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  // Windows' plain-text clipboard may normalize physical LF separators to
+  // CRLF. Encoded code newlines must remain exact in the restored document.
+  expect(copied.replace(/\r\n/g, '\n')).toBe(markdown);
+  await page.locator('.headless-input-tabs').getByRole('button', { name: 'Markdown', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await page.getByLabel('Markdown input', { exact: true }).fill(copied);
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const restored = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), restored);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('table')).toHaveCount(2);
+  await expect(editor.locator('pre')).toHaveText('npm test\n\nnpm run build');
+  await expect(editor.locator('th').first()).toHaveAttribute('colspan', '2');
+  await editor.getByText('Owner: Ada', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' approved');
+  await expect(editor).toContainText('Owner: Ada approved');
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '20-html-markdown-table-rendered-and-editable');
+  expect(errors).toEqual([]);
+});
+
 test('structured table cells survive real copy, editing, and server HTML re-import', async ({ page, context }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

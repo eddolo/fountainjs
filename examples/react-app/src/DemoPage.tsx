@@ -268,16 +268,25 @@ function outputFor(document: Node | undefined, format: OutputFormat): string {
 function OutputPanel({ document }: { document: Node | undefined }) {
   const [format, setFormat] = useState<OutputFormat>('json');
   const [copied, setCopied] = useState(false);
-  const output = useMemo(() => outputFor(document, format), [document, format]);
+  const [htmlTables, setHTMLTables] = useState(false);
+  const markdown = useMemo(() => document && format === 'markdown'
+    ? MarkdownExporter.exportWithReport(document, { tableFormat: htmlTables ? 'html' : 'pipe' })
+    : undefined, [document, format, htmlTables]);
+  const output = useMemo(() => markdown?.markdown ?? outputFor(document, format), [document, format, markdown]);
   const copy = async () => {
     await navigator.clipboard.writeText(output);
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   };
 
-  return <section className="demo-output">
+  return <section className={`demo-output${format === 'markdown' ? ' demo-output--markdown' : ''}`}>
     <header><span><strong>Portable document data</strong><small>Developer inspection · not the reader UI</small></span><button onClick={copy}>{copied ? 'Copied' : 'Copy'}</button></header>
     <nav>{(['json', 'markdown', 'html'] as const).map((item) => <button className={format === item ? 'active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</nav>
+    {format === 'markdown' && <div className="demo-output-policy">
+      <label><input type="checkbox" checked={htmlTables} onChange={event => setHTMLTables(event.target.checked)} /> Keep table structure with HTML</label>
+      <p>{htmlTables ? 'Preserves supported cell blocks and layout. Re-import with “Convert HTML blocks to rich content” enabled. Arbitrary metadata still belongs in JSON.' : 'Pipe tables may flatten rich cell content and omit merged cells or column widths.'}</p>
+      {!!markdown?.losses.length && <details><summary>{markdown.losses.length} export note{markdown.losses.length === 1 ? '' : 's'}</summary><ul>{markdown.losses.map((loss, index) => <li key={index}>{loss.type} at {loss.path.join('.') || 'root'}: {loss.detail}</li>)}</ul></details>}
+    </div>}
     <pre><code>{output}</code></pre>
   </section>;
 }
@@ -542,7 +551,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
         } : undefined,
         onHTMLBlockFallback: issue => issues.push(`Kept HTML as text: ${issue.message}`),
       });
-      return { document, details: MarkdownExporter.exportWithReport(document).losses.length + issues.length, error: '', loading: false, issues };
+      return { document, details: issues.length, error: '', loading: false, issues };
     } catch (error) {
       return { document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false, issues: [] as string[] };
     }
@@ -584,7 +593,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     ? `${parsed.details ? `${parsed.details} reported DOCX conversion detail${parsed.details === 1 ? '' : 's'}` : 'bounded DOCX import with no reported losses'}`
     : inputFormat === 'html'
     ? `${parsed.details ? `${parsed.details} recovered HTML issue${parsed.details === 1 ? '' : 's'}` : 'no recovered HTML issues'}`
-    : `${parsed.details ? `${parsed.details} projected Markdown detail${parsed.details === 1 ? '' : 's'}` : 'no reported Markdown losses'}`;
+    : `${parsed.details ? `${parsed.details} Markdown import detail${parsed.details === 1 ? '' : 's'}` : 'no reported Markdown import issues'}`;
   const downloadDOCX = (sourceDocument = parsed.document, fileName = 'fountainjs-document.docx') => {
     if (!sourceDocument) return;
     const result = exportDOCX(sourceDocument, { title: demo.title, creator: 'FountainJS demo' });

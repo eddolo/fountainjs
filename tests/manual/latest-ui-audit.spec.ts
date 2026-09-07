@@ -142,7 +142,7 @@ test('human document-conversion journey: edit, download Word, re-import, and ins
   await page.goto('/demos/node-markdown.html');
   const source = page.getByLabel('Markdown input');
   await source.fill('# Customer handoff\n\nThe **release candidate** is ready.\n\n- Verify the package\n- Send the report\n\n| Owner | State |\n| :--- | :---: |\n| Paolo | Ready |');
-  await expect(page.getByText('Valid document · 4 top-level blocks · no reported Markdown losses')).toBeVisible();
+  await expect(page.getByText('Valid document · 4 top-level blocks · no reported Markdown import issues')).toBeVisible();
   await capture(page, testInfo, '01-edited-source-before-word-export');
   await pause(page, 600);
 
