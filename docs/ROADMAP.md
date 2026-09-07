@@ -5,13 +5,31 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
-Academic rendering follow-through (2026-09-07): opt-in document-aware math
-context now lets a host refresh dependent views after edits elsewhere, with
-real MathJax semantic tests. This exposed and fixed a moved-block NodeView/path
-mismatch. A recorded two-equation KaTeX workflow checks reorder, edit, history,
-source export and narrow-screen controls. A finished visual numbering/reference
-adapter, shared reader/export rendering and whole-paper fidelity remain open;
-see [the reference audit](REFERENCE_DOCUMENT_AUDIT.md#document-context-boundary-implemented-visual-label-adapter-still-pending).
+Academic rendering follow-through (2026-09-07): the separate equation-reference
+lab now uses a bounded host-owned MathJax SVG renderer for original labelled
+equations, forward links, reorder/renumber, source editing, history, visible
+missing/duplicate-label failures, and a read-only reader. MathJax/font data stay
+outside the npm runtime. Asynchronous resources, incremental compilation,
+matching PDF/DOCX export and whole-paper fidelity remain open; see
+[the reference audit](REFERENCE_DOCUMENT_AUDIT.md#document-aware-svg-equation-lab).
+
+Academic product opportunity (user discussion, 2026-09-07): target developers
+building structured scientific/laboratory applications, rather than declaring
+Fountain a replacement for Overleaf, Quarto or Jupyter. Quarto's visual/source
+editor, citations, cross-references and executable cells are a workflow benchmark
+and potential integration target. Combine source-preserving equations, optional
+proof/execution providers and extension-defined research widgets only after
+testing their interactions. Stable node IDs are not automatically scholarly
+references; large plain-block benchmarks do not certify equation-heavy papers.
+Keep bibliography/templates, complete TeX projects, reproducible computation,
+save/reopen and independently inspected publication output explicit requirements
+of any future academic reference application. This does not start a separate
+product or change the existing editor parity release gates.
+
+New reliability follow-up from the equation lab: replacing a text-selected
+document with only atoms or childless paragraphs can throw during selection
+mapping before normalization plugins run. Reproduce at the transaction boundary
+and fix without relying on demo callers to append synthetic empty text leaves.
 
 Markdown follow-through (2026-09-07): the opt-in inline HTML adapter now protects
 Fountain's original parsed nodes while applying surrounding HTML formatting.
@@ -43,8 +61,8 @@ original domain tools. This is required evidence, not a future cosmetic demo.
 The first paper preflight found missing display-equation and TeX-table import.
 Explicit TeX-environment import now recognizes both original equations without
 discarding their labels. Table structure and all 21 original values now import
-with explicit placement/rule-loss diagnostics; label rendering, table layout
-and whole-paper fidelity remain open. See the open
+with explicit placement/rule-loss diagnostics; the host SVG lab now renders
+labels, while table layout and whole-paper fidelity remain open. See the open
 [reference-document benchmark and pinned sources](REFERENCE_DOCUMENT_AUDIT.md).
 
 Explicit content interpretation (user suggestion, 2026-09-07): provide a consistent

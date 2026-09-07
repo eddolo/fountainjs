@@ -1,0 +1,7 @@
+.equation-lab .fountain-math--display > .fountain-math__output { width: 100%; overflow-x: auto; padding-bottom: 6px; }
+.equation-lab .fountain-math--display [data-document-mathjax] { min-width: 960px; }
+.equation-lab [data-document-mathjax] a { cursor: pointer; }
+.equation-lab [data-document-mathjax] a:hover { color: #583ab8; }
+.equation-lab .fountain-editor[contenteditable="false"] { min-height: 0; }
+.equation-lab .fountain-editor { padding-left: 48px; }
+.equation-lab .math-lab__status { overflow-wrap: anywhere; }

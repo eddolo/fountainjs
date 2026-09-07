@@ -3,6 +3,11 @@ import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
+import { mathReferencesJourney } from './math-references-journey';
+
+test('renders labelled equations and reader links through real editing and recovery', async ({ page }, info) => {
+  await mathReferencesJourney(page, info);
+});
 
 test('keeps moved math source attached to its formula through native editing, undo, and export', async ({ page }, info) => {
   await mathReorderJourney(page, info);

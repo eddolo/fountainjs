@@ -4,11 +4,17 @@
 
 ### Added
 
+- Separate document-aware equation-reference lab with a host-owned MathJax SVG
+  adapter, bundled TeX fonts/notices, namespaced reader links, source editing,
+  reorder/renumbering and visible unresolved/duplicate-label failures. Optional
+  website integration only: no MathJax runtime dependency or new package export.
+  Synchronous resource limits, narrow-screen scrolling and glyph fallback are
+  explicit; whole-paper, asynchronous and PDF/DOCX parity remain pending.
 - Opt-in document-aware math renderer context and post-reconciliation NodeView
   document notifications, without adding a runtime math dependency. Real MathJax
   semantic tests cover forward references, reorder/undo/redo, deleted targets,
-  isolated scopes and error recovery. A finished visual label/reference adapter
-  and matching reader/export rendering remain pending.
+  isolated scopes and error recovery. The separate host lab supplies a visual
+  adapter and reader; matching export rendering remains pending.
 - Two-equation reorder/edit sample in the math renderer lab, with recorded
   source-editing, history and Markdown-export checks and a mobile control gutter.
 

@@ -303,12 +303,60 @@ navigation timeout before opening the lab; that case passed separately and the
 complete 12-case run then passed without retries. Production site build and
 TypeScript checking also passed.
 
-**Still pending:** a real document-aware visual renderer with namespaced anchors,
+**Pending at this increment (superseded by the next section):** a real document-aware visual renderer with namespaced anchors,
 visible missing/duplicate-label diagnostics and recorded cross-reference edits;
 shared reader/export rendering; asynchronous-resource policy and whole-paper
 PDF/DOCX comparison. The public KaTeX lab still rejects the original equation
 labels. Passing context/semantic tests must not be promoted to full reference or
 paper parity.
+
+### Document-aware SVG equation lab
+
+The separate `math-references.html` lab now renders the two original labelled
+equations using `examples/react-app/src/mathjax-document-renderer.ts`. Both
+forward references resolve; the stochastic equation's number stays on its
+numbered second row. Author and read-only reader share the host renderer with
+independent anchor namespaces. Reordering renumbers both surfaces; deleting a
+target exposes `(???)` and a diagnostic; duplicate labels replace all stale SVG
+with exact source until corrected. This does not change the KaTeX lab's syntax.
+
+The adapter has a private browser handler and local MathJax TeX SVG font data,
+base/AMS packages only, source/macro/count bounds, no global loader or external
+requests. A snapshot cache uses occurrence paths, not node object identity.
+System-font fallback is reported instead of claiming self-contained glyph
+fidelity. The optional website chunk is approximately 1.80 MB / 684 KB gzip;
+the unused default NewCM font is excluded by the website build alias. Engine
+dependencies, public exports and runtime size ceilings are unchanged. Code and
+font licensing are distinguished in `public/mathjax-notices.txt` (Apache-2.0
+code; SIL OFL-1.1 glyph data).
+
+Twelve integration tests cover real SVG/anchors, source preservation, scope
+isolation, reorder/delete/history, duplicate errors and recovery, prohibited
+commands, local font families, resource bounds, repeated node occurrences and
+glyph fallback. The full `pnpm check` passed 966 tests in 88 files and its other
+package, API, headless, format, size and performance gates on 2026-09-07.
+
+The final recorded Chromium workflow is under
+`artifacts/manual-math-references-20260907e/results/`; it edits the moved original
+equation using native keyboard selection, undoes, deletes/restores a referenced
+equation, deliberately creates duplicate labels, recovers, adds/removes an
+equation and checks Markdown source. Screenshots were compared with the pinned
+paper's first page: formula structure and number placement are represented,
+but font metrics and page layout are not a 1:1 reproduction. Reader-region
+geometry and narrow-screen horizontal scrolling were checked; the final pan
+shows the equation number remains reachable without document overflow. The
+updated journey passed 3/3 serially across Chromium, Firefox and WebKit under
+`artifacts/browser-math-references-20260907b/results/`, including actual reader
+link navigation, attempted reader typing and the locally served license notice.
+Chromium duplicate-source fallback, Firefox full reader and WebKit's narrow
+horizontal-pan screenshots were visually inspected. The site production build
+also passed, retaining the visible optional-chunk size warning.
+
+**Still pending:** asynchronous-resource lifecycle, incremental performance,
+accessible math/navigation audit, persistence/reopen and shared PDF/DOCX math
+projection; complete paper citations, bibliography, figures, table layout and
+all-page export comparison. The lab's 128-formula bound and fixed 960px measure
+must not be advertised as large-document or professional publication parity.
 
 ## Lean reference track
 

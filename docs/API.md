@@ -645,6 +645,29 @@ promises or install MathJax, resolve labels, execute TeX, or provide an export
 renderer automatically. Errors retain editable source through `onRenderError`.
 Specifying both `renderer` and `documentRenderer` is rejected.
 
+For a working host integration, see
+[`mathjax-document-renderer.ts`](../examples/react-app/src/mathjax-document-renderer.ts)
+and the [equation references lab](https://eddolo.github.io/fountainjs/math-references.html).
+This example is not a package export or an engine dependency. Pass its
+`createDocumentMathJaxRenderer(onSnapshot)` result as `documentRenderer`.
+It compiles base/AMS TeX to SVG once per immutable snapshot, including forward
+references, and caches results by node **path**, so repeated immutable node
+objects receive distinct numbers. Each editor/reader view has private anchors
+and a private MathJax handler; source labels remain untouched in JSON/Markdown.
+Duplicate labels or unsupported syntax replace stale SVG with editable source;
+missing targets and system-font fallback produce explicit diagnostics.
+
+The example bundles MathJax 4.1.3 and its TeX SVG glyph data locally, with
+[code/font notices](../examples/react-app/public/mathjax-notices.txt). It enables
+no package autoloading, remote resources, external math links or code execution.
+An optional second argument accepts another fully preloaded SVG font. The
+synchronous integration is bounded to 128 formulas / 128,000 source characters
+per snapshot (20,000 per formula), with a fixed 960px measure and horizontal
+scrolling on narrow screens. It is not an incremental or asynchronous compiler,
+full TeX importer, accessible-math certification, or matching PDF/DOCX exporter.
+The paired read-only preview uses the same renderer, but application permissions
+still require host authorization; `editable: false` is only a UI boundary.
+
 Custom NodeViews may independently implement `updateDocument(documentNode)`.
 EditorView invokes it after DOM/path reconciliation, including equal reused
 nodes, once per mounted view/document identity. The hook must be synchronous and
