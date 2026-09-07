@@ -16,16 +16,20 @@ if (createHash('sha256').update(bytes).digest('hex') !== expectedSHA256) {
 }
 const source = bytes.toString('utf8');
 const schema = new Schema(composeExtensions([...StarterKit.extensions, MathExtension]).schema);
-const imported = MarkdownImporter.parseWithSource(source, schema);
+const importOptions = { texMathEnvironments: true };
+const imported = MarkdownImporter.parseWithSource(source, schema, importOptions);
 const counts = {};
+const equations = [];
 function visit(node) {
   counts[node.type.name] = (counts[node.type.name] ?? 0) + 1;
+  if (node.type.name === 'math_block') equations.push(node.attrs.latex);
   node.content.forEach(visit);
 }
 visit(imported.document);
 const checks = [
   { name: 'unchanged source string', passed: MarkdownExporter.exportWithSource(imported.document, imported.source).markdown === source },
   { name: 'two displayed equations become editable math blocks', expected: 2, actual: counts.math_block ?? 0 },
+  { name: 'complete original equation source including labels', passed: JSON.stringify(equations) === JSON.stringify([...source.matchAll(/\\begin\{(equation|align)\}[\s\S]*?\\end\{\1\}/gu)].map(match => match[0])) },
   { name: 'LaTeX tabular becomes an editable table', expected: 1, actual: counts.table ?? 0 },
 ].map(check => ({ ...check, passed: check.passed ?? check.actual === check.expected }));
 console.log(JSON.stringify({
@@ -34,6 +38,7 @@ console.log(JSON.stringify({
   license: 'CC-BY-4.0',
   sourceURL,
   sourceSHA256: expectedSHA256,
+  importOptions,
   counts,
   checks,
   status: checks.every(check => check.passed) ? 'structural-preflight-passed' : 'reproduction-incomplete',

@@ -291,12 +291,15 @@ const limits = Object.freeze({
   // 5.1 KiB ESM / 4.4 KiB CJS. No new dependency or individual-entry cap change.
   // Explicit discarded-comment/inline-element/URL diagnostics and accepted-
   // branch reporting add ~0.9 KiB ESM; CJS remains within its current ceiling.
-  'all ESM runtime code': 1321 * kibibyte,
+  // Opt-in TeX environment boundaries and opaque definition/container handling
+  // measure 1323.3 KiB ESM / 1104.1 KiB CJS (+2.4 / +1.7 KiB). No dependency,
+  // individual-entry, CSS or performance-ceiling changes.
+  'all ESM runtime code': 1324 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
   // individual entries, ESM, CSS and performance ceilings stay unchanged.
-  'all CommonJS runtime code': 1103 * kibibyte,
+  'all CommonJS runtime code': 1105 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

@@ -32,9 +32,22 @@ Real-document acceptance (2026-09-07): reproduce openly licensed academic papers
 and native Lean proof workflows as editable documents, with recorded user edits,
 independent all-page export inspection, and explicit differences against the
 original domain tools. This is required evidence, not a future cosmetic demo.
-The first paper preflight already finds missing display-equation and TeX-table
-import, despite exact untouched-source preservation. See the open
+The first paper preflight found missing display-equation and TeX-table import.
+Explicit TeX-environment import now recognizes both original equations without
+discarding their labels; table import, label rendering and whole-paper fidelity
+remain open. See the open
 [reference-document benchmark and pinned sources](REFERENCE_DOCUMENT_AUDIT.md).
+
+Explicit content interpretation (user suggestion, 2026-09-07): provide a consistent
+selection/block action such as “Treat as LaTeX / Lean / Python / plain/verbatim.”
+This complements automatic import; it does not replace its acceptance checks.
+Use existing typed math/code nodes, preserve source, preview conversion losses,
+and make conversion undoable. Plain/verbatim must disable interpretation.
+Distinguish formula source from a full TeX document.
+Show provider/renderer availability and diagnostics: choosing a language must
+never execute code, silently connect to a service, or imply successful proof
+checking. Developers should register additional interpretations through modules.
+The underlying typed blocks exist; this unified end-user workflow is **pending**.
 
 Demand claims submitted on **2026-09-04** are recorded here as research leads.
 Before priority is justified publicly, the original Tiptap/ProseMirror issue or

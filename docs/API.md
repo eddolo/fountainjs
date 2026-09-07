@@ -1638,6 +1638,20 @@ marks on the image atom, including full/reference linked-image forms. Reference 
 changing their displayed label, unsafe URLs remain ordinary text, short table
 rows are padded, and the final tree passes `schema.validate()`.
 
+`MarkdownImporter.parse(source, schema, { texMathEnvironments: true })` (also
+available on `parseWithSource`) explicitly recognizes complete standalone TeX
+`equation`, `align`, `gather`, `multline` and `displaymath` environments, including
+starred variants except `displaymath`. A `math_block` schema node is required.
+The environment may follow prose without a blank line in this opt-in dialect.
+Its entire source, labels, comments, nested environments and tabs remain in
+`attrs.latex`; model line endings become LF, while an unchanged source snapshot
+retains the exact input. Fences, indented code and raw HTML remain opaque.
+Incomplete/mismatched or over-20,000-character environments retain the normal
+Markdown interpretation. This is lexical import, not macro execution, label
+resolution, bibliography support, or a full TeX compiler. Canonical export uses
+Fountain's `$$` wrapper around the complete retained environment. Without the
+option, existing Markdown interpretation is unchanged.
+
 `MarkdownImporter.parseWithSource(source, schema)` returns
 `{ document, source }`. The immutable `MarkdownSourceSnapshot` keeps the exact
 input, detected line ending, body, and optional inert YAML frontmatter. Fountain

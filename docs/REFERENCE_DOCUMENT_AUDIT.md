@@ -1,6 +1,7 @@
 # Real-document reproduction benchmark
 
-Status: **open; reference inspection and first structural preflight only**.
+Status: **open; equation import now passes the structural preflight, but table,
+rendering and whole-document reproduction remain incomplete**.
 Added from the user's 2026-09-07 requirement. This strengthens DOC-09, DOC-10,
 FORMAT-03, and FORMAT-05 acceptance; it is not another delivered capability.
 
@@ -95,8 +96,9 @@ smoke check inspects every runtime source map to enforce that boundary.
 The two equation fixtures were compared exactly with the pinned paper source.
 Both retain `\label` and both currently fail this renderer. The lab deliberately
 does not erase labels or substitute a simplified equation and call that a match.
-Loading a fixture creates an existing math node directly, **not** an automatic
-whole-paper import. The aligned example and recovery integral are separate
+Loading a published fixture now uses the explicit TeX-environment Markdown
+import described below, **not** a full TeX-document compiler. The aligned example
+is still directly authored as a math node; it and the recovery integral are separate
 editor-authored examples, not representations of the paper.
 
 Actual renderer testing found that KaTeX's error-colored output could bypass
@@ -118,6 +120,41 @@ published-source failure, recovered integral and the 390px-wide layout were
 visually inspected. The production site build also passed. Runtime bundles
 measure 1320.9 KiB ESM / 1102.4 KiB CJS, within unchanged ceilings. These checks
 establish the renderer boundary, not full-paper or native Lean parity.
+
+## Explicit TeX environment import
+
+`MarkdownImporter.parseWithSource(source, schema, { texMathEnvironments: true })`
+now recognizes complete equation/align/gather/multline/displaymath environments
+when the schema provides math blocks. It does not strip labels, interpret macros,
+or expand package definitions. The default dialect remains unchanged.
+
+The full pinned JOSS source now produces **two editable math blocks**, each
+exactly equal to its original equation environment including its label. This was
+checked against the downloaded checksum-verified paper, not only the two isolated
+fixtures. The source places equations immediately after prose without blank
+lines, which is also covered. Original tabs/comments remain opaque to reference
+and footnote discovery. Model line endings normalize to LF; the untouched source
+snapshot still returns the exact complete input.
+
+The updated audit still deliberately exits nonzero: the LaTeX table produces
+**zero table nodes**. There are now 36 inline math nodes (not all visually audited).
+KaTeX still rejects both equations' labels. Numbering, cross-references,
+bibliography, figures and all-page PDF/DOCX reproduction remain open. The lab
+now exercises import followed by rendering/fallback and editing; no simplified
+substitute is counted as the published equation.
+
+Verification: 24 new TeX import cases pass, including the published samples,
+prose interruption, all supported environment names, nested matrix source,
+comments/escaped delimiters, reference and footnote isolation, source snapshots,
+containers and code/HTML exclusions. `pnpm check` passed 927 tests in 84 files
+and all existing gates; default CommonMark classification remains 563/72/17.
+The import-to-render browser journey passed in Chromium, Firefox and WebKit
+(`artifacts/browser-tex-environments-20260907a/results/`). The recorded workflow
+also passed (`artifacts/manual-tex-environments-20260907a/results/`); the published
+source fallback and narrow-screen recovered formula were visually inspected.
+The production site build passed. Runtime code measures 1323.3 KiB ESM /
+1104.1 KiB CJS; aggregate ceilings increased to 1324 / 1105 KiB for this parser
+capability, with no new dependency or individual-entry/performance cap increase.
 
 ## Lean reference track
 

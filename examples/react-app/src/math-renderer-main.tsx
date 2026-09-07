@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import katex from 'katex';
-import { createEditor, EditorView, StarterKit, composeExtensions, createMathExtension, createKaTeXRenderer, NodeSelection, MarkdownExporter, undo, redo, type Editor, type Node } from 'fountainjs-editor';
+import { createEditor, EditorView, StarterKit, composeExtensions, createMathExtension, createKaTeXRenderer, NodeSelection, MarkdownImporter, MarkdownExporter, undo, redo, type Editor, type Node } from 'fountainjs-editor';
 import { SitePageLink } from './SitePageLink';
 import { mathReferenceSamples } from './math-reference-samples';
 import 'fountainjs-editor/styles.css';
@@ -34,9 +34,12 @@ function MathRendererLab() {
 
   function load(target: Editor, index: number) {
     const schema = target.state.schema;
+    const math = index === 0
+      ? [schema.node('math_block', { latex: mathReferenceSamples[index].source, ariaLabel: '' })]
+      : MarkdownImporter.parse(mathReferenceSamples[index].source, schema, { texMathEnvironments: true }).content;
     const tr = target.state.createTransaction().replace(0, target.state.doc.childCount, [
       schema.node('paragraph', {}, [schema.text('Select the formula to edit its TeX source. Enter adds a line; Ctrl/Command+Enter finishes.')]),
-      schema.node('math_block', { latex: mathReferenceSamples[index].source, ariaLabel: '' }),
+      ...math,
       schema.node('paragraph', {}, [schema.text('The renderer changes the view, not the stored mathematical source.')]),
     ]);
     tr.setSelection(new NodeSelection(tr.doc, [1]));
@@ -52,7 +55,7 @@ function MathRendererLab() {
     <section className="math-lab__intro">
       <h1>Math renderer lab</h1>
       <p>Real KaTeX, editable Fountain math nodes, and explicit failures. KaTeX and its fonts are bundled by this demo; they are not a Fountain engine dependency.</p>
-      <p>This is a formula-rendering audit, not whole-paper LaTeX import. The two published samples retain <code>\label</code>, which this renderer currently rejects. Their fallback is a known gap, not a successful reproduction.</p>
+      <p>The published samples use explicit Markdown import with <code>texMathEnvironments: true</code>. Their complete equation environments now become editable math blocks, retaining <code>\label</code>, which this renderer currently rejects. This is not whole-paper LaTeX import; source fallback is a known rendering gap, not a successful reproduction.</p>
       <p>Equation excerpts: Tiago Sequeira (2022), <a href="https://doi.org/10.21105/joss.03974">NeuralFieldEq.jl, JOSS 7(75), 3974</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Unofficial rendering test; original source is unchanged on loading. User edits create a modified version.</p>
     </section>
     <section className="math-lab__workspace" aria-label="Live math renderer">

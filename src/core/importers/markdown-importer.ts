@@ -2,6 +2,7 @@ import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
+import { texMathBlock, texMathStart, texMathCloses } from '../markdown-tex';
 import { markdownHTMLBlock, markdownHTMLBlockEnd, markdownEmptyParagraph, markdownHTMLTokenEnd as inlineHTMLTokenEnd, type MarkdownHTMLBlock } from '../markdown-html';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
@@ -29,6 +30,14 @@ export interface MarkdownHTMLInlineFallback {
 }
 
 export interface MarkdownImportOptions {
+  /**
+   * Opt-in standalone TeX equation/align/gather/multline/displaymath environments
+   * (including starred variants). Requires a math_block schema node. Retains
+   * complete TeX source, including labels; does not resolve references, execute
+   * macros, or compile a TeX document. Complete environments may interrupt prose
+   * in this explicit dialect, as in Pandoc-style academic Markdown.
+   */
+  readonly texMathEnvironments?: boolean;
   /**
    * Optional synchronous, deterministic HTML-to-schema adapter for raw HTML
    * blocks only. Return a document from this schema, or null to keep literal
@@ -1420,6 +1429,7 @@ function collectListItem(
   startIndex: number,
   schema: Schema,
   references: References,
+  options: MarkdownImportOptions = {},
 ): { lines: string[]; nextIndex: number } {
   const marker = listMarker(lines[startIndex]) as ListMarker;
   let index = startIndex;
@@ -1427,8 +1437,14 @@ function collectListItem(
   let paragraphOpen = false;
   let fence: MarkdownFence | null = null;
   let html: MarkdownHTMLBlock | null = null;
+  let tex: string | null = null;
   const trackLine = (line: string) => {
     let value = line;
+    if (tex) {
+      if (texMathCloses(value, tex)) tex = null;
+      paragraphOpen = false;
+      return;
+    }
     if (html) {
       if (html.closing ? html.closing.test(value) : !value.trim()) html = null;
       paragraphOpen = false;
@@ -1454,13 +1470,21 @@ function collectListItem(
       return;
     }
     fence = markdownFence(value);
+    if (!fence && options.texMathEnvironments && schema.nodes.math_block) {
+      const opening = texMathStart(value);
+      if (opening) {
+        tex = texMathCloses(value, opening) ? null : opening;
+        paragraphOpen = false;
+        return;
+      }
+    }
     const disclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(value);
     html = !fence && !disclosure ? markdownHTMLBlock(value, paragraphOpen) : null;
     const opaque = Boolean(html);
     if (html?.closing?.test(value)) html = null;
     paragraphOpen = !fence && !opaque && Boolean(value.trim())
       && (paragraphOpen || indentedCodeLine(value) === null)
-      && !startsBlock([value], 0, references, schema);
+      && !startsBlock([value], 0, references, schema, options);
   };
   trackLine(marker.value);
   index++;
@@ -1484,7 +1508,7 @@ function collectListItem(
     const next = listMarker(lines[index]);
     if (next && next.indent < 4) break;
     const lazyEquals = /^ {0,3}=+[\t ]*$/u.test(lines[index]);
-    if (!paragraphOpen || (startsBlock(lines, index, references, schema) && !lazyEquals)) break;
+    if (!paragraphOpen || (startsBlock(lines, index, references, schema, options) && !lazyEquals)) break;
     itemLines.push(lazyEquals ? lines[index].replace(/^( {0,3})(=)/u, '$1\\$2') : lines[index]);
     index++;
   }
@@ -1507,7 +1531,7 @@ function parseList(
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
     if (!marker || marker.indent >= 4 || marker.kind !== first.kind || marker.m !== first.m) break;
-    const item = collectListItem(lines, index, schema, references);
+    const item = collectListItem(lines, index, schema, references, options);
     index = item.nextIndex;
     const content = parseBlocks(item.lines, schema, references, options);
     if (!content.length) content.push(paragraph(schema, '', references));
@@ -1573,10 +1597,11 @@ function thematicBreak(line: string): boolean {
 
 const BLOCKQUOTE = /^ {0,3}>[ \t]?/u;
 
-function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema): boolean {
+function startsBlock(lines: readonly string[], index: number, references: References, schema: Schema, options: MarkdownImportOptions = {}): boolean {
   const line = lines[index] ?? '';
   const marker = listMarker(line);
   return !!(markdownFence(line)
+    || (options.texMathEnvironments && schema.nodes.math_block && texMathBlock(lines, index))
     || markdownHTMLBlock(line, true)
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
@@ -1689,6 +1714,16 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     // Definitions discovered globally remain in container source until this
     // block pass, so removing one cannot turn its list into an empty item.
+    const tex = options.texMathEnvironments && schema.nodes.math_block ? texMathBlock(lines, index) : null;
+    if (tex) {
+      try {
+        const node = schema.node('math_block', { latex: tex.source, ariaLabel: '' });
+        schema.validate(node);
+        blocks.push(node);
+        index = tex.end;
+        continue;
+      } catch { /* A host's incompatible math schema retains normal Markdown interpretation. */ }
+    }
     const footnote = footnoteDefinitionAt(lines, index, schema);
     if (footnote) { index = footnote.nextIndex; continue; }
     const definition = referenceDefinitionAt(lines, index);
@@ -1745,7 +1780,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       index += 2;
       // A short body row may omit pipes; a real new block ends the table.
       // A one-line probe excludes tableStart itself from the termination test.
-      while (index < lines.length && lines[index].trim() && !startsBlock([lines[index]], 0, references, schema)) {
+      while (index < lines.length && lines[index].trim() && !startsBlock([lines[index]], 0, references, schema, options)
+        && !(options.texMathEnvironments && schema.nodes.math_block && texMathBlock(lines, index))) {
         rows.push(schema.node('table_row', {}, cells(tableCells(lines[index]), 'table_cell')));
         index++;
       }
@@ -1757,6 +1793,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       let paragraphOpen = false;
       let fence: MarkdownFence | null = null;
       let html: MarkdownHTMLBlock | null = null;
+      let tex: string | null = null;
       while (index < lines.length) {
         const marked = BLOCKQUOTE.exec(lines[index]);
         if (marked) {
@@ -1770,7 +1807,10 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
             else if (listPrefix && listPrefix.indent < 4) deepest = listPrefix.value;
             else break;
           }
-          if (html) {
+          if (tex) {
+            if (texMathCloses(deepest, tex)) tex = null;
+            paragraphOpen = false;
+          } else if (html) {
             if (html.closing ? html.closing.test(deepest) : !deepest.trim()) html = null;
             paragraphOpen = false;
           } else if (fence) {
@@ -1780,6 +1820,15 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
             paragraphOpen = false;
           } else {
             fence = markdownFence(deepest);
+            if (!fence && options.texMathEnvironments && schema.nodes.math_block) {
+              const opening = texMathStart(deepest);
+              if (opening) {
+                tex = texMathCloses(deepest, opening) ? null : opening;
+                paragraphOpen = false;
+                index++;
+                continue;
+              }
+            }
             const disclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(deepest);
             html = !fence && !disclosure ? markdownHTMLBlock(deepest, paragraphOpen) : null;
             const opaque: boolean = Boolean(html);
@@ -1787,7 +1836,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
             paragraphOpen = !fence && !opaque
               && Boolean(deepest.trim())
               && (paragraphOpen || indentedCodeLine(deepest) === null)
-              && !startsBlock([deepest], 0, references, schema);
+              && !startsBlock([deepest], 0, references, schema, options);
           }
           index++;
           continue;
@@ -1799,7 +1848,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         const lazyEqualsUnderline = /^ {0,3}=+[\t ]*$/u.test(lines[index]);
         if (!lines[index].trim()
           || !paragraphOpen
-          || (startsBlock(lines, index, references, schema) && !lazyEqualsUnderline)) break;
+          || (startsBlock(lines, index, references, schema, options) && !lazyEqualsUnderline)) break;
         // Escape only the parser's internal copy so recursive block parsing
         // cannot reinterpret this literal continuation as an underline. Inline
         // escape decoding restores the exact visible equals sign.
@@ -1827,7 +1876,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         index++;
         continue b;
       }
-      if (startsBlock(lines, index, references, schema)) break;
+      if (startsBlock(lines, index, references, schema, options)) break;
       paragraphLines.push(lines[index]);
     }
     // Keep physical line endings visible to inline syntax validation. Ordinary
@@ -1838,16 +1887,26 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
   return blocks;
 }
 
-function references(markdown: string, schema: Schema): { lines: string[]; definitions: References } {
+function references(markdown: string, schema: Schema, options: MarkdownImportOptions): { lines: string[]; definitions: References } {
   const definitions = new Map<string, ReferenceDefinition>();
-  const sourceLines = markdown.replace(/\r\n?/g, '\n').split('\n')
-    .map((line) => line.replace(/^((?: {0,3}>| *(?:[-*+]|\d{1,9}[.)]))?)(\t+)/u, (_, marker, tabs) => (
-      marker + ' '.repeat(tabs.length * 4 - marker.length % 4)
-    )));
+  const originalLines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const sourceLines = originalLines.map(line => line.replace(/^((?: {0,3}>| *(?:[-*+]|\d{1,9}[.)]))?)(\t+)/u, (_, marker, tabs) => (
+    marker + ' '.repeat(tabs.length * 4 - marker.length % 4)
+  )));
   const lines: string[] = [];
   let fence: MarkdownFence | null = null;
   let paragraphOpen = false;
   for (let index = 0; index < sourceLines.length;) {
+    // Claim complete math before tab expansion or definition discovery can
+    // mutate its opaque TeX. Containers recurse with their structural prefix removed.
+    const tex = !fence && options.texMathEnvironments && schema.nodes.math_block
+      ? texMathBlock(originalLines, index) : null;
+    if (tex) {
+      lines.push(...originalLines.slice(index, tex.end));
+      index = tex.end;
+      paragraphOpen = false;
+      continue;
+    }
     const line = sourceLines[index];
     const quote = BLOCKQUOTE.exec(line);
     if (quote && !fence) {
@@ -1860,7 +1919,7 @@ function references(markdown: string, schema: Schema): { lines: string[]; defini
         prefixes.push(nested[0]);
         contents.push(sourceLines[cursor].slice(nested[0].length));
       }
-      const extracted = references(contents.join('\n'), schema);
+      const extracted = references(contents.join('\n'), schema, options);
       extracted.definitions.forEach((definition, name) => {
         if (!definitions.has(name)) definitions.set(name, definition);
       });
@@ -1912,9 +1971,9 @@ function references(markdown: string, schema: Schema): { lines: string[]; defini
     }
     const marker = listMarker(line);
     if (marker && marker.indent < 4 && !thematicBreak(line)
-      && (!paragraphOpen || startsBlock(sourceLines, index, definitions, schema))) {
-      const item = collectListItem(sourceLines, index, schema, definitions);
-      const extracted = references(item.lines.join('\n'), schema);
+      && (!paragraphOpen || startsBlock(sourceLines, index, definitions, schema, options))) {
+      const item = collectListItem(sourceLines, index, schema, definitions, options);
+      const extracted = references(item.lines.join('\n'), schema, options);
       extracted.definitions.forEach((definition, name) => {
         if (!definitions.has(name)) definitions.set(name, definition);
       });
@@ -1984,6 +2043,7 @@ function footnoteDefinitionAt(lines: readonly string[], index: number, schema: S
 function extractFootnoteDefinitions(
   markdown: string,
   schema: Schema,
+  options: MarkdownImportOptions,
 ): { markdown: string; definitions: readonly MarkdownFootnoteDefinition[] } {
   if (!schema.nodes.footnote_reference || !schema.nodes.footnote_definition) {
     return { markdown, definitions: [] };
@@ -2013,11 +2073,14 @@ function extractFootnoteDefinitions(
       paragraphOpen = false;
       continue;
     }
+    const tex = options.texMathEnvironments && schema.nodes.math_block
+      ? texMathBlock(lines, index) : null;
+    if (tex) { index = tex.end; paragraphOpen = false; continue; }
     const marker = listMarker(lines[index]);
     if (marker && marker.indent < 4 && !thematicBreak(lines[index])
-      && (!paragraphOpen || startsBlock(lines, index, new Map(), schema))) {
-      const item = collectListItem(lines, index, schema, new Map());
-      definitions.push(...extractFootnoteDefinitions(item.lines.join('\n'), schema).definitions);
+      && (!paragraphOpen || startsBlock(lines, index, new Map(), schema, options))) {
+      const item = collectListItem(lines, index, schema, new Map(), options);
+      definitions.push(...extractFootnoteDefinitions(item.lines.join('\n'), schema, options).definitions);
       index = item.nextIndex;
       paragraphOpen = false;
       continue;
@@ -2029,7 +2092,7 @@ function extractFootnoteDefinitions(
         if (!quote) break;
         contents.push(lines[index++].slice(quote[0].length));
       }
-      definitions.push(...extractFootnoteDefinitions(contents.join('\n'), schema).definitions);
+      definitions.push(...extractFootnoteDefinitions(contents.join('\n'), schema, options).definitions);
       paragraphOpen = false;
       continue;
     }
@@ -2042,7 +2105,7 @@ function extractFootnoteDefinitions(
     }
     paragraphOpen = Boolean(lines[index].trim())
       && (paragraphOpen || indentedCodeLine(lines[index]) === null)
-      && !startsBlock(lines, index, new Map(), schema);
+      && !startsBlock(lines, index, new Map(), schema, options);
     index++;
   }
   // Keep container source intact; parseBlocks consumes definitions only after
@@ -2052,10 +2115,10 @@ function extractFootnoteDefinitions(
 
 export class MarkdownImporter {
   parse(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): Node {
-    const footnotes = extractFootnoteDefinitions(markdown, schema);
+    const footnotes = extractFootnoteDefinitions(markdown, schema, options);
     // A terminal line ending terminates the last physical line; split() must
     // not turn it into extra code content when a fence is left open at EOF.
-    const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''), schema);
+    const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''), schema, options);
     const blocks = parseBlocks(source.lines, schema, source.definitions, options);
     const definitions = footnotes.definitions.map((definition) => {
       const content = parseBlocks(definition.lines, schema, source.definitions, options);

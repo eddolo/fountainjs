@@ -4,6 +4,12 @@
 
 ### Added
 
+- Explicit `MarkdownImportOptions.texMathEnvironments` recognition for complete
+  equation/align/gather/multline/displaymath source with labels and comments
+  retained. Reference and footnote discovery cannot consume those math blocks.
+  Both original JOSS paper equations now import through this opt-in dialect;
+  unsupported label rendering, TeX tables and full-paper fidelity remain open.
+
 - Public math-renderer capability lab with host-owned KaTeX, local fonts,
   source editing, history, document/export inspection, and visible failures.
   Two attributed, unchanged equation excerpts from the real JOSS reference
