@@ -271,6 +271,25 @@ node policy. The current development baseline is recorded in
 [PERFORMANCE.md](PERFORMANCE.md); CI enforces absolute p95, near-linear growth,
 and retained-document heap ceilings.
 
+## Figure content retention
+
+A figure becomes a single media node only when it contains exactly one matching
+direct media child, at most one plain-text caption, and no other significant
+content. This preserves the existing simple image/audio/video/file/embed shape.
+A canonical file preview with the same URL and generated alt label is recognized
+as part of its attachment; a different image is retained as separate content.
+Additional paragraphs, multiple images, tables, code, nested wrappers and rich
+captions instead pass through ordinary block import in source order. If a media
+URL is rejected, its caption is still processed rather than discarded with it.
+Registered custom node rules remain authoritative over their own figure subtree.
+
+`parseWithReport` emits `unmapped-block-wrapper` when this fallback loses the
+figure grouping or wrapper attributes. Rich caption marks and links remain
+editable paragraph content, not a flattened caption string. This is supported
+content retention, not a lossless arbitrary-HTML contract. The browser importer
+uses the same policy, including when HTML is pasted into an editor; Markdown
+hosts can opt into it through `parseHTMLBlock`.
+
 ## Security and trust boundary
 
 The importer is not a general HTML sanitizer that returns HTML. It projects

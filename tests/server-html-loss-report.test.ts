@@ -54,7 +54,7 @@ describe('explicit server HTML conversion losses', () => {
     const source = '<p><a href="javascript:privateToken()">label</a><img src="javascript:privateImage()"></p><figure><img src=""></figure>';
     const result = ServerHTMLImporter.parseWithReport(source, schema);
     expect(result.document.textContent).toBe('label');
-    expect(result.issues.map(issue => issue.code)).toEqual(['rejected-url', 'rejected-url']);
+    expect(result.issues.map(issue => issue.code)).toEqual(['rejected-url', 'rejected-url', 'unmapped-block-wrapper']);
     expect(JSON.stringify(result.issues)).not.toMatch(/privateToken|privateImage/);
     expect(JSON.stringify(result.document.toJSON())).not.toContain('javascript:');
   });

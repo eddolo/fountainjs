@@ -5,6 +5,13 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+HTML figure retention (2026-09-07): browser and server conversion no longer
+extract only images while silently dropping a figure's other content. Simple
+media/plain-caption shapes stay attached; complex figures retain supported
+descendants in order and the server report discloses lost grouping/attributes.
+Rich captions remain editable prose. Markdown's optional HTML-block adapter
+inherits this repair; the default inert-HTML/CommonMark policy is unchanged.
+
 DOCX matching-source recovery (2026-09-07): `restoreMathSource: true` optionally
 reopens current Fountain-exported equations whose unique bookmark binding and
 complete namespace-resolved OMML still match the v2 source record. Exact TeX
@@ -591,7 +598,7 @@ matching, while cloned references and reconstructed ambiguous equals remain
 deliberately unmapped. A development-only, schema-independent semantic oracle
 now scans all 652 CommonMark 0.31.2 examples without shipping a reference parser
 or equating Fountain's AST with CommonMark's: 563 matches are regression-locked,
-80 cases are explicitly pending, and nine safe-URL/GFM/editor-model
+72 cases are explicitly pending, and 17 safe-URL/GFM/editor-model
 differences are intentional. Marker-relative list containers now preserve
 multi-digit indentation, lazy nested content, and exact code whitespace through
 canonical export/reimport. A recorded runbook journey covers rich paste, nested
@@ -615,7 +622,7 @@ before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, ATX closer/whitespace and multiline Setext handling, plain image-description projection, inline-node marks, nested emphasis with closing-flanking enforcement, rule-of-three arithmetic, complete bullet/ordered marker styles, up-to-three-space list indentation and interruption rules, ASCII-only list separation, marker-relative tab stops, first-child nested lists/thematic breaks/code blocks, spaced thematic breaks, recursive lazy blockquote continuation, bounded opaque code-language identifiers, unmatched delimiters, outer-to-inner semantic HTML mark projection, continuous mixed-format link projection, and lazy-blockquote Setext precedence are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing. The development-only CommonMark 0.31.2 oracle materializes the specification's tab notation, canonicalizes equivalent URI spellings, and scans all 652 official examples through a neutral semantic projection, regression-locking 563 matches while classifying 80 pending and nine intentional divergences. | Promote pending semantic cases and add deeper-structure source mapping before considering a raw/visual Markdown UI. Fountain's native AST remains independent; exact source preservation and semantic preservation remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, ATX closer/whitespace and multiline Setext handling, plain image-description projection, inline-node marks, nested emphasis with closing-flanking enforcement, rule-of-three arithmetic, complete bullet/ordered marker styles, up-to-three-space list indentation and interruption rules, ASCII-only list separation, marker-relative tab stops, first-child nested lists/thematic breaks/code blocks, spaced thematic breaks, recursive lazy blockquote continuation, bounded opaque code-language identifiers, unmatched delimiters, outer-to-inner semantic HTML mark projection, continuous mixed-format link projection, and lazy-blockquote Setext precedence are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing. The development-only CommonMark 0.31.2 oracle materializes the specification's tab notation, canonicalizes equivalent URI spellings, and scans all 652 official examples through a neutral semantic projection, regression-locking 563 matches while classifying 72 pending and 17 intentional divergences. | Promote pending semantic cases and add deeper-structure source mapping before considering a raw/visual Markdown UI. Fountain's native AST remains independent; exact source preservation and semantic preservation remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node

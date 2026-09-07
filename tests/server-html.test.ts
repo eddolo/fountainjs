@@ -76,6 +76,15 @@ const schema = new Schema(composeExtensions([
 ]).schema);
 
 describe('DOM-free server HTML import', () => {
+  it('retains a mixed figure in pure Node and reports the lost figure grouping', () => {
+    expect(typeof globalThis.document).toBe('undefined');
+    const result = ServerHTMLImporter.parseWithReport('<figure><h2>Evidence</h2><img src="/sample.png"><p>Measured result</p><figcaption><em>Caption</em></figcaption></figure>', schema);
+    expect(result.document.content.map(node => node.type.name)).toEqual(['heading', 'image_super', 'paragraph', 'paragraph']);
+    expect(result.document.child(2).textContent).toBe('Measured result');
+    expect(result.document.child(3).child(0).marks[0].type.name).toBe('em');
+    expect(result.issues.some(issue => issue.code === 'unmapped-block-wrapper')).toBe(true);
+  });
+
   it('preserves unfamiliar wrapper structure without a browser and reports the discarded wrapper once', () => {
     expect(typeof globalThis.document).toBe('undefined');
     const inner = '<h2>Incident handover</h2><p>First paragraph</p><p>Second paragraph</p><ul><li>Check health</li></ul><table><tr><td>Evidence</td></tr></table>';

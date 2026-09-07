@@ -313,14 +313,18 @@ const limits = Object.freeze({
   // Optional DOCX math and nested traversal measure 1338.6 / 1116.5 KiB total.
   // Verified, bound source restoration measures 1346.0 / 1122.6 KiB total.
   // Main/core, other entries, CSS and performance ceilings remain unchanged.
-  'all ESM runtime code': 1347 * kibibyte,
+  // Figure retention and canonical attachment-preview recognition add ~1.4 KiB
+  // ESM (1347.4 KiB total), shared across browser/server imports.
+  'all ESM runtime code': 1348 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
   // individual entries, ESM, CSS and performance ceilings stay unchanged.
   // Whole-document replacement and restoration of root metadata add ~0.6 KiB
   // CJS (1109.2 KiB total). Individual entries, ESM and CSS caps stay fixed.
-  'all CommonJS runtime code': 1123 * kibibyte,
+  // Figure retention and canonical attachment-preview recognition add
+  // ~1.2 KiB CJS (1123.8 KiB total). Individual entries and performance are unchanged.
+  'all CommonJS runtime code': 1124 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

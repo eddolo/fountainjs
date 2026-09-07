@@ -25,6 +25,11 @@
 
 ### Added
 
+- Browser/server HTML figure imports preserve surrounding prose, multiple images,
+  nested blocks and rich captions instead of extracting only media. Simple media
+  captions stay attached; complex figure grouping loss is reported by the server
+  importer and exposed through the optional Markdown HTML adapter.
+
 - Opt-in DOCX equation-source restoration with versioned metadata and unique
   bookmark bindings. Unchanged projections restore exact TeX and accessibility
   labels; edited, missing, duplicated or namespace-mismatched projections are

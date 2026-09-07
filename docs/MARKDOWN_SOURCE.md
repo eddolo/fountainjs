@@ -406,6 +406,46 @@ an initial standards-oriented set of behaviors:
 The exporter chooses a code fence longer than any matching marker run in its
 content, preventing a literal triple-backtick line from closing the block.
 
+## Complex figures through optional HTML conversion
+
+The browser and server HTML importers now preserve supported figure descendants
+instead of extracting images and silently discarding adjacent content. A simple
+media/plain-caption figure remains one node. Figures containing other paragraphs,
+tables, multiple images, nested blocks or rich captions become ordered editable
+blocks; `unmapped-block-wrapper` reports the lost figure grouping/attributes.
+Rich caption marks and links survive as paragraph content. Unsafe or rejected
+media does not consume the remaining caption. Extension-defined figure nodes
+still own their subtree when their registered parse rule succeeds.
+
+This also applies to `parseHTMLBlock: ServerHTMLImporter.parse`; hosts needing
+diagnostics should use `parseWithReport` in their adapter as the conversion demo
+does. Exact-source export can retain the original figure, while canonical
+Markdown cannot retain all image layout. In the recorded 320 px image workflow,
+HTML re-import retains the full document, but standard Markdown re-import changes
+only that width to its default `100%`; the visible image-layout export note is
+asserted before conversion. This is not full HTML or CommonMark conformance.
+
+The new regression corpus covers both importers, rich captions, image rejection,
+typed video figures, nested content, and source/canonical round trips. An
+additional pure-Node test checks the server path without browser globals. The
+public conversion contract passes in Chromium, Firefox and WebKit. A recorded
+Chrome workflow pastes the original HTML via the OS clipboard, edits prose,
+undoes/redoes, and reopens both HTML and Markdown; its artifact directory is
+`artifacts/manual-figure-retention-20260907-all/`. All 16 recorded Markdown
+workflows passed in this final run. The new figure's conversion, edited content
+and explicit Markdown layout-loss screenshots were inspected.
+
+The complete check passed 1,084 tests in 95 files, with API, packed-package,
+server/headless runtime, conformance and unchanged performance checks. Figure
+retention adds about 1.4 KiB ESM / 1.2 KiB CJS; only aggregate size ceilings
+increase (measured totals 1347.4 / 1123.8 KiB). No dependency or public API changed.
+The independent CommonMark oracle still reports 563 matching / 72 pending /
+17 intentional differences, with all 72 inert-HTML and 144 generated contracts
+passing. This improvement does not certify complete CommonMark conversion.
+The final three-engine conversion rerun is retained under
+`artifacts/figure-retention-engines-20260907-final/`. The website production build
+passed with the existing large MathJax reference-page chunk warning unchanged.
+
 ## Conformance evidence and limits
 
 [`tests/fixtures/markdown/compatibility-v1.json`](../tests/fixtures/markdown/compatibility-v1.json)

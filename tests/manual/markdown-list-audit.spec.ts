@@ -34,6 +34,62 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('complex figures keep evidence and rich captions through conversion paste editing and reopen', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const source = '<figure><h2>Experiment evidence</h2><p>Before the diagram.</p><img src="/demo-media.svg" alt="Evidence diagram" width="320"><p>Measured result: 42.</p><figcaption><strong>Important</strong> <a href="/evidence">method notes</a></figcaption></figure>';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  const notes = page.getByRole('list', { name: 'Markdown HTML conversion details' });
+  await expect(notes).toContainText('figure grouping');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('Measured result: 42.');
+  await capture(page, info, '32-complex-figure-conversion');
+  // Paste the original complex figure, not the already converted HTML, to
+  // exercise the browser importer independently of the server projection.
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), source);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('h2')).toHaveText('Experiment evidence');
+  await expect(editor.getByRole('img', { name: 'Evidence diagram' })).toBeVisible();
+  await expect(editor.locator('strong')).toHaveText('Important');
+  await expect(editor.getByRole('link', { name: 'method notes' })).toBeVisible();
+  await editor.getByText('Measured result: 42.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Verified.');
+  await expect(editor).toContainText('Measured result: 42. Verified.');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('Verified.');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Measured result: 42. Verified.');
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '33-complex-figure-editable-evidence');
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  expect(expected.content[2].attrs.width).toBe('320px');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const retainedHTML = await output.locator('pre').innerText();
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await output.locator('summary').click();
+  await expect(output.locator('details')).toContainText('Image layout, responsive-source, loading, and caption metadata');
+  await capture(page, info, '34-reported-Markdown-image-layout-loss');
+  const markdown = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input').fill(retainedHTML);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+  await page.locator('.headless-input-tabs').getByRole('button', { name: 'Markdown', exact: true }).click();
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  // Standard image Markdown has no width field. Assert the exact reported
+  // projection, not a comparison that strips arbitrary attributes or content.
+  const projected = structuredClone(expected);
+  projected.content[2].attrs.width = '100%';
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(projected);
+});
+
 test('nested inert HTML keeps literal source and surrounding Markdown through real editing', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const source = '# Maintenance note\n\n- Operator checklist\n\n  > Before *marked*.\n  >\n  > <custom-panel mode="read-only">\n  > *literal* &amp; \\*\n  > </custom-panel>\n  >\n  > After **strong**.';

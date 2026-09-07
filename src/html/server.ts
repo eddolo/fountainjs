@@ -985,34 +985,44 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');
+    const selector = mediaType === 'audio' || mediaType === 'video' ? mediaType
+      : mediaType === 'file' ? 'a[data-fountain-file]' : mediaType === 'embed' ? 'iframe' : 'img';
+    const children = element.childNodes;
+    const media = children.filter((child): child is SourceElement => child.kind === 'element' && child.matches(selector));
+    const captions = children.filter((child): child is SourceElement => child.kind === 'element' && child.tagName === 'figcaption');
+    const previews = mediaType === 'file' ? children.filter((child): child is SourceElement => child.kind === 'element'
+      && child.matches('img.fountain-file__preview') && child.getAttribute('src') === media[0]?.getAttribute('href')
+      && child.getAttribute('alt') === `Preview of ${media[0]?.getAttribute('data-name')}`) : [];
+    const fallback = () => {
+      reportOnce(context, { code: 'unmapped-block-wrapper', message: 'A figure could not be represented as one media node with a plain caption. Its supported descendants were imported in order; figure grouping and wrapper attributes were not preserved.' });
+      return blockChildren(element, schema, context);
+    };
+    // Only the simple shape can become an atom without swallowing authored
+    // siblings or flattening rich caption content into a string attribute.
+    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || captions.some(caption => caption.children.length)
+      || children.some(child => child.kind === 'text' ? /[^\t\n\f\r ]/u.test(child.textContent) : child !== media[0] && !captions.includes(child) && !previews.includes(child))) return fallback();
     if (mediaType === 'audio') {
       const media = element.querySelector(':scope > audio');
       const node = media ? playbackNode(media, schema, 'audio', element) : null;
-      return node ? [node] : [];
+      return node ? [node] : fallback();
     }
     if (mediaType === 'video') {
       const media = element.querySelector(':scope > video');
       const node = media ? playbackNode(media, schema, 'video', element) : null;
-      return node ? [node] : [];
+      return node ? [node] : fallback();
     }
     if (mediaType === 'file') {
       const link = element.querySelector(':scope > a[data-fountain-file]');
       const node = link ? fileNode(link, schema, element) : null;
-      return node ? [node] : [];
+      return node ? [node] : fallback();
     }
     if (mediaType === 'embed') {
       const frame = element.querySelector(':scope > iframe');
       const node = frame ? embedNode(frame, schema, element) : null;
-      return node ? [node] : [];
+      return node ? [node] : fallback();
     }
-    const images = element.querySelectorAll(':scope > img');
-    if (images.length !== 1) {
-      return element.querySelectorAll('img')
-        .map((candidate) => imageNode(candidate, schema, 'image_super', context))
-        .filter((candidate): candidate is FountainNode => Boolean(candidate));
-    }
-    const image = imageNode(images[0] as SourceElement, schema, 'image_super', context, element);
-    return image ? [image] : [];
+    const image = imageNode(media[0]!, schema, 'image_super', context, element);
+    return image ? [image] : fallback();
   }
   if (tag === 'table') {
     const rows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr').map((row) => schema.node(
