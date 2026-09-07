@@ -2311,6 +2311,15 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       '[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2',
       '[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2',
     ].map((source) => (globalThis as any).fountainBrowserTest.inspectMarkdown(source)),
+    formattedReference: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[link *foo **bar** `#`*](/uri)',
+    ),
+    emptyReference: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '[foo]: <>\n\n[foo]',
+    ),
+    lazySetext: (globalThis as any).fountainBrowserTest.inspectMarkdown(
+      '> foo\nbar\n===',
+    ),
     imageDescription: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       'Before ![photo *with emphasis*, [a link](https://example.com), and ![an icon](icon.png)](hero.png "Hero") after',
     ),
@@ -2501,6 +2510,18 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       [{ text: 'bar', href: '/url1' }],
     ]);
   expect(result.adjacentReferences.every((entry: any) => entry.losses.length === 0)).toBe(true);
+  expect(result.formattedReference.document).toEqual(result.formattedReference.roundTrip);
+  expect(result.formattedReference.html).toBe(
+    '<p><a href="/uri" target="_blank" rel="noopener noreferrer nofollow">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>',
+  );
+  expect(result.formattedReference.losses).toEqual([]);
+  expect(result.emptyReference.document).toEqual(result.emptyReference.roundTrip);
+  expect(result.emptyReference.document.content[0].content[0].marks[0].attrs.href).toBe('');
+  expect(result.emptyReference.losses).toEqual([]);
+  expect(result.lazySetext.document).toEqual(result.lazySetext.roundTrip);
+  expect(result.lazySetext.document.content).toHaveLength(1);
+  expect(result.lazySetext.document.content[0].content[0].content[0].text).toBe('foo bar ===');
+  expect(result.lazySetext.losses).toEqual([]);
   expect(result.imageDescription.document).toEqual(result.imageDescription.roundTrip);
   expect(result.imageDescription.document.content[0].content).toEqual(expect.arrayContaining([
     expect.objectContaining({

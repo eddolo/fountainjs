@@ -5,6 +5,14 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Product-style roadmap items must be finished as complete workflows, not isolated
+editor controls. Their acceptance evidence must cover developer integration,
+author configuration, the end user's real surface, authenticated permission and
+read-only states, persistence or submission, failures and retries, and paired
+documentation. Fountain may provide replaceable contracts while the host owns
+accounts, authorization, storage, or transport, but a visual role switch is not
+evidence that those security boundaries exist.
+
 Demand claims submitted on **2026-09-04** are recorded here as research leads.
 Before priority is justified publicly, the original Tiptap/ProseMirror issue or
 discussion must be linked, dated, checked for current status, and translated
@@ -421,8 +429,8 @@ immutable node identity now distinguishes equal original blocks without fuzzy
 matching, while cloned references and reconstructed ambiguous equals remain
 deliberately unmapped. A development-only, schema-independent semantic oracle
 now scans all 652 CommonMark 0.31.2 examples without shipping a reference parser
-or equating Fountain's AST with CommonMark's: 527 matches are regression-locked,
-116 cases are explicitly pending, and nine safe-URL/GFM/editor-model
+or equating Fountain's AST with CommonMark's: 534 matches are regression-locked,
+109 cases are explicitly pending, and nine safe-URL/GFM/editor-model
 differences are intentional. The current Markdown baseline passed the
 complete 564-test package gate and Chromium/Firefox/WebKit/mobile matrix in
 [CI run `0a7aef6`](https://github.com/eddolo/fountainjs/actions/runs/34004963074),
@@ -442,7 +450,7 @@ before a source editor UI. See
 | 4 | Virtualized or paged rendering for huge documents | Delivered and certified in `8a6264e` | Continue physical-device, assistive-technology, late-loading NodeView, one-enormous-block, and multi-hour soak evidence. |
 | 5 | Enforced platform-neutral core boundary | Delivered and certified in `2c7ff4c` | Keep source/declaration/package/runtime gates permanent and continue separating mixed optional modules only when a real headless/native consumer needs them. |
 | 6 | Native renderer feasibility | Architecture design complete; the no-DOM engine boundary is delivered; DOM, Web Component, and React remain web surfaces | Review the concrete coordinate/input/IME/accessibility/lifecycle bridge contract, then deliberately schedule a bounded React Native prototype before promising native packages. A WebView does not count as native. |
-| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, ATX closer/whitespace and multiline Setext handling, plain image-description projection, inline-node marks, nested emphasis with closing-flanking enforcement, rule-of-three arithmetic, complete bullet/ordered marker styles, up-to-three-space list indentation and interruption rules, ASCII-only list separation, marker-relative tab stops, first-child nested lists/thematic breaks/code blocks, spaced thematic breaks, recursive lazy blockquote continuation, bounded opaque code-language identifiers, unmatched delimiters, and outer-to-inner semantic HTML mark projection are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing. The development-only CommonMark 0.31.2 oracle materializes the specification's tab notation, canonicalizes equivalent URI spellings, and scans all 652 official examples through a neutral semantic projection, regression-locking 527 matches while classifying 116 pending and nine intentional divergences. | Promote pending semantic cases and add deeper-structure source mapping before considering a raw/visual Markdown UI. Fountain's native AST remains independent; exact source preservation and semantic preservation remain separate promises. |
+| 7 | Higher-fidelity Markdown source preservation | Whole-source, inert frontmatter, aligned spans, identity-first plus unique structural mapping, collision-safe code spans, strict HTML5 references/ASCII escapes, safer relative/balanced links, bounded multiline labels/container definitions, nested/malformed-inline precedence, opaque-token scanning, raw-source normalization, full Unicode 17 label case folding, ATX closer/whitespace and multiline Setext handling, plain image-description projection, inline-node marks, nested emphasis with closing-flanking enforcement, rule-of-three arithmetic, complete bullet/ordered marker styles, up-to-three-space list indentation and interruption rules, ASCII-only list separation, marker-relative tab stops, first-child nested lists/thematic breaks/code blocks, spaced thematic breaks, recursive lazy blockquote continuation, bounded opaque code-language identifiers, unmatched delimiters, outer-to-inner semantic HTML mark projection, continuous mixed-format link projection, and lazy-blockquote Setext precedence are certified; block source survives insertion/deletion/movement with canonical separators and no duplicate guessing. The development-only CommonMark 0.31.2 oracle materializes the specification's tab notation, canonicalizes equivalent URI spellings, and scans all 652 official examples through a neutral semantic projection, regression-locking 534 matches while classifying 109 pending and nine intentional divergences. | Promote pending semantic cases and add deeper-structure source mapping before considering a raw/visual Markdown UI. Fountain's native AST remains independent; exact source preservation and semantic preservation remain separate promises. |
 
 Pagination and footnotes should be designed together because page geometry,
 continuation, numbering, print output, and table splitting interact. Stable node
@@ -480,7 +488,10 @@ performance, and browser behavior:
   text/number/date inputs, choices, files and signatures, conditional sections,
   calculated values, and repeatable groups. Store the form definition and
   response data through explicit portable contracts, while leaving deployment,
-  identity, secrets, notification, and backend submission ownership to the host;
+  identity, secrets, notification, and backend submission ownership to the host.
+  Treat the form definition and each submitted response as separate permissioned
+  records with independent validation and history; prove author, respondent,
+  read-only/public, rejected submission, retry, and persisted-result journeys;
 - a visible privacy-aware “Report a bug” route on the website and every demo,
   backed by the existing structured GitHub form; request Fountain version,
   framework/runtime, browser/OS, minimal reproduction, expected/actual behavior,

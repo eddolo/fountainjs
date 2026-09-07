@@ -669,6 +669,7 @@ function destinationParts(value: string, allowEmpty = false): ReferenceDefinitio
     href = source.slice(1, close);
     if (/\r|\n/u.test(href)) return null;
     cursor = close + 1;
+    if (cursor < source.length && !/[\t \r\n]/u.test(source[cursor])) return null;
   } else {
     let depth = 0;
     for (; cursor < source.length; cursor++) {
@@ -748,7 +749,7 @@ function referenceDefinitionAt(lines: readonly string[], index: number): ParsedR
       parts.push(lines[cursor].trim());
     }
     const parsed = destinationParts(parts.join('\n'));
-    if (parsed && isSafeURL(parsed.href, { allowDataImage: true })) {
+    if (parsed && isSafeURL(parsed.href, { allowDataImage: true, allowEmpty: true })) {
       best = { ...parsed, label, lineCount: cursor - index + 1 };
     }
   }
@@ -1603,10 +1604,20 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
           index++;
           continue;
         }
+        // An unmarked `===` line cannot turn a lazily continued blockquote
+        // paragraph into a Setext heading. Keep it as paragraph text. A `---`
+        // line remains interrupting because it is independently a thematic
+        // break (CommonMark examples 92-93).
+        const lazyEqualsUnderline = /^ {0,3}=+[\t ]*$/u.test(lines[index]);
         if (!lines[index].trim()
           || !paragraphOpen
-          || startsBlock(lines, index, references, schema)) break;
-        quote.push(lines[index]);
+          || (startsBlock(lines, index, references, schema) && !lazyEqualsUnderline)) break;
+        // Escape only the parser's internal copy so recursive block parsing
+        // cannot reinterpret this literal continuation as an underline. Inline
+        // escape decoding restores the exact visible equals sign.
+        quote.push(lazyEqualsUnderline
+          ? lines[index].replace(/^( {0,3})(=)/u, '$1\\$2')
+          : lines[index]);
         index++;
       }
       const quoteBlocks = parseBlocks(quote, schema, references);

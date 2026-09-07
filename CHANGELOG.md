@@ -4,6 +4,13 @@
 
 ### Fixed
 
+- Product-style capabilities now have an explicit end-to-end completion gate
+  covering developer integration, author configuration, end-user permissions,
+  persistence/submission, failure paths, and paired documentation. Markdown
+  import/export additionally preserves lazy blockquote `===` text, accepts safe
+  empty reference destinations, rejects unseparated reference titles, and keeps
+  one logical mixed-format link continuous in semantic HTML. Seven additional
+  official CommonMark examples are regression-locked.
 - HTML export now respects Fountain's outer-to-inner mark order, so nested
   emphasis, strong, code, and links remain one continuous semantic range instead
   of being inverted or fragmented across adjacent inline nodes. This promotes 28

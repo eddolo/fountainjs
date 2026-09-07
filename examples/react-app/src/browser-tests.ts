@@ -5,6 +5,7 @@ import {
   CoreExtension,
   EditorView,
   HistoryExtension,
+  HTMLExporter,
   HTMLImporter,
   LeanExtension,
   LeanController,
@@ -811,6 +812,7 @@ const inspectMarkdown = (source: string) => {
   const exported = MarkdownExporter.exportWithReport(document, { linkStyle: 'reference' });
   return {
     document: document.toJSON(),
+    html: HTMLExporter.export(document, { document: false }),
     markdown: exported.markdown,
     losses: exported.losses,
     roundTrip: MarkdownImporter.parse(exported.markdown, editor.state.schema).toJSON(),

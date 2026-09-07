@@ -332,6 +332,21 @@ describe('Markdown interchange', () => {
       .toEqual(document.toJSON());
   });
 
+  it('accepts empty reference destinations and requires whitespace before a title', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const empty = MarkdownImporter.parse('[foo]: <>\n\n[foo]', schema);
+    const malformed = MarkdownImporter.parse('[foo]: <bar>(baz)\n\n[foo]', schema);
+
+    expect(empty.childCount).toBe(1);
+    expect(empty.child(0).child(0).marks.find((mark) => mark.type.name === 'link')?.attrs.href)
+      .toBe('');
+    expect(malformed.textContent).toContain('[foo]: <bar>(baz)');
+    expect(malformed.textContent).toContain('[foo]');
+    expect(malformed.content.some((block) => block.content.some((node) => (
+      node.marks.some((mark) => mark.type.name === 'link')
+    )))).toBe(false);
+  });
+
   it('keeps brackets inside code, autolinks, and inline HTML opaque to link labels', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([
@@ -844,6 +859,14 @@ describe('Markdown interchange', () => {
         '**foo [*bar*](/url)**',
         '<p><strong>foo <a href="/url" target="_blank" rel="noopener noreferrer nofollow"><em>bar</em></a></strong></p>',
       ],
+      [
+        '[link *foo **bar** `#`*](/uri)',
+        '<p><a href="/uri" target="_blank" rel="noopener noreferrer nofollow">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>',
+      ],
+      [
+        '[*foo* bar][]\n\n[*foo* bar]: /url "title"',
+        '<p><a href="/url" title="title" target="_blank" rel="noopener noreferrer nofollow"><em>foo</em> bar</a></p>',
+      ],
       ['***foo***', '<p><em><strong>foo</strong></em></p>'],
     ] as const;
 
@@ -851,6 +874,9 @@ describe('Markdown interchange', () => {
       expect(HTMLExporter.export(MarkdownImporter.parse(source, schema), { document: false }), source)
         .toBe(expected);
     }
+
+    expect(HTMLExporter.export(MarkdownImporter.parse('[one](/a)[two](/b)', schema), { document: false }))
+      .toContain('</a><a href="/b"');
   });
 
   it('covers underscore surplus, repeated nesting, and competing spans', () => {
@@ -1356,6 +1382,8 @@ describe('Markdown interchange', () => {
     const spaced = MarkdownImporter.parse('   > # Foo\n   > bar\n > baz', schema);
     const interruptedMarkers = MarkdownImporter.parse('> bar\nbaz\n> foo', schema);
     const nested = MarkdownImporter.parse('> > > foo\nbar', schema);
+    const lazyEquals = MarkdownImporter.parse('> foo\nbar\n===', schema);
+    const interruptedRule = MarkdownImporter.parse('> Foo\n---', schema);
 
     expect(spaced.content.map((node) => node.type.name)).toEqual(['blockquote']);
     expect(spaced.child(0).content.map((node) => node.type.name)).toEqual(['heading', 'paragraph']);
@@ -1363,6 +1391,9 @@ describe('Markdown interchange', () => {
     expect(interruptedMarkers.content.map((node) => node.type.name)).toEqual(['blockquote']);
     expect(interruptedMarkers.child(0).textContent).toBe('bar baz foo');
     expect(nested.child(0).child(0).child(0).textContent).toBe('foo bar');
+    expect(lazyEquals.content.map((node) => node.type.name)).toEqual(['blockquote']);
+    expect(lazyEquals.child(0).textContent).toBe('foo bar ===');
+    expect(interruptedRule.content.map((node) => node.type.name)).toEqual(['blockquote', 'horizontal_rule']);
   });
 
   it('recognizes list markers indented by up to three spaces but keeps four-space code', () => {

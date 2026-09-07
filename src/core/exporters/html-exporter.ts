@@ -178,7 +178,12 @@ function renderText(node: Node): string {
 
 function mergeAdjacentMarks(value: string): string {
   let next: string;
-  while ((next = value.replace(/<\/(em|strong|s)><\1>/g, '')) !== value) value = next;
+  while ((next = value
+    .replace(/<\/(em|strong|s)><\1>/g, '')
+    // Links cannot nest, and their canonical opening tag is deterministic.
+    // Joining only byte-identical tags keeps one logical link range continuous
+    // without ever merging adjacent links with different destinations/options.
+    .replace(/(<a\b[^>]*>)([\s\S]*?)<\/a>\1/g, '$1$2')) !== value) value = next;
   return value;
 }
 
