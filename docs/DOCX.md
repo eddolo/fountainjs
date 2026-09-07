@@ -131,6 +131,51 @@ records those visible disagreements and the edit/fallback/undo workflow.
 Opening a file successfully, or counting rendered equation elements, does not
 prove equation fidelity. Word/LibreOffice checks remain pending.
 
+### Optional TeX converter example
+
+The host example [`mathjax-docx.ts`](../examples/react-app/src/mathjax-docx.ts)
+now parses actual expressions with MathJax 4.1.3 base/AMS and projects its
+presentation tree to `DOCXMathExpression`. It is a repository example, **not an
+exported npm module or an automatically enabled converter**. MathJax remains
+outside Fountain's library runtime graph. To use the example in a host which
+explicitly supplies that dependency:
+
+```ts
+import { exportDOCX } from 'fountainjs-editor/docx'
+import { compileTeXForDOCX } from './mathjax-docx'
+
+const result = exportDOCX(document, {
+  resolveMath: node => compileTeXForDOCX(
+    String(node.attrs.latex), node.type.name === 'math_block',
+  ),
+})
+// Check result.report; a successful projection still carries an experimental warning.
+```
+
+Supported constructs include plain/italic/bold tokens, rows, fractions (including
+barless), roots, scripts, paired delimiters, rectangular standard matrices,
+selected non-stretching accents and large operators with limits. Large operators
+require exactly one following parsed atom or braced group; ambiguous ungrouped
+multi-term bodies are declined rather than assigned an invented scope. Matrix
+geometry uses Word defaults, not a promise of matching TeX spacing.
+
+Explicit spacing, custom layout, unsupported font variants, stretching accents,
+numbered/labelled equations and references currently fall back with a reason.
+There is no package autoloading, custom macro package, full `.tex` document
+compilation or source restoration. Each formula gets a fresh parser and private
+MathJax lightweight tree adaptor: Node execution requires no `document`, `window`
+or jsdom, and performs no font loading or network requests. Limits are 20,000
+source characters, 10,000 parsed nodes (including wrappers), depth 64 and 100
+rows/columns. These are input/tree bounds, not a hard execution-time sandbox;
+hosts processing untrusted batches should also isolate work and enforce time
+and aggregate resource limits.
+
+The recorded browser diagnostic uses this converter on original and newly edited
+equations, saves the actual files at each stage, exposes conversion reasons and
+checks undo/stale-preview clearing. Unsupported source is intentionally visible
+in this diagnostic; it is not a publication-ready rendered math fallback.
+All the native Word/LibreOffice and round-trip qualifications above still apply.
+
 ## Resource and trust boundaries
 
 DOCX is a ZIP container carrying XML and may be hostile. Import therefore:

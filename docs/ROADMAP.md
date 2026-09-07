@@ -5,6 +5,16 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+DOCX TeX conversion follow-through (2026-09-07): the browser export diagnostic
+now uses a real optional MathJax base/AMS host converter, not exact-source
+lookup data. Edited fractions, explicit unsupported-spacing fallback, original
+source retention and undo are recorded with actual files and visible conversion
+reasons. The supported subset and whole-tree resource bounds are documented in
+`docs/DOCX.md`; 28 converter tests include pure Node execution. This is a host
+example, not automatic npm-runtime TeX support. Native Word/LibreOffice visual
+editing, full-paper conversion, numbering/references and equation restoration
+remain open; browser viewer omissions still prevent a visual-parity claim.
+
 Native file opportunity (user discussion, 2026-09-07): preserve a proposed `.fjs`
 self-contained package as future work, distinct from plain `.fountain.json`
 interchange. Candidate contents are a versioned manifest, portable document,

@@ -25,6 +25,11 @@
 
 ### Added
 
+- Optional repository example converting a bounded base/AMS TeX subset into
+  native DOCX math using MathJax. The recorded diagnostic now converts newly
+  edited formulas, exposes unsupported-syntax reasons, and saves each actual
+  export for inspection. No parser is added to the library runtime; complete
+  TeX conversion and native Word/LibreOffice fidelity remain unverified.
 - Recorded native-math export comparison against an independent browser DOCX
   viewer, with explicit missing/misrendered-equation diagnostics. Three-engine
   checks cover editing, stale-preview clearing, source fallback and undo; the

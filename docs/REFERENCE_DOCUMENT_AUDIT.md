@@ -526,8 +526,9 @@ explicit unsupported-equation placeholder/warning instead of concatenating
 fraction/script text into a misleading string.
 
 **Still required:** independent Word and LibreOffice visual/editing checks;
-a tested source-to-semantic converter; accepted subset and unsupported-syntax
-diagnostics; unchanged versus externally edited equation restoration; live
+broader source-to-semantic conversion (the bounded host example below now tests
+an explicit subset and unsupported-syntax diagnostics); unchanged versus
+externally edited equation restoration; live
 numbering/references; and whole-paper export comparison. FORMAT-05 remains
 partial. This does not close native academic DOCX parity.
 
@@ -546,9 +547,10 @@ other optional-entry, CSS and performance limits are unchanged.
 The recorded `tests/manual/docx-math-audit.spec.ts` workflow compares an editable
 Fountain/MathJax document with the actual downloaded DOCX rendered by
 `docx-preview` 0.4.0. The same journey runs on Chromium, Firefox and WebKit in
-`tests/browser/docx-math-journey.ts`. Eight exact source/expression pairs exercise
+`tests/browser/docx-math-journey.ts`. The initial eight exact source/expression pairs exercised
 fractions, roots, combined scripts, a matrix, accents and two operator-limit
-placements. This test-only fixture is not a general TeX adapter or a Word reader.
+placements. That initial test-only lookup was not a general TeX adapter or a
+Word reader; the real converter follow-through below replaces the lookup.
 
 Visual inspection found that counting eight `math` elements falsely suggests
 success: two of them are empty. The viewer drops combined sub/superscripts and
@@ -586,6 +588,40 @@ test DOCX even when the journey passes. No library-runtime code, dependency,
 API or size ceiling changed in this diagnostic increment. A read-only registry
 check also found no registered Microsoft Word COM automation on this host;
 the missing bundled LibreOffice remains a separate native-rendering blocker.
+
+## Real TeX conversion follow through
+
+The optional host example `examples/react-app/src/mathjax-docx.ts` now parses
+actual TeX with MathJax 4.1.3 base/AMS and projects supported parsed structures
+through the existing public `resolveMath` boundary. The diagnostic fixture no
+longer has source-to-expression lookup data. Newly typed `z+1` and
+`\frac{a^3+b}{\sqrt{c}}` export as native structures; `z\quad 1` retains its
+source and visibly reports the unsupported spacing node. Original, edited,
+compound-edited, fallback and restored DOCX bytes are downloaded and retained
+separately, alongside screenshots, trace and video.
+
+The [converter contract](DOCX.md#optional-tex-converter-example) names its
+accepted subset, resource bounds and exclusions. Limits check the entire parsed
+tree, including matrix wrappers, before recursive projection. Fresh private
+parsers isolate state; pure-Node tests run without browser globals or jsdom,
+and assert that no asynchronous loader is called. A 51-by-51 matrix and deep
+fraction tree exercise resource rejection. The adapter is not added to the
+library's runtime exports or dependency graph and does not claim TeX layout,
+document-level numbering/reference conversion or a time-limited sandbox.
+
+The first cold development-server run exposed a full reload while loading the
+new lightweight adaptor; explicit Vite prebundling prevents losing the mounted
+diagnostic on first opening. Recorded Chromium evidence is under
+`artifacts/manual-docx-real-tex-20260907-final/`. Screenshot review confirms the
+new fraction/source fallback and the pre-existing browser viewer disagreements;
+they remain failures of visual parity, not successful Word certification.
+The full `pnpm check` passed 1,040 tests in 93 files, including 28 real-converter
+tests. The final Chromium, Firefox and WebKit journeys passed; compound-equation
+screenshots from Firefox/WebKit were also opened and inspected. The website
+build passed with its existing large MathJax reference-page chunk warning;
+no library size cap, runtime API or dependency changed.
+Native Word/LibreOffice rendering and editing remain unverified. No DOCX
+created in this audit is delivered as a finished publication.
 
 ## Lean reference track
 

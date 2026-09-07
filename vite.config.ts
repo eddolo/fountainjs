@@ -18,6 +18,9 @@ const demoSlugs = [
 export default defineConfig({
   root: fileURLToPath(new URL('./examples/react-app', import.meta.url)),
   plugins: [react()],
+  // The export diagnostic is loaded dynamically. Prebundle its server-side
+  // adaptor before mounting it so first use cannot trigger a Vite full reload.
+  optimizeDeps: { include: ['@mathjax/src/js/adaptors/liteAdaptor.js'] },
   // This lab explicitly selects the bundled TeX font. Avoid also shipping
   // MathJax's unused NewCM default font through SVG's fallback import.
   resolve: { alias: [{
