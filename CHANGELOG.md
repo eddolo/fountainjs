@@ -4,6 +4,12 @@
 
 ### Added
 
+- Public math-renderer capability lab with host-owned KaTeX, local fonts,
+  source editing, history, document/export inspection, and visible failures.
+  Two attributed, unchanged equation excerpts from the real JOSS reference
+  paper expose unsupported labels rather than claiming whole-paper parity.
+  KaTeX remains development/demo-only, with runtime bundle isolation checked.
+
 - Development-only `commonmark@0.31.2` oracle for the explicit inert-HTML policy.
   It reproduces all 652 official outputs before checking 72 exact-token,
   rendered-semantic, source, and canonical-round-trip contracts plus 144
@@ -42,6 +48,11 @@
   projection, not complete CommonMark HTML conformance or lossless conversion.
 
 ### Fixed
+
+- The KaTeX adapter now defaults to thrown syntax errors, so unsupported input
+  reaches the existing editable-source fallback and error callback. An
+  always-denying trust callback also reports rejected trust commands instead
+  of returning a red pseudo-render. Caller options cannot enable trust.
 
 - Multiline math source uses textareas in the node view and demo toolbar.
   Inspecting a formula no longer strips line breaks or clears an unchanged

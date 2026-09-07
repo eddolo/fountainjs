@@ -1,5 +1,6 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 
 // This file deliberately combines browser layout, PDF parsing, 100k-block
 // virtualization, and collaboration tests. Parallel Firefox on Windows can
@@ -5061,6 +5062,37 @@ test('renders exported DOCX beside the same Fountain document through an indepen
   await expect(comparison.locator('[data-visual-fountain]').getByRole('img', { name: 'Purple FountainJS export card' })).toBeVisible();
   const imageWidths = await comparison.locator('img').evaluateAll((images) => images.map((image) => Math.round(image.getBoundingClientRect().width)));
   expect(imageWidths.every((width) => width >= 300 && width <= 340)).toBe(true);
+});
+
+test('renders real KaTeX while reporting published-equation and trust failures without source loss', async ({ page }) => {
+  const externalRequests: string[] = [];
+  page.on('request', request => { if (!new URL(request.url()).hostname.match(/^(127\.0\.0\.1|localhost)$/)) externalRequests.push(request.url()); });
+  await page.goto('/math-renderer.html');
+  await page.evaluate(() => document.fonts.ready);
+  const math = page.locator('[data-fountain-math="block"]');
+  const direct = page.getByLabel('Edit math source', { exact: true });
+  await expect(math.locator('.katex')).toBeVisible();
+  await expect(math.locator('annotation')).toHaveText(mathReferenceSamples[0].source);
+  await expect(page.getByRole('status')).toContainText('Typeset view ready');
+  const renderedWidth = await math.locator('.katex-html').evaluate(element => element.getBoundingClientRect().width);
+  expect(renderedWidth).toBeGreaterThan(40);
+  for (const index of [1, 2]) {
+    await page.getByLabel('Reference sample').selectOption(String(index));
+    await page.getByRole('button', { name: 'Load sample (replaces editor)' }).click();
+    await expect(page.getByRole('status')).toContainText('Source fallback');
+    await expect(page.getByRole('status')).toContainText('Undefined control sequence');
+    await expect(math).toHaveAttribute('data-latex', mathReferenceSamples[index].source);
+    await expect(direct).toHaveValue(mathReferenceSamples[index].source);
+    await expect(math.locator('.katex, .katex-error')).toHaveCount(0);
+  }
+  await direct.fill('\\frac{1}{2}');
+  await expect(math.locator('.katex')).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('Typeset view ready');
+  await direct.fill('\\href{javascript:alert(1)}{unsafe}');
+  await expect(page.getByRole('status')).toContainText('command requiring trust');
+  await expect(math.locator('a, img, iframe, .katex')).toHaveCount(0);
+  await expect(math).toHaveAttribute('data-latex', '\\href{javascript:alert(1)}{unsafe}');
+  expect(externalRequests).toEqual([]);
 });
 
 test('edits multiline math without losing line breaks, descriptions, or undo history', async ({ page }) => {

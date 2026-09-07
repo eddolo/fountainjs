@@ -1,5 +1,6 @@
 /** @vitest-environment jsdom */
 import { describe, expect, it, vi } from 'vitest';
+import katex from 'katex';
 import {
   AllSelection,
   EditorView,
@@ -31,6 +32,33 @@ function mathKit(extension = MathExtension) {
 }
 
 describe('first-party mathematics extension', () => {
+  it('renders actual KaTeX and reports unsupported source through the node-view fallback', () => {
+    const onRenderError = vi.fn();
+    const kit = mathKit(createMathExtension({ renderer: createKaTeXRenderer(katex), onRenderError }));
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'math_block', attrs: { latex: '\\frac{1}{2}', ariaLabel: 'One half' } }],
+    } });
+    const view = new EditorView(document.createElement('div'), editor);
+    expect(view.dom.querySelector('.katex math')).not.toBeNull();
+    expect(view.dom.querySelector('annotation')?.textContent).toBe('\\frac{1}{2}');
+    expect(onRenderError).not.toHaveBeenCalled();
+    const unsupported = '\\begin{equation}\\label{eq:one}x=1\\end{equation}';
+    expect(setMathSource(editor, unsupported, '', [0])).toBe(true);
+    expect(onRenderError).toHaveBeenCalledWith(expect.any(Error), unsupported);
+    expect(view.dom.querySelector('[data-fountain-math-error="true"] code')?.textContent).toBe(unsupported);
+    expect(view.dom.querySelector('.katex-error')).toBeNull();
+    expect(editor.state.doc.child(0).attrs.latex).toBe(unsupported);
+    expect(setMathSource(editor, '\\sqrt{x}', '', [0])).toBe(true);
+    expect(view.dom.querySelector('.katex math')).not.toBeNull();
+    expect(view.dom.querySelector('[data-fountain-math-error]')).toBeNull();
+    view.destroy();
+  });
+
+  it('keeps real KaTeX trust disabled even when a caller requests trusted commands', () => {
+    const renderer = createKaTeXRenderer(katex, { trust: true });
+    expect(() => renderer('\\href{javascript:alert(1)}{unsafe}', { document, displayMode: false })).toThrow('command requiring trust');
+  });
+
   it('inserts and updates portable inline and display TeX', () => {
     const kit = mathKit();
     const editor = createEditor({
@@ -207,7 +235,7 @@ describe('first-party mathematics extension', () => {
     expect(katex.render).toHaveBeenCalledWith('x+y', expect.any(HTMLElement), expect.objectContaining({
       displayMode: true,
       output: 'htmlAndMathml',
-      trust: false,
+      trust: expect.any(Function),
     }));
     view.destroy();
 

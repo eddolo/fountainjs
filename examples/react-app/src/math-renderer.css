@@ -1,0 +1,24 @@
+.math-lab__intro, .math-lab__workspace { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+.math-lab__intro h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 18px; }
+.math-lab__intro p { max-width: 85ch; margin-block: 12px; line-height: 1.6; }
+.math-lab__controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.math-lab__controls button, .math-lab__controls select { padding: 9px 12px; border: 1px solid #bbb5cb; border-radius: 6px; background: white; color: #211c32; font: inherit; }
+.math-lab__controls button { cursor: pointer; }
+.math-lab__controls button:focus-visible, .math-lab__controls select:focus-visible { outline: 3px solid #7552e8; outline-offset: 2px; }
+.math-lab__status { margin-block: 18px; padding: 12px 16px; border-radius: 6px; background: #e1f5e8; color: #17512c; overflow-wrap: anywhere; }
+.math-lab__status--error { background: #fff0d5; color: #663f05; }
+.math-lab .fountain-editor { min-height: 310px; padding: 28px; border: 1px solid #bbb5cb; border-radius: 8px; background: white; color: #211c32; }
+.math-lab details { margin-top: 16px; }
+.math-lab summary { cursor: pointer; font-weight: 600; }
+.math-lab pre { padding: 16px; background: #f2eff8; color: #211c32; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .math-lab .fountain-editor { padding: 14px; } }
+.math-lab { min-height: 100vh; background: #f7f5f0; color: #17152a; font-family: system-ui, sans-serif; }
+body { margin: 0; }
+.math-lab * { box-sizing: border-box; }
+.math-lab .site-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 4vw; border-bottom: 1px solid #dcd8e4; }
+.math-lab .site-header nav { display: flex; flex-wrap: wrap; gap: 22px; }
+.math-lab .site-header a { text-decoration: none; color: inherit; }
+.math-lab .brand { display: inline-flex; gap: 10px; align-items: center; font-weight: 700; }
+.math-lab .brand > span { padding: 7px 11px; background: #6d4aff; color: white; border-radius: 8px 8px 8px 0; }
+.math-lab .site-page-link__arrow { margin-left: 5px; color: #766896; }
+.math-lab a { color: #583ab8; text-underline-offset: 3px; }

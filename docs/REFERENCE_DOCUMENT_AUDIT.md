@@ -81,6 +81,44 @@ ESM / 1102.3 KiB CJS; only the aggregate CJS ceiling increased by 1 KiB to 1103.
 No dependency, public API, individual-entry, or performance-ceiling change.
 This evidence does not certify physical-device IME or typeset-paper parity.
 
+## Real renderer follow-through
+
+The [public math renderer lab](https://eddolo.github.io/fountainjs/math-renderer.html)
+uses a real, host-owned KaTeX 0.18.6 installation and local fonts. Its
+[source](../examples/react-app/src/math-renderer-main.tsx) is a complete plain
+Editor/EditorView integration with a React control shell, source editing,
+undo/redo, JSON inspection, Markdown output, and visible render diagnostics.
+The gallery and developer guide link to it. The added development dependency
+does not enter Fountain's runtime dependency graph or bundles; the package
+smoke check inspects every runtime source map to enforce that boundary.
+
+The two equation fixtures were compared exactly with the pinned paper source.
+Both retain `\label` and both currently fail this renderer. The lab deliberately
+does not erase labels or substitute a simplified equation and call that a match.
+Loading a fixture creates an existing math node directly, **not** an automatic
+whole-paper import. The aligned example and recovery integral are separate
+editor-authored examples, not representations of the paper.
+
+Actual renderer testing found that KaTeX's error-colored output could bypass
+Fountain's `onRenderError` fallback. The adapter now requests throwing syntax
+errors by default and detects denied trust commands with an always-denying
+callback. The host cannot enable trusted commands through options. Both paths
+retain exact editable TeX and report the failure. A caller can still explicitly
+select KaTeX's non-throwing syntax-error policy; that is the host's choice, not
+the default. See [KaTeX options](https://katex.org/docs/options.html) and its
+[supported functions](https://katex.org/docs/supported.html).
+
+Verification on 2026-09-07: `pnpm check` passed 903 tests in 83 files and all
+package, pure-runtime, API, CommonMark, interoperability, budget and performance
+gates. Real-renderer browser checks passed in Chromium, Firefox and WebKit
+(`artifacts/browser-real-katex-20260907b/results/`), including no external
+network requests, exact source fallback and recovery. The recorded editing
+journey passed (`artifacts/manual-real-katex-20260907b/results/`); aligned math,
+published-source failure, recovered integral and the 390px-wide layout were
+visually inspected. The production site build also passed. Runtime bundles
+measure 1320.9 KiB ESM / 1102.4 KiB CJS, within unchanged ceilings. These checks
+establish the renderer boundary, not full-paper or native Lean parity.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official

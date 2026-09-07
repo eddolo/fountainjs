@@ -57,14 +57,16 @@ export function createKaTeXRenderer(
   if (!katex || typeof katex.render !== 'function') throw new TypeError('A KaTeX-compatible render function is required.');
   return (latex, context) => {
     const mount = context.document.createElement(context.displayMode ? 'div' : 'span');
+    let deniedCommand = false;
     katex.render(latex, mount, {
       output: 'htmlAndMathml',
-      throwOnError: false,
+      throwOnError: true,
       strict: 'warn',
       ...options,
       displayMode: context.displayMode,
-      trust: false,
+      trust: () => { deniedCommand = true; return false; },
     });
+    if (deniedCommand) throw new Error('KaTeX rejected a command requiring trust. The original source was retained.');
     return mount;
   };
 }

@@ -586,6 +586,7 @@
     "entities": "8.0.0",
     "fflate": "0.8.3",
     "jsdom": "^30.0.1",
+    "katex": "0.18.6",
     "miniflare": "3.20250718.3",
     "parse5": "8.0.1",
     "parse5-htmlparser2-tree-adapter": "8.0.1",

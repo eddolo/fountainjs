@@ -25,6 +25,7 @@ export default defineConfig({
         main: fileURLToPath(new URL('./examples/react-app/index.html', import.meta.url)),
         developers: fileURLToPath(new URL('./examples/react-app/developers.html', import.meta.url)),
         demos: fileURLToPath(new URL('./examples/react-app/demos.html', import.meta.url)),
+        mathRenderer: fileURLToPath(new URL('./examples/react-app/math-renderer.html', import.meta.url)),
         ...Object.fromEntries(demoSlugs.map((slug) => [
           `demo-${slug}`,
           fileURLToPath(new URL(`./examples/react-app/demos/${slug}.html`, import.meta.url)),

@@ -615,7 +615,12 @@ source-file editor. The source-only preview also displays line breaks explicitly
 framework-neutral `MathRenderer`; the renderer must return a DOM `Node`, never
 an HTML string. `createKaTeXRenderer(katex, options?)` adapts a caller-owned
 [KaTeX installation](https://katex.org/docs/api) with combined HTML/MathML
-output and `trust: false`. KaTeX is not loaded by the FountainJS core.
+output and an always-denying trust callback (caller options cannot enable trust).
+Unsupported syntax throws by default so the node view retains source and calls
+`onRenderError`; denied trust commands also trigger this fallback, instead of a
+red pseudo-rendered result. A caller may explicitly override `throwOnError` for
+its own syntax-error display policy, but cannot override the trust denial.
+KaTeX is not loaded by the FountainJS core.
 
 ```ts
 import katex from 'katex'

@@ -1,10 +1,24 @@
 import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const require = createRequire(import.meta.url);
+
+// KaTeX belongs to the demo/test host, not the library's runtime dependency graph.
+const packageMetadata = JSON.parse(readFileSync('package.json', 'utf8'));
+if (packageMetadata.dependencies?.katex || packageMetadata.optionalDependencies?.katex) {
+  throw new Error('The demo math renderer must not become a Fountain runtime dependency.');
+}
+const runtimeMaps = readdirSync('dist').filter(file => /\.(?:js|cjs)\.map$/u.test(file));
+if (!runtimeMaps.length) throw new Error('Expected runtime source maps to verify renderer isolation.');
+for (const file of runtimeMaps) {
+  const map = JSON.parse(readFileSync(`dist/${file}`, 'utf8'));
+  if (map.sources.some(source => /(?:^|\/)katex\//u.test(source.replaceAll('\\', '/')))) {
+    throw new Error(`Demo-only KaTeX code entered a library bundle: ${file}`);
+  }
+}
 
 function assertExports(module, names, surface) {
   const missing = names.filter((name) => typeof module[name] === 'undefined');
