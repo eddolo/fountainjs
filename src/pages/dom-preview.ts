@@ -60,21 +60,88 @@ function elementsIncluding(root: HTMLElement): readonly HTMLElement[] {
   return Object.freeze([root, ...root.querySelectorAll<HTMLElement>('*')]);
 }
 
+let previewSequence = 0;
+
+/** Per-render registry: no DOM references survive after the preview is built. */
+class PreviewReferences {
+  private readonly originals = new WeakMap<Element, string>();
+  private readonly aliases = new Map<string, string>();
+  private readonly prefix = `fountain-preview-${++previewSequence}-`;
+  private sequence = 0;
+
+  prepare(elements: readonly HTMLElement[], prefix: string): void {
+    const local = new Map<string, string>();
+    elements.forEach(element => {
+      if (!element.id) return;
+      const original = element.id;
+      element.id = `${prefix}${original}`;
+      this.originals.set(element, original);
+      this.aliases.set(element.id, original);
+      if (!local.has(original)) local.set(original, element.id);
+    });
+    this.rewrite(elements, id => local.get(id), false);
+  }
+
+  finish(roots: readonly HTMLElement[]): void {
+    const elements = roots.flatMap(elementsIncluding);
+    const current = new Map<string, string>();
+    const original = new Map<string, string>();
+    elements.forEach(element => {
+      if (!element.id) return;
+      const previous = element.id;
+      // Numeric suffixes are URL/CSS safe, including when the source ID isn't.
+      element.id = `${this.prefix}${++this.sequence}`;
+      if (!current.has(previous)) current.set(previous, element.id);
+      const source = this.originals.get(element);
+      if (source && !original.has(source)) original.set(source, element.id);
+    });
+    this.rewrite(elements, id => current.get(id)
+      ?? original.get(this.aliases.get(id) ?? id), true);
+  }
+
+  private rewrite(
+    elements: readonly HTMLElement[],
+    resolve: (id: string) => string | undefined,
+    final: boolean,
+  ): void {
+    elements.forEach(element => {
+      for (const attribute of Array.from(element.attributes)) {
+        const value = attribute.value;
+        if (attribute.localName === 'href' && value.startsWith('#')) {
+          let id = value.slice(1);
+          try { id = decodeURIComponent(id); } catch { /* Literal malformed escape. */ }
+          const replacement = resolve(id);
+          if (replacement) attribute.value = `#${encodeURIComponent(replacement)}`;
+          else if (final) {
+            element.removeAttributeNode(attribute);
+            element.setAttribute('data-fountain-unresolved-reference', id);
+            if (element.localName === 'a') element.setAttribute('aria-disabled', 'true');
+          }
+        } else if (['aria-labelledby', 'aria-describedby', 'aria-controls', 'aria-owns', 'headers', 'for'].includes(attribute.name)) {
+          attribute.value = value.split(/\s+/u).map(id => resolve(id) ?? (final ? '' : id)).filter(Boolean).join(' ');
+        } else if (['style', 'fill', 'stroke', 'filter', 'clip-path', 'mask', 'marker-start', 'marker-mid', 'marker-end', 'cursor'].includes(attribute.name) && value.includes('url(')) {
+          // Local SVG paint/clip resources and inline CSS, not external URLs.
+          attribute.value = value.replace(/url\(\s*(['"]?)#([^'"\s)]+)\1\s*\)/gu, (match, _quote, id: string) => {
+            const replacement = resolve(id);
+            return replacement ? `url(#${replacement})` : final ? 'none' : match;
+          });
+        }
+      }
+    });
+  }
+}
+
 function prepareClone(
   clone: HTMLElement,
   pageNumber: number,
   cloneIndex: number,
+  references: PreviewReferences,
   visualOnly = true,
 ): HTMLElement {
   const prefix = `fountain-preview-${pageNumber}-${cloneIndex}-`;
-  const ids = new Map<string, string>();
-  elementsIncluding(clone).forEach((element) => {
-    const id = element.id;
-    if (id) {
-      const replacement = `${prefix}${id}`;
-      ids.set(id, replacement);
-      element.id = replacement;
-    }
+  const elements = elementsIncluding(clone);
+  references.prepare(elements, prefix);
+  elements.forEach((element) => {
     const path = element.dataset.fountainPath;
     if (path !== undefined) {
       element.dataset.fountainSourcePath = path;
@@ -104,14 +171,7 @@ function prepareClone(
     if (['INPUT', 'BUTTON', 'SELECT', 'TEXTAREA'].includes(element.tagName)) {
       (element as HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement).disabled = true;
     }
-    if (visualOnly && element.tagName === 'A') element.setAttribute('tabindex', '-1');
-  });
-  elementsIncluding(clone).forEach((element) => {
-    const href = element.getAttribute('href');
-    if (href?.startsWith('#')) {
-      const replacement = ids.get(href.slice(1));
-      if (replacement) element.setAttribute('href', `#${replacement}`);
-    }
+    if (visualOnly && element.localName === 'a') element.setAttribute('tabindex', '-1');
   });
   clone.contentEditable = 'false';
   return clone;
@@ -214,6 +274,7 @@ function clonedPlacement(
   allSources: readonly DOMPageFragmentSource[],
   pageNumber: number,
   cloneIndex: number,
+  references: PreviewReferences,
   renderPlacement?: DOMPagePreviewPlacementRenderer,
 ): HTMLElement | null {
   const first = placement.sources[0];
@@ -229,7 +290,7 @@ function clonedPlacement(
   if (rendered !== undefined && (rendered.nodeType !== 1 || rendered.ownerDocument !== sourceRoot.ownerDocument)) {
     throw new TypeError('renderPlacement must return a source-document HTMLElement.');
   }
-  const clone = prepareClone((rendered ?? source).cloneNode(true) as HTMLElement, pageNumber, cloneIndex);
+  const clone = prepareClone((rendered ?? source).cloneNode(true) as HTMLElement, pageNumber, cloneIndex, references);
   clone.dataset.fountainPageItem = placement.itemId;
   if (rendered !== undefined) return clone;
   if (first.kind === 'list-item' || first.kind === 'block-child' || first.kind === 'table-row-group') {
@@ -256,11 +317,12 @@ function clonedTemplate(
   template: ProjectedPageTemplate | undefined,
   pageNumber: number,
   cloneIndex: number,
+  references: PreviewReferences,
 ): HTMLElement | null {
   if (!template) return null;
   const source = renderedTopLevel(sourceRoot, template.sourcePath);
   if (!source) throw new Error(`No rendered source exists for the ${template.kind} ${template.variant} template.`);
-  const clone = prepareClone(source.cloneNode(true) as HTMLElement, pageNumber, cloneIndex);
+  const clone = prepareClone(source.cloneNode(true) as HTMLElement, pageNumber, cloneIndex, references);
   clone.classList.remove(`fountain-page-${template.kind}`);
   clone.dataset.fountainPageTemplate = `${template.kind}:${template.variant}`;
   clone.querySelectorAll<HTMLElement>('[data-fountain-page-field]').forEach((field) => {
@@ -289,7 +351,7 @@ function wireFootnotes(
     const destinationPage = destinationPages.get(id) ?? pageNumber;
     reference.querySelectorAll<HTMLAnchorElement>('a').forEach((link) => link.setAttribute(
       'href',
-      `#fountain-preview-${destinationPage}-footnote-${encodeURIComponent(id)}`,
+      `#${encodeURIComponent(`fountain-preview-${destinationPage}-footnote-${encodeURIComponent(id)}`)}`,
     ));
   });
 }
@@ -310,6 +372,7 @@ function appendFootnotes(
   target: HTMLElement,
   cloneIndex: () => number,
   fragmentSources: readonly DOMPageFootnoteFragmentSource[],
+  references: PreviewReferences,
 ): void {
   if (!page.footnotes.length) return;
   const footnotes = sourceRoot.ownerDocument.createElement('section');
@@ -336,7 +399,7 @@ function appendFootnotes(
         }
       }
     }
-    const clone = prepareClone(sourceClone, page.number, cloneIndex());
+    const clone = prepareClone(sourceClone, page.number, cloneIndex(), references);
     if (complete) {
       footnotes.appendChild(clone);
       return;
@@ -433,6 +496,7 @@ export function renderDOMPagePreview(
   const pages: HTMLElement[] = [];
   const printPageName = options.includePrintStyles === false ? undefined : physicalPageName(geometry);
   const footnoteDestinations = footnoteDestinationPages(snapshot.presentation.pages);
+  const references = new PreviewReferences();
   let cloneCount = 0;
   snapshot.content.pages.forEach((contentPage, pageIndex) => {
     const presentation = snapshot.presentation.pages[pageIndex];
@@ -450,7 +514,7 @@ export function renderDOMPagePreview(
     if (printPageName) sheet.style.setProperty('page', printPageName);
 
     const header = pageRegion(owner, 'fountain-page-preview__header', geometry.headerHeight);
-    const projectedHeader = clonedTemplate(sourceRoot, presentation.header, presentation.number, ++cloneCount);
+    const projectedHeader = clonedTemplate(sourceRoot, presentation.header, presentation.number, ++cloneCount, references);
     if (projectedHeader) header.appendChild(projectedHeader);
     sheet.appendChild(header);
 
@@ -464,6 +528,7 @@ export function renderDOMPagePreview(
         snapshot.measurement.fragmentSources,
         presentation.number,
         ++cloneCount,
+        references,
         options.renderPlacement,
       );
       if (clone) content.appendChild(clone);
@@ -475,11 +540,12 @@ export function renderDOMPagePreview(
       body,
       () => ++cloneCount,
       snapshot.measurement.footnoteSources,
+      references,
     );
     sheet.appendChild(body);
 
     const footer = pageRegion(owner, 'fountain-page-preview__footer', geometry.footerHeight);
-    const projectedFooter = clonedTemplate(sourceRoot, presentation.footer, presentation.number, ++cloneCount);
+    const projectedFooter = clonedTemplate(sourceRoot, presentation.footer, presentation.number, ++cloneCount, references);
     if (projectedFooter) footer.appendChild(projectedFooter);
     sheet.appendChild(footer);
     if (presentation.usedHeight > presentation.availableHeight) sheet.dataset.fountainPageOverflow = 'true';
@@ -488,8 +554,12 @@ export function renderDOMPagePreview(
     pages.push(sheet);
   });
 
+  // Resolve across all visual pages, then independently inside the accessible
+  // copy. Never let a preview reference escape into the live editor.
+  references.finish(pages);
   if (options.includeAccessibleDocument !== false) {
-    const accessible = prepareClone(sourceRoot.cloneNode(true) as HTMLElement, 0, 0, false);
+    const accessible = prepareClone(sourceRoot.cloneNode(true) as HTMLElement, 0, 0, references, false);
+    references.finish([accessible]);
     accessible.className = 'fountain-page-preview__accessible';
     accessible.setAttribute('role', 'document');
     accessible.setAttribute('aria-label', options.ariaLabel ?? 'Document content');

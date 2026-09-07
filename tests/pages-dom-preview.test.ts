@@ -21,6 +21,105 @@ function rectangle(top: number, height: number): DOMRect {
 afterEach(() => vi.restoreAllMocks());
 
 describe('read-only DOM page preview', () => {
+  it.each([true, false])('keeps cross-page HTML/SVG references inside each preview (accessible copy: %s)', includeAccessibleDocument => {
+    const model = schema().nodeFromJSON({ type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'References' }] },
+      { type: 'page_break' },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Equation target' }] },
+    ] });
+    const source = window.document.createElement('div');
+    source.innerHTML = '<p data-fountain-path="0" data-height="20"><a href="#equation%20id%3A%CE%B1">Equation</a><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><a href="#equation%20id%3A%CE%B1"><text>(1)</text></a><a xlink:href="#equation%20id%3A%CE%B1"><text>Legacy SVG</text></a></svg></p>'
+      + '<hr data-fountain-path="1" data-height="0" data-fountain-page-break="true">'
+      + '<p data-fountain-path="2" data-height="20"><svg xmlns="http://www.w3.org/2000/svg"><g id="equation id:α"><text>x = y</text></g></svg></p>';
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(Number(this.dataset.fountainPath ?? 0) * 30, Number(this.dataset.height ?? 0));
+    });
+    const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(source, model, geometry, { lineFragmentNodeTypes: [] });
+    const before = source.outerHTML;
+    const targets = [window.document.createElement('div'), window.document.createElement('div')];
+    for (const target of targets) {
+      const result = renderDOMPagePreview(source, target, geometry, snapshot, { includeAccessibleDocument });
+      expect(result.pages).toHaveLength(2);
+      const destination = result.pages[1].querySelector('[id]')!;
+      for (const link of result.pages[0].querySelectorAll('a')) {
+        expect(decodeURIComponent((link.getAttribute('href') ?? link.getAttribute('xlink:href'))!.slice(1))).toBe(destination.id);
+        expect(link.getAttribute('tabindex')).toBe('-1');
+      }
+      const accessible = target.querySelector('.fountain-page-preview__accessible');
+      if (accessible) for (const link of accessible.querySelectorAll('a')) {
+        expect(decodeURIComponent((link.getAttribute('href') ?? link.getAttribute('xlink:href'))!.slice(1))).toBe(accessible.querySelector('[id]')!.id);
+      }
+    }
+    const allIds = [source, ...targets].flatMap(root => [...root.querySelectorAll('[id]')].map(node => node.id));
+    expect(new Set(allIds).size).toBe(allIds.length);
+    expect(source.outerHTML).toBe(before);
+  });
+
+  it('retains clone-local SVG resources and accessibility IDs, and disables missing fragment targets', () => {
+    const model = schema().nodeFromJSON({ type: 'doc', content: [
+      { type: 'page_header', attrs: { variant: 'default' }, content: [{ type: 'paragraph' }] },
+      { type: 'paragraph' }, { type: 'page_break' }, { type: 'paragraph' },
+    ] });
+    const source = window.document.createElement('div');
+    source.innerHTML = '<header data-fountain-path="0" data-fountain-page-header="default" data-height="10">'
+      + '<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="caption"><title id="caption">Diagram</title><defs><path id="shape" d="M0 0L1 1"/><clipPath id="clip"><use href="#shape"/></clipPath></defs><g clip-path="url(#clip)" style="filter:url(#missing)"><use href="#shape"/></g></svg>'
+      + '<label for="field">Label</label><input id="field" aria-describedby="caption"></header>'
+      + '<p data-fountain-path="1" data-height="20"><a href="#absent">Missing</a><a href="#bad%zz">Malformed</a><a href="https://example.org/#outside">External</a></p>'
+      + '<hr data-fountain-path="2" data-fountain-page-break="true" data-height="0">'
+      + '<p data-fountain-path="3" data-height="20" data-source="url(#shape)">Second page</p>';
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
+      return rectangle(Number(this.dataset.fountainPath ?? 0) * 30, Number(this.dataset.height ?? 0));
+    });
+    const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10, headerHeight: 10 });
+    const snapshot = layoutDOMPages(source, model, geometry, { lineFragmentNodeTypes: [] });
+    const target = window.document.createElement('div');
+    const before = source.outerHTML;
+    const result = renderDOMPagePreview(source, target, geometry, snapshot);
+    expect(result.pages).toHaveLength(2);
+    for (const sheet of result.pages) {
+      const header = sheet.querySelector('header')!;
+      const shape = header.querySelector('path')!;
+      for (const use of header.querySelectorAll('use')) expect(use.getAttribute('href')).toBe(`#${shape.id}`);
+      expect(header.querySelector('g')!.getAttribute('clip-path')).toBe(`url(#${header.querySelector('clipPath')!.id})`);
+      expect(header.querySelector('g')!.getAttribute('style')).toBe('filter:none');
+      expect(header.querySelector('svg')!.getAttribute('aria-labelledby')).toBe(header.querySelector('title')!.id);
+      expect(header.querySelector('label')!.htmlFor).toBe(header.querySelector('input')!.id);
+      expect(header.querySelector('input')!.getAttribute('aria-describedby')).toBe(header.querySelector('title')!.id);
+    }
+    for (const group of [result.pages[0], target.querySelector('.fountain-page-preview__accessible')!]) {
+      for (const name of ['absent', 'bad%zz']) {
+        const link = group.querySelector(`[data-fountain-unresolved-reference="${name}"]`)!;
+        expect(link.hasAttribute('href')).toBe(false);
+        expect(link.getAttribute('aria-disabled')).toBe('true');
+      }
+      expect(group.querySelector('a[href^="https"]')!.getAttribute('href')).toBe('https://example.org/#outside');
+    }
+    const ids = [...target.querySelectorAll('[id]')].map(element => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(result.pages[1].querySelector('[data-source]')!.getAttribute('data-source')).toBe('url(#shape)');
+    expect(source.outerHTML).toBe(before);
+  });
+
+  it('does not link back to a source target omitted by a host print projection', () => {
+    const model = schema().nodeFromJSON({ type: 'doc', content: [{ type: 'paragraph' }, { type: 'paragraph' }] });
+    const source = window.document.createElement('div');
+    source.innerHTML = '<p data-fountain-path="0"><a href="#omitted">Figure</a></p><p data-fountain-path="1" id="omitted">Interactive figure</p>';
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(() => rectangle(0, 20));
+    const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
+    const snapshot = layoutDOMPages(source, model, geometry, { lineFragmentNodeTypes: [] });
+    const target = window.document.createElement('div');
+    const result = renderDOMPagePreview(source, target, geometry, snapshot, {
+      renderPlacement: ({ source: block, document }) => block.id === 'omitted' ? document.createElement('figure') : undefined,
+    });
+    const visualLink = result.pages[0].querySelector('a')!;
+    expect(visualLink.hasAttribute('href')).toBe(false);
+    expect(visualLink.getAttribute('data-fountain-unresolved-reference')).toBe('omitted');
+    const accessible = target.querySelector('.fountain-page-preview__accessible')!;
+    expect(accessible.querySelector('a')!.getAttribute('href')).toBe(`#${accessible.querySelector('[id]')!.id}`);
+    expect(source.querySelector('a')!.getAttribute('href')).toBe('#omitted');
+  });
+
   it('renders repeated furniture, fields, body slices, and linked footnotes without touching the editor', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',
@@ -372,7 +471,8 @@ describe('read-only DOM page preview', () => {
     const rendered = result.pages[0]?.querySelector<HTMLElement>('[data-fountain-page-item]');
     expect(rendered?.tagName).toBe('FIGURE');
     expect(rendered?.textContent).toContain('Printable widget');
-    expect(rendered?.id).toMatch(/^fountain-preview-1-\d+-print-widget$/u);
+    expect(rendered?.id).toMatch(/^fountain-preview-\d+-\d+$/u);
+    expect(rendered?.id).not.toBe('print-widget');
     expect(rendered?.hasAttribute('data-fountain-path')).toBe(false);
     expect(rendered?.contentEditable).toBe('false');
     expect(rendered?.querySelector<HTMLButtonElement>('button')?.disabled).toBe(true);

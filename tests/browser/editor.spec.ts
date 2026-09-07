@@ -6,6 +6,11 @@ import { mathReorderJourney } from './math-reorder-journey';
 import { mathReferencesJourney } from './math-references-journey';
 import { textlessReplacementJourney } from './textless-replacement-journey';
 import { mathFilesJourney } from './math-files-journey';
+import { mathPagesJourney } from './math-pages-journey';
+
+test('keeps real SVG equation links inside paged snapshots across editing and rebuilding', async ({ page }, info) => {
+  await mathPagesJourney(page, info);
+});
 
 test('saves and reopens equation files with source, references and history intact', async ({ page }, info) => {
   await mathFilesJourney(page, info);

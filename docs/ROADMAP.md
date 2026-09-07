@@ -37,6 +37,15 @@ version restore and remote collaboration snapshots. File bounds, schema
 validation and discarded-field checks precede replacement; failed loads leave
 the editor intact. This does not bundle external assets or implement `.fjs`.
 
+Paged-equation follow-through (2026-09-07): reproduced and fixed cross-block
+links escaping the paged preview, SVG anchor keyboard-order leakage and shared
+IDs across preview instances. The equation lab now builds a landscape Letter
+snapshot with an explicit stale-state/rebuild workflow. Cross-browser checks
+cover native SVG link navigation to later pages. This does not finish academic
+PDF/DOCX fidelity. Arbitrary ID targets inside clipped custom fragments and
+stylesheet ID/URL rewriting remain host projection responsibilities requiring
+broader reference-layout work; do not claim universal SVG/HTML export parity.
+
 Academic rendering follow-through (2026-09-07): the separate equation-reference
 lab now uses a bounded host-owned MathJax SVG renderer for original labelled
 equations, forward links, reorder/renumber, source editing, history, visible

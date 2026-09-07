@@ -410,11 +410,44 @@ snapshot, not a new runtime dependency.
 The final `pnpm check` passed all 987 tests in 91 files and the existing package,
 API, headless/server, format, runtime-size and performance checks.
 
-**Still pending:** shared paged/PDF/DOCX math output. Code inspection identifies
-an export-boundary risk requiring a dedicated reproduction: preview clone
-IDs are renamed per block, while cross-block equation links can still refer
-to the original live surface; SVG link handling also needs explicit coverage.
-Source-file round trips do not prove printed formula placement or PDF links.
+### Paged SVG reference boundary (2026-09-07)
+
+The dedicated regression reproduced cross-block links pointing to live-source
+IDs rather than the cloned equation. The preview now resolves references after
+all visual placements exist, independently of its accessible copy. It isolates
+IDs per render, preserves clone-local SVG resources and ID references, supports
+percent-encoded HTML/SVG links and `xlink:href`, and disables missing fragment
+links rather than silently navigating outside the preview. Four new regression
+cases cover cross-page links with/without the accessible copy, repeated SVG
+resources and label/ARIA targets, and a target omitted by host print projection.
+
+The public equation lab's **Build page preview** measures a separate reader
+copy, shows landscape Letter sheets at the renderer's 960px body width, and
+marks the snapshot stale after an author edit. This is deliberately not the
+original paper's geometry. The recorded journey opens a document containing
+the two original equations and twenty added research-note paragraphs, follows
+native SVG links to later pages, edits, rebuilds and checks narrow-screen
+containment. All three pages of the final recorded snapshot were visually
+inspected; both formulas and their numbers are visible. Inspection caught and
+removed editor-style borders leaking into the projection.
+
+Evidence: `artifacts/manual-math-pages-20260907final/results/` (video, trace,
+three page screenshots); final Chromium/Firefox/WebKit journey 3/3 without
+retries at `artifacts/browser-math-pages-20260907final/results/`. The earlier
+combined equation-file/reference and footnote/layout regression selection
+passed 21/21 across those engines at
+`artifacts/browser-math-pages-20260907c/results/`. Full `pnpm check`: 991 tests
+in 91 files, plus package/API/headless/server/format/size/performance checks.
+The optional preview entry measures 13.2 KiB ESM / 11.2 KiB CJS; total runtime
+1331.5 / 1110.4 KiB (approximately +1.7 / +1.2 KiB). Only this optional entry
+and aggregate runtime limits changed; no dependency, CSS or performance-cap
+increase.
+
+**Still pending:** independently rendered academic PDF/DOCX output and original
+paper layout comparison. DOM references do not prove PDF link destinations.
+Targets inside arbitrary clipped custom fragments need visible-fragment host
+projections; stylesheet ID selectors/URL text are not rewritten. This is not
+a universal SVG export sanitizer or complete paper reproduction.
 
 ## Lean reference track
 

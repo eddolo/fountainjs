@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Paged-preview references now resolve across cloned blocks/pages rather than
+  jumping back to the editor. Each render has isolated IDs; HTML/SVG links,
+  local SVG resources and accessibility references stay within their visual
+  or accessible projection. Missing fragment links are explicitly disabled.
 - Whole-document opening, undo/redo, version restore and remote snapshots now
   retain root-level metadata rather than replacing only children and keeping
   stale attributes. `replaceDocument` validates same-schema roots, replaces
@@ -16,6 +20,9 @@
 
 ### Added
 
+- Equation-lab paged snapshots with real SVG reference navigation and explicit
+  rebuild feedback after edits. Landscape Letter geometry is a demonstration,
+  not a reproduction of the source paper or certified PDF/DOCX output.
 - Equation lab local JSON/Markdown downloads and validated JSON reopening,
   including fresh-instance reference rebuilding, undoable opening, file bounds,
   loss rejection and collision-free generated equation labels after reopening.

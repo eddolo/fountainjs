@@ -2014,6 +2014,27 @@ assistive technology. Cloned IDs are namespaced, form controls are disabled,
 and visual links are removed from keyboard order. The renderer owns no event
 listeners and is safe to call again on the same target.
 
+Fragment links (`href` and SVG `xlink:href`, including percent-encoded IDs)
+are resolved across the finished visual pages, separately from the continuous
+accessible copy. Each render has isolated IDs, including when two previews of
+the same source coexist. Local SVG `use` links, presentation-attribute/inline
+style `url(#id)` resources, label/control IDs and common ARIA ID references are
+rewritten too. Clone-local targets take precedence for repeated furniture;
+cross-placement links use the first surviving target. A missing fragment
+target loses its link and receives `data-fountain-unresolved-reference`; missing
+anchor links also receive `aria-disabled="true"`. External URLs are unchanged.
+Do not persist these generated DOM IDs as document identity. Hosts with targets
+inside clipped custom fragments should emit IDs only in the visible fragment
+through `renderPlacement`; this does not locate arbitrary targets inside a
+clipped subtree. Stylesheet ID selectors and stylesheet-text URL references
+are not rewritten: use class-based host print styles or explicit projections.
+Clone cleanup is not an untrusted-HTML sanitizer or a network sandbox.
+
+The equation-reference lab demonstrates this boundary through **Build page
+preview**, with explicit stale-snapshot feedback after editing. Its landscape
+Letter geometry matches the host renderer's 960px equation width, not the
+original academic paper. DOM link verification is not PDF/DOCX fidelity proof.
+
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree
 mutations, element/window resize, loaded fonts, and print preparation into one

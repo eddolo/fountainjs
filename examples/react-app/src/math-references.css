@@ -5,3 +5,7 @@
 .equation-lab .fountain-editor[contenteditable="false"] { min-height: 0; }
 .equation-lab .fountain-editor { padding-left: 48px; }
 .equation-lab .math-lab__status { overflow-wrap: anywhere; }
+.equation-lab__pages { max-width: 100%; overflow: auto; }
+.equation-lab__pages .fountain-page-preview__sheet { margin: 16px 0; background: white; box-shadow: 0 0 0 1px #d9d2ed; }
+.equation-lab__pages .fountain-page-preview__content { padding: 0; }
+.equation-lab__pages .fountain-editor { border: 0; border-radius: 0; box-shadow: none; outline: none; background: transparent; }

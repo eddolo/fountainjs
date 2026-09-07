@@ -5,6 +5,9 @@ import { SitePageLink } from './SitePageLink';
 import { mathReferenceSamples } from './math-reference-samples';
 import { createDocumentMathJaxRenderer, type EquationSnapshot } from './mathjax-document-renderer';
 import { downloadDocumentFile, MAX_EQUATION_FILE_BYTES, nextEquationLabel, parseEquationDocument, replaceEquationDocument } from './math-document-files';
+import { createPageGeometry } from 'fountainjs-editor/pages';
+import { layoutDOMPages } from 'fountainjs-editor/pages/dom';
+import { renderDOMPagePreview } from 'fountainjs-editor/pages/preview';
 import 'fountainjs-editor/styles.css';
 import './math-renderer.css';
 import './math-references.css';
@@ -12,6 +15,9 @@ import './math-references.css';
 function EquationReferencesLab() {
   const mount = useRef<HTMLDivElement>(null);
   const readerMount = useRef<HTMLDivElement>(null);
+  const pageMount = useRef<HTMLDivElement>(null);
+  const [pagedDocument, setPagedDocument] = useState<Node>();
+  const [pageMessage, setPageMessage] = useState('Build a snapshot to inspect the equations and follow their links on pages.');
   const [editor, setEditor] = useState<Editor | null>(null);
   const [doc, setDoc] = useState<Node>();
   const [selected, setSelected] = useState(false);
@@ -91,6 +97,36 @@ function EquationReferencesLab() {
     }
   }
 
+  async function buildPages() {
+    if (!editor) return;
+    const before = editor.state.doc;
+    setPageMessage('Waiting for fonts, then measuring the reader snapshot…');
+    await document.fonts.ready;
+    if (!pageMount.current || !readerMount.current || editor.state.doc !== before) {
+      setPageMessage('The document changed before measurement. Build the preview again.');
+      return;
+    }
+    // Measure a separate read-only copy at the same 960px body width used by
+    // this lab's equation renderer. Never resize or move the live editor.
+    const source = readerMount.current.querySelector<HTMLElement>('.fountain-editor')!.cloneNode(true) as HTMLElement;
+    source.style.cssText = 'position:absolute;left:-20000px;top:0;width:960px;min-width:960px;max-width:none;padding:0;border:0;min-height:0;height:auto;visibility:hidden;';
+    pageMount.current.parentElement!.append(source);
+    try {
+      const geometry = createPageGeometry({ size: { width: 1056, height: 816 }, margins: 48 });
+      const layout = layoutDOMPages(source, before, geometry);
+      // Measurement-only positioning must not leak into the accessible copy.
+      source.removeAttribute('style');
+      const result = renderDOMPagePreview(source, pageMount.current, geometry, layout, { ariaLabel: 'Paged equation snapshot' });
+      const warnings = [...layout.measurement.warnings, ...layout.layout.warnings, ...layout.presentation.warnings];
+      setPagedDocument(before);
+      setPageMessage(`${result.pages.length} landscape Letter page${result.pages.length === 1 ? '' : 's'}. Links stay inside this snapshot. ${warnings.length ? `${warnings.length} layout warning(s); inspect overflow before exporting.` : ''}`);
+    } catch (error) {
+      pageMount.current.replaceChildren();
+      setPagedDocument(undefined);
+      setPageMessage(`Preview not built: ${error instanceof Error ? error.message : String(error)}`);
+    } finally { source.remove(); }
+  }
+
   return <main className="math-lab equation-lab">
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a>
       <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><span>Capability lab</span></header>
@@ -127,6 +163,13 @@ function EquationReferencesLab() {
       <details><summary>Markdown source export</summary><pre>{doc ? MarkdownExporter.export(doc) : ''}</pre></details>
     </section>
     <section className="math-lab__workspace" aria-label="Equation reading"><h2>Reader preview</h2><p>No author controls. References target equations inside this preview, not the editor above.</p><div ref={readerMount} /></section>
+    <section className="math-lab__workspace" aria-label="Equation pagination">
+      <h2>Paged snapshot</h2>
+      <p>This lab uses landscape Letter pages with a 960px body to fit its equations. This is not the original paper’s layout, and does not certify PDF/DOCX fidelity.</p>
+      <div className="math-lab__controls"><button disabled={!editor} onClick={() => void buildPages()}>Build page preview</button></div>
+      <p aria-live="polite" data-page-message>{pagedDocument && pagedDocument !== doc ? 'The document has changed. Build the preview again to replace this older snapshot.' : pageMessage}</p>
+      <div className="equation-lab__pages"><div ref={pageMount} /></div>
+    </section>
     <section className="math-lab__intro"><h2>Developer integration</h2><p>Use <code>createMathExtension(&#123; documentRenderer &#125;)</code>. The host adapter compiles a fresh document snapshot, caches each node’s SVG output, and namespaces links per view. It loads only base/AMS syntax, limits source expansion, and reports missing or duplicate labels. This lab caps a snapshot at 128 formulas and 128,000 source characters; it does not promise large-document compile performance.</p><p>Unsupported source remains editable instead of showing stale successful output. PDF/DOCX visual export parity is still pending. <a href="./math-renderer.html">Compare the lightweight KaTeX lab →</a></p><p><a href="https://github.com/eddolo/fountainjs/blob/master/examples/react-app/src/mathjax-document-renderer.ts">Host adapter source →</a> · <a href="https://github.com/eddolo/fountainjs/blob/master/docs/API.md">API contracts →</a></p></section>
   </main>;
 }

@@ -144,8 +144,10 @@ const limits = Object.freeze({
   // from both the neutral model and browser measurement lifecycle. Clipped
   // long-footnote continuations and non-duplicating print text masks add about
   // 1.9/1.5 KiB to this opt-in entry.
-  'dist/pages-preview.js': 12 * kibibyte,
-  'dist/pages-preview.cjs': 10 * kibibyte,
+  // Cross-placement HTML/SVG/IDREF remapping and preview-instance isolation:
+  // ~13.2 KiB ESM / 11.2 KiB CJS; optional entry, no added dependency.
+  'dist/pages-preview.js': 14 * kibibyte,
+  'dist/pages-preview.cjs': 12 * kibibyte,
   // Accessible block handles, visible drop states, page-preview print rules,
   // responsive editable page shells, and the three opt-in math appearances
   // remain inside one measured stylesheet.
@@ -301,14 +303,16 @@ const limits = Object.freeze({
   // dependency or individual-entry, CSS, or performance-ceiling change.
   // Recovery from textless transaction snapshots adds ~0.5 KiB ESM / 0.4 KiB
   // CJS (1329.2 / 1108.6 KiB measured); only the aggregate ESM cap changes.
-  'all ESM runtime code': 1330 * kibibyte,
+  // Preview reference registry adds ~1.7 KiB ESM / 1.2 KiB CJS. Main/core,
+  // other optional entries, CSS and performance limits are unchanged.
+  'all ESM runtime code': 1332 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
   // individual entries, ESM, CSS and performance ceilings stay unchanged.
   // Whole-document replacement and restoration of root metadata add ~0.6 KiB
   // CJS (1109.2 KiB total). Individual entries, ESM and CSS caps stay fixed.
-  'all CommonJS runtime code': 1110 * kibibyte,
+  'all CommonJS runtime code': 1111 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
