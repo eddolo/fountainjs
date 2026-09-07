@@ -29,8 +29,10 @@ const limits = Object.freeze({
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
-  'HTML5 entity decoder ESM': 42 * kibibyte,
-  'HTML5 entity decoder CommonJS': 40 * kibibyte,
+  // The inline HTML adapter shares the strict token lexer with core. Rollup
+  // now co-locates that lexer with the entity decoder (source-map verified).
+  'HTML5 entity decoder ESM': 43 * kibibyte,
+  'HTML5 entity decoder CommonJS': 41 * kibibyte,
   'dist/document-utilities.js': 36 * kibibyte,
   'dist/document-utilities.cjs': 30 * kibibyte,
   // The complete Unicode catalogue is isolated from every runtime entry and
@@ -285,17 +287,19 @@ const limits = Object.freeze({
   // KiB CJS, replacing two different heuristics; individual caps stay fixed.
   // Equivalent selection-boundary handling adds ~0.6 KiB ESM / ~0.5 KiB CJS;
   // caret/IME replacement keeps marks without changing consumer-entry caps.
-  'all ESM runtime code': 1315 * kibibyte,
+  // Protected inline-node projection and its opt-in server adapter add about
+  // 5.1 KiB ESM / 4.4 KiB CJS. No new dependency or individual-entry cap change.
+  'all ESM runtime code': 1320 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
-  'all CommonJS runtime code': 1097 * kibibyte,
+  'all CommonJS runtime code': 1102 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
 const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.endsWith('.map'));
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
-const esmEntityDecoder = runtimeFiles.find((entry) => /^decode-.*\.js$/u.test(entry.name));
-const cjsEntityDecoder = runtimeFiles.find((entry) => /^decode-.*\.cjs$/u.test(entry.name));
+const esmEntityDecoder = runtimeFiles.find((entry) => /^(?:decode|markdown-html)-.*\.js$/u.test(entry.name));
+const cjsEntityDecoder = runtimeFiles.find((entry) => /^(?:decode|markdown-html)-.*\.cjs$/u.test(entry.name));
 if (!esmEntityDecoder || !cjsEntityDecoder) throw new Error('HTML5 entity decoder chunks were not emitted.');
 measured.set('HTML5 entity decoder ESM', await sizeOf(join('dist', esmEntityDecoder.name)));
 measured.set('HTML5 entity decoder CommonJS', await sizeOf(join('dist', cjsEntityDecoder.name)));

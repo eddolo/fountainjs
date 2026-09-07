@@ -6214,3 +6214,28 @@ test('converts raw HTML blocks only when the headless demo option is enabled', a
   await option.uncheck();
   await expect(output.locator('pre')).toContainText('&lt;div&gt;');
 });
+
+test('projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/demos/node-markdown.html');
+  const source = page.getByLabel('Markdown input', { exact: true });
+  await source.fill('A <em>one **two**</em> three.\n\nA *<a href="/safe">first* second</a>.');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('&lt;em&gt;');
+  const option = page.getByRole('checkbox', { name: 'Convert inline HTML formatting' });
+  await option.check();
+  await expect(output.locator('pre')).toContainText('<em>one <strong>two</strong></em>');
+  await expect(output.locator('pre')).toContainText('<strong>two</strong>');
+  await expect(output.locator('pre')).not.toContainText('&lt;em&gt;');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('not lossless HTML conversion');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' }).getByRole('listitem')).toHaveCount(1);
+  await source.fill('A <script>**readable**</script> after.');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Kept inline HTML as text');
+  await expect(output.locator('pre')).toContainText('&lt;script&gt;');
+  await expect(output.locator('pre')).toContainText('<strong>readable</strong>');
+  await option.uncheck();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toHaveCount(0);
+  expect(errors).toEqual([]);
+});

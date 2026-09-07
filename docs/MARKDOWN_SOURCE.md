@@ -68,6 +68,87 @@ appropriate safe output layer and retain normal application trust boundaries.
 Try the **Convert HTML blocks to rich content** checkbox in the
 [headless conversion demo](https://eddolo.github.io/fountainjs/demos/node-markdown.html).
 
+### Optional inline HTML formatting
+
+Inline HTML has a separate default-off boundary. Do **not** pass individual
+opening/closing tags to the block importer: their scope spans intervening
+Markdown nodes. Use the full inline stream instead:
+
+```ts
+const html = new ServerHTMLImporter()
+const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema, {
+  parseHTMLInline(segments, targetSchema) {
+    const result = html.parseInlineWithReport(segments, targetSchema)
+    reportHTMLIssues(result.issues)
+    return result.nodes
+  },
+  onHTMLInlineFallback(issue) {
+    console.warn(issue.reason, issue.message)
+  },
+})
+```
+
+`MarkdownHTMLInlineSegment` is either `{ kind: 'node', node }` (the original
+Fountain inline node) or `{ kind: 'html', html, marks }` (one lexically valid raw
+HTML token with its local Markdown marks). Segments and the stream array are
+immutable. The adapter runs once for each inline container with raw tokens,
+after recursive Markdown parsing; headings, paragraphs, table cells, list/quote
+content, and disclosure summaries use the same boundary. Code, escaped tags,
+autolinks, and Fountain's explicit inline dialect keep their existing handling.
+Image descriptions do not invoke the projection adapter.
+
+The server implementation gives original nodes protected, collision-free slots
+in a bounded parse5 fragment. It applies enclosing HTML marks to these nodes,
+preserving their type, attributes, children, and existing Markdown marks. It
+never serializes their content through HTML. Existing Markdown marks take
+precedence over a surrounding HTML mark of the same type; repeated Markdown
+marks are not removed. HTML-created atoms inherit the Markdown marks present
+on their opening token. For example, `*<a href="/safe">one* two</a>` keeps both
+words linked but only `one` emphasized; `*<img src="/image.png">*` keeps emphasis
+on the image node.
+
+Every protected node must survive exactly once and in its original order.
+Consumed, duplicated, moved, or replaced slots cause the entire inline container
+to fall back to its normal inert interpretation. Block/raw-text/foreign-content
+HTML in an inline container currently requires a specialized adapter and also
+falls back. A custom HTML atom cannot silently swallow Markdown children.
+Original nodes outside added mark scopes retain object identity; repeated uses
+of the same immutable node are distinct protected positions.
+
+The core validates same-schema inline output and catches declined, thrown,
+foreign-schema, and invalid results. It does not police a host adapter's content
+policy; the protected-slot guarantee belongs to the supplied server adapter.
+Fallback notifications are suppressed during source-provenance verification;
+normal adapter issue reporting can still run again. Observer exceptions are not
+swallowed. `parseInlineWithReport` reports a conservative projection warning:
+comments, tag identity, unsupported attributes/styles, and unsafe URLs may be
+discarded. Source-preserving export can return those original tokens, so the
+sanitization warning above applies unchanged.
+
+Try **Convert inline HTML formatting** independently of block conversion in the
+headless demo. Neither option changes the default-policy CommonMark baseline
+(563 matching / 72 pending / 17 intentional). Full raw-HTML conformance and
+exhaustive loss reporting remain unfinished.
+
+Verification (2026-09-07): `pnpm check` passed **891 tests in 82 files**, including
+34 new inline-adapter cases, plus package, API, pure-Node/server-boundary,
+conformance, build, and performance checks. Nine sequential
+Chromium/Firefox/WebKit contracts passed in
+`artifacts/browser-inline-html-20260907c/results/`. All thirteen recorded
+Markdown/HTML workflows passed in
+`artifacts/manual-inline-html-20260907c/results/`; screenshots 26 and 27 were
+visually inspected. The new workflow uses native rich clipboard paste, replaces
+an emphasized word, checks undo/redo, exports Markdown, and re-imports to the
+same document JSON (apart from host-generated IDs). The demo consolidates
+repeated warning messages without changing importer reports.
+
+The new public API is additive; the API snapshot still covers 376 declaration
+files. No dependency was added. Measured runtime totals are about 1319.2 KiB ESM
+and 1101.0 KiB CommonJS, under explicitly revised 1320/1102 KiB aggregate caps.
+The shared strict HTML lexer is now co-located with the existing entity decoder
+by the bundler; its source map was checked and that combined chunk is measured.
+All consumer entry ceilings and performance limits remain unchanged.
+
 ### Preserving rich tables in exported Markdown
 
 Pipe tables remain the portable default, with loss reports for merged cells,
@@ -396,12 +477,11 @@ comments and lowercase declarations have their proper token boundaries, and
 ASCII HTML whitespace is distinguished from Unicode text inside attribute
 values. Type-6 block detection deliberately retains its separate prefix rule.
 
-This is a shared lexical foundation, not a general inline HTML-to-schema
-adapter. Inline projection still needs a coherent treatment of HTML scopes
-crossing Markdown links/emphasis, custom inline nodes, schema/security policy,
-unsupported content, and source provenance. The existing `parseHTMLBlock`
-callback must not be applied to isolated inline tags as if each were a complete
-document: doing so would lose the scope that determines subsequent content.
+This lexical foundation now feeds the separate opt-in inline scope adapter
+documented above. It does not itself convert HTML, and broader raw-HTML
+conformance/loss reporting is still open. The `parseHTMLBlock` callback must not
+be applied to isolated inline tags as if each were a complete document: doing
+so would lose the scope that determines subsequent content.
 
 The recorded lexical/editing workflow also exposed a core typing defect:
 replacing a selected formatted word retained formatting only for the first
@@ -447,10 +527,10 @@ headless-boundary, API, and performance gates, plus three sequential
 Chromium/Firefox/WebKit demo checks. The recording and visually
 inspected screenshots are under
 `artifacts/manual-markdown-html-projection-20260907a/results/`.
-This does **not** close the larger raw-HTML milestone: inline HTML token/mark
-projection and exhaustive unsupported-element/conversion-loss reporting remain
-open. The default-policy oracle baseline is still 563 matching / 80 pending /
-nine intentional differences.
+At that block-adapter checkpoint, this did **not** close the larger raw-HTML
+milestone: inline HTML token/mark projection and exhaustive
+unsupported-element/conversion-loss reporting remained open. The then-current
+oracle baseline was 563 matching / 80 pending / nine intentional differences.
 
 The first raw-HTML boundary implementation now supplies all seven lexical
 start/end classifiers in `src/core/markdown-html.ts`. Recognized blocks become
@@ -488,7 +568,7 @@ schema node unless registered, so server import reports
 `unmapped-block-wrapper`; both public HTML conversion paths display the note.
 Unchanged source snapshots still return the original wrapper source exactly,
 while canonical Markdown exports the projected document, not the discarded
-custom-element identity. This does not implement general inline HTML or change
+custom-element identity. That wrapper change alone did not implement inline HTML or change
 the 563 matching / 72 pending / 17 intentional CommonMark classification.
 
 Blank Markdown source lines are separators, not an unambiguous count of empty
@@ -612,10 +692,14 @@ and unsafe `href` attributes do not become active link marks.
 ## Security and collaboration
 
 Raw Markdown and frontmatter are untrusted input. The snapshot does not execute
-content. Unknown inline HTML currently remains readable literal text; its
+content. Unknown inline HTML remains readable literal text by default; its
 attribute backslashes and entity spelling are not decoded as Markdown.
 Character references are decoded before parsed URLs pass Fountain's
 protocol policy, and the final model still passes full schema validation.
+
+The separate opt-in inline adapter projects supported HTML scopes into the
+model. Exact-source export can still recover omitted original tokens; never
+render source-preserving Markdown as unsanitized live HTML.
 
 The snapshot belongs to an import/export session rather than shared document
 state. Collaboration synchronizes the structured Fountain document. A product

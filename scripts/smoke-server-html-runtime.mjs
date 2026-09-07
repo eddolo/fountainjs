@@ -1,4 +1,4 @@
-import { CoreSchemaSpec, HTMLExporter, Schema } from '../dist/index.js';
+import { CoreSchemaSpec, HTMLExporter, MarkdownImporter, Schema } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
 
 for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationObserver']) {
@@ -21,6 +21,11 @@ if (result.document.child(1).child(0).marks[0]?.type.name !== 'strong') {
 }
 if (result.issues.length !== 0) throw new Error('Valid server HTML unexpectedly produced recovery issues.');
 if (!exported.includes('<strong>HTML</strong>')) throw new Error('Server runtime HTML export lost the strong mark.');
+
+const inline = MarkdownImporter.parse('A <em>one **two**</em>.', schema, { parseHTMLInline: ServerHTMLImporter.parseInline });
+if (inline.textContent !== 'A one two.' || !inline.content[0].content.some(node =>
+  node.text === 'two' && node.marks.some(mark => mark.type.name === 'strong') && node.marks.some(mark => mark.type.name === 'em')
+)) throw new Error('Server runtime inline HTML projection lost original Markdown formatting.');
 
 const runtime = globalThis.Bun
   ? `Bun ${globalThis.Bun.version}`

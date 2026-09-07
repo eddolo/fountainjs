@@ -14,13 +14,14 @@ and mandatory Fountain-hosted services are not. Hosted infrastructure may be
 offered only behind replaceable provider contracts with a usable self-hosted
 reference.
 
-Current Markdown follow-through (2026-09-07): optional raw-HTML **block**
-projection now connects the existing browser/server importer boundary to the
-Markdown parser, including nested containers and source snapshots. The public
-headless demo exposes a default-off toggle; Node-only validation and a recorded,
-visually inspected edit/export/re-import workflow cover it. Inline HTML
-projection and exhaustive HTML conversion-loss accounting remain unfinished.
-This does not change the 563-match / 80-pending / nine-intentional-difference
+Current Markdown follow-through (2026-09-07): optional raw-HTML block conversion
+and inline HTML scope projection connect the isolated server importer to
+Markdown, including nested containers and source snapshots. Inline projection
+protects already-parsed Fountain nodes instead of serializing them through HTML;
+unprovable content preservation falls back to readable source. The public
+headless demo exposes separate default-off choices. Exhaustive HTML precedence,
+specialized/raw-text inline structures, and conversion-loss accounting remain
+unfinished. This does not change the 563-match / 72-pending / 17-intentional-difference
 CommonMark baseline or qualify the overall programme for publication. See the
 [Markdown contract and evidence](MARKDOWN_SOURCE.md).
 

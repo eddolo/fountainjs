@@ -34,6 +34,46 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('opt-in inline HTML survives a real rich paste edit undo and Markdown reimport', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('# Incident handover\n\nOwner: <em>important</em>.\n\nReview <strong>first and *second*</strong> together.\n\nLink: *<a href="/safe">one* two</a>.');
+  await page.getByRole('checkbox', { name: 'Convert inline HTML formatting' }).check();
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('<em>important</em>');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('not lossless HTML conversion');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' }).getByRole('listitem')).toHaveCount(1);
+  await capture(page, info, '26-opt-in-inline-HTML-conversion');
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('em').first()).toHaveText('important');
+  await expect(editor.locator('strong em, em strong')).toHaveText('second');
+  await editor.getByText('important', { exact: true }).dblclick();
+  await page.keyboard.type('critical');
+  await expect(editor.locator('em').first()).toHaveText('critical');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator('em').first()).toHaveText('important');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor.locator('em').first()).toHaveText('critical');
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '27-inline-HTML-editable-content');
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+  expect(errors).toEqual([]);
+});
+
 test('raw HTML lexical boundaries preserve visible Markdown formatting through real editing', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const source = '# HTML boundary review\n\nMalformed <a x=="*important*"> stays text.\n\nValid <a x="*literal*"> stays inert; *outside* is emphasized.\n\nShort <!--> *visible* after.\n\nClose </a x="*editable*"> is not an HTML tag.';

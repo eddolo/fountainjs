@@ -525,10 +525,11 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const [markdownSource, setMarkdownSource] = useState(demo.markdown ?? '');
   const [htmlSource, setHTMLSource] = useState(HEADLESS_HTML_SOURCE);
   const [projectHTMLBlocks, setProjectHTMLBlocks] = useState(false);
+  const [projectHTMLInline, setProjectHTMLInline] = useState(false);
   const [htmlBlockParser, setHTMLBlockParser] = useState<typeof import('fountainjs-editor/html/server').ServerHTMLImporter>();
   const [htmlBlockParserError, setHTMLBlockParserError] = useState('');
   useEffect(() => {
-    if (!projectHTMLBlocks || htmlBlockParser) return;
+    if ((!projectHTMLBlocks && !projectHTMLInline) || htmlBlockParser) return;
     let active = true;
     void import('fountainjs-editor/html/server').then(({ ServerHTMLImporter }) => {
       if (active) setHTMLBlockParser(() => ServerHTMLImporter);
@@ -536,9 +537,9 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       if (active) setHTMLBlockParserError(error instanceof Error ? error.message : String(error));
     });
     return () => { active = false; };
-  }, [projectHTMLBlocks, htmlBlockParser]);
+  }, [projectHTMLBlocks, projectHTMLInline, htmlBlockParser]);
   const markdownParsed = useMemo(() => {
-    if (projectHTMLBlocks && !htmlBlockParser) {
+    if ((projectHTMLBlocks || projectHTMLInline) && !htmlBlockParser) {
       return { document: undefined, details: 0, error: htmlBlockParserError, loading: !htmlBlockParserError, issues: [] as string[] };
     }
     try {
@@ -550,12 +551,19 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
           return result.document;
         } : undefined,
         onHTMLBlockFallback: issue => issues.push(`Kept HTML as text: ${issue.message}`),
+        parseHTMLInline: projectHTMLInline && htmlBlockParser ? (segments, targetSchema) => {
+          const result = new htmlBlockParser().parseInlineWithReport(segments, targetSchema);
+          issues.push(...result.issues.map(issue => issue.message));
+          return result.nodes;
+        } : undefined,
+        onHTMLInlineFallback: issue => issues.push(`Kept inline HTML as text: ${issue.message}`),
       });
-      return { document, details: issues.length, error: '', loading: false, issues };
+      const distinctIssues = [...new Set(issues)];
+      return { document, details: distinctIssues.length, error: '', loading: false, issues: distinctIssues };
     } catch (error) {
       return { document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false, issues: [] as string[] };
     }
-  }, [schema, markdownSource, projectHTMLBlocks, htmlBlockParser, htmlBlockParserError]);
+  }, [schema, markdownSource, projectHTMLBlocks, projectHTMLInline, htmlBlockParser, htmlBlockParserError]);
   const [htmlParsed, setHTMLParsed] = useState<{
     document: Node | undefined;
     details: number;
@@ -622,8 +630,9 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>
       {inputFormat === 'markdown' && <div className="headless-html-policy">
         <label><input type="checkbox" checked={projectHTMLBlocks} onChange={event => setProjectHTMLBlocks(event.target.checked)} /> Convert HTML blocks to rich content</label>
-        <p>Optional DOM-free HTML importer. Inline HTML stays literal; Markdown inside HTML blocks is not interpreted. Unsupported HTML may be flattened or omitted. This is not a lossless HTML round trip.</p>
-        {markdownParsed.issues.length > 0 && <ul aria-label="HTML block conversion details">{markdownParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}
+        <label><input type="checkbox" checked={projectHTMLInline} onChange={event => setProjectHTMLInline(event.target.checked)} /> Convert inline HTML formatting</label>
+        <p>Both options are off by default. Inline conversion keeps parsed Markdown nodes and adds HTML formatting; unsupported structures fall back to readable source. Markdown inside HTML blocks is not interpreted. Unsupported HTML attributes and comments may be omitted. This is not a lossless HTML round trip.</p>
+        {markdownParsed.issues.length > 0 && <ul aria-label="Markdown HTML conversion details">{markdownParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}
       </div>}
       {inputFormat === 'html' && htmlParsed.issues.length > 0 && <div className="headless-html-policy"><p>HTML conversion details</p><ul aria-label="Server HTML conversion details">{htmlParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul></div>}
       {inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {

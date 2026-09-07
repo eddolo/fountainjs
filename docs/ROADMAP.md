@@ -5,6 +5,15 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Markdown follow-through (2026-09-07): the opt-in inline HTML adapter now protects
+Fountain's original parsed nodes while applying surrounding HTML formatting.
+This follows the raw-block adapter and shared strict HTML lexer, rather than
+adopting another parser's AST. The conversion demo and developer guide expose
+separate default-off block/inline choices and readable-source fallback. Full
+raw-HTML conformance and exhaustive conversion-loss reporting are still open;
+the default CommonMark result remains 563 matching / 72 pending / 17 intentional.
+See [the contract and verification record](MARKDOWN_SOURCE.md#optional-inline-html-formatting).
+
 Product-style roadmap items must be finished as complete workflows, not isolated
 editor controls. Their acceptance evidence must cover developer integration,
 author configuration, the end user's real surface, authenticated permission and

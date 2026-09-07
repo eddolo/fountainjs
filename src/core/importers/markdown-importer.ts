@@ -17,18 +17,38 @@ export interface MarkdownHTMLBlockFallback {
   readonly message: string;
 }
 
+/** Raw HTML tokens interleaved with already-parsed, immutable Fountain nodes. */
+export type MarkdownHTMLInlineSegment =
+  | { readonly kind: 'html'; readonly html: string; readonly marks: readonly Mark[] }
+  | { readonly kind: 'node'; readonly node: Node };
+
+export interface MarkdownHTMLInlineFallback {
+  readonly source: string;
+  readonly reason: 'declined' | 'error';
+  readonly message: string;
+}
+
 export interface MarkdownImportOptions {
   /**
    * Optional synchronous, deterministic HTML-to-schema adapter for raw HTML
    * blocks only. Return a document from this schema, or null to keep literal
    * source. The adapter owns HTML sanitization and conversion-loss reporting;
    * schema validation alone is not an HTML sanitizer. No parser is bundled
-   * into the core. Inline HTML and Fountain's explicit dialect are unchanged.
+   * into the core. Fountain's explicit dialect is unchanged.
    * Source capture may invoke the adapter again to verify block provenance.
    */
   readonly parseHTMLBlock?: (html: string, schema: Schema) => Node | null;
   /** Called when a block is retained literally because its adapter failed or declined. */
   readonly onHTMLBlockFallback?: (issue: MarkdownHTMLBlockFallback) => void;
+  /**
+   * Optional synchronous inline HTML scope adapter. Original Markdown nodes
+   * must not be serialized and reparsed as HTML. Raw tokens carry their local
+   * Markdown marks, including marks on HTML-created atoms. Return same-schema
+   * inline nodes, or null to retain the normal inert interpretation. The host
+   * owns sanitization and loss reporting. May run again during source capture.
+   */
+  readonly parseHTMLInline?: (segments: readonly MarkdownHTMLInlineSegment[], schema: Schema) => readonly Node[] | null;
+  readonly onHTMLInlineFallback?: (issue: MarkdownHTMLInlineFallback) => void;
 }
 
 export interface MarkdownFrontmatter {
@@ -247,7 +267,9 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
   const blocks: MarkdownSourceBlockSnapshot[] = [];
   for (let index = 0; index < segments.blocks.length; index += 1) {
     const segment = segments.blocks[index];
-    const parsed = new MarkdownImporter().parse(segment.source, schema, { ...options, onHTMLBlockFallback: undefined });
+    const parsed = new MarkdownImporter().parse(segment.source, schema, {
+      ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
+    });
     const original = document.content[index];
     if (parsed.content.length !== 1 || !parsed.content[0].eq(original)) return undefined;
     blocks.push(Object.freeze({
@@ -1029,7 +1051,10 @@ function extendedEmailAutolinkToken(
   return isSafeURL(href) ? { href, title: '', label, end } : null;
 }
 
-function inline(text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = []): Node[] {
+function inline(
+  text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = [],
+  htmlTokens?: Map<Node, MarkdownHTMLInlineSegment>,
+): Node[] {
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
@@ -1086,6 +1111,15 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       }
       const htmlEnd = inlineHTMLTokenEnd(text, index);
       if (htmlEnd > index) {
+        if (htmlTokens) {
+          flush();
+          const html = text.slice(index, htmlEnd);
+          const token = schema.text(html, inheritedMarks);
+          htmlTokens.set(token, Object.freeze({ kind: 'html', html, marks: token.marks }));
+          result.push(token);
+          index = htmlEnd;
+          continue;
+        }
         // Unknown HTML is currently readable literal text. Its attributes are
         // not Markdown: keep their backslashes/entities opaque to the flush.
         plain += text.slice(index, htmlEnd).replace(/[\\&]/gu, '\\$&');
@@ -1124,7 +1158,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
           } else if (!parsed.image && schema.marks.link) {
             const mark = schema.marks.link.create({ href: parsed.href, title: parsed.title });
-            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark]));
+            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens));
           } else {
             result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks));
           }
@@ -1178,7 +1212,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
           result.push(...inline(text.slice(contentStart, match.start), schema, references, [
             ...inheritedMarks,
             type.create(),
-          ]));
+          ], htmlTokens));
           index = match.end;
           handled = true;
           break;
@@ -1203,7 +1237,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       result.push(...inline(text.slice(index + delimiter.length, end), schema, references, [
         ...inheritedMarks,
         ...types.map((type) => type.create()),
-      ]));
+      ], htmlTokens));
       index = end + delimiter.length;
       handled = true;
       break;
@@ -1255,8 +1289,35 @@ function imageDescription(value: string, schema: Schema, references: References)
   }).join('');
 }
 
-function paragraph(schema: Schema, value: string, references: References, align = 'left'): Node {
-  return schema.node('paragraph', { align }, inline(value, schema, references));
+function projectInline(text: string, schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
+  if (!options.parseHTMLInline) return inline(text, schema, references);
+  const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
+  const nodes = inline(text, schema, references, [], tokens);
+  if (!tokens.size) return nodes;
+  const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node })));
+  let issue: MarkdownHTMLInlineFallback;
+  try {
+    const projected = options.parseHTMLInline(segments, schema);
+    if (projected !== null) {
+      if (!Array.isArray(projected)) throw new TypeError('Inline HTML adapter must return an array of inline nodes.');
+      for (const node of projected) {
+        if (!(node instanceof Node) || !node.type.isInline || node.type.schema !== schema) {
+          throw new TypeError('Inline HTML adapter must return inline nodes from the supplied schema.');
+        }
+        schema.validate(node);
+      }
+      return projected.length ? [...projected] : [schema.text('')];
+    }
+    issue = { source: text, reason: 'declined', message: 'Inline HTML adapter declined conversion; literal source retained.' };
+  } catch (error) {
+    issue = { source: text, reason: 'error', message: error instanceof Error ? error.message : 'Inline HTML adapter failed; literal source retained.' };
+  }
+  options.onHTMLInlineFallback?.(Object.freeze(issue));
+  return inline(text, schema, references);
+}
+
+function paragraph(schema: Schema, value: string, references: References, align = 'left', options: MarkdownImportOptions = {}): Node {
+  return schema.node('paragraph', { align }, projectInline(value, schema, references, options));
 }
 
 function tableCells(line: string): string[] {
@@ -1572,9 +1633,10 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       if (summary) {
         const body = parseBlocks(lines.slice(summaryIndex + 1, closing), schema, references, options);
         const fallback = schema.nodes.paragraph?.create({}, [schema.text('')]);
+        const summaryContent = projectInline(summary[1], schema, references, options);
         try {
           blocks.push(schema.node('details', { open: disclosure.open }, [
-            schema.node('details_summary', {}, inline(summary[1], schema, references)),
+            schema.node('details_summary', {}, summaryContent),
             ...(body.length ? body : fallback ? [fallback] : []),
           ]));
           index = closing + 1;
@@ -1652,7 +1714,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       const value = (heading[2] ?? '')
         .replace(/(?:^|[\t ]+)#+[\t ]*$/u, '')
         .replace(/[\t ]+$/u, '');
-      blocks.push(schema.node('heading', { level: heading[1].length }, inline(value, schema, references)));
+      blocks.push(schema.node('heading', { level: heading[1].length }, projectInline(value, schema, references, options)));
       index++;
       continue;
     }
@@ -1677,7 +1739,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     if (table) {
       const rows: Node[] = [];
       const cells = (values: readonly string[], type: 'table_header' | 'table_cell') => table.headers.map((_, cellIndex) => (
-        schema.node(type, {}, [paragraph(schema, values[cellIndex] ?? '', references, table.alignments[cellIndex])])
+        schema.node(type, {}, [paragraph(schema, values[cellIndex] ?? '', references, table.alignments[cellIndex], options)])
       ));
       rows.push(schema.node('table_row', {}, cells(table.headers, 'table_header')));
       index += 2;
@@ -1761,7 +1823,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     for (index++; index < lines.length && lines[index].trim(); index++) {
       const underline = /^ {0,3}(=+|-+)[\t ]*$/u.exec(lines[index]);
       if (underline && !marker && !/^ {0,3}>/u.test(line) && !detailsStart(line)) {
-        blocks.push(schema.node('heading', { level: underline[1][0] === '=' ? 1 : 2 }, inline(paragraphLines.join('\n').trim(), schema, references)));
+        blocks.push(schema.node('heading', { level: underline[1][0] === '=' ? 1 : 2 }, projectInline(paragraphLines.join('\n').trim(), schema, references, options)));
         index++;
         continue b;
       }
@@ -1771,7 +1833,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     // Keep physical line endings visible to inline syntax validation. Ordinary
     // soft breaks become spaces only when text nodes are emitted; hard-break
     // markers are consumed by `inline` before that normalization.
-    blocks.push(paragraph(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references));
+    blocks.push(paragraph(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references, 'left', options));
   }
   return blocks;
 }

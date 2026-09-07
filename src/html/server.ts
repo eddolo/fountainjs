@@ -18,6 +18,8 @@ import {
 } from '../core/schema';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
+import type { MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
+import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
 type RawParent = Htmlparser2TreeAdapterMap['parentNode'];
@@ -56,7 +58,8 @@ export type ServerHTMLImportIssueCode =
   | 'invalid-selector'
   | 'unsupported-dom-rule'
   | 'invalid-rule-result'
-  | 'unmapped-block-wrapper';
+  | 'unmapped-block-wrapper'
+  | 'inline-html-projection';
 
 export interface ServerHTMLImportIssue {
   readonly code: ServerHTMLImportIssueCode;
@@ -69,6 +72,11 @@ export interface ServerHTMLImportIssue {
 
 export interface ServerHTMLImportResult {
   readonly document: FountainNode;
+  readonly issues: readonly ServerHTMLImportIssue[];
+}
+
+export interface ServerHTMLInlineImportResult {
+  readonly nodes: readonly FountainNode[];
   readonly issues: readonly ServerHTMLImportIssue[];
 }
 
@@ -107,6 +115,17 @@ type SourceNode = SourceText | SourceElement;
 interface ImportContext {
   readonly issues: ServerHTMLImportIssue[];
   readonly issueKeys: Set<string>;
+  readonly inlineSlots?: {
+    readonly tag: string;
+    readonly nodes: readonly FountainNode[];
+    readonly sharedNodes: ReadonlySet<FountainNode>;
+    readonly provenance: WeakMap<FountainNode, number>;
+    readonly tokenMarks: ReadonlyMap<number, readonly Mark[]>;
+  };
+}
+
+function mergeInlineMarks(local: readonly Mark[], surrounding: readonly Mark[]): readonly Mark[] {
+  return [...surrounding.filter(mark => !local.some(own => own.type === mark.type)), ...local];
 }
 
 function boundedOption(
@@ -561,23 +580,40 @@ function inlineChildren(
       return;
     }
     const tag = child.tagName;
+    const slots = context.inlineSlots;
+    if (slots && tag === slots.tag) {
+      const index = Number(child.getAttribute('data-index'));
+      const original = slots.nodes[index];
+      if (!original || !Number.isSafeInteger(index) || child.childNodes.length) {
+        throw new Error('Inline HTML changed a protected Markdown node slot.');
+      }
+      const combined = mergeInlineMarks(original.marks, marks);
+      const node = !slots.sharedNodes.has(original) && combined.length === original.marks.length && combined.every((mark, offset) => mark.eq(original.marks[offset]))
+        ? original : original.withMarks(combined);
+      slots.provenance.set(node, index);
+      result.push(node);
+      return;
+    }
+    const offset = slots ? htmlparser2Adapter.getNodeSourceCodeLocation(child.raw)?.startOffset : undefined;
+    const localMarks = offset === undefined ? [] : slots?.tokenMarks.get(offset) ?? [];
+    const atomMarks = localMarks.length ? mergeInlineMarks(localMarks, marks) : marks;
     const ruby = configuredRuby(child, schema, marks, context);
-    if (ruby) { result.push(...ruby); return; }
+    if (ruby) { result.push(...ruby.map(node => localMarks.length ? node.withMarks(mergeInlineMarks(localMarks, node.marks)) : node)); return; }
     const customNode = configuredNode(child, schema, true, marks, context);
-    if (customNode) { result.push(customNode); return; }
+    if (customNode) { result.push(localMarks.length ? customNode.withMarks(mergeInlineMarks(localMarks, customNode.marks)) : customNode); return; }
     if (tag === 'br' && schema.nodes.hard_break) {
-      result.push(schema.node('hard_break', {}, [], undefined, marks));
+      result.push(schema.node('hard_break', {}, [], undefined, atomMarks));
       return;
     }
     if (tag === 'img' && schema.nodes.inline_image) {
-      const image = imageNode(child, schema, 'inline_image', undefined, marks);
+      const image = imageNode(child, schema, 'inline_image', undefined, atomMarks);
       if (image) result.push(image);
       return;
     }
     if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
       const latex = child.getAttribute('data-latex') ?? child.textContent;
       const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
-      try { result.push(schema.node('inline_math', { latex, ariaLabel }, [], undefined, marks)); }
+      try { result.push(schema.node('inline_math', { latex, ariaLabel }, [], undefined, atomMarks)); }
       catch { if (latex) result.push(schema.text(latex, marks)); }
       return;
     }
@@ -591,7 +627,7 @@ function inlineChildren(
           trigger: child.getAttribute('data-trigger') ?? '@',
           kind: child.getAttribute('data-kind') ?? 'mention',
           href: href && isSafeURL(href) ? href : '',
-        }, [], undefined, marks));
+        }, [], undefined, atomMarks));
       } catch { result.push(...textNodes(child.textContent, schema, marks)); }
       return;
     }
@@ -605,7 +641,7 @@ function inlineChildren(
           name: child.getAttribute('data-name') ?? unicodeEmojiName(emoji),
           emoji,
           fallbackImage: fallback && isSafeURL(fallback, { allowDataImage: true }) ? fallback : '',
-        }, [], undefined, marks));
+        }, [], undefined, atomMarks));
       } catch { result.push(...textNodes(emoji || child.textContent, schema, marks)); }
       return;
     }
@@ -1015,6 +1051,103 @@ export class ServerHTMLImporter {
 
   parse(html: string, schema: Schema): FountainNode {
     return this.parseWithReport(html, schema).document;
+  }
+
+  /** Apply HTML scopes to original Markdown nodes without an HTML round trip. */
+  parseInline(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
+    return this.parseInlineWithReport(segments, schema).nodes;
+  }
+
+  /**
+   * DOM-free opt-in Markdown adapter. Throws if HTML recovery consumes, moves,
+   * duplicates, or replaces a protected Markdown node. MarkdownImporter catches
+   * this and retains its inert source interpretation. Not a lossless HTML import.
+   */
+  parseInlineWithReport(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): ServerHTMLInlineImportResult {
+    const usedNames = new Set<string>();
+    for (const segment of segments) {
+      if (segment.kind === 'html') {
+        if (!segment.html || markdownHTMLTokenEnd(segment.html, 0) !== segment.html.length) {
+          throw new TypeError('An inline HTML segment must contain exactly one raw HTML token.');
+        }
+        for (const match of segment.html.toLowerCase().matchAll(/fountain-markdown-slot-\d+/gu)) usedNames.add(match[0]);
+        segment.marks.forEach(mark => {
+          if (mark.type.schema !== schema) throw new TypeError('Inline HTML token marks must use the supplied schema.');
+        });
+      } else {
+        if (!(segment.node instanceof FountainNode) || !segment.node.type.isInline) throw new TypeError('Expected an inline Markdown node.');
+        schema.validate(segment.node);
+      }
+    }
+    let suffix = 0;
+    while (usedNames.has(`fountain-markdown-slot-${suffix}`)) suffix += 1;
+    const tag = `fountain-markdown-slot-${suffix}`;
+    const originals: FountainNode[] = [];
+    const seenNodes = new Set<FountainNode>();
+    const sharedNodes = new Set<FountainNode>();
+    const tokenMarks = new Map<number, readonly Mark[]>();
+    const parts: string[] = [];
+    let offset = 0;
+    for (const segment of segments) {
+      let part: string;
+      if (segment.kind === 'html') {
+        tokenMarks.set(offset, segment.marks);
+        part = segment.html;
+      } else {
+        part = `<${tag} data-index="${originals.length}"></${tag}>`;
+        if (seenNodes.has(segment.node)) sharedNodes.add(segment.node);
+        seenNodes.add(segment.node);
+        originals.push(segment.node);
+      }
+      parts.push(part);
+      offset += part.length;
+      if (offset > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
+    }
+    const html = parts.join('');
+    if (utf8Length(html) > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
+    const issues: ServerHTMLImportIssue[] = [];
+    const provenance = new WeakMap<FountainNode, number>();
+    const context: ImportContext = {
+      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks },
+    };
+    const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
+      treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
+      onParseError: error => {
+        if (issues.length < this.options.maxParseErrors) issues.push(parseErrorIssue(error));
+      },
+    });
+    validateTree(fragment, this.options);
+    const root = rootSource(fragment);
+    const inspect = (parent: SourceParent) => {
+      for (const child of parent.childNodes) {
+        if (child.kind !== 'element') continue;
+        if ((BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
+          throw new Error(`Inline HTML <${child.tagName}> requires a block or specialized adapter; literal source retained.`);
+        }
+        inspect(child);
+      }
+    };
+    inspect(root);
+    const nodes = inlineChildren(root, schema, [], context);
+    const found: number[] = [];
+    const verify = (node: FountainNode) => {
+      const index = provenance.get(node);
+      if (index !== undefined) found.push(index);
+      else node.content.forEach(verify);
+    };
+    nodes.forEach(node => { schema.validate(node); verify(node); });
+    if (found.length !== originals.length || found.some((index, position) => index !== position)) {
+      throw new Error('Inline HTML recovery did not preserve every Markdown node exactly once in order; literal source retained.');
+    }
+    if (segments.some(segment => segment.kind === 'html')) reportOnce(context, {
+      code: 'inline-html-projection',
+      message: 'Inline HTML was projected into schema content. Comments, tag identity, unsupported attributes/styles, and unsafe URLs are not preserved; this is not lossless HTML conversion.',
+    });
+    return Object.freeze({ nodes: Object.freeze(nodes), issues: Object.freeze([...issues]) });
+  }
+
+  static parseInline(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
+    return new ServerHTMLImporter().parseInline(segments, schema);
   }
 
   parseWithReport(html: string, schema: Schema): ServerHTMLImportResult {

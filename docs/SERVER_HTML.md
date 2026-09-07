@@ -22,6 +22,20 @@ the editor root, React, Web Component, Yjs, or DOM view does not load them.
 
 ## What is preserved
 
+For Markdown inline content, use the separate `parseInline(segments, schema)`
+method (static or instance), or instance `parseInlineWithReport` for
+`{ nodes, issues }`. Connect this to `MarkdownImportOptions.parseHTMLInline`.
+It applies HTML scopes to protected original Fountain nodes rather than
+serializing their content into HTML. If HTML recovery cannot preserve every
+original node exactly once and in order, it throws; the Markdown importer then
+retains its inert source interpretation and reports the fallback. Raw-text,
+block, and foreign-content HTML inside an inline container currently require a
+specialized adapter. Existing resource limits apply to the fragment including
+protected slots. See the [inline adapter contract](MARKDOWN_SOURCE.md#optional-inline-html-formatting)
+for local marks, source capture, default-off policy, and explicit loss warnings.
+
+## Block HTML projection
+
 The server importer reconstructs the same supported semantic outcomes as the
 browser importer:
 

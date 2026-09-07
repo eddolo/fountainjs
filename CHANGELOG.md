@@ -4,6 +4,16 @@
 
 ### Added
 
+- Opt-in `MarkdownImportOptions.parseHTMLInline` receives immutable raw-token /
+  original-node segments after Fountain's own inline parsing. The isolated
+  `ServerHTMLImporter.parseInline` / instance `parseInlineWithReport` methods
+  apply HTML scopes without reparsing original Markdown nodes. Protected-slot
+  checks reject content consumption, duplication, or reordering; failed or
+  declined adapters retain the exact inert interpretation and report through
+  `onHTMLInlineFallback`. Local Markdown marks survive on HTML-created atoms.
+  The conversion demo exposes a separate default-off option and loss/fallback
+  details. This is not full CommonMark HTML conformance or lossless HTML import.
+
 - `MarkdownExportOptions.tableFormat: 'html'` emits safe HTML table fragments
   through Fountain's existing serializer, preserving supported rich cell
   blocks, spans, column widths, and header scope. Newlines are encoded as HTML
