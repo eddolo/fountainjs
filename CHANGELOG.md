@@ -43,6 +43,13 @@
 
 ### Fixed
 
+- Multiline math source uses textareas in the node view and demo toolbar.
+  Inspecting a formula no longer strips line breaks or clears an unchanged
+  accessibility description. Display Enter inserts a line; Ctrl/Command+Enter
+  finishes editing. Selected-node synchronization preserves focus in native
+  controls instead of moving subsequent typing into the document. Live edits
+  remain undoable; this does not add whole-document LaTeX import or layout.
+
 - Server HTML reports now identify omitted comments, unmapped inline elements,
   and rejected built-in link/image URLs without copying private source payloads
   into diagnostics. Repeated losses are aggregated. Extension content candidates

@@ -91,7 +91,7 @@ function createMathNodeView(
     readonly dom = document.createElement(displayMode ? 'div' : 'span');
     private readonly output = document.createElement(displayMode ? 'div' : 'span');
     private readonly sourceEditor = document.createElement(displayMode ? 'div' : 'span');
-    private readonly sourceInput = document.createElement('input');
+    private readonly sourceInput = document.createElement('textarea');
     private current: Node;
 
     constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
@@ -105,7 +105,10 @@ function createMathNodeView(
       this.sourceEditor.contentEditable = 'false';
       this.sourceEditor.hidden = true;
       this.sourceInput.className = 'fountain-math__source-input';
-      this.sourceInput.type = 'text';
+      this.sourceInput.rows = displayMode ? 4 : 1;
+      this.sourceInput.title = displayMode
+        ? 'Enter adds a line. Ctrl+Enter or Command+Enter finishes editing.'
+        : 'Enter finishes editing. Shift+Enter adds a line.';
       this.sourceInput.maxLength = MAX_MATH_SOURCE_LENGTH;
       this.sourceInput.autocomplete = 'off';
       this.sourceInput.spellcheck = false;
@@ -129,7 +132,9 @@ function createMathNodeView(
     selectNode(): void {
       this.dom.dataset.fountainMathSelected = 'true';
       if (this.editor?.editable) {
-        this.sourceInput.value = String(this.current.attrs.latex ?? '');
+        if (this.dom.ownerDocument.activeElement !== this.sourceInput) {
+          this.sourceInput.value = String(this.current.attrs.latex ?? '');
+        }
         this.sourceEditor.hidden = false;
       }
     }
@@ -164,6 +169,7 @@ function createMathNodeView(
       const editor = this.editor;
       const latex = this.sourceInput.value;
       if (!editor || !validInsertionSource(latex)) return;
+      if (this.sourceUnchanged(latex)) return;
       // The inline editor changes only source. Clear an older hand-authored
       // description rather than announcing semantics that may no longer match;
       // the renderer immediately falls back to the new exact expression.
@@ -177,15 +183,23 @@ function createMathNodeView(
         this.sourceInput.value = String(this.current.attrs.latex ?? '');
         return;
       }
+      if (this.sourceUnchanged(latex)) return;
       replaceMathSource(editor, latex, '', this.getPath());
     };
 
+    private sourceUnchanged(latex: string): boolean {
+      // Textarea values normalize CR/CRLF to LF. Inspection must not silently
+      // rewrite stored source or discard an existing accessibility description.
+      return latex === String(this.current.attrs.latex ?? '').replace(/\r\n?/g, '\n');
+    }
+
     private onSourceKeyDown = (event: KeyboardEvent): void => {
+      if (event.isComposing) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         this.sourceInput.value = String(this.current.attrs.latex ?? '');
         this.sourceInput.blur();
-      } else if (event.key === 'Enter') {
+      } else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey || (!displayMode && !event.shiftKey))) {
         event.preventDefault();
         this.sourceInput.blur();
       }

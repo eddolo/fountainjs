@@ -5063,6 +5063,43 @@ test('renders exported DOCX beside the same Fountain document through an indepen
   expect(imageWidths.every((width) => width >= 300 && width <= 340)).toBe(true);
 });
 
+test('edits multiline math without losing line breaks, descriptions, or undo history', async ({ page }) => {
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  const latex = '\\begin{aligned}\nx &= y \\\\\n\\end{aligned}';
+  const toolbarSource = page.getByLabel('Math source', { exact: true });
+  await toolbarSource.fill(latex);
+  await page.getByRole('button', { name: '+ New Math', exact: true }).click();
+  const math = editor.locator('[data-fountain-math="block"]').first();
+  await expect(math).toHaveAttribute('data-latex', latex);
+  await expect(math.locator('[data-fountain-math-source]')).toHaveCSS('white-space', 'pre-wrap');
+  const direct = page.locator('[aria-label="Edit math source"]:visible');
+  await expect(direct).toHaveValue(latex);
+  await direct.focus();
+  await direct.press('Control+Enter');
+  await expect(math).toHaveAttribute('aria-label', 'Editable math expression');
+  await expect(math).toHaveAttribute('data-latex', latex);
+  await direct.focus();
+  await direct.press('Control+Home');
+  await direct.press('ArrowDown');
+  await direct.press('End');
+  await direct.press('Enter');
+  await page.keyboard.type('z &= w');
+  const edited = '\\begin{aligned}\nx &= y \\\\\nz &= w\n\\end{aligned}';
+  await expect(direct).toHaveValue(edited);
+  await expect(math).toHaveAttribute('data-latex', edited);
+  await expect(toolbarSource).toHaveValue(edited);
+  await direct.press('Control+Enter');
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(math).toHaveAttribute('data-latex', latex);
+  await expect(math).toHaveAttribute('aria-label', 'Editable math expression');
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(math).toHaveAttribute('data-latex', edited);
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await expect(output.locator('pre')).toContainText(`$$\n${edited}\n$$`);
+});
+
 test('renders and inserts native math in the public DOM integration', async ({ page }) => {
   await page.goto('/demos/go-docs-service.html');
   const math = page.locator('[data-fountain-math]');
@@ -5099,7 +5136,7 @@ test('renders and inserts native math in the public DOM integration', async ({ p
   const directSource = page.locator('[aria-label="Edit math source"]:visible');
   await expect(directSource).toHaveValue('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
   await directSource.fill('\\int_0^1 x^2 dx');
-  await directSource.press('Enter');
+  await directSource.press('Control+Enter');
   const editedBlock = math.filter({ hasText: '\\int_0^1 x^2 dx' });
   await expect(editedBlock).toHaveCount(1);
   await expect(editedBlock).toHaveAttribute('aria-label', 'Math expression: \\int_0^1 x^2 dx');

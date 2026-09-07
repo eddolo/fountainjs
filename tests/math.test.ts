@@ -270,7 +270,7 @@ describe('first-party mathematics extension', () => {
     const view = new EditorView(mount, editor);
     editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, [0])));
 
-    const input = view.dom.querySelector<HTMLInputElement>('[aria-label="Edit math source"]')!;
+    const input = view.dom.querySelector<HTMLTextAreaElement>('[aria-label="Edit math source"]')!;
     expect(input.closest<HTMLElement>('.fountain-math__source-editor')?.hidden).toBe(false);
     expect(input.value).toBe('x^2');
     input.value = 'x^3 + y^3';
@@ -284,6 +284,38 @@ describe('first-party mathematics extension', () => {
     expect(input.closest<HTMLElement>('.fountain-math__source-editor')?.hidden).toBe(true);
     expect(setMathSource(editor, 'z^4', undefined, [0])).toBe(true);
     expect(editor.state.doc.child(0).attrs.latex).toBe('z^4');
+    view.destroy();
+  });
+
+  it.each(['math_block', 'inline_math'])('preserves multiline %s source and its description when inspected without editing', type => {
+    const kit = mathKit();
+    const latex = '\\begin{aligned}\r\nx &= y \\\\\r\nz &= w\r\n\\end{aligned}';
+    const math = { type, attrs: { latex, ariaLabel: 'Two related equations' } };
+    const content = type === 'math_block' ? [math] : [{ type: 'paragraph', content: [math] }];
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [...content, { type: 'paragraph', content: [{ type: 'text', text: 'After' }] }],
+    } });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    const before = editor.state.doc;
+    editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, type === 'math_block' ? [0] : [0, 0])));
+    const input = view.dom.querySelector<HTMLTextAreaElement>('[aria-label="Edit math source"]')!;
+    expect(input.value).toBe(latex.replace(/\r\n/g, '\n'));
+    expect(input.tagName).toBe('TEXTAREA');
+    input.focus();
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    input.dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(type === 'inline_math');
+    const composing = new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true, cancelable: true });
+    input.dispatchEvent(composing);
+    expect(composing.defaultPrevented).toBe(false);
+    const shiftEnter = new KeyboardEvent('keydown', { key: 'Enter', shiftKey: true, bubbles: true, cancelable: true });
+    input.dispatchEvent(shiftEnter);
+    expect(shiftEnter.defaultPrevented).toBe(false);
+    input.blur();
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([1, 0], 0)));
+    expect(editor.state.doc.eq(before)).toBe(true);
     view.destroy();
   });
 });

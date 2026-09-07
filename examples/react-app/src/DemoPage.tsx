@@ -356,7 +356,7 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })}>+ Table</button>
     {editor?.state.schema.nodes.math_block && <div className="demo-math-control" role="group" aria-label="LaTeX controls">
       <span aria-hidden="true">LaTeX</span>
-      <input aria-label="Math source" value={mathSource} onChange={(event) => setMathInput(event.target.value)} />
+      <textarea aria-label="Math source" rows={2} value={mathSource} onChange={(event) => setMathInput(event.target.value)} />
       <button disabled={!mathSource.trim()} onClick={() => insertMathBlock(editor, mathSource, 'Editable math expression')}>+ New Math</button>
       {selectedMath && <button disabled={!mathSource.trim()} onClick={() => setMathSource(editor, mathSource, '', selectedMath.path)}>Update selected</button>}
     </div>}

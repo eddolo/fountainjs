@@ -602,9 +602,16 @@ computed accessible fallback does not change JSON on round trip.
 
 Without a renderer, the NodeView exposes source in a `<code>` fallback with
 `role="math"`, an accessible label, full-source hover text, and selection/error
-states. Selecting a math node reveals a direct source input; typing updates the
-portable TeX and participates in undo, Enter commits, and Escape restores the
-current source. `createMathExtension({ renderer, onRenderError, appearance })` accepts any
+states. Selecting a math node reveals a multiline source textarea; typing updates
+the portable TeX and participates in undo. For display math, Enter adds a line;
+Ctrl+Enter or Command+Enter finishes editing. For inline math, Enter finishes
+editing and Shift+Enter adds a line. Escape restores the current committed source,
+not the pre-edit version; use undo to revert live edits. Inspection without edits
+preserves the exact stored line endings and accessibility description. Native
+control focus/caret stays inside the selected math node while its source updates.
+Actual edits use the textarea's LF line endings; this is not a byte-preserving
+source-file editor. The source-only preview also displays line breaks explicitly.
+`createMathExtension({ renderer, onRenderError, appearance })` accepts any
 framework-neutral `MathRenderer`; the renderer must return a DOM `Node`, never
 an HTML string. `createKaTeXRenderer(katex, options?)` adapts a caller-owned
 [KaTeX installation](https://katex.org/docs/api) with combined HTML/MathML

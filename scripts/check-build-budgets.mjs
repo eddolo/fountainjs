@@ -293,7 +293,10 @@ const limits = Object.freeze({
   // branch reporting add ~0.9 KiB ESM; CJS remains within its current ceiling.
   'all ESM runtime code': 1321 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
-  'all CommonJS runtime code': 1102 * kibibyte,
+  // Multiline math editing and selected-control caret protection measure
+  // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
+  // individual entries, ESM, CSS and performance ceilings stay unchanged.
+  'all CommonJS runtime code': 1103 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

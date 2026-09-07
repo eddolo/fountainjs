@@ -151,7 +151,14 @@ export class SelectionHandler {
       if (!element) return this.finishSync();
       element.dataset.fountainSelectedNode = 'true';
       if (selection.nodePath.length === 1) element.draggable = true;
-      if (!applyDOM) return this.finishSync();
+      const active = this.dom.ownerDocument.activeElement;
+      // Updating a selected node must not move the browser caret out of its
+      // own native form control. Selecting a different node or explicitly
+      // focusing the editor still applies the requested document selection.
+      const ownsControl = active instanceof HTMLElement && element.contains(active)
+        && active.matches('input, textarea, select, button')
+        && active.closest<HTMLElement>('[contenteditable]')?.contentEditable === 'false';
+      if (!applyDOM || ownsControl) return this.finishSync();
       range.selectNode(element);
       this.applyDOMSelection(domSelection, range);
       return;

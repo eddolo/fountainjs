@@ -3,11 +3,53 @@ import { expect, test, type Page, type TestInfo } from '@playwright/test';
 const pause = (page: Page, milliseconds = 550) => page.waitForTimeout(milliseconds);
 
 async function capture(page: Page, testInfo: TestInfo, name: string) {
+  const path = testInfo.outputPath(`${name}.png`);
+  await page.screenshot({ path, fullPage: false });
   await testInfo.attach(name, {
-    body: await page.screenshot({ fullPage: false }),
+    path,
     contentType: 'image/png',
   });
 }
+
+test('human multiline equation journey: inspect, edit, undo, export, and reimport', async ({ page }, testInfo) => {
+  await page.goto('/demos/go-docs-service.html');
+  const latex = '\\begin{aligned}\nx_0 &= 1 \\\\\nx_{n+1} &= 2x_n\n\\end{aligned}';
+  await page.getByLabel('Math source', { exact: true }).fill(latex);
+  await page.getByRole('button', { name: '+ New Math', exact: true }).click();
+  const math = page.locator('[data-fountain-math="block"]').first();
+  const direct = page.locator('[aria-label="Edit math source"]:visible');
+  await expect(direct).toHaveValue(latex);
+  await expect(math.locator('[data-fountain-math-source]')).toHaveCSS('white-space', 'pre-wrap');
+  await math.scrollIntoViewIfNeeded();
+  await capture(page, testInfo, '01-multiline-source-intact');
+  await direct.focus();
+  await direct.press('Control+Enter');
+  await expect(math).toHaveAttribute('aria-label', 'Editable math expression');
+  await direct.focus();
+  await direct.press('Control+Home');
+  await direct.press('ArrowDown');
+  await direct.press('ArrowDown');
+  await direct.press('End');
+  await direct.press('Shift+Home');
+  await page.keyboard.type('x_{n+1} &= 3x_n');
+  const edited = latex.replace('2x_n', '3x_n');
+  await expect(direct).toHaveValue(edited);
+  await expect(math).toHaveAttribute('data-latex', edited);
+  await direct.press('Control+Enter');
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(math).toHaveAttribute('data-latex', latex);
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(math).toHaveAttribute('data-latex', edited);
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  expect(markdown).toContain(`$$\n${edited}\n$$`);
+  await math.scrollIntoViewIfNeeded();
+  await capture(page, testInfo, '02-edited-equation-and-export');
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect(output.locator('pre')).toContainText(JSON.stringify(edited));
+});
 
 test('human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input', async ({ page, context }, testInfo) => {
   test.setTimeout(60_000);
@@ -47,7 +89,7 @@ test('human Go-docs journey: selection, quote, tables, math, Lean, paste, and tr
     const directSource = page.locator('[aria-label="Edit math source"]:visible');
     await expect(directSource).toHaveValue('\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}');
     await directSource.fill('a^2 + b^2 = c^2');
-    await directSource.press('Enter');
+    await directSource.press('Control+Enter');
     const edited = math.filter({ hasText: 'a^2 + b^2 = c^2' });
     await expect(edited).toHaveAttribute('aria-label', 'Math expression: a^2 + b^2 = c^2');
     await expect(output).toContainText('"ariaLabel": ""');

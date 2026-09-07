@@ -55,6 +55,32 @@ with simpler syntax and calling import compatible. Manual authoring and automati
 import are separate workflows; any adapter or translation must be explicit and
 preserve/report source semantics, labels, citations, and losses.
 
+### Editing prerequisite discovered during follow-through
+
+The math node view and demo toolbar previously used single-line inputs, which
+cannot display multiline TeX faithfully. Merely inspecting source could strip
+line endings and clear a stored accessibility description. They now use
+textareas, preserve unchanged source/labels, and keep native control focus while
+transactions update the selected node. Display Enter adds lines; Ctrl/Command+Enter
+finishes. A recorded source-editing journey exercises backward replacement,
+undo/redo and Markdown reimport. This is an editing prerequisite only: the two
+paper import failures above remain open, as do typeset visual reproduction,
+numbering, cross-references, bibliography, and full export fidelity.
+
+Verification on 2026-09-07: `pnpm check` passed 901 tests in 83 files, along
+with API, package, pure-runtime, conformance, build-budget and performance gates.
+Six native math contracts passed across Chromium, Firefox and WebKit under
+`artifacts/browser-multiline-math-20260907c/results/`, and twelve related
+focus/custom-node/widget regressions passed under
+`artifacts/browser-control-focus-regression-20260907a/results/`.
+All four recorded capability journeys passed under
+`artifacts/manual-multiline-math-20260907c/results/`; the multiline before/after
+screenshots were visually inspected. That review found and fixed collapsed
+line breaks in the source-only preview as well. Runtime code measures 1320.8 KiB
+ESM / 1102.3 KiB CJS; only the aggregate CJS ceiling increased by 1 KiB to 1103.
+No dependency, public API, individual-entry, or performance-ceiling change.
+This evidence does not certify physical-device IME or typeset-paper parity.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official
