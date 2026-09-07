@@ -1,5 +1,32 @@
 import { expect, test } from '@playwright/test';
 
+test('uses Angular campaign controls on a touch viewport and preserves history across view remount', async ({ page }, info) => {
+  await page.goto('/demos/angular-media.html');
+  const editor = page.getByRole('textbox', { name: 'Angular campaign editor' });
+  const workspace = page.locator('[data-angular-campaign]');
+  await expect(editor).toBeVisible();
+  await editor.locator(':scope > p').last().tap();
+  await page.keyboard.press('Control+End'); await page.keyboard.press('Enter');
+  await page.keyboard.type('Mobile campaign note.');
+  await expect(editor.locator(':scope > p').last()).toHaveText('Mobile campaign note.');
+  await expect(workspace.locator('.demo-output pre')).toContainText('Mobile campaign note.');
+  await workspace.getByRole('button', { name: 'Hide editor', exact: true }).tap();
+  await expect(editor).toHaveCount(0);
+  await workspace.getByRole('button', { name: 'Show editor', exact: true }).tap();
+  await expect(editor).toContainText('Mobile campaign note.');
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).tap();
+  await expect(editor).not.toContainText('Mobile campaign note.');
+  await workspace.getByRole('button', { name: 'Redo', exact: true }).tap();
+  await expect(editor).toContainText('Mobile campaign note.');
+  await expect(page.locator('body')).toHaveJSProperty('scrollWidth', await page.evaluate(() => document.documentElement.clientWidth));
+  await editor.locator(':scope > p').last().scrollIntoViewIfNeeded();
+  const path = info.outputPath('angular-touch-campaign.png');
+  await page.screenshot({ path }); await info.attach('Angular touch editing', { path, contentType: 'image/png' });
+  await page.getByRole('button', { name: 'Reset campaign (discards edits)', exact: true }).tap();
+  await expect(page.getByLabel('Editor lifecycle', { exact: true })).toHaveText('Created: 2 · Destroyed: 1');
+  await expect(editor).not.toContainText('Mobile campaign note.');
+});
+
 test('uses the real Svelte report on a touch viewport with retained edits and history', async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

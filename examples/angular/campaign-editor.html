@@ -1,0 +1,40 @@
+<div class="demo-workspace" data-angular-campaign>
+  <section class="demo-surface">
+    <div class="surface-label"><span>LIVE ANGULAR + FOUNTAIN DIRECTIVE</span><i>Angular owns the controls, signals and editor lifecycle.</i></div>
+    <div class="demo-controls" role="group" aria-label="Campaign commands">
+      @for (button of buttons(); track button.label) {
+        <button type="button" [disabled]="button.disabled" [attr.aria-pressed]="button.pressed"
+          (mousedown)="keepSelection($event)" (click)="run(button.run)">{{button.label}}</button>
+      }
+      <label>Highlight <input type="color" aria-label="Highlight colour" [value]="highlight()" (input)="highlight.set(value($event))" /></label>
+      <button type="button" [disabled]="!editor() || !visible()" (mousedown)="keepSelection($event)" (click)="applyHighlight()">Apply highlight</button>
+      <button type="button" [disabled]="!editor() || !visible()" (mousedown)="keepSelection($event)" (click)="removeHighlight()">Remove highlight</button>
+      <button type="button" [attr.aria-pressed]="!visible()" (click)="visible.set(!visible())">{{visible() ? 'Hide editor' : 'Show editor'}}</button>
+      <label>Add local images <input type="file" aria-label="Add local images" accept="image/png,image/jpeg,image/gif,image/webp" multiple [disabled]="!editor() || !visible()" (change)="addFiles($event)" /></label>
+    </div>
+    @if (visible() && activeMedia(); as media) {
+      <div class="demo-controls" role="group" aria-label="Selected media attributes">
+        <label>Title or filename <input aria-label="Media title or filename" [value]="mediaTitle()" (input)="mediaTitle.set(value($event))" /></label>
+        <label>Caption or description <input aria-label="Media caption or description" [value]="mediaDescription()" (input)="mediaDescription.set(value($event))" /></label>
+        <button type="button" (mousedown)="keepSelection($event)" (click)="updateMedia()">Update selected media</button>
+        <button type="button" (mousedown)="keepSelection($event)" (click)="run(deleteMedia)">Delete selected media</button>
+      </div>
+    }
+    <p class="angular-campaign-status" role="status" aria-label="Upload status">{{status()}}</p>
+    @if (visible()) {
+      <div class="bare-editor" [fountainEditor]="editor()" [fountainOptions]="options"></div>
+    } @else {
+      <p class="angular-campaign-status">Editor hidden — document and undo history retained.</p>
+    }
+    <p class="angular-campaign-status" aria-label="Angular document state">{{document()?.childCount ?? 0}} blocks · {{document()?.textContent?.length ?? 0}} characters · Angular signal state</p>
+  </section>
+  <section class="demo-output" aria-label="Portable document data">
+    <header><span><strong>Portable document data</strong><small>Developer inspection · not the reader UI</small></span></header>
+    <nav aria-label="Document output format">
+      @for (choice of formats; track choice) {
+        <button type="button" [class.active]="format() === choice" [attr.aria-pressed]="format() === choice" (click)="format.set(choice)">{{choice}}</button>
+      }
+    </nav>
+    <pre><code>{{output()}}</code></pre>
+  </section>
+</div>

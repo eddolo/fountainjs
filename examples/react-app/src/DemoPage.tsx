@@ -444,44 +444,6 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
       schema: StarterKit.schema,
       plugins: StarterKit.plugins,
       placeholder: 'Edit through the Custom Element…',
-      imageUpload: demo.slug === 'angular-media' ? async (file, { signal, reportProgress }) => {
-        reportProgress(.25);
-        await new Promise<void>((resolve, reject) => {
-          const timer = window.setTimeout(resolve, 220);
-          signal.addEventListener('abort', () => {
-            window.clearTimeout(timer);
-            reject(new DOMException('Upload cancelled', 'AbortError'));
-          }, { once: true });
-        });
-        reportProgress(1);
-        return { src: '../demo-media.svg', alt: file.name.replace(/\.[^.]+$/, ''), caption: 'Uploaded through the demo host adapter.' };
-      } : undefined,
-      assetUpload: demo.slug === 'angular-media' ? async (file, { kind, signal, reportProgress }) => {
-        reportProgress(.25);
-        await new Promise<void>((resolve, reject) => {
-          const timer = window.setTimeout(resolve, 220);
-          signal.addEventListener('abort', () => {
-            window.clearTimeout(timer);
-            reject(new DOMException('Upload cancelled', 'AbortError'));
-          }, { once: true });
-        });
-        reportProgress(1);
-        if (kind === 'audio') return {
-          src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
-          title: file.name.replace(/\.[^.]+$/, ''),
-          caption: 'Audio uploaded through the Angular-owned adapter.',
-        };
-        if (kind === 'video') return {
-          src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
-          title: file.name.replace(/\.[^.]+$/, ''),
-          caption: 'Video uploaded through the Angular-owned adapter.',
-        };
-        return {
-          src: '../demo-media.svg',
-          name: file.name,
-          description: 'File uploaded through the Angular-owned adapter.',
-        };
-      } : undefined,
     });
     const element = document.createElement(tagName) as FountainEditorElement;
     element.value = demo.content;
@@ -677,7 +639,24 @@ function SvelteRuntime({ demo }: { demo: DemoDefinition }) {
   return <>{error && <p role="alert">Could not load the Svelte editor: {error}</p>}<div ref={mount} /></>;
 }
 
+function AngularRuntime({ demo }: { demo: DemoDefinition }) {
+  const mount = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let cancelled = false;
+    let dispose: (() => void) | undefined;
+    void import('./angular-generated/campaign.js').then(async ({ mountAngularCampaign }) => {
+      if (cancelled || !mount.current) return;
+      const cleanup = await mountAngularCampaign(mount.current, demo.content);
+      if (cancelled) cleanup(); else dispose = cleanup;
+    }).catch(reason => { if (!cancelled) setError(String(reason)); });
+    return () => { cancelled = true; dispose?.(); };
+  }, [demo]);
+  return <>{error && <p role="alert">Could not load the Angular editor: {error}</p>}<div ref={mount} /></>;
+}
+
 function Runtime({ demo }: { demo: DemoDefinition }) {
+  if (demo.runtime === 'angular') return <AngularRuntime demo={demo} />;
   if (demo.runtime === 'svelte') return <SvelteRuntime demo={demo} />;
   if (demo.runtime === 'vue') return <VueRuntime demo={demo} />;
   if (demo.runtime === 'dom') return <DOMRuntime demo={demo} />;

@@ -234,3 +234,12 @@
   .demo-pagination a { min-height: 120px; padding: 25px 18px; }
   .demo-pagination b { font-size: 11px; }
 }
+.angular-campaign-demo { max-width: 1500px; margin-inline: auto; }
+.angular-campaign-demo > .demo-controls { margin-bottom: 12px; }
+.angular-campaign-demo > fountain-angular-campaign-editor { display: block; min-width: 0; }
+.angular-campaign-demo .demo-output { max-height: 760px; }
+.angular-campaign-demo .demo-output pre { min-height: 0; }
+.angular-campaign-status { font-size: 12px; color: #5b536e; margin: 12px 4px; }
+.angular-campaign-demo .demo-controls label { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.angular-campaign-demo .demo-controls input { max-width: 100%; min-width: 0; }
+.angular-campaign-demo .demo-controls input[type=color] { width: 30px; height: 28px; }

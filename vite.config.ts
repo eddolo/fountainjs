@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
+import { angularLinker } from './tools/angular-build/vite-plugin.mjs';
 
 const demoSlugs = [
   'react-article',
@@ -18,12 +19,15 @@ const demoSlugs = [
 
 export default defineConfig({
   root: fileURLToPath(new URL('./examples/react-app', import.meta.url)),
-  plugins: [react(), svelte({ configFile: false })],
+  plugins: [angularLinker(), react(), svelte({ configFile: false })],
   // The optional Vue demo uses render functions, not the template compiler.
   define: { __VUE_OPTIONS_API__: false, __VUE_PROD_DEVTOOLS__: false, __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false },
   // The export diagnostic is loaded dynamically. Prebundle its server-side
   // adaptor before mounting it so first use cannot trigger a Vite full reload.
-  optimizeDeps: { include: ['@mathjax/src/js/adaptors/liteAdaptor.js'] },
+  optimizeDeps: {
+    include: ['@mathjax/src/js/adaptors/liteAdaptor.js', 'rxjs', 'rxjs/operators'],
+    exclude: ['fountainjs-editor/angular', '@angular/core', '@angular/common', '@angular/platform-browser'],
+  },
   // This lab explicitly selects the bundled TeX font. Avoid also shipping
   // MathJax's unused NewCM default font through SVG's fallback import.
   resolve: { alias: [{

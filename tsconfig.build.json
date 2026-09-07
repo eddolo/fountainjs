@@ -10,5 +10,5 @@
     "types": []
   },
   "include": ["src"],
-  "exclude": ["tests", "examples"]
+  "exclude": ["tests", "examples", "src/angular"]
 }

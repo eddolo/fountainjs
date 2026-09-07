@@ -9,6 +9,11 @@ import { mathFilesJourney } from './math-files-journey';
 import { mathPagesJourney } from './math-pages-journey';
 import { vueRunbookJourney } from './vue-runbook-journey';
 import { svelteReportJourney } from './svelte-report-journey';
+import { angularCampaignJourney } from './angular-campaign-journey';
+
+test('uses first-party Angular signals and directive for campaign editing and owner cleanup', async ({ page }, info) => {
+  await angularCampaignJourney(page, info);
+});
 
 test('disposes Svelte custom block views before their owned engine', async ({ page }) => {
   await page.goto('/browser-tests.html');
@@ -6033,8 +6038,8 @@ test('unwraps and exits an inserted quote with ordinary browser keys', async ({ 
 test('publishes semantic selection controls and table interaction in the demo gallery', async ({ page }) => {
   await page.goto('/demos/svelte-report.html');
   await expect(page.getByRole('heading', { name: 'Structured data report' })).toBeVisible();
-  await expect(page.getByText('Rectangular cell selection', { exact: true })).toBeVisible();
-  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await expect(page.getByText('Table editing', { exact: true })).toBeVisible();
+  const editor = page.getByRole('textbox', { name: 'Svelte report editor' });
   await expect(editor).toContainText('Quarterly service report');
 
   await page.locator('[data-fountain-path="2.0.0"]').click();
@@ -6047,20 +6052,25 @@ test('publishes semantic selection controls and table interaction in the demo ga
   await expect.poll(() => page.evaluate(() => document.getSelection()?.toString() ?? '')).toContain('Quarterly service report');
 });
 
-test('runs production images, native media, safe embeds, and host-owned uploads through the public Custom Element', async ({ page }) => {
+test('runs campaign images, native media and safe embeds through Angular with honest upload boundaries', async ({ page }) => {
   await page.goto('/demos/angular-media.html');
+  await expect(page.locator('fountain-angular-campaign-editor')).toHaveCSS('display', 'block');
   await expect(page.getByRole('heading', { name: 'Media-rich campaign story' })).toBeVisible();
 
-  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const editor = page.getByRole('textbox', { name: 'Angular campaign editor' });
   await expect(editor.locator('[data-fountain-node="inline_image"]')).toHaveCount(1);
   const figure = editor.locator('.fountain-image');
   await expect(figure).toHaveCount(1);
   await expect(figure.getByRole('textbox', { name: 'Image caption' })).toHaveValue(/Select me to edit/);
   await expect(figure.getByRole('slider', { name: 'Resize image from right' })).toBeVisible();
 
-  await editor.evaluate((element) => {
+  const imageBytes = await editor.evaluate((element) => {
+    const canvas = document.createElement('canvas'); canvas.width = 32; canvas.height = 32;
+    const context = canvas.getContext('2d')!; context.fillStyle = '#6044ff'; context.fillRect(0, 0, 32, 32);
+    const base64 = canvas.toDataURL('image/png').split(',')[1];
+    const bytes = Uint8Array.from(atob(base64), character => character.charCodeAt(0));
     const transfer = new DataTransfer();
-    transfer.items.add(new File(['framework-neutral upload'], 'portable.png', { type: 'image/png' }));
+    transfer.items.add(new File([bytes], 'portable.png', { type: 'image/png' }));
     element.dispatchEvent(new DragEvent('drop', {
       bubbles: true,
       cancelable: true,
@@ -6068,14 +6078,18 @@ test('runs production images, native media, safe embeds, and host-owned uploads 
       clientX: 20,
       clientY: 20,
     }));
+    return base64;
   });
 
-  const status = page.getByRole('status');
-  await expect(status).toContainText(/Uploading portable\.png|portable\.png: succeeded/);
-  await expect(status).toContainText('portable.png: succeeded');
+  const status = page.getByRole('status', { name: 'Upload status' });
+  await expect(status).toContainText('Added portable.png locally.');
   await expect(editor.locator('.fountain-image')).toHaveCount(2);
-  await expect(editor.locator('.fountain-image img[alt="portable"]')).toBeVisible();
-  await expect(page.locator('.demo-output pre')).toContainText('Uploaded through the demo host adapter.');
+  const droppedImage = editor.locator('.fountain-image img[alt="portable.png"]');
+  await expect(droppedImage).toBeVisible();
+  await expect(droppedImage).toHaveAttribute('src', `data:image/png;base64,${imageBytes}`);
+  await droppedImage.scrollIntoViewIfNeeded();
+  await expect.poll(() => droppedImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBe(32);
+  await expect(page.locator('.demo-output pre')).toContainText('Local image; embedded in the document.');
 
   await expect(editor.locator('.fountain-media--audio audio[controls]')).toHaveCount(1);
   await expect(editor.locator('.fountain-media--video video[controls][playsinline]')).toHaveCount(1);
@@ -6083,11 +6097,14 @@ test('runs production images, native media, safe embeds, and host-owned uploads 
   await expect(editor.locator('.fountain-media--file .fountain-file__preview')).toHaveAttribute('alt', 'Preview of campaign-artwork.svg');
   await expect(editor.locator('.fountain-media--file .fountain-file__download')).toHaveText('Download file');
   await editor.locator('.fountain-media--file').getByRole('button', { name: 'Select attachment' }).click();
-  const selectedMedia = page.getByRole('group', { name: 'Selected media details' });
-  await expect(selectedMedia).toContainText('Selected attachment');
-  await selectedMedia.getByLabel('File name').fill('campaign-preview.svg');
-  await selectedMedia.getByLabel('Description').fill('Editable attachment metadata with an image preview.');
-  await selectedMedia.getByRole('button', { name: 'Save details' }).click();
+  const selectedMedia = page.getByRole('group', { name: 'Selected media attributes' });
+  // A reader must scroll back to the author controls before editing them.
+  // fill() alone can focus an off-screen input without moving the viewport.
+  await selectedMedia.scrollIntoViewIfNeeded();
+  await expect(selectedMedia).toBeInViewport();
+  await selectedMedia.getByLabel('Media title or filename').fill('campaign-preview.svg');
+  await selectedMedia.getByLabel('Media caption or description').fill('Editable attachment metadata with an image preview.');
+  await selectedMedia.getByRole('button', { name: 'Update selected media' }).click();
   await expect(editor.locator('.fountain-media--file .fountain-file')).toContainText('campaign-preview.svg');
   await expect(editor.locator('.fountain-media--file .fountain-file__preview')).toHaveAttribute('alt', 'Preview of campaign-preview.svg');
   await expect(page.locator('.demo-output pre')).toContainText('Editable attachment metadata with an image preview.');
@@ -6107,10 +6124,9 @@ test('runs production images, native media, safe embeds, and host-owned uploads 
       clientY: 20,
     }));
   });
-  await expect(status).toContainText(/Uploading voice\.mp3|voice\.mp3: succeeded/);
-  await expect(status).toContainText('voice.mp3: succeeded');
-  await expect(editor.locator('.fountain-media--audio')).toHaveCount(2);
-  await expect(page.locator('.demo-output pre')).toContainText('Audio uploaded through the Angular-owned adapter.');
+  await expect(status).toContainText('uploads need a host adapter returning a persistent URL');
+  await expect(editor.locator('.fountain-media--audio')).toHaveCount(1);
+  await expect(page.locator('.demo-output pre')).not.toContainText('voice.mp3');
 });
 
 test('uses the public React media workflow for native playback, provider-gated embeds, and asset uploads', async ({ page }) => {

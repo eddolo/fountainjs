@@ -11,6 +11,7 @@ coverage/
 *.log
 .DS_Store
 .vite/
+examples/react-app/src/angular-generated/
 *.tgz
 .idea/
 .vscode/

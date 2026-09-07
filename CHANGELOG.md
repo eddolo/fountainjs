@@ -4,6 +4,15 @@
 
 ### Added
 
+- Optional `fountainjs-editor/angular` entry with injection-scoped
+  `createFountain`, signal-based `fountainState`, and standalone
+  `FountainEditorDirective`. Angular 22 remains an external optional peer;
+  partial-Ivy compilation and inert SSR are separate from the no-DOM core.
+  The campaign demo uses real Angular controls, retains local-image bytes,
+  and supports media metadata editing, deletion/undo and view/owner lifecycles.
+  Other media uploads explicitly require a host storage adapter. See
+  `docs/ANGULAR.md`; equivalent optional framework UI suites remain open.
+
 - Optional `fountainjs-editor/svelte` entry with `createFountain`, `fountainState`
   and `fountainEditor`: client ownership, lazy readable state and a DOM action
   that preserves external engine ownership. Svelte 5 is an optional external
@@ -16,9 +25,14 @@
   external-editor/view separation and inert SSR. Vue 3.5+ is an optional external
   peer, never bundled into the engine. The Vue runbook now runs actual Vue
   controls and an inspector, with lifecycle and three-browser interaction tests.
-  Angular and equivalent optional framework UI suites remain pending.
+  Equivalent optional framework UI suites remain pending.
 
 ### Fixed
+
+- Restored the Svelte report's structural cursor-placement control after its
+  framework migration. Media metadata drafts no longer reset on unrelated
+  selection updates in the Angular demo. Removed the obsolete demonstration
+  adapters that substituted stock assets for the user's chosen file.
 
 - Exact text endpoints no longer jump across a block boundary during selection
   mapping. This fixes the caret leaving a final paragraph converted to a quote

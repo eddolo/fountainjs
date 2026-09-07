@@ -15,6 +15,7 @@
     "dist/ai/mcp-adapter.d.ts": "48d7c23ab7c7636f7970062eb7b7235e9cc46be88efea89dbac964d9be9f7a78",
     "dist/ai/types.d.cts": "52d4a2756269f1a931b745557cb355d29b9b8880831156448b48d827c1c20b70",
     "dist/ai/types.d.ts": "52d4a2756269f1a931b745557cb355d29b9b8880831156448b48d827c1c20b70",
+    "dist/angular/index.d.ts": "0a276ece506e023a6475de2b3e2199804395d34c7570a9c982180433af6bb18a",
     "dist/comments/index.d.cts": "792cde82ac9e88e4644726f5aafe1a5391109caa057db0fecaeca8414cb17bf5",
     "dist/comments/index.d.ts": "58cdeb970aec1083b7fd818206b84c9a20770741d0fa5d20656294fbf20af3ad",
     "dist/core/commands.d.cts": "fb4ea490e56066585d37e9c0ad47ac7308af7d6773818e5f09b42e6aaee31049",

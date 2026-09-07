@@ -5,6 +5,43 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+SURFACE-04 Angular increment (2026-09-07): the optional
+`fountainjs-editor/angular` entry provides injection-scoped editor ownership,
+signal state and a standalone DOM-view directive. The campaign now runs actual
+Angular 22 components and controls, not an Angular-labelled Custom Element.
+The library is partial-Ivy ESM with an external optional Angular peer; the
+private compiler workspace keeps Angular's TypeScript 6 requirement separate
+from the engine's TypeScript 7 build. Core and other surfaces do not import it.
+
+Local verification: `pnpm check` passed 1,118 tests in 103 files, package/runtime
+checks, the headless import boundary, public declarations, type checks and
+unchanged performance limits. One performance run under concurrent browser
+load failed; the isolated rerun passed without changing thresholds. Only the
+Angular declaration was added; existing API hashes remain unchanged. The
+optional entry measures 4,150 bytes, with no bundled Angular runtime. Packed
+ESM/bundler type resolution and package lint pass; Angular's documented ESM-only
+profile is scoped separately from all existing dual-format entries in CI.
+
+Browser follow-through fixed metadata drafts resetting on selection updates,
+restored the Svelte report's structural cursor control, and gave the Angular
+component host block layout after intermittent WebKit control-visibility
+failures. The affected media workflow then passed five consecutive WebKit runs.
+Local image uploads retain chosen bytes, not substitute artwork. Other media
+uploads explicitly require a persistent-URL storage adapter. The recorded
+campaign journey is visually reviewed; external YouTube playback was unavailable
+and is not certified. A wrapped-line End key in the audit initially split the
+last paragraph; the revised journey checks end-of-document insertion and exact
+paragraph retention instead. See `docs/ANGULAR.md` for boundaries and tests.
+The final focused Vue/Svelte/Angular gallery set passes 19 checks across
+Chromium, Firefox, WebKit and the two touch-emulation projects. The reviewed
+mobile-Safari screenshot shows the new note in its own paragraph without
+horizontal overflow. The production website build passes with the existing
+large MathJax reference-lab chunk warning.
+
+This does not complete SURFACE-04: optional framework UI suites, broader Angular
+versions/forms, physical-device IME and accessibility evidence remain open.
+No npm release is authorized by this increment.
+
 SURFACE-04 Svelte increment (2026-09-07): the optional
 `fountainjs-editor/svelte` entry supplies `createFountain`, `fountainState` and
 `fountainEditor`. The report demo now runs compiled Svelte components for its
@@ -27,7 +64,7 @@ The final Vue/Svelte browser set passes all 13 checks across Chromium, Firefox,
 WebKit and two touch-emulation projects. Website build passes with the existing
 large MathJax reference-lab chunk warning; no runtime/bundle ceiling was relaxed
 except adding the measured optional Svelte entry to aggregate code budgets.
-Angular and equivalent optional framework UI suites remain open; this does not
+At that checkpoint Angular and equivalent optional framework UI suites remained open; this does not
 complete SURFACE-04 or permit npm publication. See `docs/SVELTE.md`.
 
 SURFACE-04 Vue increment (2026-09-07): an optional Vue 3 entry now owns client

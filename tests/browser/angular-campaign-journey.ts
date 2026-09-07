@@ -1,0 +1,77 @@
+import { expect, type Page, type TestInfo } from '@playwright/test';
+
+export async function angularCampaignJourney(page: Page, info: TestInfo) {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/demos/angular-media.html');
+  const workspace = page.locator('[data-angular-campaign]');
+  const editor = page.getByRole('textbox', { name: 'Angular campaign editor' });
+  await expect(editor).toBeVisible();
+  await expect(page.getByLabel('Editor lifecycle', { exact: true })).toHaveText('Created: 1 · Destroyed: 0');
+  const attachment = editor.locator('[data-fountain-node="file_attachment"]');
+  await attachment.getByRole('button', { name: 'Select attachment', exact: true }).click();
+  await page.getByRole('group', { name: 'Selected media attributes' }).scrollIntoViewIfNeeded();
+  await page.getByLabel('Media title or filename', { exact: true }).fill('Reviewed artwork.svg');
+  await page.getByLabel('Media caption or description', { exact: true }).fill('Approved preview and downloadable source.');
+  await expect(page.getByLabel('Media title or filename', { exact: true })).toHaveValue('Reviewed artwork.svg');
+  await expect(page.getByLabel('Media caption or description', { exact: true })).toHaveValue('Approved preview and downloadable source.');
+  await workspace.getByRole('button', { name: 'Update selected media', exact: true }).click();
+  await expect(attachment).toContainText('Reviewed artwork.svg');
+  await expect(attachment).toContainText('Approved preview and downloadable source.');
+  await workspace.getByRole('button', { name: 'Delete selected media', exact: true }).click();
+  await expect(attachment).toHaveCount(0);
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(attachment).toContainText('Reviewed artwork.svg');
+  const finalParagraph = editor.locator(':scope > p').last();
+  const originalParagraph = await finalParagraph.textContent();
+  await finalParagraph.click();
+  await page.keyboard.press('Control+End'); await page.keyboard.press('Enter');
+  const note = 'Campaign approved for review.';
+  await page.keyboard.type(note);
+  await expect(editor.locator(':scope > p').last()).toHaveText(note);
+  await expect(editor).toContainText(originalParagraph!);
+  for (let index = 0; index < note.length; index++) await page.keyboard.press('Shift+ArrowLeft');
+  await workspace.getByRole('button', { name: 'Bold', exact: true }).click();
+  await expect(editor.locator('strong')).toContainText([note]);
+  const inspector = workspace.locator('.demo-output pre');
+  await expect(inspector).toContainText(note);
+  const before = await inspector.textContent();
+  await workspace.getByRole('button', { name: 'Hide editor', exact: true }).click();
+  await expect(editor).toHaveCount(0);
+  await workspace.getByRole('button', { name: 'Show editor', exact: true }).click();
+  await expect(editor.locator('strong')).toContainText([note]);
+  await expect(inspector).toHaveText(before!);
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(editor.locator('strong').filter({ hasText: note })).toHaveCount(0);
+  await expect(editor).toContainText(note);
+  await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(editor.locator('strong')).toContainText([note]);
+  await workspace.getByRole('button', { name: 'markdown', exact: true }).click();
+  await expect(inspector).toContainText(`**${note}**`);
+  const png = Buffer.from(await page.evaluate(() => {
+    const canvas = document.createElement('canvas'); canvas.width = 800; canvas.height = 450;
+    const context = canvas.getContext('2d')!;
+    context.fillStyle = '#ff6633'; context.fillRect(0, 0, 800, 450);
+    context.fillStyle = '#ffffff'; context.font = '100px sans-serif'; context.fillText('My image', 120, 250);
+    return canvas.toDataURL('image/png').split(',')[1];
+  }), 'base64');
+  await page.getByLabel('Add local images', { exact: true }).setInputFiles({ name: 'own-image.png', mimeType: 'image/png', buffer: png });
+  const ownImage = editor.getByRole('img', { name: 'own-image.png', exact: true });
+  await expect(ownImage).toHaveAttribute('src', `data:image/png;base64,${png.toString('base64')}`);
+  await ownImage.scrollIntoViewIfNeeded();
+  await expect(ownImage).toHaveJSProperty('complete', true);
+  expect(await ownImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  await page.getByLabel('Add local images', { exact: true }).setInputFiles({ name: 'unsupported.svg', mimeType: 'image/svg+xml', buffer: Buffer.from('<svg/>') });
+  await expect(workspace.getByRole('status', { name: 'Upload status' })).toContainText('Other files need a host URL');
+  await expect(editor.getByRole('img', { name: 'unsupported.svg', exact: true })).toHaveCount(0);
+  await editor.locator(':scope > p').last().scrollIntoViewIfNeeded();
+  const path = info.outputPath('angular-edited-campaign.png');
+  await page.screenshot({ path }); await info.attach('Angular campaign editing', { path, contentType: 'image/png' });
+  for (let cycle = 2; cycle <= 4; cycle++) {
+    await page.getByRole('button', { name: 'Reset campaign (discards edits)', exact: true }).click();
+    await expect(page.getByLabel('Editor lifecycle', { exact: true })).toHaveText(`Created: ${cycle} · Destroyed: ${cycle - 1}`);
+    await expect(editor).not.toContainText(note);
+    await expect(editor.getByRole('img', { name: 'own-image.png', exact: true })).toHaveCount(0);
+  }
+  expect(errors).toEqual([]);
+}

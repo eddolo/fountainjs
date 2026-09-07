@@ -1,6 +1,6 @@
 import type { MarkJSON, NodeJSON } from 'fountainjs-editor';
 
-export type DemoRuntime = 'react' | 'vue' | 'svelte' | 'dom' | 'element' | 'headless';
+export type DemoRuntime = 'react' | 'vue' | 'svelte' | 'angular' | 'dom' | 'element' | 'headless';
 
 export interface DemoDefinition {
   index: number;
@@ -270,11 +270,11 @@ const options = { ariaLabel: 'Runbook editor' }
     slug: 'angular-media',
     title: 'Media-rich campaign story',
     host: 'Angular',
-    surface: 'Angular → Web Component',
-    runtime: 'element',
+    surface: 'Angular signals + directive',
+    runtime: 'angular',
     summary: 'A campaign editor mixing images, native audio and video, downloadable files, approved embeds, captions, tracks, and rich narrative blocks.',
-    boundary: 'Angular enables custom elements; FountainJS receives observable image and asset upload adapters owned by the application.',
-    capabilities: ['Block and inline images', 'Native audio and video', 'File attachments and safe embeds', 'Progress/cancel/retry upload boundary'],
+    boundary: 'The gallery shell is React. This campaign is a compiled Angular app using the optional fountainjs-editor/angular directive and signals. Raster images embed locally; audio/video/file uploads require your persistent-URL storage adapter.',
+    capabilities: ['Block and inline images', 'Native audio and video', 'File attachments and safe embeds', 'Local image bytes and editable metadata'],
     content: doc(
       heading(1, 'A launch story with real media'),
       paragraph(text('Images are typed nodes with source, alt text, title, caption, layout, and responsive metadata. This '), { type: 'inline_image', attrs: { src: '../demo-media.svg', alt: 'inline media example', width: '1.5em', height: '1.5em' } }, text(' image lives inside the sentence.')),
@@ -283,29 +283,25 @@ const options = { ariaLabel: 'Runbook editor' }
       { type: 'video', attrs: { src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', title: 'Campaign film', caption: 'Native video remains a portable typed node.', width: '100%', height: 'auto', controls: true, playsInline: true, preload: 'metadata' } },
       { type: 'file_attachment', attrs: { src: '../demo-media.svg', name: 'campaign-artwork.svg', mimeType: 'image/svg+xml', size: 1726, description: 'An image attachment with a visible preview, portable metadata, and a separate download action.' } },
       { type: 'embed', attrs: { src: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', provider: 'youtube', title: 'Approved campaign embed', caption: 'Provider-gated, privacy-enhanced, and sandboxed.', width: '100%', height: '360px', allow: 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen', sandbox: 'allow-scripts allow-same-origin allow-presentation', allowFullscreen: true } },
-      paragraph(text('Paste or drop another image, audio, video, or file to exercise mapped progress, cancellation, retry, and fail-closed replacement through host-owned adapters.')),
+      paragraph(text('Choose, paste, or drop a PNG, JPEG, GIF or WebP image to embed its original bytes locally. Edit media metadata using the selection controls. Audio, video and file uploads require a host storage adapter returning a persistent URL.')),
     ),
-    code: `import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
-import { StarterKit, registerFountainElement } from 'fountainjs-editor'
+    code: `import { Component } from '@angular/core'
+import { StarterKit } from 'fountainjs-editor'
+import { createFountain, fountainState, FountainEditorDirective } from 'fountainjs-editor/angular'
 
 @Component({
   standalone: true,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  template: \`<fountain-editor
-    (fountain-change)="save($event.detail.value)"
-  ></fountain-editor>\`,
+  imports: [FountainEditorDirective],
+  template: \`<div [fountainEditor]="editor()" [fountainOptions]="options"></div>
+    <p>{{snapshot()?.doc.textContent.length ?? 0}} characters</p>\`,
 })
 export class CampaignEditor {
-  constructor(private assets: AssetService) {
-    registerFountainElement({
-      schema: StarterKit.schema,
-      plugins: StarterKit.plugins,
-      imageUpload: (file, { signal, reportProgress }) =>
-        this.assets.upload(file, { signal, onProgress: reportProgress }),
-      assetUpload: (file, { kind, signal, reportProgress }) =>
-        this.assets.upload(file, { kind, signal, onProgress: reportProgress }),
-    })
-  }
+  readonly editor = createFountain(() => ({
+    schema: StarterKit.schema, plugins: StarterKit.plugins,
+  }))
+  readonly snapshot = fountainState(this.editor)
+  readonly options = { ariaLabel: 'Campaign editor' }
+  // Provide imageUpload/assetUpload options to connect your storage service.
 }`,
     accent: '#dd0031',
   },

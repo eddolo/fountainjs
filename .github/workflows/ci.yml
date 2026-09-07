@@ -42,6 +42,9 @@ jobs:
       - run: pnpm test
       - run: pnpm dlx publint@0.3.24
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./docx ./document-utilities ./emoji-data ./react ./vue ./svelte ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+      # Angular's documented partial-Ivy distribution is ESM-only. Keep the
+      # existing dual-format entries under strict checks; scope this profile.
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
       - run: pnpm exec vite build --base /fountainjs/
       - run: pnpm pack --dry-run
   lean-integration:

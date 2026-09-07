@@ -5,7 +5,7 @@
     insertList, insertTable, getActiveTableCell, addTableRow, addTableColumn,
     deleteTableRow, deleteTableColumn, deleteTable, selectTableRow, selectTableColumn,
     mergeTableCells, splitTableCell, toggleTableHeaderRow, toggleTableHeaderColumn,
-    toggleTableHeaderCell, setMark, unsetMark, setTextAlignment, type Editor, type NodeJSON,
+    toggleTableHeaderCell, setMark, unsetMark, setTextAlignment, selectGap, topLevelPosition, type Editor, type NodeJSON,
   } from 'fountainjs-editor';
   import { createFountain, fountainState, fountainEditor } from 'fountainjs-editor/svelte';
 
@@ -59,6 +59,10 @@
       <label class="demo-colour-control">Highlight <input type="color" aria-label="Highlight colour" bind:value={highlight} /></label>
       <button type="button" disabled={!$editor || !visible} onmousedown={keepSelection} onclick={() => run(editor => setMark(editor, 'highlight', { color: highlight }))}>Apply highlight</button>
       <button type="button" disabled={!$editor || !visible} onmousedown={keepSelection} onclick={() => run(editor => unsetMark(editor, 'highlight'))}>Remove highlight</button>
+      <button type="button" disabled={!$editor || !visible || $editor.state.doc.childCount < 2}
+        title="Places the insertion point after the title; it does not insert a page break"
+        aria-pressed={$snapshot?.selection.kind === 'gap' && $snapshot.selection.position === ($editor ? topLevelPosition($editor.state.doc, 1) : -1)}
+        onmousedown={keepSelection} onclick={() => run(editor => selectGap(editor, topLevelPosition(editor.state.doc, 1)))}>Place cursor after title</button>
       <label>Rows <input type="number" aria-label="Table rows" min="1" max="20" bind:value={rows} /></label>
       <label>Columns <input type="number" aria-label="Table columns" min="1" max="20" bind:value={columns} /></label>
       <button type="button" disabled={!$editor || !visible || ![rows, columns].every(n => Number.isInteger(n) && n >= 1 && n <= 20)} onmousedown={keepSelection} onclick={() => run(editor => insertTable(editor, { rows, columns, headerRow: true }))}>+ Table</button>

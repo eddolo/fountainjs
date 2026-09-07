@@ -22,8 +22,10 @@ server with `fountainjs-editor/html/server`. See
 Framework-specific integration is optional: the [Vue guide](VUE.md) documents
 `fountainjs-editor/vue` composables/component; the [Svelte guide](SVELTE.md)
 documents `fountainjs-editor/svelte` lifecycle/store/action bindings. Both are
-available in the repository build and still unreleased on npm. Neither runtime
-enters the headless core or is required by the other framework surfaces.
+available in the repository build and still unreleased on npm. The
+[Angular guide](ANGULAR.md) covers `fountainjs-editor/angular` signals,
+client ownership and its standalone partial-Ivy directive, also unreleased.
+These runtimes do not enter the headless core or the other framework surfaces.
 
 ## Document model
 

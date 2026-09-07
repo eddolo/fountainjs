@@ -138,5 +138,5 @@ A separate compiled browser fixture verifies that custom block views dispose
 while their owned engine is still alive, over five mount/unmount cycles.
 
 This is a first-party Svelte binding, not a Svelte version of every optional
-React UI panel. Equivalent framework-specific UI suites and an Angular binding
-remain separate parity work.
+React UI panel. A separate [Angular binding](ANGULAR.md) is also in the repository
+build; equivalent framework-specific UI suites remain separate parity work.

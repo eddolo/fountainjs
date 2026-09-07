@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.angular.json",
+  "compilerOptions": {
+    "rootDir": "examples/angular", "outDir": "examples/react-app/src/angular-generated"
+  },
+  "angularCompilerOptions": { "compilationMode": "full", "strictTemplates": true },
+  "files": ["examples/angular/campaign.ts"]
+}

@@ -130,5 +130,5 @@ hide/reopen and history; these are emulation, not physical-device IME evidence.
 
 This delivers the Vue binding, not a Vue equivalent of every optional React UI
 panel. A separate [Svelte binding](SVELTE.md) is also available in the repository
-build. Angular bindings and equivalent framework UI suites remain open; every
+build, alongside the [Angular binding](ANGULAR.md). Equivalent framework UI suites remain open; every
 framework can already use the engine commands and DOM/Web Component boundaries.

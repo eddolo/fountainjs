@@ -159,6 +159,23 @@ if (esmEmojiData.unicodeEmojis.length < 1_900) throw new Error('ESM Unicode emoj
 assertExports(await import('fountainjs-editor/react'), reactNames, 'ESM React entry');
 assertExports(await import('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'ESM Vue entry');
 assertExports(await import('fountainjs-editor/svelte'), ['createFountain', 'fountainState', 'fountainEditor'], 'ESM Svelte entry');
+// Angular's published directive is partial-Ivy. A normal Angular application
+// links it at build time; this Node-only import smoke uses its JIT compiler.
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  await import('@angular/compiler');
+  const binding = await import('fountainjs-editor/angular');
+  for (const name of ['createFountain', 'fountainState', 'FountainEditorDirective']) {
+    if (typeof binding[name] !== 'function') throw new Error('Missing Angular export: ' + name);
+  }
+`], { stdio: 'inherit' });
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  import { registerHooks } from 'node:module';
+  registerHooks({ resolve(specifier, context, nextResolve) {
+    if (specifier.startsWith('@angular/')) throw new Error('Unexpected Angular peer: ' + specifier);
+    return nextResolve(specifier, context);
+  } });
+  for (const entry of ['', '/core', '/react', '/vue', '/svelte']) await import('fountainjs-editor' + entry);
+`], { stdio: 'inherit' });
 // Svelte is optional too: existing surfaces must never load its runtime.
 execFileSync(process.execPath, ['--input-type=module', '-e', `
   import { registerHooks } from 'node:module';
