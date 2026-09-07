@@ -6418,6 +6418,12 @@ test('reconstructs HTML tables across Markdown block boundaries', async ({ page 
   await page.getByLabel('Markdown input', { exact: true }).fill('<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>');
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('protected Markdown block');
   await expect(output.locator('pre')).toContainText('<pre>');
+  const inertOutput = JSON.parse(await output.locator('pre').innerText());
+  await page.getByRole('checkbox', { name: 'Convert inline HTML formatting' }).check();
+  await expect(async () => {
+    expect(JSON.parse(await output.locator('pre').innerText())).toEqual(inertOutput);
+  }).toPass();
+  await expect(output.locator('pre')).toContainText('</pre>');
 });
 
 test('applies surrounding HTML formatting without replacing Markdown block content', async ({ page }) => {

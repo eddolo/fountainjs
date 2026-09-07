@@ -28,6 +28,12 @@ without serializing extension data through HTML. Surrounding semantic/style/cust
 marks now copy only affected paths, retaining source, attributes and node IDs;
 specialized raw-text scopes over those blocks still fall back explicitly.
 The 1,304 LF/CRLF flow source-retention checks do not change semantic scores.
+Combined block/inline conversion now has a separate 574/652 exact projection
+regression baseline. Its 78 unresolved comparisons include policy/schema and
+comparator differences, not just parser bugs. This broader audit exposed a real
+fallback loss: inline conversion could consume a closing tag before block flow
+failed. Recovery now restores the failed container's inert interpretation,
+including nested HTML, without changing successful sibling containers.
 Exhaustive HTML precedence, specialized/raw-text inline structures, and conversion-loss accounting remain
 unfinished. This does not change the 563-match / 72-pending / 17-intentional-difference
 CommonMark baseline or qualify the overall programme for publication. See the

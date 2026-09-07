@@ -43,6 +43,14 @@
 
 ### Fixed
 
+- Failed Markdown HTML flows now restore inline and nested HTML source as well
+  as raw block tokens. With both conversion options enabled, an inline closing
+  `</pre>` could previously disappear before the surrounding flow fell back.
+  Recovery is scoped to the failed container; successful siblings stay converted.
+  The corpus gate additionally locks 574 exact opt-in HTML semantic-projection
+  matches separately from the default inert policy and source-retention checks.
+  Remaining comparisons are explicitly unresolved, not a full-conformance claim.
+
 - Optional HTML flow conversion now carries surrounding semantic/style/custom
   marks into existing Markdown blocks. Original inline marks win collisions,
   inner HTML scopes override outer scopes, and unchanged subtrees remain shared.

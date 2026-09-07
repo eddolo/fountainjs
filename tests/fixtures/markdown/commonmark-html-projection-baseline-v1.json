@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "standard": "CommonMark 0.31.2",
+  "projectionVersion": 6,
+  "requiredMatchRanges": "1-147,151,162,164-166,168,191-200,202-206,208-217,219-238,241-279,285-307,310-314,316-343,345-475,478-490,492-493,495-523,525-535,537-595,597,600,602-607,609-610,618-624,632-641,644-652",
+  "unresolvedRanges": "148-150,152-161,163,167,169-190,201,207,218,239-240,280-284,308-309,315,344,476-477,491,494,524,536,596,598-599,601,608,611-617,625-631,642-643",
+  "note": "Both server HTML block-flow and inline adapters enabled. Locks 574 exact neutral-projection matches, not full CommonMark conformance. The 78 unresolved outputs include intentional URL/GFM/caret differences, unsupported HTML identity/layout/comments, raw-text fallback, and comparator limitations (raw pre trailing LF, formatting around block boundaries, explicit default cell spans). Do not label all 78 parser bugs or erase those differences merely to raise the score. Default inert-policy classifications remain independent."
+}

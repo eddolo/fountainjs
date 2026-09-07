@@ -5,6 +5,27 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Markdown combined-adapter audit (2026-09-07): the corpus gate now exercises both
+server HTML adapters together and locks 574/652 exact neutral-projection matches,
+separate from the unchanged default 563/72/17 classification and 1,304 LF/CRLF
+source-retention checks. The 78 unresolved comparisons include policy/schema
+differences and comparator limitations as well as unsupported conversion; they
+are not all parser bugs and do not certify full CommonMark fidelity.
+
+This audit exposed and fixed actual fallback data loss: inline conversion could
+remove `</pre>` before a surrounding table flow failed. Failed containers now
+recover their inert HTML interpretation, including nested projections, while
+successful sibling containers stay converted. No new public API or dependency.
+The complete `pnpm check` passes 1,158 tests in 104 files and unchanged runtime,
+type, package, size and performance gates. Fifteen focused Chromium/Firefox/WebKit
+checks pass. A recorded Chrome journey additionally verifies conversion fallback,
+rich clipboard paste, editing, undo/redo, canonical Markdown export and reopen;
+reviewed full-size screenshots show the retained tag in editor and export.
+Evidence: `artifacts/html-flow-rollback-20260907-recorded/` and
+`artifacts/html-flow-rollback-20260907-browser/`. Remaining work includes
+source-aware comparator handling for raw `<pre>` newlines, explicit rich-HTML
+loss accounting, specialized raw-text scopes, and the broader release gates.
+
 Markdown HTML-flow formatting increment (2026-09-07): surrounding semantic,
 style and extension-defined marks now reach existing Markdown blocks through
 the same rule/URL validation used for inline HTML. Immutable mark-path copies

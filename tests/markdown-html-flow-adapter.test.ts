@@ -95,6 +95,42 @@ describe('opt-in HTML block flow', () => {
     expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
   });
 
+  it('rolls back inline conversion when a surrounding HTML flow cannot be projected', () => {
+    const source = '<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>\n';
+    const report = vi.fn();
+    const parsed = MarkdownImporter.parseWithSource(source, schema, {
+      ...options, parseHTMLInline: ServerHTMLImporter.parseInline, onHTMLFlowFallback: report,
+    });
+    expect(parsed.document.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(parsed.document.textContent).toContain('</pre>');
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(parsed.document), schema).toJSON())
+      .toEqual(parsed.document.toJSON());
+  });
+
+  it.each(['decline', 'throw', 'invalid'] as const)('restores the entire failed container, including nested projections (%s)', failure => {
+    const source = '<div>\n\nA <strong>word</strong>.\n\n> <div>nested</div>\n\n</div>\n';
+    const block = vi.fn();
+    const report = vi.fn();
+    const flow = vi.fn((segments, target) => {
+      if (segments.some((segment: { kind: string }) => segment.kind === 'node')) {
+        if (failure === 'decline') return null;
+        if (failure === 'throw') throw new Error('Unavailable');
+        return [target.text('Invalid block')];
+      }
+      return ServerHTMLImporter.parseFlow(segments, target);
+    });
+    const parsed = MarkdownImporter.parse(source, schema, {
+      parseHTMLFlow: flow, parseHTMLBlock: block,
+      parseHTMLInline: ServerHTMLImporter.parseInline, onHTMLFlowFallback: report,
+    });
+    expect(parsed.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(flow).toHaveBeenCalledTimes(2);
+    expect(block).not.toHaveBeenCalled();
+    expect(report).toHaveBeenCalledTimes(1);
+  });
+
   it('inherits HTML marks through lists and tables while retaining node identities and local marks', () => {
     const text = schema.text('Same source', [schema.mark('link', { href: '/local' })]);
     const paragraph = schema.node('paragraph', { nodeId: 'paragraph-id', customData: { value: 2 } }, [text]);
@@ -215,5 +251,14 @@ describe('opt-in HTML block flow', () => {
       parseHTMLFlow: () => null,
       onHTMLFlowFallback: () => { throw new Error('Host error'); },
     })).toThrow('Host error');
+  });
+
+  it('limits inert rollback to the failed container, leaving sibling inline conversion intact', () => {
+    const nested = '<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>';
+    const source = `${nested.split('\n').map(line => `> ${line}`).join('\n')}\n\nA <strong>success</strong>.`;
+    const parsed = MarkdownImporter.parse(source, schema, { ...options, parseHTMLInline: ServerHTMLImporter.parseInline });
+    const inert = MarkdownImporter.parse(source, schema);
+    expect(parsed.content[0].toJSON()).toEqual(inert.content[0].toJSON());
+    expect(parsed.content[1].content[1].marks[0].type.name).toBe('strong');
   });
 });

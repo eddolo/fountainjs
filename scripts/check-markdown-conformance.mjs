@@ -30,6 +30,7 @@ for (const file of runtimeMaps) {
 const reportOnly = process.argv.includes('--report');
 const showMismatches = process.argv.includes('--show-mismatches');
 const htmlPolicyReport = process.argv.includes('--html-policy-report');
+const htmlFlowReport = process.argv.includes('--html-flow-report');
 const inspectedExamples = new Set(process.argv
   .filter((value) => value.startsWith('--example='))
   .map((value) => Number(value.slice('--example='.length))));
@@ -519,6 +520,65 @@ for (const example of commonmarkSpec.tests) {
   }
 }
 console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed (LF/CRLF); not semantic conformance.`);
+
+// Diagnose the real rich-import route separately from source snapshots and
+// the intentionally inert default. Compare rendered meaning, never native ASTs.
+{
+  const flowBaseline = JSON.parse(readFileSync(new URL('../tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json', import.meta.url), 'utf8'));
+  if (flowBaseline.standard !== baseline.standard || flowBaseline.projectionVersion !== baseline.projectionVersion) {
+    throw new Error('The opt-in HTML baseline must use the same standard and neutral projection.');
+  }
+  const flowRequired = expandRanges(flowBaseline.requiredMatchRanges);
+  const flowUnresolved = expandRanges(flowBaseline.unresolvedRanges);
+  for (let number = 1; number <= 652; number++) {
+    if (Number(flowRequired.has(number)) + Number(flowUnresolved.has(number)) !== 1) {
+      throw new Error(`Opt-in HTML example ${number} needs exactly one baseline classification.`);
+    }
+  }
+  const flowMatches = new Set();
+  const flowMismatches = [];
+  for (const example of commonmarkSpec.tests) {
+    const source = materializeTabs(example.markdown);
+    const expected = semanticProjection(materializeTabs(example.html), true);
+    const issues = [];
+    const fallbacks = [];
+    const importer = new ServerHTMLImporter();
+    let actual;
+    let error = null;
+    try {
+      const document = MarkdownImporter.parse(source, schema, {
+        parseHTMLFlow(segments, target) {
+          const result = importer.parseFlowWithReport(segments, target);
+          issues.push(...result.issues);
+          return result.nodes;
+        },
+        parseHTMLInline(segments, target) {
+          const result = importer.parseInlineWithReport(segments, target);
+          issues.push(...result.issues);
+          return result.nodes;
+        },
+        onHTMLFlowFallback: issue => fallbacks.push({ kind: 'block', ...issue }),
+        onHTMLInlineFallback: issue => fallbacks.push({ kind: 'inline', ...issue }),
+      });
+      actual = semanticProjection(HTMLExporter.export(document, { document: false }));
+    } catch (cause) { error = String(cause); }
+    if (!error && JSON.stringify(actual) === JSON.stringify(expected)) flowMatches.add(example.number);
+    else flowMismatches.push({ number: example.number, source, expected, actual, issues, fallbacks, error });
+  }
+  console.log(`Opt-in HTML block + inline semantics: ${flowMatches.size}/652 exact neutral-projection matches; remaining differences unresolved, not full conformance.`);
+  if (htmlFlowReport) {
+    console.log(`Opt-in matching ranges: ${compressRanges(flowMatches)}`);
+    console.log(`Opt-in mismatching ranges: ${compressRanges(flowMismatches.map(example => example.number))}`);
+  }
+  for (const example of flowMismatches) {
+    if (htmlFlowReport && (showMismatches || inspectedExamples.has(example.number))) console.log(JSON.stringify({ htmlFlow: example }));
+  }
+  const regressions = [...flowRequired].filter(number => !flowMatches.has(number));
+  const gains = [...flowUnresolved].filter(number => flowMatches.has(number));
+  if (flowMismatches.some(example => example.error)) throw new Error('Opt-in HTML corpus import threw; use --html-flow-report --show-mismatches.');
+  if (regressions.length) throw new Error(`Opt-in HTML semantic regressions: ${compressRanges(regressions)}`);
+  if (gains.length && !reportOnly) throw new Error(`Review newly matching opt-in HTML examples: ${compressRanges(gains)}`);
+}
 
 if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
 if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');

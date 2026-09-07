@@ -561,6 +561,47 @@ test('split HTML table becomes a real editable table with history and export', a
   expect(errors).toEqual([]);
 });
 
+test('failed HTML flow keeps literal closing tags through paste editing undo and export', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  const source = '# Import recovery\n\n<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>';
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await page.getByRole('checkbox', { name: 'Convert inline HTML formatting' }).check();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('protected Markdown block');
+  const output = page.locator('.demo-output');
+  await expect(output.locator('pre')).toContainText('</pre>');
+  await capture(page, info, 'fallback-warning-and-preserved-source');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor).toContainText('</pre>');
+  const paragraph = editor.locator('p').filter({ hasText: 'world' });
+  await paragraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' recovered');
+  await expect(paragraph).toContainText('</pre> recovered');
+  await page.keyboard.press('Control+z');
+  await expect(paragraph).toContainText('</pre>');
+  await expect(paragraph).not.toContainText('recovered');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(paragraph).toContainText('</pre> recovered');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('pre');
+  await capture(page, info, 'literal-fallback-edited-and-exported');
+  const exported = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(exported);
+  await expect(output.locator('pre')).toContainText('</pre> recovered');
+});
+
 test('HTML deletion scope remains formatted through editing history and Markdown export', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/demos/node-markdown.html');

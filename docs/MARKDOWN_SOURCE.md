@@ -111,8 +111,31 @@ carrier are not converted into arbitrary CSS-styled objects.
 Input and parsed-tree limits still apply. Unsupported raw-text
 scopes surrounding protected blocks are rejected with a reason, as are custom
 HTML rules that consume them. Failed flows retain their inert raw HTML rather
-than partially applying per-block conversion. This is not complete HTML/CSS or
+than partially applying per-block conversion. If inline or nested HTML adapters
+already ran, fallback reparses the failed container with all HTML adapters
+disabled; otherwise a closing tag such as `</pre>` could disappear before a
+surrounding table flow fails. Sibling containers remain independent. Other
+Markdown/TeX dialect options remain enabled, without repeating their reporters.
+This is not complete HTML/CSS or
 CommonMark fidelity; the default 563/72/17 baseline remains separate.
+
+The conformance command also regression-locks **574/652** exact neutral-projection
+matches with **both** server HTML adapters enabled, in
+`tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json`.
+This is separate from the default inert baseline and the 1,304 unchanged-source
+checks. Run `pnpm test:markdown-conformance --html-flow-report --show-mismatches`
+for source, expected/actual projections, conversion issues and fallback reasons;
+add `--example=148` instead of `--show-mismatches` to inspect one case.
+
+The other 78 outputs are **unresolved comparisons**, not 78 proven parser bugs:
+they include the existing 17 intentional policy/caret differences, discarded
+comments, unsupported wrappers/attributes, specialized raw-text fallback, and
+limitations of the current comparator. In particular it strips a reference
+code-block terminator even for authored raw `<pre>` content, retains explicit
+default cell spans, and treats formatting outside versus inside a paragraph as
+different structures. These need source-aware comparison rules with independent
+loss-sensitivity tests, not blanket flattening or removal of whitespace/attributes.
+No missing match has been waived or promoted to full HTML fidelity.
 
 Successful projection reports `block-html-projection` alongside specific losses.
 Exact whole-source export remains available while the document is unchanged;

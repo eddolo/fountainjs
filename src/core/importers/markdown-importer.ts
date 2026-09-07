@@ -1985,7 +1985,17 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     issue = { reason: 'error', message: error instanceof Error ? error.message : 'HTML flow adapter failed; inert HTML blocks retained.' };
   }
   options.onHTMLFlowFallback?.(Object.freeze(issue));
-  return blocks;
+  // Inline adapters and nested containers may already have consumed HTML.
+  // Returning their speculative nodes would make "inert fallback" lossy (for
+  // example, an inline </pre> disappears before a surrounding table rejects
+  // its flow). Reparse only this failed container without HTML adapters. Keep
+  // other dialect options, and do not repeat conversion callbacks/reporters.
+  return parseBlocks(lines, schema, references, {
+    ...options,
+    parseHTMLFlow: undefined, parseHTMLBlock: undefined, parseHTMLInline: undefined,
+    onHTMLFlowFallback: undefined, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
+    onTeXTableIssue: undefined,
+  });
 }
 
 function references(markdown: string, schema: Schema, options: MarkdownImportOptions): { lines: string[]; definitions: References } {
