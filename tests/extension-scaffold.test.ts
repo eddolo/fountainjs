@@ -26,7 +26,8 @@ describe('extension scaffold command', () => {
     const manifest = JSON.parse(readFileSync(join(target, 'package.json'), 'utf8'));
     const source = readFileSync(join(target, 'src/index.ts'), 'utf8');
     const test = readFileSync(join(target, 'test/extension.test.ts'), 'utf8');
-    expect(manifest.peerDependencies['fountainjs-editor']).toBe('^0.3.0');
+    const currentVersion = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+    expect(manifest.peerDependencies['fountainjs-editor']).toBe(`^${currentVersion}`);
     expect(manifest.dependencies).toBeUndefined();
     expect(manifest.exports['.']).toEqual({ types: './dist/index.d.ts', import: './dist/index.js' });
     expect(manifest.scripts.doctor).toContain('fountain.extensions.mjs');

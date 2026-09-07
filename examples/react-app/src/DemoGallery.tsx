@@ -41,6 +41,7 @@ function DemoGallery() {
       </section>
 
       <section className="boundary-section" id="boundaries">
+        <p><a href="./issue-editor.html">Issue editor workflow →</a> — an unofficial GitLab-style bug report with visual/Markdown switching, source-fidelity diagnostics, local image insertion, draft download/reopen, and a separate reader preview. No account or submission server is connected.</p>
         <p><a href="./math-renderer.html">Math renderer lab →</a> — edit typeset formulas, import a real paper’s table, and inspect equation failures and table-layout losses. This capability lab is separate from the ten environment demos.</p>
         <p><a href="./math-references.html">Equation references lab →</a> — edit and reorder the original labelled equations with locally bundled MathJax, save/reopen JSON files, inspect missing/duplicate references, and follow links across paged snapshots. Print or save a current snapshot as PDF; whole-paper layout, accessible PDF and native DOCX math remain separate audit work.</p>
         <div className="boundary-section__heading"><span>WHAT IS ACTUALLY SHARED</span><h2>Framework-neutral does not mean framework-shaped examples.</h2><p>The browser editor has four honest integration boundaries. The gallery uses each one where it belongs.</p></div>

@@ -2,7 +2,28 @@
 
 ## Unreleased
 
+## 0.4.0-beta.1 — Capability preview
+
+Preview release candidate for the `next` npm tag; publication requires the
+release verification workflow and maintainer approval of the staged package.
+This is not completion of the ProseMirror + Tiptap parity programme. Full
+CommonMark conformance, native Word/whole-paper export fidelity, physical-device
+IME/accessibility certification and equivalent framework UI suites remain open.
+The detailed changes below cover the work since 0.3.0.
+
 ### Added
+
+- Unofficial issue-editor workflow lab with visual/source switching, explicitly
+  reported Markdown preservation, separate reader preview, local draft download/
+  reopen and a bounded raster-image adapter. No online issue submission or
+  automatic persistence is implied. See `docs/ISSUE_EDITOR_DEMO.md`.
+- Full-document server HTML import now projects only the parsed body, preventing
+  head title/styles from becoming editable paragraphs. `document-shell-omitted`
+  reports discarded page metadata/styles/attributes; fragment APIs retain their
+  existing Markdown contract. HTML remains a lossy interchange format.
+- Native ranges selecting inline atoms now retain their node selection through
+  asynchronous selection events and Delete; ordinary text clicks still move
+  the caret. This repairs a regression detected by full browser CI.
 
 - Optional Markdown `parseHTMLFlow` / `onHTMLFlowFallback` and server HTML
   `parseFlow` / `parseFlowWithReport` resolve raw HTML scopes across blank-line

@@ -22,6 +22,15 @@ if (result.document.child(1).child(0).marks[0]?.type.name !== 'strong') {
 if (result.issues.length !== 0) throw new Error('Valid server HTML unexpectedly produced recovery issues.');
 if (!exported.includes('<strong>HTML</strong>')) throw new Error('Server runtime HTML export lost the strong mark.');
 
+const fullPage = HTMLExporter.export(result.document, { title: 'Page title must stay outside document content' });
+const reopened = ServerHTMLImporter.parseWithReport(fullPage, schema);
+if (JSON.stringify(reopened.document.toJSON()) !== JSON.stringify(result.document.toJSON())) {
+  throw new Error('Server runtime full-page reopen changed body content or inserted head metadata.');
+}
+if (!reopened.issues.some(issue => issue.code === 'document-shell-omitted')) {
+  throw new Error('Server runtime full-page reopen did not report omitted shell metadata/styles.');
+}
+
 const inline = MarkdownImporter.parse('A <em>one **two**</em>.', schema, { parseHTMLInline: ServerHTMLImporter.parseInline });
 if (inline.textContent !== 'A one two.' || !inline.content[0].content.some(node =>
   node.text === 'two' && node.marks.some(mark => mark.type.name === 'strong') && node.marks.some(mark => mark.type.name === 'em')

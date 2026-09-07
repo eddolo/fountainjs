@@ -23,6 +23,37 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each([false, true])('preserves a native inline-node range but allows returning to text (delete: %s)', async remove => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: { type: 'doc', content: [{ type: 'paragraph', content: [
+        { type: 'text', text: 'Before' },
+        { type: 'inline_image', attrs: { src: 'https://example.com/image.png', alt: 'Status' } },
+        { type: 'text', text: 'After' },
+      ] }] },
+    });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    view.dom.querySelector('[data-fountain-node="inline_image"]')!.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true }));
+    await settleSelection();
+    document.dispatchEvent(new Event('selectionchange'));
+    await settleSelection();
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+    if (remove) {
+      view.dom.dispatchEvent(new KeyboardEvent('keydown', { key: 'Delete', bubbles: true, cancelable: true }));
+      expect(editor.state.doc.child(0).content.map(node => node.type.name)).toEqual(['text', 'text']);
+      expect(editor.getText()).toBe('BeforeAfter');
+    } else {
+      const text = view.dom.querySelector('[data-fountain-text-path="0.2"]')!.firstChild!;
+      document.getSelection()!.setBaseAndExtent(text, 2, text, 2);
+      document.dispatchEvent(new Event('selectionchange'));
+      await settleSelection();
+      expect(editor.state.selection.eq(Selection.cursor([0, 2], 2))).toBe(true);
+    }
+    view.destroy();
+    mount.remove();
+  });
+
   it.each([false, true])('maps paragraph-element boundaries and preserves backward formatting (end boundary: %s)', async end => {
     const editor = createEditor({
       schema: StarterKit.schema, plugins: StarterKit.plugins,

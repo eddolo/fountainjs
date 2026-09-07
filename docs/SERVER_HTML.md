@@ -22,6 +22,26 @@ the editor root, React, Web Component, Yjs, or DOM view does not load them.
 
 ## What is preserved
 
+`parse` / `parseWithReport` parse a **complete HTML document** and project its
+body, matching the browser importer's detached `DOMParser` contract. A full
+`HTMLExporter.export(doc)` page can therefore reopen without its `<title>` or
+head stylesheet becoming an editable paragraph. The parser handles implied
+head/body boundaries, comments and HTML recovery rather than stripping tags
+with regular expressions. Detached document parsing uses scripting-disabled
+`noscript` interpretation. This does not execute scripts or fetch resources.
+
+`document-shell-omitted` reports discarded head elements, document-shell
+attributes or non-body framesets. Page metadata, stylesheets, document-level
+language/direction and original layout are not retained. Doctype omission in
+ordinary pasted snippets is not reported as an error. Whole-input tree limits
+still apply, including ignored head content and the parser's implicit html/head/
+body nodes. Use JSON for persistence, not HTML for full source retention.
+
+`parseFragment` / `parseFragmentWithReport` deliberately keep their existing
+fragment interpretation for Markdown adapters; they are not full-page readers.
+The distinction follows parse5's [document parser](https://parse5.js.org/functions/parse5.parse.html)
+and [scripting option](https://parse5.js.org/interfaces/parse5.ParserOptions.html).
+
 For Markdown inline content, use the separate `parseInline(segments, schema)`
 method (static or instance), or instance `parseInlineWithReport` for
 `{ nodes, issues }`. Connect this to `MarkdownImportOptions.parseHTMLInline`.

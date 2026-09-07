@@ -23,11 +23,15 @@ jobs:
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
       - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - uses: denoland/setup-deno@v2
         with:
           deno-version: lts
       - run: npm install --global npm@12.0.2
       - run: pnpm install --frozen-lockfile
+      - run: python -m pip install --disable-pip-version-check python-docx==1.2.0
       - name: Verify release tag and changelog
         if: github.event_name == 'release'
         run: node scripts/check-release.mjs --tag "${{ github.event.release.tag_name }}"
@@ -35,7 +39,8 @@ jobs:
       - run: bun scripts/smoke-server-html-runtime.mjs
       - run: deno run --allow-read scripts/smoke-server-html-runtime.mjs
       - run: pnpm dlx publint@0.3.24
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./docx ./document-utilities ./emoji-data ./react ./vue ./svelte ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
       - run: pnpm pack --dry-run
       - name: Verify npm trusted publisher
         if: github.event_name == 'workflow_dispatch'
@@ -45,4 +50,9 @@ jobs:
       # A maintainer must still inspect and approve the stage with npm 2FA.
       - name: Stage package on npm
         if: github.event_name == 'release'
-        run: npm stage publish . --access public
+        run: |
+          if node --input-type=module -e "import p from './package.json' with { type: 'json' }; process.exit(p.version.includes('-') ? 0 : 1)"; then
+            npm stage publish . --access public --tag next
+          else
+            npm stage publish . --access public --tag latest
+          fi

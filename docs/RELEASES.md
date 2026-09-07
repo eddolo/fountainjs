@@ -7,6 +7,15 @@ development.
 
 ## Stability levels
 
+The `0.4.0-beta.1` candidate is an incremental capability preview, not parity
+certification. Prereleases are staged explicitly under `next`; stable versions
+use `latest`. The GitHub release must be marked as a prerelease, and the same
+commit must pass full CI before staging. A maintainer still approves the stage
+using npm 2FA. Do not use a token previously shared in chat. npm's
+[stage tag is immutable](https://docs.npmjs.com/cli/v11/commands/npm-stage/), so
+inspect the version and `next` tag before approval; do not move `latest` as a
+side effect of this preview.
+
 | Surface | Current level | Compatibility rule |
 | --- | --- | --- |
 | Persisted versioned document envelope | Stable format v1 | Readers fail closed on unknown future versions. A format bump requires a sequential migration and fixtures. |

@@ -16,6 +16,45 @@ import { RubyExtension } from '../src/ruby';
 import { createWidgetExtension, defineWidget } from '../src/widgets';
 import { TableMap } from '../src/core/table-map';
 
+describe('full HTML document reopening', () => {
+  const schema = new Schema(composeExtensions([CoreExtension]).schema);
+
+  it('reopens a complete exported page without inserting its title or stylesheet into the body', () => {
+    expect(typeof document).toBe('undefined');
+    const original = schema.node('doc', {}, [
+      schema.node('heading', { level: 2, align: 'center' }, [schema.text('Meeting report')]),
+      schema.node('paragraph', { align: 'right' }, [schema.text('Decision retained')]),
+    ]);
+    const html = HTMLExporter.export(original, { title: 'Private browser-tab title' });
+    const reopened = ServerHTMLImporter.parseWithReport(html, schema);
+    expect(reopened.document.toJSON()).toEqual(original.toJSON());
+    expect(reopened.issues).toContainEqual(expect.objectContaining({ code: 'document-shell-omitted' }));
+  });
+
+  it.each([
+    '<!doctype html><html><head><title>Ignore me</title></head><body><p>Keep me</p></body></html>',
+    '<head><title>Ignore me</title><meta name="author" content="Someone"></head><body><p>Keep me</p></body>',
+    '<title>Ignore me</title><p>Keep me</p>',
+    '<!-- a misleading </head><body> --><TITLE>Ignore &lt;body&gt; me</TITLE><p>Keep me</p>',
+  ])('uses HTML document scope recovery, not string slicing: %s', source => {
+    expect(ServerHTMLImporter.parse(source, schema).textContent).toBe('Keep me');
+  });
+
+  it('keeps document and fragment contracts separate for title and noscript scopes', () => {
+    expect(ServerHTMLImporter.parseFragment('<title>Literal fragment title</title>', schema)[0]?.textContent).toBe('Literal fragment title');
+    expect(ServerHTMLImporter.parse('<title>Page title</title>', schema).textContent).toBe('');
+    expect(ServerHTMLImporter.parse('<body><noscript><p>Readable fallback</p></noscript></body>', schema).textContent).toBe('Readable fallback');
+    expect(ServerHTMLImporter.parseWithReport('<p>Ordinary paste</p>', schema).issues).toEqual([]);
+  });
+
+  it('checks limits in omitted head content and reports document shell losses', () => {
+    expect(() => ServerHTMLImporter.parse('<head><meta content="12345"></head><body>OK</body>', schema, { maxAttributeValueLength: 4 })).toThrow(HTMLImportLimitError);
+    const result = ServerHTMLImporter.parseWithReport('<html lang="ar"><body style="color:red"><p>Text</p></body></html>', schema);
+    expect(result.issues).toContainEqual(expect.objectContaining({ code: 'document-shell-omitted' }));
+    expect(result.document.textContent).toBe('Text');
+  });
+});
+
 describe('server HTML list numbering', () => {
   it.each(['start="-3"', 'reversed', 'type="A"', 'type="i"'])('reports unsupported list numbering: %s', attrs => {
     const schema = new Schema(composeExtensions([CoreExtension]).schema);

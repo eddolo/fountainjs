@@ -13,6 +13,58 @@ import { angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
 import { textAlignmentJourney } from './text-alignment-journey';
+import { fullReportHTML, htmlDocumentJourney } from './html-document-journey';
+import { issueEditorJourney } from './issue-editor-journey';
+
+test('writes and reopens an issue with visual Markdown source fidelity and reader preview', async ({ page }, info) => {
+  await issueEditorJourney(page, info);
+});
+
+test('issue workflow reports source regeneration and validates local image files', async ({ page }) => {
+  await page.goto('/issue-editor.html');
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  const source = page.getByRole('textbox', { name: 'Markdown description', exact: true });
+  const reference = 'Editable paragraph.\n\nA [reference][doc].\n\n[doc]: https://example.com/docs\n';
+  await source.fill(reference);
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  await expect(source).toHaveValue(reference);
+  await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
+  await expect(page.getByLabel('Fountain diagnostics')).toContainText('exact');
+  const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+  await editor.getByText('Editable paragraph.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Changed.');
+  await expect(page.getByLabel('Fountain diagnostics')).toContainText('canonical');
+  const input = page.locator('input[type="file"][accept="image/*"]');
+  await input.setInputFiles({ name: 'not-image.txt', mimeType: 'text/plain', buffer: Buffer.from('Not an image') });
+  await expect(page.getByRole('alert')).toContainText('Choose a PNG');
+  await expect(editor.locator('img')).toHaveCount(0);
+  await input.setInputFiles({ name: 'status.gif', mimeType: 'image/gif', buffer: Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64') });
+  const image = editor.getByRole('img', { name: 'status.gif', exact: true });
+  await expect(image).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBe(1);
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  await expect(source).toHaveValue(/data:image\/gif;base64,/);
+});
+
+test('reopens a full HTML report without promoting page metadata into editor content', async ({ page }, info) => {
+  await htmlDocumentJourney(page, info);
+});
+
+test('matches native document parsing for HTML envelopes, recovery, and noscript', async ({ page }) => {
+  await page.goto('/browser-tests.html');
+  for (const source of [fullReportHTML,
+    '<title>Head only</title>',
+    '<head><title>Hidden</title></head><body><p>Visible</p></body>',
+    '<!-- </head><body> --><TITLE>Hidden &lt;body&gt;</TITLE><p>Visible</p>',
+    '<body><noscript><p>Offline <strong>fallback</strong></p></noscript></body>',
+    '<table><tr><td>Recovered</td></tr></table><title>Title after body content</title>',
+  ]) {
+    const result = await page.evaluate(source => (globalThis as any).fountainBrowserTest.inspectHTMLDocument(source), source);
+    expect(result.server, source).toEqual(result.browser);
+  }
+});
 
 test('aligns selected paragraphs using backward selection, toolbar, history and HTML export', async ({ page }, info) => {
   await textAlignmentJourney(page, info);

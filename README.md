@@ -12,6 +12,12 @@ Underneath those ready-made features is a modular editing engine: a typed docume
 
 > `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
 
+The repository is preparing `0.4.0-beta.1` as a `next`-tag preview. Publication
+requires CI and npm staged approval; this is not a claim of completed parity.
+Try the [issue-editor workflow](https://eddolo.github.io/fountainjs/issue-editor.html)
+and read its [API walkthrough](docs/ISSUE_EDITOR_DEMO.md). Check npm's published
+versions before installing the candidate.
+
 ## What “language agnostic” means
 
 The editor runtime is JavaScript/TypeScript because it edits a browser DOM. FountainJS does not pretend an npm package executes natively in Python or Go.

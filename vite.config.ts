@@ -41,6 +41,7 @@ export default defineConfig({
         main: fileURLToPath(new URL('./examples/react-app/index.html', import.meta.url)),
         developers: fileURLToPath(new URL('./examples/react-app/developers.html', import.meta.url)),
         demos: fileURLToPath(new URL('./examples/react-app/demos.html', import.meta.url)),
+        issueEditor: fileURLToPath(new URL('./examples/react-app/issue-editor.html', import.meta.url)),
         mathRenderer: fileURLToPath(new URL('./examples/react-app/math-renderer.html', import.meta.url)),
         mathReferences: fileURLToPath(new URL('./examples/react-app/math-references.html', import.meta.url)),
         ...Object.fromEntries(demoSlugs.map((slug) => [

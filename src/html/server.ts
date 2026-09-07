@@ -1,5 +1,5 @@
 import { is as matchesSelector, selectAll } from 'css-select';
-import { parseFragment, type ParserError } from 'parse5';
+import { parse as parseDocument, parseFragment, type ParserError } from 'parse5';
 import {
   adapter as htmlparser2Adapter,
   type Htmlparser2TreeAdapterMap,
@@ -64,6 +64,7 @@ export type ServerHTMLImportIssueCode =
   | 'unmapped-inline-element'
   | 'discarded-html-comment'
   | 'rejected-url'
+  | 'document-shell-omitted'
   | 'inline-html-projection'
   | 'block-html-projection';
 
@@ -1367,7 +1368,7 @@ export class ServerHTMLImporter {
   }
 
   parseWithReport(html: string, schema: Schema): ServerHTMLImportResult {
-    const result = this.parseFragmentWithReport(html, schema);
+    const result = this.parseContent(html, schema, true);
     const document = schema.topNodeType.create(
       {},
       result.nodes.length ? result.nodes : [schema.node('paragraph', {}, [schema.text('')])],
@@ -1381,6 +1382,10 @@ export class ServerHTMLImporter {
   }
 
   parseFragmentWithReport(html: string, schema: Schema): ServerHTMLFragmentImportResult {
+    return this.parseContent(html, schema, false);
+  }
+
+  private parseContent(html: string, schema: Schema, documentMode: boolean): ServerHTMLFragmentImportResult {
     if (typeof html !== 'string') throw new TypeError('HTML input must be a string.');
     const inputBytes = utf8Length(html);
     if (inputBytes > this.options.maxInputBytes) {
@@ -1391,16 +1396,35 @@ export class ServerHTMLImporter {
     }
     const issues: ServerHTMLImportIssue[] = [];
     const context: ImportContext = { issues, issueKeys: new Set() };
-    const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
+    const parse = documentMode ? parseDocument<Htmlparser2TreeAdapterMap> : parseFragment<Htmlparser2TreeAdapterMap>;
+    const fragment = parse(html, {
       treeAdapter: htmlparser2Adapter,
+      // DOMParser's detached HTML documents use the disabled scripting mode.
+      // Keep fragment/Markdown interpretation backward compatible.
+      scriptingEnabled: !documentMode,
       onParseError: (error) => {
+        // Bare snippets are a supported document-import input, not a warning
+        // merely because they do not carry a page's optional doctype envelope.
+        if (documentMode && error.code === 'missing-doctype') return;
         if (issues.filter((issue) => issue.code === 'html-parse-error').length < this.options.maxParseErrors) {
           issues.push(parseErrorIssue(error));
         }
       },
     });
     validateTree(fragment, this.options, context);
-    const root = rootSource(fragment);
+    let root = rootSource(fragment);
+    if (documentMode) {
+      const shell = root.childNodes.find((node): node is SourceElement => node.kind === 'element' && node.tagName === 'html');
+      const head = shell?.children.find(node => node.tagName === 'head');
+      const body = shell?.children.find(node => node.tagName === 'body');
+      if (!body || head?.children.length || [shell, head, body].some(node => node && htmlparser2Adapter.getAttrList(node.raw).length)) {
+        reportOnce(context, {
+          code: 'document-shell-omitted',
+          message: 'Only the HTML document body was imported. Head metadata, stylesheets, document-shell attributes and non-body framesets are not preserved; external resources are not fetched.',
+        });
+      }
+      root = body ?? { childNodes: [], textContent: '' };
+    }
     const blocks = blockChildren(root, schema, context);
     if (!blocks.length && root.textContent) {
       blocks.push(schema.node('paragraph', {}, [schema.text(root.textContent)]));

@@ -108,6 +108,21 @@ export class SelectionHandler {
     const domSelection = document.getSelection();
     delete (this as SelectionHandler & DirectionState)._b;
     if (!domSelection?.anchorNode || !domSelection.focusNode || !this.dom.contains(domSelection.anchorNode)) return null;
+    // selectNode(inlineAtom) uses two offsets on its paragraph parent. Those
+    // endpoints are the existing semantic selection, not a new text caret.
+    // Preserve only the exact native range; a subsequent click in text must
+    // still be allowed to replace the node selection.
+    const semantic = this.editor.state.selection;
+    if (semantic instanceof NodeSelection && domSelection.rangeCount === 1) {
+      const selected = this.nodeElement(semantic.nodePath) ?? this.textElement(semantic.nodePath);
+      const parent = selected?.parentNode;
+      if (selected && parent) {
+        const index = Array.prototype.indexOf.call(parent.childNodes, selected) as number;
+        const range = domSelection.getRangeAt(0);
+        if (range.startContainer === parent && range.endContainer === parent
+          && range.startOffset === index && range.endOffset === index + 1) return null;
+      }
+    }
     const anchorPoint = this.readPoint(domSelection.anchorNode, domSelection.anchorOffset);
     const focusPoint = this.readPoint(domSelection.focusNode, domSelection.focusOffset);
     if (!anchorPoint || !focusPoint) return null;

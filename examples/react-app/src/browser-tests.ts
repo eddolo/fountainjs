@@ -1302,6 +1302,14 @@ Object.assign(globalThis, {
     inspectMarkdown,
     inspectMarkdownSource,
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
+    inspectHTMLDocument: async (source: string) => {
+      const { ServerHTMLImporter } = await import('fountainjs-editor/html/server');
+      const { HTMLImporter, Schema, StarterKit } = await import('fountainjs-editor');
+      const schema = new Schema(StarterKit.schema);
+      const browser = HTMLImporter.parse(source, schema);
+      const server = ServerHTMLImporter.parseWithReport(source, schema);
+      return { browser: browser.toJSON(), server: server.document.toJSON(), issues: server.issues };
+    },
     performanceBudget: runPerformanceBudget,
     virtualizationBudget: runVirtualizationBudget,
     docxVisual: { render: renderDOCXVisualComparison, math: async () => (await import('./docx-math-audit')).mountDOCXMathAudit() },

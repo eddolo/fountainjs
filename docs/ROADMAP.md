@@ -33,12 +33,44 @@ remains consumer-owned; this proves alignment, not pixel-identical styling.
 The initial browser-selection failure and the interrupted stale-Vite-import
 run remain retained rather than counted as passes. No npm release is claimed.
 
-New export follow-up from this audit: passing a full `HTMLExporter` page to the
-server importer's fragment parser can insert the `<title>` text as an extra
-paragraph. Fragment round-trips retain alignment, but full-page body extraction
-and metadata handling need separate browser/server parity tests and a fix.
-Do not count full HTML save/reopen fidelity as complete. This remains part of
-the existing FORMAT work, not a reason to narrow it to fragments.
+Full-page HTML follow-through (2026-09-07): document import now uses document
+parsing and body projection; head titles/styles no longer become paragraphs.
+Ignored page metadata/styles/attributes receive `document-shell-omitted` loss
+reports. Separate fragment APIs retain their Markdown behavior. Node and
+browser tests cover implied boundaries, recovery and noscript. The recorded
+report retains headings/alignment, ordered starts, tables and editable content;
+consumer-owned CSS remains visibly different, not pixel-identical retention.
+
+Release-readiness follow-through also repairs the inline-image selection
+regression exposed by full CI: an exact native range around an inline atom
+must stay a node selection, not collapse into a paragraph text caret. New
+tests cover asynchronous selectionchange, deletion and returning to text.
+
+The separate unofficial issue-editor lab now demonstrates visual/Markdown
+switching, safely mapped untouched source, table editing, task toggle/undo,
+reader preview and local Markdown draft download/reopen. Its diagnostics label
+collaboration, pagination, virtualization and server runtimes as inactive or
+unmeasured. Cross-block reference-source fidelity remains an explicit gap.
+See [the workflow/API guide](ISSUE_EDITOR_DEMO.md). Automated text checks alone
+missed excessive task/code heights; visual inspection caught and corrected the
+host CSS selector. Recorded evidence is in `artifacts/issue-html-20260907-recorded-v3/`.
+
+The user's incremental publication request is being prepared as
+`0.4.0-beta.1` under npm `next`, with full verification and maintainer staged
+approval still required. This does not mark the parity programme complete or
+claim that the preview is already published.
+
+Verification for this increment: `pnpm check` passes 1,235 tests in 105 files,
+385 public declarations, Node/workerd/headless/conformance and unchanged
+performance limits. Aggregate code measures 1367.6 KiB ESM / 1137.0 KiB CJS;
+ceilings increase by 1 KiB each to 1368 / 1138, with individual entry limits
+unchanged. Seventeen final browser checks pass across three desktop engines
+and the two touch-emulation reorder checks under
+`artifacts/issue-html-selection-20260907-browser-v3/`. The recorded HTML and
+issue journeys pass and their images/video frames were inspected. Package lint,
+packed type-resolution checks (Angular remains ESM-only), release metadata and
+the website production build pass. The previous full CI failure is retained
+as evidence; a fresh full CI run is still required before npm staging.
 
 DOCX list-numbering follow-through (2026-09-07): export no longer resets ordinary
 custom starts to 1 or shares one counter between separate lists. Each list has
@@ -1007,11 +1039,12 @@ performance, and browser behavior:
   backed by the existing structured GitHub form; request Fountain version,
   framework/runtime, browser/OS, minimal reproduction, expected/actual behavior,
   and sanitized document JSON without asking users to publish private content;
-- an explicitly unofficial GitLab-style issue-editor workflow demo, using no
-  copied branding or implication of affiliation. The proof must exercise a
-  rich/Markdown switch, exact untouched-source preservation after a visual
-  edit, tasks, tables, code, links, host-owned uploads, and Fountain diagnostics
-  for virtualization, headless runtimes, collaboration, and pagination. Link
+- extend the delivered unofficial issue-editor workflow lab, using no copied
+  branding or implication of affiliation. The first increment demonstrates
+  rich/Markdown switching, safely mapped untouched source, tasks, tables, code,
+  links and local draft reopening. Still add measured integrated diagnostics
+  for virtualization, headless runtimes, collaboration and pagination, plus
+  authenticated upload/submission reference workflows. Link
   [GitLab's public architecture evidence](https://docs.gitlab.com/development/fe_guide/content_editor/)
   that its real rich editor uses Tiptap/ProseMirror, and present this as a
   recognizable replacement-workflow test rather than a visual clone;

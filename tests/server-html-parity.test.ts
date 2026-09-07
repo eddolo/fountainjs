@@ -29,6 +29,7 @@ const schema = new Schema(composeExtensions([
 ]).schema);
 
 const fixtures = [
+  '<!doctype html><html><head><title>Not body text</title><style>p{color:red}</style></head><body><h2>Visible heading</h2><p>Visible text</p></body></html>',
   '<h2 style="text-align:center">Title</h2><p><strong>Bold</strong> <em>italic</em> <a href="https://example.com" target="_self">link</a></p>',
   '<blockquote><p>Before <ruby>東京<rt>とうきょう</rt></ruby>.</p><ol start="3"><li>One<ul><li>Nested</li></ul></li></ol></blockquote>',
   '<table><thead><tr><th colspan="2" data-colwidth="100,140">Head</th></tr></thead><tbody><tr><td rowspan="2">A</td><td>B</td></tr><tr><td>C</td></tr></tbody></table>',
@@ -292,7 +293,19 @@ describe('browser and server HTML semantic parity', () => {
   it.each(fixtures)('produces identical validated Fountain JSON for %s', (html) => {
     const browser = HTMLImporter.parse(html, schema);
     const server = ServerHTMLImporter.parseWithReport(html, schema);
-    expect(server.issues).toEqual([]);
+    expect(server.issues.filter(issue => issue.code !== 'document-shell-omitted')).toEqual([]);
     expect(server.document.toJSON()).toEqual(browser.toJSON());
+  });
+
+  it.each([
+    '<head><title>Not body text</title></head><body><p>Visible</p></body>',
+    '<title>Not body text</title><p>Visible</p>',
+    '<!-- </head><body> --><TITLE>Not &lt;body&gt; text</TITLE><p>Visible</p>',
+    '<body><noscript><p>Offline <strong>fallback</strong></p></noscript></body>',
+    '<html><head><title>Empty document</title></head><body></body></html>',
+    '<frameset><frame src="https://example.invalid/frame"></frameset>',
+    '<table><tr><td>Recovered</td></tr></table><title>Title after body content</title>',
+  ])('matches detached browser document recovery for %s', html => {
+    expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(HTMLImporter.parse(html, schema).toJSON());
   });
 });

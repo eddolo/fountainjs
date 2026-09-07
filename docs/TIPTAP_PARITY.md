@@ -19,8 +19,12 @@ container, whole-document and table-cell formatting. It also fixes native
 paragraph-element DOM endpoints that previously left a stale model caret during
 backward keyboard selection. Recorded toolbar/history/HTML-reader evidence and
 cross-browser checks cover this repair; it does not close explicit RTL direction
-or localization. A newly observed full-HTML-page/server-fragment title leak is
-recorded in [ROADMAP.md](ROADMAP.md) as unresolved export/reopen work.
+or localization. Full-page HTML body extraction now fixes the title/stylesheet
+leak with explicit document-shell loss reports; complete source/layout retention
+is not claimed. Full CI then exposed inline-atom selection loss, repaired by
+preserving its exact native node range. The new issue-editor workflow provides
+recorded visual/source/draft/reader evidence, not full GitLab compatibility.
+See [ROADMAP.md](ROADMAP.md) and [the workflow guide](ISSUE_EDITOR_DEMO.md).
 
 Current Markdown follow-through (2026-09-07): optional raw-HTML block conversion
 and inline HTML scope projection connect the isolated server importer to
