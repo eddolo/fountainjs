@@ -1652,6 +1652,23 @@ resolution, bibliography support, or a full TeX compiler. Canonical export uses
 Fountain's `$$` wrapper around the complete retained environment. Without the
 option, existing Markdown interpretation is unchanged.
 
+`texTables: true` opts into **lossy structural projection**, independently of
+`texMathEnvironments`. Simple `tabular` environments (optionally inside `table`)
+support l/c/r columns, rectangular rows, plain text, TeX-escaped special
+characters and `$...$` inline math. Required schema nodes must be present.
+Cells become `table_cell` nodes with aligned paragraphs; a horizontal rule does
+not imply semantic header cells. No TeX commands are executed. Float placement,
+vertical rules and horizontal rules are not represented in the document;
+`onTeXTableIssue` receives `{ source, code: 'layout-projection', message }` for
+each omitted layout category. Hosts should show these diagnostics to users.
+Unsupported complete tables retain their literal source in a paragraph and
+report `code: 'unsupported-syntax'`. This includes captions, labels, merged
+cells, width specifications, row-spacing options and unknown commands.
+Complete environments are limited to 20,000 source code units, with at most
+100 columns and 1,000 rows; unmatched/oversized environments retain ordinary
+Markdown interpretation. Unchanged source snapshots remain exact, but edited
+documents exported as Markdown are **not** a TeX source/layout round trip.
+
 `MarkdownImporter.parseWithSource(source, schema)` returns
 `{ document, source }`. The immutable `MarkdownSourceSnapshot` keeps the exact
 input, detected line ending, body, and optional inert YAML frontmatter. Fountain

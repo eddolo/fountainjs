@@ -25,6 +25,18 @@ export function texMathCloses(line: string, environment: string): boolean {
 export function texMathBlock(lines: readonly string[], start: number): { source: string; end: number } | null {
   const environment = texMathStart(lines[start]);
   if (!environment) return null;
+  return texEnvironmentBlock(lines, start);
+}
+
+export function texTableStart(line: string): string | null {
+  return /^ {0,3}\\begin\{(table|tabular)\}/u.exec(line)?.[1] ?? null;
+}
+
+export function texTableBlock(lines: readonly string[], start: number): { source: string; end: number } | null {
+  return texTableStart(lines[start]) ? texEnvironmentBlock(lines, start) : null;
+}
+
+function texEnvironmentBlock(lines: readonly string[], start: number): { source: string; end: number } | null {
   let length = 0;
   const stack: string[] = [];
   for (let index = start; index < lines.length; index++) {

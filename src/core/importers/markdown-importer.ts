@@ -2,7 +2,8 @@ import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
-import { texMathBlock, texMathStart, texMathCloses } from '../markdown-tex';
+import { texMathBlock, texMathStart, texMathCloses, texTableBlock, texTableStart } from '../markdown-tex';
+import { projectTeXTableSource } from '../tex-table';
 import { markdownHTMLBlock, markdownHTMLBlockEnd, markdownEmptyParagraph, markdownHTMLTokenEnd as inlineHTMLTokenEnd, type MarkdownHTMLBlock } from '../markdown-html';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
@@ -30,6 +31,10 @@ export interface MarkdownHTMLInlineFallback {
 }
 
 export interface MarkdownImportOptions {
+  /** Explicit, lossy projection of simple TeX tabular cells/alignment; not a TeX compiler. */
+  readonly texTables?: boolean;
+  /** Unsupported syntax stays literal; successful projections report omitted float/rule layout. */
+  readonly onTeXTableIssue?: (issue: { readonly source: string; readonly code: 'unsupported-syntax' | 'layout-projection'; readonly message: string }) => void;
   /**
    * Opt-in standalone TeX equation/align/gather/multline/displaymath environments
    * (including starred variants). Requires a math_block schema node. Retains
@@ -277,7 +282,7 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
   for (let index = 0; index < segments.blocks.length; index += 1) {
     const segment = segments.blocks[index];
     const parsed = new MarkdownImporter().parse(segment.source, schema, {
-      ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
+      ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined, onTeXTableIssue: undefined,
     });
     const original = document.content[index];
     if (parsed.content.length !== 1 || !parsed.content[0].eq(original)) return undefined;
@@ -1470,8 +1475,8 @@ function collectListItem(
       return;
     }
     fence = markdownFence(value);
-    if (!fence && options.texMathEnvironments && schema.nodes.math_block) {
-      const opening = texMathStart(value);
+    if (!fence) {
+      const opening = texStart(value, schema, options);
       if (opening) {
         tex = texMathCloses(value, opening) ? null : opening;
         paragraphOpen = false;
@@ -1601,7 +1606,7 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
   const line = lines[index] ?? '';
   const marker = listMarker(line);
   return !!(markdownFence(line)
-    || (options.texMathEnvironments && schema.nodes.math_block && texMathBlock(lines, index))
+    || texBlockAt(lines, index, schema, options)
     || markdownHTMLBlock(line, true)
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
@@ -1613,6 +1618,18 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
     || blockImage(line, references)
     || footnoteDefinitionAt(lines, index, schema)
     || (schema.nodes.details && schema.nodes.details_summary && detailsStart(line)));
+}
+
+function texStart(line: string, schema: Schema, options: MarkdownImportOptions): string | null {
+  return (options.texMathEnvironments && schema.nodes.math_block ? texMathStart(line) : null)
+    ?? (options.texTables ? texTableStart(line) : null);
+}
+
+function texBlockAt(lines: readonly string[], index: number, schema: Schema, options: MarkdownImportOptions) {
+  const math = options.texMathEnvironments && schema.nodes.math_block ? texMathBlock(lines, index) : null;
+  if (math) return { ...math, kind: 'math' as const };
+  const table = options.texTables ? texTableBlock(lines, index) : null;
+  return table ? { ...table, kind: 'table' as const } : null;
 }
 
 function projectHTMLBlock(html: string, schema: Schema, options: MarkdownImportOptions): readonly Node[] | null {
@@ -1714,8 +1731,31 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     // Definitions discovered globally remain in container source until this
     // block pass, so removing one cannot turn its list into an empty item.
-    const tex = options.texMathEnvironments && schema.nodes.math_block ? texMathBlock(lines, index) : null;
+    const tex = texBlockAt(lines, index, schema, options);
     if (tex) {
+      if (tex.kind === 'table') {
+        const projection = projectTeXTableSource(tex.source);
+        let table: Node | null = null;
+        try {
+          if (projection) {
+            table = schema.node('table', {}, projection.rows.map(row => schema.node('table_row', {}, row.map((cell, column) => (
+              schema.node('table_cell', {}, [schema.node('paragraph', { align: projection.alignments[column] }, cell.map(segment => (
+                segment.kind === 'math' ? schema.node('inline_math', { latex: segment.value, ariaLabel: '' }) : schema.text(segment.value)
+              )))])
+            )))));
+            schema.validate(table);
+          }
+        } catch { table = null; }
+        if (table && projection) {
+          blocks.push(table);
+          projection.layoutLosses.forEach(message => options.onTeXTableIssue?.({ source: tex.source, code: 'layout-projection', message }));
+        } else {
+          blocks.push(schema.node('paragraph', {}, [schema.text(tex.source)]));
+          options.onTeXTableIssue?.({ source: tex.source, code: 'unsupported-syntax', message: 'Unsupported TeX table syntax or schema; retained complete literal source without interpreting cells.' });
+        }
+        index = tex.end;
+        continue;
+      }
       try {
         const node = schema.node('math_block', { latex: tex.source, ariaLabel: '' });
         schema.validate(node);
@@ -1781,7 +1821,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       // A short body row may omit pipes; a real new block ends the table.
       // A one-line probe excludes tableStart itself from the termination test.
       while (index < lines.length && lines[index].trim() && !startsBlock([lines[index]], 0, references, schema, options)
-        && !(options.texMathEnvironments && schema.nodes.math_block && texMathBlock(lines, index))) {
+        && !texBlockAt(lines, index, schema, options)) {
         rows.push(schema.node('table_row', {}, cells(tableCells(lines[index]), 'table_cell')));
         index++;
       }
@@ -1820,8 +1860,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
             paragraphOpen = false;
           } else {
             fence = markdownFence(deepest);
-            if (!fence && options.texMathEnvironments && schema.nodes.math_block) {
-              const opening = texMathStart(deepest);
+            if (!fence) {
+              const opening = texStart(deepest, schema, options);
               if (opening) {
                 tex = texMathCloses(deepest, opening) ? null : opening;
                 paragraphOpen = false;
@@ -1899,8 +1939,7 @@ function references(markdown: string, schema: Schema, options: MarkdownImportOpt
   for (let index = 0; index < sourceLines.length;) {
     // Claim complete math before tab expansion or definition discovery can
     // mutate its opaque TeX. Containers recurse with their structural prefix removed.
-    const tex = !fence && options.texMathEnvironments && schema.nodes.math_block
-      ? texMathBlock(originalLines, index) : null;
+    const tex = !fence ? texBlockAt(originalLines, index, schema, options) : null;
     if (tex) {
       lines.push(...originalLines.slice(index, tex.end));
       index = tex.end;
@@ -2073,8 +2112,7 @@ function extractFootnoteDefinitions(
       paragraphOpen = false;
       continue;
     }
-    const tex = options.texMathEnvironments && schema.nodes.math_block
-      ? texMathBlock(lines, index) : null;
+    const tex = texBlockAt(lines, index, schema, options);
     if (tex) { index = tex.end; paragraphOpen = false; continue; }
     const marker = listMarker(lines[index]);
     if (marker && marker.indent < 4 && !thematicBreak(lines[index])

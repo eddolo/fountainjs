@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
+import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 
 test('human real-renderer journey: edit a typeset equation, inspect a published failure, and recover', async ({ page }, info) => {
   await page.goto('/math-renderer.html');
@@ -41,4 +42,40 @@ test('human real-renderer journey: edit a typeset equation, inspect a published 
   await expect(math.locator('.katex')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.screenshot({ path: info.outputPath('04-narrow-screen-real-formula.png') });
+});
+
+test('human academic table journey: inspect projection losses, edit a value, undo and export', async ({ page }, info) => {
+  await page.goto('/math-renderer.html');
+  await page.getByLabel('Reference sample').selectOption('3');
+  await page.getByRole('button', { name: 'Load sample (replaces editor)' }).click();
+  const diagnostics = page.getByRole('complementary', { name: 'TeX import diagnostics' });
+  await expect(diagnostics.getByRole('listitem')).toHaveCount(3);
+  const table = page.getByRole('textbox', { name: 'Math renderer editor' }).locator('table');
+  await expect(table.locator('tr')).toHaveCount(7);
+  await expect(table.locator('td')).toHaveCount(21);
+  for (let row = 1; row < 7; row++) {
+    await expect(table.locator('tr').nth(row).locator('td')).toHaveText([...academicTableValues[row]]);
+  }
+  await table.locator('tr').nth(1).locator('td').nth(1).click();
+  await table.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath('01-imported-original-table.png') });
+  const cell = table.locator('tr').nth(1).locator('td').nth(1);
+  await cell.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Shift+Home');
+  await page.keyboard.type('8.7e-6');
+  await expect(cell).toHaveText('8.7e-6');
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(cell).toHaveText('8.6e-6');
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(cell).toHaveText('8.7e-6');
+  await page.getByText('Markdown export', { exact: true }).click();
+  await expect(page.locator('details').last()).toContainText('8.7e-6');
+  await expect(page.locator('details').last()).toContainText('2.72');
+  await table.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath('02-edited-table-and-export.png') });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await table.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  await page.screenshot({ path: info.outputPath('03-narrow-screen-table.png') });
 });

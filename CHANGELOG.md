@@ -4,6 +4,12 @@
 
 ### Added
 
+- Opt-in TeX `tabular` projection into editable cells with l/c/r alignment,
+  escaped text and inline math. The real paper's 21 values are checked against
+  pinned source. Float placement and rules produce explicit import diagnostics;
+  unsupported commands, captions, spans, widths and row-spacing syntax stay
+  literal. The public lab includes the table and visible conversion differences.
+
 - Explicit `MarkdownImportOptions.texMathEnvironments` recognition for complete
   equation/align/gather/multline/displaymath source with labels and comments
   retained. Reference and footnote discovery cannot consume those math blocks.

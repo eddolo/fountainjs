@@ -34,8 +34,9 @@ independent all-page export inspection, and explicit differences against the
 original domain tools. This is required evidence, not a future cosmetic demo.
 The first paper preflight found missing display-equation and TeX-table import.
 Explicit TeX-environment import now recognizes both original equations without
-discarding their labels; table import, label rendering and whole-paper fidelity
-remain open. See the open
+discarding their labels. Table structure and all 21 original values now import
+with explicit placement/rule-loss diagnostics; label rendering, table layout
+and whole-paper fidelity remain open. See the open
 [reference-document benchmark and pinned sources](REFERENCE_DOCUMENT_AUDIT.md).
 
 Explicit content interpretation (user suggestion, 2026-09-07): provide a consistent

@@ -1,6 +1,30 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
+import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
+
+test('imports the published TeX table with visible losses and editable numeric values', async ({ page }) => {
+  await page.goto('/math-renderer.html');
+  await page.getByLabel('Reference sample').selectOption('3');
+  await page.getByRole('button', { name: 'Load sample (replaces editor)' }).click();
+  await expect(page.getByRole('complementary', { name: 'TeX import diagnostics' }).getByRole('listitem')).toHaveCount(3);
+  const table = page.getByRole('textbox', { name: 'Math renderer editor' }).locator('table');
+  await expect(table.locator('td')).toHaveCount(21);
+  await expect(table.locator('annotation')).toHaveText('N');
+  for (let row = 1; row < 7; row++) {
+    await expect(table.locator('tr').nth(row).locator('td')).toHaveText([...academicTableValues[row]]);
+  }
+  const cell = table.locator('tr').nth(1).locator('td').nth(1);
+  await cell.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Shift+Home');
+  await page.keyboard.type('8.7e-6');
+  await expect(cell).toHaveText('8.7e-6');
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(cell).toHaveText('8.6e-6');
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(cell).toHaveText('8.7e-6');
+});
 
 // This file deliberately combines browser layout, PDF parsing, 100k-block
 // virtualization, and collaboration tests. Parallel Firefox on Windows can

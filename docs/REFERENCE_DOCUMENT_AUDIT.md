@@ -1,7 +1,7 @@
 # Real-document reproduction benchmark
 
-Status: **open; equation import now passes the structural preflight, but table,
-rendering and whole-document reproduction remain incomplete**.
+Status: **open; equation/table structure and original table values now pass the
+preflight, but rendering, layout and whole-document reproduction remain incomplete**.
 Added from the user's 2026-09-07 requirement. This strengthens DOC-09, DOC-10,
 FORMAT-03, and FORMAT-05 acceptance; it is not another delivered capability.
 
@@ -36,8 +36,9 @@ node scripts/audit-academic-reference.mjs
 ```
 
 This opt-in networked diagnostic verifies the pinned source checksum. It is
-deliberately **not** part of the passing package gate while reproduction is
-incomplete; it exits nonzero for missing required structures. It never executes
+deliberately **not** a full-reproduction release gate; it exits nonzero for missing
+required structures or values. Its structural checks now pass, but the report
+explicitly identifies unverified reproduction requirements. It never executes
 the paper's Julia examples or accepts a changed reference automatically.
 
 Observed first preflight, 2026-09-07:
@@ -136,7 +137,7 @@ lines, which is also covered. Original tabs/comments remain opaque to reference
 and footnote discovery. Model line endings normalize to LF; the untouched source
 snapshot still returns the exact complete input.
 
-The updated audit still deliberately exits nonzero: the LaTeX table produces
+At this intermediate stage the audit still exited nonzero: the LaTeX table produced
 **zero table nodes**. There are now 36 inline math nodes (not all visually audited).
 KaTeX still rejects both equations' labels. Numbering, cross-references,
 bibliography, figures and all-page PDF/DOCX reproduction remain open. The lab
@@ -155,6 +156,45 @@ source fallback and narrow-screen recovered formula were visually inspected.
 The production site build passed. Runtime code measures 1323.3 KiB ESM /
 1104.1 KiB CJS; aggregate ceilings increased to 1324 / 1105 KiB for this parser
 capability, with no new dependency or individual-entry/performance cap increase.
+
+## Table structure and visible loss follow-through
+
+The later `texTables: true` opt-in now imports the paper's complete
+`table`/`tabular` environment. The fixture is compared exactly against the pinned
+source; the full-source preflight checks seven rows, three columns, all 21
+original values (including the inline mathematical N), and all three reported
+layout losses. It returns `structural-preflight-passed`, alongside an explicit
+incomplete-reproduction status. No Julia or TeX command is executed.
+
+The public lab's **Published performance table** sample exposes those differences:
+float placement `[H]`, vertical rules and horizontal rules are not represented
+in the model. Column alignment and editable values are preserved; all cells remain
+ordinary cells, since `\hline` alone does not establish semantic header roles.
+The implementation accepts a bounded l/c/r tabular grammar. Captions, labels,
+width specifications, spans, row-spacing syntax and unknown commands retain the
+complete literal source with an unsupported-syntax diagnostic. The original
+source snapshot is exact before edits; canonical Markdown is not a TeX round trip.
+
+Visual reference: page 3 of the original PDF places a compact table beneath the
+performance paragraph, with two internal vertical dividers and one horizontal
+rule beneath its first row. It has no surrounding grid or row-by-row rules.
+The current editor uses the host's table layout and does **not** reproduce that
+compact published geometry. Full PDF/DOCX page and rule fidelity remains open.
+
+Verification on 2026-09-07: 16 new table tests and all 943 tests in 85 files
+passed under `pnpm check`, including API/package/pure-runtime, CommonMark,
+interoperability, build-budget and performance gates. The six real table/math
+browser cases passed across Chromium, Firefox and WebKit
+(`artifacts/browser-tex-table-20260907a/results/`). Both recorded workflows passed
+(`artifacts/manual-tex-table-20260907a/results/`); the original table, edited mobile
+table and published PDF page 3 were visually compared. Editing 8.6e-6 to 8.7e-6,
+undo, redo and Markdown value export were exercised via native user controls.
+The table workflow was recorded again with the initial whole-table selection
+cleared for visual inspection (`artifacts/manual-tex-table-20260907b/results/`),
+and its final original-value view was inspected. The production site build passed.
+Runtime code measures 1326.8 KiB ESM / 1106.8 KiB CJS; aggregate caps increased
+to 1327 / 1107 KiB for this bounded parser/diagnostic capability. No new dependency,
+consumer-entry or performance cap increase.
 
 ## Lean reference track
 
