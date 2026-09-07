@@ -311,13 +311,30 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 563 currently match, 80 remain pending, and nine are
-intentional default-policy/GFM divergences. A regression, unclassified case, or
+classifies every example: 563 currently match, 72 remain pending, and 17 are
+intentional default-policy/GFM/editor-model divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
-The 80 pending examples are grouped into 72 raw-HTML cases and eight
-empty-document/container policy cases. Every pending example must belong to
-exactly one named work group with proof requirements. These are not 80 unrelated
-emphasis/parser defects, and regrouping them does not count as new support.
+The 72 pending examples belong to the raw-HTML work group. Every pending example
+must belong to exactly one named group with proof requirements. Ten intentional
+empty-document/container cases have an additional exact contract: Fountain may
+add one empty caret paragraph only to an otherwise empty root, quote, or list
+item. All other projected content must agree, and both original-source and
+canonical round trips must pass. This closes the eight formerly pending policy
+decisions without increasing the 563 semantic matches or erasing authored blanks.
+
+Caret-policy verification on 2026-09-07: `pnpm check` passed all 792 tests in
+79 files and the package, runtime, API, conformance, build, and performance gates.
+The final empty-container editing contract includes all ten official examples
+and passed in Chromium, Firefox, and WebKit. The separate visible-blank-line
+Enter/Backspace contract also passed in all three engines. A fresh recorded
+public-demo spacing/export/re-import audit passed under
+`artifacts/manual-caret-policy-20260907a/results/`; its before/after screenshots
+were visually inspected and retain the blank lines and nested list code block.
+No runtime, schema, API, or bundle-budget change was needed for this policy
+decision. The preceding HTML-table export commit `52bcfd4` has successful
+[CI](https://github.com/eddolo/fountainjs/actions/runs/34081649628) and
+[site deployment](https://github.com/eddolo/fountainjs/actions/runs/34081649649).
+
 The harness also materializes the specification's visible tab notation before
 either side is parsed, so those cases exercise real tab characters.
 Equivalent decoded and percent-encoded link destinations are canonicalized as
@@ -327,9 +344,8 @@ Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
 
 - all HTML block/inline precedence and safe unknown-HTML policy;
-- HTML-comment/list interactions and empty-item representation;
+- HTML-comment/list interactions;
 - raw-HTML interactions with links, emphasis, escapes, and line breaks;
-- source-preserving treatment of an otherwise empty document or container;
 - additional strikethrough delimiter-stack cases;
 - configurable handling for CommonMark's arbitrary URI schemes without
   weakening Fountain's default safe-URL policy;
@@ -346,8 +362,8 @@ classes, inline token precedence, unsupported schema elements, and default
 inert handling. Any opt-in conversion must pass the same URL/style/schema
 safety checks as HTML import and report losses. Script, style, processing
 instruction, and arbitrary custom-tag cases must not become executable content
-just to make their reference-rendered HTML match. Empty caret hosts need a
-separate export-policy review; blanket removal of empty paragraphs would erase
+just to make their reference-rendered HTML match. Empty caret hosts retain their
+explicit editor-model contract; blanket removal of empty paragraphs would erase
 real author-created spacing.
 
 The optional block adapter is now implemented, including nested-container and
@@ -470,7 +486,7 @@ under `artifacts/manual-markdown-containers-20260907c/results/`; its edited
 runbook screenshot was visually inspected. This is local evidence, not a claim
 of complete CommonMark compliance or an npm release.
 
-The eight pending empty-container examples now have exact-source and canonical
+The eight formerly pending empty-container examples have exact-source and canonical
 round-trip tests plus real Chromium/Firefox/WebKit typing, Backspace, Enter,
 and undo coverage. These tests preserve the editable caret hosts; they do not
 count those examples as new matches or erase author-created empty paragraphs.

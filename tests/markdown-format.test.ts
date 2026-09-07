@@ -1505,6 +1505,7 @@ describe('Markdown interchange', () => {
     const sources = [
       '[foo]: /url\n', '[foo]\n\n> [foo]: /url\n', '-\n\n  foo\n',
       '- foo\n-\n- bar\n', '- foo\n-   \n- bar\n', '1. foo\n2.\n3. bar\n', '*\n', '* a\n*\n\n* c\n',
+      '>\n', '>\n>  \n> \n',
     ];
     for (const source of sources) {
       const imported = MarkdownImporter.parseWithSource(source, schema);

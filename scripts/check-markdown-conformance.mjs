@@ -166,6 +166,20 @@ function semanticProjection(html, reference = false) {
   return blockChildren(parseFragment(html).childNodes, reference);
 }
 
+// A separate, explicitly classified contract, NEVER part of the semantic
+// matching projection. Add exactly one caret paragraph only to an empty root,
+// quote, or list item. Preserve every existing block, inline token, and attr.
+function withEditableCaretHosts(blocks) {
+  if (!blocks.length) return [['paragraph', []]];
+  return blocks.map(block => {
+    if (block[0] === 'blockquote') return ['blockquote', withEditableCaretHosts(block[1])];
+    if (block[0] === 'list') {
+      return [...block.slice(0, 3), block[3].map(item => ['item', withEditableCaretHosts(item[1])])];
+    }
+    return block;
+  });
+}
+
 // CommonMark's spec source uses a visible arrow as notation for a tab in both
 // halves of an example. The reference runners materialize it before parsing.
 function materializeTabs(value) {
@@ -242,6 +256,25 @@ const pending = expandRanges(baseline.pendingMismatchRanges);
 const intentional = new Set(baseline.intentionalDivergences.flatMap(({ exampleRanges }) => (
   [...expandRanges(exampleRanges)]
 )));
+const divergenceFailures = [];
+for (const group of baseline.intentionalDivergences) {
+  if (!group.contract) continue;
+  if (group.contract !== 'editable-caret-hosts-v1') throw new Error(`Unknown divergence contract: ${group.contract}`);
+  for (const number of expandRanges(group.exampleRanges)) {
+    const mismatch = mismatches.find(example => example.number === number);
+    if (!mismatch || mismatch.error || JSON.stringify(mismatch.actual) !== JSON.stringify(withEditableCaretHosts(mismatch.expected))) {
+      divergenceFailures.push(number);
+      continue;
+    }
+    // Lock the actual official source as well as canonical round trips. A
+    // caret representation difference must not waive source/content loss.
+    const imported = MarkdownImporter.parseWithSource(mismatch.source, schema);
+    if (MarkdownExporter.exportWithSource(imported.document, imported.source).markdown !== mismatch.source
+      || !MarkdownImporter.parse(MarkdownExporter.export(imported.document), schema).eq(imported.document)) {
+      divergenceFailures.push(number);
+    }
+  }
+}
 const classifications = [required, pending, intentional];
 if (!Array.isArray(baseline.pendingWorkGroups) || !baseline.pendingWorkGroups.length) {
   throw new Error('Pending CommonMark examples need concrete work groups.');
@@ -297,6 +330,7 @@ for (const number of inspectedExamples) {
 }
 
 if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
+if (divergenceFailures.length) throw new Error(`Intentional divergence contract regressions: ${compressRanges(divergenceFailures)}`);
 if (reportOnly) process.exit(0);
 if (!required.size) throw new Error('The CommonMark semantic baseline contains no required matches.');
 if (newlyMatching.length) {
