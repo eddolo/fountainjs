@@ -118,6 +118,17 @@ function block(node) {
     return ['code-block', codeLanguage(node), textContent(node).replace(/\n$/, '')];
   }
   if (tag === 'hr') return ['thematic-break'];
+  if (tag === 'figure' && attribute(node, 'data-align')) {
+    const meaningful = (node.childNodes ?? []).filter((child) => (
+      child.tagName || child.nodeName !== '#text' || child.value.trim()
+    ));
+    if (meaningful.length === 1 && meaningful[0].tagName === 'img') {
+      // Fountain intentionally promotes a standalone Markdown image into its
+      // richer block-image node. Ignore only the default figure layout shell
+      // so the oracle compares the shared image meaning, not either AST.
+      return ['paragraph', inline(meaningful[0])];
+    }
+  }
   return [
     'html-block',
     tag ?? node.nodeName,
@@ -187,7 +198,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 4) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 5) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)

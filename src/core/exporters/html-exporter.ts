@@ -177,7 +177,10 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     return renderMarks(renderNode(node.withMarks([]), document, path), node.marks);
   }
   const context = { document, path };
-  const children = () => node.content.map((child, index) => renderNode(child, document, [...path, index])).join('');
+  const children = () => node.content
+    .map((child, index) => renderNode(child, document, [...path, index]))
+    .join('')
+    .replace(/<\/(em|strong|s)><\1>/g, '');
   switch (node.type.name) {
     case 'doc': return node.content.map((child, index) => renderNode(child, document, [index])).join('\n');
     case 'paragraph': return `<p${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</p>`;

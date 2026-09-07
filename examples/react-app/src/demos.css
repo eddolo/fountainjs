@@ -63,6 +63,11 @@
 .single-demo__hero dd { margin: 0; font-size: 11px; }
 
 .single-demo__runtime { padding: 75px clamp(14px, 4vw, 64px); background: #222033; }
+.demo-role-guide { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 1500px; margin: 0 auto 12px; overflow: hidden; color: #c9c4d5; background: #191727; border: 1px solid #46415b; border-radius: 12px; }
+.demo-role-guide article { display: grid; gap: 5px; padding: 13px 16px; border-right: 1px solid #38344c; }
+.demo-role-guide article:last-child { border-right: 0; }
+.demo-role-guide b { color: white; font: 700 9px 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; }
+.demo-role-guide span { color: #938da1; font-size: 10px; line-height: 1.5; }
 .demo-workspace { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, .65fr); max-width: 1500px; min-height: 690px; margin: auto; overflow: hidden; background: #eeecf4; border: 1px solid #46415b; border-radius: 18px; box-shadow: 0 35px 90px rgb(0 0 0 / 32%); }
 .demo-surface { min-width: 0; padding: 18px; }
 .surface-label { display: flex; gap: 18px; align-items: center; justify-content: space-between; min-height: 39px; margin-bottom: 11px; }
@@ -73,9 +78,20 @@
 .bare-editor, .element-editor { overflow: hidden; background: white; border-radius: 12px; box-shadow: 0 12px 30px rgb(39 32 66 / 10%); }
 .bare-editor > .fountain-editor, .element-editor .fountain-editor { border: 0; border-radius: 0; }
 .element-editor fountain-demo-editor { display: block; }
-.demo-status-node { display: block; width: 100%; padding: 14px 16px; margin: 15px 0; color: #15533f; text-align: left; background: #e3f8ec; border: 1px solid #82c9a7; border-radius: 9px; font: 700 12px 'DM Mono', monospace; cursor: pointer; }
-.demo-status-node:hover, .demo-status-node:focus-visible { color: white; background: #196c55; outline: 3px solid rgb(25 108 85 / 24%); outline-offset: 2px; }
-.demo-status-widget[data-selected='true'] .demo-status-node { box-shadow: 0 0 0 3px #6d4aff; }
+.demo-status-widget { margin: 15px 0; color: #15533f; background: #e3f8ec; border: 1px solid #82c9a7; border-radius: 9px; }
+.demo-status-controls { padding: 14px 16px; }
+.demo-status-summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.demo-status-summary[hidden], .demo-status-form[hidden] { display: none; }
+.demo-status-summary > div { display: grid; gap: 4px; }
+.demo-status-summary strong { font: 700 12px 'DM Mono', monospace; }
+.demo-status-summary span { color: #39715f; font: 9px 'DM Mono', monospace; }
+.demo-status-summary button, .demo-status-form > button { padding: 7px 10px; color: #15533f; background: white; border: 1px solid #82c9a7; border-radius: 6px; font: 700 9px 'DM Mono', monospace; }
+.demo-status-form { display: grid; grid-template-columns: minmax(135px, 1.1fr) repeat(3, minmax(105px, auto)) auto; gap: 8px; align-items: end; }
+.demo-status-form > span { grid-column: 1 / -1; color: #39715f; font: 9px/1.5 'DM Mono', monospace; }
+.demo-status-form label { display: grid; gap: 4px; color: #39715f; font: 700 8px 'DM Mono', monospace; text-transform: uppercase; }
+.demo-status-controls select, .demo-status-controls input { box-sizing: border-box; width: 100%; min-width: 0; padding: 7px 8px; color: #154f3c; background: white; border: 1px solid #82c9a7; border-radius: 6px; font: 700 10px 'DM Mono', monospace; text-transform: none; }
+.demo-status-controls select:focus-visible, .demo-status-controls input:focus-visible { outline: 3px solid rgb(25 108 85 / 24%); outline-offset: 1px; }
+.demo-status-widget[data-selected='true'] { box-shadow: 0 0 0 3px #6d4aff; }
 .demo-priority-widget { margin: 15px 0; padding: 12px 14px; color: #34236f; background: #f1ecff; border: 1px solid #b8a6ef; border-radius: 9px; }
 .demo-priority-control { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 700 12px 'DM Mono', monospace; }
 .demo-priority-control select { min-width: 110px; padding: 7px 9px; color: #34236f; background: white; border: 1px solid #a995e6; border-radius: 6px; font: inherit; }
@@ -105,7 +121,9 @@
 
 .demo-output { display: grid; grid-template-rows: auto auto minmax(0, 1fr); min-width: 0; color: #d8d4e4; background: #1d1a2b; border-left: 1px solid #38344c; }
 .demo-output header { display: flex; align-items: center; justify-content: space-between; padding: 21px 18px 13px; }
+.demo-output header > span { display: grid; gap: 3px; }
 .demo-output header strong { font-size: 12px; }
+.demo-output header small { color: #847e96; font: 8px 'DM Mono', monospace; }
 .demo-output header button { color: #bdb5d1; background: transparent; border: 0; font: 10px 'DM Mono', monospace; }
 .demo-output nav { display: flex; gap: 4px; padding: 0 15px 13px; }
 .demo-output nav button { padding: 6px 8px; color: #847e96; background: transparent; border: 0; border-radius: 5px; font: 9px 'DM Mono', monospace; text-transform: uppercase; }
@@ -174,12 +192,18 @@
   .single-demo .site-header { grid-template-columns: minmax(135px, 1fr) auto; }
   .single-demo__hero aside { margin-top: 20px; }
   .single-demo__runtime { padding-inline: 8px; }
+  .demo-role-guide { grid-template-columns: 1fr; }
+  .demo-role-guide article { border-right: 0; border-bottom: 1px solid #38344c; }
+  .demo-role-guide article:last-child { border-bottom: 0; }
   .demo-workspace { border-radius: 12px; }
   .demo-surface { padding: 9px; }
   .surface-label { align-items: start; flex-direction: column; gap: 5px; padding: 8px 4px; }
   .demo-table-tools { grid-template-columns: 1fr; }
   .demo-table-tools > p { grid-column: 1; }
   .demo-object-tools { grid-template-columns: 1fr; align-items: stretch; }
+  .demo-status-form { grid-template-columns: 1fr 1fr; }
+  .demo-status-form > span, .demo-status-form label:first-of-type, .demo-status-form label:last-of-type { grid-column: 1 / -1; }
+  .demo-status-form > button { justify-self: start; }
   .demo-surface .fountain-editor { min-height: 470px; padding: 22px; }
   .demo-pagination a { min-height: 120px; padding: 25px 18px; }
   .demo-pagination b { font-size: 11px; }

@@ -56,7 +56,7 @@ import { FountainComposer, useFountain, useFountainState } from 'fountainjs-edit
 import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 import { createReactWidgetExtension, type ReactWidgetProps } from 'fountainjs-editor/react/widgets';
 import { StableNodeIdsExtension } from 'fountainjs-editor/node-ids';
-import { defineWidget } from 'fountainjs-editor/widgets';
+import { defineWidget, insertWidget } from 'fountainjs-editor/widgets';
 import { createDOMWidgetExtension } from 'fountainjs-editor/widgets/dom';
 import { demoDefinitions, getDemo, type DemoDefinition } from './demo-definitions';
 import { SitePageLink } from './SitePageLink';
@@ -97,27 +97,119 @@ const demoStatusWidget = defineWidget({
   name: 'status_panel',
   label: 'Incident status',
   attributes: {
-    status: { default: 'Investigating', validate: (value) => ['Investigating', 'Resolved'].includes(String(value)) },
+    label: { default: 'Incident status', validate: (value) => typeof value === 'string' && value.trim().length > 0 && value.length <= 80 },
+    status: { default: 'Investigating', validate: (value) => ['Investigating', 'Monitoring', 'Resolved'].includes(String(value)) },
+    severity: { default: 'SEV-2', validate: (value) => ['SEV-1', 'SEV-2', 'SEV-3', 'SEV-4'].includes(String(value)) },
+    owner: { default: '', validate: (value) => typeof value === 'string' && value.length <= 80 },
   },
+  keyPolicy: { Tab: 'allow' },
+  toText: (node) => `${String(node.attrs.label)}: ${String(node.attrs.status)} · ${String(node.attrs.severity)} · Owner: ${String(node.attrs.owner || 'Unassigned')}`,
 });
 const demoStatusExtension = createDOMWidgetExtension(demoStatusWidget, (context) => {
-  const button = context.dom.ownerDocument.createElement('button');
-  button.type = 'button';
-  button.className = 'demo-status-node';
-  const render = (status: unknown) => {
-    button.textContent = `Incident status · ${String(status)} · Click to change`;
-    button.title = `Change incident status from ${String(status)}`;
+  const ownerDocument = context.dom.ownerDocument;
+  const summary = ownerDocument.createElement('div');
+  summary.className = 'demo-status-summary';
+  const summaryCopy = ownerDocument.createElement('div');
+  const heading = ownerDocument.createElement('strong');
+  const summaryMeta = ownerDocument.createElement('span');
+  summaryCopy.append(heading, summaryMeta);
+  const edit = ownerDocument.createElement('button');
+  edit.type = 'button';
+  edit.textContent = 'Edit attributes';
+  summary.append(summaryCopy, edit);
+  const form = ownerDocument.createElement('div');
+  form.className = 'demo-status-form';
+  const explanation = ownerDocument.createElement('span');
+  explanation.textContent = 'Authoring mode · Done saves these fields as one undoable document change';
+  const label = ownerDocument.createElement('input');
+  label.setAttribute('aria-label', 'Status block label');
+  label.maxLength = 80;
+  const status = ownerDocument.createElement('select');
+  status.setAttribute('aria-label', 'Incident state');
+  ['Investigating', 'Monitoring', 'Resolved'].forEach((value) => status.append(new Option(value)));
+  const severity = ownerDocument.createElement('select');
+  severity.setAttribute('aria-label', 'Incident severity');
+  ['SEV-1', 'SEV-2', 'SEV-3', 'SEV-4'].forEach((value) => severity.append(new Option(value)));
+  const owner = ownerDocument.createElement('input');
+  owner.setAttribute('aria-label', 'Incident owner');
+  owner.placeholder = 'Unassigned';
+  owner.maxLength = 80;
+  const field = (labelText: string, control: HTMLElement) => {
+    const label = ownerDocument.createElement('label');
+    const text = ownerDocument.createElement('span');
+    text.textContent = labelText;
+    label.append(text, control);
+    return label;
   };
-  const onClick = () => {
-    const current = context.controller.getAttributes()?.status;
-    context.set('status', current === 'Resolved' ? 'Investigating' : 'Resolved');
+  context.controls.setAttribute('role', 'group');
+  context.controls.setAttribute('aria-label', 'Incident status block');
+  const done = ownerDocument.createElement('button');
+  done.type = 'button';
+  done.textContent = 'Done';
+  form.append(
+    explanation,
+    field('Block label', label),
+    field('State', status),
+    field('Severity', severity),
+    field('Owner', owner),
+    done,
+  );
+  context.controls.append(summary, form);
+  let editing = context.selected && context.editable;
+  let closedWhileSelected = false;
+  let wasSelected = context.selected;
+  let latestAttributes = context.attributes;
+  let latestEditable = context.editable;
+  const render = (attributes: Readonly<Record<string, unknown>>, selected: boolean, editable: boolean) => {
+    if (!selected) {
+      editing = false;
+      closedWhileSelected = false;
+    } else if (!wasSelected && !closedWhileSelected) editing = editable;
+    wasSelected = selected;
+    latestAttributes = attributes;
+    latestEditable = editable;
+    heading.textContent = String(attributes.label);
+    summaryMeta.textContent = `${String(attributes.status)} · ${String(attributes.severity)} · ${String(attributes.owner || 'Unassigned')}`;
+    label.value = String(attributes.label);
+    status.value = String(attributes.status);
+    severity.value = String(attributes.severity);
+    owner.value = String(attributes.owner);
+    summary.hidden = editing;
+    form.hidden = !editing;
+    edit.hidden = !editable;
   };
-  button.addEventListener('click', onClick);
-  context.controls.appendChild(button);
-  render(context.attributes.status);
+  const onEdit = () => {
+    closedWhileSelected = false;
+    editing = latestEditable;
+    context.select();
+    render(latestAttributes, true, latestEditable);
+  };
+  const onDone = () => {
+    if (!label.value.trim()) {
+      label.setAttribute('aria-invalid', 'true');
+      label.focus();
+      return;
+    }
+    label.removeAttribute('aria-invalid');
+    context.update({
+      label: label.value,
+      status: status.value,
+      severity: severity.value,
+      owner: owner.value,
+    });
+    closedWhileSelected = true;
+    editing = false;
+    render(latestAttributes, wasSelected, latestEditable);
+  };
+  edit.addEventListener('click', onEdit);
+  done.addEventListener('click', onDone);
+  render(context.attributes, context.selected, context.editable);
   return {
-    update(next) { render(next.attributes.status); },
-    destroy() { button.removeEventListener('click', onClick); },
+    update(next) { render(next.attributes, next.selected, next.editable); },
+    destroy() {
+      edit.removeEventListener('click', onEdit);
+      done.removeEventListener('click', onDone);
+    },
   };
 }, { className: 'demo-status-widget', controlsClassName: 'demo-status-controls' });
 
@@ -184,7 +276,7 @@ function OutputPanel({ document }: { document: Node | undefined }) {
   };
 
   return <section className="demo-output">
-    <header><strong>Live document output</strong><button onClick={copy}>{copied ? 'Copied' : 'Copy'}</button></header>
+    <header><span><strong>Portable document data</strong><small>Developer inspection · not the reader UI</small></span><button onClick={copy}>{copied ? 'Copied' : 'Copy'}</button></header>
     <nav>{(['json', 'markdown', 'html'] as const).map((item) => <button className={format === item ? 'active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</nav>
     <pre><code>{output}</code></pre>
   </section>;
@@ -250,6 +342,7 @@ function DemoControls({ editor }: { editor: Editor | null }) {
       onClick={() => editor && selectGap(editor, topLevelPosition(editor.state.doc, 1))}
     >Place cursor after title</button>
     <button disabled={!editor} onClick={() => editor && insertList(editor, 'task', ['A new task'])}>+ Task</button>
+    {editor?.state.schema.nodes.status_panel && <button title="Insert a new portable incident-status block after the current selection" onClick={() => insertWidget(editor, demoStatusWidget)}>+ Incident status</button>}
     <label className="demo-table-control"><span>Table</span><input aria-label="Table rows" type="number" min="1" max="50" value={tableRows} onChange={(event) => setTableRows(event.target.value)} /><b>×</b><input aria-label="Table columns" type="number" min="1" max="20" value={tableColumns} onChange={(event) => setTableColumns(event.target.value)} /></label>
     <button disabled={!editor} onClick={() => editor && insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })}>+ Table</button>
     {editor?.state.schema.nodes.math_block && <div className="demo-math-control" role="group" aria-label="LaTeX controls">
@@ -530,7 +623,14 @@ function DemoPage() {
       <aside><b>Integration boundary</b><p>{demo.boundary}</p><dl><div><dt>Host</dt><dd>{demo.host}</dd></div><div><dt>Surface</dt><dd>{demo.surface}</dd></div></dl></aside>
     </section>
 
-    <section className="single-demo__runtime" id="live-demo"><Runtime demo={demo} /></section>
+    <section className="single-demo__runtime" id="live-demo">
+      <div className="demo-role-guide" aria-label="How this demo maps to a product">
+        <article><b>Content author</b><span>Uses the live editor and its authoring controls.</span></article>
+        <article><b>Portable document</b><span>The data panel shows what an app stores, syncs, or sends—not the finished UI.</span></article>
+        <article><b>Reader or product user</b><span>Sees the host’s read-only or interactive renderer, without author-only controls.</span></article>
+      </div>
+      <Runtime demo={demo} />
+    </section>
 
     <section className="single-demo__details">
       <div className="demo-capabilities"><p>CAPABILITIES IN THIS PAGE</p>{demo.capabilities.map((capability, index) => <article key={capability}><b>0{index + 1}</b><span>{capability}</span></article>)}</div>

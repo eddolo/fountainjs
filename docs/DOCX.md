@@ -142,3 +142,12 @@ mobile emulation (with 14 deliberate capability skips) in
 The corresponding
 [public playground deployment](https://github.com/eddolo/fountainjs/actions/runs/34061065270)
 also passed.
+
+The embedded-media and independent visual-render batch then passed 669
+behavioral tests, 382 browser checks across Chromium, Firefox, WebKit, and
+mobile emulation (with 14 deliberate capability skips), and seven recorded
+human-use/export audits in
+[CI run `69091cf`](https://github.com/eddolo/fountainjs/actions/runs/34067541278).
+Its matching
+[public playground deployment](https://github.com/eddolo/fountainjs/actions/runs/34067541261)
+also passed.

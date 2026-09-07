@@ -96,11 +96,11 @@ function ArticleEditor({ value, save }) {
     runtime: 'dom',
     summary: 'A dependency-free browser integration for teams that do not want a UI framework around the editor.',
     boundary: 'An HTMLElement mount, commands, and one subscription are the complete integration.',
-    capabilities: ['First-class portable widget', 'Validated undoable controls', 'Tab/Escape cursor handoff', 'Focus-safe mapped lifecycle'],
+    capabilities: ['First-class portable widget', 'Atomic attribute editing', 'Author versus reader rendering', 'Focus-safe mapped lifecycle'],
     content: doc(
       heading(1, 'Incident response notes'),
       paragraph(text('Keep operational knowledge in a portable tree, not framework component state.')),
-      { type: 'status_panel', attrs: { status: 'Investigating' } },
+      { type: 'status_panel', attrs: { label: 'Incident status', status: 'Investigating', severity: 'SEV-2', owner: 'Mina' } },
       heading(2, 'First checks'),
       { type: 'ordered_list', attrs: { start: 1 }, content: [listItem('Confirm the affected service and region'), listItem('Link the active incident channel'), listItem('Record decisions as they happen')] },
       paragraph(text('The plain DOM surface still supports the same schema, commands, formats, media, and plugins.')),
@@ -109,29 +109,44 @@ function ArticleEditor({ value, save }) {
   CoreExtension, EditorView, HistoryExtension,
   composeExtensions, createEditor, toggleMark,
 } from 'fountainjs-editor'
-import { defineWidget } from 'fountainjs-editor/widgets'
+import { defineWidget, insertWidget } from 'fountainjs-editor/widgets'
 import { createDOMWidgetExtension } from 'fountainjs-editor/widgets/dom'
 
 const status = defineWidget({
   name: 'status_panel',
   attributes: {
+    label: { default: 'Incident status' },
     status: {
       default: 'Investigating',
-      validate: value => ['Investigating', 'Resolved'].includes(value),
+      validate: value => ['Investigating', 'Monitoring', 'Resolved'].includes(value),
     },
+    severity: { default: 'SEV-2' },
+    owner: { default: '' },
   },
 })
 
 const statusExtension = createDOMWidgetExtension(status, context => {
-  const button = document.createElement('button')
-  const render = next => { button.textContent = \`Incident status · \${next.attributes.status}\` }
-  button.onclick = () => context.set(
-    'status',
-    context.controller.getAttributes().status === 'Resolved' ? 'Investigating' : 'Resolved',
-  )
-  context.controls.append(button)
-  render(context)
-  return { update: render }
+  const label = document.createElement('input')
+  const state = document.createElement('select')
+  const severity = document.createElement('select')
+  const owner = document.createElement('input')
+  const save = document.createElement('button')
+  save.textContent = 'Done'
+  ;['Investigating', 'Monitoring', 'Resolved'].forEach(value => state.append(new Option(value)))
+  ;['SEV-1', 'SEV-2', 'SEV-3', 'SEV-4'].forEach(value => severity.append(new Option(value)))
+  save.onclick = () => context.update({
+    label: label.value,
+    status: state.value,
+    severity: severity.value,
+    owner: owner.value,
+  })
+  context.controls.append(label, state, severity, owner, save)
+  return { update: next => {
+    label.value = next.attributes.label
+    state.value = next.attributes.status
+    severity.value = next.attributes.severity
+    owner.value = next.attributes.owner
+  } }
 })
 const kit = composeExtensions([CoreExtension, HistoryExtension, statusExtension])
 
@@ -144,6 +159,7 @@ const editor = createEditor({
 
 const view = new EditorView(document.querySelector('#notes'), editor)
 document.querySelector('#bold').onclick = () => toggleMark(editor, 'strong')
+document.querySelector('#add-status').onclick = () => insertWidget(editor, status)
 
 window.addEventListener('pagehide', () => {
   view.destroy()

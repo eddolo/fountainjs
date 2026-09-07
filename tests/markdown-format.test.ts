@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   CoreExtension,
   CoreSchemaSpec,
+  HTMLExporter,
   MarkdownExporter,
   MarkdownImporter,
   Schema,
@@ -800,6 +801,29 @@ describe('Markdown interchange', () => {
       })), example.source).toEqual(example.nodes);
       expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), example.source)
         .toEqual(document.toJSON());
+    }
+  });
+
+  it('keeps emphasis active across both CommonMark hard-break forms', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    for (const source of ['*foo  \nbar*', '*foo\\\nbar*']) {
+      const document = MarkdownImporter.parse(source, schema);
+      const paragraph = document.child(0);
+
+      expect(paragraph.content.map((node) => ({
+        type: node.type.name,
+        text: node.textContent,
+        marks: node.marks.map((mark) => mark.type.name),
+      })), source).toEqual([
+        { type: 'text', text: 'foo', marks: ['em'] },
+        { type: 'hard_break', text: '', marks: ['em'] },
+        { type: 'text', text: 'bar', marks: ['em'] },
+      ]);
+
+      const exported = MarkdownExporter.export(document);
+      expect(exported).toBe('*foo  \nbar*');
+      expect(MarkdownImporter.parse(exported, schema).toJSON()).toEqual(document.toJSON());
+      expect(HTMLExporter.export(document, { document: false })).toBe('<p><em>foo<br>bar</em></p>');
     }
   });
 

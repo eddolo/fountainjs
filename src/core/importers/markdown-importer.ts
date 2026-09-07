@@ -1047,13 +1047,13 @@ function inline(text: string, schema: Schema, references: References, inheritedM
     const spaceBreak = /^ {2,}\n/u.exec(text.slice(index));
     if (spaceBreak && schema.nodes.hard_break) {
       flush();
-      result.push(schema.node('hard_break'));
+      result.push(schema.node('hard_break', {}, [], undefined, inheritedMarks));
       index += spaceBreak[0].length;
       continue;
     }
     if (text.startsWith('\\\n', index) && schema.nodes.hard_break) {
       flush();
-      result.push(schema.node('hard_break'));
+      result.push(schema.node('hard_break', {}, [], undefined, inheritedMarks));
       index += 2;
       continue;
     }

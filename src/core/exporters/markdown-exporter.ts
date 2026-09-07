@@ -51,6 +51,7 @@ interface RenderContext {
 }
 
 const SUPPORTED_MARKS = new Set(['code', 'strong', 'em', 'strike', 'link', 'highlight']);
+const DELIMITED_MARKS = new Set(['strong', 'em', 'strike']);
 const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'font_size', 'line_height']);
 const LIST_TYPES = new Set(['bullet_list', 'ordered_list', 'task_list']);
 
@@ -311,24 +312,56 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
 
 function sharedDelimitedMark(left: Node | undefined, right: Node | undefined): boolean {
   return Boolean(left?.isText && right?.isText && left.marks.some((mark) => (
-    (mark.type.name === 'strong' || mark.type.name === 'em' || mark.type.name === 'strike')
+    DELIMITED_MARKS.has(mark.type.name)
     && right.marks.some((candidate) => candidate.eq(mark))
   )));
 }
 
+function sameOrderedMarks(left: Node, right: Node): boolean {
+  return left.marks.length === right.marks.length
+    && left.marks.every((mark, index) => mark.eq(right.marks[index]!));
+}
+
+function hardBreakMarkRunEnd(content: readonly Node[], start: number): number {
+  const first = content[start];
+  if (!first || !first.marks.length || !first.marks.every((mark) => DELIMITED_MARKS.has(mark.type.name))) return start;
+
+  let end = start;
+  let containsHardBreak = false;
+  while (end < content.length) {
+    const candidate = content[end]!;
+    if ((!candidate.isText && candidate.type.name !== 'hard_break') || !sameOrderedMarks(first, candidate)) break;
+    containsHardBreak ||= candidate.type.name === 'hard_break';
+    end += 1;
+  }
+  return containsHardBreak && end - start > 1 ? end : start;
+}
+
 function inlineContent(node: Node, context: RenderContext, path: readonly number[]): string {
-  return node.content.map((child, index) => {
-    const marked = child.isText && child.marks.some((mark) => (
-      mark.type.name === 'strong' || mark.type.name === 'em' || mark.type.name === 'strike'
-    ));
+  const result: string[] = [];
+  for (let index = 0; index < node.content.length;) {
+    const child = node.content[index]!;
+    const runEnd = hardBreakMarkRunEnd(node.content, index);
+    if (runEnd > index) {
+      const value = node.content
+        .slice(index, runEnd)
+        .map((item, offset) => inline(item.withMarks([]), context, [...path, index + offset]))
+        .join('');
+      result.push(markdownMarks(child, value, context, [...path, index]));
+      index = runEnd;
+      continue;
+    }
+    const marked = child.isText && child.marks.some((mark) => DELIMITED_MARKS.has(mark.type.name));
     const preserve = marked && (
       /^\s|\s$/u.test(child.text ?? '')
       || sharedDelimitedMark(node.content[index - 1], child)
       || sharedDelimitedMark(child, node.content[index + 1])
       || child.marks.some((mark, markIndex) => child.marks.findIndex((candidate) => candidate.type === mark.type) < markIndex)
     );
-    return inline(child, context, [...path, index], preserve);
-  }).join('');
+    result.push(inline(child, context, [...path, index], preserve));
+    index += 1;
+  }
+  return result.join('');
 }
 
 function tableCell(node: Node, context: RenderContext, path: readonly number[], depth: number): string {

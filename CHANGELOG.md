@@ -4,6 +4,19 @@
 
 ### Fixed
 
+- The ten demo pages now distinguish content-author controls, portable stored
+  data, and the reader/product rendering instead of presenting those roles as
+  one ambiguous "live" surface. The incident widget defaults to a clean product
+  card and exposes label, state, severity, and owner only in explicit authoring
+  mode; new instances can be inserted from the supplied toolbar.
+- Markdown hard breaks now retain active emphasis, strong, and strike marks
+  during import, canonical export, and HTML projection. Adjacent marked inline
+  runs are emitted as one semantic wrapper instead of fragmenting around the
+  break, promoting CommonMark 0.31.2 examples 369, 373, 389, 407-409, 419,
+  425-427, and 638-639 into the regression gate.
+- The neutral CommonMark oracle now recognizes Fountain's intentionally richer
+  captionless block-image figure as the same portable image meaning. This keeps
+  the native schemas independent and removes 18 false AST-shape mismatches.
 - The public AI streaming demo now preserves leading and trailing whitespace at
   mark boundaries, so accepting a proposal beside bold, italic, or another
   adjacent fragment cannot silently join two words.
