@@ -5,6 +5,21 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+CommonMark code-origin audit (2026-09-07): projection version 7 now distinguishes
+reference Markdown-generated `<pre>` tags from authored raw HTML by exact
+renderer output offsets and parsed source locations. Only the former have their
+canonical terminator removed for comparison. The observer leaves all 652
+official HTML outputs byte-identical. Twenty LF/CRLF import/source contracts,
+including identical HTML from different source kinds and nested/repeated blocks,
+pass; six deliberate missing/added newlines are rejected. This corrects example
+169, raising the opt-in projection baseline to 575 matches / 77 unresolved
+comparisons without any parser/runtime change. The default 563/72/17 baseline
+does not change. Table/formatting projection differences, unsupported HTML and
+the full release programme remain open.
+Validation: the complete conformance command and 1,158 unit tests in 104 files
+pass. Runtime/API/bundle files are unchanged; this increment strengthens the
+test oracle rather than claiming a new editor capability.
+
 Markdown combined-adapter audit (2026-09-07): the corpus gate now exercises both
 server HTML adapters together and locks 574/652 exact neutral-projection matches,
 separate from the unchanged default 563/72/17 classification and 1,304 LF/CRLF

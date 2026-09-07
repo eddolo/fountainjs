@@ -47,9 +47,15 @@
   as raw block tokens. With both conversion options enabled, an inline closing
   `</pre>` could previously disappear before the surrounding flow fell back.
   Recovery is scoped to the failed container; successful siblings stay converted.
-  The corpus gate additionally locks 574 exact opt-in HTML semantic-projection
+  The corpus gate additionally locks 575 exact opt-in HTML semantic-projection
   matches separately from the default inert policy and source-retention checks.
   Remaining comparisons are explicitly unresolved, not a full-conformance claim.
+
+- The CommonMark comparator now binds code-block terminator handling to actual
+  Markdown-generated reference HTML offsets. Authored raw `<pre>` newlines are
+  no longer mistaken for canonical code terminators. Twenty LF/CRLF contracts
+  and six deliberate newline corruptions verify the distinction, including
+  byte-identical HTML generated from different source kinds. No runtime change.
 
 - Optional HTML flow conversion now carries surrounding semantic/style/custom
   marks into existing Markdown blocks. Original inline marks win collisions,

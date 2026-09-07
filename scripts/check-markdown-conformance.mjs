@@ -128,10 +128,11 @@ function block(node, reference) {
     return ['list', tag === 'ol' ? 'ordered' : 'bullet', tag === 'ol' ? Number(attribute(node, 'start') || 1) : null, items];
   }
   if (tag === 'pre') {
-    // The reference renderer appends one line terminator to code content.
-    // Fountain stores/exports the content itself. Remove only the reference
-    // terminator; stripping Fountain's last LF hides or invents data loss.
-    return ['code-block', codeLanguage(node), reference ? textContent(node).replace(/\n$/, '') : textContent(node)];
+    // Only a reference Markdown code block has the canonical final terminator.
+    // Authored raw <pre> content owns every LF. Bind this distinction to the
+    // actual renderer's output offset, never tag spelling, order or attributes.
+    const generated = reference.has(node.sourceCodeLocation?.startOffset);
+    return ['code-block', codeLanguage(node), generated ? textContent(node).replace(/\n$/, '') : textContent(node)];
   }
   if (tag === 'hr') return ['thematic-break'];
   if (tag === 'figure' && attribute(node, 'data-align')) {
@@ -174,8 +175,38 @@ function blockChildren(nodes, reference) {
   return result;
 }
 
-function semanticProjection(html, reference = false) {
-  return blockChildren(parseFragment(html).childNodes, reference);
+function semanticProjection(html, reference = new Set()) {
+  return blockChildren(parseFragment(html, { sourceCodeLocationInfo: true }).childNodes, reference);
+}
+
+// Observe the oracle's renderer without changing one byte of its HTML. A raw
+// HTML block can contain identical <pre><code> markup, so neither a regex nor
+// occurrence counting can reliably identify Markdown-generated code blocks.
+function referenceOutput(renderer, document) {
+  const codeOffsets = new Set();
+  const tag = renderer.tag;
+  const codeBlock = renderer.code_block;
+  const ownTag = Object.hasOwn(renderer, 'tag');
+  const ownCodeBlock = Object.hasOwn(renderer, 'code_block');
+  let inCodeBlock = false;
+  renderer.code_block = function (...args) {
+    inCodeBlock = true;
+    try { return codeBlock.apply(this, args); } finally { inCodeBlock = false; }
+  };
+  renderer.tag = function (name, ...args) {
+    if (inCodeBlock && name === 'pre') codeOffsets.add(this.buffer.length);
+    return tag.call(this, name, ...args);
+  };
+  try {
+    const html = renderer.render(document);
+    for (const offset of codeOffsets) {
+      if (!/^<pre[ >]/u.test(html.slice(offset))) throw new Error('Reference code-block origin was not a pre start tag.');
+    }
+    return { html, projection: semanticProjection(html, codeOffsets) };
+  } finally {
+    if (ownTag) renderer.tag = tag; else delete renderer.tag;
+    if (ownCodeBlock) renderer.code_block = codeBlock; else delete renderer.code_block;
+  }
 }
 
 // Independent reference semantics with ONLY the raw-HTML rendering policy
@@ -318,7 +349,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 6) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 7) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -330,6 +361,59 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 }
 
 const schema = new Schema(CoreSchemaSpec);
+// Independent newline contracts, including two identical oracle HTML strings
+// whose source provenance requires different normalized code payloads.
+const codeOriginCases = [
+  ['<pre><code>x</code></pre>\n', [['code-block', null, 'x']]],
+  ['<pre><code>x\n</code></pre>\n', [['code-block', null, 'x\n']]],
+  ['<pre><code>x\n\n</code></pre>\n', [['code-block', null, 'x\n\n']]],
+  ['```\nx\n```\n', [['code-block', null, 'x']]],
+  ['```\nx\n\n```\n', [['code-block', null, 'x\n']]],
+  ['    x\n', [['code-block', null, 'x']]],
+  ['<pre><code>x\n</code></pre>\n\n```\nx\n```\n\n<pre><code>x\n</code></pre>', [
+    ['code-block', null, 'x\n'], ['code-block', null, 'x'], ['code-block', null, 'x\n'],
+  ]],
+  ['> <pre><code>x\n> </code></pre>\n>\n> ```\n> x\n> ```', [
+    ['blockquote', [['code-block', null, 'x\n'], ['code-block', null, 'x']]],
+  ]],
+  ['- <pre><code>x\n  </code></pre>\n\n  ```\n  x\n  ```', [
+    ['list', 'bullet', null, [['item', [['code-block', null, 'x\n'], ['code-block', null, 'x']]]]],
+  ]],
+  ['<pre data-reference-code="true"><code class="language-js">x\n</code></pre>\n\n```js\nx\n```', [
+    ['code-block', 'js', 'x\n'], ['code-block', 'js', 'x'],
+  ]],
+];
+for (const [source, expected] of codeOriginCases) {
+  for (const ending of ['\n', '\r\n']) {
+    const input = source.replaceAll('\n', ending);
+    const reference = referenceParser.parse(input);
+    const observed = referenceOutput(referenceRenderer, reference);
+    if (observed.html !== referenceRenderer.render(reference)
+      || JSON.stringify(observed.projection) !== JSON.stringify(expected)) {
+      throw new Error(`Reference code origin contract failed: ${JSON.stringify(input)}`);
+    }
+    const captured = MarkdownImporter.parseWithSource(input, schema, {
+      parseHTMLFlow: ServerHTMLImporter.parseFlow, parseHTMLInline: ServerHTMLImporter.parseInline,
+    });
+    if (JSON.stringify(semanticProjection(HTMLExporter.export(captured.document, { document: false }))) !== JSON.stringify(expected)
+      || MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== input) {
+      throw new Error(`Rich import lost code whitespace: ${JSON.stringify(input)}`);
+    }
+  }
+}
+const rawTwin = referenceOutput(referenceRenderer, referenceParser.parse('<pre><code>x\n</code></pre>\n'));
+const fencedTwin = referenceOutput(referenceRenderer, referenceParser.parse('```\nx\n```\n'));
+if (rawTwin.html !== fencedTwin.html || JSON.stringify(rawTwin.projection) === JSON.stringify(fencedTwin.projection)) {
+  throw new Error('Code origin comparator must distinguish identical HTML with different source provenance.');
+}
+for (const source of ['<pre><code>x\n</code></pre>', '<pre><code>x\n\n</code></pre>', '```\nx\n\n```']) {
+  const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
+  for (const damaged of [expected[0][2].slice(0, -1), expected[0][2] + '\n']) {
+    const html = HTMLExporter.export(schema.node('doc', {}, [schema.node('code_block', {}, [schema.text(damaged)])]), { document: false });
+    if (JSON.stringify(semanticProjection(html)) === JSON.stringify(expected)) throw new Error('Code comparator accepted a lost or added LF.');
+  }
+}
+console.log(`Code origins: ${codeOriginCases.length * 2} LF/CRLF import/source contracts; identical-HTML provenance distinguished; 6 newline corruptions rejected.`);
 const matches = new Set();
 const mismatches = [];
 const roundTripFailures = [];
@@ -342,8 +426,9 @@ const htmlPolicyExamples = expandRanges(htmlPolicyGroup.exampleRanges);
 for (const example of commonmarkSpec.tests) {
   const source = materializeTabs(example.markdown);
   const reference = referenceParser.parse(source);
-  if (referenceRenderer.render(reference) !== materializeTabs(example.html)) referenceFailures.push(example.number);
-  const expected = semanticProjection(materializeTabs(example.html), true);
+  const rendered = referenceOutput(referenceRenderer, reference);
+  if (rendered.html !== materializeTabs(example.html)) referenceFailures.push(example.number);
+  const expected = rendered.projection;
   let actual;
   let error = null;
   try {
@@ -362,7 +447,7 @@ for (const example of commonmarkSpec.tests) {
         || !retainsLiteralHTML(document, expectedTokens)) htmlTokenFailures.push({
         number: example.number, source, expected: expectedTokens, actual: probed.tokens, literalRetained: retainsLiteralHTML(document, expectedTokens),
       });
-      const expectedInert = semanticProjection(inertRenderer.render(reference), true);
+      const expectedInert = referenceOutput(inertRenderer, reference).projection;
       if (JSON.stringify(actual) !== JSON.stringify(expectedInert)) htmlPolicyFailures.push({
         number: example.number, source, expected: expectedInert, actual,
       });
@@ -381,7 +466,7 @@ const generatedFailures = [];
 for (const test of generatedCases) {
   try {
     const reference = referenceParser.parse(test.source);
-    const expected = semanticProjection(inertRenderer.render(reference), true);
+    const expected = referenceOutput(inertRenderer, reference).projection;
     const captured = MarkdownImporter.parseWithSource(test.source, schema);
     const actual = semanticProjection(HTMLExporter.export(captured.document, { document: false }));
     const probe = fountainHTMLTokens(test.source, schema);
@@ -408,7 +493,7 @@ const sensitivityCases = [
   ['[foo <bar attr="](baz)">', '<p><a href="baz">foo</a></p>'],
 ];
 for (const [source, broken] of sensitivityCases) {
-  const expected = semanticProjection(inertRenderer.render(referenceParser.parse(source)), true);
+  const expected = referenceOutput(inertRenderer, referenceParser.parse(source)).projection;
   if (JSON.stringify(semanticProjection(broken)) === JSON.stringify(expected)) {
     throw new Error(`The inert HTML comparator failed its loss-sensitivity check: ${JSON.stringify(source)}`);
   }
@@ -501,7 +586,7 @@ for (const number of inspectedExamples) {
   if (!example) throw new Error(`Unknown CommonMark example ${number}.`);
   const source = materializeTabs(example.markdown);
   console.log(`Example ${number} (${example.section}) source:\n${JSON.stringify(source)}`);
-  console.log(`Expected projection:\n${JSON.stringify(semanticProjection(materializeTabs(example.html), true), null, 2)}`);
+  console.log(`Expected projection:\n${JSON.stringify(referenceOutput(referenceRenderer, referenceParser.parse(source)).projection, null, 2)}`);
   console.log(`Fountain projection:\n${JSON.stringify(mismatch?.actual ?? semanticProjection(HTMLExporter.export(MarkdownImporter.parse(source, schema), { document: false })), null, 2)}`);
   if (mismatch?.error) console.log(`Fountain error: ${mismatch.error}`);
 }
@@ -537,9 +622,10 @@ console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed
   }
   const flowMatches = new Set();
   const flowMismatches = [];
+  const flowResults = [];
   for (const example of commonmarkSpec.tests) {
     const source = materializeTabs(example.markdown);
-    const expected = semanticProjection(materializeTabs(example.html), true);
+    const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
     const issues = [];
     const fallbacks = [];
     const importer = new ServerHTMLImporter();
@@ -562,16 +648,19 @@ console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed
       });
       actual = semanticProjection(HTMLExporter.export(document, { document: false }));
     } catch (cause) { error = String(cause); }
-    if (!error && JSON.stringify(actual) === JSON.stringify(expected)) flowMatches.add(example.number);
-    else flowMismatches.push({ number: example.number, source, expected, actual, issues, fallbacks, error });
+    const matched = !error && JSON.stringify(actual) === JSON.stringify(expected);
+    const result = { number: example.number, matched, source, expected, actual, issues, fallbacks, error };
+    flowResults.push(result);
+    if (matched) flowMatches.add(example.number);
+    else flowMismatches.push(result);
   }
   console.log(`Opt-in HTML block + inline semantics: ${flowMatches.size}/652 exact neutral-projection matches; remaining differences unresolved, not full conformance.`);
   if (htmlFlowReport) {
     console.log(`Opt-in matching ranges: ${compressRanges(flowMatches)}`);
     console.log(`Opt-in mismatching ranges: ${compressRanges(flowMismatches.map(example => example.number))}`);
   }
-  for (const example of flowMismatches) {
-    if (htmlFlowReport && (showMismatches || inspectedExamples.has(example.number))) console.log(JSON.stringify({ htmlFlow: example }));
+  for (const example of flowResults) {
+    if (htmlFlowReport && ((showMismatches && !example.matched) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ htmlFlow: example }));
   }
   const regressions = [...flowRequired].filter(number => !flowMatches.has(number));
   const gains = [...flowUnresolved].filter(number => flowMatches.has(number));

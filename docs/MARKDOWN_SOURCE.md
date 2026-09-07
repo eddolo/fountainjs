@@ -119,7 +119,7 @@ Markdown/TeX dialect options remain enabled, without repeating their reporters.
 This is not complete HTML/CSS or
 CommonMark fidelity; the default 563/72/17 baseline remains separate.
 
-The conformance command also regression-locks **574/652** exact neutral-projection
+The conformance command also regression-locks **575/652** exact neutral-projection
 matches with **both** server HTML adapters enabled, in
 `tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json`.
 This is separate from the default inert baseline and the 1,304 unchanged-source
@@ -127,15 +127,26 @@ checks. Run `pnpm test:markdown-conformance --html-flow-report --show-mismatches
 for source, expected/actual projections, conversion issues and fallback reasons;
 add `--example=148` instead of `--show-mismatches` to inspect one case.
 
-The other 78 outputs are **unresolved comparisons**, not 78 proven parser bugs:
+The other 77 outputs are **unresolved comparisons**, not 77 proven parser bugs:
 they include the existing 17 intentional policy/caret differences, discarded
 comments, unsupported wrappers/attributes, specialized raw-text fallback, and
-limitations of the current comparator. In particular it strips a reference
-code-block terminator even for authored raw `<pre>` content, retains explicit
-default cell spans, and treats formatting outside versus inside a paragraph as
+limitations of the current comparator. In particular it retains explicit
+default cell spans and treats formatting outside versus inside a paragraph as
 different structures. These need source-aware comparison rules with independent
 loss-sensitivity tests, not blanket flattening or removal of whitespace/attributes.
 No missing match has been waived or promoted to full HTML fidelity.
+
+Projection version 7 corrects reference code provenance: an observer records the
+output offsets of `<pre>` tags actually emitted for Markdown code blocks, without
+changing any reference HTML. Only those blocks lose the reference's canonical
+final terminator during comparison. Raw authored `<pre>` text keeps every LF.
+This matters even when raw HTML and fenced Markdown generate byte-identical
+HTML. HTML-parser source locations bind the origin, so repeated blocks, fake
+attributes and nesting cannot shift it to another block. All 652 oracle HTML
+fixtures remain byte-exact. Twenty independent LF/CRLF import/source contracts
+cover raw, fenced, indented, repeated and nested blocks; six injected missing
+or added newlines are rejected. Example 169 now matches because Fountain was
+already correct, not because the runtime was changed or whitespace was ignored.
 
 Successful projection reports `block-html-projection` alongside specific losses.
 Exact whole-source export remains available while the document is unchanged;

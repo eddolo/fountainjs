@@ -28,8 +28,9 @@ without serializing extension data through HTML. Surrounding semantic/style/cust
 marks now copy only affected paths, retaining source, attributes and node IDs;
 specialized raw-text scopes over those blocks still fall back explicitly.
 The 1,304 LF/CRLF flow source-retention checks do not change semantic scores.
-Combined block/inline conversion now has a separate 574/652 exact projection
-regression baseline. Its 78 unresolved comparisons include policy/schema and
+Combined block/inline conversion now has a separate 575/652 exact projection
+regression baseline. Source-bound reference code provenance corrects the raw
+`<pre>` newline comparison without changing runtime content. Its 77 unresolved comparisons include policy/schema and
 comparator differences, not just parser bugs. This broader audit exposed a real
 fallback loss: inline conversion could consume a closing tag before block flow
 failed. Recovery now restores the failed container's inert interpretation,
