@@ -2042,8 +2042,10 @@ page dimensions, internal equation destinations and no duplicated prose, plus
 independent Poppler rendering of all three sample pages. This is not a tagged
 accessible PDF, native editable math export, or full academic-paper comparison.
 Firefox/WebKit print layouts are tested; their native PDF generation is not
-covered by Playwright. DOCX currently exports math as TeX fallback text with a
-loss report, not OMML equations, numbering or active equation references.
+covered by Playwright. DOCX defaults to TeX fallback text with a loss report.
+An experimental host-supplied semantic `resolveMath` projection can emit OMML;
+Word rendering, round-trip restoration, numbering and live references remain
+unverified or unimplemented. See [the DOCX boundary](DOCX.md#experimental-native-word-equations).
 
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree
@@ -2150,6 +2152,14 @@ returns `{ bytes, report }`. Raster data URLs embed directly; the optional
 converter never fetches URLs. Reports contain immutable path-bearing issues and
 a `bounded` or `lossy` fidelity value. See [DOCX.md](DOCX.md) for the precise
 supported subset, fallback policy, resource limits, and security boundary.
+
+`DOCXExportOptions.resolveMath(node, path)` accepts an optional synchronous
+`DOCXMathExpression` projection for inline/display math, including nested nodes.
+It accepts semantic data, not XML, and adds no TeX parser or browser dependency.
+Validated trees emit experimental OMML plus original-source metadata; unsupported
+trees retain TeX fallback. The report deliberately remains `lossy`: native Word
+rendering/editing and source restoration are not certified. `importDOCX` reports
+`unsupported-office-math` instead of flattening equations into misleading text.
 
 ## React
 

@@ -73,6 +73,55 @@ host; Fountain never performs a network request. Magic bytes are checked and a
 declared content-type mismatch fails to readable fallback rather than being
 trusted.
 
+## Experimental native Word equations
+
+`resolveMath(node, path)` optionally supplies a `DOCXMathExpression` for an
+`inline_math` or `math_block`. Fountain validates that semantic tree and writes
+Office Math Markup Language (OMML), not an image or raw host-supplied XML.
+This API is experimental: independent Word/LibreOffice rendering and editing
+are not yet verified. It does not parse TeX automatically.
+
+```ts
+const generated = exportDOCX(document, {
+  resolveMath(node) {
+    // A deliberately exact example; use a tested converter for general TeX.
+    if (node.attrs.latex !== String.raw`\frac{x}{y}`) return undefined
+    return {
+      type: 'fraction',
+      numerator: { type: 'text', value: 'x', style: 'italic' },
+      denominator: { type: 'text', value: 'y', style: 'italic' },
+    }
+  },
+})
+```
+
+The supported tree contains text, rows, fractions, radicals, sub/superscripts,
+delimiters, rectangular matrices, large operators with limits, and combining
+accents. Host converters own source interpretation and must decline unsupported
+syntax instead of guessing. Invalid, throwing or declining conversions retain
+the readable TeX fallback and loss report. Equations inside list items, quotes
+and table cells reach the same converter with their original model paths.
+
+Successful projections also remain `lossy` with `native-math-experimental`:
+the package contains exact TeX and emitted OMML pairs in
+`customXml/fountainMath.xml`, but this is not a round-trip restoration contract.
+Outer Fountain marks are not applied to OMML; `native-math-marks-omitted` reports
+that omission. Supply mathematical styling in the expression itself.
+
+Import currently replaces Office equations with an explicit unsupported-equation
+placeholder and `unsupported-office-math`, rather than flattening a fraction or
+script into misleading text. Keep the original DOCX: Fountain does not yet
+restore its equations from the custom XML part, reconcile externally edited
+equations with saved TeX, or provide live Word numbering/references. Consumers
+must not describe this boundary as complete LaTeX-to-Word conversion.
+
+Each expression is capped at 10,000 nodes, depth 64 and 100,000 text characters;
+matrices have at most 100 rows and 100 columns. Export packages at most 128 native
+equations, with at most 100,000 source characters each and 1,000,000 source plus
+OMML characters in total. Unsupported fields, invalid XML characters, malformed
+trees and exceeded limits fail to a reported source fallback. There is no
+network access or new parser/runtime dependency.
+
 ## Resource and trust boundaries
 
 DOCX is a ZIP container carrying XML and may be hostile. Import therefore:

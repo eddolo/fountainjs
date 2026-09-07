@@ -2,6 +2,8 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 import { Node as FountainNode, type Mark, type Schema } from '../core/schema';
 import { isSafeURL } from '../core/url';
+import { serializeDOCXMath, type DOCXMathExpression } from './math';
+export type { DOCXMathExpression } from './math';
 
 export type DOCXIssueSeverity = 'info' | 'warning' | 'error';
 
@@ -68,6 +70,12 @@ export interface DOCXExportOptions extends Pick<DOCXLimits, 'maxMediaBytes' | 'm
   readonly page?: 'a4' | 'letter';
   /** Resolves non-data image sources without giving the converter network access. */
   readonly resolveImage?: (source: string, node: FountainNode, path: readonly number[]) => DOCXExportImage | undefined;
+  /** Experimental native Word math boundary. Supply semantic data, never raw XML.
+   * No TeX parser is selected. Undefined/invalid results retain the text fallback
+   * and an explicit loss report. Source/OMML pairs are packaged for inspection;
+   * restoration after editing in Word is not yet implemented.
+   */
+  readonly resolveMath?: (node: FountainNode, path: readonly number[]) => DOCXMathExpression | undefined;
 }
 
 const DEFAULT_LIMITS: Required<DOCXLimits> = {
@@ -390,6 +398,11 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
   };
   const visit = (element: XMLElement, hyperlink?: string) => {
     const name = localName(element.name);
+    if (name === 'oMath' || name === 'oMathPara') {
+      issues.push({ code: 'unsupported-office-math', severity: 'warning', message: 'Word equation structure is not yet imported. Keep the original DOCX for its editable equation and any retained source; concatenating its runs would change the mathematics.', path });
+      appendText('[Word equation: import not yet supported]', []);
+      return;
+    }
     if (name === 'hyperlink') {
       const id = attr(element, 'id');
       const relationship = id ? media.relationships.get(id) : undefined;
@@ -703,6 +716,28 @@ interface ExportContext {
   readonly maxMediaFiles: number;
   mediaBytes: number;
   nextDrawingId: number;
+  readonly mathSources: Array<{ path: readonly number[]; source: string; omml: string }>;
+  mathCharacters: number;
+}
+
+function nativeMath(node: FountainNode, context: ExportContext, path: readonly number[]): string | undefined {
+  if (!context.options.resolveMath) return undefined;
+  try {
+    const expression = context.options.resolveMath(node, Object.freeze([...path]));
+    if (expression === undefined) return undefined;
+    const omml = serializeDOCXMath(expression, node.type.name === 'math_block');
+    const source = String(node.attrs.latex ?? '');
+    if (source.length > 100_000 || context.mathSources.length >= 128) throw new RangeError('DOCX math source exceeds the 128 equation / 100,000 character per-source limit.');
+    if (context.mathCharacters + source.length + omml.length > 1_000_000) throw new RangeError('DOCX math projections exceed the 1,000,000 character total limit.');
+    context.mathCharacters += source.length + omml.length;
+    context.mathSources.push({ path: [...path], source, omml });
+    if (node.marks.length) context.issues.push({ code: 'native-math-marks-omitted', severity: 'warning', message: 'Fountain marks around the math node were not applied; the host expression owns math styling.', path });
+    context.issues.push({ code: 'native-math-experimental', severity: 'warning', message: 'Host math was exported as OMML with its original source in customXml/fountainMath.xml. Word rendering and source restoration after external edits are not yet certified.', path });
+    return omml;
+  } catch (error) {
+    context.issues.push({ code: 'math-projection-failed', severity: 'warning', message: `Native math was rejected; source text was retained. ${error instanceof Error ? error.message : String(error)}`, path });
+    return undefined;
+  }
 }
 
 function exportLimit(value: number | undefined, fallback: number, name: string): number {
@@ -817,6 +852,10 @@ function runProperties(marks: readonly Mark[]): { xml: string; hyperlink?: strin
 
 function textRuns(node: FountainNode, context: ExportContext, path: readonly number[]): string {
   return node.content.map((inline, index) => {
+    if (inline.type.name === 'inline_math') {
+      const math = nativeMath(inline, context, [...path, index]);
+      if (math) return math;
+    }
     if (inline.type.name === 'hard_break') return '<w:r><w:br/></w:r>';
     if (inline.type.name === 'inline_image') {
       const drawing = imageRun(inline, context, [...path, index]);
@@ -842,14 +881,23 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
   }).join('');
 }
 
-function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: { numId: number; level: number }): string {
+type ExportList = { numId: number; level: number; continuation?: boolean };
+
+function paragraphProperties(node: FountainNode, list?: ExportList, quote = false): string {
   const properties: string[] = [];
   if (node.type.name === 'heading') properties.push(`<w:pStyle w:val="Heading${Math.max(1, Math.min(6, Number(node.attrs.level) || 1))}"/>`);
-  if (node.type.name === 'code_block') properties.push('<w:pStyle w:val="Code"/>');
+  else if (node.type.name === 'code_block') properties.push('<w:pStyle w:val="Code"/>');
+  else if (quote) properties.push('<w:pStyle w:val="Quote"/>');
   const align = String(node.attrs.align ?? 'left');
   if (align !== 'left') properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
-  if (list) properties.push(`<w:numPr><w:ilvl w:val="${list.level}"/><w:numId w:val="${list.numId}"/></w:numPr>`);
-  return `<w:p>${properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : ''}${textRuns(node, context, path)}</w:p>`;
+  if (list) properties.push(list.continuation
+    ? `<w:ind w:left="${720 * (list.level + 1)}"/>`
+    : `<w:numPr><w:ilvl w:val="${list.level}"/><w:numId w:val="${list.numId}"/></w:numPr>`);
+  return properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : '';
+}
+
+function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: ExportList, quote = false): string {
+  return `<w:p>${paragraphProperties(node, list, quote)}${textRuns(node, context, path)}</w:p>`;
 }
 
 function tableXML(node: FountainNode, context: ExportContext, path: readonly number[]): string {
@@ -901,21 +949,24 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
   return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="C9C2D8"/><w:left w:val="single" w:sz="6" w:color="C9C2D8"/><w:bottom w:val="single" w:sz="6" w:color="C9C2D8"/><w:right w:val="single" w:sz="6" w:color="C9C2D8"/><w:insideH w:val="single" w:sz="6" w:color="D9D3E5"/><w:insideV w:val="single" w:sz="6" w:color="D9D3E5"/></w:tblBorders><w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr>${grid}${rows}</w:tbl>`;
 }
 
-function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0): string {
+function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote = false, list?: ExportList): string {
+  if (node.type.name === 'math_block') {
+    const math = nativeMath(node, context, path);
+    if (math) return `<w:p>${paragraphProperties(node, list, quote)}${math}</w:p>`;
+  }
   switch (node.type.name) {
-    case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, context, path);
-    case 'blockquote': return node.content.map((item, index) => {
-      const base = paragraphXML(item.type.name === 'paragraph' ? item : item.type.schema.node('paragraph', {}, [item]), context, [...path, index]);
-      return base.replace('<w:p>', '<w:p><w:pPr><w:pStyle w:val="Quote"/></w:pPr>');
-    }).join('');
+    case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, context, path, list, quote);
+    case 'blockquote': return node.content.map((item, index) =>
+      blockXML(item, context, [...path, index], level, true, list)
+    ).join('');
     case 'bullet_list': case 'ordered_list': {
       const numId = node.type.name === 'ordered_list' ? 2 : 1;
       if (node.type.name === 'ordered_list' && Number(node.attrs.start) !== 1) {
         context.issues.push({ code: 'ordered-list-start-normalized', severity: 'warning', message: 'DOCX export currently normalizes a custom ordered-list start to 1.', path });
       }
       return node.content.map((item, index) => item.content.map((block, childIndex) => {
-        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1));
-        return paragraphXML(block, context, [...path, index, childIndex], { numId, level });
+        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1), quote);
+        return blockXML(block, context, [...path, index, childIndex], level, quote, { numId, level, continuation: childIndex > 0 });
       }).join('')).join('');
     }
     case 'table': return tableXML(node, context, path);
@@ -929,7 +980,7 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
     case 'horizontal_rule': return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/></w:pBdr></w:pPr></w:p>';
     default:
       context.issues.push({ code: 'block-fallback', severity: 'warning', message: `${node.type.name} was exported as readable fallback text.`, path });
-      return `<w:p><w:r><w:t>${xmlEscape(node.textContent)}</w:t></w:r></w:p>`;
+      return `<w:p>${paragraphProperties(node, list, quote)}<w:r><w:t>${xmlEscape(node.textContent)}</w:t></w:r></w:p>`;
   }
 }
 
@@ -954,7 +1005,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options,
     maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
-    mediaBytes: 0, nextDrawingId: 1,
+    mediaBytes: 0, nextDrawingId: 1, mathSources: [], mathCharacters: 0,
   };
   const body = node.content.map((block, index) => blockXML(block, context, [index])).join('');
   const letter = options.page === 'letter';
@@ -974,6 +1025,13 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     'docProps/core.xml': strToU8(core),
     'docProps/app.xml': strToU8(app),
   };
+  if (context.mathSources.length) {
+    // The original source and exact emitted projection travel together, but
+    // import deliberately does not restore this source over externally edited
+    // OMML. A future importer must first verify that association is still valid.
+    parts['customXml/fountainMath.xml'] = strToU8(`<f:mathSources xmlns:f="urn:fountainjs:docx:math:v1">${xmlEscape(JSON.stringify(context.mathSources))}</f:mathSources>`);
+    parts['word/_rels/document.xml.rels'] = strToU8(documentRels.replace('</Relationships>', '<Relationship Id="rIdFountainMathSources" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml" Target="../customXml/fountainMath.xml"/></Relationships>'));
+  }
   for (const item of context.media) parts[`word/media/${item.fileName}`] = item.bytes;
   const bytes = zipSync(parts, { level: 6 });
   return Object.freeze({ bytes, report: report(issues) });

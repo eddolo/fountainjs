@@ -4,6 +4,11 @@
 
 ### Fixed
 
+- DOCX nested quotes/list items now traverse blocks rather than flattening
+  tables/equations. Aligned quotes use a single paragraph-properties element;
+  continuation paragraphs do not each receive a fresh list marker. Unsupported
+  Office-math imports now show an explicit warning/placeholder instead of
+  concatenating fraction/script text into a misleading equation.
 - Paged-preview references now resolve across cloned blocks/pages rather than
   jumping back to the editor. Each render has isolated IDs; HTML/SVG links,
   local SVG resources and accessibility references stay within their visual
@@ -20,6 +25,11 @@
 
 ### Added
 
+- Experimental optional DOCX semantic math projection through `resolveMath`:
+  validated fractions, roots, scripts, delimiters, matrices, accents and large
+  operators emit OMML with original TeX metadata. No TeX parser or runtime
+  dependency is added. Word/LibreOffice visual editing, source restoration and
+  equation numbering/references remain open; reports remain explicitly lossy.
 - Equation-lab browser printing/Save as PDF for current paged snapshots, with
   stale-output protection. Recorded Chromium exports are checked for physical
   page sizes, internal equation destinations and text duplication, and all sample

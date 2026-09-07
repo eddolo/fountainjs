@@ -52,10 +52,21 @@ Chromium PDF preserves both internal equation destinations and landscape Letter
 dimensions; every page was independently rendered by Poppler and compared with
 the screen preview. Firefox/WebKit cover print CSS, not native PDF output.
 This does not reproduce the original paper, provide tagged accessible math, or
-finish DOCX. A separate DOCX regression confirms current math export is TeX
+finish DOCX. A separate DOCX regression confirms default math export is TeX
 fallback text with explicit loss reports, not native OMML or live numbering/
 references. The next Word boundary must preserve technical source while adding
 tested editable math and reference semantics, not silently substitute pictures.
+
+Experimental Word-math boundary (2026-09-07): an opt-in `resolveMath` callback
+now accepts validated semantic expressions and emits OMML with exact original
+TeX metadata. Quotes, lists and table cells use the same nested traversal.
+Independent XML/source checks do not certify rendering; the bundled document
+renderer cannot run here because its LibreOffice executable is unavailable.
+Word/LibreOffice visual and editing checks, a general tested TeX converter,
+source restoration after external edits, and live numbering/references remain
+open. Imports now warn and show a placeholder instead of silently flattening
+structured Word equations. The feature remains experimental and FORMAT-05 stays
+partial. See [the DOCX contract](DOCX.md#experimental-native-word-equations).
 
 Academic rendering follow-through (2026-09-07): the separate equation-reference
 lab now uses a bounded host-owned MathJax SVG renderer for original labelled

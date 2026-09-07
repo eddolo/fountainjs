@@ -489,6 +489,58 @@ produces paragraphs, not math nodes. No OMML, automatic Word equation numbering
 or live Word equation references are claimed. No new runtime dependency or
 runtime budget change was needed for this host printing increment.
 
+## Experimental native Word math projection
+
+The optional DOCX exporter now accepts host-supplied `DOCXMathExpression`
+values through `resolveMath(node, path)`. It emits OMML for explicit semantic
+fractions, radicals, scripts, delimiters, matrices, combining accents and large
+operators. This is not a general TeX converter. No raw host XML, parser
+dependency, network request or image substitution is involved.
+
+Tests reproduced and fixed a traversal defect: math blocks inside quotes and
+list items never reached the projection callback, and list-contained tables
+were flattened. An aligned quote also produced two `w:pPr` elements and lost
+nested heading semantics. Traversal now keeps blocks and original callback
+paths, emits one paragraph-properties element, and does not create another list
+marker for every continuation paragraph.
+
+`scripts/audit-docx-math.mjs` generates a structural fixture through the actual
+public package, with explicitly authored source/expression pairs. The current
+ten-equation sample includes inline/display math, quote/list nesting and a
+table-cell equation. Python's independent ElementTree/ZIP reader verified ten
+OMML equations, their exact source/path records, one list marker, a preserved
+table and at most one paragraph-properties element per paragraph. These checks
+establish package structure only, not visual or mathematical equivalence to TeX.
+
+The required `render_docx.py` attempt failed because this host's bundled runtime
+does not provide `soffice.exe`. There are no rendered pages to inspect, so this
+sample is **not a visually verified Word deliverable**. The existing browser
+DOCX comparison covers ordinary prose/media/tables, not this native math path.
+
+Every successful math projection still reports `native-math-experimental` and
+`lossy`. Invalid trees, resource-limit failures and declined conversions retain
+the source fallback. Original TeX and exact emitted OMML are saved together in
+`customXml/fountainMath.xml`; source restoration is not implemented, and stale
+metadata must not overwrite a user's later Word edits. Imports now use an
+explicit unsupported-equation placeholder/warning instead of concatenating
+fraction/script text into a misleading string.
+
+**Still required:** independent Word and LibreOffice visual/editing checks;
+a tested source-to-semantic converter; accepted subset and unsupported-syntax
+diagnostics; unchanged versus externally edited equation restoration; live
+numbering/references; and whole-paper export comparison. FORMAT-05 remains
+partial. This does not close native academic DOCX parity.
+
+Validation for this increment: full `pnpm check` passed 1,012 tests in 92 files,
+including 31 focused DOCX/math tests plus packed-package, headless/server,
+interoperability, API, size and performance checks. Five browser regressions
+passed: the existing independent prose/media/table DOCX comparison on Chromium,
+Firefox and WebKit, and phone export/re-import on mobile Chrome/Safari emulation.
+These are regression checks, not native-math visual approval. The optional DOCX
+entry measures 62.6 KiB ESM / 49.9 KiB CJS; only its and the aggregate size caps
+were adjusted for the measured semantic serializer/validation cost. Main/core,
+other optional-entry, CSS and performance limits are unchanged.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official
