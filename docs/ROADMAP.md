@@ -68,6 +68,16 @@ open. Imports now warn and show a placeholder instead of silently flattening
 structured Word equations. The feature remains experimental and FORMAT-05 stays
 partial. See [the DOCX contract](DOCX.md#experimental-native-word-equations).
 
+Native-math visual audit (2026-09-07): the recorded editor/export/independent
+browser-viewer comparison exposed empty combined-script and accent equations,
+incorrect fraction bars and ignored operator-limit/display modes in the
+third-party browser viewer. Those requested semantics are present in the DOCX;
+do not regress the exporter to satisfy an incomplete viewer. Three browser
+journeys now record these disagreements and exercise source editing, explicit
+fallback and undo. This improves the evidence, not the parity percentage:
+Word/LibreOffice visual/editing verification and a real tested TeX converter
+are still needed before academic DOCX output can be considered finished.
+
 Academic rendering follow-through (2026-09-07): the separate equation-reference
 lab now uses a bounded host-owned MathJax SVG renderer for original labelled
 equations, forward links, reorder/renumber, source editing, history, visible

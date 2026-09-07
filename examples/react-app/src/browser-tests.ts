@@ -1290,7 +1290,7 @@ Object.assign(globalThis, {
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     performanceBudget: runPerformanceBudget,
     virtualizationBudget: runVirtualizationBudget,
-    docxVisual: { render: renderDOCXVisualComparison },
+    docxVisual: { render: renderDOCXVisualComparison, math: async () => (await import('./docx-math-audit')).mountDOCXMathAudit() },
     startImageUpload,
     collaboration: {
       leftEditor,

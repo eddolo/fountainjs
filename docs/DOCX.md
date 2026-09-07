@@ -122,6 +122,15 @@ OMML characters in total. Unsupported fields, invalid XML characters, malformed
 trees and exceeded limits fail to a reported source fallback. There is no
 network access or new parser/runtime dependency.
 
+The independent browser viewer used for ordinary DOCX regression checks is not
+a native-math oracle. A recorded eight-equation comparison found that
+`docx-preview` 0.4.0 drops combined scripts/accents and ignores barless-fraction,
+limit-position and display-mode semantics that are present in the exported XML.
+The [reference audit](REFERENCE_DOCUMENT_AUDIT.md#independent-browser-math-viewer-findings)
+records those visible disagreements and the edit/fallback/undo workflow.
+Opening a file successfully, or counting rendered equation elements, does not
+prove equation fidelity. Word/LibreOffice checks remain pending.
+
 ## Resource and trust boundaries
 
 DOCX is a ZIP container carrying XML and may be hostile. Import therefore:

@@ -541,6 +541,52 @@ entry measures 62.6 KiB ESM / 49.9 KiB CJS; only its and the aggregate size caps
 were adjusted for the measured semantic serializer/validation cost. Main/core,
 other optional-entry, CSS and performance limits are unchanged.
 
+## Independent browser math viewer findings
+
+The recorded `tests/manual/docx-math-audit.spec.ts` workflow compares an editable
+Fountain/MathJax document with the actual downloaded DOCX rendered by
+`docx-preview` 0.4.0. The same journey runs on Chromium, Firefox and WebKit in
+`tests/browser/docx-math-journey.ts`. Eight exact source/expression pairs exercise
+fractions, roots, combined scripts, a matrix, accents and two operator-limit
+placements. This test-only fixture is not a general TeX adapter or a Word reader.
+
+Visual inspection found that counting eight `math` elements falsely suggests
+success: two of them are empty. The viewer drops combined sub/superscripts and
+accents, renders the barless fraction with a bar, ignores side-limit placement,
+and fails to mark display equations as block MathML. Its font metrics and
+paragraph layout also differ from Fountain. The fixture now visibly reports
+these disagreements rather than describing the preview as passing fidelity.
+
+The downloaded XML contains `sSubSup`, `acc`, `noBar` and `limLoc="subSup"`.
+Inspection of the installed viewer's `mmlTagMap` and rendering functions confirms
+that the first two tags are unsupported, fraction properties are discarded,
+and the n-ary renderer always chooses under/over when limits are present.
+Microsoft documents the combined-script structure and the corresponding MathML
+mapping in [SubSuperscript](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.math.subsuperscript?view=openxml-3.0.1)
+and [OfficeMath](https://devblogs.microsoft.com/math-in-office/officemath/).
+Do not change valid exporter structures to mimic this viewer's omissions, or
+treat this diagnosis as proof that Word will render every structure correctly.
+
+All three browser journeys reproduced the viewer limitations. The recorded
+Chromium run is under `artifacts/manual-docx-math-20260907b/` with video, trace,
+the actual DOCX, screenshots before/after undo, and `viewer-observations.json`.
+The screenshots were opened and compared: this is observed visual disagreement,
+not an XML-only conclusion. Editing through the native math textarea clears
+stale output; an unrecognized source exports as visible TeX fallback; undo
+restores the original source and native projection. The comparison disables
+physical page sizing so it cannot certify Word pagination.
+
+The automated result means **the diagnostic workflow behaves as expected**, not
+that the eight equations passed visual parity. Word/LibreOffice verification
+remains required and no Word document from this audit is a finished deliverable.
+The full check remained green at 1,012 tests in 92 files, and the final three
+browser journeys passed with an explicit original-source assertion after undo.
+CI retains the generated diagnostic screenshots, XML-viewer observations and
+test DOCX even when the journey passes. No library-runtime code, dependency,
+API or size ceiling changed in this diagnostic increment. A read-only registry
+check also found no registered Microsoft Word COM automation on this host;
+the missing bundled LibreOffice remains a separate native-rendering blocker.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official

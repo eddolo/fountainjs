@@ -5093,6 +5093,11 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
 });
 
+test('records native DOCX viewer disagreements without certifying math fidelity', async ({ page }, info) => {
+  const { docxMathJourney } = await import('./docx-math-journey');
+  await docxMathJourney(page, info);
+});
+
 test('renders exported DOCX beside the same Fountain document through an independent viewer', async ({ page }) => {
   await page.goto('/browser-tests.html');
   const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());

@@ -86,6 +86,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps
       - run: pnpm test:browser
+      # A passing diagnostic journey can still document known viewer failures.
+      # Preserve this evidence on success too; it is not Word fidelity approval.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docx-math-viewer-diagnostics
+          path: |
+            test-results/**/viewer-observations.json
+            test-results/**/equations-side-by-side.png
+            test-results/**/restored-equations.png
+            test-results/**/experimental-equations.docx
+          if-no-files-found: ignore
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

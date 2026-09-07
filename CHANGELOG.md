@@ -25,6 +25,10 @@
 
 ### Added
 
+- Recorded native-math export comparison against an independent browser DOCX
+  viewer, with explicit missing/misrendered-equation diagnostics. Three-engine
+  checks cover editing, stale-preview clearing, source fallback and undo; the
+  observed viewer limitations are documented, not counted as Word fidelity.
 - Experimental optional DOCX semantic math projection through `resolveMath`:
   validated fractions, roots, scripts, delimiters, matrices, accents and large
   operators emit OMML with original TeX metadata. No TeX parser or runtime
