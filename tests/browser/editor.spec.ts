@@ -12,6 +12,11 @@ import { svelteReportJourney } from './svelte-report-journey';
 import { angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
+import { textAlignmentJourney } from './text-alignment-journey';
+
+test('aligns selected paragraphs using backward selection, toolbar, history and HTML export', async ({ page }, info) => {
+  await textAlignmentJourney(page, info);
+});
 
 test('exports independent DOCX list starts and renders the same procedure beside the editor', async ({ page }, info) => {
   await docxNumberingJourney(page, info);

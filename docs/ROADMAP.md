@@ -5,6 +5,41 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Selection/alignment human-use audit (2026-09-07): formatting previously affected
+only the first text block and rejected all-document/cell selections. Alignment
+now visits the selected paragraphs/headings (including nested/empty blocks),
+preserves unrelated content, and applies one validated, undoable transaction.
+Selection-end boundary, read-only, no-op, custom-schema rejection and Yjs tests
+cover the model. The first recorded real-keyboard run exposed a second bug:
+Chrome placed its anchor on a paragraph element, which the DOM bridge ignored,
+so the toolbar used a stale caret and centered the wrong paragraph. The bridge
+now resolves inline-content block boundaries while leaving structural cell,
+node, gap and all-document selections under their own handling. The recording
+and cross-browser workflow include backwards selection, formatting, replacing
+the selected text, undo/redo, whole-document formatting and HTML reader output.
+Explicit RTL direction/locales are still open; alignment is not that feature.
+
+Verification: `pnpm check` passes 1,218 tests in 105 files, the 385-declaration
+compatibility snapshot, package/Node/workerd/headless/type/conformance checks,
+and unchanged performance limits. Runtime totals are 1366.5 KiB ESM / 1136.0
+KiB CJS; the aggregate ceilings increase to 1367 / 1137, with all individual
+entry ceilings unchanged. Thirty-nine focused desktop browser checks pass
+across Chromium, Firefox and WebKit, including semantic selections, page-gap
+composition and 100k-block virtualization. The website production build passes.
+Final recording and screenshots were inspected in
+`artifacts/text-alignment-20260907-recorded-v3/`; the browser evidence is in
+`artifacts/text-alignment-20260907-regression-v2/`. HTML fragment typography
+remains consumer-owned; this proves alignment, not pixel-identical styling.
+The initial browser-selection failure and the interrupted stale-Vite-import
+run remain retained rather than counted as passes. No npm release is claimed.
+
+New export follow-up from this audit: passing a full `HTMLExporter` page to the
+server importer's fragment parser can insert the `<title>` text as an extra
+paragraph. Fragment round-trips retain alignment, but full-page body extraction
+and metadata handling need separate browser/server parity tests and a fix.
+Do not count full HTML save/reopen fidelity as complete. This remains part of
+the existing FORMAT work, not a reason to narrow it to fragments.
+
 DOCX list-numbering follow-through (2026-09-07): export no longer resets ordinary
 custom starts to 1 or shares one counter between separate lists. Each list has
 an independent instance and explicit base definition/restart, with indentation

@@ -335,7 +335,9 @@ const limits = Object.freeze({
   // (1363.5 / 1133.7 KiB measured); CJS and all individual ceilings still fit.
   // Native list-start parsing and explicit numbering-loss reports add ~0.6 KiB
   // per format (1364.1 / 1134.3 KiB measured); individual caps stay unchanged.
-  'all ESM runtime code': 1365 * kibibyte,
+  // Multi-block alignment and native paragraph-boundary selection mapping:
+  // +1.7 KiB ESM / +1.2 KiB CJS, no dependencies or individual entry cap changes.
+  'all ESM runtime code': 1367 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -348,7 +350,7 @@ const limits = Object.freeze({
   // ESM remains within 1348 KiB; individual entries and performance stay fixed.
   // Shared cross-block mark projection adds ~0.7 KiB ESM / 0.6 KiB CJS;
   // the existing aggregate ESM and individual importer ceilings still fit.
-  'all CommonJS runtime code': 1135 * kibibyte,
+  'all CommonJS runtime code': 1137 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

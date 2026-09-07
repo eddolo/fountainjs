@@ -7,9 +7,11 @@ import {
   EditorView,
   GapSelection,
   NodeSelection,
+  Selection,
   StarterKit,
   createEditor,
   selectGap,
+  setTextAlignment,
   topLevelPosition,
 } from '../src';
 
@@ -21,6 +23,31 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each([false, true])('maps paragraph-element boundaries and preserves backward formatting (end boundary: %s)', async end => {
+    const editor = createEditor({
+      schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: { type: 'doc', content: [paragraph('First'), paragraph('Second'), paragraph('Third')] },
+    });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    await settleSelection();
+    const second = view.dom.querySelector<HTMLElement>('[data-fountain-path="1"]')!;
+    const firstText = view.dom.querySelector('[data-fountain-text-path="0.0"]')!.firstChild!;
+    document.getSelection()!.setBaseAndExtent(second, end ? second.childNodes.length : 0, firstText, 0);
+    view.dom.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp', shiftKey: true, bubbles: true }));
+    await settleSelection();
+    expect(editor.state.selection.eq(Selection.range([0, 0], 0, [1, 0], end ? 6 : 0))).toBe(true);
+    expect(setTextAlignment(editor, 'center')).toBe(true);
+    await settleSelection();
+    expect(editor.state.doc.content.map(node => node.attrs.align)).toEqual(['center', end ? 'center' : 'left', 'left']);
+    const native = document.getSelection()!;
+    expect(native.anchorNode?.parentElement?.getAttribute('data-fountain-text-path')).toBe('1.0');
+    expect(native.focusNode?.parentElement?.getAttribute('data-fountain-text-path')).toBe('0.0');
+    view.destroy();
+    mount.remove();
+  });
+
   it('uses Ctrl/Cmd+A as a document selection and replaces it through beforeinput', async () => {
     const editor = createEditor({
       schema: StarterKit.schema,
@@ -114,6 +141,9 @@ describe('semantic selection DOM bridge', () => {
       [0, 1, 0], [0, 1, 1], [0, 1, 2],
     ]);
     expect(view.dom.querySelectorAll('[data-fountain-selected-cell="true"]')).toHaveLength(6);
+    document.dispatchEvent(new Event('selectionchange'));
+    await settleSelection();
+    expect(editor.state.selection).toBeInstanceOf(CellSelection);
     view.destroy();
   });
 

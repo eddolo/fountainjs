@@ -63,17 +63,56 @@ export class SelectionHandler {
     dom.addEventListener('keyup', this.onSelectionInteraction);
   }
 
+  private readPoint(node: globalThis.Node, offset: number): { element: HTMLElement; offset: number } | null {
+    if (!this.dom.contains(node)) return null;
+    const element = node.nodeType === 1 ? node as HTMLElement : node.parentElement;
+    const blocked = (element: HTMLElement) => Boolean(element.closest('[data-fountain-widget]')
+      || (element.closest('[contenteditable="false"]') && element.closest('[contenteditable="false"]') !== this.dom));
+    if (!element || blocked(element)) return null;
+    const wrapper = element.closest<HTMLElement>('[data-fountain-text-path]');
+    if (wrapper) return { element: wrapper, offset: textOffsetWithin(wrapper, node, offset) };
+    // Home/Shift+Up can leave a native endpoint on the paragraph itself,
+    // before its text wrapper, instead of inside a text node. Resolve that
+    // child boundary without falling back to the previous model selection.
+    // Root boundaries remain owned by semantic all/cell/gap selection handling.
+    if (node.nodeType !== 1 || node === this.dom) return null;
+    const owner = element.closest<HTMLElement>('[data-fountain-path]');
+    if (!owner) return null;
+    try {
+      const block = getNodeAtPath(this.editor.state.doc, parseNodePath(owner));
+      // Do not reinterpret the TR/TD/container endpoints produced by semantic
+      // cell or node selection synchronization as an ordinary text range.
+      if (!block.type.isBlock || block.type.spec.atom || block.content.some(child => !child.type.isInline)) return null;
+    } catch { return null; }
+    const edge = (child: globalThis.Node, last: boolean): HTMLElement | undefined => {
+      if (child.nodeType !== 1) return undefined;
+      const candidate = child as HTMLElement;
+      const wrappers = candidate.matches('[data-fountain-text-path]') ? [candidate]
+        : Array.from(candidate.querySelectorAll<HTMLElement>('[data-fountain-text-path]'));
+      const editable = wrappers.filter(item => !blocked(item));
+      return last ? editable.at(-1) : editable[0];
+    };
+    const children = Array.from(node.childNodes);
+    for (let index = offset; index < children.length; index += 1) {
+      const next = edge(children[index]!, false);
+      if (next) return { element: next, offset: 0 };
+    }
+    for (let index = Math.min(offset, children.length) - 1; index >= 0; index -= 1) {
+      const previous = edge(children[index]!, true);
+      if (previous) return { element: previous, offset: textOffsetWithin(previous, previous, previous.childNodes.length) };
+    }
+    return null;
+  }
+
   read(): Selection | null {
     const domSelection = document.getSelection();
     delete (this as SelectionHandler & DirectionState)._b;
     if (!domSelection?.anchorNode || !domSelection.focusNode || !this.dom.contains(domSelection.anchorNode)) return null;
-    const anchorElement = (domSelection.anchorNode.nodeType === 1 ? domSelection.anchorNode as Element : domSelection.anchorNode.parentElement)
-      ?.closest<HTMLElement>('[data-fountain-text-path]');
-    const focusElement = (domSelection.focusNode.nodeType === 1 ? domSelection.focusNode as Element : domSelection.focusNode.parentElement)
-      ?.closest<HTMLElement>('[data-fountain-text-path]');
-    if (!anchorElement || !focusElement) return null;
-    const anchor = textOffsetWithin(anchorElement, domSelection.anchorNode, domSelection.anchorOffset);
-    const focus = textOffsetWithin(focusElement, domSelection.focusNode, domSelection.focusOffset);
+    const anchorPoint = this.readPoint(domSelection.anchorNode, domSelection.anchorOffset);
+    const focusPoint = this.readPoint(domSelection.focusNode, domSelection.focusOffset);
+    if (!anchorPoint || !focusPoint) return null;
+    const { element: anchorElement, offset: anchor } = anchorPoint;
+    const { element: focusElement, offset: focus } = focusPoint;
     const anchorPath = parsePath(anchorElement);
     const focusPath = parsePath(focusElement);
     if (anchorElement === focusElement) {

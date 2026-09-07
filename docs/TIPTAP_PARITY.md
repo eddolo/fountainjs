@@ -14,6 +14,14 @@ and mandatory Fountain-hosted services are not. Hosted infrastructure may be
 offered only behind replaceable provider contracts with a usable self-hosted
 reference.
 
+The 2026-09-07 human-use alignment audit fixes selected-range, nested/empty block,
+container, whole-document and table-cell formatting. It also fixes native
+paragraph-element DOM endpoints that previously left a stale model caret during
+backward keyboard selection. Recorded toolbar/history/HTML-reader evidence and
+cross-browser checks cover this repair; it does not close explicit RTL direction
+or localization. A newly observed full-HTML-page/server-fragment title leak is
+recorded in [ROADMAP.md](ROADMAP.md) as unresolved export/reopen work.
+
 Current Markdown follow-through (2026-09-07): optional raw-HTML block conversion
 and inline HTML scope projection connect the isolated server importer to
 Markdown, including nested containers and source snapshots. Inline projection

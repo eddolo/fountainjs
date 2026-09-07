@@ -28,6 +28,22 @@ setBackgroundColor(editor, '#dff8eb')
 console.log(getActiveTextStyle(editor))
 ```
 
+## Paragraph alignment
+
+`setTextAlignment(editor, 'left' | 'center' | 'right' | 'justify')` is a block
+command exported by the main and headless core entries. It formats the current
+paragraph/heading at a caret, or every selected paragraph/heading across a text
+range, selected container, selected table cells, or `AllSelection`. Nested and
+empty paragraphs are included; code and atomic media are not reformatted. A text
+range ending at the very beginning of another paragraph excludes that paragraph.
+One command is one undoable transaction and preserves the logical selection.
+Invalid, read-only, filtered and already-matching operations return `false`.
+
+The same command backs the React alignment controls and demo toolbars. Explicit
+alignment survives Fountain JSON and HTML fragment export/import. Ordinary
+Markdown cannot represent it and reports the loss. Alignment is **not writing
+direction**: explicit block direction and broader RTL/localization remain open.
+
 ## Document model
 
 Each property has an independent mark so applications can replace or remove one

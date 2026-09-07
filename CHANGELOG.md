@@ -43,6 +43,15 @@
 
 ### Fixed
 
+- Alignment applies to all selected paragraphs/headings, including nested and
+  empty blocks, container/all-document selections and selected table cells, in
+  one undoable transaction. A range ending at the next paragraph's start leaves
+  that unselected paragraph alone. No-op, invalid, read-only and filtered changes
+  return false without mutation. Native paragraph-element selection endpoints
+  (for example Chrome Home/Shift+Up) now map to document text, preventing toolbar
+  actions from using a stale caret. The declaration snapshot only adds a private
+  selection-reader helper; public command signatures are unchanged.
+
 - DOCX export gives each numbered/bullet list an independent instance and
   explicit base/restart definition, preserving supported custom starts and
   nested indentation instead of resetting every list to 1. Import respects

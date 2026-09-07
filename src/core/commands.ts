@@ -838,17 +838,44 @@ export function unsetMark(editor: Editor, markName: string): boolean {
 }
 
 export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'right' | 'justify'): boolean {
-  if (!editor.editable) return false;
-  if (editor.state.selection.kind !== 'text' && !(editor.state.selection instanceof NodeSelection)) return false;
-  const path = editor.state.selection instanceof NodeSelection
-    ? editor.state.selection.nodePath
-    : editor.state.selection.path.slice(0, -1);
-  const block = getNodeAtPath(editor.state.doc, path);
-  if (!TEXT_BLOCKS.includes(block.type.name)) return false;
-  try { block.type.create({ ...block.attrs, align }, block.content); }
-  catch { return false; }
-  editor.dispatch(editor.state.createTransaction().setNodeAttrs(path, { ...block.attrs, align }));
-  return true;
+  if (!editor.editable || !['left', 'center', 'right', 'justify'].includes(align)) return false;
+  const { state } = editor;
+  const { selection } = state;
+  if (selection instanceof GapSelection) return false;
+  const paths: number[][] = [];
+  const start = selection.path.slice(0, -1);
+  const end = selection.endPath.slice(0, -1);
+  const contains = (parent: readonly number[], child: readonly number[]) => (
+    parent.length <= child.length && parent.every((value, index) => child[index] === value)
+  );
+  const visit = (node: Node, path: number[]) => {
+    if (selection.kind === 'text') {
+      // Skip unrelated subtrees. A range ending at the next block's very
+      // beginning does not format that otherwise unselected block.
+      if (comparePaths(path, start) < 0 && !contains(path, start)) return;
+      if (comparePaths(path, end) > 0 && !contains(end, path)) return;
+      if (!selection.isCollapsed && comparePaths(start, end) !== 0
+        && comparePaths(path, end) === 0 && selection.to === 0 && selection.endPath.at(-1) === 0) return;
+    }
+    if (TEXT_BLOCKS.includes(node.type.name)) {
+      if (node.attrs.align !== align) paths.push(path);
+      return;
+    }
+    if (!node.type.spec.atom) node.content.forEach((child, index) => visit(child, [...path, index]));
+  };
+  const roots = selection instanceof CellSelection ? selection.cellPaths
+    : selection instanceof NodeSelection ? [selection.nodePath] : [[]];
+  roots.forEach(path => visit(getNodeAtPath(state.doc, path), [...path]));
+  if (!paths.length) return false;
+  const transaction = state.createTransaction();
+  try {
+    paths.forEach(path => {
+      const node = getNodeAtPath(state.doc, path);
+      node.type.create({ ...node.attrs, align }, node.content);
+      transaction.setNodeAttrs(path, { ...node.attrs, align });
+    });
+  } catch { return false; }
+  return editor.dispatch(transaction);
 }
 
 /** Inserts a semantic hard-break node and leaves an editable text cursor after it. */
