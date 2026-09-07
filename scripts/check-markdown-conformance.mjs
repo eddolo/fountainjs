@@ -550,6 +550,19 @@ if (htmlPolicyReport) {
 }
 
 const required = expandRanges(baseline.requiredMatchRanges);
+// An explicit syntax policy, not a reclassification of the default dialect.
+// Check every already-matching case as well as the three literal-address cases.
+const literalAddressExamples = new Set([...required, 608, 611, 612]);
+for (const example of commonmarkSpec.tests.filter(example => literalAddressExamples.has(example.number))) {
+  const source = materializeTabs(example.markdown);
+  const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
+  const document = MarkdownImporter.parse(source, schema, { autolinkLiterals: false });
+  const actual = semanticProjection(HTMLExporter.export(document, { document: false }));
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error(`Literal-address import policy disagrees with CommonMark example ${example.number}.`);
+  }
+}
+console.log(`Literal-address import policy: ${literalAddressExamples.size} reference semantic contracts passed (default baseline unchanged).`);
 const pending = expandRanges(baseline.pendingMismatchRanges);
 const intentional = new Set(baseline.intentionalDivergences.flatMap(({ exampleRanges }) => (
   [...expandRanges(exampleRanges)]

@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Current follow-through (2026-09-07, Unreleased): bare-address autolinking is now
+an explicit import choice rather than mandatory syntax. The opt-out passes 566
+reference comparisons while default scores stay unchanged. The headless demo
+and Chromium/Firefox/WebKit DOCX handoff checks, plus a recorded Chromium journey,
+exercise plain-address and explicit-link retention. This is a Markdown compatibility increment, not
+full CommonMark certification; see [ROADMAP.md](ROADMAP.md).
+
 Latest verified increment (2026-09-07, Unreleased): root Markdown reference
 definitions (standalone or immediately before content) retain source and lookup precedence through unrelated edits and
 block movement/deletion. The issue workflow demonstrates visual editing,

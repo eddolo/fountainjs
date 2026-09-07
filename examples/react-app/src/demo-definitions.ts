@@ -326,7 +326,9 @@ const kit = composeExtensions([
   ...StarterKit.extensions, MathExtension, LeanExtension,
 ])
 const schema = new Schema(kit.schema)
-const document = MarkdownImporter.parse(markdownSource, schema)
+const document = MarkdownImporter.parse(markdownSource, schema, {
+  autolinkLiterals: true, // false keeps bare URLs/email addresses as plain text
+})
 
 // The optional entry is isolated from browser/editor bundles.
 const { ServerHTMLImporter } = await import('fountainjs-editor/html/server')

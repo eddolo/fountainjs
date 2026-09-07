@@ -5,6 +5,26 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Literal-address import policy (2026-09-07, Unreleased): hosts can set
+`autolinkLiterals: false` to leave bare web/email addresses as text. Explicit
+Markdown/reference links, safe angle autolinks, and the default GFM-style dialect
+remain unchanged. Fifteen new unit cases cover nested content, canonical/source
+round trips, definition-prefix provenance and HTML adapter fallback. The reference
+gate checks this option against the existing 563 matching examples plus 608,
+611 and 612 (566 separate policy contracts, not a new default score). Three-engine
+contact-directory journeys verify keyboard toggling, unchanged source, DOCX
+download/reopen and explicit-link retention. Recorded desktop/mobile developer
+inspection: `artifacts/autolink-policy-20260907-recorded/`; cross-browser evidence:
+`artifacts/autolink-policy-20260907-browser-v2/`. The first run's link assertion
+omitted existing safe-link attributes and was corrected without changing runtime
+behavior. This does not certify native Word appearance or alter typing/paste
+rules; hosts must retain the import policy when reopening Markdown. See
+[the contract](MARKDOWN_SOURCE.md). This is not in published 0.4.0-beta.1.
+Full `pnpm check` passes 1,269 tests / 107 files, 385 reviewed declarations and
+the package/headless/runtime/interop/type gates. Runtime size remains inside the
+unchanged limits (1368.8 KiB ESM / 1137.9 KiB CJS). Performance and memory gates
+also pass; no ceilings or semantic baseline classifications were relaxed.
+
 Reference-source retention increment (2026-09-07, Unreleased): root Markdown
 reference definitions, standalone or directly before a paragraph/heading, now
 survive unrelated visual edits and block moves/deletions. Eighteen focused tests

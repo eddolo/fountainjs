@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added `MarkdownImportOptions.autolinkLiterals`: hosts can keep bare web/email
+  addresses as text while preserving explicit links and safe angle autolinks.
+  Default GFM-style behavior is unchanged. The headless demo exposes the choice,
+  with cross-browser DOCX handoff tests and a separate CommonMark policy gate.
+
 - Normal push/PR CI now includes the API snapshot, Node/Worker smoke tests and
   independent math-reference checks already required locally and for releases.
   A regression test guards coverage of every constituent of `pnpm check`.

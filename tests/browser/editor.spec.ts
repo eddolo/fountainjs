@@ -15,6 +15,11 @@ import { docxNumberingJourney } from './docx-numbering-journey';
 import { textAlignmentJourney } from './text-alignment-journey';
 import { fullReportHTML, htmlDocumentJourney } from './html-document-journey';
 import { issueEditorJourney } from './issue-editor-journey';
+import { markdownAutolinkJourney } from './markdown-autolink-journey';
+
+test('chooses literal address import and retains links through DOCX handoff', async ({ page }, info) => {
+  await markdownAutolinkJourney(page, info);
+});
 
 test('writes and reopens an issue with visual Markdown source fidelity and reader preview', async ({ page }, info) => {
   await issueEditorJourney(page, info);

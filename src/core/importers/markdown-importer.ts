@@ -42,6 +42,13 @@ export interface MarkdownHTMLInlineFallback {
 }
 
 export interface MarkdownImportOptions {
+  /**
+   * Recognize GFM-style bare web/email addresses as links (default true).
+   * Set false for CommonMark-style literal addresses. Explicit Markdown links
+   * and safe angle-bracket autolinks are unaffected. This is an import policy,
+   * not a full CommonMark mode or an editor typing/clipboard setting.
+   */
+  readonly autolinkLiterals?: boolean;
   /** Explicit, lossy projection of simple TeX tabular cells/alignment; not a TeX compiler. */
   readonly texTables?: boolean;
   /** Unsupported syntax stays literal; successful projections report omitted float/rule layout. */
@@ -1131,6 +1138,7 @@ function extendedEmailAutolinkToken(
 function inline(
   text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = [],
   htmlTokens?: Map<Node, MarkdownHTMLInlineSegment>,
+  autolinkLiterals = true,
 ): Node[] {
   const result: Node[] = [];
   let plain = '';
@@ -1235,7 +1243,7 @@ function inline(
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
           } else if (!parsed.image && schema.marks.link) {
             const mark = schema.marks.link.create({ href: parsed.href, title: parsed.title });
-            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens));
+            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens, autolinkLiterals));
           } else {
             result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks));
           }
@@ -1244,7 +1252,7 @@ function inline(
         }
       }
     }
-    if (schema.marks.link && !inheritedMarks.some((mark) => mark.type.name === 'link')) {
+    if (autolinkLiterals && schema.marks.link && !inheritedMarks.some((mark) => mark.type.name === 'link')) {
       const extended = extendedWebAutolinkToken(text, index) ?? extendedEmailAutolinkToken(text, index);
       if (extended) {
         flush();
@@ -1289,7 +1297,7 @@ function inline(
           result.push(...inline(text.slice(contentStart, match.start), schema, references, [
             ...inheritedMarks,
             type.create(),
-          ], htmlTokens));
+          ], htmlTokens, autolinkLiterals));
           index = match.end;
           handled = true;
           break;
@@ -1314,7 +1322,7 @@ function inline(
       result.push(...inline(text.slice(index + delimiter.length, end), schema, references, [
         ...inheritedMarks,
         ...types.map((type) => type.create()),
-      ], htmlTokens));
+      ], htmlTokens, autolinkLiterals));
       index = end + delimiter.length;
       handled = true;
       break;
@@ -1367,9 +1375,9 @@ function imageDescription(value: string, schema: Schema, references: References)
 }
 
 function projectInline(text: string, schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
-  if (!options.parseHTMLInline) return inline(text, schema, references);
+  if (!options.parseHTMLInline) return inline(text, schema, references, [], undefined, options.autolinkLiterals);
   const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
-  const nodes = inline(text, schema, references, [], tokens);
+  const nodes = inline(text, schema, references, [], tokens, options.autolinkLiterals);
   if (!tokens.size) return nodes;
   const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node })));
   let issue: MarkdownHTMLInlineFallback;
@@ -1390,7 +1398,7 @@ function projectInline(text: string, schema: Schema, references: References, opt
     issue = { source: text, reason: 'error', message: error instanceof Error ? error.message : 'Inline HTML adapter failed; literal source retained.' };
   }
   options.onHTMLInlineFallback?.(Object.freeze(issue));
-  return inline(text, schema, references);
+  return inline(text, schema, references, [], undefined, options.autolinkLiterals);
 }
 
 function paragraph(schema: Schema, value: string, references: References, align = 'left', options: MarkdownImportOptions = {}): Node {

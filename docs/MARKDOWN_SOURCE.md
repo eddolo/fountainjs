@@ -16,6 +16,34 @@ structured persistence format.
 
 ## Raw and visual workflow
 
+### Choosing whether bare addresses become links
+
+Fountain recognizes GFM-style bare web and email addresses by default. Hosts can
+disable that syntax extension without removing the schema's link capability:
+
+```ts
+const options = { autolinkLiterals: false }
+const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema, options)
+```
+
+`https://example.com`, `www.example.com`, and `writer@example.com` then remain
+plain text, including inside supported marks, lists, quotes and table cells.
+Explicit `[label](url)`, reference links, and safe `<https://example.com>` or
+`<writer@example.com>` autolinks are unchanged. URL safety checks still apply.
+The policy is passed through source capture and HTML-adapter fallback paths.
+It does not control interactive typing/paste rules, disable other Markdown
+extensions, preserve raw bytes, or claim complete CommonMark conformance.
+
+Keep the same import options when reopening exported Markdown: the syntax policy
+belongs to the host, not to the Markdown string or source snapshot. Portable JSON
+retains the actual link marks regardless of parser settings. The headless demo's
+**Turn bare URLs and email addresses into links** checkbox demonstrates the
+choice alongside developer JSON/HTML inspection.
+
+The reference gate checks the disabled policy against all 563 already-matching
+CommonMark examples plus literal-address examples 608, 611 and 612. These 566
+checks are a separate policy contract; the default conformance score is unchanged.
+
 ### Optional raw HTML block conversion
 
 Raw HTML is inert literal text by default. To convert recognized HTML **blocks**
