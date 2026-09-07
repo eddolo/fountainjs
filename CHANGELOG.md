@@ -43,6 +43,14 @@
 
 ### Fixed
 
+- DOCX export gives each numbered/bullet list an independent instance and
+  explicit base/restart definition, preserving supported custom starts and
+  nested indentation instead of resetting every list to 1. Import respects
+  numbering-instance identity and level/start overrides, keeping adjacent and
+  nested restarted lists separate. Independent browser-viewer counters are
+  visually checked; native Word rendering and arbitrary restart rules remain
+  unverified.
+
 - Zero-based ordered lists keep their original numbering when selected items
   are lifted or converted, including nested-list remainder slices. Browser and
   server HTML imports now parse list starts as HTML integer prefixes with a

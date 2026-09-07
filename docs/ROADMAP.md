@@ -5,6 +5,30 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+DOCX list-numbering follow-through (2026-09-07): export no longer resets ordinary
+custom starts to 1 or shares one counter between separate lists. Each list has
+an independent instance and explicit base definition/restart, with indentation
+for its nested level. Import reads instance identity and level overrides,
+including `startOverride` precedence. Tests cover adjacent lists, nested
+restarts, separate table cells and independently authored OOXML.
+
+The initial recorded comparison passed text checks but visibly displayed wrong
+numbers: the independent browser viewer ignores instance overrides. Explicit
+base definitions now display the intended 0, 7, 1 and nested 4 starts as well as
+retaining them in Fountain's model. Counter-style and physical indentation
+assertions guard that exact visual failure. The second revised render and its
+recording were inspected against the editor; typography is not pixel-identical.
+`pnpm check` passes 1,208 tests in 104 files, with API/package/runtime/type and
+unchanged size/performance limits; nine focused Chromium/Firefox/WebKit checks
+pass. Runtime totals remain within 1365 / 1135 KiB (1364.8 / 1134.8 measured).
+Evidence: `artifacts/docx-numbering-20260907-recorded-v3/` and
+`artifacts/docx-numbering-20260907-browser/`. Earlier failed/mismatched evidence
+is retained. The packaged native renderer was attempted but no bundled Windows
+LibreOffice executable is available; native Word/LibreOffice validation remains
+unverified. Arbitrary Word restart rules, counters resumed across prose and
+custom/negative formats remain outside this verified increment. No programme
+completion or npm publication is claimed.
+
 List-numbering fidelity audit (2026-09-07): a real zero-based procedure exposed
 incorrect `0 → 1` renumbering when lifting/converting selected list items. Shared
 slice construction now preserves zero for prefixes and correct offsets for

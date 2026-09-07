@@ -45,6 +45,45 @@ function documentFixture() {
 }
 
 describe('DOCX interchange', () => {
+  it('reads independently authored numbering overrides with instance isolation and override precedence', () => {
+    const ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+    const numbering = `<w:numbering xmlns:w="${ns}"><w:abstractNum w:abstractNumId="8"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/></w:lvl></w:abstractNum><w:num w:numId="77"><w:abstractNumId w:val="8"/><w:lvlOverride w:ilvl="0"><w:startOverride w:val="7"/></w:lvlOverride></w:num><w:num w:numId="88"><w:abstractNumId w:val="8"/><w:lvlOverride w:ilvl="0"><w:startOverride w:val="0"/><w:lvl w:ilvl="0"><w:start w:val="4"/></w:lvl></w:lvlOverride></w:num></w:numbering>`;
+    const body = [['77', 'Release'], ['77', 'Verify'], ['88', 'Prepare']].map(([id, text]) => `<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="${id}"/></w:numPr></w:pPr><w:r><w:t>${text}</w:t></w:r></w:p>`).join('');
+    const result = importDOCX(zipSync({ 'word/numbering.xml': strToU8(numbering),
+      'word/document.xml': strToU8(`<w:document xmlns:w="${ns}"><w:body>${body}</w:body></w:document>`),
+    }), schema).document;
+    expect(result.content.map(node => ({ start: node.attrs.start, text: node.textContent }))).toEqual([
+      { start: 7, text: 'ReleaseVerify' }, { start: 0, text: 'Prepare' },
+    ]);
+  });
+
+  it('allocates independent numbering inside separate table cells', () => {
+    const p = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const original = schema.node('doc', {}, [schema.node('table', {}, [schema.node('table_row', {}, [0, 5].map(start =>
+      schema.node('table_cell', { background: '' }, [schema.node('ordered_list', { start }, [schema.node('list_item', {}, [p('Check')])])]),
+    ))])]);
+    expect(importDOCX(exportDOCX(original).bytes, schema).document.toJSON()).toEqual(original.toJSON());
+  });
+
+  it('retains independent list starts, adjacent lists and nested restarts', () => {
+    const p = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const li = (text: string) => schema.node('list_item', {}, [p(text)]);
+    const ol = (start: number, text: string) => schema.node('ordered_list', { start }, [li(text), li(`${text} next`)]);
+    const original = schema.node('doc', {}, [ol(0, 'Preparation'), ol(7, 'Release'), p('Separate checks'), ol(1, 'Restart'),
+      schema.node('bullet_list', {}, [schema.node('list_item', {}, [p('Parent'), ol(4, 'Nested'), ol(9, 'Other nested')])]),
+    ]);
+    const exported = exportDOCX(original);
+    expect(exported.report.issues.some(issue => issue.code === 'ordered-list-start-normalized')).toBe(false);
+    expect(importDOCX(exported.bytes, schema).document.toJSON()).toEqual(original.toJSON());
+    const parts = unzipSync(exported.bytes);
+    const body = strFromU8(parts['word/document.xml']);
+    const ids = [...body.matchAll(/<w:numId w:val="(\d+)"/g)].map(match => match[1]);
+    expect(new Set(ids).size).toBe(6);
+    expect(ids[0]).toBe(ids[1]);
+    expect(ids[0]).not.toBe(ids[2]);
+    expect(strFromU8(parts['word/numbering.xml'])).toContain('<w:startOverride w:val="0"/>');
+  });
+
   it('reports math as lossy TeX fallback rather than native editable Word equations', () => {
     const mathSchema = new Schema(composeExtensions([...StarterKit.extensions, createMathExtension()]).schema);
     const inlineSource = String.raw`\eqref{eq:energy}`;

@@ -11,6 +11,11 @@ import { vueRunbookJourney } from './vue-runbook-journey';
 import { svelteReportJourney } from './svelte-report-journey';
 import { angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
+import { docxNumberingJourney } from './docx-numbering-journey';
+
+test('exports independent DOCX list starts and renders the same procedure beside the editor', async ({ page }, info) => {
+  await docxNumberingJourney(page, info);
+});
 
 test('retains zero-based list numbers through keyboard outdent history and export', async ({ page }, info) => {
   await listNumberingJourney(page, info);

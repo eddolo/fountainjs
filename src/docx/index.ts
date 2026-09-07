@@ -156,7 +156,7 @@ interface XMLElement {
 interface ParsedParagraph {
   readonly node: FountainNode;
   readonly continuation?: readonly FountainNode[];
-  readonly list?: { readonly level: number; readonly ordered: boolean; readonly start: number };
+  readonly list?: { readonly level: number; readonly ordered: boolean; readonly start: number; readonly id?: string };
   readonly caption?: boolean;
 }
 
@@ -495,6 +495,20 @@ function readNumbering(root: XMLElement | undefined): ReadonlyMap<string, Number
     const abstractId = attr(child(numbering, 'abstractNumId'), 'val');
     if (!numId || !abstractId) continue;
     for (const [level, value] of abstracts.get(abstractId) ?? []) levels.set(`${numId}:${level}`, value);
+    for (const override of elements(numbering, 'lvlOverride')) {
+      const index = attr(override, 'ilvl') ?? '0';
+      const key = `${numId}:${index}`;
+      const base = levels.get(key);
+      if (!base) continue;
+      const definition = child(override, 'lvl');
+      const format = attr(child(definition, 'numFmt'), 'val');
+      const start = Number(attr(child(override, 'startOverride'), 'val')
+        ?? attr(child(definition, 'start'), 'val') ?? base.start);
+      levels.set(key, {
+        ordered: format ? format !== 'bullet' && format !== 'none' : base.ordered,
+        start: Number.isInteger(start) && start >= 0 ? start : base.start,
+      });
+    }
   }
   return levels;
 }
@@ -545,7 +559,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   const numId = attr(child(numPr, 'numId'), 'val');
   const level = Number(attr(child(numPr, 'ilvl'), 'val') ?? 0);
   const definition = numId ? numbering.get(`${numId}:${level}`) ?? numbering.get(`${numId}:0`) : undefined;
-  if (definition) return { node: paragraph, continuation, list: { level: Math.max(0, Math.min(8, level)), ...definition } };
+  if (definition) return { node: paragraph, continuation, list: { level: Math.max(0, Math.min(8, level)), ...definition, id: numId } };
   const listStyle = /^list(bullet|number)(\d+)?$/i.exec(style);
   if (listStyle) return {
     node: paragraph,
@@ -565,9 +579,11 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
   const parseList = (level: number, ordered: boolean): FountainNode => {
     const listItems: FountainNode[] = [];
     const start = items[cursor]?.list?.start ?? 1;
+    const id = items[cursor]?.list?.id;
     while (cursor < items.length) {
       const current = items[cursor]!;
-      if (!current.list || current.list.level < level || (current.list.level === level && current.list.ordered !== ordered)) break;
+      if (!current.list || current.list.level < level || (current.list.level === level
+        && (current.list.ordered !== ordered || current.list.id !== id))) break;
       if (current.list.level > level) {
         if (!listItems.length) {
           issues.push({ code: 'list-level-normalized', severity: 'warning', message: 'A list began below level zero; its nesting was normalized.' });
@@ -896,6 +912,8 @@ interface ExportedMedia {
 }
 
 interface ExportContext {
+  readonly numbering: string[];
+  readonly numberingDefinitions: string[];
   readonly hyperlinks: Map<string, string>;
   readonly mediaBySource: Map<string, ExportedMedia>;
   readonly media: ExportedMedia[];
@@ -1153,10 +1171,18 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       blockXML(item, context, [...path, index], level, true, list)
     ).join('');
     case 'bullet_list': case 'ordered_list': {
-      const numId = node.type.name === 'ordered_list' ? 2 : 1;
-      if (node.type.name === 'ordered_list' && Number(node.attrs.start) !== 1) {
-        context.issues.push({ code: 'ordered-list-start-normalized', severity: 'warning', message: 'DOCX export currently normalizes a custom ordered-list start to 1.', path });
+      const ordered = node.type.name === 'ordered_list';
+      const requested = ordered ? Number(node.attrs.start) : 1;
+      const start = Number.isInteger(requested) && requested >= 0 && requested <= 2147483647 ? requested : 1;
+      if (requested !== start) {
+        context.issues.push({ code: 'ordered-list-start-normalized', severity: 'warning', message: 'DOCX export normalized a list start outside the supported 0–2147483647 range to 1.', path });
       }
+      // Each document list has its own instance, including adjacent/restarted
+      // lists and lists in table cells. Nested lists must not reset a parent.
+      const numId = context.numbering.length + 1;
+      const left = 720 * (level + 1);
+      context.numberingDefinitions.push(`<w:abstractNum w:abstractNumId="${numId}"><w:lvl w:ilvl="${level}"><w:start w:val="${start}"/><w:numFmt w:val="${ordered ? 'decimal' : 'bullet'}"/><w:lvlText w:val="${ordered ? `%${level + 1}.` : '•'}"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="${left}"/></w:tabs><w:ind w:left="${left}" w:hanging="360"/></w:pPr></w:lvl></w:abstractNum>`);
+      context.numbering.push(`<w:num w:numId="${numId}"><w:abstractNumId w:val="${numId}"/><w:lvlOverride w:ilvl="${level}"><w:startOverride w:val="${start}"/></w:lvlOverride></w:num>`);
       return node.content.map((item, index) => item.content.map((block, childIndex) => {
         if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1), quote);
         return blockXML(block, context, [...path, index, childIndex], level, quote, { numId, level, continuation: childIndex > 0 });
@@ -1188,14 +1214,13 @@ const ROOT_RELS = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relat
 const HEADING_SIZES = [64, 52, 44, 36, 30, 26] as const;
 const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr></w:style>${HEADING_SIZES.map((size, index) => `<w:style w:type="paragraph" w:styleId="Heading${index + 1}"><w:name w:val="heading ${index + 1}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="${index === 0 ? 360 : 240}" w:after="160"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:color w:val="181426"/><w:sz w:val="${size}"/><w:szCs w:val="${size}"/></w:rPr></w:style>`).join('')}<w:style w:type="paragraph" w:styleId="Quote"><w:name w:val="Quote"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="left"/><w:ind w:left="360" w:right="360"/><w:pBdr><w:left w:val="single" w:sz="18" w:space="12" w:color="7047FF"/></w:pBdr><w:spacing w:before="160" w:after="200"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:color w:val="51476A"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Caption"><w:name w:val="Caption"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:after="200"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:i/><w:color w:val="6B6378"/><w:sz w:val="19"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Code"><w:name w:val="Code"/><w:basedOn w:val="Normal"/><w:pPr><w:shd w:val="clear" w:fill="F2EFF8"/><w:spacing w:before="120" w:after="160"/></w:pPr><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:sz w:val="20"/></w:rPr></w:style><w:style w:type="character" w:styleId="CodeChar"><w:name w:val="Code Char"/><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:shd w:val="clear" w:fill="F2EFF8"/></w:rPr></w:style><w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/></w:style></w:styles>`;
 
-const NUMBERING = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="1">${Array.from({ length: 9 }, (_, level) => `<w:lvl w:ilvl="${level}"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/></w:lvl>`).join('')}</w:abstractNum><w:abstractNum w:abstractNumId="2">${Array.from({ length: 9 }, (_, level) => `<w:lvl w:ilvl="${level}"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%${level + 1}."/></w:lvl>`).join('')}</w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="1"/></w:num><w:num w:numId="2"><w:abstractNumId w:val="2"/></w:num></w:numbering>`;
 
 export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}): DOCXExportResult {
   if (node.type.name !== 'doc') throw new TypeError('exportDOCX requires a document node.');
   node.type.schema.validate(node);
   const issues: DOCXIssue[] = [];
   const context: ExportContext = {
-    hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options,
+    hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options, numbering: [], numberingDefinitions: [],
     maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
     mediaBytes: 0, nextDrawingId: 1, mathSources: [], mathCharacters: 0,
@@ -1213,7 +1238,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     '_rels/.rels': strToU8(ROOT_RELS),
     'word/document.xml': strToU8(documentXML),
     'word/styles.xml': strToU8(STYLES),
-    'word/numbering.xml': strToU8(NUMBERING),
+    'word/numbering.xml': strToU8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">${context.numberingDefinitions.join('')}${context.numbering.join('')}</w:numbering>`),
     'word/_rels/document.xml.rels': strToU8(documentRels),
     'docProps/core.xml': strToU8(core),
     'docProps/app.xml': strToU8(app),

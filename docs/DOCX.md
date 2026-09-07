@@ -57,7 +57,8 @@ closed.
 - paragraphs, headings, alignment, quotes, and code blocks;
 - bold, italic, underline, strike, code, text colour, highlight, safe links,
   tabs, and hard breaks;
-- nested numbered and bullet lists;
+- nested numbered and bullet lists, with independent instances and decimal
+  starts from 0 through 2147483647;
 - tables, required Word table grids, header rows, horizontal spans, and vertical
   spans;
 - verified PNG, JPEG, GIF, and WebP block/inline images, alternative text,
@@ -65,13 +66,34 @@ closed.
 - horizontal rules, core properties, and A4 or Letter section geometry.
 
 Unsupported inline atoms, non-raster media, custom blocks, and custom marks are
-converted to readable text and named in the report. Non-default ordered-list
-starts are currently normalized to 1 and reported. Raster data URLs embed
+converted to readable text and named in the report. Ordered-list starts outside
+the supported range are normalized to 1 and reported. Raster data URLs embed
 directly. Other image sources require the synchronous, host-controlled
 `resolveImage` callback to return bytes already authorized and available to the
 host; Fountain never performs a network request. Magic bytes are checked and a
 declared content-type mismatch fails to readable fallback rather than being
 trusted.
+
+## List numbering and restarts
+
+Each exported list receives an independent numbering instance and base level
+definition. The base start and `w:startOverride` agree, so a reader that supports
+base numbering but ignores overrides can still render the intended values.
+Explicit indentation reflects the nested level. Adjacent lists, nested lists
+and lists in separate table cells do not accidentally share a running counter.
+Import recognizes instance identity and level overrides; `startOverride` takes
+precedence over an overridden level's own start, as specified by the
+[OOXML numbering contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.startoverridenumberingvalue?view=openxml-3.0.1).
+
+The recorded release-procedure fixture compares editor output with the
+independent browser DOCX viewer and reimports exact list structure. The first
+visual inspection exposed that viewer's ignored overrides; explicit base
+definitions corrected the displayed 0, 7, 1 and nested 4 starts. This is bounded
+numbering evidence, not pixel-identical editor/Word layout or native Word
+certification. Native Word/LibreOffice rendering remains pending: the packaged
+render command could not find a bundled Windows LibreOffice executable.
+Arbitrary Word restart rules, counters resumed after intervening prose, custom
+number formats and negative numbering are not certified by this fixture.
 
 ## Experimental native Word equations
 

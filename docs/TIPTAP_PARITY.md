@@ -55,6 +55,13 @@ Three-engine keyboard/history/export checks cover the repair. Native reversed,
 negative, non-decimal and per-item override numbering still require a richer
 end-to-end contract; server import now reports those losses, not parity.
 
+DOCX additionally preserves supported custom starts and separate list instances,
+including nested restarts and table-cell lists. Independent OOXML import tests
+and recorded browser-renderer comparisons cover the new contract. Visual review
+found ignored overrides in that viewer; explicit base definitions corrected
+the displayed counters. Native Word/LibreOffice certification and arbitrary
+Word restart/continuation rules remain open. See [DOCX.md](DOCX.md).
+
 The independent `literal-html-reference-v1` gate now proves the declared inert
 policy for all 72 raw-HTML examples, plus 144 generated boundary/round-trip
 cases. The development-only reference parser must first reproduce all 652

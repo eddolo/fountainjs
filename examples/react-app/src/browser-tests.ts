@@ -60,7 +60,7 @@ import {
 } from '../../../src/comments';
 import { DetailsExtension } from '../../../src/details';
 import { RubyExtension } from '../../../src/ruby';
-import { exportDOCX } from '../../../src/docx';
+import { exportDOCX, importDOCX } from '../../../src/docx';
 import { renderAsync as renderIndependentDOCX } from 'docx-preview';
 import '../../../src/styles.css';
 
@@ -1211,7 +1211,7 @@ const runPaginationStructuralBudget = (blockCount = 5_000, iterations = 6) => {
 
 let docxVisualView: EditorView | undefined;
 let docxVisualEditor: ReturnType<typeof createEditor> | undefined;
-const renderDOCXVisualComparison = async () => {
+const renderDOCXVisualComparison = async (numbering = false) => {
   docxVisualView?.destroy();
   docxVisualEditor?.destroy();
   document.querySelector('#browser-docx-visual-comparison')?.remove();
@@ -1234,7 +1234,7 @@ const renderDOCXVisualComparison = async () => {
 
   const schema = new Schema(StarterKit.schema);
   const strong = schema.marks.strong.create();
-  const fixture = schema.node('doc', {}, [
+  let fixture = schema.node('doc', {}, [
     schema.node('heading', { level: 1, align: 'left' }, [schema.text('Visual export parity')]),
     schema.node('paragraph', {}, [schema.text('The same '), schema.text('structured document', [strong]), schema.text(' is rendered on both sides.')]),
     schema.node('image_super', {
@@ -1249,6 +1249,19 @@ const renderDOCXVisualComparison = async () => {
     ]),
   ]);
 
+  if (numbering) {
+    const p = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+    const ol = (start: number, texts: string[]) => schema.node('ordered_list', { start }, texts.map(text => schema.node('list_item', {}, [p(text)])));
+    fixture = schema.node('doc', {}, [
+      schema.node('heading', { level: 1 }, [schema.text('Release procedure')]),
+      p('Preparation starts at zero and release checks start at seven.'),
+      ol(0, ['Prepare the workspace', 'Confirm the inputs']),
+      p('Run the release checks'),
+      ol(7, ['Build the release', 'Verify the output']),
+      ol(1, ['Restart a separate checklist', 'Record the result']),
+      schema.node('bullet_list', {}, [schema.node('list_item', {}, [p('Nested checks'), ol(4, ['Inspect the archive', 'Approve the handover'])])]),
+    ]);
+  }
   const section = document.createElement('section');
   section.id = 'browser-docx-visual-comparison';
   section.innerHTML = '<h2>Fountain editor ↔ independent DOCX render</h2><div class="visual-export-grid"><article><h3>Fountain editor</h3><div data-visual-fountain></div></article><article><h3>DOCX renderer</h3><div data-visual-docx-styles></div><div data-visual-docx></div></article></div>';
@@ -1261,7 +1274,7 @@ const renderDOCXVisualComparison = async () => {
   const styleMount = section.querySelector<HTMLElement>('[data-visual-docx-styles]')!;
   docxVisualEditor = createEditor({ schema: StarterKit.schema, content: fixture.toJSON(), editable: false });
   docxVisualView = new EditorView(fountainMount, docxVisualEditor, { ariaLabel: 'Fountain export source' });
-  const exported = exportDOCX(fixture);
+  const exported = exportDOCX(fixture, { page: 'letter', title: numbering ? 'Release procedure' : 'Visual export parity' });
   await renderIndependentDOCX(exported.bytes, docxMount, styleMount, { inWrapper: true, breakPages: true, useBase64URL: true });
   section.scrollIntoView({ block: 'start' });
   return {
@@ -1272,6 +1285,7 @@ const renderDOCXVisualComparison = async () => {
     fountainImages: fountainMount.querySelectorAll('img').length,
     docxImages: docxMount.querySelectorAll('img').length,
     docxPages: docxMount.querySelectorAll('section.docx').length,
+    ...(numbering ? { bytes: Array.from(exported.bytes), source: fixture.toJSON(), reopened: importDOCX(exported.bytes, schema).document.toJSON() } : {}),
   };
 };
 
