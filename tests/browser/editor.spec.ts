@@ -2861,6 +2861,7 @@ test('round-trips marker-relative list containers and exact code whitespace', as
     '```\nkeep\n\n\nblank\n',
     '> 1. > Blockquote\ncontinued here.',
     'before [](./target.md "Details") after []()',
+    'before <a href="&ouml;.html" title="\\*"> after',
   ];
   const results = await page.evaluate(sources => sources.map(source => (
     (globalThis as any).fountainBrowserTest.inspectMarkdown(source)
@@ -2875,6 +2876,8 @@ test('round-trips marker-relative list containers and exact code whitespace', as
   expect(results[1].markdown).toContain('\n  \n  3. Nested');
   expect(results[2].document.content).toHaveLength(4);
   expect(results[3].document.content[0].content[0].text).toBe('keep\n\n\nblank');
+  expect(results[6].document.content[0].content[0].text).toBe(sources[6]);
+  expect(results[6].html).not.toContain('<a ');
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

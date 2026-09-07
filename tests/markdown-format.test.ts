@@ -1500,6 +1500,23 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('keeps unknown inline HTML literal without decoding its attribute source as Markdown', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    for (const source of [
+      '<a href="/bar\\/)">',
+      'before <a href="&ouml;&ouml;.html" title="\\*"> after',
+      '<unknown value="&amp;lt;" escaped="\\\\">literal</unknown>',
+      '<a href="javascript:alert(1)" onclick="alert(2)">literal</a>',
+    ]) {
+      const document = MarkdownImporter.parse(source, schema);
+      expect(document.textContent).toBe(source);
+      const html = HTMLExporter.export(document, { document: false });
+      expect(html).not.toContain('<a ');
+      expect(html).not.toContain('<unknown ');
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
   it('preserves an empty link label and its destination through canonical export', () => {
     const schema = new Schema(CoreSchemaSpec);
     for (const source of ['[](./target.md)', '[]()', 'before [](./target.md "Details") after', '[](./a)[](./b)']) {

@@ -1090,7 +1090,9 @@ function inline(text: string, schema: Schema, references: References, inheritedM
       }
       const htmlEnd = inlineHTMLTokenEnd(text, index);
       if (htmlEnd > index) {
-        plain += text.slice(index, htmlEnd);
+        // Unknown HTML is currently readable literal text. Its attributes are
+        // not Markdown: keep their backslashes/entities opaque to the flush.
+        plain += text.slice(index, htmlEnd).replace(/[\\&]/gu, '\\$&');
         index = htmlEnd;
         continue;
       }

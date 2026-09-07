@@ -203,6 +203,10 @@ do not enter the shipped runtime. The versioned
 classifies every example: 563 currently match, 80 remain pending, and nine are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
+The 80 pending examples are grouped into 72 raw-HTML cases and eight
+empty-document/container policy cases. Every pending example must belong to
+exactly one named work group with proof requirements. These are not 80 unrelated
+emphasis/parser defects, and regrouping them does not count as new support.
 The harness also materializes the specification's visible tab notation before
 either side is parsed, so those cases exercise real tab characters.
 Equivalent decoded and percent-encoded link destinations are canonicalized as
@@ -211,11 +215,10 @@ URIs so representation spelling is not mistaken for a semantic failure.
 Passing this corpus is **not** a claim of complete CommonMark or GFM
 conformance. Important remaining work includes:
 
-- the remaining delimiter-stack emphasis cases beyond the flanking,
-  rule-of-three, nesting, and overlap baseline;
 - all HTML block/inline precedence and safe unknown-HTML policy;
-- the remaining HTML-comment/list interactions and empty-item representation;
-- full link destination/title/reference precedence;
+- HTML-comment/list interactions and empty-item representation;
+- raw-HTML interactions with links, emphasis, escapes, and line breaks;
+- source-preserving treatment of an otherwise empty document or container;
 - additional strikethrough delimiter-stack cases;
 - configurable handling for CommonMark's arbitrary URI schemes without
   weakening Fountain's default safe-URL policy;
@@ -225,6 +228,16 @@ conformance. Important remaining work includes:
 
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
+
+The next parser milestone is a coherent raw-HTML contract, not another batch of
+unrelated delimiter exceptions. Account for all seven CommonMark HTML block
+classes, inline token precedence, unsupported schema elements, and default
+inert handling. Any opt-in conversion must pass the same URL/style/schema
+safety checks as HTML import and report losses. Script, style, processing
+instruction, and arbitrary custom-tag cases must not become executable content
+just to make their reference-rendered HTML match. Empty caret hosts need a
+separate export-policy review; blanket removal of empty paragraphs would erase
+real author-created spacing.
 
 The earlier Markdown baseline, including raw reference-label correctness,
 container definitions, link precedence, full Unicode 17 case folding,
@@ -262,7 +275,9 @@ and unsafe `href` attributes do not become active link marks.
 ## Security and collaboration
 
 Raw Markdown and frontmatter are untrusted input. The snapshot does not execute
-content. Character references are decoded before parsed URLs pass Fountain's
+content. Unknown inline HTML currently remains readable literal text; its
+attribute backslashes and entity spelling are not decoded as Markdown.
+Character references are decoded before parsed URLs pass Fountain's
 protocol policy, and the final model still passes full schema validation.
 
 The snapshot belongs to an import/export session rather than shared document

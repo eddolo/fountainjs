@@ -236,6 +236,20 @@ const intentional = new Set(baseline.intentionalDivergences.flatMap(({ exampleRa
   [...expandRanges(exampleRanges)]
 )));
 const classifications = [required, pending, intentional];
+if (!Array.isArray(baseline.pendingWorkGroups) || !baseline.pendingWorkGroups.length) {
+  throw new Error('Pending CommonMark examples need concrete work groups.');
+}
+const pendingGroups = baseline.pendingWorkGroups.map(({ name, exampleRanges, requiredProof }) => {
+  if (!name || !exampleRanges || !requiredProof) throw new Error('Every pending work group needs a name, examples, and proof requirements.');
+  const examples = expandRanges(exampleRanges);
+  if ([...examples].some(number => !pending.has(number))) throw new Error(`${name} includes an example that is not pending.`);
+  return { name, examples };
+});
+for (const number of pending) {
+  if (pendingGroups.filter(group => group.examples.has(number)).length !== 1) {
+    throw new Error(`Pending CommonMark example ${number} needs exactly one work group.`);
+  }
+}
 for (let number = 1; number <= commonmarkSpec.tests.length; number += 1) {
   const count = classifications.filter((examples) => examples.has(number)).length;
   if (count !== 1) {
@@ -257,6 +271,8 @@ if (reportOnly) console.log(`Matched example ranges: ${compressRanges(matches)}`
 if (newlyMatching.length) console.log(`New matches to review: ${compressRanges(newlyMatching)}`);
 console.log(`Baseline classifications: ${required.size} matching, ${pending.size} pending, ${intentional.size} intentional divergences.`);
 if (reportOnly) {
+  console.log('Pending implementation work:');
+  for (const group of pendingGroups) console.log(`- ${group.name}: ${group.examples.size}`);
   console.log('Remaining mismatches by section:');
   for (const [section, examples] of [...mismatchSections].sort((left, right) => left[0].localeCompare(right[0]))) {
     console.log(`- ${section}: ${examples.length}${showMismatches ? ` (${compressRanges(examples)})` : ''}`);

@@ -4,6 +4,11 @@
 
 ### Fixed
 
+- Unknown inline HTML remains inert literal text without accidentally decoding
+  backslash escapes or entities in its attribute source. The remaining 80
+  CommonMark cases now have enforced work-group ownership: 72 raw-HTML cases
+  and eight empty-document/container policy cases. This classification does
+  not claim additional CommonMark matches or enable executable HTML.
 - Empty Markdown link labels retain their destination and title instead of
   silently losing the link. Browser and server HTML import preserve safe empty
   anchors, top-level inline formatting, and surrounding text in mixed clipboard

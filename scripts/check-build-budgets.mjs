@@ -266,7 +266,10 @@ const limits = Object.freeze({
   // Existing consumer entries do not grow.
   // Fixed-point outer-to-inner HTML mark projection adds less than 1 KiB across
   // the duplicated ESM entry graph while preserving every individual ceiling.
-  'all ESM runtime code': 1303 * kibibyte,
+  // Marker-relative lists, complete inline HTML fragments, and opaque literal
+  // HTML attributes bring the aggregate to about 1303 KiB. Keep every entry's
+  // individual ceiling; round this aggregate ceiling up by one KiB.
+  'all ESM runtime code': 1304 * kibibyte,
   'all CommonJS runtime code': 1090 * kibibyte,
 });
 
