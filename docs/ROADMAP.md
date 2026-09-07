@@ -46,6 +46,17 @@ PDF/DOCX fidelity. Arbitrary ID targets inside clipped custom fragments and
 stylesheet ID/URL rewriting remain host projection responsibilities requiring
 broader reference-layout work; do not claim universal SVG/HTML export parity.
 
+Equation PDF audit (2026-09-07): the lab now prints only a current paged snapshot,
+with no author/reader duplication or stale-output printing. A real three-page
+Chromium PDF preserves both internal equation destinations and landscape Letter
+dimensions; every page was independently rendered by Poppler and compared with
+the screen preview. Firefox/WebKit cover print CSS, not native PDF output.
+This does not reproduce the original paper, provide tagged accessible math, or
+finish DOCX. A separate DOCX regression confirms current math export is TeX
+fallback text with explicit loss reports, not native OMML or live numbering/
+references. The next Word boundary must preserve technical source while adding
+tested editable math and reference semantics, not silently substitute pictures.
+
 Academic rendering follow-through (2026-09-07): the separate equation-reference
 lab now uses a bounded host-owned MathJax SVG renderer for original labelled
 equations, forward links, reorder/renumber, source editing, history, visible

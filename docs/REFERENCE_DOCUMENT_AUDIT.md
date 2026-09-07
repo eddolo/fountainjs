@@ -443,11 +443,51 @@ The optional preview entry measures 13.2 KiB ESM / 11.2 KiB CJS; total runtime
 and aggregate runtime limits changed; no dependency, CSS or performance-cap
 increase.
 
-**Still pending:** independently rendered academic PDF/DOCX output and original
-paper layout comparison. DOM references do not prove PDF link destinations.
+**Still pending at this boundary:** independently rendered academic PDF/DOCX
+output and original paper layout comparison. The PDF increment below separately
+tests the exported destinations; DOM references alone do not prove them.
 Targets inside arbitrary clipped custom fragments need visible-fragment host
 projections; stylesheet ID selectors/URL text are not rewritten. This is not
 a universal SVG export sanitizer or complete paper reproduction.
+
+### Actual browser PDF output (2026-09-07)
+
+The lab's **Print / Save PDF** invokes the native browser print workflow. Host
+print CSS exposes only the paged snapshot; a missing or stale snapshot displays
+a notice instead. The recorded Chromium journey clicks that real button and
+observes `beforeprint`, then captures the same print projection through the
+browser PDF API. It does not automate operating-system print-dialog settings.
+PDF.js independently checks three 792 × 612 pt pages, twenty unique research
+notes without repeated author/reader content, two internal link annotations,
+their named destinations and the expected destination page indices. No remote
+URL substitutes for either equation destination.
+
+Recorded evidence: `artifacts/manual-math-pdf-20260907a/results/` (video, trace,
+screen-page PNGs and actual PDF); final sample:
+`output/pdf/fountain-equation-reference-audit-20260907.pdf`. All three pages were
+rendered through Poppler at 96 dpi and visually inspected against the screen
+captures. Formulas, suppressed first-row numbering, equation numbers and page
+breaks are intact. PDF renders are 1056 × 816 pixels; screen element captures
+are 1056 × 817 due to fractional screenshot boundaries. Dark-content bounding
+boxes differ by at most two pixels in this comparison; glyph antialiasing is
+visibly different. This is supporting geometry evidence, not pixel identity or
+a semantic proof for arbitrary equations.
+
+The final targeted browser selection passed 10 tests, with 2 explicit non-Chromium
+PDF skips, at `artifacts/browser-math-pdf-20260907final/results/`. Firefox/WebKit
+verify screen/print layout and stale-state behaviour, not native PDF output.
+An older host-projection test's obsolete generated-ID suffix expectation was
+updated to the isolated-ID contract and rerun on all three engines.
+Full `pnpm check` passed 992 tests in 91 files and the existing package, API,
+headless/server, format, runtime-size and performance gates.
+
+**Remaining:** the original paper's full layout, independent native Firefox/
+Safari PDF evidence, tagged/accessible PDF math and DOCX fidelity. This PDF has
+vector equation artwork, not editable Word equations. The DOCX probe and
+`tests/docx.test.ts` explicitly show TeX retained as lossy text fallback; reimport
+produces paragraphs, not math nodes. No OMML, automatic Word equation numbering
+or live Word equation references are claimed. No new runtime dependency or
+runtime budget change was needed for this host printing increment.
 
 ## Lean reference track
 

@@ -2034,6 +2034,16 @@ The equation-reference lab demonstrates this boundary through **Build page
 preview**, with explicit stale-snapshot feedback after editing. Its landscape
 Letter geometry matches the host renderer's 960px equation width, not the
 original academic paper. DOM link verification is not PDF/DOCX fidelity proof.
+The lab also supplies **Print / Save PDF**, using the browser print dialog and
+host print CSS that excludes the author, reader and site controls. Printing is
+disabled for an absent/stale snapshot; direct browser printing shows an explicit
+notice instead of the stale pages. Chromium output has separately checked PDF
+page dimensions, internal equation destinations and no duplicated prose, plus
+independent Poppler rendering of all three sample pages. This is not a tagged
+accessible PDF, native editable math export, or full academic-paper comparison.
+Firefox/WebKit print layouts are tested; their native PDF generation is not
+covered by Playwright. DOCX currently exports math as TeX fallback text with a
+loss report, not OMML equations, numbering or active equation references.
 
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree

@@ -8,8 +8,8 @@ import { textlessReplacementJourney } from './textless-replacement-journey';
 import { mathFilesJourney } from './math-files-journey';
 import { mathPagesJourney } from './math-pages-journey';
 
-test('keeps real SVG equation links inside paged snapshots across editing and rebuilding', async ({ page }, info) => {
-  await mathPagesJourney(page, info);
+test('keeps real SVG equation links inside paged snapshots across editing and rebuilding', async ({ page, browserName }, info) => {
+  await mathPagesJourney(page, info, browserName === 'chromium');
 });
 
 test('saves and reopens equation files with source, references and history intact', async ({ page }, info) => {
@@ -671,7 +671,8 @@ test('uses a host print renderer without moving or exposing live custom DOM', as
   await expect(projection).toHaveCount(1);
   await expect(projection).toContainText('Host-rendered heading');
   await expect(projection).toHaveAttribute('contenteditable', 'false');
-  await expect(projection).toHaveAttribute('id', /^fountain-preview-\d+-\d+-host-print-heading$/u);
+  await expect(projection).toHaveAttribute('id', /^fountain-preview-\d+-\d+$/u);
+  await expect(projection).not.toHaveAttribute('id', 'host-print-heading');
   await expect(projection).not.toHaveAttribute('data-fountain-path', /.+/u);
   await expect(projection.locator('button')).toBeDisabled();
   await expect(page.locator('#pages-editor h2')).toHaveText('Measured layout');

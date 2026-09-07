@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { Schema } from '../src/core';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { StarterKit } from '../src/extensions';
+import { composeExtensions, createMathExtension } from '../src';
 
 const schema = new Schema(StarterKit.schema);
 const ONE_PIXEL_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
@@ -44,6 +45,28 @@ function documentFixture() {
 }
 
 describe('DOCX interchange', () => {
+  it('reports math as lossy TeX fallback rather than native editable Word equations', () => {
+    const mathSchema = new Schema(composeExtensions([...StarterKit.extensions, createMathExtension()]).schema);
+    const inlineSource = String.raw`\eqref{eq:energy}`;
+    const blockSource = String.raw`\begin{equation}\label{eq:energy}E=mc^2\end{equation}`;
+    const original = mathSchema.nodeFromJSON({ type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Compare ' }, { type: 'inline_math', attrs: { latex: inlineSource } }] },
+      { type: 'math_block', attrs: { latex: blockSource } },
+    ] });
+    const result = exportDOCX(original);
+    expect(result.report.fidelity).toBe('lossy');
+    expect(result.report.issues.map(issue => ({ code: issue.code, path: issue.path }))).toEqual([
+      { code: 'inline-fallback', path: [0, 1] }, { code: 'block-fallback', path: [1] },
+    ]);
+    const xml = strFromU8(unzipSync(result.bytes)['word/document.xml']);
+    expect(xml).toContain(inlineSource);
+    expect(xml).toContain(blockSource);
+    expect(xml).not.toContain('oMath');
+    const reopened = importDOCX(result.bytes, mathSchema).document;
+    expect(reopened.textContent).toContain(blockSource);
+    expect(reopened.child(1).type.name).toBe('paragraph');
+  });
+
   it('exports a valid bounded OOXML package and imports its structure in pure JavaScript', () => {
     const original = documentFixture();
     const exported = exportDOCX(original, { title: 'Fountain release', creator: 'Test host', page: 'a4' });

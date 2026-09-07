@@ -163,14 +163,16 @@ function EquationReferencesLab() {
       <details><summary>Markdown source export</summary><pre>{doc ? MarkdownExporter.export(doc) : ''}</pre></details>
     </section>
     <section className="math-lab__workspace" aria-label="Equation reading"><h2>Reader preview</h2><p>No author controls. References target equations inside this preview, not the editor above.</p><div ref={readerMount} /></section>
-    <section className="math-lab__workspace" aria-label="Equation pagination">
+    <section className="math-lab__workspace equation-lab__print" aria-label="Equation pagination" data-print-ready={Boolean(pagedDocument && pagedDocument === doc)}>
       <h2>Paged snapshot</h2>
-      <p>This lab uses landscape Letter pages with a 960px body to fit its equations. This is not the original paper’s layout, and does not certify PDF/DOCX fidelity.</p>
-      <div className="math-lab__controls"><button disabled={!editor} onClick={() => void buildPages()}>Build page preview</button></div>
+      <p>This lab uses landscape Letter pages with a 960px body to fit its equations. Chromium PDF output is checked for page sizes and internal equation links, with independently inspected page renders. This is not the original paper’s layout or a tagged accessible PDF.</p>
+      <div className="math-lab__controls"><button disabled={!editor} onClick={() => void buildPages()}>Build page preview</button><button disabled={!pagedDocument || pagedDocument !== doc} onClick={() => window.print()}>Print / Save PDF</button></div>
+      <p>Print opens your browser’s print dialog. Choose Save as PDF to keep the paged snapshot; check the preview and leave browser headers/footers off.</p>
+      <p className="equation-lab__print-notice">No current page snapshot. Return to the editor and build the page preview before printing.</p>
       <p aria-live="polite" data-page-message>{pagedDocument && pagedDocument !== doc ? 'The document has changed. Build the preview again to replace this older snapshot.' : pageMessage}</p>
       <div className="equation-lab__pages"><div ref={pageMount} /></div>
     </section>
-    <section className="math-lab__intro"><h2>Developer integration</h2><p>Use <code>createMathExtension(&#123; documentRenderer &#125;)</code>. The host adapter compiles a fresh document snapshot, caches each node’s SVG output, and namespaces links per view. It loads only base/AMS syntax, limits source expansion, and reports missing or duplicate labels. This lab caps a snapshot at 128 formulas and 128,000 source characters; it does not promise large-document compile performance.</p><p>Unsupported source remains editable instead of showing stale successful output. PDF/DOCX visual export parity is still pending. <a href="./math-renderer.html">Compare the lightweight KaTeX lab →</a></p><p><a href="https://github.com/eddolo/fountainjs/blob/master/examples/react-app/src/mathjax-document-renderer.ts">Host adapter source →</a> · <a href="https://github.com/eddolo/fountainjs/blob/master/docs/API.md">API contracts →</a></p></section>
+    <section className="math-lab__intro"><h2>Developer integration</h2><p>Use <code>createMathExtension(&#123; documentRenderer &#125;)</code>. The host adapter compiles a fresh document snapshot, caches each node’s SVG output, and namespaces links per view. It loads only base/AMS syntax, limits source expansion, and reports missing or duplicate labels. This lab caps a snapshot at 128 formulas and 128,000 source characters; it does not promise large-document compile performance.</p><p>Unsupported source remains editable instead of showing stale successful output. The paged snapshot can be printed through the browser; full-paper and accessible PDF fidelity remain pending. DOCX currently keeps math as TeX fallback text with a loss report, not native editable Word equations. <a href="./math-renderer.html">Compare the lightweight KaTeX lab →</a></p><p><a href="https://github.com/eddolo/fountainjs/blob/master/examples/react-app/src/mathjax-document-renderer.ts">Host adapter source →</a> · <a href="https://github.com/eddolo/fountainjs/blob/master/docs/API.md">API contracts →</a></p></section>
   </main>;
 }
 

@@ -1,11 +1,14 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
+import { inspectEquationPDF } from './math-pdf-contract';
 
-export async function mathPagesJourney(page: Page, info: TestInfo) {
+export async function mathPagesJourney(page: Page, info: TestInfo, exportPDF = false) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/math-references.html');
   const author = page.getByRole('textbox', { name: 'Equation author editor', exact: true });
   await expect(author.locator('mjx-container > svg')).toHaveCount(4);
+  const print = page.getByRole('button', { name: 'Print / Save PDF', exact: true });
+  await expect(print).toBeDisabled();
   await page.getByText('Stored document JSON', { exact: true }).click();
   const json = JSON.parse(await page.locator('details').first().locator('pre').innerText());
   // Open a real document through the public file control: prose separates
@@ -39,6 +42,15 @@ export async function mathPagesJourney(page: Page, info: TestInfo) {
   for (let i = 0; i < await sheets.count(); i++) {
     await sheets.nth(i).screenshot({ path: info.outputPath(`page-${i + 1}.png`) });
   }
+  await expect(print).toBeEnabled();
+  if (exportPDF) {
+    await page.evaluate(() => window.addEventListener('beforeprint', () => {
+      document.documentElement.setAttribute('data-print-request-observed', 'true');
+    }, { once: true }));
+    await print.click();
+    await expect(page.locator('html')).toHaveAttribute('data-print-request-observed', 'true');
+    await inspectEquationPDF(page, info, contract);
+  }
   const href = await links.first().getAttribute('href');
   await links.first().click();
   await expect.poll(() => new URL(page.url()).hash).toBe(href);
@@ -50,6 +62,11 @@ export async function mathPagesJourney(page: Page, info: TestInfo) {
   // gets new isolated IDs and working references without changing the source.
   await page.getByRole('button', { name: 'Add equation', exact: true }).click();
   await expect(page.locator('[data-page-message]')).toContainText('older snapshot');
+  await expect(print).toBeDisabled();
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('.equation-lab__pages')).toBeHidden();
+  await expect(page.locator('.equation-lab__print-notice')).toBeVisible();
+  await page.emulateMedia({ media: 'screen' });
   await page.getByRole('button', { name: 'Build page preview', exact: true }).click();
   await expect(page.locator('[data-page-message]')).toContainText('Links stay inside');
   expect(await links.first().getAttribute('href')).not.toBe(href);

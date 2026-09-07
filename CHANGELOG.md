@@ -20,6 +20,11 @@
 
 ### Added
 
+- Equation-lab browser printing/Save as PDF for current paged snapshots, with
+  stale-output protection. Recorded Chromium exports are checked for physical
+  page sizes, internal equation destinations and text duplication, and all sample
+  pages were independently rendered and visually inspected. Native Word math,
+  accessible PDF and full-paper layout fidelity are not claimed.
 - Equation-lab paged snapshots with real SVG reference navigation and explicit
   rebuild feedback after edits. Landscape Letter geometry is a demonstration,
   not a reproduction of the source paper or certified PDF/DOCX output.

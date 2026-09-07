@@ -9,3 +9,14 @@
 .equation-lab__pages .fountain-page-preview__sheet { margin: 16px 0; background: white; box-shadow: 0 0 0 1px #d9d2ed; }
 .equation-lab__pages .fountain-page-preview__content { padding: 0; }
 .equation-lab__pages .fountain-editor { border: 0; border-radius: 0; box-shadow: none; outline: none; background: transparent; }
+.equation-lab__print-notice { display: none; }
+@media print {
+  html, body, #root, .equation-lab { margin: 0; padding: 0; min-height: 0; background: white; }
+  .equation-lab > :not(.equation-lab__print) { display: none !important; }
+  .equation-lab__print { max-width: none; margin: 0; padding: 0; }
+  .equation-lab__print > :not(.equation-lab__pages) { display: none !important; }
+  .equation-lab__pages { max-width: none; overflow: visible; }
+  .equation-lab__pages .fountain-page-preview__sheet { margin: 0; box-shadow: none; }
+  .equation-lab__print[data-print-ready="false"] .equation-lab__pages { display: none; }
+  .equation-lab__print[data-print-ready="false"] .equation-lab__print-notice { display: block !important; padding: 48px; }
+}
