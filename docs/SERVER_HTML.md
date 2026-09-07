@@ -127,7 +127,10 @@ already-parsed Fountain block objects. They resolve HTML containers across
 Markdown blank-line boundaries without serializing the original blocks as HTML.
 `parseFlow` is available as a static convenience; instance methods share the
 importer's configured limits. Protected blocks must survive exactly once in
-order. Unsupported raw-text/formatting scopes and consuming custom rules are
+order, allowing immutable copies of paths receiving inherited marks. Original
+inline marks win over surrounding HTML; nested HTML scopes use the innermost
+mark of each type. Source, attributes and node IDs remain intact. Unsupported
+raw-text scopes and consuming custom rules are
 refused, not silently approximated. See [Markdown flow conversion](MARKDOWN_SOURCE.md#html-scopes-across-multiple-blocks).
 
 For content inserted into an existing document, use `parseFragment` or

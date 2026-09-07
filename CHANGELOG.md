@@ -6,10 +6,10 @@
 
 - Optional Markdown `parseHTMLFlow` / `onHTMLFlowFallback` and server HTML
   `parseFlow` / `parseFlowWithReport` resolve raw HTML scopes across blank-line
-  block boundaries. Protected Markdown blocks retain their actual objects,
-  source and attributes; schema/HTML recovery that consumes or alters them
+  block boundaries. Protected Markdown blocks retain source and attributes;
+  unchanged paths stay shared and added mark paths are copied. Recovery that consumes them
   falls back to inert source. The conversion demo now reconstructs split HTML
-  tables. Surrounding formatting/raw-text scopes over protected blocks remain
+  tables. Specialized raw-text scopes over protected blocks remain
   explicitly unsupported, not silently flattened; full CommonMark is not claimed.
 
 - Server HTML `parseFragment` / `parseFragmentWithReport` return validated block
@@ -42,6 +42,12 @@
   Equivalent optional framework UI suites remain pending.
 
 ### Fixed
+
+- Optional HTML flow conversion now carries surrounding semantic/style/custom
+  marks into existing Markdown blocks. Original inline marks win collisions,
+  inner HTML scopes override outer scopes, and unchanged subtrees remain shared.
+  Source, attributes and block identifiers survive immutable mark-path copies.
+  Raw-text scopes requiring source reinterpretation still fall back explicitly.
 
 - Restored the Svelte report's structural cursor-placement control after its
   framework migration. Media metadata drafts no longer reset on unrelated

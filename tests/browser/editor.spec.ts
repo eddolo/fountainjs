@@ -6415,9 +6415,22 @@ test('reconstructs HTML tables across Markdown block boundaries', async ({ page 
     expect(doc.content.map((node: { type: string }) => node.type)).toEqual(['table']);
     expect(doc.content[0].content[0].content[0].content[0].content[0].text.trim()).toBe('Hi');
   }).toPass();
-  await page.getByLabel('Markdown input', { exact: true }).fill('<del>\n\n*Keep original*\n\n</del>');
+  await page.getByLabel('Markdown input', { exact: true }).fill('<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>');
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('protected Markdown block');
-  await expect(output.locator('pre')).toContainText('<del>');
+  await expect(output.locator('pre')).toContainText('<pre>');
+});
+
+test('applies surrounding HTML formatting without replacing Markdown block content', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('<del>\n\n*Old wording*\n\n</del>\n\nCurrent wording');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  const output = page.locator('.demo-output');
+  await expect(async () => {
+    const doc = JSON.parse(await output.locator('pre').innerText());
+    expect(doc.content).toHaveLength(2);
+    expect(doc.content[0].content[0].marks.map((mark: { type: string }) => mark.type)).toEqual(['strike', 'em']);
+    expect(doc.content[1].content[0].marks ?? []).toEqual([]);
+  }).toPass();
 });
 
 test('converts raw HTML blocks only when the headless demo option is enabled', async ({ page }) => {

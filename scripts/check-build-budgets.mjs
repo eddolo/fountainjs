@@ -340,7 +340,9 @@ const limits = Object.freeze({
   // ~1.2 KiB CJS (1123.8 KiB total). Individual entries and performance are unchanged.
   // Direct table-caption content retention adds ~0.4 KiB CJS (1124.2 total).
   // ESM remains within 1348 KiB; individual entries and performance stay fixed.
-  'all CommonJS runtime code': 1132 * kibibyte,
+  // Shared cross-block mark projection adds ~0.7 KiB ESM / 0.6 KiB CJS;
+  // the existing aggregate ESM and individual importer ceilings still fit.
+  'all CommonJS runtime code': 1133 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

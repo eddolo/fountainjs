@@ -129,6 +129,9 @@ interface ImportContext {
     readonly attribute: string;
     readonly nodes: readonly FountainNode[];
     readonly offsets: ReadonlyMap<number, number>;
+    readonly scopedMarks: WeakMap<RawElement, readonly Mark[]>;
+    readonly origins: WeakMap<FountainNode, FountainNode>;
+    readonly originals: ReadonlySet<FountainNode>;
   };
   readonly inlineSlots?: {
     readonly tag: string;
@@ -591,6 +594,48 @@ function configuredRuby(
   } catch { return base; }
 }
 
+function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark[], context: ImportContext, reportUnknown: boolean): Mark[] {
+  const tag = child.tagName;
+  const nextMarks = [...marks];
+  const customMarks = configuredMarks(child, schema, context);
+  customMarks.forEach((mark) => addMark(nextMarks, mark));
+  const markName = ({
+    strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike',
+    del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript',
+  } as Record<string, string>)[tag];
+  if (reportUnknown && !customMarks.length && tag !== 'span' && tag !== 'a' && !(markName && schema.marks[markName])) reportOnce(context, {
+    code: 'unmapped-inline-element',
+    message: 'Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.',
+  });
+  if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
+    color: colorValue(child.style.backgroundColor ?? '') ?? '#fff3a3',
+  });
+  else if (markName) addSchemaMark(nextMarks, schema, markName);
+  const weight = (child.style.fontWeight ?? '').toLowerCase();
+  if (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500) addSchemaMark(nextMarks, schema, 'strong');
+  if ((child.style.fontStyle ?? '').toLowerCase() === 'italic') addSchemaMark(nextMarks, schema, 'em');
+  const decoration = `${child.style.textDecoration ?? ''} ${child.style.textDecorationLine ?? ''}`.toLowerCase();
+  if (decoration.includes('underline')) addSchemaMark(nextMarks, schema, 'underline');
+  if (decoration.includes('line-through')) addSchemaMark(nextMarks, schema, 'strike');
+  const color = colorValue(child.style.color ?? '');
+  if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
+  const background = colorValue(child.style.backgroundColor ?? '');
+  if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
+  if (tag === 'a' && schema.marks.link) {
+    const href = child.getAttribute('href') ?? '';
+    if (child.hasAttribute('href')) {
+      if (isSafeURL(href, { allowEmpty: true })) addSchemaMark(nextMarks, schema, 'link', {
+        href, title: child.getAttribute('title') ?? '',
+        target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
+      });
+      else reportOnce(context, {
+        code: 'rejected-url', message: 'Unsafe link URLs were omitted; readable link text was retained.',
+      });
+    }
+  }
+  return nextMarks;
+}
+
 function inlineChildren(
   parent: SourceParent,
   schema: Schema,
@@ -669,45 +714,7 @@ function inlineChildren(
       } catch { result.push(...textNodes(emoji || child.textContent, schema, marks)); }
       return;
     }
-    const nextMarks = [...marks];
-    const customMarks = configuredMarks(child, schema, context);
-    customMarks.forEach((mark) => addMark(nextMarks, mark));
-    const markName = ({
-      strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike',
-      del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript',
-    } as Record<string, string>)[tag];
-    if (!customMarks.length && tag !== 'span' && tag !== 'a' && !(markName && schema.marks[markName])) reportOnce(context, {
-      code: 'unmapped-inline-element',
-      message: 'Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.',
-    });
-    if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
-      color: colorValue(child.style.backgroundColor ?? '') ?? '#fff3a3',
-    });
-    else if (markName) addSchemaMark(nextMarks, schema, markName);
-    const weight = (child.style.fontWeight ?? '').toLowerCase();
-    if (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500) addSchemaMark(nextMarks, schema, 'strong');
-    if ((child.style.fontStyle ?? '').toLowerCase() === 'italic') addSchemaMark(nextMarks, schema, 'em');
-    const decoration = `${child.style.textDecoration ?? ''} ${child.style.textDecorationLine ?? ''}`.toLowerCase();
-    if (decoration.includes('underline')) addSchemaMark(nextMarks, schema, 'underline');
-    if (decoration.includes('line-through')) addSchemaMark(nextMarks, schema, 'strike');
-    const color = colorValue(child.style.color ?? '');
-    if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
-    const background = colorValue(child.style.backgroundColor ?? '');
-    if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
-    if (tag === 'a' && schema.marks.link) {
-      const href = child.getAttribute('href') ?? '';
-      if (child.hasAttribute('href')) {
-        if (isSafeURL(href, { allowEmpty: true })) addSchemaMark(nextMarks, schema, 'link', {
-          href,
-          title: child.getAttribute('title') ?? '',
-          target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
-        });
-        else reportOnce(context, {
-          code: 'rejected-url',
-          message: 'Unsafe link URLs were omitted; readable link text was retained.',
-        });
-      }
-    }
+    const nextMarks = elementMarks(child, schema, marks, context, true);
     result.push(...inlineChildren(child, schema, nextMarks, context));
   });
   if (!result.length && marks.length) result.push(schema.text('', marks));
@@ -954,7 +961,29 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   return result;
 }
 
+function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots: NonNullable<ImportContext['blockSlots']>): FountainNode {
+  if (!marks.length) return node;
+  const children = node.content.map(child => inheritBlockMarks(child, marks, slots));
+  let result = children.some((child, index) => child !== node.content[index]) ? node.copy(children) : node;
+  if (node.type.isInline) {
+    const combined = mergeInlineMarks(node.marks, marks);
+    if (combined.length !== node.marks.length || combined.some((mark, index) => !mark.eq(node.marks[index]))) {
+      result = result.withMarks(combined);
+    }
+  }
+  const origin = slots.originals.has(node) ? node : slots.origins.get(node);
+  if (origin && result !== node) slots.origins.set(result, origin);
+  return result;
+}
+
 function block(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
+  const nodes = projectBlock(element, schema, context);
+  const slots = context.blockSlots;
+  const marks = slots?.scopedMarks.get(element.raw);
+  return slots && marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots)) : nodes;
+}
+
+function projectBlock(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
   const tag = element.tagName;
   if (context.blockSlots && element.hasAttribute(context.blockSlots.attribute)) {
     const index = Number(element.getAttribute(context.blockSlots.attribute));
@@ -1217,7 +1246,7 @@ export class ServerHTMLImporter {
     return new ServerHTMLImporter().parseInline(segments, schema);
   }
 
-  /** Resolve HTML blocks as one stream, retaining parsed Markdown blocks by identity. */
+  /** Resolve HTML scopes without HTML-serializing Markdown blocks; only added mark paths are copied. */
   parseFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema): readonly FountainNode[] {
     return this.parseFlowWithReport(segments, schema).nodes;
   }
@@ -1259,7 +1288,12 @@ export class ServerHTMLImporter {
     const html = parts.join('');
     if (utf8Length(html) > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'HTML flow and protected blocks exceed the input limit.');
     const issues: ServerHTMLImportIssue[] = [];
-    const context: ImportContext = { issues, issueKeys: new Set(), blockSlots: { attribute, nodes: originals, offsets } };
+    const scopedMarks = new WeakMap<RawElement, readonly Mark[]>();
+    const origins = new WeakMap<FountainNode, FountainNode>();
+    const originalsSet = new Set(originals);
+    const context: ImportContext = { issues, issueKeys: new Set(), blockSlots: {
+      attribute, nodes: originals, offsets, scopedMarks, origins, originals: originalsSet,
+    } };
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
       onParseError: error => {
@@ -1268,25 +1302,26 @@ export class ServerHTMLImporter {
     });
     validateTree(fragment, this.options, context);
     const root = rootSource(fragment);
-    // These scopes require changes inside a protected block, not merely a
-    // wrapper around it. Refuse rather than silently strip source or formatting.
-    const inspect = (parent: SourceParent, specialized = false): void => {
+    // Raw-text scopes need a source-aware projection, not a formatting overlay.
+    const inspect = (parent: SourceParent, specialized = false, inherited: readonly Mark[] = []): void => {
       for (const child of parent.childNodes) {
         if (child.kind !== 'element') continue;
-        const scoped = specialized || /^(pre|script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option|a|strong|b|em|i|u|s|del|code|mark|sub|sup)$/u.test(child.tagName)
-          || child.hasAttribute('style') || configuredMarks(child, schema, context).length > 0;
+        const scoped = specialized || /^(pre|script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName);
         if (child.hasAttribute(attribute) && specialized) {
-          throw new Error('HTML flow requires formatting or specialized parsing inside a protected Markdown block; inert source retained.');
+          throw new Error('HTML flow requires specialized parsing inside a protected Markdown block; inert source retained.');
         }
-        inspect(child, scoped);
+        const marks = child.hasAttribute(attribute) ? inherited
+          : mergeInlineMarks(elementMarks(child, schema, [], context, false), inherited);
+        scopedMarks.set(child.raw, marks);
+        inspect(child, scoped, marks);
       }
     };
     inspect(root);
     const nodes = blockChildren(root, schema, context);
-    const originalsSet = new Set(originals);
     const found: FountainNode[] = [];
     const verify = (node: FountainNode): void => {
-      if (originalsSet.has(node)) found.push(node);
+      const original = originalsSet.has(node) ? node : origins.get(node);
+      if (original) found.push(original);
       else node.content.forEach(verify);
     };
     nodes.forEach(node => { schema.validate(node); verify(node); });

@@ -101,8 +101,14 @@ run again for source provenance (with the fallback reporter suppressed).
 
 The server adapter uses collision-free, source-bound placeholders and verifies
 that every original block survives exactly once in order. It never serializes
-Fountain blocks as HTML, preserving extension data and object identity. Input
-and parsed-tree limits still apply. Unsupported raw-text, formatting or styled
+Fountain blocks as HTML. Added semantic/style/custom marks copy only affected
+paths, retaining source, attributes and block identifiers; untouched subtrees
+retain object identity. Original inline marks take precedence over inherited
+HTML marks; inner HTML scopes override outer scopes of the same mark type.
+Formatting uses the same validated mark rules as inline HTML, including safe
+links. Block atoms without inline descendants and empty blocks without a text
+carrier are not converted into arbitrary CSS-styled objects.
+Input and parsed-tree limits still apply. Unsupported raw-text
 scopes surrounding protected blocks are rejected with a reason, as are custom
 HTML rules that consume them. Failed flows retain their inert raw HTML rather
 than partially applying per-block conversion. This is not complete HTML/CSS or

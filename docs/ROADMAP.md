@@ -5,6 +5,34 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Markdown HTML-flow formatting increment (2026-09-07): surrounding semantic,
+style and extension-defined marks now reach existing Markdown blocks through
+the same rule/URL validation used for inline HTML. Immutable mark-path copies
+retain source, attributes and node IDs; unchanged subtrees remain shared.
+Original inline marks take precedence over inherited HTML, and inner HTML
+scopes override outer scopes of the same type. Provenance verification follows
+those copies, including repeated original blocks under different scopes.
+Raw-text/specialized scopes still require a source-aware projection and fall
+back explicitly. Block atoms and empty blocks are not arbitrary CSS surfaces.
+
+Validation passes 1,153 tests in 104 files, 1,304 LF/CRLF exact-source
+contracts, package/runtime/headless checks, declarations, type checks and
+unchanged performance limits. Public signatures are unchanged; the server
+declaration comment now describes mark-path copying accurately. Added runtime
+code is about 0.7 KiB ESM / 0.6 KiB CJS; only the aggregate CommonJS ceiling
+increases by 1 KiB. A recorded Chrome journey and reviewed screenshot/video
+frames show italic strikethrough surviving conversion, rich paste, typing,
+undo/redo and Markdown export. This is not full CommonMark conformance; the
+default semantic score remains 563/72/17, and npm publication stays deferred.
+The 27-case browser regression set passes Chromium, Firefox and WebKit. Its
+initial raw-text fallback assertion used a valid standalone `<pre>` block, which
+correctly converted without fallback; the test now distinguishes that from the
+mixed table/pre CommonMark reference case. A matching core regression preserves
+both behaviors. No runtime behavior was changed to satisfy the mistaken fixture.
+Final type/unit checks and the production website build pass; the existing
+large MathJax reference-lab chunk warning remains. The full gate passed before
+the additional fixture, and final type/unit checks cover that fixture too.
+
 Markdown cross-block HTML scope increment (2026-09-07): optional `parseHTMLFlow`
 and server `parseFlow` / `parseFlowWithReport` retain already-parsed Fountain
 blocks as protected objects while resolving raw HTML across blank-line boundaries.
