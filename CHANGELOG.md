@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Fixed canonical Markdown export turning literal delimiters or unlinked
+  addresses into formatting, math nodes, or links on reopen. The same protection
+  applies to regenerated blocks in source-preserving export; actual structured
+  links/code/math and unchanged source blocks retain their existing semantics.
+
 - Added `MarkdownImportOptions.autolinkLiterals`: hosts can keep bare web/email
   addresses as text while preserving explicit links and safe angle autolinks.
   Default GFM-style behavior is unchanged. The headless demo exposes the choice,

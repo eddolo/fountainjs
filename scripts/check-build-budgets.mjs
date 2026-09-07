@@ -353,7 +353,11 @@ const limits = Object.freeze({
   // ESM remains within 1348 KiB; individual entries and performance stay fixed.
   // Shared cross-block mark projection adds ~0.7 KiB ESM / 0.6 KiB CJS;
   // the existing aggregate ESM and individual importer ceilings still fit.
-  'all CommonJS runtime code': 1138 * kibibyte,
+  // Literal delimiter/address export protection fixes silent text→mark/atom
+  // conversion on reopen. CJS measures 1138.1 KiB, ~0.2 KiB above the previous
+  // implementation. Only this aggregate ceiling grows by 1 KiB; ESM, individual
+  // entries, CSS and all performance/memory limits remain unchanged.
+  'all CommonJS runtime code': 1139 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

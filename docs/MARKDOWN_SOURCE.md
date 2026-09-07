@@ -550,6 +550,28 @@ an initial standards-oriented set of behaviors:
 The exporter chooses a code fence longer than any matching marker run in its
 content, preventing a literal triple-backtick line from closing the block.
 
+### Literal text is not newly authored syntax
+
+Canonical export escapes literal `~`, `=`, and `$` characters as well as ordinary
+Markdown delimiters. It also protects bare URL/email triggers in text without a
+link mark. For example, an unlinked `writer@example.com` becomes
+`writer\@example.com` in Markdown source and still displays as the same unlinked
+text when reopened. This prevents an export/re-import from silently adding
+strikethrough, highlighting, a math node, or a link.
+
+Actual code, links and math retain their structured serialization. Changed
+blocks in source-preserving export receive the same protection; safely mapped
+unchanged blocks keep their original source. Backslashes here are format escapes,
+not additional visible document characters. Canonical Markdown is not a verbatim
+byte format; use the original source snapshot while unchanged or an appropriate
+plain-text/structured persistence boundary when that is the requirement.
+
+Fifteen unit cases and the recorded issue workflow cover literal syntax through
+visual edits, undo/redo, source inspection, Markdown download/reopen and reader
+preview. See `tests/markdown-literal-export.test.ts` and
+`tests/browser/markdown-literal-journey.ts`. This does not claim complete Markdown
+interchange fidelity for every extension or arbitrary source language.
+
 ## Table captions through optional HTML conversion
 
 HTML table captions are no longer silently discarded by the browser/server

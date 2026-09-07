@@ -50,6 +50,13 @@ ambiguous mappings, can still force canonical export after an edit.
 Exact untouched-document source preservation does
 not mean Fountain understands all syntax. See [the full contract](MARKDOWN_SOURCE.md).
 
+For a literal-text round-trip check, put `Keep \~literal\~ and writer\@example.com.`
+in the Markdown source tab, switch to Visual editor, and add ordinary text before
+it. Download/reopen the draft or switch back through source: the visible tildes
+must remain text, and the address must remain unlinked. The regenerated Markdown
+contains protective escapes; actual links still use explicit link syntax. The
+recorded `markdown-literal-journey.ts` also checks undo/redo and reader preview.
+
 The diagnostics count the actual document's top-level blocks. This page does
 **not** run 100k-block benchmarks, collaboration, pagination or Node/Bun/Deno/
 Workers; it labels those as inactive/unmeasured instead of presenting checkmarks.

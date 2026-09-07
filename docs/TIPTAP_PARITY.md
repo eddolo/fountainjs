@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest repair (2026-09-07, Unreleased): canonical Markdown now protects literal
+delimiter/address text from becoming formatting, math atoms or new links on
+reopen. Full local verification passes 1,284 tests / 108 files; Chromium,
+Firefox and WebKit exercise visual edits, history, file handoff and reader
+retention, with an inspected Chromium recording. This repairs an actual
+interchange loss without promoting any CommonMark baseline classifications.
+
 Current follow-through (2026-09-07, Unreleased): bare-address autolinking is now
 an explicit import choice rather than mandatory syntax. The opt-out passes 566
 reference comparisons while default scores stay unchanged. The headless demo

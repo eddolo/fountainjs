@@ -60,8 +60,14 @@ const DELIMITED_MARKS = new Set(['strong', 'em', 'strike']);
 const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'font_size', 'line_height']);
 const LIST_TYPES = new Set(['bullet_list', 'ordered_list', 'task_list']);
 
-function escapeInline(text: string): string {
-  return escapeMarkdownEntityOpeners(text.replace(/([\\`*_[\]<>])/g, '\\$1'));
+function escapeInline(text: string, protectAutolinks = true): string {
+  const escaped = escapeMarkdownEntityOpeners(text.replace(/([\\`*_[\]<>~=$])/g, '\\$1'));
+  // Unmarked addresses are data, not link syntax. Escaping the trigger prevents
+  // the default GFM-style importer from adding a mark that the document lacks.
+  // Explicit link labels and image descriptions already have their own scope.
+  return protectAutolinks
+    ? escaped.replace(/https?:\/\/|www\.|@/g, value => value.replace(/[:.@]/, '\\$&'))
+    : escaped;
 }
 
 function codeSpan(text: string): string {
@@ -281,7 +287,7 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
     if (node.type.name === 'footnote_reference') return `[^${String(node.attrs.id)}]`;
     if (node.type.name === 'inline_math') return `$${String(node.attrs.latex ?? '')}$`;
     if (node.type.name === 'inline_image') {
-      return link(escapeInline(String(node.attrs.alt ?? '')), node.attrs.src, node.attrs.title, context, true);
+      return link(escapeInline(String(node.attrs.alt ?? ''), false), node.attrs.src, node.attrs.title, context, true);
     }
     if (node.type.name === 'ruby') {
       const base = node.content
@@ -313,7 +319,7 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
 
   const text = node.marks.some((mark) => mark.type.name === 'code')
     ? codeSpan(node.text ?? '')
-    : escapeInline(node.text ?? '');
+    : escapeInline(node.text ?? '', !node.marks.some(mark => mark.type.name === 'link'));
   return markdownMarks(node, text, context, path, true);
 }
 
@@ -515,7 +521,7 @@ function render(
     case 'hard_break': return '  \n';
     case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;
     case 'image_super': {
-      const image = link(escapeInline(String(node.attrs.alt ?? '')), node.attrs.src, node.attrs.title, context, true);
+      const image = link(escapeInline(String(node.attrs.alt ?? ''), false), node.attrs.src, node.attrs.title, context, true);
       return `${image}${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
     }
     case 'audio':

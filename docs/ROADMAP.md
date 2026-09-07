@@ -5,6 +5,21 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Literal Markdown export repair (2026-09-07, Unreleased): canonical output no
+longer turns plain delimiter/address text into strike/highlight marks, math atoms,
+or links when reopened. Thirteen of fifteen new unit cases reproduced the old
+corruption. The repair also covers regenerated source-mapped blocks while keeping
+actual links/code/math structured. Full `pnpm check`: 1,284 tests / 108 files,
+385 declarations and runtime/headless/interop/type/performance checks pass.
+Three-engine visual edit/history/save/reopen/reader checks pass; recorded source,
+reader and video evidence was inspected under
+`artifacts/literal-export-20260907-recorded/` (cross-browser output:
+`artifacts/literal-export-20260907-browser/`). ESM measures 1369.0 KiB within its
+existing cap; CJS measures 1138.1 KiB, with only its aggregate cap increased from
+1138 to 1139 KiB for the correction. No semantic or performance gates were
+relaxed. Full CommonMark and arbitrary extension fidelity remain open, and the
+published 0.4.0-beta.1 package does not include this repair.
+
 Literal-address import policy (2026-09-07, Unreleased): hosts can set
 `autolinkLiterals: false` to leave bare web/email addresses as text. Explicit
 Markdown/reference links, safe angle autolinks, and the default GFM-style dialect

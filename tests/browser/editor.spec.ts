@@ -16,6 +16,11 @@ import { textAlignmentJourney } from './text-alignment-journey';
 import { fullReportHTML, htmlDocumentJourney } from './html-document-journey';
 import { issueEditorJourney } from './issue-editor-journey';
 import { markdownAutolinkJourney } from './markdown-autolink-journey';
+import { markdownLiteralJourney } from './markdown-literal-journey';
+
+test('keeps literal syntax unformatted through visual edits and Markdown reopen', async ({ page }, info) => {
+  await markdownLiteralJourney(page, info);
+});
 
 test('chooses literal address import and retains links through DOCX handoff', async ({ page }, info) => {
   await markdownAutolinkJourney(page, info);
