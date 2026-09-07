@@ -18,7 +18,7 @@ import {
 } from '../core/schema';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
-import type { MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
+import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
@@ -62,7 +62,8 @@ export type ServerHTMLImportIssueCode =
   | 'unmapped-inline-element'
   | 'discarded-html-comment'
   | 'rejected-url'
-  | 'inline-html-projection';
+  | 'inline-html-projection'
+  | 'block-html-projection';
 
 export interface ServerHTMLImportIssue {
   readonly code: ServerHTMLImportIssueCode;
@@ -124,6 +125,11 @@ type SourceNode = SourceText | SourceElement;
 interface ImportContext {
   readonly issues: ServerHTMLImportIssue[];
   readonly issueKeys: Set<string>;
+  readonly blockSlots?: {
+    readonly attribute: string;
+    readonly nodes: readonly FountainNode[];
+    readonly offsets: ReadonlyMap<number, number>;
+  };
   readonly inlineSlots?: {
     readonly tag: string;
     readonly nodes: readonly FountainNode[];
@@ -543,7 +549,7 @@ function configuredNode(
     for (const candidate of candidates) {
       // Only report losses from the projection actually accepted by the schema.
       // A speculative inline interpretation of block content is not data loss.
-      const branch: ImportContext = { issues: [], issueKeys: new Set(), inlineSlots: context.inlineSlots };
+      const branch: ImportContext = { issues: [], issueKeys: new Set(), inlineSlots: context.inlineSlots, blockSlots: context.blockSlots };
       const content = candidate(branch);
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
@@ -950,6 +956,15 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
 
 function block(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
   const tag = element.tagName;
+  if (context.blockSlots && element.hasAttribute(context.blockSlots.attribute)) {
+    const index = Number(element.getAttribute(context.blockSlots.attribute));
+    const offset = htmlparser2Adapter.getNodeSourceCodeLocation(element.raw)?.startOffset;
+    if (offset === undefined || context.blockSlots.offsets.get(offset) !== index
+      || !context.blockSlots.nodes[index] || element.childNodes.length) {
+      throw new Error('HTML flow changed a protected Markdown block slot.');
+    }
+    return [context.blockSlots.nodes[index]];
+  }
   const customNode = configuredNode(element, schema, false, [], context);
   if (customNode) return [customNode];
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
@@ -1200,6 +1215,93 @@ export class ServerHTMLImporter {
 
   static parseInline(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
     return new ServerHTMLImporter().parseInline(segments, schema);
+  }
+
+  /** Resolve HTML blocks as one stream, retaining parsed Markdown blocks by identity. */
+  parseFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema): readonly FountainNode[] {
+    return this.parseFlowWithReport(segments, schema).nodes;
+  }
+
+  parseFlowWithReport(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema): ServerHTMLFragmentImportResult {
+    const usedNames = new Set<string>();
+    let bytes = 0;
+    for (const segment of segments) {
+      if (segment.kind === 'html') {
+        if (typeof segment.html !== 'string') throw new TypeError('Expected raw HTML block text.');
+        bytes += utf8Length(segment.html);
+        if (bytes > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'HTML flow exceeds the input limit.');
+        for (const match of segment.html.toLowerCase().matchAll(/data-fountain-block-slot-\d+/gu)) usedNames.add(match[0]);
+      } else {
+        if (!(segment.node instanceof FountainNode) || segment.node.type.isInline || segment.node.type === schema.topNodeType) {
+          throw new TypeError('Expected a Markdown block from the supplied schema.');
+        }
+        schema.validate(segment.node);
+      }
+    }
+    let suffix = 0;
+    while (usedNames.has(`data-fountain-block-slot-${suffix}`)) suffix++;
+    const attribute = `data-fountain-block-slot-${suffix}`;
+    const originals: FountainNode[] = [];
+    const offsets = new Map<number, number>();
+    const parts: string[] = [];
+    let offset = 0;
+    for (const segment of segments) {
+      const part = segment.kind === 'html' ? segment.html
+        : `<div ${attribute}="${originals.length}"></div>`;
+      if (segment.kind === 'node') {
+        offsets.set(offset, originals.length);
+        originals.push(segment.node);
+      }
+      parts.push(part, '\n');
+      offset += part.length + 1;
+      if (offset > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'HTML flow and protected blocks exceed the input limit.');
+    }
+    const html = parts.join('');
+    if (utf8Length(html) > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'HTML flow and protected blocks exceed the input limit.');
+    const issues: ServerHTMLImportIssue[] = [];
+    const context: ImportContext = { issues, issueKeys: new Set(), blockSlots: { attribute, nodes: originals, offsets } };
+    const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
+      treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
+      onParseError: error => {
+        if (issues.length < this.options.maxParseErrors) issues.push(parseErrorIssue(error));
+      },
+    });
+    validateTree(fragment, this.options, context);
+    const root = rootSource(fragment);
+    // These scopes require changes inside a protected block, not merely a
+    // wrapper around it. Refuse rather than silently strip source or formatting.
+    const inspect = (parent: SourceParent, specialized = false): void => {
+      for (const child of parent.childNodes) {
+        if (child.kind !== 'element') continue;
+        const scoped = specialized || /^(pre|script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option|a|strong|b|em|i|u|s|del|code|mark|sub|sup)$/u.test(child.tagName)
+          || child.hasAttribute('style') || configuredMarks(child, schema, context).length > 0;
+        if (child.hasAttribute(attribute) && specialized) {
+          throw new Error('HTML flow requires formatting or specialized parsing inside a protected Markdown block; inert source retained.');
+        }
+        inspect(child, scoped);
+      }
+    };
+    inspect(root);
+    const nodes = blockChildren(root, schema, context);
+    const originalsSet = new Set(originals);
+    const found: FountainNode[] = [];
+    const verify = (node: FountainNode): void => {
+      if (originalsSet.has(node)) found.push(node);
+      else node.content.forEach(verify);
+    };
+    nodes.forEach(node => { schema.validate(node); verify(node); });
+    if (found.length !== originals.length || found.some((node, index) => node !== originals[index])) {
+      throw new Error('HTML flow recovery did not preserve every Markdown block exactly once in order; inert source retained.');
+    }
+    if (segments.some(segment => segment.kind === 'html')) reportOnce(context, {
+      code: 'block-html-projection',
+      message: 'HTML block scopes were projected into schema content. Unsupported wrappers, attributes, layout and comments may be omitted; this is not lossless HTML conversion.',
+    });
+    return Object.freeze({ nodes: Object.freeze(nodes), issues: Object.freeze([...issues]) });
+  }
+
+  static parseFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema): readonly FountainNode[] {
+    return new ServerHTMLImporter().parseFlow(segments, schema);
   }
 
   parseWithReport(html: string, schema: Schema): ServerHTMLImportResult {

@@ -4,6 +4,14 @@
 
 ### Added
 
+- Optional Markdown `parseHTMLFlow` / `onHTMLFlowFallback` and server HTML
+  `parseFlow` / `parseFlowWithReport` resolve raw HTML scopes across blank-line
+  block boundaries. Protected Markdown blocks retain their actual objects,
+  source and attributes; schema/HTML recovery that consumes or alters them
+  falls back to inert source. The conversion demo now reconstructs split HTML
+  tables. Surrounding formatting/raw-text scopes over protected blocks remain
+  explicitly unsupported, not silently flattened; full CommonMark is not claimed.
+
 - Server HTML `parseFragment` / `parseFragmentWithReport` return validated block
   arrays without adding a standalone document's empty caret paragraph. Markdown's
   optional HTML-block adapter accepts these arrays (including empty arrays), so

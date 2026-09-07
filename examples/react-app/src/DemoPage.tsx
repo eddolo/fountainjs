@@ -507,12 +507,12 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     try {
       const issues: string[] = [];
       const document = MarkdownImporter.parse(markdownSource, schema, {
-        parseHTMLBlock: projectHTMLBlocks && htmlBlockParser ? (html, targetSchema) => {
-          const result = htmlBlockParser.parseFragmentWithReport(html, targetSchema);
+        parseHTMLFlow: projectHTMLBlocks && htmlBlockParser ? (segments, targetSchema) => {
+          const result = new htmlBlockParser().parseFlowWithReport(segments, targetSchema);
           issues.push(...result.issues.map(issue => issue.message));
           return result.nodes;
         } : undefined,
-        onHTMLBlockFallback: issue => issues.push(`Kept HTML as text: ${issue.message}`),
+        onHTMLFlowFallback: issue => issues.push(`Kept HTML as text: ${issue.message}`),
         parseHTMLInline: projectHTMLInline && htmlBlockParser ? (segments, targetSchema) => {
           const result = new htmlBlockParser().parseInlineWithReport(segments, targetSchema);
           issues.push(...result.issues.map(issue => issue.message));

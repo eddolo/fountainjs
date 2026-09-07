@@ -20,6 +20,16 @@ export interface MarkdownHTMLBlockFallback {
   readonly message: string;
 }
 
+/** One Markdown container's raw HTML blocks interleaved with parsed blocks. */
+export type MarkdownHTMLFlowSegment =
+  | { readonly kind: 'html'; readonly html: string }
+  | { readonly kind: 'node'; readonly node: Node };
+
+export interface MarkdownHTMLFlowFallback {
+  readonly reason: 'declined' | 'error';
+  readonly message: string;
+}
+
 /** Raw HTML tokens interleaved with already-parsed, immutable Fountain nodes. */
 export type MarkdownHTMLInlineSegment =
   | { readonly kind: 'html'; readonly html: string; readonly marks: readonly Mark[] }
@@ -56,6 +66,14 @@ export interface MarkdownImportOptions {
   readonly parseHTMLBlock?: (html: string, schema: Schema) => Node | readonly Node[] | null;
   /** Called when a block is retained literally because its adapter failed or declined. */
   readonly onHTMLBlockFallback?: (issue: MarkdownHTMLBlockFallback) => void;
+  /**
+   * Optional whole-container HTML scope projection, taking precedence over
+   * parseHTMLBlock. Original blocks must not be serialized/reparsed as HTML.
+   * Return schema block nodes (possibly empty), or null to retain inert HTML.
+   * Runs separately inside Markdown containers; may run during source capture.
+   */
+  readonly parseHTMLFlow?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema) => readonly Node[] | null;
+  readonly onHTMLFlowFallback?: (issue: MarkdownHTMLFlowFallback) => void;
   /**
    * Optional synchronous inline HTML scope adapter. Original Markdown nodes
    * must not be serialized and reparsed as HTML. Raw tokens carry their local
@@ -284,7 +302,7 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
   for (let index = 0; index < segments.blocks.length; index += 1) {
     const segment = segments.blocks[index];
     const parsed = new MarkdownImporter().parse(segment.source, schema, {
-      ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined, onTeXTableIssue: undefined,
+      ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined, onHTMLFlowFallback: undefined, onTeXTableIssue: undefined,
     });
     const original = document.content[index];
     if (parsed.content.length !== 1 || !parsed.content[0].eq(original)) return undefined;
@@ -1669,6 +1687,7 @@ function projectHTMLBlock(html: string, schema: Schema, options: MarkdownImportO
 
 function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
   const blocks: Node[] = [];
+  const htmlBlocks = new Map<Node, string>();
   b: for (let index = 0; index < lines.length;) {
     const line = lines[index];
     if (!line.trim()) { index++; continue; }
@@ -1703,7 +1722,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     const rawHTML = markdownHTMLBlock(line);
     if (rawHTML) {
       const end = markdownHTMLBlockEnd(lines, index, rawHTML);
-      const projected = projectHTMLBlock(lines.slice(index, end).join('\n'), schema, options);
+      const html = lines.slice(index, end).join('\n');
+      const projected = options.parseHTMLFlow ? null : projectHTMLBlock(html, schema, options);
       if (projected !== null) {
         blocks.push(...projected);
         index = end;
@@ -1714,7 +1734,9 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         if (offset && schema.nodes.hard_break) content.push(schema.node('hard_break'));
         if (raw || !schema.nodes.hard_break) content.push(schema.text(offset && !schema.nodes.hard_break ? `\n${raw}` : raw));
       });
-      blocks.push(schema.node('paragraph', {}, content));
+      const literal = schema.node('paragraph', {}, content);
+      blocks.push(literal);
+      if (options.parseHTMLFlow) htmlBlocks.set(literal, html);
       index = end;
       continue;
     }
@@ -1938,6 +1960,31 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     // markers are consumed by `inline` before that normalization.
     blocks.push(paragraph(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references, 'left', options));
   }
+  if (!options.parseHTMLFlow || !htmlBlocks.size) return blocks;
+  const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(blocks.map(node => Object.freeze(
+    htmlBlocks.has(node) ? { kind: 'html' as const, html: htmlBlocks.get(node)! } : { kind: 'node' as const, node },
+  )));
+  let issue: MarkdownHTMLFlowFallback;
+  try {
+    const projected = options.parseHTMLFlow(segments, schema);
+    if (projected !== null) {
+      if (!Array.isArray(projected)) throw new TypeError('HTML flow adapter must return a block array.');
+      for (const node of projected) {
+        if (!(node instanceof Node) || node.type.isInline || node.type === schema.topNodeType) {
+          throw new TypeError('HTML flow adapter must return schema block nodes.');
+        }
+        schema.validate(node);
+      }
+      if (projected.length && !matchesContentExpression(projected, schema.topNodeType.spec.content ?? '')) {
+        throw new TypeError('HTML flow adapter result does not match document content.');
+      }
+      return [...projected];
+    }
+    issue = { reason: 'declined', message: 'HTML flow adapter declined conversion; inert HTML blocks retained.' };
+  } catch (error) {
+    issue = { reason: 'error', message: error instanceof Error ? error.message : 'HTML flow adapter failed; inert HTML blocks retained.' };
+  }
+  options.onHTMLFlowFallback?.(Object.freeze(issue));
   return blocks;
 }
 

@@ -327,7 +327,9 @@ const limits = Object.freeze({
   // Angular's unminified partial-Ivy entry adds 4.1 KiB; no Angular runtime is bundled.
   // Block-fragment HTML APIs plus Markdown fragment validation add ~0.9 KiB
   // ESM (~0.8 KiB CJS). Existing individual entry ceilings are unchanged.
-  'all ESM runtime code': 1357 * kibibyte,
+  // Opt-in cross-block HTML flow adds ~4.4 KiB ESM / 3.6 KiB CJS for
+  // container collection, bounded slots and content-preservation verification.
+  'all ESM runtime code': 1362 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -338,7 +340,7 @@ const limits = Object.freeze({
   // ~1.2 KiB CJS (1123.8 KiB total). Individual entries and performance are unchanged.
   // Direct table-caption content retention adds ~0.4 KiB CJS (1124.2 total).
   // ESM remains within 1348 KiB; individual entries and performance stay fixed.
-  'all CommonJS runtime code': 1128 * kibibyte,
+  'all CommonJS runtime code': 1132 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

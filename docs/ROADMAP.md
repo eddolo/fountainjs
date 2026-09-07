@@ -5,6 +5,30 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Markdown cross-block HTML scope increment (2026-09-07): optional `parseHTMLFlow`
+and server `parseFlow` / `parseFlowWithReport` retain already-parsed Fountain
+blocks as protected objects while resolving raw HTML across blank-line boundaries.
+The demo now reconstructs split HTML tables and wrappers without serializing
+Fountain content, extension attributes or source as HTML. Duplicate references
+to an original block, nested Markdown containers, invalid/foreign results,
+consuming custom rules, URL policy and input limits have focused regressions.
+Whole-flow fallback is explicit when raw-text/formatting/styled scopes would
+require changing protected blocks; implementing those scopes remains next work.
+
+Verification: the full local `pnpm check` passes 1,149 tests in 104 files plus
+package/headless/runtime, declarations, type checks and unchanged performance
+limits. The conformance gate additionally passes 1,304 exact-source checks over
+all 652 reference examples with LF/CRLF endings; this is retention evidence,
+not semantic parity. The CommonMark 563/72/17 baseline remains unchanged.
+Twelve focused browser checks and fifteen adjacent caption/figure/conversion/
+paste regressions pass across Chromium, Firefox and WebKit (one test per engine
+is shared between those sets). Two recorded real editing journeys pass; the
+split-table screenshot and video frames were visually reviewed through paste,
+cell editing, undo/redo and Markdown export. Added flow collection/protection
+costs about 4.4 KiB ESM / 3.6 KiB CJS; only aggregate runtime budgets rise,
+not individual entries or performance limits. This does not authorize npm
+publication or complete the remaining HTML/Markdown or overall parity work.
+
 Markdown HTML-fragment follow-through (2026-09-07): the optional server importer
 now distinguishes block fragments from complete documents. Comment-only fragments
 produce no visible blocks instead of inserting a standalone document's caret

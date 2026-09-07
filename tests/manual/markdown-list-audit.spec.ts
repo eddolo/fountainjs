@@ -524,6 +524,43 @@ test('comment-only HTML does not create editable blank paragraphs during convers
   expect(errors).toEqual([]);
 });
 
+test('split HTML table becomes a real editable table with history and export', async ({ page, context }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('# Experiment results\n\n<table>\n\n<tr><th>Sample</th><th>Value</th></tr>\n\n<tr>\n\n<td>Alpha</td><td>42</td>\n\n</tr>\n\n</table>\n\nReviewed by Ada.');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  const output = page.locator('.demo-output');
+  await expect(output.locator('pre')).toContainText('table_cell');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('table tr')).toHaveCount(2);
+  await expect(editor.locator('table th')).toHaveText(['Sample', 'Value']);
+  const value = editor.locator('table td').nth(1);
+  await value.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' verified');
+  await expect(value).toHaveText('42 verified');
+  await capture(page, info, 'html-flow-table-edited');
+  await page.keyboard.press('Control+z');
+  await expect(value).toHaveText('42');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(value).toHaveText('42 verified');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('42 verified');
+  await capture(page, info, 'html-flow-table-exported');
+  expect(errors).toEqual([]);
+});
+
 test('opt-in HTML block conversion becomes editable content and survives canonical export', async ({ page, context }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

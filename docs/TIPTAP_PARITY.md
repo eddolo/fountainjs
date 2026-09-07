@@ -21,8 +21,13 @@ protects already-parsed Fountain nodes instead of serializing them through HTML;
 unprovable content preservation falls back to readable source. The public
 headless demo exposes separate default-off choices. Block-fragment conversion
 now omits comment-only results without inserting an empty-document caret
-paragraph, while retaining explicitly authored blank blocks. Exhaustive HTML precedence,
-specialized/raw-text inline structures, and conversion-loss accounting remain
+paragraph, while retaining explicitly authored blank blocks.
+The optional HTML flow adapter now carries raw blocks and protected Fountain
+blocks through a shared HTML scope, reconstructing tables split at blank lines
+without serializing extension data through HTML. Surrounding formatting and
+specialized raw-text scopes over those blocks still fall back explicitly.
+The 1,304 LF/CRLF flow source-retention checks do not change semantic scores.
+Exhaustive HTML precedence, specialized/raw-text inline structures, and conversion-loss accounting remain
 unfinished. This does not change the 563-match / 72-pending / 17-intentional-difference
 CommonMark baseline or qualify the overall programme for publication. See the
 [Markdown contract and evidence](MARKDOWN_SOURCE.md).

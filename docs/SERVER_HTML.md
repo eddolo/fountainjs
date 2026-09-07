@@ -122,6 +122,14 @@ being called with a partial DOM impersonation.
 
 ## Reports
 
+`parseFlow` / `parseFlowWithReport` accept interleaved raw HTML blocks and
+already-parsed Fountain block objects. They resolve HTML containers across
+Markdown blank-line boundaries without serializing the original blocks as HTML.
+`parseFlow` is available as a static convenience; instance methods share the
+importer's configured limits. Protected blocks must survive exactly once in
+order. Unsupported raw-text/formatting scopes and consuming custom rules are
+refused, not silently approximated. See [Markdown flow conversion](MARKDOWN_SOURCE.md#html-scopes-across-multiple-blocks).
+
 For content inserted into an existing document, use `parseFragment` or
 `parseFragmentWithReport` (static or instance methods). These return a readonly
 array of validated block nodes rather than a top-level document. A comment-only
@@ -149,6 +157,10 @@ for (const issue of issues) {
 ```
 
 Issue codes are:
+
+- `block-html-projection`: optional stream-level HTML projection completed;
+  unsupported grouping, attributes/layout and comments may be lost. This is an
+  explicit conversion warning, not a complete inventory of every difference;
 
 - `html-parse-error`: the standards parser recovered from malformed source;
 - `invalid-selector`: an extension supplied an invalid selector;

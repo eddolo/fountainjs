@@ -75,6 +75,46 @@ appropriate safe output layer and retain normal application trust boundaries.
 Try the **Convert HTML blocks to rich content** checkbox in the
 [headless conversion demo](https://eddolo.github.io/fountainjs/demos/node-markdown.html).
 
+### HTML scopes across multiple blocks
+
+A CommonMark blank line can end a raw HTML block without closing its HTML
+element. Use the optional flow adapter when a container or table spans several
+such blocks; individual `parseHTMLBlock` calls cannot recover that scope:
+
+```ts
+const html = new ServerHTMLImporter()
+const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema, {
+  parseHTMLFlow(segments, targetSchema) {
+    const result = html.parseFlowWithReport(segments, targetSchema)
+    reportHTMLIssues(result.issues)
+    return result.nodes
+  },
+  onHTMLFlowFallback(issue) { console.warn(issue.reason, issue.message) },
+})
+```
+
+The immutable stream contains `{ kind: 'html', html }` raw blocks and
+`{ kind: 'node', node }` already-parsed Fountain blocks. A flow runs only where
+raw HTML exists and takes precedence over `parseHTMLBlock`; nested Markdown
+containers resolve separately. The adapter is synchronous/deterministic and may
+run again for source provenance (with the fallback reporter suppressed).
+
+The server adapter uses collision-free, source-bound placeholders and verifies
+that every original block survives exactly once in order. It never serializes
+Fountain blocks as HTML, preserving extension data and object identity. Input
+and parsed-tree limits still apply. Unsupported raw-text, formatting or styled
+scopes surrounding protected blocks are rejected with a reason, as are custom
+HTML rules that consume them. Failed flows retain their inert raw HTML rather
+than partially applying per-block conversion. This is not complete HTML/CSS or
+CommonMark fidelity; the default 563/72/17 baseline remains separate.
+
+Successful projection reports `block-html-projection` alongside specific losses.
+Exact whole-source export remains available while the document is unchanged;
+cross-block source mappings stay unavailable when ambiguous. Unknown wrappers
+can be flattened and layout omitted, so the HTML adapter's output is not a
+lossless replacement for the imported source. The public conversion demo uses
+this flow adapter behind **Convert HTML blocks to rich content**.
+
 ### Optional inline HTML formatting
 
 Inline HTML has a separate default-off boundary. Do **not** pass individual

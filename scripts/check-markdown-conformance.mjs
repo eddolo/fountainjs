@@ -12,6 +12,7 @@ import {
   MarkdownExporter,
   Schema,
 } from '../dist/index.js';
+import { ServerHTMLImporter } from '../dist/html-server.js';
 
 const BASELINE_PATH = fileURLToPath(new URL(
   '../tests/fixtures/markdown/commonmark-semantic-baseline-v1.json',
@@ -503,6 +504,21 @@ for (const number of inspectedExamples) {
   console.log(`Fountain projection:\n${JSON.stringify(mismatch?.actual ?? semanticProjection(HTMLExporter.export(MarkdownImporter.parse(source, schema), { document: false })), null, 2)}`);
   if (mismatch?.error) console.log(`Fountain error: ${mismatch.error}`);
 }
+
+// This is an opt-in source-retention contract, never a semantic conformance
+// score. Keep it separate from the default-policy classifications above.
+let flowSourceChecks = 0;
+for (const example of commonmarkSpec.tests) {
+  for (const ending of ['\n', '\r\n']) {
+    const source = materializeTabs(example.markdown).replaceAll('\n', ending);
+    const imported = MarkdownImporter.parseWithSource(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseFlow });
+    if (MarkdownExporter.exportWithSource(imported.document, imported.source).markdown !== source) {
+      throw new Error(`HTML flow source-retention regression in CommonMark example ${example.number}.`);
+    }
+    flowSourceChecks++;
+  }
+}
+console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed (LF/CRLF); not semantic conformance.`);
 
 if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
 if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');
