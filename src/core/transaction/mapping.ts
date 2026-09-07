@@ -309,6 +309,13 @@ function findTextPoint(doc: Node, position: number, association: MapAssociation)
   const inside = leaves.find((leaf) => position > leaf.from && position < leaf.to);
   if (inside) return { path: inside.path, offset: position - inside.from };
 
+  // A text endpoint is already an editable position, not a gap that needs
+  // recovery. Association chooses between adjacent marked leaves sharing that
+  // endpoint; it must not jump over block boundaries to a different paragraph.
+  const endpoints = leaves.filter(leaf => position === leaf.from || position === leaf.to);
+  const endpoint = association < 0 ? endpoints[0] : endpoints.at(-1);
+  if (endpoint) return { path: endpoint.path, offset: position - endpoint.from };
+
   if (association < 0) {
     const previous = [...leaves].reverse().find((leaf) => leaf.to <= position) ?? leaves[0] as TextLeafPosition;
     return { path: previous.path, offset: Math.max(0, Math.min(position - previous.from, previous.to - previous.from)) };

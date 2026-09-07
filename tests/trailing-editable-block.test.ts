@@ -13,6 +13,9 @@ import {
   createTrailingEditableBlockTransaction,
   ensureTrailingEditableBlocks,
   getCollaborationState,
+  Selection,
+  isInsideNode,
+  toggleQuote,
   redo,
   undo,
   type CollaborationAdapterContext,
@@ -29,6 +32,17 @@ function createTrailingEditor(content: NodeJSON, extra = [TrailingEditableBlockE
 }
 
 describe('trailing editable block extension', () => {
+  it('keeps the caret inside a final paragraph converted to a quote while adding the trailing block', () => {
+    const editor = createTrailingEditor({ type: 'doc', content: [paragraph('Release notes')] });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 13)));
+    expect(toggleQuote(editor)).toBe(true);
+    expect(editor.state.doc.content.map(node => node.type.name)).toEqual(['blockquote', 'paragraph']);
+    expect(editor.state.selection.eq(Selection.cursor([0, 0, 0], 13))).toBe(true);
+    expect(isInsideNode(editor, 'blockquote')).toBe(true);
+    expect(toggleQuote(editor)).toBe(true);
+    expect(editor.state.doc.child(0).type.name).toBe('paragraph');
+    editor.destroy();
+  });
   it('adds one visible editable block after a non-text block and remains idempotent', () => {
     const editor = createTrailingEditor({ type: 'doc', content: [rule] });
     expect(editor.state.doc.content.map((node) => node.type.name)).toEqual(['horizontal_rule', 'paragraph']);

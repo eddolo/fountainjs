@@ -5,6 +5,33 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+SURFACE-04 Vue increment (2026-09-07): an optional Vue 3 entry now owns client
+editor lifecycles, subscribes through shallow reactive state, and mounts the
+existing DOM view through a first-party component. The runbook demo runs an
+actual Vue app inside the labelled React gallery shell, not just a Custom Element
+recipe. Tests cover provider disposal, SSR without DOM/plugins, replacement,
+history and native browser editing through view hide/reopen. Svelte/Angular
+bindings and complete framework-specific panel suites remain open; this does
+not change the overall partial status. See `docs/VUE.md`.
+
+The Vue quote-toggle workflow exposed an engine-level endpoint mapping bug:
+after wrapping the last paragraph, an automatic trailing-paragraph append could
+move the caret out of the quote. Resolution now honors exact text endpoints
+before recovering across structural gaps; association still chooses between
+adjacent marked spans. Core/repair regressions and the real Vue workflow cover
+this fix, which applies to every DOM/framework surface.
+
+Verification for this increment: `pnpm check` passes 1,110 tests in 99 files,
+including eight Vue lifecycle/SSR tests. The selection/quote/trailing/undo/caret
+browser regression set passes 80 checks across desktop engines and touch
+emulation, with two existing Chromium-only clipboard skips. The final Vue-only
+set passes all five projects; its recorded Chrome journey, screenshots and
+video overview were visually reviewed. That review also fixed an unbounded Vue
+JSON-inspector column in Firefox. Website build passes with the pre-existing
+large MathJax reference-lab chunk warning. Native device/screen-reader evidence,
+Svelte/Angular packages, remaining format fidelity and the rest of the release
+ledger are not completed by this increment; npm publication remains deferred.
+
 Table-caption import repair (2026-09-07): browser and server HTML import preserve
 caption content as editable blocks before the table, including rich text,
 multiple/empty paragraphs and nested-table captions. The server report explicitly

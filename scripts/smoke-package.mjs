@@ -157,6 +157,18 @@ const esmEmojiData = await import('fountainjs-editor/emoji-data');
 assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');
 if (esmEmojiData.unicodeEmojis.length < 1_900) throw new Error('ESM Unicode emoji data entry is incomplete.');
 assertExports(await import('fountainjs-editor/react'), reactNames, 'ESM React entry');
+assertExports(await import('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'ESM Vue entry');
+// Optional means non-Vue consumers never need the Vue peer, even transitively.
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  import { registerHooks } from 'node:module';
+  registerHooks({ resolve(specifier, context, nextResolve) {
+    if (specifier === 'vue' || specifier.startsWith('@vue/')) throw new Error('Unexpected Vue peer: ' + specifier);
+    return nextResolve(specifier, context);
+  } });
+  await import('fountainjs-editor');
+  await import('fountainjs-editor/core');
+  await import('fountainjs-editor/react');
+`], { stdio: 'inherit' });
 const esmYjs = await import('fountainjs-editor/yjs');
 assertExports(esmYjs, yjsNames, 'ESM Yjs entry');
 assertExports(await import('fountainjs-editor/comments'), commentsNames, 'ESM comments entry');
@@ -301,6 +313,7 @@ const cjsEmojiData = require('fountainjs-editor/emoji-data');
 assertExports(cjsEmojiData, emojiDataNames, 'CommonJS Unicode emoji data entry');
 if (cjsEmojiData.unicodeEmojis.length < 1_900) throw new Error('CommonJS Unicode emoji data entry is incomplete.');
 assertExports(require('fountainjs-editor/react'), reactNames, 'CommonJS React entry');
+assertExports(require('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'CommonJS Vue entry');
 assertExports(require('fountainjs-editor/comments'), commentsNames, 'CommonJS comments entry');
 assertExports(require('fountainjs-editor/react/comments'), reactCommentsNames, 'CommonJS React comments entry');
 assertExports(require('fountainjs-editor/tracked-changes'), trackedChangesNames, 'CommonJS tracked changes entry');

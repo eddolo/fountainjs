@@ -20,7 +20,7 @@ Its boundaries are language and framework agnostic:
 
 - Use the DOM API directly from any frontend framework.
 - Register the standards-based `<fountain-editor>` Web Component in React, Vue, Svelte, Angular, plain HTML, or any Custom-Element-capable environment.
-- Use the first-party React package when React-specific hooks and components are useful.
+- Use the first-party React or [Vue binding](docs/VUE.md) when framework-specific hooks/composables and components are useful.
 - Persist stable JSON that any backend language can store, validate, index, or transform.
 - Add nodes, marks, plugins, commands, formats, and host services through one extension contract.
 

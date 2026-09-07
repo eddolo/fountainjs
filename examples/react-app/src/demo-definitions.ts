@@ -1,6 +1,6 @@
 import type { MarkJSON, NodeJSON } from 'fountainjs-editor';
 
-export type DemoRuntime = 'react' | 'dom' | 'element' | 'headless';
+export type DemoRuntime = 'react' | 'vue' | 'dom' | 'element' | 'headless';
 
 export interface DemoDefinition {
   index: number;
@@ -205,30 +205,33 @@ field.addEventListener('fountain-change', event => {
     slug: 'vue-runbook',
     title: 'Interactive task runbook',
     host: 'Vue',
-    surface: 'Vue → Web Component',
-    runtime: 'element',
-    summary: 'A task-first runbook with real checkboxes, structured instructions, and a framework-standard event boundary.',
-    boundary: 'The live editor is the same Custom Element a Vue template binds with DOM properties and events.',
-    capabilities: ['Task toggles', 'Nested blocks', 'Vue-compatible events', 'No React dependency'],
+    surface: 'Vue composables + component',
+    runtime: 'vue',
+    summary: 'A Vue-mounted task runbook with real checkboxes, reactive document data, and an editor view you can hide and reopen without losing history.',
+    boundary: 'The gallery shell uses React. This editor, toolbar, and inspector run in a real Vue app using the optional fountainjs-editor/vue entry; that binding has no React dependency.',
+    capabilities: ['Vue lifecycle ownership', 'Reactive state', 'Task toggles', 'View remount with history'],
     content: doc(
       heading(1, 'Release runbook'),
-      paragraph(text('Tick each item in this live task document. Vue only needs the browser element contract.')),
+      paragraph(text('Tick each item, edit the instructions, and hide then reopen the editor. Vue tracks the same Fountain document and undo history.')),
       { type: 'task_list', content: [taskItem('Run the full verification suite', true), taskItem('Inspect the packed npm artifact'), taskItem('Publish and verify the registry'), taskItem('Confirm the deployed demo pages')] },
       heading(2, 'Rollback note'),
       paragraph(text('Every change is represented in portable JSON for the release service to store.')),
     ),
     code: `<script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { StarterKit, registerFountainElement } from 'fountainjs-editor'
+import { StarterKit } from 'fountainjs-editor'
+import { FountainEditor, useFountain, useFountainState } from 'fountainjs-editor/vue'
+import 'fountainjs-editor/styles.css'
 
-registerFountainElement({ schema: StarterKit.schema, plugins: StarterKit.plugins })
-const field = ref<HTMLElement & { value: unknown }>()
-onMounted(() => { field.value!.value = savedJSON })
-const save = (event: CustomEvent) => api.save(event.detail.value)
+const editor = useFountain(() => ({
+  schema: StarterKit.schema, plugins: StarterKit.plugins,
+}))
+const state = useFountainState(editor)
+const options = { ariaLabel: 'Runbook editor' }
 </script>
 
 <template>
-  <fountain-editor ref="field" @fountain-change="save" />
+  <FountainEditor :editor="editor" :options="options" />
+  <p>{{ state?.doc.textContent.length ?? 0 }} characters</p>
 </template>`,
     accent: '#42b883',
   },

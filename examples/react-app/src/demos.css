@@ -76,6 +76,12 @@
 .demo-surface .fountain-composer { background: white; border: 0; border-radius: 12px; box-shadow: 0 12px 30px rgb(39 32 66 / 10%); }
 .demo-surface .fountain-editor { min-height: 535px; max-height: 560px; overflow: auto; }
 .bare-editor, .element-editor { overflow: hidden; background: white; border-radius: 12px; box-shadow: 0 12px 30px rgb(39 32 66 / 10%); }
+.vue-runbook-hidden { min-height: 260px; padding: 32px; color: #403b52; background: white; border-radius: 12px; line-height: 1.7; }
+.vue-runbook-state { margin: 12px 0 0; color: #5f566f; font: 11px 'DM Mono', monospace; }
+[data-vue-runbook] input[type='number'] { width: 52px; }
+.vue-table-tools summary { cursor: pointer; padding: 5px; color: #403b52; font-size: 12px; }
+[data-vue-runbook] .demo-output { max-height: 760px; }
+[data-vue-runbook] .demo-output pre { min-height: 0; }
 .bare-editor > .fountain-editor, .element-editor .fountain-editor { border: 0; border-radius: 0; }
 .element-editor fountain-demo-editor { display: block; }
 .demo-status-widget { margin: 15px 0; color: #15533f; background: #e3f8ec; border: 1px solid #82c9a7; border-radius: 9px; }

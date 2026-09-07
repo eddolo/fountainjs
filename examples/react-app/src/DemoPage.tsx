@@ -649,7 +649,22 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   </div>;
 }
 
+function VueRuntime({ demo }: { demo: DemoDefinition }) {
+  const mount = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let cancelled = false;
+    let dispose: (() => void) | undefined;
+    void import('./vue-runbook').then(({ mountVueRunbook }) => {
+      if (!cancelled && mount.current) dispose = mountVueRunbook(mount.current, demo);
+    }).catch(reason => { if (!cancelled) setError(String(reason)); });
+    return () => { cancelled = true; dispose?.(); };
+  }, [demo]);
+  return <>{error && <p role="alert">Could not load the Vue editor: {error}</p>}<div ref={mount} /></>;
+}
+
 function Runtime({ demo }: { demo: DemoDefinition }) {
+  if (demo.runtime === 'vue') return <VueRuntime demo={demo} />;
   if (demo.runtime === 'dom') return <DOMRuntime demo={demo} />;
   if (demo.runtime === 'element') return <ElementRuntime demo={demo} />;
   if (demo.runtime === 'headless') return <HeadlessRuntime demo={demo} />;

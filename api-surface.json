@@ -373,6 +373,8 @@
     "dist/view/virtual-layout.d.ts": "f45103e63c0f468b6e6130fa174cd3faf9dc88c5b55efecd6d79e59ed1511793",
     "dist/view/web-component.d.cts": "0b08d68a108ba080ddbdac3867ad9860c43bfc0d32dee9aad92b1df8cf64dbaf",
     "dist/view/web-component.d.ts": "67f3292b0cb29ee268daddcee653cd4253ef177eeb9db1b26e22535dbc599d3e",
+    "dist/vue/index.d.cts": "f25015764bd24f17b6ca4a72e004658fbfc8ff9d689bcf050bdbbc34c5e9594b",
+    "dist/vue/index.d.ts": "b0381174963c691793f84b88c7a7fde5e85612676d84b0f55a86cd8fad865f75",
     "dist/widgets/dom.d.cts": "ed0548edf220b85efe19021c58cb24aa344bc5a0852b94cb6cb0d7c31707d8aa",
     "dist/widgets/dom.d.ts": "032cb14a593792c7c2480bd0fecfc8318262aef3ab85e057af4656010b7a3e7c",
     "dist/widgets/index.d.cts": "ebcdbb9517e491fafbe2369c2433b22174115863553a6dccf1d63b32851eada1",

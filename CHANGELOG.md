@@ -2,7 +2,22 @@
 
 ## Unreleased
 
+### Added
+
+- Optional `fountainjs-editor/vue` entry with `useFountain`, `useFountainState`
+  and `FountainEditor`: client-mount ownership, shallow state subscriptions,
+  external-editor/view separation and inert SSR. Vue 3.5+ is an optional external
+  peer, never bundled into the engine. The Vue runbook now runs actual Vue
+  controls and an inspector, with lifecycle and three-browser interaction tests.
+  Svelte/Angular first-party bindings remain pending.
+
 ### Fixed
+
+- Exact text endpoints no longer jump across a block boundary during selection
+  mapping. This fixes the caret leaving a final paragraph converted to a quote
+  when the trailing-editable-block plugin adds a paragraph. Adjacent marked
+  spans still respect mapping association, and real structural gaps still
+  resolve toward the requested side.
 
 - Browser/server HTML imports retain table caption content, rich marks, links
   and paragraphs instead of silently discarding them. Captions become editable

@@ -1,5 +1,28 @@
 import { expect, test } from '@playwright/test';
 
+test('uses the real Vue runbook on a touch viewport without losing task state', async ({ page }, info) => {
+  await page.goto('/demos/vue-runbook.html');
+  const workspace = page.locator('[data-vue-runbook]');
+  const editor = page.getByRole('textbox', { name: 'Vue runbook editor' });
+  const task = editor.getByRole('checkbox').nth(1);
+  await expect(task).not.toBeChecked();
+  await task.tap();
+  await expect(task).toBeChecked();
+  await workspace.getByRole('button', { name: 'Hide editor', exact: true }).tap();
+  await expect(editor).toHaveCount(0);
+  await workspace.getByRole('button', { name: 'Show editor', exact: true }).tap();
+  await expect(task).toBeChecked();
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).tap();
+  await expect(task).not.toBeChecked();
+  await workspace.getByRole('button', { name: 'Redo', exact: true }).tap();
+  await expect(task).toBeChecked();
+  await expect(page.locator('body')).toHaveJSProperty('scrollWidth', await page.evaluate(() => document.documentElement.clientWidth));
+  await editor.scrollIntoViewIfNeeded();
+  const path = info.outputPath('vue-touch-runbook.png');
+  await page.screenshot({ path });
+  await info.attach('Vue touch runbook', { path, contentType: 'image/png' });
+});
+
 test('handles virtual-keyboard replacement, composition, deletion, and history input', async ({ page }) => {
   await page.goto('/browser-tests.html');
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectText([0, 0], 0, 5));
