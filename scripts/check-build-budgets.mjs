@@ -264,7 +264,9 @@ const limits = Object.freeze({
   // portable Word styles add about 56/44 KiB as an isolated opt-in entry,
   // including the bundled ZIP codec.
   // Existing consumer entries do not grow.
-  'all ESM runtime code': 1302 * kibibyte,
+  // Fixed-point outer-to-inner HTML mark projection adds less than 1 KiB across
+  // the duplicated ESM entry graph while preserving every individual ceiling.
+  'all ESM runtime code': 1303 * kibibyte,
   'all CommonJS runtime code': 1090 * kibibyte,
 });
 

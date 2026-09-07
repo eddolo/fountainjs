@@ -2,6 +2,8 @@ import type { EditorState } from '../state';
 import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
 import { isSafeURL } from '../url';
 
+const SOURCE_NESTED_MARKS = new Set(['em', 'strong', 'strike', 'code', 'link']);
+
 export interface HTMLExportOptions {
   document?: boolean;
   title?: string;
@@ -139,7 +141,10 @@ function tableCellSizeAttributes(node: Node): string {
 }
 
 function renderMarks(content: string, marks: readonly Mark[]): string {
-  for (const mark of marks) {
+  const ordered = marks.every((mark) => SOURCE_NESTED_MARKS.has(mark.type.name))
+    ? [...marks].reverse()
+    : marks;
+  for (const mark of ordered) {
     switch (mark.type.name) {
       case 'strong': content = `<strong>${content}</strong>`; break;
       case 'em': content = `<em>${content}</em>`; break;
@@ -171,16 +176,21 @@ function renderText(node: Node): string {
   return renderMarks(escapeHTML(node.text), node.marks);
 }
 
+function mergeAdjacentMarks(value: string): string {
+  let next: string;
+  while ((next = value.replace(/<\/(em|strong|s)><\1>/g, '')) !== value) value = next;
+  return value;
+}
+
 function renderNode(node: Node, document: Node = node, path: readonly number[] = []): string {
   if (node.isText) return renderText(node);
   if (node.type.isInline && node.marks.length) {
     return renderMarks(renderNode(node.withMarks([]), document, path), node.marks);
   }
   const context = { document, path };
-  const children = () => node.content
+  const children = () => mergeAdjacentMarks(node.content
     .map((child, index) => renderNode(child, document, [...path, index]))
-    .join('')
-    .replace(/<\/(em|strong|s)><\1>/g, '');
+    .join(''));
   switch (node.type.name) {
     case 'doc': return node.content.map((child, index) => renderNode(child, document, [index])).join('\n');
     case 'paragraph': return `<p${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</p>`;

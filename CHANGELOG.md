@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- HTML export now respects Fountain's outer-to-inner mark order, so nested
+  emphasis, strong, code, and links remain one continuous semantic range instead
+  of being inverted or fragmented across adjacent inline nodes. This promotes 28
+  additional official CommonMark cases without changing Fountain's native AST.
 - The ten demo pages now distinguish content-author controls, portable stored
   data, and the reader/product rendering instead of presenting those roles as
   one ambiguous "live" surface. The incident widget defaults to a clean product

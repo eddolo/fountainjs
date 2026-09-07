@@ -827,6 +827,32 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('exports nested inline marks in their outer-to-inner document order', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      ['*foo **bar** baz*', '<p><em>foo <strong>bar</strong> baz</em></p>'],
+      ['**foo *bar* baz**', '<p><strong>foo <em>bar</em> baz</strong></p>'],
+      [
+        '*foo **bar *baz* bim** bop*',
+        '<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>',
+      ],
+      [
+        '**foo *bar **baz**\nbim* bop**',
+        '<p><strong>foo <em>bar <strong>baz</strong> bim</em> bop</strong></p>',
+      ],
+      [
+        '**foo [*bar*](/url)**',
+        '<p><strong>foo <a href="/url" target="_blank" rel="noopener noreferrer nofollow"><em>bar</em></a></strong></p>',
+      ],
+      ['***foo***', '<p><em><strong>foo</strong></em></p>'],
+    ] as const;
+
+    for (const [source, expected] of cases) {
+      expect(HTMLExporter.export(MarkdownImporter.parse(source, schema), { document: false }), source)
+        .toBe(expected);
+    }
+  });
+
   it('covers underscore surplus, repeated nesting, and competing spans', () => {
     const schema = new Schema(CoreSchemaSpec);
     const cases = [
