@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed
+
+- Transactions no longer throw when structural replacement removes every text
+  leaf. Text carets/ranges and removed inline-node selections recover a nearby
+  block gap; empty intermediate documents use an all-document selection.
+  Nested insertion, explicit subsequent selection, undo/redo and native typing
+  after atom-only replacement are covered. No synthetic text is added by mapping.
+
 ### Added
 
 - Separate document-aware equation-reference lab with a host-owned MathJax SVG

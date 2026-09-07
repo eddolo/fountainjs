@@ -358,6 +358,24 @@ projection; complete paper citations, bibliography, figures, table layout and
 all-page export comparison. The lab's 128-formula bound and fixed 960px measure
 must not be advertised as large-document or professional publication parity.
 
+The repeated-node test also exposed a transaction bug unrelated to MathJax:
+removing all text leaves threw before a caller could set its final selection.
+`mapping.ts` now recovers a structural gap, or an all-document selection for an
+empty intermediate snapshot, without adding content. The MathJax test no longer
+appends a synthetic empty-text paragraph to avoid this defect. Nine separate
+selection regressions cover text, gap, node and cell selections, nested gaps,
+history, and continued typing. A native browser journey passed 3/3 across
+Chromium/Firefox/WebKit in `artifacts/browser-textless-replacement-20260907a/`;
+the recorded Chromium repeat is in `artifacts/manual-textless-replacement-20260907a/`.
+Both typed/separate-line and Backspace-joined screenshots were inspected.
+Measured runtime growth is approximately 0.5 KiB ESM / 0.4 KiB CJS, bringing
+totals to 1329.2 / 1108.6 KiB. Only the aggregate ESM ceiling rises to 1330 KiB;
+individual entries, CJS, CSS and performance ceilings stay unchanged.
+The final `pnpm check` passed 975 tests in 89 files plus its package, API,
+headless/server, format, size and performance checks after this repair.
+A combined final run passed both journeys in all three browser engines (6/6),
+without retries, under `artifacts/browser-math-and-textless-20260907final/results/`.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official

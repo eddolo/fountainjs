@@ -296,9 +296,15 @@ function textLeafPositions(doc: Node): readonly TextLeafPosition[] {
 
 /** Resolves a structural position to the nearest editable text point. */
 export function positionToTextPoint(doc: Node, position: number, association: MapAssociation = 1): TextPoint {
+  const point = findTextPoint(doc, position, association);
+  if (!point) throw new Error('The document does not contain an editable text position.');
+  return point;
+}
+
+function findTextPoint(doc: Node, position: number, association: MapAssociation): TextPoint | null {
   validatePosition(position);
   const leaves = textLeafPositions(doc);
-  if (!leaves.length) throw new Error('The document does not contain an editable text position.');
+  if (!leaves.length) return null;
 
   const inside = leaves.find((leaf) => position > leaf.from && position < leaf.to);
   if (inside) return { path: inside.path, offset: position - inside.from };
@@ -309,6 +315,29 @@ export function positionToTextPoint(doc: Node, position: number, association: Ma
   }
   const next = leaves.find((leaf) => leaf.from >= position) ?? leaves.at(-1) as TextLeafPosition;
   return { path: next.path, offset: Math.max(0, Math.min(position - next.from, next.to - next.from)) };
+}
+
+// A valid structural edit may remove every text leaf, including temporarily
+// between transaction steps. Never fabricate a text path or mutate content to
+// recover the caret. Prefer the nearest legal block gap, forward on a tie.
+function selectionWithoutText(doc: Node, position: number): AnySelection {
+  let nearest: number | undefined;
+  const consider = (candidate: number) => {
+    if (nearest === undefined || Math.abs(candidate - position) < Math.abs(nearest - position)
+      || (Math.abs(candidate - position) === Math.abs(nearest - position) && candidate > nearest)) nearest = candidate;
+  };
+  const visit = (node: Node, before: number, root = false): void => {
+    if (node.isText) return;
+    let at = before + (root ? 0 : 1);
+    for (let index = 0; index <= node.childCount; index++) {
+      const left = node.content[index - 1];
+      const right = node.content[index];
+      if ((left || right) && !left?.type.isInline && !right?.type.isInline) consider(at);
+      if (right) { visit(right, at); at += right.nodeSize; }
+    }
+  };
+  visit(doc, 0, true);
+  return nearest === undefined ? new AllSelection(doc) : new GapSelection(doc, nearest, 1);
 }
 
 /** Maps any supported selection from one document version into the next. */
@@ -332,6 +361,8 @@ function findMappedNodePath(
 }
 
 export function mapSelection(selection: AnySelection, before: Node, after: Node, map: StepMap): AnySelection {
+  // Empty intermediate snapshots have neither a text caret nor a block gap.
+  if (!after.childCount) return new AllSelection(after);
   if (selection instanceof AllSelection) return new AllSelection(after);
   if (selection instanceof GapSelection) {
     return new GapSelection(after, map.map(selection.position, selection.association), selection.association);
@@ -343,7 +374,8 @@ export function mapSelection(selection: AnySelection, before: Node, after: Node,
     if (path) return new NodeSelection(after, path);
     const selectedNode = getNodeAtPath(before, selection.nodePath);
     if (selectedNode.type.isInline) {
-      const point = positionToTextPoint(after, from, 1);
+      const point = findTextPoint(after, from, 1);
+      if (!point) return selectionWithoutText(after, from);
       return Selection.cursor(point.path, point.offset);
     }
     return new GapSelection(after, from, 1);
@@ -361,18 +393,17 @@ export function mapSelection(selection: AnySelection, before: Node, after: Node,
     return new GapSelection(after, map.map(anchorFrom, 1), 1);
   }
   const start = textPointToPosition(before, selection.path, selection.from);
+  const startPosition = map.map(start, 1);
+  const mappedStart = findTextPoint(after, startPosition, 1);
+  if (!mappedStart) return selectionWithoutText(after, startPosition);
   if (selection.isCollapsed) {
-    const mapped = positionToTextPoint(after, map.map(start, 1), 1);
-    return Selection.cursor(mapped.path, mapped.offset);
+    return Selection.cursor(mappedStart.path, mappedStart.offset);
   }
   const end = textPointToPosition(before, selection.endPath, selection.to);
-  const startPosition = map.map(start, 1);
   const endPosition = map.map(end, -1);
   if (startPosition >= endPosition) {
-    const mapped = positionToTextPoint(after, startPosition, 1);
-    return Selection.cursor(mapped.path, mapped.offset);
+    return Selection.cursor(mappedStart.path, mappedStart.offset);
   }
-  const mappedStart = positionToTextPoint(after, startPosition, 1);
   const mappedEnd = positionToTextPoint(after, endPosition, -1);
   return Selection.range(mappedStart.path, mappedStart.offset, mappedEnd.path, mappedEnd.offset);
 }

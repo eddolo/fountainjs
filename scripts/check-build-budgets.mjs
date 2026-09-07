@@ -299,7 +299,9 @@ const limits = Object.freeze({
   // Opt-in document-context view refresh and identity-consistent NodeView moves
   // measure 1328.7 KiB ESM / 1108.2 KiB CJS (+1.9 / +1.4 KiB). No renderer
   // dependency or individual-entry, CSS, or performance-ceiling change.
-  'all ESM runtime code': 1329 * kibibyte,
+  // Recovery from textless transaction snapshots adds ~0.5 KiB ESM / 0.4 KiB
+  // CJS (1329.2 / 1108.6 KiB measured); only the aggregate ESM cap changes.
+  'all ESM runtime code': 1330 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

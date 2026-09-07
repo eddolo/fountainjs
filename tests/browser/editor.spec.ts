@@ -4,6 +4,11 @@ import { mathReferenceSamples } from '../../examples/react-app/src/math-referenc
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
 import { mathReferencesJourney } from './math-references-journey';
+import { textlessReplacementJourney } from './textless-replacement-journey';
+
+test('recovers from textless replacement for native typing, lines and history', async ({ page }, info) => {
+  await textlessReplacementJourney(page, info);
+});
 
 test('renders labelled equations and reader links through real editing and recovery', async ({ page }, info) => {
   await mathReferencesJourney(page, info);

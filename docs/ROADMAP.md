@@ -26,10 +26,15 @@ save/reopen and independently inspected publication output explicit requirements
 of any future academic reference application. This does not start a separate
 product or change the existing editor parity release gates.
 
-New reliability follow-up from the equation lab: replacing a text-selected
-document with only atoms or childless paragraphs can throw during selection
-mapping before normalization plugins run. Reproduce at the transaction boundary
-and fix without relying on demo callers to append synthetic empty text leaves.
+Reliability follow-up from the equation lab: replacing a text-selected document
+with only atoms or childless paragraphs threw during selection mapping before
+normalization plugins ran. Transaction mapping now recovers a nearest legal
+block gap without inserting synthetic text, including nested containers. Empty
+intermediate documents use an all-document selection until the caller inserts
+content/sets its intended selection. Nine regression cases cover text, node,
+cell and gap selections, nested content, history and continued typing; the real
+browser replacement/typing/Enter/history/Backspace journey passed in Chromium,
+Firefox and WebKit. This is a bounded repair, not a complete selection audit.
 
 Markdown follow-through (2026-09-07): the opt-in inline HTML adapter now protects
 Fountain's original parsed nodes while applying surrounding HTML formatting.

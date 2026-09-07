@@ -798,6 +798,14 @@ history restores the original semantic kind. Typing replaces node/all/cell
 selections and inserts a new paragraph at a gap. Mark commands apply to the
 selected node, document, or exact cell rectangle while retaining its selection.
 
+Structural replacement can leave a valid document with no text leaves. In that
+case a mapped text caret/range or removed inline-node selection becomes the
+nearest legal block gap (forward on equal distance), including nested block
+containers. A completely empty intermediate snapshot uses `AllSelection`.
+Mapping does not insert empty text or normalize document content; callers can
+continue adding steps and set their intended final selection before dispatch.
+The explicit `positionToTextPoint()` API still throws when no text point exists.
+
 Version `0.3` supports ordered ranges inside one text fragment, across differently marked inline fragments, across top-level text blocks, and through nested text leaves. Top-level paragraph replacement joins the surviving prefix and suffix into one block; nested custom structures preserve their topology while transforming the selected text leaves.
 
 ```ts

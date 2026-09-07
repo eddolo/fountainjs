@@ -121,7 +121,7 @@ describe('optional host MathJax SVG integration', () => {
   it('numbers distinct occurrences of the same immutable node independently', () => {
     const { editor, view, errors } = setup();
     const repeated = editor.state.schema.node('math_block', { latex: String.raw`\begin{equation}a=b\end{equation}` });
-    editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, [repeated, repeated, editor.state.schema.node('paragraph', {}, [editor.state.schema.text('')])]));
+    editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, [repeated, repeated]));
     expect(attributes(view.dom, 'data-equation-tags')).toEqual(['(1)', '(2)']);
     const ids = [...view.dom.querySelectorAll('[id]')].map(node => node.id);
     expect(new Set(ids).size).toBe(ids.length);
