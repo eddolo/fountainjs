@@ -104,6 +104,9 @@ jobs:
             test-results/**/edited-compound-equations.docx
             test-results/**/fallback-equations.docx
             test-results/**/restored-equations.docx
+            test-results/**/reopened-equations.png
+            test-results/**/changed-equation-refused.png
+            test-results/**/externally-changed-equations.docx
           if-no-files-found: ignore
           retention-days: 7
       - uses: actions/upload-artifact@v4

@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
-import { strFromU8, unzipSync } from 'fflate';
+import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 export async function docxMathJourney(page: Page, info: TestInfo) {
   await page.goto('/browser-tests.html');
@@ -74,4 +74,35 @@ export async function docxMathJourney(page: Page, info: TestInfo) {
   await expect(root.getByRole('status')).toContainText('8 experimental equations exported');
   await expect(root.locator('[data-conversion-issues] li')).toHaveCount(0);
   await root.screenshot({ path: info.outputPath('restored-equations.png') });
+
+  // Reopen a real downloaded file through the user-facing file picker.
+  await source.fill('z+1');
+  const open = root.getByLabel('Reopen DOCX with matching TeX metadata');
+  await open.setInputFiles(info.outputPath('experimental-equations.docx'));
+  await expect(root.locator('[data-import-status]')).toContainText('8 equations restored');
+  await expect(root.locator('[data-source] [data-document-mathjax] svg')).toHaveCount(8);
+  await first.click();
+  await expect(source).toHaveValue(String.raw`\frac{x^2}{\sqrt{y}}`);
+  await root.screenshot({ path: info.outputPath('reopened-equations.png') });
+  await root.getByRole('button', { name: 'Undo equation edit' }).click();
+  await first.click();
+  await expect(source).toHaveValue('z+1');
+  await open.setInputFiles(info.outputPath('experimental-equations.docx'));
+  await expect(root.locator('[data-import-status]')).toContainText('8 equations restored');
+
+  // Simulate an external equation edit while retaining its original metadata.
+  // This is an XML mutation, not evidence of a native Word editing session.
+  parts['word/document.xml'] = strToU8(xml.replace('>2</m:t>', '>9</m:t>'));
+  const changedPath = info.outputPath('externally-changed-equations.docx');
+  await writeFile(changedPath, zipSync(parts));
+  await open.setInputFiles(changedPath);
+  await expect(root.locator('[data-import-status]')).toContainText('7 equations restored');
+  await expect(root.getByRole('list', { name: 'Reopen warnings' })).toContainText('Equation OMML changed');
+  await expect(root.locator('[data-source]')).toContainText('[Word equation: import not yet supported]');
+  await expect(root.locator('[data-source] [data-document-mathjax] svg')).toHaveCount(7);
+  await root.screenshot({ path: info.outputPath('changed-equation-refused.png') });
+  await root.getByRole('button', { name: 'Undo equation edit' }).click();
+  await expect(root.locator('[data-source] [data-document-mathjax] svg')).toHaveCount(8);
+  await first.click();
+  await expect(source).toHaveValue(String.raw`\frac{x^2}{\sqrt{y}}`);
 }

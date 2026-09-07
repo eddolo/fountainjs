@@ -25,6 +25,11 @@
 
 ### Added
 
+- Opt-in DOCX equation-source restoration with versioned metadata and unique
+  bookmark bindings. Unchanged projections restore exact TeX and accessibility
+  labels; edited, missing, duplicated or namespace-mismatched projections are
+  refused with warnings. Default import is unchanged. General Word equation
+  import, native Word edit/save verification and full-file round trips remain open.
 - Optional repository example converting a bounded base/AMS TeX subset into
   native DOCX math using MathJax. The recorded diagnostic now converts newly
   edited formulas, exposes unsupported-syntax reasons, and saves each actual

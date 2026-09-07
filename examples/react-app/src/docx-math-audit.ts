@@ -1,7 +1,7 @@
 // Test-only workflow with real bounded TeX conversion. Never use docx-preview's
 // rendering as a Word conformance oracle.
 import { createEditor, EditorView, StarterKit, composeExtensions, createMathExtension, undo } from 'fountainjs-editor';
-import { exportDOCX } from 'fountainjs-editor/docx';
+import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 import { renderAsync } from 'docx-preview';
 import { createDocumentMathJaxRenderer } from './mathjax-document-renderer';
 import { compileTeXForDOCX } from './mathjax-docx';
@@ -26,6 +26,10 @@ export function mountDOCXMathAudit() {
     <p>Left: editable Fountain source rendered by MathJax. Right: actual exported DOCX rendered by docx-preview. The host adapter parses supported TeX expressions; unsupported constructs retain source with a warning. This is not Word or a page-layout certification.</p>
     <button type="button" data-export>Export and inspect current DOCX</button>
     <button type="button" data-undo>Undo equation edit</button>
+    <p><label>Reopen DOCX with matching TeX metadata <input type="file" data-open accept=".docx"></label></p>
+    <p>This opt-in diagnostic reads untrusted source metadata locally. Changed or ambiguous equations are not restored.</p>
+    <p data-import-status aria-live="polite"></p>
+    <ul data-import-issues aria-label="Reopen warnings"></ul>
     <p role="status">Not exported</p>
     <ul data-conversion-issues aria-label="Conversion warnings"></ul>
     <p data-viewer-issues role="alert"></p>
@@ -49,6 +53,8 @@ export function mountDOCXMathAudit() {
       root.querySelector('[data-word]')!.replaceChildren();
       root.querySelector('[data-viewer-issues]')!.textContent = '';
       root.querySelector('[data-conversion-issues]')!.replaceChildren();
+      root.querySelector('[data-import-status]')!.textContent = '';
+      root.querySelector('[data-import-issues]')!.replaceChildren();
       status.textContent = 'Source changed. Export again; the previous viewer was cleared.';
     }
   });
@@ -94,6 +100,32 @@ export function mountDOCXMathAudit() {
     } catch (error) {
       if (request === revision) status.textContent = `Export failed: ${error instanceof Error ? error.message : String(error)}`;
     } finally { button.disabled = false; }
+  });
+  const fileInput = root.querySelector<HTMLInputElement>('[data-open]')!;
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    const request = revision;
+    fileInput.disabled = true;
+    try {
+      if (file.size > 25 * 1024 * 1024) throw new Error('DOCX exceeds the 25 MiB file limit.');
+      const bytes = await file.arrayBuffer();
+      if (request !== revision || !root.isConnected) throw new Error('Editor changed while reading the file; reopen it again.');
+      const result = importDOCX(bytes, editor.state.schema, { restoreMathSource: true });
+      if (!editor.dispatch(editor.state.createTransaction().replaceDocument(result.document))) throw new Error('Document replacement was rejected.');
+      const count = result.report.issues.filter(issue => issue.code === 'math-source-restored-experimental').length;
+      root.querySelector('[data-import-status]')!.textContent = `${count} equations restored from matching package metadata. This is not general Word equation import or Word fidelity approval.`;
+      const warnings = new Map<string, number>();
+      for (const issue of result.report.issues) {
+        const text = `${issue.code}: ${issue.message}`;
+        warnings.set(text, (warnings.get(text) ?? 0) + 1);
+      }
+      root.querySelector('[data-import-issues]')!.replaceChildren(...[...warnings].map(([text, count]) => {
+        const item = document.createElement('li'); item.textContent = count > 1 ? `${text} (${count} equations)` : text; return item;
+      }));
+    } catch (error) {
+      if (root.isConnected) root.querySelector('[data-import-status]')!.textContent = `Reopen failed: ${error instanceof Error ? error.message : String(error)}`;
+    } finally { fileInput.disabled = false; fileInput.value = ''; }
   });
   root.querySelector('[data-undo]')!.addEventListener('click', () => undo(editor));
   dispose = () => { revision++; unsubscribe(); view.destroy(); editor.destroy(); root.remove(); };

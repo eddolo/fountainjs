@@ -108,17 +108,17 @@ the package contains exact TeX and emitted OMML pairs in
 Outer Fountain marks are not applied to OMML; `native-math-marks-omitted` reports
 that omission. Supply mathematical styling in the expression itself.
 
-Import currently replaces Office equations with an explicit unsupported-equation
+Default import replaces Office equations with an explicit unsupported-equation
 placeholder and `unsupported-office-math`, rather than flattening a fraction or
-script into misleading text. Keep the original DOCX: Fountain does not yet
-restore its equations from the custom XML part, reconcile externally edited
-equations with saved TeX, or provide live Word numbering/references. Consumers
-must not describe this boundary as complete LaTeX-to-Word conversion.
+script into misleading text. Opt-in matching-source restoration is described
+below. Keep the original DOCX: general OMML conversion, reconciliation of
+externally edited equations, and live Word numbering/references remain open.
+Consumers must not describe this boundary as complete LaTeX-to-Word conversion.
 
 Each expression is capped at 10,000 nodes, depth 64 and 100,000 text characters;
 matrices have at most 100 rows and 100 columns. Export packages at most 128 native
 equations, with at most 100,000 source characters each and 1,000,000 source plus
-OMML characters in total. Unsupported fields, invalid XML characters, malformed
+OMML/accessibility-label characters in total. Unsupported fields, invalid XML characters, malformed
 trees and exceeded limits fail to a reported source fallback. There is no
 network access or new parser/runtime dependency.
 
@@ -161,8 +161,9 @@ geometry uses Word defaults, not a promise of matching TeX spacing.
 
 Explicit spacing, custom layout, unsupported font variants, stretching accents,
 numbered/labelled equations and references currently fall back with a reason.
-There is no package autoloading, custom macro package, full `.tex` document
-compilation or source restoration. Each formula gets a fresh parser and private
+There is no package autoloading, custom macro package or full `.tex` document
+compilation. Source restoration is an importer operation, not provided by the
+TeX converter. Each formula gets a fresh parser and private
 MathJax lightweight tree adaptor: Node execution requires no `document`, `window`
 or jsdom, and performs no font loading or network requests. Limits are 20,000
 source characters, 10,000 parsed nodes (including wrappers), depth 64 and 100
@@ -176,12 +177,60 @@ checks undo/stale-preview clearing. Unsupported source is intentionally visible
 in this diagnostic; it is not a publication-ready rendered math fallback.
 All the native Word/LibreOffice and round-trip qualifications above still apply.
 
+### Opt in to restoring unchanged Fountain equations
+
+```ts
+const reopened = importDOCX(bytes, schema, { restoreMathSource: true })
+// Inspect reopened.report before replacing an editor document.
+```
+
+The default is off. This option reads **untrusted package metadata**, not a
+signature or proof of source accuracy. An application should enable it only
+when accepting source-bearing documents is appropriate; its math renderer must
+retain its own safety limits. Fountain does not compile or execute the restored
+source during import.
+
+Current exports write v2 records to `customXml/fountainMath.xml`: per-equation
+bookmark name, original model path, inline/display kind, exact source,
+accessibility label and emitted OMML. Standard Word bookmarks enclose each
+projection; their name/ID pairing follows Microsoft's
+[bookmark contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.bookmarkstart?view=openxml-3.0.1).
+The model path is diagnostic information, not the binding: inserted paragraphs
+and reordered equations need not invalidate an otherwise unchanged equation.
+
+Restoration requires one internal relationship to the expected metadata part,
+a valid versioned record, a unique bookmark name and paired ID, and exactly
+one matching equation within that range. Complete namespace-resolved XML trees
+are compared. Prefix spelling, attribute order and indentation outside math
+tokens may differ; token text, mathematical structures and properties may not.
+This deliberately declines edits it cannot prove unchanged, including benign
+rewrites an Office application might make. No native Word edit/save workflow is
+certified yet. Equal flattened text or a matching equation elsewhere in the
+document is not sufficient.
+
+Successful restores emit `math-source-restored-experimental` and remain lossy.
+Changed or ambiguous bindings emit `math-source-not-restored`; invalid metadata
+emits `invalid-math-source-metadata`. Unrestored equations retain the existing
+explicit placeholder/warning, **not** an invented TeX reconstruction. Old v1
+inspection-only records have no bindings and are not automatically restored.
+Marks, arbitrary extension attributes, document identity, layout and review
+metadata are not covered by this source-restoration contract.
+
+Metadata extraction is opt-in and capped at 8,000,000 expanded bytes, within the
+ordinary aggregate ZIP limits. At most 128 records and 1,000,000 source/OMML/label
+characters are accepted; XML node/depth bounds and active-schema validation still
+apply. Duplicate selected ZIP entries are rejected. Equations in mixed Word
+paragraphs become ordered prose/display blocks, rather than placing a block
+inside an inline paragraph. This is document-model recovery, not page-layout
+fidelity or a complete DOCX round-trip guarantee.
+
 ## Resource and trust boundaries
 
 DOCX is a ZIP container carrying XML and may be hostile. Import therefore:
 
 - accepts only `Uint8Array` or `ArrayBuffer` supplied by the caller;
-- extracts only `word/document.xml`, numbering, document relationships, and
+- extracts only `word/document.xml`, numbering, document relationships, optional
+  explicitly requested Fountain math metadata, and
   single-file entries under `word/media/`;
 - caps compressed archive bytes, selected expanded bytes, document XML bytes,
   embedded media bytes/file count, XML node count, and XML depth;

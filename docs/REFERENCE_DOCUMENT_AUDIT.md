@@ -528,7 +528,8 @@ fraction/script text into a misleading string.
 **Still required:** independent Word and LibreOffice visual/editing checks;
 broader source-to-semantic conversion (the bounded host example below now tests
 an explicit subset and unsupported-syntax diagnostics); unchanged versus
-externally edited equation restoration; live
+externally edited equation reconciliation (matching-source recovery is covered
+below); live
 numbering/references; and whole-paper export comparison. FORMAT-05 remains
 partial. This does not close native academic DOCX parity.
 
@@ -622,6 +623,65 @@ build passed with its existing large MathJax reference-page chunk warning;
 no library size cap, runtime API or dependency changed.
 Native Word/LibreOffice rendering and editing remain unverified. No DOCX
 created in this audit is delivered as a finished publication.
+
+## Bound equation source recovery
+
+`importDOCX(bytes, schema, { restoreMathSource: true })` now optionally restores
+exact source and accessibility labels for uniquely bound, unchanged v2 Fountain
+equations. Export adds standard paired Word bookmarks and versioned records;
+import validates the internal relationship, record shape/limits, unique names
+and IDs, exact range enclosure, full namespace-aware XML structure and active
+schema. Duplicate selected ZIP parts are rejected. Binding uses identity rather
+than the old model path or equal rendered text. Prefix renaming/indentation and
+paragraph insertion/reordering are tested; changed math/properties, missing or
+duplicated ranges, spoofed namespaces and invalid metadata decline restoration.
+
+This contract deliberately remains opt-in and experimental. Metadata is
+unauthenticated input: comparison establishes that the bound OMML has not changed
+relative to that metadata, not that the package author supplied accurate TeX.
+A test explicitly records this distinction. Import does not execute the source;
+consuming renderers still own their safety policy. v1 inspection-only records
+have no bindings and are not auto-restored. Full document metadata, layout,
+review history, arbitrary math attributes and general OMML reconstruction are
+not covered. Keep the original file when a projection is refused.
+
+The recorded file-picker workflow is under
+`artifacts/manual-docx-source-20260907-final/`. It opens an actual downloaded
+eight-equation DOCX, restores editable MathJax-backed nodes, and undoes the file
+opening. A second file changes the first equation's exponent in XML while
+leaving its saved TeX untouched: import refuses that equation with a visible
+placeholder/reason and restores the other seven; undo brings back the original.
+This controlled ZIP/XML edit is **not evidence of native Word editing**. Before
+and after screenshots are inspected, with video/trace and both files retained.
+Repeated restoration warnings are grouped in the lab so the reason for a
+refused equation remains visible.
+
+Mixed Word paragraphs containing prose/display equations import as ordered
+Fountain blocks. A text-only code style containing rich inline math is reported
+and imported as rich prose instead of causing schema failure. The optional
+DOCX entry grows by about 7 KiB ESM / 6 KiB CJS for the bounded validation,
+namespace comparison, bindings and structural handling. Its measured size and
+aggregate code caps are updated explicitly; no new runtime dependency, default
+editor/core cap, CSS cap or performance allowance is added. Native Word and
+LibreOffice visual/edit-save checks remain pending; FORMAT-05 stays partial.
+
+Final local check: 1,064 tests in 94 files, including 24 focused source-recovery
+tests, passed with package/API/headless checks and unchanged performance limits.
+The optional DOCX module measures 70.0 KiB ESM / 56.0 KiB CJS; aggregate runtime
+code measures 1346.0 / 1122.6 KiB. Only the DOCX and aggregate size caps changed.
+The additive `restoreMathSource` option is recorded in the reviewed API snapshot;
+no public declarations outside the DOCX entry changed.
+
+The final browser run passed all eight selected journeys: equation export/reopen
+and ordinary DOCX projection in Chromium, Firefox and WebKit, plus Word
+export/re-import in emulated mobile Chrome and Safari. Evidence is retained in
+`artifacts/docx-source-engines-20260907-verified/`. The reopened Firefox and
+changed-equation WebKit screenshots were visually checked: all eight equations
+return in the first case; the second visibly refuses the changed equation,
+reports why, and renders the remaining seven. These are browser-engine tests,
+not physical-device or native Word certification. A subsequent focused run
+passed all 55 DOCX tests across three files. The website production build also
+passed; its existing large MathJax reference-page chunk warning remains.
 
 ## Lean reference track
 

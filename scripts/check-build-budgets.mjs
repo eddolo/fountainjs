@@ -26,9 +26,11 @@ const limits = Object.freeze({
   // codec are isolated from every editor, React, collaboration, page, and core entry.
   // Experimental validated semantic math/OMML and exact-source packaging add
   // ~7.1 KiB ESM / 6.1 KiB CJS, including nested-block traversal fixes.
-  // Measured optional DOCX entries: 62.6 / 49.9 KiB. No new dependency.
-  'dist/docx.js': 63 * kibibyte,
-  'dist/docx.cjs': 50 * kibibyte,
+  // Bound equation-source restoration adds ~7.4 / 6.1 KiB for namespace-aware
+  // comparison, unique bookmark verification, metadata validation and mixed
+  // paragraph handling. Measured optional entries: 70.0 / 56.0 KiB; no dependency.
+  'dist/docx.js': 71 * kibibyte,
+  'dist/docx.cjs': 57 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -309,15 +311,16 @@ const limits = Object.freeze({
   // Preview reference registry adds ~1.7 KiB ESM / 1.2 KiB CJS. Main/core,
   // other optional entries, CSS and performance limits are unchanged.
   // Optional DOCX math and nested traversal measure 1338.6 / 1116.5 KiB total.
+  // Verified, bound source restoration measures 1346.0 / 1122.6 KiB total.
   // Main/core, other entries, CSS and performance ceilings remain unchanged.
-  'all ESM runtime code': 1339 * kibibyte,
+  'all ESM runtime code': 1347 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
   // individual entries, ESM, CSS and performance ceilings stay unchanged.
   // Whole-document replacement and restoration of root metadata add ~0.6 KiB
   // CJS (1109.2 KiB total). Individual entries, ESM and CSS caps stay fixed.
-  'all CommonJS runtime code': 1117 * kibibyte,
+  'all CommonJS runtime code': 1123 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

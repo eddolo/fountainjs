@@ -61,6 +61,11 @@ export interface DOCXExportImage {
 export interface DOCXImportOptions extends DOCXLimits {
   /** Maps trusted embedded bytes to an application URL. Defaults to a bounded raster data URL. */
   readonly createImageSource?: (image: DOCXEmbeddedImage) => string | undefined;
+  /** Opt in to untrusted Fountain TeX metadata only when its uniquely bound
+   * equation still matches the saved OMML. Not a general Word-math importer,
+   * signature check or guarantee that a host's TeX projection was accurate.
+   */
+  readonly restoreMathSource?: boolean;
 }
 
 export interface DOCXExportOptions extends Pick<DOCXLimits, 'maxMediaBytes' | 'maxMediaFiles'> {
@@ -73,7 +78,7 @@ export interface DOCXExportOptions extends Pick<DOCXLimits, 'maxMediaBytes' | 'm
   /** Experimental native Word math boundary. Supply semantic data, never raw XML.
    * No TeX parser is selected. Undefined/invalid results retain the text fallback
    * and an explicit loss report. Source/OMML pairs are packaged for inspection;
-   * restoration after editing in Word is not yet implemented.
+   * opt-in import restores only uniquely bound, unchanged projections.
    */
   readonly resolveMath?: (node: FountainNode, path: readonly number[]) => DOCXMathExpression | undefined;
 }
@@ -145,10 +150,12 @@ interface XMLElement {
   readonly name: string;
   readonly attrs: Readonly<Record<string, string>>;
   readonly children: XMLChild[];
+  readonly namespaces: Readonly<Record<string, string>>;
 }
 
 interface ParsedParagraph {
   readonly node: FountainNode;
+  readonly continuation?: readonly FountainNode[];
   readonly list?: { readonly level: number; readonly ordered: boolean; readonly start: number };
   readonly caption?: boolean;
 }
@@ -176,14 +183,17 @@ function decodeXML(value: string): string {
 }
 
 function parseAttributes(source: string): Record<string, string> {
-  const attrs: Record<string, string> = {};
+  const attrs: Record<string, string> = Object.create(null);
   const pattern = /([^\s=/>]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g;
-  for (const match of source.matchAll(pattern)) attrs[match[1]!] = decodeXML(match[2] ?? match[3] ?? '');
+  for (const match of source.matchAll(pattern)) {
+    if (Object.hasOwn(attrs, match[1]!)) throw new Error('Duplicate DOCX XML attribute.');
+    attrs[match[1]!] = decodeXML(match[2] ?? match[3] ?? '');
+  }
   return attrs;
 }
 
 function parseXML(source: string, limits: Required<DOCXLimits>): XMLElement {
-  const root: XMLElement = { name: '#document', attrs: {}, children: [] };
+  const root: XMLElement = { name: '#document', attrs: {}, children: [], namespaces: { xml: 'http://www.w3.org/XML/1998/namespace' } };
   const stack: XMLElement[] = [root];
   let nodes = 1;
   const tokens = source.match(/<!--[\s\S]*?-->|<\?[^>]*\?>|<!\[CDATA\[[\s\S]*?\]\]>|<![^>]*>|<[^>]+>|[^<]+/g) ?? [];
@@ -211,7 +221,11 @@ function parseXML(source: string, limits: Required<DOCXLimits>): XMLElement {
     nodes += 1;
     if (nodes > limits.maxXmlNodes) throw new Error(`DOCX XML exceeds ${limits.maxXmlNodes} nodes.`);
     if (!selfClosing && stack.length >= limits.maxXmlDepth) throw new Error(`DOCX XML exceeds depth ${limits.maxXmlDepth}.`);
-    const element: XMLElement = { name, attrs: parseAttributes(split < 0 ? '' : body.slice(split + 1)), children: [] };
+    const attrs = parseAttributes(split < 0 ? '' : body.slice(split + 1));
+    let namespaces = stack.at(-1)!.namespaces;
+    const declarations = Object.entries(attrs).filter(([key]) => key === 'xmlns' || key.startsWith('xmlns:'));
+    if (declarations.length) namespaces = { ...namespaces, ...Object.fromEntries(declarations.map(([key, value]) => [key === 'xmlns' ? '' : key.slice(6), value])) };
+    const element: XMLElement = { name, attrs, children: [], namespaces };
     stack.at(-1)!.children.push(element);
     if (!selfClosing) stack.push(element);
   }
@@ -300,6 +314,7 @@ interface ImportMediaContext {
   readonly archive: Readonly<Record<string, Uint8Array>>;
   readonly relationships: ReadonlyMap<string, ImportedRelationship>;
   readonly options: DOCXImportOptions;
+  readonly restoredMath: ReadonlyMap<XMLElement, FountainNode>;
 }
 
 function wordPartPath(target: string): string | undefined {
@@ -399,6 +414,12 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
   const visit = (element: XMLElement, hyperlink?: string) => {
     const name = localName(element.name);
     if (name === 'oMath' || name === 'oMathPara') {
+      const restored = media.restoredMath.get(element);
+      if (restored) {
+        output.push(restored);
+        issues.push({ code: 'math-source-restored-experimental', severity: 'warning', message: 'Restored TeX and its accessibility label from matching, uniquely bound package metadata. Metadata is untrusted; this is not a signature, general OMML conversion or full document round trip.', path });
+        return;
+      }
       issues.push({ code: 'unsupported-office-math', severity: 'warning', message: 'Word equation structure is not yet imported. Keep the original DOCX for its editable equation and any retained source; concatenating its runs would change the mathematics.', path });
       appendText('[Word equation: import not yet supported]', []);
       return;
@@ -417,7 +438,8 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
       const marks = runMarks(element, schema, hyperlink);
       for (const item of elements(element)) {
         const itemName = localName(item.name);
-        if (itemName === 't' || itemName === 'delText' || itemName === 'instrText') appendText(textContent(item), marks);
+        if (itemName === 'oMath' || itemName === 'oMathPara') visit(item, hyperlink);
+        else if (itemName === 't' || itemName === 'delText' || itemName === 'instrText') appendText(textContent(item), marks);
         else if (itemName === 'tab') appendText('\t', marks);
         else if (itemName === 'br' || itemName === 'cr') {
           if (schema.nodes.hard_break) output.push(schema.node('hard_break'));
@@ -480,6 +502,7 @@ function readNumbering(root: XMLElement | undefined): ReadonlyMap<string, Number
 function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaContext, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): ParsedParagraph {
   const properties = child(element, 'pPr');
   const style = attr(child(properties, 'pStyle'), 'val') ?? '';
+  const isQuote = /^(?:intense)?quote$/i.test(style) && Boolean(schema.nodes.blockquote);
   const alignment = attr(child(properties, 'jc'), 'val');
   const align = alignment === 'both' ? 'justify' : ['left', 'center', 'right', 'justify'].includes(alignment ?? '') ? alignment : 'left';
   const content = inlineContent(element, schema, media, issues, path);
@@ -489,31 +512,51 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   if (heading && schema.nodes.heading) {
     type = 'heading';
     attrs = { level: Number(heading[1]), align };
-  } else if (/^(?:intense)?quote$/i.test(style) && schema.nodes.blockquote) {
-    const paragraph = schema.node('paragraph', { align }, content);
-    return { node: schema.node('blockquote', {}, [paragraph]) };
   } else if (/code/i.test(style) && schema.nodes.code_block) {
-    return { node: schema.node('code_block', { language: '' }, content) };
+    type = 'code_block';
+    attrs = { language: '' };
   }
-  if (type === 'paragraph' && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
+  if (type === 'paragraph' && !isQuote && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
     return { node: schema.node('image_super', { ...content[0].attrs, caption: '' }) };
   }
-  const paragraph = schema.node(type, attrs, content);
+  // Word may put text and display equations in one paragraph. Preserve their
+  // order as separate Fountain blocks, never force a block into inline content.
+  const parts: FountainNode[] = [];
+  let inline: FountainNode[] = [];
+  const flush = () => {
+    if (!inline.length) return;
+    if (type === 'code_block' && inline.some(node => !node.isText)) {
+      parts.push(schema.node('paragraph', { align }, inline));
+      issues.push({ code: 'code-style-not-applied', severity: 'warning', message: 'The Word code-styled paragraph contains rich content; it was preserved as a paragraph rather than invalid text-only code.', path });
+    } else parts.push(schema.node(type, attrs, inline));
+    inline = [];
+  };
+  for (const node of content) {
+    if (node.type.name === 'math_block') { flush(); parts.push(node); }
+    else inline.push(node);
+  }
+  flush();
+  if (!parts.length) parts.push(schema.node(type, attrs));
+  if (parts.length > 1) issues.push({ code: 'display-math-paragraph-split', severity: 'info', message: 'A mixed Word paragraph was split into prose and display-equation blocks without changing their order.', path });
+  if (isQuote) return { node: schema.node('blockquote', {}, parts) };
+  const paragraph = parts[0]!;
+  const continuation = parts.slice(1);
   const numPr = child(properties, 'numPr');
   const numId = attr(child(numPr, 'numId'), 'val');
   const level = Number(attr(child(numPr, 'ilvl'), 'val') ?? 0);
   const definition = numId ? numbering.get(`${numId}:${level}`) ?? numbering.get(`${numId}:0`) : undefined;
-  if (definition) return { node: paragraph, list: { level: Math.max(0, Math.min(8, level)), ...definition } };
+  if (definition) return { node: paragraph, continuation, list: { level: Math.max(0, Math.min(8, level)), ...definition } };
   const listStyle = /^list(bullet|number)(\d+)?$/i.exec(style);
   if (listStyle) return {
     node: paragraph,
+    continuation,
     list: {
       level: Math.max(0, Math.min(8, Number(listStyle[2] ?? 1) - 1)),
       ordered: listStyle[1]!.toLowerCase() === 'number',
       start: 1,
     },
   };
-  return { node: paragraph, caption: /^caption$/i.test(style) };
+  return { node: paragraph, continuation, caption: !continuation.length && /^caption$/i.test(style) };
 }
 
 function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: DOCXIssue[]): FountainNode[] {
@@ -536,7 +579,7 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
         continue;
       }
       cursor += 1;
-      const children: FountainNode[] = [current.node];
+      const children: FountainNode[] = [current.node, ...current.continuation ?? []];
       while (cursor < items.length && items[cursor]!.list && items[cursor]!.list!.level > level) {
         const nested = items[cursor]!.list!;
         children.push(parseList(nested.level, nested.ordered));
@@ -547,7 +590,7 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
   };
   while (cursor < items.length) {
     const current = items[cursor]!;
-    if (!current.list) { output.push(current.node); cursor += 1; continue; }
+    if (!current.list) { output.push(current.node, ...current.continuation ?? []); cursor += 1; continue; }
     output.push(parseList(current.list.level, current.list.ordered));
   }
   return output;
@@ -642,6 +685,141 @@ function requiredLimits(options: DOCXLimits): Required<DOCXLimits> {
   return value;
 }
 
+const WORD_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+const MATH_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
+const MATH_SOURCE_NS = 'urn:fountainjs:docx:math:v2';
+const MATH_SOURCE_PART = 'customXml/fountainMath.xml';
+interface MathSourceRecord {
+  readonly id: string;
+  readonly path: readonly number[];
+  readonly source: string;
+  readonly ariaLabel: string;
+  readonly kind: 'inline_math' | 'math_block';
+  readonly omml: string;
+}
+
+function expandedName(element: XMLElement, name = element.name, attribute = false): string {
+  const separator = name.indexOf(':');
+  const prefix = separator < 0 ? '' : name.slice(0, separator);
+  const namespace = attribute && separator < 0 ? '' : element.namespaces[prefix];
+  if (separator >= 0 && !namespace) throw new Error('Unbound XML namespace.');
+  return `${namespace ?? ''}|${localName(name)}`;
+}
+
+function namespacedAttr(element: XMLElement, name: string): string | undefined {
+  const matches = Object.entries(element.attrs).filter(([key]) => !key.startsWith('xmlns') && expandedName(element, key, true) === `${WORD_NS}|${name}`);
+  if (matches.length > 1) throw new Error('Duplicate expanded bookmark attribute.');
+  return matches[0]?.[1];
+}
+
+/** Compare complete expanded-name trees, not flattened mathematical text.
+ * Prefix spelling, attribute order and indentation outside math tokens may
+ * change; all properties and token content must otherwise remain identical.
+ */
+function mathTreeKey(element: XMLElement): string {
+  const tree = (node: XMLElement): unknown => {
+    const name = expandedName(node);
+    const attrs = Object.entries(node.attrs).filter(([key]) => key !== 'xmlns' && !key.startsWith('xmlns:'))
+      .map(([key, value]) => [expandedName(node, key, true), value]).sort(([a], [b]) => a!.localeCompare(b!));
+    if (new Set(attrs.map(([key]) => key)).size !== attrs.length) throw new Error('Duplicate expanded XML attribute.');
+    const content = name === `${MATH_NS}|t` && node.children.every(item => typeof item === 'string')
+      ? [node.children.join('')]
+      : node.children.filter(item => typeof item !== 'string' || item.trim()).map(item => typeof item === 'string' ? item : tree(item));
+    return [name, attrs, content];
+  };
+  return JSON.stringify(tree(element));
+}
+
+function restoreMathSources(document: XMLElement, metadata: XMLElement | undefined, relationships: XMLElement | undefined,
+  schema: Schema, limits: Required<DOCXLimits>, issues: DOCXIssue[]): ReadonlyMap<XMLElement, FountainNode> {
+  const restored = new Map<XMLElement, FountainNode>();
+  if (!metadata) return restored;
+  try {
+    const relationship = (relationships ? descendants(relationships, 'Relationship') : []).filter(item =>
+      expandedName(item) === 'http://schemas.openxmlformats.org/package/2006/relationships|Relationship'
+      && item.attrs.Type === 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml'
+      && item.attrs.Target === '../customXml/fountainMath.xml'
+      && (!item.attrs.TargetMode || item.attrs.TargetMode === 'Internal'));
+    if (relationship.length !== 1) throw new Error('Missing or ambiguous internal math-source relationship.');
+    const envelope = elements(metadata);
+    if (envelope.length !== 1 || expandedName(envelope[0]!) !== `${MATH_SOURCE_NS}|mathSources`
+      || envelope[0]!.children.some(item => typeof item !== 'string')) throw new Error('Unsupported math-source metadata envelope/version.');
+    const records: unknown = JSON.parse(textContent(envelope[0]!));
+    if (!Array.isArray(records) || records.length > 128) throw new Error('Math-source metadata exceeds 128 records.');
+    const ids = new Set<string>();
+    let total = 0;
+    for (const value of records) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)
+        || Object.keys(value).sort().join(',') !== 'ariaLabel,id,kind,omml,path,source'
+        || typeof value.id !== 'string' || !/^FountainMath_[1-9][0-9]{0,2}$/.test(value.id) || ids.has(value.id)
+        || !['inline_math', 'math_block'].includes(value.kind)
+        || typeof value.source !== 'string' || value.source.length > 100_000
+        || typeof value.ariaLabel !== 'string' || value.ariaLabel.length > 1_000
+        || typeof value.omml !== 'string'
+        || !Array.isArray(value.path) || !value.path.length || value.path.length > 128
+        || !value.path.every((index: unknown) => Number.isSafeInteger(index) && Number(index) >= 0)) throw new Error('Invalid or duplicate math-source record.');
+      ids.add(value.id);
+      total += value.source.length + value.omml.length + value.ariaLabel.length;
+      if (total > 1_000_000) throw new Error('Math-source records exceed the total character limit.');
+    }
+    const starts = descendants(document, 'bookmarkStart').filter(item => expandedName(item) === `${WORD_NS}|bookmarkStart`);
+    const ends = descendants(document, 'bookmarkEnd').filter(item => expandedName(item) === `${WORD_NS}|bookmarkEnd`);
+    const startsByName = new Map<string, XMLElement[]>();
+    const startCounts = new Map<string, number>();
+    const endCounts = new Map<string, number>();
+    for (const start of starts) {
+      const name = namespacedAttr(start, 'name') ?? '';
+      const id = namespacedAttr(start, 'id') ?? '';
+      const named = startsByName.get(name);
+      if (named) named.push(start);
+      else startsByName.set(name, [start]);
+      startCounts.set(id, (startCounts.get(id) ?? 0) + 1);
+    }
+    for (const end of ends) {
+      const id = namespacedAttr(end, 'id') ?? '';
+      endCounts.set(id, (endCounts.get(id) ?? 0) + 1);
+    }
+    const siblings = new Map<XMLElement, readonly XMLChild[]>();
+    const collect = (node: XMLElement) => {
+      const content = node.children.filter(item => typeof item !== 'string' || item.trim());
+      for (const item of elements(node)) {
+        if (localName(item.name) === 'bookmarkStart' && ids.has(namespacedAttr(item, 'name') ?? '')) siblings.set(item, content);
+        collect(item);
+      }
+    };
+    collect(document);
+    for (const record of records as MathSourceRecord[]) {
+      try {
+        const candidates = startsByName.get(record.id) ?? [];
+        if (candidates.length !== 1) throw new Error('Equation bookmark is missing or duplicated.');
+        const start = candidates[0]!;
+        const id = namespacedAttr(start, 'id');
+        if (!id || startCounts.get(id) !== 1 || endCounts.get(id) !== 1) throw new Error('Equation bookmark IDs are ambiguous.');
+        const content = siblings.get(start)!;
+        const index = content.indexOf(start);
+        const math = content[index + 1]; const end = content[index + 2];
+        const kind = record.kind === 'math_block' ? 'oMathPara' : 'oMath';
+        if (!math || typeof math === 'string' || expandedName(math) !== `${MATH_NS}|${kind}`
+          || !end || typeof end === 'string' || expandedName(end) !== `${WORD_NS}|bookmarkEnd`
+          || namespacedAttr(end, 'id') !== id) throw new Error('Equation bookmark no longer encloses exactly its projection.');
+        const saved = elements(parseXML(record.omml, limits));
+        if (saved.length !== 1 || mathTreeKey(math) !== mathTreeKey(saved[0]!)) throw new Error('Equation OMML changed; retained TeX was not restored.');
+        const type = schema.nodes[record.kind];
+        if (!type || type.isInline !== (record.kind === 'inline_math')) throw new Error('The active schema has no compatible math node.');
+        const node = type.create({ latex: record.source, ariaLabel: record.ariaLabel });
+        schema.validate(node);
+        restored.set(math, node);
+      } catch (error) {
+        issues.push({ code: 'math-source-not-restored', severity: 'warning', message: error instanceof Error ? error.message : String(error), path: record.path });
+      }
+    }
+  } catch (error) {
+    restored.clear();
+    issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) });
+  }
+  return restored;
+}
+
 export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, options: DOCXImportOptions = {}): DOCXImportResult {
   const limits = requiredLimits(options);
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
@@ -650,9 +828,14 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   let mediaBytes = 0;
   let mediaFiles = 0;
   const wanted = new Set(['word/document.xml', 'word/numbering.xml', 'word/_rels/document.xml.rels']);
+  const selectedParts = new Set<string>();
+  if (options.restoreMathSource === true) wanted.add(MATH_SOURCE_PART);
   const archive = unzipSync(bytes, { filter: (file) => {
     const isMedia = /^word\/media\/[^/]+$/i.test(file.name);
     if (!wanted.has(file.name) && !isMedia) return false;
+    if (selectedParts.has(file.name)) throw new Error('DOCX contains duplicate selected ZIP parts.');
+    selectedParts.add(file.name);
+    if (file.name === MATH_SOURCE_PART && file.originalSize > 8_000_000) throw new RangeError('DOCX math-source metadata exceeds its expanded byte limit.');
     if (isMedia) {
       mediaFiles += 1;
       mediaBytes += file.originalSize;
@@ -669,11 +852,17 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const parse = (name: string) => archive[name] ? parseXML(strFromU8(archive[name]!), limits) : undefined;
   const documentXML = parseXML(strFromU8(documentBytes), limits);
   const numbering = readNumbering(parse('word/numbering.xml'));
-  const relationships = relationshipMap(parse('word/_rels/document.xml.rels'));
-  const media: ImportMediaContext = { archive, relationships, options };
+  const relationshipXML = parse('word/_rels/document.xml.rels');
+  const relationships = relationshipMap(relationshipXML);
   const body = descendants(documentXML, 'body')[0];
   if (!body) throw new Error('Invalid DOCX: document body is missing.');
   const issues: DOCXIssue[] = [];
+  let restoredMath: ReadonlyMap<XMLElement, FountainNode> = new Map();
+  if (options.restoreMathSource === true) {
+    try { restoredMath = restoreMathSources(documentXML, parse(MATH_SOURCE_PART), relationshipXML, schema, limits, issues); }
+    catch (error) { issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) }); }
+  }
+  const media: ImportMediaContext = { archive, relationships, options, restoredMath };
   const paragraphs: ParsedParagraph[] = [];
   const blocks: FountainNode[] = [];
   const flush = () => { if (paragraphs.length) blocks.push(...groupLists(paragraphs.splice(0), schema, issues)); };
@@ -716,7 +905,7 @@ interface ExportContext {
   readonly maxMediaFiles: number;
   mediaBytes: number;
   nextDrawingId: number;
-  readonly mathSources: Array<{ path: readonly number[]; source: string; omml: string }>;
+  readonly mathSources: MathSourceRecord[];
   mathCharacters: number;
 }
 
@@ -727,13 +916,17 @@ function nativeMath(node: FountainNode, context: ExportContext, path: readonly n
     if (expression === undefined) return undefined;
     const omml = serializeDOCXMath(expression, node.type.name === 'math_block');
     const source = String(node.attrs.latex ?? '');
+    const ariaLabel = String(node.attrs.ariaLabel ?? '');
     if (source.length > 100_000 || context.mathSources.length >= 128) throw new RangeError('DOCX math source exceeds the 128 equation / 100,000 character per-source limit.');
-    if (context.mathCharacters + source.length + omml.length > 1_000_000) throw new RangeError('DOCX math projections exceed the 1,000,000 character total limit.');
-    context.mathCharacters += source.length + omml.length;
-    context.mathSources.push({ path: [...path], source, omml });
+    if (ariaLabel.length > 1_000) throw new RangeError('DOCX math accessibility label exceeds 1,000 characters.');
+    if (context.mathCharacters + source.length + omml.length + ariaLabel.length > 1_000_000) throw new RangeError('DOCX math projections exceed the 1,000,000 character total limit.');
+    context.mathCharacters += source.length + omml.length + ariaLabel.length;
+    const index = context.mathSources.length + 1;
+    const id = `FountainMath_${index}`;
+    context.mathSources.push({ id, path: [...path], source, ariaLabel, kind: node.type.name as MathSourceRecord['kind'], omml });
     if (node.marks.length) context.issues.push({ code: 'native-math-marks-omitted', severity: 'warning', message: 'Fountain marks around the math node were not applied; the host expression owns math styling.', path });
     context.issues.push({ code: 'native-math-experimental', severity: 'warning', message: 'Host math was exported as OMML with its original source in customXml/fountainMath.xml. Word rendering and source restoration after external edits are not yet certified.', path });
-    return omml;
+    return `<w:bookmarkStart w:id="${index}" w:name="${id}"/>${omml}<w:bookmarkEnd w:id="${index}"/>`;
   } catch (error) {
     context.issues.push({ code: 'math-projection-failed', severity: 'warning', message: `Native math was rejected; source text was retained. ${error instanceof Error ? error.message : String(error)}`, path });
     return undefined;
@@ -1026,10 +1219,9 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     'docProps/app.xml': strToU8(app),
   };
   if (context.mathSources.length) {
-    // The original source and exact emitted projection travel together, but
-    // import deliberately does not restore this source over externally edited
-    // OMML. A future importer must first verify that association is still valid.
-    parts['customXml/fountainMath.xml'] = strToU8(`<f:mathSources xmlns:f="urn:fountainjs:docx:math:v1">${xmlEscape(JSON.stringify(context.mathSources))}</f:mathSources>`);
+    // Bookmarks bind each source to one projection, independent of model path.
+    // Import must validate both the binding and complete equation before reuse.
+    parts[MATH_SOURCE_PART] = strToU8(`<f:mathSources xmlns:f="${MATH_SOURCE_NS}">${xmlEscape(JSON.stringify(context.mathSources))}</f:mathSources>`);
     parts['word/_rels/document.xml.rels'] = strToU8(documentRels.replace('</Relationships>', '<Relationship Id="rIdFountainMathSources" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml" Target="../customXml/fountainMath.xml"/></Relationships>'));
   }
   for (const item of context.media) parts[`word/media/${item.fileName}`] = item.bytes;

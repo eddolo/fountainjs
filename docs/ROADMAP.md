@@ -5,6 +5,16 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+DOCX matching-source recovery (2026-09-07): `restoreMathSource: true` optionally
+reopens current Fountain-exported equations whose unique bookmark binding and
+complete namespace-resolved OMML still match the v2 source record. Exact TeX
+and accessibility labels survive; changed/ambiguous bindings are refused.
+The recorded lab opens actual downloaded files, undoes import, and rejects an
+equation altered in XML while recovering its unchanged peers. This is not an
+actual Word edit/save session, authenticated metadata, arbitrary OMML import or
+whole-document round-trip parity. Native Word/LibreOffice verification and
+reconciliation of changed equations remain open; default import stays opt-out.
+
 DOCX TeX conversion follow-through (2026-09-07): the browser export diagnostic
 now uses a real optional MathJax base/AMS host converter, not exact-source
 lookup data. Edited fractions, explicit unsupported-spacing fallback, original
