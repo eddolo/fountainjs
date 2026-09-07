@@ -4,6 +4,12 @@
 
 ### Added
 
+- Development-only MathJax 4.1.3 reference checks for the original paper's
+  numbered equations, suppressed rows, forward/backward references, reordering,
+  deleted targets, duplicate labels and manual tags. Source hashes and runtime
+  isolation are enforced. This establishes expected semantics, not delivered
+  Fountain equation-reference rendering or a new engine dependency.
+
 - Opt-in TeX `tabular` projection into editable cells with l/c/r alignment,
   escaped text and inline math. The real paper's 21 values are checked against
   pinned source. Float placement and rules produce explicit import diagnostics;

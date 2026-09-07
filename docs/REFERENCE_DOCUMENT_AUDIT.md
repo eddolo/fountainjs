@@ -196,6 +196,66 @@ Runtime code measures 1326.8 KiB ESM / 1106.8 KiB CJS; aggregate caps increased
 to 1327 / 1107 KiB for this bounded parser/diagnostic capability. No new dependency,
 consumer-entry or performance cap increase.
 
+## Equation-label reference semantics and integration boundary
+
+`pnpm test:math-reference` runs the development-only MathJax 4.1.3 semantic
+oracle in `scripts/audit-math-labels.mjs`. It pins the original equation strings
+by SHA-256; the networked academic preflight also compares both fixtures against
+the complete checksum-verified paper source. It does not change those equations,
+their labels, Fountain's AST, or its renderer. MathJax is Apache-2.0 licensed
+and remains a development dependency. Its own LiteDOM adapter is isolated in
+this reference script; this is not a claim that MathJax is DOM-free or that
+Fountain's pure-Node engine requires a DOM shim. Runtime package/map checks
+exclude MathJax and KaTeX from Fountain dependencies and bundles.
+
+Verified expected behavior:
+
+- The first equation has tag `(1)` and target `eq:dNFE`.
+- The second retains its label on the first, `\nonumber` row, but its tag `(2)`
+  and target `eq:dSNFE` belong to the second row. A naive per-line label counter
+  would implement the wrong semantics.
+- Forward and backward references resolve; reordering the original equations
+  changes the displayed numbers without changing the label identities.
+- Repeated fresh document snapshots produce identical results. Deleted targets
+  remain `(???)`; duplicate labels are errors, not “last one wins.”
+- Starred environments do not advance numbering. An explicit `\tag{A}` can
+  resolve through a label without consuming the next automatic number.
+- Only explicitly loaded base/AMS syntax is used. External-file, dynamic-package
+  and HTML-link commands are rejected, as are malformed formulas.
+
+These expectations agree with the official
+[MathJax numbering documentation](https://docs.mathjax.org/en/latest/input/tex/eqnumbers.html).
+The batch compilation step, unlike separate `convert()` calls, includes the
+forward-reference recompile pass. See the official
+[direct-linking API](https://docs.mathjax.org/en/latest/server/direct.html).
+This is a semantic oracle only: no pixel/layout comparison or Fountain-renderer
+parity is certified by its passing assertions.
+
+The next implementation must address both existing boundaries:
+
+1. `src/extensions/math.ts` currently calls a renderer with one TeX string,
+   display mode and browser document, without a complete Fountain document or
+   stable per-node lookup. Keep this lightweight mode, but add an opt-in
+   document-aware compilation path with labels/diagnostics and snapshot identity.
+2. `src/view/dom-renderer.ts` reuses equal NodeViews without calling `update`.
+   Changing another equation can therefore leave an unchanged reference view
+   stale unless the integration explicitly invalidates its dependants. Do not
+   solve this by replacing the editor or disrupting the source textarea's caret.
+
+Use the same derived math snapshot for author, reader and export surfaces;
+namespace rendered anchors per view so two editors cannot link into one another.
+Deletion, undo/redo, reorder, forward references, duplicate/missing labels and
+stale asynchronous results must be exercised in real user workflows. Numbering
+must not be inferred by stripping `\label`, and this reference check must not
+be counted as a delivered Fountain document-reference implementation.
+
+Verification on 2026-09-07: the eleven named oracle contracts and all existing
+`pnpm check` gates passed, including 943 tests in 85 files. The networked pinned
+paper preflight also passed all eight structural/source checks. No runtime API,
+browser behavior, bundle ceiling or performance threshold changed in this step.
+The preceding table-import commit's GitHub CI and Playground deployment were
+both confirmed successful before this reference-only increment.
+
 ## Lean reference track
 
 Use a complete, nontrivial proof sequence from the official

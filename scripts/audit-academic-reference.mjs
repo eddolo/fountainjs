@@ -6,6 +6,7 @@ import {
   MarkdownImporter, MarkdownExporter,
 } from '../dist/index.js';
 import { academicTableSource, academicTableValues } from '../examples/react-app/src/academic-table-sample.ts';
+import { mathReferenceSamples } from '../examples/react-app/src/math-reference-samples.ts';
 
 const sourceURL = 'https://raw.githubusercontent.com/tiagoseq/NeuralFieldEq.jl/e68d061e4d91e336b326076cb9ffd61bcbeb41b9/JOSS/paper.md';
 const expectedSHA256 = 'ea86c661c312b286331afb8eb8d6bac23c741a6d0df37e6c0045a9672e0c584c';
@@ -36,6 +37,7 @@ const checks = [
   { name: 'complete original equation source including labels', passed: JSON.stringify(equations) === JSON.stringify([...source.matchAll(/\\begin\{(equation|align)\}[\s\S]*?\\end\{\1\}/gu)].map(match => match[0])) },
   { name: 'LaTeX tabular becomes an editable table', expected: 1, actual: counts.table ?? 0 },
   { name: 'published table fixture matches pinned source', passed: source.includes(academicTableSource) },
+  { name: 'published equation fixtures match pinned source', passed: mathReferenceSamples.slice(1).every(sample => source.includes(sample.source)) },
   { name: 'all 21 original table values including inline math', passed: JSON.stringify(tables) === JSON.stringify([academicTableValues]) },
   { name: 'all three known layout differences explicitly reported', passed: importIssues.length === 3 && importIssues.every(issue => issue.code === 'layout-projection' && issue.source === academicTableSource) },
 ].map(check => ({ ...check, passed: check.passed ?? check.actual === check.expected }));

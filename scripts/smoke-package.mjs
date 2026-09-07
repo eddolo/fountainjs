@@ -6,17 +6,18 @@ import { join } from 'node:path';
 
 const require = createRequire(import.meta.url);
 
-// KaTeX belongs to the demo/test host, not the library's runtime dependency graph.
+// Reference math engines belong to the demo/test host, not Fountain's runtime graph.
 const packageMetadata = JSON.parse(readFileSync('package.json', 'utf8'));
-if (packageMetadata.dependencies?.katex || packageMetadata.optionalDependencies?.katex) {
-  throw new Error('The demo math renderer must not become a Fountain runtime dependency.');
+if (Object.keys({ ...packageMetadata.dependencies, ...packageMetadata.optionalDependencies }).some(name =>
+  ['katex', 'mathjax', 'mathjax-full'].includes(name) || name.startsWith('@mathjax/'))) {
+  throw new Error('Demo/reference math engines must not become Fountain runtime dependencies.');
 }
 const runtimeMaps = readdirSync('dist').filter(file => /\.(?:js|cjs)\.map$/u.test(file));
 if (!runtimeMaps.length) throw new Error('Expected runtime source maps to verify renderer isolation.');
 for (const file of runtimeMaps) {
   const map = JSON.parse(readFileSync(`dist/${file}`, 'utf8'));
-  if (map.sources.some(source => /(?:^|\/)katex\//u.test(source.replaceAll('\\', '/')))) {
-    throw new Error(`Demo-only KaTeX code entered a library bundle: ${file}`);
+  if (map.sources.some(source => /(?:^|\/)(?:katex|mathjax|mathjax-full|@mathjax)\//u.test(source.replaceAll('\\', '/')))) {
+    throw new Error(`Demo/reference math engine code entered a library bundle: ${file}`);
   }
 }
 

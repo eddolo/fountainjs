@@ -547,13 +547,14 @@
     "test:server-runtimes": "node scripts/smoke-server-html-runtime.mjs && node scripts/check-server-html-worker.mjs",
     "test:headless": "node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json",
     "test:markdown-conformance": "node scripts/check-markdown-conformance.mjs",
+    "test:math-reference": "node scripts/audit-math-labels.mjs",
     "test:docx-interoperability": "node scripts/check-docx-interoperability.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "audit:ui": "playwright test -c playwright.audit.config.ts",
     "test:lean-integration": "node scripts/test-lean-loopback.mjs",
     "test:watch": "vitest",
-    "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:docx-interoperability && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
+    "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:math-reference && pnpm test:docx-interoperability && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",
     "prepublishOnly": "pnpm check"
   },
@@ -574,6 +575,7 @@
     }
   },
   "devDependencies": {
+    "@mathjax/src": "4.1.3",
     "@playwright/test": "1.62.1",
     "@types/node": "^26.4.1",
     "@types/react": "^19.2.18",
