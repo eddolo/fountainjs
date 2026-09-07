@@ -2,6 +2,7 @@ import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
+import { markdownHTMLBlock, markdownHTMLBlockEnd } from '../markdown-html';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
 const MAX_MARKDOWN_REFERENCE_LINES = 32;
@@ -1489,6 +1490,7 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
   const line = lines[index] ?? '';
   const marker = listMarker(line);
   return !!(markdownFence(line)
+    || markdownHTMLBlock(line, true)
     || /^\$\$/.test(line)
     || /^ {0,3}(#{1,6})(?:[\t ]+|$)/u.test(line)
     || /^ {0,3}(?:=+|-+)[\t ]*$/u.test(line)
@@ -1525,6 +1527,18 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
           continue;
         } catch { /* Preserve malformed disclosure source as ordinary text. */ }
       }
+    }
+    const rawHTML = markdownHTMLBlock(line);
+    if (rawHTML) {
+      const end = markdownHTMLBlockEnd(lines, index, rawHTML);
+      const content: Node[] = [];
+      lines.slice(index, end).forEach((raw, offset) => {
+        if (offset && schema.nodes.hard_break) content.push(schema.node('hard_break'));
+        if (raw || !schema.nodes.hard_break) content.push(schema.text(offset && !schema.nodes.hard_break ? `\n${raw}` : raw));
+      });
+      blocks.push(schema.node('paragraph', {}, content));
+      index = end;
+      continue;
     }
     const fence = markdownFence(line);
     if (fence) {
@@ -1684,7 +1698,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
   return blocks;
 }
 
-function references(markdown: string): { lines: string[]; definitions: References } {
+function references(markdown: string, schema: Schema): { lines: string[]; definitions: References } {
   const definitions = new Map<string, ReferenceDefinition>();
   const sourceLines = markdown.replace(/\r\n?/g, '\n').split('\n')
     .map((line) => line.replace(/^((?: {0,3}>| *(?:[-*+]|\d{1,9}[.)]))?)(\t+)/u, (_, marker, tabs) => (
@@ -1706,7 +1720,7 @@ function references(markdown: string): { lines: string[]; definitions: Reference
         prefixes.push(nested[0]);
         contents.push(sourceLines[cursor].slice(nested[0].length));
       }
-      const extracted = references(contents.join('\n'));
+      const extracted = references(contents.join('\n'), schema);
       extracted.definitions.forEach((definition, name) => {
         if (!definitions.has(name)) definitions.set(name, definition);
       });
@@ -1728,6 +1742,15 @@ function references(markdown: string): { lines: string[]; definitions: Reference
       lines.push(line);
       paragraphOpen = false;
       index++;
+      continue;
+    }
+    const semanticDisclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(line);
+    const rawHTML = !semanticDisclosure && markdownHTMLBlock(line, paragraphOpen);
+    if (rawHTML) {
+      const end = markdownHTMLBlockEnd(sourceLines, index, rawHTML);
+      lines.push(...sourceLines.slice(index, end));
+      index = end;
+      paragraphOpen = false;
       continue;
     }
     if (!line.trim()) {
@@ -1780,7 +1803,24 @@ function extractFootnoteDefinitions(
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const body: string[] = [];
   const definitions: MarkdownFootnoteDefinition[] = [];
+  let fence: MarkdownFence | null = null;
   for (let index = 0; index < lines.length;) {
+    if (fence) {
+      body.push(lines[index]);
+      if (closesMarkdownFence(lines[index], fence)) fence = null;
+      index++;
+      continue;
+    }
+    fence = markdownFence(lines[index]);
+    if (fence) { body.push(lines[index++]); continue; }
+    const semanticDisclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(lines[index]);
+    const rawHTML = !semanticDisclosure && markdownHTMLBlock(lines[index]);
+    if (rawHTML) {
+      const end = markdownHTMLBlockEnd(lines, index, rawHTML);
+      body.push(...lines.slice(index, end));
+      index = end;
+      continue;
+    }
     const opening = /^\s{0,3}\[\^([^\]]+)\]:[ \t]*(.*)$/.exec(lines[index]);
     if (!opening) { body.push(lines[index]); index += 1; continue; }
     const id = decodeMarkdownText(opening[1]);
@@ -1811,7 +1851,7 @@ export class MarkdownImporter {
     const footnotes = extractFootnoteDefinitions(markdown, schema);
     // A terminal line ending terminates the last physical line; split() must
     // not turn it into extra code content when a fence is left open at EOF.
-    const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''));
+    const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''), schema);
     const blocks = parseBlocks(source.lines, schema, source.definitions);
     const definitions = footnotes.definitions.map((definition) => {
       const content = parseBlocks(definition.lines, schema, source.definitions);

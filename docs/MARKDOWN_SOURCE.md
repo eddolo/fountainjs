@@ -239,6 +239,23 @@ just to make their reference-rendered HTML match. Empty caret hosts need a
 separate export-policy review; blanket removal of empty paragraphs would erase
 real author-created spacing.
 
+The first raw-HTML boundary implementation now supplies all seven lexical
+start/end classifiers in `src/core/markdown-html.ts`. Recognized blocks become
+editable literal text and hard breaks, not executable HTML or accidentally
+interpreted Markdown headings/lists. Top-level reference and footnote
+extraction respect these opaque regions; the explicit details dialect stays
+separate. The oracle additionally requires exact Fountain-to-Fountain canonical
+round trips for all 44 official HTML-block examples, even while their rendered
+HTML remains an explicitly pending semantic difference. Canonical export now
+protects line-leading block syntax, authored edge whitespace, and consecutive
+hard breaks. Next work includes composing this state throughout nested
+containers and providing an opt-in safe schema projection with loss reports.
+
+The eight pending empty-container examples now have exact-source and canonical
+round-trip tests plus real Chromium/Firefox/WebKit typing, Backspace, Enter,
+and undo coverage. These tests preserve the editable caret hosts; they do not
+count those examples as new matches or erase author-created empty paragraphs.
+
 The earlier Markdown baseline, including raw reference-label correctness,
 container definitions, link precedence, full Unicode 17 case folding,
 opaque-token scanning, nested image descriptions, nested emphasis,

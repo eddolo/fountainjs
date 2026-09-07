@@ -358,7 +358,19 @@ function inlineContent(node: Node, context: RenderContext, path: readonly number
       || sharedDelimitedMark(child, node.content[index + 1])
       || child.marks.some((mark, markIndex) => child.marks.findIndex((candidate) => candidate.type === mark.type) < markIndex)
     );
-    result.push(inline(child, context, [...path, index], preserve));
+    let rendered = inline(child, context, [...path, index], preserve);
+    const previous = node.content[index - 1];
+    const next = node.content[index + 1];
+    if (child.type.name === 'hard_break' && previous?.type.name === 'hard_break') rendered = '\\\n';
+    if (child.isText && !child.marks.length) {
+      const encodeWhitespace = (value: string) => Array.from(value, character => `&#${character.charCodeAt(0)};`).join('');
+      if (!previous || previous.type.name === 'hard_break') rendered = rendered
+        .replace(/^[\t ]+/u, encodeWhitespace)
+        .replace(/^([#+=-]|\$(?=\$))/u, '\\$1')
+        .replace(/^(\d{1,9})([.)])(?=[\t ]|$)/u, '$1\\$2');
+      if (!next || next.type.name === 'hard_break') rendered = rendered.replace(/[\t ]+$/u, encodeWhitespace);
+    }
+    result.push(rendered);
     index += 1;
   }
   return result.join('');

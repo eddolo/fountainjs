@@ -269,7 +269,9 @@ const limits = Object.freeze({
   // Marker-relative lists, complete inline HTML fragments, and opaque literal
   // HTML attributes bring the aggregate to about 1303 KiB. Keep every entry's
   // individual ceiling; round this aggregate ceiling up by one KiB.
-  'all ESM runtime code': 1304 * kibibyte,
+  // The shared seven-class inert HTML block scanner and exact multiline
+  // literal export add roughly 2.5 KiB; consumer-entry ceilings stay unchanged.
+  'all ESM runtime code': 1307 * kibibyte,
   'all CommonJS runtime code': 1090 * kibibyte,
 });
 

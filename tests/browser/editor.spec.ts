@@ -2853,6 +2853,32 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
   ]);
 });
 
+test('types, deletes, and undoes inside imported empty documents, quotes, and list items', async ({ page }) => {
+  const sources = [
+    '[foo]: /url\n', '[foo]\n\n> [foo]: /url\n', '-\n\n  foo\n',
+    '- foo\n-\n- bar\n', '- foo\n-   \n- bar\n', '1. foo\n2.\n3. bar\n', '*\n', '* a\n*\n\n* c\n',
+  ];
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  for (const source of sources) {
+    await page.evaluate(source => {
+      const contract = (globalThis as any).fountainBrowserTest;
+      const editor = contract.editor;
+      const fixture = editor.state.doc.constructor.fromJSON(editor.state.schema, contract.inspectMarkdown(source).document);
+      editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, fixture.content));
+    }, source);
+    const empty = editor.locator('p').filter({ hasText: /^$/ }).first();
+    await empty.click();
+    await page.keyboard.type('Editable');
+    await expect(editor.getByText('Editable', { exact: true })).toBeVisible();
+    for (let index = 0; index < 'Editable'.length; index++) await page.keyboard.press('Backspace');
+    await expect(editor).not.toContainText('Editable');
+    const beforeEnter = await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.toJSON());
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Control+z');
+    expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.toJSON())).toEqual(beforeEnter);
+  }
+});
+
 test('round-trips marker-relative list containers and exact code whitespace', async ({ page }) => {
   const sources = [
     '10. Prepare\n\n    Confirm window.\n\n        npm test\n\n\n        npm run build\n\n    > Keep rollback.\n\n11. Deploy\n    - Check health',
@@ -2862,6 +2888,7 @@ test('round-trips marker-relative list containers and exact code whitespace', as
     '> 1. > Blockquote\ncontinued here.',
     'before [](./target.md "Details") after []()',
     'before <a href="&ouml;.html" title="\\*"> after',
+    '<script>\n\n[hidden]: /wrong\n# literal\n\n</script>\n\n[hidden]',
   ];
   const results = await page.evaluate(sources => sources.map(source => (
     (globalThis as any).fountainBrowserTest.inspectMarkdown(source)
@@ -2878,6 +2905,10 @@ test('round-trips marker-relative list containers and exact code whitespace', as
   expect(results[3].document.content[0].content[0].text).toBe('keep\n\n\nblank');
   expect(results[6].document.content[0].content[0].text).toBe(sources[6]);
   expect(results[6].html).not.toContain('<a ');
+  expect(results[7].document.content[0].type).toBe('paragraph');
+  expect(results[7].html).not.toContain('<script>');
+  expect(results[7].html).not.toContain('<h1>');
+  expect(results[7].html).not.toContain('<a ');
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

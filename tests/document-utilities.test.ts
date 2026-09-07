@@ -6,6 +6,7 @@ import {
   HTMLExporter,
   HTMLImporter,
   MarkdownExporter,
+  MarkdownImporter,
   composeExtensions,
   createEditor,
   deleteBackward,
@@ -124,7 +125,9 @@ describe('framework-neutral mention suggestions', () => {
     expect(html).toContain('href="/topics/editor-platform"');
     const parsed = HTMLImporter.parse(html, editor.state.schema);
     expect(parsed.toJSON()).toEqual(editor.getJSON());
-    expect(MarkdownExporter.export(editor.state.doc)).toBe('#Editor Platform');
+    const markdown = MarkdownExporter.export(editor.state.doc);
+    expect(markdown).toBe('#Editor Platform&#32;');
+    expect(MarkdownImporter.parse(markdown, editor.state.schema).textContent).toBe('#Editor Platform ');
   });
 
   it('ships as an independent default extension instead of silently changing StarterKit', () => {

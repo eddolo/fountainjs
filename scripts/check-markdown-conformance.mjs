@@ -8,6 +8,7 @@ import {
   CoreSchemaSpec,
   HTMLExporter,
   MarkdownImporter,
+  MarkdownExporter,
   Schema,
 } from '../dist/index.js';
 
@@ -215,6 +216,7 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 const schema = new Schema(CoreSchemaSpec);
 const matches = new Set();
 const mismatches = [];
+const roundTripFailures = [];
 for (const example of commonmarkSpec.tests) {
   const source = materializeTabs(example.markdown);
   const expected = semanticProjection(materializeTabs(example.html), true);
@@ -222,8 +224,13 @@ for (const example of commonmarkSpec.tests) {
   let error = null;
   try {
     const document = MarkdownImporter.parse(source, schema);
+    if (example.number >= 148 && example.number <= 191) {
+      const restored = MarkdownImporter.parse(MarkdownExporter.export(document), schema);
+      if (!document.eq(restored)) roundTripFailures.push(example.number);
+    }
     actual = semanticProjection(HTMLExporter.export(document, { document: false }));
   } catch (cause) {
+    if (example.number >= 148 && example.number <= 191) roundTripFailures.push(example.number);
     error = cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause);
   }
   if (!error && JSON.stringify(actual) === JSON.stringify(expected)) matches.add(example.number);
@@ -289,6 +296,7 @@ for (const number of inspectedExamples) {
   if (mismatch?.error) console.log(`Fountain error: ${mismatch.error}`);
 }
 
+if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
 if (reportOnly) process.exit(0);
 if (!required.size) throw new Error('The CommonMark semantic baseline contains no required matches.');
 if (newlyMatching.length) {

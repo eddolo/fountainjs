@@ -4,6 +4,15 @@
 
 ### Fixed
 
+- Markdown now recognizes all seven raw-HTML block boundary types and keeps
+  their content as editable literal text rather than interpreting embedded
+  headings, lists, reference definitions, or root footnote definitions.
+  Canonical export preserves edge whitespace, consecutive hard breaks, and
+  literal line-leading block syntax. All 44 official HTML-block fixtures have
+  a separate exact Fountain round-trip gate; safe HTML schema projection and
+  deeper container integration remain unfinished, not advertised as full
+  CommonMark conformance. Empty document/list/quote caret hosts also have
+  explicit typing, deletion, and undo browser coverage.
 - Unknown inline HTML remains inert literal text without accidentally decoding
   backslash escapes or entities in its attribute source. The remaining 80
   CommonMark cases now have enforced work-group ownership: 72 raw-HTML cases

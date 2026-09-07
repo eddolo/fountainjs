@@ -1500,6 +1500,24 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('preserves source and editable empty containers without removing authored blank paragraphs', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const sources = [
+      '[foo]: /url\n', '[foo]\n\n> [foo]: /url\n', '-\n\n  foo\n',
+      '- foo\n-\n- bar\n', '- foo\n-   \n- bar\n', '1. foo\n2.\n3. bar\n', '*\n', '* a\n*\n\n* c\n',
+    ];
+    for (const source of sources) {
+      const imported = MarkdownImporter.parseWithSource(source, schema);
+      expect(MarkdownExporter.exportWithSource(imported.document, imported.source)).toEqual({
+        markdown: source, preservation: 'exact', losses: [],
+      });
+      expect(MarkdownImporter.parse(MarkdownExporter.export(imported.document), schema).toJSON()).toEqual(imported.document.toJSON());
+      expect(HTMLExporter.export(imported.document, { document: false })).toContain('<p></p>');
+    }
+    const authored = schema.node('doc', {}, Array.from({ length: 3 }, () => schema.node('paragraph', {}, [schema.text('')])));
+    expect(HTMLExporter.export(authored, { document: false })).toBe('<p></p>\n<p></p>\n<p></p>');
+  });
+
   it('keeps unknown inline HTML literal without decoding its attribute source as Markdown', () => {
     const schema = new Schema(CoreSchemaSpec);
     for (const source of [

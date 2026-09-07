@@ -34,6 +34,35 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('inert HTML source remains multiline editable text through the public demos', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  const source = '<script>\n\n[hidden]: /wrong\n# literal heading\n\n</script>\n\nOutside';
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await output.locator('pre').innerText();
+  expect(html).toContain('&lt;script&gt;');
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('script, h1, a')).toHaveCount(0);
+  await expect(editor.locator(':scope > p')).toHaveCount(2);
+  await expect(editor.locator('br:not([data-fountain-caret-placeholder])')).toHaveCount(5);
+  await editor.getByText('# literal heading', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' remains text');
+  await expect(editor).toContainText('# literal heading remains text');
+  await capture(page, info, '07-inert-html-multiline-editing');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('remains text');
+});
+
 test('unwrapped clipboard fragment: formatting, surrounding text, edit, and undo', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/demos/go-docs-service.html');
