@@ -7,7 +7,7 @@ development.
 
 ## Stability levels
 
-The `0.4.0-beta.1` candidate is an incremental capability preview, not parity
+The published `0.4.0-beta.1` release is an incremental capability preview, not parity
 certification. By explicit maintainer choice, the current public beta targets
 `latest`, so the default install receives the current version. This tag does
 not imply stable maturity: keep the beta version suffix, prerelease GitHub flag,
@@ -19,6 +19,16 @@ inspect the version and `latest` tag before approval. An already staged `next`
 candidate must be rejected by a maintainer and restaged; its tag cannot be
 edited in place. Registry state, not the presence of a staged tarball, proves
 publication. Keep ongoing Unreleased work separate from a verified candidate.
+
+Published-artifact verification (2026-09-07): npm's `0.4.0-beta.1` tarball is
+3,070,336 bytes and matches the candidate SHA-512 exactly:
+`dKLU4PC6q6Jmg0JJfwMOLNczMg0DLrh9xeAdl+Nh3HUF2QeUxaqmDLyXcsEWUYsB+qQlNrU0g8u3du6emNeFjg==`.
+The source commit `a8c4890` passed all three CI jobs. A separate consumer installed
+the public package with optional peers disabled and ran schema, extension,
+transaction, exact Markdown source and full-document server HTML checks in both
+ESM and CommonJS without `window`, `document`, or jsdom. This smoke check is not
+whole-product parity certification. Use `pnpm --ignore-workspace` for isolated
+consumer installations: even a temporary directory can inherit a parent workspace.
 
 | Surface | Current level | Compatibility rule |
 | --- | --- | --- |

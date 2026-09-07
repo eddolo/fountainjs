@@ -10,8 +10,9 @@
 
 ## 0.4.0-beta.1 — Capability preview
 
-Preview release candidate intended for the `latest` npm tag; publication requires the
-release verification workflow and maintainer approval of the staged package.
+Published capability preview (2026-09-07), approved by the maintainer on npm.
+The intended default tag is `latest`; publishing and changing a tag are separate
+npm approval operations. The verified tarball was built from commit `a8c4890`.
 This is not completion of the ProseMirror + Tiptap parity programme. Full
 CommonMark conformance, native Word/whole-paper export fidelity, physical-device
 IME/accessibility certification and equivalent framework UI suites remain open.

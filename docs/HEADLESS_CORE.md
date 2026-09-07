@@ -67,6 +67,13 @@ editor.destroy()
 `toDOM` above is a declarative HTML output tuple, not a DOM node. It is safe for
 the string exporter to execute on a server.
 
+`kit.schema` is a **schema specification**, accepted by `createEditor`; it is
+not a `Schema` instance. Importers take the runtime schema, for example
+`MarkdownImporter.parseWithSource(markdown, editor.state.schema)`. Use that same
+instance for a source snapshot and its live document. Creating another schema
+from the same specification produces different node types and can prevent
+source matching; portable JSON remains the interchange boundary between them.
+
 ## Headless collaboration
 
 Use `createCoreCollaborationExtension()` when the host needs synchronized state
