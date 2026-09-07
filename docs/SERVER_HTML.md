@@ -85,6 +85,15 @@ visually inspected, including the nested table and footer row.
 
 ## Table span import contract
 
+Both importers order rows using the [native table row collection contract](https://html.spec.whatwg.org/multipage/tables.html#dom-table-rows):
+header rows first, body/direct rows next, footer rows last, preserving order
+within each category. This prevents an early footer or late header in incoming
+markup from appearing in the wrong position after paste. The server reports
+when that order differs from source order. This is structural/default table
+ordering, not computed-CSS fidelity or retention of repeating print sections.
+If a Markdown HTML flow would have to reorder protected Markdown blocks to
+achieve it, that flow still declines with its original content retained.
+
 The [HTML zero-rowspan rule](https://html.spec.whatwg.org/multipage/tables.html#attr-tdth-rowspan)
 is resolved against the source row group before its rows enter Fountain's flat
 table model. Missing/invalid attributes default to one; integer prefixes follow

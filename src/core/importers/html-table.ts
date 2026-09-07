@@ -1,3 +1,15 @@
+/** Native table row order: header, body/direct rows, footer; stable within each. */
+export function orderedHTMLTableRows<T>(rows: readonly T[], groupName: (row: T) => string): T[] {
+  const head: T[] = [];
+  const body: T[] = [];
+  const foot: T[] = [];
+  for (const row of rows) {
+    const tag = groupName(row).toLowerCase();
+    (tag === 'thead' ? head : tag === 'tfoot' ? foot : body).push(row);
+  }
+  return [...head, ...body, ...foot];
+}
+
 /** Remaining rows are counted within each source row group, not the whole table. */
 export function remainingHTMLTableRows<T>(rows: readonly T[], group: (row: T) => unknown): ReadonlyMap<T, number> {
   const counts = new Map<unknown, number>();

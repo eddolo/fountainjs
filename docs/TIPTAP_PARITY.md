@@ -41,6 +41,14 @@ unfinished. This does not change the 563-match / 72-pending / 17-intentional-dif
 CommonMark baseline or qualify the overall programme for publication. See the
 [Markdown contract and evidence](MARKDOWN_SOURCE.md).
 
+HTML table import now resolves zero spans within source row groups and places
+headers, body rows and footers in native structural order in browser and server
+paths. Independent physical-layout checks pass in all three desktop engines;
+a recorded real-clipboard edit/history/export/reopen journey confirms row order.
+Section identity, repeated print headers/footers and arbitrary CSS remain outside
+that contract. Protected Markdown blocks still trigger explicit fallback if
+conversion would reorder them; no semantic score is promoted by these repairs.
+
 The independent `literal-html-reference-v1` gate now proves the declared inert
 policy for all 72 raw-HTML examples, plus 144 generated boundary/round-trip
 cases. The development-only reference parser must first reproduce all 652

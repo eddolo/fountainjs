@@ -17,6 +17,18 @@ import { createWidgetExtension, defineWidget } from '../src/widgets';
 import { TableMap } from '../src/core/table-map';
 
 describe('server HTML row-group spans', () => {
+  it('places late headers first and early footers last without mixing nested tables or row groups', () => {
+    expect(typeof document).toBe('undefined');
+    const schema = new Schema(composeExtensions([CoreExtension]).schema);
+    const source = '<table><tfoot><tr><td rowspan="0">Total</td><td>3</td></tr><tr><td>4</td></tr></tfoot><tbody><tr><td>Body<table><tfoot><tr><td>Nested total</td></tr></tfoot><tbody><tr><td>Nested body</td></tr></tbody></table></td><td>1</td></tr></tbody><thead><tr><th scope="col">Heading</th><th scope="col">Value</th></tr></thead></table>';
+    const result = ServerHTMLImporter.parseWithReport(source, schema);
+    const table = result.document.content[0];
+    expect(table.content.map(row => row.content[0].textContent)).toEqual(['Heading', 'BodyNested bodyNested total', 'Total', '4']);
+    expect(table.content[2].content[0].attrs.rowspan).toBe(2);
+    expect(TableMap.create(table).problems).toEqual([]);
+    expect(result.issues).toContainEqual(expect.objectContaining({ message: expect.stringContaining('native header/body/footer order') }));
+  });
+
   it('preserves the table grid when zero spans start partway through separate groups', () => {
     expect(typeof document).toBe('undefined');
     const schema = new Schema(composeExtensions([CoreExtension]).schema);

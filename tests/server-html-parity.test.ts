@@ -42,13 +42,31 @@ const fixtures = [
 ];
 
 describe('HTML fallback wrapper structure', () => {
+  it.each(['hbf', 'hfb', 'bhf', 'bfh', 'fhb', 'fbh'])('imports table rows in native section order for %s markup', order => {
+    const sections: Record<string, string> = {
+      h: '<thead><tr><th scope="col">Heading</th></tr></thead>',
+      b: '<tbody><tr><td>Body one</td></tr><tr><td>Body two</td></tr></tbody>',
+      f: '<tfoot><tr><td>Total</td></tr></tfoot>',
+    };
+    const source = `<table>${Array.from(order, key => sections[key]).join('')}</table>`;
+    const reference = document.createElement('div');
+    reference.innerHTML = source;
+    const expected = Array.from(reference.querySelector('table')!.rows, row => row.textContent);
+    expect(expected).toEqual(['Heading', 'Body one', 'Body two', 'Total']);
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const parsed = importer.parse(source, schema);
+      expect(parsed.content[0].content.map(row => row.textContent)).toEqual(expected);
+      expect(importer.parse(HTMLExporter.export(parsed, { document: false }), schema).toJSON()).toEqual(parsed.toJSON());
+    }
+  });
+
   it.each(['tbody', 'thead', 'tfoot'])('resolves zero rowspan within its own %s group in browser and server', group => {
     const source = `<table><${group}><tr><td rowspan="0">Group A</td><td>A1</td></tr><tr><td>A2</td></tr></${group}><tbody><tr><td rowspan="0">Group B</td><td>B1</td></tr><tr><td>B2</td></tr><tr><td>B3</td></tr></tbody></table>`;
     const server = ServerHTMLImporter.parseWithReport(source, schema);
     const browser = HTMLImporter.parse(source, schema);
     expect(server.document.toJSON()).toEqual(browser.toJSON());
-    expect(browser.content[0].content[0].content[0].attrs.rowspan).toBe(2);
-    expect(browser.content[0].content[2].content[0].attrs.rowspan).toBe(3);
+    expect(browser.content[0].content.find(row => row.content[0].textContent === 'Group A')!.content[0].attrs.rowspan).toBe(2);
+    expect(browser.content[0].content.find(row => row.content[0].textContent === 'Group B')!.content[0].attrs.rowspan).toBe(3);
     expect(server.issues).toContainEqual(expect.objectContaining({ message: expect.stringContaining('Zero rowspan') }));
     expect(HTMLImporter.parse(HTMLExporter.export(browser, { document: false }), schema).toJSON()).toEqual(browser.toJSON());
   });

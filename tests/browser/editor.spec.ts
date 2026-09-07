@@ -6405,6 +6405,37 @@ test('HTML comments do not insert phantom paragraphs in converted Markdown', asy
   await expect(async () => expect(JSON.parse(await output.innerText()).content).toHaveLength(3)).toPass();
 });
 
+test('imported table section order matches the physically rendered source table', async ({ page }) => {
+  const source = '<table><tfoot><tr><td>Total</td><td>30</td></tr></tfoot><tbody><tr><td>Build</td><td>10</td></tr><tr><td>Deploy</td><td>20</td></tr></tbody><thead><tr><th scope="col">Stage</th><th scope="col">Minutes</th></tr></thead></table>';
+  await page.setContent(source);
+  const expected = await page.locator('tr').evaluateAll(rows => rows
+    .map(row => ({ top: row.getBoundingClientRect().top, text: row.textContent }))
+    .sort((a, b) => a.top - b.top).map(row => row.text));
+  expect(expected).toEqual(['StageMinutes', 'Build10', 'Deploy20', 'Total30']);
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(async () => {
+    const table = JSON.parse(await page.locator('.demo-output pre').innerText()).content[0];
+    const text = (node: { text?: string; content?: unknown[] }): string => node.text ?? (node.content ?? []).map(child => text(child as typeof node)).join('');
+    expect(table.content.map(text)).toEqual(expected);
+  }).toPass();
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await editor.evaluate((element, html) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? html : '' } });
+    element.dispatchEvent(event);
+  }, source);
+  await expect(editor.locator('tr')).toHaveText(expected);
+  const actual = await editor.locator('tr').evaluateAll(rows => rows
+    .map(row => ({ top: row.getBoundingClientRect().top, text: row.textContent }))
+    .sort((a, b) => a.top - b.top).map(row => row.text));
+  expect(actual).toEqual(expected);
+});
+
 test('imports zero-rowspan cells with the same row-group geometry in server and browser', async ({ page }) => {
   const source = '<table><tbody><tr><td rowspan="0">Ada</td><td>Build</td></tr><tr><td>Deploy</td></tr></tbody><tbody><tr><td rowspan="0">Grace</td><td>Review</td></tr><tr><td>Approve</td></tr></tbody></table>';
   await page.goto('/demos/node-markdown.html');

@@ -5,6 +5,26 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+HTML table section-order audit (2026-09-07): both importers now follow native
+header/body/footer row ordering, stable within each section. All six source
+arrangements are compared with the browser's independent `table.rows` result;
+nested tables and row-group spans retain their separate boundaries. The server
+reports source-order projection. If reordering would move protected Markdown
+blocks, the flow adapter still falls back with source retained rather than
+weakening its preservation invariant. This does not preserve section identity,
+repeat-on-print semantics, or arbitrary CSS layout.
+
+Validation: `pnpm check` passes 1,184 tests in 104 files, including pure-Node
+coverage; API/package/runtime and existing performance gates pass. Runtime
+measures 1363.5 KiB ESM / 1133.7 KiB CJS; only the aggregate ESM ceiling rises
+1 KiB to 1364, with CJS and individual entry ceilings unchanged. All 21 focused
+Chromium/Firefox/WebKit checks and the website build pass. A recorded Chrome
+journey uses the real HTML clipboard, edits a cell, undoes/redoes, exports and
+reopens through the server importer. Reviewed source/editor/export screenshots
+and recording frames confirm header-first and totals-last ordering. Evidence:
+`artifacts/html-table-order-20260907-recorded/` and
+`artifacts/html-table-order-20260907-browser/`. CommonMark scores remain unchanged.
+
 HTML table geometry audit (2026-09-07): browser and server import now resolve
 zero row spans within each source row group, with nested-table isolation and
 HTML integer-prefix parsing shared through a DOM-free helper. A pure-Node grid

@@ -331,7 +331,9 @@ const limits = Object.freeze({
   // container collection, bounded slots and content-preservation verification.
   // Shared HTML integer parsing and row-group-aware spans add ~1.1 KiB ESM /
   // 0.9 KiB CJS (1362.9 / 1133.2 KiB measured). No individual entry cap changes.
-  'all ESM runtime code': 1363 * kibibyte,
+  // Native table section ordering/reporting adds ~0.6 KiB ESM / 0.5 KiB CJS
+  // (1363.5 / 1133.7 KiB measured); CJS and all individual ceilings still fit.
+  'all ESM runtime code': 1364 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

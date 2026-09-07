@@ -18,7 +18,7 @@ import {
 } from '../core/schema';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
-import { htmlTableSpan, remainingHTMLTableRows } from '../core/importers/html-table';
+import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
@@ -1083,7 +1083,12 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     });
     const sourceRows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr');
     const remaining = remainingHTMLTableRows(sourceRows, row => row.raw.parent);
-    const rows = sourceRows.map((row) => schema.node(
+    const orderedRows = orderedHTMLTableRows(sourceRows, row => row.raw.parent && 'name' in row.raw.parent ? row.raw.parent.name : '');
+    if (orderedRows.some((row, index) => row !== sourceRows[index])) reportOnce(context, {
+      code: 'block-html-projection',
+      message: 'Table rows were placed in native header/body/footer order. Source row-group order and repeat-on-print behavior are not retained.',
+    });
+    const rows = orderedRows.map((row) => schema.node(
       'table_row',
       {},
       row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {

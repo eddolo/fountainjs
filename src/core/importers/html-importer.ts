@@ -10,7 +10,7 @@ import {
 } from '../schema';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
-import { htmlTableSpan, remainingHTMLTableRows } from './html-table';
+import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 
@@ -582,7 +582,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
     });
     const sourceRows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'));
     const remaining = remainingHTMLTableRows(sourceRows, row => row.parentElement);
-    const rows = sourceRows.map((row) => schema.node('table_row', {},
+    const rows = orderedHTMLTableRows(sourceRows, row => row.parentElement?.tagName ?? '').map((row) => schema.node('table_row', {},
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));

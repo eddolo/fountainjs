@@ -253,6 +253,15 @@ describe('opt-in HTML block flow', () => {
     })).toThrow('Host error');
   });
 
+  it('retains inert source if section ordering would move protected Markdown blocks', () => {
+    const source = '<table><tfoot><tr><td>\n\nFooter\n\n</td></tr></tfoot><tbody><tr><td>\n\nBody\n\n</td></tr></tbody></table>';
+    const report = vi.fn();
+    const parsed = MarkdownImporter.parseWithSource(source, schema, { ...options, onHTMLFlowFallback: report });
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(parsed.document.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
+  });
+
   it('limits inert rollback to the failed container, leaving sibling inline conversion intact', () => {
     const nested = '<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>';
     const source = `${nested.split('\n').map(line => `> ${line}`).join('\n')}\n\nA <strong>success</strong>.`;

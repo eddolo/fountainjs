@@ -43,6 +43,12 @@
 
 ### Fixed
 
+- HTML import now uses native table section order (header, body, footer) in both
+  browser and server paths, preserving stable row order within each section.
+  Early footers and late headers no longer move to the wrong visible position
+  when pasted. Source-group span calculation remains independent; nested tables
+  are isolated. Server reports make source-order projection explicit.
+
 - Browser and server HTML import now resolve `rowspan="0"` within its source
   row group instead of silently importing it as one row. Shared integer parsing
   avoids JavaScript-only numeric interpretations and invalid fractional spans.

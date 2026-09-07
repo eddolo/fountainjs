@@ -561,6 +561,42 @@ test('split HTML table becomes a real editable table with history and export', a
   expect(errors).toEqual([]);
 });
 
+test('legacy section order matches native rendering through paste edit history and reopen', async ({ page, context }, info) => {
+  const source = '<table><tfoot><tr><td>Total</td><td>30</td></tr></tfoot><tbody><tr><td>Build</td><td>10</td></tr><tr><td>Deploy</td><td>20</td></tr></tbody><thead><tr><th scope="col">Stage</th><th scope="col">Minutes</th></tr></thead></table>';
+  await page.setContent(`<style>body{font:18px system-ui;padding:48px}table{border-collapse:collapse;width:650px}td,th{border:1px solid #bbb;padding:16px;text-align:left}</style><h1>Browser-rendered source</h1><p>Source markup places the footer first and the header last.</p>${source}`);
+  const expected = await page.locator('tr').evaluateAll(rows => rows.map(row => ({ y: row.getBoundingClientRect().top, text: row.textContent })).sort((a, b) => a.y - b.y).map(row => row.text));
+  expect(expected).toEqual(['StageMinutes', 'Build10', 'Deploy20', 'Total30']);
+  await capture(page, info, 'native-source-table');
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/go-docs-service.html');
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), source);
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('tr')).toHaveText(expected);
+  await capture(page, info, 'imported-table-matches-source-order');
+  await editor.getByText('Build', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' checked');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator('tr')).toHaveText(expected);
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Build checked');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await capture(page, info, 'table-order-edited-and-exported');
+  const exported = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(exported);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(async () => {
+    const table = JSON.parse(await output.locator('pre').innerText()).content[0];
+    const text = (node: { text?: string; content?: unknown[] }): string => node.text ?? (node.content ?? []).map(child => text(child as typeof node)).join('');
+    expect(table.content.map(text)).toEqual(['StageMinutes', 'Build checked10', 'Deploy20', 'Total30']);
+  }).toPass();
+});
+
 test('row-group merged ownership cells survive real paste editing history and HTML reopen', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const source = '<h2>Release ownership</h2><table><tbody><tr><td rowspan="0">Ada</td><td>Build</td></tr><tr><td>Deploy</td></tr></tbody><tbody><tr><td rowspan="0">Grace</td><td>Review</td></tr><tr><td>Approve</td></tr></tbody></table>';
