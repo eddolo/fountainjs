@@ -59,6 +59,9 @@ export type ServerHTMLImportIssueCode =
   | 'unsupported-dom-rule'
   | 'invalid-rule-result'
   | 'unmapped-block-wrapper'
+  | 'unmapped-inline-element'
+  | 'discarded-html-comment'
+  | 'rejected-url'
   | 'inline-html-projection';
 
 export interface ServerHTMLImportIssue {
@@ -282,7 +285,7 @@ function rootSource(parent: RawParent): SourceParent {
   });
 }
 
-function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOptions>): void {
+function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOptions>, context: ImportContext): void {
   const stack: Array<{ node: RawNode; depth: number }> = htmlparser2Adapter.getChildNodes(parent)
     .map((node) => ({ node, depth: 1 }));
   let count = 0;
@@ -296,6 +299,10 @@ function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOpti
     if (current.depth > limits.maxDepth) {
       throw new HTMLImportLimitError('maxDepth', `HTML nesting exceeds ${limits.maxDepth} levels.`);
     }
+    if (htmlparser2Adapter.isCommentNode(current.node)) reportOnce(context, {
+      code: 'discarded-html-comment',
+      message: 'HTML comments were omitted from the document. Their source is not represented by editable nodes.',
+    });
     if (!htmlparser2Adapter.isElementNode(current.node)) continue;
     const attributes = htmlparser2Adapter.getAttrList(current.node);
     if (attributes.length > limits.maxAttributesPerElement) {
@@ -521,17 +528,22 @@ function configuredNode(
     const contentRoot = ruleContentElement(element, rule, contribution, context);
     if (!contentRoot) continue;
     const expression = type.spec.content;
-    const candidates: FountainNode[][] = type.spec.atom || !expression
-      ? [[]]
+    const candidates: Array<(branch: ImportContext) => FountainNode[]> = type.spec.atom || !expression
+      ? [() => []]
       : [
-          inlineChildren(contentRoot, schema, inheritedMarks, context),
-          blockChildren(contentRoot, schema, context),
+          branch => inlineChildren(contentRoot, schema, inheritedMarks, branch),
+          branch => blockChildren(contentRoot, schema, branch),
         ];
-    for (const content of candidates) {
+    for (const candidate of candidates) {
+      // Only report losses from the projection actually accepted by the schema.
+      // A speculative inline interpretation of block content is not data loss.
+      const branch: ImportContext = { issues: [], issueKeys: new Set(), inlineSlots: context.inlineSlots };
+      const content = candidate(branch);
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
         const node = type.create(attrs, content, undefined, inheritedMarks);
         schema.validate(node);
+        branch.issues.forEach(issue => reportOnce(context, issue));
         return node;
       } catch { /* Try the next content shape or parse rule. */ }
     }
@@ -606,7 +618,7 @@ function inlineChildren(
       return;
     }
     if (tag === 'img' && schema.nodes.inline_image) {
-      const image = imageNode(child, schema, 'inline_image', undefined, atomMarks);
+      const image = imageNode(child, schema, 'inline_image', context, undefined, atomMarks);
       if (image) result.push(image);
       return;
     }
@@ -646,11 +658,16 @@ function inlineChildren(
       return;
     }
     const nextMarks = [...marks];
-    configuredMarks(child, schema, context).forEach((mark) => addMark(nextMarks, mark));
+    const customMarks = configuredMarks(child, schema, context);
+    customMarks.forEach((mark) => addMark(nextMarks, mark));
     const markName = ({
       strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike',
       del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript',
     } as Record<string, string>)[tag];
+    if (!customMarks.length && tag !== 'span' && tag !== 'a' && !(markName && schema.marks[markName])) reportOnce(context, {
+      code: 'unmapped-inline-element',
+      message: 'Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.',
+    });
     if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
       color: colorValue(child.style.backgroundColor ?? '') ?? '#fff3a3',
     });
@@ -667,11 +684,17 @@ function inlineChildren(
     if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
     if (tag === 'a' && schema.marks.link) {
       const href = child.getAttribute('href') ?? '';
-      if (child.hasAttribute('href') && isSafeURL(href, { allowEmpty: true })) addSchemaMark(nextMarks, schema, 'link', {
-        href,
-        title: child.getAttribute('title') ?? '',
-        target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
-      });
+      if (child.hasAttribute('href')) {
+        if (isSafeURL(href, { allowEmpty: true })) addSchemaMark(nextMarks, schema, 'link', {
+          href,
+          title: child.getAttribute('title') ?? '',
+          target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
+        });
+        else reportOnce(context, {
+          code: 'rejected-url',
+          message: 'Unsafe link URLs were omitted; readable link text was retained.',
+        });
+      }
     }
     result.push(...inlineChildren(child, schema, nextMarks, context));
   });
@@ -690,11 +713,19 @@ function imageNode(
   image: SourceElement,
   schema: Schema,
   type: 'image_super' | 'inline_image',
+  context: ImportContext,
   container?: SourceElement,
   marks: readonly Mark[] = [],
 ): FountainNode | null {
   const src = image.getAttribute('src') ?? '';
-  if (!isSafeURL(src, { allowDataImage: true }) || !schema.nodes[type]) return null;
+  if (!isSafeURL(src, { allowDataImage: true })) {
+    reportOnce(context, {
+      code: 'rejected-url',
+      message: 'Images with missing or unsafe source URLs were omitted.',
+    });
+    return null;
+  }
+  if (!schema.nodes[type]) return null;
   const blockImage = type === 'image_super';
   const width = imageSize(
     container?.style.width
@@ -977,10 +1008,10 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
     const images = element.querySelectorAll(':scope > img');
     if (images.length !== 1) {
       return element.querySelectorAll('img')
-        .map((candidate) => imageNode(candidate, schema, 'image_super'))
+        .map((candidate) => imageNode(candidate, schema, 'image_super', context))
         .filter((candidate): candidate is FountainNode => Boolean(candidate));
     }
-    const image = imageNode(images[0] as SourceElement, schema, 'image_super', element);
+    const image = imageNode(images[0] as SourceElement, schema, 'image_super', context, element);
     return image ? [image] : [];
   }
   if (tag === 'table') {
@@ -1006,7 +1037,7 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
     return rows.length ? [schema.node('table', {}, rows)] : [];
   }
   if (tag === 'img') {
-    const image = imageNode(element, schema, 'image_super');
+    const image = imageNode(element, schema, 'image_super', context);
     return image ? [image] : [];
   }
   if (tag === 'audio' || tag === 'video') {
@@ -1116,7 +1147,7 @@ export class ServerHTMLImporter {
         if (issues.length < this.options.maxParseErrors) issues.push(parseErrorIssue(error));
       },
     });
-    validateTree(fragment, this.options);
+    validateTree(fragment, this.options, context);
     const root = rootSource(fragment);
     const inspect = (parent: SourceParent) => {
       for (const child of parent.childNodes) {
@@ -1169,7 +1200,7 @@ export class ServerHTMLImporter {
         }
       },
     });
-    validateTree(fragment, this.options);
+    validateTree(fragment, this.options, context);
     const root = rootSource(fragment);
     const blocks = blockChildren(root, schema, context);
     if (!blocks.length && root.textContent) {

@@ -289,7 +289,9 @@ const limits = Object.freeze({
   // caret/IME replacement keeps marks without changing consumer-entry caps.
   // Protected inline-node projection and its opt-in server adapter add about
   // 5.1 KiB ESM / 4.4 KiB CJS. No new dependency or individual-entry cap change.
-  'all ESM runtime code': 1320 * kibibyte,
+  // Explicit discarded-comment/inline-element/URL diagnostics and accepted-
+  // branch reporting add ~0.9 KiB ESM; CJS remains within its current ceiling.
+  'all ESM runtime code': 1321 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   'all CommonJS runtime code': 1102 * kibibyte,
 });

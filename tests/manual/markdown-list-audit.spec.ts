@@ -34,6 +34,42 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('conversion losses are visible before the remaining content is pasted and edited', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('# Imported notice\n\nNotice <unknown-inline>label</unknown-inline><!-- private note --><a href="javascript:privateLink()"> end.</a><img src="javascript:privateImage()">');
+  await page.getByRole('checkbox', { name: 'Convert inline HTML formatting' }).check();
+  const notes = page.getByRole('list', { name: 'Markdown HTML conversion details' });
+  await expect(notes.getByRole('listitem')).toHaveCount(5);
+  await expect(notes).toContainText('HTML comments were omitted');
+  await expect(notes).toContainText('Unmapped inline HTML elements');
+  await expect(notes).toContainText('Unsafe link URLs');
+  await expect(notes).toContainText('Images with missing or unsafe');
+  await expect(notes).not.toContainText('private');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('<p>Notice label end.</p>');
+  await capture(page, info, '28-explicit-HTML-conversion-losses');
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor).toContainText('Notice label end.');
+  await expect(editor.locator('img, a, unknown-inline')).toHaveCount(0);
+  await editor.getByText('Notice label end.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Reviewed.');
+  await expect(editor).toContainText('Notice label end. Reviewed.');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('Reviewed.');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Reviewed.');
+  await capture(page, info, '29-readable-content-after-lossy-import');
+});
+
 test('opt-in inline HTML survives a real rich paste edit undo and Markdown reimport', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const errors: string[] = [];

@@ -34,6 +34,13 @@
 
 ### Fixed
 
+- Server HTML reports now identify omitted comments, unmapped inline elements,
+  and rejected built-in link/image URLs without copying private source payloads
+  into diagnostics. Repeated losses are aggregated. Extension content candidates
+  are evaluated lazily, and only the accepted candidate contributes content-loss
+  reports, avoiding false warnings from discarded speculative interpretations.
+  Both HTML and opt-in Markdown conversion demos expose these specific notes.
+
 - Browser and server HTML import preserve multiple paragraphs, headings,
   lists, quotes, code, media, math, custom blocks, and nested tables within
   table/header cells instead of flattening the entire cell into one paragraph.

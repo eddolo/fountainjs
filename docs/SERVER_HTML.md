@@ -147,7 +147,18 @@ Issue codes are:
 - `unmapped-block-wrapper`: an unrecognized block wrapper was discarded while
   importing its descendants. Its identity, attributes, and behavior did not
   become an equivalent custom Fountain node. This is one aggregate note per
-  import, not a node-by-node loss inventory; it contains no source payload.
+  import, not a node-by-node loss inventory; it contains no source payload;
+- `unmapped-inline-element`: inline HTML without an accepted node/format mapping
+  was removed while retaining its readable descendants. This includes empty
+  custom media tags and formatting missing from the receiving schema;
+- `discarded-html-comment`: parsed HTML comment nodes were omitted. This also
+  covers constructs the HTML parser represents as bogus comments;
+- `rejected-url`: the built-in link/image projection omitted an unsafe link URL
+  or an image with a missing/unsafe source URL. Link text remains readable.
+  The two messages identify link versus image loss without reproducing URLs;
+- `inline-html-projection`: the opt-in Markdown inline adapter projected raw
+  tokens into schema content. Its conservative compatibility note is separate
+  from the specific losses above and is not a lossless-conversion assertion.
 
 Rule diagnostics are immutable and deduplicated by code, contribution, selector,
 and reason, rather than repeated for every affected HTML element. They identify
@@ -157,8 +168,42 @@ necessarily a lost node. Conversely, an empty report is **not** proof of lossles
 HTML conversion: unsupported tags, attributes, CSS/layout, and some filtered
 content still require broader conversion-loss accounting.
 
+Content candidates are evaluated lazily. An extension may accept block content
+after rejecting an inline interpretation (or vice versa); diagnostics from
+discarded content candidates are not reported as losses in the accepted
+document. Actual losses inside the accepted candidate still propagate.
+Comment, unknown-inline, and rejected-URL messages are aggregated by category,
+so thousands of repeated elements do not produce thousands of diagnostic rows.
+They never include source comment bodies, attribute values, or rejected URLs.
+
+Applications can use these categories to decline conversion instead of accepting
+the readable-content projection. For example, a `parseHTMLInline` callback may
+call `parseInlineWithReport`, inspect `issues`, and return `null` if it sees
+`unmapped-inline-element` or `rejected-url`. Markdown then retains the normal
+inert interpretation and invokes `onHTMLInlineFallback`. The generic
+`inline-html-projection` note alone does not identify a specific lost node, and
+an empty set of the specific categories is not a lossless guarantee.
+
 The public headless demo shows these messages for both Server HTML input and
-opt-in Markdown HTML-block conversion. A count alone is not the explanation.
+opt-in Markdown HTML-block/inline conversion. A count alone is not the explanation.
+
+Loss-report verification (2026-09-07): `pnpm check` passed **899 tests in 83
+files**, including eight new pure-Node loss/accepted-branch cases and the
+existing browser/server projection contracts. Nine sequential
+Chromium/Firefox/WebKit checks passed in
+`artifacts/browser-html-loss-report-20260907a/results/`. All fourteen recorded
+workflows passed in `artifacts/manual-html-loss-report-20260907a/results/`;
+screenshots 28 and 29 were visually inspected. The new workflow reviews specific
+warnings, pastes the retained safe HTML through the native clipboard, edits it,
+and verifies undo/redo. Registered extension content is not mislabeled as an
+unmapped element, and 1,000 repetitions produce four aggregate loss messages,
+not thousands of diagnostic rows.
+
+The new reporting adds about 0.9 KiB ESM / 0.7 KiB CommonJS; measured aggregate
+runtime is 1320.1/1101.7 KiB. The ESM aggregate cap is explicitly 1321 KiB; the
+1102 KiB CommonJS cap, consumer-entry caps, and performance limits are unchanged.
+No dependency or document-schema change was introduced. Remaining HTML losses
+and raw-HTML conformance are still open, and no npm release is implied.
 
 Wrapper/table verification (2026-09-07): the complete local gate passed 815
 tests in 80 files, including pure-Node wrapper/depth checks, browser/server

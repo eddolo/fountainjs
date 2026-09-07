@@ -258,7 +258,9 @@ describe('DOM-free server HTML import', () => {
     expect(result.document.textContent).toContain('after');
     expect(JSON.stringify(result.document.toJSON())).not.toContain('javascript:');
     expect(result.issues.length).toBeGreaterThan(0);
-    expect(result.issues.every((issue) => issue.code === 'html-parse-error')).toBe(true);
+    expect(result.issues.map(issue => issue.code)).toEqual(['html-parse-error', 'rejected-url', 'rejected-url']);
+    expect(result.issues.some(issue => issue.message.includes('link URLs'))).toBe(true);
+    expect(result.issues.some(issue => issue.message.includes('source URLs'))).toBe(true);
   });
 
   it('enforces input, tree, depth, attribute-count, and attribute-value limits', () => {

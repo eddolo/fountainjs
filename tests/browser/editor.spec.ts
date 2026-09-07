@@ -6239,3 +6239,29 @@ test('projects inline HTML around Markdown nodes only with explicit opt-in and v
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toHaveCount(0);
   expect(errors).toEqual([]);
 });
+
+test('shows specific discarded HTML and rejected URL losses in both conversion surfaces', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  const source = 'Notice <unknown-inline>label</unknown-inline><!-- private note --><a href="javascript:privateLink()"> end</a><img src="javascript:privateImage()">';
+  const output = page.locator('.demo-output');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert inline HTML formatting' }).check();
+  const markdownNotes = page.getByRole('list', { name: 'Markdown HTML conversion details' });
+  await expect(markdownNotes).toContainText('HTML comments were omitted');
+  await expect(markdownNotes).toContainText('Unmapped inline HTML elements');
+  await expect(markdownNotes).toContainText('Unsafe link URLs');
+  await expect(markdownNotes).toContainText('Images with missing or unsafe');
+  await expect(markdownNotes).not.toContainText('private');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toHaveText('<p>Notice label end</p>');
+  await page.locator('.headless-input-tabs').getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input', { exact: true }).fill(`<p>${source}</p>`);
+  const htmlNotes = page.getByRole('list', { name: 'Server HTML conversion details' });
+  await expect(htmlNotes.getByRole('listitem')).toHaveCount(4);
+  await expect(htmlNotes).toContainText('HTML comments were omitted');
+  await expect(htmlNotes).toContainText('Unmapped inline HTML elements');
+  await expect(htmlNotes).toContainText('Unsafe link URLs');
+  await expect(htmlNotes).toContainText('Images with missing or unsafe');
+  await expect(htmlNotes).not.toContainText('private');
+  await expect(output.locator('pre')).toHaveText('<p>Notice label end</p>');
+});

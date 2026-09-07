@@ -130,6 +130,18 @@ headless demo. Neither option changes the default-policy CommonMark baseline
 (563 matching / 72 pending / 17 intentional). Full raw-HTML conformance and
 exhaustive loss reporting remain unfinished.
 
+Specific conversion diagnostics now distinguish omitted HTML comments,
+unmapped inline elements, and rejected built-in link/image URLs. These appear
+alongside—not instead of—the conservative inline-projection warning. Only the
+content candidate accepted by the schema contributes content-loss diagnostics;
+a discarded speculative interpretation is not evidence of lost data. Unknown
+attributes, CSS/layout, specialized elements, and other optional node families
+still require broader accounting. No pending CommonMark case is promoted merely
+because an optional conversion can discard the mismatching HTML.
+The diagnostic increment passed the complete 899-test gate, nine cross-browser
+contracts, and fourteen recorded workflows; the warning and edited-result
+screenshots were visually inspected. See [the detailed evidence](SERVER_HTML.md#reports).
+
 Verification (2026-09-07): `pnpm check` passed **891 tests in 82 files**, including
 34 new inline-adapter cases, plus package, API, pure-Node/server-boundary,
 conformance, build, and performance checks. Nine sequential
