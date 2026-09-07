@@ -279,9 +279,11 @@ const limits = Object.freeze({
   // no parser dependency enters core and individual entry ceilings stay fixed.
   // Server-only custom-rule diagnostics add ~0.6 KiB per module format;
   // the optional server entry and all consumer-entry ceilings remain fixed.
-  'all ESM runtime code': 1312 * kibibyte,
+  // Browser/server wrapper structure, its diagnostic, and pipe-table fixes add
+  // ~0.8 KiB ESM / ~0.7 KiB CJS; no dependency or individual-entry cap changes.
+  'all ESM runtime code': 1313 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
-  'all CommonJS runtime code': 1095 * kibibyte,
+  'all CommonJS runtime code': 1096 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

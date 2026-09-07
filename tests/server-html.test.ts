@@ -76,6 +76,21 @@ const schema = new Schema(composeExtensions([
 ]).schema);
 
 describe('DOM-free server HTML import', () => {
+  it('preserves unfamiliar wrapper structure without a browser and reports the discarded wrapper once', () => {
+    expect(typeof globalThis.document).toBe('undefined');
+    const inner = '<h2>Incident handover</h2><p>First paragraph</p><p>Second paragraph</p><ul><li>Check health</li></ul><table><tr><td>Evidence</td></tr></table>';
+    const result = ServerHTMLImporter.parseWithReport(`<outer-panel><inner-panel>${inner}</inner-panel></outer-panel>`, schema);
+    expect(result.document.toJSON()).toEqual(ServerHTMLImporter.parse(inner, schema).toJSON());
+    expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
+    expect(Object.isFrozen(result.issues[0])).toBe(true);
+  });
+
+  it('keeps existing depth limits when discovering blocks within unfamiliar wrappers', () => {
+    const html = `${'<unknown-wrap>'.repeat(30)}<p>Deep but bounded</p>${'</unknown-wrap>'.repeat(30)}`;
+    expect(ServerHTMLImporter.parse(html, schema).textContent).toBe('Deep but bounded');
+    expect(() => ServerHTMLImporter.parse(html, schema, { maxDepth: 20 })).toThrow(HTMLImportLimitError);
+  });
+
   it.each(['throws', 'array', 'prototype', 'attributes', 'content', 'missing-content'] as const)('reports %s custom-node failures while retaining readable fallback', failure => {
     const customSchema = new Schema(composeExtensions([CoreExtension, defineExtension({
       name: 'invalid-html-rule',
@@ -103,7 +118,7 @@ describe('DOM-free server HTML import', () => {
     expect(result.document.content.every(node => node.type.name === 'paragraph')).toBe(true);
     expect(result.issues).toEqual([expect.objectContaining({
       code: 'invalid-rule-result', contribution: 'node:card', selector: 'custom-card',
-    })]);
+    }), expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
     expect(result.issues[0].message).not.toContain('Private payload');
     expect(Object.isFrozen(result.issues[0])).toBe(true);
   });
@@ -231,7 +246,7 @@ describe('DOM-free server HTML import', () => {
       code: 'unsupported-dom-rule',
       contribution: 'node:browser_card',
       selector: 'browser-card',
-    })]);
+    }), expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
   });
 
   it('recovers malformed HTML, rejects executable URLs, and returns parser diagnostics', () => {

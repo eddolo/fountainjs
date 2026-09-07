@@ -55,7 +55,8 @@ export type ServerHTMLImportIssueCode =
   | 'html-parse-error'
   | 'invalid-selector'
   | 'unsupported-dom-rule'
-  | 'invalid-rule-result';
+  | 'invalid-rule-result'
+  | 'unmapped-block-wrapper';
 
 export interface ServerHTMLImportIssue {
   readonly code: ServerHTMLImportIssueCode;
@@ -815,6 +816,14 @@ function hasConfiguredBlockRule(element: SourceElement, schema: Schema, context:
     && configuredRules(type.spec).some(({ rule }) => matchingRule(element, rule, `node:${type.name}`, context)));
 }
 
+function hasStructuralContent(element: SourceElement, schema: Schema, context: ImportContext): boolean {
+  if (BLOCK_TAGS.has(element.tagName) || element.matches('a[data-fountain-file]') || hasConfiguredBlockRule(element, schema, context)) return true;
+  // Keep registered inline nodes authoritative over their own HTML subtree.
+  if (Object.values(schema.nodes).some(type => type.isInline
+    && configuredRules(type.spec).some(({ rule }) => matchingRule(element, rule, `node:${type.name}`, context)))) return false;
+  return element.children.some(child => hasStructuralContent(child, schema, context));
+}
+
 function inlineGroup(content: readonly SourceNode[]): SourceParent {
   return { childNodes: content, textContent: content.map((node) => node.textContent).join('') };
 }
@@ -829,8 +838,7 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
     pending = [];
   };
   element.childNodes.forEach((child) => {
-    const structural = child.kind === 'element'
-      && (BLOCK_TAGS.has(child.tagName) || child.matches('a[data-fountain-file]') || hasConfiguredBlockRule(child, schema, context));
+    const structural = child.kind === 'element' && hasStructuralContent(child, schema, context);
     if (structural) {
       flushInline();
       result.push(...block(child, schema, context));
@@ -851,7 +859,7 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   };
   element.childNodes.forEach((child) => {
     if (child.kind === 'element' && child.tagName === 'input' && child.getAttribute('type') === 'checkbox') return;
-    if (child.kind === 'element' && (BLOCK_TAGS.has(child.tagName) || hasConfiguredBlockRule(child, schema, context))) {
+    if (child.kind === 'element' && hasStructuralContent(child, schema, context)) {
       flushInline();
       result.push(...block(child, schema, context));
       return;
@@ -977,6 +985,10 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
     const embed = embedNode(element, schema);
     return embed ? [embed] : [];
   }
+  if (!BLOCK_TAGS.has(tag)) reportOnce(context, {
+    code: 'unmapped-block-wrapper',
+    message: 'Unmapped HTML block wrappers were removed. Descendant content was imported using the schema; wrapper identity, attributes, and behavior were not preserved.',
+  });
   const nested = blockChildren(element, schema, context);
   return nested.length ? nested : [paragraph(element, schema, context)];
 }

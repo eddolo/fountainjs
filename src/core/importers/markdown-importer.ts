@@ -1298,7 +1298,9 @@ function tableCells(line: string): string[] {
   let cell = '';
   for (let index = 0; index < source.length; index++) {
     if (source[index] === '\\' && index + 1 < source.length) {
-      cell += source[index] + source[index + 1];
+      // GFM removes an escaped pipe at the table layer, including inside code
+      // spans where the inline parser deliberately leaves escapes literal.
+      cell += source[index + 1] === '|' ? '|' : source[index] + source[index + 1];
       index++;
     } else if (source[index] === '|') {
       cells.push(cell.trim());
@@ -1310,17 +1312,17 @@ function tableCells(line: string): string[] {
 }
 
 function tableAlignment(value: string): 'left' | 'center' | 'right' | null {
-  const delimiter = value.replace(/\s/g, '');
-  if (!/^:?-{3,}:?$/.test(delimiter)) return null;
+  const delimiter = value.trim();
+  if (!/^:?-+:?$/.test(delimiter)) return null;
   if (delimiter.startsWith(':') && delimiter.endsWith(':')) return 'center';
   return delimiter.endsWith(':') ? 'right' : 'left';
 }
 
 function tableStart(lines: readonly string[], index: number): { headers: string[]; alignments: ('left' | 'center' | 'right')[] } | null {
-  if (index + 1 >= lines.length || !lines[index].includes('|')) return null;
+  if (index + 1 >= lines.length || !/(^|[^\\])(?:\\\\)*\|/u.test(lines[index])) return null;
   const headers = tableCells(lines[index]);
   const delimiters = tableCells(lines[index + 1]);
-  if (headers.length < 2 || headers.length !== delimiters.length) return null;
+  if (headers.length !== delimiters.length) return null;
   const alignments = delimiters.map(tableAlignment);
   return alignments.every((align): align is 'left' | 'center' | 'right' => Boolean(align))
     ? { headers, alignments }
@@ -1710,7 +1712,9 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       ));
       rows.push(schema.node('table_row', {}, cells(table.headers, 'table_header')));
       index += 2;
-      while (index < lines.length && lines[index].includes('|') && lines[index].trim()) {
+      // A short body row may omit pipes; a real new block ends the table.
+      // A one-line probe excludes tableStart itself from the termination test.
+      while (index < lines.length && lines[index].trim() && !startsBlock([lines[index]], 0, references, schema)) {
         rows.push(schema.node('table_row', {}, cells(tableCells(lines[index]), 'table_cell')));
         index++;
       }

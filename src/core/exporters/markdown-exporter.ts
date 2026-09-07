@@ -540,6 +540,9 @@ function render(
       const firstRow = node.content[0];
       const alignments = firstRow?.content.map(tableAlignment) ?? [];
       return node.content.map((row, rowIndex) => {
+        if (row.content.some(cell => cell.type.name !== (rowIndex === 0 ? 'table_header' : 'table_cell'))) {
+          report(context, 'node', 'table_row', [...path, rowIndex], 'Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.');
+        }
         const cells = row.content.map((cell, cellIndex) => tableCell(cell, context, [...path, rowIndex, cellIndex], depth));
         const delimiter = alignments.map((align) => align === 'center' ? ':---:' : align === 'right' ? '---:' : ':---');
         return `| ${cells.join(' | ')} |${rowIndex === 0 ? `\n| ${delimiter.join(' | ')} |` : ''}`;

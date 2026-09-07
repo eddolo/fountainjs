@@ -561,7 +561,8 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     details: number;
     error: string;
     loading: boolean;
-  }>({ document: undefined, details: 0, error: '', loading: false });
+    issues: readonly string[];
+  }>({ document: undefined, details: 0, error: '', loading: false, issues: [] });
   const [docxParsed, setDOCXParsed] = useState<{
     document: Node | undefined;
     details: number;
@@ -572,14 +573,14 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   useEffect(() => {
     if (inputFormat !== 'html') return undefined;
     let active = true;
-    setHTMLParsed((current) => ({ ...current, error: '', loading: true }));
+    setHTMLParsed((current) => ({ ...current, error: '', loading: true, issues: [] }));
     void import('fountainjs-editor/html/server').then(({ ServerHTMLImporter }) => {
       if (!active) return;
       const result = ServerHTMLImporter.parseWithReport(htmlSource, schema);
-      setHTMLParsed({ document: result.document, details: result.issues.length, error: '', loading: false });
+      setHTMLParsed({ document: result.document, details: result.issues.length, error: '', loading: false, issues: result.issues.map(issue => issue.message) });
     }).catch((error: unknown) => {
       if (!active) return;
-      setHTMLParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false });
+      setHTMLParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false, issues: [] });
     });
     return () => { active = false; };
   }, [htmlSource, inputFormat, schema]);
@@ -624,6 +625,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
         <p>Optional DOM-free HTML importer. Inline HTML stays literal; Markdown inside HTML blocks is not interpreted. Unsupported HTML may be flattened or omitted. This is not a lossless HTML round trip.</p>
         {markdownParsed.issues.length > 0 && <ul aria-label="HTML block conversion details">{markdownParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}
       </div>}
+      {inputFormat === 'html' && htmlParsed.issues.length > 0 && <div className="headless-html-policy"><p>HTML conversion details</p><ul aria-label="Server HTML conversion details">{htmlParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul></div>}
       {inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;

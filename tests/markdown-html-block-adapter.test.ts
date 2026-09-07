@@ -14,6 +14,16 @@ describe('opt-in raw HTML block projection', () => {
   const options: MarkdownImportOptions = { parseHTMLBlock: ServerHTMLImporter.parse };
   const html = '<div><h2>Incident</h2><p><strong>Owner</strong> &amp; *literal Markdown*</p></div>';
 
+  it('keeps an unknown HTML wrapper source exact while projecting its descendant blocks', () => {
+    const source = '<custom-panel>\n<h2>Incident</h2><p>First</p><p>Second</p>\n</custom-panel>\n';
+    const imported = MarkdownImporter.parseWithSource(source, schema, options);
+    expect(imported.document.content.map(node => node.type.name)).toEqual(['heading', 'paragraph', 'paragraph']);
+    expect(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown).toBe(source);
+    const canonical = MarkdownExporter.export(imported.document);
+    expect(canonical).not.toContain('custom-panel');
+    expect(MarkdownImporter.parse(canonical, schema).toJSON()).toEqual(imported.document.toJSON());
+  });
+
   it('runs in pure Node and keeps raw HTML inert by default', () => {
     expect(typeof document).toBe('undefined');
     expect(typeof window).toBe('undefined');

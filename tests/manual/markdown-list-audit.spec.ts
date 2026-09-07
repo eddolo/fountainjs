@@ -34,6 +34,91 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('unfamiliar wrappers retain editable structure through Markdown conversion and rich clipboard paste', async ({ page, context }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const html = '<incident-panel>\n<inner-panel><h2>Incident handover</h2><p>First paragraph</p><p>Second paragraph</p><ul><li>Check health</li></ul><table><tr><td>Evidence</td></tr></table><p>Handover complete.</p></inner-panel>\n</incident-panel>';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(html);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(page.getByText(/Unmapped HTML block wrappers were removed/)).toBeVisible();
+  const output = page.locator('.demo-output');
+  await expect(output.locator('pre')).toContainText('Incident handover');
+  const imported = withoutNodeIds(await output.locator('pre').innerText());
+  await capture(page, info, '21-wrapper-conversion-and-explicit-warning');
+  await page.locator('.headless-input-tabs').getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input', { exact: true }).fill(html);
+  await expect(page.getByRole('list', { name: 'Server HTML conversion details' })).toContainText('Unmapped HTML block wrappers were removed');
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(imported);
+
+  // Paste the ORIGINAL unfamiliar HTML, not the already converted output, so
+  // this independently exercises the browser clipboard importer.
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator(':scope > h2')).toHaveText('Incident handover');
+  await expect(editor.locator(':scope > p')).toHaveText(['First paragraph', 'Second paragraph', 'Handover complete.']);
+  await expect(editor.locator(':scope > ul')).toHaveText('Check health');
+  await expect(editor.locator('table td')).toHaveText('Evidence');
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(imported);
+  await editor.getByText('First paragraph', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Follow-up assigned.');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('Follow-up assigned.');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Follow-up assigned.');
+  const changed = withoutNodeIds(await output.locator('pre').innerText());
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '22-wrapper-content-edited-as-real-blocks');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await output.locator('summary').click();
+  await expect(output.getByText(/Pipe Markdown makes the first row column headers/)).toBeVisible();
+  await output.getByRole('checkbox', { name: 'Keep table structure with HTML' }).check();
+  const markdown = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(changed);
+  expect(errors).toEqual([]);
+});
+
+test('one-column pipe Markdown remains an editable table through export and reimport', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('| Evidence |\n| :-: |\n| Check health |\n\nHandover complete.');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('<th');
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('th')).toHaveText('Evidence');
+  await expect(editor.locator('td')).toHaveText('Check health');
+  await editor.getByText('Check health', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' — passed');
+  await expect(editor.locator('td')).toHaveText('Check health — passed');
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  await expect(output.getByRole('checkbox', { name: 'Keep table structure with HTML' })).not.toBeChecked();
+  const markdown = await output.locator('pre').innerText();
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '23-one-column-table-and-pipe-export');
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+});
+
 test('rich table Markdown export keeps structure through the public controls', async ({ page, context }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

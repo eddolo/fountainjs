@@ -71,7 +71,9 @@ Try the **Convert HTML blocks to rich content** checkbox in the
 ### Preserving rich tables in exported Markdown
 
 Pipe tables remain the portable default, with loss reports for merged cells,
-column widths, or multiple/non-paragraph cell blocks. Choose HTML explicitly
+column widths, multiple/non-paragraph cell blocks, or cell-role changes.
+Pipe Markdown always makes the first row column headers and later rows data
+cells; it cannot preserve a headerless table or headers in later rows. Choose HTML explicitly
 when the receiving Markdown reader supports it:
 
 ```ts
@@ -103,6 +105,24 @@ over canonical export options.
 The demo data panels expose **Keep table structure with HTML** in the Markdown
 tab and show expandable export notes. Re-import that output with **Convert HTML
 blocks to rich content** enabled.
+
+The real wrapper/paste audit exposed a one-column pipe-table import defect.
+Single-column and header-only tables now remain tables, and the related
+[GFM table examples 198–205](https://github.github.com/gfm/#tables-extension-)
+have focused tests for short alignment delimiters, escaped pipes inside code
+and emphasis, header/delimiter width checks, short/long body rows, and blank-line
+or new-block termination. This is targeted table evidence, not full GFM
+certification. `tests/markdown-tables-gfm.test.ts` also verifies that an escaped
+literal pipe does not turn a Setext heading into a table.
+
+The combined wrapper/table fixes passed the complete 815-test local gate and
+all eleven recorded public-demo Markdown/HTML workflows under
+`artifacts/manual-html-wrappers-20260907b/results/`. The new recordings cover
+unfamiliar original HTML → real clipboard paste → block editing → undo/redo →
+export/re-import, plus a one-column pipe table edited in the public editor.
+Their conversion-warning and rendered-editor screenshots were visually
+inspected. This is in addition to, not a replacement for, the earlier HTML-table
+export verification below.
 
 Verification (2026-09-07): the complete local gate passed 792 tests, package and
 server-runtime checks, headless-boundary checks, semantic conformance, API,
@@ -394,7 +414,8 @@ lists and quotes while preserving opaque HTML/fenced content. Real nested
 definitions retain global lookup; definitions are consumed after container
 boundaries are established instead of blanking out an item's first lines.
 HTML inside lists/quotes cannot acquire outdented lazy paragraph content.
-An opt-in safe schema projection with loss reports remains pending.
+Opt-in block projection is available through the adapter above; full inline
+projection and exhaustive HTML conversion-loss reporting remain pending.
 
 The recorded incident-runbook workflow additionally exposed a browser/server
 HTML import bug: both inserted a blank paragraph before valid list-first code,
@@ -405,6 +426,17 @@ edits a nested paragraph, undoes/redoes, and exports/reimports Markdown.
 `tests/server-html-parity.test.ts` checks both importers directly.
 
 ### Empty paragraphs and caret hosts
+
+The HTML-block adapter also preserves block boundaries inside unfamiliar
+wrappers (for example, a custom element around two paragraphs and a list).
+Previously both browser and server HTML import silently flattened those
+descendants into one paragraph. The wrapper itself still has no equivalent
+schema node unless registered, so server import reports
+`unmapped-block-wrapper`; both public HTML conversion paths display the note.
+Unchanged source snapshots still return the original wrapper source exactly,
+while canonical Markdown exports the projected document, not the discarded
+custom-element identity. This does not implement general inline HTML or change
+the 563 matching / 72 pending / 17 intentional CommonMark classification.
 
 Blank Markdown source lines are separators, not an unambiguous count of empty
 paragraph blocks. Fountain's canonical export now preserves each empty

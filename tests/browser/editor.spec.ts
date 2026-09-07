@@ -3176,6 +3176,26 @@ test('pastes unwrapped inline HTML without dropping surrounding text or formatti
   await expect(editor).not.toContainText('Before bold and link.');
 });
 
+test('pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
+  await editor.evaluate(target => {
+    const html = '<unknown-panel><inner-panel><h2>Incident handover</h2><p>First paragraph</p><p>Second paragraph</p><ul><li>Check health</li></ul><table><tr><td>Evidence</td></tr></table><p>Handover complete.</p></inner-panel></unknown-panel>';
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? html : '' } });
+    target.dispatchEvent(event);
+  });
+  await expect(editor.locator(':scope > h2')).toHaveText('Incident handover');
+  await expect(editor.locator(':scope > p')).toHaveText(['First paragraph', 'Second paragraph', 'Handover complete.']);
+  await expect(editor.locator(':scope > ul')).toHaveText('Check health');
+  await expect(editor.locator('table td')).toHaveText('Evidence');
+  await editor.getByText('First paragraph', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Follow-up');
+  await expect(editor.locator(':scope > p')).toHaveText(['First paragraph', 'Follow-up', 'Second paragraph', 'Handover complete.']);
+});
+
 test('pastes structured table cells and edits separate paragraphs without flattening nested blocks', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());

@@ -37,6 +37,15 @@ browser importer:
   breaks, footnotes, page templates, fields, and portable widgets;
 - extension nodes and marks that declare a platform-neutral `parseHTML` rule.
 
+Unmapped wrappers containing block descendants no longer flatten those
+descendants into one paragraph. Both server import and browser paste retain
+headings, separate paragraphs, lists, and tables through nested unfamiliar
+wrappers, including inside quotes, list items, and table cells. Inline-only
+wrappers stay inline. Explicit inline/block node rules still own their subtree;
+an atomic preview is not unpacked merely because its HTML contains a paragraph.
+This is structural fallback, not support for the original custom element's
+application behavior, form submission, CSS, or attributes.
+
 Every candidate still goes through normal attribute validators, whole-node
 invariants, content expressions, and final `schema.validate()`. Unsupported or
 executable markup is never retained as a hidden HTML blob. Readable descendants
@@ -120,7 +129,11 @@ Issue codes are:
   attribute value, could not find its declared content element, or could not
   produce a schema-valid node/mark. Other rules and readable fallback content
   are still tried. An explicit `false` is an intentional decline and is not
-  reported as an error; `null`/`undefined` retain their default-attribute meaning.
+  reported as an error; `null`/`undefined` retain their default-attribute meaning;
+- `unmapped-block-wrapper`: an unrecognized block wrapper was discarded while
+  importing its descendants. Its identity, attributes, and behavior did not
+  become an equivalent custom Fountain node. This is one aggregate note per
+  import, not a node-by-node loss inventory; it contains no source payload.
 
 Rule diagnostics are immutable and deduplicated by code, contribution, selector,
 and reason, rather than repeated for every affected HTML element. They identify
@@ -129,6 +142,31 @@ the report. A later rule may recover the same content, so a diagnostic is not
 necessarily a lost node. Conversely, an empty report is **not** proof of lossless
 HTML conversion: unsupported tags, attributes, CSS/layout, and some filtered
 content still require broader conversion-loss accounting.
+
+The public headless demo shows these messages for both Server HTML input and
+opt-in Markdown HTML-block conversion. A count alone is not the explanation.
+
+Wrapper/table verification (2026-09-07): the complete local gate passed 815
+tests in 80 files, including pure-Node wrapper/depth checks, browser/server
+projection parity, authoritative custom nodes, source snapshots, and GFM table
+regressions. All eleven recorded Markdown/HTML workflows passed under
+`artifacts/manual-html-wrappers-20260907b/results/`; the warning, edited wrapper
+content, and one-column table/export screenshots were visually inspected.
+The recording pastes the original unfamiliar HTML through the native clipboard,
+not only HTML already normalized by the server importer. A pipe table with
+nonstandard cell roles requires the explicit HTML-table option for exact
+structural re-import; the loss note now explains that difference.
+
+Aggregate bundled runtime measured 1312.7 KiB ESM / 1095.5 KiB CommonJS, about
+0.8/0.7 KiB above the preceding checkpoint. The aggregate caps increased by
+1 KiB each (1313/1096); individual entry and performance limits did not change,
+and no dependency was added. This is local verification, not an npm release or
+complete CommonMark/GFM conformance.
+
+The final sequential Chromium/Firefox/WebKit run passed all nine targeted
+contracts: unfamiliar-wrapper paste/editing, structured table-cell paste, and
+the public Markdown/LaTeX/server-HTML pipeline. Evidence is under
+`artifacts/browser-html-wrappers-final-20260907a/results/`.
 
 The custom-rule diagnostic increment is covered by eight new Node-only
 regressions (776 tests in the complete local gate). The combined change also

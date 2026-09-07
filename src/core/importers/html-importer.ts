@@ -444,6 +444,15 @@ function hasConfiguredBlockRule(element: HTMLElement, schema: Schema): boolean {
     && parseRules(type.spec).some((rule) => matchesRule(element, rule)));
 }
 
+function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
+  if (BLOCK_TAGS.has(element.tagName.toLowerCase()) || element.matches('a[data-fountain-file]') || hasConfiguredBlockRule(element, schema)) return true;
+  // An explicit inline node owns its content, even if its HTML contains block
+  // descendants (for example an application-defined atomic preview).
+  if (Object.values(schema.nodes).some(type => type.isInline
+    && parseRules(type.spec).some(rule => matchesRule(element, rule)))) return false;
+  return [...element.children].some(child => child instanceof HTMLElement && hasStructuralContent(child, schema));
+}
+
 function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
@@ -454,8 +463,7 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {
-    const structural = child instanceof HTMLElement
-      && (BLOCK_TAGS.has(child.tagName.toLowerCase()) || child.matches('a[data-fountain-file]') || hasConfiguredBlockRule(child, schema));
+    const structural = child instanceof HTMLElement && hasStructuralContent(child, schema);
     if (structural) {
       flushInline();
       result.push(...block(child as HTMLElement, schema));
@@ -478,7 +486,7 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   };
   element.childNodes.forEach((child) => {
     if (child instanceof HTMLInputElement && child.type === 'checkbox') return;
-    if (child instanceof HTMLElement && (BLOCK_TAGS.has(child.tagName.toLowerCase()) || hasConfiguredBlockRule(child, schema))) {
+    if (child instanceof HTMLElement && hasStructuralContent(child, schema)) {
       flushInline();
       result.push(...block(child, schema));
       return;

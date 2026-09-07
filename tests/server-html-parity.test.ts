@@ -12,6 +12,7 @@ import {
   MediaExtension,
   Schema,
   composeExtensions,
+  defineExtension,
 } from '../src';
 import { DetailsExtension } from '../src/details';
 import { ServerHTMLImporter } from '../src/html/server';
@@ -39,6 +40,55 @@ const fixtures = [
   '<figure data-align="left" style="width:75%"><img src="https://example.com/image.png" alt="Diagram" width="640"><figcaption>Caption</figcaption></figure>',
   '<p><a href="/details" title="Details" target="_self"><img src="/status.png" alt="Status"></a></p>',
 ];
+
+describe('HTML fallback wrapper structure', () => {
+  const inner = 'Before<h2>Nested heading</h2><p>First</p><p>Second</p><ul><li>Task</li></ul>After';
+  it.each(['custom-panel', 'form', 'span'])('preserves block boundaries through an unmapped %s wrapper', tag => {
+    const source = `<${tag}>${inner}</${tag}>`;
+    const expected = HTMLImporter.parse(inner, schema).toJSON();
+    expect(ServerHTMLImporter.parse(source, schema).toJSON()).toEqual(expected);
+    expect(HTMLImporter.parse(source, schema).toJSON()).toEqual(expected);
+  });
+
+  it.each(['<ul><li>', '<table><tr><td>', '<blockquote>', '<outer-wrap>'])('preserves nested wrappers within %s', parent => {
+    const close = ({ '<ul><li>': '</li></ul>', '<table><tr><td>': '</td></tr></table>', '<blockquote>': '</blockquote>', '<outer-wrap>': '</outer-wrap>' })[parent];
+    const source = `${parent}<unknown-wrap><another-wrap>${inner}</another-wrap></unknown-wrap>${close}`;
+    const expected = HTMLImporter.parse(`${parent}${inner}${close}`, schema).toJSON();
+    const server = ServerHTMLImporter.parseWithReport(source, schema);
+    expect(server.document.toJSON()).toEqual(expected);
+    expect(HTMLImporter.parse(source, schema).toJSON()).toEqual(expected);
+    expect(server.issues).toEqual([expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
+  });
+
+  it('does not turn an inline-only unknown wrapper into a new paragraph', () => {
+    const html = 'Before <unknown-wrap><strong>inline</strong></unknown-wrap> after';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse(html, schema);
+      expect(document.childCount).toBe(1);
+      expect(document.textContent).toBe('Before inline after');
+      expect(document.child(0).child(1).marks[0].type.name).toBe('strong');
+    }
+  });
+
+  it('keeps explicit inline and block node rules authoritative over their subtrees', () => {
+    const customSchema = new Schema(composeExtensions([CoreExtension, defineExtension({
+      name: 'opaque-html-nodes',
+      nodes: {
+        preview: { inline: true, group: 'inline', atom: true, parseHTML: [{ tag: 'inline-preview' }] },
+        card: { group: 'block', atom: true, parseHTML: [{ tag: 'block-preview' }] },
+      },
+    })]).schema);
+    const source = '<inline-preview><p>Private rendered UI</p></inline-preview><block-preview><p>Other UI</p></block-preview>';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse(source, customSchema);
+      expect(document.childCount).toBe(2);
+      expect(document.child(0).child(0).type.name).toBe('preview');
+      expect(document.child(1).type.name).toBe('card');
+      expect(document.textContent).toBe('');
+    }
+    expect(ServerHTMLImporter.parseWithReport(source, customSchema).issues).toEqual([]);
+  });
+});
 
 describe('structured table-cell HTML fidelity', () => {
   it.each(['\u00a0', '\u202f', '\ufeff'])('does not discard significant Unicode spacing %j between blocks', spacing => {
