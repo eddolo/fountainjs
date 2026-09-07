@@ -19,7 +19,9 @@ and inline HTML scope projection connect the isolated server importer to
 Markdown, including nested containers and source snapshots. Inline projection
 protects already-parsed Fountain nodes instead of serializing them through HTML;
 unprovable content preservation falls back to readable source. The public
-headless demo exposes separate default-off choices. Exhaustive HTML precedence,
+headless demo exposes separate default-off choices. Block-fragment conversion
+now omits comment-only results without inserting an empty-document caret
+paragraph, while retaining explicitly authored blank blocks. Exhaustive HTML precedence,
 specialized/raw-text inline structures, and conversion-loss accounting remain
 unfinished. This does not change the 563-match / 72-pending / 17-intentional-difference
 CommonMark baseline or qualify the overall programme for publication. See the

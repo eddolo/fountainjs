@@ -28,9 +28,9 @@ import { ServerHTMLImporter } from 'fountainjs-editor/html/server'
 // `schema` is the schema already used by your application.
 const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema, {
   parseHTMLBlock(html, targetSchema) {
-    const result = ServerHTMLImporter.parseWithReport(html, targetSchema)
+    const result = ServerHTMLImporter.parseFragmentWithReport(html, targetSchema)
     reportHTMLIssues(result.issues)
-    return result.document
+    return result.nodes
   },
   onHTMLBlockFallback(issue) {
     console.warn(issue.reason, issue.message)
@@ -38,9 +38,16 @@ const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema, {
 })
 ```
 
-The adapter must be synchronous and deterministic, return a document from the
-supplied schema, and own its URL/security and conversion-loss policies. It may
-return `null` to retain literal source. Exceptions, invalid document structure,
+The adapter must be synchronous and deterministic, return a document or readonly
+block-node array from the supplied schema, and own its URL/security and
+conversion-loss policies. An empty array means successful conversion with no
+visible blocks, for example an HTML comment. Prefer `parseFragmentWithReport`
+here: whole-document `parseWithReport` intentionally adds an empty caret paragraph
+when no content remains. Explicit empty HTML paragraphs are still preserved.
+Fragments use the same parser limits, schema validation and loss reporting;
+nonempty adapter arrays must also match the receiving schema's document content
+expression. This does not resolve HTML scopes spanning multiple Markdown blocks.
+The adapter may return `null` to retain literal source. Exceptions, invalid document structure,
 and foreign-schema results also retain literal source and trigger the fallback
 callback. A schema check is **not** a general HTML sanitizer. Importer-specific
 issues should be handled inside the adapter; `onHTMLBlockFallback` only reports

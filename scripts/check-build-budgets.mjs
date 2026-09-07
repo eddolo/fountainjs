@@ -325,7 +325,9 @@ const limits = Object.freeze({
   // First-party Svelte action/stores add ~1.1 KiB ESM / 0.9 KiB CJS.
   // Measured totals: 1351.6 / 1127.1 KiB; Svelte stays an external peer.
   // Angular's unminified partial-Ivy entry adds 4.1 KiB; no Angular runtime is bundled.
-  'all ESM runtime code': 1356 * kibibyte,
+  // Block-fragment HTML APIs plus Markdown fragment validation add ~0.9 KiB
+  // ESM (~0.8 KiB CJS). Existing individual entry ceilings are unchanged.
+  'all ESM runtime code': 1357 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

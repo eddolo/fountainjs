@@ -508,9 +508,9 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       const issues: string[] = [];
       const document = MarkdownImporter.parse(markdownSource, schema, {
         parseHTMLBlock: projectHTMLBlocks && htmlBlockParser ? (html, targetSchema) => {
-          const result = htmlBlockParser.parseWithReport(html, targetSchema);
+          const result = htmlBlockParser.parseFragmentWithReport(html, targetSchema);
           issues.push(...result.issues.map(issue => issue.message));
-          return result.document;
+          return result.nodes;
         } : undefined,
         onHTMLBlockFallback: issue => issues.push(`Kept HTML as text: ${issue.message}`),
         parseHTMLInline: projectHTMLInline && htmlBlockParser ? (segments, targetSchema) => {

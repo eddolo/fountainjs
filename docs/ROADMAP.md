@@ -5,6 +5,34 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Markdown HTML-fragment follow-through (2026-09-07): the optional server importer
+now distinguishes block fragments from complete documents. Comment-only fragments
+produce no visible blocks instead of inserting a standalone document's caret
+paragraph between Markdown paragraphs/lists/code. Explicit empty blocks remain;
+whole-document imports still provide their required caret host. Markdown adapters
+accept readonly block arrays, validate their nodes and nonempty document-content
+expression, and retain literal source on invalid/foreign/orphan results. Existing
+document-returning adapters and the default inert-HTML policy are unchanged.
+
+The full local `pnpm check` passes 1,129 tests in 103 files, declarations,
+package/headless/runtime checks, type checks and unchanged performance limits.
+The additive APIs and validation add about 0.9 KiB ESM / 0.8 KiB CJS; only the
+aggregate ESM ceiling increases by 1 KiB, not individual entry/performance limits.
+A recorded public-demo conversion → rich paste → Enter/type → undo journey and
+its screenshots/video frames were visually reviewed. A browser-test read of the
+lazy import's temporary empty output was corrected to wait for valid JSON.
+A later rebuild left a reused Vite server with a stale import-resolution error;
+the affected run was stopped and the local server restarted, not counted green.
+The clean-server rerun passes all nine focused checks across Chromium, Firefox
+and WebKit. The production website build passes with the existing large MathJax
+reference-lab chunk warning.
+
+The CommonMark score remains 563 matching / 72 pending / 17 intentional.
+Next unresolved conversion boundary: HTML scopes spanning separately parsed
+Markdown blocks (especially table/container fragments), plus complete loss
+accounting. Do not treat fragment cleanup as full raw-HTML/CommonMark parity or
+permission to publish npm. See `docs/MARKDOWN_SOURCE.md` and `docs/SERVER_HTML.md`.
+
 SURFACE-04 Angular increment (2026-09-07): the optional
 `fountainjs-editor/angular` entry provides injection-scoped editor ownership,
 signal state and a standalone DOM-view directive. The campaign now runs actual

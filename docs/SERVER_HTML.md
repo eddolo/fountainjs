@@ -122,6 +122,21 @@ being called with a partial DOM impersonation.
 
 ## Reports
 
+For content inserted into an existing document, use `parseFragment` or
+`parseFragmentWithReport` (static or instance methods). These return a readonly
+array of validated block nodes rather than a top-level document. A comment-only
+fragment returns no nodes and reports the omitted comment; it does not manufacture
+an editable blank paragraph. Explicit empty paragraphs remain present. Input
+bounds, URL policy and conversion-loss categories are shared with whole-document
+import. `parse` / `parseWithReport` retain their existing empty-document caret
+paragraph and root-schema validation.
+
+```ts
+const { nodes, issues } = ServerHTMLImporter.parseFragmentWithReport(source, schema)
+// Insert using the receiving editor's normal schema-validated transaction.
+// An empty array is a successful empty projection, not a conversion failure.
+```
+
 Use `parseWithReport` when a conversion pipeline must account for parser
 recovery, browser-only extension rules, or failed custom-rule projections:
 

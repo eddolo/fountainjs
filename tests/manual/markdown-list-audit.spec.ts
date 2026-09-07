@@ -489,6 +489,41 @@ test('structured table cells survive real copy, editing, and server HTML re-impo
   expect(errors).toEqual([]);
 });
 
+test('comment-only HTML does not create editable blank paragraphs during conversion', async ({ page, context }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('# Review note\n\nBefore\n\n<!-- internal separator -->\n\nAfter');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  const output = page.locator('.demo-output');
+  await expect(async () => expect(JSON.parse(await output.locator('pre').innerText()).content).toHaveLength(3)).toPass();
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator(':scope > p')).toHaveCount(2);
+  await editor.getByText('Before', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await expect(editor.locator(':scope > p')).toHaveCount(3);
+  await page.keyboard.type('Author-added paragraph');
+  await expect(editor).toContainText('Author-added paragraph');
+  await capture(page, info, 'html-comment-fragment-edited');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('Author-added paragraph');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator(':scope > p')).toHaveCount(2);
+  await capture(page, info, 'html-comment-fragment-restored');
+  expect(errors).toEqual([]);
+});
+
 test('opt-in HTML block conversion becomes editable content and survives canonical export', async ({ page, context }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

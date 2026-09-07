@@ -1,4 +1,5 @@
 import { Mark, Node, type Schema } from '../schema';
+import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
@@ -45,13 +46,14 @@ export interface MarkdownImportOptions {
   readonly texMathEnvironments?: boolean;
   /**
    * Optional synchronous, deterministic HTML-to-schema adapter for raw HTML
-   * blocks only. Return a document from this schema, or null to keep literal
+   * blocks only. Return a document or readonly block array from this schema,
+   * including an empty array for no visible content, or null to keep literal
    * source. The adapter owns HTML sanitization and conversion-loss reporting;
    * schema validation alone is not an HTML sanitizer. No parser is bundled
    * into the core. Fountain's explicit dialect is unchanged.
    * Source capture may invoke the adapter again to verify block provenance.
    */
-  readonly parseHTMLBlock?: (html: string, schema: Schema) => Node | null;
+  readonly parseHTMLBlock?: (html: string, schema: Schema) => Node | readonly Node[] | null;
   /** Called when a block is retained literally because its adapter failed or declined. */
   readonly onHTMLBlockFallback?: (issue: MarkdownHTMLBlockFallback) => void;
   /**
@@ -1638,6 +1640,18 @@ function projectHTMLBlock(html: string, schema: Schema, options: MarkdownImportO
   try {
     const document = options.parseHTMLBlock(html, schema);
     if (document !== null) {
+      if (Array.isArray(document)) {
+        for (const node of document) {
+          if (!(node instanceof Node) || node.type.isInline || node.type === schema.topNodeType) {
+            throw new TypeError('HTML block adapter fragments must contain only schema block nodes.');
+          }
+          schema.validate(node);
+        }
+        if (document.length && !matchesContentExpression(document, schema.topNodeType.spec.content ?? '')) {
+          throw new TypeError('HTML block adapter fragment does not match document content.');
+        }
+        return document;
+      }
       if (!(document instanceof Node) || document.type !== schema.topNodeType) {
         throw new TypeError('HTML block adapter must return a document from the supplied schema.');
       }

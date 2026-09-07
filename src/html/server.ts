@@ -83,6 +83,12 @@ export interface ServerHTMLInlineImportResult {
   readonly issues: readonly ServerHTMLImportIssue[];
 }
 
+/** Converted blocks without the caret paragraph required by an empty document. */
+export interface ServerHTMLFragmentImportResult {
+  readonly nodes: readonly FountainNode[];
+  readonly issues: readonly ServerHTMLImportIssue[];
+}
+
 export class HTMLImportLimitError extends RangeError {
   readonly limit: keyof Required<ServerHTMLImporterOptions>;
 
@@ -1197,6 +1203,20 @@ export class ServerHTMLImporter {
   }
 
   parseWithReport(html: string, schema: Schema): ServerHTMLImportResult {
+    const result = this.parseFragmentWithReport(html, schema);
+    const document = schema.topNodeType.create(
+      {},
+      result.nodes.length ? result.nodes : [schema.node('paragraph', {}, [schema.text('')])],
+    );
+    schema.validate(document);
+    return Object.freeze({ document, issues: result.issues });
+  }
+
+  parseFragment(html: string, schema: Schema): readonly FountainNode[] {
+    return this.parseFragmentWithReport(html, schema).nodes;
+  }
+
+  parseFragmentWithReport(html: string, schema: Schema): ServerHTMLFragmentImportResult {
     if (typeof html !== 'string') throw new TypeError('HTML input must be a string.');
     const inputBytes = utf8Length(html);
     if (inputBytes > this.options.maxInputBytes) {
@@ -1221,12 +1241,20 @@ export class ServerHTMLImporter {
     if (!blocks.length && root.textContent) {
       blocks.push(schema.node('paragraph', {}, [schema.text(root.textContent)]));
     }
-    const document = schema.topNodeType.create(
-      {},
-      blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])],
-    );
-    schema.validate(document);
-    return Object.freeze({ document, issues: Object.freeze([...issues]) });
+    blocks.forEach(node => schema.validate(node));
+    return Object.freeze({ nodes: Object.freeze(blocks), issues: Object.freeze([...issues]) });
+  }
+
+  static parseFragment(html: string, schema: Schema, options: ServerHTMLImporterOptions = {}): readonly FountainNode[] {
+    return new ServerHTMLImporter(options).parseFragment(html, schema);
+  }
+
+  static parseFragmentWithReport(
+    html: string,
+    schema: Schema,
+    options: ServerHTMLImporterOptions = {},
+  ): ServerHTMLFragmentImportResult {
+    return new ServerHTMLImporter(options).parseFragmentWithReport(html, schema);
   }
 
   static parse(html: string, schema: Schema, options: ServerHTMLImporterOptions = {}): FountainNode {

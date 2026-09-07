@@ -6393,6 +6393,18 @@ test('exports rich tables as HTML Markdown and exposes the compatibility note', 
   await expect.poll(async () => JSON.parse(await output.locator('pre').innerText())).toEqual(original);
 });
 
+test('HTML comments do not insert phantom paragraphs in converted Markdown', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('Before\n\n<!-- internal note -->\n\nAfter');
+  const output = page.locator('.demo-output pre');
+  await expect(output).toContainText('internal note');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(async () => expect(JSON.parse(await output.innerText()).content).toHaveLength(2)).toPass();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('comment');
+  await page.getByLabel('Markdown input', { exact: true }).fill('Before\n\n<!-- internal note -->\n\n<p data-fountain-empty="block"></p>\n\nAfter');
+  await expect(async () => expect(JSON.parse(await output.innerText()).content).toHaveLength(3)).toPass();
+});
+
 test('converts raw HTML blocks only when the headless demo option is enabled', async ({ page }) => {
   await page.goto('/demos/node-markdown.html');
   await page.getByLabel('Markdown input', { exact: true }).fill('<div><h2>Imported title</h2><p><strong>Owner</strong> &amp; *literal*</p><a href="javascript:alert(1)">Unsafe</a></div>');

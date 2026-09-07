@@ -4,6 +4,12 @@
 
 ### Added
 
+- Server HTML `parseFragment` / `parseFragmentWithReport` return validated block
+  arrays without adding a standalone document's empty caret paragraph. Markdown's
+  optional HTML-block adapter accepts these arrays (including empty arrays), so
+  comment-only HTML no longer inserts phantom paragraphs in the conversion demo.
+  Existing document-returning adapters and default inert HTML remain unchanged.
+
 - Optional `fountainjs-editor/angular` entry with injection-scoped
   `createFountain`, signal-based `fountainState`, and standalone
   `FountainEditorDirective`. Angular 22 remains an external optional peer;
