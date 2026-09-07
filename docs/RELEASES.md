@@ -85,6 +85,14 @@ A release is eligible for npm staging only when all of the following are true:
     against the pinned real Lean toolchain; mocked provider tests alone are not
     release evidence.
 
+Normal push/PR CI runs every constituent of `pnpm check`, including public API
+snapshot review, Node/Worker smoke tests and the independent math-reference
+oracle. `tests/release.test.ts` guards this command coverage against drift when
+the local gate grows. Bun/Deno, browser, real Lean and package-consumer checks
+remain additional jobs/steps. Command coverage is not evidence that an individual
+gate adequately tests its claimed behavior, and the math oracle is not visual
+rendering or whole-paper fidelity certification.
+
 `scripts/check-release.mjs` enforces items 1 and 2. The GitHub Publish npm
 workflow runs it from a published release event before the complete package
 gate. The workflow uses npm trusted publishing/OIDC, stages the package with

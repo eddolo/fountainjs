@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Normal push/PR CI now includes the API snapshot, Node/Worker smoke tests and
+  independent math-reference checks already required locally and for releases.
+  A regression test guards coverage of every constituent of `pnpm check`.
+
 - Markdown source snapshots retain standalone root reference definitions after
   unrelated edits and block moves/deletions, including their duplicate-definition
   precedence. Container definitions and ambiguous boundaries still fall

@@ -1,10 +1,23 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 describe('release metadata gate', () => {
+  it('keeps normal CI verification aligned with every local package gate', () => {
+    const manifest = JSON.parse(readFileSync('package.json', 'utf8'));
+    const workflow = readFileSync('.github/workflows/ci.yml', 'utf8');
+    const verify = workflow.split(/^  verify:\s*$/m)[1]?.split(/^  [\w-]+:\s*$/m)[0];
+    expect(verify, 'The normal CI verify job must exist').toBeTruthy();
+    const commands = [...verify!.matchAll(/^      - run: (.+)$/gm)]
+      .map(match => match[1].trim());
+    const required = manifest.scripts.check.split(' && ') as string[];
+    expect(required.length).toBeGreaterThan(0);
+    const missing = commands.includes('pnpm check') ? [] : required.filter(command => !commands.includes(command));
+    expect(missing, 'Normal CI must run pnpm check or every constituent gate').toEqual([]);
+  });
+
   it('accepts the worktree package metadata outside a tagged release', () => {
     expect(execFileSync(process.execPath, ['scripts/check-release.mjs'], { encoding: 'utf8' }))
       .toContain('Release metadata verified');
