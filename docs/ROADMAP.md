@@ -28,6 +28,14 @@ documentation. Fountain may provide replaceable contracts while the host owns
 accounts, authorization, storage, or transport, but a visual role switch is not
 evidence that those security boundaries exist.
 
+Real-document acceptance (2026-09-07): reproduce openly licensed academic papers
+and native Lean proof workflows as editable documents, with recorded user edits,
+independent all-page export inspection, and explicit differences against the
+original domain tools. This is required evidence, not a future cosmetic demo.
+The first paper preflight already finds missing display-equation and TeX-table
+import, despite exact untouched-source preservation. See the open
+[reference-document benchmark and pinned sources](REFERENCE_DOCUMENT_AUDIT.md).
+
 Demand claims submitted on **2026-09-04** are recorded here as research leads.
 Before priority is justified publicly, the original Tiptap/ProseMirror issue or
 discussion must be linked, dated, checked for current status, and translated

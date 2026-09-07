@@ -31,6 +31,12 @@ cases. The development-only reference parser must first reproduce all 652
 official outputs; it is not bundled into Fountain's runtime. This is separate
 from full opt-in conversion conformance and does not promote pending cases.
 
+Academic document parity is additionally subject to the open
+[real-document reproduction benchmark](REFERENCE_DOCUMENT_AUDIT.md). Delivered
+math/Lean primitives do not claim full TeX-paper layout, bibliography, or native
+Lean IDE parity. The first real-paper preflight fails display-equation and
+LaTeX-table import; whole-document visual/export reproduction remains unverified.
+
 Primary comparison references:
 
 - [Tiptap editor overview](https://tiptap.dev/docs/editor/getting-started/overview)
