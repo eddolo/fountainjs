@@ -76,6 +76,17 @@ const schema = new Schema(composeExtensions([
 ]).schema);
 
 describe('DOM-free server HTML import', () => {
+  it('retains table caption blocks in pure Node, including within cells', () => {
+    expect(typeof globalThis.document).toBe('undefined');
+    const result = ServerHTMLImporter.parseWithReport('<table><caption><strong>Outer</strong></caption><tr><td><table><caption>Inner</caption><tr><td>Data</td></tr></table></td></tr></table>', schema);
+    expect(result.document.content.map(node => node.type.name)).toEqual(['paragraph', 'table']);
+    expect(result.document.child(0).child(0).marks[0].type.name).toBe('strong');
+    const cell = result.document.child(1).child(0).child(0);
+    expect(cell.content.map(node => node.type.name)).toEqual(['paragraph', 'table']);
+    expect(cell.child(0).textContent).toBe('Inner');
+    expect(result.issues.filter(issue => issue.message.includes('caption association'))).toHaveLength(1);
+  });
+
   it('retains a mixed figure in pure Node and reports the lost figure grouping', () => {
     expect(typeof globalThis.document).toBe('undefined');
     const result = ServerHTMLImporter.parseWithReport('<figure><h2>Evidence</h2><img src="/sample.png"><p>Measured result</p><figcaption><em>Caption</em></figcaption></figure>', schema);

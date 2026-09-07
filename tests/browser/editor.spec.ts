@@ -5026,6 +5026,23 @@ test('makes the quote control discoverable and toggles an existing quote in the 
   await expect(editor.locator(':scope > blockquote')).toContainText('Portable content can travel');
 });
 
+test('retains table captions and reports their projected association in the conversion demo', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('<table><caption>Trial <strong>results</strong></caption><tr><th>Sample</th><th>Result</th></tr><tr><td>A</td><td>42</td></tr></table>');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('caption association');
+  const output = page.locator('.demo-output');
+  const original = JSON.parse(await output.locator('pre').innerText());
+  expect(original.content.map((node: { type: string }) => node.type)).toEqual(['paragraph', 'table']);
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('<p>Trial <strong>results</strong></p>');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  await expect.poll(async () => JSON.parse(await output.locator('pre').innerText())).toEqual(original);
+});
+
 test('preserves complex figure content in the public Markdown conversion demo', async ({ page }) => {
   await page.goto('/demos/node-markdown.html');
   const source = '<figure><p>Before</p><img src="/demo-media.svg" alt="Diagram"><p>After</p><figcaption><strong>Evidence</strong></figcaption></figure>';

@@ -5,6 +5,13 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Table-caption import repair (2026-09-07): browser and server HTML import preserve
+caption content as editable blocks before the table, including rich text,
+multiple/empty paragraphs and nested-table captions. The server report explicitly
+discloses lost caption association/placement/attributes. This prevents silent
+loss through paste and optional Markdown HTML conversion; it does not complete
+native table-caption authoring, semantics or bottom-caption layout.
+
 HTML figure retention (2026-09-07): browser and server conversion no longer
 extract only images while silently dropping a figure's other content. Simple
 media/plain-caption shapes stay attached; complex figures retain supported

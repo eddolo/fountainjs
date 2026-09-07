@@ -575,6 +575,10 @@ function block(element: Element, schema: Schema): FountainNode[] {
     return image ? [image] : fallback();
   }
   if (tag === 'table') {
+    const captions = Array.from(element.querySelectorAll(':scope > caption')).flatMap(caption => {
+      const blocks = blockChildren(caption as HTMLElement, schema);
+      return blocks.length ? blocks : [paragraph(caption, schema)];
+    });
     const rows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr')).map((row) => schema.node('table_row', {},
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, Number(cell.getAttribute('colspan')) || 1));
@@ -592,7 +596,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
         );
       }),
     ));
-    return rows.length ? [schema.node('table', {}, rows)] : [];
+    return [...captions, ...rows.length ? [schema.node('table', {}, rows)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element as HTMLImageElement, schema, 'image_super');

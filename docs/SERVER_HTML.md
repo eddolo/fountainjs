@@ -146,8 +146,9 @@ Issue codes are:
   reported as an error; `null`/`undefined` retain their default-attribute meaning;
 - `unmapped-block-wrapper`: an unrecognized block wrapper was discarded while
   importing its descendants. Its identity, attributes, and behavior did not
-  become an equivalent custom Fountain node. This is one aggregate note per
-  import, not a node-by-node loss inventory; it contains no source payload;
+  become an equivalent custom Fountain node. Figure and table-caption projections
+  give specific reasons in the same category. Notes aggregate by reason, not by
+  source element; this is not a node-by-node inventory and contains no source payload;
 - `unmapped-inline-element`: inline HTML without an accepted node/format mapping
   was removed while retaining its readable descendants. This includes empty
   custom media tags and formatting missing from the receiving schema;
@@ -270,6 +271,23 @@ The enforced production benchmark parses 10,000 representative paragraphs
 node policy. The current development baseline is recorded in
 [PERFORMANCE.md](PERFORMANCE.md); CI enforces absolute p95, near-linear growth,
 and retained-document heap ceilings.
+
+## Table caption content retention
+
+The current table schema accepts rows, not a native caption child. Imported HTML
+`caption` content is therefore retained as editable blocks immediately before
+its table. Rich text, links, multiple paragraphs and authored empty paragraphs
+survive; nested-table captions stay within their surrounding cell. A caption is
+still retained when its table has no rows. Only direct captions are collected,
+so a nested table's caption is not duplicated outside its cell.
+
+The server report emits `unmapped-block-wrapper` with a caption-specific message:
+caption association, placement and attributes were not preserved. This is not
+native table-caption support and does not reproduce CSS `caption-side: bottom`.
+It repairs silent content loss without altering table row indexing or schema.
+The browser importer applies the same content projection on paste. Markdown's
+optional HTML adapter retains original source independently of that projection;
+canonical export preserves the resulting blocks, not the original caption tag.
 
 ## Figure content retention
 

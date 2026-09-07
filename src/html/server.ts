@@ -1025,6 +1025,11 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
     return image ? [image] : fallback();
   }
   if (tag === 'table') {
+    const captions = element.querySelectorAll(':scope > caption').flatMap(caption => {
+      reportOnce(context, { code: 'unmapped-block-wrapper', message: 'Table captions were retained as editable blocks before the table; caption association, placement and attributes were not preserved.' });
+      const blocks = blockChildren(caption, schema, context);
+      return blocks.length ? blocks : [paragraph(caption, schema, context)];
+    });
     const rows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr').map((row) => schema.node(
       'table_row',
       {},
@@ -1044,7 +1049,7 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
         );
       }),
     ));
-    return rows.length ? [schema.node('table', {}, rows)] : [];
+    return [...captions, ...rows.length ? [schema.node('table', {}, rows)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element, schema, 'image_super', context);

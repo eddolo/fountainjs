@@ -34,6 +34,43 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('table captions remain readable and editable through real paste and Markdown reopen', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const source = '<h2>Measurement report</h2><table><caption>Trial <strong>results</strong> — <a href="/method">method notes</a></caption><tr><th>Sample</th><th>Result</th></tr><tr><td>A</td><td>42</td></tr></table><p>All samples were measured twice.</p>';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('caption association');
+  await capture(page, info, '35-table-caption-conversion-warning');
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), source);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('h2')).toHaveText('Measurement report');
+  await expect(editor.locator('strong')).toHaveText('results');
+  await expect(editor.getByRole('link', { name: 'method notes' })).toBeVisible();
+  await expect(editor.locator('table')).toHaveCount(1);
+  await expect(editor.locator('td').last()).toHaveText('42');
+  await editor.locator('strong').dblclick();
+  await page.keyboard.type('outcomes');
+  await expect(editor.locator('strong')).toHaveText('outcomes');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator('strong')).toHaveText('results');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor.locator('strong')).toHaveText('outcomes');
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '36-table-caption-edit-and-undo');
+  const output = page.locator('.demo-output');
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+});
+
 test('complex figures keep evidence and rich captions through conversion paste editing and reopen', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const source = '<figure><h2>Experiment evidence</h2><p>Before the diagram.</p><img src="/demo-media.svg" alt="Evidence diagram" width="320"><p>Measured result: 42.</p><figcaption><strong>Important</strong> <a href="/evidence">method notes</a></figcaption></figure>';

@@ -406,6 +406,37 @@ an initial standards-oriented set of behaviors:
 The exporter chooses a code fence longer than any matching marker run in its
 content, preventing a literal triple-backtick line from closing the block.
 
+## Table captions through optional HTML conversion
+
+HTML table captions are no longer silently discarded by the browser/server
+importers. Their supported content becomes editable blocks before the table;
+rich marks, links, multiple paragraphs and empty paragraphs are preserved.
+Nested captions remain within their containing cell. The optional Markdown
+HTML-block adapter inherits this behavior, while default inert HTML is unchanged.
+
+The current table schema has no native caption child, so the report explicitly
+identifies lost caption association, placement and attributes. In particular,
+this does not reproduce bottom-caption CSS or add a native caption command.
+Exact-source export can retain the original HTML; canonical export preserves
+the projected blocks, not the caption tag. See [the server contract](SERVER_HTML.md#table-caption-content-retention).
+
+The recorded workflow in `artifacts/manual-table-caption-20260907a/` pastes an
+actual HTML table through the OS clipboard, edits marked caption text,
+undoes/redoes and exports/re-imports Markdown. The conversion warning and edited
+caption/table screenshots were visually inspected. The public conversion check
+also passed Chromium, Firefox and WebKit in
+`artifacts/table-caption-engines-20260907a/`.
+
+The complete local check passed 1,095 tests in 96 files, including ten caption
+regression cases plus a pure-Node nested-caption case. Package/API, server and
+headless runtimes, conformance and unchanged performance checks passed. Aggregate
+runtime size is 1347.9 KiB ESM / 1124.2 KiB CJS; only the CJS aggregate ceiling
+increased by 1 KiB. No public API, dependency or table schema changed. CommonMark
+remains 563 matching / 72 pending / 17 intentional; caption recovery is not a
+claim of complete conversion or native table-caption support.
+The production website build also passed, retaining the existing large MathJax
+reference-page chunk warning.
+
 ## Complex figures through optional HTML conversion
 
 The browser and server HTML importers now preserve supported figure descendants

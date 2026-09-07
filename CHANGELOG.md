@@ -4,6 +4,11 @@
 
 ### Fixed
 
+- Browser/server HTML imports retain table caption content, rich marks, links
+  and paragraphs instead of silently discarding them. Captions become editable
+  blocks before the table, with a server warning for lost caption association,
+  placement and attributes; native table-caption support is not claimed.
+
 - DOCX nested quotes/list items now traverse blocks rather than flattening
   tables/equations. Aligned quotes use a single paragraph-properties element;
   continuation paragraphs do not each receive a fresh list marker. Unsupported

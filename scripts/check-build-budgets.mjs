@@ -324,7 +324,9 @@ const limits = Object.freeze({
   // CJS (1109.2 KiB total). Individual entries, ESM and CSS caps stay fixed.
   // Figure retention and canonical attachment-preview recognition add
   // ~1.2 KiB CJS (1123.8 KiB total). Individual entries and performance are unchanged.
-  'all CommonJS runtime code': 1124 * kibibyte,
+  // Direct table-caption content retention adds ~0.4 KiB CJS (1124.2 total).
+  // ESM remains within 1348 KiB; individual entries and performance stay fixed.
+  'all CommonJS runtime code': 1125 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
