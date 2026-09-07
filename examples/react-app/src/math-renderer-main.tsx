@@ -28,7 +28,7 @@ function MathRendererLab() {
       onRenderError(error) { setFailure(error instanceof Error ? error.message : 'The renderer rejected this formula.'); },
     })]);
     const next = createEditor({ schema: kit.schema, plugins: kit.plugins });
-    const view = new EditorView(mount.current!, next, { ariaLabel: 'Math renderer editor' });
+    const view = new EditorView(mount.current!, next, { ariaLabel: 'Math renderer editor', blockHandles: true });
     const unsubscribe = next.subscribe(state => setDocumentNode(state.doc));
     setEditor(next);
     load(next, 0);
@@ -37,7 +37,7 @@ function MathRendererLab() {
 
   function load(target: Editor, index: number) {
     const schema = target.state.schema;
-    const source = index === 3 ? academicTableSource : mathReferenceSamples[index].source;
+    const source = index === 4 ? '$$\nx=1\n$$\n\n$$\ny=2\n$$' : index === 3 ? academicTableSource : mathReferenceSamples[index].source;
     const issues: string[] = [];
     const math = index === 0
       ? [schema.node('math_block', { latex: source, ariaLabel: '' })]
@@ -67,11 +67,12 @@ function MathRendererLab() {
     </section>
     <section className="math-lab__workspace" aria-label="Live math renderer">
       <div className="math-lab__controls">
-        <label>Reference sample <select value={sample} onChange={event => setSample(Number(event.target.value))}>{mathReferenceSamples.map((item, index) => <option value={index} key={item.label}>{item.label}</option>)}<option value={3}>Published performance table</option></select></label>
+        <label>Reference sample <select value={sample} onChange={event => setSample(Number(event.target.value))}>{mathReferenceSamples.map((item, index) => <option value={index} key={item.label}>{item.label}</option>)}<option value={3}>Published performance table</option><option value={4}>Two equations — reorder and edit</option></select></label>
         <button disabled={!editor} onClick={() => editor && load(editor, sample)}>Load sample (replaces editor)</button>
         <button disabled={!editor} onClick={() => editor && undo(editor)}>Undo</button>
         <button disabled={!editor} onClick={() => editor && redo(editor)}>Redo</button>
       </div>
+      <p>To move a formula, hover it to reveal its block handle and movement controls. Moving it keeps its source editable in its new position.</p>
       <div className={failure ? 'math-lab__status math-lab__status--error' : 'math-lab__status'} role="status">Most recent formula render: {failure ? `Source fallback — ${failure}` : 'Typeset view ready. This reports rendering, not mathematical proof or paper fidelity.'}</div>
       {importIssues.length > 0 && <aside className="math-lab__status math-lab__status--error" aria-label="TeX import diagnostics"><h2>Import differences</h2><ul>{importIssues.map(message => <li key={message}>{message}</li>)}</ul><p>Cells are editable; this is a structural projection, not a matching TeX layout. Markdown export is a conversion, not a .tex round trip.</p></aside>}
       <div ref={mount} />

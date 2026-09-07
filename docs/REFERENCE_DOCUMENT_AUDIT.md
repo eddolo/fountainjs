@@ -231,9 +231,10 @@ forward-reference recompile pass. See the official
 This is a semantic oracle only: no pixel/layout comparison or Fountain-renderer
 parity is certified by its passing assertions.
 
-The next implementation must address both existing boundaries:
+The initial investigation identified two integration boundaries (now addressed
+by the document-context API described below):
 
-1. `src/extensions/math.ts` currently calls a renderer with one TeX string,
+1. `src/extensions/math.ts` previously called a renderer with one TeX string,
    display mode and browser document, without a complete Fountain document or
    stable per-node lookup. Keep this lightweight mode, but add an opt-in
    document-aware compilation path with labels/diagnostics and snapshot identity.
@@ -255,6 +256,59 @@ paper preflight also passed all eight structural/source checks. No runtime API,
 browser behavior, bundle ceiling or performance threshold changed in this step.
 The preceding table-import commit's GitHub CI and Playground deployment were
 both confirmed successful before this reference-only increment.
+
+### Document-context boundary implemented; visual label adapter still pending
+
+`createMathExtension({ documentRenderer })` now exposes the immutable complete
+model document, exact current node, frozen path, display mode, owner DOM document
+and per-view scope. The existing lightweight renderer remains supported and no
+MathJax code is added to the runtime. Custom NodeViews can opt into
+`updateDocument`, called after DOM/path reconciliation even when their own node
+is unchanged. Failed hooks report errors without disconnecting mutation
+observation or preventing the remaining views from refreshing.
+
+The actual MathJax compiler is exercised through this boundary in
+`tests/math-document-context.test.ts`: original source, forward references,
+move/undo/redo renumbering, deleted targets, independent editor scopes,
+error/recovery, one compile per snapshot, no selection-only compile, and active
+multiline textarea/caret preservation. Its DOM output is deliberately a semantic
+test projection, **not a typesetting or visual-fidelity implementation**.
+
+That regression exposed and fixed a broader reuse bug: DOM reconciliation follows
+immutable block identity, while NodeView reuse could follow delete/insert position
+mapping and associate a moved DOM block with another block's `getPath` closure.
+`src/view/view.ts` now prioritizes the same immutable identity matching as the DOM
+reconciler, including deletion and virtualization. Five generic NodeView tests
+cover identity, source targeting, notification failures and observation recovery.
+
+The public KaTeX lab now includes a two-equation reorder/edit sample and visible
+block controls. The recorded user journey moves `y=2` before `x=1`, edits only the
+moved equation to `y=3`, undoes/redoes both operations and checks Markdown source
+order. Visual inspection caught mobile controls overlapping the source field;
+the lab now reserves a gutter, with an explicit non-overlap assertion. Final
+Chromium recording/screenshots/trace are under
+`artifacts/manual-math-context-20260907c/results/`; screenshots of the desktop
+move, export and corrected narrow editor were inspected.
+
+`pnpm check` passed all 954 tests in 87 files and existing non-browser gates.
+Measured runtime size is 1328.7 KiB ESM / 1108.2 KiB CJS, approximately +1.9 / +1.4
+KiB for document-context refresh and identity-consistent reuse. Aggregate caps
+are 1329 / 1109 KiB; individual entries, CSS and performance caps remain fixed.
+
+The focused browser suite passed 12/12 serially across Chromium, Firefox and
+WebKit: moved math source, nested block reordering, native math insertion and
+published table editing. Evidence is in
+`artifacts/browser-math-context-20260907c/results/`. An earlier run had a Chromium
+navigation timeout before opening the lab; that case passed separately and the
+complete 12-case run then passed without retries. Production site build and
+TypeScript checking also passed.
+
+**Still pending:** a real document-aware visual renderer with namespaced anchors,
+visible missing/duplicate-label diagnostics and recorded cross-reference edits;
+shared reader/export rendering; asynchronous-resource policy and whole-paper
+PDF/DOCX comparison. The public KaTeX lab still rejects the original equation
+labels. Passing context/semantic tests must not be promoted to full reference or
+paper parity.
 
 ## Lean reference track
 

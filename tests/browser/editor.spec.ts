@@ -2,6 +2,11 @@ import { expect, test, type Locator } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
+import { mathReorderJourney } from './math-reorder-journey';
+
+test('keeps moved math source attached to its formula through native editing, undo, and export', async ({ page }, info) => {
+  await mathReorderJourney(page, info);
+});
 
 test('imports the published TeX table with visible losses and editable numeric values', async ({ page }) => {
   await page.goto('/math-renderer.html');

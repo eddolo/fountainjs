@@ -622,6 +622,37 @@ red pseudo-rendered result. A caller may explicitly override `throwOnError` for
 its own syntax-error display policy, but cannot override the trust denial.
 KaTeX is not loaded by the FountainJS core.
 
+For document-level dependencies such as equation labels, opt into
+`createMathExtension({ documentRenderer, onRenderError })` instead. The synchronous
+`MathDocumentRenderer` receives the same source plus a `MathDocumentRenderContext`:
+
+- `document`: the output DOM's owner document; create returned DOM in this realm.
+- `displayMode`: display equation versus inline math.
+- `modelDocument`: the complete immutable Fountain document snapshot, including
+  blocks outside a virtualized viewport.
+- `node` and frozen `path`: the current math node and its reconciled model path.
+- `scope`: a stable, transient identity for this editor view. Use a weak cache
+  keyed by scope and snapshot; namespace output anchors per scope. Neither scope
+  nor compiled output belongs in persisted document JSON.
+
+Unchanged mounted math nodes refresh when the document changes elsewhere; source
+textareas retain their identity and active native selection. Selection-only
+changes do not require recompilation. A host can batch-compile once per snapshot
+and retrieve each node's result from that cache. Implement invalidation and
+resource limits in the host compiler; a full-document compile on every keystroke
+is not a large-document performance guarantee. This callback does not await
+promises or install MathJax, resolve labels, execute TeX, or provide an export
+renderer automatically. Errors retain editable source through `onRenderError`.
+Specifying both `renderer` and `documentRenderer` is rejected.
+
+Custom NodeViews may independently implement `updateDocument(documentNode)`.
+EditorView invokes it after DOM/path reconciliation, including equal reused
+nodes, once per mounted view/document identity. The hook must be synchronous and
+must not dispatch a transaction. Hook errors are reported through
+`EditorViewOptions.onError` (console error by default) after other views are
+notified and mutation observation is restored. Existing `update(node)` behavior
+is unchanged; views without the new hook need not do document-context work.
+
 ```ts
 import katex from 'katex'
 
@@ -636,6 +667,13 @@ const kit = composeExtensions([...StarterKit.extensions, math])
 `plain` is the neutral default, so a coloured container is never required.
 Set `inputRules: false` or `pasteRules: false` when the host wants commands
 without delimiter conversion. `MAX_MATH_SOURCE_LENGTH` exposes the validation limit.
+
+The [math renderer lab](https://eddolo.github.io/fountainjs/math-renderer.html)
+includes a **Two equations — reorder and edit** sample. It uses ordinary KaTeX
+rendering with `EditorView`'s `blockHandles: true`, not document-aware label
+rendering. Hover a formula, use its movement controls, edit the moved source,
+then inspect undo/redo and Markdown output. The mobile layout reserves a gutter
+so those controls do not obscure the source field.
 
 ### Lean extension and controller
 

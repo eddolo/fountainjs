@@ -4,6 +4,14 @@
 
 ### Added
 
+- Opt-in document-aware math renderer context and post-reconciliation NodeView
+  document notifications, without adding a runtime math dependency. Real MathJax
+  semantic tests cover forward references, reorder/undo/redo, deleted targets,
+  isolated scopes and error recovery. A finished visual label/reference adapter
+  and matching reader/export rendering remain pending.
+- Two-equation reorder/edit sample in the math renderer lab, with recorded
+  source-editing, history and Markdown-export checks and a mobile control gutter.
+
 - Development-only MathJax 4.1.3 reference checks for the original paper's
   numbered equations, suppressed rows, forward/backward references, reordering,
   deleted targets, duplicate labels and manual tags. Source hashes and runtime
@@ -66,6 +74,12 @@
   projection, not complete CommonMark HTML conformance or lossless conversion.
 
 ### Fixed
+
+- Reused custom block views now follow the same immutable block identity as DOM
+  reconciliation after moves and deletions. Previously a moved DOM subtree could
+  retain another block's live path, targeting the wrong source on later edits.
+- Document-context hook errors no longer prevent other views from refreshing or
+  leave the mutation observer disconnected.
 
 - The KaTeX adapter now defaults to thrown syntax errors, so unsupported input
   reaches the existing editable-source fallback and error callback. An

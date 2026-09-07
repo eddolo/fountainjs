@@ -93,6 +93,13 @@ export interface NodeViewLike<
   dom: RenderNode;
   contentDOM?: RenderNode;
   update?(node: Node): boolean;
+  /**
+   * Optional synchronous view refresh after paths and DOM are reconciled,
+   * including reused equal nodes. Called once per mounted view/document identity.
+   * Read the supplied snapshot; do not dispatch transactions from this hook.
+   * DOM views report failures through EditorViewOptions.onError.
+   */
+  updateDocument?(document: Node): void;
   selectNode?(): void;
   deselectNode?(): void;
   stopEvent?(event: ViewEvent): boolean;

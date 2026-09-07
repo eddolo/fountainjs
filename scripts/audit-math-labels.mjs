@@ -80,7 +80,7 @@ for (const source of [String.raw`\input{private-file}`, String.raw`\require{html
 }
 console.log(JSON.stringify({
   renderer: `MathJax ${mathjax.version}`, status: 'reference-semantics-verified',
-  fountainStatus: 'document-aware rendering/numbering/references remain unimplemented',
+  fountainStatus: 'document-context API implemented; visual numbering/reference adapter and export parity remain pending',
   equations: original.slice(0, 2).map(item => ({
     sha256: createHash('sha256').update(item.source).digest('hex'), tags: item.tags,
     ...(process.argv.includes('--mathml') ? { mathml: item.mathml } : {}),

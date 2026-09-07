@@ -45,6 +45,16 @@ export interface MathRenderContext {
  */
 export type MathRenderer = (latex: string, context: MathRenderContext) => globalThis.Node;
 
+export interface MathDocumentRenderContext extends MathRenderContext {
+  readonly modelDocument: Node;
+  readonly node: Node;
+  readonly path: readonly number[];
+  /** Stable per-view identity for caches and namespaced rendered anchors. Never persist it. */
+  readonly scope: object;
+}
+
+export type MathDocumentRenderer = (latex: string, context: MathDocumentRenderContext) => globalThis.Node;
+
 export interface KaTeXCompatible {
   render(latex: string, element: HTMLElement, options?: Readonly<Record<string, unknown>>): void;
 }
@@ -74,6 +84,8 @@ export function createKaTeXRenderer(
 export interface MathExtensionOptions {
   /** Optional visual renderer such as `createKaTeXRenderer(katex)`. */
   readonly renderer?: MathRenderer;
+  /** Opt-in document-aware renderer; mutually exclusive with the lightweight renderer. */
+  readonly documentRenderer?: MathDocumentRenderer;
   /** Enables `$...$` and `$$...$$` typing rules. Defaults to true. */
   readonly inputRules?: boolean;
   /** Parses pasted `$...$` and `$$...$$` Markdown as math nodes. Defaults to true. */
@@ -88,6 +100,7 @@ function createMathNodeView(
   renderer?: MathRenderer,
   onRenderError?: MathExtensionOptions['onRenderError'],
   appearance: NonNullable<MathExtensionOptions['appearance']> = 'plain',
+  documentRenderer?: MathDocumentRenderer,
 ): NodeViewConstructor {
   return class MathNodeView implements NodeViewLike {
     readonly dom = document.createElement(displayMode ? 'div' : 'span');
@@ -95,9 +108,16 @@ function createMathNodeView(
     private readonly sourceEditor = document.createElement(displayMode ? 'div' : 'span');
     private readonly sourceInput = document.createElement('textarea');
     private current: Node;
+    private renderedDocument?: Node;
+    readonly updateDocument?: (document: Node) => void;
 
     constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
       this.current = node;
+      if (documentRenderer) this.updateDocument = documentNode => {
+        if (this.renderedDocument === documentNode) return;
+        this.current = getNodeAtPath(documentNode, this.getPath());
+        this.render();
+      };
       this.dom.className = `fountain-math fountain-math--${displayMode ? 'display' : 'inline'}`;
       this.dom.dataset.fountainMath = displayMode ? 'block' : 'inline';
       this.dom.dataset.fountainMathAppearance = appearance;
@@ -127,7 +147,8 @@ function createMathNodeView(
     update(node: Node): boolean {
       if (node.type !== this.current.type) return false;
       this.current = node;
-      this.render();
+      // Document-aware rendering waits for final path reconciliation.
+      if (!documentRenderer) this.render();
       return true;
     }
 
@@ -214,20 +235,29 @@ function createMathNodeView(
       this.dom.setAttribute('aria-label', String(this.current.attrs.ariaLabel || `Math expression: ${latex}`));
       delete this.dom.dataset.fountainMathError;
       try {
-        if (!renderer) throw new Error('No math renderer configured.');
-        const rendered = renderer(latex, { displayMode, document: this.dom.ownerDocument });
+        const context = { displayMode, document: this.dom.ownerDocument };
+        let rendered: globalThis.Node;
+        if (documentRenderer) {
+          const modelDocument = this.editor?.state.doc;
+          if (!modelDocument || !this.view || typeof this.view !== 'object') throw new Error('A document-aware math renderer requires an editor view.');
+          this.renderedDocument = modelDocument;
+          rendered = documentRenderer(latex, { ...context, modelDocument, node: this.current, path: Object.freeze([...this.getPath()]), scope: this.view });
+        } else {
+          if (!renderer) throw new Error('No math renderer configured.');
+          rendered = renderer(latex, context);
+        }
         const NodeConstructor = this.dom.ownerDocument.defaultView?.Node;
         if (!NodeConstructor || !(rendered instanceof NodeConstructor)) {
           throw new TypeError('Math renderers must return a DOM Node.');
         }
         this.output.replaceChildren(rendered);
       } catch (error) {
-        if (renderer) onRenderError?.(error, latex);
+        if (renderer || documentRenderer) onRenderError?.(error, latex);
         const source = this.dom.ownerDocument.createElement('code');
         source.dataset.fountainMathSource = 'true';
         source.textContent = latex;
         this.output.replaceChildren(source);
-        if (renderer) this.dom.dataset.fountainMathError = 'true';
+        if (renderer || documentRenderer) this.dom.dataset.fountainMathError = 'true';
       }
       if (this.sourceInput !== this.dom.ownerDocument.activeElement) this.sourceInput.value = latex;
     }
@@ -235,12 +265,13 @@ function createMathNodeView(
 }
 
 function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; math_block: NodeSpec } {
+  if (options.renderer && options.documentRenderer) throw new TypeError('Choose a lightweight or document-aware math renderer, not both.');
   const appearance = options.appearance ?? 'plain';
   if (!['plain', 'tinted', 'outlined'].includes(appearance)) {
     throw new TypeError(`Unknown math appearance: ${appearance}.`);
   }
-  const InlineMathView = createMathNodeView(false, options.renderer, options.onRenderError, appearance);
-  const MathBlockView = createMathNodeView(true, options.renderer, options.onRenderError, appearance);
+  const InlineMathView = createMathNodeView(false, options.renderer, options.onRenderError, appearance, options.documentRenderer);
+  const MathBlockView = createMathNodeView(true, options.renderer, options.onRenderError, appearance, options.documentRenderer);
   return {
     inline_math: {
       group: 'inline',
@@ -457,7 +488,7 @@ export function createMathExtension(options: MathExtensionOptions = {}): Fountai
     nodes: mathNodeSpecs(options),
     plugins,
     commands: { insertInlineMath, insertMathBlock, setMathSource },
-    services: options.renderer ? { mathRenderer: options.renderer } : {},
+    services: options.documentRenderer ? { mathDocumentRenderer: options.documentRenderer } : options.renderer ? { mathRenderer: options.renderer } : {},
   });
 }
 

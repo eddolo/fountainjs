@@ -11,7 +11,10 @@
 .math-lab details { margin-top: 16px; }
 .math-lab summary { cursor: pointer; font-weight: 600; }
 .math-lab pre { padding: 16px; background: #f2eff8; color: #211c32; white-space: pre-wrap; overflow-wrap: anywhere; }
-@media (max-width: 600px) { .math-lab .fountain-editor { padding: 14px; } }
+@media (max-width: 600px) {
+  /* Reserve a gutter so the floating block controls cannot cover source text. */
+  .math-lab .fountain-editor { padding: 14px 14px 14px 48px; }
+}
 .math-lab { min-height: 100vh; background: #f7f5f0; color: #17152a; font-family: system-ui, sans-serif; }
 body { margin: 0; }
 .math-lab * { box-sizing: border-box; }

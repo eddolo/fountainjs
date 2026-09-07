@@ -5,6 +5,14 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Academic rendering follow-through (2026-09-07): opt-in document-aware math
+context now lets a host refresh dependent views after edits elsewhere, with
+real MathJax semantic tests. This exposed and fixed a moved-block NodeView/path
+mismatch. A recorded two-equation KaTeX workflow checks reorder, edit, history,
+source export and narrow-screen controls. A finished visual numbering/reference
+adapter, shared reader/export rendering and whole-paper fidelity remain open;
+see [the reference audit](REFERENCE_DOCUMENT_AUDIT.md#document-context-boundary-implemented-visual-label-adapter-still-pending).
+
 Markdown follow-through (2026-09-07): the opt-in inline HTML adapter now protects
 Fountain's original parsed nodes while applying surrounding HTML formatting.
 This follows the raw-block adapter and shared strict HTML lexer, rather than

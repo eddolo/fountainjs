@@ -108,6 +108,8 @@ export class EditorView {
   private readonly dropCursor?: DropCursorManager;
   private readonly unsubscribe: () => void;
   private nodeViews: MountedNodeView[] = [];
+  private readonly nodeViewDocuments = new WeakMap<NodeViewLike, Node>();
+  private readonly onError: (error: unknown) => void;
   private documentNodes: MountedDocumentNode[] = [];
   private selectedNodeView?: NodeViewLike;
   private mutationObserver?: MutationObserver;
@@ -126,6 +128,7 @@ export class EditorView {
   private virtualResizeObserver?: ResizeObserver;
 
   constructor(public readonly mount: HTMLElement, public readonly editor: Editor, options: EditorViewOptions = {}) {
+    this.onError = options.onError ?? ((error) => console.error(error));
     this.dom = document.createElement('div');
     this.dom.className = ['fountain-editor', options.className].filter(Boolean).join(' ');
     this.dom.contentEditable = editor.editable ? 'true' : 'false';
@@ -341,6 +344,16 @@ export class EditorView {
       entry.nodeView.destroy?.();
     });
     this.nodeViews = mounted;
+    // Paths and DOM are now reconciled. Context-dependent views must also hear
+    // about changes elsewhere, even when their own immutable node was reused.
+    const contextErrors: unknown[] = [];
+    mounted.forEach(({ nodeView }) => {
+      if (nodeView.updateDocument && this.nodeViewDocuments.get(nodeView) !== document) {
+        this.nodeViewDocuments.set(nodeView, document);
+        try { nodeView.updateDocument(document); }
+        catch (error) { contextErrors.push(error); }
+      }
+    });
     if (
       focusedNodeView
       && retained.has(focusedNodeView.nodeView)
@@ -355,6 +368,9 @@ export class EditorView {
     if (virtualPlan) this.queueVirtualMeasurement();
     this.mutationObserver?.takeRecords();
     this.observeMutations();
+    // A failed host renderer must not disconnect input observation or prevent
+    // other mounted views from receiving the new snapshot.
+    contextErrors.forEach(error => this.onError(error));
   }
 
   private virtualPlan(documentNode: Node): VirtualBlockPlan | undefined {
@@ -591,12 +607,38 @@ export class EditorView {
 
   private reusableNodeViewMap(document: Node, transaction?: Transaction): Map<string, MountedNodeView> {
     const reusable = new Map<string, MountedNodeView>();
+    if (!this.nodeViews.length) return reusable;
+    // Whole-block reconciliation follows immutable identity, not positional
+    // mapping (which may model a move as delete + insert). Match that choice
+    // before considering same-path update fallbacks, or a moved DOM subtree
+    // can acquire another block's NodeView and live getPath callback.
+    const available = new Map<Node, number[]>();
+    this.documentNodes.forEach((entry, index) => {
+      const indexes = available.get(entry.node) ?? [];
+      indexes.push(entry.index ?? index);
+      available.set(entry.node, indexes);
+    });
+    const oldByIndex = new Map(this.documentNodes.map((entry, index) => [entry.index ?? index, entry.node]));
+    const moved = new Map<number, number>();
+    document.content.forEach((node, index) => {
+      const old = oldByIndex.get(index) === node && !moved.has(index)
+        ? index : available.get(node)?.find(candidate => !moved.has(candidate));
+      if (old !== undefined) moved.set(old, index);
+    });
+    const retained = new Set<MountedNodeView>();
+    this.nodeViews.forEach(entry => {
+      const index = moved.get(entry.path[0]);
+      if (index === undefined) return;
+      reusable.set([index, ...entry.path.slice(1)].join('.'), entry);
+      retained.add(entry);
+    });
     this.nodeViews.forEach((entry) => {
+      if (retained.has(entry)) return;
       try {
         let path: readonly number[] | null = entry.path;
         const samePathNode = getNodeAtPath(document, entry.path);
         if (samePathNode === entry.node) {
-          reusable.set(path.join('.'), entry);
+          if (!reusable.has(path.join('.'))) reusable.set(path.join('.'), entry);
           return;
         }
         if (transaction) {
@@ -612,7 +654,7 @@ export class EditorView {
           const candidate = getNodeAtPath(document, path);
           if (candidate.type !== entry.node.type) path = null;
         }
-        if (path) reusable.set(path.join('.'), entry);
+        if (path && !reusable.has(path.join('.'))) reusable.set(path.join('.'), entry);
       } catch { /* A deleted or structurally replaced view is recreated or destroyed. */ }
     });
     return reusable;

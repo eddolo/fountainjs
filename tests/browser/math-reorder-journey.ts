@@ -1,0 +1,44 @@
+import { expect, type Page, type TestInfo } from '@playwright/test';
+
+export async function mathReorderJourney(page: Page, info: TestInfo) {
+  await page.goto('/math-renderer.html');
+  await page.getByLabel('Reference sample').selectOption('4');
+  await page.getByRole('button', { name: 'Load sample (replaces editor)' }).click();
+  const maths = page.locator('[data-fountain-math="block"]');
+  await expect(maths.locator('annotation')).toHaveText(['x=1', 'y=2']);
+  await maths.nth(1).hover();
+  const controls = page.getByRole('toolbar', { name: /Math block controls/i });
+  await controls.getByRole('button', { name: /Move Math block before/i }).click();
+  await expect(maths.locator('annotation')).toHaveText(['y=2', 'x=1']);
+  await maths.first().scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath('01-moved-equation.png') });
+  await maths.first().locator('.fountain-math__output').click();
+  const source = maths.first().getByLabel('Edit math source', { exact: true });
+  await expect(source).toHaveValue('y=2');
+  await source.focus();
+  await source.press('End');
+  await source.press('Backspace');
+  await page.keyboard.type('3');
+  await expect(maths.locator('annotation')).toHaveText(['y=3', 'x=1']);
+  await source.press('Control+Enter');
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(maths.locator('annotation')).toHaveText(['y=2', 'x=1']);
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(maths.locator('annotation')).toHaveText(['x=1', 'y=2']);
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(maths.locator('annotation')).toHaveText(['y=3', 'x=1']);
+  await page.getByText('Markdown export', { exact: true }).click();
+  await expect(page.locator('details').last().locator('pre')).toContainText('$$\ny=3\n$$\n\n$$\nx=1\n$$');
+  await page.locator('details').last().scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath('02-correct-source-export.png') });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await maths.first().scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  const controlBounds = await controls.boundingBox();
+  const inputBounds = await source.boundingBox();
+  expect(controlBounds).not.toBeNull();
+  expect(inputBounds).not.toBeNull();
+  expect(controlBounds!.x + controlBounds!.width).toBeLessThanOrEqual(inputBounds!.x);
+  await page.getByRole('textbox', { name: 'Math renderer editor', exact: true }).screenshot({ path: info.outputPath('03-mobile-reordered-equations.png') });
+}
