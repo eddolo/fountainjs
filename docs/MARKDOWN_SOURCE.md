@@ -16,13 +16,67 @@ structured persistence format.
 
 ## Raw and visual workflow
 
+### Optional raw HTML block conversion
+
+Raw HTML is inert literal text by default. To convert recognized HTML **blocks**
+into editable schema nodes, supply the isolated HTML importer explicitly:
+
+```ts
+import { MarkdownImporter } from 'fountainjs-editor/core'
+import { ServerHTMLImporter } from 'fountainjs-editor/html/server'
+
+// `schema` is the schema already used by your application.
+const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema, {
+  parseHTMLBlock(html, targetSchema) {
+    const result = ServerHTMLImporter.parseWithReport(html, targetSchema)
+    reportHTMLIssues(result.issues)
+    return result.document
+  },
+  onHTMLBlockFallback(issue) {
+    console.warn(issue.reason, issue.message)
+  },
+})
+```
+
+The adapter must be synchronous and deterministic, return a document from the
+supplied schema, and own its URL/security and conversion-loss policies. It may
+return `null` to retain literal source. Exceptions, invalid document structure,
+and foreign-schema results also retain literal source and trigger the fallback
+callback. A schema check is **not** a general HTML sanitizer. Importer-specific
+issues should be handled inside the adapter; `onHTMLBlockFallback` only reports
+an entire block that could not be projected. The server importer can flatten or
+omit unsupported HTML and does not provide an exhaustive HTML fidelity report.
+
+Lists, quotes, disclosures, and footnote bodies propagate the same option.
+Markdown inside an HTML block is not interpreted. Ordinary **inline HTML** is
+unchanged; this hook does not resolve the remaining inline-HTML CommonMark work.
+Fountain's explicit empty-paragraph and styled-text dialects keep their existing
+behavior. Raw block text reaches the adapter with normalized LF line endings and
+its enclosing Markdown container prefixes removed.
+
+Source capture may invoke the adapter again to verify independent block
+provenance; keep it free of mutations/network calls and make reporting tolerant
+of repeated observations. The fallback callback itself is suppressed during
+those verification parses. Multi-node HTML fragments still preserve the complete
+original source when unchanged, but fail closed for ambiguous per-block mapping.
+
+**Source preservation is not sanitization:** `exportWithSource` may return the
+exact original HTML, including content the adapter omitted. Never insert that
+Markdown/source string as live HTML. Render the validated model through the
+appropriate safe output layer and retain normal application trust boundaries.
+
+Try the **Convert HTML blocks to rich content** checkbox in the
+[headless conversion demo](https://eddolo.github.io/fountainjs/demos/node-markdown.html).
+
+### Exact source snapshots
+
 ```ts
 import {
-  CoreSchemaSpec,
   MarkdownExporter,
   MarkdownImporter,
   Schema,
 } from 'fountainjs-editor/core'
+import { CoreSchemaSpec } from 'fountainjs-editor'
 
 const schema = new Schema(CoreSchemaSpec)
 const imported = MarkdownImporter.parseWithSource(rawMarkdown, schema)
@@ -238,6 +292,19 @@ instruction, and arbitrary custom-tag cases must not become executable content
 just to make their reference-rendered HTML match. Empty caret hosts need a
 separate export-policy review; blanket removal of empty paragraphs would erase
 real author-created spacing.
+
+The optional block adapter is now implemented, including nested-container and
+source-snapshot propagation, a default-off public demo control, and a recorded
+HTML-block → rich editing → undo/redo → canonical Markdown → re-import workflow.
+Local validation passed 768 tests in 78 files plus package, server-runtime,
+headless-boundary, API, and performance gates, plus three sequential
+Chromium/Firefox/WebKit demo checks. The recording and visually
+inspected screenshots are under
+`artifacts/manual-markdown-html-projection-20260907a/results/`.
+This does **not** close the larger raw-HTML milestone: inline HTML token/mark
+projection and exhaustive unsupported-element/conversion-loss reporting remain
+open. The default-policy oracle baseline is still 563 matching / 80 pending /
+nine intentional differences.
 
 The first raw-HTML boundary implementation now supplies all seven lexical
 start/end classifiers in `src/core/markdown-html.ts`. Recognized blocks become

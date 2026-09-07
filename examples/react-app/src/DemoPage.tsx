@@ -515,14 +515,38 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const [inputFormat, setInputFormat] = useState<'markdown' | 'html' | 'docx'>('markdown');
   const [markdownSource, setMarkdownSource] = useState(demo.markdown ?? '');
   const [htmlSource, setHTMLSource] = useState(HEADLESS_HTML_SOURCE);
+  const [projectHTMLBlocks, setProjectHTMLBlocks] = useState(false);
+  const [htmlBlockParser, setHTMLBlockParser] = useState<typeof import('fountainjs-editor/html/server').ServerHTMLImporter>();
+  const [htmlBlockParserError, setHTMLBlockParserError] = useState('');
+  useEffect(() => {
+    if (!projectHTMLBlocks || htmlBlockParser) return;
+    let active = true;
+    void import('fountainjs-editor/html/server').then(({ ServerHTMLImporter }) => {
+      if (active) setHTMLBlockParser(() => ServerHTMLImporter);
+    }).catch((error: unknown) => {
+      if (active) setHTMLBlockParserError(error instanceof Error ? error.message : String(error));
+    });
+    return () => { active = false; };
+  }, [projectHTMLBlocks, htmlBlockParser]);
   const markdownParsed = useMemo(() => {
-    try {
-      const document = MarkdownImporter.parse(markdownSource, schema);
-      return { document, details: MarkdownExporter.exportWithReport(document).losses.length, error: '', loading: false };
-    } catch (error) {
-      return { document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false };
+    if (projectHTMLBlocks && !htmlBlockParser) {
+      return { document: undefined, details: 0, error: htmlBlockParserError, loading: !htmlBlockParserError, issues: [] as string[] };
     }
-  }, [schema, markdownSource]);
+    try {
+      const issues: string[] = [];
+      const document = MarkdownImporter.parse(markdownSource, schema, {
+        parseHTMLBlock: projectHTMLBlocks && htmlBlockParser ? (html, targetSchema) => {
+          const result = htmlBlockParser.parseWithReport(html, targetSchema);
+          issues.push(...result.issues.map(issue => issue.message));
+          return result.document;
+        } : undefined,
+        onHTMLBlockFallback: issue => issues.push(`Kept HTML as text: ${issue.message}`),
+      });
+      return { document, details: MarkdownExporter.exportWithReport(document).losses.length + issues.length, error: '', loading: false, issues };
+    } catch (error) {
+      return { document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false, issues: [] as string[] };
+    }
+  }, [schema, markdownSource, projectHTMLBlocks, htmlBlockParser, htmlBlockParserError]);
   const [htmlParsed, setHTMLParsed] = useState<{
     document: Node | undefined;
     details: number;
@@ -585,7 +609,13 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   ]), 'fountainjs-embedded-image.docx');
 
   return <div className="demo-workspace">
-    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>{inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
+    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>
+      {inputFormat === 'markdown' && <div className="headless-html-policy">
+        <label><input type="checkbox" checked={projectHTMLBlocks} onChange={event => setProjectHTMLBlocks(event.target.checked)} /> Convert HTML blocks to rich content</label>
+        <p>Optional DOM-free HTML importer. Inline HTML stays literal; Markdown inside HTML blocks is not interpreted. Unsupported HTML may be flattened or omitted. This is not a lossless HTML round trip.</p>
+        {markdownParsed.issues.length > 0 && <ul aria-label="HTML block conversion details">{markdownParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}
+      </div>}
+      {inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
       try {

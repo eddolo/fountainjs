@@ -275,7 +275,9 @@ const limits = Object.freeze({
   // add about 1.9 KiB ESM / 1.4 KiB CJS; consumer-entry ceilings stay fixed.
   // Explicit empty-paragraph preservation/omission plus childless-block hit
   // targets/typing add ~2.0 KiB ESM / 1.6 KiB CJS; no new runtime dependency.
-  'all ESM runtime code': 1310 * kibibyte,
+  // Optional host HTML block projection adds ~0.9 KiB ESM / ~0.7 KiB CJS;
+  // no parser dependency enters core and individual entry ceilings stay fixed.
+  'all ESM runtime code': 1311 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   'all CommonJS runtime code': 1094 * kibibyte,
 });

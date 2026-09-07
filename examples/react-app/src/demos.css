@@ -134,6 +134,10 @@
 .headless-input-tabs { display: flex; gap: 6px; margin-top: 12px; }
 .headless-input-tabs button { padding: 7px 10px; color: #756d89; background: white; border: 1px solid #d9d4df; border-radius: 7px; font: 700 10px 'DM Mono', monospace; }
 .headless-input-tabs button.active { color: white; background: var(--demo-accent); border-color: var(--demo-accent); }
+.headless-html-policy { padding: 12px; margin-top: 12px; border: 1px solid #d9d4df; border-radius: 8px; }
+.headless-html-policy label { display: flex; align-items: center; gap: 8px; }
+.headless-html-policy input { width: auto; margin: 0; accent-color: var(--demo-accent); }
+.headless-html-policy p, .headless-html-policy li { font-size: 12px; line-height: 1.6; color: #615970; }
 .headless-surface textarea { min-height: 500px; padding: 25px; resize: vertical; color: #2b2736; background: white; border: 1px solid #d9d4df; border-radius: 12px; font: 13px/1.8 'DM Mono', monospace; }
 .headless-docx-controls { display: grid; place-items: center; min-height: 240px; margin-top: 12px; padding: 32px; text-align: center; background: white; border: 1px dashed #c8c1d4; border-radius: 12px; }
 .headless-docx-controls label { display: grid; gap: 12px; color: #312b3d; font-weight: 800; }

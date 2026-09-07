@@ -11,6 +11,26 @@ const UNICODE_PUNCTUATION = /[\p{P}\p{S}]/u;
 
 export type MarkdownLineEnding = '\n' | '\r\n' | '\r';
 
+export interface MarkdownHTMLBlockFallback {
+  readonly html: string;
+  readonly reason: 'declined' | 'error';
+  readonly message: string;
+}
+
+export interface MarkdownImportOptions {
+  /**
+   * Optional synchronous, deterministic HTML-to-schema adapter for raw HTML
+   * blocks only. Return a document from this schema, or null to keep literal
+   * source. The adapter owns HTML sanitization and conversion-loss reporting;
+   * schema validation alone is not an HTML sanitizer. No parser is bundled
+   * into the core. Inline HTML and Fountain's explicit dialect are unchanged.
+   * Source capture may invoke the adapter again to verify block provenance.
+   */
+  readonly parseHTMLBlock?: (html: string, schema: Schema) => Node | null;
+  /** Called when a block is retained literally because its adapter failed or declined. */
+  readonly onHTMLBlockFallback?: (issue: MarkdownHTMLBlockFallback) => void;
+}
+
 export interface MarkdownFrontmatter {
   /** Exact prefix, including the opening/closing delimiters and any final line ending. */
   readonly raw: string;
@@ -126,11 +146,11 @@ export class MarkdownSourceSnapshot {
     }));
   }
 
-  static parse(source: string, schema: Schema): MarkdownSourceImportResult {
+  static parse(source: string, schema: Schema, options: MarkdownImportOptions = {}): MarkdownSourceImportResult {
     if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
     const parts = splitMarkdownSource(source);
-    const document = new MarkdownImporter().parse(parts.body, schema);
-    const capture = captureMarkdownBlocks(parts.body, schema, document);
+    const document = new MarkdownImporter().parse(parts.body, schema, options);
+    const capture = captureMarkdownBlocks(parts.body, schema, document, options);
     return Object.freeze({
       document,
       source: new MarkdownSourceSnapshot(source, parts, document, capture),
@@ -218,7 +238,7 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
  * one-to-one to the parsed top-level nodes. Ambiguous lists, definitions,
  * fenced content with blank lines, and cross-block references fail closed.
  */
-function captureMarkdownBlocks(source: string, schema: Schema, document: Node): MarkdownBlockCapture | undefined {
+function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   const segments = markdownBlockSegments(source);
   if (!segments.blocks.length
     || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS
@@ -227,7 +247,7 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node): 
   const blocks: MarkdownSourceBlockSnapshot[] = [];
   for (let index = 0; index < segments.blocks.length; index += 1) {
     const segment = segments.blocks[index];
-    const parsed = new MarkdownImporter().parse(segment.source, schema);
+    const parsed = new MarkdownImporter().parse(segment.source, schema, { ...options, onHTMLBlockFallback: undefined });
     const original = document.content[index];
     if (parsed.content.length !== 1 || !parsed.content[0].eq(original)) return undefined;
     blocks.push(Object.freeze({
@@ -1444,6 +1464,7 @@ function parseList(
   startIndex: number,
   schema: Schema,
   references: References,
+  options: MarkdownImportOptions,
 ): { node: Node; nextIndex: number } {
   const first = listMarker(lines[startIndex]) as ListMarker;
   const listName = first.kind === 'bullet' ? 'bullet_list' : first.kind === 'ordered' ? 'ordered_list' : 'task_list';
@@ -1456,7 +1477,7 @@ function parseList(
     if (!marker || marker.indent >= 4 || marker.kind !== first.kind || marker.m !== first.m) break;
     const item = collectListItem(lines, index, schema, references);
     index = item.nextIndex;
-    const content = parseBlocks(item.lines, schema, references);
+    const content = parseBlocks(item.lines, schema, references, options);
     if (!content.length) content.push(paragraph(schema, '', references));
     items.push(schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content));
     while (index < lines.length && !lines[index].trim()) index++;
@@ -1537,7 +1558,28 @@ function startsBlock(lines: readonly string[], index: number, references: Refere
     || (schema.nodes.details && schema.nodes.details_summary && detailsStart(line)));
 }
 
-function parseBlocks(lines: readonly string[], schema: Schema, references: References): Node[] {
+function projectHTMLBlock(html: string, schema: Schema, options: MarkdownImportOptions): readonly Node[] | null {
+  if (!options.parseHTMLBlock) return null;
+  let issue: MarkdownHTMLBlockFallback;
+  try {
+    const document = options.parseHTMLBlock(html, schema);
+    if (document !== null) {
+      if (!(document instanceof Node) || document.type !== schema.topNodeType) {
+        throw new TypeError('HTML block adapter must return a document from the supplied schema.');
+      }
+      schema.validate(document);
+      return document.content;
+    }
+    issue = { html, reason: 'declined', message: 'HTML block adapter declined conversion; literal source retained.' };
+  } catch (error) {
+    issue = { html, reason: 'error', message: error instanceof Error ? error.message : 'HTML block adapter failed; literal source retained.' };
+  }
+  // Do not swallow exceptions thrown by the host's reporting callback.
+  options.onHTMLBlockFallback?.(Object.freeze(issue));
+  return null;
+}
+
+function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
   const blocks: Node[] = [];
   b: for (let index = 0; index < lines.length;) {
     const line = lines[index];
@@ -1557,7 +1599,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         ? /^\s*<summary>(.*)<\/summary>\s*$/i.exec(lines[summaryIndex])
         : null;
       if (summary) {
-        const body = parseBlocks(lines.slice(summaryIndex + 1, closing), schema, references);
+        const body = parseBlocks(lines.slice(summaryIndex + 1, closing), schema, references, options);
         const fallback = schema.nodes.paragraph?.create({}, [schema.text('')]);
         try {
           blocks.push(schema.node('details', { open: disclosure.open }, [
@@ -1572,6 +1614,12 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     const rawHTML = markdownHTMLBlock(line);
     if (rawHTML) {
       const end = markdownHTMLBlockEnd(lines, index, rawHTML);
+      const projected = projectHTMLBlock(lines.slice(index, end).join('\n'), schema, options);
+      if (projected !== null) {
+        blocks.push(...projected);
+        index = end;
+        continue;
+      }
       const content: Node[] = [];
       lines.slice(index, end).forEach((raw, offset) => {
         if (offset && schema.nodes.hard_break) content.push(schema.node('hard_break'));
@@ -1725,13 +1773,13 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
           : lines[index]);
         index++;
       }
-      const quoteBlocks = parseBlocks(quote, schema, references);
+      const quoteBlocks = parseBlocks(quote, schema, references, options);
       blocks.push(schema.node('blockquote', {}, quoteBlocks.length ? quoteBlocks : [paragraph(schema, '', references)]));
       continue;
     }
     const marker = listMarker(line);
     if (marker && marker.indent < 4) {
-      const parsed = parseList(lines, index, schema, references);
+      const parsed = parseList(lines, index, schema, references, options);
       blocks.push(parsed.node);
       index = parsed.nextIndex;
       continue;
@@ -1968,14 +2016,14 @@ function extractFootnoteDefinitions(
 }
 
 export class MarkdownImporter {
-  parse(markdown: string, schema: Schema): Node {
+  parse(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): Node {
     const footnotes = extractFootnoteDefinitions(markdown, schema);
     // A terminal line ending terminates the last physical line; split() must
     // not turn it into extra code content when a fence is left open at EOF.
     const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''), schema);
-    const blocks = parseBlocks(source.lines, schema, source.definitions);
+    const blocks = parseBlocks(source.lines, schema, source.definitions, options);
     const definitions = footnotes.definitions.map((definition) => {
-      const content = parseBlocks(definition.lines, schema, source.definitions);
+      const content = parseBlocks(definition.lines, schema, source.definitions, options);
       return schema.node('footnote_definition', { id: definition.id }, content.length
         ? content
         : [paragraph(schema, '', source.definitions)]);
@@ -1990,13 +2038,13 @@ export class MarkdownImporter {
    * Parses the document body while retaining exact source and inert YAML
    * frontmatter provenance for raw/visual workflows.
    */
-  parseWithSource(markdown: string, schema: Schema): MarkdownSourceImportResult {
-    return MarkdownSourceSnapshot.parse(markdown, schema);
+  parseWithSource(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): MarkdownSourceImportResult {
+    return MarkdownSourceSnapshot.parse(markdown, schema, options);
   }
 
-  static parse(markdown: string, schema: Schema): Node { return new MarkdownImporter().parse(markdown, schema); }
+  static parse(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): Node { return new MarkdownImporter().parse(markdown, schema, options); }
 
-  static parseWithSource(markdown: string, schema: Schema): MarkdownSourceImportResult {
-    return new MarkdownImporter().parseWithSource(markdown, schema);
+  static parseWithSource(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): MarkdownSourceImportResult {
+    return new MarkdownImporter().parseWithSource(markdown, schema, options);
   }
 }

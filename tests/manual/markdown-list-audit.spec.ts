@@ -34,6 +34,53 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('opt-in HTML block conversion becomes editable content and survives canonical export', async ({ page, context }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/node-markdown.html');
+  const source = '# Imported incident\n\n<div><h2>Response plan</h2><p><strong>Owner:</strong> Ada &amp; Grace</p><ul><li>Check health</li><li>Notify team</li></ul></div>\n\nOutside paragraph.';
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('&lt;div&gt;');
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(output.locator('pre')).toContainText('<h2');
+  await expect(output.locator('pre')).not.toContainText('&lt;div&gt;');
+  await capture(page, info, '14-opt-in-html-block-conversion');
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.getByRole('heading', { name: 'Response plan' })).toBeVisible();
+  await expect(editor.locator('ul > li')).toHaveCount(2);
+  await editor.getByText('Check health', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' and latency');
+  await expect(editor).toContainText('Check health and latency');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('and latency');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Check health and latency');
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '15-converted-html-edited-as-document');
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  expect(markdown).toContain('## Response plan');
+  expect(markdown).not.toContain('<div>');
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+  expect(errors).toEqual([]);
+});
+
 test('inert HTML source remains multiline editable text through the public demos', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/demos/node-markdown.html');

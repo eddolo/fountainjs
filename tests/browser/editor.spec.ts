@@ -6066,3 +6066,19 @@ test('virtualizes 100,000 blocks while preserving scrolling, distant selection, 
   expect(metrics.totalHeight).toBeGreaterThan(1_000_000);
   expect(metrics.createDurationMs).toBeLessThan(5_000);
 });
+
+test('converts raw HTML blocks only when the headless demo option is enabled', async ({ page }) => {
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill('<div><h2>Imported title</h2><p><strong>Owner</strong> &amp; *literal*</p><a href="javascript:alert(1)">Unsafe</a></div>');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('&lt;div&gt;');
+  const option = page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' });
+  await option.check();
+  await expect(output.locator('pre')).toContainText('<h2');
+  await expect(output.locator('pre')).toContainText('<strong>Owner</strong>');
+  await expect(output.locator('pre')).toContainText('*literal*');
+  await expect(output.locator('pre')).not.toContainText('javascript:');
+  await option.uncheck();
+  await expect(output.locator('pre')).toContainText('&lt;div&gt;');
+});

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- Opt-in `MarkdownImportOptions.parseHTMLBlock` connects a host-owned,
+  synchronous HTML importer to recognized raw HTML blocks without importing a
+  DOM or HTML parser into the core. Nested lists, quotes, disclosures, and
+  footnotes use the same adapter. Invalid/declined conversions retain literal
+  source and report through `onHTMLBlockFallback`. Source snapshots verify
+  provenance with the same parsing policy. The headless conversion demo exposes
+  this option using the isolated server HTML importer. This is block-only
+  projection, not complete CommonMark HTML conformance or lossless conversion.
+
 ### Fixed
 
 - Empty supported text marks survive Markdown and browser/server HTML
