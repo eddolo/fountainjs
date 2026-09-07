@@ -1,5 +1,35 @@
 import { expect, test } from '@playwright/test';
 
+test('uses the real Svelte report on a touch viewport with retained edits and history', async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/demos/svelte-report.html');
+  const workspace = page.locator('[data-svelte-report]');
+  const editor = page.getByRole('textbox', { name: 'Svelte report editor' });
+  const cell = editor.locator('table tr').nth(1).locator('td').nth(1);
+  await cell.tap();
+  await page.keyboard.press('End'); await page.keyboard.press('Shift+Home');
+  await page.keyboard.type('99.99%');
+  await expect(cell).toHaveText('99.99%');
+  await workspace.getByRole('button', { name: 'Hide editor', exact: true }).tap();
+  await expect(editor).toHaveCount(0);
+  await workspace.getByRole('button', { name: 'Show editor', exact: true }).tap();
+  await expect(cell).toHaveText('99.99%');
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).tap();
+  await expect(cell).not.toHaveText('99.99%');
+  await workspace.getByRole('button', { name: 'Redo', exact: true }).tap();
+  await expect(cell).toHaveText('99.99%');
+  await expect(workspace.locator('.demo-output pre')).toContainText('99.99%');
+  await expect(page.locator('body')).toHaveJSProperty('scrollWidth', await page.evaluate(() => document.documentElement.clientWidth));
+  await editor.scrollIntoViewIfNeeded();
+  const path = info.outputPath('svelte-touch-report.png');
+  await page.screenshot({ path }); await info.attach('Svelte touch report', { path, contentType: 'image/png' });
+  await page.getByRole('button', { name: 'Reset report (discards edits)', exact: true }).tap();
+  await expect(cell).toHaveText('99.98%');
+  await expect(page.getByLabel('Editor lifecycle', { exact: true })).toHaveText('Created: 2 · Destroyed: 1');
+  expect(errors).toEqual([]);
+});
+
 test('uses the real Vue runbook on a touch viewport without losing task state', async ({ page }, info) => {
   await page.goto('/demos/vue-runbook.html');
   const workspace = page.locator('[data-vue-runbook]');

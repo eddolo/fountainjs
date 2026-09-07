@@ -1,0 +1,10 @@
+{
+  "name": "fountain-svelte-check-toolchain",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "svelte": "5.57.0",
+    "svelte-check": "4.7.6",
+    "typescript": "6.0.3"
+  }
+}

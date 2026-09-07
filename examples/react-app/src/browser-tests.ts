@@ -1639,3 +1639,8 @@ if (new URLSearchParams(globalThis.location.search).get('fixture') === 'pages-pr
   contract.pages.loadMeasurementFixture();
   contract.pages.preview(true);
 }
+// Test-only dynamic fixture; this entry is not a production website input.
+Object.assign(globalThis, { auditSvelteLifecycle: async () => {
+  const { auditSvelteLifecycle } = await import('../../../tests/browser/fixtures/svelte-lifecycle');
+  return auditSvelteLifecycle();
+} });

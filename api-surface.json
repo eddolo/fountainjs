@@ -327,6 +327,8 @@
     "dist/ruby/index.d.ts": "766ec019865038e28f252fc015e6be821b017d8fa01d2e76a0a2863026c34f6d",
     "dist/structured-attributes/index.d.cts": "9a64378ef71222e62648b197d135ff4714c05bad2bf8bb84e906ef89c48142dd",
     "dist/structured-attributes/index.d.ts": "525658970e965cb051ab34489bef7f6921e448667bfe9ed9369f5d23a69c81d2",
+    "dist/svelte/index.d.cts": "e1126d5db994209bde7f4cbff2825b2063605410385406396e4ea329290cad15",
+    "dist/svelte/index.d.ts": "a4dc2c0ded42f6a1b10a5409891277470beefdad254f624a0942f5876f82fef3",
     "dist/table-of-contents/index.d.cts": "e7e618fe6920fded450ab54c5a76b28bf7110ae12a61958dcec1789564d1ccba",
     "dist/table-of-contents/index.d.ts": "91059d263e82c72e850a66ef6c052b942edae7dc3e61f7ebeb9e4ec61f991f08",
     "dist/testing/index.d.cts": "689d7f68a26a0d92a8a0a1ba7fa03e2a950148af8e518e4e5fc93a3b63ba061d",

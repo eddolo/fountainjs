@@ -17,6 +17,14 @@ remote-update commands without a presence renderer. Parse arbitrary HTML on a
 server with `fountainjs-editor/html/server`. See
 [HEADLESS_CORE.md](HEADLESS_CORE.md) for examples, exclusions, and verification.
 
+## Optional framework bindings
+
+Framework-specific integration is optional: the [Vue guide](VUE.md) documents
+`fountainjs-editor/vue` composables/component; the [Svelte guide](SVELTE.md)
+documents `fountainjs-editor/svelte` lifecycle/store/action bindings. Both are
+available in the repository build and still unreleased on npm. Neither runtime
+enters the headless core or is required by the other framework surfaces.
+
 ## Document model
 
 `Schema` compiles a `SchemaSpec` into node and mark types. Use `schema.node()`, `schema.text()`, and `schema.mark()` to create values with attribute defaults and validation. `schema.validate()` enforces ownership, attributes, atom rules, mark placement, and node content expressions at every editor-state boundary. `Node` values are immutable and provide `textContent`, `nodeSize`, `child()`, `descendants()`, `eq()`, and `toJSON()`.

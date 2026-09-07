@@ -128,6 +128,7 @@ navigates away/back in Chromium, Firefox and WebKit. The same journey has a
 recorded manual-audit entry. Separate touch-viewport tests exercise task toggles,
 hide/reopen and history; these are emulation, not physical-device IME evidence.
 
-This delivers the Vue binding, not first-party Svelte/Angular packages or a Vue
-equivalent of every optional React UI panel. Those remain separate work; every
+This delivers the Vue binding, not a Vue equivalent of every optional React UI
+panel. A separate [Svelte binding](SVELTE.md) is also available in the repository
+build. Angular bindings and equivalent framework UI suites remain open; every
 framework can already use the engine commands and DOM/Web Component boundaries.

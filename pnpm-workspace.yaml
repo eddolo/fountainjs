@@ -1,5 +1,10 @@
 allowBuilds:
   workerd: true
+# Svelte's checker uses the TypeScript compiler API (5/6), not TS 7's native CLI.
+# Isolate that development tool's compiler rather than downgrading the engine.
+packages:
+  - '.'
+  - 'tools/svelte-check'
 minimumReleaseAgeExclude:
   - '@types/react-dom@19.2.7'
   - '@vitest/mocker@5.0.0'

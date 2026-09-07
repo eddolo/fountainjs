@@ -15,6 +15,7 @@ export default defineConfig({
         docx: fileURLToPath(new URL('./src/docx/index.ts', import.meta.url)),
         react: fileURLToPath(new URL('./src/react/index.ts', import.meta.url)),
         vue: fileURLToPath(new URL('./src/vue/index.ts', import.meta.url)),
+        svelte: fileURLToPath(new URL('./src/svelte/index.ts', import.meta.url)),
         'document-utilities': fileURLToPath(new URL('./src/document-utilities.ts', import.meta.url)),
         'emoji-data': fileURLToPath(new URL('./src/emoji-data.ts', import.meta.url)),
         yjs: fileURLToPath(new URL('./src/yjs/index.ts', import.meta.url)),
@@ -47,7 +48,7 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'vue', 'yjs'],
+      external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'vue', 'svelte', 'svelte/store', 'yjs'],
       output: {
         globals: {
           react: 'React',

@@ -663,7 +663,22 @@ function VueRuntime({ demo }: { demo: DemoDefinition }) {
   return <>{error && <p role="alert">Could not load the Vue editor: {error}</p>}<div ref={mount} /></>;
 }
 
+function SvelteRuntime({ demo }: { demo: DemoDefinition }) {
+  const mount = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let cancelled = false;
+    let dispose: (() => void) | undefined;
+    void import('./svelte-report').then(({ mountSvelteReport }) => {
+      if (!cancelled && mount.current) dispose = mountSvelteReport(mount.current, demo);
+    }).catch(reason => { if (!cancelled) setError(String(reason)); });
+    return () => { cancelled = true; dispose?.(); };
+  }, [demo]);
+  return <>{error && <p role="alert">Could not load the Svelte editor: {error}</p>}<div ref={mount} /></>;
+}
+
 function Runtime({ demo }: { demo: DemoDefinition }) {
+  if (demo.runtime === 'svelte') return <SvelteRuntime demo={demo} />;
   if (demo.runtime === 'vue') return <VueRuntime demo={demo} />;
   if (demo.runtime === 'dom') return <DOMRuntime demo={demo} />;
   if (demo.runtime === 'element') return <ElementRuntime demo={demo} />;

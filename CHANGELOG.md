@@ -4,12 +4,19 @@
 
 ### Added
 
+- Optional `fountainjs-editor/svelte` entry with `createFountain`, `fountainState`
+  and `fountainEditor`: client ownership, lazy readable state and a DOM action
+  that preserves external engine ownership. Svelte 5 is an optional external
+  peer. The report demo now uses compiled Svelte components for its toolbar,
+  editor and inspector, with view-remount/history, owner-reset, pure-Node SSR
+  and custom-block teardown checks. See `docs/SVELTE.md`.
+
 - Optional `fountainjs-editor/vue` entry with `useFountain`, `useFountainState`
   and `FountainEditor`: client-mount ownership, shallow state subscriptions,
   external-editor/view separation and inert SSR. Vue 3.5+ is an optional external
   peer, never bundled into the engine. The Vue runbook now runs actual Vue
   controls and an inspector, with lifecycle and three-browser interaction tests.
-  Svelte/Angular first-party bindings remain pending.
+  Angular and equivalent optional framework UI suites remain pending.
 
 ### Fixed
 

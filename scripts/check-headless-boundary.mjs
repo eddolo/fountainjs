@@ -13,6 +13,7 @@ const forbidden = [
   `${resolve('src/view')}${sep}`,
   `${resolve('src/react')}${sep}`,
   `${resolve('src/vue')}${sep}`,
+  `${resolve('src/svelte')}${sep}`,
   resolve('src/core/importers/html-importer.ts'),
   resolve('src/extensions/collaboration.ts'),
   resolve('src/extensions/index.ts'),

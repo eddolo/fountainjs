@@ -8,6 +8,20 @@ import { textlessReplacementJourney } from './textless-replacement-journey';
 import { mathFilesJourney } from './math-files-journey';
 import { mathPagesJourney } from './math-pages-journey';
 import { vueRunbookJourney } from './vue-runbook-journey';
+import { svelteReportJourney } from './svelte-report-journey';
+
+test('disposes Svelte custom block views before their owned engine', async ({ page }) => {
+  await page.goto('/browser-tests.html');
+  const result = await page.evaluate(() => (globalThis as any).auditSvelteLifecycle());
+  expect(result.destroyed).toEqual(Array(5).fill(true));
+  expect(result.events).toEqual(Array(5).fill([
+    'engine:create', 'view:create', 'view:destroy:engine-alive', 'engine:destroy',
+  ]).flat());
+});
+
+test('uses first-party Svelte bindings for table editing, history, stores and owner disposal', async ({ page }, info) => {
+  await svelteReportJourney(page, info);
+});
 
 test('uses first-party Vue bindings for editing, reactive state, history and view remounts', async ({ page }, info) => {
   await vueRunbookJourney(page, info);

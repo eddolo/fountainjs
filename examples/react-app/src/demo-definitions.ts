@@ -1,6 +1,6 @@
 import type { MarkJSON, NodeJSON } from 'fountainjs-editor';
 
-export type DemoRuntime = 'react' | 'vue' | 'dom' | 'element' | 'headless';
+export type DemoRuntime = 'react' | 'vue' | 'svelte' | 'dom' | 'element' | 'headless';
 
 export interface DemoDefinition {
   index: number;
@@ -240,11 +240,11 @@ const options = { ariaLabel: 'Runbook editor' }
     slug: 'svelte-report',
     title: 'Structured data report',
     host: 'Svelte',
-    surface: 'Svelte → Web Component',
-    runtime: 'element',
+    surface: 'Svelte stores + action',
+    runtime: 'svelte',
     summary: 'A report editor where tables, prose, and format exports coexist in one document instead of separate widgets.',
-    boundary: 'Svelte mounts the standards-based element and stores its JSON change detail.',
-    capabilities: ['Rectangular cell selection', 'Row/column commands', 'Svelte-compatible event', 'HTML and Markdown export'],
+    boundary: 'The gallery shell uses React; this report is a compiled Svelte 5 app using the optional fountainjs-editor/svelte stores and action, with no React inside the editor mount.',
+    capabilities: ['Real Svelte stores', 'Table editing', 'View and owner lifecycle', 'HTML and Markdown export'],
     content: doc(
       heading(1, 'Quarterly service report'),
       paragraph(text('Move through cells with Tab, edit values, or add rows and columns from the toolbar.')),
@@ -252,16 +252,17 @@ const options = { ariaLabel: 'Runbook editor' }
       paragraph(text('Tables remain part of the same validated document tree as the narrative.')),
     ),
     code: `<script lang="ts">
-  import { onMount } from 'svelte'
-  import { StarterKit, registerFountainElement } from 'fountainjs-editor'
-  registerFountainElement({ schema: StarterKit.schema, plugins: StarterKit.plugins })
+  import { StarterKit } from 'fountainjs-editor'
+  import { createFountain, fountainState, fountainEditor } from 'fountainjs-editor/svelte'
+  import 'fountainjs-editor/styles.css'
 
-  let field: HTMLElement & { value: unknown }
-  const save = (event: CustomEvent) => report.set(event.detail.value)
-  onMount(() => { field.value = $report })
+  const editor = createFountain(() => ({ schema: StarterKit.schema, plugins: StarterKit.plugins }))
+  const snapshot = fountainState(editor)
+  const options = { ariaLabel: 'Report editor' }
 </script>
 
-<fountain-editor bind:this={field} on:fountain-change={save} />`,
+<div use:fountainEditor={{ editor: $editor, options }}></div>
+<p>{$snapshot?.doc.textContent.length ?? 0} characters</p>`,
     accent: '#ff3e00',
   },
   {

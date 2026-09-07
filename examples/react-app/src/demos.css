@@ -82,6 +82,14 @@
 .vue-table-tools summary { cursor: pointer; padding: 5px; color: #403b52; font-size: 12px; }
 [data-vue-runbook] .demo-output { max-height: 760px; }
 [data-vue-runbook] .demo-output pre { min-height: 0; }
+.svelte-lifecycle-demo { max-width: 1500px; margin: auto; }
+.svelte-lifecycle-demo > .demo-controls { align-items: center; font-size: 12px; }
+.svelte-report-hidden { min-height: 260px; padding: 32px; color: #403b52; background: white; border-radius: 12px; line-height: 1.7; }
+.svelte-report-state { margin: 12px 0 0; color: #5f566f; font: 11px 'DM Mono', monospace; }
+[data-svelte-report] input[type='number'] { width: 52px; }
+.svelte-table-tools summary { cursor: pointer; padding: 5px; color: #403b52; font-size: 12px; }
+[data-svelte-report] .demo-output { max-height: 760px; }
+[data-svelte-report] .demo-output pre { min-height: 0; }
 .bare-editor > .fountain-editor, .element-editor .fountain-editor { border: 0; border-radius: 0; }
 .element-editor fountain-demo-editor { display: block; }
 .demo-status-widget { margin: 15px 0; color: #15533f; background: #e3f8ec; border: 1px solid #82c9a7; border-radius: 9px; }

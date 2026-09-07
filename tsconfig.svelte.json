@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": ["svelte", "node"], "ignoreDeprecations": "6.0" },
+  "include": ["examples/react-app/src/**/*.svelte", "src/svelte/**/*.ts", "tests/browser/fixtures/**/*.svelte", "tests/browser/fixtures/svelte-lifecycle.ts"]
+}

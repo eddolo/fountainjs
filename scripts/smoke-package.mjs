@@ -158,6 +158,19 @@ assertExports(esmEmojiData, emojiDataNames, 'ESM Unicode emoji data entry');
 if (esmEmojiData.unicodeEmojis.length < 1_900) throw new Error('ESM Unicode emoji data entry is incomplete.');
 assertExports(await import('fountainjs-editor/react'), reactNames, 'ESM React entry');
 assertExports(await import('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'ESM Vue entry');
+assertExports(await import('fountainjs-editor/svelte'), ['createFountain', 'fountainState', 'fountainEditor'], 'ESM Svelte entry');
+// Svelte is optional too: existing surfaces must never load its runtime.
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  import { registerHooks } from 'node:module';
+  registerHooks({ resolve(specifier, context, nextResolve) {
+    if (specifier === 'svelte' || specifier.startsWith('svelte/')) throw new Error('Unexpected Svelte peer: ' + specifier);
+    return nextResolve(specifier, context);
+  } });
+  await import('fountainjs-editor');
+  await import('fountainjs-editor/core');
+  await import('fountainjs-editor/react');
+  await import('fountainjs-editor/vue');
+`], { stdio: 'inherit' });
 // Optional means non-Vue consumers never need the Vue peer, even transitively.
 execFileSync(process.execPath, ['--input-type=module', '-e', `
   import { registerHooks } from 'node:module';
@@ -168,6 +181,7 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   await import('fountainjs-editor');
   await import('fountainjs-editor/core');
   await import('fountainjs-editor/react');
+  await import('fountainjs-editor/svelte');
 `], { stdio: 'inherit' });
 const esmYjs = await import('fountainjs-editor/yjs');
 assertExports(esmYjs, yjsNames, 'ESM Yjs entry');
@@ -314,6 +328,7 @@ assertExports(cjsEmojiData, emojiDataNames, 'CommonJS Unicode emoji data entry')
 if (cjsEmojiData.unicodeEmojis.length < 1_900) throw new Error('CommonJS Unicode emoji data entry is incomplete.');
 assertExports(require('fountainjs-editor/react'), reactNames, 'CommonJS React entry');
 assertExports(require('fountainjs-editor/vue'), ['FountainEditor', 'useFountain', 'useFountainState'], 'CommonJS Vue entry');
+assertExports(require('fountainjs-editor/svelte'), ['createFountain', 'fountainState', 'fountainEditor'], 'CommonJS Svelte entry');
 assertExports(require('fountainjs-editor/comments'), commentsNames, 'CommonJS comments entry');
 assertExports(require('fountainjs-editor/react/comments'), reactCommentsNames, 'CommonJS React comments entry');
 assertExports(require('fountainjs-editor/tracked-changes'), trackedChangesNames, 'CommonJS tracked changes entry');

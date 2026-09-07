@@ -5,13 +5,38 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+SURFACE-04 Svelte increment (2026-09-07): the optional
+`fountainjs-editor/svelte` entry supplies `createFountain`, `fountainState` and
+`fountainEditor`. The report demo now runs compiled Svelte components for its
+controls, view, state inspector and resettable owner. Hiding the view preserves
+document/history; resetting the keyed owner intentionally discards local edits.
+Svelte remains an external optional peer, isolated from core/React/Vue imports.
+The private Svelte checker workspace uses TypeScript 6 without downgrading the
+engine's TypeScript 7 toolchain; frozen-lockfile install and peer checks pass.
+
+Verification: the full `pnpm check` passes 1,114 tests in 101 files, including
+real compiled Svelte SSR in pure Node. Public declarations add only the two
+Svelte entries; existing signatures remain unchanged. Packed Vue/Svelte type
+resolution passes, and package smoke loads both ESM/CJS entries. Svelte's
+recorded Chrome report-editing journey, desktop screenshot, mobile-Safari
+screenshot and video overview were visually reviewed. The initial remount test
+incorrectly used a column index after inserting a column; the value was intact.
+It now checks the shifted cell and exact full-document retention across remount.
+Custom-block teardown is separately checked against the owner's engine lifetime.
+The final Vue/Svelte browser set passes all 13 checks across Chromium, Firefox,
+WebKit and two touch-emulation projects. Website build passes with the existing
+large MathJax reference-lab chunk warning; no runtime/bundle ceiling was relaxed
+except adding the measured optional Svelte entry to aggregate code budgets.
+Angular and equivalent optional framework UI suites remain open; this does not
+complete SURFACE-04 or permit npm publication. See `docs/SVELTE.md`.
+
 SURFACE-04 Vue increment (2026-09-07): an optional Vue 3 entry now owns client
 editor lifecycles, subscribes through shallow reactive state, and mounts the
 existing DOM view through a first-party component. The runbook demo runs an
 actual Vue app inside the labelled React gallery shell, not just a Custom Element
 recipe. Tests cover provider disposal, SSR without DOM/plugins, replacement,
-history and native browser editing through view hide/reopen. Svelte/Angular
-bindings and complete framework-specific panel suites remain open; this does
+history and native browser editing through view hide/reopen. At this earlier
+checkpoint Svelte/Angular bindings and complete framework-specific panel suites remained open; this does
 not change the overall partial status. See `docs/VUE.md`.
 
 The Vue quote-toggle workflow exposed an engine-level endpoint mapping bug:
@@ -29,7 +54,7 @@ set passes all five projects; its recorded Chrome journey, screenshots and
 video overview were visually reviewed. That review also fixed an unbounded Vue
 JSON-inspector column in Firefox. Website build passes with the pre-existing
 large MathJax reference-lab chunk warning. Native device/screen-reader evidence,
-Svelte/Angular packages, remaining format fidelity and the rest of the release
+then-pending Svelte/Angular packages, remaining format fidelity and the rest of the release
 ledger are not completed by this increment; npm publication remains deferred.
 
 Table-caption import repair (2026-09-07): browser and server HTML import preserve

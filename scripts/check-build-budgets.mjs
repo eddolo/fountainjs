@@ -55,6 +55,8 @@ const limits = Object.freeze({
   // Vue remains an external optional peer; only lifecycle/state/view glue ships here.
   'dist/vue.js': 3 * kibibyte,
   'dist/vue.cjs': 3 * kibibyte,
+  'dist/svelte.js': 2 * kibibyte,
+  'dist/svelte.cjs': 2 * kibibyte,
   // Provider-independent collaboration stays in the root; the optional Yjs
   // adapter remains a separately loaded peer-backed entry. Granular structured
   // attributes add nested Y.Map/Y.Array reconciliation and validation only to
@@ -319,7 +321,9 @@ const limits = Object.freeze({
   // Figure retention and canonical attachment-preview recognition add ~1.4 KiB
   // ESM (1347.4 KiB total), shared across browser/server imports.
   // First-party Vue adds ~2.5 KiB ESM / 1.9 KiB CJS, with no bundled Vue runtime.
-  'all ESM runtime code': 1351 * kibibyte,
+  // First-party Svelte action/stores add ~1.1 KiB ESM / 0.9 KiB CJS.
+  // Measured totals: 1351.6 / 1127.1 KiB; Svelte stays an external peer.
+  'all ESM runtime code': 1352 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -330,7 +334,7 @@ const limits = Object.freeze({
   // ~1.2 KiB CJS (1123.8 KiB total). Individual entries and performance are unchanged.
   // Direct table-caption content retention adds ~0.4 KiB CJS (1124.2 total).
   // ESM remains within 1348 KiB; individual entries and performance stay fixed.
-  'all CommonJS runtime code': 1127 * kibibyte,
+  'all CommonJS runtime code': 1128 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
@@ -344,6 +348,8 @@ measured.set('HTML5 entity decoder ESM', await sizeOf(join('dist', esmEntityDeco
 measured.set('HTML5 entity decoder CommonJS', await sizeOf(join('dist', cjsEntityDecoder.name)));
 measured.set('dist/vue.js', await sizeOf('dist/vue.js'));
 measured.set('dist/vue.cjs', await sizeOf('dist/vue.cjs'));
+measured.set('dist/svelte.js', await sizeOf('dist/svelte.js'));
+measured.set('dist/svelte.cjs', await sizeOf('dist/svelte.cjs'));
 
 for (const path of ['dist/index.js', 'dist/index.cjs', 'dist/core.js', 'dist/core.cjs', 'dist/ai-document-tools.js', 'dist/ai-document-tools.cjs', 'dist/ai-conversation.js', 'dist/ai-conversation.cjs', 'dist/ai-generated-media.js', 'dist/ai-generated-media.cjs', 'dist/docx.js', 'dist/docx.cjs', 'dist/document-utilities.js', 'dist/document-utilities.cjs', 'dist/emoji-data.js', 'dist/emoji-data.cjs', 'dist/react.js', 'dist/react.cjs', 'dist/yjs.js', 'dist/yjs.cjs', 'dist/comments.js', 'dist/comments.cjs', 'dist/react-comments.js', 'dist/react-comments.cjs', 'dist/tracked-changes.js', 'dist/tracked-changes.cjs', 'dist/react-tracked-changes.js', 'dist/react-tracked-changes.cjs', 'dist/versions.js', 'dist/versions.cjs', 'dist/react-versions.js', 'dist/react-versions.cjs', 'dist/react-integrity.js', 'dist/react-integrity.cjs', 'dist/details.js', 'dist/details.cjs', 'dist/ruby.js', 'dist/ruby.cjs', 'dist/text-style.js', 'dist/text-style.cjs', 'dist/testing.js', 'dist/testing.cjs', 'dist/migrations.js', 'dist/migrations.cjs', 'dist/node-ids.js', 'dist/node-ids.cjs', 'dist/table-of-contents.js', 'dist/table-of-contents.cjs', 'dist/integrity.js', 'dist/integrity.cjs', 'dist/integrity-dom.js', 'dist/integrity-dom.cjs', 'dist/structured-attributes.js', 'dist/structured-attributes.cjs', 'dist/html-server.js', 'dist/html-server.cjs', 'dist/widgets.js', 'dist/widgets.cjs', 'dist/widgets-dom.js', 'dist/widgets-dom.cjs', 'dist/react-widgets.js', 'dist/react-widgets.cjs', 'dist/pages.js', 'dist/pages.cjs', 'dist/pages-dom.js', 'dist/pages-dom.cjs', 'dist/pages-preview.js', 'dist/pages-preview.cjs', 'dist/styles.css']) {
   measured.set(path, await sizeOf(path));
