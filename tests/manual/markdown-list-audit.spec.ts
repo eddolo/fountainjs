@@ -34,6 +34,53 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('nested inert HTML keeps literal source and surrounding Markdown through real editing', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const source = '# Maintenance note\n\n- Operator checklist\n\n  > Before *marked*.\n  >\n  > <custom-panel mode="read-only">\n  > *literal* &amp; \\*\n  > </custom-panel>\n  >\n  > After **strong**.';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  const output = page.locator('.demo-output');
+  const original = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('&lt;custom-panel');
+  await expect(output.locator('pre')).toContainText('<em>marked</em>');
+  await expect(output.locator('pre')).toContainText('<strong>strong</strong>');
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('li blockquote')).toHaveCount(1);
+  await expect(editor.locator('custom-panel')).toHaveCount(0);
+  await expect(editor.locator('blockquote')).toContainText('<custom-panel mode="read-only">');
+  await expect(editor.locator('blockquote')).toContainText('*literal* &amp; \\*');
+  await expect(editor.locator('em')).toHaveText('marked');
+  // This host adds one caret paragraph after a trailing list. Assert that exact
+  // addition; do not strip blank paragraphs or relax any imported content.
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual({
+    ...original,
+    content: [...original.content, { type: 'paragraph', attrs: { align: 'left' }, content: [{ type: 'text', text: '' }] }],
+  });
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '30-nested-inert-HTML-keeps-literal-lines');
+  await editor.locator('strong').dblclick();
+  await page.keyboard.type('ready');
+  await expect(editor.locator('strong')).toHaveText('ready');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator('strong')).toHaveText('strong');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor.locator('strong')).toHaveText('ready');
+  const changed = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  await capture(page, info, '31-edited-nested-source-and-canonical-export');
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(changed);
+});
+
 test('conversion losses are visible before the remaining content is pasted and edited', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/demos/node-markdown.html');

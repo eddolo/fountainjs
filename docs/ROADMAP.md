@@ -14,6 +14,12 @@ raw-HTML conformance and exhaustive conversion-loss reporting are still open;
 the default CommonMark result remains 563 matching / 72 pending / 17 intentional.
 See [the contract and verification record](MARKDOWN_SOURCE.md#optional-inline-html-formatting).
 
+The follow-up independent oracle verifies inert raw-HTML behavior, exact tokens,
+and source/canonical round trips for those 72 pending cases plus 144 generated
+variants. Within this fixture set, the remaining work concerns broader opt-in
+projection/loss policy; this does not prove all possible inert inputs correct,
+claim complete CommonMark conversion, or change the score.
+
 Product-style roadmap items must be finished as complete workflows, not isolated
 editor controls. Their acceptance evidence must cover developer integration,
 author configuration, the end user's real surface, authenticated permission and

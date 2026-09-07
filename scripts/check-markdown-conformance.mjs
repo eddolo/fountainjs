@@ -1,7 +1,8 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import commonmarkSpec from 'commonmark-spec';
+import { Parser as CommonMarkParser, HtmlRenderer as CommonMarkRenderer } from 'commonmark';
 import { parseFragment } from 'parse5';
 
 import {
@@ -17,8 +18,17 @@ const BASELINE_PATH = fileURLToPath(new URL(
   import.meta.url,
 ));
 const baseline = JSON.parse(readFileSync(BASELINE_PATH, 'utf8'));
+const runtimeMaps = readdirSync('dist').filter(file => /\.(?:js|cjs)\.map$/u.test(file));
+if (!runtimeMaps.length) throw new Error('Runtime source maps are required to verify the test-oracle boundary.');
+for (const file of runtimeMaps) {
+  const map = JSON.parse(readFileSync(`dist/${file}`, 'utf8'));
+  if (map.sources.some(source => /(?:^|\/)commonmark\/(?:lib|dist)\//u.test(source.replaceAll('\\', '/')))) {
+    throw new Error(`The development-only CommonMark oracle entered runtime output: ${file}`);
+  }
+}
 const reportOnly = process.argv.includes('--report');
 const showMismatches = process.argv.includes('--show-mismatches');
+const htmlPolicyReport = process.argv.includes('--html-policy-report');
 const inspectedExamples = new Set(process.argv
   .filter((value) => value.startsWith('--example='))
   .map((value) => Number(value.slice('--example='.length))));
@@ -166,6 +176,96 @@ function semanticProjection(html, reference = false) {
   return blockChildren(parseFragment(html).childNodes, reference);
 }
 
+// Independent reference semantics with ONLY the raw-HTML rendering policy
+// changed. Never compare either parser's AST or rewrite Markdown source.
+const referenceParser = new CommonMarkParser();
+const referenceRenderer = new CommonMarkRenderer();
+const inertRenderer = new CommonMarkRenderer();
+inertRenderer.html_inline = function (node) {
+  this.out(node.literal.replace(/\n/gu, ' '));
+};
+inertRenderer.html_block = function (node) {
+  this.cr();
+  this.lit('<p>');
+  const lines = node.literal.replace(/\n$/u, '').split('\n');
+  lines.forEach((line, index) => {
+    if (index) this.lit('<br>\n');
+    this.out(line);
+  });
+  this.lit('</p>');
+  this.cr();
+};
+
+function referenceHTMLTokens(reference) {
+  const tokens = [];
+  const walker = reference.walker();
+  for (let event; (event = walker.next());) {
+    if (!event.entering) continue;
+    if (event.node.type === 'html_inline') tokens.push(['inline', event.node.literal]);
+    if (event.node.type === 'html_block') tokens.push(['block', event.node.literal.replace(/\n$/u, '')]);
+  }
+  return tokens;
+}
+
+function fountainHTMLTokens(source, schema) {
+  const tokens = [];
+  const document = MarkdownImporter.parse(source, schema, {
+    parseHTMLBlock: html => { tokens.push(['block', html]); return null; },
+    parseHTMLInline: segments => {
+      segments.forEach(segment => { if (segment.kind === 'html') tokens.push(['inline', segment.html]); });
+      return null;
+    },
+  });
+  return { document, tokens };
+}
+
+function retainsLiteralHTML(document, tokens) {
+  const readable = node => node.isText ? node.text
+    : node.type.name === 'hard_break' ? '\n' : node.content.map(readable).join('');
+  const content = readable(document);
+  let cursor = 0;
+  for (const [kind, raw] of tokens) {
+    const literal = kind === 'inline' ? raw.replace(/\n/gu, ' ') : raw;
+    const found = content.indexOf(literal, cursor);
+    if (found < 0) return false;
+    cursor = found + literal.length;
+  }
+  return true;
+}
+
+function generatedHTMLPolicyCases() {
+  const cases = [];
+  const blocks = [
+    '<script>\n*literal* &amp;\n</script>', '<!--\n*literal* &amp;\n-->',
+    '<?pi\n*literal* &amp;\n?>', '<!DOCTYPE\n*literal* &amp;\n>',
+    '<![CDATA[\n*literal* &amp;\n]]>', '<div>\n*literal* &amp;\n</div>',
+    '<custom-box>\n*literal* &amp;\n</custom-box>',
+  ];
+  const containers = [
+    source => source,
+    source => source.split('\n').map(line => `> ${line}`).join('\n'),
+    source => `- Item\n\n${source.split('\n').map(line => `  ${line}`).join('\n')}`,
+    source => `- Item\n\n${source.split('\n').map(line => `  > ${line}`).join('\n')}`,
+  ];
+  blocks.forEach((block, kind) => containers.forEach((wrap, container) => {
+    for (const indentation of ['', '   ']) for (const ending of ['\n', '\r\n']) {
+      const html = block.split('\n').map(line => indentation + line).join('\n');
+      const source = wrap(`Before *marked*.\n\n${html}\n\nAfter **strong**.`).replaceAll('\n', ending);
+      cases.push({ name: `block-${kind + 1}/container-${container}/indent-${indentation.length}/${JSON.stringify(ending)}`, source });
+    }
+  }));
+  for (const value of ['*not emphasis*', '&amp; \\*', 'line\nnext', 'quoted > <&']) {
+    const opening = `<em data-value="${value}">`;
+    for (const body of [
+      `Before ${opening}one **two**</em> after.`,
+      `Before *${opening}one* two</em> after.`,
+      `[link ${opening}label</em>](/safe) after.`,
+      `Before ${opening.replace('data-value=', 'data-value==')}*visible*</em> after.`,
+    ]) for (const ending of ['\n', '\r\n']) cases.push({ name: `inline-${cases.length}`, source: body.replaceAll('\n', ending) });
+  }
+  return cases;
+}
+
 // A separate, explicitly classified contract, NEVER part of the semantic
 // matching projection. Add exactly one caret paragraph only to an empty root,
 // quote, or list item. Preserve every existing block, inline token, and attr.
@@ -231,24 +331,99 @@ const schema = new Schema(CoreSchemaSpec);
 const matches = new Set();
 const mismatches = [];
 const roundTripFailures = [];
+const referenceFailures = [];
+const htmlPolicyFailures = [];
+const htmlTokenFailures = [];
+const htmlPolicyGroup = baseline.pendingWorkGroups.find(group => group.inertContract === 'literal-html-reference-v1');
+if (!htmlPolicyGroup) throw new Error('Missing the explicit literal-html-reference-v1 policy contract.');
+const htmlPolicyExamples = expandRanges(htmlPolicyGroup.exampleRanges);
 for (const example of commonmarkSpec.tests) {
   const source = materializeTabs(example.markdown);
+  const reference = referenceParser.parse(source);
+  if (referenceRenderer.render(reference) !== materializeTabs(example.html)) referenceFailures.push(example.number);
   const expected = semanticProjection(materializeTabs(example.html), true);
   let actual;
   let error = null;
   try {
     const document = MarkdownImporter.parse(source, schema);
-    if (example.number >= 148 && example.number <= 191) {
+    if (htmlPolicyExamples.has(example.number)) {
       const restored = MarkdownImporter.parse(MarkdownExporter.export(document), schema);
-      if (!document.eq(restored)) roundTripFailures.push(example.number);
+      const captured = MarkdownImporter.parseWithSource(source, schema);
+      if (!document.eq(restored) || !captured.document.eq(document)
+        || MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== source) roundTripFailures.push(example.number);
     }
     actual = semanticProjection(HTMLExporter.export(document, { document: false }));
+    if (htmlPolicyExamples.has(example.number)) {
+      const expectedTokens = referenceHTMLTokens(reference);
+      const probed = fountainHTMLTokens(source, schema);
+      if (!document.eq(probed.document) || JSON.stringify(probed.tokens) !== JSON.stringify(expectedTokens)
+        || !retainsLiteralHTML(document, expectedTokens)) htmlTokenFailures.push({
+        number: example.number, source, expected: expectedTokens, actual: probed.tokens, literalRetained: retainsLiteralHTML(document, expectedTokens),
+      });
+      const expectedInert = semanticProjection(inertRenderer.render(reference), true);
+      if (JSON.stringify(actual) !== JSON.stringify(expectedInert)) htmlPolicyFailures.push({
+        number: example.number, source, expected: expectedInert, actual,
+      });
+    }
   } catch (cause) {
-    if (example.number >= 148 && example.number <= 191) roundTripFailures.push(example.number);
+    if (htmlPolicyExamples.has(example.number)) roundTripFailures.push(example.number);
     error = cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause);
   }
   if (!error && JSON.stringify(actual) === JSON.stringify(expected)) matches.add(example.number);
   else mismatches.push({ ...example, source, expected, actual, error });
+}
+
+if (referenceFailures.length) throw new Error(`The reference parser did not reproduce the pinned official HTML fixtures: ${compressRanges(referenceFailures)}`);
+const generatedCases = generatedHTMLPolicyCases();
+const generatedFailures = [];
+for (const test of generatedCases) {
+  try {
+    const reference = referenceParser.parse(test.source);
+    const expected = semanticProjection(inertRenderer.render(reference), true);
+    const captured = MarkdownImporter.parseWithSource(test.source, schema);
+    const actual = semanticProjection(HTMLExporter.export(captured.document, { document: false }));
+    const probe = fountainHTMLTokens(test.source, schema);
+    if (JSON.stringify(actual) !== JSON.stringify(expected)
+      || JSON.stringify(probe.tokens) !== JSON.stringify(referenceHTMLTokens(reference))
+      || !retainsLiteralHTML(captured.document, referenceHTMLTokens(reference))
+      || !probe.document.eq(captured.document)
+      || MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== test.source
+      || !MarkdownImporter.parse(MarkdownExporter.export(captured.document), schema).eq(captured.document)) {
+      generatedFailures.push({ ...test, expected, actual, expectedTokens: referenceHTMLTokens(reference), actualTokens: probe.tokens });
+    }
+  } catch (error) { generatedFailures.push({ ...test, error: String(error) }); }
+}
+// Prove the neutral comparator is not erasing precisely the losses it guards.
+// These are deliberately incorrect rendered outcomes, not baseline fixtures.
+const sensitivityCases = [
+  ['A <em>text</em>.', '<p>A &lt;em&gt;text.</p>'],
+  ['A <x a="one">text</x>.', '<p>A &lt;x a="two"&gt;text&lt;/x&gt;.</p>'],
+  ['A <em>text</em>.', '<p>A <em>text</em>.</p>'],
+  ['A <x>*text*</x>.', '<p>A &lt;x&gt;<strong>text</strong>&lt;/x&gt;.</p>'],
+  ['<div>\none\ntwo\n</div>', '<p>&lt;div&gt; one two &lt;/div&gt;</p>'],
+  ['A <x a="\\*">text</x>.', '<p>A &lt;x a="*"&gt;text&lt;/x&gt;.</p>'],
+  ['A <!-- *literal* --> *visible*.', '<p>A &lt;!-- <em>literal</em> --&gt; <em>visible</em>.</p>'],
+  ['[foo <bar attr="](baz)">', '<p><a href="baz">foo</a></p>'],
+];
+for (const [source, broken] of sensitivityCases) {
+  const expected = semanticProjection(inertRenderer.render(referenceParser.parse(source)), true);
+  if (JSON.stringify(semanticProjection(broken)) === JSON.stringify(expected)) {
+    throw new Error(`The inert HTML comparator failed its loss-sensitivity check: ${JSON.stringify(source)}`);
+  }
+}
+for (const literal of ['<x a="one  two">', '<x a="one\u00a0two">']) {
+  const damaged = schema.node('paragraph', {}, [schema.text(literal.replace(/ {2}|\u00a0/u, ' '))]);
+  if (retainsLiteralHTML(damaged, [['inline', literal]])) throw new Error('The literal HTML guard accepted whitespace corruption.');
+}
+console.log(`Reference parser reproduced all ${commonmarkSpec.tests.length} official HTML outputs exactly.`);
+console.log(`Inert raw HTML: ${htmlPolicyExamples.size - htmlPolicyFailures.length}/${htmlPolicyExamples.size} semantic, ${htmlPolicyExamples.size - htmlTokenFailures.length}/${htmlPolicyExamples.size} exact token contracts; ${generatedCases.length - generatedFailures.length}/${generatedCases.length} generated boundary/round-trip contracts.`);
+console.log(`Oracle sensitivity: ${sensitivityCases.length} semantic and 2 literal-whitespace corruptions rejected; reference parser absent from ${runtimeMaps.length} runtime source maps.`);
+if (htmlPolicyReport) {
+  console.log(`Inert raw HTML policy: ${htmlPolicyExamples.size - htmlPolicyFailures.length}/${htmlPolicyExamples.size} reference semantic contracts match.`);
+  for (const failure of htmlPolicyFailures) console.log(JSON.stringify(failure));
+  console.log(`Raw HTML token streams: ${htmlPolicyExamples.size - htmlTokenFailures.length}/${htmlPolicyExamples.size} exact literal contracts match.`);
+  for (const failure of htmlTokenFailures) console.log(JSON.stringify(failure));
+  for (const failure of generatedFailures) console.log(JSON.stringify(failure));
 }
 
 const required = expandRanges(baseline.requiredMatchRanges);
@@ -330,6 +505,7 @@ for (const number of inspectedExamples) {
 }
 
 if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
+if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');
 if (divergenceFailures.length) throw new Error(`Intentional divergence contract regressions: ${compressRanges(divergenceFailures)}`);
 if (reportOnly) process.exit(0);
 if (!required.size) throw new Error('The CommonMark semantic baseline contains no required matches.');

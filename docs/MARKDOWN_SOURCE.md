@@ -435,6 +435,60 @@ item. All other projected content must agree, and both original-source and
 canonical round trips must pass. This closes the eight formerly pending policy
 decisions without increasing the 563 semantic matches or erasing authored blanks.
 
+### Independent inert-HTML reference contract
+
+The pinned `commonmark@0.31.2` JavaScript reference implementation is now a
+**development-only oracle**, not Fountain's parser. Its normal renderer must
+first reproduce all 652 official `commonmark-spec@0.31.2` HTML outputs exactly.
+Only after that check does a second reference renderer change two things:
+inline raw HTML is emitted as literal text, and raw HTML blocks are emitted as
+literal paragraphs with explicit line breaks. Everything else—block boundaries,
+emphasis, links, references, list structure, and token recognition—comes from
+the unmodified reference parser. No Fountain AST is constructed from that tree,
+and the two engines' internal trees are never compared for equality.
+
+The named `literal-html-reference-v1` contract covers all 72 pending raw-HTML
+examples. Each must pass:
+
+- neutral rendered-semantic comparison against the inert reference output;
+- exact ordered raw-token comparison through Fountain's declining adapter hooks;
+- retention of those literal tokens in Fountain's document text (inline LF is
+  a soft space; block line boundaries remain explicit);
+- unchanged parsing when adapters decline, exact original-source export, and
+  canonical Markdown export/re-import into the same Fountain document.
+
+The gate adds 144 generated cases: all seven raw-block classes in plain text,
+quotes, lists, and nested list/quote containers, with zero/three-space indentation
+and LF/CRLF endings; plus inline quoted attributes, crossing emphasis/link
+boundaries, and malformed attribute separators. Eight deliberately wrong
+semantic outputs and two whitespace-corrupted literals prove that the comparator
+does not erase the losses it is intended to catch. This includes double spaces
+and NBSP inside literal attributes, independently of HTML display whitespace.
+
+The reference parser is absent from all 128 emitted runtime source maps; the
+gate fails if it enters a browser/server library bundle. The dependency and its
+BSD-2-Clause license remain part of the development installation. See the
+[official reference implementation](https://github.com/commonmark/commonmark.js)
+and [CommonMark 0.31.2 specification](https://spec.commonmark.org/0.31.2/).
+
+Run `pnpm test:markdown-conformance` for enforced checks, or
+`node scripts/check-markdown-conformance.mjs --html-policy-report` for detailed
+policy failures. These proofs do **not** change the 563 / 72 / 17 default
+classification. The remaining work is broader opt-in HTML schema projection,
+specialized/raw-text structures, and complete unsupported/unsafe-content loss
+policy—not evidence that the 72 current examples all have delimiter bugs.
+
+Verification on 2026-09-07: the complete `pnpm check` passed 899 tests across
+83 files and the package, runtime, API, conformance, build, and performance gates.
+All 15 recorded Markdown editing workflows passed under
+`artifacts/manual-inert-html-oracle-20260907b/results/`. The new nested
+list/quote workflow uses real clipboard paste, edits marked text, exercises
+undo/redo, and exports/reimports the document. Its before/after screenshots
+were visually inspected: literal tags, entity spelling, backslash, line breaks,
+and surrounding emphasis remain visible. The host's single trailing caret
+paragraph is asserted explicitly, not stripped from comparisons. No runtime
+engine, public API, or bundle-budget change was needed for this oracle work.
+
 Caret-policy verification on 2026-09-07: `pnpm check` passed all 792 tests in
 79 files and the package, runtime, API, conformance, build, and performance gates.
 The final empty-container editing contract includes all ten official examples

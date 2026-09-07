@@ -7,6 +7,7 @@
   "pendingWorkGroups": [
     {
       "name": "Raw HTML syntax, precedence, and safe schema projection",
+      "inertContract": "literal-html-reference-v1",
       "exampleRanges": "21,31,148-191,201,308-309,344,475-477,491,494,524,536,613-617,623,625-631,642-643",
       "requiredProof": "Keep raw HTML inert by default; define safe opt-in schema projection, preserve opaque source, handle all seven block classes and inline precedence, and explicitly report unsupported or unsafe HTML. Never execute reference script/style output to increase a conformance score."
     }

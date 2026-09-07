@@ -25,6 +25,12 @@ unfinished. This does not change the 563-match / 72-pending / 17-intentional-dif
 CommonMark baseline or qualify the overall programme for publication. See the
 [Markdown contract and evidence](MARKDOWN_SOURCE.md).
 
+The independent `literal-html-reference-v1` gate now proves the declared inert
+policy for all 72 raw-HTML examples, plus 144 generated boundary/round-trip
+cases. The development-only reference parser must first reproduce all 652
+official outputs; it is not bundled into Fountain's runtime. This is separate
+from full opt-in conversion conformance and does not promote pending cases.
+
 Primary comparison references:
 
 - [Tiptap editor overview](https://tiptap.dev/docs/editor/getting-started/overview)

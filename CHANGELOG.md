@@ -4,6 +4,15 @@
 
 ### Added
 
+- Development-only `commonmark@0.31.2` oracle for the explicit inert-HTML policy.
+  It reproduces all 652 official outputs before checking 72 exact-token,
+  rendered-semantic, source, and canonical-round-trip contracts plus 144
+  generated block/container/inline variants. Ten deliberately corrupted
+  outcomes test guard sensitivity. Runtime source maps must exclude the
+  reference parser. Fountain retains its own parser and schema, and the
+  default conformance classification remains 563 matching / 72 pending / 17
+  intentional; opt-in HTML conversion/loss work is still unfinished.
+
 - Opt-in `MarkdownImportOptions.parseHTMLInline` receives immutable raw-token /
   original-node segments after Fountain's own inline parsing. The isolated
   `ServerHTMLImporter.parseInline` / instance `parseInlineWithReport` methods
