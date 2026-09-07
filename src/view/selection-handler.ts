@@ -91,6 +91,24 @@ export class SelectionHandler {
 
   capture(): Selection | null {
     const selection = this.read();
+    if (!selection) {
+      const native = document.getSelection();
+      const anchor = native?.anchorNode;
+      const element = anchor?.nodeType === 1 ? anchor as Element : anchor?.parentElement;
+      const empty = native?.isCollapsed ? element?.closest<HTMLElement>('[data-fountain-empty-text-block]') : null;
+      if (empty && this.dom.contains(empty)) {
+        try {
+          const path = parseNodePath(empty);
+          const node = getNodeAtPath(this.editor.state.doc, path);
+          if (!node.childCount && !node.type.spec.atom) {
+            const blockSelection = new NodeSelection(this.editor.state.doc, path);
+            if (!blockSelection.eq(this.editor.state.selection)) {
+              this.editor.dispatch(this.editor.state.createTransaction().setSelection(blockSelection));
+            }
+          }
+        } catch { /* A replaced DOM block must not redirect typing. */ }
+      }
+    }
     if (selection && !selection.eq(this.editor.state.selection)) {
       this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
     }
@@ -257,7 +275,8 @@ export class SelectionHandler {
     if (!atom) return;
     try {
       const path = parseNodePath(atom);
-      if (!getNodeAtPath(this.editor.state.doc, path).type.spec.atom) return;
+      const node = getNodeAtPath(this.editor.state.doc, path);
+      if (!node.type.spec.atom && !(atom.dataset.fountainEmptyTextBlock === 'true' && !node.childCount)) return;
       const selection = new NodeSelection(this.editor.state.doc, path);
       event.preventDefault();
       this.pointerSelectionHandled = true;

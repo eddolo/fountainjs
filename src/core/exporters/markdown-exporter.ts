@@ -17,6 +17,8 @@ export interface MarkdownExportLoss {
 export interface MarkdownExportOptions {
   /** Emit ordinary inline destinations or deterministic reference definitions. */
   linkStyle?: MarkdownLinkStyle;
+  /** Preserve blank paragraphs as inert HTML markers (default), or omit with loss reports. */
+  emptyParagraphs?: 'preserve' | 'omit';
   /** Receives each lossy projection after it is recorded in the returned report. */
   onLoss?: (loss: MarkdownExportLoss) => void;
 }
@@ -451,7 +453,17 @@ function render(
   switch (node.type.name) {
     case 'doc': return renderBlockSequence(node.content, context, []);
     case 'text': return inline(node, context, path);
-    case 'paragraph': return inlineContent(node, context, path);
+    case 'paragraph': {
+      const value = inlineContent(node, context, path);
+      // An empty pipe-table cell already has an explicit structural slot.
+      if (value || tableAlignmentRepresented) return value;
+      if (context.options.emptyParagraphs === 'omit') {
+        report(context, 'node', 'paragraph', path, 'Empty paragraph omitted by the requested Markdown export policy.');
+        return '';
+      }
+      if (node.childCount > 1) report(context, 'node', 'paragraph', path, 'Multiple empty text nodes are canonicalized to one caret text node.');
+      return `<p data-fountain-empty="${node.childCount ? 'text' : 'block'}"></p>`;
+    }
     case 'heading': return `${'#'.repeat(Number(node.attrs.level) || 1)} ${inlineContent(node, context, path)}`;
     case 'blockquote': return renderBlockSequence(node.content, context, path, depth)
       .split('\n')
@@ -475,13 +487,17 @@ function render(
       const prefix = marker + (node.type.name === 'task_list' ? `[${item.attrs.checked ? 'x' : ' '}] ` : '');
       const indentation = ' '.repeat(marker.length);
       let alternate = false;
+      let previousRendered: Node | undefined;
       const body = item.content.map((child, childIndex) => {
-        alternate = LIST_TYPES.has(child.type.name) && item.content[childIndex - 1]?.type === child.type ? !alternate : false;
+        alternate = LIST_TYPES.has(child.type.name) && previousRendered?.type === child.type ? !alternate : false;
         const value = render(child, context, [...path, index, childIndex], 0, false, alternate);
+        if (!value) return '';
         // Only a list starting at 1 may interrupt an existing paragraph.
         const compactList = LIST_TYPES.has(child.type.name)
           && (child.type.name !== 'ordered_list' || Number(child.attrs.start ?? 1) === 1);
-        return (childIndex ? compactList ? '\n' : '\n\n' : '') + value;
+        const separator = previousRendered ? compactList ? '\n' : '\n\n' : '';
+        previousRendered = child;
+        return separator + value;
       }).join('');
       return prefix + body.replace(/\n/g, `\n${indentation}`);
     }).join('\n');

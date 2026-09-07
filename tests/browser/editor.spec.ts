@@ -2857,6 +2857,9 @@ test('types, deletes, and undoes inside imported empty documents, quotes, and li
   const sources = [
     '[foo]: /url\n', '[foo]\n\n> [foo]: /url\n', '-\n\n  foo\n',
     '- foo\n-\n- bar\n', '- foo\n-   \n- bar\n', '1. foo\n2.\n3. bar\n', '*\n', '* a\n*\n\n* c\n',
+    '<p data-fountain-empty="text"></p>\n\nBody\n\n<p data-fountain-empty="text"></p>',
+    '- <p data-fountain-empty="text"></p>\n  \n  ```text\n  literal\n  ```',
+    '> <p data-fountain-empty="block"></p>\n>\n> After',
   ];
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   for (const source of sources) {
@@ -2892,6 +2895,9 @@ test('round-trips marker-relative list containers and exact code whitespace', as
     '- <script>\n  [hidden]: /wrong\n  </script>\n\n[hidden]',
     '> - ```text\n>   [hidden]: /wrong\n>   ```\n\n[hidden]',
     '[real]\n\n12. [real]: /right\n    "A title"\n\n    Content',
+    '<p data-fountain-empty="text"></p>\n\nBody\n\n<p data-fountain-empty="text"></p>',
+    '- <p data-fountain-empty="text"></p>\n  \n  ```text\n  literal\n  ```',
+    '> <p data-fountain-empty="block"></p>\n>\n> After',
   ];
   const results = await page.evaluate(sources => sources.map(source => (
     (globalThis as any).fountainBrowserTest.inspectMarkdown(source)

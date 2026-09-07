@@ -1,5 +1,6 @@
 import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
+import { matchesContentExpression } from '../core/schema/content-expression';
 import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
 
 export interface DOMRenderContext {
@@ -171,6 +172,13 @@ function needsCaretPlaceholder(path: readonly number[], context: DOMRenderContex
   return index === parent.childCount - 1 && parent.content[index - 1]?.type.name === 'hard_break';
 }
 
+function caretPlaceholder(): HTMLBRElement {
+  const placeholder = document.createElement('br');
+  placeholder.dataset.fountainCaretPlaceholder = '';
+  placeholder.setAttribute('aria-hidden', 'true');
+  return placeholder;
+}
+
 function renderText(node: Node, path: readonly number[], position: number, context: DOMRenderContext): HTMLElement {
   const wrapper = document.createElement('span');
   wrapper.dataset.fountainTextPath = path.join('.');
@@ -216,10 +224,7 @@ function renderText(node: Node, path: readonly number[], position: number, conte
   if (value.length === 0) {
     wrapper.appendChild(document.createTextNode(''));
     if (needsCaretPlaceholder(path, context)) {
-      const placeholder = document.createElement('br');
-      placeholder.dataset.fountainCaretPlaceholder = '';
-      placeholder.setAttribute('aria-hidden', 'true');
-      wrapper.appendChild(placeholder);
+      wrapper.appendChild(caretPlaceholder());
     }
   }
   return wrapper;
@@ -268,6 +273,14 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   )).forEach((decoration) => applyDecorationAttributes(dom, decoration));
   const target = contentDOM ?? dom;
   if (custom && contentDOM) target.replaceChildren();
+  delete dom.dataset.fountainEmptyTextBlock;
+  if (contentDOM && node.type.isBlock && !node.type.spec.atom && !node.childCount
+    && node.type.spec.content && matchesContentExpression([node.type.schema.text('')], node.type.spec.content)) {
+    // Childless text blocks are valid model nodes. Give them a visible hit
+    // target without inventing a text child or mutating shared document state.
+    dom.dataset.fountainEmptyTextBlock = 'true';
+    target.appendChild(caretPlaceholder());
+  }
   let childPosition = position + 1;
   node.content.forEach((child, index) => {
     if (!child.isText) appendWidgets(target, childPosition, context);

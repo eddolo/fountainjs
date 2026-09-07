@@ -102,6 +102,51 @@ describe('EditorView', () => {
     view.destroy();
   });
 
+  it.each(['paragraph', 'heading', 'code_block'])('renders and fills a childless %s without altering its type or attributes', type => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: {
+      type: 'doc', content: [{ type, attrs: type === 'heading' ? { level: 3, align: 'center' } : type === 'code_block' ? { language: 'typescript', lineNumbers: false } : { align: 'right' } }],
+    } });
+    const original = editor.getJSON();
+    const originalAttrs = editor.state.doc.child(0).attrs;
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const block = view.dom.querySelector<HTMLElement>('[data-fountain-empty-text-block]')!;
+    expect(block).not.toBeNull();
+    expect(block.querySelector('[data-fountain-caret-placeholder]')).not.toBeNull();
+    expect(editor.getJSON()).toEqual(original);
+    block.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true }));
+    view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'Filled' }));
+    expect(editor.state.doc.child(0).type.name).toBe(type);
+    expect(editor.state.doc.child(0).attrs).toEqual(originalAttrs);
+    expect(editor.state.doc.child(0).textContent).toBe('Filled');
+    expect(view.dom.querySelector('[data-fountain-empty-text-block]')).toBeNull();
+    view.destroy();
+    mount.remove();
+  });
+
+  it('captures a keyboard-positioned caret in a childless block rather than typing in the previous text', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Before' }] },
+      { type: 'heading', attrs: { level: 2 } },
+    ] } });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const block = view.dom.querySelector('h2')!;
+    const range = document.createRange();
+    range.setStart(block, 0);
+    range.collapse(true);
+    document.getSelection()!.removeAllRanges();
+    document.getSelection()!.addRange(range);
+    view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'Heading' }));
+    expect(editor.state.doc.child(0).textContent).toBe('Before');
+    expect(editor.state.doc.child(1).type.name).toBe('heading');
+    expect(editor.state.doc.child(1).textContent).toBe('Heading');
+    view.destroy();
+    mount.remove();
+  });
+
   it('preserves and rebases unchanged block DOM across leading insertion and deletion', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,

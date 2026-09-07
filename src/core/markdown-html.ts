@@ -8,6 +8,12 @@ export interface MarkdownHTMLBlock {
 const BLOCK_TAGS = new Set(('address article aside base basefont blockquote body caption center col colgroup dd details dialog dir div dl dt fieldset figcaption figure footer form frame frameset h1 h2 h3 h4 h5 h6 head header hr html iframe legend li link main menu menuitem nav noframes ol optgroup option p param search section summary table tbody td tfoot th thead title tr track ul').split(' '));
 const COMPLETE_TAG = /^(?:<[A-Za-z][A-Za-z\d-]*(?:[\t ]+[A-Za-z_:][A-Za-z\d_.:-]*(?:[\t ]*=[\t ]*(?:[^\s"'=<>`]+|'[^']*'|"[^"]*"))?)*[\t ]*\/?>|<\/[A-Za-z][A-Za-z\d-]*[\t ]*>)[\t ]*$/u;
 
+/** A deliberately narrow, inert dialect marker, not general HTML parsing. */
+export function markdownEmptyParagraph(line: string): 'block' | 'text' | null {
+  const match = /^ {0,3}<p data-fountain-empty="(block|text)"><\/p>[\t ]*$/u.exec(line);
+  return match ? match[1] as 'block' | 'text' : null;
+}
+
 export function markdownHTMLBlock(line: string, interruptParagraph = false): MarkdownHTMLBlock | null {
   const prefix = /^ {0,3}(?=<)/u.exec(line);
   if (!prefix) return null;

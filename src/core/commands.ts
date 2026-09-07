@@ -13,6 +13,7 @@ import { createImageNode, getActiveImage, type ImageAttributes } from './image';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
+import { matchesContentExpression } from './schema/content-expression';
 
 export type Command = (editor: Editor) => boolean;
 
@@ -60,8 +61,12 @@ function replaceAllSelection(editor: Editor, text: string): boolean {
 
 function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: string): boolean {
   const selected = getNodeAtPath(editor.state.doc, selection.nodePath);
+  const typed = text === undefined ? undefined : editor.state.schema.text(text, editor.state.storedMarks);
+  const fillEmptyBlock = typed && selected.type.isBlock && !selected.type.spec.atom && !selected.childCount
+    && selected.type.spec.content && matchesContentExpression([typed], selected.type.spec.content);
   const replacement = text === undefined
     ? []
+    : fillEmptyBlock ? [selected.copy([typed!])]
     : selected.type.isInline
       ? [editor.state.schema.text(text, editor.state.storedMarks)]
       : [paragraphWithText(editor, text)].filter((node): node is Node => Boolean(node));

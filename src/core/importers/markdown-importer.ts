@@ -2,7 +2,7 @@ import { Mark, Node, type Schema } from '../schema';
 import { isSafeURL } from '../url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
-import { markdownHTMLBlock, markdownHTMLBlockEnd, type MarkdownHTMLBlock } from '../markdown-html';
+import { markdownHTMLBlock, markdownHTMLBlockEnd, markdownEmptyParagraph, type MarkdownHTMLBlock } from '../markdown-html';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
 const MAX_MARKDOWN_REFERENCE_LINES = 32;
@@ -1391,6 +1391,10 @@ function collectListItem(
       else break;
       paragraphOpen = false;
     }
+    if (schema.nodes.paragraph && markdownEmptyParagraph(value)) {
+      paragraphOpen = false;
+      return;
+    }
     fence = markdownFence(value);
     const disclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(value);
     html = !fence && !disclosure ? markdownHTMLBlock(value, paragraphOpen) : null;
@@ -1532,6 +1536,12 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
   b: for (let index = 0; index < lines.length;) {
     const line = lines[index];
     if (!line.trim()) { index++; continue; }
+    const emptyParagraph = markdownEmptyParagraph(line);
+    if (emptyParagraph && schema.nodes.paragraph) {
+      blocks.push(schema.node('paragraph', {}, emptyParagraph === 'text' ? [schema.text('')] : []));
+      index++;
+      continue;
+    }
     const disclosure = detailsStart(line);
     if (disclosure && schema.nodes.details && schema.nodes.details_summary) {
       const closing = detailsEnd(lines, index);
@@ -1677,6 +1687,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
           } else if (fence) {
             if (closesMarkdownFence(deepest, fence)) fence = null;
             paragraphOpen = false;
+          } else if (schema.nodes.paragraph && markdownEmptyParagraph(deepest)) {
+            paragraphOpen = false;
           } else {
             fence = markdownFence(deepest);
             const disclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(deepest);
@@ -1784,6 +1796,12 @@ function references(markdown: string, schema: Schema): { lines: string[]; defini
       continue;
     }
     const semanticDisclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(line);
+    if (schema.nodes.paragraph && markdownEmptyParagraph(line)) {
+      lines.push(line);
+      index++;
+      paragraphOpen = false;
+      continue;
+    }
     const rawHTML = !semanticDisclosure && markdownHTMLBlock(line, paragraphOpen);
     if (rawHTML) {
       const end = markdownHTMLBlockEnd(sourceLines, index, rawHTML);
@@ -1895,6 +1913,11 @@ function extractFootnoteDefinitions(
     fence = markdownFence(lines[index]);
     if (fence) { paragraphOpen = false; index++; continue; }
     const semanticDisclosure = schema.nodes.details && /^\s*<\/?(?:details|summary)(?=[\t >])/iu.test(lines[index]);
+    if (schema.nodes.paragraph && markdownEmptyParagraph(lines[index])) {
+      index++;
+      paragraphOpen = false;
+      continue;
+    }
     const rawHTML = !semanticDisclosure && markdownHTMLBlock(lines[index], paragraphOpen);
     if (rawHTML) {
       index = markdownHTMLBlockEnd(lines, index, rawHTML);

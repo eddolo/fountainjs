@@ -63,6 +63,52 @@ test('inert HTML source remains multiline editable text through the public demos
   await expect(editor).not.toContainText('remains text');
 });
 
+test('authored blank paragraphs remain visible through Markdown export and reimport', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const html = '<p>Spacing review</p><p></p><ul><li><p></p><pre><code>Keep this code inside the list.</code></pre><p></p></li></ul><p>After</p>';
+  await page.goto('/demos/go-docs-service.html');
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await editor.getByText('After', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await expect(editor.locator(':scope > p')).toHaveCount(5);
+  await expect(editor.locator('li > p')).toHaveCount(2);
+  await expect(editor.locator('li > pre')).toHaveText('Keep this code inside the list.');
+  await capture(page, info, '10-authored-spacing-before-export');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  const authored = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  expect(markdown.match(/data-fountain-empty/g)).toHaveLength(5);
+
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(authored);
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const exportedHTML = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), exportedHTML);
+  await page.goto('/demos/go-docs-service.html');
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator(':scope > p')).toHaveCount(5);
+  await expect(editor.locator('li > p')).toHaveCount(2);
+  await expect(editor.locator('li > pre')).toHaveText('Keep this code inside the list.');
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(authored);
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '11-authored-spacing-after-reimport');
+});
+
 test('nested incident runbook preserves literal definitions through editing and export', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const source = '# Incident runbook\n\n- <script>\n  [hidden]: /wrong\n  </script>\n\n- ```text\n  [secret]: /not-a-link\n  ```\n\n[hidden] stays literal. [guide]\n\n12. [guide]: /runbook\n\n    Operator checklist\n\nEnd of runbook.';

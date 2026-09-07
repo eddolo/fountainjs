@@ -4,6 +4,21 @@
 
 ### Fixed
 
+- Markdown preserves authored empty paragraph blocks by default using a narrow,
+  inert `<p data-fountain-empty="text"></p>` dialect marker (`block` for a
+  childless paragraph). This includes leading/trailing/consecutive blanks and
+  blanks before code in list items. The additive `emptyParagraphs: 'omit'`
+  export option reports each omitted paragraph and keeps following blocks
+  inside their list. Empty pipe-table cells retain their existing syntax.
+  Existing source snapshots still return untouched original source exactly.
+  General safe raw-HTML conversion remains separate, unfinished work.
+  Childless text blocks also get a view-only hit target; clicking and typing
+  fills the selected block without changing its type or attributes or adding
+  model content merely by rendering it.
+- Nested reference and footnote discovery respects list/quote containers,
+  fenced code, and inert HTML. Browser/server HTML import no longer inserts
+  a fake paragraph before list-first code, headings, or nested lists; explicit
+  blank paragraphs and genuinely empty item caret hosts are retained.
 - Markdown now recognizes all seven raw-HTML block boundary types and keeps
   their content as editable literal text rather than interpreting embedded
   headings, lists, reference definitions, or root footnote definitions.

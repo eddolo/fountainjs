@@ -226,6 +226,7 @@ reference definitions:
 const document = MarkdownImporter.parse(source, schema)
 const { markdown, losses } = MarkdownExporter.exportWithReport(document, {
   linkStyle: 'reference', // default: 'inline'
+  emptyParagraphs: 'preserve', // default; 'omit' reports spacing loss
   onLoss: detail => telemetry.record('markdown-projection', detail),
 })
 ```
@@ -238,6 +239,14 @@ non-default image layout, and typed media metadata.
 An `onLoss` callback is observational: its exception is contained and cannot
 break otherwise valid serialization. `MarkdownExporter.export(...)` remains
 the convenient string-only API and accepts the same options.
+
+Empty paragraphs use inert `<p data-fountain-empty="text"></p>` markers by
+default (`block` for a childless paragraph), preserving authored spacing and
+list structure through Fountain Markdown round trips. This explicit dialect
+is not general raw-HTML conversion. Choose `emptyParagraphs: 'omit'` when an
+external Markdown consumer must not receive these HTML markers; every removed
+paragraph receives a path-specific loss report. Empty pipe-table cells keep
+ordinary table syntax. See [empty-paragraph details](MARKDOWN_SOURCE.md#empty-paragraphs-and-caret-hosts).
 
 For a raw/visual workflow, `MarkdownImporter.parseWithSource(...)` separates a
 strict leading `---` frontmatter block from the document body without parsing

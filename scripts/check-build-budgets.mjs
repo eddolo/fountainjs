@@ -273,8 +273,10 @@ const limits = Object.freeze({
   // literal export add roughly 2.5 KiB; consumer-entry ceilings stay unchanged.
   // Shared nested-container discovery and opaque footnote/reference handling
   // add about 1.9 KiB ESM / 1.4 KiB CJS; consumer-entry ceilings stay fixed.
-  'all ESM runtime code': 1308 * kibibyte,
-  'all CommonJS runtime code': 1092 * kibibyte,
+  // Explicit empty-paragraph preservation/omission plus childless-block hit
+  // targets/typing add ~2.0 KiB ESM / 1.6 KiB CJS; no new runtime dependency.
+  'all ESM runtime code': 1310 * kibibyte,
+  'all CommonJS runtime code': 1093 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

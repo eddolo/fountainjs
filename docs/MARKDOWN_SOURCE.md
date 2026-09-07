@@ -264,14 +264,62 @@ imports via the public headless demo, pastes HTML into the Go-service demo,
 edits a nested paragraph, undoes/redoes, and exports/reimports Markdown.
 `tests/server-html-parity.test.ts` checks both importers directly.
 
-**Still open:** Markdown cannot distinguish all authored empty paragraphs from
-blank source separators or generated trailing caret hosts. In particular, an
-explicit empty first paragraph followed by another block in a list needs a
-documented serialization/loss policy; otherwise export can split the list.
-The incident-runbook audit ends in an ordinary paragraph so its exact-model
-comparison does not conflate this separate gap with container text loss.
-Do not remove authored blank paragraphs globally or count this work as full
-CommonMark conformance.
+### Empty paragraphs and caret hosts
+
+Blank Markdown source lines are separators, not an unambiguous count of empty
+paragraph blocks. Fountain's canonical export now preserves each empty
+paragraph with an inert dialect marker:
+
+```html
+<p data-fountain-empty="text"></p>
+```
+
+`text` preserves the editor's empty text-caret child; `block` preserves a
+childless paragraph. The importer recognizes only these exact standalone
+forms (with up to three leading spaces and optional trailing spaces/tabs),
+without evaluating HTML. Extra attributes or nonempty content do not qualify.
+Inside code or another opaque HTML block the marker remains literal text.
+Leading, consecutive, trailing, and nested blanks survive, including an empty
+first paragraph followed by code inside a list. Empty pipe-table cells already
+have a structural slot and keep ordinary table syntax.
+
+This is a Fountain dialect, not a new CommonMark guarantee. A third-party
+Markdown renderer must permit HTML to interpret these as paragraph elements;
+its own CSS determines their visible height. Hosts that require marker-free
+Markdown can explicitly accept the spacing loss:
+
+```ts
+const { markdown, losses } = MarkdownExporter.exportWithReport(doc, {
+  emptyParagraphs: 'omit',
+});
+```
+
+Each omitted paragraph is reported with its document path. Following code or
+other blocks remain inside their list. There is no heuristic that deletes a
+blank paragraph merely because it might be an automatically generated caret
+host: once present in the document, default export preserves it. Existing
+source snapshots still return unchanged original source exactly; the option
+applies when a block is rendered canonically. Multiple redundant empty text
+children are canonicalized with a loss report; arbitrary attributes/marks
+remain subject to the existing format loss policy. JSON remains lossless
+structured persistence. General safe raw-HTML projection is still pending.
+
+The browser view gives childless text blocks a view-only placeholder without
+changing JSON during render. Pointer or collapsed native-caret selection can
+target the empty block, and typing fills it while retaining its node type and
+attributes. This applies to paragraph, heading, and code blocks that accept
+text; atom NodeViews do not receive invented caret content.
+
+Verification on 2026-09-07: the complete `pnpm check` gate passed 733 tests.
+Nine targeted Chromium/Firefox/WebKit contracts passed, including actual
+typing, Backspace, Enter, and undo in imported empty containers. All five
+recorded public-demo Markdown audits passed under
+`artifacts/manual-markdown-empty-20260907b/results/`. The authored-spacing
+workflow creates trailing blanks with Enter, preserves blanks before/after a
+list's code block, exports/reimports Markdown, and pastes the result into a
+fresh editor; its before/after JSON and paragraph counts agree, and the
+rendered screenshots were visually inspected. The CommonMark baseline stays
+at 563 matching, 80 pending, and nine intentional differences.
 
 Nested-container verification on 2026-09-07: `pnpm check` passed all 717 tests,
 package/headless/server-runtime contracts, semantic conformance, and build and
