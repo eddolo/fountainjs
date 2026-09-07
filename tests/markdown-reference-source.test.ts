@@ -2,6 +2,39 @@ import { describe, expect, it } from 'vitest';
 import { CoreSchemaSpec, MarkdownExporter, MarkdownImporter, Schema } from '../src';
 
 describe('reference-definition source provenance', () => {
+  it.each(['\n', '\r\n', '\r'])('preserves definition prefixes before paragraphs and headings (%j)', ending => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = ['[ref]: ./first.md "First"', 'Heading', '=======', '',
+      '[REF]: ./ignored.md', 'Edit.', '', 'Keep __this__ [ref].', ''].join(ending);
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const changed = schema.node('doc', {}, [imported.document.child(0),
+      schema.node('paragraph', {}, [schema.text('Changed.')]), imported.document.child(2)]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+    expect(result.preservation).toBe('blocks');
+    expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+    expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(changed.toJSON());
+    for (const content of [[imported.document.child(2), imported.document.child(0)], [imported.document.child(2)]]) {
+      const moved = schema.node('doc', {}, content);
+      const mapped = MarkdownExporter.exportWithSource(moved, imported.source);
+      expect(mapped.preservation).toBe('mapped-blocks');
+      expect(mapped.markdown).toContain('Keep __this__ [ref].');
+      expect(mapped.markdown.split('[ref]:')).toHaveLength(2);
+      expect(mapped.markdown.indexOf('[ref]:')).toBeLessThan(mapped.markdown.indexOf('[REF]:'));
+      expect(MarkdownImporter.parse(mapped.markdown, schema).toJSON()).toEqual(moved.toJSON());
+    }
+  });
+
+  it('preserves multiline prefix definitions without swallowing following literal lines', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = 'Edit.\n\n[ref]:\n  <./guide.md>\n  "First\n  title"\nKeep [ref].\n\n[unresolved]: not a destination\n';
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const changed = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Changed.')]), ...imported.document.content.slice(1)]);
+    const result = MarkdownExporter.exportWithSource(changed, imported.source);
+    expect(result.preservation).toBe('blocks');
+    expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+    expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(changed.toJSON());
+  });
+
   it.each(['\n', '\r\n', '\r'])('retains definitions in their original positions after an unrelated edit (%j)', ending => {
     const schema = new Schema(CoreSchemaSpec);
     const source = ['[guide]: <https://example.com/original> "Keep title"', '', '# Heading ###', '',
@@ -101,7 +134,9 @@ describe('reference-definition source provenance', () => {
     const imported = MarkdownImporter.parseWithSource(source, schema);
     const changed = schema.node('doc', {}, imported.document.content.slice(1));
     const result = MarkdownExporter.exportWithSource(changed, imported.source);
-    expect(result.preservation).toBe('canonical');
+    expect(result.preservation).toBe('mapped-blocks');
+    expect(result.markdown).toContain('[unsafe]: javascript:alert(1)');
+    expect(result.markdown).toContain('[safe]: ./safe.md');
     expect(changed.textContent).toContain('[unsafe]: javascript:alert(1)');
     expect(JSON.stringify(changed.toJSON())).not.toContain('"href":"javascript:');
     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(changed.toJSON());
@@ -120,15 +155,16 @@ describe('reference-definition source provenance', () => {
   });
 
   it.each([
-    'Edit.\n\n> [ref]: ./nested.md\n\nAn [example][ref].',
-    'Edit.\n\n[ref]: ./mixed.md\nAn [example][ref].\n\nAnother [ref].',
-    'Edit.\n\n```markdown\n\n[ref]: ./code.md\n\n```\n\n[ref]',
-  ])('does not promote definitions from ambiguous, mixed or fenced regions: %s', source => {
+    ['canonical', 'Edit.\n\n> [ref]: ./nested.md\n\nAn [example][ref].'],
+    ['blocks', 'Edit.\n\n[ref]: ./mixed.md\nAn [example][ref].\n\nAnother [ref].'],
+    ['canonical', 'Edit.\n\n```markdown\n\n[ref]: ./code.md\n\n```\n\n[ref]'],
+  ])('uses %s only for proven definition boundaries: %s', (preservation, source) => {
     const schema = new Schema(CoreSchemaSpec);
     const imported = MarkdownImporter.parseWithSource(source, schema);
     const changed = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Changed.')]), ...imported.document.content.slice(1)]);
     const result = MarkdownExporter.exportWithSource(changed, imported.source);
-    expect(result.preservation).toBe('canonical');
+    expect(result.preservation).toBe(preservation);
+    if (preservation === 'blocks') expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(changed.toJSON());
   });
 });

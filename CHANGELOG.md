@@ -4,9 +4,13 @@
 
 - Markdown source snapshots retain standalone root reference definitions after
   unrelated edits and block moves/deletions, including their duplicate-definition
-  precedence. Mixed/container definitions and ambiguous boundaries still fall
+  precedence. Container definitions and ambiguous boundaries still fall
   back to canonical output. The issue workflow now demonstrates reference-style
-  source retention. These changes are **not** in the staged 0.4.0-beta.1 tarball.
+  source retention. These changes are **not** in the published 0.4.0-beta.1 tarball.
+- Root definitions directly before a paragraph or heading now receive the same
+  retention guarantees, including after movement/deletion. Only parser-proven
+  prefixes are extracted; literal/rejected definitions and container fallbacks
+  retain their existing semantics. The issue demo exercises this compact form.
 
 ## 0.4.0-beta.1 — Capability preview
 

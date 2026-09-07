@@ -19,7 +19,6 @@ The preview keeps an outdated status after switching rooms.
 switchRoom("planning");
 ~~~
 
-An untouched paragraph with __deliberate source formatting__ and a [link][host-docs].
-
 [host-docs]: https://example.com/docs "Host documentation"
+An untouched paragraph with __deliberate source formatting__ and a [link][host-docs].
 `;

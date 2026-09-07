@@ -52,13 +52,22 @@ test('issue workflow preserves root references and validates local image files',
   await expect(source).toHaveValue(/\[doc\]: https:\/\/example.com\/docs/);
 });
 
-test('issue workflow reports canonical fallback for mixed reference definitions', async ({ page }) => {
+test('issue workflow preserves reference prefixes and reports container fallback', async ({ page }) => {
   await page.goto('/issue-editor.html');
   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
   const source = page.getByRole('textbox', { name: 'Markdown description', exact: true });
-  await source.fill('Editable paragraph.\n\n[doc]: https://example.com/docs\nA [reference][doc].\n\nAnother [doc].');
+  const original = 'Editable paragraph.\n\n[doc]: https://example.com/docs\nA [reference][doc].\n\nAnother [doc].';
+  await source.fill(original);
   await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+  await editor.getByText('Editable paragraph.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Changed.');
+  await expect(page.getByLabel('Fountain diagnostics')).toContainText('blocks');
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  await expect(source).toHaveValue(original.replace('Editable paragraph.', 'Editable paragraph. Changed.'));
+  await source.fill('Editable paragraph.\n\n> [doc]: https://example.com/docs\n\nA [reference][doc].');
+  await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
   await editor.getByText('Editable paragraph.', { exact: true }).click();
   await page.keyboard.press('End');
   await page.keyboard.type(' Changed.');

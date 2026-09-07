@@ -5,24 +5,28 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
-Reference-source retention increment (2026-09-07, Unreleased): standalone root
-Markdown reference definitions now survive unrelated visual edits and block
-moves/deletions. Fourteen focused tests cover line endings, duplicate precedence,
+Reference-source retention increment (2026-09-07, Unreleased): root Markdown
+reference definitions, standalone or directly before a paragraph/heading, now
+survive unrelated visual edits and block moves/deletions. Eighteen focused tests
+cover compact definition prefixes, line endings, duplicate precedence,
 Unicode/escaped labels, multiline/image references, literal-bracket safety,
 frontmatter, rejected URLs, ambiguous fallback and 200 blocks sharing 1,000
-definitions. Full `pnpm check`: 1,249 tests / 106 files, 385 declarations and
+definitions. Full `pnpm check`: 1,253 tests / 106 files, 385 declarations and
 unchanged runtime/headless/conformance/performance gates pass. Runtime size is
-1368.5 KiB ESM / 1137.7 KiB CJS; only the aggregate ESM ceiling rises by 1 KiB
-to 1369. Nine issue-workflow checks pass across Chromium, Firefox and WebKit.
+1368.7 KiB ESM / 1137.8 KiB CJS, within the existing 1369 / 1138 ceilings.
+Nine issue-workflow checks pass across Chromium, Firefox and WebKit, including
+rendered link destinations/titles before editing, in the reader, and after reopen.
 The recorded real-keyboard edit/undo/redo/source/reader/download/reopen/task
 workflow and its desktop/mobile screenshots were visually inspected:
-`artifacts/reference-source-20260907-recorded/`; cross-browser evidence:
-`artifacts/reference-source-20260907-browser-v2/`. Screenshot capture now waits
-for font loading and instant scroll-to-top completion: the first WebKit capture
-caught a moving fixed header, not a settled layout. This is not physical-mobile
+`artifacts/reference-prefix-20260907-recorded-v2/`; cross-browser evidence:
+`artifacts/reference-prefix-20260907-browser-v3/`. Screenshot capture waits for
+fonts/layout and retries instant scroll-to-top: reader mounting could apply
+scroll anchoring after the initial scroll, so polling alone could leave a
+displaced fixed header. The first failed capture is retained separately.
+This is not physical-mobile
 certification or full CommonMark conformance (still 563/652 default, 578/652
-opt-in HTML). Mixed/container definition provenance remains open. The already
-staged 0.4.0-beta.1 tarball does not include this increment; see Unreleased.
+opt-in HTML). Container definition provenance remains open. The published
+0.4.0-beta.1 tarball does not include this increment; see Unreleased.
 
 Selection/alignment human-use audit (2026-09-07): formatting previously affected
 only the first text block and rejected all-document/cell selections. Alignment

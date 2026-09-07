@@ -127,9 +127,9 @@ export class MarkdownSourceSnapshot {
   readonly body: string;
   readonly lineEnding: MarkdownLineEnding;
   readonly frontmatter?: MarkdownFrontmatter;
-  /** Exact source trivia (whitespace/standalone definitions) before the first block. */
+  /** Exact source trivia (whitespace/root definitions) before the first block. */
   readonly leading: string;
-  /** Standalone reference definitions in original order, retained after structural edits. */
+  /** Root reference definitions in original order, retained after structural edits. */
   readonly referenceDefinitions: string;
   /**
    * Conservatively mapped top-level blocks. An empty array means this source was
@@ -293,37 +293,45 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
 
 /**
  * Capture only when blank-line-delimited source regions independently map
- * one-to-one to the parsed top-level nodes. Standalone root reference
- * definitions are source trivia, shared with every block's inline parser.
- * Mixed/container definitions and ambiguous block boundaries still fail closed.
+ * one-to-one to the parsed top-level nodes. Root reference-definition prefixes
+ * are source trivia, shared with every block's inline parser. Container
+ * definitions and ambiguous block boundaries still fail closed.
  */
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   const segments = markdownBlockSegments(source);
   if (!segments.blocks.length || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
   const quietOptions = { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
     onHTMLFlowFallback: undefined, onTeXTableIssue: undefined };
-  const isDefinitionRegion = (value: string): boolean => {
-    if (!/^ {0,3}\[/u.test(value)) return false;
-    const lines = value.replace(/\r\n?/gu, '\n').split('\n');
-    for (let index = 0; index < lines.length;) {
-      if (footnoteDefinitionAt(lines, index, schema)) return false;
+  const definitionPrefix = (value: string): string => {
+    if (!/^ {0,3}\[/u.test(value)) return '';
+    // Keep physical endings and indentation separately from the parser's lines.
+    // A definition may end immediately before a paragraph, not just a blank line.
+    const physical = value.match(/[^\r\n]*(?:\r\n|\r|\n|$)/gu)!.filter(Boolean);
+    const lines = physical.map(line => line.replace(/(?:\r\n|\r|\n)$/u, ''));
+    let index = 0;
+    while (index < lines.length) {
+      if (footnoteDefinitionAt(lines, index, schema)) break;
       const definition = referenceDefinitionAt(lines, index);
-      if (!definition) return false;
+      if (!definition) break;
       index += definition.lineCount;
     }
-    return true;
+    return physical.slice(0, index).join('');
   };
-  const definitionRegions = new Set(segments.blocks.filter(block => isDefinitionRegion(block.source)));
-  const referenceDefinitions = [...definitionRegions].map(block => block.source).join(`${sourceLineEnding(source)}${sourceLineEnding(source)}`);
+  const regions = segments.blocks.map(block => ({ ...block, prefix: definitionPrefix(block.source) }));
+  const referenceDefinitions = regions.filter(region => region.prefix)
+    .map(region => region.prefix.replace(/(?:\r\n|\r|\n)$/u, ''))
+    .join(`${sourceLineEnding(source)}${sourceLineEnding(source)}`);
   // Parse the definition context once; appending every definition to every
   // block would multiply large reference sets by the number of document blocks.
   const context = referenceDefinitions ? references(referenceDefinitions, schema, quietOptions).definitions : null;
   const contentRegions: Array<{ source: string; separatorAfter: string }> = [];
   let leading = segments.leading;
-  for (const region of segments.blocks) {
-    if (!definitionRegions.has(region)) contentRegions.push({ ...region });
-    else if (contentRegions.length) contentRegions[contentRegions.length - 1].separatorAfter += region.source + region.separatorAfter;
-    else leading += region.source + region.separatorAfter;
+  for (const region of regions) {
+    const content = region.source.slice(region.prefix.length);
+    const trivia = region.prefix + (content ? '' : region.separatorAfter);
+    if (contentRegions.length) contentRegions[contentRegions.length - 1].separatorAfter += trivia;
+    else leading += trivia;
+    if (content) contentRegions.push({ source: content, separatorAfter: region.separatorAfter });
   }
   if (contentRegions.length !== document.content.length) return undefined;
 

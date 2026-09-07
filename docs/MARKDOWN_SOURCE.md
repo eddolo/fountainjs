@@ -421,17 +421,20 @@ to a different neighbor. Capture is capped at 10,000 top-level regions; larger
 source still gets exact whole-document preservation while unchanged, then
 canonical fallback.
 
-Standalone root link/image reference definitions are shared parsing context,
+Root link/image reference definitions are shared parsing context,
 not document nodes. Their exact source stays in `leading` or `separatorAfter`
 trivia for aligned edits. `referenceDefinitions` exposes the captured definition
 regions in original order; after a structural move/deletion they are appended
 once, in that order, with canonical separators. This keeps surviving references
 resolvable and preserves first-definition precedence. Unused definitions are not
 automatically removed. A single parsed definition map is shared across capture
-checks instead of reparsing every definition for every content block.
+checks instead of reparsing every definition for every content block. Definitions
+may occupy their own region or prefix a paragraph/heading without a blank line.
+Capture peels only the prefix accepted by the same reference parser, retaining
+its exact physical line endings in the preceding source trivia.
 
-Only regions entirely consisting of accepted root definitions qualify. Mixed
-paragraph/definition regions, container definitions, footnotes and ambiguous
+Only accepted root prefixes qualify. Definition-looking text after an open
+paragraph is not a prefix. Container definitions, footnotes and ambiguous
 boundaries do not receive this guarantee. Rejected unsafe URL definitions remain
 visible literal content under the normal importer policy, not hidden trivia.
 Source preservation is not a sanitizer; raw unchanged source can contain syntax
@@ -441,8 +444,8 @@ retained definitions cannot turn literal text into unintended links.
 This preserves useful author choices such as Setext headings, closing ATX
 markers, deliberate spacing, and unknown literal directives in untouched
 blocks. Equal duplicates retain their own source only while their original node
-identity survives; duplicated references, reconstructed equal nodes, loose
-structures spanning blank lines and mixed/container reference definitions can
+identity survives; repeated node identities, reconstructed equal nodes, loose
+structures spanning blank lines and container reference definitions can
 still force canonical output. Changed links are regenerated inline; requesting
 new reference-style output falls back if it would collide with source-owned
 definitions. Fountain does not use fuzzy matching or
