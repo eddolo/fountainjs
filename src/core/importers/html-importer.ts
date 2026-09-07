@@ -444,13 +444,13 @@ function hasConfiguredBlockRule(element: HTMLElement, schema: Schema): boolean {
     && parseRules(type.spec).some((rule) => matchesRule(element, rule)));
 }
 
-function blockChildren(element: HTMLElement, schema: Schema): FountainNode[] {
+function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
-    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
+    const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
+    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', inlineParagraphAttrs, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {
@@ -472,7 +472,7 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
+    const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
     if (meaningful) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
@@ -561,10 +561,11 @@ function block(element: Element, schema: Schema): FountainNode[] {
     return image ? [image] : [];
   }
   if (tag === 'table') {
-    const rows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tr')).map((row) => schema.node('table_row', {},
+    const rows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr')).map((row) => schema.node('table_row', {},
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, Number(cell.getAttribute('colspan')) || 1));
         const rowspan = Math.max(1, Math.min(100, Number(cell.getAttribute('rowspan')) || 1));
+        const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell) });
         return schema.node(
           cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
           {
@@ -573,7 +574,7 @@ function block(element: Element, schema: Schema): FountainNode[] {
             colwidth: tableCellWidths(cell, colspan),
             ...(cell.tagName.toLowerCase() === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
           },
-          [paragraph(cell, schema)],
+          content.length ? content : [paragraph(cell, schema)],
         );
       }),
     ));

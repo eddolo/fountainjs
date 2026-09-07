@@ -819,13 +819,13 @@ function inlineGroup(content: readonly SourceNode[]): SourceParent {
   return { childNodes: content, textContent: content.map((node) => node.textContent).join('') };
 }
 
-function blockChildren(element: SourceParent, schema: Schema, context: ImportContext): FountainNode[] {
+function blockChildren(element: SourceParent, schema: Schema, context: ImportContext, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
-    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
+    const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
+    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', inlineParagraphAttrs, content));
     pending = [];
   };
   element.childNodes.forEach((child) => {
@@ -845,7 +845,7 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   let pending: SourceNode[] = [];
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
+    const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
     if (meaningful) result.push(schema.node('paragraph', {}, content));
     pending = [];
   };
@@ -940,12 +940,13 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
     return image ? [image] : [];
   }
   if (tag === 'table') {
-    const rows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tr').map((row) => schema.node(
+    const rows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr').map((row) => schema.node(
       'table_row',
       {},
       row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, Number(cell.getAttribute('colspan')) || 1));
         const rowspan = Math.max(1, Math.min(100, Number(cell.getAttribute('rowspan')) || 1));
+        const content = blockChildren(cell, schema, context, { align: alignment(cell) });
         return schema.node(
           cell.tagName === 'th' ? 'table_header' : 'table_cell',
           {
@@ -954,7 +955,7 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
             colwidth: tableCellWidths(cell, colspan),
             ...(cell.tagName === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
           },
-          [paragraph(cell, schema, context)],
+          content.length ? content : [paragraph(cell, schema, context)],
         );
       }),
     ));

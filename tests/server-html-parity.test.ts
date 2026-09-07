@@ -40,6 +40,70 @@ const fixtures = [
   '<p><a href="/details" title="Details" target="_self"><img src="/status.png" alt="Status"></a></p>',
 ];
 
+describe('structured table-cell HTML fidelity', () => {
+  it.each(['\u00a0', '\u202f', '\ufeff'])('does not discard significant Unicode spacing %j between blocks', spacing => {
+    const body = `<p>Before</p>${spacing}<p>After</p>`;
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const root = importer.parse(body, schema);
+      expect(root.content.map(node => node.textContent)).toEqual(['Before', spacing, 'After']);
+      const cell = importer.parse(`<table><tr><td>${body}</td></tr></table>`, schema).child(0).child(0).child(0);
+      expect(cell.content.map(node => node.textContent)).toEqual(['Before', spacing, 'After']);
+      const item = importer.parse(`<ul><li>${body}</li></ul>`, schema).child(0).child(0);
+      expect(item.content.map(node => node.textContent)).toEqual(['Before', spacing, 'After']);
+    }
+  });
+
+  it('keeps media, math, and portable custom blocks inside their cell', () => {
+    const extended = new Schema({ ...schema.spec, nodes: { ...schema.spec.nodes, status_card: {
+      group: 'block', atom: true,
+      attrs: { label: { default: '', validate: value => typeof value === 'string' } },
+      parseHTML: [{ tag: 'aside[data-status-card]', getAttrs: element => ({ label: element.getAttribute('data-label') ?? '' }) }],
+      toDOM: node => ['aside', { 'data-status-card': '', 'data-label': node.attrs.label }, String(node.attrs.label)],
+    } } });
+    const doc = extended.node('doc', {}, [extended.node('table', {}, [extended.node('table_row', {}, [extended.node('table_cell', {}, [
+      extended.node('image_super', { src: 'https://example.com/evidence.png', alt: 'Evidence', caption: 'Screenshot' }),
+      extended.node('math_block', { latex: 'x^2', ariaLabel: 'Squared' }),
+      extended.node('status_card', { label: 'Resolved' }),
+    ])])])]);
+    const html = HTMLExporter.export(doc, { document: false });
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      expect(importer.parse(html, extended).toJSON()).toEqual(doc.toJSON());
+    }
+  });
+
+  it.each(['table_cell', 'table_header'])('preserves multiple blocks and nested tables in %s', cellType => {
+    const p = (value: string) => schema.node('paragraph', {}, [schema.text(value)]);
+    const nested = schema.node('table', {}, [schema.node('table_row', {}, [schema.node('table_cell', {}, [p('Nested cell')])])]);
+    const content = [
+      p('First paragraph'), p(''),
+      schema.node('heading', { level: 3, align: 'right' }, [schema.text('Cell heading')]),
+      schema.node('bullet_list', {}, [schema.node('list_item', {}, [p('List item'), p('Continuation')])]),
+      schema.node('blockquote', {}, [p('Quoted note'), p('Second quoted paragraph')]),
+      schema.node('code_block', { language: 'js', lineNumbers: true }, [schema.text('one()\n\ntwo()')]),
+      nested,
+    ];
+    const doc = schema.node('doc', {}, [schema.node('table', {}, [schema.node('table_row', {}, [schema.node(cellType, { colspan: 2, colwidth: [100, 140] }, content)])])]);
+    const html = HTMLExporter.export(doc, { document: false });
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON());
+    }
+  });
+
+  it('retains footer rows, mixed inline/block cell content, alignment, and empty cells', () => {
+    const html = '<table><thead><tr><th>Heading</th></tr></thead><tbody><tr><td style="text-align:center">Before<p style="text-align:right">Middle</p>After</td></tr><tr><td></td></tr></tbody><tfoot><tr><td>Footer</td></tr></tfoot></table>';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const doc = importer.parse(html, schema);
+      const table = doc.child(0);
+      expect(table.childCount).toBe(4);
+      const mixed = table.child(1).child(0);
+      expect(mixed.content.map(node => node.textContent)).toEqual(['Before', 'Middle', 'After']);
+      expect(mixed.content.map(node => node.attrs.align)).toEqual(['center', 'right', 'center']);
+      expect(table.child(2).child(0).child(0).child(0).text).toBe('');
+      expect(table.child(3).textContent).toBe('Footer');
+    }
+  });
+});
+
 describe('browser and server HTML semantic parity', () => {
   it.each(['strong', 'em', 'strike', 'code', 'underline', 'subscript', 'superscript', 'highlight'])('preserves empty %s formatting across HTML and Markdown', name => {
     const document = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('', [schema.marks[name].create()])])]);

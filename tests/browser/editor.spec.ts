@@ -3175,6 +3175,46 @@ test('pastes unwrapped inline HTML without dropping surrounding text or formatti
   await expect(editor).not.toContainText('Before bold and link.');
 });
 
+test('pastes structured table cells and edits separate paragraphs without flattening nested blocks', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
+  await editor.evaluate(target => {
+    const html = '<table><tbody><tr><td><p>First paragraph</p><p>Second paragraph</p><blockquote><p>Quote</p></blockquote><ul><li>Task</li></ul><table><tr><td>Nested</td></tr></table></td></tr></tbody><tfoot><tr><td>Footer</td></tr></tfoot></table>';
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? html : '' } });
+    target.dispatchEvent(event);
+  });
+  await expect(editor.locator('table')).toHaveCount(2);
+  const cell = editor.locator('td > .fountain-table-cell__content').first();
+  await expect(cell.locator(':scope > p')).toHaveText(['First paragraph', 'Second paragraph']);
+  await expect(cell.locator(':scope > blockquote')).toHaveText('Quote');
+  await expect(cell.locator(':scope > ul')).toHaveText('Task');
+  await expect(editor).toContainText('Footer');
+  await cell.getByText('First paragraph', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('New paragraph');
+  await expect(cell.locator(':scope > p')).toHaveText(['First paragraph', 'New paragraph', 'Second paragraph']);
+  await expect(cell.locator('table td')).toHaveText('Nested');
+});
+
+test('retains standalone non-collapsible Unicode text during rich paste', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  for (const spacing of ['\u00a0', '\u202f', '\ufeff']) {
+    await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
+    await editor.evaluate((target, spacing) => {
+      const event = new Event('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'clipboardData', { value: {
+        files: [], getData: (type: string) => type === 'text/html' ? `<p>Before</p>${spacing}<p>After</p>` : '',
+      } });
+      target.dispatchEvent(event);
+    }, spacing);
+    await expect(editor.locator(':scope > p')).toHaveCount(3);
+    expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.map((node: any) => node.textContent)))
+      .toEqual(['Before', spacing, 'After']);
+  }
+});
+
 test('pastes empty formatting and applies it to subsequently typed text', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());

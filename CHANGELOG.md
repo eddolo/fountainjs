@@ -15,6 +15,17 @@
 
 ### Fixed
 
+- Browser and server HTML import preserve multiple paragraphs, headings,
+  lists, quotes, code, media, math, custom blocks, and nested tables within
+  table/header cells instead of flattening the entire cell into one paragraph.
+  Footer rows are retained, empty cells keep an editable paragraph, and loose
+  inline cell content keeps the cell's alignment. This also applies to rich
+  clipboard paste and opt-in Markdown HTML-block conversion.
+- Standalone NBSP, narrow NBSP, BOM, and other non-collapsible Unicode text
+  between HTML blocks no longer disappears as if it were markup indentation.
+  Browser/server import only ignores plain HTML whitespace-only inline runs
+  between blocks; the same rule covers list items and table cells.
+
 - Server HTML import now reports invalid custom-rule projections instead of
   silently disguising thrown attribute readers, malformed results, missing
   content elements, or schema rejection as ordinary successful conversion.

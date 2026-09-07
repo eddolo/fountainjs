@@ -30,6 +30,7 @@ browser importer:
   foreground/background colour, font family, font size, and line height;
 - ordered, bullet, nested, and task lists;
 - rowspan/colspan tables and bounded column widths;
+- multi-block table/header cells, nested tables, and footer-row content;
 - safe block/inline images, audio, video, tracks, files, and provider-validated
   embeds when the receiving schema includes those nodes;
 - math source, mentions, emoji metadata, ruby annotations, details, page
@@ -44,6 +45,17 @@ fall back to ordinary Fountain content where possible.
 HTML is an interoperability boundary, not the lossless persistence format.
 Use validated Fountain JSON when arbitrary extension state, comments, tracked
 changes, or application metadata must survive exactly.
+
+Table-cell fidelity verification (2026-09-07): `pnpm check` passed 783 tests
+plus package, headless/runtime, conformance, API, and performance gates. Six
+Chromium/Firefox/WebKit checks cover structured-cell paste/Enter and exact
+NBSP/narrow-NBSP/BOM retention. All eight recorded Markdown/HTML workflows
+passed under `artifacts/manual-table-markdown-regression-20260907a/results/`.
+The table workflow types and undoes/redoes inside a cell, creates a new
+paragraph, copies the whole document through the actual browser clipboard,
+reimports in the server-HTML demo, and pastes back into the live editor with
+equal document JSON (apart from host-generated IDs). Rendered screenshots were
+visually inspected, including the nested table and footer row.
 
 ## Portable extension rules
 

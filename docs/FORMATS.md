@@ -14,6 +14,21 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 
 ## HTML
 
+Table cells and header cells preserve their supported `block+` structure during
+HTML import: multiple/empty paragraphs, headings, lists, quotes, code, media,
+math, portable custom blocks, and nested tables are not flattened into a single
+text run. Header/body/footer rows all enter the document in source order; the
+model does not retain a distinct `tfoot` grouping. Loose inline runs between
+cell blocks become separate paragraphs and inherit the cell's declared
+alignment. This does not claim arbitrary CSS inheritance or print-layout
+fidelity. These rules are shared by browser paste and server conversion.
+
+Between blocks, only whitespace-only inline runs made of HTML's collapsible
+ASCII whitespace are ignored as markup indentation. NBSP, narrow NBSP, BOM,
+and other non-collapsible Unicode text are retained as authored content,
+including inside table cells and list items. This is preservation, not automatic
+Unicode cleanup; use explicit integrity inspection/sanitization when desired.
+
 `HTMLExporter` produces a full responsive document or a fragment. Text and attributes are escaped. Only approved protocols survive link and media serialization. Alignment, foreground/background colour, font family, font size, line height, subscript, superscript, semantic hard breaks, tasks, tables, images, native audio/video with tracks, downloadable file metadata, and provider-approved embeds retain their HTML meaning.
 
 `HTMLImporter` supports headings, paragraphs, quotes, preformatted code, ordered/bullet/task lists, images and figures, audio, video, files, approved embeds, tables, dividers, line breaks, common inline marks, and optional math, mention, and emoji nodes when their receiving schema includes the corresponding extension. Media is reconstructed through schema validation: an iframe is discarded unless the configured `MediaExtension` recognizes its canonical HTTPS provider URL and accepts every permission/sandbox attribute. Math HTML stores TeX separately from its computed accessible label, so import does not persist renderer markup or mutate JSON. Mention identity and safe links round-trip through typed data attributes. Emoji name, Unicode value, and safe fallback metadata likewise round-trip; raw Unicode emoji in ordinary imported text becomes an emoji node when that schema supports it. This root importer uses the browser's `DOMParser`.

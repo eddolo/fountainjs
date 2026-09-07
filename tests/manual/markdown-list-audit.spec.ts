@@ -34,6 +34,72 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('structured table cells survive real copy, editing, and server HTML re-import', async ({ page, context }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const html = '<h1>Incident handover</h1><table><thead><tr><th>Actions and evidence</th></tr></thead><tbody><tr><td><p>First paragraph</p><p>Second paragraph</p><h3>Checks</h3><ul><li>Check health</li><li>Notify team</li></ul><blockquote><p>Keep the rollback image.</p></blockquote><table><tr><td>Nested evidence</td></tr></table></td></tr></tbody><tfoot><tr><td>Signed off by Ada</td></tr></tfoot></table>';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(html);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('<h3>Checks</h3>');
+  const converted = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), converted);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  const cell = editor.locator('td > .fountain-table-cell__content').first();
+  await expect(cell.locator(':scope > p')).toHaveText(['First paragraph', 'Second paragraph']);
+  await expect(editor.locator('table')).toHaveCount(2);
+  await cell.getByText('First paragraph', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' reviewed');
+  await page.keyboard.press('Control+z');
+  await expect(cell.locator(':scope > p').first()).toHaveText('First paragraph');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(cell.locator(':scope > p').first()).toHaveText('First paragraph reviewed');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Follow-up assigned.');
+  await expect(cell.locator(':scope > p')).toHaveText(['First paragraph reviewed', 'Follow-up assigned.', 'Second paragraph']);
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '16-table-cell-multiblock-editing');
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  const expected = withoutNodeIds(await output.locator('pre').innerText());
+  await cell.getByText('Follow-up assigned.', { exact: true }).click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+c');
+  const copied = await page.evaluate(async () => {
+    for (const item of await navigator.clipboard.read()) {
+      if (item.types.includes('text/html')) return (await item.getType('text/html')).text();
+    }
+    return '';
+  });
+  expect(copied).toContain('Incident handover');
+  expect(copied).toContain('<h3>Checks</h3>');
+  expect(copied).toContain('Signed off by Ada');
+  await page.goto('/demos/node-markdown.html');
+  await page.getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input', { exact: true }).fill(copied);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+  await capture(page, info, '17-table-cell-copied-html-reimport');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const reimported = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), reimported);
+  await page.goto('/demos/go-docs-service.html');
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(expected);
+  await expect(editor.locator('table')).toHaveCount(2);
+  await editor.getByText('Signed off by Ada', { exact: true }).scrollIntoViewIfNeeded();
+  await capture(page, info, '18-table-nesting-and-footer-after-reimport');
+  expect(errors).toEqual([]);
+});
+
 test('opt-in HTML block conversion becomes editable content and survives canonical export', async ({ page, context }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
