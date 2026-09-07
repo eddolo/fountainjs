@@ -200,7 +200,7 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 561 currently match, 82 remain pending, and nine are
+classifies every example: 563 currently match, 80 remain pending, and nine are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 The harness also materializes the specification's visible tab notation before
@@ -237,7 +237,7 @@ by the complete 564-test package gate and green Chromium/Firefox/WebKit/mobile
 plus the corresponding successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34004963046).
 
-The latest list-container expansion regression-locks 561 examples. Items now
+The current baseline regression-locks 563 examples. List items now
 use the actual marker width and tab-stop-aware padding, collect their physical
 lines before parsing inline constructs, and retain lazy nested quote/list
 continuations. Canonical export indents by the rendered marker width, separates
@@ -252,6 +252,12 @@ the Go-service editor demo, nested editing, Enter, undo/redo, and Markdown
 export/reimport. The check compares content after excluding host-generated
 node IDs, which Markdown does not carry. The importer/exporter regression suite
 also covers 128 marker-width/indent/padding combinations.
+
+Empty link labels now preserve their link mark, destination, and title through
+canonical Markdown export (official examples 484 and 487). Browser and server
+HTML import also retain safe empty anchors and group top-level text/inline
+markup around structural blocks instead of dropping surrounding text. Missing
+and unsafe `href` attributes do not become active link marks.
 
 ## Security and collaboration
 

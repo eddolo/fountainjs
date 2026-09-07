@@ -68,6 +68,14 @@ same bounded validators used by commands and JSON import. HTML mark-wrapper
 order is presentation-only; the set, types, and attributes of marks round-trip,
 while JSON remains the byte-stable source of truth.
 
+Both HTML importers group top-level inline content into paragraphs, retaining
+text around `<strong>`, `<a>`, and intervening structural blocks. Safe anchors
+with empty labels retain their link metadata; a missing or unsafe `href` does
+not create a link. The supplied editor stylesheet underlines text links even
+when a host resets global anchor styles. Set `--fountain-link-color` on the
+editor or its container to customize their colour; attachments and navigation
+controls are not targeted by this rule.
+
 ## Markdown
 
 The Markdown boundary supports headings, paragraphs, recursive blockquotes,

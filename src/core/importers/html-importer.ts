@@ -277,6 +277,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     }
     result.push(...inlineChildren(child, schema, nextMarks));
   });
+  if (!result.length && marks.some(mark => mark.type.name === 'link')) result.push(schema.text('', marks));
   return result;
 }
 
@@ -448,13 +449,13 @@ function blockChildren(element: HTMLElement, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0);
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
     if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {
     const structural = child instanceof HTMLElement
-      && (BLOCK_TAGS.has(child.tagName.toLowerCase()) || hasConfiguredBlockRule(child, schema));
+      && (BLOCK_TAGS.has(child.tagName.toLowerCase()) || child.matches('a[data-fountain-file]') || hasConfiguredBlockRule(child, schema));
     if (structural) {
       flushInline();
       result.push(...block(child as HTMLElement, schema));
@@ -471,7 +472,7 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0);
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
     if (meaningful) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
@@ -600,7 +601,7 @@ export class HTMLImporter {
   parse(html: string, schema: Schema): FountainNode {
     if (typeof DOMParser === 'undefined') throw new Error('HTMLImporter requires a browser DOMParser (or a DOM shim in Node.js).');
     const body = new DOMParser().parseFromString(html, 'text/html').body;
-    const blocks = Array.from(body.children).flatMap((element) => block(element, schema));
+    const blocks = blockChildren(body, schema);
     if (!blocks.length && body.textContent) blocks.push(schema.node('paragraph', {}, [schema.text(body.textContent)]));
     const document = schema.topNodeType.create({}, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
     schema.validate(document);

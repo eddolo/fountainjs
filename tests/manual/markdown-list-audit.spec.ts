@@ -34,6 +34,32 @@ const withoutNodeIds = (json: string) => JSON.parse(json, (key, value) => {
   return value;
 });
 
+test('unwrapped clipboard fragment: formatting, surrounding text, edit, and undo', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/demos/go-docs-service.html');
+  await page.evaluate(async () => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob(['Before <strong>bold</strong> and <a href="https://example.com/target">link</a>.<p>Middle</p>After'], { type: 'text/html' }),
+    'text/plain': new Blob(['Before bold and link.\nMiddle\nAfter'], { type: 'text/plain' }),
+  })]));
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator(':scope > p')).toHaveText(['Before bold and link.', 'Middle', 'After']);
+  await expect(editor.locator('strong')).toHaveText('bold');
+  await expect(editor.locator('a')).toHaveText('link');
+  await expect(editor.locator('a')).toHaveCSS('text-decoration-line', 'underline');
+  await editor.scrollIntoViewIfNeeded();
+  await capture(page, info, '05-unwrapped-rich-paste');
+  await editor.getByText('After', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' editing');
+  await expect(editor).toContainText('After editing');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator(':scope > p')).toHaveText(['Before bold and link.', 'Middle', 'After']);
+  await capture(page, info, '06-fragment-edit-undone');
+});
+
 test('numbered runbook: import, rich paste, nested editing, undo, and Markdown export', async ({ page, context }, info) => {
   test.setTimeout(60_000);
   const errors: string[] = [];

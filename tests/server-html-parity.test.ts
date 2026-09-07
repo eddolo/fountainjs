@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   CoreExtension,
+  HTMLExporter,
   HTMLImporter,
   MathExtension,
   MediaExtension,
@@ -38,6 +39,38 @@ const fixtures = [
 ];
 
 describe('browser and server HTML semantic parity', () => {
+  it('keeps top-level text around inline markup and structural blocks', () => {
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse('Before <strong>bold</strong> and <a href="/target">link</a>.<p>Middle</p>After', schema);
+      expect(document.content.map(node => node.textContent)).toEqual(['Before bold and link.', 'Middle', 'After']);
+      expect(document.child(0).content.find(node => node.text === 'bold')?.marks[0].type.name).toBe('strong');
+      expect(document.child(0).content.find(node => node.text === 'link')?.marks[0].attrs.href).toBe('/target');
+      expect(importer.parse(HTMLExporter.export(document, { document: false }), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
+  it('preserves zero-length safe anchors without inventing links for missing or unsafe hrefs', () => {
+    const sources = [
+      '<a href="/target" title="Details"></a>',
+      '<p>before <a href=""><em></em></a> after</p>',
+      '<blockquote><a href="/target"></a></blockquote>',
+    ];
+    for (const html of sources) {
+      for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+        const document = importer.parse(html, schema);
+        const output = HTMLExporter.export(document, { document: false });
+        expect(output).toContain('<a href=');
+        expect(importer.parse(output, schema).toJSON()).toEqual(document.toJSON());
+      }
+      expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(HTMLImporter.parse(html, schema).toJSON());
+    }
+    for (const html of ['<a></a>', '<a href="javascript:alert(1)"></a>']) {
+      for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+        expect(HTMLExporter.export(importer.parse(html, schema), { document: false })).not.toContain('<a ');
+      }
+    }
+  });
+
   it.each(fixtures)('produces identical validated Fountain JSON for %s', (html) => {
     const browser = HTMLImporter.parse(html, schema);
     const server = ServerHTMLImporter.parseWithReport(html, schema);

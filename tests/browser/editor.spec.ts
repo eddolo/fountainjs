@@ -2860,6 +2860,7 @@ test('round-trips marker-relative list containers and exact code whitespace', as
     '- one\n+ two\n\n1. three\n2) four',
     '```\nkeep\n\n\nblank\n',
     '> 1. > Blockquote\ncontinued here.',
+    'before [](./target.md "Details") after []()',
   ];
   const results = await page.evaluate(sources => sources.map(source => (
     (globalThis as any).fountainBrowserTest.inspectMarkdown(source)
@@ -3102,6 +3103,27 @@ test('preserves structured rich HTML from a real browser clipboard event', async
   expect(prevented).toBe(true);
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('h2')).toHaveText('Imported heading');
   await expect(page.getByRole('textbox', { name: 'Browser contract editor' }).locator('strong')).toHaveText('rich');
+});
+
+test('pastes unwrapped inline HTML without dropping surrounding text or formatting', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
+  await editor.evaluate(target => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/html'
+        ? 'Before <strong>bold</strong> and <a href="/target">link</a>.<p>Middle</p>After'
+        : type === 'text/plain' ? 'Before bold and link.\nMiddle\nAfter' : '',
+    } });
+    target.dispatchEvent(event);
+  });
+  await expect(editor.locator(':scope > p')).toHaveText(['Before bold and link.', 'Middle', 'After']);
+  await expect(editor.locator('strong')).toHaveText('bold');
+  await expect(editor.locator('a[href="/target"]')).toHaveText('link');
+  await expect(editor.locator('a[href="/target"]')).toHaveCSS('text-decoration-line', 'underline');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('Before bold and link.');
 });
 
 test('normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine', async ({ page }) => {

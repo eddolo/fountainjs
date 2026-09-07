@@ -1500,6 +1500,18 @@ describe('Markdown interchange', () => {
     }
   });
 
+  it('preserves an empty link label and its destination through canonical export', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    for (const source of ['[](./target.md)', '[]()', 'before [](./target.md "Details") after', '[](./a)[](./b)']) {
+      const document = MarkdownImporter.parse(source, schema);
+      const links = document.child(0).content.filter(node => node.marks.some(mark => mark.type.name === 'link'));
+      expect(links.length).toBeGreaterThan(0);
+      expect(links.every(node => node.isText && node.text === '')).toBe(true);
+      expect(HTMLExporter.export(document, { document: false })).toContain('</a>');
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
   it('exports adjacent distinct lists without merging them on re-import', () => {
     const schema = new Schema(CoreSchemaSpec);
     for (const source of ['- foo\n- bar\n+ baz', '1. foo\n2. bar\n3) baz', '> - foo\n> + bar', '- - foo\n  + bar']) {

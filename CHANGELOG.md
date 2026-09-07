@@ -4,6 +4,14 @@
 
 ### Fixed
 
+- Empty Markdown link labels retain their destination and title instead of
+  silently losing the link. Browser and server HTML import preserve safe empty
+  anchors, top-level inline formatting, and surrounding text in mixed clipboard
+  fragments. The CommonMark baseline now locks 563 matches, with 80 pending and
+  nine intentional differences; unsafe or missing anchor destinations do not
+  acquire link marks. Text links in the supplied editor stylesheet stay
+  underlined despite a host's global anchor reset, with a customizable
+  `--fountain-link-color` instead of styling attachment controls or navigation.
 - Markdown list content now follows each marker's width and padding, including
   tabs, multi-digit numbering, nested containers, lazy paragraphs, and code.
   Canonical export preserves these structures, distinct adjacent lists, and

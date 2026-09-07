@@ -253,11 +253,10 @@ class ServerElement implements SourceElement {
   }
 }
 
-function rootSource(parent: RawParent): SourceParent & { children: readonly SourceElement[] } {
+function rootSource(parent: RawParent): SourceParent {
   const childNodes = wrapChildren(parent);
   return Object.freeze({
     childNodes,
-    children: childNodes.filter((node): node is SourceElement => node.kind === 'element'),
     textContent: rawText(parent as RawNode),
   });
 }
@@ -614,6 +613,7 @@ function inlineChildren(
     }
     result.push(...inlineChildren(child, schema, nextMarks, context));
   });
+  if (!result.length && marks.some(mark => mark.type.name === 'link')) result.push(schema.text('', marks));
   return result;
 }
 
@@ -794,18 +794,18 @@ function inlineGroup(content: readonly SourceNode[]): SourceParent {
   return { childNodes: content, textContent: content.map((node) => node.textContent).join('') };
 }
 
-function blockChildren(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
+function blockChildren(element: SourceParent, schema: Schema, context: ImportContext): FountainNode[] {
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0);
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
     if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
     pending = [];
   };
   element.childNodes.forEach((child) => {
     const structural = child.kind === 'element'
-      && (BLOCK_TAGS.has(child.tagName) || hasConfiguredBlockRule(child, schema, context));
+      && (BLOCK_TAGS.has(child.tagName) || child.matches('a[data-fountain-file]') || hasConfiguredBlockRule(child, schema, context));
     if (structural) {
       flushInline();
       result.push(...block(child, schema, context));
@@ -820,7 +820,7 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   let pending: SourceNode[] = [];
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0);
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
     if (meaningful) result.push(schema.node('paragraph', {}, content));
     pending = [];
   };
@@ -998,7 +998,7 @@ export class ServerHTMLImporter {
     });
     validateTree(fragment, this.options);
     const root = rootSource(fragment);
-    const blocks = root.children.flatMap((element) => block(element, schema, context));
+    const blocks = blockChildren(root, schema, context);
     if (!blocks.length && root.textContent) {
       blocks.push(schema.node('paragraph', {}, [schema.text(root.textContent)]));
     }

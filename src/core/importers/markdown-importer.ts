@@ -1242,7 +1242,7 @@ function inline(text: string, schema: Schema, references: References, inheritedM
     index++;
   }
   flush();
-  return result.length ? result : [schema.text('')];
+  return result.length ? result : [schema.text('', inheritedMarks)];
 }
 
 function imageDescription(value: string, schema: Schema, references: References): string {
