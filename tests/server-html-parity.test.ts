@@ -6,6 +6,8 @@ import {
   CoreExtension,
   HTMLExporter,
   HTMLImporter,
+  MarkdownImporter,
+  MarkdownExporter,
   MathExtension,
   MediaExtension,
   Schema,
@@ -39,6 +41,27 @@ const fixtures = [
 ];
 
 describe('browser and server HTML semantic parity', () => {
+  it.each([
+    ['<pre><code>literal</code></pre>', 'code_block'],
+    ['<h2>Heading</h2>', 'heading'],
+    ['<ul><li>Nested</li></ul>', 'bullet_list'],
+  ])('does not invent a paragraph before a list-first %s block', (body, type) => {
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse(`<ul><li>${body}</li></ul>`, schema);
+      expect(document.child(0).child(0).childCount).toBe(1);
+      expect(document.child(0).child(0).child(0).type.name).toBe(type);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
+  it('preserves explicit blank list paragraphs and supplies a caret host only for empty items', () => {
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse('<ul><li></li><li><p></p><pre><code>literal</code></pre></li></ul>', schema);
+      expect(document.child(0).child(0).content.map(node => node.type.name)).toEqual(['paragraph']);
+      expect(document.child(0).child(1).content.map(node => node.type.name)).toEqual(['paragraph', 'code_block']);
+    }
+  });
+
   it('keeps top-level text around inline markup and structural blocks', () => {
     for (const importer of [HTMLImporter, ServerHTMLImporter]) {
       const document = importer.parse('Before <strong>bold</strong> and <a href="/target">link</a>.<p>Middle</p>After', schema);

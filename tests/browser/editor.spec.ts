@@ -2889,6 +2889,9 @@ test('round-trips marker-relative list containers and exact code whitespace', as
     'before [](./target.md "Details") after []()',
     'before <a href="&ouml;.html" title="\\*"> after',
     '<script>\n\n[hidden]: /wrong\n# literal\n\n</script>\n\n[hidden]',
+    '- <script>\n  [hidden]: /wrong\n  </script>\n\n[hidden]',
+    '> - ```text\n>   [hidden]: /wrong\n>   ```\n\n[hidden]',
+    '[real]\n\n12. [real]: /right\n    "A title"\n\n    Content',
   ];
   const results = await page.evaluate(sources => sources.map(source => (
     (globalThis as any).fountainBrowserTest.inspectMarkdown(source)
@@ -2909,6 +2912,12 @@ test('round-trips marker-relative list containers and exact code whitespace', as
   expect(results[7].html).not.toContain('<script>');
   expect(results[7].html).not.toContain('<h1>');
   expect(results[7].html).not.toContain('<a ');
+  for (const result of results.slice(8, 10)) {
+    expect(result.html).toContain('[hidden]: /wrong');
+    expect(result.html).not.toContain('<a ');
+  }
+  expect(results[10].html).toContain('href="/right"');
+  expect(results[10].html).not.toContain('[real]:');
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {
@@ -3158,6 +3167,29 @@ test('pastes unwrapped inline HTML without dropping surrounding text or formatti
   await expect(editor.locator('a[href="/target"]')).toHaveCSS('text-decoration-line', 'underline');
   await page.keyboard.press('Control+z');
   await expect(editor).not.toContainText('Before bold and link.');
+});
+
+test('pastes and edits list-first code without inventing a blank paragraph', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
+  await editor.evaluate(target => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/html'
+        ? '<ul><li><pre><code>literal</code></pre></li></ul><p>After</p>'
+        : type === 'text/plain' ? 'literal\nAfter' : '',
+    } });
+    target.dispatchEvent(event);
+  });
+  await expect(editor.locator('li > p')).toHaveCount(0);
+  await expect(editor.locator('li > pre')).toHaveText('literal');
+  await editor.locator('pre').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' edited');
+  await expect(editor.locator('li > pre')).toHaveText('literal edited');
+  await page.keyboard.press('Control+z');
+  await expect(editor.locator('li > pre')).toHaveText('literal');
 });
 
 test('normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine', async ({ page }) => {

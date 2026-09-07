@@ -63,6 +63,49 @@ test('inert HTML source remains multiline editable text through the public demos
   await expect(editor).not.toContainText('remains text');
 });
 
+test('nested incident runbook preserves literal definitions through editing and export', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const source = '# Incident runbook\n\n- <script>\n  [hidden]: /wrong\n  </script>\n\n- ```text\n  [secret]: /not-a-link\n  ```\n\n[hidden] stays literal. [guide]\n\n12. [guide]: /runbook\n\n    Operator checklist\n\nEnd of runbook.';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await output.locator('pre').innerText();
+  expect(html).toContain('[hidden]: /wrong');
+  expect(html).toContain('[secret]: /not-a-link');
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor).toContainText('[hidden]: /wrong');
+  await expect(editor.locator('pre')).toHaveText('[secret]: /not-a-link');
+  await expect(editor.locator('script')).toHaveCount(0);
+  await expect(editor.locator('a')).toHaveCount(1);
+  // Browser clipboard import resolves relative URLs against the source page.
+  await expect(editor.locator('a')).toHaveAttribute('href', new URL('/runbook', page.url()).href);
+  await editor.getByText('Operator checklist', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' verified');
+  await expect(editor).toContainText('Operator checklist verified');
+  await capture(page, info, '08-nested-runbook-edited');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('verified');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Operator checklist verified');
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const exported = await output.locator('pre').innerText();
+  await output.getByRole('button', { name: 'json', exact: true }).click();
+  const edited = withoutNodeIds(await output.locator('pre').innerText());
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(exported);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(edited);
+  await capture(page, info, '09-nested-runbook-reimported');
+});
+
 test('unwrapped clipboard fragment: formatting, surrounding text, edit, and undo', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/demos/go-docs-service.html');

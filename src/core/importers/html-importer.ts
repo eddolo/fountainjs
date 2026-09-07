@@ -486,7 +486,9 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
     inlineFragment.appendChild(child.cloneNode(true));
   });
   flushInline();
-  if (!result.length || result[0]?.type.name !== 'paragraph') {
+  // A list item accepts block+, including a code block or heading first.
+  // Only an actually empty item needs an editable paragraph fallback.
+  if (!result.length) {
     result.unshift(schema.node('paragraph', {}, [schema.text('')]));
   }
   return result;

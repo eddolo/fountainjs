@@ -271,8 +271,10 @@ const limits = Object.freeze({
   // individual ceiling; round this aggregate ceiling up by one KiB.
   // The shared seven-class inert HTML block scanner and exact multiline
   // literal export add roughly 2.5 KiB; consumer-entry ceilings stay unchanged.
-  'all ESM runtime code': 1307 * kibibyte,
-  'all CommonJS runtime code': 1090 * kibibyte,
+  // Shared nested-container discovery and opaque footnote/reference handling
+  // add about 1.9 KiB ESM / 1.4 KiB CJS; consumer-entry ceilings stay fixed.
+  'all ESM runtime code': 1308 * kibibyte,
+  'all CommonJS runtime code': 1092 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

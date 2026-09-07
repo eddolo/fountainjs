@@ -248,8 +248,39 @@ separate. The oracle additionally requires exact Fountain-to-Fountain canonical
 round trips for all 44 official HTML-block examples, even while their rendered
 HTML remains an explicitly pending semantic difference. Canonical export now
 protects line-leading block syntax, authored edge whitespace, and consecutive
-hard breaks. Next work includes composing this state throughout nested
-containers and providing an opt-in safe schema projection with loss reports.
+hard breaks. Nested list discovery now uses the same marker-relative item
+collector as block parsing. Reference and footnote discovery recurse through
+lists and quotes while preserving opaque HTML/fenced content. Real nested
+definitions retain global lookup; definitions are consumed after container
+boundaries are established instead of blanking out an item's first lines.
+HTML inside lists/quotes cannot acquire outdented lazy paragraph content.
+An opt-in safe schema projection with loss reports remains pending.
+
+The recorded incident-runbook workflow additionally exposed a browser/server
+HTML import bug: both inserted a blank paragraph before valid list-first code,
+headings, or nested lists. They now supply a paragraph only for an empty item;
+explicit author-created blank paragraphs are retained. The recorded regression
+imports via the public headless demo, pastes HTML into the Go-service demo,
+edits a nested paragraph, undoes/redoes, and exports/reimports Markdown.
+`tests/server-html-parity.test.ts` checks both importers directly.
+
+**Still open:** Markdown cannot distinguish all authored empty paragraphs from
+blank source separators or generated trailing caret hosts. In particular, an
+explicit empty first paragraph followed by another block in a list needs a
+documented serialization/loss policy; otherwise export can split the list.
+The incident-runbook audit ends in an ordinary paragraph so its exact-model
+comparison does not conflate this separate gap with container text loss.
+Do not remove authored blank paragraphs globally or count this work as full
+CommonMark conformance.
+
+Nested-container verification on 2026-09-07: `pnpm check` passed all 717 tests,
+package/headless/server-runtime contracts, semantic conformance, and build and
+performance budgets. Two targeted browser contracts passed in Chromium,
+Firefox, and WebKit (six runs), including typing and undo in a pasted list-first
+code block. The recorded public-demo audit passed with video and screenshots
+under `artifacts/manual-markdown-containers-20260907c/results/`; its edited
+runbook screenshot was visually inspected. This is local evidence, not a claim
+of complete CommonMark compliance or an npm release.
 
 The eight pending empty-container examples now have exact-source and canonical
 round-trip tests plus real Chromium/Firefox/WebKit typing, Backspace, Enter,

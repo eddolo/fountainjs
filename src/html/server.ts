@@ -834,7 +834,9 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
     pending.push(child);
   });
   flushInline();
-  if (!result.length || result[0]?.type.name !== 'paragraph') {
+  // Match browser import: preserve valid first-child blocks without inserting
+  // an authored-looking empty paragraph before them.
+  if (!result.length) {
     result.unshift(schema.node('paragraph', {}, [schema.text('')]));
   }
   return result;
