@@ -561,6 +561,43 @@ test('split HTML table becomes a real editable table with history and export', a
   expect(errors).toEqual([]);
 });
 
+test('row-group merged ownership cells survive real paste editing history and HTML reopen', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const source = '<h2>Release ownership</h2><table><tbody><tr><td rowspan="0">Ada</td><td>Build</td></tr><tr><td>Deploy</td></tr></tbody><tbody><tr><td rowspan="0">Grace</td><td>Review</td></tr><tr><td>Approve</td></tr></tbody></table>';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Zero rowspan');
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }) })]), source);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect(editor.locator('td[rowspan="2"]')).toHaveCount(2);
+  await editor.getByText('Build', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' verified');
+  await expect(editor).toContainText('Build verified');
+  await page.keyboard.press('Control+z');
+  await expect(editor).not.toContainText('Build verified');
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toContainText('Build verified');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await capture(page, info, 'merged-ownership-edited-and-exported');
+  const exported = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(exported);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  await expect(async () => {
+    const table = JSON.parse(await output.locator('pre').innerText()).content[1];
+    expect(table.content[0].content[0].attrs.rowspan).toBe(2);
+    expect(table.content[2].content[0].attrs.rowspan).toBe(2);
+  }).toPass();
+  await expect(output.locator('pre')).toContainText('Build verified');
+});
+
 test('failed HTML flow keeps literal closing tags through paste editing undo and export', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/demos/node-markdown.html');

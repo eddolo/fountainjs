@@ -10,6 +10,7 @@ import {
 } from '../schema';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
+import { htmlTableSpan, remainingHTMLTableRows } from './html-table';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 
@@ -579,10 +580,13 @@ function block(element: Element, schema: Schema): FountainNode[] {
       const blocks = blockChildren(caption as HTMLElement, schema);
       return blocks.length ? blocks : [paragraph(caption, schema)];
     });
-    const rows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr')).map((row) => schema.node('table_row', {},
+    const sourceRows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'));
+    const remaining = remainingHTMLTableRows(sourceRows, row => row.parentElement);
+    const rows = sourceRows.map((row) => schema.node('table_row', {},
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
-        const colspan = Math.max(1, Math.min(100, Number(cell.getAttribute('colspan')) || 1));
-        const rowspan = Math.max(1, Math.min(100, Number(cell.getAttribute('rowspan')) || 1));
+        const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
+        const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
+        const rowspan = Math.max(1, Math.min(100, rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1));
         const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell) });
         return schema.node(
           cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',

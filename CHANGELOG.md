@@ -43,11 +43,19 @@
 
 ### Fixed
 
+- Browser and server HTML import now resolve `rowspan="0"` within its source
+  row group instead of silently importing it as one row. Shared integer parsing
+  avoids JavaScript-only numeric interpretations and invalid fractional spans.
+  Server reports distinguish explicit zero-span expansion from the existing
+  100-row/column geometry limit. Nested tables do not affect parent row counts.
+  The CommonMark comparator also recognizes equivalent unit spans/cell wrappers
+  while rejecting fourteen structural/content losses.
+
 - Failed Markdown HTML flows now restore inline and nested HTML source as well
   as raw block tokens. With both conversion options enabled, an inline closing
   `</pre>` could previously disappear before the surrounding flow fell back.
   Recovery is scoped to the failed container; successful siblings stay converted.
-  The corpus gate additionally locks 575 exact opt-in HTML semantic-projection
+  The corpus gate additionally locks 578 exact opt-in HTML semantic-projection
   matches separately from the default inert policy and source-retention checks.
   Remaining comparisons are explicitly unresolved, not a full-conformance claim.
 

@@ -5,6 +5,31 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+HTML table geometry audit (2026-09-07): browser and server import now resolve
+zero row spans within each source row group, with nested-table isolation and
+HTML integer-prefix parsing shared through a DOM-free helper. A pure-Node grid
+check covers spans starting partway through separate groups. Zero-span expansion
+is explicitly reported as a snapshot, not a retained live row-group rule;
+clamping above the existing 100-row/column limit now reports possible geometry
+loss. The table schema and public API remain unchanged.
+
+Projection version 8 compares rows/groups/cells structurally and equates only
+unit spans and ordinary cell paragraph wrappers. Fourteen deliberately corrupted
+tables must remain distinguishable. Already-working examples 149, 160 and 190
+now match, bringing the opt-in baseline to 578 matches / 74 unresolved; default
+CommonMark remains 563/72/17. General row-group identity, header/footer layout,
+unsupported HTML attributes and specialized raw-text conversion remain open.
+
+Validation: `pnpm check` passes 1,176 tests in 104 files, API/package/server/runtime
+checks and unchanged performance limits. Added runtime is ~1.1 KiB ESM / 0.9 KiB
+CJS; aggregate ceilings rise by 1 KiB each (1363 / 1134 KiB), individual entry
+ceilings stay unchanged. Eighteen Chromium/Firefox/WebKit checks pass, including
+physical cell-bottom alignment. A recorded Chrome ownership-table journey
+passes real clipboard paste, cell editing, undo/redo, HTML export and server
+reopen; reviewed screenshot/video frames show both correctly merged cells.
+Evidence: `artifacts/html-rowspan-20260907-recorded/` and
+`artifacts/html-rowspan-20260907-browser/`. This is not full table/HTML parity.
+
 CommonMark code-origin audit (2026-09-07): projection version 7 now distinguishes
 reference Markdown-generated `<pre>` tags from authored raw HTML by exact
 renderer output offsets and parsed source locations. Only the former have their

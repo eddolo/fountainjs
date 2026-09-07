@@ -44,6 +44,9 @@ browser importer:
   foreground/background colour, font family, font size, and line height;
 - ordered, bullet, nested, and task lists;
 - rowspan/colspan tables and bounded column widths;
+- `rowspan="0"` resolved to an explicit span over the remaining rows of its
+  source row group, including nested tables and spans starting partway through
+  a group; the browser importer uses the same integer/counting helpers;
 - multi-block table/header cells, nested tables, and footer-row content;
 - safe block/inline images, audio, video, tracks, files, and provider-validated
   embeds when the receiving schema includes those nodes;
@@ -79,6 +82,22 @@ paragraph, copies the whole document through the actual browser clipboard,
 reimports in the server-HTML demo, and pastes back into the live editor with
 equal document JSON (apart from host-generated IDs). Rendered screenshots were
 visually inspected, including the nested table and footer row.
+
+## Table span import contract
+
+The [HTML zero-rowspan rule](https://html.spec.whatwg.org/multipage/tables.html#attr-tdth-rowspan)
+is resolved against the source row group before its rows enter Fountain's flat
+table model. Missing/invalid attributes default to one; integer prefixes follow
+HTML parsing rules, not JavaScript numeric syntax. Nested-table rows never
+contribute to a parent table's span. Counting is linear in the number of rows.
+
+`parseWithReport` reports zero-span expansion as `block-html-projection`: it is
+a snapshot converted to an explicit span, not a retained live row-group rule.
+The existing schema limit remains 100 rows/columns per cell span. Values above
+that limit are clamped and now explicitly reported as potential geometry loss.
+Row-group identity, header/footer layout behavior and unsupported attributes are
+not generally preserved merely because the span is correct. This does not claim
+arbitrary HTML table fidelity.
 
 ## Portable extension rules
 

@@ -18,6 +18,7 @@ import {
 } from '../core/schema';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
+import { htmlTableSpan, remainingHTMLTableRows } from '../core/importers/html-table';
 import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
@@ -1080,12 +1081,24 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       const blocks = blockChildren(caption, schema, context);
       return blocks.length ? blocks : [paragraph(caption, schema, context)];
     });
-    const rows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr').map((row) => schema.node(
+    const sourceRows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr');
+    const remaining = remainingHTMLTableRows(sourceRows, row => row.raw.parent);
+    const rows = sourceRows.map((row) => schema.node(
       'table_row',
       {},
       row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
-        const colspan = Math.max(1, Math.min(100, Number(cell.getAttribute('colspan')) || 1));
-        const rowspan = Math.max(1, Math.min(100, Number(cell.getAttribute('rowspan')) || 1));
+        const columnSpan = htmlTableSpan(cell.getAttribute('colspan'));
+        const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
+        const resolvedRows = rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1;
+        const colspan = Math.max(1, Math.min(100, columnSpan ?? 1));
+        const rowspan = Math.max(1, Math.min(100, resolvedRows));
+        if (rowSpan === 0) reportOnce(context, {
+          code: 'block-html-projection',
+          message: 'Zero rowspan was resolved to the remaining source row-group rows. The imported span is explicit, not a live row-group rule.',
+        });
+        if (resolvedRows > 100 || (columnSpan ?? 1) > 100) reportOnce(context, {
+          code: 'block-html-projection', message: 'Table spans above the supported 100-row/column limit were clamped; table geometry may differ.',
+        });
         const content = blockChildren(cell, schema, context, { align: alignment(cell) });
         return schema.node(
           cell.tagName === 'th' ? 'table_header' : 'table_cell',

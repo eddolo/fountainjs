@@ -119,7 +119,7 @@ Markdown/TeX dialect options remain enabled, without repeating their reporters.
 This is not complete HTML/CSS or
 CommonMark fidelity; the default 563/72/17 baseline remains separate.
 
-The conformance command also regression-locks **575/652** exact neutral-projection
+The conformance command also regression-locks **578/652** exact neutral-projection
 matches with **both** server HTML adapters enabled, in
 `tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json`.
 This is separate from the default inert baseline and the 1,304 unchanged-source
@@ -127,11 +127,10 @@ checks. Run `pnpm test:markdown-conformance --html-flow-report --show-mismatches
 for source, expected/actual projections, conversion issues and fallback reasons;
 add `--example=148` instead of `--show-mismatches` to inspect one case.
 
-The other 77 outputs are **unresolved comparisons**, not 77 proven parser bugs:
+The other 74 outputs are **unresolved comparisons**, not 74 proven parser bugs:
 they include the existing 17 intentional policy/caret differences, discarded
 comments, unsupported wrappers/attributes, specialized raw-text fallback, and
-limitations of the current comparator. In particular it retains explicit
-default cell spans and treats formatting outside versus inside a paragraph as
+limitations of the current comparator. In particular it treats formatting outside versus inside a paragraph as
 different structures. These need source-aware comparison rules with independent
 loss-sensitivity tests, not blanket flattening or removal of whitespace/attributes.
 No missing match has been waived or promoted to full HTML fidelity.
@@ -147,6 +146,14 @@ fixtures remain byte-exact. Twenty independent LF/CRLF import/source contracts
 cover raw, fenced, indented, repeated and nested blocks; six injected missing
 or added newlines are rejected. Example 169 now matches because Fountain was
 already correct, not because the runtime was changed or whitespace was ignored.
+
+Projection version 8 compares table groups, rows and cell block content
+structurally. It equates only explicit `rowspan="1"` / `colspan="1"` with their
+omission and ordinary text with its cell paragraph wrapper. Header/data identity,
+all other attributes, non-unit spans, row-group identity, captions, nested tables,
+explicit empty paragraphs and content/formatting remain significant. Fourteen
+deliberate structural/content corruptions must be rejected. This recognizes
+already-working examples 149, 160 and 190, not arbitrary HTML table fidelity.
 
 Successful projection reports `block-html-projection` alongside specific losses.
 Exact whole-source export remains available while the document is unchanged;

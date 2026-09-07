@@ -42,6 +42,37 @@ const fixtures = [
 ];
 
 describe('HTML fallback wrapper structure', () => {
+  it.each(['tbody', 'thead', 'tfoot'])('resolves zero rowspan within its own %s group in browser and server', group => {
+    const source = `<table><${group}><tr><td rowspan="0">Group A</td><td>A1</td></tr><tr><td>A2</td></tr></${group}><tbody><tr><td rowspan="0">Group B</td><td>B1</td></tr><tr><td>B2</td></tr><tr><td>B3</td></tr></tbody></table>`;
+    const server = ServerHTMLImporter.parseWithReport(source, schema);
+    const browser = HTMLImporter.parse(source, schema);
+    expect(server.document.toJSON()).toEqual(browser.toJSON());
+    expect(browser.content[0].content[0].content[0].attrs.rowspan).toBe(2);
+    expect(browser.content[0].content[2].content[0].attrs.rowspan).toBe(3);
+    expect(server.issues).toContainEqual(expect.objectContaining({ message: expect.stringContaining('Zero rowspan') }));
+    expect(HTMLImporter.parse(HTMLExporter.export(browser, { document: false }), schema).toJSON()).toEqual(browser.toJSON());
+  });
+
+  it('does not count nested-table rows in a zero rowspan', () => {
+    const source = '<table><tr><td rowspan="0">Outer<table><tr><td rowspan="0">Inner</td><td>1</td></tr><tr><td>2</td></tr><tr><td>3</td></tr></table></td><td>A</td></tr><tr><td>B</td></tr></table>';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const table = importer.parse(source, schema).content[0];
+      const cell = table.content[0].content[0];
+      expect(cell.attrs.rowspan).toBe(2);
+      expect(cell.content.find(node => node.type.name === 'table')?.content[0].content[0].attrs.rowspan).toBe(3);
+    }
+  });
+
+  it.each([
+    [null, 1], ['', 1], [' ', 1], ['-2', 1], ['NaN', 1], ['1.5', 1],
+    ['2x', 2], ['  +2', 2], ['0', 3], ['00', 3], ['0x10', 3], ['999999999999999999999', 100],
+  ])('uses HTML span integer rules for %s', (value, expected) => {
+    const source = `<table><tr><td${value === null ? '' : ` rowspan="${value}"`}>A</td></tr><tr><td>B</td></tr><tr><td>C</td></tr></table>`;
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      expect(importer.parse(source, schema).content[0].content[0].content[0].attrs.rowspan).toBe(expected);
+    }
+  });
+
   const inner = 'Before<h2>Nested heading</h2><p>First</p><p>Second</p><ul><li>Task</li></ul>After';
   it.each(['custom-panel', 'form', 'span'])('preserves block boundaries through an unmapped %s wrapper', tag => {
     const source = `<${tag}>${inner}</${tag}>`;

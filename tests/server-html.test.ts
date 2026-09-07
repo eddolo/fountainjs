@@ -14,6 +14,31 @@ import { HTMLImportLimitError, ServerHTMLImporter } from '../src/html/server';
 import { PagesExtension } from '../src/pages';
 import { RubyExtension } from '../src/ruby';
 import { createWidgetExtension, defineWidget } from '../src/widgets';
+import { TableMap } from '../src/core/table-map';
+
+describe('server HTML row-group spans', () => {
+  it('preserves the table grid when zero spans start partway through separate groups', () => {
+    expect(typeof document).toBe('undefined');
+    const schema = new Schema(composeExtensions([CoreExtension]).schema);
+    const source = '<table><tbody><tr><td>A0</td><td>B0</td></tr><tr><td rowspan="0">Owner A</td><td>A1</td></tr><tr><td>A2</td></tr></tbody><tbody><tr><td rowspan="0">Owner B</td><td>B1</td></tr><tr><td>B2</td></tr></tbody></table>';
+    const result = ServerHTMLImporter.parseWithReport(source, schema);
+    const table = result.document.content[0];
+    expect(table.content[1].content[0].attrs.rowspan).toBe(2);
+    expect(table.content[3].content[0].attrs.rowspan).toBe(2);
+    const map = TableMap.create(table);
+    expect(map.width).toBe(2);
+    expect(map.height).toBe(5);
+    expect(map.problems).toEqual([]);
+    expect(ServerHTMLImporter.parse(HTMLExporter.export(result.document, { document: false }), schema).toJSON()).toEqual(result.document.toJSON());
+  });
+
+  it('reports unsupported span geometry instead of silently claiming exact conversion', () => {
+    const schema = new Schema(composeExtensions([CoreExtension]).schema);
+    const result = ServerHTMLImporter.parseWithReport('<table><tr><td rowspan="101" colspan="200">A</td></tr></table>', schema);
+    expect(result.document.content[0].content[0].content[0].attrs).toMatchObject({ rowspan: 100, colspan: 100 });
+    expect(result.issues).toContainEqual(expect.objectContaining({ message: expect.stringContaining('100-row/column limit') }));
+  });
+});
 
 const portableExtension = defineExtension({
   name: 'portable-html-fixture',

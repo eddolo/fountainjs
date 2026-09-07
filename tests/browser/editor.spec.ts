@@ -6405,6 +6405,37 @@ test('HTML comments do not insert phantom paragraphs in converted Markdown', asy
   await expect(async () => expect(JSON.parse(await output.innerText()).content).toHaveLength(3)).toPass();
 });
 
+test('imports zero-rowspan cells with the same row-group geometry in server and browser', async ({ page }) => {
+  const source = '<table><tbody><tr><td rowspan="0">Ada</td><td>Build</td></tr><tr><td>Deploy</td></tr></tbody><tbody><tr><td rowspan="0">Grace</td><td>Review</td></tr><tr><td>Approve</td></tr></tbody></table>';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  await page.getByRole('checkbox', { name: 'Convert HTML blocks to rich content' }).check();
+  const output = page.locator('.demo-output pre');
+  await expect(async () => {
+    const table = JSON.parse(await output.innerText()).content[0];
+    expect(table.content[0].content[0].attrs.rowspan).toBe(2);
+    expect(table.content[2].content[0].attrs.rowspan).toBe(2);
+  }).toPass();
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Zero rowspan');
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await editor.evaluate((element, html) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? html : '' } });
+    element.dispatchEvent(event);
+  }, source);
+  await expect(editor.locator('td[rowspan="2"]')).toHaveCount(2);
+  await expect(editor.locator('tr')).toHaveCount(4);
+  const ada = await editor.locator('td').filter({ hasText: /^Ada$/ }).boundingBox();
+  const deploy = await editor.locator('td').filter({ hasText: /^Deploy$/ }).boundingBox();
+  const grace = await editor.locator('td').filter({ hasText: /^Grace$/ }).boundingBox();
+  expect(ada).not.toBeNull(); expect(deploy).not.toBeNull(); expect(grace).not.toBeNull();
+  expect(Math.abs((ada!.y + ada!.height) - (deploy!.y + deploy!.height))).toBeLessThan(2);
+  expect(grace!.y).toBeGreaterThanOrEqual(ada!.y + ada!.height - 1);
+});
+
 test('reconstructs HTML tables across Markdown block boundaries', async ({ page }) => {
   await page.goto('/demos/node-markdown.html');
   await page.getByLabel('Markdown input', { exact: true }).fill('<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>');

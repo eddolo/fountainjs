@@ -39,6 +39,7 @@ const BLOCK_TAGS = new Set([
   'address', 'article', 'aside', 'blockquote', 'div', 'dl', 'fieldset', 'figure',
   'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'main',
   'nav', 'ol', 'p', 'pre', 'section', 'table', 'ul',
+  'caption', 'colgroup', 'col', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th',
 ]);
 
 function attribute(node, name) {
@@ -135,6 +136,14 @@ function block(node, reference) {
     return ['code-block', codeLanguage(node), generated ? textContent(node).replace(/\n$/, '') : textContent(node)];
   }
   if (tag === 'hr') return ['thematic-break'];
+  if (tag === 'td' || tag === 'th') {
+    // An explicit unit span is the same HTML table geometry as its omission.
+    // Preserve every other attribute, header/data distinction and content block.
+    const attrs = (node.attrs ?? []).filter(({ name, value }) => !(
+      (name === 'colspan' || name === 'rowspan') && value === '1'
+    )).map(({ name, value }) => [name, value]).sort();
+    return ['table-cell', tag, attrs, blockChildren(node.childNodes ?? [], reference)];
+  }
   if (tag === 'figure' && attribute(node, 'data-align')) {
     const meaningful = (node.childNodes ?? []).filter((child) => (
       child.tagName || child.nodeName !== '#text' || child.value.trim()
@@ -349,7 +358,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 7) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 8) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -414,6 +423,33 @@ for (const source of ['<pre><code>x\n</code></pre>', '<pre><code>x\n\n</code></p
   }
 }
 console.log(`Code origins: ${codeOriginCases.length * 2} LF/CRLF import/source contracts; identical-HTML provenance distinguished; 6 newline corruptions rejected.`);
+const plainTable = '<table><tr><td>A</td><td>B</td></tr></table>';
+const explicitTable = '<table><tbody><tr><td colspan="1" rowspan="1"><p>A</p></td><td rowspan="1" colspan="1"><p>B</p></td></tr></tbody></table>';
+if (JSON.stringify(semanticProjection(plainTable)) !== JSON.stringify(semanticProjection(explicitTable))) {
+  throw new Error('Equivalent unit table spans and cell paragraph wrappers must compare equally.');
+}
+const tableSensitivityCases = [
+  [plainTable, plainTable.replace('<td>A', '<th>A').replace('A</td>', 'A</th>')],
+  [plainTable, plainTable.replace('<td>A</td>', '')],
+  [plainTable, plainTable.replace('<td>A</td><td>B</td>', '<td>B</td><td>A</td>')],
+  [plainTable, plainTable.replace('</table>', '<tr><td>C</td><td>D</td></tr></table>')],
+  [plainTable, plainTable.replace('<td>A', '<td colspan="2">A')],
+  [plainTable, plainTable.replace('<td>A', '<td rowspan="2">A')],
+  [plainTable, plainTable.replace('<td>A', '<td data-owner="Ada">A')],
+  [plainTable, plainTable.replace('A</td>', '<p>A</p><p></p></td>')],
+  [plainTable.replace('<td>A', '<td><strong>A').replace('A</td>', 'A</strong></td>'), plainTable],
+  [plainTable.replace('<tr>', '<thead><tr>').replace('</tr>', '</tr></thead>'), plainTable],
+  [plainTable.replace('<tr>', '<caption>Report</caption><tr>'), plainTable],
+  [plainTable.replace('A</td>', 'A<br>B</td>'), plainTable.replace('A</td>', 'A B</td>')],
+  [plainTable.replace('A</td>', '<p>A</p><p>B</p></td>'), plainTable.replace('A</td>', 'A B</td>')],
+  [plainTable.replace('A</td>', `${plainTable}</td>`), plainTable],
+];
+for (const [expected, damaged] of tableSensitivityCases) {
+  if (JSON.stringify(semanticProjection(expected)) === JSON.stringify(semanticProjection(damaged))) {
+    throw new Error(`Table comparator accepted structural or content loss: ${damaged}`);
+  }
+}
+console.log(`Table projection: unit spans/cell wrappers equivalent; ${tableSensitivityCases.length} structural/content corruptions rejected.`);
 const matches = new Set();
 const mismatches = [];
 const roundTripFailures = [];
