@@ -99,23 +99,26 @@ function codeLanguage(node) {
   return !language || language === 'text' ? null : language;
 }
 
-function listItem(node) {
-  return ['item', blockChildren(node.childNodes ?? [])];
+function listItem(node, reference) {
+  return ['item', blockChildren(node.childNodes ?? [], reference)];
 }
 
-function block(node) {
+function block(node, reference) {
   const tag = node.tagName;
   if (tag === 'p') return ['paragraph', normalizeInline((node.childNodes ?? []).flatMap(inline))];
   if (/^h[1-6]$/.test(tag)) {
     return ['heading', Number(tag[1]), normalizeInline((node.childNodes ?? []).flatMap(inline))];
   }
-  if (tag === 'blockquote') return ['blockquote', blockChildren(node.childNodes ?? [])];
+  if (tag === 'blockquote') return ['blockquote', blockChildren(node.childNodes ?? [], reference)];
   if (tag === 'ul' || tag === 'ol') {
-    const items = (node.childNodes ?? []).filter((child) => child.tagName === 'li').map(listItem);
+    const items = (node.childNodes ?? []).filter((child) => child.tagName === 'li').map((item) => listItem(item, reference));
     return ['list', tag === 'ol' ? 'ordered' : 'bullet', tag === 'ol' ? Number(attribute(node, 'start') || 1) : null, items];
   }
   if (tag === 'pre') {
-    return ['code-block', codeLanguage(node), textContent(node).replace(/\n$/, '')];
+    // The reference renderer appends one line terminator to code content.
+    // Fountain stores/exports the content itself. Remove only the reference
+    // terminator; stripping Fountain's last LF hides or invents data loss.
+    return ['code-block', codeLanguage(node), reference ? textContent(node).replace(/\n$/, '') : textContent(node)];
   }
   if (tag === 'hr') return ['thematic-break'];
   if (tag === 'figure' && attribute(node, 'data-align')) {
@@ -133,11 +136,11 @@ function block(node) {
     'html-block',
     tag ?? node.nodeName,
     [...(node.attrs ?? [])].map(({ name, value }) => [name, value]).sort(),
-    blockChildren(node.childNodes ?? []),
+    blockChildren(node.childNodes ?? [], reference),
   ];
 }
 
-function blockChildren(nodes) {
+function blockChildren(nodes, reference) {
   const result = [];
   let pending = [];
   const flush = () => {
@@ -149,7 +152,7 @@ function blockChildren(nodes) {
     const isBlock = node.tagName && BLOCK_TAGS.has(node.tagName);
     if (isBlock) {
       flush();
-      result.push(block(node));
+      result.push(block(node, reference));
     } else if (node.nodeName === '#text' && !node.value.trim() && !pending.length) {
       // Formatting whitespace between block elements has no document meaning.
     } else pending.push(node);
@@ -158,8 +161,8 @@ function blockChildren(nodes) {
   return result;
 }
 
-function semanticProjection(html) {
-  return blockChildren(parseFragment(html).childNodes);
+function semanticProjection(html, reference = false) {
+  return blockChildren(parseFragment(html).childNodes, reference);
 }
 
 // CommonMark's spec source uses a visible arrow as notation for a tab in both
@@ -198,7 +201,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 5) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 6) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -214,7 +217,7 @@ const matches = new Set();
 const mismatches = [];
 for (const example of commonmarkSpec.tests) {
   const source = materializeTabs(example.markdown);
-  const expected = semanticProjection(materializeTabs(example.html));
+  const expected = semanticProjection(materializeTabs(example.html), true);
   let actual;
   let error = null;
   try {
@@ -265,7 +268,7 @@ for (const number of inspectedExamples) {
   if (!example) throw new Error(`Unknown CommonMark example ${number}.`);
   const source = materializeTabs(example.markdown);
   console.log(`Example ${number} (${example.section}) source:\n${JSON.stringify(source)}`);
-  console.log(`Expected projection:\n${JSON.stringify(semanticProjection(materializeTabs(example.html)), null, 2)}`);
+  console.log(`Expected projection:\n${JSON.stringify(semanticProjection(materializeTabs(example.html), true), null, 2)}`);
   console.log(`Fountain projection:\n${JSON.stringify(mismatch?.actual ?? semanticProjection(HTMLExporter.export(MarkdownImporter.parse(source, schema), { document: false })), null, 2)}`);
   if (mismatch?.error) console.log(`Fountain error: ${mismatch.error}`);
 }

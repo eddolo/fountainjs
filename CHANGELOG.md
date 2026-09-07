@@ -4,6 +4,13 @@
 
 ### Fixed
 
+- Markdown list content now follows each marker's width and padding, including
+  tabs, multi-digit numbering, nested containers, lazy paragraphs, and code.
+  Canonical export preserves these structures, distinct adjacent lists, and
+  blank code lines. Unclosed fences no longer acquire an extra EOF line.
+  The CommonMark oracle preserves meaningful trailing code newlines and now
+  locks 561 matching examples (82 pending, nine intentional differences).
+  HTML link coalescing also stops at intervening links with other attributes.
 - Product-style capabilities now have an explicit end-to-end completion gate
   covering developer integration, author configuration, end-user permissions,
   persistence/submission, failure paths, and paired documentation. Markdown

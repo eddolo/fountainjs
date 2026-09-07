@@ -200,7 +200,7 @@ document schema. Fountain keeps its own parser, model, identity, extension,
 security, source-preservation, and loss-reporting contracts. Reference parsers
 do not enter the shipped runtime. The versioned
 [semantic baseline](https://github.com/eddolo/fountainjs/blob/master/tests/fixtures/markdown/commonmark-semantic-baseline-v1.json)
-classifies every example: 534 currently match, 109 remain pending, and nine are
+classifies every example: 561 currently match, 82 remain pending, and nine are
 intentional default-policy/GFM divergences. A regression, unclassified case, or
 newly matching case fails the gate and requires an explicit baseline review.
 The harness also materializes the specification's visible tab notation before
@@ -214,8 +214,7 @@ conformance. Important remaining work includes:
 - the remaining delimiter-stack emphasis cases beyond the flanking,
   rule-of-three, nesting, and overlap baseline;
 - all HTML block/inline precedence and safe unknown-HTML policy;
-- exact list marker, indentation, interruption, tight/loose, and lazy
-  continuation rules;
+- the remaining HTML-comment/list interactions and empty-item representation;
 - full link destination/title/reference precedence;
 - additional strikethrough delimiter-stack cases;
 - configurable handling for CommonMark's arbitrary URI schemes without
@@ -227,16 +226,32 @@ conformance. Important remaining work includes:
 Until those gates exist, documentation should say “supports these Markdown
 features,” not “fully CommonMark/GFM compliant.”
 
-The current Markdown baseline, including raw reference-label correctness,
+The earlier Markdown baseline, including raw reference-label correctness,
 container definitions, link precedence, full Unicode 17 case folding,
 opaque-token scanning, nested image descriptions, nested emphasis,
 rule-of-three arithmetic, repeated mark levels, unlike-marker overlap
 precedence, exact GFM tilde-run boundaries, and unmatched-delimiter
-preservation, is certified
+preservation, was certified
 by the complete 564-test package gate and green Chromium/Firefox/WebKit/mobile
 [CI run for `0a7aef6`](https://github.com/eddolo/fountainjs/actions/runs/34004963074),
 plus the corresponding successful
 [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34004963046).
+
+The latest list-container expansion regression-locks 561 examples. Items now
+use the actual marker width and tab-stop-aware padding, collect their physical
+lines before parsing inline constructs, and retain lazy nested quote/list
+continuations. Canonical export indents by the rendered marker width, separates
+nested ordered lists starting above one, alternates markers for distinct
+adjacent lists, and preserves every blank code line. An EOF line terminator no
+longer becomes extra content inside an unclosed fence. The semantic oracle
+removes only the reference HTML renderer's code terminator, not Fountain text.
+
+`tests/manual/markdown-list-audit.spec.ts` records a numbered deployment
+runbook through the public headless demo, standard rich clipboard paste into
+the Go-service editor demo, nested editing, Enter, undo/redo, and Markdown
+export/reimport. The check compares content after excluding host-generated
+node IDs, which Markdown does not carry. The importer/exporter regression suite
+also covers 128 marker-width/indent/padding combinations.
 
 ## Security and collaboration
 

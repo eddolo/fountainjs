@@ -416,25 +416,32 @@ function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): st
   return `${frontmatter}${separator}${body}`;
 }
 
+function renderBlockSequence(nodes: readonly Node[], context: RenderContext, path: readonly number[], depth = 0): string {
+  let alternate = false;
+  return nodes.map((node, index) => {
+    alternate = LIST_TYPES.has(node.type.name) && nodes[index - 1]?.type === node.type ? !alternate : false;
+    return render(node, context, [...path, index], depth, false, alternate);
+  }).join('\n\n');
+}
+
 function render(
   node: Node,
   context: RenderContext,
   path: readonly number[] = [],
   depth = 0,
   tableAlignmentRepresented = false,
+  alternateListMarker = false,
 ): string {
   reportNodeAttributes(node, context, path, tableAlignmentRepresented);
   const children = () => node.content
     .map((child, index) => render(child, context, [...path, index], depth))
     .join('');
   switch (node.type.name) {
-    case 'doc': return node.content.map((child, index) => render(child, context, [index])).join('\n\n').replace(/\n{3,}/g, '\n\n');
+    case 'doc': return renderBlockSequence(node.content, context, []);
     case 'text': return inline(node, context, path);
     case 'paragraph': return inlineContent(node, context, path);
     case 'heading': return `${'#'.repeat(Number(node.attrs.level) || 1)} ${inlineContent(node, context, path)}`;
-    case 'blockquote': return node.content
-      .map((child, index) => render(child, context, [...path, index], depth))
-      .join('\n\n')
+    case 'blockquote': return renderBlockSequence(node.content, context, path, depth)
       .split('\n')
       .map((line) => `> ${line}`)
       .join('\n');
@@ -449,18 +456,25 @@ function render(
       return `<details${node.attrs.open ? ' open' : ''}>\n<summary>${label}</summary>\n\n${body}\n</details>`;
     }
     case 'details_summary': return inlineContent(node, context, path);
-    case 'bullet_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- ${render(child, context, [...path, index], depth + 1)}`).join('\n');
-    case 'ordered_list': return node.content.map((child, index) => `${'  '.repeat(depth)}${((node.attrs.start as number) + index) % 1e9}. ${render(child, context, [...path, index], depth + 1)}`).join('\n');
-    case 'task_list': return node.content.map((child, index) => `${'  '.repeat(depth)}- [${child.attrs.checked ? 'x' : ' '}] ${render(child, context, [...path, index], depth + 1)}`).join('\n');
-    case 'list_item': case 'task_item': return node.content.map((child, index) => {
-      const value = render(child, context, [...path, index], depth);
-      if (index === 0) return LIST_TYPES.has(child.type.name)
-        ? value.slice(depth * 2)
-        : value.replace(/\n/g, `\n${'  '.repeat(depth)}`);
-      if (LIST_TYPES.has(child.type.name)) return `\n${value}`;
-      const indentation = '  '.repeat(depth);
-      return `\n\n${indentation}${value.replace(/\n/g, `\n${indentation}`)}`;
-    }).join('');
+    case 'bullet_list': case 'ordered_list': case 'task_list': return node.content.map((item, index) => {
+      const marker = node.type.name === 'ordered_list'
+        ? `${((node.attrs.start as number) + index) % 1e9}${alternateListMarker ? ')' : '.'} `
+        : alternateListMarker ? '+ ' : '- ';
+      const prefix = marker + (node.type.name === 'task_list' ? `[${item.attrs.checked ? 'x' : ' '}] ` : '');
+      const indentation = ' '.repeat(marker.length);
+      let alternate = false;
+      const body = item.content.map((child, childIndex) => {
+        alternate = LIST_TYPES.has(child.type.name) && item.content[childIndex - 1]?.type === child.type ? !alternate : false;
+        const value = render(child, context, [...path, index, childIndex], 0, false, alternate);
+        // Only a list starting at 1 may interrupt an existing paragraph.
+        const compactList = LIST_TYPES.has(child.type.name)
+          && (child.type.name !== 'ordered_list' || Number(child.attrs.start ?? 1) === 1);
+        return (childIndex ? compactList ? '\n' : '\n\n' : '') + value;
+      }).join('');
+      return prefix + body.replace(/\n/g, `\n${indentation}`);
+    }).join('\n');
+    case 'list_item': case 'task_item': return node.content
+      .map((child, index) => render(child, context, [...path, index])).join('\n\n');
     case 'code_block': return fencedCode(node);
     case 'horizontal_rule': return '* * *';
     case 'hard_break': return '  \n';

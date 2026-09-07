@@ -1300,6 +1300,7 @@ function tableStart(lines: readonly string[], index: number): { headers: string[
 
 interface ListMarker {
   readonly indent: number;
+  readonly contentIndent: number;
   readonly kind: 'bullet' | 'ordered' | 'task';
   readonly m: '-' | '*' | '+' | '.' | ')';
   readonly value: string;
@@ -1308,30 +1309,53 @@ interface ListMarker {
 }
 
 function listMarker(line: string): ListMarker | null {
-  const match = /^([ \t]*)(?:([-*+])[ \t]+\[([ xX])\]|([-*+])|(\d{1,9})([.)]))(?:([ \t]+)(.*)|[ \t]*)$/.exec(line);
+  const match = /^([ \t]*)(?:([-*+])|(\d{1,9})([.)]))(?:([ \t]+)(.*)|$)/.exec(line);
   if (!match) return null;
+  const indent = indentationColumns(match[1]);
+  const markerEnd = indent + (match[2] ? 1 : match[3].length + 1);
+  const padding = indentationColumns(match[5] ?? '', markerEnd);
+  const contentPadding = match[6] && padding <= 4 ? padding : 1;
+  const contentIndent = markerEnd + contentPadding;
+  const raw = (match[6] && padding > 4 ? ' '.repeat(padding - 1) : '') + (match[6] ?? '');
+  // Task syntax is an inline prefix; it does not increase the container's
+  // indentation requirement for subsequent paragraphs or nested lists.
+  const task = match[2] ? /^\[([ xX])\](?:[ \t]+(.*)|$)/.exec(raw) : null;
   return {
-    indent: match[1].length,
-    kind: match[2] ? 'task' : match[4] ? 'bullet' : 'ordered',
-    m: (match[2] || match[4] || match[6]) as ListMarker['m'],
-    value: match[8] ? `${match[7].length > 4 ? match[7].slice(1) : ''}${match[8]}` : '',
-    checked: match[3]?.toLowerCase() === 'x',
-    start: +(match[5] || 1),
+    indent,
+    contentIndent,
+    kind: task ? 'task' : match[2] ? 'bullet' : 'ordered',
+    m: (match[2] || match[4]) as ListMarker['m'],
+    value: task ? task[2] ?? '' : raw,
+    checked: task?.[1].toLowerCase() === 'x',
+    start: +(match[3] || 1),
   };
 }
 
-function appendContinuation(current: Node, value: string, schema: Schema, references: References): Node {
-  return schema.node('paragraph', current.attrs, [
-    ...current.content,
-    schema.text(' '),
-    ...inline(value, schema, references),
-  ]);
+function indentationColumns(value: string, start = 0): number {
+  let column = start;
+  for (const character of value) {
+    if (character === ' ') column++;
+    else if (character === '\t') column += 4 - column % 4;
+    else break;
+  }
+  return column - start;
+}
+
+function stripIndentation(value: string, columns: number): string {
+  let column = 0;
+  let index = 0;
+  while (column < columns && index < value.length) {
+    if (value[index] === ' ') column++;
+    else if (value[index] === '\t') column += 4 - column % 4;
+    else break;
+    index++;
+  }
+  return ' '.repeat(Math.max(0, column - columns)) + value.slice(index);
 }
 
 function parseList(
   lines: readonly string[],
   startIndex: number,
-  indent: number,
   schema: Schema,
   references: References,
 ): { node: Node; nextIndex: number } {
@@ -1343,61 +1367,62 @@ function parseList(
   while (index < lines.length) {
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
-    if (!marker || marker.indent !== indent || marker.kind !== first.kind || marker.m !== first.m) break;
-    const content = marker.value
-      ? parseBlocks([marker.value], schema, references)
-      : [paragraph(schema, '', references)];
+    if (!marker || marker.indent >= 4 || marker.kind !== first.kind || marker.m !== first.m) break;
+    const itemLines = [marker.value];
+    let paragraphOpen = false;
+    let fence: MarkdownFence | null = null;
+    const trackLine = (line: string) => {
+      let value = line;
+      if (fence) {
+        if (closesMarkdownFence(value, fence)) fence = null;
+        paragraphOpen = false;
+        return;
+      }
+      // Track the paragraph at the innermost container so lazy continuation
+      // remains possible through combinations of quotes and nested lists.
+      for (;;) {
+        const quote = BLOCKQUOTE.exec(value);
+        const nested = listMarker(value);
+        if (quote) value = value.slice(quote[0].length);
+        else if (nested && nested.indent < 4) value = nested.value;
+        else break;
+        paragraphOpen = false;
+      }
+      fence = markdownFence(value);
+      paragraphOpen = !fence && Boolean(value.trim())
+        && (paragraphOpen || indentedCodeLine(value) === null)
+        && !startsBlock([value], 0, references, schema);
+    };
+    trackLine(marker.value);
     index++;
-    const fence = markdownFence(marker.value);
-    while (fence && index < lines.length) {
-      const value = lines[index].slice(Math.min(lines[index].length, indent + 2));
-      index++;
-      if (closesMarkdownFence(value, fence)) break;
-      const last = content.at(-1) as Node;
-      content[content.length - 1] = last.copy([schema.text(`${last.textContent}${last.textContent ? '\n' : ''}${value}`)]);
-    }
     while (index < lines.length) {
-      const next = listMarker(lines[index]);
-      if (next && next.indent > indent) {
-        const nested = parseList(lines, index, next.indent, schema, references);
-        content.push(nested.node);
-        index = nested.nextIndex;
-        continue;
-      }
-      if (next || (!lines[index].trim() && listMarker(lines[index + 1] ?? '')?.indent === indent)) break;
       if (!lines[index].trim()) {
-        let continuationStart = index + 1;
-        while (continuationStart < lines.length && !lines[continuationStart].trim()) continuationStart++;
-        const continuationMarker = listMarker(lines[continuationStart] ?? '');
-        if (continuationMarker && continuationMarker.indent > indent) {
-          const nested = parseList(lines, continuationStart, continuationMarker.indent, schema, references);
-          content.push(nested.node);
-          index = nested.nextIndex;
-          continue;
-        }
-        const leading = /^\s*/.exec(lines[continuationStart] ?? '')?.[0].length ?? 0;
-        if (continuationStart >= lines.length || leading <= indent) { index = continuationStart; break; }
-        const continuation: string[] = [];
-        index = continuationStart;
-        while (index < lines.length) {
-          const candidate = listMarker(lines[index]);
-          const candidateIndent = /^\s*/.exec(lines[index])?.[0].length ?? 0;
-          if ((candidate && candidate.indent <= indent) || (lines[index].trim() && candidateIndent <= indent)) break;
-          continuation.push(lines[index].slice(Math.min(lines[index].length, indent + 2)));
-          index++;
-        }
-        content.push(...parseBlocks(continuation, schema, references));
+        // An item with no content ends at the next blank line.
+        if (itemLines.length === 1 && !marker.value) { index++; break; }
+        itemLines.push('');
+        paragraphOpen = false;
+        index++;
         continue;
       }
-      const leading = /^\s*/.exec(lines[index])?.[0].length ?? 0;
-      if (leading <= indent) break;
-      const continuation = lines[index].trim();
-      const last = content.at(-1);
-      if (last?.type.name === 'paragraph') content[content.length - 1] = appendContinuation(last, continuation, schema, references);
-      else content.push(paragraph(schema, continuation, references));
+      const leading = indentationColumns(lines[index]);
+      if (leading >= marker.contentIndent) {
+        const value = stripIndentation(lines[index], marker.contentIndent);
+        itemLines.push(value);
+        trackLine(value);
+        index++;
+        continue;
+      }
+      const next = listMarker(lines[index]);
+      if (next && next.indent < 4) break;
+      const lazyEquals = /^ {0,3}=+[\t ]*$/u.test(lines[index]);
+      if (!paragraphOpen || (startsBlock(lines, index, references, schema) && !lazyEquals)) break;
+      itemLines.push(lazyEquals ? lines[index].replace(/^( {0,3})(=)/u, '$1\\$2') : lines[index]);
       index++;
     }
+    const content = parseBlocks(itemLines, schema, references);
+    if (!content.length) content.push(paragraph(schema, '', references));
     items.push(schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content));
+    while (index < lines.length && !lines[index].trim()) index++;
   }
   return {
     node: schema.node(listName, listName === 'ordered_list' ? { start: first.start } : {}, items),
@@ -1590,7 +1615,14 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         if (marked) {
           const content = lines[index].slice(marked[0].length);
           quote.push(content);
-          const deepest = content.replace(/^(?: {0,3}>[ \t]?)+/u, '');
+          let deepest = content;
+          for (;;) {
+            const quotePrefix = BLOCKQUOTE.exec(deepest);
+            const listPrefix = listMarker(deepest);
+            if (quotePrefix) deepest = deepest.slice(quotePrefix[0].length);
+            else if (listPrefix && listPrefix.indent < 4) deepest = listPrefix.value;
+            else break;
+          }
           if (fence) {
             if (closesMarkdownFence(deepest, fence)) fence = null;
             paragraphOpen = false;
@@ -1626,7 +1658,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     const marker = listMarker(line);
     if (marker && marker.indent < 4) {
-      const parsed = parseList(lines, index, marker.indent, schema, references);
+      const parsed = parseList(lines, index, schema, references);
       blocks.push(parsed.node);
       index = parsed.nextIndex;
       continue;
@@ -1645,7 +1677,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     // Keep physical line endings visible to inline syntax validation. Ordinary
     // soft breaks become spaces only when text nodes are emitted; hard-break
     // markers are consumed by `inline` before that normalization.
-    blocks.push(paragraph(schema, paragraphLines.join('\n'), references));
+    blocks.push(paragraph(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references));
   }
   return blocks;
 }
@@ -1775,7 +1807,9 @@ function extractFootnoteDefinitions(
 export class MarkdownImporter {
   parse(markdown: string, schema: Schema): Node {
     const footnotes = extractFootnoteDefinitions(markdown, schema);
-    const source = references(footnotes.markdown);
+    // A terminal line ending terminates the last physical line; split() must
+    // not turn it into extra code content when a fence is left open at EOF.
+    const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''));
     const blocks = parseBlocks(source.lines, schema, source.definitions);
     const definitions = footnotes.definitions.map((definition) => {
       const content = parseBlocks(definition.lines, schema, source.definitions);

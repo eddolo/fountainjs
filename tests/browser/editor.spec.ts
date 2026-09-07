@@ -2350,7 +2350,7 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
       'Existing paragraph\n14. stays in it\n\nExisting paragraph\n1. starts a list',
     ),
     orderedMarkerLimits: (globalThis as any).fountainBrowserTest.inspectMarkdown(
-      '0. Zero\n1. One\n\n123456789. Valid\n\n1234567890. Literal',
+      '0. Zero\n1. One\n\n123456789) Valid\n\n1234567890. Literal',
     ),
     emptyListItems: (globalThis as any).fountainBrowserTest.inspectMarkdown(
       '-\n- Filled\n\n1.\n2. Filled',
@@ -2851,6 +2851,29 @@ test('round-trips variable-delimiter Markdown code spans in the browser package'
     { text: '[link](<foo bar>)', links: [] },
     { text: 'link', links: ['/url\u00a0"title"'] },
   ]);
+});
+
+test('round-trips marker-relative list containers and exact code whitespace', async ({ page }) => {
+  const sources = [
+    '10. Prepare\n\n    Confirm window.\n\n        npm test\n\n\n        npm run build\n\n    > Keep rollback.\n\n11. Deploy\n    - Check health',
+    '- Parent\n\n  3. Nested\n  4. Next\n     - [x] Done',
+    '- one\n+ two\n\n1. three\n2) four',
+    '```\nkeep\n\n\nblank\n',
+    '> 1. > Blockquote\ncontinued here.',
+  ];
+  const results = await page.evaluate(sources => sources.map(source => (
+    (globalThis as any).fountainBrowserTest.inspectMarkdown(source)
+  )), sources);
+  for (const result of results) {
+    expect(result.roundTrip).toEqual(result.document);
+    expect(result.losses).toEqual([]);
+  }
+  expect(results[0].html).toContain('<ol start="10">');
+  expect(results[0].html).toContain('npm test\n\n\nnpm run build');
+  expect(results[0].markdown).toContain('    Confirm window.');
+  expect(results[1].markdown).toContain('\n  \n  3. Nested');
+  expect(results[2].document.content).toHaveLength(4);
+  expect(results[3].document.content[0].content[0].text).toBe('keep\n\n\nblank');
 });
 
 test('preserves raw Markdown and inert frontmatter through the browser package', async ({ page }) => {

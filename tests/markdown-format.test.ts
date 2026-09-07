@@ -877,6 +877,10 @@ describe('Markdown interchange', () => {
 
     expect(HTMLExporter.export(MarkdownImporter.parse('[one](/a)[two](/b)', schema), { document: false }))
       .toContain('</a><a href="/b"');
+    const alternatingLinks = HTMLExporter.export(MarkdownImporter.parse('[one](/a)[two](/b)[three](/a)', schema), { document: false });
+    expect(alternatingLinks.match(/<a /g)).toHaveLength(3);
+    expect(alternatingLinks.match(/<\/a>/g)).toHaveLength(3);
+    expect(alternatingLinks).toContain('two</a><a href="/a"');
   });
 
   it('covers underscore surplus, repeated nesting, and competing spans', () => {
@@ -1441,6 +1445,67 @@ describe('Markdown interchange', () => {
     documents.forEach((document) => {
       expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
     });
+  });
+
+  it('uses marker width and padding for paragraphs, code, and quotes in ordered items', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    for (const start of [1, 10, 999, 123456789]) {
+      for (let indent = 0; indent < 4; indent++) {
+        for (let padding = 1; padding <= 4; padding++) {
+          const prefix = ' '.repeat(indent) + `${start}.` + ' '.repeat(padding);
+          const column = ' '.repeat(prefix.length);
+          const source = `${prefix}First\n${column}second\n\n${column}    exact code\n\n${column}> Quote`;
+          const document = MarkdownImporter.parse(source, schema);
+          const item = document.child(0).child(0);
+          expect(item.content.map((node) => node.type.name), source).toEqual(['paragraph', 'code_block', 'blockquote']);
+          expect(item.child(0).textContent, source).toBe('First second');
+          expect(item.child(1).textContent, source).toBe('exact code');
+          expect(item.child(2).textContent, source).toBe('Quote');
+          expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), source)
+            .toEqual(document.toJSON());
+        }
+      }
+    }
+  });
+
+  it('keeps outdented paragraphs, variable-indent siblings, and lazy nested quotes in their containers', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const outside = MarkdownImporter.parse('-    one\n\n  two', schema);
+    const siblings = MarkdownImporter.parse('- a\n - b\n  - c\n   - d\n  - e\n - f\n- g', schema);
+    const nested = MarkdownImporter.parse('> 1. > Blockquote\ncontinued here.', schema);
+    expect(outside.content.map((node) => node.type.name)).toEqual(['bullet_list', 'paragraph']);
+    expect(outside.child(1).textContent).toBe('two');
+    expect(siblings.childCount).toBe(1);
+    expect(siblings.child(0).content.map((item) => item.textContent)).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g']);
+    expect(nested.childCount).toBe(1);
+    expect(nested.child(0).child(0).child(0).child(0).type.name).toBe('blockquote');
+    expect(nested.textContent).toBe('Blockquote continued here.');
+  });
+
+  it('preserves blank code lines, empty-item boundaries, and tab-relative list padding', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const code = MarkdownImporter.parse('- a\n- ```\n  b\n\n\n  ```\n- c', schema);
+    expect(code.child(0).child(1).child(0).textContent).toBe('b\n\n');
+    const unclosed = MarkdownImporter.parse('```\nline\n\n', schema);
+    expect(unclosed.child(0).textContent).toBe('line\n');
+    const standalone = MarkdownImporter.parse('```\nline\n\n\n```', schema);
+    expect(standalone.child(0).textContent).toBe('line\n\n');
+    const empty = MarkdownImporter.parse('-\n\n  outside', schema);
+    expect(empty.content.map((node) => node.type.name)).toEqual(['bullet_list', 'paragraph']);
+    const tabs = MarkdownImporter.parse('10.\tfoo\n\n\t\tcode', schema);
+    expect(tabs.child(0).child(0).content.map((node) => node.type.name)).toEqual(['paragraph', 'code_block']);
+    expect(tabs.child(0).child(0).child(1).textContent).toBe('code');
+    for (const document of [code, empty, tabs, unclosed, standalone]) {
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
+  it('exports adjacent distinct lists without merging them on re-import', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    for (const source of ['- foo\n- bar\n+ baz', '1. foo\n2. bar\n3) baz', '> - foo\n> + bar', '- - foo\n  + bar']) {
+      const document = MarkdownImporter.parse(source, schema);
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON(), source).toEqual(document.toJSON());
+    }
   });
 
   it('preserves loose list items containing multiple blocks', () => {

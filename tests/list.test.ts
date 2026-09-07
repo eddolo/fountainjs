@@ -183,9 +183,10 @@ describe('professional list transforms', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = [
       '- Parent **bold**',
+      '',
       '  3. Nested one',
       '  4. Nested two',
-      '    - [x] Done',
+      '     - [x] Done',
       '- Sibling',
     ].join('\n');
     const doc = MarkdownImporter.parse(source, schema);
@@ -198,13 +199,15 @@ describe('professional list transforms', () => {
     expect(ordered.child(1).child(1).child(0).attrs.checked).toBe(true);
     const markdown = MarkdownExporter.export(doc);
     expect(markdown).toContain('  3. Nested one');
-    expect(markdown).toContain('    - [x] Done');
+    expect(markdown).toContain('     - [x] Done');
     expect(MarkdownImporter.parse(markdown, schema).eq(doc)).toBe(true);
   });
 
   it('preserves zero starts and limits ordered markers to nine digits', () => {
     const schema = new Schema(CoreSchemaSpec);
-    const source = '0. Zero\n1. One\n\n123456789. Valid\n\n1234567890. Literal';
+    // A different delimiter starts a separate list (CommonMark example 302).
+    // A blank line and a different number alone do not end the previous list.
+    const source = '0. Zero\n1. One\n\n123456789) Valid\n\n1234567890. Literal';
     const doc = MarkdownImporter.parse(source, schema);
 
     expect(doc.content.map((node) => node.type.name)).toEqual([
