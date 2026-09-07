@@ -298,7 +298,9 @@ function inline(node: Node, context: RenderContext, path: readonly number[], pre
       : escapeInline(node.textContent);
   }
 
-  if (preserveMarkBoundary) {
+  // Empty delimiter runs are not Markdown emphasis/code. The existing inert
+  // style envelope can preserve their formatting without producing syntax.
+  if (preserveMarkBoundary || ((node.text ?? '') === '' && node.marks.some(mark => mark.type.name !== 'link'))) {
     const linkIndex = node.marks.findIndex((mark) => mark.type.name === 'link');
     const linkMark = linkIndex > 0 ? undefined : node.marks[linkIndex];
     const value = textStyleHTML(node.withMarks(node.marks.filter((mark) => mark !== linkMark)), context, path);
@@ -455,12 +457,14 @@ function render(
     case 'text': return inline(node, context, path);
     case 'paragraph': {
       const value = inlineContent(node, context, path);
-      // An empty pipe-table cell already has an explicit structural slot.
-      if (value || tableAlignmentRepresented) return value;
-      if (context.options.emptyParagraphs === 'omit') {
-        report(context, 'node', 'paragraph', path, 'Empty paragraph omitted by the requested Markdown export policy.');
+      if (!tableAlignmentRepresented && context.options.emptyParagraphs === 'omit'
+        && (!value || node.content.every(child => child.isText && !child.text
+          && !child.marks.some(mark => mark.type.name === 'link')))) {
+        report(context, 'node', 'paragraph', path, 'Empty paragraph and its formatting omitted by the requested Markdown export policy.');
         return '';
       }
+      // An empty pipe-table cell already has an explicit structural slot.
+      if (value || tableAlignmentRepresented) return value;
       if (node.childCount > 1) report(context, 'node', 'paragraph', path, 'Multiple empty text nodes are canonicalized to one caret text node.');
       return `<p data-fountain-empty="${node.childCount ? 'text' : 'block'}"></p>`;
     }

@@ -20,6 +20,28 @@ describe('explicit empty-paragraph Markdown fidelity', () => {
     expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema).toJSON()).toEqual(doc.toJSON());
   });
 
+  it.each(['strong', 'em', 'strike', 'code', 'underline', 'subscript', 'superscript', 'highlight'])('preserves an empty %s text mark without creating visible Markdown syntax', name => {
+    const doc = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('', [schema.marks[name].create()])])]);
+    const result = MarkdownExporter.exportWithReport(doc);
+    expect(result.losses).toEqual([]);
+    expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(doc.toJSON());
+  });
+
+  it('preserves adjacent empty mark runs and nested marks around empty links', () => {
+    const strong = schema.marks.strong.create();
+    const em = schema.marks.em.create();
+    const link = schema.marks.link.create({ href: '/target', title: 'Details', target: '_blank' });
+    for (const content of [
+      [schema.text('', [strong]), schema.text('', [em]), schema.text('After')],
+      [schema.text('', [strong, em])], [schema.text('', [link, strong])], [schema.text('', [strong, link])],
+    ]) {
+      const doc = schema.node('doc', {}, [schema.node('paragraph', {}, content)]);
+      const result = MarkdownExporter.exportWithReport(doc);
+      expect(result.losses).toEqual([]);
+      expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(doc.toJSON());
+    }
+  });
+
   it.each(['bullet_list', 'ordered_list', 'task_list'])('keeps a blank first paragraph and subsequent code inside %s', type => {
     const itemType = type === 'task_list' ? 'task_item' : 'list_item';
     const doc = schema.node('doc', {}, [schema.node(type, type === 'ordered_list' ? { start: 12 } : {}, [
@@ -65,6 +87,17 @@ describe('explicit empty-paragraph Markdown fidelity', () => {
     expect(roundTrip.childCount).toBe(1);
     expect(roundTrip.child(0).child(0).child(0).type.name).toBe('code_block');
     expect(roundTrip.textContent).toBe('literal');
+  });
+
+  it('honors explicit empty-paragraph omission for a styled blank but retains an empty link destination', () => {
+    const doc = schema.node('doc', {}, [
+      schema.node('paragraph', {}, [schema.text('', [schema.marks.strong.create()])]),
+      schema.node('paragraph', {}, [schema.text('', [schema.marks.link.create({ href: '/target' })])]),
+    ]);
+    const exported = MarkdownExporter.exportWithReport(doc, { emptyParagraphs: 'omit' });
+    expect(exported.markdown).not.toContain('strong');
+    expect(exported.markdown).toContain('[](/target)');
+    expect(exported.losses.map(loss => loss.path)).toEqual([[0]]);
   });
 
   it('keeps adjacent markers self-contained before reference and footnote definitions', () => {

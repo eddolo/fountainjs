@@ -63,6 +63,43 @@ test('inert HTML source remains multiline editable text through the public demos
   await expect(editor).not.toContainText('remains text');
 });
 
+test('empty formatting survives conversion and controls the next typed text', async ({ page, context }, info) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const source = '# Styled template\n\n<span data-fountain-text-style="true" style=""><strong></strong></span>\n\nAfter';
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(source);
+  const output = page.locator('.demo-output');
+  const original = withoutNodeIds(await output.locator('pre').innerText());
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  expect(await output.locator('pre').innerText()).toContain('<strong></strong>');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const html = await output.locator('pre').innerText();
+  await page.evaluate(async html => navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], { type: 'text/html' }),
+  })]), html);
+  await page.goto('/demos/go-docs-service.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+v');
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(original);
+  const blank = editor.locator(':scope > p').first();
+  await expect(blank).toHaveText('');
+  await blank.click();
+  await page.keyboard.type('This inherits bold.');
+  await expect(blank.locator('strong')).toHaveText('This inherits bold.');
+  await capture(page, info, '12-typed-into-preserved-empty-formatting');
+  await page.keyboard.press('Control+z');
+  await expect(blank).toHaveText('');
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(original);
+  await output.getByRole('button', { name: 'markdown', exact: true }).click();
+  const markdown = await output.locator('pre').innerText();
+  await page.goto('/demos/node-markdown.html');
+  await page.getByLabel('Markdown input', { exact: true }).fill(markdown);
+  await expect.poll(async () => withoutNodeIds(await output.locator('pre').innerText())).toEqual(original);
+  await capture(page, info, '13-empty-formatting-restored-and-reimported');
+});
+
 test('authored blank paragraphs remain visible through Markdown export and reimport', async ({ page, context }, info) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const html = '<p>Spacing review</p><p></p><ul><li><p></p><pre><code>Keep this code inside the list.</code></pre><p></p></li></ul><p>After</p>';

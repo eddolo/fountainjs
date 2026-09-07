@@ -796,8 +796,8 @@ function generatedStyledNodes(
   baseMarks: readonly Mark[],
 ): readonly Node[] {
   const nodes: Node[] = [];
-  const stack: Array<{ readonly tag: string; readonly marks: readonly Mark[] }> = [
-    { tag: '', marks: baseMarks },
+  const stack: Array<{ readonly tag: string; readonly marks: readonly Mark[]; readonly nodeStart: number }> = [
+    { tag: '', marks: baseMarks, nodeStart: 0 },
   ];
   const tagPattern = /<\/?(?:strong|em|u|s|code|sub|sup|a)(?:\s[^>]*)?>/gi;
   const markNames: Readonly<Record<string, string>> = {
@@ -816,7 +816,12 @@ function generatedStyledNodes(
     const tag = /^<\/?([a-z]+)/iu.exec(token)?.[1]?.toLowerCase() ?? '';
     if (closing) {
       const openingIndex = stack.findLastIndex((entry) => entry.tag === tag);
-      if (openingIndex > 0) stack.splice(openingIndex);
+      if (openingIndex > 0) {
+        if (nodes.length === stack[openingIndex].nodeStart) {
+          nodes.push(schema.text('', stack.at(-1)?.marks ?? baseMarks));
+        }
+        stack.splice(openingIndex);
+      }
     } else {
       const current = stack.at(-1)?.marks ?? baseMarks;
       const type = schema.marks[tag === 'a' ? 'link' : markNames[tag] ?? ''];
@@ -836,11 +841,12 @@ function generatedStyledNodes(
           next = [...current, type.create(attrs)];
         } catch { /* Invalid or unsafe link attributes degrade to readable text. */ }
       }
-      stack.push({ tag, marks: next });
+      stack.push({ tag, marks: next, nodeStart: nodes.length });
     }
     cursor = offset + token.length;
   }
   appendText(source.slice(cursor));
+  if (!nodes.length) nodes.push(schema.text('', stack.at(-1)?.marks ?? baseMarks));
   return nodes;
 }
 

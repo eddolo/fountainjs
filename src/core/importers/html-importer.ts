@@ -277,7 +277,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     }
     result.push(...inlineChildren(child, schema, nextMarks));
   });
-  if (!result.length && marks.some(mark => mark.type.name === 'link')) result.push(schema.text('', marks));
+  if (!result.length && marks.length) result.push(schema.text('', marks));
   return result;
 }
 
@@ -449,7 +449,7 @@ function blockChildren(element: HTMLElement, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
     if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
@@ -472,7 +472,7 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
     if (meaningful) result.push(schema.node('paragraph', {}, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };

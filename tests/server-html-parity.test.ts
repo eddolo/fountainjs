@@ -41,6 +41,16 @@ const fixtures = [
 ];
 
 describe('browser and server HTML semantic parity', () => {
+  it.each(['strong', 'em', 'strike', 'code', 'underline', 'subscript', 'superscript', 'highlight'])('preserves empty %s formatting across HTML and Markdown', name => {
+    const document = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('', [schema.marks[name].create()])])]);
+    const html = HTMLExporter.export(document, { document: false });
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const imported = importer.parse(html, schema);
+      expect(imported.toJSON()).toEqual(document.toJSON());
+      expect(MarkdownImporter.parse(MarkdownExporter.export(imported), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
   it.each([
     ['<pre><code>literal</code></pre>', 'code_block'],
     ['<h2>Heading</h2>', 'heading'],
@@ -69,6 +79,17 @@ describe('browser and server HTML semantic parity', () => {
       expect(document.child(0).content.find(node => node.text === 'bold')?.marks[0].type.name).toBe('strong');
       expect(document.child(0).content.find(node => node.text === 'link')?.marks[0].attrs.href).toBe('/target');
       expect(importer.parse(HTMLExporter.export(document, { document: false }), schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
+  it('retains unwrapped empty formatting as structural paragraphs', () => {
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse('<strong></strong><p>After</p><em></em>', schema);
+      expect(document.childCount).toBe(3);
+      expect(document.child(0).child(0).marks[0].type.name).toBe('strong');
+      expect(document.child(2).child(0).marks[0].type.name).toBe('em');
+      expect(document.textContent).toBe('After');
+      expect(MarkdownImporter.parse(MarkdownExporter.export(document), schema).toJSON()).toEqual(document.toJSON());
     }
   });
 

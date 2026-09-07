@@ -3175,6 +3175,30 @@ test('pastes unwrapped inline HTML without dropping surrounding text or formatti
   await expect(editor).not.toContainText('Before bold and link.');
 });
 
+test('pastes empty formatting and applies it to subsequently typed text', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
+  await editor.evaluate(target => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [],
+      getData: (type: string) => type === 'text/html'
+        ? '<p><strong></strong></p><p>After</p>'
+        : type === 'text/plain' ? '\nAfter' : '',
+    } });
+    target.dispatchEvent(event);
+  });
+  const first = editor.locator(':scope > p').first();
+  await expect(first).toHaveText('');
+  await first.click();
+  await page.keyboard.type('Still bold');
+  await expect(first.locator('strong')).toHaveText('Still bold');
+  await page.keyboard.press('Control+z');
+  await expect(first).toHaveText('');
+  const marks = await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).child(0).marks.map((mark: any) => mark.type.name));
+  expect(marks).toEqual(['strong']);
+});
+
 test('pastes and edits list-first code without inventing a blank paragraph', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());

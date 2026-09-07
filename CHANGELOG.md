@@ -4,6 +4,13 @@
 
 ### Fixed
 
+- Empty supported text marks survive Markdown and browser/server HTML
+  interchange. Empty bold, emphasis, code, strike, underline, sub/superscript,
+  highlight, nested marks, and formatted empty links no longer turn into
+  delimiter characters or disappear. Canonical Markdown reuses the inert
+  styled-text envelope; typing into a pasted blank retains its formatting,
+  including after undo. Explicit blank-paragraph omission still reports the
+  loss, while empty links keep their meaningful destinations.
 - Markdown preserves authored empty paragraph blocks by default using a narrow,
   inert `<p data-fountain-empty="text"></p>` dialect marker (`block` for a
   childless paragraph). This includes leading/trailing/consecutive blanks and

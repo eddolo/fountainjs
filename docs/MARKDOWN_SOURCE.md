@@ -304,6 +304,22 @@ children are canonicalized with a loss report; arbitrary attributes/marks
 remain subject to the existing format loss policy. JSON remains lossless
 structured persistence. General safe raw-HTML projection is still pending.
 
+Empty supported formatting runs use the existing inert styled-text envelope
+instead of ambiguous delimiter-only strings such as `****` or empty backticks.
+The envelope preserves nested/adjacent empty mark runs, including formatted
+empty links; browser and server HTML import also retain empty formatting tags.
+Typing into the corresponding blank inherits its marks. An explicit
+`emptyParagraphs: 'omit'` request reports a styled blank's removal, but an empty
+link is retained because its destination carries meaning. Unsupported custom
+marks remain subject to the normal loss report.
+
+The empty-formatting batch passed the complete 752-test gate and six targeted
+Chromium/Firefox/WebKit contracts. A recorded public-demo conversion → rich
+paste → type → undo → Markdown reimport audit passed under
+`artifacts/manual-markdown-empty-marks-20260907a/results/`; the screenshot of
+new text inheriting the saved bold style was visually inspected. This does
+not change the CommonMark baseline or enable general raw-HTML execution.
+
 The browser view gives childless text blocks a view-only placeholder without
 changing JSON during render. Pointer or collapsed native-caret selection can
 target the empty block, and typing fills it while retaining its node type and

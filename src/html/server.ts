@@ -613,7 +613,7 @@ function inlineChildren(
     }
     result.push(...inlineChildren(child, schema, nextMarks, context));
   });
-  if (!result.length && marks.some(mark => mark.type.name === 'link')) result.push(schema.text('', marks));
+  if (!result.length && marks.length) result.push(schema.text('', marks));
   return result;
 }
 
@@ -799,7 +799,7 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
   let pending: SourceNode[] = [];
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
     if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', {}, content));
     pending = [];
   };
@@ -820,7 +820,7 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   let pending: SourceNode[] = [];
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
-    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.some(mark => mark.type.name === 'link'));
+    const meaningful = content.some((node) => !node.isText || node.textContent.trim().length > 0 || node.marks.length);
     if (meaningful) result.push(schema.node('paragraph', {}, content));
     pending = [];
   };
