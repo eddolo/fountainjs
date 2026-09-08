@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Word content-control correction (2026-09-08, Unreleased): supported visible
+content inside Word controls now imports instead of disappearing, including
+nested controls inside table cells. Control semantics remain explicit losses,
+and the public conversion page shows those messages. Independent producer and
+browser evidence are documented in the [control audit](DOCX_CONTENT_CONTROLS.md);
+native Word page fidelity and complete form/glossary round trips remain open.
+
 Source-recovery audit (2026-09-08, Unreleased): fixed synthetic code terminators
 leaking into code buffers. The optional structural adapter now has an independent
 580/652 CommonMark semantic regression profile checked with LF and CRLF, plus

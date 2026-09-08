@@ -12,6 +12,11 @@ import { svelteReportJourney } from './svelte-report-journey';
 import { angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
+import { docxControlsJourney } from './docx-controls-journey';
+
+test('imports and edits Word content controls without losing visible content', async ({ page }, info) => {
+  await docxControlsJourney(page, info);
+});
 import { textAlignmentJourney } from './text-alignment-journey';
 import { fullReportHTML, htmlDocumentJourney } from './html-document-journey';
 import { issueEditorJourney } from './issue-editor-journey';

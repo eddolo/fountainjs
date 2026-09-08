@@ -5,6 +5,17 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Word content-control correction (2026-09-08, Unreleased): while investigating
+glossary handoff, the importer was found dropping entire block controls and cell
+content. Shared block traversal now retains supported displayed content, reports
+removed control behavior, and keeps control properties out of inline text. The
+public conversion UI exposes the actual messages. See
+[audit and remaining limits](DOCX_CONTENT_CONTROLS.md). Full Word forms, typed
+glossary export and native page-render verification are not completed by this fix.
+Verification: 1,661 tests / 128 files; independent Word producer checks; six
+three-engine browser checks; recorded and visually inspected handoff; passing
+site build. The previous code-ending update's complete Linux CI also passed.
+
 Source-recovery audit (2026-09-08, Unreleased): corrected generated code terminators
 being added to editable code buffers. The optional structural recovery route now
 has its own 652-example CommonMark regression baseline: 580 required semantic

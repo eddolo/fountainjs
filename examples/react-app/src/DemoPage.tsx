@@ -550,7 +550,8 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     details: number;
     error: string;
     fileName: string;
-  }>({ document: undefined, details: 0, error: '', fileName: '' });
+    issues: readonly string[];
+  }>({ document: undefined, details: 0, error: '', fileName: '', issues: [] });
   const [docxExportStatus, setDOCXExportStatus] = useState('');
   useEffect(() => {
     if (inputFormat !== 'html') return undefined;
@@ -617,14 +618,18 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
         <p>HTML is converted into the supported document schema. Wrappers, attributes and layout can change. No reported details is not a guarantee of lossless conversion.</p>
         {htmlParsed.issues.length > 0 && <><p>HTML conversion details</p><ul aria-label="Server HTML conversion details">{htmlParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul></>}
       </div>}
+      {inputFormat === 'docx' && <div className="headless-html-policy">
+        <p>Word content is converted into the supported schema. Form controls, layout and other features can change. Read the conversion details; an empty report does not prove full Word fidelity.</p>
+        {docxParsed.issues.length > 0 && <ul aria-label="Word DOCX conversion details">{docxParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}
+      </div>}
       {inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
       try {
         const result = importDOCX(await file.arrayBuffer(), schema);
-        setDOCXParsed({ document: result.document, details: result.report.issues.length, error: '', fileName: file.name });
+        setDOCXParsed({ document: result.document, details: result.report.issues.length, error: '', fileName: file.name, issues: [...new Set(result.report.issues.map(issue => issue.message))] });
       } catch (error) {
-        setDOCXParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), fileName: file.name });
+        setDOCXParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), fileName: file.name, issues: [] });
       }
     }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={() => downloadDOCX()}>Download as Word DOCX</button><button onClick={downloadImageSample}>Download embedded-image sample</button><span>Uses the same DOM-free import/export entry in browsers and servers. Fountain never fetches image URLs.</span></div>{docxExportStatus && <p className="headless-status" role="status">{docxExportStatus}</p>}{importedImages.length > 0 && <div className="headless-image-previews" aria-label="Imported DOCX image previews">{importedImages.map((image, index) => <figure key={`${String(image.attrs.src).slice(0, 40)}-${index}`}><img src={String(image.attrs.src)} alt={String(image.attrs.alt)} /><figcaption>{String(image.attrs.caption || image.attrs.alt || `Image ${index + 1}`)}</figcaption></figure>)}</div>}<p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
     <OutputPanel document={parsed.document} />

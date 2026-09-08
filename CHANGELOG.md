@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Fixed DOCX import dropping visible block content controls, including controls
+  inside table cells. Inline controls now read only their displayed content, not
+  control properties. Supported content survives with explicit behavior-loss
+  warnings; the public conversion page now shows Word import details.
+
 - Fixed the optional Markdown/HTML source-recovery adapter adding a generated
   terminal newline to code buffers. Authored blank lines and raw HTML code endings
   remain intact. Added a separate 652-example source-recovery regression profile

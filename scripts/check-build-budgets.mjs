@@ -29,8 +29,10 @@ const limits = Object.freeze({
   // Bound equation-source restoration adds ~7.4 / 6.1 KiB for namespace-aware
   // comparison, unique bookmark verification, metadata validation and mixed
   // paragraph handling. Measured optional entries: 70.0 / 56.0 KiB; no dependency.
-  'dist/docx.js': 71 * kibibyte,
-  'dist/docx.cjs': 57 * kibibyte,
+  // Shared body/cell/control traversal retains visible SDT content with explicit
+  // loss reports. Measured 71.2 / 57.0 KiB (+~0.5 each), no new dependency.
+  'dist/docx.js': 72 * kibibyte,
+  'dist/docx.cjs': 58 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -383,7 +385,8 @@ const limits = Object.freeze({
   // Same source-aware preformatted projection: measured 1142.7 KiB.
   // Same newline-stream correction: measured 1143.5 KiB.
   // Same definition-list feature: measured 1158.3 KiB CJS (+~4.4 KiB).
-  'all CommonJS runtime code': 1159 * kibibyte,
+  // Same content-control projection: 1159.2 KiB. ESM/CSS/performance caps unchanged.
+  'all CommonJS runtime code': 1160 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

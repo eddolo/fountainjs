@@ -33,6 +33,10 @@ persistence format; keep validated Fountain JSON as the source of truth.
 
 ## Supported import
 
+- supported visible block/inline content inside Word content controls, including
+  nested controls in table cells, with explicit loss reports for the control
+  identity, form behavior, locks and bindings; see the
+  [content-control audit and limitations](DOCX_CONTENT_CONTROLS.md);
 - paragraphs, six heading levels, left/centre/right/justified alignment;
 - bold, italic, underline, strike, code character style, text colour, named
   Word highlights, safe external hyperlinks, tabs, and hard line breaks;

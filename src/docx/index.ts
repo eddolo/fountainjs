@@ -413,6 +413,12 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
   };
   const visit = (element: XMLElement, hyperlink?: string) => {
     const name = localName(element.name);
+    if (name === 'sdt') {
+      for (const content of contentControlContents(element, issues, path)) {
+        elements(content.element).forEach(item => visit(item, hyperlink));
+      }
+      return;
+    }
     if (name === 'oMath' || name === 'oMathPara') {
       const restored = media.restoredMath.get(element);
       if (restored) {
@@ -612,6 +618,60 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
   return output;
 }
 
+function contentControlContents(element: XMLElement, issues: DOCXIssue[], path: readonly number[]): Array<{ element: XMLElement; index: number }> {
+  if (expandedName(element) !== `${WORD_NS}|sdt`) {
+    issues.push({ code: 'unsupported-content-control-namespace', severity: 'warning', message: 'A non-Word content-control lookalike was not interpreted.', path });
+    return [];
+  }
+  const contents = elements(element).flatMap((value, index) => expandedName(value) === `${WORD_NS}|sdtContent` ? [{ element: value, index }] : []);
+  issues.push({ code: 'content-control-unwrapped', severity: 'warning',
+    message: 'Word content-control content was imported without its control identity, form behavior, locks or data bindings.', path });
+  if (contents.length !== 1) issues.push({ code: 'invalid-content-control', severity: 'warning',
+    message: 'A Word content control had missing or multiple content containers; available visible content was retained in order.', path });
+  return contents;
+}
+
+/** Read visible block content in the body, cells and block content controls.
+ * Control properties are never document content or executable form bindings.
+ */
+function parseBlocks(container: XMLElement, schema: Schema, media: ImportMediaContext,
+  numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): FountainNode[] {
+  const blocks: FountainNode[] = [];
+  const paragraphs: ParsedParagraph[] = [];
+  const flush = () => { if (paragraphs.length) blocks.push(...groupLists(paragraphs.splice(0), schema, issues)); };
+  const visit = (parent: XMLElement, parentPath: readonly number[]) => {
+    for (const [index, item] of elements(parent).entries()) {
+      const currentPath = [...parentPath, index];
+      const name = localName(item.name);
+      if (name === 'p') {
+        const parsed = parseParagraph(item, schema, media, numbering, issues, currentPath);
+        if (parsed.caption) {
+          flush();
+          const image = blocks.at(-1);
+          if (image?.type.name === 'image_super' && parsed.node.textContent.trim()) {
+            blocks[blocks.length - 1] = schema.node('image_super', { ...image.attrs, caption: parsed.node.textContent });
+          } else paragraphs.push({ node: parsed.node });
+        } else paragraphs.push(parsed);
+      } else if (name === 'tbl') {
+        flush();
+        blocks.push(parseTable(item, schema, media, numbering, issues, currentPath));
+      } else if (name === 'sdt') {
+        // Inline/row/cell controls have different shapes. This branch only
+        // projects block controls in an already established block container.
+        const contents = contentControlContents(item, issues, currentPath);
+        // Continue the paragraph stream: a control boundary does not restart
+        // numbering or separate a caption from its preceding image.
+        for (const content of contents) visit(content.element, [...currentPath, content.index]);
+      } else if (!['sectPr', 'tcPr'].includes(name)) {
+        issues.push({ code: 'unsupported-block', severity: 'warning', message: `Unsupported Word block ${name} was omitted.`, path: currentPath });
+      }
+    }
+  };
+  visit(container, path);
+  flush();
+  return blocks;
+}
+
 function parseTable(element: XMLElement, schema: Schema, media: ImportMediaContext, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): FountainNode {
   interface MutableCell { content: FountainNode[]; colspan: number; rowspan: number; header: boolean; continuation: boolean }
   const rows: MutableCell[][] = [];
@@ -634,27 +694,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
         column += colspan;
         continue;
       }
-      const paragraphs: FountainNode[] = [];
-      const pendingParagraphs: ParsedParagraph[] = [];
-      const flushParagraphs = () => {
-        if (pendingParagraphs.length) paragraphs.push(...groupLists(pendingParagraphs.splice(0), schema, issues));
-      };
-      elements(cell).filter((item) => ['p', 'tbl'].includes(localName(item.name))).forEach((item, index) => {
-        if (localName(item.name) === 'p') {
-          const parsed = parseParagraph(item, schema, media, numbering, issues, [...path, rowIndex, cellIndex, index]);
-          if (parsed.caption) {
-            flushParagraphs();
-            const image = paragraphs.at(-1);
-            if (image?.type.name === 'image_super' && parsed.node.textContent.trim()) {
-              paragraphs[paragraphs.length - 1] = schema.node('image_super', { ...image.attrs, caption: parsed.node.textContent });
-            } else pendingParagraphs.push({ node: parsed.node });
-          } else pendingParagraphs.push(parsed);
-        } else {
-          flushParagraphs();
-          paragraphs.push(parseTable(item, schema, media, numbering, issues, [...path, rowIndex, cellIndex, index]));
-        }
-      });
-      flushParagraphs();
+      const paragraphs = parseBlocks(cell, schema, media, numbering, issues, [...path, rowIndex, cellIndex]);
       const content = paragraphs.length ? paragraphs : [schema.node('paragraph')];
       const mutable: MutableCell = { content, colspan, rowspan: 1, header: rowHeader, continuation: false };
       cells.push(mutable);
@@ -879,25 +919,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     catch (error) { issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) }); }
   }
   const media: ImportMediaContext = { archive, relationships, options, restoredMath };
-  const paragraphs: ParsedParagraph[] = [];
-  const blocks: FountainNode[] = [];
-  const flush = () => { if (paragraphs.length) blocks.push(...groupLists(paragraphs.splice(0), schema, issues)); };
-  for (const [index, item] of elements(body).entries()) {
-    const name = localName(item.name);
-    if (name === 'p') {
-      const parsed = parseParagraph(item, schema, media, numbering, issues, [index]);
-      if (parsed.caption) {
-        flush();
-        const image = blocks.at(-1);
-        if (image?.type.name === 'image_super' && parsed.node.textContent.trim()) {
-          blocks[blocks.length - 1] = schema.node('image_super', { ...image.attrs, caption: parsed.node.textContent });
-        } else paragraphs.push({ node: parsed.node });
-      } else paragraphs.push(parsed);
-    }
-    else if (name === 'tbl') { flush(); blocks.push(parseTable(item, schema, media, numbering, issues, [index])); }
-    else if (name !== 'sectPr') issues.push({ code: 'unsupported-block', severity: 'warning', message: `Unsupported Word block ${name} was omitted.`, path: [index] });
-  }
-  flush();
+  const blocks = parseBlocks(body, schema, media, numbering, issues, []);
   const fallback = schema.nodes.paragraph ? schema.node('paragraph') : undefined;
   const document = schema.node('doc', {}, blocks.length ? blocks : fallback ? [fallback] : []);
   schema.validate(document);
