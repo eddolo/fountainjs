@@ -3,11 +3,13 @@ import { CoreSchemaSpec, HTMLContainerExtension, Schema, MarkdownImporter, Markd
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 
 let cleanup: (() => void) | undefined;
-export function mountMarkdownDocumentAudit(referenceHTML: string) {
+export function mountMarkdownDocumentAudit(referenceHTML: string, sample: 'html' | 'plain' = 'html') {
   cleanup?.();
   const spec = { ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } };
   const schema = new Schema(spec);
-  const source = '<a href="/guide">First paragraph.\n\nSecond **paragraph**.</a>\n';
+  const source = sample === 'plain'
+    ? 'Heading\n=======\n\nKeep __this__ spelling.\n\n~~~~html\n<b>literal</b>\n~~~~\n\nEdit here.\n'
+    : '<a href="/guide">First paragraph.\n\nSecond **paragraph**.</a>\n';
   const issues: string[] = [];
   const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLDocument: (segments, target, context) => {
     const result = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, target, context);
@@ -19,7 +21,9 @@ export function mountMarkdownDocumentAudit(referenceHTML: string) {
   const style = document.createElement('style');
   style.textContent = '#markdown-document-audit{max-width:960px;margin:30px auto;padding:30px;background:#f5f2ff;font:16px/1.5 Arial}#markdown-document-audit .fountain-editor{min-height:200px;padding:24px;background:white}#markdown-document-audit textarea{display:block;width:100%;min-height:100px}#markdown-document-audit iframe{width:100%;height:230px;background:white;border:1px solid #b8acd4}#markdown-document-audit button{padding:10px;margin:12px 0}';
   root.prepend(style); document.body.append(root);
-  root.querySelector('[data-warning]')!.textContent = [...new Set(issues)].join(' ');
+  root.querySelector('h2')!.textContent = sample === 'plain' ? 'Ordinary Markdown with document HTML conversion enabled' : 'HTML scope across paragraphs';
+  root.querySelector('[data-warning]')!.textContent = issues.length ? [...new Set(issues)].join(' ')
+    : 'No HTML conversion was needed. Editing one paragraph should preserve the other source blocks, including the heading underline, emphasis spelling and code fence.';
   const frame = (html: string) => `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><style>body{font:16px/1.5 Arial;padding:20px}p{margin:16px 0}</style></head><body>${html}</body></html>`;
   root.querySelectorAll('iframe')[1].srcdoc = frame(referenceHTML);
   const editor = createEditor({ schema: spec, state: EditorState.create({ schema, doc: parsed.document, plugins: [createHistoryPlugin()] }) });

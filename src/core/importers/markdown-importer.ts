@@ -135,7 +135,8 @@ export interface MarkdownImportOptions {
    * only, with pristine inert nodes and recursive syntax context, when supported
    * source blocks contain HTML. Unsupported block kinds remain explicit.
    * Uses onHTMLFlowFallback on refusal; no partial conversion is committed.
-   * Exact untouched source survives, but per-block source reuse is disabled.
+   * Exact untouched source survives. Per-block reuse is disabled only when the
+   * document adapter is invoked; ordinary Markdown keeps independent capture.
    */
   readonly parseHTMLDocument?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context: MarkdownHTMLFlowContext) => readonly Node[] | null;
   readonly onHTMLFlowFallback?: (issue: MarkdownHTMLFlowFallback) => void;
@@ -281,8 +282,19 @@ export class MarkdownSourceSnapshot {
   static parse(source: string, schema: Schema, options: MarkdownImportOptions = {}): MarkdownSourceImportResult {
     if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
     const parts = splitMarkdownSource(source);
-    const document = new MarkdownImporter().parse(parts.body, schema, options);
-    const capture = captureMarkdownBlocks(parts.body, schema, document, options);
+    let documentHTMLScope = false;
+    const documentAdapter = options.parseHTMLDocument;
+    const parseOptions = documentAdapter ? { ...options, parseHTMLDocument: (...args: Parameters<typeof documentAdapter>) => {
+      // Even a declined/failed projection can span independent source regions.
+      documentHTMLScope = true;
+      return documentAdapter(...args);
+    } } : options;
+    const document = new MarkdownImporter().parse(parts.body, schema, parseOptions);
+    // Merely enabling a policy must not rewrite unrelated Markdown. Local HTML
+    // callbacks are still suppressed, matching document-adapter precedence.
+    const captureOptions = documentAdapter ? { ...options, parseHTMLDocument: undefined,
+      parseHTMLFlow: undefined, parseHTMLBlock: undefined, parseHTMLInline: undefined, parseHTMLParagraph: undefined } : options;
+    const capture = documentHTMLScope ? undefined : captureMarkdownBlocks(parts.body, schema, document, captureOptions);
     return Object.freeze({
       document,
       source: new MarkdownSourceSnapshot(source, parts, document, capture),
@@ -372,9 +384,6 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
  * definitions and ambiguous block boundaries still fail closed.
  */
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
-  // HTML formatting may originate in another source region. Independent block
-  // reuse would silently discard or relocate that shared scope after an edit.
-  if (options.parseHTMLDocument) return undefined;
   const segments = markdownBlockSegments(source);
   if (!segments.blocks.length || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
   const quietOptions = { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,

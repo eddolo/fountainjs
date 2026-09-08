@@ -12,6 +12,9 @@ The combined optional-container profile has 599/652 semantic matches. Exact
 source remains separate; formatted-whitespace layout differences, unsupported
 HTML and full CommonMark parity are still open. See
 [contract and evidence](MARKDOWN_DOCUMENT_FLOW.md).
+Source-retention follow-up: enabling the policy alone no longer rewrites
+unrelated Markdown blocks. Independent capture remains available when no
+document HTML adapter runs; real cross-block scopes still refuse unsafe splicing.
 
 Optional HTML containers (2026-09-08, Unreleased): bounded div/section wrappers
 can now retain structure and supported attributes with HTMLContainerExtension.

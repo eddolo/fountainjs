@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Enabling whole-document Markdown HTML conversion no longer forces canonical
+  rewriting of unrelated blocks when no HTML conversion runs. Actual document
+  HTML scopes, including refused projections, still disable unsafe block splicing.
+
 - Added experimental parseHTMLDocument for one root HTML source conversion before
   local adapters, including cross-paragraph/list formatting scopes. Retains the
   entire inert document on refusal and exact untouched source; edits use canonical

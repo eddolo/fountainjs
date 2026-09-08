@@ -76,6 +76,52 @@ describe('explicit whole-document HTML source conversion', () => {
     editor.destroy();
   });
 
+  it.each(['\n', '\r\n'])('retains unrelated Markdown source when the configured document adapter is unused (%j)', ending => {
+    const source = 'Heading\n=======\n\nKeep __this__ spelling.\n\n~~~~html\n<b>literal</b>\n~~~~\n\nEdit here.\n'.replaceAll('\n', ending);
+    const adapter = vi.fn(ServerHTMLImporter.parseTextBlockFlow);
+    const local = vi.fn(() => { throw new Error('Local adapters must remain suppressed'); });
+    const settings = { parseHTMLDocument: adapter, parseHTMLFlow: local, parseHTMLBlock: local, parseHTMLInline: local, parseHTMLParagraph: local };
+    const parsed = MarkdownImporter.parseWithSource(source, schema, settings);
+    expect(parsed.source.blocks).toHaveLength(4);
+    const editor = createEditor({ schema: spec, state: EditorState.create({ schema, plugins: [createHistoryPlugin()], doc: parsed.document }) });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([3, 0], 0)));
+    expect(insertText(editor, 'Updated ')).toBe(true);
+    const saved = MarkdownExporter.exportWithSource(editor.state.doc, parsed.source);
+    expect(saved.preservation).toBe('blocks');
+    expect(saved.markdown).toBe(source.replace('Edit here.', 'Updated Edit here.'));
+    expect(MarkdownImporter.parseWithSource(saved.markdown, schema, settings).document.toJSON()).toEqual(editor.state.doc.toJSON());
+    expect(adapter).not.toHaveBeenCalled();
+    expect(local).not.toHaveBeenCalled();
+    expect(undo(editor)).toBe(true);
+    expect(MarkdownExporter.exportWithSource(editor.state.doc, parsed.source).markdown).toBe(source);
+    editor.destroy();
+  });
+
+  it.each(['decline', 'throw'] as const)('does not splice independent source after a document adapter %s', mode => {
+    const fallback = vi.fn();
+    const adapter = vi.fn(() => { if (mode === 'throw') throw new Error('Cannot project'); return null; });
+    const parsed = MarkdownImporter.parseWithSource(linked, schema, { parseHTMLDocument: adapter, onHTMLFlowFallback: fallback });
+    expect(adapter).toHaveBeenCalledTimes(1);
+    expect(fallback).toHaveBeenCalledTimes(1);
+    expect(parsed.source.blocks).toHaveLength(0);
+    expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(linked);
+  });
+
+  it('retains reference definitions when HTML-free blocks are moved with the document policy enabled', () => {
+    const source = '[ref]: ./guide.md "Original"\n\nHeading\n=======\n\nKeep __this__ [reference][ref].\n\nEdit.\n';
+    const adapter = vi.fn(ServerHTMLImporter.parseTextBlockFlow);
+    const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLDocument: adapter });
+    expect(parsed.source.blocks).toHaveLength(3);
+    const moved = schema.node('doc', {}, [parsed.document.child(1), parsed.document.child(0)]);
+    const saved = MarkdownExporter.exportWithSource(moved, parsed.source);
+    expect(saved.preservation).toBe('mapped-blocks');
+    expect(saved.markdown).toContain('Keep __this__ [reference][ref].');
+    expect(saved.markdown).toContain('Heading\n=======');
+    expect(saved.markdown.match(/\[ref\]:/g)).toHaveLength(1);
+    expect(MarkdownImporter.parse(saved.markdown, schema).toJSON()).toEqual(moved.toJSON());
+    expect(adapter).not.toHaveBeenCalled();
+  });
+
   it.each(['decline', 'throw', 'inline', 'foreign', 'not-array'] as const)('keeps the entire inert tree on adapter %s', mode => {
     const fallback = vi.fn();
     const foreign = new Schema(spec);

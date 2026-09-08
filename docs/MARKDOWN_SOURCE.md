@@ -3,8 +3,10 @@
 Experimental [whole-document HTML conversion](MARKDOWN_DOCUMENT_FLOW.md) now
 handles supported raw HTML scopes across paragraphs and lists in one root pass.
 Its separate combined-container profile requires 599/652 semantic matches;
-existing profiles stay unchanged. Exact untouched source survives, but edits
-use canonical Markdown and HTML-repair spacing differences remain open.
+existing profiles stay unchanged. Exact untouched source survives. Edits after
+a document HTML projection use canonical Markdown; ordinary Markdown retains
+independent source blocks even with that option enabled. HTML-repair spacing
+differences remain open.
 
 Optional section-wrapper retention is documented in [HTML_CONTAINERS.md](HTML_CONTAINERS.md).
 It requires an explicitly installed schema extension and enabled HTML conversion;

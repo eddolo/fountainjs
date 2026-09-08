@@ -56,5 +56,23 @@ export async function markdownDocumentJourney(page: Page, info: TestInfo) {
   await expect(root.getByRole('status')).toHaveText('Source preservation: exact');
   await editor.scrollIntoViewIfNeeded();
   await page.screenshot({ path: info.outputPath('edited-undo-scope.png') });
+
+  const plain = 'Heading\n=======\n\nKeep __this__ spelling.\n\n~~~~html\n<b>literal</b>\n~~~~\n\nEdit here.\n';
+  const plainReference = new HtmlRenderer().render(new Parser().parse(plain));
+  await page.evaluate(html => (globalThis as any).fountainBrowserTest.markdownDocument(html, 'plain'), plainReference);
+  await editor.getByText('Edit here.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Reviewed.');
+  await root.getByRole('button', { name: 'Save Markdown' }).click();
+  await expect(root.getByRole('status')).toHaveText('Source preservation: blocks');
+  await expect(root.getByLabel('Saved scope Markdown')).toHaveValue(plain.replace('Edit here.', 'Edit here. Reviewed.'));
+  await expect(fountainFrame.getByText('Edit here. Reviewed.', { exact: true })).toBeVisible();
+  await editor.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath('ordinary-markdown-source-retained.png') });
+  await editor.getByText('Edit here. Reviewed.', { exact: true }).click();
+  await page.keyboard.press('ControlOrMeta+z');
+  await root.getByRole('button', { name: 'Save Markdown' }).click();
+  await expect(root.getByLabel('Saved scope Markdown')).toHaveValue(plain);
+  await expect(root.getByRole('status')).toHaveText('Source preservation: exact');
   expect(errors).toEqual([]);
 }

@@ -371,7 +371,9 @@ const limits = Object.freeze({
   // ~2.3 / 2.1 KiB. Measured 1402.5 / 1165.9; entry/CSS/performance caps unchanged.
   // Whole-document HTML source projection and explicit whitespace-layout reports
   // add ~2.3 / 1.8 KiB; measured 1404.8 / 1167.7. No entry/CSS cap changes.
-  'all ESM runtime code': 1405 * kibibyte,
+  // Scope-sensitive source capture adds ~0.2 KiB; measured just above 1405.
+  // Only the aggregate ESM ceiling changes; entry/CSS/CJS caps stay unchanged.
+  'all ESM runtime code': 1406 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
