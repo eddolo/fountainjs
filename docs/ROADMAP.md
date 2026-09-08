@@ -5,13 +5,21 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Typed glossary handoff (2026-09-08, Unreleased): DOCX now retains term/description
+roles using validated versioned controls, preserving supported visible content
+and external text edits. Incompatible host schemas fall back without repeatedly
+parsing nested entries. See [contract and evidence](DOCX_GLOSSARIES.md). Complete
+Word form behavior, native page fidelity and glossary-containing numbered-item
+relationships remain open. This is not a new npm release or full export parity.
+
 Word content-control correction (2026-09-08, Unreleased): while investigating
 glossary handoff, the importer was found dropping entire block controls and cell
 content. Shared block traversal now retains supported displayed content, reports
 removed control behavior, and keeps control properties out of inline text. The
 public conversion UI exposes the actual messages. See
 [audit and remaining limits](DOCX_CONTENT_CONTROLS.md). Full Word forms, typed
-glossary export and native page-render verification are not completed by this fix.
+glossary export and native page-render verification were not completed by that fix;
+the subsequent glossary work is described above.
 Verification: 1,661 tests / 128 files; independent Word producer checks; six
 three-engine browser checks; recorded and visually inspected handoff; passing
 site build. The previous code-ending update's complete Linux CI also passed.

@@ -618,6 +618,50 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
   return output;
 }
 
+const DEFINITION_TAG = 'urn:fountainjs:docx:definition:';
+type DefinitionRole = 'list' | 'term' | 'description';
+
+/** Only our versioned, behavior-free structural controls carry glossary roles.
+ * Visible Word content, never hidden source JSON, is authoritative.
+ */
+function definitionControl(element: XMLElement): { role: DefinitionRole; content: XMLElement; index: number } | undefined {
+  if (expandedName(element) !== `${WORD_NS}|sdt`) return;
+  const children = elements(element);
+  const properties = children.filter(item => expandedName(item) === `${WORD_NS}|sdtPr`);
+  const contents = children.filter(item => expandedName(item) === `${WORD_NS}|sdtContent`);
+  if (children.length !== 2 || properties.length !== 1 || contents.length !== 1) return;
+  const fields = elements(properties[0]!);
+  if (fields.some(item => !['alias', 'id', 'tag'].some(name => expandedName(item) === `${WORD_NS}|${name}`))) return;
+  const tags = fields.filter(item => expandedName(item) === `${WORD_NS}|tag`);
+  if (tags.length !== 1) return;
+  const tag = namespacedAttr(tags[0]!, 'val');
+  const role = (['list', 'term', 'description'] as const).find(value => tag === `${DEFINITION_TAG}${value}:v1`);
+  return role ? { role, content: contents[0]!, index: children.indexOf(contents[0]!) } : undefined;
+}
+
+function parseDefinitionList(element: XMLElement, schema: Schema, media: ImportMediaContext,
+  numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): FountainNode[] | undefined {
+  const control = definitionControl(element);
+  if (control?.role !== 'list') return;
+  const entries = elements(control.content).map(definitionControl);
+  if (entries.some(entry => !entry || entry.role === 'list')) return;
+  // Parse each visible entry exactly once, even with an incompatible host schema.
+  // Retrying nested controls through the fallback would multiply work by depth.
+  const contents = entries.map((entry, index) => parseBlocks(entry!.content, schema, media, numbering, issues,
+    [...path, control.index, index, entry!.index]));
+  try {
+    const children = entries.map((entry, index) => schema.node(`definition_${entry!.role}`, {},
+      contents[index]!.length ? contents[index]! : [schema.node('paragraph')]));
+    const node = schema.node('definition_list', {}, children);
+    schema.validate(node);
+    return [node];
+  } catch {
+    // Missing/incompatible host roles must not turn readable Word into an error.
+    issues.push({ code: 'definition-schema-fallback', severity: 'warning', message: 'The host schema could not restore Word glossary roles; visible content was imported without those roles.', path });
+    return contents.flat();
+  }
+}
+
 function contentControlContents(element: XMLElement, issues: DOCXIssue[], path: readonly number[]): Array<{ element: XMLElement; index: number }> {
   if (expandedName(element) !== `${WORD_NS}|sdt`) {
     issues.push({ code: 'unsupported-content-control-namespace', severity: 'warning', message: 'A non-Word content-control lookalike was not interpreted.', path });
@@ -656,6 +700,8 @@ function parseBlocks(container: XMLElement, schema: Schema, media: ImportMediaCo
         flush();
         blocks.push(parseTable(item, schema, media, numbering, issues, currentPath));
       } else if (name === 'sdt') {
+        const glossary = parseDefinitionList(item, schema, media, numbering, issues, currentPath);
+        if (glossary) { flush(); blocks.push(...glossary); continue; }
         // Inline/row/cell controls have different shapes. This branch only
         // projects block controls in an already established block container.
         const contents = contentControlContents(item, issues, currentPath);
@@ -945,6 +991,7 @@ interface ExportContext {
   readonly maxMediaFiles: number;
   mediaBytes: number;
   nextDrawingId: number;
+  nextControlId: number;
   readonly mathSources: MathSourceRecord[];
   mathCharacters: number;
 }
@@ -1115,22 +1162,23 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
 }
 
 type ExportList = { numId: number; level: number; continuation?: boolean };
+type DefinitionLayout = { indent: number; term: boolean };
 
-function paragraphProperties(node: FountainNode, list?: ExportList, quote = false): string {
+function paragraphProperties(node: FountainNode, list?: ExportList, quote = false, definition?: DefinitionLayout): string {
   const properties: string[] = [];
   if (node.type.name === 'heading') properties.push(`<w:pStyle w:val="Heading${Math.max(1, Math.min(6, Number(node.attrs.level) || 1))}"/>`);
   else if (node.type.name === 'code_block') properties.push('<w:pStyle w:val="Code"/>');
   else if (quote) properties.push('<w:pStyle w:val="Quote"/>');
+  else if (definition?.term) properties.push('<w:pStyle w:val="FountainDefinitionTerm"/>');
   const align = String(node.attrs.align ?? 'left');
   if (align !== 'left') properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
-  if (list) properties.push(list.continuation
-    ? `<w:ind w:left="${720 * (list.level + 1)}"/>`
-    : `<w:numPr><w:ilvl w:val="${list.level}"/><w:numId w:val="${list.numId}"/></w:numPr>`);
+  if (list && !list.continuation) properties.push(`<w:numPr><w:ilvl w:val="${list.level}"/><w:numId w:val="${list.numId}"/></w:numPr>`);
+  if (definition?.indent || list?.continuation) properties.push(`<w:ind w:left="${(definition?.indent ?? 0) + (list ? 720 * (list.level + 1) : quote ? 360 : 0)}"${list && !list.continuation ? ' w:hanging="360"' : ''}/>`);
   return properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : '';
 }
 
-function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: ExportList, quote = false): string {
-  return `<w:p>${paragraphProperties(node, list, quote)}${textRuns(node, context, path)}</w:p>`;
+function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: ExportList, quote = false, definition?: DefinitionLayout): string {
+  return `<w:p>${paragraphProperties(node, list, quote, definition)}${textRuns(node, context, path)}</w:p>`;
 }
 
 function tableXML(node: FountainNode, context: ExportContext, path: readonly number[]): string {
@@ -1182,15 +1230,32 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
   return `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="C9C2D8"/><w:left w:val="single" w:sz="6" w:color="C9C2D8"/><w:bottom w:val="single" w:sz="6" w:color="C9C2D8"/><w:right w:val="single" w:sz="6" w:color="C9C2D8"/><w:insideH w:val="single" w:sz="6" w:color="D9D3E5"/><w:insideV w:val="single" w:sz="6" w:color="D9D3E5"/></w:tblBorders><w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr>${grid}${rows}</w:tbl>`;
 }
 
-function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote = false, list?: ExportList): string {
+function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote = false, list?: ExportList, definition?: DefinitionLayout): string {
   if (node.type.name === 'math_block') {
     const math = nativeMath(node, context, path);
-    if (math) return `<w:p>${paragraphProperties(node, list, quote)}${math}</w:p>`;
+    if (math) return `<w:p>${paragraphProperties(node, list, quote, definition)}${math}</w:p>`;
   }
   switch (node.type.name) {
-    case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, context, path, list, quote);
+    case 'definition_list': {
+      if (node.content.some(entry => !['definition_term', 'definition_description'].includes(entry.type.name))) {
+        context.issues.push({ code: 'definition-structure-fallback', severity: 'warning', message: 'A custom glossary structure was exported as separate readable blocks without assigning term or description roles.', path });
+        return node.content.map((entry, index) => blockXML(entry, context, [...path, index], level, quote, list, definition)).join('');
+      }
+      if (list) context.issues.push({ code: 'definition-list-numbered-context', severity: 'warning', message: 'A glossary inside a numbered or bulleted item retains its roles but may reopen outside the enclosing item.', path });
+      context.issues.push({ code: 'definition-docx-experimental', severity: 'warning', message: 'Glossary roles use versioned Word content controls. Native Word layout and retention after third-party saves are not yet certified.', path });
+      const wrap = (role: DefinitionRole, content: string) => `<w:sdt><w:sdtPr><w:alias w:val="Fountain glossary ${role}"/><w:tag w:val="${DEFINITION_TAG}${role}:v1"/><w:id w:val="${context.nextControlId++}"/></w:sdtPr><w:sdtContent>${content}</w:sdtContent></w:sdt>`;
+      for (const [index, item] of [node, ...node.content].entries()) {
+        if (Object.keys(item.attrs).length || item.marks.length) context.issues.push({ code: 'definition-metadata-omitted', severity: 'warning', message: 'Custom glossary role attributes and marks are not retained by DOCX; use Fountain JSON for exact persistence.', path: index ? [...path, index - 1] : path });
+      }
+      return wrap('list', node.content.map((entry, index) => {
+        const role = entry.type.name === 'definition_term' ? 'term' : 'description';
+        const layout = { indent: (definition?.indent ?? 0) + (role === 'description' ? 360 : 0), term: role === 'term' };
+        return wrap(role, entry.content.map((block, blockIndex) => blockXML(block, context, [...path, index, blockIndex], 0, false, undefined, layout)).join(''));
+      }).join(''));
+    }
+    case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, context, path, list, quote, definition);
     case 'blockquote': return node.content.map((item, index) =>
-      blockXML(item, context, [...path, index], level, true, list)
+      blockXML(item, context, [...path, index], level, true, list, definition)
     ).join('');
     case 'bullet_list': case 'ordered_list': {
       const ordered = node.type.name === 'ordered_list';
@@ -1202,12 +1267,12 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       // Each document list has its own instance, including adjacent/restarted
       // lists and lists in table cells. Nested lists must not reset a parent.
       const numId = context.numbering.length + 1;
-      const left = 720 * (level + 1);
+      const left = 720 * (level + 1) + (definition?.indent ?? 0);
       context.numberingDefinitions.push(`<w:abstractNum w:abstractNumId="${numId}"><w:lvl w:ilvl="${level}"><w:start w:val="${start}"/><w:numFmt w:val="${ordered ? 'decimal' : 'bullet'}"/><w:lvlText w:val="${ordered ? `%${level + 1}.` : '•'}"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="${left}"/></w:tabs><w:ind w:left="${left}" w:hanging="360"/></w:pPr></w:lvl></w:abstractNum>`);
       context.numbering.push(`<w:num w:numId="${numId}"><w:abstractNumId w:val="${numId}"/><w:lvlOverride w:ilvl="${level}"><w:startOverride w:val="${start}"/></w:lvlOverride></w:num>`);
       return node.content.map((item, index) => item.content.map((block, childIndex) => {
-        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1), quote);
-        return blockXML(block, context, [...path, index, childIndex], level, quote, { numId, level, continuation: childIndex > 0 });
+        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1), quote, undefined, definition);
+        return blockXML(block, context, [...path, index, childIndex], level, quote, { numId, level, continuation: childIndex > 0 }, definition);
       }).join('')).join('');
     }
     case 'table': return tableXML(node, context, path);
@@ -1221,7 +1286,7 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
     case 'horizontal_rule': return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/></w:pBdr></w:pPr></w:p>';
     default:
       context.issues.push({ code: 'block-fallback', severity: 'warning', message: `${node.type.name} was exported as readable fallback text.`, path });
-      return `<w:p>${paragraphProperties(node, list, quote)}<w:r><w:t>${xmlEscape(node.textContent)}</w:t></w:r></w:p>`;
+      return `<w:p>${paragraphProperties(node, list, quote, definition)}<w:r><w:t>${xmlEscape(node.textContent)}</w:t></w:r></w:p>`;
   }
 }
 
@@ -1245,7 +1310,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options, numbering: [], numberingDefinitions: [],
     maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
-    mediaBytes: 0, nextDrawingId: 1, mathSources: [], mathCharacters: 0,
+    mediaBytes: 0, nextDrawingId: 1, nextControlId: 1, mathSources: [], mathCharacters: 0,
   };
   const body = node.content.map((block, index) => blockXML(block, context, [index])).join('');
   const letter = options.page === 'letter';
@@ -1259,7 +1324,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     '[Content_Types].xml': strToU8(contentTypes(context.media)),
     '_rels/.rels': strToU8(ROOT_RELS),
     'word/document.xml': strToU8(documentXML),
-    'word/styles.xml': strToU8(STYLES),
+    'word/styles.xml': strToU8(STYLES.replace('</w:styles>', '<w:style w:type="paragraph" w:styleId="FountainDefinitionTerm"><w:name w:val="Fountain Definition Term"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/></w:pPr><w:rPr><w:b/></w:rPr></w:style></w:styles>')),
     'word/numbering.xml': strToU8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">${context.numberingDefinitions.join('')}${context.numbering.join('')}</w:numbering>`),
     'word/_rels/document.xml.rels': strToU8(documentRels),
     'docProps/core.xml': strToU8(core),

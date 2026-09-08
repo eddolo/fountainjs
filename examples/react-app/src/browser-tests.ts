@@ -1334,7 +1334,7 @@ Object.assign(globalThis, {
     },
     performanceBudget: runPerformanceBudget,
     virtualizationBudget: runVirtualizationBudget,
-    docxVisual: { render: renderDOCXVisualComparison, math: async () => (await import('./docx-math-audit')).mountDOCXMathAudit(), controls: async () => (await import('./docx-controls-audit')).mountDOCXControlsAudit() },
+    docxVisual: { render: renderDOCXVisualComparison, math: async () => (await import('./docx-math-audit')).mountDOCXMathAudit(), controls: async () => (await import('./docx-controls-audit')).mountDOCXControlsAudit(), glossary: async () => (await import('./docx-glossary-audit')).mountDOCXGlossaryAudit() },
     startImageUpload,
     collaboration: {
       leftEditor,

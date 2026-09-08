@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Typed glossary DOCX handoff (2026-09-08, Unreleased): terms and descriptions now
+export as versioned Word controls and reopen from validated visible content.
+Nested definitions, supported rich blocks and external edits retain their roles;
+unknown controls and incompatible host schemas have explicit readable fallbacks.
+See [evidence and remaining limits](DOCX_GLOSSARIES.md). Native Word page layout,
+complete third-party save retention and full form support are still open.
+
 Word content-control correction (2026-09-08, Unreleased): supported visible
 content inside Word controls now imports instead of disappearing, including
 nested controls inside table cells. Control semantics remain explicit losses,

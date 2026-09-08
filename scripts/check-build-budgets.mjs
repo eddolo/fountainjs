@@ -31,8 +31,10 @@ const limits = Object.freeze({
   // paragraph handling. Measured optional entries: 70.0 / 56.0 KiB; no dependency.
   // Shared body/cell/control traversal retains visible SDT content with explicit
   // loss reports. Measured 71.2 / 57.0 KiB (+~0.5 each), no new dependency.
-  'dist/docx.js': 72 * kibibyte,
-  'dist/docx.cjs': 58 * kibibyte,
+  // Versioned glossary controls, schema-validated role restoration and visible
+  // paragraph presentation add ~3.7 / 3.1 KiB to this optional boundary only.
+  'dist/docx.js': 75 * kibibyte,
+  'dist/docx.cjs': 61 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -363,7 +365,7 @@ const limits = Object.freeze({
   // Generated-code ending provenance adds ~0.7 KiB ESM / ~0.4 KiB CJS.
   // Measured 1394.3 / 1158.7 KiB; only this aggregate ESM cap changes.
   // No new dependency; individual entry, CSS and performance caps stay fixed.
-  'all ESM runtime code': 1395 * kibibyte,
+  'all ESM runtime code': 1399 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -386,7 +388,7 @@ const limits = Object.freeze({
   // Same newline-stream correction: measured 1143.5 KiB.
   // Same definition-list feature: measured 1158.3 KiB CJS (+~4.4 KiB).
   // Same content-control projection: 1159.2 KiB. ESM/CSS/performance caps unchanged.
-  'all CommonJS runtime code': 1160 * kibibyte,
+  'all CommonJS runtime code': 1163 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

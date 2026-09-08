@@ -43,8 +43,9 @@ Imported values become normal editable Fountain content. Re-exporting creates
 ordinary supported Word paragraphs/tables, not the original form controls.
 Row-level and cell-level controls around `w:tr`/`w:tc`, control widgets, live data
 binding, permissions, arbitrary Word layout and full form round trips remain
-outside this contract. Typed glossary export/retention is also still pending;
-this import correction is a prerequisite, not its completion.
+outside this contract. The subsequent [typed glossary handoff](DOCX_GLOSSARIES.md)
+adds validated structural controls; it does not add complete form behavior or
+certify native Word layout.
 
 ## Evidence and limitations
 

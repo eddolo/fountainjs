@@ -63,7 +63,9 @@ inserted pair always has two editable paragraphs.
   matching receiving schema and explicit parse/output rules.
 - CommonMark has no native definition-list syntax. Markdown export uses a compact
   HTML block and reports the need for an HTML-enabled receiving importer. It does
-  **not** imply universal Markdown or DOCX/TeX fidelity. Plain-text export and the
+  **not** imply universal Markdown or DOCX/TeX fidelity. DOCX now has an
+  [experimental typed glossary handoff](DOCX_GLOSSARIES.md); native layout and
+  complete third-party save retention remain unverified. Plain-text export and the
   clipboard separate entries with line breaks; plain text cannot retain roles.
 - The issue demo opts into **tables and definition lists only** when reopening
   HTML-bearing Markdown. Unrelated HTML remains inert. General consumers choose

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added experimental DOCX glossary export and validated reimport using versioned
+  Word content controls. Terms, descriptions and supported nested content retain
+  their roles; visible external edits remain authoritative. Unsupported controls,
+  host schemas and metadata produce explicit fallback reports. Native Word layout
+  and complete third-party save retention remain unverified.
+
 - Fixed DOCX import dropping visible block content controls, including controls
   inside table cells. Inline controls now read only their displayed content, not
   control properties. Supported content survives with explicit behavior-loss

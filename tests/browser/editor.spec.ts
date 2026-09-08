@@ -13,6 +13,11 @@ import { angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
 import { docxControlsJourney } from './docx-controls-journey';
+import { docxGlossaryJourney } from './docx-glossary-journey';
+
+test('edits and reopens a Word glossary with term and description roles', async ({ page }, info) => {
+  await docxGlossaryJourney(page, info);
+});
 
 test('imports and edits Word content controls without losing visible content', async ({ page }, info) => {
   await docxControlsJourney(page, info);

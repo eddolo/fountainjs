@@ -33,6 +33,8 @@ persistence format; keep validated Fountain JSON as the source of truth.
 
 ## Supported import
 
+- validated Fountain glossary controls restoring term/description roles from
+  visible Word content; see the [experimental contract](DOCX_GLOSSARIES.md);
 - supported visible block/inline content inside Word content controls, including
   nested controls in table cells, with explicit loss reports for the control
   identity, form behavior, locks and bindings; see the
@@ -58,6 +60,8 @@ closed.
 
 ## Supported export
 
+- glossary terms/descriptions as versioned Word content controls with explicit
+  experimental and metadata-loss reports; [scope and limits](DOCX_GLOSSARIES.md);
 - paragraphs, headings, alignment, quotes, and code blocks;
 - bold, italic, underline, strike, code, text colour, highlight, safe links,
   tabs, and hard breaks;

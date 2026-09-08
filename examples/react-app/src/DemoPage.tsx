@@ -588,7 +588,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     anchor.click();
     URL.revokeObjectURL(url);
     setDOCXExportStatus(result.report.issues.length
-      ? `Downloaded with ${result.report.issues.length} reported conversion detail${result.report.issues.length === 1 ? '' : 's'}.`
+      ? `Downloaded with ${result.report.issues.length} reported conversion detail${result.report.issues.length === 1 ? '' : 's'}. ${[...new Set(result.report.issues.map(issue => issue.message))].join(' ')}`
       : 'Downloaded with bounded conversion and no reported losses.');
   };
   const downloadImageSample = () => downloadDOCX(schema.node('doc', {}, [

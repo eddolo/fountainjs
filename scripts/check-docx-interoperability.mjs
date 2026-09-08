@@ -13,6 +13,7 @@ const folder = await mkdtemp(join(tmpdir(), 'fountain-docx-'));
 const fountainPath = join(folder, 'fountain.docx');
 const pythonPath = join(folder, 'python.docx');
 const imagePath = join(folder, 'pixel.png');
+const glossaryPath = join(folder, 'glossary.docx');
 
 try {
   const image = schema.node('image_super', {
@@ -31,6 +32,11 @@ try {
   if (generated.report.fidelity !== 'bounded') throw new Error(`Fountain export was unexpectedly ${generated.report.fidelity}.`);
   await writeFile(fountainPath, generated.bytes);
   await writeFile(imagePath, pngBytes);
+  const glossary = schema.node('doc', {}, [schema.node('definition_list', {}, [
+    schema.node('definition_term', {}, [schema.node('paragraph', {}, [schema.text('Latency')])]),
+    schema.node('definition_description', {}, [schema.node('paragraph', {}, [schema.text('Time to respond.')])]),
+  ])]);
+  await writeFile(glossaryPath, exportDOCX(glossary).bytes);
 
   const program = String.raw`
 import sys
@@ -38,12 +44,22 @@ from docx import Document
 from docx.shared import Inches
 from docx.oxml import OxmlElement
 
-fountain_path, python_path, image_path = sys.argv[1:4]
+fountain_path, python_path, image_path, glossary_path = sys.argv[1:5]
 fountain = Document(fountain_path)
 assert fountain.paragraphs[0].text == "Fountain interoperability"
 assert len(fountain.inline_shapes) == 1
 assert any(p.text == "Portable image caption" for p in fountain.paragraphs)
 assert fountain.tables[0].cell(0, 0).text == "Portable"
+
+# Inspect the archive through an independent OOXML consumer, then save a visible
+# Word-text edit. This is structural interoperability, not native layout proof.
+glossary = Document(glossary_path)
+tags = glossary.element.xpath('.//w:sdtPr/w:tag/@w:val')
+assert tags == ['urn:fountainjs:docx:definition:list:v1', 'urn:fountainjs:docx:definition:term:v1', 'urn:fountainjs:docx:definition:description:v1']
+values = glossary.element.xpath('.//w:sdtContent//w:t')
+assert [value.text for value in values] == ['Latency', 'Time to respond.']
+values[1].text = 'Independent visible edit.'
+glossary.save(glossary_path)
 
 created = Document()
 created.add_heading("Independent producer", level=2)
@@ -70,11 +86,17 @@ created.save(python_path)
   const candidates = process.platform === 'win32' ? ['python', 'python3'] : ['python3', 'python'];
   let result;
   for (const executable of candidates) {
-    result = spawnSync(executable, ['-c', program, fountainPath, pythonPath, imagePath], { encoding: 'utf8' });
+    result = spawnSync(executable, ['-c', program, fountainPath, pythonPath, imagePath, glossaryPath], { encoding: 'utf8' });
     if (!result.error || result.error.code !== 'ENOENT') break;
   }
   if (!result || result.error) throw result?.error ?? new Error('Python was not found.');
   if (result.status !== 0) throw new Error(`python-docx interoperability failed:\n${result.stderr || result.stdout}`);
+  const reopenedGlossary = importDOCX(await readFile(glossaryPath), schema);
+  if (reopenedGlossary.report.issues.length || reopenedGlossary.document.child(0).type.name !== 'definition_list'
+    || reopenedGlossary.document.child(0).child(1).type.name !== 'definition_description'
+    || reopenedGlossary.document.child(0).child(1).textContent !== 'Independent visible edit.') {
+    throw new Error('Independent DOCX glossary edit did not retain typed roles and visible text.');
+  }
 
   const imported = importDOCX(await readFile(pythonPath), schema);
   if (imported.report.fidelity !== 'lossy' || imported.report.issues.length !== 2
@@ -86,7 +108,7 @@ created.save(python_path)
   if (!imported.document.textContent.includes('Strong from Python')) throw new Error('Independent DOCX text did not import.');
   const importedTable = imported.document.content.find(node => node.type.name === 'table');
   if (importedTable?.child(0).child(0).textContent !== 'Producer') throw new Error('Independent DOCX cell-control content did not import.');
-  console.log('python-docx opened Fountain media; Fountain retained independent body/cell content controls with explicit behavior-loss warnings.');
+  console.log('python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with explicit behavior-loss warnings.');
 } finally {
   await rm(folder, { recursive: true, force: true });
 }
