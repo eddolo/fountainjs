@@ -49,7 +49,7 @@ export async function docxGlossaryJourney(page: Page, info: TestInfo) {
   const publicDownload = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download as Word DOCX', exact: true }).click();
   await (await publicDownload).saveAs(info.outputPath('public-glossary.docx'));
-  await expect(page.getByRole('status')).toContainText('Native Word layout and retention after third-party saves are not yet certified.');
+  await expect(page.locator('.headless-status[role="status"]')).toContainText('Native Word layout and retention after third-party saves are not yet certified.');
   await page.screenshot({ path: info.outputPath('public-export-warning.png'), fullPage: true });
   expect(errors).toEqual([]);
 }

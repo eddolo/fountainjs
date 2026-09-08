@@ -70,6 +70,7 @@ export type ServerHTMLImportIssueCode =
   | 'preformatted-html-projection'
   | 'paragraph-flow-projection'
   | 'text-block-flow-projection'
+  | 'formatted-whitespace-block'
   | 'block-html-projection';
 
 export interface ServerHTMLImportIssue {
@@ -1421,6 +1422,18 @@ export class ServerHTMLImporter {
       else node.content.forEach(verify);
     };
     nodes.forEach(node => { schema.validate(node); verify(node); });
+    if (wholeContainer) {
+      const inspectWhitespace = (node: FountainNode): void => {
+        if (node.type.name === 'paragraph' && node.content.length
+          && node.content.every(child => child.isText && !/[^\t\n\f\r ]/u.test(child.text ?? ''))
+          && node.content.some(child => child.marks.length)) reportOnce(context, {
+          code: 'formatted-whitespace-block',
+          message: 'HTML recovery produced a whitespace-only formatted paragraph. Its formatting is retained, but editable paragraph spacing can differ from the original HTML layout.',
+        });
+        node.content.forEach(inspectWhitespace);
+      };
+      nodes.forEach(inspectWhitespace);
+    }
     if (found.length !== originals.length || found.some((index, position) => index !== position)) {
       throw new Error('Inline HTML recovery did not preserve every Markdown node exactly once in order; literal source retained.');
     }

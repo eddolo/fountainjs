@@ -15,6 +15,11 @@ import { docxNumberingJourney } from './docx-numbering-journey';
 import { docxControlsJourney } from './docx-controls-journey';
 import { docxGlossaryJourney } from './docx-glossary-journey';
 import { htmlContainerJourney, htmlContainerAuthoringJourney } from './html-container-journey';
+import { markdownDocumentJourney } from './markdown-document-journey';
+
+test('converts document-wide HTML scopes with source edit undo and explicit layout differences', async ({ page }, info) => {
+  await markdownDocumentJourney(page, info);
+});
 
 test('authors sections with properties, empty content, undo and reader preview', async ({ page }, info) => {
   await htmlContainerAuthoringJourney(page, info);
@@ -6451,6 +6456,7 @@ test('runs a host-owned multi-turn AI conversation with reusable prompts and cle
   await conversation.getByRole('button', { name: 'Send' }).click();
   await expect(conversation.getByText('This is follow-up 2.', { exact: false })).toBeVisible();
   await expect(conversation.locator('.fountain-ai-conversation__messages article')).toHaveCount(4);
+  await expect(conversation.getByText('Ready', { exact: true })).toBeVisible();
 
   await conversation.getByRole('button', { name: 'Clear history' }).click();
   await expect(conversation.getByRole('button', { name: 'Confirm clear' })).toBeVisible();

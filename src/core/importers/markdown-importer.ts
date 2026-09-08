@@ -128,6 +128,16 @@ export interface MarkdownImportOptions {
    * Runs separately inside Markdown containers; may run during source capture.
    */
   readonly parseHTMLFlow?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext) => readonly Node[] | null;
+  /**
+   * Explicit whole-document source projection, including inline HTML scopes
+   * crossing paragraphs and supported list/quote boundaries. Takes precedence
+   * over block, flow, paragraph and inline HTML callbacks. Called at the root
+   * only, with pristine inert nodes and recursive syntax context, when supported
+   * source blocks contain HTML. Unsupported block kinds remain explicit.
+   * Uses onHTMLFlowFallback on refusal; no partial conversion is committed.
+   * Exact untouched source survives, but per-block source reuse is disabled.
+   */
+  readonly parseHTMLDocument?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context: MarkdownHTMLFlowContext) => readonly Node[] | null;
   readonly onHTMLFlowFallback?: (issue: MarkdownHTMLFlowFallback) => void;
   /**
    * Optional synchronous inline HTML scope adapter. Original Markdown nodes
@@ -362,6 +372,9 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
  * definitions and ambiguous block boundaries still fail closed.
  */
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
+  // HTML formatting may originate in another source region. Independent block
+  // reuse would silently discard or relocate that shared scope after an edit.
+  if (options.parseHTMLDocument) return undefined;
   const segments = markdownBlockSegments(source);
   if (!segments.blocks.length || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
   const quietOptions = { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
@@ -2277,6 +2290,9 @@ function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: 
   // Keep deleted/ambiguous projections visible so recovery cannot silently drop them.
   orderedSources.push(...sources.filter(source => !emitted.has(source)));
   capture?.(orderedSources);
+  // A document adapter owns the single root conversion. Nested containers must
+  // retain pristine syntax nodes and capture their source instead of converting.
+  if (options.parseHTMLDocument) return blocks;
   if (!htmlBlocks.size) return blocks;
   const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(blocks.map(node => Object.freeze(
     htmlBlocks.has(node) ? { kind: 'html' as const, html: htmlBlocks.get(node)! } : { kind: 'node' as const, node },
@@ -2544,18 +2560,55 @@ function extractFootnoteDefinitions(
 
 export class MarkdownImporter {
   parse(markdown: string, schema: Schema, options: MarkdownImportOptions = {}): Node {
+    if (options.parseHTMLDocument) options = {
+      // Enable existing syntax capture; finishHTMLBlocks defers this marker.
+      ...options, parseHTMLFlow: () => null,
+      parseHTMLBlock: undefined, parseHTMLInline: undefined, parseHTMLParagraph: undefined,
+    };
     const footnotes = extractFootnoteDefinitions(markdown, schema, options);
     // A terminal line ending terminates the last physical line; split() must
     // not turn it into extra code content when a fence is left open at EOF.
     const source = references(footnotes.markdown.replace(/\r\n$|[\r\n]$/u, ''), schema, options);
-    const blocks = parseBlocks(source.lines, schema, source.definitions, options);
+    const captured: PendingHTMLBlockSource[] = [];
+    const blocks = parseBlocks(source.lines, schema, source.definitions, options, undefined,
+      options.parseHTMLDocument ? sources => captured.push(...sources) : undefined);
     const definitions = footnotes.definitions.map((definition) => {
       const content = parseBlocks(definition.lines, schema, source.definitions, options);
       return schema.node('footnote_definition', { id: definition.id }, content.length
         ? content
         : [paragraph(schema, '', source.definitions)]);
     });
-    const content = [...blocks, ...definitions];
+    let content = [...blocks, ...definitions];
+    if (options.parseHTMLDocument) {
+      captured.push(...definitions.map(node => ({ kind: 'unsupported' as const, blocks: [node] })));
+      const context = htmlFlowContext(captured, schema, source.definitions, options);
+      const syntax = context.readBlockSources!();
+      const containsHTML = (item: MarkdownHTMLFlowBlockSource): boolean => item.kind === 'html'
+        || ('children' in item && item.children.some(containsHTML))
+        || (item.kind !== 'code' && 'segments' in item && item.segments.some(segment => segment.kind === 'html'));
+      if (syntax.some(containsHTML)) {
+        const raw = new Map(syntax.flatMap(item => item.kind === 'html' ? item.blocks.map(node => [node, item.html] as const) : []));
+        const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(content.map(node => Object.freeze(raw.has(node)
+          ? { kind: 'html' as const, html: raw.get(node)! } : { kind: 'node' as const, node })));
+        let issue: MarkdownHTMLFlowFallback | undefined;
+        try {
+          const projected = options.parseHTMLDocument(segments, schema, context);
+          if (projected === null) issue = { reason: 'declined', message: 'HTML document adapter declined conversion; the complete inert document was retained.' };
+          else {
+            if (!Array.isArray(projected)) throw new TypeError('HTML document adapter must return a block array.');
+            for (const node of projected) {
+              if (!(node instanceof Node) || node.type.isInline || node.type === schema.topNodeType) throw new TypeError('HTML document adapter must return schema block nodes.');
+              schema.validate(node);
+            }
+            if (projected.length && !matchesContentExpression(projected, schema.topNodeType.spec.content ?? '')) throw new TypeError('HTML document result does not match document content.');
+            content = [...projected];
+          }
+        } catch (error) {
+          issue = { reason: 'error', message: error instanceof Error ? error.message : 'HTML document adapter failed; the complete inert document was retained.' };
+        }
+        if (issue) options.onHTMLFlowFallback?.(Object.freeze(issue));
+      }
+    }
     const document = schema.topNodeType.create({}, content.length ? content : [paragraph(schema, '', source.definitions)]);
     schema.validate(document);
     return document;

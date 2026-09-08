@@ -494,11 +494,12 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const [projectHTMLInline, setProjectHTMLInline] = useState(false);
   const [projectHTMLParagraphs, setProjectHTMLParagraphs] = useState(false);
   const [projectParagraphFlow, setProjectParagraphFlow] = useState(false);
+  const [projectDocumentFlow, setProjectDocumentFlow] = useState(false);
   const [autolinkLiterals, setAutolinkLiterals] = useState(true);
   const [htmlBlockParser, setHTMLBlockParser] = useState<typeof import('fountainjs-editor/html/server').ServerHTMLImporter>();
   const [htmlBlockParserError, setHTMLBlockParserError] = useState('');
   useEffect(() => {
-    if ((!projectHTMLBlocks && !projectHTMLInline && !projectHTMLParagraphs && !projectParagraphFlow) || htmlBlockParser) return;
+    if ((!projectHTMLBlocks && !projectHTMLInline && !projectHTMLParagraphs && !projectParagraphFlow && !projectDocumentFlow) || htmlBlockParser) return;
     let active = true;
     void import('fountainjs-editor/html/server').then(({ ServerHTMLImporter }) => {
       if (active) setHTMLBlockParser(() => ServerHTMLImporter);
@@ -506,15 +507,20 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       if (active) setHTMLBlockParserError(error instanceof Error ? error.message : String(error));
     });
     return () => { active = false; };
-  }, [projectHTMLBlocks, projectHTMLInline, projectHTMLParagraphs, projectParagraphFlow, htmlBlockParser]);
+  }, [projectHTMLBlocks, projectHTMLInline, projectHTMLParagraphs, projectParagraphFlow, projectDocumentFlow, htmlBlockParser]);
   const markdownParsed = useMemo(() => {
-    if ((projectHTMLBlocks || projectHTMLInline || projectHTMLParagraphs || projectParagraphFlow) && !htmlBlockParser) {
+    if ((projectHTMLBlocks || projectHTMLInline || projectHTMLParagraphs || projectParagraphFlow || projectDocumentFlow) && !htmlBlockParser) {
       return { document: undefined, details: 0, error: htmlBlockParserError, loading: !htmlBlockParserError, issues: [] as string[] };
     }
     try {
       const issues: string[] = [];
       const document = MarkdownImporter.parse(markdownSource, schema, {
         autolinkLiterals,
+        parseHTMLDocument: projectDocumentFlow && htmlBlockParser ? (segments, targetSchema, context) => {
+          const result = new htmlBlockParser().parseTextBlockFlowWithReport(segments, targetSchema, context);
+          issues.push(...result.issues.map(issue => issue.message));
+          return result.nodes;
+        } : undefined,
         parseHTMLFlow: (projectHTMLBlocks || projectParagraphFlow) && htmlBlockParser ? (segments, targetSchema, context) => {
           const parser = new htmlBlockParser();
           const result = projectParagraphFlow ? parser.parseTextBlockFlowWithReport(segments, targetSchema, context)
@@ -541,7 +547,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     } catch (error) {
       return { document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), loading: false, issues: [] as string[] };
     }
-  }, [schema, markdownSource, autolinkLiterals, projectHTMLBlocks, projectHTMLInline, projectHTMLParagraphs, projectParagraphFlow, htmlBlockParser, htmlBlockParserError]);
+  }, [schema, markdownSource, autolinkLiterals, projectHTMLBlocks, projectHTMLInline, projectHTMLParagraphs, projectParagraphFlow, projectDocumentFlow, htmlBlockParser, htmlBlockParserError]);
   const [htmlParsed, setHTMLParsed] = useState<{
     document: Node | undefined;
     details: number;
@@ -611,10 +617,12 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       {inputFormat === 'markdown' && <div className="headless-html-policy">
         <label><input type="checkbox" checked={autolinkLiterals} onChange={event => setAutolinkLiterals(event.target.checked)} /> Turn bare URLs and email addresses into links</label>
         <p>On by default. Turn it off to keep unbracketed addresses as text. Explicit Markdown links and safe &lt;angle-bracket&gt; links still work. This import setting does not change editor typing rules or enable full CommonMark mode.</p>
-        <label><input type="checkbox" checked={projectHTMLBlocks} onChange={event => setProjectHTMLBlocks(event.target.checked)} /> Convert HTML blocks to rich content</label>
-        <label><input type="checkbox" checked={projectHTMLInline} onChange={event => setProjectHTMLInline(event.target.checked)} /> Convert inline HTML formatting</label>
-        <label><input type="checkbox" checked={projectHTMLParagraphs} onChange={event => setProjectHTMLParagraphs(event.target.checked)} /> Recover block tags inside paragraphs</label>
-        <label><input type="checkbox" checked={projectParagraphFlow} onChange={event => setProjectParagraphFlow(event.target.checked)} /> Recover Markdown text across HTML blocks</label>
+        <label><input type="checkbox" checked={projectDocumentFlow} onChange={event => setProjectDocumentFlow(event.target.checked)} /> Convert HTML across the complete document</label>
+        {projectDocumentFlow && <p>Experimental whole-document source conversion replaces the four local HTML options below. Inline HTML can carry across paragraphs and supported lists/quotes. Unsupported structures or active raw-text HTML cause an all-inert fallback; no partial conversion is kept. Source capture retains an untouched file exactly, but after an edit this mode uses canonical Markdown rather than reusing independent source blocks. HTML repair can create extra formatted whitespace paragraphs: read the layout warning. <a href="https://github.com/eddolo/fountainjs/blob/master/docs/MARKDOWN_DOCUMENT_FLOW.md">Contract, examples and remaining gaps →</a></p>}
+        <label><input type="checkbox" disabled={projectDocumentFlow} checked={projectHTMLBlocks} onChange={event => setProjectHTMLBlocks(event.target.checked)} /> Convert HTML blocks to rich content</label>
+        <label><input type="checkbox" disabled={projectDocumentFlow} checked={projectHTMLInline} onChange={event => setProjectHTMLInline(event.target.checked)} /> Convert inline HTML formatting</label>
+        <label><input type="checkbox" disabled={projectDocumentFlow} checked={projectHTMLParagraphs} onChange={event => setProjectHTMLParagraphs(event.target.checked)} /> Recover block tags inside paragraphs</label>
+        <label><input type="checkbox" disabled={projectDocumentFlow} checked={projectParagraphFlow} onChange={event => setProjectParagraphFlow(event.target.checked)} /> Recover Markdown text across HTML blocks</label>
         {projectParagraphFlow && <p>Experimental source projection replaces ordinary block-flow conversion. Raw HTML, unchanged paragraphs, headings, code, and nested bullet/ordered lists and quotes use their syntax-derived wrappers and line endings. Task lists retain their complete structure and checked state or the conversion is refused. Inline images, math/emoji and inline metadata remain structured outside preformatted text. Block grouping can change; custom block data, modified content and conversions that would flatten tasks or inline objects are refused. Only plain hard breaks have a source-aware preformatted projection. Original file retention and rendered HTML fidelity are separate guarantees; unsupported HTML wrappers may be omitted.</p>}
         <p>HTML conversion is off by default. Experimental paragraph recovery can split one paragraph into several blocks; it takes precedence over inline conversion in ordinary paragraphs, not headings or pipe-table cells. Tight and loose lists use their own wrapper context. Closed, text-only preformatted spans become code blocks with restored line breaks; conversion details explain whitespace and plain-text export changes. Cross-paragraph spans need the separate source projection above. Unsupported atoms and active raw-text structures fall back to source. Markdown inside HTML blocks is not interpreted. Unsupported HTML attributes and comments may be omitted; empty list items retain an editable paragraph. This is not a lossless HTML round trip.</p>
         {markdownParsed.issues.length > 0 && <ul aria-label="Markdown HTML conversion details">{markdownParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}

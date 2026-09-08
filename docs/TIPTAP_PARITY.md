@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Whole-document HTML scopes (2026-09-08, Unreleased): optional root conversion
+removes the paragraph-local scope limitation while retaining Fountain's model
+and safety defaults. A separate 599/652 combined-container reference profile is
+required alongside the unchanged older profiles. This is semantic evidence,
+not full CommonMark or pixel-layout parity: repaired whitespace paragraphs
+remain a documented visual gap. See [MARKDOWN_DOCUMENT_FLOW.md](MARKDOWN_DOCUMENT_FLOW.md).
+
 Optional HTML-container retention (2026-09-08, Unreleased): the modular schema can
 preserve safe section wrappers and supported attributes instead of flattening
 their structure. It adds 26 separate reference-semantic and 26 source checks,

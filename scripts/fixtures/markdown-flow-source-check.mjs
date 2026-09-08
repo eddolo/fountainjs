@@ -4,6 +4,10 @@ import { createEditor, insertHTMLContainer, appendHTMLContainerParagraph, unwrap
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const documentFlow = MarkdownImporter.parse('<a href="/guide">First\n\nSecond</a>', schema, { parseHTMLDocument: ServerHTMLImporter.parseTextBlockFlow });
+  if (documentFlow.content.filter(node => node.textContent.trim()).some(node => !node.child(0).marks.some(mark => mark.type.name === 'link' && mark.attrs.href === '/guide'))) {
+    throw new Error('Compiled document-level HTML scope did not survive the paragraph boundary.');
+  }
   const containers = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } });
   const preservedSection = ServerHTMLImporter.parse('<section id="release"><p>Portable section</p></section>', containers);
   const reopenedSection = MarkdownImporter.parse(MarkdownExporter.export(preservedSection), containers, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow });

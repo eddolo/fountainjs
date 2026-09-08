@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "standard": "CommonMark 0.31.2",
+  "profile": "parseHTMLDocument + ServerHTMLImporter.parseTextBlockFlow + HTMLContainerExtension",
+  "requiredMatchRanges": "1-149,151-155,159-162,164-169,174-175,184-200,202-206,208-217,219-238,241-279,285-307,310-314,316-490,492-523,525-535,537-595,597,600,602-607,609-610,618-624,630,632-641,644-652",
+  "unresolvedRanges": "150,156-158,163,170-173,176-183,201,207,218,239-240,280-284,308-309,315,491,524,536,596,598-599,601,608,611-617,625-629,631,642-643",
+  "note": "599 semantic matches on both LF and CRLF, using the unchanged neutral comparator. All 652 cases separately retain exact untouched source. This opt-in profile does not change the default or older flow baselines. Remaining cases include deliberate URL/caret/autolink policies and unsupported or unsafe HTML. Semantic matches are not pixel-layout or universal HTML conformance claims."
+}

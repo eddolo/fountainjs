@@ -5,6 +5,14 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Document-level HTML source conversion (2026-09-08, Unreleased): an explicit root
+adapter now carries supported inline HTML scopes across paragraphs and nested
+lists/quotes, with complete inert fallback and no premature local conversion.
+The combined optional-container profile has 599/652 semantic matches. Exact
+source remains separate; formatted-whitespace layout differences, unsupported
+HTML and full CommonMark parity are still open. See
+[contract and evidence](MARKDOWN_DOCUMENT_FLOW.md).
+
 Optional HTML containers (2026-09-08, Unreleased): bounded div/section wrappers
 can now retain structure and supported attributes with HTMLContainerExtension.
 The demo exposes the opt-in, host-specific rules take precedence, and unknown

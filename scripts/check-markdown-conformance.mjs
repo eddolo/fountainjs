@@ -35,6 +35,7 @@ const showMismatches = process.argv.includes('--show-mismatches');
 const htmlPolicyReport = process.argv.includes('--html-policy-report');
 const htmlFlowReport = process.argv.includes('--html-flow-report');
 const sourceFlowReport = process.argv.includes('--source-flow-report');
+const documentFlowReport = process.argv.includes('--document-flow-report');
 const inspectedExamples = new Set(process.argv
   .filter((value) => value.startsWith('--example='))
   .map((value) => Number(value.slice('--example='.length))));
@@ -1010,6 +1011,38 @@ if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip 
   if (sourceFlowReport) console.log(`Source-recovery matching ranges: ${compressRanges(matches)}`);
   if (errors.length || regressions.length) throw new Error(`Source-recovery corpus regressions: ${[...errors, ...regressions].join(', ')}`);
   if (gains.length && !reportOnly) throw new Error(`Review newly matching source-recovery examples: ${compressRanges(gains)}`);
+}
+{
+  const documentBaseline = JSON.parse(readFileSync(new URL('../tests/fixtures/markdown/commonmark-document-flow-v1.json', import.meta.url), 'utf8'));
+  const required = expandRanges(documentBaseline.requiredMatchRanges);
+  const unresolved = expandRanges(documentBaseline.unresolvedRanges);
+  for (let number = 1; number <= 652; number++) {
+    if (Number(required.has(number)) + Number(unresolved.has(number)) !== 1) throw new Error(`Document-flow example ${number} needs one classification.`);
+  }
+  const documentSchema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } });
+  const counts = new Map();
+  let retention = 0;
+  for (const example of commonmarkSpec.tests) for (const ending of ['\n', '\r\n']) {
+    const source = materializeTabs(example.markdown).replaceAll('\n', ending);
+    const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
+    const fallbacks = [];
+    const options = { parseHTMLDocument: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: issue => fallbacks.push(issue) };
+    const doc = MarkdownImporter.parse(source, documentSchema, options);
+    const actual = semanticProjection(HTMLExporter.export(doc, { document: false }));
+    const captured = MarkdownImporter.parseWithSource(source, documentSchema, options);
+    if (MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== source) throw new Error(`Whole-document source changed: ${example.number}`);
+    retention++;
+    const matched = JSON.stringify(actual) === JSON.stringify(expected);
+    if (matched) counts.set(example.number, (counts.get(example.number) ?? 0) + 1);
+    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { number: example.number, ending, source, expected, actual, fallbacks, matched } }));
+  }
+  const matches = [...counts].filter(([, count]) => count === 2).map(([number]) => number);
+  console.log(`Whole-document optional-container profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
+  if (documentFlowReport) console.log(`Document-flow matching ranges: ${compressRanges(matches)}`);
+  const regressions = [...required].filter(number => counts.get(number) !== 2);
+  if (regressions.length) throw new Error(`Document-flow semantic regressions: ${compressRanges(regressions)}`);
+  const gains = [...unresolved].filter(number => counts.has(number));
+  if (gains.length && !reportOnly) throw new Error(`Review newly matching document-flow examples: ${compressRanges(gains)}`);
 }
 if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');
 if (divergenceFailures.length) throw new Error(`Intentional divergence contract regressions: ${compressRanges(divergenceFailures)}`);

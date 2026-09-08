@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added experimental parseHTMLDocument for one root HTML source conversion before
+  local adapters, including cross-paragraph/list formatting scopes. Retains the
+  entire inert document on refusal and exact untouched source; edits use canonical
+  Markdown. Added a separate 599/652 combined-container reference profile and
+  explicit reports for formatted-whitespace paragraphs whose layout may differ.
+
 - Added optional section insert/append/unwrap commands and a public authoring
   workshop with properties, undo/redo and a separate reader snapshot. Fixed
   browser/server HTML import losing atom-only or empty-block section children,
