@@ -144,6 +144,7 @@ interface ImportContext {
     readonly provenance: WeakMap<FountainNode, number>;
     readonly tokenMarks: ReadonlyMap<number, readonly Mark[]>;
     readonly softBreaks: ReadonlySet<number>;
+    readonly adjacentText: ReadonlySet<number>;
   };
 }
 
@@ -1028,20 +1029,33 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const slots = context.inlineSlots;
     let content: FountainNode[];
     if (slots) {
+      let previousIndex: number | undefined;
+      let previousCR = false;
+      const preLocation = htmlparser2Adapter.getNodeSourceCodeLocation(element.raw);
+      const preMarks = slots.tokenMarks.get(preLocation?.startOffset ?? -1) ?? [];
+      // The placeholder tags suppress HTML's initial-LF rule. An empty original
+      // text node must not consume that rule, but a real tag/mark boundary does.
+      const first = element.childNodes[0];
+      const firstIndex = first?.kind === 'element' && first.tagName === slots.tag
+        && htmlparser2Adapter.getNodeSourceCodeLocation(first.raw)?.startOffset === preLocation?.startTag?.endOffset
+        ? Number(first.getAttribute('data-index')) : undefined;
+      let emptyInitial = false;
       content = inlineChildren(element, schema, [], context).map(node => {
         const index = slots.provenance.get(node);
         if (!node.isText) {
           throw new Error('Preformatted HTML cannot flatten an inline atom; literal source retained.');
         }
-        let value = (index !== undefined && slots.softBreaks.has(index) ? '\n' : node.text!).replace(/\r\n?/gu, '\n');
-        // The placeholder tag suppresses HTML's initial-LF rule. Reapply it only
-        // when the original character token directly followed the pre start tag.
-        const first = element.childNodes[0];
-        if (first?.kind === 'element' && first.tagName === slots.tag
-          && Number(first.getAttribute('data-index')) === index
-          && htmlparser2Adapter.getNodeSourceCodeLocation(first.raw)?.startOffset
-            === htmlparser2Adapter.getNodeSourceCodeLocation(element.raw)?.startTag?.endOffset
-          && value.startsWith('\n')) value = value.slice(1);
+        const originalText = index !== undefined && slots.softBreaks.has(index) ? '\n' : node.text!;
+        const adjacent = index !== undefined && previousIndex === index - 1 && slots.adjacentText.has(index);
+        const skipLF = adjacent && previousCR && originalText.startsWith('\n');
+        let value = (skipLF ? originalText.slice(1) : originalText).replace(/\r\n?/gu, '\n');
+        previousCR = originalText ? originalText.endsWith('\r') : adjacent && previousCR;
+        previousIndex = index;
+        const sourceMarks = index === undefined ? [] : slots.nodes[index].marks;
+        const initial = (firstIndex !== undefined && index === firstIndex || emptyInitial && adjacent)
+          && sourceMarks.length === preMarks.length && sourceMarks.every((mark, position) => mark === preMarks[position]);
+        emptyInitial = initial && originalText.length === 0;
+        if (initial && value.startsWith('\n')) value = value.slice(1);
         const result = value === node.text ? node : node.withText(value);
         if (index !== undefined) slots.provenance.set(result, index);
         return result;
@@ -1269,6 +1283,9 @@ export class ServerHTMLImporter {
         if (segment.softBreak !== undefined && (segment.softBreak !== true || !segment.node.isText || segment.node.text !== ' ')) {
           throw new TypeError('A soft-break segment must be a space text node.');
         }
+        if (segment.textRun !== undefined && (!Number.isSafeInteger(segment.textRun) || segment.textRun < 0)) {
+          throw new TypeError('Text-run provenance must be a nonnegative safe integer.');
+        }
       }
     }
     if (preOpen) throw new Error('Preformatted HTML spans a paragraph boundary; literal source retained.');
@@ -1280,6 +1297,8 @@ export class ServerHTMLImporter {
     const sharedNodes = new Set<FountainNode>();
     const tokenMarks = new Map<number, readonly Mark[]>();
     const softBreaks = new Set<number>();
+    const adjacentText = new Set<number>();
+    let previousSegment: MarkdownHTMLInlineSegment | undefined;
     const wrapped = paragraphMode && wrapParagraph;
     const parts: string[] = wrapped ? ['<p>'] : [];
     let offset = wrapped ? 3 : 0;
@@ -1294,7 +1313,12 @@ export class ServerHTMLImporter {
         seenNodes.add(segment.node);
         originals.push(segment.node);
         if (segment.softBreak) softBreaks.add(originals.length - 1);
+        if (previousSegment?.kind === 'node' && previousSegment.node.isText && segment.node.isText
+          && previousSegment.textRun === segment.textRun
+          && previousSegment.node.marks.length === segment.node.marks.length
+          && previousSegment.node.marks.every((mark, index) => mark.eq(segment.node.marks[index]))) adjacentText.add(originals.length - 1);
       }
+      previousSegment = segment;
       parts.push(part);
       offset += part.length;
       if (offset > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
@@ -1305,7 +1329,7 @@ export class ServerHTMLImporter {
     const issues: ServerHTMLImportIssue[] = [];
     const provenance = new WeakMap<FountainNode, number>();
     const context: ImportContext = {
-      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks },
+      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText },
     };
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,

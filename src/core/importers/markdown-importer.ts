@@ -33,7 +33,11 @@ export interface MarkdownHTMLFlowFallback {
 /** Raw HTML tokens interleaved with already-parsed, immutable Fountain nodes. */
 export type MarkdownHTMLInlineSegment =
   | { readonly kind: 'html'; readonly html: string; readonly marks: readonly Mark[] }
-  | { readonly kind: 'node'; readonly node: Node; readonly softBreak?: true };
+  | {
+    readonly kind: 'node'; readonly node: Node; readonly softBreak?: true;
+    /** Import-local character run; unequal values preserve generated Markdown tag boundaries. */
+    readonly textRun?: number;
+  };
 
 export interface MarkdownHTMLInlineFallback {
   readonly source: string;
@@ -1148,19 +1152,23 @@ function inline(
   text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = [],
   htmlTokens?: Map<Node, MarkdownHTMLInlineSegment>,
   autolinkLiterals = true,
-  softBreaks?: Set<Node>,
+  softBreaks?: Map<Node, { readonly softBreak?: true; readonly textRun: number }>,
 ): Node[] {
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
     if (plain && softBreaks) {
+      const textRun = softBreaks.size;
       plain.split('\n').forEach((part, index) => {
         if (index) {
           const node = schema.text(' ', inheritedMarks);
-          softBreaks.add(node);
+          softBreaks.set(node, { softBreak: true, textRun });
           result.push(node);
         }
-        if (part) result.push(...textNodes(decodeMarkdownText(part), schema, inheritedMarks));
+        if (part) for (const node of textNodes(decodeMarkdownText(part), schema, inheritedMarks)) {
+          softBreaks.set(node, { textRun });
+          result.push(node);
+        }
       });
       plain = '';
       return;
@@ -1438,10 +1446,10 @@ export interface MarkdownHTMLParagraphContext {
 function paragraphBlocks(schema: Schema, value: string, references: References, options: MarkdownImportOptions, tightList = false): Node[] {
   if (!options.parseHTMLParagraph) return [paragraph(schema, value, references, 'left', options)];
   const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
-  const softBreaks = new Set<Node>();
+  const softBreaks = new Map<Node, { readonly softBreak?: true; readonly textRun: number }>();
   const nodes = inline(value, schema, references, [], tokens, options.autolinkLiterals, softBreaks);
   if (!tokens.size) return [schema.node('paragraph', { align: 'left' }, nodes)];
-  const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node, ...(softBreaks.has(node) ? { softBreak: true as const } : {}) })));
+  const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node, ...softBreaks.get(node) })));
   let issue: MarkdownHTMLInlineFallback;
   try {
     const projected = options.parseHTMLParagraph(segments, schema, Object.freeze({ tightList }));

@@ -594,6 +594,13 @@ const paragraphRecoveryCases = [
   'A <pre>**first\nsecond**</pre> end',
   'A <pre>&#13;one&#13;&#10;two</pre> end',
   'A <pre>&#10;&#10;one</pre> end',
+  'A <pre>a&#13;\nb</pre> end',
+  'A <pre>&#13;\nb</pre> end',
+  'A <pre>**&#10;line**</pre> end',
+  'A <pre>a&#13;<span>\nb</span></pre> end',
+  'A <pre>a&#13;<!-- boundary -->\nb</pre> end',
+  'A <pre>**a&#13;**\nb</pre> end',
+  'A <pre>**a&#13;\nb**</pre> end',
 ];
 for (const source of paragraphRecoveryCases) {
   for (const ending of ['\n', '\r\n']) {
@@ -608,6 +615,17 @@ for (const source of paragraphRecoveryCases) {
   }
 }
 console.log(`Paragraph recovery: ${paragraphRecoveryCases.length * 2} opt-in reference/source contracts; existing baselines unchanged.`);
+// Markdown emphasis crossing a recovered block leaves an empty wrapper in the
+// reference paragraph. Its code text is supported, but the whole structure is
+// still a mismatch: do not hide that loss by normalizing empty marks away.
+for (const source of ['A **<pre>&#10;line</pre>** end']) {
+  const captured = MarkdownImporter.parseWithSource(source, schema, { parseHTMLParagraph: ServerHTMLImporter.parseParagraph });
+  const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
+  const actual = semanticProjection(HTMLExporter.export(captured.document, { document: false }));
+  if (captured.document.content.find(node => node.type.name === 'code_block')?.textContent !== 'line'
+    || MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== source
+    || JSON.stringify(actual) === JSON.stringify(expected)) throw new Error('Cross-block empty emphasis boundary changed; audit before counting conformance.');
+}
 // Empty-item placeholder blocks and omitted HTML comment identity remain
 // mismatches. Do not normalize either away to inflate conformance.
 for (const source of ['- [x]:\n    /url\n- Before <p>Inside</p> After', '-\n\n- Before <p>Inside</p> After', '- Before <p>Inside</p> After\n  <!-- comment\n\n  still comment -->\n- Next']) {

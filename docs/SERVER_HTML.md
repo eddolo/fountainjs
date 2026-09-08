@@ -61,9 +61,10 @@ For a Markdown paragraph containing block tags, the separate experimental
 return multiple blocks. Connect them to `parseHTMLParagraph`, not
 `parseHTMLInline`. Original inline nodes remain protected through HTML paragraph
 recovery. The same limits and schema/URL policies apply. Forward the paragraph
-context for tight-list wrappers and segment `softBreak` metadata for closed,
+context for tight-list wrappers and segment `softBreak`/`textRun` metadata for closed,
 text-only preformatted scopes. Those scopes restore physical LF, apply HTML
-newline rules and report plain-text code export semantics. Text attributes/marks
+newline rules across continuous text runs, respect raw/Markdown tag boundaries,
+and report plain-text code export semantics. Text attributes/marks
 remain in the model; atoms and cross-paragraph/active raw-text scopes still fall
 back explicitly. See the
 [paragraph recovery contract](MARKDOWN_SOURCE.md#experimental-paragraph-html-recovery).

@@ -5,6 +5,25 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Preformatted newline correction (2026-09-08, Unreleased): CRLF pairs spanning
+protected text nodes now remain a single newline. Import-local `textRun`
+provenance respects raw tags/comments and generated Markdown mark boundaries;
+initial-LF handling also accounts for empty text slots. Eighteen added tests
+bring the full clean check to 1,447 tests / 114 files. The oracle has 76 paragraph
+reference/source contracts; the 563/579 corpus semantic baselines are unchanged.
+Measured runtime code is 1375.9 KiB ESM / 1143.5 KiB CJS; aggregate ceilings rise
+1 KiB each, to 1376/1144, without individual entry or performance cap changes.
+The recorded edit/undo/download/reopen/reader journey passed; editor, reader,
+narrow-screen screenshots and recording contact sheet were visually inspected.
+Chromium and WebKit passed. Firefox initially pasted into only the first block
+after Select All during a loaded run, then passed three isolated reruns without
+a code change. Preserve the initial failure under `artifacts/preformatted-crlf-browsers`
+and investigate selection timing before calling the journey stable under load.
+An overlapping audit rebuild disrupted the first full check's Angular import;
+the complete sequential rerun passed. Do not rebuild `dist` while tests consume it.
+Cross-block Markdown emphasis still loses an empty reference wrapper; its
+correct code text/source retention is not counted as full structural conformance.
+
 Preformatted paragraph follow-through (2026-09-08, Unreleased): closed text-only
 pre scopes can now become code blocks without flattening physical soft breaks.
 Optional segment `softBreak` provenance distinguishes LF from ordinary spaces.

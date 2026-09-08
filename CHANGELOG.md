@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Fixed preformatted CRLF normalization across protected text segments, including
+  a CR entity followed by a physical Markdown newline. Optional `textRun`
+  provenance preserves Markdown formatting boundaries; raw tags/comments also
+  prevent coalescing. Initial-LF handling now respects newly opened Markdown marks
+  and empty original text nodes. Original positions/attributes remain intact.
+  The change adds about 1 KiB ESM / 0.8 KiB CJS; aggregate ceilings rise to
+  1376/1144 KiB, with no individual entry or performance limit change.
+
 - Added source-aware, text-only preformatted recovery inside a single Markdown
   paragraph. Soft-break provenance restores LF only inside code content; HTML
   newline normalization and initial-LF handling are reported. Text attributes,

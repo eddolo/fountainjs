@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Preformatted newline correction (2026-09-08, Unreleased): streaming CRLF and
+initial-LF rules now respect protected text positions, empty slots and Markdown
+formatting boundaries. Full clean check: 1,447 tests / 114 files; 76 paragraph
+reference/source contracts, with default 563 / block+inline 579 unchanged.
+The recorded journey and visually inspected editor/reader/mobile layouts retain
+the exact three lines and indentation. Chromium/WebKit passed; Firefox had one
+partial-selection/paste failure under load before three isolated passes. That
+intermittent failure remains open, not silently certified by reruns. See the
+[roadmap evidence and remaining limits](ROADMAP.md).
+
 Preformatted paragraph follow-through (2026-09-08, Unreleased): source-tagged soft
 breaks now survive closed text-only pre scopes as code line breaks. HTML newline
 handling and plain-text code exports are reported; text attributes/marks remain

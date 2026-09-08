@@ -102,7 +102,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await capture('tight-list-mobile.png');
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto('/demos/node-markdown.html');
-  await source.fill('Before <pre>first line\n  second line\nlast line</pre> After');
+  await source.fill('Before <pre>&#13;\nfirst line&#13;\n  second line\nlast line</pre> After');
   await output.getByRole('button', { name: 'html', exact: true }).click();
   await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
   await expect(output.locator('pre')).toContainText('first line\n  second line\nlast line');

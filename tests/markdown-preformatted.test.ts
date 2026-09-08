@@ -18,6 +18,14 @@ describe('source-aware paragraph preformatted projection', () => {
     ['A <pre><span>\none</span></pre> end', '\none'],
     ['A <pre>&#13;one&#13;&#10;two</pre> end', 'one\ntwo'],
     ['A <pre>&#10;&#10;one</pre> end', '\none'],
+    ['A <pre>a&#13;\nb</pre> end', 'a\nb'],
+    ['A <pre>&#13;\nb</pre> end', 'b'],
+    ['A <pre>**&#10;line**</pre> end', '\nline'],
+    ['A **<pre>&#10;line</pre>** end', 'line'],
+    ['A <pre>a&#13;<span>\nb</span></pre> end', 'a\n\nb'],
+    ['A <pre>a&#13;<!-- boundary -->\nb</pre> end', 'a\n\nb'],
+    ['A <pre>**a&#13;**\nb</pre> end', 'a\n\nb'],
+    ['A <pre>**a&#13;\nb**</pre> end', 'a\nb'],
   ])('preserves preformatted text for %s', (source, expected) => {
     for (const ending of ['\n', '\r\n']) {
       const input = source.replaceAll('\n', ending);
@@ -86,5 +94,48 @@ describe('source-aware paragraph preformatted projection', () => {
     const restored = result.find(node => node.type.name === 'code_block')!.child(0);
     expect(restored.text).toBe('\n');
     expect(restored.attrs).toEqual(node.attrs);
+  });
+
+  it('keeps source positions and private attributes when consuming a split CRLF', () => {
+    const first = schema.text('a\r').withAttrs({ privateId: 'first' });
+    const second = schema.text('\n').withAttrs({ privateId: 'second' });
+    const html = (value: string): MarkdownHTMLInlineSegment => ({ kind: 'html', html: value, marks: [] });
+    const result = ServerHTMLImporter.parseParagraph([
+      html('<pre>'), { kind: 'node', node: first, textRun: 0 },
+      { kind: 'node', node: second, textRun: 0 }, html('</pre>'),
+    ], schema).find(node => node.type.name === 'code_block')!;
+    expect(result.content.map(node => node.text)).toEqual(['a\n', '']);
+    expect(result.content.map(node => node.attrs)).toEqual([first.attrs, second.attrs]);
+    expect(first.text).toBe('a\r');
+    expect(second.text).toBe('\n');
+  });
+
+  it.each([-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1])('rejects invalid text-run provenance %s', textRun => {
+    expect(() => ServerHTMLImporter.parseParagraph([{ kind: 'node', node: schema.text('text'), textRun }], schema)).toThrow(/Text-run/);
+  });
+
+  it.each([
+    [['', '\nline'], 'line'],
+    [['a\r', '', '\nline'], 'a\nline'],
+    [['', '\r', '', '\nline'], 'line'],
+  ] as const)('handles empty original slots in a continuous run %j', (values, expected) => {
+    const result = ServerHTMLImporter.parseParagraph([
+      { kind: 'html', html: '<pre>', marks: [] },
+      ...values.map(value => ({ kind: 'node' as const, node: schema.text(value), textRun: 0 })),
+      { kind: 'html', html: '</pre>', marks: [] },
+    ], schema).find(node => node.type.name === 'code_block')!;
+    expect(result.textContent).toBe(expected);
+    expect(result.content).toHaveLength(values.length);
+  });
+
+  it('does not coalesce CRLF across distinct Markdown scopes with equal marks', () => {
+    const strong = schema.marks.strong.create();
+    const result = ServerHTMLImporter.parseParagraph([
+      { kind: 'html', html: '<pre>', marks: [] },
+      { kind: 'node', node: schema.text('a\r', [strong]), textRun: 0 },
+      { kind: 'node', node: schema.text('\nb', [strong]), textRun: 1 },
+      { kind: 'html', html: '</pre>', marks: [] },
+    ], schema).find(node => node.type.name === 'code_block')!;
+    expect(result.textContent).toBe('a\n\nb');
   });
 });
