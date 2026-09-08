@@ -11,7 +11,11 @@ The demo exposes the opt-in, host-specific rules take precedence, and unknown
 attributes fall back with server loss reports. Thirteen official CommonMark
 container cases have separate LF/CRLF reference and source checks; existing
 default/profile scores do not change. See [scope and evidence](HTML_CONTAINERS.md).
-Complete HTML/CSS retention and automatic empty-container authoring remain open.
+Follow-up authoring adds explicit insert/append/unwrap commands and a public
+property/reader workshop, with empty-container edits undoable on request. It
+also corrects omitted block-only children and missing clipboard paragraph breaks.
+Complete HTML/CSS retention, automatic empty-container interaction and general
+wrap-selection authoring remain open.
 
 Typed glossary handoff (2026-09-08, Unreleased): DOCX now retains term/description
 roles using validated versioned controls, preserving supported visible content

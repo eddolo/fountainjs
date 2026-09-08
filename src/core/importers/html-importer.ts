@@ -140,6 +140,8 @@ function configuredNode(
           inlineChildren(contentRoot, schema, inheritedMarks),
           blockChildren(contentRoot, schema),
         ];
+    // Empty inline projection must not win over real children in block*.
+    if (/^block[+*?]$/.test(expression ?? '')) candidates.reverse();
     for (const content of candidates) {
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {

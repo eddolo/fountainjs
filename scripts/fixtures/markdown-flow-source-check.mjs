@@ -1,5 +1,6 @@
 import { CoreSchemaSpec, HTMLContainerExtension, MarkdownImporter, MarkdownExporter, Schema, tokenizeCode } from '../../dist/index.js';
 import { ServerHTMLImporter } from '../../dist/html-server.js';
+import { createEditor, insertHTMLContainer, appendHTMLContainerParagraph, unwrapHTMLContainer } from '../../dist/core.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
@@ -7,6 +8,12 @@ export function checkMarkdownFlowSources() {
   const preservedSection = ServerHTMLImporter.parse('<section id="release"><p>Portable section</p></section>', containers);
   const reopenedSection = MarkdownImporter.parse(MarkdownExporter.export(preservedSection), containers, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow });
   if (!reopenedSection.eq(preservedSection) || preservedSection.child(0).attrs.id !== 'release') throw new Error('Compiled optional HTML container handoff lost structure.');
+  const sectionEditor = createEditor({ schema: { ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } }, content: preservedSection.toJSON() });
+  if (!insertHTMLContainer(sectionEditor) || !appendHTMLContainerParagraph(sectionEditor, [1]) || !unwrapHTMLContainer(sectionEditor, [1])
+    || sectionEditor.state.doc.child(1).type.name !== 'paragraph' || sectionEditor.state.doc.child(0).attrs.id !== 'release') {
+    throw new Error('Compiled DOM-free section authoring failed.');
+  }
+  sectionEditor.destroy();
   const recoveredCode = MarkdownImporter.parse('<div>\n\n```js\nx\n```\n\n```js\nx\n\n```\n\n</div>', schema, {
     parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
   });

@@ -14,7 +14,11 @@ import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
 import { docxControlsJourney } from './docx-controls-journey';
 import { docxGlossaryJourney } from './docx-glossary-journey';
-import { htmlContainerJourney } from './html-container-journey';
+import { htmlContainerJourney, htmlContainerAuthoringJourney } from './html-container-journey';
+
+test('authors sections with properties, empty content, undo and reader preview', async ({ page }, info) => {
+  await htmlContainerAuthoringJourney(page, info);
+});
 
 test('preserves optional section containers through real editing and reader output', async ({ page }, info) => {
   await htmlContainerJourney(page, info);

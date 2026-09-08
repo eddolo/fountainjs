@@ -567,6 +567,9 @@ function configuredNode(
           branch => inlineChildren(contentRoot, schema, inheritedMarks, branch),
           branch => blockChildren(contentRoot, schema, branch),
         ];
+    // Empty inline projection also satisfies block*. Try actual blocks first
+    // so atom-only or empty-paragraph sections do not silently lose children.
+    if (/^block[+*?]$/.test(expression ?? '')) candidates.reverse();
     for (const candidate of candidates) {
       // Only report losses from the projection actually accepted by the schema.
       // A speculative inline interpretation of block content is not data loss.

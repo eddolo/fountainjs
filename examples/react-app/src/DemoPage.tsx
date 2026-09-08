@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { HTMLContainerWorkshop } from './HTMLContainerWorkshop';
 import {
   HTMLExporter,
   HTMLContainerExtension,
@@ -605,8 +606,8 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   ]), 'fountainjs-embedded-image.docx');
 
   return <div className="demo-workspace">
-    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>
-      {inputFormat !== 'docx' && <div className="headless-html-policy"><label><input type="checkbox" checked={preserveContainers} onChange={event => setPreserveContainers(event.target.checked)} /> Preserve HTML section containers</label><p>Adds the optional HTMLContainerExtension. Keeps supported wrappers, IDs, classes, titles and language/direction attributes. Unknown attributes decline the wrapper with conversion details. Markdown still needs HTML conversion enabled separately.</p></div>}
+    <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>This conversion panel uses no contenteditable or EditorView.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>
+      {inputFormat !== 'docx' && <div className="headless-html-policy"><label><input type="checkbox" checked={preserveContainers} onChange={event => setPreserveContainers(event.target.checked)} /> Preserve HTML section containers</label><p>Adds the optional HTMLContainerExtension. Keeps supported wrappers, IDs, classes, titles and language/direction attributes. Unknown attributes decline the wrapper with conversion details. Markdown still needs HTML conversion enabled separately.</p>{demo.slug === 'node-markdown' && <a href="#section-authoring">Try creating and editing sections below →</a>}</div>}
       {inputFormat === 'markdown' && <div className="headless-html-policy">
         <label><input type="checkbox" checked={autolinkLiterals} onChange={event => setAutolinkLiterals(event.target.checked)} /> Turn bare URLs and email addresses into links</label>
         <p>On by default. Turn it off to keep unbracketed addresses as text. Explicit Markdown links and safe &lt;angle-bracket&gt; links still work. This import setting does not change editor typing rules or enable full CommonMark mode.</p>
@@ -637,6 +638,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       }
     }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={() => downloadDOCX()}>Download as Word DOCX</button><button onClick={downloadImageSample}>Download embedded-image sample</button><span>Uses the same DOM-free import/export entry in browsers and servers. Fountain never fetches image URLs.</span></div>{docxExportStatus && <p className="headless-status" role="status">{docxExportStatus}</p>}{importedImages.length > 0 && <div className="headless-image-previews" aria-label="Imported DOCX image previews">{importedImages.map((image, index) => <figure key={`${String(image.attrs.src).slice(0, 40)}-${index}`}><img src={String(image.attrs.src)} alt={String(image.attrs.alt)} /><figcaption>{String(image.attrs.caption || image.attrs.alt || `Image ${index + 1}`)}</figcaption></figure>)}</div>}<p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
     <OutputPanel document={parsed.document} />
+    {demo.slug === 'node-markdown' && <HTMLContainerWorkshop />}
   </div>;
 }
 

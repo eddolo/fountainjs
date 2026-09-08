@@ -31,9 +31,8 @@ The `html_container` node has `block*` content and a validated `tag` attribute:
 `div`, `section`, `article`, `aside`, `nav`, `main`, `header`, `footer`, or
 `address`. Children remain normal editable Fountain blocks, including nested
 containers, headings and lists. Empty source wrappers remain empty rather than
-becoming fake paragraphs. An application authoring an empty container should
-provide an initial paragraph; this module does not add a container toolbar or an
-empty-container caret policy.
+becoming fake paragraphs. The optional authoring commands explicitly create a
+paragraph when requested; import never manufactures one automatically.
 
 Supported attributes are `id`, `className` (HTML `class`), `title`, `lang` and
 `dir`. String values are bounded and control characters are rejected; direction
@@ -53,6 +52,52 @@ Rules use the additive optional `HTMLParseElement.getAttributeNames()` API. Both
 the DOM-free adapter and browsers provide it. A custom adapter without enumeration
 cannot verify the whitelist, so these rules decline it. Attribute enumeration
 does not expose DOM nodes, events, selection or layout.
+
+## Authoring without changing the engine
+
+The module registers three commands in `HTMLContainerExtension.commands` and
+exports the same functions from the root and `fountainjs-editor/core` entries:
+
+```ts
+import { insertHTMLContainer, appendHTMLContainerParagraph,
+  unwrapHTMLContainer, setNodeAttributes } from 'fountainjs-editor/core';
+
+insertHTMLContainer(editor, { tag: 'section', title: 'Next steps' });
+appendHTMLContainerParagraph(editor, [1]);
+setNodeAttributes(editor, [1], { title: 'Follow-up', lang: 'en' });
+unwrapHTMLContainer(editor, [1]);
+```
+
+Paths above are examples, not stable IDs. Resolve them from the current document
+immediately before invoking a command, particularly with concurrent edits.
+Insertion happens **after the active top-level block**, even when the caret is
+nested, and does not delete the selected content. It creates an initial paragraph
+and focuses it. Appending works for empty or populated containers and keeps their
+properties. Updating properties uses the existing validated attribute command.
+
+Unwrapping replaces the chosen container with its children, preserving their
+rich structure and attributes. The removed wrapper's own properties are removed.
+An empty container becomes an editable paragraph. A text range entirely within
+the container keeps its offsets; a selected descendant node keeps its selection.
+Other selections move to the first resulting text leaf or node. Incompatible
+parent schemas are refused. The three commands respect editor read-only state
+and rejected host transactions, and accepted changes use ordinary undo/redo.
+Read-only UI is not server-side authorization.
+
+The public [authoring workshop](https://eddolo.github.io/fountainjs/demos/node-markdown.html#section-authoring)
+provides a section picker, property inputs, insert/append/unwrap controls,
+undo/redo and an isolated static reader snapshot. This is a separate draft, not
+the conversion result above it. Changing parser options does not reset it. The
+reader has no authoring controls or scripts; later edits require a new preview.
+Outlines are this demo's CSS, not document data. No universal section toolbar,
+automatic click-to-edit policy for empty wrappers, or general wrap-selection
+command is implied.
+
+Authoring regressions also found and fixed two retention bugs: both HTML parsers
+must try block children before accepting an empty inline interpretation of
+`block*` content, and plain-text clipboard serialization must separate a section's
+child blocks with newlines. Empty paragraphs, nested empty wrappers and dividers
+now survive the block-first import path.
 
 ## Export and safety boundaries
 
@@ -92,16 +137,28 @@ fallback, then edits a real nested section, creates a paragraph, undoes/redoes,
 and verifies reader HTML. The manual counterpart records the journey. The audit
 outlines wrappers for inspection; that theme is not imposed by the module.
 
-Local verification passes 1,694 tests / 131 files, compiled server and headless
+The follow-up authoring tests add insertion without selection loss, nested
+unwrapping, attribute changes, empty-container undo, selected atoms, invalid
+paths, read-only/filter rejection and strict parent-schema rejection. The
+compiled Node/workerd fixture now also calls the authoring commands. The public
+journey uses real keyboard copying and inspects the resulting plain/rich formats;
+it is not a claim that every external editor was tested.
+
+Local verification passes 1,714 tests / 132 files, compiled server and headless
 checks, public API/package contracts, the complete existing CommonMark profiles,
-framework types, performance and size checks. The new journey passes in Chromium,
-Firefox and WebKit. Its separate recording, public option screenshot and edited
-section/reader comparison were visually inspected. The site build passes with
-the existing optional math chunk warning. Evidence is retained in
-`artifacts/html-containers-final-check.log`, `html-containers-browsers.log`,
-`html-containers-recorded/` and `html-containers-site-build.log`.
+framework types, performance and size checks. Import/edit and authoring journeys
+pass in Chromium, Firefox and WebKit (six checks), as do six existing public
+conversion regressions. Two separate journeys are recorded. The authoring video
+overview, visible editor and reader screenshots, and narrow-screen property
+controls were visually inspected. A full-component screenshot initially showed
+an unpainted off-screen iframe; the final journey explicitly scrolls the reader
+into view and captures its visible output rather than accepting DOM text alone.
+The site build passes with the existing optional math chunk warning. Evidence:
+`artifacts/section-authoring-final-check.log`, `section-authoring-final-tests.log`,
+`section-authoring-verified-final.log`, `section-authoring-regression.log`,
+`section-authoring-recorded-final/` and `section-authoring-site-build.log`.
 
 No runtime dependency was added. The public declaration graph is 389 files.
-Aggregate runtime size is 1400.2 KiB ESM / 1163.8 KiB CJS, with reviewed caps of
-1401/1164 KiB; individual entry, stylesheet and performance caps are unchanged.
+Aggregate runtime size is 1402.5 KiB ESM / 1165.9 KiB CJS, with reviewed caps of
+1403/1166 KiB; individual entry, stylesheet and performance caps are unchanged.
 These are source/site changes, not a new npm release over `0.4.0-beta.1`.

@@ -5,7 +5,10 @@ preserve safe section wrappers and supported attributes instead of flattening
 their structure. It adds 26 separate reference-semantic and 26 source checks,
 not a reclassification of default CommonMark results. Public opt-in, actual
 editing and reader evidence are described in [HTML_CONTAINERS.md](HTML_CONTAINERS.md).
-This does not establish complete HTML, CSS, authoring UI or product parity.
+The follow-up adds explicit section authoring, property controls and a reader
+snapshot, plus fixes for block-only import children and plain-text clipboard
+line breaks. This does not establish complete HTML, CSS, authoring UI or product
+parity; automatic empty-wrapper interaction and general wrapping remain open.
 
 Typed glossary DOCX handoff (2026-09-08, Unreleased): terms and descriptions now
 export as versioned Word controls and reopen from validated visible content.

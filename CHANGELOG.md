@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added optional section insert/append/unwrap commands and a public authoring
+  workshop with properties, undo/redo and a separate reader snapshot. Fixed
+  browser/server HTML import losing atom-only or empty-block section children,
+  and plain-text section copying joining paragraphs without line breaks.
+
 - Added optional HTMLContainerExtension for bounded section/div wrapper retention,
   shared browser/server parsing, canonical Markdown HTML handoff and low-priority
   host-overridable rules. Unsupported attributes decline to reported readable

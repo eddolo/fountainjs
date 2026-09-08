@@ -1,9 +1,18 @@
 // @vitest-environment jsdom
 import { expect, it } from 'vitest';
-import { HTMLImporter, Schema, HTMLContainerExtension, StarterKit, composeExtensions } from '../src';
+import { HTMLImporter, HTMLExporter, Schema, HTMLContainerExtension, StarterKit, composeExtensions } from '../src';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(composeExtensions([...StarterKit.extensions, HTMLContainerExtension]).schema);
+
+it.each(['<hr>', '<p></p>', '<div></div>', '<section><hr></section>'])('retains block-only section children: %s', child => {
+  const source = `<section id="outer">${child}</section>`;
+  const browser = HTMLImporter.parse(source, schema);
+  const server = ServerHTMLImporter.parse(source, schema);
+  expect(browser.toJSON()).toEqual(server.toJSON());
+  expect(browser.child(0).childCount).toBe(1);
+  expect(HTMLExporter.export(server, { document: false })).toBe(source);
+});
 
 it('uses equivalent browser and DOM-free container rules', () => {
   for (const source of [
