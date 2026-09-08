@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added a discoverable local conversion lab for Markdown, HTML, DOCX and Fountain
+  JSON files, editable imports, explicit warnings, export/reopen checks and opt-in
+  diagnostic downloads. Original-format visual fidelity is not certified.
+
 ## 0.4.0-beta.2 — Document retention and workflow checkpoint
 
 This is an unfinished public beta, not completed ProseMirror/Tiptap parity.

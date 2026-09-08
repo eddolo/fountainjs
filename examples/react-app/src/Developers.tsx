@@ -961,7 +961,7 @@ pnpm check        # complete library release gate`}</Code>
         </article>
       </div>
 
-      <footer><span>FountainJS developer guide</span><span><a href="./">Home</a> · <a href="https://github.com/eddolo/fountainjs">GitHub</a> · MIT</span></footer>
+      <footer><span>FountainJS developer guide · <a href="./conversion-lab.html">Test your files in the conversion lab ↗</a> · <a href="https://github.com/eddolo/fountainjs/blob/master/docs/CONVERSION_LAB.md">Lab implementation guide ↗</a></span><span><a href="./">Home</a> · <a href="https://github.com/eddolo/fountainjs">GitHub</a> · MIT</span></footer>
     </main>
   );
 }

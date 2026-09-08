@@ -17,6 +17,11 @@ import { docxGlossaryJourney } from './docx-glossary-journey';
 import { htmlContainerJourney, htmlContainerAuthoringJourney } from './html-container-journey';
 import { markdownDocumentJourney } from './markdown-document-journey';
 import { webComponentFormJourney } from './web-component-form-journey';
+import { conversionLabJourney } from './conversion-lab-journey';
+
+test('imports private files in the conversion lab with reports and export reopen', async ({ page }, info) => {
+  await conversionLabJourney(page, info);
+});
 
 test('submits resets and disables a native form-associated Web Component', async ({ page }, info) => {
   await webComponentFormJourney(page, info);

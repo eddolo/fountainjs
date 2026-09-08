@@ -21,6 +21,7 @@ function DemoGallery() {
       <section className="workflow-discovery" aria-label="Real-world workflow demos"><div><h2>Real-world workflows, rebuilt with FountainJS.</h2><p>Try a GitLab-style issue editor or a Todoist-style task workspace. Then follow the implementation guide.</p></div><div className="workflow-discovery-actions"><a href="./workflows.html">Explore product workflows ↗</a><a href="./issue-editor.html">Open GitLab-style issue editor ↗</a></div></section>
 
       <section className="demos-hero">
+        <div className="workflow-discovery"><div><h2>Try your own documents.</h2><p>Import files locally, inspect conversion warnings, edit and reopen an export.</p></div><a href="./conversion-lab.html">Open the conversion lab ↗</a></div>
         <p>TEN WORKING INTEGRATIONS</p>
         <h1>Different products.<br />Different stacks.<br /><em>One document core.</em></h1>
         <div className="demos-hero__foot"><span>Every card opens a dedicated interactive page built in this repository.</span><a href="#gallery">Explore all ten ↓</a></div>

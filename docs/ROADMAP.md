@@ -1,5 +1,12 @@
 # FountainJS opportunity roadmap
 
+Conversion-lab checkpoint (2026-09-08, website): a first local file intake,
+editable import, diagnostic report and export/reopen lab now covers the existing
+Markdown/HTML/DOCX/JSON adapters. It is linked from demos and the developer guide.
+Original-format visual comparison, universal import, reviewed/redacted reproduction
+bundles, worker isolation and new adapters remain future work. See
+[the lab contract](CONVERSION_LAB.md). The wider programme remains paused.
+
 This roadmap preserves product opportunities that arise from user feedback,
 upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
