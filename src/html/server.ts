@@ -293,6 +293,7 @@ class ServerElement implements SourceElement {
   }
 
   hasAttribute(name: string): boolean { return this.getAttribute(name) !== null; }
+  getAttributeNames(): readonly string[] { return Object.freeze(htmlparser2Adapter.getAttrList(this.raw).map(attribute => attribute.name)); }
 
   matches(selector: string): boolean { return matchesSelector<RawNode, RawElement>(this.raw, selector); }
 

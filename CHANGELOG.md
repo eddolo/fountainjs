@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added optional HTMLContainerExtension for bounded section/div wrapper retention,
+  shared browser/server parsing, canonical Markdown HTML handoff and low-priority
+  host-overridable rules. Unsupported attributes decline to reported readable
+  fallback. The conversion demo exposes the opt-in; StarterKit and inert Markdown
+  defaults remain unchanged. Added portable attribute-name enumeration for rules.
+
 - Added experimental DOCX glossary export and validated reimport using versioned
   Word content controls. Terms, descriptions and supported nested content retain
   their roles; visible external edits remain authoritative. Unsupported controls,

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   HTMLExporter,
+  HTMLContainerExtension,
   ClipboardHistoryExtension,
   JSONExporter,
   LeanExtension,
@@ -480,9 +481,11 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
 }
 
 function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
-  const schema = useMemo(() => new Schema(
-    demo.slug === 'node-markdown' ? headlessDemoKit.schema : StarterKit.schema,
-  ), [demo.slug]);
+  const [preserveContainers, setPreserveContainers] = useState(false);
+  const schema = useMemo(() => {
+    const kit = demo.slug === 'node-markdown' ? headlessDemoKit : StarterKit;
+    return new Schema(preserveContainers ? composeExtensions([...kit.extensions, HTMLContainerExtension]).schema : kit.schema);
+  }, [demo.slug, preserveContainers]);
   const [inputFormat, setInputFormat] = useState<'markdown' | 'html' | 'docx'>('markdown');
   const [markdownSource, setMarkdownSource] = useState(demo.markdown ?? '');
   const [htmlSource, setHTMLSource] = useState(HEADLESS_HTML_SOURCE);
@@ -603,6 +606,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
 
   return <div className="demo-workspace">
     <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>No contenteditable or EditorView is mounted.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>
+      {inputFormat !== 'docx' && <div className="headless-html-policy"><label><input type="checkbox" checked={preserveContainers} onChange={event => setPreserveContainers(event.target.checked)} /> Preserve HTML section containers</label><p>Adds the optional HTMLContainerExtension. Keeps supported wrappers, IDs, classes, titles and language/direction attributes. Unknown attributes decline the wrapper with conversion details. Markdown still needs HTML conversion enabled separately.</p></div>}
       {inputFormat === 'markdown' && <div className="headless-html-policy">
         <label><input type="checkbox" checked={autolinkLiterals} onChange={event => setAutolinkLiterals(event.target.checked)} /> Turn bare URLs and email addresses into links</label>
         <p>On by default. Turn it off to keep unbracketed addresses as text. Explicit Markdown links and safe &lt;angle-bracket&gt; links still work. This import setting does not change editor typing rules or enable full CommonMark mode.</p>

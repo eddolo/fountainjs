@@ -11,6 +11,7 @@ export * from '../core/exporters/markdown-exporter';
 export * from '../core/exporters/text-exporter';
 export * from '../core/importers/markdown-importer';
 export * from '../extensions/extension';
+export * from '../extensions/html-containers';
 export * from '../extensions/command-manager';
 export * from '../extensions/collaboration-core';
 export * from '../extensions/plugins/history';

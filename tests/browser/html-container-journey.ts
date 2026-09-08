@@ -1,0 +1,47 @@
+import { expect, type Page, type TestInfo } from '@playwright/test';
+
+export async function htmlContainerJourney(page: Page, info: TestInfo) {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/demos/node-markdown.html');
+  await page.getByRole('button', { name: 'Server HTML', exact: true }).click();
+  await page.getByLabel('Server HTML input', { exact: true }).fill('<section id="handover"><h2>Release</h2><div class="checks"><p>Inspect logs.</p><p>Record outcome.</p></div></section>');
+  const output = page.locator('.demo-output');
+  await expect(output).toContainText('Inspect logs.');
+  await expect(output).not.toContainText('html_container');
+  await page.getByLabel('Preserve HTML section containers', { exact: true }).check();
+  await expect(output).toContainText('html_container');
+  await expect(output).toContainText('handover');
+  await expect(output).toContainText('checks');
+  await page.screenshot({ path: info.outputPath('public-container-option.png'), fullPage: true });
+  await page.getByLabel('Server HTML input', { exact: true }).fill('<section data-private="private-value"><p>Still readable.</p></section>');
+  await expect(output).toContainText('Still readable.');
+  await expect(output).not.toContainText('html_container');
+  await expect(page.getByText('Unmapped HTML block wrappers were removed.', { exact: false })).toBeVisible();
+  await page.goto('/browser-tests.html');
+  const result = await page.evaluate(() => (globalThis as any).fountainBrowserTest.htmlContainers());
+  expect(result.retained).toBe(result.source);
+  const root = page.locator('#html-container-audit');
+  const editor = root.getByRole('textbox', { name: 'Structured section editor', exact: true });
+  await expect(editor.locator('section#handover .checks li')).toHaveCount(2);
+  await expect(editor.locator('section#handover > p br')).toHaveCount(1);
+  await editor.locator('section#handover > p').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' today');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Follow up tomorrow.');
+  await expect(editor.locator('section#handover > p')).toHaveCount(2);
+  await expect(editor).toContainText('Follow up tomorrow.');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(editor).not.toContainText('Follow up tomorrow.');
+  await page.keyboard.press('ControlOrMeta+Shift+z');
+  await expect(editor).toContainText('Follow up tomorrow.');
+  await root.getByRole('button', { name: 'Preview saved section' }).click();
+  const reader = root.locator('[data-reader]');
+  await expect(reader.locator('section#handover')).toHaveAttribute('lang', 'en');
+  await expect(reader.locator('section#handover > p')).toHaveCount(2);
+  await expect(reader.locator('.checks li')).toHaveCount(2);
+  await expect(reader).toContainText('Follow up tomorrow.');
+  await root.screenshot({ path: info.outputPath('edited-section-and-reader.png') });
+  expect(errors).toEqual([]);
+}

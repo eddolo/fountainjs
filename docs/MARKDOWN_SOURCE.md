@@ -1,5 +1,9 @@
 # Markdown semantics and source fidelity
 
+Optional section-wrapper retention is documented in [HTML_CONTAINERS.md](HTML_CONTAINERS.md).
+It requires an explicitly installed schema extension and enabled HTML conversion;
+the inert default and existing conformance profiles are unchanged.
+
 FountainJS exposes two separate promises because “round-trip Markdown” can mean
 two very different things:
 

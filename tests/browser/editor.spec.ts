@@ -14,6 +14,11 @@ import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
 import { docxControlsJourney } from './docx-controls-journey';
 import { docxGlossaryJourney } from './docx-glossary-journey';
+import { htmlContainerJourney } from './html-container-journey';
+
+test('preserves optional section containers through real editing and reader output', async ({ page }, info) => {
+  await htmlContainerJourney(page, info);
+});
 
 test('edits and reopens a Word glossary with term and description roles', async ({ page }, info) => {
   await docxGlossaryJourney(page, info);

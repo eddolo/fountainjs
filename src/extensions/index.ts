@@ -48,6 +48,7 @@ import { composeExtensions, defineExtension } from './extension';
 import { TextStyleExtension } from '../text-style';
 
 export * from './extension';
+export * from './html-containers';
 export * from './command-manager';
 export * from './math';
 export * from './lean';

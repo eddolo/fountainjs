@@ -5,6 +5,14 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Optional HTML containers (2026-09-08, Unreleased): bounded div/section wrappers
+can now retain structure and supported attributes with HTMLContainerExtension.
+The demo exposes the opt-in, host-specific rules take precedence, and unknown
+attributes fall back with server loss reports. Thirteen official CommonMark
+container cases have separate LF/CRLF reference and source checks; existing
+default/profile scores do not change. See [scope and evidence](HTML_CONTAINERS.md).
+Complete HTML/CSS retention and automatic empty-container authoring remain open.
+
 Typed glossary handoff (2026-09-08, Unreleased): DOCX now retains term/description
 roles using validated versioned controls, preserving supported visible content
 and external text edits. Incompatible host schemas fall back without repeatedly

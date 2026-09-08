@@ -503,8 +503,8 @@ function render(
       return `<details${node.attrs.open ? ' open' : ''}>\n<summary>${label}</summary>\n\n${body}\n</details>`;
     }
     case 'details_summary': return inlineContent(node, context, path);
-    case 'definition_list':
-      report(context, 'node', node.type.name, path, 'Definition list projected as HTML: re-import requires an HTML-enabled Markdown reader. Arbitrary schema metadata is not guaranteed to survive the HTML boundary.');
+    case 'html_container': case 'definition_list':
+      report(context, 'node', node.type.name, path, `${node.type.name === 'definition_list' ? 'Definition list' : 'HTML container'} projected as HTML: re-import requires an HTML-enabled Markdown reader. Arbitrary schema metadata is not guaranteed to survive the HTML boundary.`);
       return HTMLExporter.export(node, { document: false }).replace(/\r/g, '&#13;').replace(/\n/g, '&#10;');
     case 'bullet_list': case 'ordered_list': case 'task_list': return node.content.map((item, index) => {
       const marker = node.type.name === 'ordered_list'

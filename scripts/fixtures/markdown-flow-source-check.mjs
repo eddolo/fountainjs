@@ -1,8 +1,12 @@
-import { CoreSchemaSpec, MarkdownImporter, MarkdownExporter, Schema, tokenizeCode } from '../../dist/index.js';
+import { CoreSchemaSpec, HTMLContainerExtension, MarkdownImporter, MarkdownExporter, Schema, tokenizeCode } from '../../dist/index.js';
 import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const containers = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } });
+  const preservedSection = ServerHTMLImporter.parse('<section id="release"><p>Portable section</p></section>', containers);
+  const reopenedSection = MarkdownImporter.parse(MarkdownExporter.export(preservedSection), containers, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow });
+  if (!reopenedSection.eq(preservedSection) || preservedSection.child(0).attrs.id !== 'release') throw new Error('Compiled optional HTML container handoff lost structure.');
   const recoveredCode = MarkdownImporter.parse('<div>\n\n```js\nx\n```\n\n```js\nx\n\n```\n\n</div>', schema, {
     parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
   });

@@ -8,6 +8,7 @@ import { parseFragment } from 'parse5';
 import {
   CoreSchemaSpec,
   HTMLExporter,
+  HTMLContainerExtension,
   MarkdownImporter,
   MarkdownExporter,
   Schema,
@@ -927,6 +928,22 @@ console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed
 }
 
 if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
+// Explicitly installed schema extension; never promote default-profile matches.
+{
+  const containers = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } });
+  const numbers = [152, 153, 154, 155, 159, 161, 174, 175, 184, 185, 186, 188, 189];
+  for (const number of numbers) for (const ending of ['\n', '\r\n']) {
+    const example = commonmarkSpec.tests.find(value => value.number === number);
+    const source = materializeTabs(example.markdown).replaceAll('\n', ending);
+    const options = { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, parseHTMLInline: ServerHTMLImporter.parseInline };
+    const document = MarkdownImporter.parse(source, containers, options);
+    const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
+    if (JSON.stringify(semanticProjection(HTMLExporter.export(document, { document: false }))) !== JSON.stringify(expected)) throw new Error(`Optional container projection disagrees with CommonMark ${number}.`);
+    const captured = MarkdownImporter.parseWithSource(source, containers, options);
+    if (MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== source) throw new Error(`Optional container source changed in ${number}.`);
+  }
+  console.log('Optional HTML containers: 26 reference-semantic and 26 exact-source checks; existing schema/profile scores unchanged.');
+}
 // The source-reprojecting adapter is a separate profile, not a replacement for
 // the identity-preserving profile. Require every reviewed case on both endings.
 {

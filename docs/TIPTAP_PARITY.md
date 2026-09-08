@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Optional HTML-container retention (2026-09-08, Unreleased): the modular schema can
+preserve safe section wrappers and supported attributes instead of flattening
+their structure. It adds 26 separate reference-semantic and 26 source checks,
+not a reclassification of default CommonMark results. Public opt-in, actual
+editing and reader evidence are described in [HTML_CONTAINERS.md](HTML_CONTAINERS.md).
+This does not establish complete HTML, CSS, authoring UI or product parity.
+
 Typed glossary DOCX handoff (2026-09-08, Unreleased): terms and descriptions now
 export as versioned Word controls and reopen from validated visible content.
 Nested definitions, supported rich blocks and external edits retain their roles;

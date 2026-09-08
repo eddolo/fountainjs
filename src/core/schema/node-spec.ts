@@ -48,6 +48,8 @@ export interface HTMLParseElement {
   readonly dataset: Readonly<Record<string, string | undefined>>;
   getAttribute(name: string): string | null;
   hasAttribute(name: string): boolean;
+  /** Optional enumeration for rules that must decline unsupported attributes. */
+  getAttributeNames?(): readonly string[];
 }
 
 /** Declarative HTML rule that can run without browser globals or a fake DOM. */
