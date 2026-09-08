@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Firefox audit follow-through (2026-09-08): the apparent selection failure was
+an invalidated interaction across a page reload, established from the original
+trace. Stable-document guards now detect that condition without hiding editor
+failures. Nine isolated three-engine repetitions and a separate recorded Firefox
+journey passed; editor and reader layouts were visually checked. Full sequential
+check: 1,451 tests / 115 files. No selection
+engine change or new parity claim is justified by this result.
+[Evidence and limitations](BROWSER_AUDIT_RELOADS.md).
+
 Preformatted newline correction (2026-09-08, Unreleased): streaming CRLF and
 initial-LF rules now respect protected text positions, empty slots and Markdown
 formatting boundaries. Full clean check: 1,447 tests / 114 files; 76 paragraph
@@ -7,7 +16,7 @@ reference/source contracts, with default 563 / block+inline 579 unchanged.
 The recorded journey and visually inspected editor/reader/mobile layouts retain
 the exact three lines and indentation. Chromium/WebKit passed; Firefox had one
 partial-selection/paste failure under load before three isolated passes. That
-intermittent failure remains open, not silently certified by reruns. See the
+failure was subsequently traced to a page reload, as documented above. See the
 [roadmap evidence and remaining limits](ROADMAP.md).
 
 Preformatted paragraph follow-through (2026-09-08, Unreleased): source-tagged soft

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Hardened the Markdown browser audit against page reloads between selection and
+  paste, with forced-reload sensitivity tests and a separate recorded Firefox
+  journey. Documented evidence that the earlier Firefox failure crossed a Vite
+  page restart during a concurrent rebuild. No runtime or public API changes.
+
 - Fixed preformatted CRLF normalization across protected text segments, including
   a CR entity followed by a physical Markdown newline. Optional `textRun`
   provenance preserves Markdown formatting boundaries; raw tags/comments also

@@ -24,6 +24,17 @@ import { htmlBlockFormatJourney } from './html-block-format-journey';
 import { issueTableHandoffJourney } from './issue-table-handoff-journey';
 import { markdownScopeJourney } from './markdown-scope-journey';
 import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-journey';
+import { inStableDocument } from './stable-document';
+
+test('guards editor actions against page reloads without suppressing failures', async ({ page }) => {
+  await expect(inStableDocument(page, 'Stable action', async () => 'kept')).resolves.toBe('kept');
+  const failure = new Error('Real editor failure');
+  await expect(inStableDocument(page, 'Failed action', async () => { throw failure; })).rejects.toBe(failure);
+  await expect(inStableDocument(page, 'Reloaded action', async () => { await page.reload(); })).rejects.toThrow(/page navigated during the interaction/);
+  const crossed = await inStableDocument(page, 'Reload and fail', async () => { await page.reload(); throw failure; }).catch(error => error);
+  expect(crossed.message).toMatch(/page navigated during the interaction/);
+  expect(crossed.cause).toBe(failure);
+});
 
 test('recovers paragraph HTML into editable blocks and a reopened reader', async ({ page }, info) => {
   await markdownParagraphRecoveryJourney(page, info);

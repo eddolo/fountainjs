@@ -1423,6 +1423,17 @@ written under
 `artifacts/manual-ui-audit/` for visual inspection and are intentionally not
 published in the package.
 
+Run build-backed suites sequentially in one checkout: `pnpm audit:ui` rebuilds
+the library, and a second suite using the live Vite server can reload mid-action
+when those files change. Do not run it alongside `pnpm check`, another audit,
+or a rebuild of that checkout. For concurrent runs, use separate checkouts and
+separate server ports. A changed editor after a page restart is not evidence
+about selection in the original editor. The Markdown recovery journey uses an
+explicit stable-document guard; forced-reload checks prove the guard fails the
+run, preserves real errors, and removes its event listener. To record the same
+journey in Firefox alone, run
+`pnpm exec playwright test -c playwright.audit.config.ts firefox-paragraph-recovery-audit.spec.ts`.
+
 The website includes [a ten-demo integration gallery](https://eddolo.github.io/fountainjs/demos.html) with dedicated working pages for React, plain DOM, the Web Component, Vue, Svelte, Angular, headless Node.js, and JSON boundaries with Python, Go, and Java. Framework recipes use the real supported adapter boundary; backend recipes are explicitly presented as portable JSON contracts rather than browser runtimes. Capability-focused labs are paired with matching developer/API explanations so live behavior and its integration contract can be read in either direction.
 
 ## Project status

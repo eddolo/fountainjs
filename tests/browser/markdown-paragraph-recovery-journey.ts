@@ -1,10 +1,22 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
+import { inStableDocument } from './stable-document';
 
 export async function markdownParagraphRecoveryJourney(page: Page, info: TestInfo): Promise<void> {
   const capture = async (name: string) => {
     await page.evaluate(async () => { await document.fonts.ready; window.scrollTo({ top: 0, behavior: 'instant' }); await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))); });
     await page.screenshot({ path: info.outputPath(name), fullPage: true });
   };
+  const replaceByPaste = async (html: string) => inStableDocument(page, 'Select all and paste converted HTML', async () => {
+    const surface = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+    await surface.click();
+    await page.keyboard.press('ControlOrMeta+a');
+    // Public paste event payload, not OS clipboard permission certification.
+    await surface.evaluate((element, value) => {
+      const event = new Event('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
+      element.dispatchEvent(event);
+    }, html);
+  });
   await page.goto('/demos/node-markdown.html');
   const source = page.getByLabel('Markdown input', { exact: true });
   await source.fill('Before <h2>Recovered heading</h2> After');
@@ -19,14 +31,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await expect(output.locator('pre')).toContainText('&lt;script&gt;');
   await page.goto('/issue-editor.html');
   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
-  await editor.click();
-  await page.keyboard.press('ControlOrMeta+a');
-  // Public paste event payload, not OS clipboard permission certification.
-  await editor.evaluate((element, value) => {
-    const event = new Event('paste', { bubbles: true, cancelable: true });
-    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
-    element.dispatchEvent(event);
-  }, html);
+  await replaceByPaste(html);
   const verify = async (surface: typeof editor) => {
     await expect(surface.locator('h2')).toHaveText('Recovered heading');
     await expect(surface.locator('p')).toHaveText(['Before', 'After', '']);
@@ -67,13 +72,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await source.fill('- Before <h2>Recovered list heading</h2> After\n\n- Second item');
   await expect(output.locator('pre')).toContainText('<p></p>');
   await page.goto('/issue-editor.html');
-  await editor.click();
-  await page.keyboard.press('ControlOrMeta+a');
-  await editor.evaluate((element, value) => {
-    const event = new Event('paste', { bubbles: true, cancelable: true });
-    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
-    element.dispatchEvent(event);
-  }, listHTML);
+  await replaceByPaste(listHTML);
   const verifyList = async (surface: typeof editor) => {
     await expect(surface.locator('li')).toHaveCount(2);
     await expect(surface.locator('li').first().locator('p')).toHaveText(['Before', 'After']);
@@ -109,13 +108,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Preformatted HTML became a code block');
   const preHTML = await output.locator('pre').innerText();
   await page.goto('/issue-editor.html');
-  await editor.click();
-  await page.keyboard.press('ControlOrMeta+a');
-  await editor.evaluate((element, value) => {
-    const event = new Event('paste', { bubbles: true, cancelable: true });
-    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
-    element.dispatchEvent(event);
-  }, preHTML);
+  await replaceByPaste(preHTML);
   const verifyPre = async (surface: typeof editor) => {
     // String-based toHaveText normalizes whitespace and would miss collapsed LF
     // or indentation. Compare raw text and the actual whitespace rendering mode.

@@ -5,6 +5,15 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Firefox audit follow-through (2026-09-08): the retained trace proves a document
+reload between Select All and paste while another audit rebuilt the shared
+checkout. This specific failure is an invalidated run, not evidence of a
+selection-engine defect. Added a tested stable-document guard, isolated
+three-engine repetitions (nine passed) and a recorded Firefox journey with
+visually inspected results. Full sequential check: 1,451 tests / 115 files.
+No editor code or capability totals changed.
+See [the trace timeline, checks and audit isolation rules](BROWSER_AUDIT_RELOADS.md).
+
 Preformatted newline correction (2026-09-08, Unreleased): CRLF pairs spanning
 protected text nodes now remain a single newline. Import-local `textRun`
 provenance respects raw tags/comments and generated Markdown mark boundaries;
@@ -18,7 +27,7 @@ narrow-screen screenshots and recording contact sheet were visually inspected.
 Chromium and WebKit passed. Firefox initially pasted into only the first block
 after Select All during a loaded run, then passed three isolated reruns without
 a code change. Preserve the initial failure under `artifacts/preformatted-crlf-browsers`
-and investigate selection timing before calling the journey stable under load.
+for evidence; the reload investigation and guarded reruns are documented above.
 An overlapping audit rebuild disrupted the first full check's Angular import;
 the complete sequential rerun passed. Do not rebuild `dist` while tests consume it.
 Cross-block Markdown emphasis still loses an empty reference wrapper; its
