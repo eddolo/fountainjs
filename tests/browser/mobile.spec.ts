@@ -1,4 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { webComponentFormJourney } from './web-component-form-journey';
+
+test('submits resets and disables a native form-associated Web Component on mobile', async ({ page }, info) => {
+  await webComponentFormJourney(page, info);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+});
 
 test('uses Angular campaign controls on a touch viewport and preserves history across view remount', async ({ page }, info) => {
   await page.goto('/demos/angular-media.html');

@@ -373,7 +373,9 @@ const limits = Object.freeze({
   // add ~2.3 / 1.8 KiB; measured 1404.8 / 1167.7. No entry/CSS cap changes.
   // Scope-sensitive source capture adds ~0.2 KiB; measured just above 1405.
   // Only the aggregate ESM ceiling changes; entry/CSS/CJS caps stay unchanged.
-  'all ESM runtime code': 1406 * kibibyte,
+  // Native Web Component form integration adds ~2.2 / 1.9 KiB ESM/CJS.
+  // Measured 1407.2 / 1169.7; individual entry and CSS caps remain unchanged.
+  'all ESM runtime code': 1408 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -396,7 +398,7 @@ const limits = Object.freeze({
   // Same newline-stream correction: measured 1143.5 KiB.
   // Same definition-list feature: measured 1158.3 KiB CJS (+~4.4 KiB).
   // Same content-control projection: 1159.2 KiB. ESM/CSS/performance caps unchanged.
-  'all CommonJS runtime code': 1168 * kibibyte,
+  'all CommonJS runtime code': 1170 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

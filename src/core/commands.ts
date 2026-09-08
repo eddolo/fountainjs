@@ -470,10 +470,9 @@ export function deleteForward(editor: Editor): boolean {
 export function setContent(editor: Editor, content: Node): boolean {
   if (content.type !== editor.state.schema.topNodeType) throw new Error('Invalid content');
   const transaction = editor.state.createTransaction()
-    .replace(0, editor.state.doc.childCount, content.content)
+    .replaceDocument(content)
     .setMeta('content$replace', true);
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 /** Inserts a parsed document fragment while preserving inline marks and block structure. */

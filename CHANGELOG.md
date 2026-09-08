@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 0.4.0-beta.2 — Document retention and workflow checkpoint
+
+This is an unfinished public beta, not completed ProseMirror/Tiptap parity.
+Full local checks pass 1,745 tests. The latest five-configuration native-form
+browser run passed four configurations and timed out in desktop WebKit after
+a button detached; this checkpoint does not certify that journey as stable.
+An isolated pre-release WebKit rerun passed; the intermittent failure is retained.
+CommonMark, native Word page fidelity and complete form validation remain open.
+
+- Added opt-in native Web Component form submission/reset/state restoration and
+  fieldset disabling, with a public local FormData workshop. Full native-input
+  validation/autofill parity is not claimed. Web Component value assignments and
+  `setContent` now replace root metadata as well as content and report rejected updates.
+
 - Enabling whole-document Markdown HTML conversion no longer forces canonical
   rewriting of unrelated blocks when no HTML conversion runs. Actual document
   HTML scopes, including refused projections, still disable unsafe block splicing.

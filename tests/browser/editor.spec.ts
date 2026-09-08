@@ -16,6 +16,11 @@ import { docxControlsJourney } from './docx-controls-journey';
 import { docxGlossaryJourney } from './docx-glossary-journey';
 import { htmlContainerJourney, htmlContainerAuthoringJourney } from './html-container-journey';
 import { markdownDocumentJourney } from './markdown-document-journey';
+import { webComponentFormJourney } from './web-component-form-journey';
+
+test('submits resets and disables a native form-associated Web Component', async ({ page }, info) => {
+  await webComponentFormJourney(page, info);
+});
 
 test('converts document-wide HTML scopes with source edit undo and explicit layout differences', async ({ page }, info) => {
   await markdownDocumentJourney(page, info);

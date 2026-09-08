@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Web Component forms (2026-09-08, Unreleased): opt-in native FormData submission,
+reset, state-restoration handling and fieldset disabling now have a public
+workshop and cross-browser journey. Whole-document value updates also retain
+root metadata correctly. Required/custom validity, label activation and actual
+autofill/session-restoration certification remain open; see
+[WEB_COMPONENT_FORMS.md](WEB_COMPONENT_FORMS.md).
+
 Whole-document HTML scopes (2026-09-08, Unreleased): optional root conversion
 removes the paragraph-local scope limitation while retaining Fountain's model
 and safety defaults. A separate 599/652 combined-container reference profile is

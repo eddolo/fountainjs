@@ -12,10 +12,11 @@ Underneath those ready-made features is a modular editing engine: a typed docume
 
 > `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
 
-`0.4.0-beta.1` is published as a public beta, not a claim of completed parity.
-Install that release explicitly with `npm install fountainjs-editor@0.4.0-beta.1`.
+`0.4.0-beta.2` is the public-beta checkpoint, not a claim of completed parity.
+After npm approval, install it explicitly with `npm install fountainjs-editor@0.4.0-beta.2`.
 The intended default tag is `latest`; npm tag changes require separate maintainer
-approval. Newer changes listed under Unreleased are not in this package.
+approval. See the [checkpoint and known limitations](docs/RELEASE_0_4_0_BETA_2.md).
+Newer changes listed under Unreleased are not in this package.
 Try the [real-world workflow demos](https://eddolo.github.io/fountainjs/workflows.html):
 a GitLab-style issue editor and a Todoist-style task workspace, with linked
 [API walkthroughs](docs/WORKFLOW_DEMOS.md). These run the current development

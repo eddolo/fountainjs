@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CoreSchemaSpec, Selection, createEditor, historyPlugin, undo, redo, ReplaceDocumentStep } from '../src';
+import { CoreSchemaSpec, Selection, Plugin, createEditor, historyPlugin, undo, redo, ReplaceDocumentStep, setContent } from '../src';
 
 function setup() {
   return createEditor({ schema: CoreSchemaSpec, plugins: [historyPlugin], content: {
@@ -7,6 +7,23 @@ function setup() {
   } });
 }
 describe('whole-document replacement', () => {
+  it('routes the public setContent command through whole-document replacement', () => {
+    const editor = setup();
+    const original = editor.getJSON();
+    const next = editor.state.doc.withAttrs({ experiment: 'replacement' });
+    expect(setContent(editor, next)).toBe(true);
+    expect(editor.getJSON()).toEqual(next.toJSON());
+    expect(undo(editor)).toBe(true);
+    expect(editor.getJSON()).toEqual(original);
+    editor.destroy();
+  });
+  it('reports rejected setContent commands instead of claiming a replacement happened', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [new Plugin({ filterTransaction: () => false })] });
+    const original = editor.getJSON();
+    expect(setContent(editor, editor.state.doc.withAttrs({ rejected: true }))).toBe(false);
+    expect(editor.getJSON()).toEqual(original);
+    editor.destroy();
+  });
   it('replaces rather than merges root attributes, and restores the entire snapshot with history', () => {
     const editor = setup();
     const original = editor.getJSON();

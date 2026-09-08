@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { HTMLContainerWorkshop } from './HTMLContainerWorkshop';
+import { WebComponentFormDemo } from './WebComponentFormDemo';
 import {
   HTMLExporter,
   HTMLContainerExtension,
@@ -476,8 +477,9 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
   }, [demo]);
 
   return <div className="demo-workspace">
-    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>The editable region below is a registered &lt;fountain-demo-editor&gt;.</i></div><DemoControls editor={editor} /><div className="element-editor" ref={mount} />{demo.slug === 'angular-media' && <p className="headless-status" role="status">{uploadStatus || 'Paste or drop an image, audio, video, or file to run the host upload adapters.'}</p>}</section>
+    <section className="demo-surface"><div className="surface-label"><span>LIVE {demo.surface.toUpperCase()}</span><i>The editable region below is a registered &lt;fountain-demo-editor&gt;.</i></div>{demo.slug === 'java-approval-workflow' && <p><a href="#native-form">Try native HTML form submission and reset →</a></p>}<DemoControls editor={editor} /><div className="element-editor" ref={mount} />{demo.slug === 'angular-media' && <p className="headless-status" role="status">{uploadStatus || 'Paste or drop an image, audio, video, or file to run the host upload adapters.'}</p>}</section>
     <OutputPanel document={currentDocument} />
+    {demo.slug === 'java-approval-workflow' && <WebComponentFormDemo />}
   </div>;
 }
 

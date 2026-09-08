@@ -1,0 +1,13 @@
+.native-form { padding: 24px; margin-top: 24px; grid-column: 1 / -1; scroll-margin-top: 100px; }
+.native-form h2 { margin-top: 0; }
+.native-form p { line-height: 1.55; }
+.native-form label { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.native-form fieldset { min-inline-size: 0; padding: 16px; margin: 16px 0; border: 1px solid #cfc9dc; border-radius: 10px; }
+.native-form legend { padding: 0 8px; font-size: 13px; font-weight: 600; }
+.native-form input:not([type=checkbox]) { padding: 9px 12px; border: 1px solid #b7aecb; border-radius: 6px; max-width: 100%; box-sizing: border-box; font: inherit; }
+.demo-surface.native-form .fountain-editor { min-height: 150px; max-height: 320px; padding: 20px; background: white; border: 1px solid #d6d0e1; border-radius: 8px; }
+.native-form .fountain-editor[inert] { opacity: .65; }
+.native-form button { padding: 10px 14px; margin: 0 4px 6px 0; border: 1px solid #b7aecb; border-radius: 7px; background: white; color: #201b31; font: inherit; cursor: pointer; }
+.native-form button:hover { background: #e6dff3; color: #201b31; }
+.native-form pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 16px; background: #fff; border: 1px solid #d6d0e1; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+.native-form :focus-visible { outline: 2px solid #7044df; outline-offset: 3px; }
