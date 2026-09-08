@@ -1,5 +1,11 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Whole-container Markdown boundary audit (2026-09-08): eight pending fixtures and
+48 fallback/source checks now protect the unsupported preformatted flow cases.
+An executable collision proof establishes that earlier parser provenance is
+required. No runtime change, new semantic match or parity percentage increase.
+[Boundary evidence and implementation plan](MARKDOWN_FLOW_PROVENANCE.md).
+
 Firefox audit follow-through (2026-09-08): the apparent selection failure was
 an invalidated interaction across a page reload, established from the original
 trace. Stable-document guards now detect that condition without hiding editor

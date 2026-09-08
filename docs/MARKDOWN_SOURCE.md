@@ -248,6 +248,9 @@ unclosed or cross-paragraph preformatted scopes, scripts and foreign content
 remain explicit fallbacks. Both an unsupported opening and its orphan closing
 tag remain literal; they are not silently consumed. Whole-container raw-text
 projection still needs a separate source-aware design.
+The [whole-container boundary audit](MARKDOWN_FLOW_PROVENANCE.md) demonstrates
+why finished block nodes are insufficient and records the proposed smallest
+change, pending reference fixtures and implementation acceptance criteria.
 
 **Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph

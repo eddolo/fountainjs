@@ -1,0 +1,54 @@
+{
+  "standard": "CommonMark 0.31.2",
+  "status": "pending-source-aware-flow",
+  "cases": [
+    {
+      "id": "table-pre",
+      "source": "<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>\n",
+      "referenceHTML": "<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>\n",
+      "missingBoundary": "The closing pre token is inside an already-projected Markdown paragraph."
+    },
+    {
+      "id": "soft-break",
+      "source": "<div><pre>\n\nline one\nline two\n\n</pre></div>\n",
+      "referenceHTML": "<div><pre>\n<p>line one\nline two</p>\n<p></pre></div></p>\n",
+      "missingBoundary": "Physical LF and literal spaces have the same final paragraph text."
+    },
+    {
+      "id": "list",
+      "source": "<div><pre>\n\n- one\n- two\n\n</pre></div>\n",
+      "referenceHTML": "<div><pre>\n<ul>\n<li>one</li>\n<li>two</li>\n</ul>\n<p></pre></div></p>\n",
+      "missingBoundary": "List textContent joins items without the renderer's structural newlines."
+    },
+    {
+      "id": "fenced-code",
+      "source": "<div><pre>\n\n```\nx\n```\n\n</pre></div>\n",
+      "referenceHTML": "<div><pre>\n<pre><code>x\n</code></pre>\n<p></pre></div></p>\n",
+      "missingBoundary": "Generated code wrappers and their final terminator differ from authored raw pre markup."
+    },
+    {
+      "id": "heading",
+      "source": "<div><pre>\n\n# Heading\n\n</pre></div>\n",
+      "referenceHTML": "<div><pre>\n<h1>Heading</h1>\n<p></pre></div></p>\n",
+      "missingBoundary": "Heading structure and generated wrapper boundaries must not become a bare textContent string."
+    },
+    {
+      "id": "hard-break",
+      "source": "<div><pre>\n\nline one  \nline two\n\n</pre></div>\n",
+      "referenceHTML": "<div><pre>\n<p>line one<br />\nline two</p>\n<p></pre></div></p>\n",
+      "missingBoundary": "A hard-break atom and the renderer's following LF are distinct from a physical soft break."
+    },
+    {
+      "id": "entity-crlf",
+      "source": "<div><pre>\n\nA&#13;\nB\n\n</pre></div>\n",
+      "referenceHTML": "<div><pre>\n<p>A\r\nB</p>\n<p></pre></div></p>\n",
+      "missingBoundary": "Decoded CR and physical LF normalize as a stream before becoming preformatted model text."
+    },
+    {
+      "id": "unclosed",
+      "source": "<div><pre>\n\nline one\nline two\n",
+      "referenceHTML": "<div><pre>\n<p>line one\nline two</p>\n",
+      "missingBoundary": "End-of-container recovery requires open-scope state, not a guessed closing tag."
+    }
+  ]
+}

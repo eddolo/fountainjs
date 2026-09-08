@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Audited whole-container preformatted Markdown recovery and added eight pending
+  reference fixtures with 48 safe-fallback/source checks. An executable collision
+  proof shows why recovery requires earlier source provenance. This adds no
+  runtime/API changes or CommonMark conformance claims.
+
 - Hardened the Markdown browser audit against page reloads between selection and
   paste, with forced-reload sensitivity tests and a separate recorded Firefox
   journey. Documented evidence that the earlier Firefox failure crossed a Vite

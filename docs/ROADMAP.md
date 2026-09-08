@@ -5,6 +5,14 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Whole-container Markdown audit (2026-09-08): proved that different physical
+newline/space inputs currently produce identical complete flow-node streams.
+Recovery therefore needs earlier parser provenance, not a `textContent` patch.
+Eight fixed reference fixtures now exercise 48 LF/CRLF safe-fallback, rollback
+and source-retention checks across three adapter routes. No capability gain or
+runtime/API change is claimed; the 563/579 semantic baselines remain unchanged.
+See [the concrete boundary design and acceptance criteria](MARKDOWN_FLOW_PROVENANCE.md).
+
 Firefox audit follow-through (2026-09-08): the retained trace proves a document
 reload between Select All and paste while another audit rebuilt the shared
 checkout. This specific failure is an invalidated run, not evidence of a
