@@ -1,5 +1,46 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Recursive follow-through (Unreleased): `readBlockSources()` now captures
+import-local list/item/quote boundaries from the existing parser, with deferred
+tightness, ordered starts, raw HTML, empty model placeholders and explicit
+unsupported blocks. The separate source-projection adapter consumes these
+events without serializing arbitrary finished nodes. Child correspondence,
+custom metadata, duplicate nodes and depth/node limits are checked. A reference
+failure exposed nested code-language leakage onto the enclosing pre; both HTML
+importers now inspect only a direct code child. The strict oracle passes 46
+LF/CRLF exact-code/source contracts and 16 complete nested-container semantic/
+source contracts. Corpus scores and the identity-preserving flow contract stay
+unchanged. Task lists, inline atoms and omitted outer wrappers remain unresolved.
+
+The preceding commit's Linux browser CI (run 34200671647) failed the list-first
+code editing test in WebKit on all retries (552 passed, 14 skipped, one failed).
+Inspection of its retained trace led to a stronger label-area click test. That
+test reproduced lost code input locally in Firefox and WebKit, despite the
+editor having focus. The syntax plugin now explicitly places a code caret for
+its generated label area. Centre/label checks pass in all three desktop engines;
+the hosted Linux rerun remains a separate requirement, not proven by Windows.
+Original failure artifacts are retained under `artifacts/list-code-label-focus-before/`
+and the downloaded `artifacts/prior-ci-playwright-report/`.
+
+Final local verification: full sequential `pnpm check` passes 1,553 tests / 121
+files, including compiled Node/workerd, headless, packaging and performance
+checks. Fifteen targeted checks pass across Chromium, Firefox and WebKit:
+nested recovery, label handoff, prior paragraph recovery, and centre/label-area
+code clicks. Two separate recorded journeys pass; editor/reader screenshots,
+narrow layouts and both recording overviews were inspected. The initial
+structural screenshot caught smooth scrolling mid-capture; capture now uses
+instant scroll plus two animation frames, and the corrected images were checked.
+Final evidence: `artifacts/structural-label-final-browser/`,
+`artifacts/structural-label-final-recorded/`,
+`artifacts/structural-final-regression-browser/`, and
+`artifacts/list-code-label-focus-after/`. Production site build passes.
+The optional source-tree API changes only the Markdown importer declarations;
+its snapshot was reviewed. Measured aggregate code is 1,385.7 KiB ESM and
+1,151.4 KiB CJS, with explicit 1,386/1,152 KiB ceilings. Individual entry,
+CSS and performance budgets are unchanged; no dependency was added.
+Viewport emulation and synthetic public paste events are not physical-device
+or OS clipboard certification. Hosted Linux confirmation remains pending.
+
 Opaque-label follow-through (Unreleased): the former code-language schema
 restriction is now removed for whitespace-free string metadata. Full fence info
 is decoded before its first word is selected; canonical label escaping preserves

@@ -133,6 +133,16 @@ export function checkMarkdownFlowBoundaries({
     ['empty-code', '```\n```'], ['blank-code', '```\n\n```'],
     ['literal-code', '```\n<b>x</b> &amp; *y*\n```'],
     ['heading-mark', '# **Title**'],
+    ['loose-list', '- one\n\n- two'],
+    ['ordered-list', '3. one\n4. two'],
+    ['empty-list-item', '-\n- two'],
+    ['nested-list', '- one\n  - nested\n  - second\n- two'],
+    ['list-quote', '- one\n\n  > quoted\n  > line\n\n- two'],
+    ['quote-list', '> - one\n> - two'],
+    ['nested-code', '- one\n\n  ```js\n  x < y\n  ```\n\n- two'],
+    ['list-heading', '- # Title\n- item'],
+    ['nested-quote', '> first\n>\n> > second'],
+    ['empty-quote', '>'],
   ].map(([id, body]) => ({ id, source: `<div><pre>\n\n${body}\n\n</pre></div>\n` }))];
   let textBlockChecks = 0;
   for (const test of textBlockCases) for (const ending of ['\n', '\r\n']) {
@@ -143,7 +153,7 @@ export function checkMarkdownFlowBoundaries({
       onHTMLFlowFallback: issue => fallbacks.push(issue),
     });
     assert.equal(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown, source);
-    if (test.id === 'list' || test.id === 'hard-break') {
+    if (test.id === 'hard-break') {
       assert.ok(fallbacks.length, `${test.id}: nested containers/atoms still require structural support`);
       assert.deepEqual(imported.document.toJSON(), MarkdownImporter.parse(source, schema).toJSON());
       continue;
@@ -156,5 +166,23 @@ export function checkMarkdownFlowBoundaries({
     else assert.notDeepEqual(actual, expected, `${test.id}: omitted outer div remains an explicit structural mismatch`);
     textBlockChecks++;
   }
-  console.log(`Explicit text-block source flow: ${textBlockChecks} LF/CRLF reference-code/source contracts. Paragraphs, headings and code supported; outer-div mismatches remain, lists/atoms still refused.`);
+  console.log(`Explicit structural source flow: ${textBlockChecks} LF/CRLF reference-code/source contracts. Paragraphs, headings, code and list/quote nesting supported; outer-div mismatches remain, atoms still refused.`);
+  let containerChecks = 0;
+  for (const body of ['- one\n- two', '- one\n\n- two', '3. one\n4. two',
+    '- one\n  - nested\n  - second\n- two', '- one\n\n  > quoted\n  > line\n\n- two',
+    '> - one\n> - two', '- # Title\n- item', '> first\n>\n> > second']) {
+    for (const ending of ['\n', '\r\n']) {
+      const source = `<blockquote>\n\n${body}\n\n</blockquote>\n`.replaceAll('\n', ending);
+      const fallbacks = [];
+      const imported = MarkdownImporter.parseWithSource(source, schema, {
+        parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: issue => fallbacks.push(issue),
+      });
+      assert.equal(fallbacks.length, 0, `${body}: supported container projection`);
+      assert.deepEqual(semanticProjection(HTMLExporter.export(imported.document, { document: false })),
+        semanticProjection(referenceRenderer.render(referenceParser.parse(source))), `${body}: full list/quote reference structure`);
+      assert.equal(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown, source);
+      containerChecks++;
+    }
+  }
+  console.log(`Structural source flow: ${containerChecks} LF/CRLF full reference-structure and exact-source contracts outside pre.`);
 }

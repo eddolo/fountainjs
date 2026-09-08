@@ -2,7 +2,7 @@ import { Decoration, DecorationSet } from '../../core/decoration';
 import type { Editor } from '../../core/editor';
 import { Plugin } from '../../core/plugin';
 import type { Node } from '../../core/schema';
-import { NodeSelection } from '../../core/selection';
+import { NodeSelection, Selection } from '../../core/selection';
 import type { EditorState } from '../../core/state';
 import { getNodeAtPath } from '../../core/transaction/path';
 import { setNodeAttributes } from '../../core/structure-commands';
@@ -253,7 +253,30 @@ function collectCodeDecorations(state: EditorState, config: SyntaxHighlightConfi
 }
 
 export function createSyntaxHighlightPlugin(config: SyntaxHighlightConfig = {}): Plugin {
-  return new Plugin({ props: { decorations: (state) => collectCodeDecorations(state, config) } });
+  return new Plugin({ props: {
+    decorations: (state) => collectCodeDecorations(state, config),
+    handleClick(editor, event) {
+      // The unselectable, wrapping label is generated CSS, not document text.
+      // Firefox/WebKit can leave a caret outside the code when it is clicked.
+      // Resolve only that label area; ordinary text clicks and modified range
+      // selection remain native. No browser globals are touched during import.
+      if (!editor.editable || event.button !== 0 || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey
+        || typeof Element === 'undefined' || !(event.target instanceof Element)) return false;
+      const pre = event.target.closest<HTMLElement>('pre.fjs-code-block[data-fountain-path]');
+      const code = pre?.querySelector<HTMLElement>(':scope > code');
+      if (!pre || event.target !== pre || !code || event.clientY >= code.getBoundingClientRect().top) return false;
+      try {
+        const path = (pre.dataset.fountainPath ?? '').split('.').map(Number);
+        if (!path.length || path.some(index => !Number.isSafeInteger(index) || index < 0)) return false;
+        const node = getNodeAtPath(editor.state.doc, path);
+        if (node.type.name !== 'code_block' || node.content.some(child => !child.isText)) return false;
+        pre.closest<HTMLElement>('[contenteditable="true"]')?.focus({ preventScroll: true });
+        editor.dispatch(editor.state.createTransaction().setSelection(node.childCount
+          ? new Selection([...path, 0], 0) : new NodeSelection(editor.state.doc, path)));
+        return true;
+      } catch { return false; }
+    },
+  } });
 }
 
 export interface ActiveCodeBlock {

@@ -15,6 +15,7 @@ describe('source-aware heading and code HTML flow', () => {
     ['blank fenced code', '```\n\n```', '\n\n'],
     ['literal code', '```\n<b>x</b> &amp; *y*\n```', '<b>x</b> &amp; *y*\n\n'],
     ['mixed text blocks', '# Recovery note\n\nfirst line\n  second line\n\n```\nconst n = 1;\n```', 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n'],
+    ['tight list', '- one\n- two', '\none\ntwo\n\n'],
   ];
   it.each(cases)('recovers %s without confusing syntax with rendered text', (_name, body, expected) => {
     for (const ending of ['\n', '\r\n']) {
@@ -81,7 +82,7 @@ describe('source-aware heading and code HTML flow', () => {
     expect(doc.toJSON()).toEqual(MarkdownImporter.parse(source, custom).toJSON());
   });
 
-  it.each(['- one\n- two', 'line  \nbreak', '# ![image](https://example.test/a.png)'])('refuses unsupported structure: %s', body => {
+  it.each(['- [x] task', 'line  \nbreak', '# ![image](https://example.test/a.png)'])('refuses unsupported structure: %s', body => {
     const source = wrap(body);
     const fallback = vi.fn();
     const doc = MarkdownImporter.parse(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });

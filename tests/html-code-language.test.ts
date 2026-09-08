@@ -5,6 +5,13 @@ import { ServerHTMLImporter } from '../src/html/server';
 
 describe('HTML code language class tokens', () => {
   const schema = new Schema(CoreSchemaSpec);
+  it('does not borrow a nested component language for the surrounding pre', () => {
+    for (const parser of [HTMLImporter, ServerHTMLImporter]) {
+      const html = '<pre><ul><li>notes<pre><code class="language-python">x</code></pre></li></ul></pre>';
+      expect(parser.parse(html, schema).child(0).attrs.language).toBe('text');
+      expect(parser.parse(html.replace('<pre>', '<pre data-language="log">'), schema).child(0).attrs.language).toBe('log');
+    }
+  });
   it.each(['c++', 'c#', 'objective-c', 'my.dsl', 'python', 'rust', 'x'.repeat(100)])('retains the complete %s label in both importers', language => {
     const html = `<pre><code class="highlight language-${language} another">x\n</code></pre>`;
     for (const parser of [HTMLImporter, ServerHTMLImporter]) {

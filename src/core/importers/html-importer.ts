@@ -151,7 +151,7 @@ function configuredNode(
   return null;
 }
 
-function directChild(element: HTMLElement, tagName: string): HTMLElement | null {
+function directChild(element: Element, tagName: string): HTMLElement | null {
   return Array.from(element.children).find((child): child is HTMLElement => (
     child instanceof HTMLElement && child.tagName.toLowerCase() === tagName
   )) ?? null;
@@ -545,7 +545,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     return [schema.node('blockquote', {}, children.length ? children : [paragraph(element, schema)])];
   }
   if (tag === 'pre') return [schema.node('code_block', {
-    language: element.getAttribute('data-language') || element.querySelector('code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
+    language: element.getAttribute('data-language') || directChild(element, 'code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
     lineNumbers: true,
   }, [schema.text(element.textContent ?? '')])];
   if (tag === 'hr') return [schema.node('horizontal_rule')];

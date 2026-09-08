@@ -3,6 +3,14 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const nested = MarkdownImporter.parse('<blockquote>\n\n3. first\n   - child\n4. > quoted\n\n</blockquote>', schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+  });
+  const list = nested.child(0).child(0);
+  if (list.type.name !== 'ordered_list' || list.attrs.start !== 3
+    || list.child(0).child(1).type.name !== 'bullet_list' || list.child(1).child(0).type.name !== 'blockquote') {
+    throw new Error('Compiled structural flow lost list/quote nesting or the ordered start.');
+  }
   const inspect = source => {
     let context;
     MarkdownImporter.parse(`<div><pre>\n\n${source}\n\n</pre></div>`, schema, {

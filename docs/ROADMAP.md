@@ -5,6 +5,13 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Recursive Markdown follow-through (2026-09-08, Unreleased): parser-derived
+list/item/quote source events now feed the explicit HTML recovery adapter.
+Tight/loose lists, ordered starts and nested quote/list combinations pass the
+new reference contracts. Custom data and altered projections still roll back;
+tasks, inline atoms and outer-wrapper fidelity remain open. See
+[the exact boundary](MARKDOWN_SOURCE.md#explicit-text-block-source-flow-recovery).
+
 Opaque code-label correction (2026-09-08, Unreleased): the earlier default-schema
 fence-label rejection is resolved. Whitespace-free labels are metadata, including
 long names and HTML punctuation. Fence entities/escapes decode before language

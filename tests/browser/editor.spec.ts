@@ -25,6 +25,11 @@ import { issueTableHandoffJourney } from './issue-table-handoff-journey';
 import { markdownScopeJourney } from './markdown-scope-journey';
 import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-journey';
 import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
+import { markdownStructuralRecoveryJourney } from './markdown-structural-recovery-journey';
+
+test('recovers nested Markdown lists and quotes through an editor and reader', async ({ page }, info) => {
+  await markdownStructuralRecoveryJourney(page, info);
+});
 
 test('edits opaque code labels and reopens them safely in a reader', async ({ page }, info) => {
   await markdownCodeLabelsJourney(page, info);
@@ -3554,7 +3559,7 @@ test('pastes empty formatting and applies it to subsequently typed text', async 
   expect(marks).toEqual(['strong']);
 });
 
-test('pastes and edits list-first code without inventing a blank paragraph', async ({ page }) => {
+for (const clickTarget of ['centre', 'label'] as const) test(`pastes and edits list-first code without inventing a blank paragraph${clickTarget === 'label' ? ' from its label area' : ''}`, async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
   await editor.evaluate(target => {
@@ -3569,7 +3574,8 @@ test('pastes and edits list-first code without inventing a blank paragraph', asy
   });
   await expect(editor.locator('li > p')).toHaveCount(0);
   await expect(editor.locator('li > pre')).toHaveText('literal');
-  await editor.locator('pre').click();
+  await editor.locator('pre').click(clickTarget === 'label' ? { position: { x: 40, y: 24 } } : {});
+  await expect(editor).toBeFocused();
   await page.keyboard.press('End');
   await page.keyboard.type(' edited');
   await expect(editor.locator('li > pre')).toHaveText('literal edited');

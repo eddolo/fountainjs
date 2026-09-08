@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Recursive source recovery (2026-09-08, Unreleased): the optional Markdown/HTML
+adapter now uses parser-derived list/quote events, including ordered starts and
+tight/loose item boundaries. Reference checks cover both exact preformatted
+content and complete nested structure outside pre. Custom attributes, modified
+projections and unsupported atoms remain explicit refusals. This is progress on
+the remaining HTML/Markdown boundary, not full conformance or completed parity.
+
 Opaque code labels (2026-09-08, Unreleased): previously rejected long/quoted
 labels now remain safely serialized string metadata. Fence decoding order and
 canonical escape retention are corrected, and prototype-like labels no longer

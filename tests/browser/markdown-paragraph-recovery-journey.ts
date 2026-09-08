@@ -146,8 +146,8 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
   const flowHTML = await output.locator('pre').innerText();
   await capture('paragraph-flow-conversion.png');
-  await source.fill('<div><pre>\n\n- one\n- two\n\n</pre></div>');
-  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('lists and other containers need structural projection');
+  await source.fill('<div><pre>\n\n- [x] task\n\n</pre></div>');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('unsupported block syntax');
   await expect(output.locator('pre')).toContainText('&lt;div&gt;');
   await page.goto('/issue-editor.html');
   await replaceByPaste(flowHTML);

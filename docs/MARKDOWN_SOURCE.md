@@ -357,8 +357,8 @@ across both lazy inspection methods, without replaying host adapters.
 The adapter checks pristine node content, marks and supported attributes before
 applying syntax-derived wrappers. It does not HTML-export arbitrary original
 nodes. Custom block attributes, including schema defaults and assigned IDs,
-modified adapter output, ambiguous block correspondence, lists, nested
-containers and inline atoms remain refusals with inert rollback. Original
+modified adapter output, ambiguous block correspondence, unsupported container
+types and inline atoms remain refusals with inert rollback. Original
 identity-preserving `parseFlow` and paragraph-only `parseParagraphFlow` are
 unchanged. Successful conversion reports `text-block-flow-projection` plus
 applicable HTML/preformatted losses; heading/code grouping and identity can
@@ -366,13 +366,35 @@ change inside an HTML `pre` scope.
 
 Try **Recover Markdown text across HTML blocks** in the conversion demo. This
 replaces its ordinary block-flow option, and stays off by default. The reference
-gate checks 24 LF/CRLF exact-code/source contracts, including headings, literal
-code, empty/blank fences and generated newlines. Only the existing table/pre
+gate checks 46 LF/CRLF exact-code/source contracts, including headings, literal
+code, empty/blank fences, nested lists/quotes and generated newlines. The table/pre
 case also matches full wrapper structure; omitted outer `div` elements remain
 strict mismatches. The 563/652 default and 579/652 block+inline semantic baselines
 are unchanged. This is not full CommonMark or lossless HTML support.
 
+Unreleased recursive boundary: optional `context.readBlockSources()` returns a
+cached frozen tree of `MarkdownHTMLFlowBlockSource`. Direct text sources reuse
+the existing snapshots. `container` entries describe parser-derived `ul`, `ol`,
+`li` and `blockquote` boundaries, ordered `start`, current `blocks`, and recursive
+`children`. `html` retains raw block source; `empty` distinguishes required editor
+placeholders from authored empty paragraphs; `unsupported` keeps unhandled
+syntax explicit. These are import-local references, not document IDs or a new
+document AST. The core imports no HTML parser or DOM runtime.
+
+The adapter uses this tree when supplied, while retaining support for older
+direct-text contexts. Tight/loose item paragraphs are finalized from sibling
+source boundaries before capture. Container children must still correspond to
+the original node references; custom attributes, IDs, modified adapter output,
+task lists and atoms decline with complete inert rollback. Node/depth limits
+also apply to the recursive projection. No host callback is replayed merely to
+inspect the tree. Sixteen LF/CRLF contracts additionally compare complete
+list/quote reference structure outside `pre`, not just extracted text. Empty
+items still require an editable model paragraph, so this is not a promise of
+literal CommonMark AST equality. Browser/server HTML import reads a pre's code
+language from a direct code child, never an unrelated nested list/component.
+
 ### Opaque code-language labels
+
 
 The supplied code schema now accepts whitespace-free string labels without the
 former 50-character/HTML-punctuation restriction. Labels are document metadata,

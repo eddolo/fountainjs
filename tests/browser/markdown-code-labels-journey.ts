@@ -28,7 +28,9 @@ export async function markdownCodeLabelsJourney(page: Page, info: TestInfo): Pro
   };
   await verify(editor, false);
   for (const [index, label] of labels.entries()) await expect(editor.locator('pre').nth(index)).toHaveAttribute('title', label);
-  await editor.locator('pre').first().click();
+  // The generated label is not document text, but clicking it must still let
+  // an author enter the code instead of typing at a stale/outside selection.
+  await editor.locator('pre').first().click({ position: { x: 40, y: 24 } });
   await page.keyboard.press('End');
   await page.keyboard.type(' edited');
   await verify(editor, true);

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Fixed code-label clicks leaving typing outside the code in Firefox/WebKit.
+  The syntax plugin maps its generated label area to the start of the code;
+  normal text clicks and modified-selection gestures remain browser-owned.
+
+- Added import-local list/quote source trees to the opt-in Markdown HTML recovery
+  adapter. Nested bullet/ordered lists, tight/loose paragraphs, ordered starts,
+  quotes and generated separators now survive supported source projection.
+  Custom data, changed projections, tasks and atoms still cause inert rollback.
+  Fixed nested code labels leaking onto an enclosing preformatted block.
+  This does not change ordinary imports or claim full CommonMark conformance.
+
 - Removed the supplied code schema's artificial label-length/punctuation limit;
   labels remain whitespace-free string metadata, safely escaped in HTML and
   canonical Markdown. Fence info is decoded before selecting its language word.
