@@ -56,16 +56,20 @@ describe('Markdown interchange', () => {
     expect(MarkdownImporter.parse(markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 
-  it('accepts bounded opaque code-language identifiers without accepting markup', () => {
+  it('treats opaque code-language labels as metadata rather than markup', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = '````;\ncode\n````';
     const document = MarkdownImporter.parse(source, schema);
 
     expect(document.child(0).attrs.language).toBe(';');
     expect(MarkdownExporter.export(document)).toBe('```;\ncode\n```');
-    expect(() => schema.node('code_block', {
+    const literal = schema.node('doc', {}, [schema.node('code_block', {
       language: '<script>', lineNumbers: true,
-    })).toThrow('Invalid value for attribute: language');
+    }, [schema.text('code')])]);
+    expect(HTMLExporter.export(literal, { document: false })).toContain('language-&lt;script&gt;');
+    expect(HTMLExporter.export(literal, { document: false })).not.toContain('<script>');
+    expect(MarkdownImporter.parse(MarkdownExporter.export(literal), schema).toJSON()).toEqual(literal.toJSON());
+    expect(() => schema.node('code_block', { language: 'two words' })).toThrow('Invalid value for attribute: language');
   });
 
   it('round-trips code spans with delimiter collisions and significant edge spaces', () => {

@@ -1,4 +1,4 @@
-import { CoreSchemaSpec, MarkdownImporter, Schema } from '../../dist/index.js';
+import { CoreSchemaSpec, MarkdownImporter, MarkdownExporter, Schema, tokenizeCode } from '../../dist/index.js';
 import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
@@ -39,6 +39,12 @@ export function checkMarkdownFlowSources() {
   }
   if (ServerHTMLImporter.parse('<pre><code class="language-c++">x</code></pre>', schema).child(0).attrs.language !== 'c++') {
     throw new Error('Compiled HTML importer truncated the code language token.');
+  }
+  for (const label of ['x"y', 'constructor', '__proto__', 'x'.repeat(100), 'a&amp;b']) {
+    const doc = schema.node('doc', {}, [schema.node('code_block', { language: label }, [schema.text('x')])]);
+    const reopened = MarkdownImporter.parse(MarkdownExporter.export(doc), schema);
+    if (reopened.child(0).attrs.language !== label) throw new Error('Compiled canonical Markdown changed an opaque code label.');
+    tokenizeCode('const x = 1;', label);
   }
   return true;
 }

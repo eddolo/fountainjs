@@ -24,6 +24,11 @@ import { htmlBlockFormatJourney } from './html-block-format-journey';
 import { issueTableHandoffJourney } from './issue-table-handoff-journey';
 import { markdownScopeJourney } from './markdown-scope-journey';
 import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-journey';
+import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
+
+test('edits opaque code labels and reopens them safely in a reader', async ({ page }, info) => {
+  await markdownCodeLabelsJourney(page, info);
+});
 import { inStableDocument } from './stable-document';
 
 test('guards editor actions against page reloads without suppressing failures', async ({ page }) => {

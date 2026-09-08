@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Opaque code labels (2026-09-08, Unreleased): previously rejected long/quoted
+labels now remain safely serialized string metadata. Fence decoding order and
+canonical escape retention are corrected, and prototype-like labels no longer
+crash the highlighter. Thirty-four new complete reference/source/canonical
+contracts pass without changing the 563/579 corpus baselines. Long visual labels
+wrap and expose their original spelling; no full parity claim follows from this.
+
 Code-language fidelity (2026-09-08, Unreleased): browser/server HTML import now
 preserves full supported labels such as `c++`, `c#` and `my.dsl` instead of
 truncating them. Full check passes 1,515 tests / 119 files. Unsupported CommonMark

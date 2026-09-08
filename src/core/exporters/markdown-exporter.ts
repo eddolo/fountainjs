@@ -427,7 +427,10 @@ function longestMarkerRun(value: string, marker: '`' | '~'): number {
 
 function fencedCode(node: Node): string {
   const value = node.textContent;
-  const language = String(node.attrs.language ?? '').trim().split(/\s+/u)[0] ?? '';
+  // Protect entity openers/backslash escapes and delimiter-looking prefixes.
+  // Otherwise a literal label such as "a&amp;b" changes when the file reopens.
+  const language = (String(node.attrs.language ?? '').trim().split(/\s+/u)[0] ?? '')
+    .replace(/[\\&`~<>"']/gu, character => `&#${character.codePointAt(0)};`);
   const marker: '`' | '~' = language.includes('`') ? '~' : '`';
   const fence = marker.repeat(Math.max(3, longestMarkerRun(value, marker) + 1));
   return `${fence}${language}\n${value}\n${fence}`;

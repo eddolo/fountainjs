@@ -1,5 +1,29 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Opaque-label follow-through (Unreleased): the former code-language schema
+restriction is now removed for whitespace-free string metadata. Full fence info
+is decoded before its first word is selected; canonical label escaping preserves
+entities, backslashes and marker-looking prefixes. Browser/server HTML retain
+complete safely escaped labels. The highlighter's inherited-property lookup bug
+for `constructor`/`__proto__` is fixed with own-property checks. These are actual
+input/rendering corrections, not normalization of the conformance comparator.
+See [the contract](MARKDOWN_SOURCE.md#opaque-code-language-labels).
+
+Verification: 34 LF/CRLF reference-label contracts, compiled Node/workerd checks,
+and the full sequential check pass (1,542 tests / 120 files). The two public
+editor journeys pass in Chromium, Firefox and WebKit (six browser tests); a
+separate recorded code-label journey and the production website build pass.
+The initial narrow-screen visual inspection exposed clipped long labels. Labels
+now wrap above the code, with the original spelling available in a hover title;
+the final mobile screenshot, editor/reader screenshots and recording overview
+were visually inspected. Evidence is retained under
+`artifacts/opaque-code-labels-wrap-browser/` and
+`artifacts/opaque-code-labels-recorded/`. Reader preview deliberately has no
+author syntax-label decoration; its document labels are independently checked.
+This is viewport emulation, not physical-mobile or OS-clipboard certification.
+No API snapshot or budget thresholds changed. The strict default/opt-in corpus
+scores remain 563/652 and 579/652; nested container recovery is still unfinished.
+
 Code-language follow-through (Unreleased): a compiled oracle probe found that
 `c++` and `c#` survived Markdown parsing but became `c` during HTML projection.
 Both browser and server HTML importers now consume complete supported language

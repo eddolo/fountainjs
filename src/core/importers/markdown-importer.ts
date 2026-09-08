@@ -1778,7 +1778,9 @@ function markdownFence(line: string): MarkdownFence | null {
     marker,
     length: match[2].length,
     indent: match[1].length,
-    language: decodeMarkdownText(info.split(/\s+/u)[0] ?? ''),
+    // CommonMark decodes the entire info string before choosing its first word.
+    // An entity can introduce whitespace, including a leading separator.
+    language: decodeMarkdownText(info).split(/\s+/u)[0] ?? '',
   };
 }
 

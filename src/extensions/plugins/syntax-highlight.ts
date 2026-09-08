@@ -76,7 +76,7 @@ function escapeRegExp(value: string): string {
 
 export function normalizeCodeLanguage(language: string): string {
   const value = language.trim().toLowerCase() || 'text';
-  return ALIASES[value] ?? value;
+  return Object.hasOwn(ALIASES, value) ? ALIASES[value] : value;
 }
 
 function commentPattern(language: string): string | null {
@@ -92,7 +92,7 @@ function commentPattern(language: string): string | null {
 export function tokenizeCode(code: string, requestedLanguage = 'text'): readonly SyntaxToken[] {
   const language = normalizeCodeLanguage(requestedLanguage);
   const tokenLanguage = language === 'jsx' ? 'javascript' : language === 'tsx' ? 'typescript' : language;
-  const keywords = KEYWORDS[tokenLanguage] ?? [];
+  const keywords = Object.hasOwn(KEYWORDS, tokenLanguage) ? KEYWORDS[tokenLanguage] : [];
   const alternatives: string[] = [];
   const comments = commentPattern(language);
   if (comments) alternatives.push(`(?<comment>${comments})`);
@@ -219,6 +219,7 @@ function collectCodeDecorations(state: EditorState, config: SyntaxHighlightConfi
       decorations.push(Decoration.node(before, before + node.nodeSize, {
         class: `fjs-code-block fjs-highlight--${theme}`,
         'data-language': language,
+        title: String(node.attrs.language ?? 'text'),
         'data-fountain-syntax-truncated': code.length > maxCodeLength ? 'true' : undefined,
       }, { key: `syntax-block-${path.join('.')}` }));
       for (const token of tokenizeSafely(code, language, config)) {
@@ -282,7 +283,7 @@ export function setCodeBlockLanguage(editor: Editor, language: string): boolean 
   const active = getActiveCodeBlock(editor);
   if (!active) return false;
   const normalized = normalizeCodeLanguage(language);
-  if (!/^[^\s<>&"']{1,50}$/.test(normalized)) return false;
+  if (/\s/u.test(normalized)) return false;
   return setNodeAttributes(editor, active.path, { language: normalized });
 }
 

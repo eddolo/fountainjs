@@ -62,6 +62,7 @@ describe('language-aware code blocks', () => {
     const block = view.dom.querySelector('pre[data-language="typescript"]');
 
     expect(block?.classList.contains('fjs-code-block')).toBe(true);
+    expect(block?.getAttribute('title')).toBe('typescript');
     expect([...view.dom.querySelectorAll('.fjs-token--keyword')].map((node) => node.textContent)).toEqual(['const', 'return']);
     expect(view.dom.querySelector('.fjs-token--comment')?.textContent).toBe('// return 42');
     expect(view.dom.querySelectorAll('.fjs-code-line-number')).toHaveLength(3);
@@ -89,8 +90,23 @@ describe('language-aware code blocks', () => {
     expect(view.dom.querySelector('pre')?.dataset.language).toBe(';');
     expect(toggleCodeBlockLineNumbers(editor, false)).toBe(true);
     expect(view.dom.querySelectorAll('.fjs-code-line-number')).toHaveLength(0);
-    expect(setCodeBlockLanguage(editor, '<script>')).toBe(false);
+    expect(setCodeBlockLanguage(editor, '<script>')).toBe(true);
+    expect(view.dom.querySelector('script')).toBeNull();
+    expect(editor.state.doc.child(0).attrs.language).toBe('<script>');
     view.destroy();
+  });
+
+  it.each(['constructor', '__proto__', 'toString', 'hasOwnProperty'])('handles unregistered prototype-like label %s without crashing or changing document data', language => {
+    expect(() => tokenizeCode('const n = 1;', language)).not.toThrow();
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: codeDocument(language) });
+    const before = editor.getJSON();
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    expect(view.dom.querySelector('pre')?.textContent).toBe('const answer = "if";\n// return 42\nreturn answer;');
+    expect(editor.getJSON()).toEqual(before);
+    view.destroy();
+    mount.remove();
   });
 
   it('accepts a host tokenizer while filtering unsafe or overlapping ranges', () => {

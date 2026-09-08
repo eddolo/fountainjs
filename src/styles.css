@@ -244,8 +244,8 @@
 .fountain-ruby-editor__actions button:hover { filter: brightness(.96); }
 .fountain-editor pre { overflow-x: auto; padding: 18px; color: #e7e9ee; background: #151823; border-radius: 12px; }
 .fountain-editor code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
-.fountain-editor pre.fjs-code-block { position: relative; padding-top: 42px; tab-size: 2; }
-.fountain-editor pre.fjs-code-block::before { position: absolute; top: 12px; left: 18px; color: #9298aa; font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .1em; content: attr(data-language); user-select: none; }
+.fountain-editor pre.fjs-code-block { position: relative; tab-size: 2; }
+.fountain-editor pre.fjs-code-block::before { display: block; margin-bottom: 12px; white-space: normal; overflow-wrap: anywhere; color: #9298aa; font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .1em; content: attr(data-language); user-select: none; }
 .fountain-editor pre.fjs-code-block > code { display: block; min-width: max-content; }
 .fountain-editor .fjs-code-line-number { display: inline-block; width: 2.8em; margin-right: 1em; color: #697084; text-align: right; user-select: none; }
 .fountain-editor .fjs-code-line-number::before { content: attr(data-line); }

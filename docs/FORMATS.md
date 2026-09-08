@@ -128,6 +128,12 @@ decoding, so `\&copy;` remains the literal text `&copy;`. URL protocols are
 validated after decoding, and canonical export escapes a literal reference-like
 sequence so reparsing cannot silently change its meaning.
 
+Code-fence info is decoded before selecting its first language word. The supplied
+schema accepts opaque whitespace-free labels, including long names and HTML
+punctuation; labels are metadata, never executable HTML or automatic grammar
+installation. Canonical export protects literal entity/escape/fence characters
+in those labels. See [code-label retention and limits](MARKDOWN_SOURCE.md#opaque-code-language-labels).
+
 Links accept safe absolute, root/hash/dot-relative, path-relative, and
 query-relative destinations. Bare destinations retain balanced parentheses;
 angle destinations may contain parentheses; title delimiters must close

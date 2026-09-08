@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Removed the supplied code schema's artificial label-length/punctuation limit;
+  labels remain whitespace-free string metadata, safely escaped in HTML and
+  canonical Markdown. Fence info is decoded before selecting its language word.
+  Fixed inherited-property lookups for labels such as `constructor`/`__proto__`
+  in syntax highlighting. Long visual labels wrap and expose original-spelling
+  hover text without mutating document data. Host schemas can stay stricter.
+  Thirty-four new reference-semantic/source/canonical contracts pass without
+  changing the existing CommonMark scores or runtime budget thresholds.
+
 - Fixed browser and server HTML code-language extraction truncating `c++`, `c#`
   and dotted language labels. Import now matches a complete supported class token,
   not a partial prefix or a substring of another class. This does not widen the

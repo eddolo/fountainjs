@@ -14,6 +14,7 @@ import {
 } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
 import { checkMarkdownFlowBoundaries } from './check-markdown-flow-boundaries.mjs';
+import { checkMarkdownCodeLabels } from './check-markdown-code-labels.mjs';
 
 const BASELINE_PATH = fileURLToPath(new URL(
   '../tests/fixtures/markdown/commonmark-semantic-baseline-v1.json',
@@ -398,6 +399,8 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 }
 
 const schema = new Schema(CoreSchemaSpec);
+checkMarkdownCodeLabels({ schema, MarkdownImporter, MarkdownExporter, HTMLExporter,
+  referenceParser, referenceRenderer, referenceOutput, semanticProjection });
 checkMarkdownFlowBoundaries({
   schema, MarkdownImporter, MarkdownExporter, HTMLExporter, ServerHTMLImporter,
   referenceParser, referenceRenderer, semanticProjection,

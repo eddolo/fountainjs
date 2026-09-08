@@ -372,14 +372,43 @@ case also matches full wrapper structure; omitted outer `div` elements remain
 strict mismatches. The 563/652 default and 579/652 block+inline semantic baselines
 are unchanged. This is not full CommonMark or lossless HTML support.
 
-Known separate input limit: the supplied code schema rejects some CommonMark
-fence info labels (quotes/HTML-significant characters and labels over 50
-characters). Such inputs can still throw during ordinary code-node construction;
-this adapter does not widen the schema or claim to fix that import policy.
-Supported code labels such as `c++`, `c#` and `my.dsl` now survive both browser
-and server HTML import without being truncated. Class extraction requires a
-whole `language-...` token; unrelated class substrings and overlong/unsafe labels
-do not silently become misleading partial language names.
+### Opaque code-language labels
+
+The supplied code schema now accepts whitespace-free string labels without the
+former 50-character/HTML-punctuation restriction. Labels are document metadata,
+not executable markup, tokenizer names that must be registered, or permission to
+run code. Quotes, ampersands, angle brackets, Unicode and long names therefore
+remain available to application-specific languages. Hosts may still provide a
+narrower schema; its validation is respected.
+This broader acceptance is in the Unreleased development build. Older package
+versions or stricter host schemas may reject documents containing these labels.
+
+Markdown import decodes the full fence info string before taking its first word,
+matching the reference renderer. For example, `a&#32;b` selects language `a`;
+a decoded leading space selects no named language (Fountain's `text` default).
+The remaining info words are not modeled as independent attributes: untouched
+file retention keeps them, but canonical regeneration does not promise to retain
+arbitrary fence options.
+
+Canonical Markdown encodes label characters that could change meaning on
+reimport: entity openers, backslash escapes, fence markers and HTML punctuation.
+Thus literal `a&amp;b`, a quoted label and a marker-looking name all retain their
+values after save/reopen. HTML export escapes attribute values; DOM rendering
+uses attribute setters, never HTML interpolation. Both HTML importers consume
+whole language class tokens, not partial prefixes. This is label preservation,
+not lossless conversion of arbitrary HTML or binary/invalid-Unicode metadata.
+
+The highlighter uses own-property lookups so names such as `constructor` and
+`__proto__` cannot select inherited JavaScript properties. Unknown names do not
+execute code or install grammars. Highlighting may display a normalized alias
+(`cpp` for `c++`); the document retains its original label. Long visual labels
+wrap, and the original spelling is available as hover text. These decorations
+do not change document JSON.
+
+The development-only oracle checks 34 LF/CRLF complete reference-semantic,
+exact-source and canonical-round-trip contracts for these labels. Existing
+563/652 and 579/652 corpus scores are unchanged; the new cases do not establish
+full CommonMark support.
 
 **Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph

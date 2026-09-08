@@ -117,19 +117,13 @@ describe('source-aware heading and code HTML flow', () => {
   });
 
   it('keeps hostile fence info inert rather than creating HTML attributes', () => {
-    // The supplied schema rejects these labels. Exercise a host that explicitly
-    // permits them, so the adapter's escaping is tested independently.
-    const custom = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
-      code_block: { ...CoreSchemaSpec.nodes.code_block, attrs: { ...CoreSchemaSpec.nodes.code_block.attrs,
-        language: { default: 'text', validate: (value: unknown) => typeof value === 'string' },
-      } },
-    } });
     const fallback = vi.fn();
-    const parsed = MarkdownImporter.parse('<div>\n\n```x"onclick="bad\nSafe\n```\n\n</div>', custom, {
+    const parsed = MarkdownImporter.parse('<div>\n\n```x"onclick="bad\nSafe\n```\n\n</div>', schema, {
       parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback,
     });
     expect(fallback).not.toHaveBeenCalled();
     expect(parsed.child(0).textContent).toBe('Safe\n');
+    expect(parsed.child(0).attrs.language).toBe('x"onclick="bad');
     expect(parsed.content).toHaveLength(1);
   });
 });

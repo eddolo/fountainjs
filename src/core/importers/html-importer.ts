@@ -545,7 +545,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     return [schema.node('blockquote', {}, children.length ? children : [paragraph(element, schema)])];
   }
   if (tag === 'pre') return [schema.node('code_block', {
-    language: element.getAttribute('data-language') || element.querySelector('code')?.className.match(/(?:^|\s)language-([^\s<>&"']{1,50})(?=\s|$)/u)?.[1] || 'text',
+    language: element.getAttribute('data-language') || element.querySelector('code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
     lineNumbers: true,
   }, [schema.text(element.textContent ?? '')])];
   if (tag === 'hr') return [schema.node('horizontal_rule')];

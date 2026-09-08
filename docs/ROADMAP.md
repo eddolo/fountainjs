@@ -5,6 +5,15 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Opaque code-label correction (2026-09-08, Unreleased): the earlier default-schema
+fence-label rejection is resolved. Whitespace-free labels are metadata, including
+long names and HTML punctuation. Fence entities/escapes decode before language
+selection; canonical export protects literal label values. Own-property checks
+fix prototype-name crashes in highlighting. Long view labels wrap and have
+original-spelling hover text. The new 34 LF/CRLF reference-semantic/source/
+canonical contracts leave corpus scores unchanged. Lists/nested source events,
+inline atoms and wrapper retention remain the next Markdown boundaries.
+
 Code-language import correction (2026-09-08, Unreleased): `c++`, `c#` and dotted
 labels no longer truncate during browser/server HTML conversion. Complete class
 token matching avoids misleading partial names. Full check: 1,515 tests / 119

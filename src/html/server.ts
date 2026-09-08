@@ -1068,7 +1068,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       });
     } else content = [schema.text(element.textContent)];
     return [schema.node('code_block', {
-      language: element.getAttribute('data-language') || codeClass.match(/(?:^|\s)language-([^\s<>&"']{1,50})(?=\s|$)/u)?.[1] || 'text',
+      language: element.getAttribute('data-language') || codeClass.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
       lineNumbers: true,
     }, content)];
   }
