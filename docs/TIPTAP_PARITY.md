@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest follow-through (2026-09-08, Unreleased): the issue workflow exposes the
+existing HTML-table preservation route and imports supported table structure
+when reopening Markdown. Six new pure-Node host-policy checks; full local check
+passes 1,374 tests / 112 files. Headerless/mixed cells, spans, paragraphs and bold
+rendering survive source/file/reader handoff in Chromium, Firefox and WebKit,
+including undo/redo of file replacement. No new engine API, bundle ceiling or
+CommonMark conformance promotion. Pipe-format losses remain explicit.
+
 Latest follow-through (2026-09-08, Unreleased): browser paste and pure-Node HTML
 import retain supported inline formatting across block wrappers, lists and table
 groups/rows/cells, including nearer color overrides. Twenty-four added cases

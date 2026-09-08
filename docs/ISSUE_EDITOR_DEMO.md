@@ -33,6 +33,34 @@ It is featured above the ten environment integrations in the gallery and in the
   title is not Markdown content and stays host-owned. JSON metadata/history and
   arbitrary extensions are not preserved by claiming Markdown is a native format.
 
+## Table handoff policy
+
+The **Table export** selector exposes the existing `tableFormat: 'pipe' | 'html'`
+export option. Pipes remain the default for compatibility. Choose HTML tables
+before switching to source or downloading when your table has no header, mixed
+header/data roles, merged cells, or multiple blocks per cell. Supported HTML
+table structure is retained; arbitrary metadata and all CSS are not guaranteed.
+The compatibility warning remains visible because other Markdown readers must
+support HTML tables too.
+
+`issue-markdown-policy.ts` supplies a `parseHTMLBlock` adapter to every source/file
+import in this workflow. It accepts table-root blocks whose schema projection
+contains only tables, using `ServerHTMLImporter.parse`; unrelated raw HTML stays
+inert. There is no HTML injection or script execution. This is a host policy, not
+a change to Fountain's default Markdown importer. Supported table links/images
+still have the normal URL/network boundaries described above.
+
+Unchanged captured source remains exact even if the export selector changes:
+the option governs regenerated tables, not a forced whole-file conversion.
+The selector is disabled while editing raw source, since download saves that
+buffer verbatim. Reopening a file is an undoable document replacement.
+
+`tests/issue-markdown-tables.test.ts` checks this actual host policy in pure Node.
+`tests/browser/issue-table-handoff-journey.ts` checks pasted headerless/mixed/merged
+cells, multiple paragraphs, rendered bold weight, source switching, file download,
+reopen/undo/redo and desktop/narrow reader views. Its paste event exercises the
+clipboard payload handler, not an operating-system clipboard permission audit.
+
 ## Try it
 
 1. Switch to Markdown source. Notice the tilde code fence, double underscores,

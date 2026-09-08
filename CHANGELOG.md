@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Exposed the existing HTML-table export option in the issue workflow, with a
+  table-scoped schema importer on source/file reopen. Headerless and mixed-role
+  tables, merged cells and multi-paragraph content now have a demonstrated
+  preservation route. Pipe Markdown remains the compatibility default, with
+  explicit loss reports; this does not make arbitrary Markdown readers lossless.
+
 - Fixed browser/server HTML import dropping bold, emphasis, colors and supported
   typography around multiple blocks, list items and table groups/rows/cells.
   Nearer supported inline colors now override outer colors. Shared portable

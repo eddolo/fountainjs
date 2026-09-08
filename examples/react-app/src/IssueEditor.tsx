@@ -3,6 +3,7 @@ import { EditorState, MarkdownExporter, MarkdownImporter, Schema, StarterKit, ty
 import { FountainComposer, FountainEditor, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { issueMarkdown } from './issue-example';
 import { SitePageLink } from './SitePageLink';
+import { issueMarkdownOptions } from './issue-markdown-policy';
 
 // The demo host stores bounded raster images in the document, not on a server.
 const localImage: ImageUploadHandler = async (file, { signal }) => {
@@ -42,7 +43,7 @@ function Reader({ json }: { json: ReturnType<ReturnType<typeof useFountain>['get
 export function IssueEditor() {
   const initial = useMemo(() => {
     const schema = new Schema(StarterKit.schema);
-    const parsed = MarkdownImporter.parseWithSource(issueMarkdown, schema);
+    const parsed = MarkdownImporter.parseWithSource(issueMarkdown, schema, issueMarkdownOptions);
     return { ...parsed, state: EditorState.create({ schema, doc: parsed.document, plugins: StarterKit.plugins }) };
   }, []);
   // Source provenance and editor state must use the same schema instance.
@@ -54,19 +55,20 @@ export function IssueEditor() {
   const [title, setTitle] = useState('Room switch leaves stale content');
   const [message, setMessage] = useState('Local demo only. Nothing is submitted to GitHub or GitLab. Download your draft before leaving.');
   const [error, setError] = useState('');
+  const [tableFormat, setTableFormat] = useState<'pipe' | 'html'>('pipe');
   const reportError = useCallback((cause: unknown) => setError(String(cause)), []);
   const uploadImage = useCallback<ImageUploadHandler>((file, context) => {
     setError('');
     return localImage(file, context);
   }, []);
   const upload = useRef<HTMLInputElement>(null);
-  const result = useMemo(() => MarkdownExporter.exportWithSource(state.doc, snapshot), [state.doc, snapshot]);
+  const result = useMemo(() => MarkdownExporter.exportWithSource(state.doc, snapshot, { tableFormat }), [state.doc, snapshot, tableFormat]);
 
   const switchMode = (next: typeof mode) => {
     if (next === mode) return;
     try {
       if (mode === 'markdown' && next !== 'markdown') {
-        const parsed = MarkdownImporter.parseWithSource(raw, state.schema);
+        const parsed = MarkdownImporter.parseWithSource(raw, state.schema, issueMarkdownOptions);
         if (!parsed.document.eq(state.doc) && !editor.dispatch(editor.createTransaction().replaceDocument(parsed.document))) {
           throw new Error('The editor rejected the Markdown update. Your source is still available.');
         }
@@ -81,7 +83,7 @@ export function IssueEditor() {
     try {
       if (file.size > 8 * 1024 * 1024) throw new Error('Choose a Markdown draft smaller than 8 MiB.');
       const source = await file.text();
-      const parsed = MarkdownImporter.parseWithSource(source, editor.state.schema);
+      const parsed = MarkdownImporter.parseWithSource(source, editor.state.schema, issueMarkdownOptions);
       if (!parsed.document.eq(editor.state.doc) && !editor.dispatch(editor.createTransaction().replaceDocument(parsed.document))) throw new Error('Draft replacement was rejected.');
       setSnapshot(parsed.source);
       setRaw(source);
@@ -106,6 +108,8 @@ export function IssueEditor() {
           {mode === 'preview' && <div className="issue-reader"><p>READ-ONLY DESCRIPTION · NO AUTHOR TOOLBAR</p><Reader json={state.doc.toJSON()} /></div>}
         </section>
         {error && <p role="alert" className="issue-error">{error}</p>}
+        <div className="issue-table-format"><label htmlFor="issue-table-format">Table export</label><select id="issue-table-format" aria-describedby="issue-table-format-help" value={tableFormat} disabled={mode === 'markdown'} onChange={event => setTableFormat(event.target.value as 'pipe' | 'html')}><option value="pipe">Markdown pipes · widest compatibility</option><option value="html">HTML tables · preserve cell structure</option></select></div>
+        <p id="issue-table-format-help">HTML tables retain supported cell roles, spans and rich content when reopened here. Other readers must support HTML tables. This choice affects regenerated tables; untouched source stays unchanged. In source mode, download saves your raw text as written.</p>
         <div className="issue-actions"><button onClick={() => { download('issue-description.md', mode === 'markdown' ? raw : result.markdown, 'text/markdown;charset=utf-8'); setMessage('Downloaded description Markdown. Keep the host title separately; this does not create an online issue.'); }}>Download Markdown draft</button><button onClick={() => upload.current?.click()}>Open Markdown draft</button><input ref={upload} type="file" accept=".md,.markdown,text/markdown,text/plain" aria-label="Open Markdown draft file" hidden onChange={event => { const file = event.target.files?.[0]; if (file) void reopen(file); event.target.value = ''; }} /></div>
         <p role="status">{message}</p>
       </section>

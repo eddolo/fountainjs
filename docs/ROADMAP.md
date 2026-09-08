@@ -5,6 +5,17 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Table handoff follow-through (2026-09-08, Unreleased): the issue workflow now
+exposes the existing HTML-table option and opts into schema-projected table
+imports on file/source reopen. Six host-policy tests bring the full local check
+to 1,374 tests / 112 files; Chromium, Firefox and WebKit pass the mixed/headerless
+table journey, including merged cells, paragraphs, bold rendering and reopen
+undo/redo. Recorded editor/reader/mobile captures and recording overview under
+`artifacts/issue-table-handoff-recorded-v2/` were visually inspected. See
+[the workflow contract](ISSUE_EDITOR_DEMO.md#table-handoff-policy).
+This closes the missing demo preservation route, not pipe-format limitations,
+arbitrary CSS fidelity or the remaining CommonMark programme.
+
 HTML formatting inheritance repair (2026-09-08, Unreleased): both browser and
 server import retain supported marks/typography around blocks, list items and
 table row groups/rows/cells, with nearest supported color overrides. Verified by
