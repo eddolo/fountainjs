@@ -429,6 +429,52 @@ complete inert rollback. HTML formatting inside task text that would change the
 subtree also declines. Custom task attributes/IDs remain outside this adapter's
 contract. Exact original file retention remains separate from HTML fidelity.
 
+### Register HTML wrappers your application owns
+
+The default schema does not represent arbitrary HTML sections or their layout.
+An application can define a real container node instead of accepting flattening:
+
+```ts
+import { CoreSchemaSpec, MarkdownImporter, Schema } from 'fountainjs-editor'
+import { ServerHTMLImporter } from 'fountainjs-editor/html/server'
+
+const schema = new Schema({
+  ...CoreSchemaSpec,
+  nodes: {
+    ...CoreSchemaSpec.nodes,
+    section: {
+      group: 'block',
+      content: 'block+',
+      attrs: { label: { default: '', validate: value => typeof value === 'string' && value.length <= 200 } },
+      parseHTML: [{
+        tag: 'section[data-label]',
+        getAttrs: element => ({ label: element.getAttribute('data-label') ?? '' }),
+      }],
+      toDOM: node => ['section', { 'data-label': node.attrs.label }, 0],
+    },
+  },
+})
+
+const imported = MarkdownImporter.parseWithSource(
+  '<section data-label="Release">\n\nInspect logs  \nCheck timestamps\n\n</section>',
+  schema,
+  { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow },
+)
+```
+
+The section label and nested block structure now belong to the document schema,
+and `HTMLExporter` uses the same `toDOM` rule. The editor/reader must use that same
+schema to reopen the HTML; a consumer without the extension cannot promise to
+retain the wrapper. Only the declared label is retained here, not arbitrary
+attributes, CSS, scripts or complete original layout. Original Markdown file
+retention still uses `exportWithSource` and its returned source record.
+
+Unreleased regression coverage verifies nested registered wrappers containing
+hard breaks, competing rules and rejected content shapes. Evidence from rejected
+speculative parses is discarded; a rule that actually drops protected content
+still causes whole-flow fallback. This fixes extension composition, not the
+default schema's unknown-wrapper fidelity or CommonMark corpus score.
+
 ### Opaque code-language labels
 
 

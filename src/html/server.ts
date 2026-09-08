@@ -566,12 +566,18 @@ function configuredNode(
     for (const candidate of candidates) {
       // Only report losses from the projection actually accepted by the schema.
       // A speculative inline interpretation of block content is not data loss.
-      const branch: ImportContext = { issues: [], issueKeys: new Set(), inlineSlots: context.inlineSlots, blockSlots: context.blockSlots };
+      const branch: ImportContext = { issues: [], issueKeys: new Set(),
+        // A rejected content shape may traverse generated hard breaks. Commit
+        // its visit evidence only if this projection is actually accepted.
+        inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [] } : undefined,
+        blockSlots: context.blockSlots,
+      };
       const content = candidate(branch);
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
         const node = type.create(attrs, content, undefined, inheritedMarks);
         schema.validate(node);
+        branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
         branch.issues.forEach(issue => reportOnce(context, issue));
         return node;
       } catch { /* Try the next content shape or parse rule. */ }

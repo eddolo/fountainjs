@@ -5,6 +5,12 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Registered-wrapper correction (2026-09-08, Unreleased): fixed rejected HTML
+content-shape attempts contaminating hard-break preservation checks. Registered
+sections now survive the tested source-recovery/edit/export/reopen path. Seven
+new unit cases, compiled server checks and three-engine browser coverage support
+this extension-system fix; unknown HTML/layout fidelity remains open.
+
 Task-source follow-through (2026-09-08, Unreleased): opt-in mixed HTML/Markdown
 recovery now preserves whole task-list subtrees, including checked state and
 nested tasks. Explicit source discriminants prevent confusing tasks with plain

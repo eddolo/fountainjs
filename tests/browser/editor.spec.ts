@@ -26,6 +26,11 @@ import { markdownScopeJourney } from './markdown-scope-journey';
 import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-journey';
 import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
 import { markdownStructuralRecoveryJourney } from './markdown-structural-recovery-journey';
+import { markdownCustomWrapperJourney } from './markdown-custom-wrapper-journey';
+
+test('edits registered HTML wrappers after Markdown source recovery', async ({ page }, info) => {
+  await markdownCustomWrapperJourney(page, info);
+});
 
 test('recovers nested Markdown lists and quotes through an editor and reader', async ({ page }, info) => {
   await markdownStructuralRecoveryJourney(page, info);

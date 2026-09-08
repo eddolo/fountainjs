@@ -1,5 +1,11 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Registered-wrapper correction (2026-09-08, Unreleased): custom HTML container
+rules no longer falsely reject generated hard breaks after trying an incompatible
+content shape. Only accepted parse attempts contribute preservation evidence.
+Nested section editing and HTML reopening pass across three engines. This repairs
+the modular import path; it does not establish full HTML fidelity or parity.
+
 Task-source recovery (2026-09-08, Unreleased): optional HTML/Markdown source
 projection now verifies complete task-list subtrees and checked state. Nested
 tasks remain structured; raw-text flattening or changed task content rolls back

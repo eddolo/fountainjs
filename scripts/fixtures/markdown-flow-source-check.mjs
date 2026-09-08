@@ -3,6 +3,15 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const sectionSchema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
+    section: { group: 'block', content: 'block+', parseHTML: [{ tag: 'section' }] },
+  } });
+  const section = MarkdownImporter.parse('<section>\n\none  \ntwo\n\n</section>', sectionSchema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+  }).child(0);
+  if (section.type.name !== 'section' || section.child(0).content.filter(node => node.type.name === 'hard_break').length !== 1) {
+    throw new Error('Compiled source recovery double-counted a speculative custom-wrapper projection.');
+  }
   const tasks = MarkdownImporter.parse('<blockquote>\n\n- [ ] Inspect\n  - [x] Reviewed\n\n</blockquote>', schema, {
     parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
   }).child(0).child(0);

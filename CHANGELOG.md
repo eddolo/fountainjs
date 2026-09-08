@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Fixed registered HTML container rules falsely rejecting Markdown source
+  recovery with hard breaks. Only accepted rule/content-shape attempts contribute
+  preservation evidence; real dropped or reordered content is still refused.
+
 - Fixed completed-task styling striking through unfinished nested subtasks.
   Task completion appearance now follows each task's own checked state.
 

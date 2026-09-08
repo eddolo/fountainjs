@@ -1,5 +1,44 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Registered-wrapper correction (2026-09-08, Unreleased): a schema-defined HTML
+section with `block+` content falsely declined recovery when it contained a
+generated Markdown hard break. `configuredNode` first tried inline content, then
+block content, but both attempts appended to the same break-visit ledger. The
+preservation guard correctly rejected the duplicate evidence even though only
+the block interpretation would be returned. Candidate contexts now own their
+break-visit arrays; only accepted candidates commit visits to the parent. Nested
+rules preserve source order; rejected shapes/rules leave no visit evidence.
+Actual missing/reordered protected nodes and breaks still fail, and the unknown-
+wrapper/default-schema contract has not been broadened into arbitrary HTML.
+
+Seven regression cases cover LF/CRLF registered/nested sections, headings,
+lists, competing high-priority rules, built-in fallback and a deliberately lossy
+content selector. The first case was reproduced failing before the runtime fix.
+Compiled Node/workerd smoke checks exercise a registered section with a break.
+Full `pnpm check` passes 1,595 tests / 124 files; API declarations and all existing
+budget/performance limits remain unchanged. Runtime: 1,388.8 KiB ESM / 1,153.9 KiB
+CJS, within 1,389 / 1,154 KiB caps, with no new dependency.
+
+The new browser contract registers a custom section through the public extension
+API, imports nested sections through source recovery, and then uses real keyboard
+typing/undo/redo. It exports HTML, reopens through the browser importer and checks
+wrapper attributes/nesting and exactly one visible line-height break at desktop
+and 390px widths. Three engines pass; the existing nested-task/image public demo
+journey also passes in all three. A recorded contract run passes and its recording
+overview plus desktop/mobile editor screenshots were visually inspected. This is
+an editor/API contract harness, not a new end-user demo, OS-clipboard test or
+physical-mobile certification. Evidence: `artifacts/registered-wrapper-final-check.log`,
+`artifacts/registered-wrapper-browser/`, `artifacts/registered-wrapper-regression/`,
+and `artifacts/registered-wrapper-recorded/`. Site build passes with its existing
+large MathJax chunk warning. The earlier fixture type check caught mixed source
+and built-package nominal schema types; the editor fixture now consistently uses
+source-module types, while compiled runtime coverage remains in the smoke tests.
+
+Developer documentation now includes a concrete registered-section example and
+updates the server guide's stale list/atom limitations. CommonMark 563/579 scores
+and the 58/38 reference/source contracts remain unchanged. Unknown wrappers,
+attributes/layout and the remaining parity programme still require further work.
+
 Task-source follow-through (2026-09-08, Unreleased): the recursive context now
 has distinct `taskList`/`taskItem` discriminants and explicit boolean checked
 state. The optional structural adapter validates original attributes/children,

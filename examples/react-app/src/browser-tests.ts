@@ -387,7 +387,18 @@ const browserNodeView = defineExtension({
     },
   },
 });
-const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView, LeanExtension, ClipboardHistoryExtension]);
+const browserHTMLSection = defineExtension({
+  name: 'browser-html-section',
+  nodes: {
+    browser_section: {
+      group: 'block', content: 'block+',
+      attrs: { label: { default: '' } },
+      parseHTML: [{ tag: 'section[data-label]', getAttrs: element => ({ label: element.getAttribute('data-label') ?? '' }) }],
+      toDOM: node => ['section', { 'data-label': node.attrs.label, 'aria-label': node.attrs.label }, 0],
+    },
+  },
+});
+const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView, browserHTMLSection, LeanExtension, ClipboardHistoryExtension]);
 
 const editor = createEditor({
   schema: browserKit.schema,
@@ -1301,6 +1312,17 @@ Object.assign(globalThis, {
     clipboardHistory: () => getClipboardHistoryState(editor),
     inspectMarkdown,
     inspectMarkdownSource,
+    importRegisteredHTMLFlow: async (source: string) => {
+      const { ServerHTMLImporter } = await import('../../../src/html/server');
+      const fallbacks: unknown[] = [];
+      const parsed = MarkdownImporter.parse(source, editor.state.schema, {
+        parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: issue => fallbacks.push(issue),
+      });
+      editor.dispatch(editor.createTransaction().replaceDocument(editor.state.schema.nodeFromJSON(parsed.toJSON())));
+      return { fallbacks, html: HTMLExporter.export(editor.state.doc, { document: false }) };
+    },
+    exportHTML: () => HTMLExporter.export(editor.state.doc, { document: false }),
+    reopenHTML: (html: string) => editor.dispatch(editor.createTransaction().replaceDocument(HTMLImporter.parse(html, editor.state.schema))),
     markdownLosses: () => MarkdownExporter.exportWithReport(editor.state.doc).losses,
     inspectHTMLDocument: async (source: string) => {
       const { ServerHTMLImporter } = await import('fountainjs-editor/html/server');

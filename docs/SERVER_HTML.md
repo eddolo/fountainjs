@@ -13,10 +13,20 @@ data, changed content and unsupported structural nodes. See the
 [contract, losses and demo option](MARKDOWN_SOURCE.md#explicit-paragraph-source-flow-recovery)
 before choosing that mode; it is not a lossless substitute for `parseFlow`.
 `parseTextBlockFlow` / `parseTextBlockFlowWithReport` extend explicit source
-projection to pristine headings and fenced/indented code using the new lazy
-text-block context. Lists and atoms remain unsupported. See the
+projection to pristine headings and fenced/indented code. Recursive source
+context also supports list/quote nesting, preserves inline objects outside
+preformatted text, and verifies whole task subtrees. Custom Markdown block
+metadata and projections that would flatten protected data still decline. See the
 [text-block policy](MARKDOWN_SOURCE.md#explicit-text-block-source-flow-recovery)
 for generated newlines, identity changes and remaining fidelity gaps.
+
+Registered HTML wrappers use the supplied schema's `parseHTML` and `toDOM`
+rules; they need not be flattened just because the default schema has no matching
+node. Source recovery now commits hard-break visit evidence only from accepted
+content-shape/rule candidates. Rejected speculative projections cannot make a
+valid custom section falsely fail the duplicate-break guard. Actual missing or
+reordered source nodes/breaks still fail. See the
+[registered-wrapper example](MARKDOWN_SOURCE.md#register-html-wrappers-your-application-owns).
 
 ```ts
 import { CoreSchemaSpec, HTMLExporter, Schema } from 'fountainjs-editor'
