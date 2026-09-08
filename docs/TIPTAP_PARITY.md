@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Code-language fidelity (2026-09-08, Unreleased): browser/server HTML import now
+preserves full supported labels such as `c++`, `c#` and `my.dsl` instead of
+truncating them. Full check passes 1,515 tests / 119 files. Unsupported CommonMark
+fence info and broader structural conversion remain open; no parity score bump.
+The three-engine public conversion/source/reader journey and separate recorded
+run passed, with the C++ reader and recording overview visually inspected.
+
 Text-block source recovery (2026-09-08, Unreleased): opt-in mixed Markdown/HTML
 projection now covers direct ATX/Setext headings and fenced/indented code, with
 syntax-derived wrappers and code terminators. Twenty-four LF/CRLF reference-code

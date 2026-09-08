@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Fixed browser and server HTML code-language extraction truncating `c++`, `c#`
+  and dotted language labels. Import now matches a complete supported class token,
+  not a partial prefix or a substring of another class. This does not widen the
+  code schema's separate fence-info restrictions.
+
 - Extended explicit Markdown/HTML source recovery to ATX/Setext headings and
   fenced/indented code, with lazy syntax context and a separate text-block flow
   API. The conversion demo uses this default-off option. Literal code and empty

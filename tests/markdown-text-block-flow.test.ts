@@ -62,6 +62,14 @@ describe('source-aware heading and code HTML flow', () => {
     expect(doc.child(1).textContent).toBe('x < y\n');
   });
 
+  it.each(['c++', 'c#', 'my.dsl'])('does not truncate the %s code label during source projection', language => {
+    const source = `<div>\n\n\`\`\`${language}\nx\n\`\`\`\n\n</div>`;
+    const fallback = vi.fn();
+    const doc = MarkdownImporter.parse(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });
+    expect(fallback).not.toHaveBeenCalled();
+    expect(doc.child(0).attrs.language).toBe(language);
+  });
+
   it.each(['heading', 'code_block'])('refuses custom %s metadata even in schema defaults', type => {
     const custom = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
       [type]: { ...CoreSchemaSpec.nodes[type], attrs: { ...CoreSchemaSpec.nodes[type].attrs, owner: { default: 'Alice' } } },

@@ -37,5 +37,8 @@ export function checkMarkdownFlowSources() {
   if (textBlocks.child(0).type.name !== 'code_block' || textBlocks.child(0).textContent !== 'Title\nx\n\n') {
     throw new Error('Compiled text-block source flow lost heading/code wrappers or generated newlines.');
   }
+  if (ServerHTMLImporter.parse('<pre><code class="language-c++">x</code></pre>', schema).child(0).attrs.language !== 'c++') {
+    throw new Error('Compiled HTML importer truncated the code language token.');
+  }
   return true;
 }

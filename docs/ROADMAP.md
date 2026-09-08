@@ -5,6 +5,15 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Code-language import correction (2026-09-08, Unreleased): `c++`, `c#` and dotted
+labels no longer truncate during browser/server HTML conversion. Complete class
+token matching avoids misleading partial names. Full check: 1,515 tests / 119
+files, including compiled Node/workerd. This is separate from the still-open
+Markdown fence-info schema rejection below; it does not increase corpus scores.
+Three-engine conversion/paste/public-source/reader checks and a separate recorded
+run passed; visual inspection confirmed the reader result. Syntax highlighting's
+`cpp` display alias is checked separately from the retained `c++` model label.
+
 Text-block source flow (2026-09-08, Unreleased): direct ATX/Setext headings and
 fenced/indented code now retain syntax context, wrappers and generated code
 terminators through the separate opt-in `parseTextBlockFlow` adapter. The demo

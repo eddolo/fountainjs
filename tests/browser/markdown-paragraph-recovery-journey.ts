@@ -177,4 +177,22 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.setViewportSize({ width: 390, height: 844 });
   await verifyFlow(reader);
   await capture('paragraph-flow-mobile.png');
+  await page.setViewportSize({ width: 1440, height: 960 });
+  await page.goto('/demos/node-markdown.html');
+  await source.fill('<div>\n\n```c++\nint n = 1;\n```\n\n</div>');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
+  await expect(output.locator('pre')).toContainText('data-language="c++"');
+  const cppHTML = await output.locator('pre').innerText();
+  await page.goto('/issue-editor.html');
+  await replaceByPaste(cppHTML);
+  // Syntax decorations display the registered alias "cpp" without changing
+  // the model. Check the actual retained label through public source mode.
+  await expect(editor.locator('pre')).toHaveAttribute('data-language', 'cpp');
+  await expect(editor.locator('pre')).toContainText('int n = 1;');
+  await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+  await expect(page.getByLabel('Markdown description', { exact: true })).toHaveValue(/^```c\+\+\nint n = 1;/);
+  await page.getByRole('button', { name: 'Reader preview', exact: true }).click();
+  await expect(reader.locator('pre')).toHaveAttribute('data-language', 'c++');
+  await capture('code-language-reader.png');
 }

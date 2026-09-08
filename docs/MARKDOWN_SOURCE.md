@@ -376,6 +376,10 @@ Known separate input limit: the supplied code schema rejects some CommonMark
 fence info labels (quotes/HTML-significant characters and labels over 50
 characters). Such inputs can still throw during ordinary code-node construction;
 this adapter does not widen the schema or claim to fix that import policy.
+Supported code labels such as `c++`, `c#` and `my.dsl` now survive both browser
+and server HTML import without being truncated. Class extraction requires a
+whole `language-...` token; unrelated class substrings and overlong/unsafe labels
+do not silently become misleading partial language names.
 
 **Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph

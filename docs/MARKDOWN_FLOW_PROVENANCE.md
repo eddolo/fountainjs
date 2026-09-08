@@ -1,5 +1,28 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Code-language follow-through (Unreleased): a compiled oracle probe found that
+`c++` and `c#` survived Markdown parsing but became `c` during HTML projection.
+Both browser and server HTML importers now consume complete supported language
+class tokens, including punctuation/dotted labels, and reject partial class
+matches. Nine browser/server unit cases and three text-flow label regressions
+cover this. The full sequential check passes 1,515 tests / 119 files, including
+the compiled Node/workerd label check. No API/budget threshold changes.
+
+The first browser label assertion failed in all engines because the live syntax
+decoration deliberately shows the registered alias `cpp`. Inspection of
+`collectCodeDecorations` establishes that this is a view attribute, not a model
+transaction. The corrected journey separately asserts the `cpp` decoration,
+the public Markdown source's exact `c++` fence label, and the independent
+reader's model label. Original failure traces remain under
+`artifacts/code-language-flow-browser/`; this is not an alias-normalization
+change in the engine or permission to accept truncated source labels.
+The corrected journey passes all three desktop engines under
+`artifacts/code-language-source-browser/`. A separate recorded run passes under
+`artifacts/code-language-flow-recorded/`; its video overview and the C++ reader
+screenshot were visually inspected. The production website build passes. The
+earlier text-block recording remains separate evidence for the mixed-content
+whitespace behavior; no OS clipboard or physical-device certification is claimed.
+
 Text-block follow-through (Unreleased): `readTextBlockSources()` now retains
 direct heading and code syntax as well as paragraph provenance. The separate
 `parseTextBlockFlow` adapter uses those wrappers and generated code terminators,
