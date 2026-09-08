@@ -1,5 +1,18 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest follow-through (2026-09-08, Unreleased): a real-world workflow hub now
+surfaces the issue editor directly from the demo gallery and adds a Todoist-style
+task workspace. Independent task documents/history, host metadata, reader preview
+and local Markdown handoff are exercised, not whole-product replacement claims.
+Markdown table escapes and strikethrough boundaries now preserve literal text
+across 420 text/mark/container combinations and ten captured GitHub fixtures.
+Full local verification: 1,344 tests / 110 files; six Chromium/Firefox/WebKit
+journeys passed, plus separately recorded and visually inspected issue/task
+journeys and narrow-screen captures. Public API and bundle budgets are unchanged.
+CommonMark remains 563/652 default matches (72 pending, 17 intentional); neither
+this demonstration work nor the targeted GFM fixes close the parity programme.
+These changes are on the development website, not the immutable beta.1 tarball.
+
 Latest follow-through (2026-09-07, Unreleased): literal text LF/CR survives
 Markdown save/reopen without becoming spaces or structural blocks, including
 multiline code marks. Full local verification passes 1,303 tests / 109 files;

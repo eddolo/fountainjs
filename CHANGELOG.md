@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Added a real-world workflow hub prominently linked above the ten integration
+  demos, with GitLab-style issue editing and a new unofficial Todoist-style task
+  workspace. The task demo exercises independent descriptions/history, host-owned
+  metadata, reader preview and local Markdown download/reopen. Guides explain
+  implementation and persistence boundaries; no original-product integration is implied.
+- Fixed escaped tildes adjoining strikethrough markers and protected pipes after
+  backslashes in GFM table cells. Added 420 text/mark/container round-trip checks,
+  ten captured GitHub semantic fixtures and a recorded editing/handoff journey.
+  Public API and bundle limits are unchanged; full CommonMark parity remains open.
+
 - Fixed literal LF/CR text becoming spaces, headings, lists, or paragraphs on
   Markdown export/reopen. Character references now decode after source soft-break
   handling; canonical text encodes its own line endings, and multiline inline

@@ -16,8 +16,10 @@ Underneath those ready-made features is a modular editing engine: a typed docume
 Install that release explicitly with `npm install fountainjs-editor@0.4.0-beta.1`.
 The intended default tag is `latest`; npm tag changes require separate maintainer
 approval. Newer changes listed under Unreleased are not in this package.
-Try the [issue-editor workflow](https://eddolo.github.io/fountainjs/issue-editor.html)
-and read its [API walkthrough](docs/ISSUE_EDITOR_DEMO.md). Check npm's published
+Try the [real-world workflow demos](https://eddolo.github.io/fountainjs/workflows.html):
+a GitLab-style issue editor and a Todoist-style task workspace, with linked
+[API walkthroughs](docs/WORKFLOW_DEMOS.md). These run the current development
+website, which can be ahead of the published package. Check npm's published
 versions and distribution tags before choosing a release.
 
 ## What “language agnostic” means

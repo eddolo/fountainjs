@@ -18,6 +18,16 @@ import { issueEditorJourney } from './issue-editor-journey';
 import { markdownAutolinkJourney } from './markdown-autolink-journey';
 import { markdownLiteralJourney } from './markdown-literal-journey';
 import { markdownNewlineJourney } from './markdown-newline-journey';
+import { markdownEscapeJourney } from './markdown-escape-journey';
+import { productWorkflowJourney } from './product-workflow-journey';
+
+test('discovers product workflows and preserves separate task drafts and histories', async ({ page }, info) => {
+  await productWorkflowJourney(page, info);
+});
+
+test('retains escaped pipes and strikethrough through table edits and Markdown handoff', async ({ page }, info) => {
+  await markdownEscapeJourney(page, info);
+});
 
 test('retains literal text lines through editing and Markdown handoff', async ({ page }, info) => {
   await markdownNewlineJourney(page, info);

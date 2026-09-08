@@ -3,7 +3,8 @@
 Open [the workflow lab](https://eddolo.github.io/fountainjs/issue-editor.html).
 It is an unofficial GitLab-style issue-description workflow, not a GitLab clone,
 integration, affiliation or claim of full GitLab Flavored Markdown compatibility.
-It is separate from the ten environment integrations in the gallery.
+It is featured above the ten environment integrations in the gallery and in the
+[real-world workflow hub](https://eddolo.github.io/fountainjs/workflows.html).
 
 ## Ownership and APIs
 
@@ -69,6 +70,11 @@ The diagnostics count the actual document's top-level blocks. This page does
 **not** run 100k-block benchmarks, collaboration, pagination or Node/Bun/Deno/
 Workers; it labels those as inactive/unmeasured instead of presenting checkmarks.
 Those capability demos and deployment evidence remain separate work.
+
+The `markdown-escape-journey.ts` regression edits a regex containing a literal
+backslash and pipe inside a table code cell, with escaped literal tildes inside
+a strikethrough cell. Undo/redo, source switching, download/reopen and the reader
+must preserve both cells without creating a third column or losing formatting.
 
 Implementation: `examples/react-app/src/IssueEditor.tsx`,
 `issue-example.ts`, `issue-editor.css`, and `issue-main.tsx`.

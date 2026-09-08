@@ -620,7 +620,7 @@ function Developers() {
     <main className="developer-page">
       <header className="site-header">
         <a className="brand" href="./" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html" current>Developers</SitePageLink><SitePageLink href="./issue-editor.html">Issue workflow</SitePageLink><a className="site-section-link" href="#system-map">Architecture</a><a className="site-section-link" href="#extensions">Extensions</a></nav>
+        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html" current>Developers</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><a className="site-section-link" href="#system-map">Architecture</a><a className="site-section-link" href="#extensions">Extensions</a></nav>
         <a className="install-pill" href="./#playground">Open playground</a>
       </header>
 

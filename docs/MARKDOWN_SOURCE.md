@@ -1017,6 +1017,19 @@ HTML import also retain safe empty anchors and group top-level text/inline
 markup around structural blocks instead of dropping surrounding text. Missing
 and unsafe `href` attributes do not become active link marks.
 
+## Escapes across Markdown layers
+
+GFM table escaping runs before inline parsing: an immediately backslash-escaped
+pipe stays in its cell even after another backslash. The table layer removes
+only the final protecting backslash. This differs from the usual inline escape
+parity rule; a code span must retain the other backslashes verbatim. Escaped
+literal tildes likewise must not extend the adjacent strikethrough delimiter run.
+`tests/markdown-combination-retention.test.ts` covers 420 text/mark/container
+round trips and targeted boundary cases. Ten checked-in GitHub Markdown API
+responses provide a GFM semantic reference (`github-escape-interactions-v1.json`),
+compared through Fountain's server HTML importer rather than literal foreign-AST
+equality. This is a targeted GFM check, not a full GFM/CommonMark certification.
+
 ## Security and collaboration
 
 Raw Markdown and frontmatter are untrusted input. The snapshot does not execute

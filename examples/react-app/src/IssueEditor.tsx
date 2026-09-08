@@ -92,7 +92,7 @@ export function IssueEditor() {
   };
 
   return <main className="issue-site">
-    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><a href="#integration">How this is built ↓</a></header>
+    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><a href="#integration">How this is built ↓</a></header>
     <div className="issue-layout">
       <section className="issue-workspace">
         <p className="issue-eyebrow">WORKFLOW LAB · UNOFFICIAL GITLAB-STYLE ISSUE EDITOR</p>

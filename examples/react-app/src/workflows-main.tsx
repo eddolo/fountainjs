@@ -1,0 +1,18 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { SitePageLink } from './SitePageLink';
+import './index.css';
+import './workflows.css';
+
+function Workflows() {
+  return <main className="workflows-site">
+    <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html" current>Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
+    <section className="workflow-heading"><p>REAL-WORLD WORKFLOWS</p><h1>Familiar work.<br />Powered by FountainJS.</h1><p>Try the editor inside a product, then see how it is built. These are independent workflow recreations—not integrations, endorsements, or complete product clones.</p></section>
+    <section className="workflow-grid" aria-label="Product workflow demos">
+      <article className="workflow-card"><span className="workflow-kind">ISSUES &amp; REVIEW</span><h2>GitLab-style issue editor</h2><p>Write a bug report visually, inspect its Markdown, add a table or image, and hand the draft to a reader.</p><ul><li>Visual ↔ Markdown switching</li><li>Source-preservation diagnostics</li><li>Download, reopen, reader preview</li></ul><a className="workflow-open" href="./issue-editor.html">Try the issue editor ↗</a><p className="workflow-evidence">GitLab documents a Tiptap + ProseMirror editor. This demo uses FountainJS; it does not implement all GitLab Flavored Markdown or connect to GitLab.</p><div className="workflow-links"><a href="https://github.com/eddolo/fountainjs/blob/master/docs/ISSUE_EDITOR_DEMO.md">Implementation guide ↗</a><a href="https://docs.gitlab.com/development/fe_guide/content_editor/">Original architecture ↗</a></div></article>
+      <article className="workflow-card workflow-card--task"><span className="workflow-kind">TASKS &amp; PROJECTS</span><h2>Todoist-style task briefs</h2><p>Give each task a rich description. Switch tasks without losing drafts, complete work, and preview the description without author controls.</p><ul><li>Independent documents and undo histories</li><li>Task metadata beside editable content</li><li>Markdown draft download and reopen</li></ul><a className="workflow-open" href="./task-workflow.html">Try the task workspace ↗</a><p className="workflow-evidence">Doist publishes its Tiptap-based Typist editor. This local demo uses FountainJS, with no Todoist account, synchronization, or task API.</p><div className="workflow-links"><a href="https://github.com/eddolo/fountainjs/blob/master/docs/WORKFLOW_DEMOS.md">Implementation guide ↗</a><a href="https://github.com/Doist/typist">Original editor ↗</a></div></article>
+    </section>
+    <section className="workflow-more"><h2>Choose the kind of proof you need.</h2><p>Product workflows show complete editing journeys. The integration gallery shows framework and backend boundaries. Capability labs explore specialist work in more depth.</p><div><a href="./demos.html#gallery">10 integration demos →</a><a href="./math-renderer.html">Math and paper-table lab →</a><a href="./math-references.html">Equation references and print lab →</a><a href="./developers.html">Developer guide →</a></div><p>No speed or feature-superiority claims are implied by a familiar layout. The demos label what is active, and the guides explain the boundaries.</p></section>
+  </main>;
+}
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><Workflows /></React.StrictMode>);

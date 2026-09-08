@@ -1120,6 +1120,12 @@ performance, and browser behavior:
   [GitLab's public architecture evidence](https://docs.gitlab.com/development/fe_guide/content_editor/)
   that its real rich editor uses Tiptap/ProseMirror, and present this as a
   recognizable replacement-workflow test rather than a visual clone;
+- delivered a discoverable [real-world workflow hub](https://eddolo.github.io/fountainjs/workflows.html)
+  above the ten integration demos, plus an unofficial Todoist-style task-brief
+  workspace with independent editor histories, host-owned task metadata and local
+  Markdown handoff. See [the implementation and scope](WORKFLOW_DEMOS.md).
+  Further document/review, block-knowledge and academic product workflows remain
+  candidates, not completed clones or claims about the original products' engines;
 - table captions and advanced image/text wrapping;
 - cross-editor schema-aware drag and drop; the local general inline/block drop
   cursor is delivered and publicly certified under UI-06, while accepting and

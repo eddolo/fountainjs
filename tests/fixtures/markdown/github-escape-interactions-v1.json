@@ -1,0 +1,49 @@
+{
+  "capturedAt": "2026-09-08",
+  "endpoint": "https://api.github.com/markdown",
+  "mode": "gfm",
+  "spec": "https://github.github.com/gfm/#tables-extension-",
+  "note": "Synthetic public inputs, response HTML captured without alteration. Offline regression fixtures; not full GFM conformance.",
+  "cases": [
+    {
+      "markdown": "| `a\\|b` |\n| --- |\n| x |",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th><code class=\"notranslate\">a|b</code></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "markdown": "| `a\\\\|b` |\n| --- |\n| x |",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th><code class=\"notranslate\">a\\|b</code></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "markdown": "| `a\\\\\\|b` |\n| --- |\n| x |",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th><code class=\"notranslate\">a\\\\|b</code></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "markdown": "| `a\\\\\\\\|b` |\n| --- |\n| x |",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th><code class=\"notranslate\">a\\\\\\|b</code></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "markdown": "| `a\\\\\\\\\\|b` |\n| --- |\n| x |",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th><code class=\"notranslate\">a\\\\\\\\|b</code></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "markdown": "| `a\\\\\\\\\\\\|b` |\n| --- |\n| x |",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th><code class=\"notranslate\">a\\\\\\\\\\|b</code></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>x</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "markdown": "~~\\~\\~x\\~\\~~~",
+      "html": "<p><del>~~x~~</del></p>"
+    },
+    {
+      "markdown": "\\~~~x~~",
+      "html": "<p>~<del>x</del></p>"
+    },
+    {
+      "markdown": "~\\~x\\~~",
+      "html": "<p><del>~x~</del></p>"
+    },
+    {
+      "markdown": "| Left | Right\n| --- | ---\n| cell | end\\\\|",
+      "html": "<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th>Left</th>\n<th>Right</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>cell</td>\n<td>end|</td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    }
+  ]
+}

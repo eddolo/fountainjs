@@ -1,5 +1,6 @@
 import { demoDefinitions } from './demo-definitions';
 import { SitePageLink } from './SitePageLink';
+import './workflows.css';
 
 const surfaces = [
   ['React', 'The optional React entry supplies hooks, composer, toolbar, navigator, and review UI.'],
@@ -13,9 +14,11 @@ function DemoGallery() {
     <main className="demos-site">
       <header className="site-header">
         <a className="brand" href="./" aria-label="FountainJS home"><span>F</span> FountainJS</a>
-        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html" current>10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink><a className="site-section-link" href="#boundaries">Boundaries</a></nav>
+        <nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html" current>10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink><a className="site-section-link" href="#boundaries">Boundaries</a></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>
+
+      <section className="workflow-discovery" aria-label="Real-world workflow demos"><div><h2>Real-world workflows, rebuilt with FountainJS.</h2><p>Try a GitLab-style issue editor or a Todoist-style task workspace. Then follow the implementation guide.</p></div><div className="workflow-discovery-actions"><a href="./workflows.html">Explore product workflows ↗</a><a href="./issue-editor.html">Open GitLab-style issue editor ↗</a></div></section>
 
       <section className="demos-hero">
         <p>TEN WORKING INTEGRATIONS</p>

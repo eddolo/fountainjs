@@ -1,0 +1,55 @@
+.workflows-site, .task-site { min-height: 100vh; background: #f7f5f0; }
+.workflows-site .site-header, .task-site .site-header { grid-template-columns: 1fr auto; }
+.workflow-heading, .task-heading { max-width: 1450px; margin: auto; padding: 56px clamp(20px,5vw,72px) 32px; }
+.workflow-heading > p:first-child, .task-heading > p:first-child, .workflow-kind { color: #6542d5; font: 600 13px/1.5 'DM Mono', monospace; letter-spacing: .06em; }
+.workflow-heading h1 { font-size: clamp(38px,5vw,72px); line-height: 1.05; letter-spacing: -.045em; margin: 20px 0; }
+.workflow-heading > p:last-child, .task-heading > p:last-child { max-width: 830px; font-size: 17px; line-height: 1.7; color: #5c5668; }
+.workflow-grid { max-width: 1450px; margin: auto; padding: 12px clamp(20px,5vw,72px) 60px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.workflow-card { display: flex; flex-direction: column; padding: 32px; background: white; border: 1px solid #d7d0e4; border-top: 5px solid #6542d5; border-radius: 12px; }
+.workflow-card--task { border-top-color: #137659; }
+.workflow-card h2 { font-size: 30px; letter-spacing: -.035em; margin: 20px 0 10px; }
+.workflow-card > p, .workflow-card li { font-size: 16px; line-height: 1.7; }
+.workflow-card ul { padding-left: 22px; flex: 1; }
+.workflow-open { display: block; text-align: center; padding: 16px; color: white; background: #5132b7; border-radius: 8px; font-weight: 700; }
+.workflow-card--task .workflow-open { background: #11694f; }
+.workflow-card .workflow-evidence { color: #635d6e; font-size: 14px; }
+.workflow-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; text-decoration: underline; }
+.workflow-more { max-width: 1306px; margin: 0 auto; padding: 32px clamp(20px,4vw,50px) 64px; border-top: 1px solid #d7d0e4; }
+.workflow-more p { font-size: 16px; line-height: 1.75; max-width: 1000px; color: #5c5668; }
+.workflow-more > div { display: flex; flex-wrap: wrap; gap: 12px 24px; color: #5132b7; font-weight: 700; line-height: 1.6; }
+.workflow-discovery { margin: 0; padding: 24px clamp(24px,7vw,112px); background: #9af0c0; color: #172d23; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px 24px; }
+.workflow-discovery h2 { font-size: 25px; margin: 0 0 8px; }
+.workflow-discovery p { font-size: 16px; line-height: 1.6; margin: 0; }
+.workflow-discovery a { display: inline-block; padding: 12px 16px; font-weight: 700; background: #172d23; color: white; border-radius: 8px; }
+.workflow-discovery-actions { display: flex; flex-direction: column; gap: 8px; }
+.workflow-discovery-actions a:last-child { background: transparent; color: #172d23; text-decoration: underline; padding-block: 6px; }
+.task-heading { padding-top: 30px; padding-bottom: 16px; }
+.task-heading h1 { margin: 12px 0; font-size: clamp(30px,4vw,46px); letter-spacing: -.04em; text-wrap: balance; }
+.task-workspace { display: grid; grid-template-columns: 280px minmax(0,1fr); width: calc(100% - 32px); max-width: 1306px; margin: 0 auto 40px; border: 1px solid #d7d0e4; background: white; border-radius: 12px; overflow: clip; }
+.task-sidebar { padding: 26px 20px; background: #f0f3ef; border-right: 1px solid #d7d0e4; }
+.task-sidebar h2 { font-size: 21px; margin-top: 0; }
+.task-sidebar > p { font-size: 14px; line-height: 1.6; color: #516258; }
+.task-sidebar nav { display: grid; gap: 8px; }
+.task-sidebar button { width: 100%; display: flex; gap: 10px; text-align: left; border: 1px solid transparent; background: transparent; color: #253b30; padding: 12px; border-radius: 8px; line-height: 1.5; overflow-wrap: anywhere; }
+.task-sidebar button[aria-pressed=true] { background: white; border-color: #779b89; font-weight: 700; }
+.task-sidebar .task-add { margin-top: 20px; color: #11694f; font-weight: 700; }
+.task-panes { min-width: 0; }
+.task-pane { padding: 24px; }
+.task-pane[hidden] { display: none; }
+.task-meta { display: grid; grid-template-columns: minmax(0,1fr) 160px; gap: 16px; }
+.task-meta label { display: grid; gap: 8px; font-size: 14px; font-weight: 700; }
+.task-meta input:not([type=checkbox]) { width: 100%; min-width: 0; padding: 12px; border: 1px solid #b9b4c5; border-radius: 7px; background: white; color: #17152a; }
+.task-meta .task-complete { display: flex; align-items: center; grid-column: 1 / -1; }
+.task-mode { display: flex; gap: 20px; align-items: center; justify-content: space-between; margin-top: 16px; }
+.task-mode h2 { font-size: 20px; }
+.task-mode button, .task-file-actions button { padding: 10px 14px; border: 1px solid #b9b4c5; border-radius: 7px; background: white; color: #342953; }
+.task-pane .fountain-editor { min-height: 300px; }
+.task-file-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.task-file-actions button:first-child { background: #11694f; color: white; border-color: #11694f; }
+.task-pane > p { font-size: 14px; line-height: 1.6; }
+.task-diagnostics { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; padding-top: 18px; border-top: 1px solid #ddd7e5; font-size: 14px; }
+.task-diagnostics dt { color: #686171; }
+.task-diagnostics dd { margin: 4px 0 0; }
+.task-site button:focus-visible, .workflows-site a:focus-visible { outline: 3px solid #7b58ec; outline-offset: 3px; }
+@media (max-width: 850px) { .task-workspace { margin-inline: 16px; grid-template-columns: 1fr; }.task-sidebar { border-right: 0; border-bottom: 1px solid #d7d0e4; }.task-sidebar nav { grid-template-columns: repeat(3,minmax(0,1fr)); }.task-sidebar button { font-size: 14px; }.workflow-grid { grid-template-columns: 1fr; }.workflow-discovery { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .workflows-site .site-header, .task-site .site-header { height: auto; min-height: 96px; grid-template-columns: 1fr; padding-block: 12px; gap: 12px; }.workflows-site .site-header nav, .task-site .site-header nav { flex-wrap: wrap; gap: 8px; font-size: 14px; }.workflow-card { padding: 24px; }.task-pane { padding: 16px; }.task-meta { grid-template-columns: 1fr; }.task-sidebar nav { grid-template-columns: 1fr; } }

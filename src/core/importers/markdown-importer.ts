@@ -524,7 +524,7 @@ function matchingDelimiter(
       }
     }
     if (value.startsWith(delimiter, index)
-      && (!exactRun || (value[index - 1] !== delimiter[0]
+      && (!exactRun || ((value[index - 1] !== delimiter[0] || isEscapedMarkdownCharacter(value, index - 1))
         && value[index + delimiter.length] !== delimiter[0]))) return index;
   }
   return -1;
@@ -1316,7 +1316,8 @@ function inline(
     for (const [delimiter, markNames] of delimiters) {
       if (!text.startsWith(delimiter, index)) continue;
       const exactRun = delimiter[0] === '~';
-      if (exactRun && (text[index - 1] === '~' || text[index + delimiter.length] === '~')) continue;
+      if (exactRun && ((text[index - 1] === '~' && !isEscapedMarkdownCharacter(text, index - 1))
+        || text[index + delimiter.length] === '~')) continue;
       const end = matchingDelimiter(text, index + delimiter.length, delimiter, exactRun, references);
       const types = markNames.map((markName) => schema.marks[markName]);
       if (end <= index + delimiter.length || types.some((type) => !type)) continue;
@@ -1410,14 +1411,16 @@ function paragraph(schema: Schema, value: string, references: References, align 
 function tableCells(line: string): string[] {
   let source = line.trim();
   if (source.startsWith('|')) source = source.slice(1);
-  if (source.endsWith('|') && !/(^|[^\\])(?:\\\\)*\\\|$/.test(source)) source = source.slice(0, -1);
+  if (source.endsWith('|') && source.at(-2) !== '\\') source = source.slice(0, -1);
   const cells: string[] = [];
   let cell = '';
   for (let index = 0; index < source.length; index++) {
-    if (source[index] === '\\' && index + 1 < source.length) {
+    if (source[index] === '\\' && source[index + 1] === '|') {
       // GFM removes an escaped pipe at the table layer, including inside code
       // spans where the inline parser deliberately leaves escapes literal.
-      cell += source[index + 1] === '|' ? '|' : source[index] + source[index + 1];
+      // Other backslashes stay for inline parsing: even a run of two or more
+      // before a pipe protects it, and only the final slash is removed here.
+      cell += '|';
       index++;
     } else if (source[index] === '|') {
       cells.push(cell.trim());
@@ -1436,7 +1439,7 @@ function tableAlignment(value: string): 'left' | 'center' | 'right' | null {
 }
 
 function tableStart(lines: readonly string[], index: number): { headers: string[]; alignments: ('left' | 'center' | 'right')[] } | null {
-  if (index + 1 >= lines.length || !/(^|[^\\])(?:\\\\)*\|/u.test(lines[index])) return null;
+  if (index + 1 >= lines.length || !/(^|[^\\])\|/u.test(lines[index])) return null;
   const headers = tableCells(lines[index]);
   const delimiters = tableCells(lines[index + 1]);
   if (headers.length !== delimiters.length) return null;
