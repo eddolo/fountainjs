@@ -1,5 +1,58 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Code-ending correction (2026-09-08, Unreleased): running the entire CommonMark
+corpus through `parseTextBlockFlow`, rather than only the older `parseFlow`,
+reproduced an extra code-buffer newline in example 191. Two apparent frontmatter
+failures were audit setup errors: `parseWithSource` captures frontmatter outside
+the body, while the public conversion route uses ordinary `parse`. Semantics
+and source retention are now audited separately.
+
+The fix in `src/html/server.ts` tracks generated code-wrapper offsets and terminal
+LF carriers through the existing protected inline slots. A carrier becomes empty
+only when projected inside its own generated code wrapper. It retains its LF
+inside an enclosing raw `pre`. The empty carrier stays in provenance checks, so
+the existing once-only/in-order preservation guards still apply. No authored
+newline is heuristically trimmed; no public API, runtime dependency or neutral
+semantic comparator changes were needed.
+
+Sixteen added unit cases cover LF/CRLF, leading/trailing authored blank lines,
+foster parenting, separate raw HTML code, enclosing preformatted flow and host
+parse rules. Two older expectations recorded the extra LF; they now require the
+same code buffer as the unwrapped Markdown input. Compiled Node/workerd fixtures
+also distinguish code with and without an authored terminal blank line.
+
+The normal conformance gate now independently requires 580/652 reference matches
+on both line endings for source recovery and 1,304 exact-source checks. Default
+563/652 and identity-preserving 579/652 remain unchanged. This broadens regression
+coverage; it does not complete CommonMark or recover arbitrary HTML layouts.
+The private provenance maps add about 0.7 KiB ESM / 0.4 KiB CJS: measured aggregate
+runtime sizes are 1394.3 / 1158.7 KiB. Only the aggregate ESM ceiling moves to
+1395 KiB; all individual entry, CSS, CJS and performance ceilings stay fixed.
+
+Visual review then reproduced a separate reader issue: the text buffer retained
+the authored terminal LF, but a plain `pre > code` reader did not allocate the
+last empty line. A new geometry assertion failed before the CSS correction.
+`src/styles.css` now uses an empty, zero-width inline-block pseudo-element only
+on the plain code surface; the decorated code view already handles its own lines.
+This contributes a line box without adding source, DOM text or clipboard bytes.
+The browser journey checks exact text and distinct code heights on desktop and
+390px layouts, in addition to editing, undo/redo and draft download/reopen.
+
+Verification: full sequential `pnpm check` passes 1,649 tests / 127 files,
+compiled Node/workerd, headless/API/package, framework types, unchanged performance
+limits and reviewed size gates. Nine browser checks pass across Chromium, Firefox
+and WebKit (code endings, registered-wrapper recovery and paragraph recovery).
+A separate recorded journey passes against a fresh build; the recording overview,
+author surface and desktop/390px reader screenshots were visually inspected.
+Paste coverage uses a standard HTML paste-event payload, not OS clipboard access.
+Evidence: `artifacts/source-code-ending-final-check.log`,
+`artifacts/code-ending-final-browsers.log`, `artifacts/code-ending-reader-repro.log`
+(expected pre-fix layout failure), `artifacts/code-ending-recorded.log` and
+`artifacts/code-ending-recorded/overview.png`.
+A final three-engine rerun against the rebuilt minimal CSS passes in
+`artifacts/code-ending-built-browsers.log`; the site build passes in
+`artifacts/code-ending-site-build.log` (existing optional math chunk warning).
+
 Standard-wrapper reporting correction (2026-09-08, Unreleased): the server HTML
 fallback incorrectly suppressed `unmapped-block-wrapper` for recognized standard
 block tags, even when no schema node represented the wrapper. Removal is now

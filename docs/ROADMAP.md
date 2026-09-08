@@ -5,6 +5,17 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Source-recovery audit (2026-09-08, Unreleased): corrected generated code terminators
+being added to editable code buffers. The optional structural recovery route now
+has its own 652-example CommonMark regression baseline: 580 required semantic
+matches on both LF/CRLF and 1,304 separate exact-source checks. Existing 563/579
+profiles remain unchanged; full conformance is unfinished. See
+[profile boundaries](MARKDOWN_SOURCE.md#source-recovery-code-endings-and-corpus-coverage).
+Visual review also found and corrected hidden terminal blank lines in plain
+reader code views. Full check passes 1,649 tests / 127 files; nine three-engine
+browser checks and a recorded/visually inspected handoff pass. The prior native
+definition-list update's full Linux CI has now also completed successfully.
+
 Definition-list structure (2026-09-08, Unreleased): the reproduced glossary
 flattening gap now has native term/description nodes, shared browser/server
 projection, insertion/appending/removal controls, history and explicit Markdown

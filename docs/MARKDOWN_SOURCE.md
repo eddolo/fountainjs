@@ -16,6 +16,46 @@ structured persistence format.
 
 ## Raw and visual workflow
 
+### Source-recovery code endings and corpus coverage
+
+The optional `ServerHTMLImporter.parseTextBlockFlow` adapter now distinguishes
+the generated HTML renderer's code terminator from authored code-buffer text.
+For example, a fenced `x` inside an HTML `div` remains `x`, not `x\n`; an
+authored blank line before the closing fence still yields `x\n`. Raw HTML `pre`
+content retains its actual trailing newlines. When generated code is flattened
+inside a *different* raw `pre`, its renderer LF remains part of that rendered
+stream. The adapter uses import-local provenance, not blanket trimming.
+The supplied plain code-view CSS also keeps the last authored empty line visible
+without inserting a sentinel character into the document or copied text.
+
+The conformance command now always checks three distinct profiles against the
+same CommonMark 0.31.2 reference and unchanged neutral semantic projection:
+
+| Import policy | Required matching examples |
+| --- | ---: |
+| Default, inert HTML | 563 / 652 |
+| Identity-preserving HTML flow plus inline adapter | 579 / 652 |
+| Explicit text-block source recovery plus inline adapter | 580 / 652 on both LF and CRLF |
+
+These are not interchangeable capabilities or full conformance claims. The
+source-recovery profile includes example 148's already-supported reconstruction
+and the corrected code ending in example 191. Its remaining 72 examples include
+unsupported HTML semantics and intentional safety/editor/dialect differences;
+they must not all be advertised as missing parser rules.
+
+Semantic comparison uses `MarkdownImporter.parse`, the same API as the public
+conversion demo. An additional 1,304 checks use `parseWithSource` and exact
+untouched-source export independently. Source capture recognizes inert YAML
+frontmatter, so comparing its body alone to plain CommonMark would misclassify
+examples 96 and 98. Exact source retention does not prove semantic fidelity.
+
+Inspect this profile with
+`node scripts/check-markdown-conformance.mjs --source-flow-report --show-mismatches`.
+The independently reviewed ranges live in
+`tests/fixtures/markdown/commonmark-source-recovery-baseline-v1.json`; regressions
+fail the normal gate. New matches require review instead of silently changing
+the established default or identity-preserving profile.
+
 ### Choosing whether bare addresses become links
 
 Fountain recognizes GFM-style bare web and email addresses by default. Hosts can

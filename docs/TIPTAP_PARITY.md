@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Source-recovery audit (2026-09-08, Unreleased): fixed synthetic code terminators
+leaking into code buffers. The optional structural adapter now has an independent
+580/652 CommonMark semantic regression profile checked with LF and CRLF, plus
+separate exact-source retention. Existing 563/579 profiles and the neutral
+comparator remain unchanged. This is a correctness/coverage improvement, not
+completed CommonMark or product parity.
+
 Definition-list structure (2026-09-08, Unreleased): native terms/descriptions now
 retain distinct editable blocks through HTML and opt-in Markdown handoff. Shared
 server/browser projection, pair insertion, contextual removal, undo and explicit

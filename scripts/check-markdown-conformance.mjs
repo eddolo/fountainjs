@@ -33,6 +33,7 @@ const reportOnly = process.argv.includes('--report');
 const showMismatches = process.argv.includes('--show-mismatches');
 const htmlPolicyReport = process.argv.includes('--html-policy-report');
 const htmlFlowReport = process.argv.includes('--html-flow-report');
+const sourceFlowReport = process.argv.includes('--source-flow-report');
 const inspectedExamples = new Set(process.argv
   .filter((value) => value.startsWith('--example='))
   .map((value) => Number(value.slice('--example='.length))));
@@ -926,6 +927,73 @@ console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed
 }
 
 if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip regressions: ${compressRanges(roundTripFailures)}`);
+// The source-reprojecting adapter is a separate profile, not a replacement for
+// the identity-preserving profile. Require every reviewed case on both endings.
+{
+  const sourceBaseline = JSON.parse(readFileSync(new URL('../tests/fixtures/markdown/commonmark-source-recovery-baseline-v1.json', import.meta.url), 'utf8'));
+  if (sourceBaseline.standard !== baseline.standard || sourceBaseline.projectionVersion !== baseline.projectionVersion) {
+    throw new Error('Source recovery must use the same standard and neutral projection.');
+  }
+  const required = expandRanges(sourceBaseline.requiredMatchRanges);
+  const unresolved = expandRanges(sourceBaseline.unresolvedRanges);
+  for (let number = 1; number <= 652; number++) {
+    if (Number(required.has(number)) + Number(unresolved.has(number)) !== 1) throw new Error(`Source-recovery example ${number} needs one classification.`);
+  }
+  const matchCounts = new Map();
+  const regressions = [];
+  const errors = [];
+  let retentionChecks = 0;
+  for (const example of commonmarkSpec.tests) for (const ending of ['\n', '\r\n']) {
+    const source = materializeTabs(example.markdown).replaceAll('\n', ending);
+    const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
+    const fallbacks = [];
+    const issues = [];
+    let actual;
+    let error = null;
+    try {
+      const importer = new ServerHTMLImporter();
+      const document = MarkdownImporter.parse(source, schema, {
+        parseHTMLFlow(segments, target, context) {
+          const result = importer.parseTextBlockFlowWithReport(segments, target, context);
+          issues.push(...result.issues);
+          return result.nodes;
+        },
+        parseHTMLInline(segments, target) {
+          const result = importer.parseInlineWithReport(segments, target);
+          issues.push(...result.issues);
+          return result.nodes;
+        },
+        onHTMLFlowFallback: issue => fallbacks.push(issue),
+        onHTMLInlineFallback: issue => fallbacks.push(issue),
+      });
+      // Source capture deliberately recognizes inert YAML frontmatter, whereas
+      // parse() treats the same --- lines as CommonMark. Check retention apart
+      // from the semantics of the actual parse() route used by the demo.
+      const captured = MarkdownImporter.parseWithSource(source, schema, {
+        parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+        parseHTMLInline: ServerHTMLImporter.parseInline,
+      });
+      if (MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== source) {
+        throw new Error('Source-recovery profile failed exact untouched-source retention.');
+      }
+      retentionChecks++;
+      actual = semanticProjection(HTMLExporter.export(document, { document: false }));
+    } catch (cause) { error = String(cause); }
+    const matched = !error && JSON.stringify(actual) === JSON.stringify(expected);
+    if (error) errors.push(`${example.number}/${JSON.stringify(ending)}: ${error}`);
+    if (matched) matchCounts.set(example.number, (matchCounts.get(example.number) ?? 0) + 1);
+    else if (required.has(example.number)) regressions.push(`${example.number}/${JSON.stringify(ending)}`);
+    if (sourceFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) {
+      console.log(JSON.stringify({ sourceFlow: { number: example.number, ending, source, expected, actual, matched, issues, fallbacks, error } }));
+    }
+  }
+  const matches = [...matchCounts].filter(([, count]) => count === 2).map(([number]) => number);
+  const gains = [...unresolved].filter(number => matchCounts.has(number));
+  console.log(`Opt-in source recovery: ${matches.length}/652 neutral-projection matches on LF and CRLF; ${retentionChecks} separate exact-source checks. Not full CommonMark conformance.`);
+  if (sourceFlowReport) console.log(`Source-recovery matching ranges: ${compressRanges(matches)}`);
+  if (errors.length || regressions.length) throw new Error(`Source-recovery corpus regressions: ${[...errors, ...regressions].join(', ')}`);
+  if (gains.length && !reportOnly) throw new Error(`Review newly matching source-recovery examples: ${compressRanges(gains)}`);
+}
 if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');
 if (divergenceFailures.length) throw new Error(`Intentional divergence contract regressions: ${compressRanges(divergenceFailures)}`);
 if (reportOnly) process.exit(0);

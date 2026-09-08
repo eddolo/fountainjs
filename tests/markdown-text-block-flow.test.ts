@@ -63,7 +63,9 @@ describe('source-aware heading and code HTML flow', () => {
     expect(doc.child(0).attrs.level).toBe(1);
     expect(doc.child(0).child(0).marks.map(mark => mark.type.name)).toContain('strong');
     expect(doc.child(1).attrs.language).toBe('python');
-    expect(doc.child(1).textContent).toBe('x < y\n');
+    // A wrapper must not add the HTML renderer's terminal LF to the code buffer.
+    expect(doc.child(1).textContent).toBe('x < y');
+    expect(doc.child(1).textContent).toBe(MarkdownImporter.parse('```python\nx < y\n```', schema).child(0).textContent);
   });
 
   it.each(['c++', 'c#', 'my.dsl'])('does not truncate the %s code label during source projection', language => {
@@ -157,7 +159,7 @@ describe('source-aware heading and code HTML flow', () => {
       parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback,
     });
     expect(fallback).not.toHaveBeenCalled();
-    expect(parsed.child(0).textContent).toBe('Safe\n');
+    expect(parsed.child(0).textContent).toBe('Safe');
     expect(parsed.child(0).attrs.language).toBe('x"onclick="bad');
     expect(parsed.content).toHaveLength(1);
   });

@@ -151,6 +151,8 @@ interface ImportContext {
     readonly sourceBreaks: ReadonlyMap<number, FountainNode>;
     readonly projectedBreaks: WeakSet<FountainNode>;
     readonly breakVisits: number[];
+    readonly codeBlocks: ReadonlyMap<number, FountainNode>;
+    readonly codeEndings: ReadonlyMap<number, FountainNode>;
   };
 }
 
@@ -1090,6 +1092,12 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         const adjacent = index !== undefined && previousIndex === index - 1 && slots.adjacentText.has(index);
         const skipLF = adjacent && previousCR && originalText.startsWith('\n');
         let value = (skipLF ? originalText.slice(1) : originalText).replace(/\r\n?/gu, '\n');
+        // A Markdown renderer's terminal LF belongs to the generated code
+        // wrapper, not to the code buffer. Retain it when flattened inside a
+        // different raw pre, but keep only the empty provenance carrier in its
+        // own generated pre. No authored newline is trimmed or guessed away.
+        const generatedCode = preLocation && slots.codeBlocks.get(preLocation.startOffset);
+        if (generatedCode && index !== undefined && slots.codeEndings.get(index) === generatedCode) value = '';
         previousCR = originalText ? originalText.endsWith('\r') : adjacent && previousCR;
         previousIndex = index;
         const sourceMarks = index === undefined ? [] : slots.nodes[index].marks;
@@ -1303,7 +1311,7 @@ export class ServerHTMLImporter {
     return new ServerHTMLImporter().parseParagraph(segments, schema, context);
   }
 
-  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false, generated?: { breaks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; lineFeeds: ReadonlySet<FountainNode> }): ServerHTMLInlineImportResult {
+  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false, generated?: { breaks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; lineFeeds: ReadonlySet<FountainNode>; codeBlocks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; codeEndings: ReadonlyMap<FountainNode, FountainNode> }): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
     let preOpen = false;
     for (const segment of segments) {
@@ -1342,6 +1350,8 @@ export class ServerHTMLImporter {
     const softBreaks = new Set<number>();
     const adjacentText = new Set<number>();
     const sourceBreaks = new Map<number, FountainNode>();
+    const codeBlocks = new Map<number, FountainNode>();
+    const codeEndings = new Map<number, FountainNode>();
     let previousSegment: MarkdownHTMLInlineSegment | undefined;
     const wrapped = paragraphMode && wrapParagraph;
     const parts: string[] = wrapped ? ['<p>'] : [];
@@ -1352,12 +1362,16 @@ export class ServerHTMLImporter {
         tokenMarks.set(offset, segment.marks);
         const sourceBreak = generated?.breaks.get(segment);
         if (sourceBreak) sourceBreaks.set(offset, sourceBreak);
+        const sourceCode = generated?.codeBlocks.get(segment);
+        if (sourceCode) codeBlocks.set(offset, sourceCode);
         part = segment.html;
       } else {
         part = `<${tag} data-index="${originals.length}"></${tag}>`;
         if (seenNodes.has(segment.node)) sharedNodes.add(segment.node);
         seenNodes.add(segment.node);
         originals.push(segment.node);
+        const codeEnding = generated?.codeEndings.get(segment.node);
+        if (codeEnding) codeEndings.set(originals.length - 1, codeEnding);
         if (segment.softBreak || generated?.lineFeeds.has(segment.node)) softBreaks.add(originals.length - 1);
         if (previousSegment?.kind === 'node' && previousSegment.node.isText && segment.node.isText
           && previousSegment.textRun === segment.textRun
@@ -1375,7 +1389,7 @@ export class ServerHTMLImporter {
     const issues: ServerHTMLImportIssue[] = [];
     const provenance = new WeakMap<FountainNode, number>();
     const context: ImportContext = {
-      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText, sourceBreaks, projectedBreaks: new WeakSet(), breakVisits: [] },
+      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText, sourceBreaks, codeBlocks, codeEndings, projectedBreaks: new WeakSet(), breakVisits: [] },
     };
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
@@ -1480,6 +1494,8 @@ export class ServerHTMLImporter {
     const stream: MarkdownHTMLInlineSegment[] = [];
     const generatedBreaks = new Map<MarkdownHTMLInlineSegment, FountainNode>();
     const generatedLineFeeds = new Set<FountainNode>();
+    const generatedCodeBlocks = new Map<MarkdownHTMLInlineSegment, FountainNode>();
+    const generatedCodeEndings = new Map<FountainNode, FountainNode>();
     let newline = true;
     const raw = (html: string) => { stream.push({ kind: 'html', html, marks: [] }); if (html) newline = html.endsWith('\n'); };
     const cr = () => { if (!newline) raw('\n'); };
@@ -1550,7 +1566,13 @@ export class ServerHTMLImporter {
         const language = paragraph.language.replace(/[&<>"']/gu, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
         // Tasks preserve their Fountain subtree, not a rendered CommonMark
         // code stream: do not introduce an inline code mark or renderer LF.
-        raw(insideTask ? `<pre data-language="${language}">` : `<pre><code class="language-${language}">`);
+        if (insideTask) raw(`<pre data-language="${language}">`);
+        else {
+          const opening: MarkdownHTMLInlineSegment = { kind: 'html', html: `<pre><code class="language-${language}">`, marks: [] };
+          generatedCodeBlocks.set(opening, node);
+          stream.push(opening);
+          newline = false;
+        }
       } else if (!tight) raw(`<${tag}>`);
       for (const part of paragraph.segments) {
         if (structural && !insideTask && part.kind === 'node' && part.node.type.name === 'hard_break'
@@ -1571,7 +1593,13 @@ export class ServerHTMLImporter {
         if (part.kind === 'html') { if (part.html) newline = part.html.endsWith('\n'); }
         else if (part.node.text) newline = Boolean(part.softBreak) || (!part.node.marks.length && part.node.text.endsWith('\n'));
       }
-      raw(paragraph.kind === 'code' ? insideTask ? '</pre>\n' : `${paragraph.finalLineBreak ? '\n' : ''}</code></pre>\n` : tight ? recursive ? '' : '\n' : `</${tag}>\n`);
+      if (paragraph.kind === 'code' && !insideTask && paragraph.finalLineBreak) {
+        const ending = schema.text('');
+        generatedLineFeeds.add(ending);
+        generatedCodeEndings.set(ending, node);
+        stream.push({ kind: 'node', node: ending });
+      }
+      raw(paragraph.kind === 'code' ? insideTask ? '</pre>\n' : '</code></pre>\n' : tight ? recursive ? '' : '\n' : `</${tag}>\n`);
     };
     for (const segment of segments) {
       if (segment.kind === 'html') {
@@ -1585,7 +1613,9 @@ export class ServerHTMLImporter {
       emit(source);
     }
     if ([...byBlock].some(([node, source]) => source.kind !== 'html' && !used.has(node))) throw new Error('Paragraph flow source context contains unmatched blocks.');
-    const result = this.parseInlineContent(stream, schema, true, false, true, { breaks: generatedBreaks, lineFeeds: generatedLineFeeds });
+    const result = this.parseInlineContent(stream, schema, true, false, true, {
+      breaks: generatedBreaks, lineFeeds: generatedLineFeeds, codeBlocks: generatedCodeBlocks, codeEndings: generatedCodeEndings,
+    });
     // Task syntax is an extension, not ordinary CommonMark list text. Reject
     // HTML repair/raw-text scopes that erase, duplicate or alter any task tree.
     // A refusal rolls back the entire speculative flow at the importer boundary.

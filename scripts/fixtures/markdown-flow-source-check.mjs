@@ -3,6 +3,12 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const recoveredCode = MarkdownImporter.parse('<div>\n\n```js\nx\n```\n\n```js\nx\n\n```\n\n</div>', schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+  });
+  if (recoveredCode.child(0).textContent !== 'x' || recoveredCode.child(1).textContent !== 'x\n') {
+    throw new Error('Compiled source recovery confused generated and authored code endings.');
+  }
   const definitions = ServerHTMLImporter.parse('<dl><dt>Latency</dt><dd>Time to respond.</dd><dt>Throughput</dt><dd>Work per second.</dd></dl>', schema);
   const reopenedDefinitions = MarkdownImporter.parse(MarkdownExporter.export(definitions), schema, {
     parseHTMLBlock: (html, target) => ServerHTMLImporter.parseFragment(html, target),

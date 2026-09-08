@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "standard": "CommonMark 0.31.2",
+  "projectionVersion": 9,
+  "requiredMatchRanges": "1-149,151,160,162,164-169,190-200,202-206,208-217,219-238,241-279,285-307,310-314,316-343,345-475,478-490,492-493,495-523,525-535,537-595,597,600,602-607,609-610,618-624,632-641,644-652",
+  "unresolvedRanges": "150,152-159,161,163,170-189,201,207,218,239-240,280-284,308-309,315,344,476-477,491,494,524,536,596,598-599,601,608,611-617,625-631,642-643",
+  "note": "Separate explicit parseTextBlockFlow plus parseInline profile, using parse() for semantics and parseWithSource() only for independent exact-source retention (the latter recognizes inert frontmatter). 580 reference matches are required with both LF and CRLF. This includes recovered CommonMark 148 and code-ending-correct 191. Does not replace the default 563 or identity-preserving HTML-flow 579 baselines. Remaining mismatches include security/caret/GFM policy differences and unsupported HTML semantics; not full CommonMark conformance. No neutral comparator changes."
+}

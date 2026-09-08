@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Fixed the optional Markdown/HTML source-recovery adapter adding a generated
+  terminal newline to code buffers. Authored blank lines and raw HTML code endings
+  remain intact. Added a separate 652-example source-recovery regression profile
+  with LF/CRLF semantics and independent exact-source retention checks.
+- Kept trailing authored blank lines visible in plain code-block reader views
+  using an empty CSS layout marker, without adding document/clipboard characters.
+
 - Added native definition-list terms and descriptions, browser/server HTML import,
   editing commands and contextual toolbar controls. Glossaries retain their
   structure through HTML and explicitly enabled Markdown handoff in the issue

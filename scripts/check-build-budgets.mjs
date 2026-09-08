@@ -358,7 +358,10 @@ const limits = Object.freeze({
   // Native definition-list nodes, shared browser/server projection, editing
   // commands, toolbar controls and boundary-aware text output add ~4.8 KiB.
   // Measured 1393.6 KiB ESM; no new dependency or per-entry budget increase.
-  'all ESM runtime code': 1394 * kibibyte,
+  // Generated-code ending provenance adds ~0.7 KiB ESM / ~0.4 KiB CJS.
+  // Measured 1394.3 / 1158.7 KiB; only this aggregate ESM cap changes.
+  // No new dependency; individual entry, CSS and performance caps stay fixed.
+  'all ESM runtime code': 1395 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

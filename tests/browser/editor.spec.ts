@@ -28,6 +28,11 @@ import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
 import { markdownStructuralRecoveryJourney } from './markdown-structural-recovery-journey';
 import { markdownCustomWrapperJourney } from './markdown-custom-wrapper-journey';
 import { definitionListJourney } from './definition-list-journey';
+import { markdownCodeEndingsJourney } from './markdown-code-endings-journey';
+
+test('preserves code endings through source recovery and reader handoff', async ({ page }, info) => {
+  await markdownCodeEndingsJourney(page, info);
+});
 
 test('edits definition lists and reopens a glossary in a reader', async ({ page }, info) => {
   await definitionListJourney(page, info);
