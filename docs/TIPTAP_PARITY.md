@@ -1,5 +1,11 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+HTML loss visibility (2026-09-08, Unreleased): standard wrappers removed by schema
+fallback now report that loss; registered containers are not falsely flagged.
+Public conversion output stays fully accessible in a keyboard-scrollable panel.
+This improves reporting/UX, not structural fidelity or the CommonMark score.
+Definition-list term/description structure remains a reproduced open gap.
+
 Registered-wrapper correction (2026-09-08, Unreleased): custom HTML container
 rules no longer falsely reject generated hard breaks after trying an incompatible
 content shape. Only accepted parse attempts contribute preservation evidence.

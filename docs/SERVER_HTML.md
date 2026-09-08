@@ -299,7 +299,7 @@ Issue codes are:
   produce a schema-valid node/mark. Other rules and readable fallback content
   are still tried. An explicit `false` is an intentional decline and is not
   reported as an error; `null`/`undefined` retain their default-attribute meaning;
-- `unmapped-block-wrapper`: an unrecognized block wrapper was discarded while
+- `unmapped-block-wrapper`: a block wrapper without a supported schema projection was discarded while
   importing its descendants. Its identity, attributes, and behavior did not
   become an equivalent custom Fountain node. Figure and table-caption projections
   give specific reasons in the same category. Notes aggregate by reason, not by
@@ -323,6 +323,14 @@ the report. A later rule may recover the same content, so a diagnostic is not
 necessarily a lost node. Conversely, an empty report is **not** proof of lossless
 HTML conversion: unsupported tags, attributes, CSS/layout, and some filtered
 content still require broader conversion-loss accounting.
+
+Standard block tags are not exempt from loss reporting. In the default schema,
+an unrepresented `div`, `section`, `article`, `aside`, `main`, `nav`, `header`,
+`footer`, `address`, `fieldset` or `dl` reports wrapper removal just like an
+unknown custom tag. The parser knowing a tag is block-level does not mean it
+retains that wrapper. Typography can still survive as marks while the wrapper
+itself is lost. A successfully registered container rule is not reported as a
+removed wrapper; rejected speculative content shapes do not create false losses.
 
 Content candidates are evaluated lazily. An extension may accept block content
 after rejecting an inline interpretation (or vice versa); diagnostics from

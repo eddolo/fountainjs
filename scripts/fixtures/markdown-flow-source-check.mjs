@@ -3,6 +3,12 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const omitted = ServerHTMLImporter.parseWithReport('<section id="private"><p>Content</p></section>', schema);
+  if (omitted.document.child(0).type.name !== 'paragraph'
+    || !omitted.issues.some(issue => issue.code === 'unmapped-block-wrapper')
+    || JSON.stringify(omitted.issues).includes('private')) {
+    throw new Error('Compiled HTML conversion did not report a removed standard wrapper safely.');
+  }
   const sectionSchema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
     section: { group: 'block', content: 'block+', parseHTML: [{ tag: 'section' }] },
   } });

@@ -152,6 +152,8 @@
 .demo-output nav button.active { color: white; background: var(--demo-accent); }
 .demo-output pre { min-width: 0; padding: 18px; margin: 0; overflow: auto; color: #bbb5c9; background: #211e30; border-top: 1px solid #38344c; font: 10px/1.7 'DM Mono', monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
 .headless-surface { display: flex; flex-direction: column; }
+.headless-surface + .demo-output pre { min-height: 0; max-height: min(680px, 65vh); }
+.demo-output pre:focus-visible { outline: 2px solid var(--demo-accent); outline-offset: -2px; }
 .headless-surface > label { margin: 12px 0 8px; color: #625d6d; font-size: 12px; font-weight: 800; }
 .headless-input-tabs { display: flex; gap: 6px; margin-top: 12px; }
 .headless-input-tabs button { padding: 7px 10px; color: #756d89; background: white; border: 1px solid #d9d4df; border-radius: 7px; font: 700 10px 'DM Mono', monospace; }

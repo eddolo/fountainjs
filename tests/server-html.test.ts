@@ -23,7 +23,8 @@ it('inherits block typography in pure Node without a DOM shim', () => {
   expect(result.document.content.map(node => node.child(0).marks.map(mark => mark.type.name))).toEqual([
     ['font_family', 'font_size', 'line_height'], ['font_family', 'font_size', 'line_height'],
   ]);
-  expect(result.issues).toEqual([]);
+  // Typography survives as marks, but the section itself is not represented.
+  expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
 });
 
 it('does not retry the identical portable rule as a DOM callback when it declines', () => {

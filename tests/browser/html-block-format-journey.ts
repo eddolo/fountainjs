@@ -29,6 +29,18 @@ export async function htmlBlockFormatJourney(page: Page, info: TestInfo): Promis
       expect.objectContaining({ type: 'strong' }), expect.objectContaining({ type: 'text_color', attrs: { color: '#123456' } }),
     ]));
   }).toPass();
+  const details = page.getByRole('list', { name: 'Server HTML conversion details' });
+  await expect(details).toContainText('Unmapped HTML block wrappers were removed.');
+  await expect(page.getByText('HTML is converted into the supported document schema.', { exact: false }))
+    .toContainText('not a guarantee of lossless conversion');
+  const resultPanel = page.getByRole('region', { name: 'Document output', exact: true });
+  await expect.poll(() => resultPanel.evaluate(element => element.scrollHeight > element.clientHeight && element.clientHeight <= 680)).toBe(true);
+  await resultPanel.focus();
+  await page.keyboard.press('PageDown');
+  await expect.poll(() => resultPanel.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
+  await resultPanel.evaluate(element => { element.scrollTop = 0; });
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.screenshot({ path: info.outputPath('section-conversion-warning.png'), fullPage: true });
   await page.goto('/issue-editor.html');
   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
   await editor.click();

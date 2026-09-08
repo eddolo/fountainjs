@@ -1,5 +1,47 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Standard-wrapper reporting correction (2026-09-08, Unreleased): the server HTML
+fallback incorrectly suppressed `unmapped-block-wrapper` for recognized standard
+block tags, even when no schema node represented the wrapper. Removal is now
+reported for all fallback wrappers. This changes reporting, not the projected
+document. Registered wrappers remain authoritative; repeated warnings stay
+deduplicated and source attribute values are not included. Thirteen added unit
+cases cover standard tags, registered-node exemptions and 1,000 repeated wrappers.
+The existing typography test still verifies inherited marks, and now also
+correctly expects a warning for its removed section. Compiled Node/workerd smoke
+checks verify the same reporting boundary. `pnpm check` passes 1,608 tests / 124
+files; runtime/API/dependencies and all existing ceilings remain unchanged
+(1,388.8 KiB ESM / 1,153.9 KiB CJS).
+
+The public conversion demo now says "reported HTML conversion details", not
+"recovered HTML issues", and explicitly says an empty report is not a lossless
+guarantee. The styled-report workflow verifies the warning while retaining its
+formatting/edit/undo/redo/download/reopen checks. Initial screenshot review also
+found the JSON column stretching the complete page into a tall mostly empty
+input area. Headless output is now height-bounded with full scrolling; output
+regions are named, keyboard focusable and have a visible focus outline. The
+journey verifies PageDown actually scrolls the result instead of truncating it.
+
+Final UI verification: TypeScript passes; six browser checks pass across Chromium,
+Firefox and WebKit (styled-report handoff plus the public headless pipeline).
+A newly recorded styled-report journey passes after the scrolling correction.
+Its recording overview and complete conversion-page screenshot were visually
+inspected: warning text is visible and the output no longer stretches the page
+to the full JSON length. Evidence: `artifacts/standard-wrapper-check.log`,
+`artifacts/standard-wrapper-scroll-browser/`, and
+`artifacts/standard-wrapper-scroll-recorded/`. Pre-layout-fix recordings remain
+in `artifacts/standard-wrapper-recorded/`. Final site build succeeds with the
+existing large MathJax warning. Paste remains a synthetic public-event payload,
+not OS-clipboard certification; mobile viewports are not physical-device proof.
+
+Next concrete fidelity finding, not fixed here: with the default schema,
+`<dl><dt>Latency</dt><dd>Time to respond.</dd><dt>Throughput</dt><dd>Work per second.</dd></dl>`
+currently becomes one paragraph with four adjacent text nodes, losing term/
+description boundaries. The compiled importer reproduction confirms both lost
+structure and the newly explicit wrapper/inline warnings. Definition-list
+semantics need an actual representation/import/export/editing contract; a warning
+alone does not close this gap. CommonMark 563/579 scores remain unchanged.
+
 Registered-wrapper correction (2026-09-08, Unreleased): a schema-defined HTML
 section with `block+` content falsely declined recovery when it contained a
 generated Markdown hard break. `configuredNode` first tried inline content, then

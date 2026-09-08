@@ -7,6 +7,29 @@ import { MarkdownImporter } from '../src/core/importers/markdown-importer';
 const schema = new Schema(CoreSchemaSpec);
 
 describe('explicit server HTML conversion losses', () => {
+  it.each(['div', 'section', 'article', 'aside', 'main', 'nav', 'header', 'footer', 'address', 'fieldset', 'dl'])('reports removed standard %s wrappers without exposing their metadata', tag => {
+    const result = ServerHTMLImporter.parseWithReport(`<${tag} id="private-id" class="private-class"><p>Visible content</p></${tag}>`, schema);
+    expect(result.document.child(0).type.name).toBe('paragraph');
+    expect(result.document.textContent).toBe('Visible content');
+    expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
+    expect(JSON.stringify(result.issues)).not.toMatch(/private-id|private-class/);
+  });
+
+  it('does not report wrappers that are actually represented by a registered schema node', () => {
+    const custom = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
+      section: { group: 'block', content: 'block+', parseHTML: [{ tag: 'section' }] },
+    } });
+    const result = ServerHTMLImporter.parseWithReport('<section><p>Kept</p></section>', custom);
+    expect(result.document.child(0).type.name).toBe('section');
+    expect(result.issues).toEqual([]);
+  });
+
+  it('bounds repeated standard-wrapper losses to a single report', () => {
+    const result = ServerHTMLImporter.parseWithReport('<div><section><p>Visible</p></section></div>'.repeat(1000), schema);
+    expect(result.document.childCount).toBe(1000);
+    expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
+  });
+
   it('reports comments independently of malformed HTML and without leaking their contents', () => {
     const result = ServerHTMLImporter.parseWithReport('<!-- private-token --><p>visible<!-- another-secret --></p>', schema);
     expect(result.document.textContent).toBe('visible');

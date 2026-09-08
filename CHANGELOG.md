@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Kept large server-conversion results in a bounded, keyboard-scrollable output
+  panel. Full output and copying remain available without stretching the entire
+  demo page to the length of its JSON.
+
+- Fixed silent omission of standard HTML wrappers in server conversion reports.
+  Removed `div`, `section`, `article` and other unmapped block wrappers now report
+  their loss, just like unknown custom tags. The demo distinguishes conversion
+  details from parse recovery and does not equate an empty report with losslessness.
+
 - Fixed registered HTML container rules falsely rejecting Markdown source
   recovery with hard breaks. Only accepted rule/content-shape attempts contribute
   preservation evidence; real dropped or reordered content is still refused.

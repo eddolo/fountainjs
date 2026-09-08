@@ -5292,7 +5292,8 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
 
   await page.getByRole('button', { name: 'Server HTML' }).click();
   await expect(page.getByLabel('Server HTML input')).toContainText('<h1>Server-native document</h1>');
-  await expect(page.getByText('Valid document · 5 top-level blocks · no recovered HTML issues')).toBeVisible();
+  await expect(page.getByText('Valid document · 5 top-level blocks · no reported HTML conversion details')).toBeVisible();
+  await expect(page.getByText('HTML is converted into the supported document schema.', { exact: false })).toContainText('not a guarantee of lossless conversion');
   await page.getByRole('button', { name: 'json' }).click();
   await expect(output).toContainText('inline_math');
   await expect(output).toContainText('ordered_list');

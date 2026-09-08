@@ -287,7 +287,7 @@ function OutputPanel({ document }: { document: Node | undefined }) {
       <p>{htmlTables ? 'Preserves supported cell blocks and layout. Re-import with “Convert HTML blocks to rich content” enabled. Arbitrary metadata still belongs in JSON.' : 'Pipe tables may flatten rich cell content and omit merged cells or column widths.'}</p>
       {!!markdown?.losses.length && <details><summary>{markdown.losses.length} export note{markdown.losses.length === 1 ? '' : 's'}</summary><ul>{markdown.losses.map((loss, index) => <li key={index}>{loss.type} at {loss.path.join('.') || 'root'}: {loss.detail}</li>)}</ul></details>}
     </div>}
-    <pre><code>{output}</code></pre>
+    <pre tabIndex={0} role="region" aria-label="Document output"><code>{output}</code></pre>
   </section>;
 }
 
@@ -575,7 +575,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const detailLabel = inputFormat === 'docx'
     ? `${parsed.details ? `${parsed.details} reported DOCX conversion detail${parsed.details === 1 ? '' : 's'}` : 'bounded DOCX import with no reported losses'}`
     : inputFormat === 'html'
-    ? `${parsed.details ? `${parsed.details} recovered HTML issue${parsed.details === 1 ? '' : 's'}` : 'no recovered HTML issues'}`
+    ? `${parsed.details ? `${parsed.details} reported HTML conversion detail${parsed.details === 1 ? '' : 's'}` : 'no reported HTML conversion details'}`
     : `${parsed.details ? `${parsed.details} Markdown import detail${parsed.details === 1 ? '' : 's'}` : 'no reported Markdown import issues'}`;
   const downloadDOCX = (sourceDocument = parsed.document, fileName = 'fountainjs-document.docx') => {
     if (!sourceDocument) return;
@@ -613,7 +613,10 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
         <p>HTML conversion is off by default. Experimental paragraph recovery can split one paragraph into several blocks; it takes precedence over inline conversion in ordinary paragraphs, not headings or pipe-table cells. Tight and loose lists use their own wrapper context. Closed, text-only preformatted spans become code blocks with restored line breaks; conversion details explain whitespace and plain-text export changes. Cross-paragraph spans need the separate source projection above. Unsupported atoms and active raw-text structures fall back to source. Markdown inside HTML blocks is not interpreted. Unsupported HTML attributes and comments may be omitted; empty list items retain an editable paragraph. This is not a lossless HTML round trip.</p>
         {markdownParsed.issues.length > 0 && <ul aria-label="Markdown HTML conversion details">{markdownParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul>}
       </div>}
-      {inputFormat === 'html' && htmlParsed.issues.length > 0 && <div className="headless-html-policy"><p>HTML conversion details</p><ul aria-label="Server HTML conversion details">{htmlParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul></div>}
+      {inputFormat === 'html' && <div className="headless-html-policy">
+        <p>HTML is converted into the supported document schema. Wrappers, attributes and layout can change. No reported details is not a guarantee of lossless conversion.</p>
+        {htmlParsed.issues.length > 0 && <><p>HTML conversion details</p><ul aria-label="Server HTML conversion details">{htmlParsed.issues.map((issue, index) => <li key={index}>{issue}</li>)}</ul></>}
+      </div>}
       {inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;

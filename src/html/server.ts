@@ -1228,7 +1228,9 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const embed = embedNode(element, schema);
     return embed ? [embed] : [];
   }
-  if (!BLOCK_TAGS.has(tag)) reportOnce(context, {
+  // Recognizing a tag as block-level is not the same as representing its
+  // wrapper in the schema. Every path reaching this fallback removes it.
+  reportOnce(context, {
     code: 'unmapped-block-wrapper',
     message: 'Unmapped HTML block wrappers were removed. Descendant content was imported using the schema; wrapper identity, attributes, and behavior were not preserved.',
   });

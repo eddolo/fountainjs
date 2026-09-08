@@ -5,6 +5,12 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+HTML fidelity audit (2026-09-08, Unreleased): removed standard wrappers now
+produce explicit conversion warnings, and the demo no longer implies an empty
+report proves losslessness. A reproduced next gap remains: default-schema HTML
+definition lists merge terms/descriptions into one paragraph. This requires real
+semantic import/export/editing work, not just further warnings.
+
 Registered-wrapper correction (2026-09-08, Unreleased): fixed rejected HTML
 content-shape attempts contaminating hard-break preservation checks. Registered
 sections now survive the tested source-recovery/edit/export/reopen path. Seven
