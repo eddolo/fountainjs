@@ -147,8 +147,10 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   const flowHTML = await output.locator('pre').innerText();
   await capture('paragraph-flow-conversion.png');
   await source.fill('<div><pre>\n\n- [x] task\n\n</pre></div>');
-  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('unsupported block syntax');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('cannot change or flatten a task list; original source retained');
   await expect(output.locator('pre')).toContainText('&lt;div&gt;');
+  await expect(output.locator('pre')).toContainText('data-checked="true"');
+  await expect(output.locator('pre')).toContainText('task');
   await page.goto('/issue-editor.html');
   await replaceByPaste(flowHTML);
   const verifyFlow = async (surface: typeof editor) => {

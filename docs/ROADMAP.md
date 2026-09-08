@@ -5,6 +5,14 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Recovery regression audit (2026-09-08, Unreleased): the full Linux browser run
+for the task-source change reported three failures, all from one stale warning
+assertion in the older paragraph-recovery journey. The refusal to flatten a
+checked task is intentional. That assertion now checks the specific refusal,
+retained task content and checked state. The five related recovery/conversion
+journeys pass across Chromium, Firefox and WebKit locally (15 checks); this is
+not a claim that the subsequent full Linux CI run has passed.
+
 HTML fidelity audit (2026-09-08, Unreleased): removed standard wrappers now
 produce explicit conversion warnings, and the demo no longer implies an empty
 report proves losslessness. A reproduced next gap remains: default-schema HTML
