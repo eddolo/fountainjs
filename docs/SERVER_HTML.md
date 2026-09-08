@@ -5,6 +5,14 @@ Fountain document model in plain Node.js. It does not read `window`, `document`,
 `DOMParser`, `HTMLElement`, selection, layout, clipboard, or other browser APIs,
 and it does not require jsdom or another fake DOM.
 
+For mixed Markdown/HTML, `parseFlow` retains protected block identities.
+The separate experimental `parseParagraphFlow` / `parseParagraphFlowWithReport`
+methods explicitly reproject pristine text-only paragraph source across HTML
+boundaries. They require the Markdown callback context and refuse custom block
+data, changed content and unsupported structural nodes. See the
+[contract, losses and demo option](MARKDOWN_SOURCE.md#explicit-paragraph-source-flow-recovery)
+before choosing that mode; it is not a lossless substitute for `parseFlow`.
+
 ```ts
 import { CoreSchemaSpec, HTMLExporter, Schema } from 'fountainjs-editor'
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server'

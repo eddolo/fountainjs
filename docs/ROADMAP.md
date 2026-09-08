@@ -5,6 +5,20 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Paragraph-source flow recovery (2026-09-08, Unreleased): an explicit opt-in server
+adapter and conversion-demo switch now recover four mixed HTML/pre fixture kinds.
+Eight LF/CRLF contracts retain exact code text/source; two also match complete
+reference structure. Outer-div mismatches remain visible. Assigned IDs/custom
+paragraph data, changed projections, headings/lists/code and inline atoms are
+refused. The original flow contract and 563/579 baselines remain unchanged.
+Full check: 1,484 tests / 117 files, compiled Node/workerd recovery and existing
+API/headless/package/type/performance gates. Next: structural source events and
+non-text/metadata-preserving projection, not normalizing away wrapper mismatches.
+The expanded user journey and stronger whole-replacement assertions pass all
+three desktop engines. Recorded conversion/editor/mobile-reader views were
+inspected; production website build passed. Runtime: 1379.1 KiB ESM / 1146.1 KiB
+CJS, with aggregate caps 1380/1147 and individual/performance limits unchanged.
+
 Paragraph provenance implementation (2026-09-08, Unreleased): HTML flow adapters
 can lazily inspect direct paragraph syntax through an optional context. Physical
 LF, raw tokens and tight-list context survive separately from current converted

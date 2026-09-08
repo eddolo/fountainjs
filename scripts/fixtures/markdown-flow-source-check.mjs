@@ -1,4 +1,5 @@
 import { CoreSchemaSpec, MarkdownImporter, Schema } from '../../dist/index.js';
+import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
@@ -23,6 +24,12 @@ export function checkMarkdownFlowSources() {
   }
   if (!inspect('*word* </pre>').some(segment => segment.kind === 'html' && segment.html === '</pre>')) {
     throw new Error('Compiled paragraph context lost a raw closing token.');
+  }
+  const recovered = MarkdownImporter.parse('<div><pre>\n\none\ntwo\n\n</pre></div>', schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseParagraphFlow,
+  });
+  if (recovered.child(0).type.name !== 'code_block' || recovered.child(0).textContent !== 'one\ntwo\n') {
+    throw new Error('Compiled paragraph-source flow recovery lost preformatted content.');
   }
   return true;
 }

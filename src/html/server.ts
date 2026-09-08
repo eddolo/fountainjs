@@ -20,7 +20,7 @@ import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
-import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
+import type { MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
@@ -67,6 +67,7 @@ export type ServerHTMLImportIssueCode =
   | 'document-shell-omitted'
   | 'inline-html-projection'
   | 'preformatted-html-projection'
+  | 'paragraph-flow-projection'
   | 'block-html-projection';
 
 export interface ServerHTMLImportIssue {
@@ -1260,16 +1261,16 @@ export class ServerHTMLImporter {
     return new ServerHTMLImporter().parseParagraph(segments, schema, context);
   }
 
-  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true): ServerHTMLInlineImportResult {
+  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
     let preOpen = false;
     for (const segment of segments) {
       if (segment.kind === 'html') {
-        if (!segment.html || markdownHTMLTokenEnd(segment.html, 0) !== segment.html.length) {
+        if (!wholeContainer && (!segment.html || markdownHTMLTokenEnd(segment.html, 0) !== segment.html.length)) {
           throw new TypeError('An inline HTML segment must contain exactly one raw HTML token.');
         }
         const pre = /^<(\/?)pre(?=[\t\n\r\f />])/iu.exec(segment.html);
-        if (pre) {
+        if (pre && !wholeContainer) {
           if (Boolean(pre[1]) !== preOpen) throw new Error('Preformatted HTML must close within one paragraph without nested or orphan pre tags; literal source retained.');
           preOpen = !pre[1];
         }
@@ -1369,6 +1370,76 @@ export class ServerHTMLImporter {
 
   static parseInline(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
     return new ServerHTMLImporter().parseInline(segments, schema);
+  }
+
+  /**
+   * Explicit source reprojection of containers containing raw HTML and pristine
+   * text-only Markdown paragraphs. Unlike parseFlow, paragraph block identities
+   * may change. Custom block data, modified projections and atoms are refused.
+   */
+  parseParagraphFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): readonly FountainNode[] {
+    return this.parseParagraphFlowWithReport(segments, schema, context).nodes;
+  }
+
+  parseParagraphFlowWithReport(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): ServerHTMLFragmentImportResult {
+    if (!context) throw new Error('Paragraph flow recovery requires Markdown parser source context.');
+    const paragraphs = context.readParagraphSources();
+    if (segments.length > this.options.maxNodes || paragraphs.length > this.options.maxNodes) {
+      throw new HTMLImportLimitError('maxNodes', 'Paragraph flow exceeds the node limit.');
+    }
+    const byBlock = new Map<FountainNode, typeof paragraphs[number]>();
+    for (const paragraph of paragraphs) {
+      if (paragraph.blocks.length !== 1 || byBlock.has(paragraph.blocks[0])) {
+        throw new Error('Paragraph flow cannot replace modified or ambiguous paragraph projections.');
+      }
+      byBlock.set(paragraph.blocks[0], paragraph);
+    }
+    // Only combine adjacent text for comparison; never trim whitespace, erase
+    // marks/attributes or flatten an atom. The original blocks remain untouched.
+    const normalized = (nodes: readonly FountainNode[]): FountainNode[] => {
+      const result: FountainNode[] = [];
+      for (const node of nodes) {
+        if (!node.isText) throw new Error('Paragraph flow cannot flatten an inline atom.');
+        const previous = result.at(-1);
+        if (previous && previous.withText(node.text!).eq(node)) result[result.length - 1] = previous.withText(previous.text! + node.text!);
+        else result.push(node);
+      }
+      return result;
+    };
+    const stream: MarkdownHTMLInlineSegment[] = [];
+    const raw = (html: string) => stream.push({ kind: 'html', html, marks: [] });
+    const used = new Set<FountainNode>();
+    for (const segment of segments) {
+      if (segment.kind === 'html') {
+        if (typeof segment.html !== 'string') throw new TypeError('Expected raw HTML block text.');
+        raw(segment.html + '\n');
+        continue;
+      }
+      const paragraph = byBlock.get(segment.node);
+      if (!paragraph || used.has(segment.node)) throw new Error('Paragraph flow requires an unambiguous source for every Markdown block; non-paragraph blocks need structural projection.');
+      used.add(segment.node);
+      schema.validate(segment.node);
+      if (Object.keys(segment.node.attrs).some(key => key !== 'align')) {
+        throw new Error('Paragraph flow refuses changed paragraph content, marks or custom attributes.');
+      }
+      const original = schema.node('paragraph', { align: 'left' }, normalized(paragraph.segments.map(part => part.kind === 'node'
+        ? part.node : schema.text(part.html.replace(/\n/gu, ' '), part.marks))));
+      const current = segment.node.copy(normalized(segment.node.content));
+      if (!current.eq(original)) throw new Error('Paragraph flow refuses changed paragraph content, marks or custom attributes.');
+      if (!paragraph.tightList) raw('<p>');
+      for (const part of paragraph.segments) stream.push(part);
+      raw(paragraph.tightList ? '\n' : '</p>\n');
+    }
+    if (used.size !== byBlock.size) throw new Error('Paragraph flow source context contains unmatched blocks.');
+    const result = this.parseInlineContent(stream, schema, true, false, true);
+    return Object.freeze({ nodes: result.nodes, issues: Object.freeze([...result.issues, Object.freeze({
+      code: 'paragraph-flow-projection' as const,
+      message: 'Markdown paragraph source was reprojected across HTML block boundaries. Paragraph grouping/identity and HTML layout may change; custom paragraph data and inline atoms are refused. This is an explicit source projection, not identity-preserving block flow or lossless HTML.',
+    })]) });
+  }
+
+  static parseParagraphFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): readonly FountainNode[] {
+    return new ServerHTMLImporter().parseParagraphFlow(segments, schema, context);
   }
 
   /** Resolve HTML scopes without HTML-serializing Markdown blocks; only added mark paths are copied. */

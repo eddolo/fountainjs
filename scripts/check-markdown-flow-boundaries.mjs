@@ -4,14 +4,14 @@ import { readFileSync } from 'node:fs';
 // Invoked by the existing conformance gate. This is a pending-capability safety
 // matrix, not a second parser, runtime dependency, or semantic match baseline.
 export function checkMarkdownFlowBoundaries({
-  schema, MarkdownImporter, MarkdownExporter, ServerHTMLImporter,
+  schema, MarkdownImporter, MarkdownExporter, HTMLExporter, ServerHTMLImporter,
   referenceParser, referenceRenderer, semanticProjection,
 }) {
   const fixture = JSON.parse(readFileSync(new URL(
     '../tests/fixtures/markdown/html-flow-pre-boundaries-v1.json', import.meta.url,
   ), 'utf8'));
   assert.equal(fixture.standard, 'CommonMark 0.31.2');
-  assert.equal(fixture.status, 'pending-source-aware-flow');
+  assert.equal(fixture.status, 'partial-paragraph-source-flow');
   assert.ok(fixture.cases.length > 0, 'pending matrix must not become empty');
   assert.equal(new Set(fixture.cases.map(test => test.id)).size, fixture.cases.length);
   const routes = [
@@ -86,5 +86,46 @@ export function checkMarkdownFlowBoundaries({
   assert.notDeepEqual(semanticProjection(referenceRenderer.render(referenceParser.parse(multiline))),
     semanticProjection(referenceRenderer.render(referenceParser.parse(singleline))),
     'the collision affects preformatted semantics, not merely HTML spelling');
-  console.log(`Whole-container pre recovery: ${checks} safe-fallback/source checks; ${fixture.cases.length} unresolved fixtures, not conformance gains. Lazy paragraph context distinguishes the legacy collision.`);
+  console.log(`Identity-preserving flow: ${checks} safe-fallback/source checks; ${fixture.cases.length} fixtures still declined on this route. Lazy paragraph context distinguishes the legacy collision.`);
+  const supported = new Set(['table-pre', 'soft-break', 'entity-crlf', 'unclosed']);
+  let recovered = 0;
+  let fullMatches = 0;
+  const codeContent = projection => {
+    const found = [];
+    const visit = value => {
+      if (!Array.isArray(value)) return;
+      if (value[0] === 'code-block') found.push(value);
+      else value.forEach(visit);
+    };
+    visit(projection);
+    return found;
+  };
+  for (const test of fixture.cases) for (const ending of ['\n', '\r\n']) {
+    const source = test.source.replaceAll('\n', ending);
+    const fallbacks = [];
+    const imported = MarkdownImporter.parseWithSource(source, schema, {
+      parseHTMLFlow: ServerHTMLImporter.parseParagraphFlow,
+      onHTMLFlowFallback: issue => fallbacks.push(issue),
+    });
+    assert.equal(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown, source);
+    if (supported.has(test.id)) {
+      assert.equal(fallbacks.length, 0, `${test.id}: paragraph flow must recover`);
+      const actual = semanticProjection(HTMLExporter.export(imported.document, { document: false }));
+      const expected = semanticProjection(test.referenceHTML);
+      assert.deepEqual(codeContent(actual), codeContent(expected), `${test.id}: exact reference preformatted content`);
+      if (test.id === 'table-pre') {
+        assert.deepEqual(actual, expected, `${test.id}: full recovered reference semantics`);
+        fullMatches++;
+      } else {
+        // Keep the known omitted outer div visible in the strict comparator.
+        // Exact code text is useful, but is not full structural conformance.
+        assert.notDeepEqual(actual, expected, `${test.id}: review wrapper retention if newly matching`);
+      }
+      recovered++;
+    } else {
+      assert.ok(fallbacks.length, `${test.id}: structural projection remains unsupported`);
+      assert.deepEqual(imported.document.toJSON(), MarkdownImporter.parse(source, schema).toJSON());
+    }
+  }
+  console.log(`Explicit paragraph-source flow: ${recovered} LF/CRLF exact-code/source contracts; ${fullMatches} full structural matches. Outer-div mismatches retained; 4 structural fixture kinds still declined.`);
 }

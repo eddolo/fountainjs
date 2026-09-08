@@ -399,7 +399,7 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 
 const schema = new Schema(CoreSchemaSpec);
 checkMarkdownFlowBoundaries({
-  schema, MarkdownImporter, MarkdownExporter, ServerHTMLImporter,
+  schema, MarkdownImporter, MarkdownExporter, HTMLExporter, ServerHTMLImporter,
   referenceParser, referenceRenderer, semanticProjection,
 });
 // Compare actual text characters, without the general visible-whitespace

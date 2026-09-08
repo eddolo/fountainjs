@@ -1,11 +1,30 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Latest implementation (Unreleased): the separate `parseParagraphFlow` adapter
+now recovers pristine text-only paragraphs across raw HTML boundaries. Four
+fixture kinds retain exact preformatted text; the table/pre fixture also matches
+full reference structure. Outer `div` wrapper mismatches remain explicit. Lists,
+headings, code and hard-break atoms still require structural work; custom data
+is refused rather than flattened. The original `parseFlow` contract is unchanged.
+See [the explicit API and demo](MARKDOWN_SOURCE.md#explicit-paragraph-source-flow-recovery).
+
+Verification: full sequential check passes 1,484 tests / 117 files, including
+compiled Node/workerd recovery, API/headless/type/package and performance gates.
+The expanded conversion/edit/undo/download/reopen/reader journey passes Chromium,
+Firefox and WebKit. Stronger reruns also assert that no prior headings, tables or
+lists survive replacement (`artifacts/paragraph-flow-strict-browser/`). A separate
+recording and conversion/editor/mobile-reader screenshots were visually inspected
+under `artifacts/paragraph-flow-recorded/`; original cross-browser evidence is in
+`artifacts/paragraph-flow-browser/`. The production website build passed.
+Runtime code is 1379.1 KiB ESM / 1146.1 KiB CJS; aggregate caps rise 3 KiB each to
+1380/1147, with no individual entry or performance threshold changes.
+
 Follow-through (Unreleased): `parseHTMLFlow` now receives lazy paragraph-source
 inspection through an optional third context argument. It distinguishes the
 LF/space collision below, retains raw tokens and current output-block references,
 and does not replay host adapters. This is a paragraph inspection boundary,
-not the complete structural projection described in this audit. The built-in
-server adapter still explicitly declines these eight fixtures. See the
+not the complete structural projection described in this audit. The original
+identity-preserving server flow still declines these eight fixtures. See the
 [API contract and limitations](MARKDOWN_SOURCE.md#inspect-paragraph-syntax-from-a-flow-adapter).
 
 Verified follow-through: 1,466 tests / 116 files in the complete sequential check;

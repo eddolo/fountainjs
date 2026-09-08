@@ -292,6 +292,51 @@ context is inspection/provenance groundwork: `ServerHTMLImporter.parseFlow`
 still declines the unsupported cross-paragraph preformatted cases. It is not
 permission to flatten original block IDs, attributes or custom atoms into text.
 
+### Explicit paragraph-source flow recovery
+
+`ServerHTMLImporter.parseParagraphFlow` is a separate, default-off adapter. It
+can use that context to recover preformatted HTML spanning blank-line Markdown
+boundaries. Its contract differs from the original identity-preserving
+`parseFlow`: pristine paragraphs can be regrouped into code blocks.
+
+```ts
+const html = new ServerHTMLImporter()
+const imported = MarkdownImporter.parseWithSource(markdown, schema, {
+  parseHTMLFlow(segments, target, context) {
+    const result = html.parseParagraphFlowWithReport(segments, target, context)
+    reportIssues(result.issues)
+    return result.nodes
+  },
+  onHTMLFlowFallback: reportFallback,
+})
+```
+
+The adapter requires one unambiguous paragraph source for each supplied Markdown
+block. It compares original parsed content, marks and attributes with the current
+blocks before reprojection. Adjacent equal text runs can differ in segmentation,
+but whitespace is not trimmed and atoms are never flattened. Assigned IDs,
+non-alignment paragraph attributes (including custom schema defaults), changed
+paragraph content, ambiguous/multi-block projections and non-paragraph blocks
+are refused. Inline text/marks remain protected during the HTML parsing stage.
+Active/foreign scopes and input limits retain explicit failure paths. No supplied
+block is mutated, serialized through HTML or silently stripped of custom data.
+
+Plain text across paragraph boundaries, CR-entity/physical-LF pairs, an unclosed
+pre scope, and the mixed HTML-table/pre example now recover exact code text.
+The table/pre fixture matches the strict reference structure as well. The other
+three fixtures still lose an outer `div` wrapper: eight LF/CRLF code/source
+contracts contain only two full structural matches. These are not an increase
+to the default 563/652 or block+inline 579/652 semantic baseline. Code, lists,
+headings and hard-break atoms inside these mixed flows need further structural
+projection. This is not complete raw-HTML or CommonMark support.
+
+Successful conversion reports `paragraph-flow-projection` and applicable
+preformatted/HTML loss reports. Paragraph grouping and HTML layout may change;
+exact unchanged-source export does not mean a lossless rendered HTML round trip.
+Try **Recover cross-paragraph preformatted HTML** in the conversion demo. This
+explicitly replaces the ordinary block-flow mode for that import, not the editor
+engine's normal editing or clipboard behavior.
+
 **Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph
 for empty list items, unlike the reference's empty `<li>`. Ordinary/loose paragraph

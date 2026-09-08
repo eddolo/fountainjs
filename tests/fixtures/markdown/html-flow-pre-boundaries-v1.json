@@ -1,6 +1,6 @@
 {
   "standard": "CommonMark 0.31.2",
-  "status": "pending-source-aware-flow",
+  "status": "partial-paragraph-source-flow",
   "cases": [
     {
       "id": "table-pre",

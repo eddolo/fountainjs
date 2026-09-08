@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Paragraph-source recovery (2026-09-08, Unreleased): four cross-paragraph HTML/pre
+fixture kinds now retain exact code text via a separate explicit adapter and demo
+option. Eight LF/CRLF checks include two complete reference-structure matches;
+outer-div mismatches, structural nodes and atoms remain open. Full check passes
+1,484 tests / 117 files. Existing 563/579 corpus semantic baselines are unchanged.
+The expanded editing/undo/file-reopen/reader journey passed in three desktop
+engines; recorded conversion/editor/mobile-reader layouts were inspected.
+
 Paragraph provenance implementation (2026-09-08, Unreleased): an optional lazy
 flow context exposes direct paragraph syntax, raw tags and physical line breaks
 without host callback replay. This advances the source-aware adapter boundary;

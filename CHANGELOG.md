@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Added explicit, default-off paragraph-source HTML flow recovery and its live
+  conversion-demo option. Pristine text-only paragraphs can recover into code
+  blocks across raw HTML boundaries; changed/custom block data, non-paragraph
+  structures and atoms are refused. The original identity-preserving flow is
+  unchanged. Eight LF/CRLF code/source contracts include two full structural
+  reference matches; outer-div mismatches and broader CommonMark gaps remain.
+  Runtime growth is about 2.6 KiB ESM / 2.2 KiB CJS; aggregate ceilings rise to
+  1380/1147 KiB, with all individual entry and performance limits unchanged.
+
 - Added lazy paragraph-source inspection for HTML flow adapters through an
   optional third context argument. It retains normalized syntax input, raw tags,
   physical breaks, list context and output-block references without replaying
