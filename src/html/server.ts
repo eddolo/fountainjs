@@ -1445,9 +1445,7 @@ export class ServerHTMLImporter {
       const result: FountainNode[] = [];
       for (const node of nodes) {
         if (!node.isText) {
-          if (!structural || node.type.name !== 'hard_break' || Object.keys(node.attrs).length || node.content.length || node.marks.length) {
-            throw new Error('Paragraph flow cannot flatten an inline atom or custom hard break.');
-          }
+          if (!structural || !node.type.isInline) throw new Error('Paragraph flow cannot flatten an inline atom.');
           result.push(node);
           continue;
         }
@@ -1516,7 +1514,8 @@ export class ServerHTMLImporter {
         raw(`<pre><code class="language-${language}">`);
       } else if (!tight) raw(`<${tag}>`);
       for (const part of paragraph.segments) {
-        if (structural && part.kind === 'node' && part.node.type.name === 'hard_break') {
+        if (structural && part.kind === 'node' && part.node.type.name === 'hard_break'
+          && !Object.keys(part.node.attrs).length && !part.node.content.length && !part.node.marks.length) {
           const generated: MarkdownHTMLInlineSegment = { kind: 'html', html: '<br />', marks: [] };
           generatedBreaks.set(generated, part.node);
           stream.push(generated);
@@ -1551,7 +1550,7 @@ export class ServerHTMLImporter {
     return Object.freeze({ nodes: result.nodes, issues: Object.freeze([...result.issues, Object.freeze({
       code: structural ? 'text-block-flow-projection' as const : 'paragraph-flow-projection' as const,
       message: structural
-        ? 'Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Block grouping/identity and HTML layout may change; custom data, modified projections, unsupported blocks and other inline atoms are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML.'
+        ? 'Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML.'
         : 'Markdown paragraph source was reprojected across HTML block boundaries. Paragraph grouping/identity and HTML layout may change; custom paragraph data and inline atoms are refused. This is an explicit source projection, not identity-preserving block flow or lossless HTML.',
     })]) });
   }

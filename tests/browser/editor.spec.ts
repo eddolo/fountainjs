@@ -4940,6 +4940,13 @@ test('uses the public React image workflow for metadata, alignment, and replacem
   await page.getByText('Responsive sources', { exact: true }).click();
   await page.getByLabel('Image source set').fill('https://cdn.example.com/small.png 480w, https://cdn.example.com/large.png 1200w');
   await page.getByLabel('Image sizes').fill('(max-width: 600px) 100vw, 420px');
+  for (const [field, text] of [['Image URL', 'Image URL'], ['Alternative text', 'Alternative text'],
+    ['Image title', 'Title (optional)'], ['Image caption', 'Caption (optional)'],
+    ['Image source set', 'Source set'], ['Image sizes', 'Responsive sizes']]) {
+    const label = page.locator('form.is-image label').filter({ has: page.getByLabel(field, { exact: true }) });
+    await expect(label).toBeVisible();
+    await expect(label).toContainText(text);
+  }
   await page.getByRole('button', { name: 'Insert URL' }).click();
 
   const figure = page.locator('.fountain-image').last();

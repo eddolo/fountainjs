@@ -171,7 +171,14 @@ export function checkMarkdownFlowBoundaries({
   for (const body of ['- one\n- two', '- one\n\n- two', '3. one\n4. two',
     '- one\n  - nested\n  - second\n- two', '- one\n\n  > quoted\n  > line\n\n- two',
     '> - one\n> - two', '- # Title\n- item', '> first\n>\n> > second',
-    'one  \ntwo', 'one\\\ntwo', '- one  \n  two\n- three', '> one\\\n> two']) {
+    'one  \ntwo', 'one\\\ntwo', '- one  \n  two\n- three', '> one\\\n> two',
+    'Before ![Diagram](/diagram.png "Caption") after',
+    '# Before ![Diagram](/diagram.png "Caption") after',
+    '- Before ![Diagram](/diagram.png "Caption") after\n- Second',
+    '> Before ![Diagram](/diagram.png "Caption") after',
+    'Before **![Diagram](/diagram.png "Caption")** after',
+    'Before [![Diagram](/diagram.png "Caption")](/details) after',
+    '**one  \ntwo**']) {
     for (const ending of ['\n', '\r\n']) {
       const source = `<blockquote>\n\n${body}\n\n</blockquote>\n`.replaceAll('\n', ending);
       const fallbacks = [];

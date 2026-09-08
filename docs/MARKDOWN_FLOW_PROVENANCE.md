@@ -1,5 +1,58 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Inline-object follow-through (2026-09-08, Unreleased): the pristine-content
+comparison now preserves inline nodes as nodes instead of rejecting every atom
+up front. Outside preformatted scopes the existing protected-slot machinery
+retains their attributes, marks and order. Plain hard breaks retain their
+special renderer-whitespace projection; marked/custom breaks use original
+node slots. Preformatted conversion still rejects objects it would need to
+flatten, and modified inline-adapter output still causes complete inert rollback.
+There is no arbitrary-node HTML serialization or new public API.
+
+Twelve unit cases cover inline images in paragraphs/headings/nested lists/quotes,
+marked and linked images, marked breaks, custom inline data, optional math/emoji,
+preformatted refusal and modified-image rollback. Seven additional LF/CRLF
+reference cases increase the complete structure/source matrix from 24 to 38;
+the 58 preformatted contracts and 563/579 corpus baselines remain unchanged.
+Compiled Node/workerd smoke checks now cover marked image source data.
+Full `pnpm check` passes 1,571 tests / 122 files. Including the visible-label
+correction below, runtime is 1,387.4 KiB ESM / 1,152.7 KiB CJS, within unchanged
+caps; no dependency/API snapshot changes.
+
+The public conversion → incident editor → reader journey now imports a linked
+image, edits its alternative text/title through the supplied toolbar, undoes
+and redoes, deletes and restores the image without losing surrounding prose,
+then downloads/reopens Markdown and checks the image/link again. Three browser
+engines pass the extended journey. The diagnostic sidebar now explicitly
+distinguishes local raster uploads from imported URLs that can load remotely.
+Final browser evidence: `artifacts/inline-flow-edit-browser/`; full check log:
+`artifacts/inline-flow-check.log`. Initial editor/mobile reader screenshots
+were visually inspected. Synthetic paste and viewport emulation are not OS
+clipboard or physical-mobile certification.
+
+Visual inspection also exposed disappearing image-field labels once their
+placeholders were replaced by values. The supplied React image form now has
+persistent labels for URL, alternative text, optional title/caption and responsive
+source fields, using its existing grid and mobile styles. The inline-image
+journey checks label visibility and node kind; the regular public image workflow
+also checks all six labels with populated values. Final package check log:
+`artifacts/inline-flow-final-check.log`.
+
+Final verification: six browser checks pass (both journeys across Chromium,
+Firefox and WebKit), a separately recorded extended incident journey passes,
+and the final image-controls screenshot plus recording overview were visually
+inspected. Evidence: `artifacts/inline-flow-verified-browser/` and
+`artifacts/inline-flow-verified-recorded/`. The production website build passes
+with its existing large MathJax chunk warning. The first caption-label assertion
+mistakenly required exact label text despite a populated textarea contributing
+text; it now checks the visible label associated with each field and retains
+the populated-value condition. No runtime workaround was used to satisfy it.
+
+The preceding hard-break release `d1da5c1` also completed its full hosted Linux
+[CI run](https://github.com/eddolo/fountainjs/actions/runs/34205604435) successfully.
+That confirms the preceding change; this inline-object/label update has its own
+local evidence and requires its own hosted run after publication.
+
 Plain hard-break follow-through (2026-09-08, Unreleased): structural source
 projection now recognizes pristine, unmarked, attribute-free `hard_break`
 nodes. It emits a separately tracked generated `br` and a renderer-whitespace

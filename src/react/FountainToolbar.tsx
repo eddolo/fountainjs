@@ -747,10 +747,10 @@ export function FountainToolbar({
           <option value="block">Block image</option>
           <option value="inline">Inline with text</option>
         </select>}
-        <input aria-label="Image URL" required inputMode="url" placeholder="https://example.com/image.jpg" value={url} onChange={(event) => setURL(event.target.value)} />
-        <input aria-label="Alternative text" placeholder="Alternative text" value={alt} onChange={(event) => setAlt(event.target.value)} />
-        <input aria-label="Image title" placeholder="Title (optional)" value={imageTitle} onChange={(event) => setImageTitle(event.target.value)} />
-        {!activeImage?.inline && imagePlacement === 'block' && <textarea aria-label="Image caption" placeholder="Caption (optional)" value={caption} onChange={(event) => setCaption(event.target.value)} />}
+        <label>Image URL <input aria-label="Image URL" required inputMode="url" placeholder="https://example.com/image.jpg" value={url} onChange={(event) => setURL(event.target.value)} /></label>
+        <label>Alternative text <input aria-label="Alternative text" placeholder="Describe the image" value={alt} onChange={(event) => setAlt(event.target.value)} /></label>
+        <label>Title (optional) <input aria-label="Image title" placeholder="Title (optional)" value={imageTitle} onChange={(event) => setImageTitle(event.target.value)} /></label>
+        {!activeImage?.inline && imagePlacement === 'block' && <label>Caption (optional) <textarea aria-label="Image caption" placeholder="Caption (optional)" value={caption} onChange={(event) => setCaption(event.target.value)} /></label>}
         <label>Width <input aria-label="Image width" required placeholder="100% or 640px" value={imageWidth} onChange={(event) => setImageWidth(event.target.value)} /></label>
         <label>Height <input aria-label="Image height" required placeholder="auto" value={imageHeight} onChange={(event) => setImageHeight(event.target.value)} /></label>
         {!activeImage?.inline && imagePlacement === 'block' && <select aria-label="Image alignment" value={imageAlign} onChange={(event) => setImageAlign(event.target.value as 'left' | 'center' | 'right')}>
@@ -760,8 +760,8 @@ export function FountainToolbar({
         </select>}
         <details>
           <summary>Responsive sources</summary>
-          <input aria-label="Image source set" placeholder="small.jpg 480w, large.jpg 1200w" value={imageSrcset} onChange={(event) => setImageSrcset(event.target.value)} />
-          <input aria-label="Image sizes" placeholder="(max-width: 600px) 100vw, 600px" value={imageSizes} onChange={(event) => setImageSizes(event.target.value)} />
+          <label>Source set <input aria-label="Image source set" placeholder="small.jpg 480w, large.jpg 1200w" value={imageSrcset} onChange={(event) => setImageSrcset(event.target.value)} /></label>
+          <label>Responsive sizes <input aria-label="Image sizes" placeholder="(max-width: 600px) 100vw, 600px" value={imageSizes} onChange={(event) => setImageSizes(event.target.value)} /></label>
         </details>
         <div className="fountain-toolbar__image-actions">
           <button type="submit">{activeImage ? 'Save image' : 'Insert URL'}</button>

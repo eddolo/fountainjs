@@ -5,6 +5,12 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Inline-object follow-through (2026-09-08, Unreleased): the structural HTML adapter
+now preserves source-defined inline images, math/emoji, marks and custom inline
+data outside preformatted scopes. Twelve new unit cases and seven added LF/CRLF
+reference cases cover this boundary. Flattening those objects, changed inline
+projections, task blocks and unknown wrappers remain outside the contract.
+
 Hard-break follow-through (2026-09-08, Unreleased): the explicit structural
 HTML recovery route now distinguishes plain Markdown hard breaks, physical
 soft breaks and spaces. The reference gate covers 58 preformatted stream/source

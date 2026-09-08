@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added persistent visible labels to image URL, description, title, caption
+  and responsive-source fields. Labels remain visible after values are filled.
+
+- The optional structural Markdown/HTML adapter now retains inline images,
+  links/marks, optional math/emoji nodes and custom inline metadata in supported
+  editable structures. It still refuses projections that would flatten those
+  objects into preformatted text, preserving complete source on fallback.
+
 - Added source-aware plain Markdown hard-break recovery to the opt-in structural
   HTML adapter. Generated break tags and following line feeds stay distinct;
   custom/marked breaks and other unsupported atoms still retain source through

@@ -339,6 +339,16 @@ editing or clipboard behavior.
 
 ### Explicit text-block source flow recovery
 
+Inline nodes no longer cause a blanket refusal on this route. Pristine inline
+images (including linked/marked images), optional math/emoji nodes, and marked
+or custom-data hard breaks travel through protected inline slots outside
+preformatted scopes. Their source-defined attributes and marks are retained;
+changed inline-adapter output still fails the pristine-content comparison.
+This is not permission to flatten those objects: if an enclosing `pre` would
+require their data to become plain text, the complete flow falls back to inert
+source. Only the plain hard-break syntax exception below can be reprojected
+inside `pre`. Custom block metadata and unsupported block kinds remain refusals.
+
 Plain Markdown hard breaks now have a source-aware projection on this route.
 Two trailing spaces or a backslash before a newline generate a `br` and a
 separate renderer LF. Outside `pre` the break remains a hard-break node and its
@@ -370,7 +380,8 @@ The adapter checks pristine node content, marks and supported attributes before
 applying syntax-derived wrappers. It does not HTML-export arbitrary original
 nodes. Custom block attributes, including schema defaults and assigned IDs,
 modified adapter output, ambiguous block correspondence, unsupported container
-types and inline atoms other than plain hard breaks remain refusals with inert rollback. Original
+types and conversions that would flatten inline objects remain refusals with
+inert rollback. Original
 identity-preserving `parseFlow` and paragraph-only `parseParagraphFlow` are
 unchanged. Successful conversion reports `text-block-flow-projection` plus
 applicable HTML/preformatted losses; heading/code grouping and identity can
@@ -397,9 +408,10 @@ The adapter uses this tree when supplied, while retaining support for older
 direct-text contexts. Tight/loose item paragraphs are finalized from sibling
 source boundaries before capture. Container children must still correspond to
 the original node references; custom attributes, IDs, modified adapter output,
-task lists and atoms other than plain hard breaks decline with complete inert rollback. Node/depth limits
+task lists and conversions that would erase inline objects decline with complete
+inert rollback. Node/depth limits
 also apply to the recursive projection. No host callback is replayed merely to
-inspect the tree. Twenty-four LF/CRLF contracts additionally compare complete
+inspect the tree. Thirty-eight LF/CRLF contracts additionally compare complete
 list/quote reference structure outside `pre`, not just extracted text. Empty
 items still require an editable model paragraph, so this is not a promise of
 literal CommonMark AST equality. Browser/server HTML import reads a pre's code

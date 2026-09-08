@@ -55,7 +55,7 @@
 .fountain-toolbar__link-preview { padding: 7px 4px; color: var(--fountain-accent); font: 700 12px/1.2 system-ui, sans-serif; white-space: nowrap; }
 .fountain-toolbar__popover.is-image { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); align-items: end; }
 .fountain-toolbar__popover.is-image > strong { grid-column: 1 / -1; }
-.fountain-toolbar__popover.is-image > label { display: grid; gap: 4px; color: var(--fountain-muted); font: 700 11px/1.2 system-ui, sans-serif; }
+.fountain-toolbar__popover.is-image label { display: grid; gap: 4px; color: var(--fountain-muted); font: 700 11px/1.2 system-ui, sans-serif; }
 .fountain-toolbar__popover.is-image input, .fountain-toolbar__popover.is-image select, .fountain-toolbar__popover.is-image textarea { box-sizing: border-box; width: 100%; min-width: 0; }
 .fountain-toolbar__popover.is-image details { grid-column: 1 / -1; color: var(--fountain-muted); font: 700 11px/1.4 system-ui, sans-serif; }
 .fountain-toolbar__popover.is-image details[open] { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }

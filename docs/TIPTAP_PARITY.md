@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Inline-object recovery (2026-09-08, Unreleased): the explicit source adapter now
+preserves supported inline objects and their data through editable block
+structures, while retaining inert rollback if preformatted projection would
+flatten them. Full-structure/source reference contracts increase from 24 to 38;
+the 563/579 corpus scores remain unchanged. This is interoperability progress,
+not full HTML fidelity or completed parity.
+
 Plain hard-break recovery (2026-09-08, Unreleased): parser-generated break tags
 and renderer line feeds now remain distinct through explicit source projection,
 including nested lists/quotes and preformatted scopes. Reference checks increase

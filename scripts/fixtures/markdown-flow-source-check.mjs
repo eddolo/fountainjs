@@ -3,6 +3,11 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const image = MarkdownImporter.parse('<blockquote>\n\nBefore **![Diagram](/diagram.png "Caption")** after\n\n</blockquote>', schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+  }).child(0).child(0).content.find(node => node.type.name === 'inline_image');
+  if (!image || image.attrs.src !== '/diagram.png' || image.attrs.alt !== 'Diagram' || image.attrs.title !== 'Caption'
+    || image.marks[0]?.type.name !== 'strong') throw new Error('Compiled structural flow lost inline image data or marks.');
   for (const body of ['one  \ntwo', 'one\\\ntwo']) {
     const source = `<div><pre>\n\n${body}\n\n</pre></div>`;
     const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow });
