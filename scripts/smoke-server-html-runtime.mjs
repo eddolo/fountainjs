@@ -42,3 +42,12 @@ const runtime = globalThis.Bun
     ? `Deno ${globalThis.Deno.version.deno}`
     : `Node ${globalThis.process?.versions?.node ?? 'unknown'}`;
 console.log(`${runtime}: DOM-free server HTML import/export passed.`);
+
+const paragraph = MarkdownImporter.parse('Before <h2>Heading</h2> After', schema, {
+  parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+});
+if (paragraph.childCount !== 4 || paragraph.child(1).type.name !== 'heading'
+  || paragraph.child(1).textContent !== 'Heading') {
+  throw new Error('Compiled server runtime paragraph HTML recovery failed.');
+}
+console.log(`${runtime}: block-returning Markdown paragraph recovery passed.`);

@@ -1,5 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Paragraph HTML implementation (2026-09-08, Unreleased): an additive, default-off
+block-returning paragraph adapter now recovers embedded paragraph/heading/quote
+tags without forcing block nodes into inline content. Seventeen unit cases,
+eight reference/source contracts and 1,304 unchanged-source cases cover the new
+path; the editor/file/reader journey passes Chromium, Firefox and WebKit.
+Experimental demo/documentation explicitly retain tight-list empty-paragraph and
+raw-text limitations. Existing 563 default / 579 block+inline semantic baselines
+are unchanged. This is concrete boundary work, not completion of the programme.
+Full local check: 1,391 tests / 113 files, with compiled Node/workerd recovery,
+headless/API and performance gates passing. Recorded editor/reopened reader and
+narrow-screen views were visually inspected; the recording test passed.
+
 CommonMark evidence audit (2026-09-08, Unreleased): projection version 9 corrects
 the comparison of paragraph/heading formatting scopes, recognizing example 167
 which the engine already imports correctly. Opt-in HTML now locks 579/652;

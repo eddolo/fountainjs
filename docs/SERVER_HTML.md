@@ -56,6 +56,14 @@ for local marks, source capture, default-off policy, and explicit loss warnings.
 
 ## Block HTML projection
 
+For a Markdown paragraph containing block tags, the separate experimental
+`parseParagraph(segments, schema)` / `parseParagraphWithReport` methods can
+return multiple blocks. Connect them to `parseHTMLParagraph`, not
+`parseHTMLInline`. Original inline nodes remain protected through HTML paragraph
+recovery. The same limits and schema/URL policies apply. Tight-list wrapper
+semantics and raw-text scopes remain unfinished; see the
+[paragraph recovery contract](MARKDOWN_SOURCE.md#experimental-paragraph-html-recovery).
+
 Supported inline formatting now survives block boundaries in both importers:
 for example, `<strong><p>One</p><p>Two</p></strong>` keeps both paragraphs bold.
 The same mark rules cover block styles, list items, table row groups, rows and

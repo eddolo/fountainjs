@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added default-off, experimental Markdown paragraph HTML recovery. A separate
+  block-returning adapter handles paragraph/heading/quote tags inside ordinary
+  paragraphs while preserving original inline nodes and explicit failure paths.
+  The conversion demo exposes the option. Tight-list wrapper semantics and
+  raw-text/preformatted scopes remain documented limitations; existing inline
+  behavior and CommonMark baselines are unchanged. Aggregate ESM/CJS budgets
+  increase by 2 KiB each for the additive API; individual entry limits are unchanged.
+
 - Strengthened the CommonMark semantic comparator for paragraph/heading
   formatting scopes, recognizing already-correct example 167 without changing
   runtime behavior. Added independent source/semantic and corruption checks;

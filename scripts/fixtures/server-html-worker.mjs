@@ -1,4 +1,4 @@
-import { CoreSchemaSpec, HTMLExporter, Schema } from '../../dist/index.js';
+import { CoreSchemaSpec, HTMLExporter, MarkdownImporter, Schema } from '../../dist/index.js';
 import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 const schema = new Schema(CoreSchemaSpec);
@@ -11,11 +11,16 @@ export default {
     }
     const source = await request.text();
     const result = ServerHTMLImporter.parseWithReport(source, schema);
+    const paragraph = MarkdownImporter.parse('Before <h2>Heading</h2> After', schema, {
+      parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+    });
     return new Response(JSON.stringify({
       blocks: result.document.childCount,
       text: result.document.textContent,
       html: HTMLExporter.export(result.document, { document: false }),
       issues: result.issues,
+      paragraphRecovered: paragraph.childCount === 4 && paragraph.child(1).type.name === 'heading'
+        && paragraph.child(1).textContent === 'Heading',
     }), { headers: { 'content-type': 'application/json' } });
   },
 };

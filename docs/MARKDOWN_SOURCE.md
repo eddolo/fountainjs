@@ -175,10 +175,52 @@ origin, whitespace, HTML-token and table sensitivity checks remain in force.
 
 This is not permission to lift arbitrary HTML through Markdown's inline parser.
 For example, `<strong><em><p>Both</p></em></strong>` on one line is parsed as inline
-HTML within a Markdown paragraph; that adapter still rejects block elements and
+HTML within a Markdown paragraph; the inline-only adapter still rejects block elements and
 keeps the source literal. Two explicit nonconformance contracts retain this
 fallback and exact original source. By contrast a standalone `<strong>` opening
 line begins an HTML block and can use the separate block-flow adapter.
+
+### Experimental paragraph HTML recovery
+
+`MarkdownImportOptions.parseHTMLParagraph` is a separate, default-off boundary
+for HTML that can split an ordinary Markdown paragraph into several blocks:
+
+```ts
+MarkdownImporter.parse('Before <h2>Heading</h2> After', schema, {
+  parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+  onHTMLParagraphFallback: issue => report(issue.message),
+})
+```
+
+The callback receives the same frozen HTML-token/original-inline-node segments
+as the inline adapter, but must return a same-schema block array (or `null`). It
+takes precedence over `parseHTMLInline` in ordinary paragraphs. Headings and
+pipe-table cells retain the existing inline-only path. Failures restore inert
+HTML for the whole paragraph without partially applying another inline adapter.
+If surrounding block flow fails, recovery disables this adapter too when
+restoring the original container.
+
+`ServerHTMLImporter.parseParagraph` / `parseParagraphWithReport` use HTML parser
+recovery with an implicit paragraph wrapper, keeping original Markdown nodes in
+protected slots rather than serializing their data. They verify each original
+position survives exactly once and in order, including repeated references and
+mark-only copies. Unknown wrappers/attributes may be omitted with conversion
+reports; unsafe URLs are rejected. Raw-text/preformatted/foreign-content scopes
+still require specialized parsing and fall back explicitly. Limits apply to the
+wrapper and slots as well as source bytes. No browser or fake DOM is required.
+
+**Known limitation:** tight-list paragraphs do not carry their HTML rendering
+context into this adapter yet. CommonMark omits their implicit `<p>` wrapper;
+the new path can therefore add an empty paragraph after a block tag. This is an
+explicit pending semantic mismatch, not a conformance gain. Ordinary paragraph
+recovery can also legitimately produce empty blocks from HTML's closing-tag
+recovery. Do not blindly trim them away. Eight reference/source checks and 1,304
+whole-corpus source-retention checks are separate from the unchanged 563 default
+and 579 block/inline-adapter baselines. Full CommonMark remains unfinished.
+
+Try **Recover block tags inside paragraphs** in the conversion demo. The recorded
+`markdown-paragraph-recovery-journey.ts` exercises conversion, paste, editing/undo,
+Markdown download/reopen and desktop/mobile reader layouts.
 
 Projection version 7 corrects reference code provenance: an observer records the
 output offsets of `<pre>` tags actually emitted for Markdown code blocks, without

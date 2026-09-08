@@ -89,6 +89,15 @@ export interface MarkdownImportOptions {
    * owns sanitization and loss reporting. May run again during source capture.
    */
   readonly parseHTMLInline?: (segments: readonly MarkdownHTMLInlineSegment[], schema: Schema) => readonly Node[] | null;
+  /**
+   * Optional paragraph-level HTML recovery that may return multiple blocks.
+   * Receives original inline nodes and raw HTML tokens, before inline conversion.
+   * Applies only to ordinary paragraphs (including list/quote paragraphs), not
+   * headings or pipe-table cells. Takes precedence over parseHTMLInline there.
+   * Return null to retain inert HTML; validate and sanitize in the adapter.
+   */
+  readonly parseHTMLParagraph?: (segments: readonly MarkdownHTMLInlineSegment[], schema: Schema) => readonly Node[] | null;
+  readonly onHTMLParagraphFallback?: (issue: MarkdownHTMLInlineFallback) => void;
   readonly onHTMLInlineFallback?: (issue: MarkdownHTMLInlineFallback) => void;
 }
 
@@ -1408,6 +1417,36 @@ function paragraph(schema: Schema, value: string, references: References, align 
   return schema.node('paragraph', { align }, projectInline(value, schema, references, options));
 }
 
+function paragraphBlocks(schema: Schema, value: string, references: References, options: MarkdownImportOptions): Node[] {
+  if (!options.parseHTMLParagraph) return [paragraph(schema, value, references, 'left', options)];
+  const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
+  const nodes = inline(value, schema, references, [], tokens, options.autolinkLiterals);
+  if (!tokens.size) return [schema.node('paragraph', { align: 'left' }, nodes)];
+  const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node })));
+  let issue: MarkdownHTMLInlineFallback;
+  try {
+    const projected = options.parseHTMLParagraph(segments, schema);
+    if (projected !== null) {
+      if (!Array.isArray(projected)) throw new TypeError('Paragraph HTML adapter must return a block array.');
+      for (const node of projected) {
+        if (!(node instanceof Node) || node.type.isInline || node.type === schema.topNodeType || node.type.schema !== schema) {
+          throw new TypeError('Paragraph HTML adapter must return block nodes from the supplied schema.');
+        }
+        schema.validate(node);
+      }
+      if (projected.length && !matchesContentExpression(projected, schema.topNodeType.spec.content ?? '')) {
+        throw new TypeError('Paragraph HTML adapter result does not match document content.');
+      }
+      return [...projected];
+    }
+    issue = { source: value, reason: 'declined', message: 'Paragraph HTML adapter declined conversion; literal source retained.' };
+  } catch (error) {
+    issue = { source: value, reason: 'error', message: error instanceof Error ? error.message : 'Paragraph HTML adapter failed; literal source retained.' };
+  }
+  options.onHTMLParagraphFallback?.(Object.freeze(issue));
+  return [schema.node('paragraph', { align: 'left' }, inline(value, schema, references, [], undefined, options.autolinkLiterals))];
+}
+
 function tableCells(line: string): string[] {
   let source = line.trim();
   if (source.startsWith('|')) source = source.slice(1);
@@ -2014,7 +2053,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     // Keep physical line endings visible to inline syntax validation. Ordinary
     // soft breaks become spaces only when text nodes are emitted; hard-break
     // markers are consumed by `inline` before that normalization.
-    blocks.push(paragraph(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references, 'left', options));
+    blocks.push(...paragraphBlocks(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references, options));
   }
   if (!options.parseHTMLFlow || !htmlBlocks.size) return blocks;
   const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(blocks.map(node => Object.freeze(
@@ -2049,6 +2088,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
   return parseBlocks(lines, schema, references, {
     ...options,
     parseHTMLFlow: undefined, parseHTMLBlock: undefined, parseHTMLInline: undefined,
+    parseHTMLParagraph: undefined, onHTMLParagraphFallback: undefined,
     onHTMLFlowFallback: undefined, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
     onTeXTableIssue: undefined,
   });

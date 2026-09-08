@@ -23,6 +23,11 @@ import { productWorkflowJourney } from './product-workflow-journey';
 import { htmlBlockFormatJourney } from './html-block-format-journey';
 import { issueTableHandoffJourney } from './issue-table-handoff-journey';
 import { markdownScopeJourney } from './markdown-scope-journey';
+import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-journey';
+
+test('recovers paragraph HTML into editable blocks and a reopened reader', async ({ page }, info) => {
+  await markdownParagraphRecoveryJourney(page, info);
+});
 
 test('reads separate retired paragraphs after Markdown HTML scope conversion and handoff', async ({ page }, info) => {
   await markdownScopeJourney(page, info);

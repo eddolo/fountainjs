@@ -967,9 +967,9 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   return inheritElementMarks(element, result, schema, context);
 }
 
-function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: ImportContext['blockSlots']): FountainNode {
+function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: ImportContext['blockSlots'], inlineSlots?: ImportContext['inlineSlots']): FountainNode {
   if (!marks.length) return node;
-  const children = node.content.map(child => inheritBlockMarks(child, marks, slots));
+  const children = node.content.map(child => inheritBlockMarks(child, marks, slots, inlineSlots));
   let result = children.some((child, index) => child !== node.content[index]) ? node.copy(children) : node;
   if (node.type.isInline) {
     const combined = mergeInlineMarks(node.marks, marks);
@@ -979,6 +979,8 @@ function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: I
   }
   const origin = slots?.originals.has(node) ? node : slots?.origins.get(node);
   if (origin && result !== node) slots?.origins.set(result, origin);
+  const index = inlineSlots?.provenance.get(node);
+  if (index !== undefined && result !== node) inlineSlots?.provenance.set(result, index);
   return result;
 }
 
@@ -989,7 +991,7 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
 function inheritElementMarks(element: SourceElement, nodes: FountainNode[], schema: Schema, context: ImportContext): FountainNode[] {
   const slots = context.blockSlots;
   const marks = slots ? slots.scopedMarks.get(element.raw) : elementMarks(element, schema, [], context, false);
-  return marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots)) : nodes;
+  return marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots, context.inlineSlots)) : nodes;
 }
 
 function projectBlock(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
@@ -1200,6 +1202,23 @@ export class ServerHTMLImporter {
    * this and retains its inert source interpretation. Not a lossless HTML import.
    */
   parseInlineWithReport(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): ServerHTMLInlineImportResult {
+    return this.parseInlineContent(segments, schema, false);
+  }
+
+  /** Recover an HTML paragraph into blocks while preserving original inline nodes. */
+  parseParagraph(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
+    return this.parseParagraphWithReport(segments, schema).nodes;
+  }
+
+  parseParagraphWithReport(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): ServerHTMLFragmentImportResult {
+    return this.parseInlineContent(segments, schema, true);
+  }
+
+  static parseParagraph(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
+    return new ServerHTMLImporter().parseParagraph(segments, schema);
+  }
+
+  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
     for (const segment of segments) {
       if (segment.kind === 'html') {
@@ -1222,8 +1241,8 @@ export class ServerHTMLImporter {
     const seenNodes = new Set<FountainNode>();
     const sharedNodes = new Set<FountainNode>();
     const tokenMarks = new Map<number, readonly Mark[]>();
-    const parts: string[] = [];
-    let offset = 0;
+    const parts: string[] = paragraphMode ? ['<p>'] : [];
+    let offset = paragraphMode ? 3 : 0;
     for (const segment of segments) {
       let part: string;
       if (segment.kind === 'html') {
@@ -1239,6 +1258,7 @@ export class ServerHTMLImporter {
       offset += part.length;
       if (offset > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
     }
+    if (paragraphMode) parts.push('</p>');
     const html = parts.join('');
     if (utf8Length(html) > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
     const issues: ServerHTMLImportIssue[] = [];
@@ -1257,14 +1277,14 @@ export class ServerHTMLImporter {
     const inspect = (parent: SourceParent) => {
       for (const child of parent.childNodes) {
         if (child.kind !== 'element') continue;
-        if ((BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
+        if ((!paragraphMode && BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(pre|script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
           throw new Error(`Inline HTML <${child.tagName}> requires a block or specialized adapter; literal source retained.`);
         }
         inspect(child);
       }
     };
     inspect(root);
-    const nodes = inlineChildren(root, schema, [], context);
+    const nodes = paragraphMode ? blockChildren(root, schema, context) : inlineChildren(root, schema, [], context);
     const found: number[] = [];
     const verify = (node: FountainNode) => {
       const index = provenance.get(node);

@@ -1,0 +1,60 @@
+import { expect, type Page, type TestInfo } from '@playwright/test';
+
+export async function markdownParagraphRecoveryJourney(page: Page, info: TestInfo): Promise<void> {
+  const capture = async (name: string) => {
+    await page.evaluate(async () => { await document.fonts.ready; window.scrollTo({ top: 0, behavior: 'instant' }); await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))); });
+    await page.screenshot({ path: info.outputPath(name), fullPage: true });
+  };
+  await page.goto('/demos/node-markdown.html');
+  const source = page.getByLabel('Markdown input', { exact: true });
+  await source.fill('Before <h2>Recovered heading</h2> After');
+  const output = page.locator('.demo-output');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await expect(output.locator('pre')).toContainText('&lt;h2&gt;');
+  await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
+  await expect(output.locator('pre')).toContainText('<h2>Recovered heading</h2>');
+  const html = await output.locator('pre').innerText();
+  await source.fill('Before <pre>literal</pre> After');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Kept paragraph HTML as text');
+  await expect(output.locator('pre')).toContainText('&lt;pre&gt;');
+  await page.goto('/issue-editor.html');
+  const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+  await editor.click();
+  await page.keyboard.press('ControlOrMeta+a');
+  // Public paste event payload, not OS clipboard permission certification.
+  await editor.evaluate((element, value) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
+    element.dispatchEvent(event);
+  }, html);
+  const verify = async (surface: typeof editor) => {
+    await expect(surface.locator('h2')).toHaveText('Recovered heading');
+    await expect(surface.locator('p')).toHaveText(['Before', 'After', '']);
+    const before = await surface.locator('p').first().boundingBox();
+    const heading = await surface.locator('h2').boundingBox();
+    const after = await surface.locator('p').nth(1).boundingBox();
+    expect(heading!.y).toBeGreaterThanOrEqual(before!.y + before!.height);
+    expect(after!.y).toBeGreaterThanOrEqual(heading!.y + heading!.height);
+  };
+  await verify(editor);
+  await editor.getByText('After', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' updated');
+  await expect(editor).toContainText('After updated');
+  await page.keyboard.press('ControlOrMeta+z');
+  await verify(editor);
+  await capture('recovered-paragraph-editor.png');
+  const pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download Markdown draft', exact: true }).click();
+  const path = info.outputPath('recovered-paragraph.md');
+  await (await pending).saveAs(path);
+  await page.getByLabel('Open Markdown draft file', { exact: true }).setInputFiles(path);
+  await verify(editor);
+  await page.getByRole('button', { name: 'Reader preview', exact: true }).click();
+  const reader = page.getByRole('textbox', { name: 'Issue preview', exact: true });
+  await verify(reader);
+  await capture('recovered-paragraph-reader.png');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await verify(reader);
+  await capture('recovered-paragraph-mobile.png');
+}

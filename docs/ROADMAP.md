@@ -5,6 +5,29 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Paragraph HTML recovery (2026-09-08, Unreleased): a new default-off block-returning
+`parseHTMLParagraph` boundary and DOM-free `ServerHTMLImporter.parseParagraph`
+allow ordinary paragraph HTML to recover into separate editable blocks while
+retaining original inline nodes/metadata and explicit failure paths. Seventeen
+unit cases pass; eight independent reference/source checks and 1,304 corpus source
+checks do not replace conformance. The conversion demo exposes the experimental
+option and the workflow passes Chromium, Firefox and WebKit through editing,
+download/reopen and reader views. Runtime growth is measured at ESM 1371.6 KiB and
+CJS 1140.3 KiB; aggregate caps increase by 2 KiB each to 1372/1141, with individual
+entry limits unchanged. Public declarations add the optional callback/reporter
+and paragraph methods; existing APIs remain available.
+Full `pnpm check` passes 1,391 tests / 113 files, compiled Node and workerd
+paragraph-recovery checks, API/headless boundaries and performance budgets.
+Recorded editor, reopened reader and narrow-screen screenshots were visually
+inspected; the recorded journey also passed. This is bounded workflow evidence,
+not certification of arbitrary pasted HTML or physical mobile input.
+
+Next: carry tight/loose list rendering context into paragraph recovery. A tight
+list can currently acquire an extra empty paragraph because its HTML omits the
+implicit `<p>` wrapper; the independent oracle records this mismatch explicitly.
+Preformatted/raw-text scopes and exact unsupported wrapper identity remain open.
+Do not call this full CommonMark support or promote the existing 563/579 baselines.
+
 CommonMark evidence audit (2026-09-08, Unreleased): the neutral comparator now
 recognizes equivalent paragraph/heading formatting scopes instead of requiring
 the reference HTML and Fountain's inline marks to share one representation.

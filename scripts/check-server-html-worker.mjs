@@ -47,6 +47,7 @@ try {
   if (!body.html.includes('<em>real workerd</em>') || body.issues.length !== 0) {
     throw new Error(`Worker lost semantic HTML: ${JSON.stringify(body)}`);
   }
+  if (body.paragraphRecovered !== true) throw new Error('Worker paragraph HTML recovery failed.');
   console.log('Cloudflare workerd (Miniflare): DOM-free server HTML import/export passed.');
 } finally {
   await worker.dispose();
