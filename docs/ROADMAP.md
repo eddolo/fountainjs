@@ -5,6 +5,16 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+HTML formatting inheritance repair (2026-09-08, Unreleased): both browser and
+server import retain supported marks/typography around blocks, list items and
+table row groups/rows/cells, with nearest supported color overrides. Verified by
+1,368 tests / 111 files in the full local check and three browser workflow runs;
+recorded source/editor/reader/mobile captures were inspected. See
+[the exact scope](SERVER_HTML.md#block-html-projection). No public API or bundle
+ceiling changed. Follow up on CSS reset semantics and lossless alternatives for
+native table roles not representable by pipe Markdown; do not equate reported
+conversion losses with solved export fidelity. The CommonMark baseline is unchanged.
+
 Literal text line-ending repair (2026-09-07, Unreleased): LF/CR in text no longer
 become spaces or Markdown block syntax through canonical save/reopen. Nineteen
 unit cases cover text/marks, code, headings, quotes, lists, tables, ruby and

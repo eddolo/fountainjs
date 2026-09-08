@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Fixed browser/server HTML import dropping bold, emphasis, colors and supported
+  typography around multiple blocks, list items and table groups/rows/cells.
+  Nearer supported inline colors now override outer colors. Shared portable
+  typography rules no longer emit spurious DOM-only fallback warnings. This is
+  not arbitrary CSS cascade or headerless-table Markdown fidelity support.
+
 - Added a real-world workflow hub prominently linked above the ten integration
   demos, with GitLab-style issue editing and a new unofficial Todoist-style task
   workspace. The task demo exercises independent descriptions/history, host-owned

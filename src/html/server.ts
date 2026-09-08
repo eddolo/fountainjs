@@ -445,7 +445,10 @@ function configuredRules(
 ): Array<{ rule: ParseRule; portable: boolean }> {
   return [
     ...(spec.parseHTML ?? []).map((rule) => ({ rule, portable: true })),
-    ...(spec.parseDOM ?? []).map((rule) => ({ rule, portable: false })),
+    // One rule object may deliberately serve both environments. A declined
+    // portable rule must not be retried as an unsupported DOM-only callback.
+    ...(spec.parseDOM ?? []).filter(rule => !spec.parseHTML?.includes(rule as HTMLParseRule))
+      .map((rule) => ({ rule, portable: false })),
   ];
 }
 
@@ -599,7 +602,7 @@ function configuredRuby(
 
 function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark[], context: ImportContext, reportUnknown: boolean): Mark[] {
   const tag = child.tagName;
-  const nextMarks = [...marks];
+  const nextMarks: Mark[] = [];
   const customMarks = configuredMarks(child, schema, context);
   customMarks.forEach((mark) => addMark(nextMarks, mark));
   const markName = ({
@@ -636,7 +639,7 @@ function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark
       });
     }
   }
-  return nextMarks;
+  return [...mergeInlineMarks(nextMarks, marks)];
 }
 
 function inlineChildren(
@@ -934,7 +937,7 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
     } else pending.push(child);
   });
   flushInline();
-  return result;
+  return element instanceof ServerElement ? inheritElementMarks(element, result, schema, context) : result;
 }
 
 function listItemContent(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
@@ -961,10 +964,10 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   if (!result.length) {
     result.unshift(schema.node('paragraph', {}, [schema.text('')]));
   }
-  return result;
+  return inheritElementMarks(element, result, schema, context);
 }
 
-function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots: NonNullable<ImportContext['blockSlots']>): FountainNode {
+function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: ImportContext['blockSlots']): FountainNode {
   if (!marks.length) return node;
   const children = node.content.map(child => inheritBlockMarks(child, marks, slots));
   let result = children.some((child, index) => child !== node.content[index]) ? node.copy(children) : node;
@@ -974,16 +977,19 @@ function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots: No
       result = result.withMarks(combined);
     }
   }
-  const origin = slots.originals.has(node) ? node : slots.origins.get(node);
-  if (origin && result !== node) slots.origins.set(result, origin);
+  const origin = slots?.originals.has(node) ? node : slots?.origins.get(node);
+  if (origin && result !== node) slots?.origins.set(result, origin);
   return result;
 }
 
 function block(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
-  const nodes = projectBlock(element, schema, context);
+  return inheritElementMarks(element, projectBlock(element, schema, context), schema, context);
+}
+
+function inheritElementMarks(element: SourceElement, nodes: FountainNode[], schema: Schema, context: ImportContext): FountainNode[] {
   const slots = context.blockSlots;
-  const marks = slots?.scopedMarks.get(element.raw);
-  return slots && marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots)) : nodes;
+  const marks = slots ? slots.scopedMarks.get(element.raw) : elementMarks(element, schema, [], context, false);
+  return marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots)) : nodes;
 }
 
 function projectBlock(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
@@ -1098,7 +1104,8 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       code: 'block-html-projection',
       message: 'Table rows were placed in native header/body/footer order. Source row-group order and repeat-on-print behavior are not retained.',
     });
-    const rows = orderedRows.map((row) => schema.node(
+    const rows = orderedRows.map((row) => {
+      const node = schema.node(
       'table_row',
       {},
       row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
@@ -1126,7 +1133,12 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
           content.length ? content : [paragraph(cell, schema, context)],
         );
       }),
-    ));
+      );
+      const marked = inheritElementMarks(row, [node], schema, context);
+      const parent = row.raw.parent;
+      return parent && parent !== element.raw && htmlparser2Adapter.isElementNode(parent)
+        ? inheritElementMarks(new ServerElement(parent), marked, schema, context)[0] : marked[0];
+    });
     return [...captions, ...rows.length ? [schema.node('table', {}, rows)] : []];
   }
   if (tag === 'img') {

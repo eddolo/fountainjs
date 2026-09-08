@@ -249,7 +249,16 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
       } catch { result.push(...textNodes(emoji || child.textContent || '', schema, marks)); }
       return;
     }
-    const nextMarks = [...marks];
+    result.push(...inlineChildren(child, schema, elementMarks(child, schema, marks)));
+  });
+  if (!result.length && marks.length) result.push(schema.text('', marks));
+  return result;
+}
+
+/** The same inline-format rules apply to a block and to an inline wrapper. */
+function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[] = []): Mark[] {
+    const tag = child.tagName.toLowerCase();
+    const nextMarks: Mark[] = [];
     configuredMarks(child, schema).forEach((mark) => addMark(nextMarks, mark));
     const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript' } as Record<string, string>)[tag];
     if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
@@ -277,10 +286,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
         });
       }
     }
-    result.push(...inlineChildren(child, schema, nextMarks));
-  });
-  if (!result.length && marks.length) result.push(schema.text('', marks));
-  return result;
+    return [...marks.filter(mark => !nextMarks.some(local => local.type === mark.type)), ...nextMarks];
 }
 
 function imageSize(value: string, fallback: string): string {
@@ -474,7 +480,7 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
     }
   });
   flushInline();
-  return result;
+  return inheritElementMarks(element, result, schema);
 }
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
@@ -501,10 +507,28 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   if (!result.length) {
     result.unshift(schema.node('paragraph', {}, [schema.text('')]));
   }
-  return result;
+  return inheritElementMarks(element, result, schema);
 }
 
 function block(element: Element, schema: Schema): FountainNode[] {
+  return inheritElementMarks(element, projectBlock(element, schema), schema);
+}
+
+function inheritElementMarks(element: Element, nodes: FountainNode[], schema: Schema): FountainNode[] {
+  const marks = element instanceof HTMLElement ? elementMarks(element, schema) : [];
+  const inherit = (node: FountainNode): FountainNode => {
+    const children = node.content.map(inherit);
+    let result = children.some((child, index) => child !== node.content[index]) ? node.copy(children) : node;
+    if (node.type.isInline) {
+      const combined = [...marks.filter(mark => !node.marks.some(local => local.type === mark.type)), ...node.marks];
+      if (combined.length !== node.marks.length || combined.some((mark, index) => !mark.eq(node.marks[index]))) result = result.withMarks(combined);
+    }
+    return result;
+  };
+  return marks.length ? nodes.map(inherit) : nodes;
+}
+
+function projectBlock(element: Element, schema: Schema): FountainNode[] {
   const tag = element.tagName.toLowerCase();
   const customNode = configuredNode(element as HTMLElement, schema, false);
   if (customNode) return [customNode];
@@ -583,7 +607,8 @@ function block(element: Element, schema: Schema): FountainNode[] {
     });
     const sourceRows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'));
     const remaining = remainingHTMLTableRows(sourceRows, row => row.parentElement);
-    const rows = orderedHTMLTableRows(sourceRows, row => row.parentElement?.tagName ?? '').map((row) => schema.node('table_row', {},
+    const rows = orderedHTMLTableRows(sourceRows, row => row.parentElement?.tagName ?? '').map((row) => {
+      const node = schema.node('table_row', {},
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
@@ -600,7 +625,10 @@ function block(element: Element, schema: Schema): FountainNode[] {
           content.length ? content : [paragraph(cell, schema)],
         );
       }),
-    ));
+      );
+      const marked = inheritElementMarks(row, [node], schema);
+      return row.parentElement && row.parentElement !== element ? inheritElementMarks(row.parentElement, marked, schema)[0] : marked[0];
+    });
     return [...captions, ...rows.length ? [schema.node('table', {}, rows)] : []];
   }
   if (tag === 'img') {

@@ -1,6 +1,14 @@
 import type { MarkSpec } from '../../core';
 import { normalizeLineHeight } from '../../text-style/values';
 
+const styleRule = {
+  tag: '[style]',
+  getAttrs(element: { style: { lineHeight?: string } }): { lineHeight: string } | false {
+    const lineHeight = normalizeLineHeight(element.style.lineHeight);
+    return lineHeight ? { lineHeight } : false;
+  },
+};
+
 export const lineHeight: MarkSpec = {
   attrs: {
     lineHeight: {
@@ -8,19 +16,7 @@ export const lineHeight: MarkSpec = {
       validate: (value) => normalizeLineHeight(value) === value,
     },
   },
-  parseHTML: [{
-    tag: '[style]',
-    getAttrs: (element) => {
-      const lineHeight = normalizeLineHeight(element.style.lineHeight);
-      return lineHeight ? { lineHeight } : false;
-    },
-  }],
-  parseDOM: [{
-    tag: '[style]',
-    getAttrs: (element) => {
-      const lineHeight = normalizeLineHeight(element.style.lineHeight);
-      return lineHeight ? { lineHeight } : false;
-    },
-  }],
+  parseHTML: [styleRule],
+  parseDOM: [styleRule],
   toDOM: (mark) => ['span', { style: `line-height:${String(mark.attrs.lineHeight)}` }, 0],
 };

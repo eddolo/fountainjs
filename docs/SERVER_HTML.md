@@ -56,6 +56,29 @@ for local marks, source capture, default-off policy, and explicit loss warnings.
 
 ## Block HTML projection
 
+Supported inline formatting now survives block boundaries in both importers:
+for example, `<strong><p>One</p><p>Two</p></strong>` keeps both paragraphs bold.
+The same mark rules cover block styles, list items, table row groups, rows and
+cells. A nearer explicit supported color/style value wins over an outer mark
+of the same type, and formatting does not leak into unrelated siblings.
+Native block attributes and structure remain in the Fountain model; no HTML
+serialization/reparse is used to transfer marks onto protected Markdown nodes.
+
+This is semantic formatting inheritance, not a browser CSS engine. External
+stylesheets, arbitrary layout, selector cascades, and CSS reset values such as
+`font-weight:normal` inside a bold scope are not fully modeled. Conversion-loss
+reports and the existing raw-HTML fallback contracts still apply. Built-in
+typography rules use one portable rule object for both `parseHTML` and `parseDOM`;
+the server does not retry that identical rule as a DOM-only callback. Distinct
+browser-only rules continue to be reported rather than executed.
+
+Regression coverage: `tests/html-block-mark-inheritance.test.ts`, pure-Node
+cases in `tests/server-html.test.ts`, and the real-editor
+`tests/browser/html-block-format-journey.ts`. The latter compares rendered
+formatting before import, after paste, after editing/undo, and after Markdown
+download/reopen in a separate reader. It tests an HTML clipboard payload, not
+OS clipboard permissions or arbitrary external-editor interoperability.
+
 The server importer reconstructs the same supported semantic outcomes as the
 browser importer:
 

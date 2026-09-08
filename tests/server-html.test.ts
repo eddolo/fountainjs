@@ -16,6 +16,26 @@ import { RubyExtension } from '../src/ruby';
 import { createWidgetExtension, defineWidget } from '../src/widgets';
 import { TableMap } from '../src/core/table-map';
 
+it('inherits block typography in pure Node without a DOM shim', () => {
+  expect(typeof document).toBe('undefined');
+  const target = new Schema(composeExtensions([CoreExtension]).schema);
+  const result = ServerHTMLImporter.parseWithReport('<section style="font-family:Georgia;font-size:20px;line-height:1.75"><p>One</p><p>Two</p></section>', target);
+  expect(result.document.content.map(node => node.child(0).marks.map(mark => mark.type.name))).toEqual([
+    ['font_family', 'font_size', 'line_height'], ['font_family', 'font_size', 'line_height'],
+  ]);
+  expect(result.issues).toEqual([]);
+});
+
+it('does not retry the identical portable rule as a DOM callback when it declines', () => {
+  const rule = { tag: '[style]', getAttrs: () => false as const };
+  const target = new Schema(composeExtensions([CoreExtension, defineExtension({
+    name: 'shared-declining-rule', marks: { optional: { parseHTML: [rule], parseDOM: [rule] } },
+  })]).schema);
+  const result = ServerHTMLImporter.parseWithReport('<p style="text-align:center">Plain</p>', target);
+  expect(result.document.child(0).child(0).marks).toEqual([]);
+  expect(result.issues).toEqual([]);
+});
+
 describe('full HTML document reopening', () => {
   const schema = new Schema(composeExtensions([CoreExtension]).schema);
 

@@ -17,11 +17,23 @@ JSON is the lossless persistence format. Nodes use stable type names, optional a
 Table cells and header cells preserve their supported `block+` structure during
 HTML import: multiple/empty paragraphs, headings, lists, quotes, code, media,
 math, portable custom blocks, and nested tables are not flattened into a single
-text run. Header/body/footer rows all enter the document in source order; the
+text run. Header/body/footer rows enter the document in native HTML display order; the
 model does not retain a distinct `tfoot` grouping. Loose inline runs between
 cell blocks become separate paragraphs and inherit the cell's declared
 alignment. This does not claim arbitrary CSS inheritance or print-layout
 fidelity. These rules are shared by browser paste and server conversion.
+
+Supported inline marks and typography on block wrappers, list items, row groups,
+rows and cells are transferred to their text without dropping block structure.
+Nearer supported color/style values override surrounding values; this does not
+implement stylesheet cascades, arbitrary CSS layout, or all CSS reset semantics.
+See [the inheritance boundary and tests](SERVER_HTML.md#block-html-projection).
+
+Pipe Markdown necessarily has a header-first table shape. Export reports cell-role
+loss when a native table has no header or uses a different header arrangement;
+reopening that Markdown can change the table's appearance. Use native JSON or
+HTML when those roles must survive. This limitation is not a formatting-inheritance
+fix and must not be hidden by treating all table round trips as lossless.
 
 Between blocks, only whitespace-only inline runs made of HTML's collapsible
 ASCII whitespace are ignored as markup indentation. NBSP, narrow NBSP, BOM,

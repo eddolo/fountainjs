@@ -1,5 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest follow-through (2026-09-08, Unreleased): browser paste and pure-Node HTML
+import retain supported inline formatting across block wrappers, lists and table
+groups/rows/cells, including nearer color overrides. Twenty-four added cases
+bring full `pnpm check` to 1,368 tests / 111 files. Three desktop browser journeys
+verify server import, pasted rendering, editing/undo and Markdown file handoff;
+recorded original/editor/reader/mobile views were inspected. Public API and bundle
+ceilings are unchanged (ESM 1369.8/1370 KiB; CJS 1138.8/1139 KiB).
+The CommonMark baselines remain 563 default / 578 opt-in HTML matches out of 652.
+Arbitrary CSS cascades/resets and headerless-table pipe-Markdown fidelity remain
+open, explicitly documented boundaries—not new conformance matches.
+
 Latest follow-through (2026-09-08, Unreleased): a real-world workflow hub now
 surfaces the issue editor directly from the demo gallery and adds a Todoist-style
 task workspace. Independent task documents/history, host metadata, reader preview

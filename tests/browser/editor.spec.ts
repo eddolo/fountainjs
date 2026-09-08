@@ -20,6 +20,11 @@ import { markdownLiteralJourney } from './markdown-literal-journey';
 import { markdownNewlineJourney } from './markdown-newline-journey';
 import { markdownEscapeJourney } from './markdown-escape-journey';
 import { productWorkflowJourney } from './product-workflow-journey';
+import { htmlBlockFormatJourney } from './html-block-format-journey';
+
+test('retains HTML block formatting through server import, paste and draft handoff', async ({ page }, info) => {
+  await htmlBlockFormatJourney(page, info);
+});
 
 test('discovers product workflows and preserves separate task drafts and histories', async ({ page }, info) => {
   await productWorkflowJourney(page, info);
