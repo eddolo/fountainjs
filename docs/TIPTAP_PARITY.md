@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+CommonMark evidence audit (2026-09-08, Unreleased): projection version 9 corrects
+the comparison of paragraph/heading formatting scopes, recognizing example 167
+which the engine already imports correctly. Opt-in HTML now locks 579/652;
+default remains 563/652. Twenty semantic/source contracts and ten injected losses
+guard the normalization. Two inline-block HTML cases remain explicit literal
+fallbacks, not new conformance. No runtime feature or package API changed.
+
 Latest follow-through (2026-09-08, Unreleased): the issue workflow exposes the
 existing HTML-table preservation route and imports supported table structure
 when reopening Markdown. Six new pure-Node host-policy checks; full local check
@@ -104,10 +111,12 @@ without serializing extension data through HTML. Surrounding semantic/style/cust
 marks now copy only affected paths, retaining source, attributes and node IDs;
 specialized raw-text scopes over those blocks still fall back explicitly.
 The 1,304 LF/CRLF flow source-retention checks do not change semantic scores.
-Combined block/inline conversion now has a separate 578/652 exact projection
+Combined block/inline conversion now has a separate 579/652 exact projection
 regression baseline. Source-bound reference code provenance corrects the raw
 `<pre>` newline comparison; structural table comparison recognizes equivalent
-unit spans and cell wrappers while rejecting fourteen real losses. Its 74 unresolved comparisons include policy/schema and
+unit spans and cell wrappers while rejecting fourteen real losses. Attribute-free
+paragraph/heading formatting scopes are normalized with independent loss checks.
+Its 73 unresolved comparisons include policy/schema and
 comparator differences, not just parser bugs. This broader audit exposed a real
 fallback loss: inline conversion could consume a closing tag before block flow
 failed. Recovery now restores the failed container's inert interpretation,

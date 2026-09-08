@@ -5,6 +5,22 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+CommonMark evidence audit (2026-09-08, Unreleased): the neutral comparator now
+recognizes equivalent paragraph/heading formatting scopes instead of requiring
+the reference HTML and Fountain's inline marks to share one representation.
+Example 167 is newly recognized, not newly implemented: opt-in HTML is 579/652,
+default stays 563/652. Twenty reference/source contracts and ten deliberately
+damaged outputs guard the equivalence. Inline HTML containing block tags and
+raw-text scopes over protected Markdown blocks remain open; explicit fallback
+contracts prevent those gaps from being silently counted as supported.
+The conversion → HTML paste → Markdown download/reopen → reader journey passes
+Chromium, Firefox and WebKit; `tests/browser/markdown-scope-journey.ts` verifies
+separate rendered paragraphs, strike/emphasis and an unformatted sibling.
+The next inline-block work must address the inline-only adapter return contract:
+HTML recovery may split a Markdown paragraph into several blocks, which cannot
+be represented by inserting block nodes into its existing inline content array.
+Keep protected-node/source checks and explicit fallback during that work.
+
 Table handoff follow-through (2026-09-08, Unreleased): the issue workflow now
 exposes the existing HTML-table option and opts into schema-projected table
 imports on file/source reopen. Six host-policy tests bring the full local check

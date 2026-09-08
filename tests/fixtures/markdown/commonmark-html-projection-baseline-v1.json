@@ -1,8 +1,8 @@
 {
   "version": 1,
   "standard": "CommonMark 0.31.2",
-  "projectionVersion": 8,
-  "requiredMatchRanges": "1-147,149,151,160,162,164-166,168-169,190-200,202-206,208-217,219-238,241-279,285-307,310-314,316-343,345-475,478-490,492-493,495-523,525-535,537-595,597,600,602-607,609-610,618-624,632-641,644-652",
-  "unresolvedRanges": "148,150,152-159,161,163,167,170-189,201,207,218,239-240,280-284,308-309,315,344,476-477,491,494,524,536,596,598-599,601,608,611-617,625-631,642-643",
-  "note": "Both server HTML block-flow and inline adapters enabled. Locks 578 exact neutral-projection matches, not full CommonMark conformance. Version 7 corrected authored pre newlines; version 8 gives tables structural row/group/cell comparison, equating only explicit unit spans and ordinary cell paragraph wrappers. Fourteen structural/content corruptions must remain detectable. The 74 unresolved outputs include intentional URL/GFM/caret differences, unsupported HTML identity/layout/comments, raw-text fallback, and comparator limitations around formatting block boundaries. Default inert-policy classifications remain independent."
+  "projectionVersion": 9,
+  "requiredMatchRanges": "1-147,149,151,160,162,164-169,190-200,202-206,208-217,219-238,241-279,285-307,310-314,316-343,345-475,478-490,492-493,495-523,525-535,537-595,597,600,602-607,609-610,618-624,632-641,644-652",
+  "unresolvedRanges": "148,150,152-159,161,163,170-189,201,207,218,239-240,280-284,308-309,315,344,476-477,491,494,524,536,596,598-599,601,608,611-617,625-631,642-643",
+  "note": "Both server HTML block-flow and inline adapters enabled. Locks 579 exact neutral-projection matches, not full CommonMark conformance. Version 9 recognizes attribute-free strong/em/strike scopes around paragraphs/headings as equivalent to per-block inline marks: example 167 was already imported correctly. Twenty reference semantic/source contracts and ten corruptions guard this narrow equivalence; inline HTML containing block tags remains explicitly unsupported. Earlier code-origin and structural-table sensitivity checks remain. The 73 unresolved outputs include intentional URL/GFM/caret differences, unsupported HTML identity/layout/comments, raw-text fallback, and other comparator limitations. Default inert-policy classifications remain independent."
 }

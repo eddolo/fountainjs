@@ -172,8 +172,12 @@ function blockChildren(nodes, reference) {
     pending = [];
   };
   for (const node of nodes) {
+    const scoped = paragraphFormattingScope(node, reference);
     const isBlock = node.tagName && BLOCK_TAGS.has(node.tagName);
-    if (isBlock) {
+    if (scoped) {
+      flush();
+      result.push(...scoped);
+    } else if (isBlock) {
       flush();
       result.push(block(node, reference));
     } else if (node.nodeName === '#text' && !node.value.trim() && !pending.length) {
@@ -182,6 +186,29 @@ function blockChildren(nodes, reference) {
   }
   flush();
   return result;
+}
+
+// HTML permits an inline formatting scope around paragraph blocks. Fountain
+// stores that formatting on each paragraph's inline content instead. Normalize
+// only attribute-free mark scopes containing paragraphs/headings (or another
+// such scope), not arbitrary wrappers, mixed loose text, code or layout nodes.
+// Keep paragraph boundaries and apply the mark even to an empty paragraph.
+function paragraphFormattingScope(node, reference) {
+  const marks = { strong: 'strong', b: 'strong', em: 'emphasis', i: 'emphasis', del: 'strike', s: 'strike' };
+  const mark = Object.hasOwn(marks, node.tagName) ? marks[node.tagName] : null;
+  if (!mark || node.attrs?.length) return null;
+  const blocks = [];
+  for (const child of node.childNodes ?? []) {
+    if (child.nodeName === '#text' && !child.value.trim()) continue;
+    if (child.tagName === 'p' || /^h[1-6]$/u.test(child.tagName)) blocks.push(block(child, reference));
+    else {
+      const nested = paragraphFormattingScope(child, reference);
+      if (!nested) return null;
+      blocks.push(...nested);
+    }
+  }
+  if (!blocks.length) return null;
+  return blocks.map(value => [...value.slice(0, -1), [[mark, value.at(-1)]]]);
 }
 
 function semanticProjection(html, reference = new Set()) {
@@ -358,7 +385,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 8) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 9) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -473,6 +500,65 @@ for (const [expected, damaged] of tableSensitivityCases) {
   }
 }
 console.log(`Table projection: unit spans/cell wrappers equivalent; ${tableSensitivityCases.length} structural/content corruptions rejected.`);
+const formattingScopeCases = [
+  ...['strong', 'b', 'em', 'i', 'del', 's'].map(tag => [
+    `<${tag}>\n\nFirst\n\nSecond\n\n</${tag}>\n`,
+    `<p><${tag}>First</${tag}></p><p><${tag}>Second</${tag}></p>`,
+  ]),
+  ['<del>\n\n*foo*\n\n</del>\n', '<p><s><em>foo</em></s></p>'],
+  ['<strong>\n<em><p>Both</p></em>\n</strong>\n', '<p><strong><em>Both</em></strong></p>'],
+  ['<strong>\n\n# Heading\n\nBody\n\n</strong>\n', '<h1><strong>Heading</strong></h1><p><strong>Body</strong></p>'],
+  ['<del>\n<p>First</p><p>Second</p></del>\n\nPlain\n', '<p><s>First</s></p><p><s>Second</s></p><p>Plain</p>'],
+];
+for (const [source, equivalent] of formattingScopeCases) {
+  for (const ending of ['\n', '\r\n']) {
+    const input = source.replaceAll('\n', ending);
+    const expected = referenceOutput(referenceRenderer, referenceParser.parse(input)).projection;
+    const imported = MarkdownImporter.parseWithSource(input, schema, {
+      parseHTMLFlow: ServerHTMLImporter.parseFlow, parseHTMLInline: ServerHTMLImporter.parseInline,
+    });
+    if (JSON.stringify(expected) !== JSON.stringify(semanticProjection(equivalent))
+      || JSON.stringify(expected) !== JSON.stringify(semanticProjection(HTMLExporter.export(imported.document, { document: false })))
+      || MarkdownExporter.exportWithSource(imported.document, imported.source).markdown !== input) {
+      throw new Error(`Formatting-scope semantic/source contract failed: ${JSON.stringify(input)}`);
+    }
+  }
+}
+const scopedParagraphs = '<del><p>First</p><p>Second</p></del><p>Plain</p>';
+const formattingScopeCorruptions = [
+  '<p><s>First Second</s></p><p>Plain</p>',
+  '<p><s>First</s></p><p>Second</p><p>Plain</p>',
+  '<p><s>First</s></p><p><s>Second</s></p><p><s>Plain</s></p>',
+  '<p><s>Second</s></p><p><s>First</s></p><p>Plain</p>',
+  '<p><s>First</s></p><p><s>Second</s></p><p></p><p>Plain</p>',
+  '<h2><s>First</s></h2><p><s>Second</s></p><p>Plain</p>',
+  '<del data-author="Ada"><p>First</p><p>Second</p></del><p>Plain</p>',
+  '<x><p><s>First</s></p><p><s>Second</s></p></x><p>Plain</p>',
+  '<constructor><p><s>First</s></p><p><s>Second</s></p></constructor><p>Plain</p>',
+  '<pre><s>First\nSecond</s></pre><p>Plain</p>',
+];
+for (const damaged of formattingScopeCorruptions) {
+  if (JSON.stringify(semanticProjection(scopedParagraphs)) === JSON.stringify(semanticProjection(damaged))) {
+    throw new Error(`Formatting-scope comparator accepted content/structure/identity loss: ${damaged}`);
+  }
+}
+console.log(`Formatting scopes: ${formattingScopeCases.length * 2} reference semantic/source contracts; ${formattingScopeCorruptions.length} corruptions rejected.`);
+// Inline HTML containing block elements is a different parser boundary. Do not
+// hide its existing, explicit fallback behind the block-scope equivalence above.
+for (const source of ['<strong><em><p>Both</p></em></strong>\n', '<del><p>First</p><p>Second</p></del>\n']) {
+  const fallbacks = [];
+  const imported = MarkdownImporter.parseWithSource(source, schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseFlow, parseHTMLInline: ServerHTMLImporter.parseInline,
+    onHTMLInlineFallback: issue => fallbacks.push(issue),
+  });
+  if (!fallbacks.length || imported.document.textContent !== source.trimEnd()
+    || MarkdownExporter.exportWithSource(imported.document, imported.source).markdown !== source
+    || JSON.stringify(referenceOutput(referenceRenderer, referenceParser.parse(source)).projection)
+      === JSON.stringify(semanticProjection(HTMLExporter.export(imported.document, { document: false })))) {
+    throw new Error('Inline block HTML must remain an explicit, source-preserving nonconformance, not a false scope match.');
+  }
+}
+console.log('Inline block HTML: 2 existing literal fallbacks retained, explicitly not counted as conformance.');
 const matches = new Set();
 const mismatches = [];
 const roundTripFailures = [];

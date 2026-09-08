@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Strengthened the CommonMark semantic comparator for paragraph/heading
+  formatting scopes, recognizing already-correct example 167 without changing
+  runtime behavior. Added independent source/semantic and corruption checks;
+  opt-in HTML is 579/652, default remains 563/652. Inline-block HTML fallbacks
+  remain explicit nonconformance, not waived failures.
+
 - Exposed the existing HTML-table export option in the issue workflow, with a
   table-scoped schema importer on source/file reopen. Headerless and mixed-role
   tables, merged cells and multi-paragraph content now have a demonstrated

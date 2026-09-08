@@ -147,7 +147,7 @@ Markdown/TeX dialect options remain enabled, without repeating their reporters.
 This is not complete HTML/CSS or
 CommonMark fidelity; the default 563/72/17 baseline remains separate.
 
-The conformance command also regression-locks **578/652** exact neutral-projection
+The conformance command also regression-locks **579/652** exact neutral-projection
 matches with **both** server HTML adapters enabled, in
 `tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json`.
 This is separate from the default inert baseline and the 1,304 unchanged-source
@@ -155,13 +155,30 @@ checks. Run `pnpm test:markdown-conformance --html-flow-report --show-mismatches
 for source, expected/actual projections, conversion issues and fallback reasons;
 add `--example=148` instead of `--show-mismatches` to inspect one case.
 
-The other 74 outputs are **unresolved comparisons**, not 74 proven parser bugs:
+The other 73 outputs are **unresolved comparisons**, not 73 proven parser bugs:
 they include the existing 17 intentional policy/caret differences, discarded
 comments, unsupported wrappers/attributes, specialized raw-text fallback, and
-limitations of the current comparator. In particular it treats formatting outside versus inside a paragraph as
-different structures. These need source-aware comparison rules with independent
-loss-sensitivity tests, not blanket flattening or removal of whitespace/attributes.
+limitations of the current comparator. These need source-aware comparison rules
+with independent loss-sensitivity tests, not blanket flattening or removal of
+whitespace/attributes.
 No missing match has been waived or promoted to full HTML fidelity.
+
+Projection version 9 recognizes attribute-free strong/emphasis/strike wrappers
+around paragraphs or headings as equivalent to marks on their inline content.
+It retains each block boundary, heading level and mark, and declines unknown or
+attributed wrappers, mixed loose content and code/layout scopes. Example 167 now
+matches because the runtime was already correct, not because a parser feature
+was added. Twenty independent LF/CRLF semantic/source contracts and ten injected
+losses cover collapsed, reordered, added and reformatted paragraphs, sibling
+scope leaks, attributes, unknown wrappers and code replacement. Earlier code
+origin, whitespace, HTML-token and table sensitivity checks remain in force.
+
+This is not permission to lift arbitrary HTML through Markdown's inline parser.
+For example, `<strong><em><p>Both</p></em></strong>` on one line is parsed as inline
+HTML within a Markdown paragraph; that adapter still rejects block elements and
+keeps the source literal. Two explicit nonconformance contracts retain this
+fallback and exact original source. By contrast a standalone `<strong>` opening
+line begins an HTML block and can use the separate block-flow adapter.
 
 Projection version 7 corrects reference code provenance: an observer records the
 output offsets of `<pre>` tags actually emitted for Markdown code blocks, without

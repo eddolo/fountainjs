@@ -22,6 +22,11 @@ import { markdownEscapeJourney } from './markdown-escape-journey';
 import { productWorkflowJourney } from './product-workflow-journey';
 import { htmlBlockFormatJourney } from './html-block-format-journey';
 import { issueTableHandoffJourney } from './issue-table-handoff-journey';
+import { markdownScopeJourney } from './markdown-scope-journey';
+
+test('reads separate retired paragraphs after Markdown HTML scope conversion and handoff', async ({ page }, info) => {
+  await markdownScopeJourney(page, info);
+});
 
 test('preserves headerless and mixed tables through source and file handoff', async ({ page }, info) => {
   await issueTableHandoffJourney(page, info);
