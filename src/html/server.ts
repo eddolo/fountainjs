@@ -20,7 +20,7 @@ import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
-import type { MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
+import type { MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLFlowTextBlockSource, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
@@ -68,6 +68,7 @@ export type ServerHTMLImportIssueCode =
   | 'inline-html-projection'
   | 'preformatted-html-projection'
   | 'paragraph-flow-projection'
+  | 'text-block-flow-projection'
   | 'block-html-projection';
 
 export interface ServerHTMLImportIssue {
@@ -1383,7 +1384,24 @@ export class ServerHTMLImporter {
 
   parseParagraphFlowWithReport(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): ServerHTMLFragmentImportResult {
     if (!context) throw new Error('Paragraph flow recovery requires Markdown parser source context.');
-    const paragraphs = context.readParagraphSources();
+    return this.projectTextBlockFlow(segments, schema, context.readParagraphSources().map(source => ({ ...source, kind: 'paragraph' })), false);
+  }
+
+  /** Explicit pristine paragraph/heading/code source projection; not identity-preserving parseFlow. */
+  parseTextBlockFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): readonly FountainNode[] {
+    return this.parseTextBlockFlowWithReport(segments, schema, context).nodes;
+  }
+
+  parseTextBlockFlowWithReport(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): ServerHTMLFragmentImportResult {
+    if (!context?.readTextBlockSources) throw new Error('Text-block flow recovery requires Markdown parser text-block source context.');
+    return this.projectTextBlockFlow(segments, schema, context.readTextBlockSources(), true);
+  }
+
+  static parseTextBlockFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext): readonly FountainNode[] {
+    return new ServerHTMLImporter().parseTextBlockFlow(segments, schema, context);
+  }
+
+  private projectTextBlockFlow(segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, paragraphs: readonly MarkdownHTMLFlowTextBlockSource[], structural: boolean): ServerHTMLFragmentImportResult {
     if (segments.length > this.options.maxNodes || paragraphs.length > this.options.maxNodes) {
       throw new HTMLImportLimitError('maxNodes', 'Paragraph flow exceeds the node limit.');
     }
@@ -1416,25 +1434,39 @@ export class ServerHTMLImporter {
         continue;
       }
       const paragraph = byBlock.get(segment.node);
-      if (!paragraph || used.has(segment.node)) throw new Error('Paragraph flow requires an unambiguous source for every Markdown block; non-paragraph blocks need structural projection.');
+      if (!paragraph || used.has(segment.node)) throw new Error(structural
+        ? 'Text-block flow requires an unambiguous source for every Markdown block; lists and other containers need structural projection.'
+        : 'Paragraph flow requires an unambiguous source for every Markdown block; non-paragraph blocks need structural projection.');
       used.add(segment.node);
       schema.validate(segment.node);
-      if (Object.keys(segment.node.attrs).some(key => key !== 'align')) {
+      const allowed = paragraph.kind === 'heading' ? ['align', 'level'] : paragraph.kind === 'code' ? ['language', 'lineNumbers'] : ['align'];
+      if (Object.keys(segment.node.attrs).some(key => !allowed.includes(key))) {
         throw new Error('Paragraph flow refuses changed paragraph content, marks or custom attributes.');
       }
-      const original = schema.node('paragraph', { align: 'left' }, normalized(paragraph.segments.map(part => part.kind === 'node'
+      const type = paragraph.kind === 'code' ? 'code_block' : paragraph.kind;
+      const attrs = paragraph.kind === 'code' ? { language: paragraph.language, lineNumbers: true }
+        : paragraph.kind === 'heading' ? { level: paragraph.level, align: 'left' } : { align: 'left' };
+      const original = schema.node(type, attrs, normalized(paragraph.segments.map(part => part.kind === 'node'
         ? part.node : schema.text(part.html.replace(/\n/gu, ' '), part.marks))));
       const current = segment.node.copy(normalized(segment.node.content));
       if (!current.eq(original)) throw new Error('Paragraph flow refuses changed paragraph content, marks or custom attributes.');
-      if (!paragraph.tightList) raw('<p>');
+      const tight = paragraph.kind === 'paragraph' && paragraph.tightList;
+      const tag = paragraph.kind === 'heading' ? `h${paragraph.level}` : 'p';
+      if (paragraph.kind === 'code') {
+        // Only syntax-derived language metadata is emitted, never arbitrary node attributes.
+        const language = paragraph.language.replace(/[&<>"']/gu, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
+        raw(`<pre><code class="language-${language}">`);
+      } else if (!tight) raw(`<${tag}>`);
       for (const part of paragraph.segments) stream.push(part);
-      raw(paragraph.tightList ? '\n' : '</p>\n');
+      raw(paragraph.kind === 'code' ? `${paragraph.finalLineBreak ? '\n' : ''}</code></pre>\n` : tight ? '\n' : `</${tag}>\n`);
     }
     if (used.size !== byBlock.size) throw new Error('Paragraph flow source context contains unmatched blocks.');
     const result = this.parseInlineContent(stream, schema, true, false, true);
     return Object.freeze({ nodes: result.nodes, issues: Object.freeze([...result.issues, Object.freeze({
-      code: 'paragraph-flow-projection' as const,
-      message: 'Markdown paragraph source was reprojected across HTML block boundaries. Paragraph grouping/identity and HTML layout may change; custom paragraph data and inline atoms are refused. This is an explicit source projection, not identity-preserving block flow or lossless HTML.',
+      code: structural ? 'text-block-flow-projection' as const : 'paragraph-flow-projection' as const,
+      message: structural
+        ? 'Markdown text-block source was reprojected across HTML boundaries using paragraph, heading and code wrappers. Block grouping/identity and HTML layout may change; custom block data, modified projections, lists and inline atoms are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML.'
+        : 'Markdown paragraph source was reprojected across HTML block boundaries. Paragraph grouping/identity and HTML layout may change; custom paragraph data and inline atoms are refused. This is an explicit source projection, not identity-preserving block flow or lossless HTML.',
     })]) });
   }
 

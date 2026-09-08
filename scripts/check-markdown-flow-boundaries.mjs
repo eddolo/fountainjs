@@ -128,4 +128,33 @@ export function checkMarkdownFlowBoundaries({
     }
   }
   console.log(`Explicit paragraph-source flow: ${recovered} LF/CRLF exact-code/source contracts; ${fullMatches} full structural matches. Outer-div mismatches retained; 4 structural fixture kinds still declined.`);
+  const textBlockCases = [...fixture.cases, ...[
+    ['setext', 'First\nsecond\n---'], ['indented-code', '    x'],
+    ['empty-code', '```\n```'], ['blank-code', '```\n\n```'],
+    ['literal-code', '```\n<b>x</b> &amp; *y*\n```'],
+    ['heading-mark', '# **Title**'],
+  ].map(([id, body]) => ({ id, source: `<div><pre>\n\n${body}\n\n</pre></div>\n` }))];
+  let textBlockChecks = 0;
+  for (const test of textBlockCases) for (const ending of ['\n', '\r\n']) {
+    const source = test.source.replaceAll('\n', ending);
+    const fallbacks = [];
+    const imported = MarkdownImporter.parseWithSource(source, schema, {
+      parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+      onHTMLFlowFallback: issue => fallbacks.push(issue),
+    });
+    assert.equal(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown, source);
+    if (test.id === 'list' || test.id === 'hard-break') {
+      assert.ok(fallbacks.length, `${test.id}: nested containers/atoms still require structural support`);
+      assert.deepEqual(imported.document.toJSON(), MarkdownImporter.parse(source, schema).toJSON());
+      continue;
+    }
+    assert.equal(fallbacks.length, 0, `${test.id}: text-block source projection must recover`);
+    const actual = semanticProjection(HTMLExporter.export(imported.document, { document: false }));
+    const expected = semanticProjection(referenceRenderer.render(referenceParser.parse(source)));
+    assert.deepEqual(codeContent(actual), codeContent(expected), `${test.id}: exact reference code stream, including generated terminators`);
+    if (test.id === 'table-pre') assert.deepEqual(actual, expected);
+    else assert.notDeepEqual(actual, expected, `${test.id}: omitted outer div remains an explicit structural mismatch`);
+    textBlockChecks++;
+  }
+  console.log(`Explicit text-block source flow: ${textBlockChecks} LF/CRLF reference-code/source contracts. Paragraphs, headings and code supported; outer-div mismatches remain, lists/atoms still refused.`);
 }

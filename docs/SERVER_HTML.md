@@ -12,6 +12,11 @@ boundaries. They require the Markdown callback context and refuse custom block
 data, changed content and unsupported structural nodes. See the
 [contract, losses and demo option](MARKDOWN_SOURCE.md#explicit-paragraph-source-flow-recovery)
 before choosing that mode; it is not a lossless substitute for `parseFlow`.
+`parseTextBlockFlow` / `parseTextBlockFlowWithReport` extend explicit source
+projection to pristine headings and fenced/indented code using the new lazy
+text-block context. Lists and atoms remain unsupported. See the
+[text-block policy](MARKDOWN_SOURCE.md#explicit-text-block-source-flow-recovery)
+for generated newlines, identity changes and remaining fidelity gaps.
 
 ```ts
 import { CoreSchemaSpec, HTMLExporter, Schema } from 'fountainjs-editor'

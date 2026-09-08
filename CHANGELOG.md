@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Extended explicit Markdown/HTML source recovery to ATX/Setext headings and
+  fenced/indented code, with lazy syntax context and a separate text-block flow
+  API. The conversion demo uses this default-off option. Literal code and empty
+  fences retain their distinct renderer newlines; custom metadata, changed
+  projections, nested lists and atoms are refused. Existing flow APIs and corpus
+  scores are unchanged. Runtime growth is approximately 2.4 KiB ESM / 2.0 KiB CJS;
+  aggregate caps rise 2 KiB each to 1382/1149, with individual/performance caps
+  unchanged. This is not full CommonMark or HTML-wrapper fidelity.
+
 - Added explicit, default-off paragraph-source HTML flow recovery and its live
   conversion-demo option. Pristine text-only paragraphs can recover into code
   blocks across raw HTML boundaries; changed/custom block data, non-paragraph

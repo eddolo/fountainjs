@@ -138,20 +138,21 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await capture('preformatted-mobile.png');
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto('/demos/node-markdown.html');
-  await source.fill('<div><pre>\n\nfirst line\n  second line\n\n</pre></div>');
+  await source.fill('<div><pre>\n\n# Recovery note\n\nfirst line\n  second line\n\n```\nconst n = 1;\n```\n\n</pre></div>');
   await output.getByRole('button', { name: 'html', exact: true }).click();
-  await page.getByRole('checkbox', { name: 'Recover cross-paragraph preformatted HTML' }).check();
-  await expect(output.locator('pre')).toContainText('first line\n  second line\n');
-  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Paragraph grouping/identity');
+  await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
+  const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
+  await expect(output.locator('pre')).toContainText(recoveredText);
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
   const flowHTML = await output.locator('pre').innerText();
   await capture('paragraph-flow-conversion.png');
   await source.fill('<div><pre>\n\n- one\n- two\n\n</pre></div>');
-  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('non-paragraph blocks need structural projection');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('lists and other containers need structural projection');
   await expect(output.locator('pre')).toContainText('&lt;div&gt;');
   await page.goto('/issue-editor.html');
   await replaceByPaste(flowHTML);
   const verifyFlow = async (surface: typeof editor) => {
-    await expect.poll(() => surface.locator('pre').textContent()).toBe('first line\n  second line\n');
+    await expect.poll(() => surface.locator('pre').textContent()).toBe(recoveredText);
     await expect(surface.locator('h1,h2,h3,table,ul,ol')).toHaveCount(0);
     await expect(surface.locator('p')).toHaveText(['']);
     expect(await surface.locator('pre').evaluate(element => getComputedStyle(element).whiteSpace)).toMatch(/^(pre|pre-wrap|break-spaces)$/);

@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Text-block source recovery (2026-09-08, Unreleased): opt-in mixed Markdown/HTML
+projection now covers direct ATX/Setext headings and fenced/indented code, with
+syntax-derived wrappers and code terminators. Twenty-four LF/CRLF reference-code
+and source contracts pass; outer-div mismatches and nested lists/atoms remain
+open. Full check passes 1,503 tests / 118 files, including compiled Node/workerd.
+This does not change the 563/579 corpus baselines or establish complete parity.
+The expanded conversion/edit/undo/file/reader journey passed Chromium, Firefox
+and WebKit; a separate recording and desktop/mobile layouts were inspected.
+
 Paragraph-source recovery (2026-09-08, Unreleased): four cross-paragraph HTML/pre
 fixture kinds now retain exact code text via a separate explicit adapter and demo
 option. Eight LF/CRLF checks include two complete reference-structure matches;

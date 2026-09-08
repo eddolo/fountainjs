@@ -5,6 +5,22 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Text-block source flow (2026-09-08, Unreleased): direct ATX/Setext headings and
+fenced/indented code now retain syntax context, wrappers and generated code
+terminators through the separate opt-in `parseTextBlockFlow` adapter. The demo
+uses this extension of paragraph recovery. Twenty-four LF/CRLF reference-code
+and source contracts pass; existing corpus scores and outer-div mismatches are
+unchanged. Custom metadata, modified blocks, nested containers and atoms are
+still refused. Full sequential check passes 1,503 tests / 118 files, compiled
+Node/workerd recovery, API/headless/package/type/performance gates. Runtime is
+1381.5 KiB ESM / 1148.1 KiB CJS; aggregate caps rise 2 KiB to 1382/1149 with no
+individual or performance relaxation. Next: nested container/source events,
+hard-break semantics, wrapper retention, and the separate default-schema fence
+info rejection (some valid CommonMark labels still throw during node creation).
+The extended conversion/edit/undo/download/reopen/reader journey passes three
+desktop engines. Its separate recording, desktop conversion/editor and 390px
+reader were visually inspected; see [evidence](MARKDOWN_FLOW_PROVENANCE.md).
+
 Paragraph-source flow recovery (2026-09-08, Unreleased): an explicit opt-in server
 adapter and conversion-demo switch now recover four mixed HTML/pre fixture kinds.
 Eight LF/CRLF contracts retain exact code text/source; two also match complete

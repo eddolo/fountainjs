@@ -31,5 +31,11 @@ export function checkMarkdownFlowSources() {
   if (recovered.child(0).type.name !== 'code_block' || recovered.child(0).textContent !== 'one\ntwo\n') {
     throw new Error('Compiled paragraph-source flow recovery lost preformatted content.');
   }
+  const textBlocks = MarkdownImporter.parse('<div><pre>\n\n# Title\n\n```\nx\n```\n\n</pre></div>', schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+  });
+  if (textBlocks.child(0).type.name !== 'code_block' || textBlocks.child(0).textContent !== 'Title\nx\n\n') {
+    throw new Error('Compiled text-block source flow lost heading/code wrappers or generated newlines.');
+  }
   return true;
 }

@@ -1,5 +1,31 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Text-block follow-through (Unreleased): `readTextBlockSources()` now retains
+direct heading and code syntax as well as paragraph provenance. The separate
+`parseTextBlockFlow` adapter uses those wrappers and generated code terminators,
+while refusing custom metadata/modified blocks. The oracle checks 24 LF/CRLF
+exact-code/source contracts; outer-div mismatches remain deliberately visible.
+Lists/nested containers and hard-break atoms still need structural source events.
+Paragraph-only and identity-preserving flow contracts remain unchanged.
+See [the text-block contract](MARKDOWN_SOURCE.md#explicit-text-block-source-flow-recovery).
+The default code schema's restrictive fence-language attribute was also exposed
+by a hostile-info test; ordinary import of unsupported labels remains a separate
+input-policy issue, not a recovered capability.
+
+Verification: full sequential `pnpm check` passes 1,503 tests / 118 files,
+including compiled Node/workerd recovery, API/headless/type/package and existing
+performance gates. The extended conversion → edit → undo → download → reopen →
+reader journey passes Chromium, Firefox and WebKit; it asserts exact code text
+and complete replacement of prior headings/lists/tables. A separate recorded
+Chromium run passes. Conversion/editor/mobile-reader screenshots and the video
+overview were visually inspected under `artifacts/text-block-flow-browser/`
+and `artifacts/text-block-flow-recorded/`. Paste uses a public clipboard event
+payload, not OS-clipboard certification; the 390px viewport is not a physical
+mobile-device test. The production `/fountainjs/` site build passed, retaining
+the existing large MathJax chunk warning. Runtime measures 1381.5 KiB ESM /
+1148.1 KiB CJS; aggregate caps rise 2 KiB each to 1382/1149, without changing
+individual-entry or performance limits.
+
 Latest implementation (Unreleased): the separate `parseParagraphFlow` adapter
 now recovers pristine text-only paragraphs across raw HTML boundaries. Four
 fixture kinds retain exact preformatted text; the table/pre fixture also matches

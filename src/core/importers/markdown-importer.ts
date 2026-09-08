@@ -41,6 +41,14 @@ export interface MarkdownHTMLFlowParagraphSource {
   readonly tightList: boolean;
 }
 
+/** Direct text-block syntax; never inferred by exporting a finished document node. */
+export type MarkdownHTMLFlowTextBlockSource =
+  | (MarkdownHTMLFlowParagraphSource & { readonly kind: 'paragraph' })
+  | (Omit<MarkdownHTMLFlowParagraphSource, 'tightList'> & { readonly kind: 'heading'; readonly level: number })
+  | (Omit<MarkdownHTMLFlowParagraphSource, 'tightList'> & {
+    readonly kind: 'code'; readonly language: string; readonly finalLineBreak: boolean;
+  });
+
 export interface MarkdownHTMLFlowContext {
   /**
    * Lazily inspect direct paragraphs in this container, without invoking host
@@ -48,6 +56,10 @@ export interface MarkdownHTMLFlowContext {
    * headings, code, nested containers and generated separators are not included.
    */
   readonly readParagraphSources: () => readonly MarkdownHTMLFlowParagraphSource[];
+  /** Lazy direct paragraphs, ATX/Setext headings and fenced/indented code, in order.
+   * Nested containers and atoms still need a structural source representation.
+   * Optional for compatibility with hosts supplying paragraph-only context. */
+  readonly readTextBlockSources?: () => readonly MarkdownHTMLFlowTextBlockSource[];
 }
 
 /** Raw HTML tokens interleaved with already-parsed, immutable Fountain nodes. */
@@ -1856,34 +1868,57 @@ interface ListItemLayout {
 }
 
 type PendingHTMLParagraphSource = Omit<MarkdownHTMLFlowParagraphSource, 'segments'>;
+type PendingHTMLTextBlockSource =
+  | (PendingHTMLParagraphSource & { readonly kind: 'paragraph' })
+  | (Omit<PendingHTMLParagraphSource, 'tightList'> & { readonly kind: 'heading'; readonly level: number })
+  | (Omit<PendingHTMLParagraphSource, 'tightList'> & { readonly kind: 'code'; readonly language: string; readonly finalLineBreak: boolean });
 
-function htmlFlowContext(paragraphs: readonly PendingHTMLParagraphSource[], schema: Schema, references: References, options: MarkdownImportOptions): MarkdownHTMLFlowContext {
+function htmlFlowContext(sources: readonly PendingHTMLTextBlockSource[], schema: Schema, references: References, options: MarkdownImportOptions): MarkdownHTMLFlowContext {
   let cached: readonly MarkdownHTMLFlowParagraphSource[] | undefined;
+  let textBlocks: readonly MarkdownHTMLFlowTextBlockSource[] | undefined;
+  const snapshots = new Map<PendingHTMLTextBlockSource, MarkdownHTMLFlowTextBlockSource>();
   const autolinkLiterals = options.autolinkLiterals;
+  const inspect = (source: PendingHTMLTextBlockSource): MarkdownHTMLFlowTextBlockSource => {
+    const existing = snapshots.get(source);
+    if (existing) return existing;
+    const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
+    const characters = new Map<Node, { readonly softBreak?: true; readonly textRun: number }>();
+    const nodes = source.kind === 'code' ? [schema.text(source.source)]
+      : inline(source.source, schema, references, [], tokens, autolinkLiterals, characters);
+    const segments = Object.freeze(nodes.map(node => tokens.get(node)
+      ?? Object.freeze({ kind: 'node' as const, node, ...characters.get(node) })));
+    const result = Object.freeze({ ...source, segments });
+    snapshots.set(source, result);
+    return result;
+  };
   return Object.freeze({ readParagraphSources: () => {
-    if (!cached) cached = Object.freeze(paragraphs.map(paragraph => {
-      const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
-      const characters = new Map<Node, { readonly softBreak?: true; readonly textRun: number }>();
-      const nodes = inline(paragraph.source, schema, references, [], tokens, autolinkLiterals, characters);
-      const segments = Object.freeze(nodes.map(node => tokens.get(node)
-        ?? Object.freeze({ kind: 'node' as const, node, ...characters.get(node) })));
-      return Object.freeze({ ...paragraph, segments });
-    }));
+    if (!cached) cached = Object.freeze(sources.filter(source => source.kind === 'paragraph').map(source => inspect(source) as MarkdownHTMLFlowParagraphSource));
     return cached;
-  } });
+  }, readTextBlockSources: () => textBlocks ??= Object.freeze(sources.map(inspect)) });
 }
 
 function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, layout?: ListItemLayout): Node[] {
   const blocks: Node[] = [];
   const htmlBlocks = new Map<Node, string>();
   const paragraphs = new Map<Node, string>();
-  const sources: PendingHTMLParagraphSource[] = [];
+  const sources: PendingHTMLTextBlockSource[] = [];
   const projectParagraph = (value: string, tightList = false): Node[] => {
     const projected = paragraphBlocks(schema, value, references, options, tightList);
     if (options.parseHTMLFlow) sources.push(Object.freeze({
-      source: value, blocks: Object.freeze([...projected]), tightList,
+      kind: 'paragraph', source: value, blocks: Object.freeze([...projected]), tightList,
     }));
     return projected;
+  };
+  const projectHeading = (value: string, level: number): Node => {
+    const node = schema.node('heading', { level }, projectInline(value, schema, references, options));
+    if (options.parseHTMLFlow) sources.push(Object.freeze({ kind: 'heading', source: value, level, blocks: Object.freeze([node]) }));
+    return node;
+  };
+  const projectCode = (code: readonly string[], language: string): Node => {
+    const value = code.join('\n');
+    const node = schema.node('code_block', { language, lineNumbers: true }, [schema.text(value)]);
+    if (options.parseHTMLFlow) sources.push(Object.freeze({ kind: 'code', source: value, language, finalLineBreak: code.length > 0, blocks: Object.freeze([node]) }));
+    return node;
   };
   b: for (let index = 0; index < lines.length;) {
     const start = index;
@@ -1952,7 +1987,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         code.push(content.slice(Math.min(fence.indent, indentation)));
       }
       if (index < lines.length) index++;
-      blocks.push(schema.node('code_block', { language: fence.language || 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
+      blocks.push(projectCode(code, fence.language || 'text'));
       continue;
     }
     const firstCodeLine = indentedCodeLine(line);
@@ -1967,7 +2002,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       while (code.at(-1) === '') code.pop();
       sourceEnd = index - 1;
       while (sourceEnd > start && !lines[sourceEnd].trim()) sourceEnd--;
-      blocks.push(schema.node('code_block', { language: 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
+      blocks.push(projectCode(code, 'text'));
       continue;
     }
     // Definitions discovered globally remain in container source until this
@@ -2030,7 +2065,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       const value = (heading[2] ?? '')
         .replace(/(?:^|[\t ]+)#+[\t ]*$/u, '')
         .replace(/[\t ]+$/u, '');
-      blocks.push(schema.node('heading', { level: heading[1].length }, projectInline(value, schema, references, options)));
+      blocks.push(projectHeading(value, heading[1].length));
       index++;
       continue;
     }
@@ -2154,7 +2189,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     for (index++; index < lines.length && lines[index].trim(); index++) {
       const underline = /^ {0,3}(=+|-+)[\t ]*$/u.exec(lines[index]);
       if (underline && !marker && !/^ {0,3}>/u.test(line) && !detailsStart(line)) {
-        blocks.push(schema.node('heading', { level: underline[1][0] === '=' ? 1 : 2 }, projectInline(paragraphLines.join('\n').trim(), schema, references, options)));
+        blocks.push(projectHeading(paragraphLines.join('\n').trim(), underline[1][0] === '=' ? 1 : 2));
         index++;
         continue b;
       }
@@ -2182,14 +2217,18 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
   return finishHTMLBlocks(blocks, htmlBlocks, lines, schema, references, options, sources);
 }
 
-function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, sources: readonly PendingHTMLParagraphSource[]): Node[] {
+function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, sources: readonly PendingHTMLTextBlockSource[]): Node[] {
   if (!options.parseHTMLFlow || !htmlBlocks.size) return blocks;
   const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(blocks.map(node => Object.freeze(
     htmlBlocks.has(node) ? { kind: 'html' as const, html: htmlBlocks.get(node)! } : { kind: 'node' as const, node },
   )));
   let issue: MarkdownHTMLFlowFallback;
   try {
-    const projected = options.parseHTMLFlow(segments, schema, htmlFlowContext(sources, schema, references, options));
+    // Deferred list paragraphs are appended after headings/code are parsed.
+    // Expose direct text-block sources in their actual current block order.
+    const order = new Map(blocks.map((node, index) => [node, index]));
+    const orderedSources = [...sources].sort((a, b) => (order.get(a.blocks[0]) ?? blocks.length) - (order.get(b.blocks[0]) ?? blocks.length));
+    const projected = options.parseHTMLFlow(segments, schema, htmlFlowContext(orderedSources, schema, references, options));
     if (projected !== null) {
       if (!Array.isArray(projected)) throw new TypeError('HTML flow adapter must return a block array.');
       for (const node of projected) {

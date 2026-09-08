@@ -333,9 +333,49 @@ projection. This is not complete raw-HTML or CommonMark support.
 Successful conversion reports `paragraph-flow-projection` and applicable
 preformatted/HTML loss reports. Paragraph grouping and HTML layout may change;
 exact unchanged-source export does not mean a lossless rendered HTML round trip.
-Try **Recover cross-paragraph preformatted HTML** in the conversion demo. This
-explicitly replaces the ordinary block-flow mode for that import, not the editor
-engine's normal editing or clipboard behavior.
+The paragraph-only API retains this narrower contract. The conversion demo now
+offers the extended text-block adapter below; neither changes normal editor
+editing or clipboard behavior.
+
+### Explicit text-block source flow recovery
+
+`ServerHTMLImporter.parseTextBlockFlow` / `parseTextBlockFlowWithReport` extend
+the opt-in source-projection policy to direct ATX/Setext headings and fenced or
+indented code, as well as paragraphs. Use the same callback pattern above with
+`html.parseTextBlockFlowWithReport(segments, target, context)`.
+
+The new optional `context.readTextBlockSources()` method returns a cached, frozen
+array in current direct-block order. Entries share the paragraph source fields
+and have a discriminant: `kind: 'paragraph'` with `tightList`, `kind: 'heading'`
+with `level`, or `kind: 'code'` with `language` and `finalLineBreak`. Code `source`
+is literal parsed code, not Markdown to parse again. The boolean distinguishes
+an empty fence from a fence containing an empty line: generated renderer
+terminators must not be guessed from a finished code node's text. Headings retain
+their inline tokens and physical breaks. Shared paragraph snapshots are reused
+across both lazy inspection methods, without replaying host adapters.
+
+The adapter checks pristine node content, marks and supported attributes before
+applying syntax-derived wrappers. It does not HTML-export arbitrary original
+nodes. Custom block attributes, including schema defaults and assigned IDs,
+modified adapter output, ambiguous block correspondence, lists, nested
+containers and inline atoms remain refusals with inert rollback. Original
+identity-preserving `parseFlow` and paragraph-only `parseParagraphFlow` are
+unchanged. Successful conversion reports `text-block-flow-projection` plus
+applicable HTML/preformatted losses; heading/code grouping and identity can
+change inside an HTML `pre` scope.
+
+Try **Recover Markdown text across HTML blocks** in the conversion demo. This
+replaces its ordinary block-flow option, and stays off by default. The reference
+gate checks 24 LF/CRLF exact-code/source contracts, including headings, literal
+code, empty/blank fences and generated newlines. Only the existing table/pre
+case also matches full wrapper structure; omitted outer `div` elements remain
+strict mismatches. The 563/652 default and 579/652 block+inline semantic baselines
+are unchanged. This is not full CommonMark or lossless HTML support.
+
+Known separate input limit: the supplied code schema rejects some CommonMark
+fence info labels (quotes/HTML-significant characters and labels over 50
+characters). Such inputs can still throw during ordinary code-node construction;
+this adapter does not widen the schema or claim to fix that import policy.
 
 **Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph
