@@ -117,7 +117,10 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
     element.dispatchEvent(event);
   }, preHTML);
   const verifyPre = async (surface: typeof editor) => {
-    await expect(surface.locator('pre')).toHaveText('first line\n  second line\nlast line');
+    // String-based toHaveText normalizes whitespace and would miss collapsed LF
+    // or indentation. Compare raw text and the actual whitespace rendering mode.
+    await expect.poll(() => surface.locator('pre').textContent()).toBe('first line\n  second line\nlast line');
+    expect(await surface.locator('pre').evaluate(element => getComputedStyle(element).whiteSpace)).toMatch(/^(pre|pre-wrap|break-spaces)$/);
     await expect(surface.locator('p')).toHaveText(['Before', 'After', '']);
   };
   await verifyPre(editor);
