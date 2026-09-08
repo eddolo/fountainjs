@@ -1,5 +1,6 @@
 import { CoreSchemaSpec, HTMLExporter, MarkdownImporter, Schema } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
+import { checkMarkdownFlowSources } from './fixtures/markdown-flow-source-check.mjs';
 
 for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationObserver']) {
   if (name in globalThis) throw new Error(`Server HTML runtime unexpectedly exposes ${name}.`);
@@ -51,6 +52,8 @@ if (paragraph.childCount !== 4 || paragraph.child(1).type.name !== 'heading'
   throw new Error('Compiled server runtime paragraph HTML recovery failed.');
 }
 console.log(`${runtime}: block-returning Markdown paragraph recovery passed.`);
+checkMarkdownFlowSources();
+console.log(`${runtime}: lazy Markdown flow paragraph sources passed.`);
 const tightList = MarkdownImporter.parse('- Before <h2>Heading</h2> After', schema, {
   parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
 });

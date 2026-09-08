@@ -5,6 +5,19 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Paragraph provenance implementation (2026-09-08, Unreleased): HTML flow adapters
+can lazily inspect direct paragraph syntax through an optional context. Physical
+LF, raw tokens and tight-list context survive separately from current converted
+blocks. Existing adapters need no change; no host callbacks are replayed. This
+resolves the inspection collision, not whole-container semantic recovery.
+Next: structural rendering events and a source-aware server projection that
+preserves original content/identity or explicitly declines unsupported nodes.
+Verification: full sequential check passed 1,466 tests / 116 files, compiled
+Node/workerd inspection, existing API/headless/package/type/conformance and
+performance checks. Three desktop browser journeys passed; the separate recorded
+journey's editor, list reader, mobile preformatted view and overview were inspected.
+ESM runtime is 1376.5 KiB (1377 cap); CJS 1143.9 KiB (1144 unchanged cap).
+
 Whole-container Markdown audit (2026-09-08): proved that different physical
 newline/space inputs currently produce identical complete flow-node streams.
 Recovery therefore needs earlier parser provenance, not a `textContent` patch.

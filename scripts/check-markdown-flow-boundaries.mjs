@@ -58,20 +58,33 @@ export function checkMarkdownFlowBoundaries({
   const capture = source => {
     const calls = [];
     MarkdownImporter.parse(source, schema, {
-      parseHTMLFlow(segments) {
-        calls.push(segments.map(segment => segment.kind === 'html' ? segment
-          : { kind: 'node', node: segment.node.toJSON() }));
+      parseHTMLFlow(segments, _schema, context) {
+        assert.ok(context, 'importer supplies lazy paragraph-source context');
+        const paragraphs = context.readParagraphSources();
+        assert.equal(context.readParagraphSources(), paragraphs, 'context is cached');
+        calls.push({
+          legacy: segments.map(segment => segment.kind === 'html' ? segment
+            : { kind: 'node', node: segment.node.toJSON() }),
+          paragraphs: paragraphs.map(paragraph => ({ source: paragraph.source,
+            segments: paragraph.segments.map(segment => segment.kind === 'html' ? segment : {
+              kind: segment.kind, node: segment.node.toJSON(), softBreak: segment.softBreak, textRun: segment.textRun,
+            }),
+          })),
+        });
         return null;
       },
     });
     assert.equal(calls.length, 1);
-    return calls;
+    return calls[0];
   };
-  assert.deepEqual(capture(multiline), capture(singleline), 'review when flow gains source provenance');
+  const multi = capture(multiline);
+  const single = capture(singleline);
+  assert.deepEqual(multi.legacy, single.legacy, 'existing flow segments remain compatible');
+  assert.notDeepEqual(multi.paragraphs, single.paragraphs, 'new paragraph context must resolve the information collision');
   assert.notEqual(referenceRenderer.render(referenceParser.parse(multiline)),
     referenceRenderer.render(referenceParser.parse(singleline)));
   assert.notDeepEqual(semanticProjection(referenceRenderer.render(referenceParser.parse(multiline))),
     semanticProjection(referenceRenderer.render(referenceParser.parse(singleline))),
     'the collision affects preformatted semantics, not merely HTML spelling');
-  console.log(`Whole-container pre recovery: ${checks} safe-fallback/source checks; ${fixture.cases.length} unresolved fixtures, not conformance gains. Proven flow-provenance collision.`);
+  console.log(`Whole-container pre recovery: ${checks} safe-fallback/source checks; ${fixture.cases.length} unresolved fixtures, not conformance gains. Lazy paragraph context distinguishes the legacy collision.`);
 }

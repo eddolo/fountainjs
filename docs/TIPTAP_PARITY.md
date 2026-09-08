@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Paragraph provenance implementation (2026-09-08, Unreleased): an optional lazy
+flow context exposes direct paragraph syntax, raw tags and physical line breaks
+without host callback replay. This advances the source-aware adapter boundary;
+it does not increase the 563/579 semantic baselines or complete CommonMark.
+Full check: 1,466 tests / 116 files; three-engine editing/reopen regression and
+recorded visual inspection passed. No new end-user conversion is claimed.
+
 Whole-container Markdown boundary audit (2026-09-08): eight pending fixtures and
 48 fallback/source checks now protect the unsupported preformatted flow cases.
 An executable collision proof establishes that earlier parser provenance is

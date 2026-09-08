@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added lazy paragraph-source inspection for HTML flow adapters through an
+  optional third context argument. It retains normalized syntax input, raw tags,
+  physical breaks, list context and output-block references without replaying
+  host conversion callbacks. Syntax nodes are fresh, not live position mappings.
+  Whole-container recovery remains unfinished; existing semantic baselines stay
+  unchanged. Runtime growth is about 0.6 KiB ESM / 0.4 KiB CJS. The aggregate ESM
+  ceiling rises from 1376 to 1377 KiB; CJS and individual limits are unchanged.
+
 - Audited whole-container preformatted Markdown recovery and added eight pending
   reference fixtures with 48 safe-fallback/source checks. An executable collision
   proof shows why recovery requires earlier source provenance. This adds no

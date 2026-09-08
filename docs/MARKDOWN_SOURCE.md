@@ -252,6 +252,46 @@ The [whole-container boundary audit](MARKDOWN_FLOW_PROVENANCE.md) demonstrates
 why finished block nodes are insufficient and records the proposed smallest
 change, pending reference fixtures and implementation acceptance criteria.
 
+### Inspect paragraph syntax from a flow adapter
+
+The importer now supplies an optional third `MarkdownHTMLFlowContext` argument
+to `parseHTMLFlow`. Existing two-argument adapters and direct invocations remain
+valid. `context.readParagraphSources()` lazily returns a cached, frozen array:
+
+```ts
+MarkdownImporter.parse(markdown, schema, {
+  parseHTMLFlow(segments, target, context) {
+    const paragraphs = context?.readParagraphSources() ?? []
+    const physicalBreaks = paragraphs.reduce((count, paragraph) => count +
+      paragraph.segments.filter(part => part.kind === 'node' && part.softBreak).length, 0)
+    // Host-owned diagnostics; do not automatically log or transmit document text.
+    diagnostics = { paragraphs: paragraphs.length, physicalBreaks }
+    return ServerHTMLImporter.parseFlow(segments, target)
+  },
+})
+```
+
+Each entry contains normalized paragraph `source`, current output `blocks`,
+pre-conversion inline `segments`, and `tightList`. It distinguishes a physical
+LF from a literal space and retains raw closing tokens before HTML adapters
+consume them. One paragraph may correspond to several output blocks or none.
+`blocks` retain their current object identities. Syntax segment nodes are fresh
+inspection nodes, **not positional identities of those output blocks**.
+
+Inspection reuses Fountain's own inline parser with its reference definitions
+and literal-address policy; it invokes no host HTML conversion callbacks.
+Syntax nodes are allocated only on first inspection. List items establish their
+tight/loose context before invoking flow callbacks. Source capture may still
+invoke flow adapters separately for provenance probes, as before.
+
+This covers direct ordinary paragraphs of each container only. Nested containers
+have their own context; headings, code, raw HTML blocks and generated structural
+separators are not a complete rendering stream here. `source` is parser-normalized
+input, not a byte-exact file slice; use `parseWithSource` for file retention. The
+context is inspection/provenance groundwork: `ServerHTMLImporter.parseFlow`
+still declines the unsupported cross-paragraph preformatted cases. It is not
+permission to flatten original block IDs, attributes or custom atoms into text.
+
 **Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph
 for empty list items, unlike the reference's empty `<li>`. Ordinary/loose paragraph

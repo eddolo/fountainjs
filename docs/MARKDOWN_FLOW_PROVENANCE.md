@@ -1,7 +1,30 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
-Status: investigated on 2026-09-08; capability still unfinished. No runtime,
-schema, dependency or public API changes in this audit. This is the next step
+Follow-through (Unreleased): `parseHTMLFlow` now receives lazy paragraph-source
+inspection through an optional third context argument. It distinguishes the
+LF/space collision below, retains raw tokens and current output-block references,
+and does not replay host adapters. This is a paragraph inspection boundary,
+not the complete structural projection described in this audit. The built-in
+server adapter still explicitly declines these eight fixtures. See the
+[API contract and limitations](MARKDOWN_SOURCE.md#inspect-paragraph-syntax-from-a-flow-adapter).
+
+Verified follow-through: 1,466 tests / 116 files in the complete sequential check;
+compiled Node and workerd inspection; three desktop engines through the existing
+edit/undo/download/reopen journey. A separate recording and editor/list-reader/
+mobile preformatted screenshots were inspected under
+`artifacts/paragraph-sources-recorded/`; three-engine results are under
+`artifacts/paragraph-sources-browser/`. These are regression checks of existing
+conversion behavior, not visual evidence of the still-missing whole-container
+projection. The production `/fountainjs/` website build passed.
+
+A compiled local 10,000-paragraph probe retained every physical break and invoked
+the flow callback once: parsing 143 ms, first lazy inspection 88 ms, subsequent
+inspection returned the same snapshot. This is a single-machine diagnostic,
+not a cross-machine benchmark or memory bound. Runtime code measures 1376.5 KiB
+ESM / 1143.9 KiB CJS; only the aggregate ESM cap rises 1 KiB to 1377.
+
+Original audit: investigated on 2026-09-08; capability still unfinished. No runtime,
+schema, dependency or public API changes in that audit. This is the next step
 after single-paragraph preformatted recovery, not native-platform work.
 
 ## The information loss is demonstrable
@@ -18,10 +41,12 @@ line two
 ```
 
 Replace the physical newline between `one` and `line` with one space. The
-current importer gives `parseHTMLFlow` **identical segments and complete node
+legacy flow stream gives `parseHTMLFlow` **identical segments and complete node
 JSON for both inputs**. The CommonMark reference renders different preformatted
 text. An adapter cannot infer which input produced that shared representation.
 Adding a `textContent` conversion in the server importer cannot repair this.
+The new optional context preserves the missing distinction separately without
+changing those existing flow segments.
 
 The executable proof and eight fixed reference outputs live in
 [the boundary checker](../scripts/check-markdown-flow-boundaries.mjs) and

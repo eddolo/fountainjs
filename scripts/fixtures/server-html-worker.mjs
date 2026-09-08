@@ -1,5 +1,6 @@
 import { CoreSchemaSpec, HTMLExporter, MarkdownImporter, Schema } from '../../dist/index.js';
 import { ServerHTMLImporter } from '../../dist/html-server.js';
+import { checkMarkdownFlowSources } from './markdown-flow-source-check.mjs';
 
 const schema = new Schema(CoreSchemaSpec);
 
@@ -27,6 +28,7 @@ export default {
       text: result.document.textContent,
       html: HTMLExporter.export(result.document, { document: false }),
       issues: result.issues,
+      paragraphSources: checkMarkdownFlowSources(),
       paragraphRecovered: paragraph.childCount === 4 && paragraph.child(1).type.name === 'heading'
         && paragraph.child(1).textContent === 'Heading',
     }), { headers: { 'content-type': 'application/json' } });

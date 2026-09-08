@@ -30,6 +30,26 @@ export interface MarkdownHTMLFlowFallback {
   readonly message: string;
 }
 
+/** Parser input for one direct paragraph, before HTML adapter conversion. */
+export interface MarkdownHTMLFlowParagraphSource {
+  /** Normalized parser input, not an exact file slice (for that use parseWithSource). */
+  readonly source: string;
+  /** Current converted blocks for this paragraph, in order; may be empty. */
+  readonly blocks: readonly Node[];
+  /** Fresh syntax nodes, not positional identities of the converted blocks. */
+  readonly segments: readonly MarkdownHTMLInlineSegment[];
+  readonly tightList: boolean;
+}
+
+export interface MarkdownHTMLFlowContext {
+  /**
+   * Lazily inspect direct paragraphs in this container, without invoking host
+   * adapters. Cached per flow call. Not a complete block/rendering stream:
+   * headings, code, nested containers and generated separators are not included.
+   */
+  readonly readParagraphSources: () => readonly MarkdownHTMLFlowParagraphSource[];
+}
+
 /** Raw HTML tokens interleaved with already-parsed, immutable Fountain nodes. */
 export type MarkdownHTMLInlineSegment =
   | { readonly kind: 'html'; readonly html: string; readonly marks: readonly Mark[] }
@@ -83,7 +103,7 @@ export interface MarkdownImportOptions {
    * Return schema block nodes (possibly empty), or null to retain inert HTML.
    * Runs separately inside Markdown containers; may run during source capture.
    */
-  readonly parseHTMLFlow?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema) => readonly Node[] | null;
+  readonly parseHTMLFlow?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context?: MarkdownHTMLFlowContext) => readonly Node[] | null;
   readonly onHTMLFlowFallback?: (issue: MarkdownHTMLFlowFallback) => void;
   /**
    * Optional synchronous inline HTML scope adapter. Original Markdown nodes
@@ -1683,7 +1703,7 @@ function parseList(
     const itemStart = index;
     const item = collectListItem(lines, index, schema, references, options);
     index = item.nextIndex;
-    const layout: ListItemLayout | undefined = options.parseHTMLParagraph ? { spans: [] } : undefined;
+    const layout: ListItemLayout | undefined = options.parseHTMLParagraph || options.parseHTMLFlow ? { spans: [] } : undefined;
     const content = parseBlocks(item.lines, schema, references, options, layout);
     let lastLine = item.lines.length - 1;
     while (lastLine > 0 && !item.lines[lastLine].trim()) lastLine--;
@@ -1835,10 +1855,36 @@ interface ListItemLayout {
   finish?: (tight: boolean) => Node[];
 }
 
+type PendingHTMLParagraphSource = Omit<MarkdownHTMLFlowParagraphSource, 'segments'>;
+
+function htmlFlowContext(paragraphs: readonly PendingHTMLParagraphSource[], schema: Schema, references: References, options: MarkdownImportOptions): MarkdownHTMLFlowContext {
+  let cached: readonly MarkdownHTMLFlowParagraphSource[] | undefined;
+  const autolinkLiterals = options.autolinkLiterals;
+  return Object.freeze({ readParagraphSources: () => {
+    if (!cached) cached = Object.freeze(paragraphs.map(paragraph => {
+      const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
+      const characters = new Map<Node, { readonly softBreak?: true; readonly textRun: number }>();
+      const nodes = inline(paragraph.source, schema, references, [], tokens, autolinkLiterals, characters);
+      const segments = Object.freeze(nodes.map(node => tokens.get(node)
+        ?? Object.freeze({ kind: 'node' as const, node, ...characters.get(node) })));
+      return Object.freeze({ ...paragraph, segments });
+    }));
+    return cached;
+  } });
+}
+
 function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, layout?: ListItemLayout): Node[] {
   const blocks: Node[] = [];
   const htmlBlocks = new Map<Node, string>();
   const paragraphs = new Map<Node, string>();
+  const sources: PendingHTMLParagraphSource[] = [];
+  const projectParagraph = (value: string, tightList = false): Node[] => {
+    const projected = paragraphBlocks(schema, value, references, options, tightList);
+    if (options.parseHTMLFlow) sources.push(Object.freeze({
+      source: value, blocks: Object.freeze([...projected]), tightList,
+    }));
+    return projected;
+  };
   b: for (let index = 0; index < lines.length;) {
     const start = index;
     const previousLength = blocks.length;
@@ -2123,27 +2169,27 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       const placeholder = schema.node('paragraph');
       paragraphs.set(placeholder, value);
       blocks.push(placeholder);
-    } else blocks.push(...paragraphBlocks(schema, value, references, options));
+    } else blocks.push(...projectParagraph(value));
     } finally {
       if (blocks.length > previousLength || syntaxBlock) layout?.spans.push({ start, end: sourceEnd ?? index - 1 });
     }
   }
   if (layout) {
     layout.finish = tight => finishHTMLBlocks(blocks.flatMap(node => paragraphs.has(node)
-      ? paragraphBlocks(schema, paragraphs.get(node)!, references, options, tight) : [node]), htmlBlocks, lines, schema, references, options);
+      ? projectParagraph(paragraphs.get(node)!, tight) : [node]), htmlBlocks, lines, schema, references, options, sources);
     return blocks;
   }
-  return finishHTMLBlocks(blocks, htmlBlocks, lines, schema, references, options);
+  return finishHTMLBlocks(blocks, htmlBlocks, lines, schema, references, options, sources);
 }
 
-function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
+function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, sources: readonly PendingHTMLParagraphSource[]): Node[] {
   if (!options.parseHTMLFlow || !htmlBlocks.size) return blocks;
   const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(blocks.map(node => Object.freeze(
     htmlBlocks.has(node) ? { kind: 'html' as const, html: htmlBlocks.get(node)! } : { kind: 'node' as const, node },
   )));
   let issue: MarkdownHTMLFlowFallback;
   try {
-    const projected = options.parseHTMLFlow(segments, schema);
+    const projected = options.parseHTMLFlow(segments, schema, htmlFlowContext(sources, schema, references, options));
     if (projected !== null) {
       if (!Array.isArray(projected)) throw new TypeError('HTML flow adapter must return a block array.');
       for (const node of projected) {

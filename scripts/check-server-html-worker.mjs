@@ -48,6 +48,7 @@ try {
     throw new Error(`Worker lost semantic HTML: ${JSON.stringify(body)}`);
   }
   if (body.paragraphRecovered !== true) throw new Error('Worker paragraph HTML recovery failed.');
+  if (body.paragraphSources !== true) throw new Error('Worker Markdown flow paragraph inspection failed.');
   console.log('Cloudflare workerd (Miniflare): DOM-free server HTML import/export passed.');
 } finally {
   await worker.dispose();

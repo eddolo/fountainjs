@@ -348,7 +348,7 @@ const limits = Object.freeze({
   // Preformatted text provenance/recovery: measured 1374.9 KiB, entry caps unchanged.
   // Continuous-run CRLF + empty-slot/Markdown-scope initial-LF correction:
   // measured 1375.9 KiB; no new dependency or individual entry ceiling change.
-  'all ESM runtime code': 1376 * kibibyte,
+  'all ESM runtime code': 1377 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
