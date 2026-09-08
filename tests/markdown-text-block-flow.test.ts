@@ -16,6 +16,9 @@ describe('source-aware heading and code HTML flow', () => {
     ['literal code', '```\n<b>x</b> &amp; *y*\n```', '<b>x</b> &amp; *y*\n\n'],
     ['mixed text blocks', '# Recovery note\n\nfirst line\n  second line\n\n```\nconst n = 1;\n```', 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n'],
     ['tight list', '- one\n- two', '\none\ntwo\n\n'],
+    ['space hard break', 'line  \nbreak', 'line\nbreak\n'],
+    ['backslash hard break', 'line\\\nbreak', 'line\nbreak\n'],
+    ['literal space', 'line break', 'line break\n'],
   ];
   it.each(cases)('recovers %s without confusing syntax with rendered text', (_name, body, expected) => {
     for (const ending of ['\n', '\r\n']) {
@@ -82,12 +85,43 @@ describe('source-aware heading and code HTML flow', () => {
     expect(doc.toJSON()).toEqual(MarkdownImporter.parse(source, custom).toJSON());
   });
 
-  it.each(['- [x] task', 'line  \nbreak', '# ![image](https://example.test/a.png)'])('refuses unsupported structure: %s', body => {
+  it.each(['- [x] task', '# ![image](https://example.test/a.png)', '**line  \nbreak**'])('refuses unsupported structure: %s', body => {
     const source = wrap(body);
     const fallback = vi.fn();
     const doc = MarkdownImporter.parse(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });
     expect(fallback).toHaveBeenCalledOnce();
     expect(doc.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+  });
+
+  it('refuses custom hard-break attributes rather than losing them in pre', () => {
+    const custom = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
+      hard_break: { ...CoreSchemaSpec.nodes.hard_break, attrs: { owner: { default: 'Alice' } } },
+    } });
+    const source = wrap('line  \nbreak');
+    const fallback = vi.fn();
+    const parsed = MarkdownImporter.parseWithSource(source, custom, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });
+    expect(fallback).toHaveBeenCalledOnce();
+    expect(parsed.document.toJSON()).toEqual(MarkdownImporter.parse(source, custom).toJSON());
+    expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
+  });
+
+  it('does not mistake authored raw br HTML for a generated Markdown hard break', () => {
+    const source = wrap('one<br />two');
+    const fallback = vi.fn();
+    const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });
+    expect(fallback).toHaveBeenCalledOnce();
+    expect(parsed.document.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
+  });
+
+  it('keeps the renderer newline collapsible outside pre so the editor shows only one break', () => {
+    const source = '<blockquote>\n\none  \ntwo\n\n</blockquote>';
+    const fallback = vi.fn();
+    const doc = MarkdownImporter.parse(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });
+    expect(fallback).not.toHaveBeenCalled();
+    const paragraph = doc.child(0).child(0);
+    expect(paragraph.content.filter(node => node.type.name === 'hard_break')).toHaveLength(1);
+    expect(paragraph.content.filter(node => node.isText).map(node => node.text).join('')).toBe('onetwo');
   });
 
   it('does not expand the paragraph-only contract and requires text-block context', () => {

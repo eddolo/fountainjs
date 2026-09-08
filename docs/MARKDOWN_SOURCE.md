@@ -339,6 +339,18 @@ editing or clipboard behavior.
 
 ### Explicit text-block source flow recovery
 
+Plain Markdown hard breaks now have a source-aware projection on this route.
+Two trailing spaces or a backslash before a newline generate a `br` and a
+separate renderer LF. Outside `pre` the break remains a hard-break node and its
+renderer LF contributes no extra editable newline or leading space; inside
+`pre` the generated tag contributes no text and the LF provides the actual
+newline, matching the reference HTML text stream. Generated tags are tracked
+by source offset and checked for count/order, not recognized by user-controlled
+attributes. Raw authored `br` tags, marked break nodes and custom break metadata
+are not covered by this exception. They still refuse unsafe preformatted
+recovery and retain the original source. No normal paste or editing policy is
+changed, and the narrower paragraph-only recovery remains unchanged.
+
 `ServerHTMLImporter.parseTextBlockFlow` / `parseTextBlockFlowWithReport` extend
 the opt-in source-projection policy to direct ATX/Setext headings and fenced or
 indented code, as well as paragraphs. Use the same callback pattern above with
@@ -358,7 +370,7 @@ The adapter checks pristine node content, marks and supported attributes before
 applying syntax-derived wrappers. It does not HTML-export arbitrary original
 nodes. Custom block attributes, including schema defaults and assigned IDs,
 modified adapter output, ambiguous block correspondence, unsupported container
-types and inline atoms remain refusals with inert rollback. Original
+types and inline atoms other than plain hard breaks remain refusals with inert rollback. Original
 identity-preserving `parseFlow` and paragraph-only `parseParagraphFlow` are
 unchanged. Successful conversion reports `text-block-flow-projection` plus
 applicable HTML/preformatted losses; heading/code grouping and identity can
@@ -366,7 +378,7 @@ change inside an HTML `pre` scope.
 
 Try **Recover Markdown text across HTML blocks** in the conversion demo. This
 replaces its ordinary block-flow option, and stays off by default. The reference
-gate checks 46 LF/CRLF exact-code/source contracts, including headings, literal
+gate checks 58 LF/CRLF exact-code/source contracts, including headings, literal
 code, empty/blank fences, nested lists/quotes and generated newlines. The table/pre
 case also matches full wrapper structure; omitted outer `div` elements remain
 strict mismatches. The 563/652 default and 579/652 block+inline semantic baselines
@@ -385,9 +397,9 @@ The adapter uses this tree when supplied, while retaining support for older
 direct-text contexts. Tight/loose item paragraphs are finalized from sibling
 source boundaries before capture. Container children must still correspond to
 the original node references; custom attributes, IDs, modified adapter output,
-task lists and atoms decline with complete inert rollback. Node/depth limits
+task lists and atoms other than plain hard breaks decline with complete inert rollback. Node/depth limits
 also apply to the recursive projection. No host callback is replayed merely to
-inspect the tree. Sixteen LF/CRLF contracts additionally compare complete
+inspect the tree. Twenty-four LF/CRLF contracts additionally compare complete
 list/quote reference structure outside `pre`, not just extracted text. Empty
 items still require an editable model paragraph, so this is not a promise of
 literal CommonMark AST equality. Browser/server HTML import reads a pre's code

@@ -147,6 +147,9 @@ interface ImportContext {
     readonly tokenMarks: ReadonlyMap<number, readonly Mark[]>;
     readonly softBreaks: ReadonlySet<number>;
     readonly adjacentText: ReadonlySet<number>;
+    readonly sourceBreaks: ReadonlyMap<number, FountainNode>;
+    readonly projectedBreaks: WeakSet<FountainNode>;
+    readonly breakVisits: number[];
   };
 }
 
@@ -677,6 +680,14 @@ function inlineChildren(
     const offset = slots ? htmlparser2Adapter.getNodeSourceCodeLocation(child.raw)?.startOffset : undefined;
     const localMarks = offset === undefined ? [] : slots?.tokenMarks.get(offset) ?? [];
     const atomMarks = localMarks.length ? mergeInlineMarks(localMarks, marks) : marks;
+    const sourceBreak = offset === undefined ? undefined : slots?.sourceBreaks.get(offset);
+    if (sourceBreak && tag === 'br') {
+      slots!.breakVisits.push(offset!);
+      const node = sourceBreak.withMarks(mergeInlineMarks(sourceBreak.marks, marks));
+      slots!.projectedBreaks.add(node);
+      result.push(node);
+      return;
+    }
     const ruby = configuredRuby(child, schema, marks, context);
     if (ruby) { result.push(...ruby.map(node => localMarks.length ? node.withMarks(mergeInlineMarks(localMarks, node.marks)) : node)); return; }
     const customNode = configuredNode(child, schema, true, marks, context);
@@ -1042,8 +1053,16 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         && htmlparser2Adapter.getNodeSourceCodeLocation(first.raw)?.startOffset === preLocation?.startTag?.endOffset
         ? Number(first.getAttribute('data-index')) : undefined;
       let emptyInitial = false;
-      content = inlineChildren(element, schema, [], context).map(node => {
+      content = inlineChildren(element, schema, [], context).flatMap(node => {
         const index = slots.provenance.get(node);
+        // A parser-generated <br /> has no textContent inside pre. Its following
+        // renderer LF is a separate text token, not an atom flattened to text.
+        if (slots.projectedBreaks.has(node)) {
+          previousIndex = undefined;
+          previousCR = false;
+          emptyInitial = false;
+          return [];
+        }
         if (!node.isText) {
           throw new Error('Preformatted HTML cannot flatten an inline atom; literal source retained.');
         }
@@ -1262,7 +1281,7 @@ export class ServerHTMLImporter {
     return new ServerHTMLImporter().parseParagraph(segments, schema, context);
   }
 
-  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false): ServerHTMLInlineImportResult {
+  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false, generated?: { breaks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; lineFeeds: ReadonlySet<FountainNode> }): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
     let preOpen = false;
     for (const segment of segments) {
@@ -1300,6 +1319,7 @@ export class ServerHTMLImporter {
     const tokenMarks = new Map<number, readonly Mark[]>();
     const softBreaks = new Set<number>();
     const adjacentText = new Set<number>();
+    const sourceBreaks = new Map<number, FountainNode>();
     let previousSegment: MarkdownHTMLInlineSegment | undefined;
     const wrapped = paragraphMode && wrapParagraph;
     const parts: string[] = wrapped ? ['<p>'] : [];
@@ -1308,13 +1328,15 @@ export class ServerHTMLImporter {
       let part: string;
       if (segment.kind === 'html') {
         tokenMarks.set(offset, segment.marks);
+        const sourceBreak = generated?.breaks.get(segment);
+        if (sourceBreak) sourceBreaks.set(offset, sourceBreak);
         part = segment.html;
       } else {
         part = `<${tag} data-index="${originals.length}"></${tag}>`;
         if (seenNodes.has(segment.node)) sharedNodes.add(segment.node);
         seenNodes.add(segment.node);
         originals.push(segment.node);
-        if (segment.softBreak) softBreaks.add(originals.length - 1);
+        if (segment.softBreak || generated?.lineFeeds.has(segment.node)) softBreaks.add(originals.length - 1);
         if (previousSegment?.kind === 'node' && previousSegment.node.isText && segment.node.isText
           && previousSegment.textRun === segment.textRun
           && previousSegment.node.marks.length === segment.node.marks.length
@@ -1331,7 +1353,7 @@ export class ServerHTMLImporter {
     const issues: ServerHTMLImportIssue[] = [];
     const provenance = new WeakMap<FountainNode, number>();
     const context: ImportContext = {
-      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText },
+      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText, sourceBreaks, projectedBreaks: new WeakSet(), breakVisits: [] },
     };
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
@@ -1361,6 +1383,11 @@ export class ServerHTMLImporter {
     nodes.forEach(node => { schema.validate(node); verify(node); });
     if (found.length !== originals.length || found.some((index, position) => index !== position)) {
       throw new Error('Inline HTML recovery did not preserve every Markdown node exactly once in order; literal source retained.');
+    }
+    const expectedBreaks = [...sourceBreaks.keys()];
+    const visitedBreaks = context.inlineSlots!.breakVisits;
+    if (visitedBreaks.length !== expectedBreaks.length || visitedBreaks.some((offset, index) => offset !== expectedBreaks[index])) {
+      throw new Error('HTML recovery changed generated Markdown hard-break order or count; literal source retained.');
     }
     if (segments.some(segment => segment.kind === 'html')) reportOnce(context, {
       code: 'inline-html-projection',
@@ -1417,14 +1444,22 @@ export class ServerHTMLImporter {
     const normalized = (nodes: readonly FountainNode[]): FountainNode[] => {
       const result: FountainNode[] = [];
       for (const node of nodes) {
-        if (!node.isText) throw new Error('Paragraph flow cannot flatten an inline atom.');
+        if (!node.isText) {
+          if (!structural || node.type.name !== 'hard_break' || Object.keys(node.attrs).length || node.content.length || node.marks.length) {
+            throw new Error('Paragraph flow cannot flatten an inline atom or custom hard break.');
+          }
+          result.push(node);
+          continue;
+        }
         const previous = result.at(-1);
-        if (previous && previous.withText(node.text!).eq(node)) result[result.length - 1] = previous.withText(previous.text! + node.text!);
+        if (previous?.isText && previous.withText(node.text!).eq(node)) result[result.length - 1] = previous.withText(previous.text! + node.text!);
         else result.push(node);
       }
       return result;
     };
     const stream: MarkdownHTMLInlineSegment[] = [];
+    const generatedBreaks = new Map<MarkdownHTMLInlineSegment, FountainNode>();
+    const generatedLineFeeds = new Set<FountainNode>();
     let newline = true;
     const raw = (html: string) => { stream.push({ kind: 'html', html, marks: [] }); if (html) newline = html.endsWith('\n'); };
     const cr = () => { if (!newline) raw('\n'); };
@@ -1481,6 +1516,19 @@ export class ServerHTMLImporter {
         raw(`<pre><code class="language-${language}">`);
       } else if (!tight) raw(`<${tag}>`);
       for (const part of paragraph.segments) {
+        if (structural && part.kind === 'node' && part.node.type.name === 'hard_break') {
+          const generated: MarkdownHTMLInlineSegment = { kind: 'html', html: '<br />', marks: [] };
+          generatedBreaks.set(generated, part.node);
+          stream.push(generated);
+          // Renderer LF after br is invisible under normal HTML whitespace
+          // rules. Keep an empty protected carrier outside pre; restore LF only
+          // inside pre, without introducing an editable newline or leading space.
+          const carrier = schema.text('');
+          generatedLineFeeds.add(carrier);
+          stream.push({ kind: 'node', node: carrier });
+          newline = true;
+          continue;
+        }
         stream.push(part);
         if (part.kind === 'html') { if (part.html) newline = part.html.endsWith('\n'); }
         else if (part.node.text) newline = Boolean(part.softBreak) || (!part.node.marks.length && part.node.text.endsWith('\n'));
@@ -1499,11 +1547,11 @@ export class ServerHTMLImporter {
       emit(source);
     }
     if ([...byBlock].some(([node, source]) => source.kind !== 'html' && !used.has(node))) throw new Error('Paragraph flow source context contains unmatched blocks.');
-    const result = this.parseInlineContent(stream, schema, true, false, true);
+    const result = this.parseInlineContent(stream, schema, true, false, true, { breaks: generatedBreaks, lineFeeds: generatedLineFeeds });
     return Object.freeze({ nodes: result.nodes, issues: Object.freeze([...result.issues, Object.freeze({
       code: structural ? 'text-block-flow-projection' as const : 'paragraph-flow-projection' as const,
       message: structural
-        ? 'Markdown source was reprojected across HTML boundaries using text-block and available list/quote syntax. Block grouping/identity and HTML layout may change; custom data, modified projections, unsupported blocks and inline atoms are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML.'
+        ? 'Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Block grouping/identity and HTML layout may change; custom data, modified projections, unsupported blocks and other inline atoms are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML.'
         : 'Markdown paragraph source was reprojected across HTML block boundaries. Paragraph grouping/identity and HTML layout may change; custom paragraph data and inline atoms are refused. This is an explicit source projection, not identity-preserving block flow or lossless HTML.',
     })]) });
   }

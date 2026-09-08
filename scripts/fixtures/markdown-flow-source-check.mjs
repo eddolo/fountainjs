@@ -3,6 +3,14 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  for (const body of ['one  \ntwo', 'one\\\ntwo']) {
+    const source = `<div><pre>\n\n${body}\n\n</pre></div>`;
+    const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow });
+    if (parsed.document.child(0).type.name !== 'code_block' || parsed.document.child(0).textContent !== 'one\ntwo\n'
+      || MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown !== source) {
+      throw new Error('Compiled hard-break source recovery lost line-break semantics or original source.');
+    }
+  }
   const nested = MarkdownImporter.parse('<blockquote>\n\n3. first\n   - child\n4. > quoted\n\n</blockquote>', schema, {
     parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
   });

@@ -12,7 +12,7 @@ export async function markdownStructuralRecoveryJourney(page: Page, info: TestIn
   };
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  const body = '3. First step\n   - Inspect logs\n   - Retry request\n4. > Record outcome';
+  const body = '3. First step\n   - Inspect logs  \n     Check timestamps\n   - Retry request\n4. > Record outcome';
   await page.goto('/demos/node-markdown.html');
   const input = page.getByLabel('Markdown input', { exact: true });
   const output = page.locator('.demo-output');
@@ -40,7 +40,31 @@ export async function markdownStructuralRecoveryJourney(page: Page, info: TestIn
     await expect(surface.locator('ol')).toHaveCount(1);
     await expect(surface.locator('ol')).toHaveAttribute('start', '3');
     await expect(surface.locator('ol > li')).toHaveCount(2);
-    await expect(surface.locator('ol > li').first().locator('ul > li')).toHaveText(['Inspect logs', 'Retry request']);
+    const items = surface.locator('ol > li').first().locator('ul > li');
+    await expect(items).toHaveText([/Inspect logs\s*Check timestamps/u, 'Retry request']);
+    await expect(items.first().locator('br')).toHaveCount(1);
+    // A real line break must produce a second visible line, not just an atom
+    // in JSON or a space. Verify again after download/reopen and in the reader.
+    await expect.poll(() => items.first().evaluate(element => {
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      const tops: number[] = [];
+      const lefts: number[] = [];
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        const value = node.textContent ?? '';
+        for (const word of ['Inspect', 'Check']) {
+          const index = value.indexOf(word);
+          if (index < 0) continue;
+          const range = document.createRange();
+          range.setStart(node, index); range.setEnd(node, index + word.length);
+          tops.push(range.getBoundingClientRect().top);
+          lefts.push(range.getBoundingClientRect().left);
+        }
+      }
+      const lineHeight = Number.parseFloat(getComputedStyle(element.querySelector('p') ?? element).lineHeight);
+      return tops.length === 2 && Number.isFinite(lineHeight)
+        && Math.abs(tops[1] - tops[0] - lineHeight) < 2 && Math.abs(lefts[1] - lefts[0]) < 2;
+    })).toBe(true);
     await expect(surface.locator('ol > li').last().locator('blockquote')).toHaveText('Record outcome');
     await expect(surface.getByText(edited ? 'First step updated' : 'First step', { exact: true })).toBeVisible();
     expect(errors).toEqual([]);

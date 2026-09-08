@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added source-aware plain Markdown hard-break recovery to the opt-in structural
+  HTML adapter. Generated break tags and following line feeds stay distinct;
+  custom/marked breaks and other unsupported atoms still retain source through
+  safe fallback. Default imports and CommonMark corpus scores are unchanged.
+
 - Fixed code-label clicks leaving typing outside the code in Firefox/WebKit.
   The syntax plugin maps its generated label area to the start of the code;
   normal text clicks and modified-selection gestures remain browser-owned.

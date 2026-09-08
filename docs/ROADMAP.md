@@ -5,6 +5,12 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Hard-break follow-through (2026-09-08, Unreleased): the explicit structural
+HTML recovery route now distinguishes plain Markdown hard breaks, physical
+soft breaks and spaces. The reference gate covers 58 preformatted stream/source
+and 24 complete structure/source contracts. Marked/custom breaks, other atoms,
+task lists and outer-wrapper fidelity remain open; corpus scores are unchanged.
+
 Recursive Markdown follow-through (2026-09-08, Unreleased): parser-derived
 list/item/quote source events now feed the explicit HTML recovery adapter.
 Tight/loose lists, ordered starts and nested quote/list combinations pass the

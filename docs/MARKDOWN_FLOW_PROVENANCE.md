@@ -1,5 +1,42 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Plain hard-break follow-through (2026-09-08, Unreleased): structural source
+projection now recognizes pristine, unmarked, attribute-free `hard_break`
+nodes. It emits a separately tracked generated `br` and a renderer-whitespace
+carrier. In preformatted scopes the tag contributes no text and the carrier
+becomes LF; elsewhere an empty protected carrier prevents a second line break
+or an unwanted leading space beside the actual break.
+Generated tags use parse offsets, not user-controlled attributes, and their
+order/count is checked. Custom/marked breaks, raw authored break tags inside
+pre, other atoms and task lists retain conservative fallbacks. The paragraph-only
+and identity-preserving adapters do not acquire this new exception.
+
+The first browser assertions passed while a screenshot exposed a double-height
+gap: a literal generated LF beside the break was visible under editor whitespace
+rules. The carrier correction fixes this without deleting original source
+newlines. The journey now measures exactly one computed line-height after
+editing, undo/redo, download/reopen and reader preview, including mobile width.
+It also checks both lines align horizontally, after inspection caught a leading
+renderer space in the intermediate correction.
+Earlier evidence remains under `artifacts/hard-break-workflows-browser/`.
+
+Reference checks now cover 58 LF/CRLF preformatted stream/source contracts and
+24 complete structure/source contracts outside pre. Corpus scores remain
+563/652 default and 579/652 block+inline. Full sequential `pnpm check` passes
+1,559 tests / 121 files, including compiled Node/workerd. Public API declarations
+are unchanged. Runtime totals are 1,387.0 KiB ESM / 1,152.4 KiB CJS, with explicit
+1,388/1,153 KiB aggregate caps; no individual entry, CSS or performance limit
+changes and no new dependency. Full log: `artifacts/hard-break-final-check.log`.
+
+Final public journeys: six tests pass across Chromium, Firefox and WebKit,
+covering the nested hard-break editor/reader round trip and discovery/use of
+the GitLab-style and Todoist-style workflow showcase. Two separately recorded
+journeys pass. Final evidence is under `artifacts/hard-break-aligned-browser/`
+and `artifacts/hard-break-aligned-recorded/`; editor/reader captures and both
+recording overviews were visually inspected. These are emulated viewports and
+public synthetic paste events, not physical-mobile or OS clipboard certification.
+The production website build passes with the existing large MathJax chunk warning.
+
 Recursive follow-through (Unreleased): `readBlockSources()` now captures
 import-local list/item/quote boundaries from the existing parser, with deferred
 tightness, ordered starts, raw HTML, empty model placeholders and explicit
@@ -39,7 +76,11 @@ its snapshot was reviewed. Measured aggregate code is 1,385.7 KiB ESM and
 1,151.4 KiB CJS, with explicit 1,386/1,152 KiB ceilings. Individual entry,
 CSS and performance budgets are unchanged; no dependency was added.
 Viewport emulation and synthetic public paste events are not physical-device
-or OS clipboard certification. Hosted Linux confirmation remains pending.
+or OS clipboard certification. Hosted Linux confirmation subsequently passed:
+[CI 34203630460](https://github.com/eddolo/fountainjs/actions/runs/34203630460)
+for `b6a8679` completed successfully, including the browser job that previously
+failed code-label caret placement. This is evidence for that preceding commit,
+not a substitute for CI on the newer hard-break changes above.
 
 Opaque-label follow-through (Unreleased): the former code-language schema
 restriction is now removed for whitespace-free string metadata. Full fence info

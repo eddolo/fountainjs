@@ -1,5 +1,11 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Plain hard-break recovery (2026-09-08, Unreleased): parser-generated break tags
+and renderer line feeds now remain distinct through explicit source projection,
+including nested lists/quotes and preformatted scopes. Reference checks increase
+to 58 preformatted and 24 full-structure/source contracts. This is not an increase
+to the 563/579 corpus scores or a claim of completed Markdown/editor parity.
+
 Recursive source recovery (2026-09-08, Unreleased): the optional Markdown/HTML
 adapter now uses parser-derived list/quote events, including ordered starts and
 tight/loose item boundaries. Reference checks cover both exact preformatted
