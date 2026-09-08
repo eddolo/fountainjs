@@ -201,7 +201,7 @@ If surrounding block flow fails, recovery disables this adapter too when
 restoring the original container.
 
 `ServerHTMLImporter.parseParagraph` / `parseParagraphWithReport` use HTML parser
-recovery with an implicit paragraph wrapper, keeping original Markdown nodes in
+recovery with an implicit paragraph wrapper where required, keeping original Markdown nodes in
 protected slots rather than serializing their data. They verify each original
 position survives exactly once and in order, including repeated references and
 mark-only copies. Unknown wrappers/attributes may be omitted with conversion
@@ -209,12 +209,21 @@ reports; unsafe URLs are rejected. Raw-text/preformatted/foreign-content scopes
 still require specialized parsing and fall back explicitly. Limits apply to the
 wrapper and slots as well as source bytes. No browser or fake DOM is required.
 
-**Known limitation:** tight-list paragraphs do not carry their HTML rendering
-context into this adapter yet. CommonMark omits their implicit `<p>` wrapper;
-the new path can therefore add an empty paragraph after a block tag. This is an
-explicit pending semantic mismatch, not a conformance gain. Ordinary paragraph
-recovery can also legitimately produce empty blocks from HTML's closing-tag
-recovery. Do not blindly trim them away. Eight reference/source checks and 1,304
+The callback's third argument is a frozen `MarkdownHTMLParagraphContext` with
+`tightList: boolean`. Forward it when wrapping `parseParagraph` or
+`parseParagraphWithReport`; direct method references forward it automatically.
+The server adapter omits the implicit `<p>` for direct tight-list paragraphs.
+Ordinary paragraphs, paragraphs in quotes and loose lists retain the wrapper.
+List tightness comes from sibling source boundaries, not a search for any blank
+line: blanks inside nested lists, quotes, fenced code and HTML do not loosen the
+parent. Item paragraph/flow conversion waits until sibling boundaries are known;
+the parser does not replay host adapters to discover tightness.
+
+**Remaining limits:** raw-text/preformatted scopes, omitted HTML comments and
+unknown wrapper identity are not lossless. The schema still supplies a paragraph
+for empty list items, unlike the reference's empty `<li>`. Ordinary/loose paragraph
+recovery can legitimately produce empty blocks from HTML's closing-tag recovery;
+do not blindly trim them away. Thirty-eight reference/source checks and 1,304
 whole-corpus source-retention checks are separate from the unchanged 563 default
 and 579 block/inline-adapter baselines. Full CommonMark remains unfinished.
 

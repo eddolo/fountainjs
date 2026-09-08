@@ -14,6 +14,10 @@ export default {
     const paragraph = MarkdownImporter.parse('Before <h2>Heading</h2> After', schema, {
       parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
     });
+    const tightList = MarkdownImporter.parse('- Before <h2>Heading</h2> After', schema, {
+      parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+    });
+    if (tightList.child(0).child(0).childCount !== 3) return new Response('Phantom tight-list paragraph', { status: 500 });
     return new Response(JSON.stringify({
       blocks: result.document.childCount,
       text: result.document.textContent,

@@ -1,12 +1,23 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Tight-list recovery follow-through (2026-09-08, Unreleased): direct list paragraphs
+now receive source-derived tightness context instead of always adding an HTML p
+wrapper. Nested containers and opaque blocks retain their own scope. Full local
+check passes 1,409 tests / 113 files, compiled Node/workerd, API/headless and
+performance gates. Thirty-eight reference/source cases and 1,304 source-retention
+checks accompany three-engine editing/file/reader journeys. Empty-item/comment
+identity differences and raw-text recovery remain open. No conformance inflation:
+the established default 563 / block+inline 579 semantic baselines are unchanged.
+The extended recorded journey passed; editor/reopened reader and narrow-screen
+views were visually inspected. This is not physical-device input certification.
+
 Paragraph HTML implementation (2026-09-08, Unreleased): an additive, default-off
 block-returning paragraph adapter now recovers embedded paragraph/heading/quote
 tags without forcing block nodes into inline content. Seventeen unit cases,
 eight reference/source contracts and 1,304 unchanged-source cases cover the new
 path; the editor/file/reader journey passes Chromium, Firefox and WebKit.
-Experimental demo/documentation explicitly retain tight-list empty-paragraph and
-raw-text limitations. Existing 563 default / 579 block+inline semantic baselines
+The tight-list wrapper issue is addressed above; experimental demo/documentation
+retain raw-text limitations. Existing 563 default / 579 block+inline semantic baselines
 are unchanged. This is concrete boundary work, not completion of the programme.
 Full local check: 1,391 tests / 113 files, with compiled Node/workerd recovery,
 headless/API and performance gates passing. Recorded editor/reopened reader and

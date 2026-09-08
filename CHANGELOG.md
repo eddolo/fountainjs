@@ -2,11 +2,19 @@
 
 ## Unreleased
 
+- Fixed phantom paragraph recovery in tight Markdown lists. Paragraph adapters
+  receive frozen list-rendering context; the optional server adapter omits only
+  the appropriate wrapper. Nested containers and opaque code/HTML use source
+  boundaries, without replaying callbacks. The demo forwards the context.
+  Empty-item placeholders, HTML comment retention and raw-text recovery remain
+  separate gaps. Aggregate size caps rise to 1374 KiB ESM / 1142 KiB CJS for this
+  implementation; individual entry limits and conformance baselines are unchanged.
+
 - Added default-off, experimental Markdown paragraph HTML recovery. A separate
   block-returning adapter handles paragraph/heading/quote tags inside ordinary
   paragraphs while preserving original inline nodes and explicit failure paths.
-  The conversion demo exposes the option. Tight-list wrapper semantics and
-  raw-text/preformatted scopes remain documented limitations; existing inline
+  The conversion demo exposes the option. Raw-text/preformatted scopes
+  remain documented limitations; existing inline
   behavior and CommonMark baselines are unchanged. Aggregate ESM/CJS budgets
   increase by 2 KiB each for the additive API; individual entry limits are unchanged.
 

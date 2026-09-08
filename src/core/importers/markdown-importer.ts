@@ -96,7 +96,7 @@ export interface MarkdownImportOptions {
    * headings or pipe-table cells. Takes precedence over parseHTMLInline there.
    * Return null to retain inert HTML; validate and sanitize in the adapter.
    */
-  readonly parseHTMLParagraph?: (segments: readonly MarkdownHTMLInlineSegment[], schema: Schema) => readonly Node[] | null;
+  readonly parseHTMLParagraph?: (segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, context: MarkdownHTMLParagraphContext) => readonly Node[] | null;
   readonly onHTMLParagraphFallback?: (issue: MarkdownHTMLInlineFallback) => void;
   readonly onHTMLInlineFallback?: (issue: MarkdownHTMLInlineFallback) => void;
 }
@@ -1417,7 +1417,12 @@ function paragraph(schema: Schema, value: string, references: References, align 
   return schema.node('paragraph', { align }, projectInline(value, schema, references, options));
 }
 
-function paragraphBlocks(schema: Schema, value: string, references: References, options: MarkdownImportOptions): Node[] {
+export interface MarkdownHTMLParagraphContext {
+  /** Direct paragraph of a tight list item; its HTML has no implicit p wrapper. */
+  readonly tightList: boolean;
+}
+
+function paragraphBlocks(schema: Schema, value: string, references: References, options: MarkdownImportOptions, tightList = false): Node[] {
   if (!options.parseHTMLParagraph) return [paragraph(schema, value, references, 'left', options)];
   const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
   const nodes = inline(value, schema, references, [], tokens, options.autolinkLiterals);
@@ -1425,7 +1430,7 @@ function paragraphBlocks(schema: Schema, value: string, references: References, 
   const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node })));
   let issue: MarkdownHTMLInlineFallback;
   try {
-    const projected = options.parseHTMLParagraph(segments, schema);
+    const projected = options.parseHTMLParagraph(segments, schema, Object.freeze({ tightList }));
     if (projected !== null) {
       if (!Array.isArray(projected)) throw new TypeError('Paragraph HTML adapter must return a block array.');
       for (const node of projected) {
@@ -1641,26 +1646,49 @@ function parseList(
   schema: Schema,
   references: References,
   options: MarkdownImportOptions,
-): { node: Node; nextIndex: number } {
+): { node: Node; nextIndex: number; sourceEnd: number } {
   const first = listMarker(lines[startIndex]) as ListMarker;
   const listName = first.kind === 'bullet' ? 'bullet_list' : first.kind === 'ordered' ? 'ordered_list' : 'task_list';
   const itemName = first.kind === 'task' ? 'task_item' : 'list_item';
   const items: Node[] = [];
+  const pending: { marker: ListMarker; layout: ListItemLayout; start: number; end: number }[] = [];
   let index = startIndex;
+  let sourceEnd = startIndex;
   while (index < lines.length) {
     if (thematicBreak(lines[index])) break;
     const marker = listMarker(lines[index]);
     if (!marker || marker.indent >= 4 || marker.kind !== first.kind || marker.m !== first.m) break;
+    const itemStart = index;
     const item = collectListItem(lines, index, schema, references, options);
     index = item.nextIndex;
-    const content = parseBlocks(item.lines, schema, references, options);
+    const layout: ListItemLayout | undefined = options.parseHTMLParagraph ? { spans: [] } : undefined;
+    const content = parseBlocks(item.lines, schema, references, options, layout);
+    let lastLine = item.lines.length - 1;
+    while (lastLine > 0 && !item.lines[lastLine].trim()) lastLine--;
+    sourceEnd = layout ? itemStart + Math.max(layout.spans.at(-1)?.end ?? 0, lastLine) : index - 1;
+    if (layout) pending.push({ marker, layout, start: itemStart, end: sourceEnd });
+    else {
+      if (!content.length) content.push(paragraph(schema, '', references));
+      items.push(schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content));
+    }
+    while (index < lines.length && !lines[index].trim()) index++;
+  }
+  // Decide from sibling source boundaries, never from blank lines buried inside
+  // a nested list, quote, fenced code or raw HTML block. Delay only this item's
+  // paragraph/flow adapters until all siblings establish the list's tightness.
+  const tight = !pending.some((item, itemIndex) => (
+    (pending[itemIndex + 1]?.start ?? item.end + 1) > item.end + 1
+    || item.layout.spans.some((span, blockIndex, spans) => blockIndex > 0 && span.start > spans[blockIndex - 1].end + 1)
+  ));
+  for (const { marker, layout } of pending) {
+    const content = layout.finish!(tight);
     if (!content.length) content.push(paragraph(schema, '', references));
     items.push(schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content));
-    while (index < lines.length && !lines[index].trim()) index++;
   }
   return {
     node: schema.node(listName, listName === 'ordered_list' ? { start: first.start } : {}, items),
     nextIndex: index,
+    sourceEnd,
   };
 }
 
@@ -1780,10 +1808,21 @@ function projectHTMLBlock(html: string, schema: Schema, options: MarkdownImportO
   return null;
 }
 
-function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
+interface ListItemLayout {
+  spans: { start: number; end: number }[];
+  finish?: (tight: boolean) => Node[];
+}
+
+function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, layout?: ListItemLayout): Node[] {
   const blocks: Node[] = [];
   const htmlBlocks = new Map<Node, string>();
+  const paragraphs = new Map<Node, string>();
   b: for (let index = 0; index < lines.length;) {
+    const start = index;
+    const previousLength = blocks.length;
+    let sourceEnd: number | undefined;
+    let syntaxBlock = false;
+    try {
     const line = lines[index];
     if (!line.trim()) { index++; continue; }
     const emptyParagraph = markdownEmptyParagraph(line);
@@ -1816,6 +1855,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     const rawHTML = markdownHTMLBlock(line);
     if (rawHTML) {
+      syntaxBlock = true;
       const end = markdownHTMLBlockEnd(lines, index, rawHTML);
       const html = lines.slice(index, end).join('\n');
       const projected = options.parseHTMLFlow ? null : projectHTMLBlock(html, schema, options);
@@ -1857,6 +1897,8 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         break;
       }
       while (code.at(-1) === '') code.pop();
+      sourceEnd = index - 1;
+      while (sourceEnd > start && !lines[sourceEnd].trim()) sourceEnd--;
       blocks.push(schema.node('code_block', { language: 'text', lineNumbers: true }, [schema.text(code.join('\n'))]));
       continue;
     }
@@ -1898,7 +1940,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     const footnote = footnoteDefinitionAt(lines, index, schema);
     if (footnote) { index = footnote.nextIndex; continue; }
     const definition = referenceDefinitionAt(lines, index);
-    if (definition) { index += definition.lineCount; continue; }
+    if (definition) { syntaxBlock = true; index += definition.lineCount; continue; }
     if (schema.nodes.math_block && /^\$\$/.test(line)) {
       const singleLine = /^\$\$(.+)\$\$$/.exec(line);
       if (singleLine) {
@@ -2037,6 +2079,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       const parsed = parseList(lines, index, schema, references, options);
       blocks.push(parsed.node);
       index = parsed.nextIndex;
+      sourceEnd = parsed.sourceEnd;
       continue;
     }
     const paragraphLines = [line];
@@ -2053,8 +2096,25 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     // Keep physical line endings visible to inline syntax validation. Ordinary
     // soft breaks become spaces only when text nodes are emitted; hard-break
     // markers are consumed by `inline` before that normalization.
-    blocks.push(...paragraphBlocks(schema, paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, ''), references, options));
+    const value = paragraphLines.join('\n').replace(/^[\t ]+|[\t ]+$/gu, '');
+    if (layout) {
+      const placeholder = schema.node('paragraph');
+      paragraphs.set(placeholder, value);
+      blocks.push(placeholder);
+    } else blocks.push(...paragraphBlocks(schema, value, references, options));
+    } finally {
+      if (blocks.length > previousLength || syntaxBlock) layout?.spans.push({ start, end: sourceEnd ?? index - 1 });
+    }
   }
+  if (layout) {
+    layout.finish = tight => finishHTMLBlocks(blocks.flatMap(node => paragraphs.has(node)
+      ? paragraphBlocks(schema, paragraphs.get(node)!, references, options, tight) : [node]), htmlBlocks, lines, schema, references, options);
+    return blocks;
+  }
+  return finishHTMLBlocks(blocks, htmlBlocks, lines, schema, references, options);
+}
+
+function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
   if (!options.parseHTMLFlow || !htmlBlocks.size) return blocks;
   const segments: readonly MarkdownHTMLFlowSegment[] = Object.freeze(blocks.map(node => Object.freeze(
     htmlBlocks.has(node) ? { kind: 'html' as const, html: htmlBlocks.get(node)! } : { kind: 'node' as const, node },

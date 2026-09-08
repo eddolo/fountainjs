@@ -567,28 +567,42 @@ const paragraphRecoveryCases = [
   'Before <h2>Heading</h2> After',
   'Before <blockquote>Quoted *text*</blockquote> After',
   '> Before <p>Inside</p> After',
+  '- Before <p>Inside</p> After',
+  '- Before <p>Inside</p> After\n- Next <h2>Heading</h2> End',
+  '- Before <p>Inside</p> After\n\n- Next <h2>Heading</h2> End',
+  '- Before <p>Inside</p> After\n\n  Another <p>Block</p> End',
+  '- Before <p>Inside</p> After\n  - nested\n\n  - loose child\n- Next',
+  '- Before <p>Inside</p> After\n  > nested\n  >\n  > quote\n- Next',
+  '- Before <p>Inside</p> After\n  ```\n  code\n\n  still code\n  ```\n- Next',
+  '- Before <p>Inside</p> After\n  - nested\n\n  Another <p>Block</p> End',
+  '-     code\n\n  Before <p>Inside</p> After',
+  '1. Before <p>Inside</p> After\n2. Next',
+  '> - Before <p>Inside</p> After\n> - Next',
+  '- > Before <p>Inside</p> After',
+  '- [x]: /url\n\n  Before <p>Inside</p> After',
+  '- Before <p>Inside</p> After\n\n  [x]: /url\n  Another <p>Block</p> End',
+  '- Outer <p>Inside</p> End\n  - Nested <h2>Heading</h2> End\n\n  - Other <p>Block</p> End\n- Next',
 ];
 for (const source of paragraphRecoveryCases) {
   for (const ending of ['\n', '\r\n']) {
-    const input = `${source}${ending}`;
+    const input = `${source.replaceAll('\n', ending)}${ending}`;
     const expected = referenceOutput(referenceRenderer, referenceParser.parse(input)).projection;
-    const captured = MarkdownImporter.parseWithSource(input, schema, { parseHTMLParagraph: ServerHTMLImporter.parseParagraph });
+    const captured = MarkdownImporter.parseWithSource(input, schema, { parseHTMLParagraph: ServerHTMLImporter.parseParagraph, parseHTMLFlow: ServerHTMLImporter.parseFlow });
     const actual = semanticProjection(HTMLExporter.export(captured.document, { document: false }));
     if (JSON.stringify(actual) !== JSON.stringify(expected)
       || MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== input) {
-      throw new Error(`Paragraph recovery differs from reference semantics/source: ${JSON.stringify(input)}`);
+      throw new Error(`Paragraph recovery differs from reference semantics/source: ${JSON.stringify(input)}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
     }
   }
 }
 console.log(`Paragraph recovery: ${paragraphRecoveryCases.length * 2} opt-in reference/source contracts; existing baselines unchanged.`);
-// Tight-list rendering omits the implicit <p> wrapper used by this paragraph
-// adapter. That context is not carried yet: keep the extra-empty-paragraph
-// mismatch visible instead of claiming list-level CommonMark fidelity.
-const tightListParagraphSource = '- Before <p>Inside</p> After\n';
-const tightListParagraph = MarkdownImporter.parse(tightListParagraphSource, schema, { parseHTMLParagraph: ServerHTMLImporter.parseParagraph });
-if (JSON.stringify(semanticProjection(HTMLExporter.export(tightListParagraph, { document: false })))
-  === JSON.stringify(referenceOutput(referenceRenderer, referenceParser.parse(tightListParagraphSource)).projection)) {
-  throw new Error('Review the newly matching tight-list paragraph recovery before changing its pending classification.');
+// Empty-item placeholder blocks and omitted HTML comment identity remain
+// mismatches. Do not normalize either away to inflate conformance.
+for (const source of ['- [x]:\n    /url\n- Before <p>Inside</p> After', '-\n\n- Before <p>Inside</p> After', '- Before <p>Inside</p> After\n  <!-- comment\n\n  still comment -->\n- Next']) {
+  const actual = MarkdownImporter.parse(source, schema, { parseHTMLParagraph: ServerHTMLImporter.parseParagraph, parseHTMLFlow: ServerHTMLImporter.parseFlow });
+  if (JSON.stringify(semanticProjection(HTMLExporter.export(actual, { document: false }))) === JSON.stringify(referenceOutput(referenceRenderer, referenceParser.parse(source)).projection)) {
+    throw new Error('Review the newly matching empty-item/comment representation before changing its pending classification.');
+  }
 }
 let paragraphSourceChecks = 0;
 for (const example of commonmarkSpec.tests) {
@@ -604,7 +618,7 @@ for (const example of commonmarkSpec.tests) {
     paragraphSourceChecks++;
   }
 }
-console.log(`Paragraph recovery: ${paragraphSourceChecks} corpus source-retention checks; tight-list wrapper semantics remain pending.`);
+console.log(`Paragraph recovery: ${paragraphSourceChecks} corpus source-retention checks; not full semantic conformance.`);
 const matches = new Set();
 const mismatches = [];
 const roundTripFailures = [];

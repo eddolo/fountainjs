@@ -51,3 +51,7 @@ if (paragraph.childCount !== 4 || paragraph.child(1).type.name !== 'heading'
   throw new Error('Compiled server runtime paragraph HTML recovery failed.');
 }
 console.log(`${runtime}: block-returning Markdown paragraph recovery passed.`);
+const tightList = MarkdownImporter.parse('- Before <h2>Heading</h2> After', schema, {
+  parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+});
+if (tightList.child(0).child(0).childCount !== 3) throw new Error('Compiled runtime added a phantom tight-list paragraph.');

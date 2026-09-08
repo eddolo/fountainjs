@@ -20,7 +20,7 @@ import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
-import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment } from '../core/importers/markdown-importer';
+import type { MarkdownHTMLFlowSegment, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
@@ -1206,19 +1206,19 @@ export class ServerHTMLImporter {
   }
 
   /** Recover an HTML paragraph into blocks while preserving original inline nodes. */
-  parseParagraph(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
-    return this.parseParagraphWithReport(segments, schema).nodes;
+  parseParagraph(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, context?: MarkdownHTMLParagraphContext): readonly FountainNode[] {
+    return this.parseParagraphWithReport(segments, schema, context).nodes;
   }
 
-  parseParagraphWithReport(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): ServerHTMLFragmentImportResult {
-    return this.parseInlineContent(segments, schema, true);
+  parseParagraphWithReport(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, context?: MarkdownHTMLParagraphContext): ServerHTMLFragmentImportResult {
+    return this.parseInlineContent(segments, schema, true, !context?.tightList);
   }
 
-  static parseParagraph(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema): readonly FountainNode[] {
-    return new ServerHTMLImporter().parseParagraph(segments, schema);
+  static parseParagraph(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, context?: MarkdownHTMLParagraphContext): readonly FountainNode[] {
+    return new ServerHTMLImporter().parseParagraph(segments, schema, context);
   }
 
-  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean): ServerHTMLInlineImportResult {
+  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
     for (const segment of segments) {
       if (segment.kind === 'html') {
@@ -1241,8 +1241,9 @@ export class ServerHTMLImporter {
     const seenNodes = new Set<FountainNode>();
     const sharedNodes = new Set<FountainNode>();
     const tokenMarks = new Map<number, readonly Mark[]>();
-    const parts: string[] = paragraphMode ? ['<p>'] : [];
-    let offset = paragraphMode ? 3 : 0;
+    const wrapped = paragraphMode && wrapParagraph;
+    const parts: string[] = wrapped ? ['<p>'] : [];
+    let offset = wrapped ? 3 : 0;
     for (const segment of segments) {
       let part: string;
       if (segment.kind === 'html') {
@@ -1258,7 +1259,7 @@ export class ServerHTMLImporter {
       offset += part.length;
       if (offset > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
     }
-    if (paragraphMode) parts.push('</p>');
+    if (wrapped) parts.push('</p>');
     const html = parts.join('');
     if (utf8Length(html) > this.options.maxInputBytes) throw new HTMLImportLimitError('maxInputBytes', 'Inline HTML and protected node slots exceed the input limit.');
     const issues: ServerHTMLImportIssue[] = [];

@@ -57,4 +57,47 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.setViewportSize({ width: 390, height: 844 });
   await verify(reader);
   await capture('recovered-paragraph-mobile.png');
+  await page.setViewportSize({ width: 1440, height: 960 });
+  await page.goto('/demos/node-markdown.html');
+  await source.fill('- Before <h2>Recovered list heading</h2> After\n- Second item');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
+  await expect(output.locator('pre')).toContainText('<h2>Recovered list heading</h2>');
+  const listHTML = await output.locator('pre').innerText();
+  await source.fill('- Before <h2>Recovered list heading</h2> After\n\n- Second item');
+  await expect(output.locator('pre')).toContainText('<p></p>');
+  await page.goto('/issue-editor.html');
+  await editor.click();
+  await page.keyboard.press('ControlOrMeta+a');
+  await editor.evaluate((element, value) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
+    element.dispatchEvent(event);
+  }, listHTML);
+  const verifyList = async (surface: typeof editor) => {
+    await expect(surface.locator('li')).toHaveCount(2);
+    await expect(surface.locator('li').first().locator('p')).toHaveText(['Before', 'After']);
+    await expect(surface.locator('li').first().locator('h2')).toHaveText('Recovered list heading');
+    await expect(surface.locator('li').nth(1)).toHaveText('Second item');
+  };
+  await verifyList(editor);
+  await editor.getByText('After', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' edited');
+  await expect(editor).toContainText('After edited');
+  await page.keyboard.press('ControlOrMeta+z');
+  await verifyList(editor);
+  await capture('tight-list-editor.png');
+  const listDownload = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download Markdown draft', exact: true }).click();
+  const listPath = info.outputPath('tight-list.md');
+  await (await listDownload).saveAs(listPath);
+  await page.getByLabel('Open Markdown draft file', { exact: true }).setInputFiles(listPath);
+  await verifyList(editor);
+  await page.getByRole('button', { name: 'Reader preview', exact: true }).click();
+  await verifyList(reader);
+  await capture('tight-list-reader.png');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await verifyList(reader);
+  await capture('tight-list-mobile.png');
 }

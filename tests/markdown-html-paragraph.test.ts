@@ -30,7 +30,43 @@ describe('block-producing Markdown paragraph HTML adapter', () => {
     expect(quote.type.name).toBe('blockquote');
     expect(quote.content.map(node => node.textContent.trim())).toEqual(['Before', 'Inside', 'After', '']);
     const item = MarkdownImporter.parse('- Before <div>Inside</div> After', schema, options).child(0).child(0);
-    expect(item.content.map(node => node.textContent.trim())).toEqual(['Before', 'Inside', 'After', '']);
+    expect(item.content.map(node => node.textContent.trim())).toEqual(['Before', 'Inside', 'After']);
+  });
+
+  it.each([
+    ['- A <p>B</p> C', [true]],
+    ['- A <p>B</p> C\n\n', [true]],
+    ['- A <p>B</p> C\n- D <p>E</p> F', [true, true]],
+    ['- A <p>B</p> C\n\n- D <p>E</p> F', [false, false]],
+    ['- A <p>B</p> C\n\n  D <p>E</p> F', [false, false]],
+    ['- A <p>B</p> C\n  - nested\n\n  - other\n- D <p>E</p> F', [true, true]],
+    ['- A <p>B</p> C\n  > nested\n  >\n  > other\n- D <p>E</p> F', [true, true]],
+    ['- A <p>B</p> C\n  ```\n  nested\n\n  other\n  ```\n- D <p>E</p> F', [true, true]],
+    ['- A <p>B</p> C\n  - nested\n\n  D <p>E</p> F', [false, false]],
+    ['-     code\n\n  A <p>B</p> C', [false]],
+    ['-\n\n- A <p>B</p> C', [false]],
+    ['1. A <p>B</p> C\n2. D <p>E</p> F', [true, true]],
+    ['> - A <p>B</p> C\n> - D <p>E</p> F', [true, true]],
+    ['- > A <p>B</p> C', [false]],
+    ['- [x]: /url\n\n  A <p>B</p> C', [false]],
+    ['- [x]:\n    /url\n- A <p>B</p> C', [true]],
+    ['- A <p>B</p> C\n  <!-- comment\n\n  still comment -->\n- Next', [true]],
+  ] as const)('passes structural list context for %s', (source, expected) => {
+    const contexts: boolean[] = [];
+    const doc = MarkdownImporter.parse(source, schema, { parseHTMLParagraph: (segments, target, context) => {
+      expect(Object.isFrozen(context)).toBe(true);
+      contexts.push(context.tightList);
+      return ServerHTMLImporter.parseParagraph(segments, target, context);
+    } });
+    expect(contexts).toEqual(expected);
+    schema.validate(doc);
+  });
+
+  it('keeps deferred list fallback literal and does not invoke a paragraph adapter twice', () => {
+    const callback = vi.fn(() => null);
+    const source = '- A <p>B</p> C\n\n- D <p>E</p> F';
+    expect(MarkdownImporter.parse(source, schema, { parseHTMLParagraph: callback }).toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(callback).toHaveBeenCalledTimes(2);
   });
 
   it.each(['A <pre>**code**</pre> end', 'A <script>**code**</script> end'])('retains explicit fallback for specialized content: %s', source => {

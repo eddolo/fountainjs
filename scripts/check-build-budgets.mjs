@@ -344,7 +344,8 @@ const limits = Object.freeze({
   // Only aggregate ESM grows by 1 KiB; CJS and entry/performance caps stay fixed.
   // Paragraph-level HTML recovery adds a validated block-returning adapter.
   // 2026-09-08: measured 1371.6 KiB; individual entry budgets remain unchanged.
-  'all ESM runtime code': 1372 * kibibyte,
+  // Source-span list context and deferred paragraph recovery add about 1.4 KiB.
+  'all ESM runtime code': 1374 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -362,7 +363,8 @@ const limits = Object.freeze({
   // implementation. Only this aggregate ceiling grows by 1 KiB; ESM, individual
   // entries, CSS and all performance/memory limits remain unchanged.
   // Same additive paragraph recovery API; measured 1140.3 KiB.
-  'all CommonJS runtime code': 1141 * kibibyte,
+  // Same list-context implementation; individual entry ceilings unchanged.
+  'all CommonJS runtime code': 1142 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

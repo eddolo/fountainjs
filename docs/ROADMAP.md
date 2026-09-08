@@ -5,6 +5,23 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Tight-list paragraph follow-through (2026-09-08, Unreleased): the optional
+paragraph adapter now receives frozen `tightList` context, and the server adapter
+omits its implicit paragraph wrapper only where required. Direct sibling source
+boundaries determine tightness; nested lists/quotes, code and HTML keep their own
+scope. Host callbacks are deferred, not replayed. Full check passes 1,409 tests /
+113 files, Node/workerd recovery, package/API/headless and performance gates.
+The recovery oracle now checks 38 LF/CRLF semantics/source contracts plus 1,304
+corpus source contracts; three desktop engines pass editing, undo, file reopen
+and reader journeys. Measured aggregate code: 1373.1 KiB ESM / 1141.2 KiB CJS,
+under revised 1374/1142 caps; individual entry limits remain unchanged.
+Recorded tight-list editor/reopened-reader/narrow-screen views were inspected.
+A separate compiled 10,000-item probe retained three blocks per recovered item
+and invoked each paragraph adapter once; it is not a cross-machine benchmark.
+Empty list-item placeholders and omitted HTML comment identity remain explicit
+mismatches. Raw-text/preformatted recovery is the next boundary to investigate;
+do not claim full CommonMark or promote the existing 563/579 baselines.
+
 Paragraph HTML recovery (2026-09-08, Unreleased): a new default-off block-returning
 `parseHTMLParagraph` boundary and DOM-free `ServerHTMLImporter.parseParagraph`
 allow ordinary paragraph HTML to recover into separate editable blocks while
@@ -22,9 +39,8 @@ Recorded editor, reopened reader and narrow-screen screenshots were visually
 inspected; the recorded journey also passed. This is bounded workflow evidence,
 not certification of arbitrary pasted HTML or physical mobile input.
 
-Next: carry tight/loose list rendering context into paragraph recovery. A tight
-list can currently acquire an extra empty paragraph because its HTML omits the
-implicit `<p>` wrapper; the independent oracle records this mismatch explicitly.
+The tight/loose list rendering context gap discovered here is addressed by the
+follow-through above; ordinary/loose paragraphs retain HTML closing-tag recovery.
 Preformatted/raw-text scopes and exact unsupported wrapper identity remain open.
 Do not call this full CommonMark support or promote the existing 563/579 baselines.
 
