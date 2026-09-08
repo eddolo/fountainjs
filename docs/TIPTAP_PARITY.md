@@ -1,10 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Definition-list structure (2026-09-08, Unreleased): native terms/descriptions now
+retain distinct editable blocks through HTML and opt-in Markdown handoff. Shared
+server/browser projection, pair insertion, contextual removal, undo and explicit
+format warnings replace the earlier paragraph-flattening fallback for supported
+lists. See [contracts and verification](DEFINITION_LISTS.md). This does not change
+the CommonMark score or establish complete format fidelity or product parity.
+
 HTML loss visibility (2026-09-08, Unreleased): standard wrappers removed by schema
 fallback now report that loss; registered containers are not falsely flagged.
 Public conversion output stays fully accessible in a keyboard-scrollable panel.
 This improves reporting/UX, not structural fidelity or the CommonMark score.
-Definition-list term/description structure remains a reproduced open gap.
+That audit's definition-list gap is addressed by the subsequent work above.
 
 Registered-wrapper correction (2026-09-08, Unreleased): custom HTML container
 rules no longer falsely reject generated hard breaks after trying an incompatible

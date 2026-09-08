@@ -5,6 +5,10 @@ Fountain document model in plain Node.js. It does not read `window`, `document`,
 `DOMParser`, `HTMLElement`, selection, layout, clipboard, or other browser APIs,
 and it does not require jsdom or another fake DOM.
 
+The core schema now includes [definition-list term/description nodes](DEFINITION_LISTS.md).
+Valid `dl` entries retain their structural boundaries, nested content and order;
+grouping-wrapper removal remains an explicit report rather than a lossless claim.
+
 For mixed Markdown/HTML, `parseFlow` retains protected block identities.
 The separate experimental `parseParagraphFlow` / `parseParagraphFlowWithReport`
 methods explicitly reproject pristine text-only paragraph source across HTML

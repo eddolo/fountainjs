@@ -5,6 +5,15 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Definition-list structure (2026-09-08, Unreleased): the reproduced glossary
+flattening gap now has native term/description nodes, shared browser/server
+projection, insertion/appending/removal controls, history and explicit Markdown
+HTML-policy handoff. Plain-text/clipboard boundaries remain readable. See
+[definition-list contracts and evidence](DEFINITION_LISTS.md). Broader format
+fidelity and the remaining CommonMark semantics remain unfinished.
+Verification: 1,633 unit/integration tests, nine browser checks across three engines,
+a recorded and visually inspected glossary handoff, and a passing site build.
+
 Recovery regression audit (2026-09-08, Unreleased): the full Linux browser run
 for the task-source change reported three failures, all from one stale warning
 assertion in the older paragraph-recovery journey. The refusal to flatten a
@@ -15,9 +24,9 @@ not a claim that the subsequent full Linux CI run has passed.
 
 HTML fidelity audit (2026-09-08, Unreleased): removed standard wrappers now
 produce explicit conversion warnings, and the demo no longer implies an empty
-report proves losslessness. A reproduced next gap remains: default-schema HTML
-definition lists merge terms/descriptions into one paragraph. This requires real
-semantic import/export/editing work, not just further warnings.
+report proves losslessness. It also reproduced default-schema definition-list
+flattening; the subsequent native implementation above addresses that structure
+instead of counting the warning alone as a fix.
 
 Registered-wrapper correction (2026-09-08, Unreleased): fixed rejected HTML
 content-shape attempts contaminating hard-break preservation checks. Registered

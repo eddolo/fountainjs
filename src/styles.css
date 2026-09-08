@@ -164,6 +164,10 @@
 .fountain-editor h1 { font-size: 2.25em; line-height: 1.15; letter-spacing: -.03em; }
 .fountain-editor h2 { font-size: 1.65em; line-height: 1.2; letter-spacing: -.02em; }
 .fountain-editor blockquote { padding: 4px 0 4px 18px; color: var(--fountain-muted); border-left: 3px solid var(--fountain-accent); }
+.fountain-editor dl { margin: 1em 0; }
+.fountain-editor dt { font-weight: 600; }
+.fountain-editor dd { margin: 0 0 0.8em 1.5em; }
+.fountain-editor :is(dt, dd) > p { margin: 0.3em 0; }
 .fountain-editor .fountain-page-header, .fountain-editor .fountain-page-footer { position: relative; margin-block: 1.25rem; padding: 1.5rem 1rem .75rem; border: 1px dashed var(--fountain-border); border-radius: 8px; background: color-mix(in srgb, var(--fountain-accent-soft) 42%, transparent); }
 .fountain-editor .fountain-page-header::before, .fountain-editor .fountain-page-footer::before { position: absolute; inset-block-start: .4rem; inset-inline-start: 1rem; color: var(--fountain-muted); font: 700 .65rem/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; user-select: none; }
 .fountain-editor .fountain-page-header::before { content: "Header template · " attr(data-fountain-page-header); }

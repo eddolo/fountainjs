@@ -12,6 +12,7 @@ import { blockquote } from './nodes/blockquote';
 import { bulletList } from './nodes/bullet-list';
 import { codeBlock } from './nodes/code-block';
 import { doc } from './nodes/doc';
+import { definitionList, definitionTerm, definitionDescription } from './nodes/definition-list';
 import { figcaption } from './nodes/figcaption';
 import { hardBreak } from './nodes/hard-break';
 import { heading } from './nodes/heading';
@@ -61,6 +62,7 @@ export * from './nodes/blockquote';
 export * from './nodes/bullet-list';
 export * from './nodes/code-block';
 export * from './nodes/doc';
+export * from './nodes/definition-list';
 export * from './nodes/figcaption';
 export * from './nodes/hard-break';
 export * from './nodes/heading';
@@ -104,6 +106,7 @@ export const CoreExtension = defineExtension({
   name: 'fountain-core',
   nodes: {
     doc, paragraph, text, heading, blockquote,
+    definition_list: definitionList, definition_term: definitionTerm, definition_description: definitionDescription,
     bullet_list: bulletList, ordered_list: orderedList, list_item: listItem,
     task_list: taskList, task_item: taskItem,
     code_block: codeBlock, horizontal_rule: horizontalRule, hard_break: hardBreak,

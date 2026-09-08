@@ -83,7 +83,9 @@ function clipboardText(node: Node): string {
     case 'task_list': return node.content.map((item) => (
       `${item.attrs.checked ? '[x]' : '[ ]'} ${clipboardText(item).split('\n').join('\n    ')}`
     )).join('\n');
-    case 'list_item': case 'task_item': return node.content.map(clipboardText).join('\n');
+    case 'list_item': case 'task_item':
+    case 'definition_list': case 'definition_term': case 'definition_description':
+      return node.content.map(clipboardText).join('\n');
     case 'table': return node.content.map(clipboardText).join('\n');
     case 'table_row': return node.content.map(clipboardText).join('\t');
     case 'table_header': case 'table_cell': return node.content.map(clipboardText).join('\n');

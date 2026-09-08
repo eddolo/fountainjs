@@ -29,6 +29,7 @@ export type FountainToolbarActionId =
   | 'text-style'
   | 'align-left' | 'align-center' | 'align-right' | 'justify'
   | 'quote' | 'bullet-list' | 'ordered-list' | 'task-list' | 'outdent-list' | 'indent-list'
+  | 'definition-list' | 'append-definition' | 'delete-definition-list'
   | 'code-block' | 'insert-table' | 'image' | 'upload-image' | 'media' | 'upload-asset'
   | 'divider' | 'hard-break'
   | 'table-menu'
@@ -60,6 +61,9 @@ export function FountainToolbarIcon({ name, ...props }: FountainToolbarIconProps
   else if (name === 'search') content = <><circle cx="10.5" cy="10.5" r="6" /><path d="m15 15 5 5" /></>;
   else if (name === 'clipboard-history') content = <><path d="M9 5h6M9 3h6v4H9zM7 5H5v16h14V5h-2" /><path d="M8 12h8M8 16h5" /></>;
   else if (name === 'paragraph') content = <><path d="M17 4H10a4 4 0 0 0 0 8h3M13 4v16M17 4v16" /></>;
+  else if (name === 'definition-list') content = <><path d="M3 4h10M7 9h14M3 15h10M7 20h14" /></>;
+  else if (name === 'append-definition') content = <><path d="M3 5h10M7 10h14M12 15v6M9 18h6" /></>;
+  else if (name === 'delete-definition-list') content = <><path d="M3 4h10M7 9h14M9 15l6 6M15 15l-6 6" /></>;
   else if (name.startsWith('heading-')) content = <text x="12" y="16" textAnchor="middle" stroke="none" fill="currentColor" fontSize="11" fontWeight="700">H{name.at(-1)}</text>;
   else if (name === 'bold') content = <path d="M7 4h6a4 4 0 0 1 0 8H7zm0 8h7a4 4 0 0 1 0 8H7z" />;
   else if (name === 'italic') content = <><path d="M10 4h7M7 20h7M14 4 10 20" /></>;

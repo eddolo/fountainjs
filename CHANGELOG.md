@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added native definition-list terms and descriptions, browser/server HTML import,
+  editing commands and contextual toolbar controls. Glossaries retain their
+  structure through HTML and explicitly enabled Markdown handoff in the issue
+  demo. Grouping-wrapper loss and Markdown HTML requirements remain reported.
+- Preserved block boundaries in plain-text exports and definition-list clipboard
+  payloads, without inserting line breaks between inline formatting runs.
+
 - Kept large server-conversion results in a bounded, keyboard-scrollable output
   panel. Full output and copying remain available without stretching the entire
   demo page to the length of its JSON.

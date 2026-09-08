@@ -34,13 +34,14 @@ in `artifacts/standard-wrapper-recorded/`. Final site build succeeds with the
 existing large MathJax warning. Paste remains a synthetic public-event payload,
 not OS-clipboard certification; mobile viewports are not physical-device proof.
 
-Next concrete fidelity finding, not fixed here: with the default schema,
+Previously reproduced fidelity finding, addressed by the native
+[definition-list implementation](DEFINITION_LISTS.md): with the old default schema,
 `<dl><dt>Latency</dt><dd>Time to respond.</dd><dt>Throughput</dt><dd>Work per second.</dd></dl>`
-currently becomes one paragraph with four adjacent text nodes, losing term/
+became one paragraph with four adjacent text nodes, losing term/
 description boundaries. The compiled importer reproduction confirms both lost
 structure and the newly explicit wrapper/inline warnings. Definition-list
-semantics need an actual representation/import/export/editing contract; a warning
-alone does not close this gap. CommonMark 563/579 scores remain unchanged.
+semantics now have a representation/import/export/editing contract; the preceding
+warning-only correction did not close this gap. CommonMark 563/579 scores remain unchanged.
 
 Registered-wrapper correction (2026-09-08, Unreleased): a schema-defined HTML
 section with `block+` content falsely declined recovery when it contained a

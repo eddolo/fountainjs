@@ -44,11 +44,16 @@ The compatibility warning remains visible because other Markdown readers must
 support HTML tables too.
 
 `issue-markdown-policy.ts` supplies a `parseHTMLBlock` adapter to every source/file
-import in this workflow. It accepts table-root blocks whose schema projection
-contains only tables, using `ServerHTMLImporter.parse`; unrelated raw HTML stays
+import in this workflow. It accepts table/definition-list-root blocks whose schema
+projection contains only tables or definition lists, using `ServerHTMLImporter.parse`; unrelated raw HTML stays
 inert. There is no HTML injection or script execution. This is a host policy, not
 a change to Fountain's default Markdown importer. Supported table links/images
 still have the normal URL/network boundaries described above.
+
+The toolbar also supports [definition lists and glossaries](DEFINITION_LISTS.md):
+insert a list, add term/description pairs, edit each entry, delete/undo, and reopen
+the downloaded HTML-bearing Markdown in the reader. This is the same local file
+handoff, not a new account or server integration.
 
 Unchanged captured source remains exact even if the export selector changes:
 the option governs regenerated tables, not a forced whole-file conversion.

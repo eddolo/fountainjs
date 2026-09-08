@@ -9,6 +9,7 @@ describe('issue workflow HTML table policy', () => {
     '<table><tr><td><strong>Ada</strong></td><td>Ready</td></tr></table>',
     '<table><tr><th scope="row">Owner</th><td>Ada</td></tr><tr><td colspan="2"><p>First</p><p>Second</p></td></tr></table>',
     '<table><tr><td rowspan="2">Team</td><td>Ada</td></tr><tr><td>Grace</td></tr></table>',
+    '<dl><dt>Latency</dt><dd><p>Time to respond.</p><p>In milliseconds.</p></dd></dl>',
   ])('retains roles and structure through the actual host import policy: %s', html => {
     const doc = ServerHTMLImporter.parse(html, schema);
     const exported = MarkdownExporter.export(doc, { tableFormat: 'html' });
@@ -19,6 +20,7 @@ describe('issue workflow HTML table policy', () => {
   it.each([
     '<div><p>Not a table</p></div>',
     '<table><tr><td>A</td></tr></table><p>Outside</p>',
+    '<dl><dt>Term</dt><dd>Description</dd></dl><p>Outside</p>',
   ])('declines unrelated HTML instead of enabling general HTML: %s', html => {
     expect(issueMarkdownOptions.parseHTMLBlock!(html, schema)).toBeNull();
     expect(MarkdownImporter.parse(html, schema, issueMarkdownOptions).textContent).toBe(html);

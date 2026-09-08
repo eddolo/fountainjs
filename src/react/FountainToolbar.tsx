@@ -1,6 +1,9 @@
 import { Fragment, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   addTableColumn,
+  insertDefinitionList,
+  appendDefinitionPair,
+  deleteDefinitionList,
   addTableRow,
   deleteTableColumn,
   deleteTableRow,
@@ -604,6 +607,9 @@ export function FountainToolbar({
       entry('justify', tool('justify', 'Justify', () => setTextAlignment(editor, 'justify'))),
     ]),
     insert: () => toolbarGroup('insert', [
+      entry('definition-list', editor.state.schema.nodes.definition_list && tool('definition-list', 'Insert definition list', () => insertDefinitionList(editor))),
+      entry('append-definition', isInsideNode(editor, 'definition_list') && tool('append-definition', 'Add term and description', () => appendDefinitionPair(editor))),
+      entry('delete-definition-list', isInsideNode(editor, 'definition_list') && tool('delete-definition-list', 'Delete definition list', () => deleteDefinitionList(editor))),
       entry('quote', tool('quote', isInsideNode(editor, 'blockquote') ? 'Remove quote' : 'Quote selected blocks', () => toggleQuote(editor), { active: isInsideNode(editor, 'blockquote') })),
       entry('bullet-list', tool('bullet-list', 'Bullet list', () => toggleList(editor, 'bullet'), { active: isInsideNode(editor, 'bullet_list') })),
       entry('ordered-list', tool('ordered-list', 'Numbered list', () => toggleList(editor, 'ordered'), { active: isInsideNode(editor, 'ordered_list') })),

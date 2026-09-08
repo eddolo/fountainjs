@@ -3,6 +3,12 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const definitions = ServerHTMLImporter.parse('<dl><dt>Latency</dt><dd>Time to respond.</dd><dt>Throughput</dt><dd>Work per second.</dd></dl>', schema);
+  const reopenedDefinitions = MarkdownImporter.parse(MarkdownExporter.export(definitions), schema, {
+    parseHTMLBlock: (html, target) => ServerHTMLImporter.parseFragment(html, target),
+  });
+  if (definitions.child(0).type.name !== 'definition_list' || definitions.child(0).childCount !== 4
+    || !reopenedDefinitions.eq(definitions)) throw new Error('Compiled definition-list import/export changed term or description structure.');
   const omitted = ServerHTMLImporter.parseWithReport('<section id="private"><p>Content</p></section>', schema);
   if (omitted.document.child(0).type.name !== 'paragraph'
     || !omitted.issues.some(issue => issue.code === 'unmapped-block-wrapper')

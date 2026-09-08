@@ -1,4 +1,5 @@
 import type { Editor } from './editor';
+import { insertNode } from './commands';
 import { NodeSelection, Selection } from './selection';
 import { Node, type Attributes } from './schema';
 import { getActiveTableCell } from './table-commands';
@@ -15,6 +16,7 @@ function ancestorPath(editor: Editor, names: readonly string[]): number[] | null
 }
 
 export function isInsideNode(editor: Editor, typeName: string): boolean {
+  if (editor.state.selection instanceof NodeSelection && editor.state.selection.nodeType === typeName) return true;
   return ancestorPath(editor, [typeName]) !== null;
 }
 
@@ -155,6 +157,57 @@ export function deleteTable(editor: Editor): boolean {
   }
   const active = getActiveTableCell(editor);
   return active ? removeNode(editor, active.tablePath) : false;
+}
+
+/** Innermost definition list containing the selection, including a selected list node. */
+function getActiveDefinitionList(editor: Editor): { path: readonly number[]; node: Node } | null {
+  const selection = editor.state.selection;
+  const path = selection instanceof NodeSelection && selection.nodeType === 'definition_list'
+    ? selection.nodePath : ancestorPath(editor, ['definition_list']);
+  return path ? { path, node: getNodeAtPath(editor.state.doc, path) } : null;
+}
+
+function definitionPair(editor: Editor, term: string, description: string): Node[] | null {
+  const schema = editor.state.schema;
+  if (!editor.editable || typeof term !== 'string' || typeof description !== 'string'
+    || !schema.nodes.definition_list || !schema.nodes.definition_term || !schema.nodes.definition_description) return null;
+  try {
+    return ['definition_term', 'definition_description'].map((name, index) => schema.node(name, {}, [
+      schema.node('paragraph', {}, [schema.text(index ? description : term)]),
+    ]));
+  } catch { return null; }
+}
+
+/** Inserts an editable term/description list after the active top-level block. */
+export function insertDefinitionList(editor: Editor, term = '', description = ''): boolean {
+  const pair = definitionPair(editor, term, description);
+  if (!pair) return false;
+  const before = editor.state.doc;
+  return insertNode(editor, editor.state.schema.node('definition_list', {}, pair)) && editor.state.doc !== before;
+}
+
+/** Appends a pair to the selected list and focuses its new term. One undoable transaction. */
+export function appendDefinitionPair(editor: Editor, term = '', description = ''): boolean {
+  const active = getActiveDefinitionList(editor);
+  const pair = definitionPair(editor, term, description);
+  if (!active || !pair) return false;
+  const transaction = editor.state.createTransaction().replaceNode(active.path, [active.node.copy([...active.node.content, ...pair])]);
+  transaction.setSelection(Selection.cursor([...active.path, active.node.childCount, 0, 0], 0));
+  return editor.dispatch(transaction);
+}
+
+/** Removes the selected list, preserving the surrounding document and a usable caret. */
+export function deleteDefinitionList(editor: Editor): boolean {
+  const active = getActiveDefinitionList(editor);
+  if (!editor.editable || !active) return false;
+  const parent = getNodeAtPath(editor.state.doc, active.path.slice(0, -1));
+  if (parent.childCount === 1) {
+    const transaction = editor.createTransaction().replaceNode(active.path, [emptyParagraph(editor)]);
+    transaction.setSelection(Selection.cursor([...active.path, 0], 0));
+    return editor.dispatch(transaction);
+  }
+  const before = editor.state.doc;
+  return removeNode(editor, active.path) && editor.state.doc !== before;
 }
 
 export interface NodeMove {

@@ -20,6 +20,7 @@ import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
+import { importDefinitionList } from '../core/importers/html-definition-list';
 import type { MarkdownHTMLFlowBlockSource, MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLFlowTextBlockSource, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
@@ -919,7 +920,7 @@ function tableCellWidths(cell: SourceElement, colspan: number): number[] | null 
 }
 
 const BLOCK_TAGS = new Set([
-  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset',
+  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'dt', 'dd', 'fieldset',
   'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
   'header', 'hr', 'img', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'summary',
   'table', 'ul', 'audio', 'video', 'iframe',
@@ -1029,6 +1030,19 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   }
   const customNode = configuredNode(element, schema, false, [], context);
   if (customNode) return [customNode];
+  if (tag === 'dl') {
+    const branch: ImportContext = { ...context, issues: [], issueKeys: new Set(),
+      inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [] } : undefined };
+    const list = importDefinitionList(element, schema, item => blockChildren(item, schema, branch),
+      item => configuredNode(item, schema, false, [], branch), () => {
+      reportOnce(branch, { code: 'unmapped-block-wrapper', message: 'Definition-list grouping wrappers were removed; term and description order was retained.' });
+    });
+    if (list) {
+      branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
+      branch.issues.forEach(issue => reportOnce(context, issue));
+      return [list];
+    }
+  }
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
     const latex = element.getAttribute('data-latex') ?? element.textContent;
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';

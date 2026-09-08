@@ -283,7 +283,7 @@ export class HTMLExporter {
     const fragment = renderNode(node);
     if (options.document === false) return fragment;
     const title = escapeHTML(options.title ?? 'FountainJS document');
-    const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}</style>`;
+    const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em 1.5em}:is(dt,dd)>p{margin:.3em 0}</style>`;
     return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>${title}</title>\n${styles}\n</head>\n<body>\n${fragment}\n</body>\n</html>`;
   }
 

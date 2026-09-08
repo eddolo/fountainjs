@@ -12,6 +12,7 @@ import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
 import { htmlOrderedListStart } from './html-list';
+import { importDefinitionList } from './html-definition-list';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 
@@ -441,7 +442,7 @@ function tableCellWidths(cell: Element, colspan: number): number[] | null {
 }
 
 const BLOCK_TAGS = new Set([
-  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'fieldset',
+  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'dt', 'dd', 'fieldset',
   'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
   'header', 'hr', 'img', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'summary',
   'table', 'ul', 'audio', 'video', 'iframe',
@@ -532,6 +533,11 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   const tag = element.tagName.toLowerCase();
   const customNode = configuredNode(element as HTMLElement, schema, false);
   if (customNode) return [customNode];
+  if (tag === 'dl') {
+    const list = importDefinitionList(element as HTMLElement, schema, item => blockChildren(item, schema),
+      item => configuredNode(item, schema, false));
+    if (list) return [list];
+  }
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
     const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';

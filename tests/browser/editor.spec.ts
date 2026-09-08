@@ -27,6 +27,11 @@ import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-
 import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
 import { markdownStructuralRecoveryJourney } from './markdown-structural-recovery-journey';
 import { markdownCustomWrapperJourney } from './markdown-custom-wrapper-journey';
+import { definitionListJourney } from './definition-list-journey';
+
+test('edits definition lists and reopens a glossary in a reader', async ({ page }, info) => {
+  await definitionListJourney(page, info);
+});
 
 test('edits registered HTML wrappers after Markdown source recovery', async ({ page }, info) => {
   await markdownCustomWrapperJourney(page, info);
