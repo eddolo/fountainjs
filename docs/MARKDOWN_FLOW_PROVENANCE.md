@@ -1,5 +1,53 @@
 # Whole-container Markdown/HTML recovery boundary audit
 
+Task-source follow-through (2026-09-08, Unreleased): the recursive context now
+has distinct `taskList`/`taskItem` discriminants and explicit boolean checked
+state. The optional structural adapter validates original attributes/children,
+then verifies every complete resulting task-list subtree against its original.
+Changed, duplicated or flattened task trees cause whole-flow inert rollback.
+Task paragraphs keep explicit wrappers; hard breaks stay protected nodes and
+code preserves exact text without generated inline-code marks/renderer LFs.
+These are Fountain/GFM-extension semantics, not CommonMark conformance gains.
+Custom task metadata and HTML that changes task text remain explicit refusals.
+
+Seventeen new unit cases cover LF/CRLF source retention, checked/unchecked tasks,
+nested tasks, ordered lists, quotes, headings, code, hard breaks, inline images,
+raw-text/preformatted refusal, custom task metadata and cached frozen context.
+Compiled Node/workerd smoke checks cover nested checked state. The public API
+snapshot changes only the Markdown importer's two declaration hashes; consumers
+exhaustively matching the source union must handle or decline the new cases.
+No runtime dependency was added. Runtime measures 1,388.7 KiB ESM / 1,153.8 KiB
+CJS, about +1.3 / +1.1 KiB. Only aggregate caps grow to 1,389 / 1,154 KiB;
+individual entry, CSS and performance caps remain unchanged.
+
+The first full package check passed 1,588 tests / 123 files, and the extended
+public conversion → issue editor → reader workflow passed in Chromium, Firefox
+and WebKit, plus a recorded Chromium run. Screenshot inspection then found an
+unchecked nested task visually struck through by its completed parent, despite
+correct document state. The old descendant/wrapper decoration propagated into
+children. Completion styling now applies to text blocks with per-task scoped
+variables, so an unfinished subtask is not visually completed by its parent.
+The journey now asserts both text-block decoration and undecorated wrappers
+after toggling, undo/redo, Markdown download/reopen and reader/mobile preview.
+Pre-fix evidence is preserved in `artifacts/task-flow-browser/` and
+`artifacts/task-flow-recorded/`; these initial passes are not final visual QA.
+
+Final verification after the styling fix: full `pnpm check` again passes 1,588
+tests / 123 files; three updated browser journeys and one recorded journey pass.
+The final recording overview, desktop reader and 390px reader screenshots were
+visually inspected: the unchecked child remains unstruck while its parent and
+completed sibling are struck through. Evidence: `artifacts/task-flow-styling-check.log`,
+`artifacts/task-flow-styling-browser/` and `artifacts/task-flow-styling-recorded/`.
+CSS measures 85.7 KiB within its unchanged 86 KiB cap. Production site build
+passes with the existing large MathJax chunk warning. Browser paste is synthetic
+through the public event handler; viewport emulation is not physical mobile or
+OS clipboard certification. The preceding inline-object update's hosted Linux
+run was still pending during local verification; no hosted success is claimed.
+
+CommonMark remains 563/652 default and 579/652 block+inline, with 58 preformatted
+and 38 complete reference-structure/source contracts unchanged. Complete HTML
+wrapper/attribute fidelity and the broader parity programme remain unfinished.
+
 Inline-object follow-through (2026-09-08, Unreleased): the pristine-content
 comparison now preserves inline nodes as nodes instead of rejecting every atom
 up front. Outside preformatted scopes the existing protected-slot machinery

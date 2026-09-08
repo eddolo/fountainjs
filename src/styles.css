@@ -309,7 +309,14 @@
 .fountain-editor [data-type="task-list"] { padding: 0; list-style: none; }
 .fountain-editor [data-type="task-item"] { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
 .fountain-editor [data-fountain-task-toggle] { width: 18px; height: 18px; margin-top: .38em; accent-color: var(--fountain-accent); }
-.fountain-editor [data-type="task-item"][data-checked="true"] .fountain-task-item__content { color: var(--fountain-muted); text-decoration: line-through; }
+.fountain-editor [data-type="task-item"] { --fountain-task-decoration: none; --fountain-task-color: initial; }
+.fountain-editor [data-type="task-item"][data-checked="true"] { --fountain-task-decoration: line-through; --fountain-task-color: var(--fountain-muted); }
+/* Decorate text blocks, not the wrapper: wrapper decorations propagate through
+   nested tasks and cannot be cancelled by an unfinished child's text-decoration. */
+.fountain-editor .fountain-task-item__content :is(p, h1, h2, h3, h4, h5, h6, pre) {
+  color: var(--fountain-task-color, inherit);
+  text-decoration: var(--fountain-task-decoration);
+}
 .fountain-task-item__content > :first-child { margin-top: 0; }
 .fountain-task-item__content > :last-child { margin-bottom: 0; }
 .fountain-navigator { display: grid; gap: 2px; font: 14px/1.35 system-ui, sans-serif; }

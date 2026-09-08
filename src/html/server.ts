@@ -1462,8 +1462,9 @@ export class ServerHTMLImporter {
     const raw = (html: string) => { stream.push({ kind: 'html', html, marks: [] }); if (html) newline = html.endsWith('\n'); };
     const cr = () => { if (!newline) raw('\n'); };
     const used = new Set<FountainNode>();
+    const taskLists: FountainNode[] = [];
     let count = 0;
-    const emit = (paragraph: MarkdownHTMLFlowBlockSource, depth = 0): void => {
+    const emit = (paragraph: MarkdownHTMLFlowBlockSource, depth = 0, insideTask = false): void => {
       if (++count > this.options.maxNodes) throw new HTMLImportLimitError('maxNodes', 'Structural flow exceeds its node limit.');
       if (depth > this.options.maxDepth) throw new HTMLImportLimitError('maxDepth', 'Structural flow exceeds its depth limit.');
       if (paragraph.blocks.length !== 1 || used.has(paragraph.blocks[0])) throw new Error('Structural flow requires unique source blocks.');
@@ -1475,6 +1476,20 @@ export class ServerHTMLImporter {
       if (paragraph.kind === 'empty') {
         if (Object.keys(node.attrs).some(key => key !== 'align') || node.content.some(child => !child.isText || child.text || child.marks.length)
           || !node.eq(schema.node('paragraph', {}, node.content))) throw new Error('Structural flow refuses modified empty placeholders.');
+        return;
+      }
+      if (paragraph.kind === 'taskList' || paragraph.kind === 'taskItem') {
+        const list = paragraph.kind === 'taskList';
+        const attrs = list ? {} : { checked: paragraph.checked };
+        if (Object.keys(node.attrs).some(key => list || key !== 'checked')
+          || !node.eq(schema.node(list ? 'task_list' : 'task_item', attrs, node.content))) throw new Error('Structural flow refuses custom or modified task attributes.');
+        const children = paragraph.children.flatMap(child => child.blocks);
+        if (children.length !== node.content.length || children.some((child, index) => child !== node.content[index])) throw new Error('Structural flow refuses modified task projections.');
+        if (list) taskLists.push(node);
+        cr();
+        raw(list ? '<ul data-type="task-list">' : `<li data-type="task-item" data-checked="${paragraph.checked}">`);
+        for (const child of paragraph.children) emit(child, depth + 1, true);
+        raw(list ? '</ul>' : '</li>'); cr();
         return;
       }
       if (paragraph.kind === 'container') {
@@ -1489,7 +1504,7 @@ export class ServerHTMLImporter {
         if (paragraph.tag !== 'li') cr();
         raw(`<${paragraph.tag}${paragraph.tag === 'ol' && paragraph.start !== 1 ? ` start="${paragraph.start}"` : ''}>`);
         if (paragraph.tag !== 'li') cr();
-        for (const child of paragraph.children) emit(child, depth + 1);
+        for (const child of paragraph.children) emit(child, depth + 1, insideTask);
         if (paragraph.tag !== 'li') cr();
         raw(`</${paragraph.tag}>`); cr();
         return;
@@ -1505,16 +1520,18 @@ export class ServerHTMLImporter {
         ? part.node : schema.text(part.html.replace(/\n/gu, ' '), part.marks))));
       const current = node.copy(normalized(node.content));
       if (!current.eq(original)) throw new Error('Paragraph flow refuses changed paragraph content, marks or custom attributes.');
-      const tight = paragraph.kind === 'paragraph' && paragraph.tightList;
+      const tight = paragraph.kind === 'paragraph' && paragraph.tightList && !insideTask;
       const tag = paragraph.kind === 'heading' ? `h${paragraph.level}` : 'p';
       if (recursive && !tight) cr();
       if (paragraph.kind === 'code') {
         // Only syntax-derived language metadata is emitted, never arbitrary node attributes.
         const language = paragraph.language.replace(/[&<>"']/gu, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
-        raw(`<pre><code class="language-${language}">`);
+        // Tasks preserve their Fountain subtree, not a rendered CommonMark
+        // code stream: do not introduce an inline code mark or renderer LF.
+        raw(insideTask ? `<pre data-language="${language}">` : `<pre><code class="language-${language}">`);
       } else if (!tight) raw(`<${tag}>`);
       for (const part of paragraph.segments) {
-        if (structural && part.kind === 'node' && part.node.type.name === 'hard_break'
+        if (structural && !insideTask && part.kind === 'node' && part.node.type.name === 'hard_break'
           && !Object.keys(part.node.attrs).length && !part.node.content.length && !part.node.marks.length) {
           const generated: MarkdownHTMLInlineSegment = { kind: 'html', html: '<br />', marks: [] };
           generatedBreaks.set(generated, part.node);
@@ -1532,7 +1549,7 @@ export class ServerHTMLImporter {
         if (part.kind === 'html') { if (part.html) newline = part.html.endsWith('\n'); }
         else if (part.node.text) newline = Boolean(part.softBreak) || (!part.node.marks.length && part.node.text.endsWith('\n'));
       }
-      raw(paragraph.kind === 'code' ? `${paragraph.finalLineBreak ? '\n' : ''}</code></pre>\n` : tight ? recursive ? '' : '\n' : `</${tag}>\n`);
+      raw(paragraph.kind === 'code' ? insideTask ? '</pre>\n' : `${paragraph.finalLineBreak ? '\n' : ''}</code></pre>\n` : tight ? recursive ? '' : '\n' : `</${tag}>\n`);
     };
     for (const segment of segments) {
       if (segment.kind === 'html') {
@@ -1547,6 +1564,20 @@ export class ServerHTMLImporter {
     }
     if ([...byBlock].some(([node, source]) => source.kind !== 'html' && !used.has(node))) throw new Error('Paragraph flow source context contains unmatched blocks.');
     const result = this.parseInlineContent(stream, schema, true, false, true, { breaks: generatedBreaks, lineFeeds: generatedLineFeeds });
+    // Task syntax is an extension, not ordinary CommonMark list text. Reject
+    // HTML repair/raw-text scopes that erase, duplicate or alter any task tree.
+    // A refusal rolls back the entire speculative flow at the importer boundary.
+    if (taskLists.length) {
+      const projected: FountainNode[] = [];
+      const visit = (node: FountainNode): void => {
+        if (node.type.name === 'task_list') projected.push(node);
+        node.content.forEach(visit);
+      };
+      result.nodes.forEach(visit);
+      if (projected.length !== taskLists.length || projected.some((node, index) => !node.eq(taskLists[index]))) {
+        throw new Error('Structural flow cannot change or flatten a task list; original source retained.');
+      }
+    }
     return Object.freeze({ nodes: result.nodes, issues: Object.freeze([...result.issues, Object.freeze({
       code: structural ? 'text-block-flow-projection' as const : 'paragraph-flow-projection' as const,
       message: structural

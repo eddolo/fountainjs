@@ -3,6 +3,13 @@ import { ServerHTMLImporter } from '../../dist/html-server.js';
 
 export function checkMarkdownFlowSources() {
   const schema = new Schema(CoreSchemaSpec);
+  const tasks = MarkdownImporter.parse('<blockquote>\n\n- [ ] Inspect\n  - [x] Reviewed\n\n</blockquote>', schema, {
+    parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
+  }).child(0).child(0);
+  if (tasks.type.name !== 'task_list' || tasks.child(0).attrs.checked !== false
+    || tasks.child(0).child(1).child(0).attrs.checked !== true) {
+    throw new Error('Compiled source recovery lost nested task structure or checked state.');
+  }
   const image = MarkdownImporter.parse('<blockquote>\n\nBefore **![Diagram](/diagram.png "Caption")** after\n\n</blockquote>', schema, {
     parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow,
   }).child(0).child(0).content.find(node => node.type.name === 'inline_image');

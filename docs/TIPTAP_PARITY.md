@@ -1,5 +1,11 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Task-source recovery (2026-09-08, Unreleased): optional HTML/Markdown source
+projection now verifies complete task-list subtrees and checked state. Nested
+tasks remain structured; raw-text flattening or changed task content rolls back
+to inert source. This is Fountain/GFM-extension retention, not CommonMark
+conformance or completed parity. See the source-boundary audit for evidence.
+
 Inline-object recovery (2026-09-08, Unreleased): the explicit source adapter now
 preserves supported inline objects and their data through editable block
 structures, while retaining inert rollback if preformatted projection would

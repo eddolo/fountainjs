@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Fixed completed-task styling striking through unfinished nested subtasks.
+  Task completion appearance now follows each task's own checked state.
+
+- Added explicit task-list/item source events and checked-state-preserving task
+  recovery to the optional Markdown/HTML adapter. Complete task subtrees are
+  verified after conversion; altered/flattened tasks and custom task metadata
+  retain original source through rollback. Default import behavior is unchanged.
+
 - Added persistent visible labels to image URL, description, title, caption
   and responsive-source fields. Labels remain visible after values are filled.
 

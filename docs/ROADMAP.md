@@ -5,6 +5,12 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Task-source follow-through (2026-09-08, Unreleased): opt-in mixed HTML/Markdown
+recovery now preserves whole task-list subtrees, including checked state and
+nested tasks. Explicit source discriminants prevent confusing tasks with plain
+lists. Altered/flattened tasks and custom metadata still roll back. This is an
+extension-retention improvement, not an increase in CommonMark corpus scores.
+
 Inline-object follow-through (2026-09-08, Unreleased): the structural HTML adapter
 now preserves source-defined inline images, math/emoji, marks and custom inline
 data outside preformatted scopes. Twelve new unit cases and seven added LF/CRLF

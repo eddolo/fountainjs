@@ -53,6 +53,8 @@ export type MarkdownHTMLFlowTextBlockSource =
 export type MarkdownHTMLFlowBlockSource = MarkdownHTMLFlowTextBlockSource
   | { readonly kind: 'container'; readonly tag: 'blockquote' | 'ul' | 'ol' | 'li'; readonly start?: number;
     readonly blocks: readonly Node[]; readonly children: readonly MarkdownHTMLFlowBlockSource[] }
+  | { readonly kind: 'taskList'; readonly blocks: readonly Node[]; readonly children: readonly MarkdownHTMLFlowBlockSource[] }
+  | { readonly kind: 'taskItem'; readonly checked: boolean; readonly blocks: readonly Node[]; readonly children: readonly MarkdownHTMLFlowBlockSource[] }
   | { readonly kind: 'html'; readonly html: string; readonly blocks: readonly Node[] }
   | { readonly kind: 'empty'; readonly blocks: readonly Node[] }
   | { readonly kind: 'unsupported'; readonly blocks: readonly Node[] };
@@ -1754,13 +1756,16 @@ function parseList(
     }
     const node = schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content);
     items.push(node);
-    itemSources.push({ kind: 'container', tag: 'li', blocks: [node], children: sources });
+    itemSources.push(itemName === 'task_item'
+      ? { kind: 'taskItem', checked: Boolean(marker.checked), blocks: [node], children: sources }
+      : { kind: 'container', tag: 'li', blocks: [node], children: sources });
   }
   const node = schema.node(listName, listName === 'ordered_list' ? { start: first.start } : {}, items);
   return {
     node,
-    source: options.parseHTMLFlow && first.kind !== 'task'
-      ? { kind: 'container', tag: first.kind === 'ordered' ? 'ol' : 'ul', start: first.start, blocks: [node], children: itemSources } : undefined,
+    source: !options.parseHTMLFlow ? undefined : first.kind === 'task'
+      ? { kind: 'taskList', blocks: [node], children: itemSources }
+      : { kind: 'container', tag: first.kind === 'ordered' ? 'ol' : 'ul', start: first.start, blocks: [node], children: itemSources },
     nextIndex: index,
     sourceEnd,
   };
@@ -1896,6 +1901,8 @@ type PendingHTMLTextBlockSource =
   | (Omit<PendingHTMLParagraphSource, 'tightList'> & { readonly kind: 'code'; readonly language: string; readonly finalLineBreak: boolean });
 type PendingHTMLBlockSource = PendingHTMLTextBlockSource
   | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'container' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
+  | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'taskList' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
+  | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'taskItem' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
   | Extract<MarkdownHTMLFlowBlockSource, { kind: 'html' | 'empty' | 'unsupported' }>;
 
 function htmlFlowContext(sources: readonly PendingHTMLBlockSource[], schema: Schema, references: References, options: MarkdownImportOptions): MarkdownHTMLFlowContext {
@@ -1919,7 +1926,7 @@ function htmlFlowContext(sources: readonly PendingHTMLBlockSource[], schema: Sch
   };
   const isText = (source: PendingHTMLBlockSource): source is PendingHTMLTextBlockSource => ['paragraph', 'heading', 'code'].includes(source.kind);
   const inspectBlock = (source: PendingHTMLBlockSource): MarkdownHTMLFlowBlockSource => isText(source) ? inspect(source)
-    : Object.freeze({ ...source, blocks: Object.freeze([...source.blocks]), ...(source.kind === 'container'
+    : Object.freeze({ ...source, blocks: Object.freeze([...source.blocks]), ...('children' in source
       ? { children: Object.freeze(source.children.map(inspectBlock)) } : {}) }) as MarkdownHTMLFlowBlockSource;
   return Object.freeze({ readParagraphSources: () => {
     if (!cached) cached = Object.freeze(sources.filter(source => source.kind === 'paragraph').map(source => inspect(source) as MarkdownHTMLFlowParagraphSource));

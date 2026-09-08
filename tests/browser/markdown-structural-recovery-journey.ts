@@ -12,7 +12,7 @@ export async function markdownStructuralRecoveryJourney(page: Page, info: TestIn
   };
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  const body = '3. First step\n   - Inspect logs  \n     Check timestamps\n   - Retry request\n4. > Record outcome\n\nDiagram: [![Service diagram](/demo-media.svg "Service map")](/details) for the incident.';
+  const body = '3. First step\n   - Inspect logs  \n     Check timestamps\n   - Retry request\n4. > Record outcome\n\n- [ ] Review incident\n  - [x] Notify team\n  - [ ] Follow up\n\nDiagram: [![Service diagram](/demo-media.svg "Service map")](/details) for the incident.';
   await page.goto('/demos/node-markdown.html');
   const input = page.getByLabel('Markdown input', { exact: true });
   const output = page.locator('.demo-output');
@@ -36,7 +36,21 @@ export async function markdownStructuralRecoveryJourney(page: Page, info: TestIn
       element.dispatchEvent(event);
     }, html);
   });
+  let taskCompleted = false;
   const verify = async (surface: typeof editor, edited = false, reviewed = false) => {
+    const tasks = surface.locator('li[data-type="task-item"]');
+    await expect(tasks).toHaveCount(3);
+    await expect(tasks.nth(0)).toHaveAttribute('data-checked', String(taskCompleted));
+    await expect(tasks.nth(1)).toHaveAttribute('data-checked', 'true');
+    await expect(tasks.nth(2)).toHaveAttribute('data-checked', 'false');
+    await expect(tasks.first().locator('ul[data-type="task-list"]')).toHaveCount(1);
+    for (const [index, completed] of [taskCompleted, true, false].entries()) {
+      await expect(tasks.nth(index).locator(':scope > .fountain-task-item__content > p').first())
+        .toHaveCSS('text-decoration-line', completed ? 'line-through' : 'none');
+      // No decorated ancestor may visually strike through an unfinished child.
+      await expect(tasks.nth(index).locator(':scope > .fountain-task-item__content'))
+        .toHaveCSS('text-decoration-line', 'none');
+    }
     await expect(surface.locator('ol')).toHaveCount(1);
     await expect(surface.locator('ol')).toHaveAttribute('start', '3');
     await expect(surface.locator('ol > li')).toHaveCount(2);
@@ -77,6 +91,16 @@ export async function markdownStructuralRecoveryJourney(page: Page, info: TestIn
     await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth > 0)).toBe(true);
     expect(errors).toEqual([]);
   };
+  await verify(editor);
+  const taskToggle = editor.locator('input[data-fountain-task-toggle]').first();
+  await taskToggle.click();
+  taskCompleted = true;
+  await verify(editor);
+  await page.keyboard.press('ControlOrMeta+z');
+  taskCompleted = false;
+  await verify(editor);
+  await page.keyboard.press('ControlOrMeta+Shift+z');
+  taskCompleted = true;
   await verify(editor);
   await editor.getByText('First step', { exact: true }).click();
   await page.keyboard.press('End');

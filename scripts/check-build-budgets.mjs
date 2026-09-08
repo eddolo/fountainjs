@@ -352,7 +352,10 @@ const limits = Object.freeze({
   // ESM / ~2.5 KiB CJS; no runtime dependency or individual entry cap change.
   // Explicit label-area caret placement adds a further ~0.9 / 0.7 KiB.
   // Source-aware hard breaks add ~1.3 KiB ESM / 1 KiB CJS; no entry/CSS cap changes.
-  'all ESM runtime code': 1388 * kibibyte,
+  // Explicit task source events and whole-subtree verification add ~1.3 KiB
+  // ESM / 1.1 KiB CJS (1388.7 / 1153.8 measured). No new dependency or change
+  // to individual entries, CSS or performance ceilings.
+  'all ESM runtime code': 1389 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -373,7 +376,7 @@ const limits = Object.freeze({
   // Same list-context implementation; individual entry ceilings unchanged.
   // Same source-aware preformatted projection: measured 1142.7 KiB.
   // Same newline-stream correction: measured 1143.5 KiB.
-  'all CommonJS runtime code': 1153 * kibibyte,
+  'all CommonJS runtime code': 1154 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

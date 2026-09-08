@@ -399,7 +399,9 @@ Unreleased recursive boundary: optional `context.readBlockSources()` returns a
 cached frozen tree of `MarkdownHTMLFlowBlockSource`. Direct text sources reuse
 the existing snapshots. `container` entries describe parser-derived `ul`, `ol`,
 `li` and `blockquote` boundaries, ordered `start`, current `blocks`, and recursive
-`children`. `html` retains raw block source; `empty` distinguishes required editor
+`children`. Separate `taskList` and `taskItem` entries retain task structure and
+explicit boolean `checked` state; consumers must handle these discriminants or
+decline them, not treat them as ordinary lists. `html` retains raw block source; `empty` distinguishes required editor
 placeholders from authored empty paragraphs; `unsupported` keeps unhandled
 syntax explicit. These are import-local references, not document IDs or a new
 document AST. The core imports no HTML parser or DOM runtime.
@@ -408,7 +410,7 @@ The adapter uses this tree when supplied, while retaining support for older
 direct-text contexts. Tight/loose item paragraphs are finalized from sibling
 source boundaries before capture. Container children must still correspond to
 the original node references; custom attributes, IDs, modified adapter output,
-task lists and conversions that would erase inline objects decline with complete
+and conversions that would erase inline objects decline with complete
 inert rollback. Node/depth limits
 also apply to the recursive projection. No host callback is replayed merely to
 inspect the tree. Thirty-eight LF/CRLF contracts additionally compare complete
@@ -416,6 +418,16 @@ list/quote reference structure outside `pre`, not just extracted text. Empty
 items still require an editable model paragraph, so this is not a promise of
 literal CommonMark AST equality. Browser/server HTML import reads a pre's code
 language from a direct code child, never an unrelated nested list/component.
+
+Task recovery is a Fountain/GFM-extension contract, not extra CommonMark
+conformance. Every resulting task-list subtree must equal its original Fountain
+subtree, including checked state, nested blocks, text, marks and inline data.
+Task paragraphs keep explicit wrappers; code uses its exact source without
+generated inline-code marks or renderer line feeds. HTML repair that alters,
+duplicates or flattens tasks (including preformatted/raw-text scopes) causes
+complete inert rollback. HTML formatting inside task text that would change the
+subtree also declines. Custom task attributes/IDs remain outside this adapter's
+contract. Exact original file retention remains separate from HTML fidelity.
 
 ### Opaque code-language labels
 
