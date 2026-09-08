@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Added source-aware, text-only preformatted recovery inside a single Markdown
+  paragraph. Soft-break provenance restores LF only inside code content; HTML
+  newline normalization and initial-LF handling are reported. Text attributes,
+  marks and positional provenance survive; code export remains plain text.
+  Atoms, active/foreign raw text, nested/orphan pre tags and cross-paragraph scopes
+  remain explicit fallbacks. Default/inline-only behavior stays unchanged.
+  Aggregate code measures 1374.9 KiB ESM / 1142.7 KiB CJS; caps rise 1 KiB each to
+  1375/1143, with individual entry limits unchanged.
+
 - Fixed phantom paragraph recovery in tight Markdown lists. Paragraph adapters
   receive frozen list-rendering context; the optional server adapter omits only
   the appropriate wrapper. Nested containers and opaque code/HTML use source

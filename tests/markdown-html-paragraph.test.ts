@@ -69,7 +69,7 @@ describe('block-producing Markdown paragraph HTML adapter', () => {
     expect(callback).toHaveBeenCalledTimes(2);
   });
 
-  it.each(['A <pre>**code**</pre> end', 'A <script>**code**</script> end'])('retains explicit fallback for specialized content: %s', source => {
+  it.each(['A <pre>![image](image.png)</pre> end', 'A <script>**code**</script> end'])('retains explicit fallback for specialized content: %s', source => {
     const issues: string[] = [];
     const doc = MarkdownImporter.parse(source, schema, { ...options, onHTMLParagraphFallback: issue => issues.push(issue.reason) });
     expect(issues).toEqual(['error']);

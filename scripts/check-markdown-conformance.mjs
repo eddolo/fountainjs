@@ -582,6 +582,18 @@ const paragraphRecoveryCases = [
   '- [x]: /url\n\n  Before <p>Inside</p> After',
   '- Before <p>Inside</p> After\n\n  [x]: /url\n  Another <p>Block</p> End',
   '- Outer <p>Inside</p> End\n  - Nested <h2>Heading</h2> End\n\n  - Other <p>Block</p> End\n- Next',
+  'A <pre>one\ntwo</pre> end',
+  'A <pre>\none\ntwo</pre> end',
+  'A <pre><code>\none\ntwo</code></pre> end',
+  'A <pre>**bold** and *em*</pre> end',
+  'A <pre>a &amp; b &#10; c</pre> end',
+  'A <pre>  one\t two  </pre> end',
+  'A <pre><span>\none</span></pre> end',
+  '- A <pre>one\n  two</pre> end',
+  '> A <pre>one\n> two</pre> end',
+  'A <pre>**first\nsecond**</pre> end',
+  'A <pre>&#13;one&#13;&#10;two</pre> end',
+  'A <pre>&#10;&#10;one</pre> end',
 ];
 for (const source of paragraphRecoveryCases) {
   for (const ending of ['\n', '\r\n']) {

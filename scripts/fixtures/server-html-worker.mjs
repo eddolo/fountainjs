@@ -18,6 +18,10 @@ export default {
       parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
     });
     if (tightList.child(0).child(0).childCount !== 3) return new Response('Phantom tight-list paragraph', { status: 500 });
+    const preformatted = MarkdownImporter.parse('Before <pre>one\ntwo</pre> After', schema, {
+      parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+    });
+    if (preformatted.child(1).textContent !== 'one\ntwo') return new Response('Lost preformatted line breaks', { status: 500 });
     return new Response(JSON.stringify({
       blocks: result.document.childCount,
       text: result.document.textContent,

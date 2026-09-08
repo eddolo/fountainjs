@@ -5,6 +5,29 @@ upstream issue boards, editor-community discussions, and FountainJS's own parity
 audit. It is not a shipped-feature list and it is not permission to replace
 current release gates with a larger pile of unfinished modules.
 
+Preformatted paragraph follow-through (2026-09-08, Unreleased): closed text-only
+pre scopes can now become code blocks without flattening physical soft breaks.
+Optional segment `softBreak` provenance distinguishes LF from ordinary spaces.
+The server applies HTML CR/CRLF and initial-LF rules, retains text attributes and
+marks, and reports the plain-text export boundary. Nested/orphan/cross-paragraph
+pre tags and atoms still fail explicitly; unsupported closing tags remain literal.
+Twenty added unit cases bring the full check to 1,429 tests / 114 files; compiled
+Node/workerd, API/headless, package and performance gates pass. The paragraph
+oracle now has 62 LF/CRLF reference/source contracts plus 1,304 source-retention
+checks, without changing the default 563 / block+inline 579 baselines. The extended
+editing/undo/download/reopen/reader journey passes Chromium, Firefox and WebKit.
+Measured code: 1374.9 KiB ESM / 1142.7 KiB CJS; aggregate ceilings rise 1 KiB each
+to 1375/1143, all individual entry limits unchanged.
+The extended recorded audit passed; code editor, reopened reader and narrow-screen
+views were visually inspected with all three lines and indentation retained.
+
+Next: whole-container preformatted/raw-text source projection. The current flow
+API protects parsed block nodes but does not carry the source/render provenance
+needed to reinterpret them within raw-text scopes. Do not flatten their model
+text or serialize private attributes into HTML as a shortcut. Hard-break atoms,
+foreign/active content, comment identity and empty-item representation are still
+separate open cases; this is not full CommonMark or verbatim-mode completion.
+
 Tight-list paragraph follow-through (2026-09-08, Unreleased): the optional
 paragraph adapter now receives frozen `tightList` context, and the server adapter
 omits its implicit paragraph wrapper only where required. Direct sibling source

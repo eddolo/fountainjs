@@ -14,9 +14,9 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
   await expect(output.locator('pre')).toContainText('<h2>Recovered heading</h2>');
   const html = await output.locator('pre').innerText();
-  await source.fill('Before <pre>literal</pre> After');
+  await source.fill('Before <script>literal</script> After');
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Kept paragraph HTML as text');
-  await expect(output.locator('pre')).toContainText('&lt;pre&gt;');
+  await expect(output.locator('pre')).toContainText('&lt;script&gt;');
   await page.goto('/issue-editor.html');
   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
   await editor.click();
@@ -100,4 +100,44 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.setViewportSize({ width: 390, height: 844 });
   await verifyList(reader);
   await capture('tight-list-mobile.png');
+  await page.setViewportSize({ width: 1440, height: 960 });
+  await page.goto('/demos/node-markdown.html');
+  await source.fill('Before <pre>first line\n  second line\nlast line</pre> After');
+  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
+  await expect(output.locator('pre')).toContainText('first line\n  second line\nlast line');
+  await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Preformatted HTML became a code block');
+  const preHTML = await output.locator('pre').innerText();
+  await page.goto('/issue-editor.html');
+  await editor.click();
+  await page.keyboard.press('ControlOrMeta+a');
+  await editor.evaluate((element, value) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { files: [], getData: (type: string) => type === 'text/html' ? value : '' } });
+    element.dispatchEvent(event);
+  }, preHTML);
+  const verifyPre = async (surface: typeof editor) => {
+    await expect(surface.locator('pre')).toHaveText('first line\n  second line\nlast line');
+    await expect(surface.locator('p')).toHaveText(['Before', 'After', '']);
+  };
+  await verifyPre(editor);
+  await editor.locator('pre').click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' edited');
+  await expect(editor.locator('pre')).toContainText(' edited');
+  await page.keyboard.press('ControlOrMeta+z');
+  await verifyPre(editor);
+  await capture('preformatted-editor.png');
+  const preDownload = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download Markdown draft', exact: true }).click();
+  const prePath = info.outputPath('preformatted.md');
+  await (await preDownload).saveAs(prePath);
+  await page.getByLabel('Open Markdown draft file', { exact: true }).setInputFiles(prePath);
+  await verifyPre(editor);
+  await page.getByRole('button', { name: 'Reader preview', exact: true }).click();
+  await verifyPre(reader);
+  await capture('preformatted-reader.png');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await verifyPre(reader);
+  await capture('preformatted-mobile.png');
 }

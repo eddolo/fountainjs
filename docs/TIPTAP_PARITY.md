@@ -1,5 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Preformatted paragraph follow-through (2026-09-08, Unreleased): source-tagged soft
+breaks now survive closed text-only pre scopes as code line breaks. HTML newline
+handling and plain-text code exports are reported; text attributes/marks remain
+in JSON. Cross-paragraph scopes, atoms and active/foreign raw text retain explicit
+fallbacks. Full local check passes 1,429 tests / 114 files, including compiled
+Node/workerd and package/API/headless/performance gates. Sixty-two reference/source
+cases and 1,304 corpus source checks accompany the three-engine editor/file/reader
+journey. Baselines remain 563 default / 579 block+inline; no claim of full conformance.
+The recording test passed and editor/reopened-reader/narrow-screen frames were
+visually inspected. This does not certify physical-device input or arbitrary HTML.
+
 Tight-list recovery follow-through (2026-09-08, Unreleased): direct list paragraphs
 now receive source-derived tightness context instead of always adding an HTML p
 wrapper. Nested containers and opaque blocks retain their own scope. Full local

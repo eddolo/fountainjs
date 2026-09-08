@@ -33,7 +33,7 @@ export interface MarkdownHTMLFlowFallback {
 /** Raw HTML tokens interleaved with already-parsed, immutable Fountain nodes. */
 export type MarkdownHTMLInlineSegment =
   | { readonly kind: 'html'; readonly html: string; readonly marks: readonly Mark[] }
-  | { readonly kind: 'node'; readonly node: Node };
+  | { readonly kind: 'node'; readonly node: Node; readonly softBreak?: true };
 
 export interface MarkdownHTMLInlineFallback {
   readonly source: string;
@@ -1148,10 +1148,23 @@ function inline(
   text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = [],
   htmlTokens?: Map<Node, MarkdownHTMLInlineSegment>,
   autolinkLiterals = true,
+  softBreaks?: Set<Node>,
 ): Node[] {
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
+    if (plain && softBreaks) {
+      plain.split('\n').forEach((part, index) => {
+        if (index) {
+          const node = schema.text(' ', inheritedMarks);
+          softBreaks.add(node);
+          result.push(node);
+        }
+        if (part) result.push(...textNodes(decodeMarkdownText(part), schema, inheritedMarks));
+      });
+      plain = '';
+      return;
+    }
     if (plain) result.push(...textNodes(
       // Only physical Markdown soft breaks collapse. Entity-decoded LF/CR
       // characters belong to the text and must survive unchanged.
@@ -1254,7 +1267,7 @@ function inline(
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
           } else if (!parsed.image && schema.marks.link) {
             const mark = schema.marks.link.create({ href: parsed.href, title: parsed.title });
-            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens, autolinkLiterals));
+            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens, autolinkLiterals, softBreaks));
           } else {
             result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks));
           }
@@ -1308,7 +1321,7 @@ function inline(
           result.push(...inline(text.slice(contentStart, match.start), schema, references, [
             ...inheritedMarks,
             type.create(),
-          ], htmlTokens, autolinkLiterals));
+          ], htmlTokens, autolinkLiterals, softBreaks));
           index = match.end;
           handled = true;
           break;
@@ -1334,7 +1347,7 @@ function inline(
       result.push(...inline(text.slice(index + delimiter.length, end), schema, references, [
         ...inheritedMarks,
         ...types.map((type) => type.create()),
-      ], htmlTokens, autolinkLiterals));
+      ], htmlTokens, autolinkLiterals, softBreaks));
       index = end + delimiter.length;
       handled = true;
       break;
@@ -1425,9 +1438,10 @@ export interface MarkdownHTMLParagraphContext {
 function paragraphBlocks(schema: Schema, value: string, references: References, options: MarkdownImportOptions, tightList = false): Node[] {
   if (!options.parseHTMLParagraph) return [paragraph(schema, value, references, 'left', options)];
   const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
-  const nodes = inline(value, schema, references, [], tokens, options.autolinkLiterals);
+  const softBreaks = new Set<Node>();
+  const nodes = inline(value, schema, references, [], tokens, options.autolinkLiterals, softBreaks);
   if (!tokens.size) return [schema.node('paragraph', { align: 'left' }, nodes)];
-  const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node })));
+  const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node, ...(softBreaks.has(node) ? { softBreak: true as const } : {}) })));
   let issue: MarkdownHTMLInlineFallback;
   try {
     const projected = options.parseHTMLParagraph(segments, schema, Object.freeze({ tightList }));

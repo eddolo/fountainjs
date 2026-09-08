@@ -66,6 +66,7 @@ export type ServerHTMLImportIssueCode =
   | 'rejected-url'
   | 'document-shell-omitted'
   | 'inline-html-projection'
+  | 'preformatted-html-projection'
   | 'block-html-projection';
 
 export interface ServerHTMLImportIssue {
@@ -142,6 +143,7 @@ interface ImportContext {
     readonly sharedNodes: ReadonlySet<FountainNode>;
     readonly provenance: WeakMap<FountainNode, number>;
     readonly tokenMarks: ReadonlyMap<number, readonly Mark[]>;
+    readonly softBreaks: ReadonlySet<number>;
   };
 }
 
@@ -1023,10 +1025,36 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   }
   if (tag === 'pre') {
     const codeClass = element.querySelector('code')?.getAttribute('class') ?? '';
+    const slots = context.inlineSlots;
+    let content: FountainNode[];
+    if (slots) {
+      content = inlineChildren(element, schema, [], context).map(node => {
+        const index = slots.provenance.get(node);
+        if (!node.isText) {
+          throw new Error('Preformatted HTML cannot flatten an inline atom; literal source retained.');
+        }
+        let value = (index !== undefined && slots.softBreaks.has(index) ? '\n' : node.text!).replace(/\r\n?/gu, '\n');
+        // The placeholder tag suppresses HTML's initial-LF rule. Reapply it only
+        // when the original character token directly followed the pre start tag.
+        const first = element.childNodes[0];
+        if (first?.kind === 'element' && first.tagName === slots.tag
+          && Number(first.getAttribute('data-index')) === index
+          && htmlparser2Adapter.getNodeSourceCodeLocation(first.raw)?.startOffset
+            === htmlparser2Adapter.getNodeSourceCodeLocation(element.raw)?.startTag?.endOffset
+          && value.startsWith('\n')) value = value.slice(1);
+        const result = value === node.text ? node : node.withText(value);
+        if (index !== undefined) slots.provenance.set(result, index);
+        return result;
+      });
+      reportOnce(context, {
+        code: 'preformatted-html-projection',
+        message: 'Preformatted HTML became a code block. Text-node attributes and marks remain in the document; code exports render plain text, not HTML formatting. Physical soft breaks were restored, CR/CRLF normalized as HTML newlines, and HTML initial-LF handling applied. Inline atoms require a specialized adapter.',
+      });
+    } else content = [schema.text(element.textContent)];
     return [schema.node('code_block', {
       language: element.getAttribute('data-language') || codeClass.match(/language-([\w-]+)/)?.[1] || 'text',
       lineNumbers: true,
-    }, [schema.text(element.textContent)])];
+    }, content)];
   }
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {
@@ -1220,10 +1248,16 @@ export class ServerHTMLImporter {
 
   private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
+    let preOpen = false;
     for (const segment of segments) {
       if (segment.kind === 'html') {
         if (!segment.html || markdownHTMLTokenEnd(segment.html, 0) !== segment.html.length) {
           throw new TypeError('An inline HTML segment must contain exactly one raw HTML token.');
+        }
+        const pre = /^<(\/?)pre(?=[\t\n\r\f />])/iu.exec(segment.html);
+        if (pre) {
+          if (Boolean(pre[1]) !== preOpen) throw new Error('Preformatted HTML must close within one paragraph without nested or orphan pre tags; literal source retained.');
+          preOpen = !pre[1];
         }
         for (const match of segment.html.toLowerCase().matchAll(/fountain-markdown-slot-\d+/gu)) usedNames.add(match[0]);
         segment.marks.forEach(mark => {
@@ -1232,8 +1266,12 @@ export class ServerHTMLImporter {
       } else {
         if (!(segment.node instanceof FountainNode) || !segment.node.type.isInline) throw new TypeError('Expected an inline Markdown node.');
         schema.validate(segment.node);
+        if (segment.softBreak !== undefined && (segment.softBreak !== true || !segment.node.isText || segment.node.text !== ' ')) {
+          throw new TypeError('A soft-break segment must be a space text node.');
+        }
       }
     }
+    if (preOpen) throw new Error('Preformatted HTML spans a paragraph boundary; literal source retained.');
     let suffix = 0;
     while (usedNames.has(`fountain-markdown-slot-${suffix}`)) suffix += 1;
     const tag = `fountain-markdown-slot-${suffix}`;
@@ -1241,6 +1279,7 @@ export class ServerHTMLImporter {
     const seenNodes = new Set<FountainNode>();
     const sharedNodes = new Set<FountainNode>();
     const tokenMarks = new Map<number, readonly Mark[]>();
+    const softBreaks = new Set<number>();
     const wrapped = paragraphMode && wrapParagraph;
     const parts: string[] = wrapped ? ['<p>'] : [];
     let offset = wrapped ? 3 : 0;
@@ -1254,6 +1293,7 @@ export class ServerHTMLImporter {
         if (seenNodes.has(segment.node)) sharedNodes.add(segment.node);
         seenNodes.add(segment.node);
         originals.push(segment.node);
+        if (segment.softBreak) softBreaks.add(originals.length - 1);
       }
       parts.push(part);
       offset += part.length;
@@ -1265,7 +1305,7 @@ export class ServerHTMLImporter {
     const issues: ServerHTMLImportIssue[] = [];
     const provenance = new WeakMap<FountainNode, number>();
     const context: ImportContext = {
-      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks },
+      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks },
     };
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
@@ -1278,7 +1318,7 @@ export class ServerHTMLImporter {
     const inspect = (parent: SourceParent) => {
       for (const child of parent.childNodes) {
         if (child.kind !== 'element') continue;
-        if ((!paragraphMode && BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(pre|script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
+        if ((!paragraphMode && BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
           throw new Error(`Inline HTML <${child.tagName}> requires a block or specialized adapter; literal source retained.`);
         }
         inspect(child);

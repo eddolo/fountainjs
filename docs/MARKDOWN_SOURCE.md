@@ -205,7 +205,7 @@ recovery with an implicit paragraph wrapper where required, keeping original Mar
 protected slots rather than serializing their data. They verify each original
 position survives exactly once and in order, including repeated references and
 mark-only copies. Unknown wrappers/attributes may be omitted with conversion
-reports; unsafe URLs are rejected. Raw-text/preformatted/foreign-content scopes
+reports; unsafe URLs are rejected. Active raw-text and foreign-content scopes
 still require specialized parsing and fall back explicitly. Limits apply to the
 wrapper and slots as well as source bytes. No browser or fake DOM is required.
 
@@ -219,11 +219,31 @@ line: blanks inside nested lists, quotes, fenced code and HTML do not loosen the
 parent. Item paragraph/flow conversion waits until sibling boundaries are known;
 the parser does not replay host adapters to discover tightness.
 
-**Remaining limits:** raw-text/preformatted scopes, omitted HTML comments and
+Closed, text-only `<pre>` scopes inside a single Markdown paragraph now become
+code blocks. The importer supplies `softBreak: true` on space-text segments that
+came from a physical Markdown soft break. The adapter restores those LF characters
+only within preformatted content; normal paragraphs retain spaces. Nested emphasis
+retains its text marks/attributes in JSON. CR/CRLF become HTML newlines, and exactly
+one initial LF is removed when it directly follows `<pre>` (not `<pre><code>`).
+Text copies preserve attributes and the original position provenance. The
+`preformatted-html-projection` report explicitly explains these transformations
+and that code export is plain text, not a reproduction of HTML formatting.
+This is not verbatim/integrity mode; untouched Markdown source can still be
+exported exactly through the source-retention API.
+
+Paragraph adapters must forward the original segments, including soft-break
+metadata. The server validates that a tagged soft break is a space text node.
+Inline atoms (including hard-break nodes and media), nested/orphan `<pre>` tags,
+unclosed or cross-paragraph preformatted scopes, scripts and foreign content
+remain explicit fallbacks. Both an unsupported opening and its orphan closing
+tag remain literal; they are not silently consumed. Whole-container raw-text
+projection still needs a separate source-aware design.
+
+**Remaining limits:** those raw-text/cross-paragraph scopes, omitted HTML comments and
 unknown wrapper identity are not lossless. The schema still supplies a paragraph
 for empty list items, unlike the reference's empty `<li>`. Ordinary/loose paragraph
 recovery can legitimately produce empty blocks from HTML's closing-tag recovery;
-do not blindly trim them away. Thirty-eight reference/source checks and 1,304
+do not blindly trim them away. Sixty-two reference/source checks and 1,304
 whole-corpus source-retention checks are separate from the unchanged 563 default
 and 579 block/inline-adapter baselines. Full CommonMark remains unfinished.
 

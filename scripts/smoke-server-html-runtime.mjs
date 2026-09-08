@@ -55,3 +55,9 @@ const tightList = MarkdownImporter.parse('- Before <h2>Heading</h2> After', sche
   parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
 });
 if (tightList.child(0).child(0).childCount !== 3) throw new Error('Compiled runtime added a phantom tight-list paragraph.');
+const preformatted = MarkdownImporter.parse('Before <pre>one\ntwo</pre> After', schema, {
+  parseHTMLParagraph: ServerHTMLImporter.parseParagraph,
+});
+if (preformatted.child(1).type.name !== 'code_block' || preformatted.child(1).textContent !== 'one\ntwo') {
+  throw new Error('Compiled runtime lost preformatted line breaks.');
+}
