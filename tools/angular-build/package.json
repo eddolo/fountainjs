@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@angular/compiler-cli": "22.1.5",
-    "@angular/compiler": "22.1.5",
-    "@babel/core": "7.28.4",
-    "typescript": "6.0.3"
+    "@angular/compiler-cli": "22.2.0",
+    "@angular/compiler": "22.2.0",
+    "@babel/core": "8.0.6",
+    "typescript": "7.0.2"
   }
 }
