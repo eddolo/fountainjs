@@ -1,12 +1,31 @@
 import { CoreSchemaSpec, HTMLExporter, MarkdownImporter, Schema } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
 import { checkMarkdownFlowSources } from './fixtures/markdown-flow-source-check.mjs';
+import { checkHTMLPageSettings } from './fixtures/html-page-settings-check.mjs';
+import { checkHTMLComments } from './fixtures/html-comments-check.mjs';
+import { checkHTMLFlow } from './fixtures/html-flow-check.mjs';
+import * as blockAtomCore from '../dist/index.js';
+import { checkMarkdownBlockAtoms } from './fixtures/markdown-block-atoms-check.mjs';
+import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
+import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
+import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
+import { checkHTMLLinkControls } from './fixtures/html-link-controls-check.mjs';
+import * as inertHTML from '../dist/html-inert.js';
 
 for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationObserver']) {
   if (name in globalThis) throw new Error(`Server HTML runtime unexpectedly exposes ${name}.`);
 }
 
 const schema = new Schema(CoreSchemaSpec);
+checkInertHTMLSource(blockAtomCore, { ServerHTMLImporter }, inertHTML);
+console.log(`Compiled runtime: ${checkHTMLLinkControls(blockAtomCore, { ServerHTMLImporter })} link normalization/security/history/destination contracts passed.`);
+console.log('Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.');
+console.log(`Compiled runtime: ${checkModelIntegrity(blockAtomCore)} owned-attribute checks plus immutable snapshots/history passed.`);
+checkHTMLFlow();
+checkMarkdownBlockAtoms(blockAtomCore, { ServerHTMLImporter });
+console.log(`Compiled runtime: ${checkMarkdownEmphasis(blockAtomCore)} native emphasis and partial-schema retention checks passed.`);
+console.log('Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.');
+console.log('Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.');
 const result = ServerHTMLImporter.parseWithReport(
   '<h1>Portable runtime</h1><p><strong>HTML</strong> without a fake DOM.</p>',
   schema,
@@ -43,6 +62,10 @@ const runtime = globalThis.Bun
     ? `Deno ${globalThis.Deno.version.deno}`
     : `Node ${globalThis.process?.versions?.node ?? 'unknown'}`;
 console.log(`${runtime}: DOM-free server HTML import/export passed.`);
+checkHTMLPageSettings(schema);
+checkHTMLComments();
+console.log(`${runtime}: inert HTML comment retention, canonical reopen and breakout rejection passed.`);
+console.log(`${runtime}: complete HTML page-settings retention and invalid/fragment boundaries passed.`);
 
 const paragraph = MarkdownImporter.parse('Before <h2>Heading</h2> After', schema, {
   parseHTMLParagraph: ServerHTMLImporter.parseParagraph,

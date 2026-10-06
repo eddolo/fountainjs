@@ -1,5 +1,126 @@
 # Server-native HTML conversion
 
+## Registered inert wrappers and saved empty paragraphs
+
+Unreleased, 2026-10-06: the separate `fountainjs-editor/html/inert` entry supplies
+`createInertHTMLBlockExtension({ tags })` for explicitly owned unknown wrappers.
+It uses existing schema parse/serialize rules and retains supported block
+children plus bounded inert attributes/tokens, never original HTML execution,
+handlers or layout. `appendInertHTMLBlockParagraph(editor, path)` makes authoring
+inside a preserved empty wrapper explicit and undoable. It is DOM-free; the host
+view restores the caret with `view.focus()`. See
+[the complete source/security/reader contract](HTML_INERT_SOURCE.md#registered-block-wrappers).
+
+Canonical saved empty paragraphs now have explicit Markdown source context and
+use the existing offset-bound protected block slots during document-wide recovery.
+The previous unsupported-source fallback is reproduced and fixed; implicit
+container caret fillers retain their old behavior. Packed ESM/CJS and actual
+Node/workerd fixtures include wrapper authoring, history, native/canonical
+reopening and a trailing empty paragraph. Native JSON remains exact; adjacent
+unmarked text leaves can still canonicalize in HTML/Markdown. A follow-up now
+preserves genuinely childless paragraph shape with `data-fountain-empty="block"`
+in fragment and document HTML, including nested Markdown HTML carriers. Both
+importers require a source element with no child nodes before restoring that
+shape; forged markers never suppress text/media/comments/whitespace/elements.
+Ordinary empty paragraphs keep their normal caret leaf.
+Follow-up final gate: `artifacts/html-empty-paragraph-complete-gate-verified-20261006.log`
+passes 2,618 tests / 196 files, packed ESM/CJS and pure Node/workerd fixtures.
+The recorded pointer/keyboard and visual evidence is in
+`artifacts/html-empty-paragraph-visual-verification-20261006.json`.
+Previous block gate: `artifacts/html-inert-block-complete-gate-final-20261006.log`.
+
+## Link destination policy
+
+Unreleased, 2026-10-06: supported TAB/LF/CR destination data is percent-encoded
+only after validating its browser-compacted spelling. Unsafe schemes/network
+paths, ambiguous HTTP authorities, other controls and schema-over-limit expansion
+remain unlinked. With the supplied link schema, optional `link.attrs.htmlHref`
+retains bounded inert source intent alongside encoded typed data. Rendering uses
+that source only if it still reproduces stored `href`, preserving HTML browser
+navigation separately from literal Markdown links. `normalized-link-url`
+describes this projection. A custom schema without that optional attribute gets
+an explicit warning that original navigation behavior is not retained.
+Messages never echo the potentially private URL. `invalid-rule-result` reports
+a normalized destination rejected by the declared schema.
+
+Native literal backslashes render encoded outside ambiguous HTTP authorities.
+A bounded, safe `data-fountain-link-href` carrier restores original model data
+only when its rendering equals the visible href exactly. Invalid carriers are
+ignored with a source-free `invalid-rule-result` issue. External raw HTML links
+with backslashes retain source-bound HTML navigation where the schema supports
+it. `data-fountain-html-href` is separately validated against visible href;
+both carrier kinds present together, unsafe/stale values or oversized metadata
+are ignored and reported. Manual URL editing clears HTML-origin metadata.
+The shared persisted URL safety gate is not weakened. Browser and pure-server
+import agree on the complete native document.
+
+This private carrier is not an extension installation or executable behavior.
+See [the exact fidelity limits and corrected oracle](MARKDOWN_DOCUMENT_FLOW.md#link-destination-integrity-and-oracle-correction).
+
+Unreleased: optional `sourceTokens: true` exposes immutable tag-boundary tokens
+to portable schema rules. It is off by default, distinguishes direct HTML from
+reconstructed Markdown input, and exposes no file offsets. The isolated
+`fountainjs-editor/html/inert` factory can retain explicitly registered unknown
+inline tags as safe data plus editable children, never their original behavior
+or layout. See [the contract and public workshop](HTML_INERT_SOURCE.md).
+
+That entry also provides a separate, explicit script/style/textarea source
+factory. These become literal code data in safe carriers, not live HTML.
+`code: true`, `text*` rules keep Unicode text without emoji conversion while
+retaining representable display marks. HTML normalization and head/body
+placement still apply; source capture does not erase those distinctions.
+
+The optional Markdown whole-document source route now preserves syntax-derived
+block images and dividers inside supported HTML sections/lists/quotes. Original
+nodes and complete attributes remain protected by source offsets and visit
+order; no image URL or metadata is reconstructed from a temporary HTML tag.
+Unrepresentable image links/formatting, preformatted flattening and unsupported
+block syntax refuse the entire conversion instead of silently losing data.
+Compiled ESM/CommonJS and real workerd exercise full canonical/native reopening
+without a DOM shim. See [the source-flow contract](MARKDOWN_DOCUMENT_FLOW.md#protected-markdown-block-atoms-2026-10-05).
+
+Pristine pipe tables also survive this optional source route. Parser-derived
+cell syntax, document references and alignment validate the original complete
+subtree; protected source offsets keep it outside HTML re-parsing. Supported
+outer marks can apply to cell text. Flattening/active contexts and changed
+projections still refuse conversion. This is not CommonMark-table support or
+pixel-equivalent layout. See [the table contract](MARKDOWN_DOCUMENT_FLOW.md#protected-markdown-tables-2026-10-05).
+
+With explicit `HTMLFlowExtension` opt-in, anonymous inline runs can be retained
+as `html_flow` instead of an invented paragraph. Authored `<p>` elements remain
+paragraphs; cell paragraph attributes remain authoritative. Normal HTML whitespace
+applies to the flow's DOM view, and native HTML emits its inline content. The
+Markdown canonical carrier accepts only its identifying attribute and the
+strict inert `data-fountain-empty-text="true"` marker for a cleared unmarked
+caret leaf. That leaf and a genuinely childless flow remain distinct on canonical
+reopening. The marker is not an ordinary paragraph normalization rule, and
+completely empty native HTML is a reader projection, not a model backup.
+Without this schema,
+the prior paragraph fallback and `formatted-whitespace-block` report are unchanged.
+Supported imports are still subject to the existing schema and resource checks.
+See [the contract](MARKDOWN_DOCUMENT_FLOW.md#optional-anonymous-inline-flow-2026-10-05-unreleased).
+
+`HTMLCommentExtension` is an explicit schema opt-in for inert comment source data.
+Supported comments survive browser/server HTML conversion as `html_comment`
+inline atoms. Editor badges are author controls; exported HTML contains native
+comments. Unsupported comment data or containing projections still receive the
+located, category-bounded `discarded-html-comment` report, in the existing tree-
+diagnostic phase. Hidden comments are not private; remove sensitive data before
+sharing. See [the Markdown contract](MARKDOWN_DOCUMENT_FLOW.md#optional-inert-html-comments-2026-10-05-unreleased)
+for safe serialization limits, canonical envelopes and the separate 611/652 profile.
+
+Standalone Fountain HTML exports retain physical `pageSettings` in a validated,
+inert `data-fountain-page-settings` attribute on the document body. Browser
+`HTMLImporter.parse` and `ServerHTMLImporter.parse` restore the supported point
+values, including explicit zero and negative top/bottom margins. This does not
+apply page CSS, reproduce native pagination or retain arbitrary root metadata.
+Only body metadata is accepted; nested blocks/head attributes are ignored.
+`document: false` exports and fragment/clipboard imports omit document settings.
+The server reports `invalid-page-settings` for malformed, invalid or oversized
+(over 2,048 characters) values without removing visible text. Document-shell
+omission reports still cover unrelated head/styles/attributes. Use Fountain JSON
+when the complete Fountain document model must be retained.
+
 `fountainjs-editor/html/server` converts untrusted HTML into the same validated
 Fountain document model in plain Node.js. It does not read `window`, `document`,
 `DOMParser`, `HTMLElement`, selection, layout, clipboard, or other browser APIs,
@@ -264,8 +385,9 @@ refused, not silently approximated. See [Markdown flow conversion](MARKDOWN_SOUR
 
 For content inserted into an existing document, use `parseFragment` or
 `parseFragmentWithReport` (static or instance methods). These return a readonly
-array of validated block nodes rather than a top-level document. A comment-only
-fragment returns no nodes and reports the omitted comment; it does not manufacture
+array of validated block nodes rather than a top-level document. Without the
+optional comment schema, a comment-only fragment returns no nodes and reports
+the omitted comment; it does not manufacture
 an editable blank paragraph. Explicit empty paragraphs remain present. Input
 bounds, URL policy and conversion-loss categories are shared with whole-document
 import. `parse` / `parseWithReport` retain their existing empty-document caret

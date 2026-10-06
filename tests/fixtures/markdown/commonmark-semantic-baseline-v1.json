@@ -1,7 +1,7 @@
 {
   "version": 1,
   "standard": "CommonMark 0.31.2",
-  "projectionVersion": 9,
+  "projectionVersion": 11,
   "requiredMatchRanges": "1-20,22-30,32-147,192-200,202-206,208-217,219-238,241-279,285-307,310-314,316-343,345-474,478-490,492-493,495-523,525-535,537-595,597,600,602-607,609-610,618-622,624,632-641,644-652",
   "pendingMismatchRanges": "21,31,148-191,201,308-309,344,475-477,491,494,524,536,613-617,623,625-631,642-643",
   "pendingWorkGroups": [
@@ -27,5 +27,5 @@
       "reason": "Fountain adds exactly one empty paragraph to an otherwise empty document, blockquote, or list item as an editable caret host. The harness verifies that this is the only semantic difference and that exact-source and canonical round trips preserve content. These are not counted as CommonMark matches."
     }
   ],
-  "note": "Official visible tab markers are materialized before parsing. Equivalent decoded and percent-encoded URLs are URI-canonicalized. Expected HTML and Fountain output are reduced to a neutral semantic projection that never compares or constrains either parser's native AST."
+  "note": "Official visible tab markers are materialized before parsing. Reviewed URI equivalents are canonicalized, but raw TAB/LF/CR/backslash attributes are never aliased to encoded URL data. Version 11 exposes browser-significant destination differences; repaired literal Markdown links retain the 563 default matches. HTML example 21 remains pending by default. Expected HTML and Fountain output are reduced to a neutral semantic projection that never compares or constrains either parser's native AST."
 }

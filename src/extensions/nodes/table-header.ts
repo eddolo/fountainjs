@@ -6,5 +6,5 @@ export const tableHeader: NodeSpec = {
     scope: { default: 'col', validate: (value) => ['col', 'row', 'colgroup', 'rowgroup'].includes(String(value)) },
   },
   nodeView: createTableCellNodeView('th'),
-  toDOM: (node) => ['th', { ...tableCellDOMAttributes(node), scope: node.attrs.scope }, 0],
+  toDOM: (node, context) => ['th', { ...tableCellDOMAttributes(node, context), scope: node.attrs.scope }, 0],
 };

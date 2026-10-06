@@ -3,6 +3,11 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { checkMarkdownBlockAtoms } from './fixtures/markdown-block-atoms-check.mjs';
+import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
+import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
+import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
+import { checkHTMLLinkControls } from './fixtures/html-link-controls-check.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -232,6 +237,13 @@ if (packedIntegrity.invisibleCharacters[0]?.kind !== 'zero-width-space') {
 assertExports(await import('fountainjs-editor/integrity/dom'), integrityDOMNames, 'ESM integrity DOM entry');
 assertExports(await import('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'ESM structured attributes entry');
 const esmServerHTML = await import('fountainjs-editor/html/server');
+const esmInertHTML = await import('fountainjs-editor/html/inert');
+assertExports(esmInertHTML, ['createInertHTMLInlineExtension', 'createInertHTMLRawTextExtension'], 'ESM inert HTML entry');
+checkInertHTMLSource(esmCore, esmServerHTML, esmInertHTML);
+console.log(`Packed ESM: ${checkHTMLLinkControls(esmCore, esmServerHTML)} link normalization/security/history/destination contracts passed.`);
+checkMarkdownBlockAtoms(esmCore, esmServerHTML);
+console.log(`Packed ESM: ${checkMarkdownEmphasis(esmCore)} native emphasis and partial-schema retention checks passed.`);
+console.log(`Packed ESM root/core: ${checkModelIntegrity(esmCore)}/${checkModelIntegrity(esmHeadlessCore, esmCore.CoreSchemaSpec)} owned-attribute checks plus immutable snapshots/history passed.`);
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
 const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
 if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
@@ -364,6 +376,12 @@ assertExports(require('fountainjs-editor/integrity'), integrityNames, 'CommonJS 
 assertExports(require('fountainjs-editor/integrity/dom'), integrityDOMNames, 'CommonJS integrity DOM entry');
 assertExports(require('fountainjs-editor/structured-attributes'), structuredAttributeNames, 'CommonJS structured attributes entry');
 const cjsServerHTML = require('fountainjs-editor/html/server');
+assertExports(require('fountainjs-editor/html/inert'), ['createInertHTMLInlineExtension', 'createInertHTMLRawTextExtension'], 'CommonJS inert HTML entry');
+checkInertHTMLSource(cjsCore, cjsServerHTML, require('fountainjs-editor/html/inert'));
+console.log(`Packed CommonJS: ${checkHTMLLinkControls(cjsCore, cjsServerHTML)} link normalization/security/history/destination contracts passed.`);
+checkMarkdownBlockAtoms(cjsCore, cjsServerHTML);
+console.log(`Packed CommonJS: ${checkMarkdownEmphasis(cjsCore)} native emphasis and partial-schema retention checks passed.`);
+console.log(`Packed CommonJS root/core: ${checkModelIntegrity(cjsCore)}/${checkModelIntegrity(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} owned-attribute checks plus immutable snapshots/history passed.`);
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
 const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
 if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');

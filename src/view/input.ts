@@ -141,6 +141,7 @@ export class InputManager {
   private compositionSelection?: AnySelection;
   private compositionHandled = false;
   private composingValue = false;
+  private shiftEnterPending = false;
   private draggedNodePath?: readonly number[];
   private suppressNativeDragDeleteUntil = 0;
 
@@ -154,6 +155,8 @@ export class InputManager {
   ) {
     dom.addEventListener('beforeinput', this.onBeforeInput);
     dom.addEventListener('keydown', this.onKeyDown);
+    dom.addEventListener('keyup', this.clearBreakIntent);
+    dom.addEventListener('blur', this.clearBreakIntent, true);
     dom.addEventListener('paste', this.onPaste);
     dom.addEventListener('copy', this.onCopy);
     dom.addEventListener('cut', this.onCut);
@@ -170,12 +173,15 @@ export class InputManager {
 
   destroy(): void {
     this.composingValue = false;
+    this.shiftEnterPending = false;
     this.compositionSelection = undefined;
     this.compositionHandled = false;
     this.draggedNodePath = undefined;
     this.suppressNativeDragDeleteUntil = 0;
     this.dom.removeEventListener('beforeinput', this.onBeforeInput);
     this.dom.removeEventListener('keydown', this.onKeyDown);
+    this.dom.removeEventListener('keyup', this.clearBreakIntent);
+    this.dom.removeEventListener('blur', this.clearBreakIntent, true);
     this.dom.removeEventListener('paste', this.onPaste);
     this.dom.removeEventListener('copy', this.onCopy);
     this.dom.removeEventListener('cut', this.onCut);
@@ -190,11 +196,59 @@ export class InputManager {
     this.dom.removeEventListener('click', this.onClick);
   }
 
+  private clearBreakIntent = (): void => { this.shiftEnterPending = false; };
+
+  private focusedCodeRegion(event: Event): HTMLElement | undefined {
+    const target = event.target;
+    return target instanceof HTMLElement && target.tagName === 'PRE'
+      && target.dataset.fountainNode === 'code_block' && target === this.dom.ownerDocument.activeElement
+      && !target.contains(this.dom.ownerDocument.getSelection()?.anchorNode ?? null) ? target : undefined;
+  }
+
+  private enterCodeRegion(codeRegion: HTMLElement): void {
+    const wrapper = codeRegion.querySelector('[data-fountain-text-path]') ?? codeRegion;
+    const range = this.dom.ownerDocument.createRange();
+    range.selectNodeContents(wrapper); range.collapse(true);
+    this.dom.focus({ preventScroll: true });
+    const selection = this.dom.ownerDocument.getSelection();
+    selection?.removeAllRanges(); selection?.addRange(range);
+    this.selections.capture();
+  }
+
   private onKeyDown = (event: KeyboardEvent): void => {
+    this.shiftEnterPending = false;
     if (this.options.shouldStopEvent?.(event)) return;
+    const codeRegion = this.focusedCodeRegion(event);
+    let pluginsChecked = false;
+    if (codeRegion) {
+      // A tab-focused scrolling region is not a text caret. Capturing the old
+      // range would steal focus and can edit the previous paragraph instead.
+      for (const plugin of this.editor.state.plugins) {
+        if (plugin.spec.props?.handleKeyDown?.(this.editor, event)) { event.preventDefault(); return; }
+      }
+      pluginsChecked = true;
+      if (event.key === 'Tab') return;
+      if (event.key === 'Backspace' || event.key === 'Delete') { event.preventDefault(); return; }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'x') { event.preventDefault(); return; }
+      if (!event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey
+        && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault();
+        codeRegion.scrollLeft += event.key === 'ArrowRight' ? 40 : -40;
+        return;
+      }
+      const paste = (event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === 'v';
+      if (this.editor.editable && (paste || (!event.ctrlKey && !event.metaKey && !event.altKey
+        && (event.key === 'Enter' || event.key.length === 1)))) {
+        // Enter, typing or paste explicitly enters the source at its first leaf,
+        // including the existing empty-block caret placeholder.
+        // Chromium needs this caret before Ctrl+V to emit native paste at all.
+        this.enterCodeRegion(codeRegion);
+        if (event.key === 'Enter') { event.preventDefault(); return; }
+      } else return;
+    }
     this.selections.requestDOMSync();
     this.selections.capture();
-    for (const plugin of this.editor.state.plugins) {
+    for (const plugin of pluginsChecked ? [] : this.editor.state.plugins) {
       if (plugin.spec.props?.handleKeyDown?.(this.editor, event)) {
         event.preventDefault();
         return;
@@ -202,6 +256,10 @@ export class InputManager {
     }
     const modifier = event.ctrlKey || event.metaKey;
     const key = event.key.toLowerCase();
+    // WebKit reports Shift+Enter as insertParagraph. Preserve keyboard intent
+    // until beforeinput instead of bypassing plugins or inserting twice.
+    this.shiftEnterPending = key === 'enter' && event.shiftKey && !modifier && !event.altKey
+      && !event.isComposing && !this.composingValue && this.editor.editable;
     const mark = modifier && !event.altKey
       ? key === 'b' ? 'strong' : key === 'i' ? 'em' : key === 'u' ? 'underline' : null
       : null;
@@ -240,8 +298,15 @@ export class InputManager {
   };
 
   private onBeforeInput = (event: InputEvent): void => {
+    const shiftEnter = this.shiftEnterPending;
+    this.shiftEnterPending = false;
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
+    const codeRegion = this.focusedCodeRegion(event);
+    if (codeRegion) {
+      if (event.inputType.startsWith('delete')) { event.preventDefault(); return; }
+      this.enterCodeRegion(codeRegion);
+    }
     this.selections.requestDOMSync();
     if (event.inputType === 'insertCompositionText' && event.isComposing) return;
     if (event.inputType === 'insertFromComposition' || event.inputType === 'insertCompositionText') {
@@ -276,16 +341,19 @@ export class InputManager {
       event.preventDefault();
       const textBlock = selection.kind === 'text'
         ? getNodeAtPath(state.doc, selection.path.slice(0, -1))
+        : selection instanceof NodeSelection ? getNodeAtPath(state.doc, selection.nodePath)
         : undefined;
       if (textBlock?.type.spec.code) insertText(this.editor, '\n');
+      else if (shiftEnter) insertHardBreak(this.editor);
       else splitBlock(this.editor);
       return;
     }
 
     if (event.inputType === 'insertLineBreak') {
       event.preventDefault();
-      const textBlock = getNodeAtPath(state.doc, selection.path.slice(0, -1));
-      if (textBlock.type.spec.code) insertText(this.editor, '\n');
+      const textBlock = selection instanceof NodeSelection ? getNodeAtPath(state.doc, selection.nodePath)
+        : selection.kind === 'text' ? getNodeAtPath(state.doc, selection.path.slice(0, -1)) : undefined;
+      if (textBlock?.type.spec.code) insertText(this.editor, '\n');
       else insertHardBreak(this.editor);
       return;
     }
@@ -333,6 +401,8 @@ export class InputManager {
     this.selections.requestDOMSync();
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
+    const codeRegion = this.focusedCodeRegion(event);
+    if (codeRegion) this.enterCodeRegion(codeRegion);
     this.selections.capture();
     const fountain = event.clipboardData?.getData(FOUNTAIN_CLIPBOARD_MIME) ?? '';
     let fountainFallback: ExternalPasteIssue | null = null;
@@ -483,10 +553,11 @@ export class InputManager {
     const payload: FountainClipboardPayload = { version: 1, document: document.toJSON() };
     let plainText = clipboardText(document);
     const selection = this.editor.state.selection;
-    if (!plainText && selection instanceof NodeSelection) {
+    if (!plainText && selection instanceof NodeSelection
+      && !getNodeAtPath(this.editor.state.doc, selection.nodePath).type.spec.toText) {
       const visual = Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-path]'))
         .find((element) => element.dataset.fountainPath === selection.nodePath.join('.'));
-      plainText = visual?.innerText.trim() || visual?.textContent?.trim()
+      plainText = visual?.innerText?.trim() || visual?.textContent?.trim()
         || `[${selection.nodeType.replace(/_/g, ' ')}]`;
     }
     event.clipboardData.setData('text/plain', plainText);
@@ -511,6 +582,7 @@ export class InputManager {
   };
 
   private onCut = (event: ClipboardEvent): void => {
+    if (this.focusedCodeRegion(event)) { event.preventDefault(); return; }
     this.selections.requestDOMSync();
     const semanticSelection = this.editor.state.selection instanceof NodeSelection
       || this.editor.state.selection instanceof AllSelection;
@@ -526,6 +598,7 @@ export class InputManager {
   };
 
   private onCompositionStart = (event: CompositionEvent): void => {
+    this.shiftEnterPending = false;
     if (this.options.shouldStopEvent?.(event)) return;
     this.composingValue = true;
     this.compositionHandled = false;

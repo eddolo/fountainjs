@@ -25,6 +25,7 @@ import {
   selectText,
   setMathSource,
   splitBlock,
+  undo,
 } from '../src';
 
 function mathKit(extension = MathExtension) {
@@ -143,6 +144,17 @@ describe('first-party mathematics extension', () => {
     expect(hostileHTML).not.toContain('<img src=x');
     expect(hostileHTML).toContain('&lt;img src=x onerror=&quot;alert(1)&quot;&gt; &amp; y');
     expect(HTMLImporter.parse(hostileHTML, schema).toJSON()).toEqual(hostile.toJSON());
+
+    const semantic = schema.node('doc', {}, [schema.node('math_block', {
+      latex: '\\frac{x}{y}', ariaLabel: '',
+      expression: { type: 'fraction', numerator: { type: 'text', value: 'x' }, denominator: { type: 'text', value: 'y' } },
+    })]);
+    const semanticHTML = HTMLExporter.export(semantic, { document: false });
+    expect(semanticHTML).toContain('data-fountain-math-expression=');
+    expect(HTMLImporter.parse(semanticHTML, schema).toJSON()).toEqual(semantic.toJSON());
+    expect(MarkdownExporter.exportWithReport(semantic).losses).toContainEqual(expect.objectContaining({
+      kind: 'attribute', type: 'math_block',
+    }));
   });
 
   it('rejects empty, NUL-containing, and oversized command input', () => {
@@ -313,6 +325,18 @@ describe('first-party mathematics extension', () => {
     expect(setMathSource(editor, 'z^4', undefined, [0])).toBe(true);
     expect(editor.state.doc.child(0).attrs.latex).toBe('z^4');
     view.destroy();
+  });
+
+  it('invalidates retained imported semantics on source edits and restores them with undo', () => {
+    const kit = mathKit();
+    const expression = { type: 'fraction', numerator: { type: 'text', value: 'x' }, denominator: { type: 'text', value: 'y' } } as const;
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'math_block', attrs: { latex: '\\frac{x}{y}', expression } }],
+    } });
+    expect(setMathSource(editor, '\\frac{x}{z}', undefined, [0])).toBe(true);
+    expect(editor.state.doc.child(0).attrs.expression).toBeUndefined();
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.child(0).attrs.expression).toEqual(expression);
   });
 
   it.each(['math_block', 'inline_math'])('preserves multiline %s source and its description when inspected without editing', type => {

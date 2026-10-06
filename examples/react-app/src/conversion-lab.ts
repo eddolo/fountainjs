@@ -1,11 +1,17 @@
-import { HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
+import katex from 'katex';
+import { HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
+import { PagesExtension } from 'fountainjs-editor/pages';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
-import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
+import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/docx';
+import { compileTeXForDOCX } from './mathjax-docx';
 
 export type LabFormat = 'markdown' | 'html' | 'docx' | 'json';
-export type LabIssue = { code: string; message: string };
-export const labSchema = new Schema(StarterKit.schema);
-export const labPolicy = 'starter-kit-v1; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000';
+export type LabIssue = { code: string; message: string; path?: readonly number[]; sourcePart?: string };
+export const labKit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
+  renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
+})]);
+export const labSchema = new Schema(labKit.schema);
+export const labPolicy = 'starter-kit-pages-v2; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000';
 export function labImages(document: Node) {
   const images: { source: string; alt: string; embedded: boolean }[] = [];
   const visit = (node: Node) => {
@@ -40,11 +46,11 @@ function boundedJSON(text: string) {
   visit(value, 0);
   return value;
 }
-export function importLab(bytes: Uint8Array, format: LabFormat): { document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot } {
+export function importLab(bytes: Uint8Array, format: LabFormat): { document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; packageParts?: readonly DOCXPackagePart[] } {
   if (bytes.byteLength > (format === 'docx' ? 4 : 1) * 1024 * 1024) throw new Error('Lab limit: 1 MiB per text/JSON file; 4 MiB per DOCX.');
   if (format === 'docx') {
     const result = importDOCX(bytes, labSchema, { maxArchiveBytes: 4 * 1024 * 1024, maxExpandedBytes: 24 * 1024 * 1024 });
-    return { document: result.document, issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message })) };
+    return { document: result.document, issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message, path: issue.path, sourcePart: issue.sourcePart })), packageParts: result.packageParts };
   }
   const text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
   if (format === 'html') {
@@ -54,7 +60,7 @@ export function importLab(bytes: Uint8Array, format: LabFormat): { document: Nod
   if (format === 'json') {
     const document = labSchema.nodeFromJSON(boundedJSON(text));
     if (document.type !== labSchema.topNodeType) throw new Error('Choose a complete Fountain document JSON object with type "doc", not a single node or a workspace bundle.');
-    return { document, issues: [{ code: 'schema-boundary', message: 'Validated against the supplied StarterKit schema, not every extension schema. Extra data and visual fidelity are not certified; keep the original file.' }] };
+    return { document, issues: [{ code: 'schema-boundary', message: 'Validated against the supplied StarterKit + Pages schema, not every extension schema. Extra data and visual fidelity are not certified; keep the original file.' }] };
   }
   const result = MarkdownImporter.parseWithSource(text, labSchema);
   return { ...result, issues: [{ code: 'markdown-coverage', message: 'Default Markdown parser: raw HTML stays inert; full CommonMark/dialect conformance and exhaustive import-loss reporting are not available.' }] };
@@ -64,7 +70,9 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
   // the import schema; recreate the same portable document there before matching.
   document = labSchema.nodeFromJSON(document.toJSON());
   if (format === 'docx') {
-    const result = exportDOCX(document);
+    const result = exportDOCX(document, {
+      resolveMath: node => compileTeXForDOCX(String(node.attrs.latex), node.type.name === 'math_block'),
+    });
     return { bytes: result.bytes, extension: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message })) };
   }
   if (format === 'markdown') {
@@ -72,5 +80,5 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
     return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues: result.losses.map(loss => ({ code: loss.kind, message: loss.detail })) };
   }
   const text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document);
-  return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export is a projection. Complete styling, metadata and extension behaviour are not guaranteed.' }] : [] };
+  return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.' }] : [] };
 }

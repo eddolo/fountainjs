@@ -1,9 +1,18 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { detectLabFormat, exportLab, importLab, sameLabDocument, labImages } from '../examples/react-app/src/conversion-lab';
+import { detectLabFormat, exportLab, importLab, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
 import { Schema, StarterKit } from 'fountainjs-editor';
+import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it.each(['docx', 'html', 'json'] as const)('retains linked editable notes through %s in the lab schema', format => {
+    const document = labSchema.node('doc', {}, [
+      labSchema.node('paragraph', {}, [labSchema.text('Claim'), labSchema.node('footnote_reference', { id: '7' })]),
+      labSchema.node('footnote_definition', { id: '7' }, [labSchema.node('paragraph', {}, [labSchema.text('Evidence')])]),
+    ]);
+    const reopened = importLab(exportLab(document, format).bytes, format).document;
+    expect(reopened.toJSON()).toEqual(format === 'docx' ? withDOCXExportDefaults(document.toJSON()) : document.toJSON());
+  });
   it('detects only supported extensions', () => {
     expect(detectLabFormat('Paper.DOCX')).toBe('docx');
     expect(detectLabFormat('draft.markdown')).toBe('markdown');

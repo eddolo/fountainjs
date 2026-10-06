@@ -27,13 +27,16 @@ import {
   normalizeFontFamily,
   normalizeFontSize,
   normalizeLineHeight,
+  normalizeLetterSpacing,
   normalizeTextStyleColor,
   setBackgroundColor,
   setFontFamily,
   setFontSize,
   setLineHeight,
+  setLetterSpacing,
   setTextColor,
   unsetFontFamily,
+  unsetLetterSpacing,
 } from '../src/text-style';
 import { createYjsCollaborationExtension } from '../src/yjs';
 
@@ -44,6 +47,81 @@ function markValues(document: ReturnType<Schema['nodeFromJSON']>): Record<string
 }
 
 describe('complete text style suite', () => {
+  it.each([[' -0.500pt ', '-0.5pt'], ['0pt', '0pt'], [1.25, '1.25pt'], ['.25em', '0.25em'], ['-12px', '-12px']])('normalizes character spacing %s', (input, expected) => {
+    expect(normalizeLetterSpacing(input)).toBe(expected);
+  });
+
+  it.each(['normal', 'calc(2px)', '1pt;position:fixed', '10%', '999pt', '-513px', NaN, Infinity, '0.12345pt'])('rejects unsupported character spacing %s', input => {
+    expect(normalizeLetterSpacing(input)).toBeNull();
+  });
+
+  it('edits character spacing across blocks and removes it without changing fonts or text', () => {
+    const composed = kit();
+    const editor = createEditor({ schema: composed.schema, plugins: composed.plugins, content: { type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Before', marks: [{ type: 'strong' }] }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'After' }] },
+    ] } });
+    editor.dispatch(editor.createTransaction().setSelection(new AllSelection(editor.state.doc)));
+    const original = editor.getJSON();
+    expect(setLetterSpacing(editor, '-0.5pt')).toBe(true);
+    expect(getActiveTextStyle(editor).letterSpacing).toBe('-0.5pt');
+    for (const p of editor.state.doc.content) expect(p.child(0).marks.some(mark => mark.type.name === 'letter_spacing')).toBe(true);
+    expect(editor.state.doc.child(0).child(0).marks.some(mark => mark.type.name === 'strong')).toBe(true);
+    expect(unsetLetterSpacing(editor)).toBe(true);
+    expect(editor.getJSON()).toEqual(original);
+    expect(undo(editor)).toBe(true);
+    expect(getActiveTextStyle(editor).letterSpacing).toBe('-0.5pt');
+    expect(setLetterSpacing(editor, 'bad')).toBe(false);
+    editor.destroy();
+  });
+
+  it('retains explicit zero and nearest inherited spacing through browser HTML', () => {
+    const schema = new Schema(kit().schema);
+    const doc = HTMLImporter.parse('<div style="letter-spacing:2pt"><p>A <span style="letter-spacing:0pt">B</span> C</p></div>', schema);
+    expect(doc.child(0).content.map(node => node.marks.find(mark => mark.type.name === 'letter_spacing')?.attrs.spacing)).toEqual(['2pt', '0pt', '2pt']);
+    expect(HTMLImporter.parse(HTMLExporter.export(doc, { document: false }), schema).toJSON()).toEqual(doc.toJSON());
+    expect(() => schema.mark('letter_spacing', { spacing: '2pt;color:red' })).toThrow();
+  });
+
+  it('reads mixed character pitch across a range and keeps a caret reset on new text', () => {
+    const composed = kit();
+    const editor = createEditor({ schema: composed.schema, plugins: composed.plugins, content: { type: 'doc', content: [
+      { type: 'paragraph', content: [
+        { type: 'text', text: 'Wide', marks: [{ type: 'letter_spacing', attrs: { spacing: '1.5pt' } }] },
+        { type: 'text', text: 'Tight', marks: [{ type: 'letter_spacing', attrs: { spacing: '-0.5pt' } }] },
+      ] },
+    ] } });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.range([0, 0], 0, [0, 1], 5)));
+    expect(getActiveTextStyle(editor)).toMatchObject({ mixed: ['letterSpacing'] });
+    expect(getActiveTextStyle(editor).letterSpacing).toBeUndefined();
+    expect(setLetterSpacing(editor, '0pt')).toBe(true);
+    expect(editor.state.doc.child(0).textContent).toBe('WideTight');
+    expect(getActiveTextStyle(editor)).toMatchObject({ letterSpacing: '0pt', mixed: [] });
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 4)));
+    expect(setLetterSpacing(editor, '2pt')).toBe(true);
+    expect(insertText(editor, ' new ')).toBe(true);
+    expect(editor.state.doc.child(0).content.find(node => node.text === ' new ')?.marks
+      .find(mark => mark.type.name === 'letter_spacing')?.attrs.spacing).toBe('2pt');
+    expect(unsetLetterSpacing(editor)).toBe(true);
+    expect(insertText(editor, 'plain')).toBe(true);
+    expect(editor.state.doc.child(0).content.find(node => node.text === 'plain')?.marks).toEqual([]);
+    editor.destroy();
+  });
+
+  it('retains character pitch in Markdown text-style HTML while rejecting unsafe values', () => {
+    const schema = new Schema(kit().schema);
+    const doc = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Literal <source>', [
+      schema.mark('letter_spacing', { spacing: '0pt' }), schema.mark('strong'),
+    ])])]);
+    const result = MarkdownExporter.exportWithReport(doc);
+    expect(result.losses).toEqual([]);
+    expect(result.markdown).toContain('letter-spacing:0pt');
+    expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(doc.toJSON());
+    const hostile = MarkdownImporter.parse('<span data-fountain-text-style="true" style="letter-spacing:calc(1px);position:fixed">Safe text</span>', schema);
+    expect(hostile.textContent).toBe('Safe text');
+    expect(hostile.child(0).child(0).marks).toEqual([]);
+  });
+
   it('normalizes portable values and rejects CSS injection or unbounded measurements', () => {
     expect(normalizeFontFamily(' "IBM Plex Sans" , system-ui ')).toBe('IBM Plex Sans, system-ui');
     expect(fontFamilyCSS('IBM Plex Sans, system-ui')).toBe('"IBM Plex Sans",system-ui');
@@ -60,16 +138,16 @@ describe('complete text style suite', () => {
     expect(normalizeTextStyleColor('red;background:url(evil)')).toBeNull();
   });
 
-  it('ships all five style marks in CoreExtension and as a reusable custom-kit extension', () => {
+  it('ships all six style marks in CoreExtension and as a reusable custom-kit extension', () => {
     const core = new Schema(composeExtensions([CoreExtension]).schema);
     expect(Object.keys(core.marks)).toEqual(expect.arrayContaining([
-      'text_color', 'highlight', 'font_family', 'font_size', 'line_height',
+      'text_color', 'highlight', 'font_family', 'font_size', 'line_height', 'letter_spacing',
     ]));
     expect(Object.keys(TextStyleExtension.marks ?? {})).toEqual([
-      'text_color', 'highlight', 'font_family', 'font_size', 'line_height',
+      'text_color', 'highlight', 'font_family', 'font_size', 'line_height', 'letter_spacing',
     ]);
     expect(Object.keys(TextStyleExtension.commands ?? {})).toEqual(expect.arrayContaining([
-      'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight',
+      'setTextColor', 'setBackgroundColor', 'setFontFamily', 'setFontSize', 'setLineHeight', 'setLetterSpacing', 'unsetLetterSpacing',
     ]));
   });
 
@@ -159,6 +237,7 @@ describe('complete text style suite', () => {
       schema.mark('font_family', { family: 'Noto Sans JP, sans-serif' }),
       schema.mark('font_size', { size: '18px' }),
       schema.mark('line_height', { lineHeight: '1.75' }),
+      schema.mark('letter_spacing', { spacing: '-0.5pt' }),
     ])])]);
     const html = HTMLExporter.export(document, { document: false });
     expect(html).toContain('font-family:&quot;Noto Sans JP&quot;,sans-serif');
@@ -171,6 +250,7 @@ describe('complete text style suite', () => {
       font_family: { family: 'Noto Sans JP, sans-serif' },
       font_size: { size: '18px' },
       line_height: { lineHeight: '1.75' },
+      letter_spacing: { spacing: '-0.5pt' },
     });
     expect(restored.child(0).child(0).marks.some((mark) => mark.type.name === 'strong')).toBe(true);
     expect(() => schema.nodeFromJSON({ type: 'doc', content: [{ type: 'paragraph', content: [{
@@ -239,6 +319,7 @@ describe('complete text style suite', () => {
     expect(setFontFamily(left, 'Noto Sans JP, sans-serif')).toBe(true);
     expect(setFontSize(left, '18px')).toBe(true);
     expect(setLineHeight(left, '1.75')).toBe(true);
+    expect(setLetterSpacing(left, '-0.5pt')).toBe(true);
     Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument), 'style-update');
     expect(right.getJSON()).toEqual(left.getJSON());
 

@@ -78,6 +78,11 @@ keyboard and pointer users receive the same structural feedback. This applies
 to wrapped multi-line paragraphs, headings, whole lists and tables, media,
 widgets, and custom block NodeViews.
 
+Unreleased: the supplied active/handle tint uses an inset shadow rather than
+overwriting the node background, so dark code and source-owned custom colours
+remain legible. The stronger ring and separate drop rule remain distinct.
+Hosts may replace this CSS treatment; none of it enters document data or exports.
+
 While dragging, only schema-valid targets show a visible before/after rule. The
 rule is a separate overlay from both the target-block highlight and the grabbed
 source state; it answers where the block will land rather than which block is

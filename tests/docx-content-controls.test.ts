@@ -1,3 +1,4 @@
+import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 import { describe, expect, it } from 'vitest';
 import { strToU8, zipSync } from 'fflate';
 import { Schema } from '../src/core';
@@ -21,7 +22,7 @@ describe('DOCX visible content-control projection', () => {
     expect(result.document.child(2).child(0).marks.map(mark => mark.type.name)).toEqual(['strong']);
     expect(result.report.issues.map(issue => issue.code)).toEqual(['content-control-unwrapped', 'content-control-unwrapped']);
     expect(JSON.stringify(result.report)).not.toContain('private metadata');
-    expect(importDOCX(exportDOCX(result.document).bytes, schema).document.toJSON()).toEqual(result.document.toJSON());
+    expect(importDOCX(exportDOCX(result.document).bytes, schema).document.toJSON()).toEqual(withDOCXExportDefaults(result.document.toJSON()));
   });
 
   it('reads controls inside cells, nested tables and tables inside controls', () => {

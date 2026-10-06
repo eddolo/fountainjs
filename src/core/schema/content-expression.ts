@@ -7,47 +7,48 @@ type Expression =
   | { kind: 'repeat'; value: Expression; min: number; max: number };
 
 class Parser {
-  private index = 0;
+  #index = 0;
+  readonly #tokens: readonly string[];
 
-  constructor(private readonly tokens: readonly string[]) {}
+  constructor(tokens: readonly string[]) { this.#tokens = tokens; }
 
   parse(): Expression {
-    const expression = this.parseChoice();
-    if (this.index !== this.tokens.length) throw new Error(`Unexpected content-expression token: ${this.tokens[this.index]}`);
+    const expression = this.#parseChoice();
+    if (this.#index !== this.#tokens.length) throw new Error(`Unexpected content-expression token: ${this.#tokens[this.#index]}`);
     return expression;
   }
 
-  private parseChoice(): Expression {
-    const values = [this.parseSequence()];
-    while (this.tokens[this.index] === '|') {
-      this.index += 1;
-      values.push(this.parseSequence());
+  #parseChoice(): Expression {
+    const values = [this.#parseSequence()];
+    while (this.#tokens[this.#index] === '|') {
+      this.#index += 1;
+      values.push(this.#parseSequence());
     }
     return values.length === 1 ? values[0] as Expression : { kind: 'choice', values };
   }
 
-  private parseSequence(): Expression {
+  #parseSequence(): Expression {
     const values: Expression[] = [];
-    while (this.index < this.tokens.length && ![')', '|'].includes(this.tokens[this.index] as string)) {
-      values.push(this.parseTerm());
+    while (this.#index < this.#tokens.length && ![')', '|'].includes(this.#tokens[this.#index] as string)) {
+      values.push(this.#parseTerm());
     }
     return values.length === 1 ? values[0] as Expression : { kind: 'sequence', values };
   }
 
-  private parseTerm(): Expression {
-    const token = this.tokens[this.index++];
+  #parseTerm(): Expression {
+    const token = this.#tokens[this.#index++];
     let value: Expression;
     if (token === '(') {
-      value = this.parseChoice();
-      if (this.tokens[this.index++] !== ')') throw new Error('Unclosed parenthesis in content expression.');
+      value = this.#parseChoice();
+      if (this.#tokens[this.#index++] !== ')') throw new Error('Unclosed parenthesis in content expression.');
     } else if (token && /^[A-Za-z_][\w-]*$/.test(token)) {
       value = { kind: 'name', value: token };
     } else {
       throw new Error(`Invalid content-expression token: ${String(token)}`);
     }
-    const quantifier = this.tokens[this.index];
+    const quantifier = this.#tokens[this.#index];
     if (quantifier === '*' || quantifier === '+' || quantifier === '?') {
-      this.index += 1;
+      this.#index += 1;
       if (quantifier === '*') return { kind: 'repeat', value, min: 0, max: Number.POSITIVE_INFINITY };
       if (quantifier === '+') return { kind: 'repeat', value, min: 1, max: Number.POSITIVE_INFINITY };
       return { kind: 'repeat', value, min: 0, max: 1 };
@@ -107,6 +108,11 @@ export function matchesContentExpression(content: readonly Node[], source: strin
   if (!expression) {
     expression = new Parser(tokenize(source)).parse();
     cache.set(source, expression);
+  }
+  if (expression.kind === 'repeat' && expression.value.kind === 'name') {
+    const name = expression.value.value;
+    return content.length >= expression.min && content.length <= expression.max
+      && content.every(node => matchesName(node, name));
   }
   return match(expression, content, 0).has(content.length);
 }

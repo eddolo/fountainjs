@@ -55,9 +55,12 @@ export function fontFamilyCSS(value: unknown): string {
 function normalizeMeasurement(
   value: unknown,
   ranges: Readonly<Record<string, readonly [number, number]>>,
+  signed = false,
 ): string | null {
   if (typeof value !== 'string' && typeof value !== 'number') return null;
-  const match = /^\s*(\d+(?:\.\d{1,4})?|\.\d{1,4})\s*(px|pt|rem|em|%)?\s*$/iu.exec(String(value));
+  const match = (signed
+    ? /^\s*(-?(?:\d+(?:\.\d{1,4})?|\.\d{1,4}))\s*(px|pt|rem|em)?\s*$/iu
+    : /^\s*(\d+(?:\.\d{1,4})?|\.\d{1,4})\s*(px|pt|rem|em|%)?\s*$/iu).exec(String(value));
   if (!match) return null;
   const amount = Number(match[1]);
   const unit = (match[2] ?? '').toLowerCase();
@@ -71,6 +74,15 @@ export function normalizeFontSize(value: unknown): string | null {
   return normalizeMeasurement(value, {
     px: [1, 512], pt: [1, 384], rem: [0.25, 32], em: [0.25, 32], '%': [25, 800],
   });
+}
+
+/** Signed character pitch, independent of line height and font kerning.
+ * Numeric values use physical points; relative CSS units remain explicit.
+ */
+export function normalizeLetterSpacing(value: unknown): string | null {
+  return normalizeMeasurement(typeof value === 'number' ? `${value}pt` : value, {
+    px: [-512, 512], pt: [-384, 384], em: [-4, 32], rem: [-4, 32],
+  }, true);
 }
 
 /** Normalizes unitless or unit-aware line height without permitting CSS functions. */

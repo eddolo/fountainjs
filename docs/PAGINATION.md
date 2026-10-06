@@ -160,15 +160,21 @@ their real continuation items and keep ordered-list starts, selection, IME,
 history, review, and collaboration intact. Tables use reversible non-model
 spacer rows at measured rowspan-safe boundaries while the one canonical table
 and every real row remain editable. Accessibility-hidden page shells show
-read-only clones of leading all-header rows, and those copies refresh after an
+read-only clones of leading repeating rows, and those copies refresh after an
 edit to the canonical header. Oversized rows stay one editable row, expose an
 overflow marker on the affected sheet, and retain edit/undo/redo behavior.
 Overlapping/transitive body rowspans are collapsed into one legal fragment, so
 no continuation can cut through the merged region. A two-row header fixture
 proves preserved header `rowspan`/`colspan`, sanitized copies, continued merged
 body groups, editing, and history in Chromium and WebKit. If any leading header
-cell spans beyond the all-header band, continuation keeps the affected source
+cell spans beyond the repeating band, continuation keeps the affected source
 rows together but omits the structurally incomplete repeated header.
+Unreleased: explicit `table_row.attrs.repeatHeader` separates repeat intent from
+semantic header-cell roles. Consecutive leading ordinary `td` rows can repeat;
+an explicit false on a `th` row prevents repetition. Unspecified rows retain
+the legacy all-header-cell default. Editable measurement and read-only preview
+share the same leading-band and rowspan-safety rule. Repeated copies remain
+read-only, sanitized and outside the document model.
 Images, audio, native disclosures, code blocks, and custom NodeViews use one
 default policy: retain the canonical editable DOM/model node, move it intact to
 the next page when it fits, and mark its sheet as overflowing without clipping

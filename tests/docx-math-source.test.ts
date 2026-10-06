@@ -1,3 +1,4 @@
+import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 import { describe, expect, it } from 'vitest';
 import { strFromU8, strToU8, unzipSync, zipSync, Zip, ZipPassThrough } from 'fflate';
 import { Schema, StarterKit, composeExtensions, createMathExtension } from '../src';
@@ -27,6 +28,15 @@ const allMath = (document: ReturnType<typeof read>['document']) => {
   document.descendants(node => { if (['inline_math', 'math_block'].includes(node.type.name)) result.push({ type: node.type.name, latex: node.attrs.latex, ariaLabel: node.attrs.ariaLabel }); });
   return result;
 };
+const withoutExpressions = (value: unknown): unknown => {
+  if (Array.isArray(value)) return value.map(withoutExpressions);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(Object.entries(value).filter(([key]) => key !== 'expression').map(([key, item]) => [key, withoutExpressions(item)]));
+};
+const generated = [
+  { type: 'inline_math', latex: '\\mathrm{x}', ariaLabel: 'Imported Word equation: \\mathrm{x}' },
+  { type: 'math_block', latex: '\\frac{\\mathrm{x}}{\\mathrm{y}}', ariaLabel: 'Imported Word equation: \\frac{\\mathrm{x}}{\\mathrm{y}}' },
+];
 
 describe('opt-in bound DOCX math-source restoration', () => {
   it('restores exact TeX, Unicode/line endings and accessibility labels without browser globals', () => {
@@ -34,18 +44,26 @@ describe('opt-in bound DOCX math-source restoration', () => {
     const bytes = exportFile();
     const reopened = read(bytes);
     expect(allMath(reopened.document)).toEqual(allMath(doc));
-    expect(reopened.document.toJSON()).toEqual(doc.toJSON());
+    expect(withoutExpressions(reopened.document.toJSON())).toEqual(withDOCXExportDefaults(doc.toJSON()));
+    expect(reopened.document.child(0).child(1).attrs.expression).toEqual(expect.objectContaining({ type: 'text', value: 'x' }));
+    expect(reopened.document.child(1).attrs.expression).toEqual(expect.objectContaining({ type: 'fraction' }));
     expect(reopened.report.fidelity).toBe('lossy');
     expect(reopened.report.issues.map(issue => issue.code)).toEqual(['math-source-restored-experimental', 'math-source-restored-experimental']);
-    expect(allMath(importDOCX(bytes, schema).document)).toEqual([]);
+    const semantic = importDOCX(bytes, schema);
+    expect(allMath(semantic.document)).toEqual(generated);
+    expect(semantic.report.issues.filter(issue => issue.code === 'office-math-imported-experimental')).toHaveLength(2);
   });
 
   it('does not restore stale source after an actual equation edit', () => {
     const bytes = editXML(exportFile(), xml => xml.replace('>y</m:t>', '>z</m:t>'));
     const reopened = read(bytes);
-    expect(allMath(reopened.document)).toHaveLength(1);
-    expect(reopened.document.textContent).toContain('[Word equation: import not yet supported]');
+    expect(allMath(reopened.document)).toEqual([
+      allMath(doc)[0],
+      { type: 'math_block', latex: '\\frac{\\mathrm{x}}{\\mathrm{z}}', ariaLabel: 'Imported Word equation: \\frac{\\mathrm{x}}{\\mathrm{z}}' },
+    ]);
+    expect(reopened.document.textContent).not.toContain('[Word equation:');
     expect(reopened.report.issues).toContainEqual(expect.objectContaining({ code: 'math-source-not-restored', message: expect.stringContaining('OMML changed') }));
+    expect(reopened.report.issues).toContainEqual(expect.objectContaining({ code: 'office-math-imported-experimental' }));
   });
 
   it('retains binding across paragraph insertion and harmless XML prefix changes', () => {
@@ -69,20 +87,23 @@ describe('opt-in bound DOCX math-source restoration', () => {
 
   it('refuses property edits even when flattened equation text is unchanged', () => {
     const reopened = read(editXML(exportFile(), xml => xml.replace('m:val="center"', 'm:val="left"')));
-    expect(allMath(reopened.document).map(node => node.type)).toEqual(['inline_math']);
+    expect(allMath(reopened.document).map(node => node.type)).toEqual(['inline_math', 'math_block']);
+    expect(allMath(reopened.document)[1]?.latex).toBe('\\frac{\\mathrm{x}}{\\mathrm{y}}');
     expect(reopened.report.issues.some(issue => issue.message.includes('OMML changed'))).toBe(true);
   });
 
   it.each([
-    (xml: string) => xml.replace('<w:bookmarkStart w:id="2" w:name="FountainMath_2"/>', ''),
-    (xml: string) => xml.replace('<w:bookmarkEnd w:id="2"/>', '<w:bookmarkEnd w:id="1"/>'),
-    (xml: string) => xml.replace('<w:bookmarkStart w:id="2"', '<w:bookmarkStart w:id="1"'),
-    (xml: string) => xml.replace('w:name="FountainMath_2"', 'w:name="FountainMath_1"'),
-    (xml: string) => xml.replace('<w:bookmarkEnd w:id="2"/>', '<w:r><w:t>Extra</w:t></w:r><w:bookmarkEnd w:id="2"/>'),
-    (xml: string) => xml.replaceAll('http://schemas.openxmlformats.org/officeDocument/2006/math', 'urn:fake-math'),
-  ])('refuses missing, ambiguous, enlarged or namespace-spoofed bindings', edit => {
+    { semantic: true, edit: (xml: string) => xml.replace('<w:bookmarkStart w:id="2" w:name="FountainMath_2"/>', '') },
+    { semantic: true, edit: (xml: string) => xml.replace('<w:bookmarkEnd w:id="2"/>', '<w:bookmarkEnd w:id="1"/>') },
+    { semantic: true, edit: (xml: string) => xml.replace('<w:bookmarkStart w:id="2"', '<w:bookmarkStart w:id="1"') },
+    { semantic: true, edit: (xml: string) => xml.replace('w:name="FountainMath_2"', 'w:name="FountainMath_1"') },
+    { semantic: true, edit: (xml: string) => xml.replace('<w:bookmarkEnd w:id="2"/>', '<w:r><w:t>Extra</w:t></w:r><w:bookmarkEnd w:id="2"/>') },
+    { semantic: false, edit: (xml: string) => xml.replaceAll('http://schemas.openxmlformats.org/officeDocument/2006/math', 'urn:fake-math') },
+  ])('refuses missing, ambiguous, enlarged or namespace-spoofed source bindings', ({ edit, semantic }) => {
     const reopened = read(editXML(exportFile(), edit));
-    expect(allMath(reopened.document).some(node => node.type === 'math_block')).toBe(false);
+    // Valid OMML remains independently importable even when private Fountain
+    // source metadata is unusable. A spoofed math namespace remains inert.
+    expect(allMath(reopened.document).some(node => node.type === 'math_block')).toBe(semantic);
     expect(reopened.report.issues.some(issue => issue.code === 'math-source-not-restored')).toBe(true);
   });
 
@@ -124,7 +145,7 @@ describe('opt-in bound DOCX math-source restoration', () => {
     const reopened = read(claimed);
     expect(allMath(reopened.document)[0].latex).toBe('claimed source');
     expect(reopened.report.issues.some(issue => issue.code === 'math-source-restored-experimental' && issue.message.includes('untrusted'))).toBe(true);
-    expect(allMath(importDOCX(claimed, schema).document)).toEqual([]);
+    expect(allMath(importDOCX(claimed, schema).document)).toEqual(generated);
   });
 
   it('rejects duplicate selected ZIP entries rather than trusting the last copy', () => {
@@ -146,7 +167,7 @@ describe('opt-in bound DOCX math-source restoration', () => {
     const bytes = editXML(exportFile(), xml => xml.replace('w:name="FountainMath_2"',
       'w:name="FountainMath_2" q:name="FountainMath_2" xmlns:q="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'));
     const reopened = read(bytes);
-    expect(allMath(reopened.document)).toEqual([]);
+    expect(allMath(reopened.document)).toEqual(generated);
     expect(reopened.report.issues.some(issue => issue.code === 'invalid-math-source-metadata')).toBe(true);
   });
 
@@ -157,7 +178,7 @@ describe('opt-in bound DOCX math-source restoration', () => {
         '<w:body><Relationship xmlns="http://schemas.openxmlformats.org/package/2006/relationships" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml" Target="../customXml/fountainMath.xml"/>'));
     });
     const reopened = read(bytes);
-    expect(allMath(reopened.document)).toEqual([]);
+    expect(allMath(reopened.document)).toEqual(generated);
     expect(reopened.report.issues.some(issue => issue.code === 'invalid-math-source-metadata')).toBe(true);
   });
 
@@ -172,7 +193,7 @@ describe('opt-in bound DOCX math-source restoration', () => {
     if (kind === 'oversize') expect(() => read(bytes)).toThrow(/expanded byte limit/);
     else {
       const reopened = read(bytes);
-      expect(allMath(reopened.document)).toEqual([]);
+      expect(allMath(reopened.document)).toEqual(generated);
       expect(reopened.report.issues.some(issue => issue.code === 'invalid-math-source-metadata')).toBe(true);
     }
     // Opt-out never extracts/parses private source metadata.

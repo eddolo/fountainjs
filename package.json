@@ -104,6 +104,9 @@
       "html/server": [
         "dist/html/server.d.ts"
       ],
+      "html/inert": [
+        "dist/html/inert.d.ts"
+      ],
       "widgets": [
         "dist/widgets/index.d.ts"
       ],
@@ -133,6 +136,16 @@
       "require": {
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
+      }
+    },
+    "./html/inert": {
+      "import": {
+        "types": "./dist/html/inert.d.ts",
+        "default": "./dist/html-inert.js"
+      },
+      "require": {
+        "types": "./dist/html/inert.d.cts",
+        "default": "./dist/html-inert.cjs"
       }
     },
     "./core": {
@@ -585,9 +598,10 @@
     "test:headless": "node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json",
     "test:markdown-conformance": "node scripts/check-markdown-conformance.mjs",
     "test:math-reference": "node scripts/audit-math-labels.mjs",
-    "test:docx-interoperability": "node scripts/check-docx-interoperability.mjs",
+    "test:docx-interoperability": "node scripts/check-docx-interoperability.mjs && node scripts/check-docx-table-text.mjs && node scripts/check-docx-quote-appearance.mjs",
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
+    "test:browser:cold-import": "playwright test --config playwright.cold-input-audit.config.ts --grep \"edits registered HTML wrappers\"",
     "audit:ui": "playwright test -c playwright.audit.config.ts",
     "test:lean-integration": "node scripts/test-lean-loopback.mjs",
     "test:watch": "vitest",

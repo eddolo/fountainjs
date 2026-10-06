@@ -30,6 +30,9 @@ export class Node {
     this.attrs = freezeAttributes(attrs);
     this.content = Object.freeze([...content]);
     this.marks = Object.freeze([...marks]);
+    // Validation and history reuse these values by identity. TypeScript's
+    // readonly modifier alone does not protect a snapshot at runtime.
+    Object.freeze(this);
   }
 
   get isText(): boolean { return this.type.name === 'text'; }
@@ -94,7 +97,7 @@ export class Node {
     const marks = (json.marks ?? []).map((mark) => Mark.fromJSON(schema, mark));
     if (json.type === 'text') {
       if (typeof json.text !== 'string') throw new TypeError('Text node JSON requires a string value.');
-      return schema.text(json.text, marks);
+      return schema.nodes.text.create(json.attrs ?? {}, [], json.text, marks);
     }
     if (json.text !== undefined) throw new TypeError(`Non-text node ${json.type} cannot contain a text property.`);
     return schema.node(json.type, json.attrs ?? {}, (json.content ?? []).map((child) => Node.fromJSON(schema, child)), undefined, marks);

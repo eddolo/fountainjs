@@ -1,5 +1,5 @@
 import type { Editor } from './editor';
-import { NodeSelection } from './selection';
+import { NodeSelection, Selection } from './selection';
 import { Node, type Attributes } from './schema';
 import { getNodeAtPath } from './transaction/path';
 import { isSafeURL } from './url';
@@ -48,11 +48,18 @@ export function createImageNode(editor: Editor, attrs: ImageAttributes, inline =
 
 /** Returns the selected block or inline image, optionally at an explicit path. */
 export function getActiveImage(editor: Editor, path?: readonly number[]): ActiveImage | null {
-  const targetPath = path ?? (editor.state.selection instanceof NodeSelection ? editor.state.selection.nodePath : null);
-  if (!targetPath) return null;
-  try {
-    const node = getNodeAtPath(editor.state.doc, targetPath);
-    if (!['image_super', 'inline_image'].includes(node.type.name)) return null;
-    return { path: Object.freeze([...targetPath]), node, inline: node.type.name === 'inline_image' };
-  } catch { return null; }
+  const selection = editor.state.selection;
+  const initial = path ?? (selection instanceof NodeSelection
+    ? selection.nodePath
+    : selection instanceof Selection ? selection.path : null);
+  if (!initial) return null;
+  for (let length = initial.length; length > 0; length -= 1) {
+    const targetPath = initial.slice(0, length);
+    try {
+      const node = getNodeAtPath(editor.state.doc, targetPath);
+      if (!['image_super', 'inline_image'].includes(node.type.name)) continue;
+      return { path: Object.freeze([...targetPath]), node, inline: node.type.name === 'inline_image' };
+    } catch { return null; }
+  }
+  return null;
 }

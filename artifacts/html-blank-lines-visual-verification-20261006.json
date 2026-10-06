@@ -1,0 +1,337 @@
+{
+  "date": "2026-10-06",
+  "scope": "Visible blank paragraphs in editor, reader, and an actually downloaded standalone HTML file",
+  "sourceSnapshot": "artifacts/html-blank-lines-production-source-final-20261006.json",
+  "sourceDigest": "5c5355f9e5c3b9b7ac108839b3a1efff3287876de5b175a4959f73dcdea9d966",
+  "sourceFiles": 687,
+  "gate": {
+    "log": "artifacts/html-blank-lines-complete-gate-20261006.log",
+    "passed": true,
+    "tests": 2619,
+    "testFiles": 196,
+    "declarationFiles": 409
+  },
+  "browser": {
+    "log": "artifacts/html-blank-lines-recorded-final-20261006.log",
+    "passed": 9,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "workers": 1,
+    "retries": 0
+  },
+  "reproduction": "Before the fix, an empty paragraph with a 36px computed line height occupied zero height in the reader and standalone HTML.",
+  "fix": "Default standalone HTML and the workshop reader apply p{min-height:1em;min-height:1lh}. Empty marked runs are covered without injecting fake text or changing the model. document:false and includeStyles:false remain host-styled.",
+  "verification": "Six blank paragraphs per surface, including three consecutive paragraphs, an empty strong run, a quoted 64px line and a table-cell exact 10pt line. Measured height and non-overlap, whole-document reopen comparisons, and saved file:// HTML were tested.",
+  "visualReview": {
+    "captures": 42,
+    "directFinal": 3,
+    "identicalToDirectSameTurn": 16,
+    "identicalToPriorInspected": 23
+  },
+  "captures": [
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-editor.png",
+      "sha256": "2756e68611ef615bd9901f67da2a33edb6bfc94c5690643d3446315e3c87d52d",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-editor.png",
+      "sha256": "3117baebdc176b61b24d2d149402706396874751917b818222f36d7721fe8b91",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-bottom.png",
+      "sha256": "b1371f58c06ff8eda4091e43cd2c9eb5ea5ac1f52ddc9141c6e08dbb9b631220",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-bottom.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-table.png",
+      "sha256": "e9814d3c94e79e744ee98706bb4449303ef5d417169657a71850a7f4d3ae55c9",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-table.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-top.png",
+      "sha256": "0c3319c7d8294a4a470a6025150f08f5c030d8022759b8a18b3d1521940d56c8",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-top.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-bottom.png",
+      "sha256": "6c7aed71c59b110208fd3da3d926b26ef989674110703d6f1550462c5dac1645",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-bottom.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-table.png",
+      "sha256": "ca037a64718c412735ad78c044a68ed3d1d2fc9e70ebd50f90f0868085e754a9",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-table.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-top.png",
+      "sha256": "3bcebc48f0904f062a9a8c605170ddd91d71ab58173127e8ae587aab7ba23e75",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-top.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-editor.png",
+      "sha256": "2c8717373cd299f26e752b4876f95ef2fc401a20d486700d4c0de7b29210dc2b",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-editor.png",
+      "sha256": "68d9366d1889a14909fb442507f16b704872807ff63dab95a34a127930e084ec",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-bottom.png",
+      "sha256": "9d6a75aaaa249b1a4b705b2c21722b98f8c388f67080165a5f0d6a3cccb2cdec",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-bottom.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-table.png",
+      "sha256": "20d8dfe0a250564b79979404153f1deabb76f750a2d7ff5bb5f81a3ba89e33c2",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-table.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-top.png",
+      "sha256": "588ccb0e6321f70bc60cd6531600411eed510181be1df94a614ceead7118cb63",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-top.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-bottom.png",
+      "sha256": "77113077f18efacd2ec671d0d76d2c963d142f4754153a22cf4bfa4aaa0e808d",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-bottom.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-table.png",
+      "sha256": "57256436e5ab5f102a39a7bfab6e74415a2618ca4e562f8e561e43cd9aee30a1",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-table.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-top.png",
+      "sha256": "529c28d01f5febd7699d1655d5004523c16e7ffb3d2a64a63a410ed03312ea55",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-top.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-editor.png",
+      "sha256": "74cdb17f2cd714e3a5b12268f0a607465b3c06726d041d4396efae3c515e0a55",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-editor.png",
+      "sha256": "740491d15fd6d0a94ecdd97ece13e32335c6e75b74a62934d0f77ad2a30a6721",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-bottom.png",
+      "sha256": "86adadccec7d27c4641a28fa52ead637f672549098bbb4b731310e35b174d47f",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-bottom.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-table.png",
+      "sha256": "17ba21fc7deb10999e53163fedc348e843e607407f4b517cea0a5cd2a263fbf9",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-table.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-top.png",
+      "sha256": "761a5a37f0895a2b63ddd2bfbc6ff8882da7c2e92104926e05c63a006dfc0843",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-top.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-bottom.png",
+      "sha256": "d4c878d9ce9a1a02290b641a66389180d3cff8cf88055cede31aa160d4f79c6d",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-bottom.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-table.png",
+      "sha256": "6472f8b52baae84ca733bce7a4f40fa80572c0e68f793dd3b191baf70eccce5a",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-table.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-top.png",
+      "sha256": "249f464b0a265852b11fd77017fc22a290f0a612eb53e05415a2e7d01d5cfc2f",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-top.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-editor.png",
+      "sha256": "b4f9fa8834a3fe0163c9848e8bd98f4b77cecdcd35236ae0800768ac63bd807c",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-reader.png",
+      "sha256": "a98499d3128444b9e44f223897e14f2db26b7754fbb8e2aa0810bb4ae0c0a384",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-reader.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-editor.png",
+      "sha256": "865d0de4acaae5b53fdc62c1da5bc4fa2d29470736660675ae7fa97e6e00bed5",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-reader.png",
+      "sha256": "d1d42f2b7ce2c6e7ffae59655cb3e80b4910dc75ca2b16f109cea754930556e7",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-reader.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-editor.png",
+      "sha256": "5839482855c2007a8976a4e680ae41c1a8815962021c709bce242fdbc0061094",
+      "verified": true,
+      "inspectionReference": "artifacts/html-empty-paragraph-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-editor.png",
+      "review": "sha256-identical-to-prior-inspected-evidence"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-reader.png",
+      "sha256": "bfdee3ea9c47ddd3b01aa1564da668a823accd06b341ccbb93603a4b8648b8cb",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-reader.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-editor.png",
+      "sha256": "c28c04985876ba8ca83951305fe7bae824c757ace7d324efa123adc704c85080",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-editor.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-reader-table.png",
+      "sha256": "f77c09748118be3f867073c13f7d4c334c7c3c6f97ed944bf0f5ecd70b6310b4",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-reader-table.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-reader-top.png",
+      "sha256": "d62e9a1bb5dbf8586edd5c3ed51753a27d46e6bb73f88cb1abeb1a3a2556c547",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-reader-top.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-standalone.png",
+      "sha256": "de80f6e3b0953c56527f14d34f9e1643eba47f2057194ed2f8169b361688a5ae",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-chromium/blank-lines-standalone.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-editor.png",
+      "sha256": "ab16ae1eb6220870800221c99d98c601cbd7649a10f48ad8d6ce2538415351dc",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-editor.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-reader-table.png",
+      "sha256": "2a26964be542a71fdaf35a61dec16c2e1aff5862d70de3c897c8fd285aeeef19",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-reader-table.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-reader-top.png",
+      "sha256": "726fe430695346915fa33f17f1b9febeeb267da8433162d35210c8a7f5eef55a",
+      "verified": true,
+      "inspectionReference": null,
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-standalone.png",
+      "sha256": "04cc35cb1bf8f8c2a0ddae527ee9224507acea82f84a4f6d2aa51933664c1668",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-firefox/blank-lines-standalone.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-webkit/blank-lines-editor.png",
+      "sha256": "9b101e40ce25e0dfef35736b3a2f27b4b6432d97d504742f60653c9946728324",
+      "verified": true,
+      "inspectionReference": null,
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-webkit/blank-lines-reader-table.png",
+      "sha256": "4efaede185a8e4bd57e72a7aaf4a1a1347c011768d8052fa55377483e6aebc5e",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-webkit/blank-lines-reader-table.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-webkit/blank-lines-reader-top.png",
+      "sha256": "f89e6fd60fbca27013f0f5b1a932207eac7e1fae021e11daf7c6998b0536b6c2",
+      "verified": true,
+      "inspectionReference": null,
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/html-blank-lines-recorded-final-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-webkit/blank-lines-standalone.png",
+      "sha256": "2aefaeab99133125a2f408318adc7dc5465e25523f1191bfb2251124cf149684",
+      "verified": true,
+      "inspectionReference": "artifacts/html-blank-lines-recorded-20261006/editor-keeps-consecutive-m-06839-le-in-reader-and-saved-HTML-webkit/blank-lines-standalone.png",
+      "review": "sha256-identical-to-this-turn-direct-inspection"
+    }
+  ],
+  "limits": [
+    "Screen rendering only; no new native Word/PDF/print certification.",
+    "Reader, editor, and standalone HTML use different themes; no pixel-identity claim.",
+    "No physical mobile device coverage.",
+    "No parity rows promoted; CommonMark scores unchanged.",
+    "Changes remain Unreleased."
+  ]
+}

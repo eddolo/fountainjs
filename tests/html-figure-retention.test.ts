@@ -8,7 +8,6 @@ const image = '<img src="/diagram.png" alt="Diagram">';
 const fixtures = [
   '<p>First</p><p>Second</p>',
   `Before${image}<p>After</p>`,
-  `${image}<figcaption><strong>Important</strong> <a href="/evidence">evidence</a></figcaption>`,
   `${image}<figcaption>First caption</figcaption><figcaption>Second caption</figcaption>`,
   `${image}<p>Between</p>${image}<figcaption>Both diagrams</figcaption>`,
   `<div>${image}<p>Nested evidence</p></div><figcaption>Caption</figcaption>`,
@@ -59,6 +58,22 @@ describe('HTML figure content retention', () => {
     expect(ServerHTMLImporter.parseWithReport(html, schema).issues.some(issue => issue.code === 'unmapped-block-wrapper')).toBe(true);
   });
 
+  it('keeps a rich image caption attached and marked across browser and server HTML', () => {
+    const html = `<figure>${image}<figcaption><strong>Important</strong> <a href="/evidence">evidence</a></figcaption></figure>`;
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const document = importer.parse(html, schema);
+      const figure = document.child(0);
+      expect(document.childCount).toBe(1);
+      expect(figure.type.name).toBe('image_super');
+      expect(figure.attrs.caption).toBe('');
+      expect(figure.content.map(node => node.textContent).join('')).toBe('Important evidence');
+      expect(figure.content[0]?.marks.map(mark => mark.type.name)).toEqual(['strong']);
+      expect(figure.content[2]?.marks.find(mark => mark.type.name === 'link')?.attrs.href).toBe('/evidence');
+      expect(importer.parse(HTMLExporter.export(document, { document: false }), schema).toJSON()).toEqual(document.toJSON());
+    }
+    expect(ServerHTMLImporter.parseWithReport(html, schema).issues).toEqual([]);
+  });
+
   it('keeps a simple image and plain caption attached with its dimensions and alignment', () => {
     const html = `<figure data-align="left" style="width:75%">\n${image}\n<figcaption>Caption</figcaption>\n</figure>`;
     for (const importer of [HTMLImporter, ServerHTMLImporter]) {
@@ -67,6 +82,19 @@ describe('HTML figure content retention', () => {
       expect(document.child(0).attrs).toMatchObject({ caption: 'Caption', width: '75%', align: 'left' });
     }
     expect(ServerHTMLImporter.parseWithReport(html, schema).issues).toEqual([]);
+  });
+
+  it('preserves independent caption alignment and paragraph geometry through browser and server HTML', () => {
+    const document = schema.node('doc', {}, [schema.node('image_super', {
+      src: '/diagram.png', align: 'left', captionAlign: 'right',
+      captionLayout: { unit: 'pt', fontFamily: 'Georgia', fontSize: 14, spacingAfter: 7, indentStart: 3 },
+    }, [schema.text('Evidence', [schema.marks.strong.create()])])]);
+    const html = HTMLExporter.export(document, { document: false });
+    expect(html).toContain('text-align:right');
+    expect(html).toContain('margin-block-end:7pt');
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      expect(importer.parse(html, schema).toJSON()).toEqual(document.toJSON());
+    }
   });
 
   it.each(['', ' data-fountain-media="video"'])('keeps captions when the media cannot be imported: %s', attribute => {

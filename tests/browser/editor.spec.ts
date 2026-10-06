@@ -1,5 +1,7 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { strFromU8, unzipSync } from 'fflate';
+import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
@@ -16,12 +18,83 @@ import { docxControlsJourney } from './docx-controls-journey';
 import { docxGlossaryJourney } from './docx-glossary-journey';
 import { htmlContainerJourney, htmlContainerAuthoringJourney } from './html-container-journey';
 import { markdownDocumentJourney } from './markdown-document-journey';
+import { htmlCommentJourney } from './html-comment-journey';
+import { htmlFlowJourney, htmlFlowRetentionJourney, htmlFlowClipboardJourney, htmlBlockAtomsJourney, htmlTableFlowJourney } from './html-flow-journey';
+import { markdownFlowNewlineJourney } from './markdown-flow-newline-journey';
+import { markdownEmphasisRunsJourney, markdownPartialSchemaJourney } from './markdown-emphasis-runs-journey';
 import { webComponentFormJourney } from './web-component-form-journey';
 import { conversionLabJourney } from './conversion-lab-journey';
+import { modelIntegrityJourney } from './model-integrity-journey';
+import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-journey';
+import { htmlRawTextJourney } from './html-raw-text-journey';
+import { htmlLinkControlsJourney } from './html-link-controls-journey';
+import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-block-journey';
+import { htmlBlankLineJourney } from './html-blank-line-journey';
+
+test('separates the homepage framework descenders from the italic extend line', async ({ page }, info) => {
+  for (const width of [1162, 1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    const heading = page.locator('.hero h1');
+    await expect(heading).toBeVisible();
+    await expect(heading.locator('span').nth(1)).toHaveText('Use any framework.');
+    await expect(heading.locator('em')).toHaveText('Extend every layer.');
+    const geometry = await heading.evaluate(element => {
+      const framework = element.querySelectorAll('span')[1].getBoundingClientRect();
+      const extend = element.querySelector('em')!.getBoundingClientRect();
+      return { gap: extend.top - framework.bottom, fontSize: parseFloat(getComputedStyle(element).fontSize) };
+    });
+    expect(geometry.gap).toBeGreaterThanOrEqual(geometry.fontSize * .15);
+    await page.screenshot({ path: info.outputPath(`hero-spacing-${width}.png`) });
+  }
+});
+
+test('keeps consecutive marked quoted and table blank lines visible in reader and saved HTML', async ({ page }, info) => {
+  await htmlBlankLineJourney(page, info);
+});
+
+test('fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo', async ({ page }, info) => {
+  await htmlEmptyParagraphJourney(page, info);
+});
+
+test('edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening', async ({ page }, info) => {
+  await htmlInertBlockJourney(page, info);
+});
+
+test('retains HTML link navigation and literal Markdown data through real editing and reopening', async ({ page }, info) => {
+  await htmlLinkControlsJourney(page, info);
+});
+
+test('edits inert script style textarea source with real Enter Backspace history and safe reader reopening', async ({ page }, info) => {
+  await htmlRawTextJourney(page, info);
+});
+
+test('retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions', async ({ page }, info) => {
+  await htmlIncompleteSourceJourney(page, info);
+});
+
+test('preserves registered inert inline source through real typing history and Markdown HTML JSON reopening', async ({ page }, info) => {
+  await htmlInertJourney(page, info);
+});
+
+test('preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening', async ({ page }, info) => {
+  await modelIntegrityJourney(page, info);
+});
 
 test('imports private files in the conversion lab with reports and export reopen', async ({ page }, info) => {
   await conversionLabJourney(page, info);
 });
+
+test('resolves unequal Markdown runs through actual selection editing history download and reader reopen', async ({ page }, info) => {
+  await markdownEmphasisRunsJourney(page, info);
+});
+
+for (const mark of ['em', 'strong'] as const) {
+  test(`retains partial Markdown ${mark} scope through real typing history and canonical reopening`, async ({ page }, info) => {
+    await markdownPartialSchemaJourney(page, info, mark);
+  });
+}
 
 test('submits resets and disables a native form-associated Web Component', async ({ page }, info) => {
   await webComponentFormJourney(page, info);
@@ -29,6 +102,35 @@ test('submits resets and disables a native form-associated Web Component', async
 
 test('converts document-wide HTML scopes with source edit undo and explicit layout differences', async ({ page }, info) => {
   await markdownDocumentJourney(page, info);
+});
+
+test('preserves inert HTML comments through human editing source and reader output', async ({ page }, info) => {
+  await htmlCommentJourney(page, info);
+});
+
+test('copies anonymous flow internally and into an external plain-text editor through real clipboard', async ({ page, browserName }, info) => {
+  test.skip(browserName === 'webkit' && process.platform === 'win32', 'Windows Playwright WebKit drops event-authored clipboard payloads even in an independent textarea. See scripts/check-browser-clipboard-capability.mjs; real Safari clipboard verification remains open.');
+  await htmlFlowClipboardJourney(page, info);
+});
+
+test('retains cleared anonymous flow through real cut save reopen and continued editing', async ({ page }, info) => {
+  await htmlFlowRetentionJourney(page, info);
+});
+
+test('retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output', async ({ page }, info) => {
+  await htmlFlowJourney(page, info);
+});
+
+test('retains literal flow newlines through actual Markdown export and source reimport', async ({ page }, info) => {
+  await markdownFlowNewlineJourney(page, info);
+});
+
+test('edits protected Markdown images and dividers inside HTML sections through history and reopening', async ({ page }, info) => {
+  await htmlBlockAtomsJourney(page, info);
+});
+
+test('edits protected Markdown tables inside HTML sections through cell navigation history and reopening', async ({ page }, info) => {
+  await htmlTableFlowJourney(page, info);
 });
 
 test('authors sections with properties, empty content, undo and reader preview', async ({ page }, info) => {
@@ -61,6 +163,7 @@ import { markdownParagraphRecoveryJourney } from './markdown-paragraph-recovery-
 import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
 import { markdownStructuralRecoveryJourney } from './markdown-structural-recovery-journey';
 import { markdownCustomWrapperJourney } from './markdown-custom-wrapper-journey';
+import { outputFormatJourney } from './output-format-journey';
 import { definitionListJourney } from './definition-list-journey';
 import { markdownCodeEndingsJourney } from './markdown-code-endings-journey';
 
@@ -74,6 +177,10 @@ test('edits definition lists and reopens a glossary in a reader', async ({ page 
 
 test('edits registered HTML wrappers after Markdown source recovery', async ({ page }, info) => {
   await markdownCustomWrapperJourney(page, info);
+});
+
+test('retains the complete document through pointer and keyboard output-format changes', async ({ page }, info) => {
+  await outputFormatJourney(page, info);
 });
 
 test('recovers nested Markdown lists and quotes through an editor and reader', async ({ page }, info) => {
@@ -353,6 +460,11 @@ test.beforeEach(async ({ page, browserName }, testInfo) => {
     test.skip(true, 'This browser-specific bridge is exercised in Chromium.');
   }
   await page.goto('/browser-tests.html');
+  // Document load is not the application's readiness boundary: a cold Vite
+  // dependency discovery can restart the page before the module exposes its API.
+  // Assert readiness explicitly, without sleeping or retrying failed editing.
+  await page.waitForFunction(() => Boolean((globalThis as any).fountainBrowserTest?.editor));
+  await expect(page.getByRole('textbox', { name: 'Browser contract editor', exact: true })).toBeVisible();
 });
 
 test('keeps comparison names separate from their copy in a mobile desktop-site viewport', async ({ page }) => {
@@ -1590,6 +1702,39 @@ test('keeps one canonical ordered list editable and numbered across page shells'
   )).toBe(2);
 });
 
+for (const intent of ['ordinary', 'off'] as const) test(`honours explicit table repetition independently of cell roles (${intent})`, async ({ page }, info) => {
+  await page.goto(`/browser-tests.html?fixture=editable-table-pages&repeat=${intent}`);
+  const editor = page.getByRole('textbox', { name: 'Split table page editor' });
+  const host = page.getByLabel('Editable pages browser contract').locator('.fountain-editable-pages');
+  await expect(host).toHaveAttribute('data-fountain-editable-pages-mode', 'paged');
+  const table = editor.locator(':scope > table[data-fountain-node="table"]');
+  const row = table.locator('tr[data-fountain-node="table_row"]').first();
+  const headers = host.locator('.fountain-editable-pages__shells [data-fountain-editable-table-header]');
+  const sheets = host.locator('.fountain-editable-pages__sheet');
+  expect(await sheets.count()).toBeGreaterThan(1);
+  await expect(row).toHaveAttribute('data-fountain-repeat-header', String(intent === 'ordinary'));
+  await expect(row.locator(intent === 'ordinary' ? 'th' : 'td')).toHaveCount(0);
+  await expect.poll(async () => await headers.count() - (intent === 'ordinary' ? await sheets.count() - 1 : 0)).toBe(0);
+  if (intent === 'ordinary') {
+    await expect(headers.locator('th')).toHaveCount(0);
+    expect(await headers.evaluateAll(items => items.every(item =>
+      item.getAttribute('contenteditable') === 'false' && !item.querySelector('[data-fountain-path]')))).toBe(true);
+  }
+  await host.screenshot({ path: info.outputPath(`repeat-${intent}-before.png`) });
+  await selectBlockEnd(row);
+  await page.keyboard.type(' LIVE');
+  await expect(row).toContainText('Status LIVE');
+  if (intent === 'ordinary') await expect.poll(() => headers.allTextContents()).toEqual(Array(await sheets.count() - 1).fill('RecordStatus LIVE'));
+  else await expect(headers).toHaveCount(0);
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.undo())).toBe(true);
+  await expect(row).not.toContainText('LIVE');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.pages.editable.redo())).toBe(true);
+  await expect(row).toContainText('LIVE');
+  await expect(row).toHaveAttribute('data-fountain-repeat-header', String(intent === 'ordinary'));
+  await expect(table.locator('tr[data-fountain-node="table_row"]')).toHaveCount(13);
+  await host.screenshot({ path: info.outputPath(`repeat-${intent}-edited.png`) });
+});
+
 test('keeps one canonical table editable with repeated headers across page shells', async ({ page }) => {
   await page.goto('/browser-tests.html?fixture=editable-table-pages');
   const editor = page.getByRole('textbox', { name: 'Split table page editor' });
@@ -1998,7 +2143,7 @@ test('keeps code, media, disclosures, and custom atoms canonical across editable
   ]));
   expect(contract.warnings.every((warning: any) => (
     warning.code === 'oversized-item'
-      && ['block:2:audio', 'block:4:code_block', 'block:5:browser_counter'].includes(warning.itemId)
+      && ['block:1:image_super', 'block:2:audio', 'block:4:code_block', 'block:5:browser_counter'].includes(warning.itemId)
   ))).toBe(true);
 
   const oversizedNodeNames: string[] = contract.warnings
@@ -2013,7 +2158,10 @@ test('keeps code, media, disclosures, and custom atoms canonical across editable
       const sheet = pageNumber
         ? document.querySelector<HTMLElement>(`.fountain-editable-pages__sheet[data-fountain-editable-page="${pageNumber}"]`)
         : null;
-      return { nodeName, pageNumber, marked: sheet?.dataset.fountainEditablePageOverflow };
+      const style = node ? getComputedStyle(node) : null;
+      const measuredHeight = (node?.getBoundingClientRect().height ?? 0)
+        + Number.parseFloat(style?.marginBlockStart || '0') + Number.parseFloat(style?.marginBlockEnd || '0');
+      return { nodeName, pageNumber, measuredHeight, marked: sheet?.dataset.fountainEditablePageOverflow };
     });
     return {
       atomHeight: atom?.getBoundingClientRect().height ?? 0,
@@ -2023,6 +2171,7 @@ test('keeps code, media, disclosures, and custom atoms canonical across editable
   }, oversizedNodeNames);
   expect(overflow.atomHeight).toBeGreaterThan(overflow.bodyHeight);
   expect(overflow.marked.map((entry: { nodeName: string }) => entry.nodeName)).toEqual(oversizedNodeNames);
+  expect(overflow.marked.every((entry: { measuredHeight: number }) => entry.measuredHeight > overflow.bodyHeight)).toBe(true);
   expect(overflow.marked.every((entry: { pageNumber?: string; marked?: string }) => (
     /^\d+$/u.test(entry.pageNumber ?? '') && entry.marked === 'true'
   ))).toBe(true);
@@ -4113,7 +4262,7 @@ test('uses Ctrl+A as an explicit all-document selection and replaces the documen
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('text');
 });
 
-test('selects and deletes an atomic image through real pointer and keyboard input', async ({ page }) => {
+test('selects and deletes a block image through real pointer and keyboard input', async ({ page }) => {
   const inserted = await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
     return contract.commands.commands.insertImage({ src: 'https://example.com/selected.png', alt: 'Selected image' });
@@ -4156,8 +4305,19 @@ test('edits, aligns, resizes, and undoes a production image through accessible c
   const caption = figure.getByRole('textbox', { name: 'Image caption' });
   await caption.fill('A caption edited in the node view');
   await caption.press('ControlOrMeta+Enter');
-  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super')?.attrs.caption))
+  await expect.poll(() => page.evaluate(() => {
+    const image = (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super');
+    return image?.content.map((node: any) => node.textContent).join('');
+  }))
     .toBe('A caption edited in the node view');
+  const richCaption = figure.locator('[data-fountain-image-caption-content]');
+  await richCaption.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('!');
+  await expect.poll(() => page.evaluate(() => {
+    const image = (globalThis as any).fountainBrowserTest.editor.state.doc.content.find((node: any) => node.type.name === 'image_super');
+    return image?.content.map((node: any) => node.textContent).join('');
+  })).toBe('A caption edited in the node view!');
 
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.setImageAlignment('right'))).toBe(true);
   await expect(figure).toHaveAttribute('data-align', 'right');
@@ -4265,6 +4425,161 @@ test('extends and replaces a rectangular cell selection through real pointer inp
   await expect(page.locator('[data-fountain-path="1.0.1"]')).toHaveText('');
   await expect(page.locator('[data-fountain-path="1.1.0"]')).toHaveText('');
   await expect(page.locator('[data-fountain-path="1.1.1"]')).toHaveText('');
+});
+
+test('keeps mixed-format links intact through backward selection typing and history', async ({ page }, info) => {
+  const original = await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const { schema } = editor.state;
+    const link = schema.mark('link', { href: '/guide' });
+    const paragraph = schema.node('paragraph', {}, [
+      schema.text('Second ', [link]), schema.text('paragraph', [schema.mark('strong'), link]), schema.text('.', [link]),
+    ]);
+    editor.dispatch(editor.createTransaction().replace(0, editor.state.doc.childCount, [paragraph,
+      schema.node('paragraph', {}, [schema.text('\n', [link])])]));
+    return editor.getJSON();
+  });
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await expect(editor.locator('a[href]')).toHaveCount(1);
+  await expect(paragraph.getByRole('link')).toHaveText('Second paragraph.');
+  await expect(paragraph.locator('strong')).toHaveText('paragraph');
+  await paragraph.click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Shift+Home');
+  await expect.poll(() => page.evaluate(() => document.getSelection()?.toString())).toBe('Second paragraph.');
+  await page.keyboard.type('Reviewed');
+  await expect(paragraph).toHaveText('Reviewed');
+  const changed = await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON());
+  await page.keyboard.press('Control+z');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(original);
+  await expect(editor.locator('a[href]')).toHaveCount(1);
+  await page.screenshot({ path: info.outputPath('mixed-link-backward-selection-and-undo.png') });
+  await page.keyboard.press('Control+Shift+z');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(changed);
+});
+
+test('reaches overflowing code by keyboard and leaves it without modifying the document', async ({ page }, info) => {
+  const original = await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const { schema } = editor.state;
+    editor.dispatch(editor.createTransaction().replace(0, editor.state.doc.childCount, [
+      schema.node('paragraph', {}, [schema.text('Before code')]),
+      schema.node('code_block', { language: 'typescript' }, [schema.text('const value = "' + 'x'.repeat(220) + '";')]),
+      schema.node('paragraph', {}, [schema.text('After code')]),
+    ]));
+    const root = document.querySelector<HTMLElement>('[aria-label="Browser contract editor"]')!;
+    for (const [label, position] of [['Before editor', 'beforebegin'], ['After editor', 'afterend']] as const) {
+      const button = document.createElement('button'); button.textContent = label;
+      root.insertAdjacentElement(position, button);
+    }
+    return editor.getJSON();
+  });
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: 'Before editor', exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expect(editor).toBeFocused();
+  await page.keyboard.press('Tab');
+  const code = editor.getByRole('region', { name: 'typescript code', exact: true });
+  await expect(code).toBeFocused();
+  await expect.poll(() => code.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'After editor', exact: true })).toBeFocused();
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(original);
+  await page.keyboard.press('Shift+Tab');
+  await expect(code).toBeFocused();
+  const background = await code.evaluate(element => getComputedStyle(element).backgroundColor);
+  for (let index = 0; index < 15; index += 1) await page.keyboard.press('ArrowRight');
+  await expect.poll(() => code.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+  await expect(code).toBeFocused();
+  await expect(code).toHaveCSS('background-color', background);
+  expect(background).toBe('rgb(21, 24, 35)');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(original);
+  await page.screenshot({ path: info.outputPath('code-keyboard-focus-and-overflow.png') });
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('// reviewed ');
+  await expect(code).toContainText('// reviewed const value');
+  await expect(editor.locator('[data-fountain-node="paragraph"]').first()).toHaveText('Before code');
+  await page.keyboard.press('Control+z');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(original);
+});
+
+test('pastes into tab-focused code through Chromium clipboard without changing the previous paragraph', async ({ page }, info) => {
+  const original = await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const { schema } = editor.state;
+    editor.dispatch(editor.createTransaction().replace(0, editor.state.doc.childCount, [
+      schema.node('paragraph', {}, [schema.text('Leave this paragraph alone')]),
+      schema.node('code_block', { language: 'python' }, [schema.text('print(1)')]),
+    ]));
+    const source = document.createElement('textarea'); source.setAttribute('aria-label', 'Code clipboard source');
+    source.value = '# copied\n'; document.body.prepend(source);
+    return editor.getJSON();
+  });
+  const source = page.getByRole('textbox', { name: 'Code clipboard source', exact: true });
+  await source.focus(); await source.selectText(); await page.keyboard.press('Control+c');
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const code = editor.getByRole('region', { name: 'python code', exact: true });
+  await code.focus(); await page.keyboard.press('Control+v');
+  await expect(code).toContainText('# copied\nprint(1)');
+  await expect(editor.locator('[data-fountain-node="paragraph"]')).toHaveText('Leave this paragraph alone');
+  await page.screenshot({ path: info.outputPath('keyboard-code-paste-target.png') });
+  await page.keyboard.press('Control+z');
+  await expect.poll(() => page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(original);
+});
+
+test('announces table resize values through real keyboard, pointer and history workflows', async ({ page }, info) => {
+  const original = await page.evaluate(() => {
+    const { editor } = (globalThis as any).fountainBrowserTest;
+    const { schema } = editor.state;
+    const cell = (text: string, colwidth: number[], colspan = 1) => schema.node('table_cell', { colwidth, colspan },
+      [schema.node('paragraph', {}, [schema.text(text)])]);
+    const table = schema.node('table', {}, [
+      schema.node('table_row', {}, [cell('Merged columns', [150, 250], 2), cell('Neighbor', [90])]),
+      schema.node('table_row', {}, [cell('Left', [150]), cell('Right', [250]), cell('Neighbor row', [90])]),
+    ]);
+    editor.dispatch(editor.state.createTransaction().replace(0, editor.state.doc.childCount, [table]));
+    return editor.state.doc.toJSON();
+  });
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const handle = page.locator('[data-fountain-path="0.0.0"] .fountain-table-cell__resize-handle');
+  await expect(handle).toHaveAttribute('aria-valuemin', '40');
+  await expect(handle).toHaveAttribute('aria-valuemax', '2000');
+  await expect(handle).toHaveAttribute('aria-valuenow', '250');
+  await expect(handle).toHaveAttribute('aria-valuetext', '250 pixels');
+  await handle.focus();
+  await expect(handle).toBeFocused();
+  await handle.press('Shift+ArrowRight');
+  await expect(handle).toHaveAttribute('aria-valuenow', '275');
+  await expect(handle).toBeFocused();
+  await expect(page.locator('[data-fountain-path="0.1.1"] .fountain-table-cell__resize-handle')).toHaveAttribute('aria-valuenow', '275');
+  await expect(page.locator('[data-fountain-path="0.1.2"] .fountain-table-cell__resize-handle')).toHaveAttribute('aria-valuenow', '90');
+  await editor.press('Control+z');
+  await expect(handle).toHaveAttribute('aria-valuenow', '250');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.toJSON())).toEqual(original);
+  await editor.press('Control+Shift+z');
+  await expect(handle).toHaveAttribute('aria-valuenow', '275');
+  const resized = await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.toJSON());
+  // Deliberately close the existing 500ms typing/history grouping interval.
+  await page.waitForTimeout(600);
+  await handle.scrollIntoViewIfNeeded();
+  const box = await handle.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box!.x + box!.width / 2 + 35, box!.y + box!.height / 2, { steps: 5 });
+  await expect(handle).toHaveAttribute('aria-valuenow', '310');
+  await expect(handle).toHaveAttribute('aria-valuetext', '310 pixels');
+  await page.mouse.up();
+  await expect(handle).toBeFocused();
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('cell');
+  await expect(page.locator('[data-fountain-path="0.1.1"] .fountain-table-cell__resize-handle')).toHaveAttribute('aria-valuenow', '310');
+  await editor.screenshot({ path: info.outputPath('table-resize-announced-and-committed.png') });
+  await editor.press('Control+z');
+  await expect(handle).toHaveAttribute('aria-valuenow', '275');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.doc.toJSON())).toEqual(resized);
+  await editor.screenshot({ path: info.outputPath('table-resize-undo-exact-document.png') });
 });
 
 test('edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids', async ({ page }) => {
@@ -4939,6 +5254,8 @@ test('applies the complete text-style suite through the public React toolbar', a
   await page.getByRole('button', { name: 'Apply font' }).click();
   await page.getByLabel('Font size').fill('20px');
   await page.getByRole('button', { name: 'Apply size' }).click();
+  await page.getByLabel('Character spacing').fill('-0.5pt');
+  await page.getByRole('button', { name: 'Apply spacing' }).click();
   await page.getByLabel('Line height').fill('1.8');
   await page.getByRole('button', { name: 'Apply line height' }).click();
   await page.getByLabel('Text colour').fill('#123456');
@@ -4972,6 +5289,7 @@ test('applies the complete text-style suite through the public React toolbar', a
     font_family: { family: 'Atkinson Hyperlegible, sans-serif' },
     font_size: { size: '20px' },
     line_height: { lineHeight: '1.8' },
+    letter_spacing: { spacing: '-0.5pt' },
   });
 });
 
@@ -5017,6 +5335,105 @@ test('uses the public React image workflow for metadata, alignment, and replacem
   });
   await expect(page.locator('form.is-image').getByRole('status')).toContainText('replacement.gif inserted');
   await expect(figure.locator('img')).toHaveAttribute('src', /^data:image\/gif;base64,/);
+});
+
+test('opens and cancels public configuration panels with keyboard focus and exact document retention', async ({ page }, info) => {
+  await page.goto('/demos/react-article.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  const json = page.locator('.demo-output pre');
+  await expect(json).toContainText('"type": "doc"');
+  const original = JSON.parse(await json.textContent() ?? '');
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 720 });
+    for (const [action, formClass, label] of [
+      ['link', 'link', 'Link URL'], ['search', 'search', 'Find text'],
+      ['highlight', 'highlight', 'Highlight colour'], ['text-style', 'text-style', 'Font family'],
+      ['image', 'image', 'Image placement'], ['insert-table', 'table', 'Table rows'],
+      ['media', 'media', 'Media type'],
+    ]) {
+      await editor.locator('[data-fountain-node="paragraph"]').first().click();
+      await page.keyboard.press('Home'); await page.keyboard.press('Shift+End');
+      const trigger = page.locator(`button[data-fountain-toolbar-action="${action}"]`);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await trigger.focus(); await trigger.press('Enter');
+      const form = page.locator(`form.is-${formClass}`);
+      const field = form.getByLabel(label, { exact: true });
+      await expect(field).toBeFocused();
+      await expect(form).toHaveAttribute('aria-label', /\S/);
+      await expect(trigger).toHaveAttribute('aria-controls', await form.getAttribute('id') ?? '');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      const clipped = await form.evaluate(form => {
+        const bounds = form.getBoundingClientRect();
+        return [...form.querySelectorAll('input, select, textarea, button')]
+          .filter(element => element.checkVisibility())
+          .filter(element => {
+            const box = element.getBoundingClientRect();
+            return box.left < Math.max(0, bounds.left) - 1 || box.right > Math.min(innerWidth, bounds.right) + 1;
+          }).map(element => element.getAttribute('aria-label') ?? element.textContent);
+      });
+      expect(clipped).toEqual([]);
+      if (action === 'link') {
+        await field.fill('https://example.com/incident');
+        await field.press('Home'); await field.press('ArrowRight'); await field.press('ArrowRight');
+        await expect(field).toBeFocused();
+        expect(await field.evaluate(element => (element as HTMLInputElement).selectionStart)).toBe(2);
+      }
+      expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
+      // Host/capture style mutations must not steal focus from a native panel
+      // field while the original contenteditable selection still exists.
+      await editor.evaluate(element => { (element as HTMLElement).style.caretColor = 'transparent'; });
+      await form.screenshot({ path: info.outputPath(`keyboard-panel-${action}-${width}.png`) });
+      await expect(field).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(form).toHaveCount(0); await expect(trigger).toBeFocused();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
+    }
+    // This native field is inside the toolbar itself: arrows must not transfer
+    // focus to a command button or start toolbar traversal.
+    const color = page.locator('[data-fountain-toolbar-action="text-color"] input');
+    await color.focus(); await color.press('ArrowRight'); await expect(color).toBeFocused();
+    expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
+  }
+});
+
+test('keeps table configuration labels legible on pointer hover', async ({ page }, info) => {
+  await page.goto('/demos/react-article.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await expect(page.locator('.demo-output pre')).toContainText('"type": "doc"');
+  await editor.locator('[data-fountain-node="paragraph"]').first().click();
+  await page.locator('button[data-fountain-toolbar-action="insert-table"]').click();
+  await page.locator('form.is-table').getByRole('button', { name: 'Insert', exact: true }).click();
+  await editor.locator('th,td').first().click();
+  await page.locator('button[data-fountain-toolbar-action="table-menu"]').click();
+  const form = page.locator('form.is-table-tools');
+  const original = JSON.parse(await page.locator('.demo-output pre').textContent() ?? '');
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 720 });
+    const button = form.getByRole('button', { name: 'Make/unmake header row', exact: true });
+    await button.hover();
+    await button.evaluate(async element => {
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      await Promise.all(element.getAnimations().map(animation => animation.finished.catch(() => {})));
+    });
+    const appearance = await button.evaluate(element => {
+      const style = getComputedStyle(element);
+      const luminance = (color: string) => {
+        const channels = color.match(/[\d.]+/g)!.slice(0, 3).map(value => {
+          const channel = Number(value) / 255;
+          return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+        });
+        return channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
+      };
+      const foreground = luminance(style.color); const background = luminance(style.backgroundColor);
+      return { color: style.color, background: style.backgroundColor, opacity: style.opacity,
+        contrast: (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05) };
+    });
+    await form.screenshot({ path: info.outputPath(`table-hover-${width}.png`) });
+    expect(appearance.opacity).toBe('1');
+    expect(appearance.contrast, JSON.stringify(appearance)).toBeGreaterThanOrEqual(4.5);
+    expect(JSON.parse(await page.locator('.demo-output pre').textContent() ?? '')).toEqual(original);
+  }
 });
 
 test('creates and edits a link through the public React toolbar', async ({ page }) => {
@@ -5390,25 +5807,120 @@ test('records native DOCX viewer disagreements without certifying math fidelity'
   await docxMathJourney(page, info);
 });
 
-test('renders exported DOCX beside the same Fountain document through an independent viewer', async ({ page }) => {
+test('checks actual DOCX retention beside an independent viewer without hiding its header omission', async ({ page }, info) => {
   await page.goto('/browser-tests.html');
   const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());
-  expect(summary).toMatchObject({ fidelity: 'bounded', issues: [], fountainImages: 1, docxImages: 1, docxPages: 1 });
+  expect(summary).toMatchObject({ fidelity: 'bounded', fountainImages: 1, docxImages: 1, docxPages: 1 });
+  expect(summary.issues.map((issue: { code: string; severity: string; path?: number[] }) =>
+    ({ code: issue.code, severity: issue.severity, path: issue.path }))).toEqual([
+    { code: 'table-header-role-extension', severity: 'info', path: [4, 0, 0] },
+    { code: 'table-header-role-extension', severity: 'info', path: [4, 0, 1] },
+    { code: 'table-row-repeat-defaulted', severity: 'info', path: [4, 0] },
+    { code: 'table-row-repeat-defaulted', severity: 'info', path: [4, 1] },
+    { code: 'table-width-defaulted', severity: 'info', path: [4] },
+    { code: 'page-settings-defaulted', severity: 'info', path: undefined },
+  ]);
+  const defaults = withDOCXExportDefaults(summary.source, 'letter');
+  // This fixture's neutral Word Caption inherits Normal, and its legacy string
+  // becomes editable marked content. Declare that projection independently;
+  // never erase caption content/attributes from the actual reopened document.
+  const expectedImage = defaults.content![2]!;
+  const projectedImage = {
+    ...expectedImage,
+    attrs: { ...expectedImage.attrs, caption: '', captionAlign: 'center', captionLayout: {
+      unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8,
+      lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
+      keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
+    } },
+    content: [{ type: 'text', text: 'Embedded image with a portable caption.', marks: [
+      { type: 'font_family', attrs: { family: 'Arial' } },
+      { type: 'font_size', attrs: { size: '11pt' } },
+    ] }],
+  };
+  const expected = { ...defaults, content: defaults.content!.map((node, index) => index === 2 ? projectedImage
+    : index === 4 ? { ...node, content: node.content!.map((row, rowIndex) => rowIndex ? row : {
+      ...row, content: row.content!.map(cell => ({ ...cell, attrs: { ...cell.attrs, background: '#ede9fe' } })),
+    }) } : node) };
+  expect(summary.reopened).toEqual(expected);
+  const archive = unzipSync(Uint8Array.from(summary.bytes));
+  const xml = strFromU8(archive['word/document.xml']);
+  expect(xml).toContain('Feature'); expect(xml).toContain('Result');
+  expect(xml.match(/urn:fountainjs:docx:table-header:col:v1/g)).toHaveLength(2);
+  expect(xml.match(/<w:shd w:val="clear" w:color="auto" w:fill="EDE9FE"\/>/g)).toHaveLength(2);
+  expect(xml).toContain('<w:pStyle w:val="Caption"/>');
+  expect(summary.viewerIssues).toEqual([{ code: 'viewer-omits-table-cell-text',
+    sourceCellCount: 4, previewCellCount: 4, missing: ['Feature', 'Result'] }]);
+  expect(summary.viewerCells).toEqual(['', '', 'Embedded media', 'Visible']);
   for (const text of [
     'Visual export parity',
     'The same structured document is rendered on both sides.',
     'Embedded image with a portable caption.',
     'Readable structure must survive the file boundary.',
-    'Feature', 'Result', 'Embedded media', 'Visible',
+    'Embedded media', 'Visible',
   ]) {
     expect(summary.fountainText).toContain(text);
     expect(summary.docxText).toContain(text);
   }
   const comparison = page.locator('#browser-docx-visual-comparison');
+  for (const text of ['Feature', 'Result']) {
+    expect(summary.fountainText).toContain(text);
+    expect(summary.docxText).not.toContain(text);
+  }
+  await expect(comparison.locator('[data-viewer-issues]')).toContainText('omitted table-cell content: Feature; Result');
   await expect(comparison.locator('img')).toHaveCount(2);
   await expect(comparison.locator('[data-visual-fountain]').getByRole('img', { name: 'Purple FountainJS export card' })).toBeVisible();
   const imageWidths = await comparison.locator('img').evaluateAll((images) => images.map((image) => Math.round(image.getBoundingClientRect().width)));
   expect(imageWidths.every((width) => width >= 300 && width <= 340)).toBe(true);
+  const pageGeometry = await comparison.evaluate(section => {
+    const box = (selector: string) => { const value = section.querySelector(selector)!.getBoundingClientRect();
+      return { width: value.width, left: value.left, right: value.right }; };
+    return { source: box('[data-visual-fountain]>.fountain-editor'), preview: box('section.docx'), host: box('[data-visual-docx]') };
+  });
+  expect(pageGeometry.source.width).toBeCloseTo(816, 0);
+  expect(pageGeometry.preview.width).toBeCloseTo(816, 0);
+  expect(pageGeometry.preview.left).toBeGreaterThanOrEqual(pageGeometry.host.left);
+  expect(pageGeometry.preview.right).toBeLessThanOrEqual(pageGeometry.host.right);
+  await comparison.scrollIntoViewIfNeeded();
+  await comparison.screenshot({ path: info.outputPath('actual-docx-and-preview-disagreement.png') });
+  await info.attach('untouched-export.docx', { body: Buffer.from(summary.bytes),
+    contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+
+  // StarterKit deliberately supplies a history-neutral caret host after a
+  // terminal table. Import alone does not add it; editor mounting does. Account
+  // for exactly that documented policy, without dropping authored empty blocks.
+  const editorExpected = { ...expected, content: [...expected.content,
+    { type: 'paragraph', attrs: { align: 'left' }, content: [{ type: 'text', text: '' }] },
+  ] };
+  expect(await page.evaluate(bytes => (globalThis as any).fountainBrowserTest.docxVisual.reopen(bytes), summary.bytes)).toEqual(editorExpected);
+  const quote = comparison.locator('[data-visual-fountain] blockquote');
+  await expect(quote).toHaveAttribute('data-fountain-quote-appearance', 'explicit');
+  await expect(quote).toHaveCSS('border-left-width', '0px');
+  await expect(quote).toHaveCSS('padding-left', '0px');
+  await expect(quote).toHaveCSS('margin-left', '0px');
+  await expect(quote.locator('p')).toHaveCSS('border-left-width', '3px');
+  await expect(quote.locator('p')).toHaveCSS('border-left-color', 'rgb(112, 71, 255)');
+  await expect(quote.locator('p')).toHaveCSS('margin-inline-start', '24px');
+  await quote.screenshot({ path: info.outputPath('reopened-quote-single-source-border.png') });
+  const caption = comparison.locator('[data-visual-fountain] [data-fountain-image-caption-content]');
+  await expect(caption).toHaveText('Embedded image with a portable caption.');
+  await caption.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Verified in the editor.');
+  await expect(caption).toHaveText('Embedded image with a portable caption. Verified in the editor.');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(caption).toHaveText('Embedded image with a portable caption.');
+  await page.keyboard.press('ControlOrMeta+Shift+z');
+  await expect(caption).toHaveText('Embedded image with a portable caption. Verified in the editor.');
+  const edited = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.exportCurrent());
+  expect(edited.reopened).toEqual(withDOCXExportDefaults(edited.source, 'letter'));
+  expect(edited.source.content[2].content[0].text).toBe('Embedded image with a portable caption. Verified in the editor.');
+  const editedXML = strFromU8(unzipSync(Uint8Array.from(edited.bytes))['word/document.xml']);
+  expect(editedXML).toContain('Verified in the editor.');
+  expect(editedXML).toContain('<w:pStyle w:val="FountainExplicitQuote"/>');
+  expect(editedXML.match(/<w:pBdr>/g)).toHaveLength(1);
+  await comparison.screenshot({ path: info.outputPath('reopened-caption-edited-and-reexported.png') });
+  await info.attach('caption-edited-export.docx', { body: Buffer.from(edited.bytes),
+    contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
 });
 
 test('renders real KaTeX while reporting published-equation and trust failures without source loss', async ({ page }) => {
@@ -5955,8 +6467,23 @@ test('copies readable Fountain text into a plain-text external editor', async ({
     'Format\tResult',
     'Text\tReady',
     '[Image: Clipboard diagram]',
-    '',
   ].join('\n'));
+  // A terminal image does not imply an authored blank paragraph. Conversely,
+  // actual empty paragraphs and trailing spaces must not be trimmed on copy.
+  await page.evaluate(() => {
+    const contract = (globalThis as any).fountainBrowserTest;
+    const { schema } = contract.editor.state;
+    contract.editor.dispatch(contract.editor.state.createTransaction().replace(0, contract.editor.state.doc.childCount, [
+      schema.node('paragraph', {}, [schema.text('Verbatim tail  ')]),
+      schema.node('paragraph', {}, [schema.text('')]),
+      schema.node('paragraph', {}, [schema.text('')]),
+    ]));
+    contract.view.focus(); contract.commands.commands.selectAll();
+  });
+  await page.keyboard.press('Control+c');
+  const destination = page.getByRole('textbox', { name: 'External plain-text editor' });
+  await destination.fill(''); await destination.focus(); await page.keyboard.press('Control+v');
+  await expect(destination).toHaveValue('Verbatim tail  \n\n');
 });
 
 test('copies math to external rich and plain-text editors without renderer controls', async ({ page, browserName }) => {
@@ -6783,7 +7310,7 @@ test('shows specific discarded HTML and rejected URL losses in both conversion s
   await page.getByLabel('Markdown input', { exact: true }).fill(source);
   await page.getByRole('checkbox', { name: 'Convert inline HTML formatting' }).check();
   const markdownNotes = page.getByRole('list', { name: 'Markdown HTML conversion details' });
-  await expect(markdownNotes).toContainText('HTML comments were omitted');
+  await expect(markdownNotes).toContainText('An HTML comment was omitted: the schema, comment data, or containing projection cannot retain it. Original source must be retained separately.');
   await expect(markdownNotes).toContainText('Unmapped inline HTML elements');
   await expect(markdownNotes).toContainText('Unsafe link URLs');
   await expect(markdownNotes).toContainText('Images with missing or unsafe');
@@ -6794,7 +7321,7 @@ test('shows specific discarded HTML and rejected URL losses in both conversion s
   await page.getByLabel('Server HTML input', { exact: true }).fill(`<p>${source}</p>`);
   const htmlNotes = page.getByRole('list', { name: 'Server HTML conversion details' });
   await expect(htmlNotes.getByRole('listitem')).toHaveCount(4);
-  await expect(htmlNotes).toContainText('HTML comments were omitted');
+  await expect(htmlNotes).toContainText('An HTML comment was omitted: the schema, comment data, or containing projection cannot retain it. Original source must be retained separately.');
   await expect(htmlNotes).toContainText('Unmapped inline HTML elements');
   await expect(htmlNotes).toContainText('Unsafe link URLs');
   await expect(htmlNotes).toContainText('Images with missing or unsafe');

@@ -49,6 +49,8 @@ import { TextStyleExtension } from '../text-style';
 
 export * from './extension';
 export * from './html-containers';
+export * from './html-comments';
+export * from './html-flow';
 export * from './command-manager';
 export * from './math';
 export * from './lean';

@@ -529,7 +529,11 @@ describe('read-only DOM page preview', () => {
     expect(result.pages[1]?.textContent).not.toContain('Item 1');
   });
 
-  it('repeats table header rows while retaining only the assigned continuation rows', () => {
+  it.each([
+    { role: 'table_header', intent: undefined, repeats: true, tag: 'th' },
+    { role: 'table_cell', intent: true, repeats: true, tag: 'td' },
+    { role: 'table_header', intent: false, repeats: false, tag: 'th' },
+  ])('repeats only eligible table rows while retaining assigned continuation rows: $role / $intent', ({ role, intent, repeats, tag }) => {
     const paragraph = (text: string) => ({
       type: 'paragraph', content: [{ type: 'text', text }],
     });
@@ -538,7 +542,7 @@ describe('read-only DOM page preview', () => {
       content: [{
         type: 'table',
         content: [
-          { type: 'table_row', content: [{ type: 'table_header', content: [paragraph('Heading')] }] },
+          { type: 'table_row', attrs: { repeatHeader: intent }, content: [{ type: role, content: [paragraph('Heading')] }] },
           { type: 'table_row', content: [{ type: 'table_cell', content: [paragraph('First')] }] },
           { type: 'table_row', content: [{ type: 'table_cell', content: [paragraph('Second')] }] },
         ],
@@ -547,7 +551,7 @@ describe('read-only DOM page preview', () => {
     const source = window.document.createElement('div');
     source.innerHTML = `
       <table data-fountain-path="0" data-height="40"><tbody>
-        <tr data-fountain-path="0.0" data-height="10"><th>Heading</th></tr>
+        <tr data-fountain-path="0.0" data-height="10"${intent === undefined ? '' : ` data-fountain-repeat-header="${intent}"`}><${tag}>Heading</${tag}></tr>
         <tr data-fountain-path="0.1" data-height="15"><td>First</td></tr>
         <tr data-fountain-path="0.2" data-height="15"><td>Second</td></tr>
       </tbody></table>
@@ -568,8 +572,8 @@ describe('read-only DOM page preview', () => {
     expect(result.pages[0]?.querySelectorAll('tr')).toHaveLength(2);
     expect(result.pages[0]?.textContent).toContain('First');
     expect(result.pages[0]?.textContent).not.toContain('Second');
-    expect(result.pages[1]?.querySelectorAll('tr')).toHaveLength(2);
-    expect(result.pages[1]?.querySelector('tr:first-child th')?.textContent).toBe('Heading');
+    expect(result.pages[1]?.querySelectorAll('tr')).toHaveLength(repeats ? 2 : 1);
+    expect(result.pages[1]?.querySelector(`tr:first-child ${tag}`)?.textContent).toBe(repeats ? 'Heading' : undefined);
     expect(result.pages[1]?.textContent).toContain('Second');
     expect(result.pages[1]?.textContent).not.toContain('First');
   });

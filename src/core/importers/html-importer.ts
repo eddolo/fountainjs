@@ -10,9 +10,21 @@ import {
 } from '../schema';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
+import { importedHTMLLinkURL } from './html-link-url';
+import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource } from '../link-destination';
+import { importHTMLComment } from '../html-comment';
+import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
+import { tableBackground } from '../table-background';
+import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
+import { readParagraphLayout } from '../paragraph-layout';
+import { readImageCaptionAttributes } from '../image-caption';
+import { readTableLayout, readTableRow } from '../table-layout';
+import { readTableAppearance } from '../table-appearance';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
 import { htmlOrderedListStart } from './html-list';
 import { importDefinitionList } from './html-definition-list';
+import { parseMathExpressionJSON } from '../math-expression';
+import { readHTMLDocumentPageSettings } from './html-page-settings';
 
 const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 
@@ -136,13 +148,16 @@ function configuredNode(
     const expression = type.spec.content;
     const candidates: FountainNode[][] = type.spec.atom || !expression
       ? [[]]
+      : type.spec.code && expression === 'text*'
+      ? [inlineChildren(contentRoot, schema, inheritedMarks, true)]
       : [
           inlineChildren(contentRoot, schema, inheritedMarks),
           blockChildren(contentRoot, schema),
         ];
     // Empty inline projection must not win over real children in block*.
     if (/^block[+*?]$/.test(expression ?? '')) candidates.reverse();
-    for (const content of candidates) {
+    for (const candidate of candidates) {
+      const content = restoreHTMLFlowCaret(type.name, contentRoot, candidate, schema);
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
         const node = type.create(attrs, content, undefined, inheritedMarks);
@@ -195,11 +210,16 @@ function configuredRuby(
   } catch { return base; }
 }
 
-function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = []): FountainNode[] {
+function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = [], literalText = false): FountainNode[] {
   const result: FountainNode[] = [];
   parent.childNodes.forEach((child) => {
+    if (child.nodeType === globalThis.Node.COMMENT_NODE) {
+      const comment = importHTMLComment(child.textContent ?? '', schema, marks);
+      if (comment) result.push(comment);
+      return;
+    }
     if (child.nodeType === globalThis.Node.TEXT_NODE) {
-      if (child.textContent) result.push(...textNodes(child.textContent, schema, marks));
+      if (child.textContent) result.push(...(literalText ? [schema.text(child.textContent, marks)] : textNodes(child.textContent, schema, marks)));
       return;
     }
     if (!(child instanceof HTMLElement)) return;
@@ -220,7 +240,8 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
     if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
       const latex = child.getAttribute('data-latex') ?? child.textContent ?? '';
       const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
-      try { result.push(schema.node('inline_math', { latex, ariaLabel }, [], undefined, marks)); }
+      const expression = parseMathExpressionJSON(child.getAttribute('data-fountain-math-expression'));
+      try { result.push(schema.node('inline_math', { latex, ariaLabel, expression }, [], undefined, marks)); }
       catch { if (latex) result.push(schema.text(latex, marks)); }
       return;
     }
@@ -252,7 +273,7 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
       } catch { result.push(...textNodes(emoji || child.textContent || '', schema, marks)); }
       return;
     }
-    result.push(...inlineChildren(child, schema, elementMarks(child, schema, marks)));
+    result.push(...inlineChildren(child, schema, elementMarks(child, schema, marks), literalText));
   });
   if (!result.length && marks.length) result.push(schema.text('', marks));
   return result;
@@ -261,8 +282,13 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
 /** The same inline-format rules apply to a block and to an inline wrapper. */
 function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[] = []): Mark[] {
     const tag = child.tagName.toLowerCase();
+    const layoutProjection = child.hasAttribute('data-fountain-paragraph-layout');
+    const fontContext = readParagraphLayout(child).layout as { fontFamily?: string; fontSize?: number } | undefined;
     const nextMarks: Mark[] = [];
-    configuredMarks(child, schema).forEach((mark) => addMark(nextMarks, mark));
+    configuredMarks(child, schema).filter(mark => !layoutProjection || !['highlight', 'line_height'].includes(mark.type.name))
+      .filter(mark => !(mark.type.name === 'font_family' && fontContext?.fontFamily !== undefined)
+        && !(mark.type.name === 'font_size' && fontContext?.fontSize !== undefined))
+      .forEach((mark) => addMark(nextMarks, mark));
     const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript' } as Record<string, string>)[tag];
     if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
       color: colorValue(child.style.backgroundColor) ?? '#fff3a3',
@@ -277,15 +303,25 @@ function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[]
     const color = colorValue(child.style.color);
     if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
     const background = colorValue(child.style.backgroundColor);
-    if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
+    // Cell fills belong to the cell, not to movable text inside it.
+    if (background && !layoutProjection && tag !== 'td' && tag !== 'th') addSchemaMark(nextMarks, schema, 'highlight', { color: background });
     if (tag === 'a' && schema.marks.link) {
-      const href = child.getAttribute('href') ?? '';
+      const originalHref = child.getAttribute('href') ?? '';
+      const HTMLCarrier = child.getAttribute('data-fountain-html-href');
+      const literalCarrier = child.getAttribute('data-fountain-link-href');
+      const nativeHTMLSource = literalCarrier === null ? restoredHTMLLinkSource(originalHref, HTMLCarrier) : null;
+      const literalSource = HTMLCarrier === null ? restoredLinkDestination(originalHref, literalCarrier) : null;
+      const source = nativeHTMLSource ?? originalHref;
+      const href = nativeHTMLSource !== null ? importedHTMLLinkURL(source) : literalSource ?? importedHTMLLinkURL(source);
+      const htmlHref = literalSource === null && schema.marks.link.spec.attrs?.htmlHref
+        && needsHTMLLinkSource(source) ? source : undefined;
       const anchor = child as HTMLAnchorElement;
-      if (child.hasAttribute('href') && isSafeURL(href, { allowEmpty: true })) {
+      if (child.hasAttribute('href') && href !== null) {
         addSchemaMark(nextMarks, schema, 'link', {
           href,
           title: anchor.title,
           target: anchor.target === '_self' ? '_self' : '_blank',
+          ...(htmlHref === undefined ? {} : { htmlHref }),
         });
       }
     }
@@ -314,6 +350,9 @@ function imageNode(
     block ? '100%' : 'auto',
   );
   const height = imageSize(image.style.height || image.getAttribute('height') || '', block ? 'auto' : '1em');
+  const captionElement = block ? container?.querySelector<HTMLElement>(':scope > figcaption') ?? null : null;
+  const richCaption = Boolean(captionElement && (container?.dataset.fountainRichCaption === 'true' || captionElement.children.length));
+  const caption = richCaption && captionElement ? inlineChildren(captionElement, schema) : [];
   try {
     return schema.node(type, {
       src,
@@ -326,8 +365,8 @@ function imageNode(
       sizes: image.getAttribute('sizes') ?? '',
       loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '') ? image.getAttribute('decoding') : 'async',
-      ...(block ? { caption: container?.querySelector(':scope > figcaption')?.textContent ?? '' } : {}),
-    }, [], undefined, marks);
+      ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement) } : {}),
+    }, caption, undefined, marks);
   } catch { return null; }
 }
 
@@ -427,7 +466,10 @@ function alignment(element: Element): 'left' | 'center' | 'right' | 'justify' {
 
 function paragraph(element: Element, schema: Schema): FountainNode {
   const content = inlineChildren(element, schema);
-  return schema.node('paragraph', { align: alignment(element) }, content.length ? content : [schema.text('')]);
+  // Only a literally childless writer marker can suppress the normal caret
+  // leaf. Text, media, comments and even whitespace must use ordinary parsing.
+  const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
+  return schema.node('paragraph', { align: alignment(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: Element, colspan: number): number[] | null {
@@ -470,7 +512,9 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
     const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
-    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', inlineParagraphAttrs, content));
+    const flow = !Object.keys(inlineParagraphAttrs).length && importHTMLAnonymousFlow(content, schema);
+    if (flow) result.push(flow);
+    else if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', inlineParagraphAttrs, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {
@@ -543,18 +587,20 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
     const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
-    try { return [schema.node('math_block', { latex, ariaLabel })]; }
+    const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
+    try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
-  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element) }, inlineChildren(element, schema))];
+  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
     const children = blockChildren(element as HTMLElement, schema);
-    return [schema.node('blockquote', {}, children.length ? children : [paragraph(element, schema)])];
+    return [schema.node('blockquote', readExplicitQuoteAppearance(element), children.length ? children : [paragraph(element, schema)])];
   }
   if (tag === 'pre') return [schema.node('code_block', {
     language: element.getAttribute('data-language') || directChild(element, 'code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
     lineNumbers: true,
+    ...readParagraphLayout(element),
   }, [schema.text(element.textContent ?? '')])];
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {
@@ -581,9 +627,10 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
       && child.getAttribute('src') === media[0]?.getAttribute('href')
       && child.getAttribute('alt') === `Preview of ${media[0]?.getAttribute('data-name')}`) : [];
     const fallback = () => blockChildren(element as HTMLElement, schema);
-    // A media atom may consume only one media child and an optional plain
-    // caption. Rich captions and other authored blocks must remain editable.
-    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || captions.some(caption => caption.children.length)
+    const imageFigure = !['audio', 'video', 'file', 'embed'].includes(mediaType ?? '');
+    // Images own editable inline caption content. Other media nodes remain
+    // atomic and may consume only a plain caption string.
+    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || (!imageFigure && captions.some(caption => caption.children.length))
       || Array.from(element.childNodes).some(child => child.nodeType === 3 ? /[^\t\n\f\r ]/u.test(child.textContent ?? '') : child.nodeType === 1 && child !== media[0] && !captions.includes(child as Element) && !previews.includes(child as Element))) return fallback();
     if (mediaType === 'audio') {
       const media = element.querySelector<HTMLAudioElement>(':scope > audio');
@@ -616,7 +663,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const sourceRows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'));
     const remaining = remainingHTMLTableRows(sourceRows, row => row.parentElement);
     const rows = orderedHTMLTableRows(sourceRows, row => row.parentElement?.tagName ?? '').map((row) => {
-      const node = schema.node('table_row', {},
+      const node = schema.node('table_row', readTableRow(row),
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
@@ -628,6 +675,8 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
             colspan,
             rowspan,
             colwidth: tableCellWidths(cell, colspan),
+            background: tableBackground((cell as HTMLElement).style.backgroundColor),
+            ...readTableAppearance(cell, true),
             ...(cell.tagName.toLowerCase() === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
           },
           content.length ? content : [paragraph(cell, schema)],
@@ -637,7 +686,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
       const marked = inheritElementMarks(row, [node], schema);
       return row.parentElement && row.parentElement !== element ? inheritElementMarks(row.parentElement, marked, schema)[0] : marked[0];
     });
-    return [...captions, ...rows.length ? [schema.node('table', {}, rows)] : []];
+    return [...captions, ...rows.length ? [schema.node('table', { ...readTableLayout(element as HTMLElement), ...readTableAppearance(element) }, rows)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element as HTMLImageElement, schema, 'image_super');
@@ -663,9 +712,10 @@ export class HTMLImporter {
   parse(html: string, schema: Schema): FountainNode {
     if (typeof DOMParser === 'undefined') throw new Error('HTMLImporter requires a browser DOMParser (or a DOM shim in Node.js).');
     const body = new DOMParser().parseFromString(html, 'text/html').body;
+    const { pageSettings } = readHTMLDocumentPageSettings(body);
     const blocks = blockChildren(body, schema);
     if (!blocks.length && body.textContent) blocks.push(schema.node('paragraph', {}, [schema.text(body.textContent)]));
-    const document = schema.topNodeType.create({}, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
+    const document = schema.topNodeType.create(pageSettings ? { pageSettings } : {}, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
     schema.validate(document);
     return document;
   }

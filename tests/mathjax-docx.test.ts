@@ -44,7 +44,7 @@ describe('optional real TeX to DOCX host projection', () => {
     const xml = strFromU8(parts['word/document.xml']);
     expect(xml).toContain('<m:f>');
     expect(xml).toContain(sources[1]);
-    expect(result.report.issues.map(issue => issue.code)).toEqual(['native-math-experimental', 'math-projection-failed', 'block-fallback']);
+    expect(result.report.issues.map(issue => issue.code)).toEqual(['native-math-experimental', 'math-projection-failed', 'block-fallback', 'page-settings-defaulted']);
     expect(result.report.issues[1]).toMatchObject({ path: [1], message: expect.stringContaining('mspace') });
     expect(doc.toJSON()).toEqual(original);
     expect(strFromU8(parts['customXml/fountainMath.xml'])).toContain('\\\\frac');

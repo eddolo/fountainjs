@@ -6,6 +6,7 @@ import {
 } from '../../core';
 import { getNodeAtPath } from '../../core/transaction/path';
 import { imageText } from './image-attributes';
+import { imageCaptionDOMAttributes } from '../../core/image-caption';
 
 const MIN_IMAGE_WIDTH = 50;
 const MAX_IMAGE_WIDTH = 2_000;
@@ -15,6 +16,7 @@ interface ImageEditorView { readonly editor: Editor }
 /** Framework-neutral, accessible editing surface for block images. */
 export class ImageNodeView implements NodeViewLike {
   readonly dom = document.createElement('figure');
+  readonly contentDOM = document.createElement('span');
   private readonly image = document.createElement('img');
   private readonly caption = document.createElement('figcaption');
   private readonly captionInput = document.createElement('textarea');
@@ -44,7 +46,11 @@ export class ImageNodeView implements NodeViewLike {
     this.image.addEventListener('error', this.onError);
 
     this.caption.className = 'fountain-image__caption';
-    this.caption.contentEditable = 'false';
+    this.contentDOM.className = 'fountain-image__caption-content';
+    // The complete caption line is an editing target, including blank space
+    // beside short or differently aligned text.
+    this.contentDOM.style.display = 'block';
+    this.contentDOM.dataset.fountainImageCaptionContent = '';
     this.captionInput.className = 'fountain-image__caption-input';
     this.captionInput.rows = 1;
     this.captionInput.maxLength = 20_000;
@@ -53,7 +59,7 @@ export class ImageNodeView implements NodeViewLike {
     this.captionInput.addEventListener('blur', this.commitCaption);
     this.captionInput.addEventListener('keydown', this.onCaptionKeyDown);
     this.captionText.className = 'fountain-image__caption-text';
-    this.caption.append(this.captionInput, this.captionText);
+    this.caption.append(this.contentDOM, this.captionInput, this.captionText);
 
     this.error.className = 'fountain-image__error';
     this.error.contentEditable = 'false';
@@ -83,14 +89,16 @@ export class ImageNodeView implements NodeViewLike {
 
   stopEvent(event: Event): boolean {
     return this.controls.contains(event.target as globalThis.Node)
-      || this.caption.contains(event.target as globalThis.Node)
+      || this.captionInput.contains(event.target as globalThis.Node)
+      || this.captionText.contains(event.target as globalThis.Node)
       || this.error.contains(event.target as globalThis.Node);
   }
 
   ignoreMutation(mutation: MutationRecord): boolean {
     if (
       mutation.target === this.image
-      || this.caption.contains(mutation.target)
+      || this.captionInput.contains(mutation.target)
+      || this.captionText.contains(mutation.target)
       || this.controls.contains(mutation.target)
       || this.error.contains(mutation.target)
     ) return true;
@@ -136,12 +144,21 @@ export class ImageNodeView implements NodeViewLike {
       this.usingFallbackSource = false;
     }
     this.applySource();
+    const richCaption = this.current.childCount > 0;
+    const captionAppearance = imageCaptionDOMAttributes(attrs);
+    this.caption.style.cssText = String(captionAppearance.style);
+    for (const name of ['data-fountain-caption-align', 'data-fountain-paragraph-layout'] as const) {
+      const value = captionAppearance[name];
+      if (value === undefined) this.caption.removeAttribute(name);
+      else this.caption.setAttribute(name, String(value));
+    }
     const value = String(attrs.caption || '');
     if (document.activeElement !== this.captionInput) this.captionInput.value = value;
     this.captionText.textContent = value;
-    this.captionInput.hidden = !this.editable;
-    this.captionText.hidden = this.editable || !value;
-    this.caption.hidden = !this.editable && !value;
+    this.contentDOM.hidden = !richCaption;
+    this.captionInput.hidden = !this.editable || richCaption;
+    this.captionText.hidden = this.editable || richCaption || !value;
+    this.caption.hidden = richCaption ? false : !this.editable && !value;
     this.controls.hidden = !this.editable;
     this.retry.hidden = !this.editable;
     delete this.dom.dataset.fountainImageError;
@@ -181,7 +198,7 @@ export class ImageNodeView implements NodeViewLike {
     if (live.type.name !== 'image_super') return false;
     try {
       const next = { ...live.attrs, ...attrs };
-      live.type.create(next);
+      live.type.create(next, live.content, undefined, live.marks);
       editor.dispatch(editor.state.createTransaction().setNodeAttrs(path, next));
       return true;
     } catch { return false; }
@@ -189,7 +206,23 @@ export class ImageNodeView implements NodeViewLike {
 
   private commitCaption = (): void => {
     const next = this.captionInput.value;
-    if (next !== String(this.current.attrs.caption || '')) this.commitAttrs({ caption: next });
+    if (next === String(this.current.attrs.caption || '')) return;
+    const editor = this.editor;
+    if (!editor?.editable) return;
+    const path = this.getPath();
+    let live: Node;
+    try { live = getNodeAtPath(editor.state.doc, path); }
+    catch { return; }
+    if (live.type.name !== 'image_super') return;
+    try {
+      const replacement = live.type.create(
+        { ...live.attrs, caption: '' },
+        next ? [editor.state.schema.text(next)] : [],
+        undefined,
+        live.marks,
+      );
+      editor.dispatch(editor.state.createTransaction().replaceNode(path, [replacement]));
+    } catch { /* Invalid caption input leaves the document unchanged. */ }
   };
 
   private onCaptionKeyDown = (event: KeyboardEvent): void => {

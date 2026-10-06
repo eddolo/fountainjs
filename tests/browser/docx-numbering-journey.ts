@@ -1,11 +1,12 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
+import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 
 export async function docxNumberingJourney(page: Page, info: TestInfo): Promise<void> {
   await page.goto('/browser-tests.html');
   const result = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render(true));
-  expect(result.issues).toEqual([]);
-  expect(result.reopened).toEqual(result.source);
+  expect(result.issues).toEqual([expect.objectContaining({ code: 'page-settings-defaulted', severity: 'info' })]);
+  expect(result.reopened).toEqual(withDOCXExportDefaults(result.source, 'letter'));
   expect(result.fountainText).toBe(result.docxText);
   const comparison = page.locator('#browser-docx-visual-comparison');
   const editor = comparison.locator('[data-visual-fountain]');

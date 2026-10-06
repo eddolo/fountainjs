@@ -1,4 +1,5 @@
 import type { NodeSpec } from '../../core';
+import { paragraphLayoutAttribute, paragraphLayoutDOMAttributes } from '../../core/paragraph-layout';
 
 export const codeBlock: NodeSpec = {
   group: 'block', content: 'text*', code: true,
@@ -7,6 +8,7 @@ export const codeBlock: NodeSpec = {
     // serialization escapes it; hosts may impose their own narrower schema.
     language: { default: 'text', validate: (value) => typeof value === 'string' && !/\s/u.test(value) },
     lineNumbers: { default: true, validate: (value) => typeof value === 'boolean' },
+    layout: paragraphLayoutAttribute,
   },
-  toDOM: (node) => ['pre', { 'data-language': node.attrs.language, 'data-line-numbers': String(Boolean(node.attrs.lineNumbers)) }, ['code', 0]],
+  toDOM: (node) => ['pre', { ...paragraphLayoutDOMAttributes(node.attrs.layout), tabindex: 0, role: 'region', 'aria-label': `${node.attrs.language} code`, 'data-language': node.attrs.language, 'data-line-numbers': String(Boolean(node.attrs.lineNumbers)) }, ['code', 0]],
 };

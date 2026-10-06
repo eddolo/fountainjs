@@ -1,7 +1,7 @@
 # Text styles
 
 FountainJS includes foreground colour, background colour, font family, font
-size, and line height as validated document marks. They work in `CoreExtension`
+size, line height, and signed character spacing as validated document marks. They work in `CoreExtension`
 and `StarterKit`; the isolated `fountainjs-editor/text-style` entry exposes the
 same schema specs, normalizers, queries, and commands to custom kits.
 
@@ -13,6 +13,7 @@ import {
   setFontFamily,
   setFontSize,
   setLineHeight,
+  setLetterSpacing,
   setTextColor,
 } from 'fountainjs-editor/text-style'
 
@@ -22,6 +23,7 @@ const editor = createEditor({ schema: kit.schema, plugins: kit.plugins })
 setFontFamily(editor, 'Atkinson Hyperlegible, sans-serif')
 setFontSize(editor, '18px')
 setLineHeight(editor, 1.7)
+setLetterSpacing(editor, '1.5pt')
 setTextColor(editor, '#17231e')
 setBackgroundColor(editor, '#dff8eb')
 
@@ -56,6 +58,7 @@ value without reconstructing an unrelated style object:
 | `font_family` | `family` | `Atkinson Hyperlegible, sans-serif` |
 | `font_size` | `size` | `18px` |
 | `line_height` | `lineHeight` | `1.7` |
+| `letter_spacing` | `spacing` | `-0.5pt` |
 
 Marks apply to ordinary inline text across a single paragraph, several
 paragraphs, a node selection, selected table cells, or the whole document.
@@ -74,11 +77,15 @@ Style values enter the document only after normalization:
   rendered;
 - font size accepts bounded `px`, `pt`, `em`, `rem`, or `%` values;
 - line height accepts a bounded unitless ratio or `px`, `em`, `rem`, or `%`;
+- character spacing accepts signed `px` (-512 to 512), `pt` (-384 to 384),
+  `em` or `rem` (-4 to 32). Numeric command values use points. Explicit `0pt`
+  is retained as a reset; removing the mark is a separate operation. Percent,
+  `normal`, CSS functions and nonfinite values are not accepted by this setter;
 - declarations, CSS functions, control characters, braces, backslashes, and
   out-of-range measurements are rejected.
 
 The exported `normalizeTextStyleColor`, `normalizeFontFamily`,
-`normalizeFontSize`, and `normalizeLineHeight` functions let a non-React host
+`normalizeFontSize`, `normalizeLineHeight`, and `normalizeLetterSpacing` functions let a non-React host
 validate controls before calling a command. These checks protect the document
 model and generated inline CSS; they do not download or license a font. The host
 remains responsible for making selected font files available and for its
@@ -93,6 +100,7 @@ Content Security Policy.
 | Family | `setFontFamily`, `unsetFontFamily` |
 | Size | `setFontSize`, `unsetFontSize` |
 | Line height | `setLineHeight`, `unsetLineHeight` |
+| Character spacing | `setLetterSpacing`, `unsetLetterSpacing` |
 | Read selection | `getActiveTextStyle` |
 
 `getActiveTextStyle()` reports only values common to every selected text
@@ -100,7 +108,7 @@ segment. A property that differs across the selection is omitted from the value
 fields and named in `mixed`; this prevents a toolbar from pretending that the
 first leaf represents the whole selection.
 
-`TextStyleExtension` contains the five mark specs and named commands for a
+`TextStyleExtension` contains the six mark specs and named commands for a
 custom schema assembled without `CoreExtension`. Do not compose it beside
 `CoreExtension`, because the core already includes those same mark names and the
 default conflict policy correctly rejects duplicate schema contributions.
@@ -109,7 +117,7 @@ default conflict policy correctly rejects duplicate schema contributions.
 
 The supplied React toolbar exposes one `Text styles` action. Its accessible,
 responsive panel accepts custom or suggested font families, unit-aware size and
-line-height values, and independent foreground/background colour controls. The
+line-height and signed character-spacing values, and independent foreground/background colour controls. The
 stable action id is `text-style`, so products may reorder, hide, relabel, or
 replace it through normal toolbar props.
 
@@ -126,6 +134,11 @@ directly. No React state or DOM reference appears in the text-style module.
   `<span data-fountain-text-style="true">` inline-HTML form, so Fountain can
   round-trip them without silently discarding presentation.
 - Plain text intentionally projects only readable characters.
+- DOCX retains signed physical character pitch in native twentieth-point
+  units, including supported style inheritance and direct zero resets. Pixel
+  normalization and rounding are reported. Relative `em`/`rem` pitch cannot
+  be exported as an absolute Word value and is reported as an unsupported mark.
+  Character spacing is not kerning; native font/layout equivalence remains open.
 - The generic Yjs adapter synchronizes these marks like every other document
   mark; no style-specific collaboration provider is required.
 

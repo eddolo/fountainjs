@@ -13,3 +13,8 @@ export * from './table-commands';
 export * from './search';
 export * from './url';
 export * from './platform';
+export * from './page-settings';
+export * from './paragraph-layout';
+export * from './math-expression';
+export * from './table-appearance';
+export { isTablePreferredWidth, type TablePreferredWidth } from './table-width';

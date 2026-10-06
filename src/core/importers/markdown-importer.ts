@@ -1,6 +1,8 @@
 import { Mark, Node, type Schema } from '../schema';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
+import { needsHTMLLinkSource, restoredHTMLLinkSource, restoredLinkDestination } from '../link-destination';
+import { importedHTMLLinkURL } from './html-link-url';
 import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities';
 import { unicodeCaseFold } from '../unicode-case-fold';
 import { texMathBlock, texMathStart, texMathCloses, texTableBlock, texTableStart } from '../markdown-tex';
@@ -51,12 +53,19 @@ export type MarkdownHTMLFlowTextBlockSource =
 
 /** Import-local structure, not a document schema or stable-position mapping. */
 export type MarkdownHTMLFlowBlockSource = MarkdownHTMLFlowTextBlockSource
+  | { readonly kind: 'thematicBreak'; readonly blocks: readonly Node[] }
+  | { readonly kind: 'image'; readonly src: string; readonly alt: string; readonly title: string; readonly blocks: readonly Node[] }
+  | { readonly kind: 'table'; readonly blocks: readonly Node[]; readonly rows: readonly {
+    readonly header: boolean; readonly cells: readonly {
+      readonly source: string; readonly align: string; readonly segments: readonly MarkdownHTMLInlineSegment[];
+    }[];
+  }[] }
   | { readonly kind: 'container'; readonly tag: 'blockquote' | 'ul' | 'ol' | 'li'; readonly start?: number;
     readonly blocks: readonly Node[]; readonly children: readonly MarkdownHTMLFlowBlockSource[] }
   | { readonly kind: 'taskList'; readonly blocks: readonly Node[]; readonly children: readonly MarkdownHTMLFlowBlockSource[] }
   | { readonly kind: 'taskItem'; readonly checked: boolean; readonly blocks: readonly Node[]; readonly children: readonly MarkdownHTMLFlowBlockSource[] }
   | { readonly kind: 'html'; readonly html: string; readonly blocks: readonly Node[] }
-  | { readonly kind: 'empty'; readonly blocks: readonly Node[] }
+  | { readonly kind: 'empty'; readonly blocks: readonly Node[]; /** Explicit saved paragraph, not an implicit container caret. */ readonly explicit?: true }
   | { readonly kind: 'unsupported'; readonly blocks: readonly Node[] };
 
 export interface MarkdownHTMLFlowContext {
@@ -638,15 +647,121 @@ function opaqueInlineEnd(value: string, start: number): number {
       : -1;
 }
 
-interface EmphasisMatch {
-  readonly start: number;
-  readonly end: number;
-  readonly runStart: number;
-  readonly runEnd: number;
+// Resolve CommonMark delimiter runs against native Fountain nodes. The existing
+// lexer owns opaque tokens and extension syntax; no reference AST is introduced.
+interface EmphasisDelimiter {
+  node: Node;
+  index: number;
+  marker: '*' | '_';
+  count: number;
+  remaining: number;
+  flanking: number;
+  alive: boolean;
+  left: number;
+  previous: number;
+  next: number;
 }
 
-function emphasisDelimiterLength(runLength: number): 1 | 2 {
-  return runLength % 2 === 0 ? 2 : 1;
+function resolveEmphasisDelimiters(
+  nodes: Node[], delimiters: EmphasisDelimiter[], schema: Schema, inheritedMarks: readonly Mark[],
+  htmlTokens?: Map<Node, MarkdownHTMLInlineSegment>,
+  softBreaks?: Map<Node, { readonly softBreak?: true; readonly textRun: number }>,
+): Node[] {
+  if (!delimiters.length) return nodes.length ? nodes : [schema.text('', inheritedMarks)];
+  const spans: { start: number; end: number; mark: Mark | undefined; literal: string }[] = [];
+  delimiters.forEach((delimiter, index) => {
+    delimiter.previous = index - 1;
+    delimiter.next = index + 1 < delimiters.length ? index + 1 : -1;
+  });
+  const remove = (index: number) => {
+    const delimiter = delimiters[index];
+    if (!delimiter.alive) return;
+    delimiter.alive = false;
+    if (delimiter.previous >= 0) delimiters[delimiter.previous].next = delimiter.next;
+    if (delimiter.next >= 0) delimiters[delimiter.next].previous = delimiter.previous;
+  };
+  const searchedBefore = new Map<string, number>();
+  for (let closeIndex = 0; closeIndex < delimiters.length; closeIndex++) {
+    const close = delimiters[closeIndex];
+    while (close.alive && (close.flanking & 2)) {
+      const category = `${close.marker}:${close.flanking & 1}:${close.count % 3}`;
+      const lowerBound = searchedBefore.get(category) ?? -1;
+      let openIndex = close.previous;
+      while (openIndex > lowerBound) {
+        const open = delimiters[openIndex];
+        if (open.marker === close.marker && (open.flanking & 1)
+          && !violatesEmphasisRuleOfThree(open.count, open.flanking, close.count, close.flanking)) break;
+        openIndex = open.previous;
+      }
+      if (openIndex <= lowerBound) {
+        searchedBefore.set(category, close.previous);
+        if (!(close.flanking & 1)) remove(closeIndex);
+        break;
+      }
+      const open = delimiters[openIndex];
+      const consumed = open.remaining >= 2 && close.remaining >= 2 ? 2 : 1;
+      const type = schema.marks[consumed === 2 ? 'strong' : 'em'];
+      open.remaining -= consumed;
+      close.remaining -= consumed;
+      close.left += consumed;
+      spans.push({ start: open.index, end: close.index,
+        mark: type?.create(), literal: type ? '' : open.marker.repeat(consumed) });
+      let nested = open.next;
+      while (nested >= 0 && nested !== closeIndex) {
+        const next = delimiters[nested].next;
+        remove(nested);
+        nested = next;
+      }
+      if (!open.remaining) remove(openIndex);
+      if (!close.remaining) remove(closeIndex);
+    }
+  }
+  // Outer marks precede inner marks, including repeated emphasis depth. Matches
+  // sharing both boundary runs are consumed inner-first and then wrapped.
+  // Stable sort keeps reversed consumption order at shared boundaries.
+  spans.reverse().sort((a, b) => a.start - b.start || b.end - a.end);
+  let startIndex = 0;
+  const active: typeof spans = [];
+  const activeMarks: Mark[] = [];
+  const byNode = new Map(delimiters.map(delimiter => [delimiter.node, delimiter]));
+  const result: Node[] = [];
+  const append = (original: Node, node = original) => {
+    if (activeMarks.length) node = node.withMarks([...inheritedMarks, ...activeMarks, ...node.marks.slice(inheritedMarks.length)]);
+    if (node !== original) {
+      const html = htmlTokens?.get(original);
+      if (html) htmlTokens!.set(node, html.kind === 'node' ? { ...html, node } : { ...html, marks: node.marks });
+      const soft = softBreaks?.get(original);
+      if (soft) softBreaks!.set(node, soft);
+    }
+    const last = result.at(-1);
+    if (last?.isText && node.isText && last.withText(node.text!).eq(node)
+      && !htmlTokens?.has(last) && !htmlTokens?.has(node) && !softBreaks?.has(last) && !softBreaks?.has(node)) {
+      result[result.length - 1] = last.withText(last.text! + node.text!);
+    } else result.push(node);
+  };
+  for (let index = 0; index < nodes.length; index++) {
+    const original = nodes[index];
+    const delimiter = byNode.get(original);
+    // Matched spans are nested, never crossing; close innermost events first.
+    // Resolve syntax independently of schema availability. Unsupported pairs
+    // remain literal at their original nesting depth, never reused as closers
+    // for another mark or deleted from the text.
+    while (active.at(-1)?.end === index) {
+      const span = active.pop()!;
+      if (span.mark) activeMarks.pop();
+      else append(original, original.withText(span.literal));
+    }
+    if (!(delimiter && !delimiter.remaining)) {
+      append(original, delimiter ? original.withText(original.text!.slice(delimiter.left, delimiter.left + delimiter.remaining)) : original);
+    }
+    while (spans[startIndex]?.start === index) {
+      const span = spans[startIndex++];
+      if (span.mark) activeMarks.push(span.mark);
+      else append(original, original.withText(span.literal));
+      active.push(span);
+    }
+  }
+  return result.length ? result : [schema.text('', inheritedMarks)];
 }
 
 function violatesEmphasisRuleOfThree(
@@ -660,141 +775,6 @@ function violatesEmphasisRuleOfThree(
     && (openerLength % 3 !== 0 || closerLength % 3 !== 0);
 }
 
-function enclosedByEarlierUnlikeEmphasis(
-  value: string,
-  searchStart: number,
-  candidateStart: number,
-  candidateCloserStart: number,
-  references: References,
-): boolean {
-  const candidateMarker = value[candidateStart] as '*' | '_';
-  const marker = candidateMarker === '*' ? '_' : '*';
-
-  for (let index = searchStart; index < candidateStart; index++) {
-    if (value[index] === '\\') { index++; continue; }
-    const opaqueEnd = opaqueInlineEnd(value, index);
-    if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
-    if (value[index] === '[' || value[index] === '!') {
-      const linkEnd = linkToken(value, index, references)?.end ?? -1;
-      if (linkEnd > index) { index = linkEnd - 1; continue; }
-    }
-    if (value[index] !== marker) continue;
-
-    let runEnd = index;
-    while (value[runEnd] === marker) runEnd += 1;
-    const runLength = runEnd - index;
-    if (emphasisFlanking(value, index, runLength, marker) & 1) {
-      const delimiterLength = emphasisDelimiterLength(runLength);
-      const match = matchingEmphasisRun(
-        value,
-        index,
-        runLength,
-        delimiterLength,
-        references,
-        runLength - delimiterLength,
-      );
-      if (match && match.start > candidateStart && match.end <= candidateCloserStart) return true;
-    }
-    index = runEnd - 1;
-  }
-  return false;
-}
-
-function matchingEmphasisRun(
-  value: string,
-  openerStart: number,
-  openerLength: number,
-  delimiterLength: 1 | 2,
-  references: References,
-  openerRemainder = openerLength - delimiterLength,
-): EmphasisMatch | null {
-  const marker = value[openerStart] as '*' | '_';
-  const openerFlanking = emphasisFlanking(value, openerStart, openerLength, marker);
-  const start = openerStart + openerLength;
-  let pendingRemainder = openerRemainder;
-  for (let index = start; index <= value.length - delimiterLength; index++) {
-    if (value[index] === '\\') { index++; continue; }
-    const opaqueEnd = opaqueInlineEnd(value, index);
-    if (opaqueEnd > index) { index = opaqueEnd - 1; continue; }
-    if (value[index] === '[' || value[index] === '!') {
-      const linkEnd = linkToken(value, index, references)?.end ?? -1;
-      if (linkEnd > index) { index = linkEnd - 1; continue; }
-    }
-    if (value[index] !== marker
-      || (value[index - 1] === marker && !isEscapedMarkdownCharacter(value, index - 1))) continue;
-    let runEnd = index;
-    while (value[runEnd] === marker) runEnd += 1;
-    const runLength = runEnd - index;
-    const flanking = emphasisFlanking(value, index, runLength, marker);
-    if ((flanking & 2) && pendingRemainder > 0 && runLength <= pendingRemainder) {
-      pendingRemainder -= runLength;
-      index = runEnd - 1;
-      continue;
-    }
-    const canClose = Boolean(flanking & 2)
-      && runLength >= delimiterLength + pendingRemainder
-      && !violatesEmphasisRuleOfThree(openerLength, openerFlanking, runLength, flanking);
-
-    if (canClose) {
-      const closeStart = index + pendingRemainder;
-      return { start: closeStart, end: closeStart + delimiterLength, runStart: index, runEnd };
-    }
-
-    if (flanking & 1) {
-      const nestedLength = emphasisDelimiterLength(runLength);
-      const nested = matchingEmphasisRun(
-        value,
-        index,
-        runLength,
-        nestedLength,
-        references,
-        runLength - nestedLength,
-      );
-      if (nested) {
-        // A same-marker opener inside an already-open unlike span must not
-        // steal the current opener's later closer. CommonMark rule 15 gives
-        // the earlier, outer span precedence in this overlap shape.
-        if (enclosedByEarlierUnlikeEmphasis(
-          value,
-          start,
-          index,
-          nested.start,
-          references,
-        )) {
-          index = runEnd - 1;
-          continue;
-        }
-        const remainingCloserLength = nested.runEnd - nested.end;
-        const nestedCloserFlanking = emphasisFlanking(
-          value,
-          nested.runStart,
-          nested.runEnd - nested.runStart,
-          marker,
-        );
-        if (remainingCloserLength >= delimiterLength
-          && (nestedCloserFlanking & 2)
-          && !violatesEmphasisRuleOfThree(
-            openerLength,
-            openerFlanking,
-            nested.runEnd - nested.runStart,
-            nestedCloserFlanking,
-          )) {
-          const closeStart = nested.runEnd - delimiterLength;
-          return {
-            start: closeStart,
-            end: nested.runEnd,
-            runStart: nested.runStart,
-            runEnd: nested.runEnd,
-          };
-        }
-        index = nested.runEnd - 1;
-        continue;
-      }
-    }
-    index = runEnd - 1;
-  }
-  return null;
-}
 
 function codeSpanToken(value: string, start: number): { readonly text: string; readonly end: number } | null {
   if (value[start] !== '`' || value[start - 1] === '`') return null;
@@ -1005,12 +985,21 @@ function generatedStyledNodes(
         tag === 'em' || tag === 'strong' || !current.some((mark) => mark.type === type)
       )) {
         try {
-          const href = generatedAttribute(token, 'href');
+          const visibleHref = generatedAttribute(token, 'href');
+          const literalCarrier = /\sdata-fountain-link-href\s*=/iu.test(token)
+            ? generatedAttribute(token, 'data-fountain-link-href') : null;
+          const htmlCarrier = /\sdata-fountain-html-href\s*=/iu.test(token)
+            ? generatedAttribute(token, 'data-fountain-html-href') : null;
+          const htmlSource = literalCarrier === null ? restoredHTMLLinkSource(visibleHref, htmlCarrier) : null;
+          const literalHref = htmlCarrier === null ? restoredLinkDestination(visibleHref, literalCarrier) : null;
+          const source = htmlSource ?? visibleHref;
+          const href = literalHref ?? importedHTMLLinkURL(source);
           if (tag === 'a' && !isSafeURL(href, { allowEmpty: true })) throw new Error('Unsafe link');
           const attrs = tag === 'a' ? {
             href,
             title: generatedAttribute(token, 'title'),
             target: generatedAttribute(token, 'target') === '_self' ? '_self' : '_blank',
+            ...(literalHref === null && type.spec.attrs?.htmlHref && needsHTMLLinkSource(source) ? { htmlHref: source } : {}),
           } : {};
           next = [...current, type.create(attrs)];
         } catch { /* Invalid or unsafe link attributes degrade to readable text. */ }
@@ -1082,6 +1071,7 @@ function styledTextToken(
     else if (property === 'font-family') add('font_family', { family: styleValue.replace(/["']/g, '').replace(/,/g, ', ') });
     else if (property === 'font-size') add('font_size', { size: styleValue });
     else if (property === 'line-height') add('line_height', { lineHeight: styleValue });
+    else if (property === 'letter-spacing') add('letter_spacing', { spacing: styleValue });
   });
   const body = value.slice(contentStart, contentStart + closing.index);
   const nodes = generatedStyledNodes(body, schema, marks);
@@ -1220,6 +1210,7 @@ function inline(
   autolinkLiterals = true,
   softBreaks?: Map<Node, { readonly softBreak?: true; readonly textRun: number }>,
 ): Node[] {
+  const emphasisDelimiters: EmphasisDelimiter[] = [];
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
@@ -1368,41 +1359,19 @@ function inline(
       : null;
     if (marker && (text[index - 1] !== marker || isEscapedMarkdownCharacter(text, index - 1))) {
       let openingEnd = index;
-      while (text[openingEnd] === marker) openingEnd += 1;
-      const openingLength = openingEnd - index;
-      const primaryLength = emphasisDelimiterLength(openingLength);
-      if (emphasisFlanking(text, index, openingLength, marker) & 1) {
-        const attemptCount = openingLength > 1 ? 3 : 1;
-        for (let attempt = 0; attempt < attemptCount; attempt++) {
-          const delimiterLength = attempt === 0 ? primaryLength : primaryLength === 1 ? 2 : 1;
-          const prefix = attempt === 2 ? openingLength - delimiterLength : 0;
-          const type = schema.marks[delimiterLength === 2 ? 'strong' : 'em'];
-          if (!type) continue;
-          const match = matchingEmphasisRun(
-            text,
-            index,
-            openingLength,
-            delimiterLength,
-            references,
-            prefix === 0 ? openingLength - delimiterLength : 0,
-          );
-          const contentStart = prefix === 0 ? index + delimiterLength : openingEnd;
-          if (!match || match.start <= contentStart) continue;
-          if (attempt === 0 && openingLength === 3 && delimiterLength === 1
-            && match.runEnd - match.runStart === 2 && match.start > match.runStart) continue;
-          if (prefix > 0) plain += marker.repeat(prefix);
-          flush();
-          result.push(...inline(text.slice(contentStart, match.start), schema, references, [
-            ...inheritedMarks,
-            type.create(),
-          ], htmlTokens, autolinkLiterals, softBreaks));
-          index = match.end;
-          handled = true;
-          break;
-        }
-      }
+      while (text[openingEnd] === marker) openingEnd++;
+      const count = openingEnd - index;
+      const flanking = emphasisFlanking(text, index, count, marker);
+      flush();
+      const node = schema.text(marker.repeat(count), inheritedMarks);
+      result.push(node);
+      emphasisDelimiters.push({
+        node, index: result.length - 1, marker, count, remaining: count, flanking, alive: true,
+        left: 0, previous: -1, next: -1,
+      });
+      index = openingEnd;
+      continue;
     }
-    if (handled) continue;
 
     const delimiters: readonly [string, readonly string[]][] = [
       ['~~', ['strike']],
@@ -1458,7 +1427,7 @@ function inline(
     index++;
   }
   flush();
-  return result.length ? result : [schema.text('', inheritedMarks)];
+  return resolveEmphasisDelimiters(result, emphasisDelimiters, schema, inheritedMarks, htmlTokens, softBreaks);
 }
 
 function imageDescription(value: string, schema: Schema, references: References): string {
@@ -1922,10 +1891,13 @@ type PendingHTMLTextBlockSource =
   | (Omit<PendingHTMLParagraphSource, 'tightList'> & { readonly kind: 'heading'; readonly level: number })
   | (Omit<PendingHTMLParagraphSource, 'tightList'> & { readonly kind: 'code'; readonly language: string; readonly finalLineBreak: boolean });
 type PendingHTMLBlockSource = PendingHTMLTextBlockSource
+  | { readonly kind: 'table'; readonly blocks: readonly Node[]; readonly rows: readonly {
+    readonly header: boolean; readonly cells: readonly { readonly source: string; readonly align: string }[];
+  }[] }
   | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'container' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
   | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'taskList' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
   | (Omit<Extract<MarkdownHTMLFlowBlockSource, { kind: 'taskItem' }>, 'children'> & { readonly children: readonly PendingHTMLBlockSource[] })
-  | Extract<MarkdownHTMLFlowBlockSource, { kind: 'html' | 'empty' | 'unsupported' }>;
+  | Extract<MarkdownHTMLFlowBlockSource, { kind: 'html' | 'empty' | 'unsupported' | 'thematicBreak' | 'image' }>;
 
 function htmlFlowContext(sources: readonly PendingHTMLBlockSource[], schema: Schema, references: References, options: MarkdownImportOptions): MarkdownHTMLFlowContext {
   let cached: readonly MarkdownHTMLFlowParagraphSource[] | undefined;
@@ -1947,9 +1919,18 @@ function htmlFlowContext(sources: readonly PendingHTMLBlockSource[], schema: Sch
     return result;
   };
   const isText = (source: PendingHTMLBlockSource): source is PendingHTMLTextBlockSource => ['paragraph', 'heading', 'code'].includes(source.kind);
-  const inspectBlock = (source: PendingHTMLBlockSource): MarkdownHTMLFlowBlockSource => isText(source) ? inspect(source)
-    : Object.freeze({ ...source, blocks: Object.freeze([...source.blocks]), ...('children' in source
+  const inspectBlock = (source: PendingHTMLBlockSource): MarkdownHTMLFlowBlockSource => {
+    if (isText(source)) return inspect(source);
+    if (source.kind === 'table') return Object.freeze({ ...source, blocks: Object.freeze([...source.blocks]),
+      rows: Object.freeze(source.rows.map(row => Object.freeze({ header: row.header,
+        cells: Object.freeze(row.cells.map(cell => Object.freeze({ ...cell,
+          segments: inspect({ kind: 'paragraph', source: cell.source, blocks: [], tightList: false }).segments,
+        }))),
+      }))),
+    });
+    return Object.freeze({ ...source, blocks: Object.freeze([...source.blocks]), ...('children' in source
       ? { children: Object.freeze(source.children.map(inspectBlock)) } : {}) }) as MarkdownHTMLFlowBlockSource;
+  };
   return Object.freeze({ readParagraphSources: () => {
     if (!cached) cached = Object.freeze(sources.filter(source => source.kind === 'paragraph').map(source => inspect(source) as MarkdownHTMLFlowParagraphSource));
     return cached;
@@ -1990,7 +1971,9 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     if (!line.trim()) { index++; continue; }
     const emptyParagraph = markdownEmptyParagraph(line);
     if (emptyParagraph && schema.nodes.paragraph) {
-      blocks.push(schema.node('paragraph', {}, emptyParagraph === 'text' ? [schema.text('')] : []));
+      const node = schema.node('paragraph', {}, emptyParagraph === 'text' ? [schema.text('')] : []);
+      blocks.push(node);
+      if (options.parseHTMLFlow) sources.push({ kind: 'empty', blocks: [node], explicit: true });
       index++;
       continue;
     }
@@ -2130,28 +2113,40 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       continue;
     }
     if (thematicBreak(line)) {
-      blocks.push(schema.node('horizontal_rule'));
+      const node = schema.node('horizontal_rule');
+      blocks.push(node);
+      if (options.parseHTMLFlow) sources.push(Object.freeze({ kind: 'thematicBreak', blocks: Object.freeze([node]) }));
       index++;
       continue;
     }
     const image = blockImage(line, references);
     if (image && isSafeURL(image.href, { allowDataImage: true })) {
-      blocks.push(schema.node('image_super', {
+      const alt = imageDescription(image.label, schema, references);
+      const node = schema.node('image_super', {
         src: image.href,
-        alt: imageDescription(image.label, schema, references),
+        alt,
         title: image.title,
         width: '100%',
         caption: '',
-      }));
+      });
+      blocks.push(node);
+      if (options.parseHTMLFlow) sources.push(Object.freeze({ kind: 'image', src: image.href, alt, title: image.title, blocks: Object.freeze([node]) }));
       index++;
       continue;
     }
     const table = tableStart(lines, index);
     if (table) {
       const rows: Node[] = [];
-      const cells = (values: readonly string[], type: 'table_header' | 'table_cell') => table.headers.map((_, cellIndex) => (
-        schema.node(type, {}, [paragraph(schema, values[cellIndex] ?? '', references, table.alignments[cellIndex], options)])
-      ));
+      const sourceRows: Extract<PendingHTMLBlockSource, { kind: 'table' }>['rows'][number][] = [];
+      const cells = (values: readonly string[], type: 'table_header' | 'table_cell') => {
+        if (options.parseHTMLFlow) sourceRows.push(Object.freeze({ header: type === 'table_header',
+          cells: Object.freeze(table.headers.map((_, cellIndex) => Object.freeze({
+            source: values[cellIndex] ?? '', align: table.alignments[cellIndex],
+          }))),
+        }));
+        return table.headers.map((_, cellIndex) => schema.node(type, {}, [paragraph(schema,
+          values[cellIndex] ?? '', references, table.alignments[cellIndex], options)]));
+      };
       rows.push(schema.node('table_row', {}, cells(table.headers, 'table_header')));
       index += 2;
       // A short body row may omit pipes; a real new block ends the table.
@@ -2161,7 +2156,9 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
         rows.push(schema.node('table_row', {}, cells(tableCells(lines[index]), 'table_cell')));
         index++;
       }
-      blocks.push(schema.node('table', {}, rows));
+      const node = schema.node('table', {}, rows);
+      blocks.push(node);
+      if (options.parseHTMLFlow) sources.push(Object.freeze({ kind: 'table', blocks: Object.freeze([node]), rows: Object.freeze(sourceRows) }));
       continue;
     }
     if (BLOCKQUOTE.test(line)) {

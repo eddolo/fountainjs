@@ -199,7 +199,16 @@ function insertLinkAtCaret(
   return true;
 }
 
+function selectionIsCode(editor: Editor): boolean {
+  const { doc, selection } = editor.state;
+  for (let length = selection.path.length; length > 0; length -= 1) {
+    if (getNodeAtPath(doc, selection.path.slice(0, length)).type.spec.code) return true;
+  }
+  return false;
+}
+
 function pasteLink(editor: Editor, text: string, options: LinkBehaviorOptions): boolean {
+  if (selectionIsCode(editor)) return false;
   const candidate = text.trim();
   const looksLikeLink = /^(?:https?:\/\/|mailto:|tel:|www\.|[#/?]|\.\.\/|\.\/)/iu.test(candidate)
     || /^[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}$/u.test(candidate)
@@ -213,6 +222,7 @@ function pasteLink(editor: Editor, text: string, options: LinkBehaviorOptions): 
 
 function autolinkInput(editor: Editor, from: number, to: number, input: string, options: LinkBehaviorOptions): boolean {
   if (!/\s$/.test(input)) return false;
+  if (selectionIsCode(editor)) return false;
   const selection = editor.state.selection;
   if (selection.kind !== 'text' || !selection.isSingleText || selection.from !== from || selection.to !== to) return false;
   const target = getNodeAtPath(editor.state.doc, selection.path);

@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-06",
+  "packageVersion": "0.4.0-beta.2",
+  "release": "GitHub checkpoint only; no npm release",
+  "sourceSnapshot": "artifacts/github-checkpoint-source-20261006.json",
+  "sourceFiles": 687,
+  "sourceDigest": "4644d1454dc74a92c77d0c8daf4788471b6949af1ea504186820690c4ba45159",
+  "verification": {
+    "fullGateExitCode": 0,
+    "tests": 2619,
+    "testFiles": 196,
+    "declarations": 409,
+    "checks": [
+      "build",
+      "API",
+      "packed package",
+      "Node/workerd server runtimes",
+      "headless boundary",
+      "CommonMark conformance",
+      "math reference",
+      "DOCX interoperability",
+      "bundle budget",
+      "performance budget",
+      "typecheck including framework bindings",
+      "unit tests",
+      "production website build"
+    ],
+    "websiteBuildLog": "artifacts/github-checkpoint-site-build-20261006.log",
+    "heroRecordedLog": "artifacts/hero-spacing-recorded-20261006.log",
+    "heroTests": 3,
+    "heroEngines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "widths": [
+      1162,
+      1440,
+      390
+    ],
+    "retries": 0,
+    "workers": 1,
+    "assertion": "Gap between the framework span and italic tagline is at least .15 times heading font size.",
+    "captures": [
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-chromium/hero-spacing-1162.png",
+        "sha256": "3d2d268cb1b3b3d04563a570d5977c3bbf27a15ff34415079aa2944fd60ce138",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-chromium/hero-spacing-1440.png",
+        "sha256": "2a827e8ac0c9985cf367a00b8271b18f4333946e161e6e67960aeb2bc2e3a993",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-chromium/hero-spacing-390.png",
+        "sha256": "a6f6a2021a4d2c3e39e06b4e1a1d3ac53123721431b60cd9cfbcf436b3760347",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-firefox/hero-spacing-1162.png",
+        "sha256": "6f693c09ea14d37a444261655d96f62e6ccbdd16deb9b9f75b40f0c86b55dc34",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-firefox/hero-spacing-1440.png",
+        "sha256": "dba36729046ce118c626bb2a63c80831beaff8f54d91f5af61af12638658f923",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-firefox/hero-spacing-390.png",
+        "sha256": "62d6c6d6e54e584d68bfdd6d7e6e798b0c85a92722d3903f38b8c4adea7da319",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-webkit/hero-spacing-1162.png",
+        "sha256": "db70081cc1115c3d4694da8be6a9fd76e7f7c7007fdd62ddb23bdafcf66e8a66",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-webkit/hero-spacing-1440.png",
+        "sha256": "7df6d6155034d85102a5db5d01fefb2c107b67c0682ed653452702b1d812e9d9",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/hero-spacing-recorded-20261006/editor-separates-the-homep-b6067-from-the-italic-extend-line-webkit/hero-spacing-390.png",
+        "sha256": "f3d494a8282c8407e771024f4bede0ea03f6d2f87f25741306894d315d0ea9a5",
+        "review": "direct-visual-inspection"
+      }
+    ]
+  },
+  "retainedBlankLineEvidence": "artifacts/html-blank-lines-visual-verification-20261006.json",
+  "scope": "Accumulated source, demos, tests, docs, and selected small evidence summaries. Local videos/traces/generated fixtures remain on disk, excluded from Git.",
+  "limitations": [
+    "Beta, not complete parity or universal file fidelity.",
+    "No new physical mobile or native Word/PDF/print certification.",
+    "Local capture references are not files included in the repository.",
+    "Known production-site large-chunk warning remains."
+  ]
+}

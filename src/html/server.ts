@@ -1,4 +1,7 @@
 import { is as matchesSelector, selectAll } from 'css-select';
+import { readImageCaptionAttributes } from '../core/image-caption';
+import { readTableLayout, readTableRow } from '../core/table-layout';
+import { readTableAppearance } from '../core/table-appearance';
 import { parse as parseDocument, parseFragment, type ParserError } from 'parse5';
 import {
   adapter as htmlparser2Adapter,
@@ -12,15 +15,26 @@ import {
   type DOMParseRule,
   type HTMLParseElement,
   type HTMLParseRule,
+  type HTMLSourceTokens,
   type MarkType,
   type NodeType,
   type Schema,
 } from '../core/schema';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
+import { importedHTMLLinkURL } from '../core/importers/html-link-url';
+import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource, renderedLinkDestination } from '../core/link-destination';
+import { importHTMLComment } from '../core/html-comment';
+import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow';
+import { tableBackground } from '../core/table-background';
+import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../core/explicit-emphasis';
+import { readParagraphLayout } from '../core/paragraph-layout';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
 import { importDefinitionList } from '../core/importers/html-definition-list';
+import { parseMathExpressionJSON } from '../core/math-expression';
+import { readHTMLDocumentPageSettings } from '../core/importers/html-page-settings';
+import type { DocumentPageSettings } from '../core/page-settings';
 import type { MarkdownHTMLFlowBlockSource, MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLFlowTextBlockSource, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
@@ -48,6 +62,8 @@ const HARD_LIMITS = Object.freeze({
 });
 
 export interface ServerHTMLImporterOptions {
+  /** Expose bounded parser-input lexemes to schema rules. Off by default. */
+  sourceTokens?: boolean;
   maxInputBytes?: number;
   maxNodes?: number;
   maxDepth?: number;
@@ -55,6 +71,8 @@ export interface ServerHTMLImporterOptions {
   maxAttributeValueLength?: number;
   maxParseErrors?: number;
 }
+
+export type ServerHTMLImportLimit = Exclude<keyof ServerHTMLImporterOptions, 'sourceTokens'>;
 
 export type ServerHTMLImportIssueCode =
   | 'html-parse-error'
@@ -65,7 +83,9 @@ export type ServerHTMLImportIssueCode =
   | 'unmapped-inline-element'
   | 'discarded-html-comment'
   | 'rejected-url'
+  | 'normalized-link-url'
   | 'document-shell-omitted'
+  | 'invalid-page-settings'
   | 'inline-html-projection'
   | 'preformatted-html-projection'
   | 'paragraph-flow-projection'
@@ -99,9 +119,9 @@ export interface ServerHTMLFragmentImportResult {
 }
 
 export class HTMLImportLimitError extends RangeError {
-  readonly limit: keyof Required<ServerHTMLImporterOptions>;
+  readonly limit: ServerHTMLImportLimit;
 
-  constructor(limit: keyof Required<ServerHTMLImporterOptions>, message: string) {
+  constructor(limit: ServerHTMLImportLimit, message: string) {
     super(message);
     this.name = 'HTMLImportLimitError';
     this.limit = limit;
@@ -123,14 +143,34 @@ interface SourceElement extends HTMLParseElement, SourceParent {
   readonly raw: RawElement;
   readonly tagName: string;
   readonly children: readonly SourceElement[];
+  readonly parentElement: SourceElement | null;
   matches(selector: string): boolean;
   querySelector(selector: string): SourceElement | null;
   querySelectorAll(selector: string): readonly SourceElement[];
 }
 
-type SourceNode = SourceText | SourceElement;
+interface SourceInput {
+  readonly text: string;
+  readonly origin: HTMLSourceTokens['origin'];
+}
+
+interface SourceComment {
+  readonly kind: 'comment';
+  readonly raw: RawNode;
+  readonly data: string;
+  readonly textContent: '';
+}
+
+type SourceNode = SourceText | SourceComment | SourceElement;
 
 interface ImportContext {
+  /** Code-context text stays text; do not turn source emoji into document atoms. */
+  readonly literalText?: boolean;
+  /** Validated schema-owned literal sources, never live raw-text DOM nodes. */
+  readonly literalRawText?: WeakMap<RawElement, FountainNode>;
+  commentOrigins?: WeakMap<FountainNode, RawNode>;
+  commentSources?: RawNode[];
+  commentIssueOffset?: number;
   readonly issues: ServerHTMLImportIssue[];
   readonly issueKeys: Set<string>;
   readonly blockSlots?: {
@@ -154,6 +194,9 @@ interface ImportContext {
     readonly breakVisits: number[];
     readonly codeBlocks: ReadonlyMap<number, FountainNode>;
     readonly codeEndings: ReadonlyMap<number, FountainNode>;
+    readonly blockAtoms: ReadonlyMap<number, { readonly tag: 'hr' | 'img' | 'table' | 'p'; readonly node: FountainNode }>;
+    readonly atomNodes: ReadonlySet<FountainNode>;
+    readonly atomVisits: number[];
   };
 }
 
@@ -162,7 +205,7 @@ function mergeInlineMarks(local: readonly Mark[], surrounding: readonly Mark[]):
 }
 
 function boundedOption(
-  name: keyof Required<ServerHTMLImporterOptions>,
+  name: ServerHTMLImportLimit,
   supplied: number | undefined,
 ): number {
   const value = supplied ?? DEFAULT_LIMITS[name];
@@ -173,7 +216,11 @@ function boundedOption(
 }
 
 function normalizeOptions(options: ServerHTMLImporterOptions): Required<ServerHTMLImporterOptions> {
+  if (options.sourceTokens !== undefined && typeof options.sourceTokens !== 'boolean') {
+    throw new TypeError('sourceTokens must be a boolean.');
+  }
   return {
+    sourceTokens: options.sourceTokens ?? false,
     maxInputBytes: boundedOption('maxInputBytes', options.maxInputBytes),
     maxNodes: boundedOption('maxNodes', options.maxNodes),
     maxDepth: boundedOption('maxDepth', options.maxDepth),
@@ -219,12 +266,14 @@ const STYLE_NAMES: Readonly<Record<string, string>> = Object.freeze({
   color: 'color',
   'font-family': 'fontFamily',
   'font-size': 'fontSize',
+  'letter-spacing': 'letterSpacing',
   'font-style': 'fontStyle',
   'font-weight': 'fontWeight',
   height: 'height',
   'line-height': 'lineHeight',
   'max-width': 'maxWidth',
   'text-align': 'textAlign',
+  'table-layout': 'tableLayout',
   'text-decoration': 'textDecoration',
   'text-decoration-line': 'textDecorationLine',
   width: 'width',
@@ -249,28 +298,58 @@ function rawText(node: RawNode): string {
   return htmlparser2Adapter.getChildNodes(node as RawParent).map((child) => rawText(child)).join('');
 }
 
-function wrapNode(node: RawNode): SourceNode | null {
+function wrapNode(node: RawNode, source?: SourceInput): SourceNode | null {
+  if (htmlparser2Adapter.isCommentNode(node)) {
+    return Object.freeze({ kind: 'comment', raw: node, data: htmlparser2Adapter.getCommentNodeContent(node), textContent: '' });
+  }
   if (htmlparser2Adapter.isTextNode(node)) {
     return Object.freeze({ kind: 'text', textContent: htmlparser2Adapter.getTextNodeContent(node) });
   }
-  return htmlparser2Adapter.isElementNode(node) ? new ServerElement(node) : null;
+  return htmlparser2Adapter.isElementNode(node) ? new ServerElement(node, source) : null;
 }
 
-function wrapChildren(parent: RawParent): SourceNode[] {
+function reportCommentLoss(nodes: readonly FountainNode[], context: ImportContext): void {
+  if (!context.commentSources?.length) return;
+  const issueStart = context.issues.length;
+  const retained = new Set<RawNode>();
+  const inspect = (node: FountainNode): void => {
+    const original = context.commentOrigins?.get(node);
+    if (original) retained.add(original);
+    node.content.forEach(inspect);
+  };
+  nodes.forEach(inspect);
+  for (const node of context.commentSources) {
+    if (!retained.has(node)) {
+      const location = htmlparser2Adapter.getNodeSourceCodeLocation(node);
+      reportOnce(context, { code: 'discarded-html-comment',
+        message: 'An HTML comment was omitted: the schema, comment data, or containing projection cannot retain it. Original source must be retained separately.',
+        ...(location ? { line: location.startLine, column: location.startCol } : {}),
+      });
+    }
+  }
+  // Decide retention after projection, but preserve the existing diagnostic
+  // phase/order: tree losses precede node/rule and projection diagnostics.
+  const comments = context.issues.splice(issueStart);
+  context.issues.splice(context.commentIssueOffset ?? 0, 0, ...comments);
+}
+
+function wrapChildren(parent: RawParent, source?: SourceInput): SourceNode[] {
   return htmlparser2Adapter.getChildNodes(parent).flatMap((node) => {
-    const wrapped = wrapNode(node);
+    const wrapped = wrapNode(node, source);
     return wrapped ? [wrapped] : [];
   });
 }
 
 class ServerElement implements SourceElement {
+  readonly #source?: SourceInput;
   readonly kind = 'element' as const;
   readonly raw: RawElement;
   readonly tagName: string;
   readonly style: Readonly<Record<string, string>>;
   readonly dataset: Readonly<Record<string, string | undefined>>;
 
-  constructor(raw: RawElement) {
+  constructor(raw: RawElement, source?: SourceInput) {
+    this.#source = source;
     this.raw = raw;
     this.tagName = htmlparser2Adapter.getTagName(raw).toLowerCase();
     this.style = parseStyle(this.getAttribute('style') ?? '');
@@ -281,7 +360,7 @@ class ServerElement implements SourceElement {
     this.dataset = Object.freeze(dataset);
   }
 
-  get childNodes(): readonly SourceNode[] { return wrapChildren(this.raw); }
+  get childNodes(): readonly SourceNode[] { return wrapChildren(this.raw, this.#source); }
   get children(): readonly SourceElement[] {
     return this.childNodes.filter((node): node is SourceElement => node.kind === 'element');
   }
@@ -296,6 +375,22 @@ class ServerElement implements SourceElement {
   hasAttribute(name: string): boolean { return this.getAttribute(name) !== null; }
   getAttributeNames(): readonly string[] { return Object.freeze(htmlparser2Adapter.getAttrList(this.raw).map(attribute => attribute.name)); }
 
+  getSourceTokens(): HTMLSourceTokens | null {
+    if (!this.#source) return null;
+    const location = htmlparser2Adapter.getNodeSourceCodeLocation(this.raw);
+    if (!location?.startTag) return null;
+    return Object.freeze({
+      startTag: this.#source.text.slice(location.startTag.startOffset, location.startTag.endOffset),
+      endTag: location.endTag ? this.#source.text.slice(location.endTag.startOffset, location.endTag.endOffset) : null,
+      origin: this.#source.origin,
+    });
+  }
+
+  get parentElement(): SourceElement | null {
+    const parent = this.raw.parent;
+    return parent && htmlparser2Adapter.isElementNode(parent) ? new ServerElement(parent, this.#source) : null;
+  }
+
   matches(selector: string): boolean { return matchesSelector<RawNode, RawElement>(this.raw, selector); }
 
   querySelector(selector: string): SourceElement | null {
@@ -304,12 +399,12 @@ class ServerElement implements SourceElement {
 
   querySelectorAll(selector: string): readonly SourceElement[] {
     return selectAll<RawNode, RawElement>(selector, this.raw.children, { context: this.raw })
-      .map((element) => new ServerElement(element));
+      .map((element) => new ServerElement(element, this.#source));
   }
 }
 
-function rootSource(parent: RawParent): SourceParent {
-  const childNodes = wrapChildren(parent);
+function rootSource(parent: RawParent, source?: SourceInput): SourceParent {
+  const childNodes = wrapChildren(parent, source);
   return Object.freeze({
     childNodes,
     textContent: rawText(parent as RawNode),
@@ -317,6 +412,9 @@ function rootSource(parent: RawParent): SourceParent {
 }
 
 function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOptions>, context: ImportContext): void {
+  context.commentOrigins ??= new WeakMap();
+  context.commentSources ??= [];
+  context.commentIssueOffset = context.issues.length;
   const stack: Array<{ node: RawNode; depth: number }> = htmlparser2Adapter.getChildNodes(parent)
     .map((node) => ({ node, depth: 1 }));
   let count = 0;
@@ -330,10 +428,7 @@ function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOpti
     if (current.depth > limits.maxDepth) {
       throw new HTMLImportLimitError('maxDepth', `HTML nesting exceeds ${limits.maxDepth} levels.`);
     }
-    if (htmlparser2Adapter.isCommentNode(current.node)) reportOnce(context, {
-      code: 'discarded-html-comment',
-      message: 'HTML comments were omitted from the document. Their source is not represented by editable nodes.',
-    });
+    if (htmlparser2Adapter.isCommentNode(current.node)) context.commentSources.push(current.node);
     if (!htmlparser2Adapter.isElementNode(current.node)) continue;
     const attributes = htmlparser2Adapter.getAttrList(current.node);
     if (attributes.length > limits.maxAttributesPerElement) {
@@ -541,6 +636,8 @@ function configuredNode(
   inheritedMarks: readonly Mark[],
   context: ImportContext,
 ): FountainNode | null {
+  const retained = inline ? context.literalRawText?.get(element.raw) : undefined;
+  if (retained) return inheritedMarks.length ? retained.withMarks(inheritedMarks) : retained;
   const matches: Array<{
     type: NodeType;
     rule: ParseRule;
@@ -564,6 +661,8 @@ function configuredNode(
     const expression = type.spec.content;
     const candidates: Array<(branch: ImportContext) => FountainNode[]> = type.spec.atom || !expression
       ? [() => []]
+      : type.spec.code && expression === 'text*'
+      ? [branch => inlineChildren(contentRoot, schema, inheritedMarks, { ...branch, literalText: true })]
       : [
           branch => inlineChildren(contentRoot, schema, inheritedMarks, branch),
           branch => blockChildren(contentRoot, schema, branch),
@@ -577,15 +676,16 @@ function configuredNode(
       const branch: ImportContext = { issues: [], issueKeys: new Set(),
         // A rejected content shape may traverse generated hard breaks. Commit
         // its visit evidence only if this projection is actually accepted.
-        inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [] } : undefined,
+        inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [], atomVisits: [] } : undefined,
         blockSlots: context.blockSlots,
       };
-      const content = candidate(branch);
+      const content = restoreHTMLFlowCaret(type.name, contentRoot, candidate(branch), schema);
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
         const node = type.create(attrs, content, undefined, inheritedMarks);
         schema.validate(node);
         branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
+        branch.inlineSlots?.atomVisits.forEach(offset => context.inlineSlots!.atomVisits.push(offset));
         branch.issues.forEach(issue => reportOnce(context, issue));
         return node;
       } catch { /* Try the next content shape or parse rule. */ }
@@ -624,8 +724,13 @@ function configuredRuby(
 
 function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark[], context: ImportContext, reportUnknown: boolean): Mark[] {
   const tag = child.tagName;
+  const layoutProjection = child.hasAttribute('data-fountain-paragraph-layout');
+  const fontContext = readParagraphLayout(child).layout as { fontFamily?: string; fontSize?: number } | undefined;
   const nextMarks: Mark[] = [];
-  const customMarks = configuredMarks(child, schema, context);
+  const customMarks = configuredMarks(child, schema, context)
+    .filter(mark => !layoutProjection || !['highlight', 'line_height'].includes(mark.type.name))
+    .filter(mark => !(mark.type.name === 'font_family' && fontContext?.fontFamily !== undefined)
+      && !(mark.type.name === 'font_size' && fontContext?.fontSize !== undefined));
   customMarks.forEach((mark) => addMark(nextMarks, mark));
   const markName = ({
     strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike',
@@ -648,14 +753,45 @@ function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark
   const color = colorValue(child.style.color ?? '');
   if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
   const background = colorValue(child.style.backgroundColor ?? '');
-  if (background) addSchemaMark(nextMarks, schema, 'highlight', { color: background });
+  // Cell fills belong to the cell, not to movable text inside it.
+  if (background && !layoutProjection && tag !== 'td' && tag !== 'th') addSchemaMark(nextMarks, schema, 'highlight', { color: background });
   if (tag === 'a' && schema.marks.link) {
-    const href = child.getAttribute('href') ?? '';
+    const originalHref = child.getAttribute('href') ?? '';
+    const carrier = child.getAttribute('data-fountain-link-href');
+    const HTMLCarrier = child.getAttribute('data-fountain-html-href');
+    const nativeHTMLSource = carrier === null ? restoredHTMLLinkSource(originalHref, HTMLCarrier) : null;
+    const restored = HTMLCarrier === null ? restoredLinkDestination(originalHref, carrier) : null;
+    const source = nativeHTMLSource ?? originalHref;
+    const href = nativeHTMLSource !== null ? importedHTMLLinkURL(source) : restored ?? importedHTMLLinkURL(source);
+    const htmlHref = restored === null && schema.marks.link.spec.attrs?.htmlHref
+      && needsHTMLLinkSource(source) ? source : undefined;
+    if (HTMLCarrier !== null && nativeHTMLSource === null) reportOnce(context, {
+      code: 'invalid-rule-result', contribution: 'mark:link',
+      message: 'An invalid or mismatched HTML link source carrier was ignored; the visible destination remains authoritative.',
+    });
+    if (carrier !== null && restored === null) reportOnce(context, {
+      code: 'invalid-rule-result', contribution: 'mark:link',
+      message: 'An invalid or mismatched native link source carrier was ignored; the visible destination remains authoritative.',
+    });
     if (child.hasAttribute('href')) {
-      if (isSafeURL(href, { allowEmpty: true })) addSchemaMark(nextMarks, schema, 'link', {
-        href, title: child.getAttribute('title') ?? '',
-        target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
-      });
+      if (href !== null) {
+        addSchemaMark(nextMarks, schema, 'link', {
+          href, title: child.getAttribute('title') ?? '',
+          target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
+          ...(htmlHref === undefined ? {} : { htmlHref }),
+        });
+        if (restored === null && nativeHTMLSource === null && (href !== originalHref || renderedLinkDestination(href, htmlHref) !== href)
+          && nextMarks.some(mark => mark.type.name === 'link' && mark.attrs.href === href)) reportOnce(context, {
+          code: 'normalized-link-url',
+          message: htmlHref === undefined
+            ? 'Link destination data was normalized without HTML-source navigation support in the declared schema; original browser behavior is not retained. Inspect the destination before following it.'
+            : 'Link control data is stored percent-encoded with a bound HTML-source spelling that preserves browser navigation. Inspect the stored and rendered destinations before following it.',
+        });
+        else if (href !== originalHref && !nextMarks.some(mark => mark.type.name === 'link')) reportOnce(context, {
+          code: 'invalid-rule-result', contribution: 'mark:link',
+          message: 'A normalized link destination did not satisfy the declared link schema; readable content was retained unlinked.',
+        });
+      }
       else reportOnce(context, {
         code: 'rejected-url', message: 'Unsafe link URLs were omitted; readable link text was retained.',
       });
@@ -672,8 +808,16 @@ function inlineChildren(
 ): FountainNode[] {
   const result: FountainNode[] = [];
   parent.childNodes.forEach((child) => {
+    if (child.kind === 'comment') {
+      const comment = importHTMLComment(child.data, schema, marks);
+      if (comment) {
+        context.commentOrigins!.set(comment, child.raw);
+        result.push(comment);
+      }
+      return;
+    }
     if (child.kind === 'text') {
-      if (child.textContent) result.push(...textNodes(child.textContent, schema, marks));
+      if (child.textContent) result.push(...(context.literalText ? [schema.text(child.textContent, marks)] : textNodes(child.textContent, schema, marks)));
       return;
     }
     const tag = child.tagName;
@@ -692,6 +836,9 @@ function inlineChildren(
       return;
     }
     const offset = slots ? htmlparser2Adapter.getNodeSourceCodeLocation(child.raw)?.startOffset : undefined;
+    if (offset !== undefined && slots?.blockAtoms.has(offset)) {
+      throw new Error('HTML recovery cannot flatten a protected Markdown block atom into inline content; literal source retained.');
+    }
     const localMarks = offset === undefined ? [] : slots?.tokenMarks.get(offset) ?? [];
     const atomMarks = localMarks.length ? mergeInlineMarks(localMarks, marks) : marks;
     const sourceBreak = offset === undefined ? undefined : slots?.sourceBreaks.get(offset);
@@ -718,7 +865,8 @@ function inlineChildren(
     if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
       const latex = child.getAttribute('data-latex') ?? child.textContent;
       const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
-      try { result.push(schema.node('inline_math', { latex, ariaLabel }, [], undefined, atomMarks)); }
+      const expression = parseMathExpressionJSON(child.getAttribute('data-fountain-math-expression'));
+      try { result.push(schema.node('inline_math', { latex, ariaLabel, expression }, [], undefined, atomMarks)); }
       catch { if (latex) result.push(schema.text(latex, marks)); }
       return;
     }
@@ -791,6 +939,9 @@ function imageNode(
     blockImage ? '100%' : 'auto',
   );
   const height = imageSize(image.style.height || image.getAttribute('height') || '', blockImage ? 'auto' : '1em');
+  const captionElement = blockImage ? container?.querySelector(':scope > figcaption') ?? null : null;
+  const richCaption = Boolean(captionElement && (container?.getAttribute('data-fountain-rich-caption') === 'true' || captionElement.children.length));
+  const caption = richCaption && captionElement ? inlineChildren(captionElement, schema, [], context) : [];
   try {
     return schema.node(type, {
       src,
@@ -805,8 +956,8 @@ function imageNode(
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '')
         ? image.getAttribute('decoding')
         : 'async',
-      ...(blockImage ? { caption: container?.querySelector(':scope > figcaption')?.textContent ?? '' } : {}),
-    }, [], undefined, marks);
+      ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement) } : {}),
+    }, caption, undefined, marks);
   } catch { return null; }
 }
 
@@ -910,7 +1061,10 @@ function alignment(element: SourceElement): 'left' | 'center' | 'right' | 'justi
 
 function paragraph(element: SourceElement, schema: Schema, context: ImportContext): FountainNode {
   const content = inlineChildren(element, schema, [], context);
-  return schema.node('paragraph', { align: alignment(element) }, content.length ? content : [schema.text('')]);
+  // Match the browser importer: a marker never takes precedence over source
+  // children, including comments, whitespace or unsupported descendant tags.
+  const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
+  return schema.node('paragraph', { align: alignment(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: SourceElement, colspan: number): number[] | null {
@@ -956,7 +1110,9 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
   const flushInline = () => {
     const content = inlineChildren(inlineGroup(pending), schema, [], context);
     const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
-    if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', inlineParagraphAttrs, content));
+    const flow = !Object.keys(inlineParagraphAttrs).length && importHTMLAnonymousFlow(content, schema);
+    if (flow) result.push(flow);
+    else if (meaningful && schema.nodes.paragraph) result.push(schema.node('paragraph', inlineParagraphAttrs, content));
     pending = [];
   };
   element.childNodes.forEach((child) => {
@@ -997,9 +1153,12 @@ function listItemContent(element: SourceElement, schema: Schema, context: Import
   return inheritElementMarks(element, result, schema, context);
 }
 
-function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: ImportContext['blockSlots'], inlineSlots?: ImportContext['inlineSlots']): FountainNode {
+function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: ImportContext['blockSlots'], inlineSlots?: ImportContext['inlineSlots'], commentOrigins?: ImportContext['commentOrigins']): FountainNode {
   if (!marks.length) return node;
-  const children = node.content.map(child => inheritBlockMarks(child, marks, slots, inlineSlots));
+  if (inlineSlots?.atomNodes.has(node) && node.type.name === 'image_super') {
+    throw new Error('HTML formatting or links around a Markdown block image require an inline-image projection; literal source retained.');
+  }
+  const children = node.content.map(child => inheritBlockMarks(child, marks, slots, inlineSlots, commentOrigins));
   let result = children.some((child, index) => child !== node.content[index]) ? node.copy(children) : node;
   if (node.type.isInline) {
     const combined = mergeInlineMarks(node.marks, marks);
@@ -1011,6 +1170,8 @@ function inheritBlockMarks(node: FountainNode, marks: readonly Mark[], slots?: I
   if (origin && result !== node) slots?.origins.set(result, origin);
   const index = inlineSlots?.provenance.get(node);
   if (index !== undefined && result !== node) inlineSlots?.provenance.set(result, index);
+  const commentOrigin = commentOrigins?.get(node);
+  if (commentOrigin && result !== node) commentOrigins?.set(result, commentOrigin);
   return result;
 }
 
@@ -1021,11 +1182,18 @@ function block(element: SourceElement, schema: Schema, context: ImportContext): 
 function inheritElementMarks(element: SourceElement, nodes: FountainNode[], schema: Schema, context: ImportContext): FountainNode[] {
   const slots = context.blockSlots;
   const marks = slots ? slots.scopedMarks.get(element.raw) : elementMarks(element, schema, [], context, false);
-  return marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots, context.inlineSlots)) : nodes;
+  return marks?.length ? nodes.map(node => inheritBlockMarks(node, marks, slots, context.inlineSlots, context.commentOrigins)) : nodes;
 }
 
 function projectBlock(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
   const tag = element.tagName;
+  const location = htmlparser2Adapter.getNodeSourceCodeLocation(element.raw)?.startOffset;
+  const atom = location === undefined ? undefined : context.inlineSlots?.blockAtoms.get(location);
+  if (atom) {
+    if (tag !== atom.tag || element.childNodes.length) throw new Error('HTML recovery changed a protected Markdown block atom.');
+    context.inlineSlots!.atomVisits.push(location!);
+    return [atom.node];
+  }
   if (context.blockSlots && element.hasAttribute(context.blockSlots.attribute)) {
     const index = Number(element.getAttribute(context.blockSlots.attribute));
     const offset = htmlparser2Adapter.getNodeSourceCodeLocation(element.raw)?.startOffset;
@@ -1039,13 +1207,14 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   if (customNode) return [customNode];
   if (tag === 'dl') {
     const branch: ImportContext = { ...context, issues: [], issueKeys: new Set(),
-      inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [] } : undefined };
+      inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [], atomVisits: [] } : undefined };
     const list = importDefinitionList(element, schema, item => blockChildren(item, schema, branch),
       item => configuredNode(item, schema, false, [], branch), () => {
       reportOnce(branch, { code: 'unmapped-block-wrapper', message: 'Definition-list grouping wrappers were removed; term and description order was retained.' });
     });
     if (list) {
       branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
+      branch.inlineSlots?.atomVisits.forEach(offset => context.inlineSlots!.atomVisits.push(offset));
       branch.issues.forEach(issue => reportOnce(context, issue));
       return [list];
     }
@@ -1053,16 +1222,17 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
     const latex = element.getAttribute('data-latex') ?? element.textContent;
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
-    try { return [schema.node('math_block', { latex, ariaLabel })]; }
+    const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
+    try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {
-    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element) }, inlineChildren(element, schema, [], context))];
+    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
   }
   if (tag === 'p') return [paragraph(element, schema, context)];
   if (tag === 'blockquote') {
     const children = blockChildren(element, schema, context);
-    return [schema.node('blockquote', {}, children.length ? children : [paragraph(element, schema, context)])];
+    return [schema.node('blockquote', readExplicitQuoteAppearance(element), children.length ? children : [paragraph(element, schema, context)])];
   }
   if (tag === 'pre') {
     const codeClass = directChild(element, 'code')?.getAttribute('class') ?? '';
@@ -1122,6 +1292,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     return [schema.node('code_block', {
       language: element.getAttribute('data-language') || codeClass.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
       lineNumbers: true,
+      ...readParagraphLayout(element),
     }, content)];
   }
   if (tag === 'hr') return [schema.node('horizontal_rule')];
@@ -1159,13 +1330,14 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       && child.matches('img.fountain-file__preview') && child.getAttribute('src') === media[0]?.getAttribute('href')
       && child.getAttribute('alt') === `Preview of ${media[0]?.getAttribute('data-name')}`) : [];
     const fallback = () => {
-      reportOnce(context, { code: 'unmapped-block-wrapper', message: 'A figure could not be represented as one media node with a plain caption. Its supported descendants were imported in order; figure grouping and wrapper attributes were not preserved.' });
+      reportOnce(context, { code: 'unmapped-block-wrapper', message: 'A figure could not be represented as one media node with its supported caption. Its supported descendants were imported in order; figure grouping and wrapper attributes were not preserved.' });
       return blockChildren(element, schema, context);
     };
-    // Only the simple shape can become an atom without swallowing authored
-    // siblings or flattening rich caption content into a string attribute.
-    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || captions.some(caption => caption.children.length)
-      || children.some(child => child.kind === 'text' ? /[^\t\n\f\r ]/u.test(child.textContent) : child !== media[0] && !captions.includes(child) && !previews.includes(child))) return fallback();
+    const imageFigure = !['audio', 'video', 'file', 'embed'].includes(mediaType ?? '');
+    // Images own editable inline caption content. Other media nodes remain
+    // atomic and may consume only a plain caption string.
+    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || (!imageFigure && captions.some(caption => caption.children.length))
+      || children.some(child => child.kind === 'text' ? /[^\t\n\f\r ]/u.test(child.textContent) : child.kind === 'element' && child !== media[0] && !captions.includes(child) && !previews.includes(child))) return fallback();
     if (mediaType === 'audio') {
       const media = element.querySelector(':scope > audio');
       const node = media ? playbackNode(media, schema, 'audio', element) : null;
@@ -1205,7 +1377,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const rows = orderedRows.map((row) => {
       const node = schema.node(
       'table_row',
-      {},
+      readTableRow(row),
       row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const columnSpan = htmlTableSpan(cell.getAttribute('colspan'));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
@@ -1226,6 +1398,8 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
             colspan,
             rowspan,
             colwidth: tableCellWidths(cell, colspan),
+            background: tableBackground(cell.style.backgroundColor),
+            ...readTableAppearance(cell, true),
             ...(cell.tagName === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
           },
           content.length ? content : [paragraph(cell, schema, context)],
@@ -1235,9 +1409,9 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       const marked = inheritElementMarks(row, [node], schema, context);
       const parent = row.raw.parent;
       return parent && parent !== element.raw && htmlparser2Adapter.isElementNode(parent)
-        ? inheritElementMarks(new ServerElement(parent), marked, schema, context)[0] : marked[0];
+        ? inheritElementMarks(row.parentElement!, marked, schema, context)[0] : marked[0];
     });
-    return [...captions, ...rows.length ? [schema.node('table', {}, rows)] : []];
+    return [...captions, ...rows.length ? [schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element) }, rows)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element, schema, 'image_super', context);
@@ -1316,7 +1490,7 @@ export class ServerHTMLImporter {
     return new ServerHTMLImporter().parseParagraph(segments, schema, context);
   }
 
-  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false, generated?: { breaks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; lineFeeds: ReadonlySet<FountainNode>; codeBlocks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; codeEndings: ReadonlyMap<FountainNode, FountainNode> }): ServerHTMLInlineImportResult {
+  private parseInlineContent(segments: readonly MarkdownHTMLInlineSegment[], schema: Schema, paragraphMode: boolean, wrapParagraph = true, wholeContainer = false, generated?: { breaks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; lineFeeds: ReadonlySet<FountainNode>; codeBlocks: ReadonlyMap<MarkdownHTMLInlineSegment, FountainNode>; codeEndings: ReadonlyMap<FountainNode, FountainNode>; blockAtoms: ReadonlyMap<MarkdownHTMLInlineSegment, { readonly tag: 'hr' | 'img' | 'table' | 'p'; readonly node: FountainNode }> }): ServerHTMLInlineImportResult {
     const usedNames = new Set<string>();
     let preOpen = false;
     for (const segment of segments) {
@@ -1357,6 +1531,7 @@ export class ServerHTMLImporter {
     const sourceBreaks = new Map<number, FountainNode>();
     const codeBlocks = new Map<number, FountainNode>();
     const codeEndings = new Map<number, FountainNode>();
+    const blockAtoms = new Map<number, { readonly tag: 'hr' | 'img' | 'table' | 'p'; readonly node: FountainNode }>();
     let previousSegment: MarkdownHTMLInlineSegment | undefined;
     const wrapped = paragraphMode && wrapParagraph;
     const parts: string[] = wrapped ? ['<p>'] : [];
@@ -1369,6 +1544,8 @@ export class ServerHTMLImporter {
         if (sourceBreak) sourceBreaks.set(offset, sourceBreak);
         const sourceCode = generated?.codeBlocks.get(segment);
         if (sourceCode) codeBlocks.set(offset, sourceCode);
+        const atom = generated?.blockAtoms.get(segment);
+        if (atom) blockAtoms.set(offset, atom);
         part = segment.html;
       } else {
         part = `<${tag} data-index="${originals.length}"></${tag}>`;
@@ -1394,19 +1571,40 @@ export class ServerHTMLImporter {
     const issues: ServerHTMLImportIssue[] = [];
     const provenance = new WeakMap<FountainNode, number>();
     const context: ImportContext = {
-      issues, issueKeys: new Set(), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText, sourceBreaks, codeBlocks, codeEndings, projectedBreaks: new WeakSet(), breakVisits: [] },
+      issues, issueKeys: new Set(), ...(wholeContainer ? { literalRawText: new WeakMap<RawElement, FountainNode>() } : {}), inlineSlots: { tag, nodes: originals, sharedNodes, provenance, tokenMarks, softBreaks, adjacentText, sourceBreaks, codeBlocks, codeEndings, blockAtoms, atomNodes: new Set([...blockAtoms.values()].map(atom => atom.node)), atomVisits: [], projectedBreaks: new WeakSet(), breakVisits: [] },
     };
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
       onParseError: error => {
+        // An EOF inside a tag discards its entire token, potentially including
+        // all raw Markdown source. Protected-node checks cannot detect that
+        // loss when the input consists only of raw HTML. Refuse speculative
+        // whole-document conversion so the Markdown importer keeps its inert
+        // source projection. Complete opening tags may still be HTML-repaired.
+        // This guard is independent of the bounded diagnostic budget.
+        if (wholeContainer && error.code === 'eof-in-tag') {
+          throw new Error('HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained.');
+        }
         if (issues.length < this.options.maxParseErrors) issues.push(parseErrorIssue(error));
       },
     });
     validateTree(fragment, this.options, context);
-    const root = rootSource(fragment);
+    const root = rootSource(fragment, this.options.sourceTokens ? { text: html, origin: 'markdown-projection' } : undefined);
     const inspect = (parent: SourceParent) => {
       for (const child of parent.childNodes) {
         if (child.kind !== 'element') continue;
+        if (wholeContainer && /^(script|style|textarea)$/u.test(child.tagName)) {
+          const literal = configuredNode(child, schema, true, [], context);
+          if (literal?.type.spec.code && literal.type.spec.content === 'text*'
+            && literal.content.every(node => node.isText && !node.marks.length)
+            && literal.textContent === child.textContent) {
+            context.literalRawText!.set(child.raw, literal);
+            // These are parser raw-text elements: their body is one literal
+            // string, not HTML descendants or protected Markdown node slots.
+            // The existing provenance check below still refuses swallowed slots.
+            continue;
+          }
+        }
         if ((!paragraphMode && BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
           throw new Error(`Inline HTML <${child.tagName}> requires a block or specialized adapter; literal source retained.`);
         }
@@ -1442,10 +1640,16 @@ export class ServerHTMLImporter {
     if (visitedBreaks.length !== expectedBreaks.length || visitedBreaks.some((offset, index) => offset !== expectedBreaks[index])) {
       throw new Error('HTML recovery changed generated Markdown hard-break order or count; literal source retained.');
     }
+    const expectedAtoms = [...blockAtoms.keys()];
+    const visitedAtoms = context.inlineSlots!.atomVisits;
+    if (visitedAtoms.length !== expectedAtoms.length || visitedAtoms.some((offset, index) => offset !== expectedAtoms[index])) {
+      throw new Error('HTML recovery changed protected Markdown block atom order or count; literal source retained.');
+    }
     if (segments.some(segment => segment.kind === 'html')) reportOnce(context, {
       code: 'inline-html-projection',
-      message: 'Inline HTML was projected into schema content. Comments, tag identity, unsupported attributes/styles, and unsafe URLs are not preserved; this is not lossless HTML conversion.',
+      message: 'Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion.',
     });
+    reportCommentLoss(nodes, context);
     return Object.freeze({ nodes: Object.freeze(nodes), issues: Object.freeze([...issues]) });
   }
 
@@ -1513,6 +1717,7 @@ export class ServerHTMLImporter {
     const generatedLineFeeds = new Set<FountainNode>();
     const generatedCodeBlocks = new Map<MarkdownHTMLInlineSegment, FountainNode>();
     const generatedCodeEndings = new Map<FountainNode, FountainNode>();
+    const generatedAtoms = new Map<MarkdownHTMLInlineSegment, { readonly tag: 'hr' | 'img' | 'table' | 'p'; readonly node: FountainNode }>();
     let newline = true;
     const raw = (html: string) => { stream.push({ kind: 'html', html, marks: [] }); if (html) newline = html.endsWith('\n'); };
     const cr = () => { if (!newline) raw('\n'); };
@@ -1528,9 +1733,52 @@ export class ServerHTMLImporter {
       schema.validate(node);
       if (paragraph.kind === 'unsupported') throw new Error('Structural flow refuses unsupported block syntax.');
       if (paragraph.kind === 'html') { cr(); raw(paragraph.html); cr(); return; }
+      if (paragraph.kind === 'thematicBreak' || paragraph.kind === 'image') {
+        const image = paragraph.kind === 'image';
+        const expected = image ? schema.node('image_super', {
+          src: paragraph.src, alt: paragraph.alt, title: paragraph.title, width: '100%', caption: '',
+        }) : schema.node('horizontal_rule');
+        if (!node.eq(expected)) throw new Error('Structural flow refuses modified Markdown block atoms.');
+        const tag = image ? 'img' : 'hr';
+        // Offsets bind these syntax-derived void tags to the ORIGINAL node.
+        // Source-authored tags cannot spoof them, and no attributes or media
+        // bytes pass through HTML parsing. Missing/reordered visits refuse flow.
+        const opening: MarkdownHTMLInlineSegment = { kind: 'html', html: `<${tag} />`, marks: [] };
+        generatedAtoms.set(opening, { tag, node });
+        cr(); stream.push(opening); newline = false; cr();
+        return;
+      }
+      if (paragraph.kind === 'table') {
+        if (node.type.name !== 'table' || paragraph.rows.length !== node.childCount
+          || paragraph.rows.some((row, index) => row.cells.length !== node.child(index).childCount)) {
+          throw new Error('Structural flow refuses modified Markdown table geometry.');
+        }
+        // Reconstruct only the pristine schema projection from fresh parser
+        // cell syntax (including references), never from exported HTML/JSON.
+        // Keep the ORIGINAL subtree, complete defaults, marks and identities.
+        const expected = schema.node('table', {}, paragraph.rows.map(row => schema.node('table_row', {},
+          row.cells.map(cell => schema.node(row.header ? 'table_header' : 'table_cell', {}, [schema.node('paragraph',
+            { align: cell.align }, normalized(cell.segments.map(part => part.kind === 'node'
+              ? part.node : schema.text(part.html.replace(/\n/gu, ' '), part.marks)))),
+          ])),
+        )));
+        if (!node.eq(expected)) throw new Error('Structural flow refuses modified Markdown table projections.');
+        const opening: MarkdownHTMLInlineSegment = { kind: 'html', html: '<table></table>', marks: [] };
+        generatedAtoms.set(opening, { tag: 'table', node });
+        cr(); stream.push(opening); newline = false; cr();
+        return;
+      }
       if (paragraph.kind === 'empty') {
         if (Object.keys(node.attrs).some(key => key !== 'align') || node.content.some(child => !child.isText || child.text || child.marks.length)
           || !node.eq(schema.node('paragraph', {}, node.content))) throw new Error('Structural flow refuses modified empty placeholders.');
+        // An explicit saved empty paragraph is real document content. Carry
+        // its exact node through the existing offset-bound block-slot guard;
+        // implicit list/quote caret fillers keep their previous behavior.
+        if (paragraph.explicit) {
+          const opening: MarkdownHTMLInlineSegment = { kind: 'html', html: '<p></p>', marks: [] };
+          generatedAtoms.set(opening, { tag: 'p', node });
+          cr(); stream.push(opening); newline = false; cr();
+        }
         return;
       }
       if (paragraph.kind === 'taskList' || paragraph.kind === 'taskItem') {
@@ -1632,6 +1880,7 @@ export class ServerHTMLImporter {
     if ([...byBlock].some(([node, source]) => source.kind !== 'html' && !used.has(node))) throw new Error('Paragraph flow source context contains unmatched blocks.');
     const result = this.parseInlineContent(stream, schema, true, false, true, {
       breaks: generatedBreaks, lineFeeds: generatedLineFeeds, codeBlocks: generatedCodeBlocks, codeEndings: generatedCodeEndings,
+      blockAtoms: generatedAtoms,
     });
     // Task syntax is an extension, not ordinary CommonMark list text. Reject
     // HTML repair/raw-text scopes that erase, duplicate or alter any task tree.
@@ -1710,11 +1959,14 @@ export class ServerHTMLImporter {
     const fragment = parseFragment<Htmlparser2TreeAdapterMap>(html, {
       treeAdapter: htmlparser2Adapter, sourceCodeLocationInfo: true,
       onParseError: error => {
+        if (error.code === 'eof-in-tag') {
+          throw new Error('HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained.');
+        }
         if (issues.length < this.options.maxParseErrors) issues.push(parseErrorIssue(error));
       },
     });
     validateTree(fragment, this.options, context);
-    const root = rootSource(fragment);
+    const root = rootSource(fragment, this.options.sourceTokens ? { text: html, origin: 'markdown-projection' } : undefined);
     // Raw-text scopes need a source-aware projection, not a formatting overlay.
     const inspect = (parent: SourceParent, specialized = false, inherited: readonly Mark[] = []): void => {
       for (const child of parent.childNodes) {
@@ -1745,6 +1997,7 @@ export class ServerHTMLImporter {
       code: 'block-html-projection',
       message: 'HTML block scopes were projected into schema content. Unsupported wrappers, attributes, layout and comments may be omitted; this is not lossless HTML conversion.',
     });
+    reportCommentLoss(nodes, context);
     return Object.freeze({ nodes: Object.freeze(nodes), issues: Object.freeze([...issues]) });
   }
 
@@ -1755,7 +2008,7 @@ export class ServerHTMLImporter {
   parseWithReport(html: string, schema: Schema): ServerHTMLImportResult {
     const result = this.parseContent(html, schema, true);
     const document = schema.topNodeType.create(
-      {},
+      result.pageSettings ? { pageSettings: result.pageSettings } : {},
       result.nodes.length ? result.nodes : [schema.node('paragraph', {}, [schema.text('')])],
     );
     schema.validate(document);
@@ -1770,7 +2023,7 @@ export class ServerHTMLImporter {
     return this.parseContent(html, schema, false);
   }
 
-  private parseContent(html: string, schema: Schema, documentMode: boolean): ServerHTMLFragmentImportResult {
+  private parseContent(html: string, schema: Schema, documentMode: boolean): ServerHTMLFragmentImportResult & { readonly pageSettings?: DocumentPageSettings } {
     if (typeof html !== 'string') throw new TypeError('HTML input must be a string.');
     const inputBytes = utf8Length(html);
     if (inputBytes > this.options.maxInputBytes) {
@@ -1784,6 +2037,7 @@ export class ServerHTMLImporter {
     const parse = documentMode ? parseDocument<Htmlparser2TreeAdapterMap> : parseFragment<Htmlparser2TreeAdapterMap>;
     const fragment = parse(html, {
       treeAdapter: htmlparser2Adapter,
+      sourceCodeLocationInfo: this.options.sourceTokens,
       // DOMParser's detached HTML documents use the disabled scripting mode.
       // Keep fragment/Markdown interpretation backward compatible.
       scriptingEnabled: !documentMode,
@@ -1797,15 +2051,21 @@ export class ServerHTMLImporter {
       },
     });
     validateTree(fragment, this.options, context);
-    let root = rootSource(fragment);
+    let root = rootSource(fragment, this.options.sourceTokens ? { text: html, origin: 'html-input' } : undefined);
+    let pageSettings: DocumentPageSettings | undefined;
     if (documentMode) {
       const shell = root.childNodes.find((node): node is SourceElement => node.kind === 'element' && node.tagName === 'html');
       const head = shell?.children.find(node => node.tagName === 'head');
       const body = shell?.children.find(node => node.tagName === 'body');
+      const settings = readHTMLDocumentPageSettings(body);
+      pageSettings = settings.pageSettings;
+      if (settings.invalid) reportOnce(context, {
+        code: 'invalid-page-settings', message: 'Invalid or oversized Fountain body page-settings metadata was omitted; visible document content remains.',
+      });
       if (!body || head?.children.length || [shell, head, body].some(node => node && htmlparser2Adapter.getAttrList(node.raw).length)) {
         reportOnce(context, {
           code: 'document-shell-omitted',
-          message: 'Only the HTML document body was imported. Head metadata, stylesheets, document-shell attributes and non-body framesets are not preserved; external resources are not fetched.',
+          message: 'The HTML document body and valid Fountain page settings were imported. Head metadata, stylesheets, other document-shell attributes and non-body framesets are not preserved; external resources are not fetched.',
         });
       }
       root = body ?? { childNodes: [], textContent: '' };
@@ -1815,7 +2075,8 @@ export class ServerHTMLImporter {
       blocks.push(schema.node('paragraph', {}, [schema.text(root.textContent)]));
     }
     blocks.forEach(node => schema.validate(node));
-    return Object.freeze({ nodes: Object.freeze(blocks), issues: Object.freeze([...issues]) });
+    reportCommentLoss(blocks, context);
+    return Object.freeze({ nodes: Object.freeze(blocks), issues: Object.freeze([...issues]), ...(pageSettings ? { pageSettings } : {}) });
   }
 
   static parseFragment(html: string, schema: Schema, options: ServerHTMLImporterOptions = {}): readonly FountainNode[] {

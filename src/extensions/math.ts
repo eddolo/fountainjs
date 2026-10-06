@@ -10,6 +10,7 @@ import {
   type NodeViewConstructor,
   type NodeViewLike,
 } from '../core';
+import { isMathExpression } from '../core/math-expression';
 import { getNodeAtPath } from '../core/transaction/path';
 import { MarkdownImporter } from '../core/importers/markdown-importer';
 import { defineExtension, type FountainExtension } from './extension';
@@ -32,6 +33,7 @@ function validMathSource(value: unknown): boolean {
 const mathAttributes = {
   latex: { default: '', validate: validMathSource },
   ariaLabel: { default: '', validate: (value: unknown) => typeof value === 'string' && value.length <= 1_000 },
+  expression: { default: undefined, validate: (value: unknown) => value === undefined || isMathExpression(value) },
 } as const;
 
 export interface MathRenderContext {
@@ -286,6 +288,7 @@ function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; 
         'data-fountain-math-appearance': appearance,
         'data-latex': node.attrs.latex,
         'data-math-aria-label': node.attrs.ariaLabel,
+        ...(node.attrs.expression ? { 'data-fountain-math-expression': JSON.stringify(node.attrs.expression) } : {}),
         role: 'math',
         'aria-label': node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`,
       }, ['code', String(node.attrs.latex)]],
@@ -302,6 +305,7 @@ function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; 
         'data-fountain-math-appearance': appearance,
         'data-latex': node.attrs.latex,
         'data-math-aria-label': node.attrs.ariaLabel,
+        ...(node.attrs.expression ? { 'data-fountain-math-expression': JSON.stringify(node.attrs.expression) } : {}),
         role: 'math',
         'aria-label': node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`,
       }, ['code', String(node.attrs.latex)]],
@@ -411,7 +415,7 @@ function replaceMathSource(
   const active = getActiveMath(editor, requestedPath);
   if (!active) return false;
   const { node, path } = active;
-  const attrs = { ...node.attrs, latex, ...(ariaLabel === undefined ? {} : { ariaLabel }) };
+  const attrs = { ...node.attrs, latex, expression: undefined, ...(ariaLabel === undefined ? {} : { ariaLabel }) };
   if (String(node.attrs.latex) === latex
     && (ariaLabel === undefined || node.attrs.ariaLabel === ariaLabel)) return false;
   let replacement: Node;

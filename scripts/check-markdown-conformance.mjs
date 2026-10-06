@@ -9,6 +9,8 @@ import {
   CoreSchemaSpec,
   HTMLExporter,
   HTMLContainerExtension,
+  HTMLCommentExtension,
+  HTMLFlowExtension,
   MarkdownImporter,
   MarkdownExporter,
   Schema,
@@ -16,6 +18,7 @@ import {
 import { ServerHTMLImporter } from '../dist/html-server.js';
 import { checkMarkdownFlowBoundaries } from './check-markdown-flow-boundaries.mjs';
 import { checkMarkdownCodeLabels } from './check-markdown-code-labels.mjs';
+import { checkMarkdownDelimiterNeighbors } from './check-markdown-delimiter-neighbors.mjs';
 
 const BASELINE_PATH = fileURLToPath(new URL(
   '../tests/fixtures/markdown/commonmark-semantic-baseline-v1.json',
@@ -39,6 +42,9 @@ const documentFlowReport = process.argv.includes('--document-flow-report');
 const inspectedExamples = new Set(process.argv
   .filter((value) => value.startsWith('--example='))
   .map((value) => Number(value.slice('--example='.length))));
+// Collect baseline regressions so a diagnostic report reaches every profile.
+// Reporting never waives a regression: all collected failures still exit nonzero.
+const profileRegressions = [];
 
 const BLOCK_TAGS = new Set([
   'address', 'article', 'aside', 'blockquote', 'div', 'dl', 'fieldset', 'figure',
@@ -61,7 +67,11 @@ function normalizedText(value) {
 }
 
 function normalizedURL(value) {
-  try { return encodeURI(decodeURI(value)); } catch { return value; }
+  // WHATWG URL preprocessing strips raw ASCII TAB/LF/CR, never encoded bytes.
+  // Raw backslashes still cannot alias encoded data (browser path separators).
+  const navigation = value.replace(/[\t\n\r]/gu, '');
+  if (/\\/u.test(navigation)) return navigation;
+  try { return encodeURI(decodeURI(navigation)); } catch { return navigation; }
 }
 
 function normalizeInline(tokens) {
@@ -390,7 +400,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 9) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 11) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)
@@ -402,6 +412,8 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 }
 
 const schema = new Schema(CoreSchemaSpec);
+checkMarkdownDelimiterNeighbors({ schema, MarkdownImporter, MarkdownExporter, HTMLExporter,
+  referenceParser, referenceRenderer, referenceOutput, semanticProjection });
 checkMarkdownCodeLabels({ schema, MarkdownImporter, MarkdownExporter, HTMLExporter,
   referenceParser, referenceRenderer, referenceOutput, semanticProjection });
 checkMarkdownFlowBoundaries({
@@ -744,6 +756,19 @@ for (const [source, broken] of sensitivityCases) {
     throw new Error(`The inert HTML comparator failed its loss-sensitivity check: ${JSON.stringify(source)}`);
   }
 }
+const URLSensitivityCases = [
+  ['foo\\bar', 'foo%5Cbar'], ['foo\nbar', 'foo%0Abar'],
+  ['foo\tbar', 'foo%09bar'], ['https://example.com?find=\\*', 'https://example.com?find=%5C*'],
+];
+for (const [raw, encoded] of URLSensitivityCases) {
+  if (normalizedURL(raw) === normalizedURL(encoded)) throw new Error('The URL comparator hid browser-significant raw bytes.');
+}
+for (const [literal, encoded] of [['café', 'caf%C3%A9'], ['two words', 'two%20words']]) {
+  if (normalizedURL(literal) !== normalizedURL(encoded)) throw new Error('The URL comparator lost reviewed URI equivalence.');
+}
+for (const source of ['foo\tbar', 'foo\nbar', 'foo\rbar']) {
+  if (normalizedURL(source) !== normalizedURL('foobar')) throw new Error('The URL comparator lost browser control preprocessing.');
+}
 for (const literal of ['<x a="one  two">', '<x a="one\u00a0two">']) {
   const damaged = schema.node('paragraph', {}, [schema.text(literal.replace(/ {2}|\u00a0/u, ' '))]);
   if (retainsLiteralHTML(damaged, [['inline', literal]])) throw new Error('The literal HTML guard accepted whitespace corruption.');
@@ -751,6 +776,7 @@ for (const literal of ['<x a="one  two">', '<x a="one\u00a0two">']) {
 console.log(`Reference parser reproduced all ${commonmarkSpec.tests.length} official HTML outputs exactly.`);
 console.log(`Inert raw HTML: ${htmlPolicyExamples.size - htmlPolicyFailures.length}/${htmlPolicyExamples.size} semantic, ${htmlPolicyExamples.size - htmlTokenFailures.length}/${htmlPolicyExamples.size} exact token contracts; ${generatedCases.length - generatedFailures.length}/${generatedCases.length} generated boundary/round-trip contracts.`);
 console.log(`Oracle sensitivity: ${sensitivityCases.length} semantic and 2 literal-whitespace corruptions rejected; reference parser absent from ${runtimeMaps.length} runtime source maps.`);
+console.log('URL oracle sensitivity: 4 raw-control/backslash aliases rejected; 3 TAB/LF/CR preprocessing equivalences; 2 reviewed URI equivalents retained.');
 if (htmlPolicyReport) {
   console.log(`Inert raw HTML policy: ${htmlPolicyExamples.size - htmlPolicyFailures.length}/${htmlPolicyExamples.size} reference semantic contracts match.`);
   for (const failure of htmlPolicyFailures) console.log(JSON.stringify(failure));
@@ -763,16 +789,18 @@ const required = expandRanges(baseline.requiredMatchRanges);
 // An explicit syntax policy, not a reclassification of the default dialect.
 // Check every already-matching case as well as the three literal-address cases.
 const literalAddressExamples = new Set([...required, 608, 611, 612]);
+const literalAddressFailures = [];
 for (const example of commonmarkSpec.tests.filter(example => literalAddressExamples.has(example.number))) {
   const source = materializeTabs(example.markdown);
   const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
   const document = MarkdownImporter.parse(source, schema, { autolinkLiterals: false });
   const actual = semanticProjection(HTMLExporter.export(document, { document: false }));
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-    throw new Error(`Literal-address import policy disagrees with CommonMark example ${example.number}.`);
+    literalAddressFailures.push(example.number);
   }
 }
-console.log(`Literal-address import policy: ${literalAddressExamples.size} reference semantic contracts passed (default baseline unchanged).`);
+console.log(`Literal-address import policy: ${literalAddressExamples.size - literalAddressFailures.length}/${literalAddressExamples.size} reference semantic contracts passed (default baseline unchanged).`);
+if (literalAddressFailures.length) profileRegressions.push(`Literal-address policy: ${compressRanges(literalAddressFailures)}`);
 const pending = expandRanges(baseline.pendingMismatchRanges);
 const intentional = new Set(baseline.intentionalDivergences.flatMap(({ exampleRanges }) => (
   [...expandRanges(exampleRanges)]
@@ -924,7 +952,7 @@ console.log(`Opt-in HTML flow: ${flowSourceChecks} exact-source contracts passed
   const regressions = [...flowRequired].filter(number => !flowMatches.has(number));
   const gains = [...flowUnresolved].filter(number => flowMatches.has(number));
   if (flowMismatches.some(example => example.error)) throw new Error('Opt-in HTML corpus import threw; use --html-flow-report --show-mismatches.');
-  if (regressions.length) throw new Error(`Opt-in HTML semantic regressions: ${compressRanges(regressions)}`);
+  if (regressions.length) profileRegressions.push(`Opt-in HTML semantic regressions: ${compressRanges(regressions)}`);
   if (gains.length && !reportOnly) throw new Error(`Review newly matching opt-in HTML examples: ${compressRanges(gains)}`);
 }
 
@@ -1009,17 +1037,22 @@ if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip 
   const gains = [...unresolved].filter(number => matchCounts.has(number));
   console.log(`Opt-in source recovery: ${matches.length}/652 neutral-projection matches on LF and CRLF; ${retentionChecks} separate exact-source checks. Not full CommonMark conformance.`);
   if (sourceFlowReport) console.log(`Source-recovery matching ranges: ${compressRanges(matches)}`);
-  if (errors.length || regressions.length) throw new Error(`Source-recovery corpus regressions: ${[...errors, ...regressions].join(', ')}`);
+  if (errors.length || regressions.length) profileRegressions.push(`Source-recovery corpus regressions: ${[...errors, ...regressions].join(', ')}`);
   if (gains.length && !reportOnly) throw new Error(`Review newly matching source-recovery examples: ${compressRanges(gains)}`);
 }
-{
-  const documentBaseline = JSON.parse(readFileSync(new URL('../tests/fixtures/markdown/commonmark-document-flow-v1.json', import.meta.url), 'utf8'));
+for (const [preserveComments, preserveFlow] of [[false, false], [true, false], [true, true]]) {
+  const fixture = preserveFlow ? 'commonmark-anonymous-flow-v1.json' : preserveComments ? 'commonmark-comment-flow-v1.json' : 'commonmark-document-flow-v1.json';
+  const documentBaseline = JSON.parse(readFileSync(new URL(`../tests/fixtures/markdown/${fixture}`, import.meta.url), 'utf8'));
+  if (documentBaseline.projectionVersion !== baseline.projectionVersion) throw new Error('Document-flow comparator version differs from the default.');
   const required = expandRanges(documentBaseline.requiredMatchRanges);
   const unresolved = expandRanges(documentBaseline.unresolvedRanges);
   for (let number = 1; number <= 652; number++) {
     if (Number(required.has(number)) + Number(unresolved.has(number)) !== 1) throw new Error(`Document-flow example ${number} needs one classification.`);
   }
-  const documentSchema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes } });
+  const documentSchema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes,
+    ...(preserveComments ? HTMLCommentExtension.nodes : {}),
+    ...(preserveFlow ? HTMLFlowExtension.nodes : {}),
+  } });
   const counts = new Map();
   let retention = 0;
   for (const example of commonmarkSpec.tests) for (const ending of ['\n', '\r\n']) {
@@ -1034,18 +1067,20 @@ if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip 
     retention++;
     const matched = JSON.stringify(actual) === JSON.stringify(expected);
     if (matched) counts.set(example.number, (counts.get(example.number) ?? 0) + 1);
-    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { number: example.number, ending, source, expected, actual, fallbacks, matched } }));
+    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, number: example.number, ending, source, expected, actual, fallbacks, matched } }));
   }
   const matches = [...counts].filter(([, count]) => count === 2).map(([number]) => number);
-  console.log(`Whole-document optional-container profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
-  if (documentFlowReport) console.log(`Document-flow matching ranges: ${compressRanges(matches)}`);
+  console.log(`Whole-document optional-container${preserveComments ? '+comment' : ''}${preserveFlow ? '+anonymous-flow' : ''} profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
+  if (documentFlowReport) console.log(`Document-flow${preserveComments ? '+comment' : ''} matching ranges: ${compressRanges(matches)}`);
   const regressions = [...required].filter(number => counts.get(number) !== 2);
-  if (regressions.length) throw new Error(`Document-flow semantic regressions: ${compressRanges(regressions)}`);
+  if (regressions.length) profileRegressions.push(`Document-flow semantic regressions: ${compressRanges(regressions)}`);
   const gains = [...unresolved].filter(number => counts.has(number));
   if (gains.length && !reportOnly) throw new Error(`Review newly matching document-flow examples: ${compressRanges(gains)}`);
 }
 if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');
 if (divergenceFailures.length) throw new Error(`Intentional divergence contract regressions: ${compressRanges(divergenceFailures)}`);
+if (regressed.length) profileRegressions.push(`Default semantic regressions: ${compressRanges(regressed)}`);
+if (profileRegressions.length) throw new Error(profileRegressions.join('\n'));
 if (reportOnly) process.exit(0);
 if (!required.size) throw new Error('The CommonMark semantic baseline contains no required matches.');
 if (newlyMatching.length) {

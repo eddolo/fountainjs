@@ -37,7 +37,7 @@ export type FountainToolbarActionId =
   | 'add-table-row' | 'delete-table-row' | 'add-table-column' | 'delete-table-column'
   | 'delete-table'
   | 'merge-cells' | 'split-cell' | 'toggle-header-row' | 'toggle-header-column'
-  | 'toggle-header-cell' | 'select-row' | 'select-column' | 'column-width';
+  | 'toggle-header-cell' | 'toggle-row-repeat-header' | 'select-row' | 'select-column' | 'column-width';
 
 export interface FountainToolbarIconProps extends SVGProps<SVGSVGElement> {
   name: FountainToolbarActionId;
@@ -157,6 +157,10 @@ export function FountainToolbarRoot({ label = 'Formatting and rich content', cla
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    // Fields own caret, value and option navigation; toolbar traversal applies
+    // only to command controls, not editable/native widgets supplied by a host.
+    if (event.target instanceof HTMLElement
+      && event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"], [role="combobox"], [role="spinbutton"], [role="slider"]')) return;
     const controls = [...event.currentTarget.querySelectorAll<HTMLElement>(
       'button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([type="file"]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])',
     )];

@@ -10,6 +10,10 @@ export async function mathFilesJourney(page: Page, info: TestInfo) {
   const blocks = author.locator('[data-fountain-math="block"]');
   const json = page.locator('details').first().locator('pre');
   const jsonValue = async () => JSON.parse((await json.textContent())!);
+  // The static inspection pane exists before React's editor effect commits.
+  // Wait for the actual initial document, not an empty pre or a fixed delay.
+  await expect(blocks).toHaveCount(2);
+  await expect(json).toContainText('"type": "doc"');
   const initial = await jsonValue();
   await page.getByRole('button', { name: 'Add equation', exact: true }).click();
   await expect(blocks).toHaveCount(3);

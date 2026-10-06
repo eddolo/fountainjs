@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { HTMLContainerWorkshop } from './HTMLContainerWorkshop';
+import { HTMLCommentWorkshop } from './HTMLCommentWorkshop';
+import { HTMLFlowWorkshop } from './HTMLFlowWorkshop';
+import { HTMLInertWorkshop } from './HTMLInertWorkshop';
 import { WebComponentFormDemo } from './WebComponentFormDemo';
 import {
   HTMLExporter,
   HTMLContainerExtension,
+  HTMLCommentExtension,
+  HTMLFlowExtension,
   ClipboardHistoryExtension,
   JSONExporter,
   LeanExtension,
@@ -284,7 +289,7 @@ function OutputPanel({ document }: { document: Node | undefined }) {
 
   return <section className={`demo-output${format === 'markdown' ? ' demo-output--markdown' : ''}`}>
     <header><span><strong>Portable document data</strong><small>Developer inspection · not the reader UI</small></span><button onClick={copy}>{copied ? 'Copied' : 'Copy'}</button></header>
-    <nav>{(['json', 'markdown', 'html'] as const).map((item) => <button className={format === item ? 'active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</nav>
+    <nav aria-label="Document output format">{(['json', 'markdown', 'html'] as const).map((item) => <button type="button" aria-pressed={format === item} className={format === item ? 'active' : ''} onClick={() => setFormat(item)} key={item}>{item}</button>)}</nav>
     {format === 'markdown' && <div className="demo-output-policy">
       <label><input type="checkbox" checked={htmlTables} onChange={event => setHTMLTables(event.target.checked)} /> Keep table structure with HTML</label>
       <p>{htmlTables ? 'Preserves supported cell blocks and layout. Re-import with “Convert HTML blocks to rich content” enabled. Arbitrary metadata still belongs in JSON.' : 'Pipe tables may flatten rich cell content and omit merged cells or column widths.'}</p>
@@ -485,10 +490,16 @@ function ElementRuntime({ demo }: { demo: DemoDefinition }) {
 
 function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   const [preserveContainers, setPreserveContainers] = useState(false);
+  const [preserveComments, setPreserveComments] = useState(false);
+  const [preserveFlow, setPreserveFlow] = useState(false);
   const schema = useMemo(() => {
     const kit = demo.slug === 'node-markdown' ? headlessDemoKit : StarterKit;
-    return new Schema(preserveContainers ? composeExtensions([...kit.extensions, HTMLContainerExtension]).schema : kit.schema);
-  }, [demo.slug, preserveContainers]);
+    return new Schema(composeExtensions([...kit.extensions,
+      ...(preserveContainers ? [HTMLContainerExtension] : []),
+      ...(preserveComments ? [HTMLCommentExtension] : []),
+      ...(preserveFlow ? [HTMLFlowExtension] : []),
+    ]).schema);
+  }, [demo.slug, preserveContainers, preserveComments, preserveFlow]);
   const [inputFormat, setInputFormat] = useState<'markdown' | 'html' | 'docx'>('markdown');
   const [markdownSource, setMarkdownSource] = useState(demo.markdown ?? '');
   const [htmlSource, setHTMLSource] = useState(HEADLESS_HTML_SOURCE);
@@ -563,7 +574,17 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     error: string;
     fileName: string;
     issues: readonly string[];
-  }>({ document: undefined, details: 0, error: '', fileName: '', issues: [] });
+    loading: boolean;
+  }>({ document: undefined, details: 0, error: '', fileName: '', issues: [], loading: false });
+  const docxRequest = useRef(0);
+  useEffect(() => {
+    // A pending read belongs to the schema that started it. Invalidation also
+    // prevents a completed read from publishing after this surface unmounts.
+    setDOCXParsed(current => current.loading
+      ? { ...current, document: undefined, loading: false, error: 'Document schema changed. Choose the file again.' }
+      : current);
+    return () => { docxRequest.current += 1; };
+  }, [schema]);
   const [docxExportStatus, setDOCXExportStatus] = useState('');
   useEffect(() => {
     if (inputFormat !== 'html') return undefined;
@@ -580,7 +601,7 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
     return () => { active = false; };
   }, [htmlSource, inputFormat, schema]);
   const parsed = inputFormat === 'html' ? htmlParsed : inputFormat === 'docx'
-    ? { ...docxParsed, loading: false }
+    ? docxParsed
     : markdownParsed;
   const importedImages = useMemo(() => documentImages(inputFormat === 'docx' ? docxParsed.document : undefined), [docxParsed.document, inputFormat]);
   const source = inputFormat === 'html' ? htmlSource : markdownSource;
@@ -616,6 +637,8 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
   return <div className="demo-workspace">
     <section className="demo-surface headless-surface"><div className="surface-label"><span>LIVE HEADLESS FORMAT PIPELINE</span><i>This conversion panel uses no contenteditable or EditorView.</i></div><nav className="headless-input-tabs" aria-label="Headless input format"><button className={inputFormat === 'markdown' ? 'active' : ''} onClick={() => setInputFormat('markdown')}>Markdown</button><button className={inputFormat === 'html' ? 'active' : ''} onClick={() => setInputFormat('html')}>Server HTML</button><button className={inputFormat === 'docx' ? 'active' : ''} onClick={() => setInputFormat('docx')}>Word DOCX</button></nav>
       {inputFormat !== 'docx' && <div className="headless-html-policy"><label><input type="checkbox" checked={preserveContainers} onChange={event => setPreserveContainers(event.target.checked)} /> Preserve HTML section containers</label><p>Adds the optional HTMLContainerExtension. Keeps supported wrappers, IDs, classes, titles and language/direction attributes. Unknown attributes decline the wrapper with conversion details. Markdown still needs HTML conversion enabled separately.</p>{demo.slug === 'node-markdown' && <a href="#section-authoring">Try creating and editing sections below →</a>}</div>}
+      {inputFormat !== 'docx' && <div className="headless-html-policy"><label><input type="checkbox" checked={preserveComments} onChange={event => setPreserveComments(event.target.checked)} /> Preserve inert HTML comments</label><p>Adds the optional HTMLCommentExtension. Comments are source data, never scripts or app review comments. Markdown still requires explicit HTML conversion. Comments inside unsupported projections can still be omitted with a warning.</p><a href="#comment-authoring">Try editing comment data and reader output below →</a></div>}
+      {inputFormat !== 'docx' && <div className="headless-html-policy"><label><input type="checkbox" checked={preserveFlow} onChange={event => setPreserveFlow(event.target.checked)} /> Preserve anonymous inline HTML flow</label><p>Adds the optional HTMLFlowExtension. Retains inline content outside authored paragraphs without inventing paragraph spacing. Markdown still requires explicit HTML conversion. This does not preserve arbitrary HTML styles or behavior.</p>{demo.slug === 'node-markdown' && <a href="#anonymous-flow">Compare editor and reader spacing below →</a>}</div>}
       {inputFormat === 'markdown' && <div className="headless-html-policy">
         <label><input type="checkbox" checked={autolinkLiterals} onChange={event => setAutolinkLiterals(event.target.checked)} /> Turn bare URLs and email addresses into links</label>
         <p>On by default. Turn it off to keep unbracketed addresses as text. Explicit Markdown links and safe &lt;angle-bracket&gt; links still work. This import setting does not change editor typing rules or enable full CommonMark mode.</p>
@@ -640,15 +663,25 @@ function HeadlessRuntime({ demo }: { demo: DemoDefinition }) {
       {inputFormat === 'docx' ? <div className="headless-docx-controls"><label>Import a Word document<input aria-label="Import Word DOCX" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={async (event) => {
       const file = event.target.files?.[0];
       if (!file) return;
+      event.target.value = '';
+      const request = ++docxRequest.current;
+      setDOCXExportStatus('');
+      setDOCXParsed({ document: undefined, details: 0, error: '', fileName: file.name, issues: [], loading: true });
       try {
-        const result = importDOCX(await file.arrayBuffer(), schema);
-        setDOCXParsed({ document: result.document, details: result.report.issues.length, error: '', fileName: file.name, issues: [...new Set(result.report.issues.map(issue => issue.message))] });
+        const bytes = await file.arrayBuffer();
+        if (request !== docxRequest.current) return;
+        const result = importDOCX(bytes, schema);
+        setDOCXParsed({ document: result.document, details: result.report.issues.length, error: '', fileName: file.name, issues: [...new Set(result.report.issues.map(issue => issue.message))], loading: false });
       } catch (error) {
-        setDOCXParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), fileName: file.name, issues: [] });
+        if (request !== docxRequest.current) return;
+        setDOCXParsed({ document: undefined, details: 0, error: error instanceof Error ? error.message : String(error), fileName: file.name, issues: [], loading: false });
       }
-    }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={() => downloadDOCX()}>Download as Word DOCX</button><button onClick={downloadImageSample}>Download embedded-image sample</button><span>Uses the same DOM-free import/export entry in browsers and servers. Fountain never fetches image URLs.</span></div>{docxExportStatus && <p className="headless-status" role="status">{docxExportStatus}</p>}{importedImages.length > 0 && <div className="headless-image-previews" aria-label="Imported DOCX image previews">{importedImages.map((image, index) => <figure key={`${String(image.attrs.src).slice(0, 40)}-${index}`}><img src={String(image.attrs.src)} alt={String(image.attrs.alt)} /><figcaption>{String(image.attrs.caption || image.attrs.alt || `Image ${index + 1}`)}</figcaption></figure>)}</div>}<p className={parsed.error ? 'headless-status error' : 'headless-status'}>{parsed.error || (parsed.loading ? 'Loading the isolated DOM-free parser…' : `Valid document · ${parsed.document?.childCount ?? 0} top-level blocks · ${detailLabel}`)}</p></section>
+    }} /></label><span>{docxParsed.fileName || 'Choose a .docx file; parsing stays in this browser.'}</span></div> : <><label htmlFor="headless-source">{inputFormat === 'html' ? 'Server HTML input' : 'Markdown input'}</label><textarea id="headless-source" value={source} onChange={(event) => setSource(event.target.value)} /></>}<div className="headless-format-actions"><button disabled={!parsed.document} onClick={() => downloadDOCX()}>Download as Word DOCX</button><button onClick={downloadImageSample}>Download embedded-image sample</button><span>Uses the same DOM-free import/export entry in browsers and servers. Fountain never fetches image URLs.</span></div>{docxExportStatus && <p className="headless-status" role="status" aria-label="DOCX export status">{docxExportStatus}</p>}{importedImages.length > 0 && <div className="headless-image-previews" aria-label="Imported DOCX image previews">{importedImages.map((image, index) => <figure key={`${String(image.attrs.src).slice(0, 40)}-${index}`}><img src={String(image.attrs.src)} alt={String(image.attrs.alt)} /><figcaption>{String(image.attrs.caption || image.attrs.alt || `Image ${index + 1}`)}</figcaption></figure>)}</div>}<p className={parsed.error ? 'headless-status error' : 'headless-status'} role={parsed.error ? 'alert' : 'status'} aria-label="Document import status" aria-busy={parsed.loading} data-import-state={parsed.error ? 'error' : parsed.loading ? 'loading' : parsed.document ? 'ready' : 'idle'}>{parsed.error || (parsed.loading ? inputFormat === 'docx' ? `Reading ${docxParsed.fileName}…` : 'Loading the isolated DOM-free parser…' : parsed.document ? `Valid document · ${parsed.document.childCount} top-level blocks · ${detailLabel}` : inputFormat === 'docx' ? 'Choose a .docx file; parsing stays in this browser.' : 'No document ready.')}</p></section>
     <OutputPanel document={parsed.document} />
     {demo.slug === 'node-markdown' && <HTMLContainerWorkshop />}
+    {demo.slug === 'node-markdown' && <HTMLCommentWorkshop />}
+    {demo.slug === 'node-markdown' && <HTMLFlowWorkshop />}
+    {demo.slug === 'node-markdown' && <HTMLInertWorkshop />}
   </div>;
 }
 
@@ -713,7 +746,7 @@ function DemoPage() {
 
   return <main className="single-demo" style={{ '--demo-accent': demo.accent } as React.CSSProperties}>
     <header className="site-header">
-      <a className="brand" href="../" aria-label="FountainJS home"><span>F</span> FountainJS</a>
+      <a className="brand" href="../" aria-label="F FountainJS home"><span aria-hidden="true">F</span> FountainJS</a>
       <nav aria-label="Primary navigation"><SitePageLink href="../">Home</SitePageLink><SitePageLink href="../demos.html">10 demos</SitePageLink><SitePageLink href="../developers.html">Developers</SitePageLink><a className="site-section-link site-external-link" href="https://github.com/eddolo/fountainjs">Source ↗</a></nav>
       <a className="install-pill" href="../demos.html">Demo {String(demo.index).padStart(2, '0')} / 10</a>
     </header>
@@ -724,7 +757,7 @@ function DemoPage() {
     </section>
 
     <section className="single-demo__runtime" id="live-demo">
-      <div className="demo-role-guide" aria-label="How this demo maps to a product">
+      <div className="demo-role-guide" role="group" aria-label="How this demo maps to a product">
         <article><b>Content author</b><span>Uses the live editor and its authoring controls.</span></article>
         <article><b>Portable document</b><span>The data panel shows what an app stores, syncs, or sends—not the finished UI.</span></article>
         <article><b>Reader or product user</b><span>Sees the host’s read-only or interactive renderer, without author-only controls.</span></article>
@@ -734,7 +767,7 @@ function DemoPage() {
 
     <section className="single-demo__details">
       <div className="demo-capabilities"><p>CAPABILITIES IN THIS PAGE</p>{demo.capabilities.map((capability, index) => <article key={capability}><b>0{index + 1}</b><span>{capability}</span></article>)}</div>
-      <div className="host-recipe"><p>{demo.host.toUpperCase()} INTEGRATION RECIPE</p><pre><code>{demo.code}</code></pre><span>This code documents the real boundary used by the live example. Product storage, authentication, and deployment remain host-owned.</span></div>
+      <div className="host-recipe"><p>{demo.host.toUpperCase()} INTEGRATION RECIPE</p><pre tabIndex={0} role="region" aria-label={`${demo.host} integration code`}><code>{demo.code}</code></pre><span>This code documents the real boundary used by the live example. Product storage, authentication, and deployment remain host-owned.</span></div>
     </section>
 
     <nav className="demo-pagination" aria-label="Other demos">

@@ -82,13 +82,16 @@ import {
   setFontFamily,
   setFontSize,
   setLineHeight,
+  setLetterSpacing,
   setTextColor,
   unsetBackgroundColor,
   unsetFontFamily,
   unsetFontSize,
   unsetLineHeight,
+  unsetLetterSpacing,
 } from '../text-style';
 import { useFountainState } from './useFountain';
+import { tableRowRepeats } from '../core/table-layout';
 import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
 import {
   FountainToolbarButton,
@@ -127,6 +130,18 @@ export interface FountainToolbarProps {
   renderAction?: (context: FountainToolbarActionRenderContext) => ReactNode;
 }
 
+type ToolbarPanel = 'link' | 'image' | 'media' | 'search' | 'code' | 'insert-table' | 'table' | 'text-style' | 'highlight';
+const actionPanel: Partial<Record<FountainToolbarActionId, ToolbarPanel>> = {
+  link: 'link', image: 'image', media: 'media', search: 'search', 'code-block': 'code',
+  'insert-table': 'insert-table', 'table-menu': 'table', 'column-width': 'table',
+  'text-style': 'text-style', highlight: 'highlight',
+};
+const panelLabels: Record<ToolbarPanel, string> = {
+  link: 'Link settings', image: 'Image settings', media: 'Media settings', search: 'Find and replace',
+  code: 'Code settings', 'insert-table': 'Insert table', table: 'Table options',
+  'text-style': 'Text styles', highlight: 'Highlight settings',
+};
+
 export function FountainToolbar({
   editor,
   className,
@@ -146,10 +161,25 @@ export function FountainToolbar({
 }: FountainToolbarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const assetInput = useRef<HTMLInputElement>(null);
+  const wrapper = useRef<HTMLDivElement>(null);
+  const panelTrigger = useRef<HTMLButtonElement | null>(null);
+  const panelId = useId();
   const languageListId = useId();
   const fontFamilyListId = useId();
   const state = useFountainState(editor);
-  const [panel, setPanel] = useState<'link' | 'image' | 'media' | 'search' | 'code' | 'insert-table' | 'table' | 'text-style' | 'highlight' | null>(null);
+  const [panel, setPanel] = useState<ToolbarPanel | null>(null);
+  const panelProps = (name: ToolbarPanel) => ({ id: `${panelId}-${name}`, 'aria-label': panelLabels[name] });
+  const closePanel = () => {
+    setPanel(null);
+    const trigger = panelTrigger.current;
+    if (trigger?.isConnected && !trigger.disabled) trigger.focus();
+    else wrapper.current?.querySelector<HTMLButtonElement>('button:not([disabled])')?.focus();
+  };
+  useEffect(() => {
+    if (!panel) return;
+    const form = wrapper.current?.querySelector<HTMLFormElement>(`form[id="${panelId}-${panel}"]`);
+    form?.querySelector<HTMLElement>('input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])')?.focus();
+  }, [panel, panelId, editor]);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -195,6 +225,7 @@ export function FountainToolbar({
   const [fontFamilyValue, setFontFamilyValue] = useState('');
   const [fontSizeValue, setFontSizeValue] = useState('');
   const [lineHeightValue, setLineHeightValue] = useState('');
+  const [letterSpacingValue, setLetterSpacingValue] = useState('');
   const [styleColor, setStyleColor] = useState('#171923');
   const [styleBackground, setStyleBackground] = useState('#fff3a3');
   const [highlightColor, setHighlightColor] = useState('#fff3a3');
@@ -216,6 +247,13 @@ export function FountainToolbar({
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
   const activeTable = getActiveTableCell(editor);
+  const activeRow = activeTable?.table.child(activeTable.cell.row);
+  const rowRepeats = activeRow ? tableRowRepeats(activeRow) : false;
+  const toggleRowRepetition = () => {
+    if (!editor.editable || !activeTable || !activeRow?.type.spec.attrs?.repeatHeader) return;
+    editor.dispatch(editor.state.createTransaction().setNodeAttrs([...activeTable.tablePath, activeTable.cell.row],
+      { ...activeRow.attrs, repeatHeader: !rowRepeats }));
+  };
   const tableSelected = Boolean(activeTable)
     || (editor.state.selection instanceof NodeSelection && editor.state.selection.nodeType === 'table');
   const activeImage = getActiveImage(editor);
@@ -225,12 +263,13 @@ export function FountainToolbar({
 
   const toggleTextStylePanel = () => {
     if (panel === 'text-style') {
-      setPanel(null);
+      closePanel();
       return;
     }
     setFontFamilyValue(activeTextStyle.fontFamily ?? '');
     setFontSizeValue(activeTextStyle.fontSize ?? '');
     setLineHeightValue(activeTextStyle.lineHeight ?? '');
+    setLetterSpacingValue(activeTextStyle.letterSpacing ?? '');
     setStyleColor(activeTextStyle.color ?? '#171923');
     setStyleBackground(activeTextStyle.backgroundColor ?? '#fff3a3');
     setTextStyleError('');
@@ -244,7 +283,7 @@ export function FountainToolbar({
 
   const toggleLinkPanel = () => {
     if (panel === 'link') {
-      setPanel(null);
+      closePanel();
       return;
     }
     setURL(activeLink?.href ?? '');
@@ -261,7 +300,7 @@ export function FountainToolbar({
       setLinkTitle('');
       setLinkText('');
       setLinkTarget('_blank');
-      setPanel(null);
+      closePanel();
     }
   };
 
@@ -288,13 +327,13 @@ export function FountainToolbar({
       setAlt('');
       setImageTitle('');
       setCaption('');
-      setPanel(null);
+      closePanel();
     }
   };
 
   const toggleImagePanel = () => {
     if (panel === 'image') {
-      setPanel(null);
+      closePanel();
       return;
     }
     const attrs = activeImage?.node.attrs;
@@ -313,7 +352,7 @@ export function FountainToolbar({
 
   const toggleCodePanel = () => {
     if (panel === 'code') {
-      setPanel(null);
+      closePanel();
       return;
     }
     if (activeCodeBlock) {
@@ -329,7 +368,7 @@ export function FountainToolbar({
 
   const submitCodeLanguage = (event: FormEvent) => {
     event.preventDefault();
-    if (setCodeBlockLanguage(editor, codeLanguage)) setPanel(null);
+    if (setCodeBlockLanguage(editor, codeLanguage)) closePanel();
   };
 
   const chooseImage = async (file?: File) => {
@@ -359,7 +398,7 @@ export function FountainToolbar({
 
   const toggleMediaPanel = (preferred: AssetUploadKind | 'embed' = 'audio') => {
     if (panel === 'media') {
-      setPanel(null);
+      closePanel();
       return;
     }
     const attrs = activeMedia?.node.attrs;
@@ -445,7 +484,7 @@ export function FountainToolbar({
               playsInline: mediaPlaysInline,
             })
             : insertAudio(editor, playback);
-    if (accepted) setPanel(null);
+    if (accepted) closePanel();
   };
 
   const chooseAsset = (file?: File) => {
@@ -514,14 +553,19 @@ export function FountainToolbar({
       icon={icon}
       active={options.active}
       disabled={options.disabled}
-      onAction={onAction}
+      aria-expanded={actionPanel[actionId] ? panel === actionPanel[actionId] : undefined}
+      aria-controls={actionPanel[actionId] ? `${panelId}-${actionPanel[actionId]}` : undefined}
+      onAction={() => {
+        if (actionPanel[actionId]) panelTrigger.current = wrapper.current?.querySelector<HTMLButtonElement>(`button[data-fountain-toolbar-action="${actionId}"]`) ?? null;
+        onAction();
+      }}
     />);
   };
   const menuTool = (
     actionId: FountainToolbarActionId,
     defaultLabel: string,
     onAction: () => void,
-    options: { disabled?: boolean; danger?: boolean } = {},
+    options: { disabled?: boolean; danger?: boolean; active?: boolean } = {},
   ): ReactNode => {
     const label = actionLabels[actionId] ?? defaultLabel;
     return customize(actionId, defaultLabel, <FountainToolbarButton
@@ -530,6 +574,7 @@ export function FountainToolbar({
       icon={<span>{label}</span>}
       className={options.danger ? 'is-danger' : undefined}
       disabled={options.disabled}
+      active={options.active}
       onAction={onAction}
     />);
   };
@@ -577,9 +622,9 @@ export function FountainToolbar({
     ]),
     'block-types': () => toolbarGroup('block-types', [
       entry('paragraph', tool('paragraph', 'Paragraph', () => setBlockType(editor, 'paragraph'))),
-      entry('heading-1', tool('heading-1', 'Heading 1', () => setBlockType(editor, 'heading', { level: 1 }))),
-      entry('heading-2', tool('heading-2', 'Heading 2', () => setBlockType(editor, 'heading', { level: 2 }))),
-      entry('heading-3', tool('heading-3', 'Heading 3', () => setBlockType(editor, 'heading', { level: 3 }))),
+      entry('heading-1', tool('heading-1', 'H1 — Heading 1', () => setBlockType(editor, 'heading', { level: 1 }))),
+      entry('heading-2', tool('heading-2', 'H2 — Heading 2', () => setBlockType(editor, 'heading', { level: 2 }))),
+      entry('heading-3', tool('heading-3', 'H3 — Heading 3', () => setBlockType(editor, 'heading', { level: 3 }))),
     ]),
     marks: () => toolbarGroup('marks', [
       entry('bold', tool('bold', 'Bold', mark('strong'), { active: isMarkActive(editor, 'strong') })),
@@ -590,14 +635,14 @@ export function FountainToolbar({
       entry('highlight', tool('highlight', 'Highlight text and choose colour', () => setPanel(panel === 'highlight' ? null : 'highlight'), {
         active: panel === 'highlight' || isMarkActive(editor, 'highlight'),
       })),
-      entry('subscript', tool('subscript', 'Subscript', mark('subscript'), { active: isMarkActive(editor, 'subscript') })),
-      entry('superscript', tool('superscript', 'Superscript', mark('superscript'), { active: isMarkActive(editor, 'superscript') })),
+      entry('subscript', tool('subscript', '2 — Subscript', mark('subscript'), { active: isMarkActive(editor, 'subscript') })),
+      entry('superscript', tool('superscript', '2 — Superscript', mark('superscript'), { active: isMarkActive(editor, 'superscript') })),
       entry('link', tool('link', 'Add or edit link', toggleLinkPanel, { active: Boolean(activeLink) || isMarkActive(editor, 'link') })),
       entry('unlink', tool('unlink', 'Remove link', () => removeLink(editor), { disabled: !activeLink && !isMarkActive(editor, 'link') })),
       entry('text-color', colorControl),
       entry('clear-text-color', tool('clear-text-color', 'Remove text color', () => unsetMark(editor, 'text_color'), { disabled: !isMarkActive(editor, 'text_color') })),
-      entry('text-style', tool('text-style', 'Text styles', toggleTextStylePanel, {
-        active: panel === 'text-style' || Boolean(activeTextStyle.color || activeTextStyle.backgroundColor || activeTextStyle.fontFamily || activeTextStyle.fontSize || activeTextStyle.lineHeight),
+      entry('text-style', tool('text-style', 'A — Text styles', toggleTextStylePanel, {
+        active: panel === 'text-style' || Boolean(activeTextStyle.color || activeTextStyle.backgroundColor || activeTextStyle.fontFamily || activeTextStyle.fontSize || activeTextStyle.lineHeight || activeTextStyle.letterSpacing),
       })),
     ]),
     alignment: () => toolbarGroup('alignment', [
@@ -612,7 +657,7 @@ export function FountainToolbar({
       entry('delete-definition-list', isInsideNode(editor, 'definition_list') && tool('delete-definition-list', 'Delete definition list', () => deleteDefinitionList(editor))),
       entry('quote', tool('quote', isInsideNode(editor, 'blockquote') ? 'Remove quote' : 'Quote selected blocks', () => toggleQuote(editor), { active: isInsideNode(editor, 'blockquote') })),
       entry('bullet-list', tool('bullet-list', 'Bullet list', () => toggleList(editor, 'bullet'), { active: isInsideNode(editor, 'bullet_list') })),
-      entry('ordered-list', tool('ordered-list', 'Numbered list', () => toggleList(editor, 'ordered'), { active: isInsideNode(editor, 'ordered_list') })),
+      entry('ordered-list', tool('ordered-list', '123 — Numbered list', () => toggleList(editor, 'ordered'), { active: isInsideNode(editor, 'ordered_list') })),
       entry('task-list', tool('task-list', 'Task list', () => toggleList(editor, 'task'), { active: isInsideNode(editor, 'task_list') })),
       entry('outdent-list', tool('outdent-list', 'Lift list item', () => outdentListItem(editor), { disabled: !isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item') })),
       entry('indent-list', tool('indent-list', 'Indent list item', () => indentListItem(editor), { disabled: !isInsideNode(editor, 'list_item') && !isInsideNode(editor, 'task_item') })),
@@ -634,6 +679,7 @@ export function FountainToolbar({
       entry('merge-cells', tool('merge-cells', 'Merge selected table cells', () => mergeTableCells(editor), { disabled: !(editor.state.selection instanceof CellSelection) || editor.state.selection.cellPaths.length < 2 })),
       entry('split-cell', tool('split-cell', 'Split merged table cell', () => splitTableCell(editor), { disabled: !activeTable || (activeTable.cell.colspan === 1 && activeTable.cell.rowspan === 1) })),
       entry('toggle-header-row', tool('toggle-header-row', 'Toggle header row', () => toggleTableHeaderRow(editor), { disabled: !activeTable })),
+      entry('toggle-row-repeat-header', tool('toggle-row-repeat-header', 'Repeat row on pages', toggleRowRepetition, { disabled: !activeRow?.type.spec.attrs?.repeatHeader, active: rowRepeats })),
       entry('toggle-header-column', tool('toggle-header-column', 'Toggle header column', () => toggleTableHeaderColumn(editor), { disabled: !activeTable })),
       entry('toggle-header-cell', tool('toggle-header-cell', 'Toggle header cell', () => toggleTableHeaderCell(editor), { disabled: !activeTable })),
       entry('select-row', tool('select-row', 'Select table row', () => selectTableRow(editor), { disabled: !activeTable })),
@@ -654,14 +700,18 @@ export function FountainToolbar({
   const visibleGroups = [...new Set(groups)].filter((group): group is FountainToolbarGroupId => group in groupRenderers);
 
   return (
-    <div className="fountain-toolbar-wrap">
+    <div ref={wrapper} className="fountain-toolbar-wrap" onKeyDown={event => {
+      if (panel && event.key === 'Escape' && !event.defaultPrevented && !event.nativeEvent.isComposing) {
+        event.preventDefault(); event.stopPropagation(); closePanel();
+      }
+    }}>
       <FountainToolbarRoot className={className} label={toolbarLabel}>
         {visibleGroups.map((group) => groupRenderers[group]())}
         {extraActions}
         <input ref={fileInput} className="fountain-toolbar__file" type="file" accept="image/*" tabIndex={-1} aria-hidden="true" onChange={(event) => void chooseImage(event.target.files?.[0])} />
         <input ref={assetInput} className="fountain-toolbar__file" type="file" accept="audio/*,video/*,application/pdf,text/*,.zip" tabIndex={-1} aria-hidden="true" onChange={(event) => chooseAsset(event.target.files?.[0])} />
       </FountainToolbarRoot>
-      {panel === 'link' && <form className="fountain-toolbar__popover is-link" onSubmit={submitLink}>
+      {panel === 'link' && <form {...panelProps('link')} className="fountain-toolbar__popover is-link" onSubmit={submitLink}>
         <strong>{activeLink ? 'Edit link' : 'Add link'}</strong>
         <input aria-label="Link URL" required inputMode="url" placeholder="https://example.com, /page, or mail@example.com" value={url} onChange={(event) => setURL(event.target.value)} />
         {!activeLink && editor.state.selection.isCollapsed && <input aria-label="Link text" required placeholder="Visible link text" value={linkText} onChange={(event) => setLinkText(event.target.value)} />}
@@ -672,10 +722,10 @@ export function FountainToolbar({
         </select>
         {activeLink && <a className="fountain-toolbar__link-preview" href={activeLink.href} target={activeLink.target} rel={activeLink.target === '_blank' ? 'noopener noreferrer' : undefined}>Open current link</a>}
         <button type="submit">{activeLink ? 'Save link' : 'Apply link'}</button>
-        {activeLink && <button type="button" onClick={() => { removeLink(editor); setPanel(null); }}>Remove link</button>}
-        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+        {activeLink && <button type="button" onClick={() => { removeLink(editor); closePanel(); }}>Remove link</button>}
+        <button type="button" onClick={closePanel}>Cancel</button>
       </form>}
-      {panel === 'text-style' && <form className="fountain-toolbar__popover is-text-style" onSubmit={(event) => event.preventDefault()}>
+      {panel === 'text-style' && <form {...panelProps('text-style')} className="fountain-toolbar__popover is-text-style" onSubmit={(event) => event.preventDefault()}>
         <strong>Text styles</strong>
         <p className="fountain-toolbar__hint">Apply one property at a time. Blank values mean unset or mixed text.</p>
         <fieldset className="fountain-toolbar__style-field">
@@ -707,6 +757,15 @@ export function FountainToolbar({
           </div>
         </fieldset>
         <fieldset className="fountain-toolbar__style-field">
+          <label>Character spacing
+            <input aria-label="Character spacing" placeholder={activeTextStyle.mixed.includes('letterSpacing') ? 'Mixed spacing' : '0pt, 1.5pt, or -0.5pt'} value={letterSpacingValue} onChange={event => setLetterSpacingValue(event.target.value)} />
+          </label>
+          <div className="fountain-toolbar__style-actions">
+            <button type="button" disabled={!letterSpacingValue.trim()} onClick={() => applyTextStyle('Character spacing', () => setLetterSpacing(editor, letterSpacingValue))}>Apply spacing</button>
+            <button type="button" onClick={() => { unsetLetterSpacing(editor); setLetterSpacingValue(''); setTextStyleError(''); }}>Remove spacing</button>
+          </div>
+        </fieldset>
+        <fieldset className="fountain-toolbar__style-field">
           <label>Line height
             <input aria-label="Line height" placeholder={activeTextStyle.mixed.includes('lineHeight') ? 'Mixed line heights' : '1.5, 24px, or 150%'} value={lineHeightValue} onChange={(event) => setLineHeightValue(event.target.value)} />
           </label>
@@ -730,19 +789,19 @@ export function FountainToolbar({
           </div>
         </fieldset>
         {textStyleError && <p className="fountain-toolbar__error" role="alert">{textStyleError}</p>}
-        <button type="button" onClick={() => setPanel(null)}>Close</button>
+        <button type="button" onClick={closePanel}>Close</button>
       </form>}
-      {panel === 'highlight' && <form className="fountain-toolbar__popover is-highlight" onSubmit={(event) => {
+      {panel === 'highlight' && <form {...panelProps('highlight')} className="fountain-toolbar__popover is-highlight" onSubmit={(event) => {
         event.preventDefault();
-        if (setMark(editor, 'highlight', { color: highlightColor })) setPanel(null);
+        if (setMark(editor, 'highlight', { color: highlightColor })) closePanel();
       }}>
         <strong>Highlight text</strong>
         <label>Colour <input aria-label="Highlight colour" type="color" value={highlightColor} onChange={(event) => setHighlightColor(event.target.value)} /></label>
         <button type="submit">Apply highlight</button>
-        <button type="button" disabled={!isMarkActive(editor, 'highlight')} onClick={() => { unsetMark(editor, 'highlight'); setPanel(null); }}>Remove highlight</button>
-        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+        <button type="button" disabled={!isMarkActive(editor, 'highlight')} onClick={() => { unsetMark(editor, 'highlight'); closePanel(); }}>Remove highlight</button>
+        <button type="button" onClick={closePanel}>Cancel</button>
       </form>}
-      {panel === 'image' && <form className="fountain-toolbar__popover is-image" onSubmit={submitImage}>
+      {panel === 'image' && <form {...panelProps('image')} className="fountain-toolbar__popover is-image" onSubmit={submitImage}>
         <strong>{activeImage ? 'Edit image' : 'Add image'}</strong>
         {!activeImage && <select aria-label="Image placement" value={imagePlacement} onChange={(event) => {
           const placement = event.target.value as 'block' | 'inline';
@@ -772,8 +831,8 @@ export function FountainToolbar({
         <div className="fountain-toolbar__image-actions">
           <button type="submit">{activeImage ? 'Save image' : 'Insert URL'}</button>
           <button type="button" onClick={() => fileInput.current?.click()}>{activeImage ? 'Replace file' : 'Choose file'}</button>
-          {activeImage && <button type="button" onClick={() => { deleteImage(editor); setPanel(null); }}>Delete image</button>}
-          <button type="button" onClick={() => setPanel(null)}>Close</button>
+          {activeImage && <button type="button" onClick={() => { deleteImage(editor); closePanel(); }}>Delete image</button>}
+          <button type="button" onClick={closePanel}>Close</button>
         </div>
         {uploadSnapshot && <div className="fountain-image-upload" role="status" aria-live="polite">
           <span>{uploadSnapshot.status === 'uploading'
@@ -790,7 +849,7 @@ export function FountainToolbar({
           {uploadSnapshot.status === 'failed' && <button type="button" onClick={() => void imageTask?.retry().catch((error) => onError?.(error))}>Retry upload</button>}
         </div>}
       </form>}
-      {panel === 'media' && <form className="fountain-toolbar__popover is-media" onSubmit={submitMedia}>
+      {panel === 'media' && <form {...panelProps('media')} className="fountain-toolbar__popover is-media" onSubmit={submitMedia}>
         <strong>{activeMedia ? 'Edit media' : 'Add media'}</strong>
         <select aria-label="Media type" value={mediaKind} disabled={Boolean(activeMedia)} onChange={(event) => {
           const kind = event.target.value as AssetUploadKind | 'embed';
@@ -840,8 +899,8 @@ export function FountainToolbar({
         <div className="fountain-toolbar__image-actions">
           <button type="submit">{activeMedia ? 'Save media' : 'Insert URL'}</button>
           {assetUpload && mediaKind !== 'embed' && <button type="button" onClick={() => assetInput.current?.click()}>{activeMedia ? 'Replace file' : 'Choose file'}</button>}
-          {activeMedia && <button type="button" onClick={() => { deleteMedia(editor); setPanel(null); }}>Delete media</button>}
-          <button type="button" onClick={() => setPanel(null)}>Close</button>
+          {activeMedia && <button type="button" onClick={() => { deleteMedia(editor); closePanel(); }}>Delete media</button>}
+          <button type="button" onClick={closePanel}>Close</button>
         </div>
         {assetSnapshot && <div className="fountain-image-upload" role="status" aria-live="polite">
           <span>{assetSnapshot.status === 'uploading'
@@ -858,7 +917,7 @@ export function FountainToolbar({
           {assetSnapshot.status === 'failed' && <button type="button" onClick={() => void assetTask?.retry().catch((error) => onError?.(error))}>Retry upload</button>}
         </div>}
       </form>}
-      {panel === 'code' && <form className="fountain-toolbar__popover is-code" onSubmit={submitCodeLanguage}>
+      {panel === 'code' && <form {...panelProps('code')} className="fountain-toolbar__popover is-code" onSubmit={submitCodeLanguage}>
         <strong>Code block</strong>
         <input
           aria-label="Code language"
@@ -883,9 +942,9 @@ export function FountainToolbar({
           Line numbers
         </label>
         <button type="submit">Apply</button>
-        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+        <button type="button" onClick={closePanel}>Cancel</button>
       </form>}
-      {panel === 'table' && tableSelected && <form className="fountain-toolbar__popover is-table-tools" onSubmit={(event) => event.preventDefault()}>
+      {panel === 'table' && tableSelected && <form {...panelProps('table')} className="fountain-toolbar__popover is-table-tools" onSubmit={(event) => event.preventDefault()}>
         <div className="fountain-toolbar__table-heading">
           <strong>Table options</strong>
           <p className="fountain-toolbar__hint">Changes apply to the cell containing the cursor. Select adjacent cells with Shift-click before merging.</p>
@@ -901,6 +960,8 @@ export function FountainToolbar({
           {menuTool('add-table-row-below', 'Add row below', () => addTableRow(editor, 'after'), { disabled: !activeTable })}
           {menuTool('delete-table-row', 'Delete current row', () => deleteTableRow(editor), { disabled: !activeTable })}
           {menuTool('toggle-header-row', 'Make/unmake header row', () => toggleTableHeaderRow(editor), { disabled: !activeTable })}
+          {menuTool('toggle-row-repeat-header', 'Repeat row on pages', toggleRowRepetition, { disabled: !activeRow?.type.spec.attrs?.repeatHeader, active: rowRepeats })}
+          <p className="fountain-toolbar__hint">Only consecutive repeating rows at the top can repeat. A rowspan crossing into body rows prevents safe repeated copies. This does not change cell colour or header roles.</p>
         </fieldset>
         <fieldset><legend>Columns</legend>
           {menuTool('add-table-column-left', 'Add column left', () => addTableColumn(editor, 'before'), { disabled: !activeTable })}
@@ -914,27 +975,27 @@ export function FountainToolbar({
           {menuTool('column-width', 'Apply width', () => resizeTableColumn(editor, Number(tableWidth)), { disabled: !activeTable })}
         </fieldset>
         <div className="fountain-toolbar__table-footer">
-          {menuTool('delete-table', 'Delete entire table', () => { deleteTable(editor); setPanel(null); }, { danger: true })}
-          <button type="button" onClick={() => setPanel(null)}>Close</button>
+          {menuTool('delete-table', 'Delete entire table', () => { deleteTable(editor); closePanel(); }, { danger: true })}
+          <button type="button" onClick={closePanel}>Close</button>
         </div>
       </form>}
-      {panel === 'insert-table' && <form className="fountain-toolbar__popover is-table" onSubmit={(event) => {
+      {panel === 'insert-table' && <form {...panelProps('insert-table')} className="fountain-toolbar__popover is-table" onSubmit={(event) => {
         event.preventDefault();
-        if (insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })) setPanel(null);
+        if (insertTable(editor, { rows: Number(tableRows), columns: Number(tableColumns), headerRow: true })) closePanel();
       }}>
         <strong>Insert table</strong>
         <label>Rows <input aria-label="Table rows" required type="number" min="1" max="50" step="1" value={tableRows} onChange={(event) => setTableRows(event.target.value)} /></label>
         <label>Columns <input aria-label="Table columns" required type="number" min="1" max="20" step="1" value={tableColumns} onChange={(event) => setTableColumns(event.target.value)} /></label>
         <button type="submit">Insert</button>
-        <button type="button" onClick={() => setPanel(null)}>Cancel</button>
+        <button type="button" onClick={closePanel}>Cancel</button>
       </form>}
-      {panel === 'search' && <form className="fountain-toolbar__popover is-search" onSubmit={(event) => { event.preventDefault(); selectNextMatch(editor, query); }}>
+      {panel === 'search' && <form {...panelProps('search')} className="fountain-toolbar__popover is-search" onSubmit={(event) => { event.preventDefault(); selectNextMatch(editor, query); }}>
         <strong>{query ? `${findText(state?.doc ?? editor.state.doc, query).length} matches` : 'Find in document'}</strong>
         <input aria-label="Find text" required placeholder="Find" value={query} onChange={(event) => setQuery(event.target.value)} />
         <input aria-label="Replacement text" placeholder="Replace with" value={replacement} onChange={(event) => setReplacement(event.target.value)} />
         <button type="submit">Find next</button>
         <button type="button" onClick={() => replaceAllText(editor, query, replacement)}>Replace all</button>
-        <button type="button" onClick={() => setPanel(null)}>Close</button>
+        <button type="button" onClick={closePanel}>Close</button>
       </form>}
       <ClipboardHistoryMenu editor={editor} />
     </div>

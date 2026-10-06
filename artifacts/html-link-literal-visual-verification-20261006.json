@@ -1,0 +1,304 @@
+{
+  "date": "2026-10-06",
+  "status": "verified-unreleased-checkpoint",
+  "sourceSnapshot": "artifacts/html-link-literal-production-source-final-20261006.json",
+  "sourceDigest": "5566aae575a1fee7179a487cd58dad675027e952aad451cb1cfae288d1866dab",
+  "sourceFileCount": 681,
+  "completeGate": {
+    "log": "artifacts/html-link-literal-complete-gate-final-20261006.log",
+    "unitTests": 2569,
+    "testFiles": 193,
+    "declarationFiles": 409,
+    "linkContractsPerRuntime": 473,
+    "runtimes": [
+      "packed ESM",
+      "packed CommonJS",
+      "compiled Node",
+      "Cloudflare workerd via Miniflare"
+    ]
+  },
+  "recordedRegression": {
+    "log": "artifacts/html-link-literal-recorded-regressions-final-20261006.log",
+    "passed": 42,
+    "retries": 0,
+    "workers": 1,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "captureRoot": "artifacts/html-link-literal-recorded-regressions-final-20261006"
+  },
+  "visualReview": {
+    "linkCaptures": [
+      {
+        "sha256": "9A52AFA6B6475EA7B9D9FF295DF607DE5EA17F45B46EB4A92F4D1E101BB5AA05",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\encoded-link-destinations.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "47A03C91655CCBD6B6CA1AB8EECB7ABB4E2D65903C0F40132003E7F68A4F794E",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\encoded-link-editor-mobile.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "14160BFC11756C5AD40254E87F53B1B89072557B94254C953F89D6CF6C4A4DAD",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\encoded-link-editor.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "74FFE4758A90098284E624A2CFC9B8563C6FBA79E0362B4B9F4197345BF1849F",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\encoded-link-reader-mobile.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "948F84818749B38D607FDABFBC0F58B8D2047D8179118571EFCC9A4339CB0FA2",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\encoded-link-reader.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "2F2AB55ACA2C0EE42076871E1960F4BAB7941FA890C5E5121F28612FAD04F822",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\literal-markdown-links-editor.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "8854B95895C8368ABDF176F0D89586B19E49BBB9EBA49953E4768145F7E0D5AB",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\literal-markdown-links-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "CA161782E48F5143968A45AB884CA9CCF8C360845B8D992F543263F78A95F5D3",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-chromium\\literal-markdown-links-reader.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "1B8736712F55D5247266EA541570026A5B64DDEB2A3717D8DFDAB58BD53880BF",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\encoded-link-destinations.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "B39B592B9044AE865D333AA272ADC9CF18DF2BA818B7C293BC31EB4CD0400708",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\encoded-link-editor-mobile.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "12E3A01980AD454F9FE5A84625B1D83D57DE76BDDCA506539C17F33745EDDAFE",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\encoded-link-editor.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "FD2EDD996612D417548FBCE3305E9BB9205DDCDB92B06052FA1593F6236BACA8",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\encoded-link-reader-mobile.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "2FCA495FFC341A90A70BD924F7DE92F82390CCC10C20053F956786ACAB54693F",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\encoded-link-reader.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "BA53CB262FE48365891A0AE46D99BBBEE3EB509B55A1C5B421AEB57F11B020C5",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\literal-markdown-links-editor.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "2F6C7711FEE107AFD07A193DC31E5EFBEF0CDBA8A6DA0827ECE0398460777E46",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\literal-markdown-links-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "CCA10BEE9D0D3AEC9A17ADDDA89F5388DE3DFD3F8965B918E8603CA9D9073700",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-firefox\\literal-markdown-links-reader.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "2DE705EB4B29C5B05A2CEF506E139FC0CD1A37517753F0F25AB3F2CD9DC2DEF8",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\encoded-link-destinations.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "5B16F163EB701FB0214A226ADDF5E174FB58EA242C94D2236FF5BFDB4A60C2B0",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\encoded-link-editor-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "C2487979094B80F60AB3A3E627F1EC44A8F7539245BF092A96688DA802D906C3",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\encoded-link-editor.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "D564A1FC6CB31758D055F9A01B3C936905D81DA3F44B362618D1E9A0E4DFF048",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\encoded-link-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "03DE63843BB3CDA73B6FCD1403074576F856E3AB0833191BA0BD8A891A352F48",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\encoded-link-reader.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "E3FBF0AED4013E4D670B2341F76B5AF2F90F602AFC8DF039C61771507CD70316",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\literal-markdown-links-editor.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "D6EEE9283B70D72B64D00F14CE50D80250FEB7F24DA695AF38B12DAB90EBE47A",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\literal-markdown-links-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "A488081E7B9894790E91417483AC85F835002F4D44054F5FD960095DB9102CD4",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-retains-encoded-HTM-db246--real-editing-and-reopening-webkit\\literal-markdown-links-reader.png",
+        "identicalToReviewed": true
+      }
+    ],
+    "previousLinkCaptureRoot": "artifacts/html-link-literal-browser-checked-20261006",
+    "previousLinkCapturesVisuallyInspected": 24,
+    "identicalFreshLinkCaptures": 16,
+    "freshChangedLinkCapturesVisuallyInspected": 8,
+    "rawSourceCaptures": 18,
+    "priorRawVerification": "artifacts/html-inert-raw-text-visual-verification-20261006.json",
+    "identicalFreshRawCaptures": 13,
+    "changedFreshRawCapturesVisuallyInspected": 5,
+    "rawCaptures": [
+      {
+        "sha256": "13DC323AB0F5901795727ED25F2CA56AE72E0B770513BBE6F4F1F64D6DAC4EBC",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium\\raw-text-editor-edited.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "4FCAFCF2EE49569EE8CF7CC9F250620B1F0F3C54AE2E929A35581AFA4EF75BF8",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium\\raw-text-editor-mobile.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "8552A53CDBBC76F15354BDC0A8CA7E2CC46BC096461BF039CED7E4EF2AA9B462",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium\\raw-text-empty-filled.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "34469BF10B54310D94E2E2C0F055A5A7AA1057A9472DDC0E5007ECCBD3E0F967",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium\\raw-text-reader-edited.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "506356D8C4A5FA70C17F9BFEDD93D8BBC3750014816CC0FE498471F039B40E86",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium\\raw-text-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "450BF59F592D957C836A2787C033CC8C26331DE18F194BF705F11DB5E59A3FF0",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium\\raw-text-retained-data.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "5083A959EF514EFC510E16DB6A755F8570A337D0ABC75D844313AF8052D0C0BD",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox\\raw-text-editor-edited.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "045420A33AF7AC731030193A8A8FEDB90F9DE790D3BBC411AC82692693F52E56",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox\\raw-text-editor-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "6E1458F9FF4B08517626BE55803482B4CCCB933C86A3AC0CCF8ED59404137032",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox\\raw-text-empty-filled.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "322225AC84E7E0255CACE2486EE792A7D116DFC5473111F38AE143F64B62D6F5",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox\\raw-text-reader-edited.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "BA41ADF261917ED3D711E84B703BC353433F67BC4A69D956AA1D68AECAC36144",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox\\raw-text-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "ACEE9E474A4481C15B64E8795CAD2A07544BA551044AF58105BC1AC7C26DDD0E",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox\\raw-text-retained-data.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "7E5770A1A8D33325141F027D29670A8E716ADA0FC0CC8E7FF39B1878A9938502",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit\\raw-text-editor-edited.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "F8FBDB53F56A0ECBB38C6D35731F5AA7386C048507B31F156957DF01A51C4E1E",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit\\raw-text-editor-mobile.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "01DC066E6A2B666C0D4B511AAAA504001F14ECF863C3EF1B79F6C56B0E100928",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit\\raw-text-empty-filled.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "83608D1C8F5811184837A43D2D45EBB242A77FF5CF3B1A73AAFFF192E9503C1E",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit\\raw-text-reader-edited.png",
+        "identicalToReviewed": false
+      },
+      {
+        "sha256": "52BED4B8FFB95D9F1111E5D9CE0506781A2A137C16D1AE3903A8A9EAA55C0E8A",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit\\raw-text-reader-mobile.png",
+        "identicalToReviewed": true
+      },
+      {
+        "sha256": "99925F83301BE0F38A8BB8164C35CB9020B535ADB469CB50961263216B1769AB",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\html-link-literal-recorded-regressions-final-20261006\\editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit\\raw-text-retained-data.png",
+        "identicalToReviewed": true
+      }
+    ]
+  },
+  "observations": [
+    "Editor and reader retain visible link labels, surrounding spaces, paragraphs and the plaintext unsafe-link fallback.",
+    "Stored and rendered URLs are separately visible; all four Markdown destination examples use percent-encoded backslash data in actual hrefs.",
+    "Desktop/390px captures remain readable without horizontal page overflow. Device emulation is not physical-device testing.",
+    "Raw script/style/textarea bodies stay readable code data with inert badges; CSS URLs and script bodies remain source, not executed behavior.",
+    "Two original native word-selection gestures selected a following blank; the final test trims it using Shift+ArrowLeft and asserts that neighbouring text is unchanged.",
+    "Thirteen raw-source captures and sixteen link captures are byte-identical to already inspected screenshots. All remaining changed captures were inspected directly."
+  ],
+  "oracle": {
+    "projectionVersion": 10,
+    "defaultMatches": 563,
+    "strongestOptInMatches": 610,
+    "total": 652,
+    "repairedMarkdownExamples": [
+      20,
+      202,
+      502,
+      603
+    ],
+    "unresolvedNavigationExamples": [
+      21,
+      642,
+      643
+    ],
+    "literalURLDataIsNotOriginalBrowserNavigation": true,
+    "nativeASTEqualityIsNotRequiredBySemanticOracle": true
+  },
+  "retainedFailures": [
+    "artifacts/html-link-controls-oracle-full-reviewed-20261006.log",
+    "artifacts/html-link-literal-oracle-fixed-20261006.log",
+    "artifacts/html-link-literal-budget-20261006.log",
+    "artifacts/html-link-literal-recorded-first-20261006.log",
+    "artifacts/html-link-literal-types-20261006.log"
+  ],
+  "failureInterpretation": [
+    "Stricter URL oracle exposed four previously hidden rendering failures, then one explicit raw-HTML navigation boundary. The four Markdown failures were fixed; the HTML boundary remains unresolved.",
+    "Initial aggregate budgets were exceeded; measured ~2.0/1.9 KiB feature growth received bounded aggregate allowances only.",
+    "The first Chromium recording timed out while capturing an offscreen reader iframe; final recording scrolls that iframe into view. No production fix or timeout relaxation was used.",
+    "An earlier type-only run overlapped a cold browser build that cleared dist declarations. The frozen serialized complete gate subsequently passed framework types. The failed run remains retained."
+  ],
+  "limitations": [
+    "Videos/traces are recorded; visual review was performed on captured screenshots, not a claim to have watched every video frame.",
+    "Selected workflows, not exhaustive editor behavior.",
+    "No physical mobile/IME certification or every external clipboard/editor combination.",
+    "No original active HTML behavior/layout or universal document-fidelity guarantee.",
+    "Canonical plain-text-run coalescing after rejected HTML remains a disclosed native-shape mismatch.",
+    "No publication, parity-row promotion or completed CommonMark claim."
+  ]
+}

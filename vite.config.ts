@@ -22,10 +22,11 @@ export default defineConfig({
   plugins: [angularLinker(), react(), svelte({ configFile: false })],
   // The optional Vue demo uses render functions, not the template compiler.
   define: { __VUE_OPTIONS_API__: false, __VUE_PROD_DEVTOOLS__: false, __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false },
-  // The export diagnostic is loaded dynamically. Prebundle its server-side
-  // adaptor before mounting it so first use cannot trigger a Vite full reload.
+  // Export diagnostics and registered HTML recovery load their server adapters
+  // lazily. Include their dependencies before first use: discovering these only
+  // during an import can re-optimize the graph and reload an active document.
   optimizeDeps: {
-    include: ['@mathjax/src/js/adaptors/liteAdaptor.js', 'rxjs', 'rxjs/operators'],
+    include: ['@mathjax/src/js/adaptors/liteAdaptor.js', 'rxjs', 'rxjs/operators', 'css-select', 'parse5', 'parse5-htmlparser2-tree-adapter', 'fountainjs-editor/html/inert'],
     exclude: ['fountainjs-editor/angular', '@angular/core', '@angular/common', '@angular/platform-browser'],
   },
   // This lab explicitly selects the bundled TeX font. Avoid also shipping

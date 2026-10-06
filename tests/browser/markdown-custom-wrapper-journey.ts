@@ -1,11 +1,14 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
+import { inStableDocument } from './stable-document';
 
 export async function markdownCustomWrapperJourney(page: Page, info: TestInfo): Promise<void> {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/browser-tests.html');
+  await expect.poll(() => page.evaluate(() => typeof (globalThis as any).fountainBrowserTest?.importRegisteredHTMLFlow)).toBe('function');
   const source = '<section data-label="Release">\n\n# Release handover\n\n<section data-label="Checks">\n\nInspect logs  \nCheck timestamps\n\n</section>\n\n</section>';
-  const imported = await page.evaluate(source => (globalThis as any).fountainBrowserTest.importRegisteredHTMLFlow(source), source);
+  const imported = await inStableDocument(page, 'Import registered Markdown HTML wrappers', () =>
+    page.evaluate(source => (globalThis as any).fountainBrowserTest.importRegisteredHTMLFlow(source), source));
   expect(imported.fallbacks).toEqual([]);
   const editor = page.getByRole('textbox', { name: 'Browser contract editor', exact: true });
   const checks = editor.locator('section[data-label="Checks"] > p');

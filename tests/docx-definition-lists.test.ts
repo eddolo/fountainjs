@@ -1,3 +1,4 @@
+import { withDOCXExportDefaults, withDOCXExportStyles } from './fixtures/docx-page-defaults';
 import { describe, expect, it, vi } from 'vitest';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema } from '../src/core';
@@ -18,39 +19,50 @@ const change = (fn: (xml: string) => string, bytes = exported().bytes) => {
 describe('versioned Word glossary controls', () => {
   it('retains roles, repeated entries, paragraphs, rich marks, list starts and nested definitions', () => {
     const result = exported();
-    expect(result.report.issues.every(issue => issue.code === 'definition-docx-experimental')).toBe(true);
+    expect(result.report.issues.every(issue => ['definition-docx-experimental', 'page-settings-defaulted'].includes(issue.code))).toBe(true);
     const reopened = importDOCX(result.bytes, schema);
     expect(reopened.report.issues).toEqual([]);
-    expect(reopened.document.toJSON()).toEqual(document().toJSON());
+    expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(document().toJSON(), 'letter'));
   });
 
   it('uses visible edits and duplicate control IDs without restoring hidden source', () => {
     const bytes = change(xml => xml.replace('Time to respond.', 'Edited in Word.').replace(/w:id w:val="\d+"/g, 'w:id w:val="1"'));
     const reopened = importDOCX(bytes, schema);
-    expect(reopened.document.toJSON()).toEqual(document(source.replace('Time to respond.', 'Edited in Word.')).toJSON());
+    expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(document(source.replace('Time to respond.', 'Edited in Word.')).toJSON(), 'letter'));
     expect(reopened.report.issues).toEqual([]);
   });
 
   it('keeps definition lists inside table cells and tables inside descriptions', () => {
     const doc = document('<table><tr><td>' + source + '</td></tr></table><dl><dt>Results</dt><dd><table><tr><td>42</td></tr></table></dd></dl>');
     const actual = importDOCX(exportDOCX(doc).bytes, schema).document;
-    expect(actual.child(0).child(0).child(0).child(0).toJSON()).toEqual(doc.child(0).child(0).child(0).child(0).toJSON());
+    expect(actual.child(0).child(0).child(0).child(0).toJSON()).toEqual(withDOCXExportStyles(doc.child(0).child(0).child(0).child(0).toJSON()));
     const table = actual.child(1).child(1).child(0);
     expect(table.type.name).toBe('table');
-    expect(table.child(0).child(0).attrs).toEqual({ colspan: 1, rowspan: 1, colwidth: null, background: '' });
+    expect(table.child(0).child(0).attrs).toEqual({ colspan: 1, rowspan: 1, colwidth: [160], background: '' });
     expect(table.textContent).toBe('42');
   });
 
   it.each(['<dl></dl>', '<dl><dd>Unpaired definition</dd><dd>Second definition</dd></dl>'])('retains incomplete authoring structure: %s', html => {
     const doc = document(html);
     const actual = importDOCX(exportDOCX(doc).bytes, schema).document;
-    expect(actual.toJSON()).toEqual(doc.toJSON());
+    expect(actual.toJSON()).toEqual(withDOCXExportDefaults(doc.toJSON()));
   });
 
-  it('keeps empty entries editable, using the DOCX importer empty-paragraph representation', () => {
+  it('keeps explicit empty entries and their native run marks editable', () => {
     const actual = importDOCX(exportDOCX(document('<dl><dt></dt><dd></dd></dl>')).bytes, schema).document.child(0);
     expect(actual.content.map(node => node.type.name)).toEqual(['definition_term', 'definition_description']);
-    for (const entry of actual.content) expect(entry.content.map(node => node.toJSON())).toEqual([{ type: 'paragraph', attrs: { align: 'left' } }]);
+    expect(actual.toJSON()).toEqual({ type: 'definition_list', content: [
+      { type: 'definition_term', content: [{ type: 'paragraph', attrs: { align: 'left', emphasis: 'explicit', layout: {
+        unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8, lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto', keepWithNext: true, keepLinesTogether: false, pageBreakBefore: false,
+      } }, content: [{ type: 'text', text: '', marks: [
+        { type: 'font_family', attrs: { family: 'Arial' } }, { type: 'font_size', attrs: { size: '11pt' } }, { type: 'strong' },
+      ] }] }] },
+      { type: 'definition_description', content: [{ type: 'paragraph', attrs: { align: 'left', emphasis: 'explicit', layout: {
+        unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8, lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto', indentStart: 18, keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
+      } }, content: [{ type: 'text', text: '', marks: [
+        { type: 'font_family', attrs: { family: 'Arial' } }, { type: 'font_size', attrs: { size: '11pt' } },
+      ] }] }] },
+    ] });
   });
 
   it.each([
@@ -74,7 +86,7 @@ describe('versioned Word glossary controls', () => {
   });
 
   it('accepts equivalent namespace prefixes but not foreign structural controls', () => {
-    expect(importDOCX(change(xml => xml.replaceAll('w:', 'x:').replace('xmlns:w=', 'xmlns:x=')), schema).document.toJSON()).toEqual(document().toJSON());
+    expect(importDOCX(change(xml => xml.replaceAll('w:', 'x:').replace('xmlns:w=', 'xmlns:x=')), schema).document.toJSON()).toEqual(withDOCXExportDefaults(document().toJSON(), 'letter'));
     const foreign = importDOCX(change(xml => xml.replace('<w:sdt>', '<f:sdt xmlns:f="urn:foreign">').replace(/<\/w:sdt>(?=<w:sectPr>)/, '</f:sdt>')), schema);
     expect(foreign.report.issues.some(issue => issue.code === 'unsupported-content-control-namespace')).toBe(true);
   });
@@ -90,7 +102,7 @@ describe('versioned Word glossary controls', () => {
     expect(result.report.issues.some(issue => issue.code === 'definition-schema-fallback')).toBe(true);
   });
 
-  it('uses paragraph styles for role appearance without adding strong content marks', () => {
+  it('exports role appearance as a paragraph style and imports its effective bold appearance as editable marks', () => {
     const files = unzipSync(exported().bytes);
     const xml = strFromU8(files['word/document.xml']!);
     expect(xml).toContain('<w:pStyle w:val="FountainDefinitionTerm"/>');
@@ -100,7 +112,9 @@ describe('versioned Word glossary controls', () => {
     expect(strFromU8(files['word/styles.xml']!)).toContain('Fountain Definition Term');
     const ids = [...xml.matchAll(/<w:id w:val="(\d+)"/g)].map(match => match[1]);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(importDOCX(exported().bytes, schema).document.child(0).child(0).child(0).child(0).marks).toEqual([]);
+    expect(importDOCX(exported().bytes, schema).document.child(0).child(0).child(0).child(0).marks.map(mark => mark.toJSON())).toEqual([
+      { type: 'font_family', attrs: { family: 'Arial' } }, { type: 'font_size', attrs: { size: '11pt' } }, { type: 'strong' },
+    ]);
   });
 
   it('parses deeply nested visible content once when the host roles are incompatible', () => {

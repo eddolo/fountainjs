@@ -59,6 +59,8 @@ function cellAttrs(cell: Node, overrides: Attributes = {}, targetName = cell.typ
     colspan,
     rowspan: Number(overrides.rowspan ?? cell.attrs.rowspan) || 1,
     colwidth: overrides.colwidth === undefined ? normalizedWidths(cell, colspan) : overrides.colwidth,
+    background: overrides.background ?? cell.attrs.background ?? '',
+    appearance: overrides.appearance ?? cell.attrs.appearance,
   };
   if (targetName === 'table_header') {
     attrs.scope = overrides.scope ?? cell.attrs.scope ?? 'col';

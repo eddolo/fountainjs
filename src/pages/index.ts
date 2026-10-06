@@ -24,6 +24,7 @@ import {
 export * from './layout';
 export * from './presentation';
 export * from './templates';
+export * from './settings';
 
 const FOOTNOTE_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 

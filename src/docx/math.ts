@@ -1,22 +1,17 @@
-/** Host-supplied semantic math, independent of TeX parsers and browser DOM. */
-export type DOCXMathExpression =
-  | { readonly type: 'text'; readonly value: string; readonly style?: 'plain' | 'italic' | 'bold' | 'bold-italic' }
-  | { readonly type: 'row'; readonly content: readonly DOCXMathExpression[] }
-  | { readonly type: 'fraction'; readonly numerator: DOCXMathExpression; readonly denominator: DOCXMathExpression; readonly bar?: boolean }
-  | { readonly type: 'radical'; readonly body: DOCXMathExpression; readonly degree?: DOCXMathExpression }
-  | { readonly type: 'script'; readonly base: DOCXMathExpression; readonly sub?: DOCXMathExpression; readonly sup?: DOCXMathExpression }
-  | { readonly type: 'delimiter'; readonly body: DOCXMathExpression; readonly open: string; readonly close: string }
-  | { readonly type: 'nary'; readonly symbol: string; readonly body: DOCXMathExpression; readonly sub?: DOCXMathExpression; readonly sup?: DOCXMathExpression; readonly limits?: 'beside' | 'above-below' }
-  | { readonly type: 'matrix'; readonly rows: readonly (readonly DOCXMathExpression[])[] }
-  | { readonly type: 'accent'; readonly body: DOCXMathExpression; readonly character: string };
+import type { MathExpression } from '../core/math-expression';
+
+/** Backwards-compatible DOCX name for Fountain's platform-neutral semantic math. */
+export type DOCXMathExpression = MathExpression;
 
 const namespace = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
 const allowed: Record<string, readonly string[]> = {
   text: ['value', 'style'], row: ['content'], fraction: ['numerator', 'denominator', 'bar'],
   radical: ['body', 'degree'], script: ['base', 'sub', 'sup'], delimiter: ['body', 'open', 'close'],
   nary: ['symbol', 'body', 'sub', 'sup', 'limits'], matrix: ['rows'], accent: ['body', 'character'],
+  function: ['name', 'argument'], limit: ['base', 'limit', 'position'], equation_array: ['rows'],
 };
 const escape = (value: string) => value.replace(/[&<>"']/gu, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[char]!);
+const invalidExpression = (): never => { throw new TypeError('Invalid.'); };
 
 /** Internal serializer. Fails closed on unknown semantics rather than dropping them. */
 export function serializeDOCXMath(expression: DOCXMathExpression, display: boolean): string {
@@ -78,6 +73,15 @@ export function serializeDOCXMath(expression: DOCXMathExpression, display: boole
       case 'accent':
         if (typeof input.character !== 'string' || !/^\p{M}$/u.test(input.character)) throw new TypeError('Math accent requires a combining character.');
         return `<m:acc><m:accPr><m:chr m:val="${text(input.character, true)}"/></m:accPr>${argument('e', input.body)}</m:acc>`;
+      case 'function': return `<m:func>${argument('fName', input.name)}${argument('e', input.argument)}</m:func>`;
+      case 'limit': {
+        if (!['lower', 'upper'].includes(input.position)) invalidExpression();
+        const tag = input.position === 'lower' ? 'limLow' : 'limUpp';
+        return `<m:${tag}>${argument('e', input.base)}${argument('lim', input.limit)}</m:${tag}>`;
+      }
+      case 'equation_array':
+        if (!Array.isArray(input.rows) || !input.rows.length || input.rows.length > 100) invalidExpression();
+        return `<m:eqArr>${input.rows.map(value => argument('e', value)).join('')}</m:eqArr>`;
     }
   };
   const body = visit(expression);

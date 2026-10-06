@@ -1,4 +1,37 @@
-import { defineConfig, devices } from '@playwright/test';
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { defineConfig, devices, firefox } from '@playwright/test';
+
+function patchWindowsFirefoxSxsManifest() {
+  if (process.platform !== 'win32') return;
+
+  const executablePath = firefox.executablePath();
+  if (!existsSync(executablePath)) return;
+
+  const executable = readFileSync(executablePath);
+  const manifestText = executable.toString('latin1');
+  const mozglueDependency =
+    /<dependency>\s*<dependentAssembly>\s*<assemblyIdentity\s+(?=[^>]*\bname="mozglue")[^>]*\/>\s*<\/dependentAssembly>\s*<\/dependency>/g;
+  const matches = [...manifestText.matchAll(mozglueDependency)];
+
+  // Windows 11 build 26200 rejects Playwright Firefox's embedded mozglue
+  // private-assembly manifest. Removing only that SxS declaration lets the
+  // normal loader use the mozglue.dll shipped beside firefox.exe.
+  if (matches.length === 0) return;
+  if (matches.length !== 1 || matches[0].index === undefined) {
+    throw new Error(`Expected one mozglue SxS dependency in ${executablePath}, found ${matches.length}`);
+  }
+
+  const start = matches[0].index;
+  const end = start + matches[0][0].length;
+  const patched = Buffer.from(executable);
+  patched.fill(0x20, start, end);
+
+  const backupPath = `${executablePath}.sxs-original`;
+  if (!existsSync(backupPath)) copyFileSync(executablePath, backupPath);
+  writeFileSync(executablePath, patched);
+}
+
+patchWindowsFirefoxSxsManifest();
 
 const port = 4173;
 

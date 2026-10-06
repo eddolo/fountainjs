@@ -9,5 +9,9 @@
 .section-editor{background:#fff;border:1px solid #c9bce9;border-radius:10px;padding:20px;min-height:230px}
 .section-editor .fountain-editor>:is(div,section,article,aside,nav,main,header,footer,address){outline:1px dashed #9b88c2;padding:14px;margin:12px 0;min-height:24px}
 .section-picker{max-width:600px;margin-top:20px}.section-workshop iframe{width:100%;height:330px;border:1px solid #c9bce9;background:white}
+.section-workshop{scroll-margin-top:110px}.section-workshop textarea{display:block;box-sizing:border-box;width:100%;max-width:100%;padding:10px;font:14px/1.5 monospace;border:1px solid #c9bce9;border-radius:6px;margin-bottom:12px}.comment-data-field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:min(100%,300px)}
 .section-workshop pre{max-height:350px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}.section-workshop summary{cursor:pointer}
+.section-workshop [data-fountain-inert-badge]{font-size:.75em;color:#574384;border:1px dotted #a49abb;padding:2px;border-radius:3px}
+.section-workshop [data-fountain-inert-content]{border-bottom:1px dotted #a49abb}
+.section-workshop [data-fountain-inert-raw-text] code{white-space:pre-wrap;font-family:monospace;display:inline-block;max-width:100%;min-width:1ch;overflow-wrap:anywhere}
 @media(max-width:600px){.section-properties label{width:100%}.section-editor{padding:10px}.section-workshop button{white-space:normal}}

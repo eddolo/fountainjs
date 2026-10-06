@@ -1,5 +1,377 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest blank-line checkpoint (2026-10-06, Unreleased): recorded saved-file use
+found and fixed empty paragraphs visually collapsing outside the editor.
+Default standalone HTML and the workshop reader preserve a paragraph's own line
+height, including empty marks and nested quote/table blanks, without fake text
+or model changes. The actual downloaded file is opened in each desktop engine.
+**2,619 tests / 196 files** and nine serial three-engine workflows pass. See
+`artifacts/html-blank-lines-visual-verification-20261006.json` for measured
+geometry and inspected/hash-verified images. This is not native print, identical
+themes or physical-device certification; no parity-row or release promotion.
+
+Latest childless-paragraph checkpoint (2026-10-06, Unreleased): exact empty shape
+now survives supported HTML and nested Markdown HTML carriers; forged markers
+cannot hide source children. The previous DOCX-to-HTML empty-leaf exception is
+removed in favor of complete JSON equality. **2,618 tests / 196 files** pass,
+with six recorded three-engine input workflows and hash-verified visual evidence
+(six new captures directly inspected, 24 block-regression captures previously
+inspected). See `artifacts/html-empty-paragraph-visual-verification-20261006.json`.
+Blank-line print geometry and arbitrary adjacent-leaf retention remain separate
+requirements. No delivered-row, CommonMark-score or release promotion.
+
+Previous block-preservation checkpoint (2026-10-06, Unreleased): registered
+unknown block wrappers can retain editable heading/list/table/media/nested
+children through the optional `html/inert` adapter. Empty wrapper authoring is
+explicit and undoable. Fix canonical saved empty paragraphs triggering an
+unsupported-source fallback during document-wide HTML recovery, using existing
+protected block slots. Original HTML behavior/CSS remains inert; native JSON
+is the complete backup and adjacent text-leaf shape changes remain documented.
+The empty-paragraph follow-up preserves childless shape through HTML and nested
+Markdown HTML carriers, while refusing forged markers with source children.
+
+Unchanged-source final gate: **2,606 tests / 195 files**, 409 declarations,
+packed ESM/CJS, Node/workerd and existing performance limits. Twelve recorded
+three-engine workflows pass, no retries. All 24 block captures and 18 raw-source
+captures are visually verified directly or by exact hashes to inspected evidence;
+the other 39 regression captures are not claimed re-inspected this checkpoint.
+See `artifacts/html-inert-block-visual-verification-20261006.json` and
+[the contract/public workshop](HTML_INERT_SOURCE.md#registered-block-wrappers).
+This advances a partial fidelity area, not the delivered-row count. CommonMark
+stays **563 default / 613 strongest opt-in**; no percentage or release promotion.
+
+Previous source-bound URL checkpoint (2026-10-06, Unreleased): preserve HTML
+navigation separately from literal Markdown data using optional bounded link
+source metadata, with native/canonical reopening and tampered-carrier refusal.
+Version-11 semantic verification retains **563 default** and requires **613
+strongest opt-in** matches. Raw HTML example 21 is repaired; whole-document
+control cases 642/643 now retain navigation, not just bytes. The oracle still
+rejects encoded/raw URL aliases. All parity rows/percentages remain unchanged.
+Historical evidence below belongs to its own source checkpoint. See
+[the complete boundary and evidence](MARKDOWN_DOCUMENT_FLOW.md#link-destination-integrity-and-oracle-correction).
+
+Previous URL frozen complete gate: **2,585 tests / 194 files**, 409 declarations,
+packed ESM/CJS and actual Node/workerd (**486 link contracts each**), framework
+types and existing performance limits. Evidence:
+`artifacts/html-link-origin-complete-gate-final-20261006.log`, with unchanged
+682-file source manifest `artifacts/html-link-origin-production-source-final-20261006.json`.
+This improves a partial fidelity area, not the delivered-row count.
+
+Final unchanged-source recording: **42 passed** desktop workflows, no retries;
+36 fresh link captures directly inspected and 18 raw-source captures verified
+against inspected evidence or re-inspected when changed. Videos/traces remain
+local. Exact scope: `artifacts/html-link-origin-visual-verification-20261006.json`.
+This is not exhaustive editor, physical-device or native Word layout parity.
+
+Previous version-10 frozen complete gate: **2,569 tests / 193 files**, 409 declarations,
+packed ESM/CJS, actual Node/workerd (473 link contracts each), framework types
+and unchanged performance ceilings. This improves reliability evidence without
+promoting a capability row or claiming completed CommonMark/layout parity.
+
+Previous version-10 serial browser recording passes **42** input workflows on Chromium,
+Firefox and WebKit, with no retries. The 24 link and 18 raw-source captures are
+visually verified (changed images directly; unchanged images by SHA256 against
+inspected evidence). This is selected desktop-engine testing, not real-device
+IME certification. Videos/traces and failures remain retained locally.
+
+Literal raw-source follow-up (2026-10-06, Unreleased): opt-in script/style/
+textarea capture now uses safe editable code carriers, not active HTML.
+Literal Unicode and user-applied display formatting survive native/canonical
+reopening. Empty inline-code typing preserves identity; recorded Chromium
+pointer redirection is fixed. Complete gate: **2,551 tests / 191 files**, 409
+declarations, packed ESM/CJS, pure Node/workerd, framework types and existing
+performance limits. Nine recorded three-engine public workflows pass; all 18
+new raw captures are inspected. Explicit size allowances and retained failures
+are documented in [performance](PERFORMANCE.md) and
+[the preservation contract](HTML_INERT_SOURCE.md).
+HTML parsing/normalization, direct head/body placement and physical mobile/IME
+remain distinct boundaries. No CommonMark score, parity row or percentage is
+promoted; this source adapter is not original HTML behavior or layout parity.
+
+The final unchanged-source recording additionally passes 36 selected desktop
+workflows across three engines, including reverse selections, empty lines,
+code keyboard entry, inline deletion, quote exit and history. Fresh raw captures
+match the inspected images byte-for-byte; see the roadmap for the recorded log
+and visual-verification manifest. This is selected regression evidence, not a
+claim that every interaction or physical device has been certified.
+
+Raw-source reliability follow-up (2026-10-06, Unreleased): incomplete HTML tags
+could consume all editable Markdown content during optional flow conversion.
+Both flow profiles now refuse that projection and retain literal source with
+a diagnostic, independently of the report budget. The public workshop exposes
+the fallback and the different direct-HTML repair outcome. Complete gate:
+2,524 tests / 190 files, packed ESM/CJS and pure Node/workerd, with unchanged
+performance limits. Six recorded three-engine public workflows pass; all 15
+new source/reader/mobile/diagnostic captures are inspected. The complete gate
+precedes only a browser-test first-line click correction; a fresh type check
+and the final recording cover it. Evidence and remaining scope are in
+[the roadmap](ROADMAP.md) and [the contract](MARKDOWN_DOCUMENT_FLOW.md#unfinished-tag-retention-guard-2026-10-06-unreleased).
+No CommonMark count, parity row or completion percentage is promoted.
+
+Production preservation follow-up (2026-10-06, Unreleased): optional server
+source tokens and the separate `html/inert` factory retain explicitly registered
+unknown inline data without reproducing its behavior. Permanent tests reproduce
+and fix a modified-carrier visible-text loss. The Node/Markdown workshop exposes
+real editing, token inspection, Markdown/HTML/JSON reopening and a safe reader.
+Full gate: 2,507 tests / 189 files, 409 declarations, packed ESM/CJS, pure Node/
+workerd, headless types and existing performance/memory limits. Nine recorded
+three-engine workflows pass; all 24 new inline captures are inspected. Optional
+module size is separately budgeted. See [the contract](HTML_INERT_SOURCE.md).
+CommonMark remains 563/652 default and 611/652 strongest existing opt-in. No
+parity row or percentage is promoted; physical-device/native export-layout
+evidence remains unfinished. Historical prototype notes below are superseded
+by the linked production contract, not erased.
+
+Visual verification follow-up (2026-10-06, Unreleased): recorded captures reveal
+sticky-header text bleed-through despite passing editor assertions. Shared demo
+navigation is now opaque; retain the pre-fix failure and six post-fix three-engine
+reader/selection passes. Eighteen inert-inline prototype cases also pass on the
+current unchanged source; all prototype captures and six key header captures
+are inspected. A 145-assertion private lexical-source experiment distinguishes
+parser-input tokens from original Markdown file coordinates. No source API,
+universal importer, CommonMark-score or parity-row promotion is made. See
+[the remaining boundary](MARKDOWN_DOCUMENT_FLOW.md#lexical-token-boundary-experiment-2026-10-06).
+
+Streaming selection follow-up (2026-10-06, Unreleased): complete gate passes
+2,457 tests / 186 files, public/packed/runtime/type checks and unchanged resource
+limits after replacing the per-selection full-document leaf table. Four compiled
+consumers agree with the previous resolver in 40,588 comparisons each. Fifty-one
+recorded desktop regressions pass against identical source hashes. This clears
+the current scaling failure, not the entire parity programme; source semantics,
+CommonMark scores and roadmap rows remain unchanged. Visual inspection finds a
+sticky-header readability issue despite functional passes. See
+[scope and retained failures](PERFORMANCE.md#streaming-text-point-lookup-2026-10-06-unreleased).
+
+Schema-owned Markdown follow-up (2026-10-06, Unreleased): opted-in custom nodes
+can export through sanitized HTML with explicit reader/metadata diagnostics.
+Types, 2,453 tests / 185 files and 18 recorded three-engine real Markdown
+edit/export/reopen cases pass on unchanged source; all new captures are inspected.
+The three-tag preservation lab is still a prototype. Existing reference-semantic
+scores and parity rows are not promoted. The latest serialized complete gate
+fails local scaling at 16.85x / 15x after passing format/runtime/size checks;
+separate functional passes do not erase it. See
+[the scoped result](MARKDOWN_DOCUMENT_FLOW.md#schema-owned-markdown-html-boundary-2026-10-06).
+
+Validator allocation follow-up (2026-10-06, Unreleased): native-model integrity
+fixes are retained while primitive ancestry checks and simple repeated-name
+content validation avoid redundant Sets. Independent membership/cardinality,
+cycle and live-group regressions pass. The serialized complete package gate
+passes 2,438 tests / 184 files, packed/runtime/headless/type checks and unchanged
+size/latency/scaling/heap limits. This closes the current source's gate failure,
+not every historical performance outlier or the wider parity programme. See
+[the measured scope and retained failures](PERFORMANCE.md#current-allocation-follow-up-2026-10-06-unreleased).
+No row, percentage, CommonMark score or release promotion is made.
+The final gate again passes after the browser startup fixture is made explicit;
+33 recorded editing plus 18 structural/large-document Chromium/Firefox/WebKit
+cases pass with unchanged source hashes and the new editor captures inspected.
+The retained initial startup failure is not counted as a pass. Four remaining
+unknown-inline HTML examples still lose unsupported identity in edited
+canonical output; exact original-source retention is not conformance or
+end-to-end fidelity. See [the next preservation boundary](MARKDOWN_DOCUMENT_FLOW.md#unknown-inline-html-after-a-visual-edit-2026-10-06).
+
+Native Markdown follow-up (2026-10-06, Unreleased): surplus and nearest-delimiter
+resolution now passes 6,674 generated independent-meaning/source/full-native
+reopen checks. A separate caller-schema regression fixes unsupported mark runs
+moving supported formatting onto the wrong text. The full package gate passes
+2,401 tests / 182 files, including 140 compiled full/partial-schema checks per
+ESM/CommonJS/Node/workerd consumer, and unchanged API/size/performance/heap limits.
+Six recorded edit/history/download/reopen journeys pass before the schema
+follow-up; the final-source repeated batch passes all 18 cases with unchanged
+658-file hashes and all 15 first-repeat captures inspected. The later final-source
+gate fails the unchanged 5,000-block HTML p95 ceiling (556.19 ms / 500 ms).
+A passing standalone GC-traced diagnostic does not explain/close that outlier.
+The independent broad desktop matrix finishes with 601 pass / 17 skip / zero
+failures and unchanged 658-file hashes. It cannot substitute for the failed
+resource gate and predates the subsequent native-model integrity correction.
+The earlier 592-pass broad
+matrix predates these parser changes. CommonMark scores stay 563 default / 611
+opt-in, and all parity-row statuses remain unchanged. See [the scoped evidence](MARKDOWN_DOCUMENT_FLOW.md#partial-schema-delimiter-scope-2026-10-06).
+
+Scrolling/flow-retention follow-up (2026-10-06, Unreleased): the named-status
+batch passes eight cases and reproduces WebKit's missed output activation.
+Immediate native scrolling replaces the global smooth-scroll rule; 24 repeated
+three-engine format/glossary/wrapper/DOCX cases and six original paragraph
+journeys pass. A separate 24-case Markdown diagnosis identifies and fixes a
+canonical-flow trailing-newline loss, without claiming unsupported wrappers or
+changing reference semantics. Seventy-four focused unit and nine recorded flow
+journeys pass. Twelve new captures are inspected with camera-induced header
+overlap findings retained. The complete package gate passes 2,383 tests / 181
+files plus runtime/type/format/resource checks at unchanged limits. The full
+cold desktop matrix finishes with 592 passes, 17 explicit skips and zero failures;
+all 654 recorded source hashes match. It predates the separate delimiter source
+follow-up and does not prove that new change. No row or percentage promotion; CommonMark stays 563 default / 611
+opt-in. See [the browser evidence](DOCX_FIDELITY_CHECKPOINT.md#native-control-scrolling-follow-up-2026-10-06)
+and [the canonical retention evidence](MARKDOWN_DOCUMENT_FLOW.md#adapter-diagnosis-and-literal-flow-newline-retention-2026-10-06).
+
+Announcement follow-up (2026-10-06, Unreleased): the replacement matrix exposed
+an ambiguous glossary-test selector matching import and export announcements.
+The retained run was interrupted with unchanged source hashes. Named status
+regions and an explicit readiness assertion pass nine UI plus 13 conversion
+cases; subsequent browser results and the new complete gate are recorded above. No row or
+percentage promotion. See [the evidence](DOCX_FIDELITY_CHECKPOINT.md#separate-import-and-export-announcements-2026-10-06).
+
+Cold-cache recovery follow-up (2026-10-06, Unreleased): the wrapper reload is
+reproduced with a private new Vite cache, then the original three-engine journey
+passes after pre-optimizing its lazy parser dependencies. Six editor images are
+inspected, and the new cold-audit configuration passes 12 recorded journeys,
+including complete-document format-selection and DOCX handoff checks. Eighteen
+additional scoped UI images are inspected with visual findings retained. The
+literal cold-import command also passes all three projects. The complete serial package gate
+passes 2,373 tests / 181 files plus runtime/type/format/resource checks without
+limit increases; the original WebKit output-selection failure remains open.
+The original broad matrix remains failed, and row coverage is unchanged. See
+[the evidence](DOCX_FIDELITY_CHECKPOINT.md#cold-cache-html-recovery-follow-up-2026-10-06).
+
+The replacement full cold-cache desktop matrix was interrupted after the
+selector failure above, with all 653 source hashes unchanged. A new full matrix
+remains required.
+No broad browser/parity claim is promoted while that run is incomplete.
+
+Headless-file readiness follow-up (2026-10-06, Unreleased): the unchanged broad
+desktop matrix has 583 passes, 17 skips and three failures. The demo now exposes
+real file-import readiness and rejects stale asynchronous results/errors; eight
+UI ownership cases plus 13 conversion cases pass. The recorded three-engine
+handoff follow-up passes, not a whole-browser pass. The newer complete package
+gate and scoped reload fix are documented above. WebKit scrolling and visual
+findings remain open. No row or percentage
+promotion. See [the evidence](DOCX_FIDELITY_CHECKPOINT.md#headless-file-readiness-follow-up-2026-10-06).
+
+Configuration-control follow-up (2026-10-06, Unreleased): named non-modal forms,
+instance-local trigger ownership, native field key behavior and mutation-safe
+external focus now have recorded keyboard/source-retention evidence. Visual
+review found and fixed low-contrast hover labels and clipped desktop Link/Find
+controls. The 33-case pre-layout batch and six-case final layout/focus/hover
+batch pass. The final 72 interactive states pass automated behavior/rule checks:
+66 axe states and six empty-sandbox DOM-only readers, with manual findings in
+66 states. All 72 final panel/reader images have now been inspected, retaining
+Firefox sticky-header overlap, faint WebKit placeholders and narrow checkbox
+spacing as follow-ups rather than issuing a blanket visual pass. The
+complete serial package gate passes 2,365 tests / 180 files with compiled,
+headless, framework, type and resource checks. The new 603-case desktop matrix
+is separate and subsequently finished with three failures, as above.
+Keep 58 Delivered, seven Partial and two Host
+boundary rows (67 total); no row, percentage or release promotion. See
+[the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#configuration-panels-and-external-focus-follow-up-2026-10-06).
+
+Keyboard/source-safe accessibility follow-up (2026-10-05, Unreleased): contiguous
+linked text keeps one view anchor without changing source/export; code regions
+support keyboard browsing and deliberate source entry/paste without editing an
+old paragraph range. Recorded native paste also exposed and fixed automatic
+linking inside code. The frozen focused batch passes 25 checks / two explicit
+non-Chromium clipboard skips. Initial main-document accessibility passes 36
+states, all retaining incomplete/manual checks; menus, readers, screen readers
+and physical devices remain open. The complete serial package gate passes
+2,345 tests / 178 files plus runtime/type/resource checks. The retained earlier
+performance failure was not hidden or given a higher limit; the full recheck
+passes server HTML p95 at 64.98 ms against 120 ms. The current catalogue has 58 Delivered,
+seven Partial and two Host boundary rows (67 total), not a measure of effort
+remaining. No row, release or whole-matrix status is promoted. See
+[the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#keyboard-and-source-safe-accessibility-follow-up-2026-10-05).
+
+Accessibility follow-up (2026-10-05, Unreleased): the initial 12 Chromium page
+states all fail automated checks. Table resize values now exist before use and
+follow preview/cancel/history. Actual keyboard/pointer use found focus theft and
+stale queued selection synchronization; the bounded fixes pass six recorded
+three-engine table cases and 65 focused table/view/toolbar units. All six final
+table captures were inspected. Contrast, target sizes and accessible names are
+being checked in the public routes, with no rules disabled. This is not WCAG or
+screen-reader certification, and PROD-03 stays Partial. The earlier 2,325-test
+gate below predates this accessibility work. See
+[the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#accessibility-and-table-control-follow-up-2026-10-05).
+
+Current audit status: the recorded 585-case desktop matrix finished with 568
+passes, 15 explicit capability skips and two failures: Firefox's comment-reader
+capture and WebKit's initial JSON-pane read before editor initialization (not
+demonstrated export loss). Bounded snapshot ownership and actual-document
+readiness changes have 33 focused unit passes and 18 recorded follow-up passes
+(three repeats per desktop engine), with 12 representative captures inspected.
+The new complete serial local gate passes 2,325 tests / 176 files, including the
+compiled runtimes, type and resource gates. It is not an updated broad browser
+pass; no production, release or parity status is promoted. See
+[the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#source-owned-quote-appearance-and-desktop-audit-2026-10-05).
+
+Desktop/DOCX audit (2026-10-05, Unreleased): source-owned quote borders and
+indentation no longer acquire a second container decoration; borderless native
+quotes stay borderless. Complete caption/history/re-export contracts pass. The
+serial local gate passes 2,322 tests / 175 files, with compiled no-DOM quote
+oracles. All nine final three-engine quote/caption images were inspected. The
+195-pass broad Chromium run predates this final quote change; focused six- and
+three-pass batches cover that change, not the full production matrix. Broader
+current-tree verification is assessed separately. Preview header omissions,
+native Word layout, full CommonMark and physical-device evidence remain open.
+No delivered-row or percentage promotion. See
+[the evidence and bounded size cost](DOCX_FIDELITY_CHECKPOINT.md#source-owned-quote-appearance-and-desktop-audit-2026-10-05).
+
+Mixed-table source follow-up (2026-10-05, Unreleased): pristine pipe tables now
+survive optional document-wide HTML source conversion, preserving original
+subtrees, reference marks, alignment and complete defaults with refusal guards.
+The local gate passes 2,315 tests / 174 files and compiled no-DOM contracts. Six
+paired desktop journeys pass, with 21 table images plus six reader checkpoints
+inspected. Reader spacing differs from the static reference; physical-device,
+full CommonMark and general format/layout evidence remain open. Profiles stay
+563 default / 611 opt-in; no row/% or release promotion. See
+[the contract](MARKDOWN_DOCUMENT_FLOW.md#protected-markdown-tables-2026-10-05).
+
+Markdown block-atom follow-up (2026-10-05, Unreleased): protected standalone
+images/dividers now work in the supported optional whole-document HTML source
+route. Browser use also exposed and fixed ambiguous workshop Save/Reopen
+selectors. The full local gate passes 2,298 tests / 173 files and compiled
+ESM/CommonJS/workerd contracts. CommonMark stays 563 default / 611 opt-in; full
+conformance and general raw-HTML/format layout remain unfinished. No delivered
+row, percentage or release promotion. Three recorded desktop-engine workflows
+pass with all 18 final images inspected; responsive fit is not physical-device
+certification and reference/native image alignment still differs. See
+[the contract](MARKDOWN_DOCUMENT_FLOW.md#protected-markdown-block-atoms-2026-10-05).
+
+Table-text follow-up (2026-10-05, Unreleased): supported base/conditional text
+now uses the existing native cascade with Word absolute table toggles and nested
+context isolation. Normal/default precedence is explicitly unverified. The full
+local gate passes 2,283 tests / 172 files, with 407 declarations and 88 headless
+modules. Six recorded workflows pass and all 30 new images were inspected. Native
+Word appearance and FORMAT-05 remain open; no row or percentage promotion. See
+[the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#table-owned-text-formatting-2026-10-05).
+
+Table-style follow-up (2026-10-05, Unreleased): supported inherited/conditional
+cell appearance now survives actual editing/history/export/reopening as direct
+declarations. Six recorded desktop workflows pass and all 30 images were checked;
+2,267 behavioral tests pass. One full-check performance attempt failed at 16.89x
+remote growth; the isolated rerun passed at 9.39x against the unchanged 15x limit.
+Native rendering remains unavailable; independent previews miss conditional
+source rules and do not certify Word appearance. Table text, row/RTL/native
+layout and FORMAT-05 remain open. No row, percentage or release promotion. See
+[the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#inherited-and-conditional-table-appearance-2026-10-05).
+
+Row-repeat follow-up (2026-10-05, Unreleased): supported Word repetition now
+survives independently of cell roles, with a separate author control and no
+invented header fill/emphasis. Real browser use also exposed and fixed explicit
+empty text/run-mark loss on native DOCX reopening. The final full gate passes
+2,235 tests / 169 files; 18 targeted recorded desktop checks pass, and all 27 new
+captures were inspected. Native Word rendering, third-party save retention,
+broader styles/layout and FORMAT-05 remain open. No row or percentage promotion.
+See [the checkpoint](DOCX_FIDELITY_CHECKPOINT.md#row-repetition-and-empty-run-retention-2026-10-05).
+
+Cleared inline-flow follow-up (2026-10-05, Unreleased): a failing save/reopen
+regression exposed loss of the empty unmarked caret leaf. The canonical carrier
+now retains it without changing childless flows or normal paragraphs. The serial
+complete gate passes 2,206 tests / 167 files; Node/workerd check both empty shapes.
+The public workshop supports actual reopening and continued editing. Independent
+Windows WebKit event-authored clipboard failure remains a production-evidence
+limitation, not a passed Safari integration. No delivered row or percentage is
+promoted. See [the flow contract](MARKDOWN_DOCUMENT_FLOW.md#optional-anonymous-inline-flow-2026-10-05-unreleased).
+The final recorded combined run passes 14 journeys with one explicit Windows
+WebKit clipboard exclusion, and all 22 new retention/clipboard/reader/control
+images were inspected. This does not resolve physical-device or Safari evidence.
+
+Anonymous HTML flow follow-up (2026-10-05, Unreleased): the explicit
+`HTMLFlowExtension` retains anonymous inline content without inventing a
+paragraph. The linked-whitespace sample now has two editor/reader paragraphs,
+matching strict reference geometry at desktop and narrow widths in recorded
+Chromium/Firefox/WebKit editing/Enter/delete/undo journeys. Native and canonical
+reopening pass in Node/workerd; the opt-in reference score remains 611/652.
+No row or completion percentage is promoted, and this does not certify wider
+HTML, native Word, page or mobile/IME fidelity. See
+[the contract](MARKDOWN_DOCUMENT_FLOW.md#optional-anonymous-inline-flow-2026-10-05-unreleased).
+
 Web Component forms (2026-09-08, Unreleased): opt-in native FormData submission,
 reset, state-restoration handling and fieldset disabling now have a public
 workshop and cross-browser journey. Whole-document value updates also retain
@@ -500,7 +872,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | --- | --- | --- | --- |
 | PROD-01 | Cross-browser desktop confidence | Partial | A Chromium/Firefox/WebKit Playwright lane now covers core input, cross-block and semantic selections, mapped decorations, input-rule undo, and the React playground; expand it across every editing capability. |
 | PROD-02 | Mobile and IME confidence | Partial | Cross-engine composition order, replacement input, deletion, history, and responsive-layout contracts run in Pixel/Chromium and iPhone/WebKit emulation; add physical iOS/Android device-farm runs for real virtual keyboards and autocorrect. |
-| PROD-03 | Accessibility conformance | Partial | Establish WCAG 2.2 AA targets, automated checks, manual screen-reader scripts, and fixes. |
+| PROD-03 | Accessibility conformance | Partial | Pinned axe-core checks cover six initial main-page routes at desktop/narrow widths across Chromium, Firefox and WebKit (36 states), plus nine supplied configuration forms and issue/task readers (66 axe states). Six saved-comment reader states receive DOM metadata/ARIA checks only; their empty sandbox remains intact. The strengthened 72-state interactive batch passes reported rules, focus retention and horizontal containment with incomplete/manual findings retained. Recorded keyboard/pointer regressions cover panel ownership, external focus during mutation repair, native field keys, settled hover contrast, table controls, code regions, linked text and block feedback. Other menu/custom-renderer states, assistive technology and physical-device evidence remain open; this is not WCAG certification. |
 | PROD-04 | RTL and localization | Partial | Logical replacement inside mixed Hebrew/Latin/Arabic content is covered across browsers; add explicit block direction, bidi-aware visual navigation checks, translatable UI strings, and locale packages. |
 | PROD-05 | Performance and memory budgets | Delivered | Reproducible production-build curves cover local, incremental-remote, and untrusted full-JSON updates through 10,000 blocks; heap gates cover a 2,000-edit live session and forty destroyed editors; raw startup-size ceilings remain enforced; immutable subtree validation, top-level DOM reconciliation, zero-churn React NodeViews, direct remote transactions, and text-only Yjs deltas prevent avoidable whole-document work. The 1,000-block input gate retains 999 block elements and caps input-to-paint in every desktop engine. Opt-in top-level virtualization now keeps fewer than 100 DOM blocks mounted in a real 100,000-block editor while preserving distant selection/editing, Japanese IME, rich copy, decorations, NodeViews, collaboration, scroll anchors, print, and mobile behavior. This is covered by 452 behavioral tests, the complete 289-pass Chromium/Firefox/WebKit/mobile [CI run for `8a6264e`](https://github.com/eddolo/fountainjs/actions/runs/33977243766), and the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33977243779). Measurements and explicit limits are in [the performance contract](PERFORMANCE.md) and [virtualization contract](VIRTUALIZATION.md). ProseMirror + Tiptap still has much deeper production evidence. |
 | PROD-06 | Extension authoring and compatibility tooling | Delivered | Versioned SemVer manifests, exact extension-API compatibility, ordered requirements, hard duplicate/contribution conflicts, a non-destructive TypeScript package scaffold, a framework-neutral checked example, headless document/command/teardown conformance, and installation-wide `fountainjs-editor doctor` diagnostics ship in the public source and package. The generated package was packed, installed, built, tested, and diagnosed in an isolated consumer; the full gate passed with 319 behavioral tests; all 190 Chromium/Firefox/WebKit/mobile checks passed in the [CI run for `b11eb75`](https://github.com/eddolo/fountainjs/actions/runs/33926458877); the [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33926458876) succeeded; and the deployed developer guide was verified with the manifest, scaffold, conformance, doctor, and source links visible. The authoring contract and trust boundaries are documented in [EXTENSIONS.md](EXTENSIONS.md). This delivers tooling, not ecosystem-size parity: ProseMirror + Tiptap still has far more third-party extensions and maintainers. |

@@ -1,0 +1,419 @@
+{
+  "date": "2026-10-06",
+  "status": "verified-unreleased-checkpoint",
+  "sourceSnapshot": "artifacts/html-link-origin-production-source-final-20261006.json",
+  "sourceDigest": "0ad827e68d59490843dbf06f3ded4814a86b70dc3e129a92b22f8ccc4cd7ad1a",
+  "sourceFileCount": 682,
+  "completeGate": {
+    "log": "artifacts/html-link-origin-complete-gate-final-20261006.log",
+    "unitTests": 2585,
+    "testFiles": 194,
+    "declarationFiles": 409,
+    "linkContractsPerRuntime": 486,
+    "runtimes": [
+      "packed ESM",
+      "packed CommonJS",
+      "compiled pure Node",
+      "Cloudflare workerd via Miniflare"
+    ]
+  },
+  "recordedRegression": {
+    "log": "artifacts/html-link-origin-recorded-regressions-final-20261006.log",
+    "passed": 42,
+    "retries": 0,
+    "workers": 1,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "sourceUnchanged": true
+  },
+  "oracle": {
+    "projectionVersion": 11,
+    "default": 563,
+    "identityHTML": 579,
+    "sourceRecovery": 580,
+    "containers": 601,
+    "comments": 613,
+    "anonymousFlow": 613,
+    "total": 652,
+    "reviewedGains": [
+      21,
+      642,
+      643
+    ],
+    "rawEncodedNegativeGuards": 4,
+    "rawControlPreprocessingEquivalences": 3,
+    "URISpellingEquivalences": 2,
+    "exactSourceChecksPerProfile": 1304,
+    "fullConformance": false
+  },
+  "visualReview": {
+    "linkCapturesDirectlyInspected": 36,
+    "rawCaptures": 18,
+    "rawByteIdenticalToInspectedPrior": 8,
+    "rawChangedDirectlyInspected": 10,
+    "priorVerification": "artifacts/html-link-literal-visual-verification-20261006.json",
+    "captures": [
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-editor-edited.png",
+        "sha256": "1583e21fac66377fbe9600ae5a386662a47499c58c35497c7652ccf878ecca88",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-editor-mobile.png",
+        "sha256": "d58d79babe1104d913dc11db15273092c6f023274f8c2160f5025481ac617060",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-empty-filled.png",
+        "sha256": "376c4cf4b86dd725739e41b4eca43b30910bd83db86768767749550f9c5f5929",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-edited.png",
+        "sha256": "34469bf10b54310d94e2e2c0f055a5a7aa1057a9472ddc0e5007eccbd3e0f967",
+        "engine": "chromium",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-edited.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-mobile.png",
+        "sha256": "506356d8c4a5fa70c17f9bfedd93d8bbc3750014816cc0fe498471f039b40e86",
+        "engine": "chromium",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-mobile.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-retained-data.png",
+        "sha256": "450bf59f592d957c836a2787c033cc8c26331de18f194bf705f11db5e59a3ff0",
+        "engine": "chromium",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-retained-data.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-edited.png",
+        "sha256": "5083a959ef514efc510e16db6a755f8570a337d0abc75d844313af8052d0c0bd",
+        "engine": "firefox",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-edited.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-mobile.png",
+        "sha256": "045420a33af7ac731030193a8a8fedb90f9de790d3bbc411ac82692693f52e56",
+        "engine": "firefox",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-mobile.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-empty-filled.png",
+        "sha256": "6e1458f9ff4b08517626be55803482b4cccb933c86a3ac0ccf8ed59404137032",
+        "engine": "firefox",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-empty-filled.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-reader-edited.png",
+        "sha256": "5ea0bd2573da23b63495ad58d9a925c8899c719e43691a7c526a61394a533963",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-reader-mobile.png",
+        "sha256": "300b3f64b9d19e4528575dc02940210b69829b0a53f44334865b2efde89c9105",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-retained-data.png",
+        "sha256": "acee9e474a4481c15b64e8795cad2a07544ba551044af58105bc1ac7c26ddd0e",
+        "engine": "firefox",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-retained-data.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-editor-edited.png",
+        "sha256": "bff43fd6c425ba0955edace08942fa89511da5e5cdf71e92c7fede6aed00ed32",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-editor-mobile.png",
+        "sha256": "0352f641debc713ede579607815c69d5c52ab11bc6193242dcc32ae71e9c9214",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-empty-filled.png",
+        "sha256": "3f3e55ba51f897627d3a607e72b9d83d3b6b1b01cce26fda074fab26b4bf1dbe",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-reader-edited.png",
+        "sha256": "fe07b6e064cba0b1bce6ac9804395cc8f4008540308a4c0d17b5f2a814beb09e",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-reader-mobile.png",
+        "sha256": "74b46b5a0c8c320ff8cc8e8bf35a5da9c0f26ff7f5bbfb2198c2db2917d205ee",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-retained-data.png",
+        "sha256": "99925f83301be0f38a8bb8164c35cb9020b535adb469cb50961263216b1769ab",
+        "engine": "webkit",
+        "review": "byte-identical-to-inspected-prior-capture",
+        "previousCapture": "artifacts/html-link-literal-recorded-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-retained-data.png"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/encoded-link-destinations.png",
+        "sha256": "9a5e7d3dcb721e2cda654a0ee6a1ffa697f5c65b61fd5d57e9ecdad28e0a3e9e",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/encoded-link-editor-mobile.png",
+        "sha256": "47a03c91655ccbd6b6ca1ab8eecb7abb4e2d65903c0f40132003e7f68a4f794e",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/encoded-link-editor.png",
+        "sha256": "14160bfc11756c5ad40254e87f53b1b89072557b94254c953f89d6cf6c4a4dad",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/encoded-link-reader-mobile.png",
+        "sha256": "74ffe4758a90098284e624a2cfc9b8563c6fba79e0362b4b9f4197345bf1849f",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/encoded-link-reader.png",
+        "sha256": "948f84818749b38d607fdabfbc0f58b8d2047d8179118571efcc9a4339cb0fa2",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/html-navigation-destinations.png",
+        "sha256": "4fa802d3613d0b3a9eb03f9f46b3eaf972d17050c8b4f64c9bb0e2365ae4e3a0",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/html-navigation-editor.png",
+        "sha256": "bcbdbbc224b5c665047283276f264c78a210eec84f90d0fa02c0d07a28d930f1",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/html-navigation-reader-mobile.png",
+        "sha256": "917095534d3b7c795c97ccb360728f1ec2aea5b28726dcdcb83baedeb1bda2db",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/html-navigation-reader.png",
+        "sha256": "aa57663a13696ecfc4f7a8c2be1c596b3def5f7d1caa6d47c41cd9a69502ff98",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/literal-markdown-links-editor.png",
+        "sha256": "2f2ab55aca2c0ee42076871e1960f4bab7941fa890c5e5121f28612fad04f822",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/literal-markdown-links-reader-mobile.png",
+        "sha256": "2d4b87ea32d120bf971adaba81a69c1def455b752aa4287970de508279a316e6",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-chromium/literal-markdown-links-reader.png",
+        "sha256": "e230146be2d95e198c825aec4b92e0a2104f46c34190e455c6bad9df1783379a",
+        "engine": "chromium",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/encoded-link-destinations.png",
+        "sha256": "4e0c784f74eda575ef8c996fb129064d340d92488ff9e5ede5577d3fbf5afc62",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/encoded-link-editor-mobile.png",
+        "sha256": "b39b592b9044ae865d333aa272adc9cf18df2ba818b7c293bc31eb4cd0400708",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/encoded-link-editor.png",
+        "sha256": "12e3a01980ad454f9fe5a84625b1d83d57de76bddca506539c17f33745eddafe",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/encoded-link-reader-mobile.png",
+        "sha256": "f1d5e34d0a8c956f1cda727092ff1d8c1862d290382da50c4cbea4c2ebc0cee2",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/encoded-link-reader.png",
+        "sha256": "670dc2e004cc86f3bc6ce9cf9ceb8edbcf67e339a1fe09bc39b80728f6e936b1",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/html-navigation-destinations.png",
+        "sha256": "eff15e7b992da9dfafb5f4d1b34d77f7d968eb90e56ee5ae9cd5f6c4f241537e",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/html-navigation-editor.png",
+        "sha256": "dd02c542906955a9ef087386d5bcd3a478d2c89b2cff5cdf89085cd093c6393d",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/html-navigation-reader-mobile.png",
+        "sha256": "67a9b2f4668c9c847f8c1077fa59a37632e5257672d512bd386017dc2574a668",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/html-navigation-reader.png",
+        "sha256": "42acdb5b73a5f465a90cbe55f156e3574d51b8e38074ccea169838dc9596d58e",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/literal-markdown-links-editor.png",
+        "sha256": "ba53cb262fe48365891a0ae46d99bbbee3eb509b55a1c5b421aeb57f11b020c5",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/literal-markdown-links-reader-mobile.png",
+        "sha256": "b85bb9576d5a4ed4b553b37ce47b22632c07003f5a45ae2a803a54a19e52d120",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-firefox/literal-markdown-links-reader.png",
+        "sha256": "5b2150d380788f26ecb91696ab2fa77a5a725c0cfdd8cf94d5ad7d1cfe397de6",
+        "engine": "firefox",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/encoded-link-destinations.png",
+        "sha256": "1ee07bca4733394e55c2a96af55382c1844176b43683d941314f8d617fa14420",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/encoded-link-editor-mobile.png",
+        "sha256": "5b16f163eb701fb0214a226addf5e174fb58ea242c94d2236ff5bfdb4a60c2b0",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/encoded-link-editor.png",
+        "sha256": "c2487979094b80f60ab3a3e627f1ec44a8f7539245bf092a96688da802d906c3",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/encoded-link-reader-mobile.png",
+        "sha256": "a8382583fca9d87c9bc858e3c02b2b90c85a0770331fb2fc1efbf6723a50ec48",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/encoded-link-reader.png",
+        "sha256": "c0e83898b81796aa13075ba314bddca9e4e66853dbcf8091c045646f491791e0",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/html-navigation-destinations.png",
+        "sha256": "01c5715e5c1f2d1802f07e9e6d2ddd1627d2bcb974a75beec8ca8bd43afc9889",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/html-navigation-editor.png",
+        "sha256": "0a765432704de9b39fc13ea3901195b27b0c1712fd29d3ac8f5dca6bea99e81e",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/html-navigation-reader-mobile.png",
+        "sha256": "61185a5e40cee07c28fd43e0558c365d00d1408afa13d4f00b4e175ebe2e97d7",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/html-navigation-reader.png",
+        "sha256": "b317286e4672d400d26f705bed875866586f78c8c1c66e1388252d7bd358cad2",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/literal-markdown-links-editor.png",
+        "sha256": "e3fbf0aed4013e4d670b2341f76b5af2f90f602afc8df039c61771507cd70316",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/literal-markdown-links-reader-mobile.png",
+        "sha256": "d6eee9283b70d72b64d00f14ce50d80250feb7f24da695af38b12dab90ebe47a",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      },
+      {
+        "path": "artifacts/html-link-origin-recorded-regressions-final-20261006/editor-retains-HTML-link-n-46ee4--real-editing-and-reopening-webkit/literal-markdown-links-reader.png",
+        "sha256": "fc86962fa1808da0b491de4ab87b6a3d2451f2816bc39de829fe6ecc3bb48ad1",
+        "engine": "webkit",
+        "review": "direct-visual-inspection"
+      }
+    ]
+  },
+  "observations": [
+    "All five HTML navigation-intent labels render in the editor and reader at desktop and 390px widths; intended edited text is HTML Renamed path, with its adjacent blank preserved.",
+    "Literal Markdown link labels/source backslashes remain visible; their DOM hrefs keep encoded literal data, separately from HTML-origin URLs.",
+    "RenderedHref in the demo is obtained from the real link node specification, not an independent duplicate formatter.",
+    "The five-link destination panel is internally scrollable; its screenshot exposes the first two records. All five attrs and actual anchor URL properties are asserted programmatically.",
+    "Rejected unsafe links remain readable unlinked text. The unsupported-HTML adjacent plain-run coalescing mismatch remains visibly reported and exactly tested.",
+    "Raw script/style/textarea source stays visible inert code, with literal emoji and accessible source badges; mobile source/badge wrapping is visible rather than hidden."
+  ],
+  "retainedDiagnosticsAndIncompleteRuns": [
+    "artifacts/html-link-origin-initial-20261006.log",
+    "artifacts/html-link-origin-contracts-final-20261006.log (latest focused pass; earlier ruby-carrier failure was observed in the tool output before repair)",
+    "artifacts/html-link-origin-budget-initial-20261006.log",
+    "artifacts/html-link-origin-browser-initial-20261006.log (incorrect grep selected zero tests)",
+    "artifacts/html-link-origin-browser-20261006.log (interrupted iframe screenshot stall; partial captures/trace retained)",
+    "artifacts/html-link-origin-complete-gate-20261006.log (interrupted for browser-test-only selection correction, not a complete pass)"
+  ],
+  "limitations": [
+    "Selected desktop Playwright workflows and 390px resizing are not physical mobile/IME or real Safari clipboard certification.",
+    "Anchor href properties and URL parsing are verified; no remote navigation/network fetch is used to claim destination availability.",
+    "Canonical HTML-origin Markdown requires matching HTML-enabled parse rules; default Markdown remains inert.",
+    "Unknown/unsafe HTML semantics, original CSS/page layout, byte-exact imported HTML and whole-file source retention are not promised.",
+    "Custom link schemas omitting htmlHref cannot promise HTML-origin navigation fidelity and receive a behavior-loss diagnostic.",
+    "Source metadata is inert but not secret: applications must redact deliberately before sharing.",
+    "Other screenshots/trace frames in the regression artifact tree are not included in this visual-review manifest.",
+    "No GitHub/npm publication, roadmap row promotion or project completion is implied."
+  ]
+}

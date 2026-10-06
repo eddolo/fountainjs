@@ -1,3 +1,4 @@
+import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 import { unzipSync, strFromU8, strToU8, zipSync } from 'fflate';
 import { describe, expect, it } from 'vitest';
 
@@ -62,7 +63,7 @@ describe('DOCX interchange', () => {
     const original = schema.node('doc', {}, [schema.node('table', {}, [schema.node('table_row', {}, [0, 5].map(start =>
       schema.node('table_cell', { background: '' }, [schema.node('ordered_list', { start }, [schema.node('list_item', {}, [p('Check')])])]),
     ))])]);
-    expect(importDOCX(exportDOCX(original).bytes, schema).document.toJSON()).toEqual(original.toJSON());
+    expect(importDOCX(exportDOCX(original).bytes, schema).document.toJSON()).toEqual(withDOCXExportDefaults(original.toJSON()));
   });
 
   it('retains independent list starts, adjacent lists and nested restarts', () => {
@@ -74,7 +75,7 @@ describe('DOCX interchange', () => {
     ]);
     const exported = exportDOCX(original);
     expect(exported.report.issues.some(issue => issue.code === 'ordered-list-start-normalized')).toBe(false);
-    expect(importDOCX(exported.bytes, schema).document.toJSON()).toEqual(original.toJSON());
+    expect(importDOCX(exported.bytes, schema).document.toJSON()).toEqual(withDOCXExportDefaults(original.toJSON()));
     const parts = unzipSync(exported.bytes);
     const body = strFromU8(parts['word/document.xml']);
     const ids = [...body.matchAll(/<w:numId w:val="(\d+)"/g)].map(match => match[1]);
@@ -95,7 +96,7 @@ describe('DOCX interchange', () => {
     const result = exportDOCX(original);
     expect(result.report.fidelity).toBe('lossy');
     expect(result.report.issues.map(issue => ({ code: issue.code, path: issue.path }))).toEqual([
-      { code: 'inline-fallback', path: [0, 1] }, { code: 'block-fallback', path: [1] },
+      { code: 'inline-fallback', path: [0, 1] }, { code: 'block-fallback', path: [1] }, { code: 'page-settings-defaulted', path: undefined },
     ]);
     const xml = strFromU8(unzipSync(result.bytes)['word/document.xml']);
     expect(xml).toContain(inlineSource);
@@ -110,7 +111,14 @@ describe('DOCX interchange', () => {
     const original = documentFixture();
     const exported = exportDOCX(original, { title: 'Fountain release', creator: 'Test host', page: 'a4' });
     expect(exported.bytes.slice(0, 2)).toEqual(new Uint8Array([0x50, 0x4b]));
-    expect(exported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [] });
+    expect(exported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [
+      expect.objectContaining({ code: 'table-header-role-extension', severity: 'info', path: [4, 0, 0] }),
+      expect.objectContaining({ code: 'table-header-role-extension', severity: 'info', path: [4, 0, 1] }),
+      expect.objectContaining({ code: 'table-row-repeat-defaulted', severity: 'info', path: [4, 0] }),
+      expect.objectContaining({ code: 'table-row-repeat-defaulted', severity: 'info', path: [4, 1] }),
+      expect.objectContaining({ code: 'table-width-defaulted', severity: 'info', path: [4] }),
+      expect.objectContaining({ code: 'page-settings-defaulted', severity: 'info' }),
+    ] });
 
     const archive = unzipSync(exported.bytes);
     expect(Object.keys(archive).sort()).toEqual([
@@ -130,7 +138,7 @@ describe('DOCX interchange', () => {
       'heading', 'paragraph', 'bullet_list', 'blockquote', 'table',
     ]);
     expect(imported.document.content[0]?.attrs).toMatchObject({ level: 2, align: 'center' });
-    expect(imported.document.content[1]?.content[1]?.marks.map((item) => item.type.name)).toEqual(['em', 'link']);
+    expect(imported.document.content[1]?.content[1]?.marks.map((item) => item.type.name)).toEqual(['font_family', 'font_size', 'em', 'link']);
     expect(imported.document.content[2]?.content[1]?.content[1]?.type.name).toBe('ordered_list');
     expect(imported.document.content[4]?.content[0]?.content[0]?.type.name).toBe('table_header');
   });
@@ -196,7 +204,7 @@ describe('DOCX interchange', () => {
     ]);
 
     const exported = exportDOCX(original);
-    expect(exported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [] });
+    expect(exported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [expect.objectContaining({ code: 'page-settings-defaulted', severity: 'info' })] });
     const archive = unzipSync(exported.bytes);
     expect(archive['word/media/image1.png']).toEqual(new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')));
     expect(strFromU8(archive['[Content_Types].xml']!)).toContain('Extension="png" ContentType="image/png"');
@@ -207,14 +215,83 @@ describe('DOCX interchange', () => {
     expect(xml).toContain('<w:pStyle w:val="Caption"/>');
 
     const imported = importDOCX(exported.bytes, schema);
-    expect(imported.report).toEqual({ format: 'docx', fidelity: 'bounded', issues: [] });
+    expect(imported.report.fidelity).toBe('bounded');
+    expect(imported.report.issues).toEqual([]);
     expect(imported.document.content.map((node) => node.type.name)).toEqual(['image_super', 'paragraph']);
     expect(imported.document.child(0).attrs).toMatchObject({
       src: ONE_PIXEL_DATA_URL, alt: 'Architecture diagram', title: 'System map', width: '320px', height: '180px',
-      caption: 'Portable architecture',
+      caption: '',
     });
+    expect(imported.document.child(0).content.map(node => node.textContent).join('')).toBe('Portable architecture');
+    expect(imported.document.child(0).content.flatMap(node => node.marks.map(mark => mark.type.name))).not.toContain('em');
     expect(imported.document.child(1).content.map((node) => node.type.name)).toEqual(['text', 'inline_image', 'text']);
     expect(imported.document.child(1).content[1]?.attrs).toMatchObject({ src: ONE_PIXEL_DATA_URL, alt: 'Status', width: '24px', height: '24px' });
+  });
+
+  it('round-trips rich image captions as editable marked content with hyperlinks', () => {
+    const strong = schema.marks.strong.create();
+    const link = schema.marks.link.create({ href: 'https://example.com/evidence', title: '', target: '_blank' });
+    const image = schema.node('image_super', {
+      src: ONE_PIXEL_DATA_URL, alt: 'Evidence plot', width: '320px', height: '180px', caption: '',
+      captionAlign: 'right', captionLayout: { unit: 'pt', fontFamily: 'Georgia', fontSize: 14, spacingAfter: 7, indentStart: 3 },
+    }, [schema.text('Measured ', [strong]), schema.text('evidence', [link])]);
+    const exported = exportDOCX(schema.node('doc', {}, [image]));
+    const archive = unzipSync(exported.bytes);
+    const xml = strFromU8(archive['word/document.xml']!);
+    expect(xml).toContain('<w:pStyle w:val="Caption"/>');
+    expect(xml).toContain('<w:b/>');
+    expect(xml).toContain('<w:hyperlink r:id="rId1"');
+    expect(strFromU8(archive['word/_rels/document.xml.rels']!)).toContain('Target="https://example.com/evidence"');
+
+    const reopened = importDOCX(exported.bytes, schema).document.child(0);
+    expect(reopened.attrs.caption).toBe('');
+    expect(reopened.attrs.captionAlign).toBe('right');
+    expect(reopened.attrs.captionLayout).toMatchObject({ unit: 'pt', fontFamily: 'Georgia', fontSize: 14, spacingAfter: 7, indentStart: 3 });
+    for (const run of reopened.content) {
+      expect(run.marks.find(mark => mark.type.name === 'font_family')?.attrs.family).toBe('Georgia');
+      expect(run.marks.find(mark => mark.type.name === 'font_size')?.attrs.size).toBe('14pt');
+    }
+    expect(reopened.content.flatMap(node => node.marks.map(mark => mark.type.name))).not.toContain('em');
+    expect(reopened.content.map(node => node.textContent).join('')).toBe('Measured evidence');
+    expect(reopened.content[0]?.marks.map(mark => mark.type.name)).toContain('strong');
+    expect(reopened.content[1]?.marks.find(mark => mark.type.name === 'link')?.attrs.href).toBe('https://example.com/evidence');
+  });
+
+  it('materializes a legacy caption into a complete editable Word-styled image without losing its source or pixels', () => {
+    const image = schema.node('image_super', { src: ONE_PIXEL_DATA_URL, alt: 'Retained caption fixture',
+      width: '320px', height: '180px', caption: 'Embedded image with a portable caption.' });
+    const original = image.toJSON();
+    const exported = exportDOCX(schema.node('doc', {}, [image]));
+    const archive = unzipSync(exported.bytes);
+    const xml = strFromU8(archive['word/document.xml']!);
+    expect(xml).toContain('<w:pStyle w:val="Caption"/>');
+    expect(xml).toContain('<w:jc w:val="center"/>');
+    expect(xml).toContain('<w:t>Embedded image with a portable caption.</w:t>');
+    expect(archive['word/media/image1.png']).toEqual(Uint8Array.from(Buffer.from(ONE_PIXEL_PNG, 'base64')));
+    const reopened = importDOCX(exported.bytes, schema).document.child(0);
+    expect(reopened.toJSON()).toEqual({ ...original, attrs: { ...original.attrs,
+      caption: '', captionAlign: 'center', captionLayout: {
+        unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8,
+        lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
+        keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
+      },
+    }, content: [{ type: 'text', text: 'Embedded image with a portable caption.', marks: [
+      { type: 'font_family', attrs: { family: 'Arial' } }, { type: 'font_size', attrs: { size: '11pt' } },
+    ] }] });
+    expect(image.toJSON()).toEqual(original);
+    const secondExport = exportDOCX(schema.node('doc', {}, [reopened]));
+    expect(importDOCX(secondExport.bytes, schema).document.child(0).toJSON()).toEqual(reopened.toJSON());
+  });
+
+  it('exports the paragraph font context of a plain image caption on its actual text run', () => {
+    const image = schema.node('image_super', { src: ONE_PIXEL_DATA_URL, caption: 'Plain evidence',
+      captionLayout: { unit: 'pt', fontFamily: 'Courier New', fontSize: 16 } });
+    const exported = exportDOCX(schema.node('doc', {}, [image]));
+    const xml = strFromU8(unzipSync(exported.bytes)['word/document.xml']!);
+    expect(xml).toContain('<w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="32"/></w:rPr><w:t>Plain evidence</w:t>');
+    const reopened = importDOCX(exported.bytes, schema).document.child(0);
+    expect(reopened.attrs.captionLayout).toMatchObject({ fontFamily: 'Courier New', fontSize: 16 });
+    expect(reopened.child(0).marks.find(mark => mark.type.name === 'font_size')?.attrs.size).toBe('16pt');
   });
 
   it('requires explicit host resolution for non-data images and validates the returned bytes', () => {
@@ -234,7 +311,7 @@ describe('DOCX interchange', () => {
     const mismatched = exportDOCX(document, {
       resolveImage: () => ({ bytes: new Uint8Array(Buffer.from(ONE_PIXEL_PNG, 'base64')), contentType: 'image/jpeg' }),
     });
-    expect(mismatched.report).toMatchObject({ fidelity: 'lossy', issues: [{ code: 'image-type-mismatch', path: [0] }] });
+    expect(mismatched.report).toMatchObject({ fidelity: 'lossy', issues: [{ code: 'image-type-mismatch', path: [0] }, { code: 'page-settings-defaulted', severity: 'info' }] });
     expect(unzipSync(mismatched.bytes)['word/media/image1.png']).toBeUndefined();
   });
 

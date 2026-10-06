@@ -1,0 +1,31 @@
+{
+  "sourceSnapshot": "artifacts/html-inert-raw-text-production-source-checked-20261006.json",
+  "sourceDigest": "2e75a14320a73b6f9c0e65116a0b364425c45054fde316c10e83afa3b2059acd",
+  "inspectedCaptureRoot": "artifacts/html-inert-raw-text-browser-fixed-20261006",
+  "freshRegressionCaptureRoot": "artifacts/html-inert-raw-text-browser-regressions-20261006",
+  "engines": ["chromium", "firefox", "webkit"],
+  "inspectedPerEngine": [
+    "raw-text-editor-edited.png",
+    "raw-text-retained-data.png",
+    "raw-text-reader-edited.png",
+    "raw-text-editor-mobile.png",
+    "raw-text-reader-mobile.png",
+    "raw-text-empty-filled.png"
+  ],
+  "rawCapturesVisuallyInspected": 18,
+  "freshCapturesComparedBySHA256": 18,
+  "freshCapturesIdenticalToInspected": 18,
+  "additionalFreshCodeKeyboardCapturesInspected": 3,
+  "observations": [
+    "Literal script, CSS URL and HTML/Markdown delimiters remain visible source, not live behavior.",
+    "Desktop and 390px source/reader captures are readable; source wraps and inert badges remain visible.",
+    "Filled empty source stays in its own code carrier.",
+    "WebKit density/font fallback differs; this is not pixel equality across engines.",
+    "Code-keyboard contract captures show visible focus and horizontal code overflow; surrounding debug JSON is a test harness, not the public mobile UI."
+  ],
+  "limitations": [
+    "Desktop engine emulation, not physical mobile or native IME coverage.",
+    "Safe source fallback, not reproduction of original HTML layout/behavior.",
+    "Selected recorded workflows, not every editor interaction or third-party clipboard destination."
+  ]
+}

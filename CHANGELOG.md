@@ -1,6 +1,466 @@
 # Changelog
 
+Unreleased default table-width fix: distinguish omitted Word automatic width
+from a new Fountain table's full-width/complete-fixed-grid defaults. DOCX export
+reports default-width materialization rather than silently switching sizing
+policy on reopen. Native layout certification remains outstanding.
+
 ## Unreleased
+
+- Space the homepage italic tagline away from the preceding framework line so descenders do not collide. Recorded Chromium, Firefox, and WebKit checks cover 1162px, 1440px, and 390px widths, with screenshot review.
+
+- Fix visually collapsed blank paragraphs in the default standalone HTML export
+  and inert workshop reader. A paragraph occupies at least its computed line
+  height, including empty marked runs; no fake text, `<br>` or document mutation
+  is added. Unstyled documents/fragments remain host-styled. The workshop now
+  downloads real standalone HTML for saved-file inspection. Recorded browser
+  checks compare editor, reader and opened file geometry, including quotes,
+  consecutive blanks and table cells. This is not native print certification.
+
+- Preserve genuinely childless paragraphs through HTML document/fragment exports
+  and nested Markdown HTML carriers using the existing empty-paragraph marker.
+  Browser and server importers accept the marker only on elements with no child
+  nodes; added visible content is parsed normally, never hidden. Ordinary empty
+  paragraphs retain their default caret leaf. This does not preserve arbitrary
+  adjacent text-node segmentation or certify whole-format fidelity.
+
+- Fix canonical saved empty paragraphs being classified as unsupported when
+  a document-wide HTML adapter was enabled. Preserve explicit empty paragraphs
+  through the existing offset-bound block-slot guard; leave implicit list/quote
+  caret fillers unchanged. Recorded block editing exposed this failure.
+
+- Add opt-in `createInertHTMLBlockExtension({ tags })` and
+  `appendInertHTMLBlockParagraph(editor, path)` to `html/inert`. Registered unknown
+  wrappers retain editable block children and bounded inert source metadata;
+  empty imports remain empty until an explicit undoable authoring action.
+  Safe HTML/Markdown carriers do not apply original tags, handlers or CSS.
+  The public inert workshop includes a structured-block sample. This is source
+  retention, not original-layout reproduction; the default schema is unchanged.
+
+- Preserve literal Markdown backslash destinations through export/reopening and
+  encode their DOM hrefs without losing exact native data. Restore only safe,
+  bounded carriers bound to the visible destination; do not encode ambiguous
+  HTTP authority backslashes into different hostname/user-info data.
+- Preserve supported HTML link controls as encoded data with explicit
+  `normalized-link-url` diagnostics, while rejecting disguised unsafe destinations
+  and reporting invalid native carriers/schema-over-limit expansion.
+- Retain imported HTML navigation intent in optional bounded `link.htmlHref`,
+  separate from literal Markdown URLs. Bind it to stored/visible href, reject
+  forged or conflicting carriers, preserve source CR/LF/TAB through reopening,
+  clear origin on manual URL editing, and cover generated ruby/styled-text links.
+- Tighten the CommonMark URL oracle: raw control/backslash attributes are not
+  encoded URL equivalents. Repair four previously hidden Markdown rendering
+  failures; retain 563 default matches. Source-bound navigation repairs raw HTML
+  example 21 and whole-document control cases 642/643; version-11 strongest
+  opt-in is 613/652. Encoded controls are still not equated with stripped raw
+  controls. No parity-row or release promotion.
+
+- Add separate opt-in script/style/textarea inert-source registration through
+  `createInertHTMLRawTextExtension`, without installing original active HTML,
+  attributes or behavior. Preserve literal Unicode in text-only code import
+  and supported user-applied display marks through canonical reopening.
+  Reject modified badges that would hide media. Fix empty inline-code typing
+  and Chromium pointer placement without replacing node identity; add recorded
+  Enter/Backspace/history/reopen and desktop/narrow-reader checks. HTML parser
+  normalization and CommonMark conformance scores remain unchanged.
+
+- Refuse speculative Markdown HTML-flow conversion when an unfinished tag
+  would consume raw source (`eof-in-tag`), retaining editable literal text
+  and an explicit fallback even after diagnostic slots are exhausted.
+  Add public source-fallback/parser diagnostics and a reproducible sample;
+  direct HTML repair semantics and CommonMark conformance scores are unchanged.
+- Add opt-in server HTML lexical-token inspection and the isolated
+  `html/inert` extension factory for explicitly registered unknown inline tags.
+  Retain bounded source data without executing original tags/attributes;
+  decline modified carrier shells rather than swallowing visible siblings.
+  Add a real Node/Markdown editing/reopening workshop. This does not promote
+  CommonMark conformance or promise original behavior/layout reproduction.
+
+- Make shared demo navigation opaque so scrolled document/toolbar text cannot
+  bleed through the sticky header when backdrop blur is unavailable. Retain
+  the reproduced Firefox failure and verify desktop/mobile-width reader and
+  selection workflows across Chromium, Firefox and WebKit.
+
+- Resolve text points with a streaming walk rather than constructing a
+  full-document leaf table on every selection mapping. Preserve association,
+  empty-run and nearest-point semantics, with independent oracle and compiled
+  ESM/CommonJS regressions. Verify the complete gate and 51 recorded desktop
+  editing/selection/collaboration/large-document cases without relaxing limits.
+
+- Add explicit `NodeSpec.markdown: 'html'` canonical projection through the
+  existing sanitized HTML exporter. Preserve neighboring paragraph/heading
+  formatting and encode literal newlines; report the matching-reader boundary
+  rather than promise arbitrary metadata retention. Default custom-node
+  flattening and HTML security filters are unchanged. This is a schema-owned
+  export boundary, not shipped universal unknown-HTML support or full CommonMark
+  conformance.
+
+- Avoid per-primitive ancestry Sets when freezing attributes, retaining cycle
+  checks and non-portable-value cache refusal. Match top-level simple repeated
+  schema names directly by cardinality/membership instead of allocating a
+  position Set per child; complex extension expressions retain the general
+  matcher. Add independent semantic/allocation regressions and verify the
+  complete package gate without changing resource limits or public APIs.
+
+- Runtime-freeze native node/mark instances so field replacement, deletion or
+  redefinition cannot alter old snapshots or bypass cached child ownership.
+  Preserve own portable attribute names including `constructor`/`__proto__`,
+  and refuse inherited values as required fields or default overrides.
+  Final public attributes stay ordinary frozen objects; mutable non-portable
+  values remain uncached. Preserve text-node attributes through native JSON
+  reopening with normal schema validation. Add permanent source/compiled-runtime regressions and
+  recorded real editing/history checks. No full file-fidelity claim follows.
+
+- Resolve unequal/surplus Markdown emphasis runs by nearest eligible delimiter
+  precedence on Fountain's native nodes, keeping code, links, equations and
+  extension tokens at the existing lexer boundary. Permanent generated LF/CRLF
+  checks distinguish correct interpretation from exact source retention; full
+  CommonMark conformance is still unclaimed. Match nesting independently of
+  caller mark availability, keeping unsupported pairs literal in their original
+  scope instead of shifting or suppressing available emphasis.
+
+- Preserve literal CR/LF and trailing blank lines in canonical Markdown for
+  optional anonymous HTML flow, instead of letting Markdown block parsing
+  consume them. Native HTML stays unchanged; original-source retention and
+  CommonMark semantic conformance remain separate guarantees.
+
+- Keep native control focus and scroll-into-view immediate in the demo site,
+  instead of animating pointer targets with a global smooth-scroll rule.
+  Recorded desktop/narrow format switching checks retain complete JSON and
+  ordinary pointer/Enter/Space activation; broader verification stays separate.
+
+- Give headless import readiness and DOCX export warnings distinct accessible
+  status names, so assistive tools and browser assertions can identify both
+  announcements without confusing one for the other.
+
+- Pre-optimize the lazy HTML-recovery parser dependencies in the demo server so
+  first use cannot reload an active document. Add an isolated cold-cache browser
+  regression command and reject navigation during the registered-wrapper import
+  rather than retrying through a destroyed editor.
+
+- Make the headless DOCX demo report idle/loading/ready/error states instead of
+  claiming an unchosen file is valid. Prevent older asynchronous reads/errors
+  from replacing a newer import, invalidate pending reads on schema changes or
+  unmount, allow same-file retry, and disable previous-file export during
+  replacement. Announce the chosen output format. Full import comparisons remain
+  intact; scoped verification and remaining browser failures are documented in
+  the fidelity checkpoint.
+
+- Give React configuration forms named, instance-local trigger ownership,
+  keyboard opening focus and composition-safe Escape/Close/Cancel return focus.
+  Preserve native/custom field navigation and external control focus during view
+  mutation repair, even when an old editor Range remains selected. Keep toolbar
+  hover/pressed labels legible without removing active-background feedback.
+  Wrap configuration fields/actions within their editor instead of clipping
+  desktop Link and Find/Replace controls; test their actual horizontal bounds.
+  Add language/title/main metadata to the controlled English comment reader,
+  retaining its restrictive CSP and empty sandbox. Recorded interaction and
+  accessibility evidence is tracked in the fidelity checkpoint; these changes
+  do not claim WCAG, physical-device or full-browser-matrix certification.
+
+- Keep consecutive mixed-format text links continuous in the view while
+  preserving original leaf paths and source/export metadata. Suppress navigation
+  for whitespace-only view links without deleting their marks. Make code regions
+  keyboard-focusable/scrollable with deliberate source entry and native paste;
+  avoid stale paragraph edits and automatic link rewriting inside code. Preserve
+  source backgrounds under whole-block focus/handle feedback. Recorded focused
+  regressions and initial main-page automated accessibility checks pass; manual
+  screen-reader, reader/menu states and the fresh full browser matrix remain open.
+
+- Announce table resize bounds/current width before interaction and keep values
+  synchronized with preview, cancellation and undo/redo, including merged cells.
+  Share private geometry/width projections per immutable table instead of
+  rebuilding the grid for every handle. Preserve keyboard/pointer control focus
+  and refuse obsolete queued view-selection snapshots after nested dispatch.
+  Add recorded three-engine regression coverage. Improve demo contrast, task
+  checkbox targets, keyboard-accessible recipe panels and visible-name toolbar
+  labels. The initial scan failures are retained; the later main-page scan
+  passes reported rules with incomplete/manual checks still open. No
+  WCAG, screen-reader or full-browser-matrix certification is claimed.
+
+- Give changed saved HTML-comment reader snapshots their own sandboxed iframe,
+  without reloading identical saves or updating a saved reader for unsaved
+  author edits. Add the snapshot lifecycle regression and synchronize the
+  equation-file journey with actual editor initialization. The retained broad
+  desktop audit has 568 passes, 15 skips and two failures; the original two
+  workflows pass 18 recorded follow-up cases. This is not an all-matrix or
+  physical-device certification.
+- Preserve source-owned quote appearance without double borders/indentation in
+  the editor, browser/server HTML and native DOCX. The optional explicit quote
+  mode leaves ordinary quote defaults unchanged; a neutral native style prevents
+  borderless imported quotes from acquiring Word Quote decoration. Unsupported
+  host schemas and ordinary Markdown report their styling boundaries. Add
+  compiled ESM/CommonJS no-DOM retention gates and recorded caption editing,
+  history and re-export checks. Complete audit pages no longer clip the native
+  preview; its missing table-header labels remain explicitly visible rather
+  than being patched into a false reference. Native Word fidelity remains open.
+
+- Preserve supported pipe tables inside optional mixed HTML/Markdown source
+  conversion. Parser-derived cells, references and alignment validate complete
+  defaults; source-offset slots retain the original table subtree without HTML
+  re-parsing. Add a discoverable editable table workshop and real cell-navigation,
+  history and reopening tests, plus compiled Node/CommonJS/Worker coverage.
+  The default inert policy and CommonMark profiles are unchanged; this is not
+  full GFM or pixel-perfect table reproduction. See
+  [the contract](docs/MARKDOWN_DOCUMENT_FLOW.md#protected-markdown-tables-2026-10-05).
+- Preserve syntax-derived Markdown dividers and standalone images when the
+  optional whole-document HTML adapter is enabled. Protected source offsets
+  retain the original image/rule nodes, schema defaults and nested list/quote
+  placement, rather than refusing an otherwise supported document. Modified,
+  flattened or reordered atoms and unrepresentable image link/formatting scopes
+  still refuse the complete speculative conversion. Fix the Markdown workshop's
+  Save/Reopen selectors so they cannot overwrite an image-caption control or
+  image status. Add a discoverable images/dividers sample and compiled Node,
+  CommonJS and Worker regressions. CommonMark scores and default HTML policy
+  remain unchanged; see [the contract](docs/MARKDOWN_DOCUMENT_FLOW.md#protected-markdown-block-atoms-2026-10-05).
+- Import supported table-owned run and paragraph formatting through the existing
+  strict style decoders. Base/conditional text fonts, sizes, colour, emphasis,
+  spacing and alignment become editable native declarations. Word table toggles
+  are absolute resets, not ordinary style XOR; nested tables own their own
+  context and reserved TableNormal children are ignored. Unsupported text stays
+  reported. Normal/document-default precedence and native page appearance remain
+  explicitly unverified; original live style bindings are not preserved.
+
+- Materialize supported inherited and conditional Word table appearance as
+  editable native declarations. Bounded table-style ancestry, actual default
+  styles, independent border/margin edges, explicit nil/zero/clear resets,
+  table width/layout, row/column bands, edge rows/columns and corners are covered.
+  Office region precedence and row-wide conditional margins are format-boundary
+  rules, not additions to the portable schema. Unsupported table text/row
+  properties, omitted grid offsets and distinct merged-continuation fills have
+  explicit diagnostics. Live style bindings and original style XML are not
+  retained by native export; native Word page fidelity remains uncertified.
+
+- Retain explicit empty text leaves and supported run marks in DOCX export/reopen,
+  separately from childless paragraphs and property-only runs. This fixes the
+  loss found in the recorded table-control journey; deleted text and empty field
+  instructions do not create caret leaves. Third-party edit/save retention is
+  still unverified.
+
+- Separate native Word row repetition from semantic header cells. A validated
+  `table_row.repeatHeader` choice survives HTML and native DOCX; ordinary repeated
+  Word rows no longer acquire invented header fill or emphasis. Pagination uses
+  only contiguous, rowspan-safe leading bands. Semantic Fountain cell scopes use
+  strict versioned, behavior-free Word controls, with explicit third-party-save
+  limitations. The customizable table menu adds `toggle-row-repeat-header`, and
+  the conversion lab exposes table controls. Native Word layout is not certified.
+
+- Preserve a cleared unmarked `html_flow` caret leaf in canonical Markdown
+  instead of reopening it as a childless node. Browser/server parsing uses a
+  strictly scoped inert marker; ordinary paragraphs and native HTML reader
+  output are unchanged. The flow workshop adds unmarked/childless examples,
+  explicit saved-source reopening and safe focus for childless inline blocks.
+  Real Safari clipboard certification remains open; an independent Windows
+  WebKit clipboard diagnostic is retained separately from editor success.
+
+- Optional `HTMLFlowExtension` retains anonymous inline HTML without inventing
+  paragraph spacing. Native HTML no longer adds pretty-printing newlines beside
+  these flows or after a trailing flow in the document shell. Canonical Markdown
+  has an inert, same-schema envelope; Enter creates a real paragraph, joins and
+  inline paste work, and undo restores the original source. The recorded linked-
+  paragraph example matches reference reader spacing in three desktop engines,
+  including a narrow viewport. The 611/652 opt-in semantic baseline is unchanged;
+  this is a layout repair, not a full-format or CommonMark completion claim.
+
+- Optional `HTMLCommentExtension` retains safe inert HTML comment data during
+  browser/server HTML and opted-in Markdown conversion. Editor source badges
+  differ deliberately from native comment output; canonical paragraph/heading
+  envelopes preserve neighboring Markdown formatting. Export never rewrites
+  comment data while coalescing marks. Breakout payloads are rejected, and
+  comments omitted by unsupported projections still produce located warnings.
+  The additional opt-in CommonMark profile matches 611/652; default scores and
+  security policies are unchanged. Hidden comments are not private data.
+- Clipboard node copying now respects an explicit empty `toText` projection
+  instead of leaking author-control labels. Nodes without a text contract retain
+  their existing visible-text fallback, including surfaces without `innerText`.
+- Standalone HTML now retains validated physical document page settings in
+  inert `data-fountain-page-settings` body metadata. Browser and DOM-free HTML
+  document import agree; nested blocks and clipboard fragments do not acquire
+  page settings. Malformed/oversized metadata leaves visible content intact and
+  the server importer reports the additive `invalid-page-settings` issue code.
+  The conversion lab no longer reports supported HTML page settings as lost.
+  This is model retention, not native pagination or arbitrary metadata retention.
+- Report direct Word paragraph-mark character spacing as a located import loss
+  rather than silently dropping it or applying it to unrelated text runs.
+  Empty-line/caret pitch remains unsupported; text-run pitch is unchanged.
+
+- Add validated signed character spacing as the `letter_spacing` mark and
+  `setLetterSpacing` / `unsetLetterSpacing` commands. Core/StarterKit and the
+  optional text-style module share the mark; the React Text styles panel exposes
+  apply/remove controls. Word defaults, paragraph/character ancestry and direct
+  zero resets import from signed twentieth-point values. Native export reports
+  rounding, pixel normalization and unsupported relative units. Browser/server
+  HTML and Markdown's bounded inline-HTML projection retain the mark. This is
+  character pitch, not kerning or full native typography certification.
+
+- Normalize WebKit's Shift+Enter `insertParagraph` event into a hard break using
+  the pending keyboard intent. Keep beforeinput plugin precedence, literal code
+  newlines, read-only/IME guards and keyup/blur cleanup. Recorded edit/export/
+  reopen checks pass in Chromium, Firefox and WebKit; native layout remains open.
+
+- DOCX text-wrapping breaks now retain their run formatting. Shift+Enter keeps
+  active fonts/emphasis on the inserted break rather than only on subsequent
+  text; explicitly switched-off marks remain off. Export reports unresolved
+  paragraph fonts instead of implying generated defaults preserve source line
+  geometry. Unknown-baseline pixel-fidelity failures remain open.
+
+- Paragraph font context retains validated family/point size separately from
+  inline marks, including empty paragraphs and image captions. Browser/server
+  HTML no longer inject those paragraph fonts as inline marks; HTML wrappers
+  retain font mark order. DOCX projects resolved style/paragraph-mark fonts only
+  when text-run fonts are independently represented, otherwise reporting the
+  limitation. Native export applies defaults to unmarked runs without replacing
+  inline overrides. Imported headings no longer acquire generated keep flags
+  when the source resolves them off. Native font-metric equivalence remains open.
+
+- DOCX paragraph import resolves the supported Word cascade before materializing
+  omitted spacing as zero before/after and a single-line multiple. Explicit
+  native export prevents generated Word defaults from changing it on reopening;
+  JSON and DOM-free HTML retain the values. Full native line-metric fidelity
+  remains unverified; unsupported automatic/line-unit spacing remains reported.
+
+- Tables retain an independent validated `preferredWidth` in points, percent,
+  `auto` or `nil` through JSON, browser/server HTML and DOCX. Stored native
+  preferences are no longer replaced by automatic width or a fixed-grid sum.
+  The shared cell projection counts borders/padding inside grid widths instead
+  of adding them twice. Unsupported units/lengths, row exceptions, schema gaps
+  and native rounding receive reports; pipe Markdown reports width loss.
+  This retains direct width preferences, not Word's full layout algorithm.
+  Percentage views use the host's containing surface; page-width equivalence,
+  inherited table styles and native visual certification remain open.
+
+- Optional validated `TableAppearance` data retains direct table/cell physical
+  borders and padding in points through JSON, browser/server HTML and DOCX.
+  Explicit zero margins and border `none`/`nil` are distinct from omitted
+  declarations. Borderless Word imports no longer acquire the application's
+  generated grid/margins; fresh Fountain tables keep their existing defaults.
+  Cells use the existing post-reconciliation refresh hook when their parent
+  appearance changes without a cell edit. Unsupported styles/effects, schema
+  gaps, rounding, row exceptions and distinct merge-fragment appearance receive
+  located reports. Pipe Markdown reports appearance loss.
+  Identical repeated native appearance groups are coalesced with a report;
+  conflicting groups are omitted with a located warning without losing content.
+  Native border-conflict behavior, table style inheritance, implicit margins and full layout fidelity
+  remain unverified; this is not a 1:1 Word-rendering claim.
+
+- Tables now retain explicit fixed/automatic layout through the portable model,
+  browser/server HTML and DOCX. Fixed views derive column geometry from existing
+  cell widths, wrap long text and update after undoable resizing. DOCX writes the
+  native layout declaration; pipe Markdown reports layout loss. Invalid layout,
+  row exceptions, incomplete grids and host schema gaps receive located reports.
+  Word rows with explicitly disabled repeated-header flags remain ordinary
+  editable cells instead of acquiring header styling/repetition on export.
+  Invalid flags receive located warnings; ambiguous declarations are rejected.
+  The public-lab
+  edit/export/reopen journey passes in Chromium, Firefox and WebKit. Independent
+  preview and native visual certification remain limited as documented in DOCX.md.
+
+- Block images may now own editable rich caption content while retaining the
+  legacy `caption` string for compatible documents. They also retain the
+  caption's independent alignment and paragraph geometry in `captionAlign`
+  and `captionLayout`. DOCX export uses a neutral Caption style so it does not
+  invent italic text, a smaller font, a different colour or centred alignment
+  for an imported caption. Browser/server HTML and the image view project the
+  same portable attributes. Browser/server HTML and
+  DOCX preserve supported caption marks and links; Word Caption paragraphs no
+  longer collapse their rich runs to plain text. Caption typing, whole-image
+  selection/deletion, alignment, resize and undo pass real Chromium, Firefox
+  and WebKit interaction tests. `NodeSpec.selectable` lets a non-atomic NodeView
+  expose a whole-node shell without stealing selection from its model-owned
+  `contentDOM`. Costs remain tracked by the optional-entry and aggregate build
+  budgets; default editor entry caps are unchanged. This does not yet cover arbitrary Word fields or block content in
+  captions, floating image/text wrapping, or native Word/LibreOffice fidelity.
+
+- Supported native Word equations now import as real editable inline/display
+  math rather than placeholders. A bounded, platform-neutral `MathExpression`
+  tree retains the interpreted semantics across Fountain JSON and HTML and is
+  written directly back to OMML, without requiring a browser or reparsing
+  generated TeX. Editing the TeX source invalidates the retained tree and remains
+  undoable, so stale semantics cannot override the author's change. Unsupported
+  Function application, upper/lower limits and equation arrays are now within
+  the typed subset alongside fractions, radicals, scripts, matrices and operators.
+  OMML still becomes an explicit visible placeholder and a located warning; this
+  is not complete Office Math coverage or native Word/LibreOffice certification.
+  All 15 public-lab import/edit/export/reopen journeys pass across Chromium,
+  Firefox and WebKit; the four-equation fixture records the independent viewer's
+  matching source/export upper-limit omission as a viewer limitation.
+  The optional DOCX entry's raw size budget now records the complete fidelity
+  bridge (package inventory, notes, page stories/settings/styles/layout/tables
+  and OMML) at 150 KiB ESM / 122 KiB CJS; default editor/framework entry caps
+  remain unchanged. This is an explicit distribution cost, not hidden core growth.
+
+- DOCX tables now retain native `tblGrid` / `tcW` column geometry as validated
+  Fountain cell `colwidth` values and write those widths back across ordinary,
+  spanning and vertical-merge cells. Conflicting or ambiguous geometry and
+  whole-pixel normalization are reported. Automatic Word layout remains
+  automatic; imported fixed-layout behavior is explicitly reported as not yet
+  represented rather than silently changing the table contract. The independent
+  scientific-document audit now compares source/exported table dimensions and
+  reopens the actual export in Chromium, Firefox and WebKit.
+
+- Added platform-neutral paragraph layout data for paragraphs, headings and code
+  blocks: spacing, line rules, start/end and first-line/hanging indents,
+  keep-with-next/keep-lines/page-break-before, RGB shading and four-sided borders.
+  DOCX import resolves these properties through document defaults and paragraph
+  style ancestry; DOCX export writes native paragraph properties. HTML carries
+  the typed value plus a CSS view projection, Markdown reports the unsupported
+  presentation instead of silently discarding it, and block changes/splitting
+  retain it. A conversion-page CSS leak that compressed imported heading letters
+  was also isolated. This is not multi-section layout, table-style fidelity,
+  character-spacing support or native Word/LibreOffice certification.
+
+- DOCX import now resolves document run defaults and paragraph/character style
+  ancestry from the relationship-owned styles part, then applies direct overrides.
+  Supported formatting becomes editable marks and explicit block emphasis.
+  Previously implicit Word defaults can become explicit on reimport; this is
+  appearance materialization, not exact source JSON or live-style retention.
+  Used unsupported style declarations receive located warnings. Conditional
+  styles, native equations and native Word fidelity remain open.
+
+- Paragraphs and headings can carry `emphasis: 'explicit'`: normal weight/style
+  at the block boundary, with bold/italic controlled by existing editable marks.
+  The mode survives supported HTML and native DOCX round trips, block conversion
+  and splitting. Ordinary Markdown reports the appearance limitation. This is
+  the editable boundary used by Word run-style projection.
+  Declared attributes with `default: undefined` are now omitted when unset,
+  keeping optional state JSON-compatible; ordinary documents keep their prior
+  serialized shape. Existing non-optional attribute defaults are unchanged.
+
+- DOCX direct Latin theme-font references now resolve embedded major/minor
+  regional defaults through relationship-owned theme parts and become editable
+  named-font marks. The import report explicitly states that live theme bindings
+  are materialized, not preserved. External/invalid references and unsupported
+  language-dependent or script-specific selection are not silently guessed.
+  Broader script-specific and conditional style behaviour remains unfinished.
+
+- Internal DOCX style-cascade groundwork now distinguishes style inheritance
+  from direct overrides, retains explicit formatting resets and per-script font
+  declarations, and bounds malformed ancestry. A namespace-aware XML reader now
+  decodes document defaults and paragraph/character styles into that cascade;
+  unsupported declarations are reported rather than marked preserved.
+  It now feeds the public importer; its passing tests alone do not establish
+  complete inherited-style or visual fidelity.
+
+- DOCX direct run fonts now use existing `font_family` / `font_size` marks and
+  native Word export properties. Missing schema support, unresolved theme/script
+  fonts, unsupported relative CSS sizes/fallback stacks, half-point rounding and
+  pixel-to-point normalization are reported. No fonts are fetched or embedded.
+  Full inherited Word style resolution remains open.
+
+- Added portable physical `DocumentPageSettings`, validation/read helpers and
+  transactional settings changes through the Pages entry. Single-section DOCX
+  paper dimensions, margins, header/footer edge distances and gutter now survive
+  import/export; the conversion lab exposes editing with undo/redo. Missing
+  values produce explicit export-default reports and become explicit on reimport,
+  so callers must not assume a settings-free document remains JSON-identical.
+  Multi-section/automatic layout, source styles and native Word math import are
+  not certified by this change.
+- DOCX intake now exposes `packageParts` (always present in import results), an
+  optional issue `sourcePart`, and the optional `maxArchiveEntries` limit. Code
+  constructing mock `DOCXImportResult` objects must supply the inventory. Source
+  package inventory is not a semantic fidelity guarantee. Related local fixes
+  retain supported table shading, native footnotes, single-section headers and
+  footers, and explicit page breaks; see the DOCX fidelity checkpoint.
 
 - Added a discoverable local conversion lab for Markdown, HTML, DOCX and Fountain
   JSON files, editable imports, explicit warnings, export/reopen checks and opt-in

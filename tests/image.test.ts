@@ -251,7 +251,8 @@ describe('production image editing', () => {
     expect(input?.value).toBe('Initial');
     if (input) input.value = 'Edited caption';
     input?.dispatchEvent(new FocusEvent('blur'));
-    expect(editor.state.doc.child(0).attrs.caption).toBe('Edited caption');
+    expect(editor.state.doc.child(0).attrs.caption).toBe('');
+    expect(editor.state.doc.child(0).content.map((node) => node.textContent).join('')).toBe('Edited caption');
     handle?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
     expect(editor.state.doc.child(0).attrs.width).toBe('310px');
     const image = figure?.querySelector('img');

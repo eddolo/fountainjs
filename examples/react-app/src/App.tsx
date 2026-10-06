@@ -953,7 +953,7 @@ function App() {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="FountainJS home"><span>F</span> FountainJS</a>
+        <a className="brand" href="#top" aria-label="F FountainJS home"><span>F</span> FountainJS</a>
         <nav aria-label="Primary navigation"><SitePageLink href="#top" current>Home</SitePageLink><a className="site-section-link" href="#what">What it is</a><a className="site-section-link" href="#open-source">Open source</a><a className="site-section-link" href="#playground">Live demo</a><a className="site-section-link" href="#collaboration">Collaboration</a><a className="site-section-link" href="#review">Review</a><a className="site-section-link" href="#versions">Versions</a><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav>
         <a className="install-pill" href="https://www.npmjs.com/package/fountainjs-editor">npm i fountainjs-editor</a>
       </header>

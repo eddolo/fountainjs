@@ -14,22 +14,26 @@ function computeAttrs(
   specs: Record<string, { default?: unknown; validate?: (value: unknown) => boolean }> = {},
   supplied: Attributes = {},
 ): Attributes {
-  const result: Attributes = {};
+  // Attribute names are data, including "__proto__" and "constructor".
+  // Use an inert scratch object; freezeAttributes supplies the public clone.
+  const result: Attributes = Object.create(null);
   for (const [name, spec] of Object.entries(specs)) {
-    const value = name in supplied ? supplied[name] : spec.default;
+    const value = Object.hasOwn(supplied, name) ? supplied[name] : spec.default;
     if (value === undefined && !('default' in spec)) throw new Error(`Missing required attribute: ${name}`);
     if (spec.validate && !spec.validate(value)) throw new Error(`Invalid value for attribute: ${name}`);
-    result[name] = value;
+    // An explicitly undefined default declares an optional attribute. Absence
+    // must stay absence: persisting undefined breaks portable JSON/Yjs values.
+    if (value !== undefined) result[name] = value;
   }
   for (const [name, value] of Object.entries(supplied)) {
-    if (!(name in result)) result[name] = value;
+    if (!Object.hasOwn(specs, name)) result[name] = value;
   }
   return result;
 }
 
-function isDeeplyImmutable(value: unknown, ancestors = new Set<object>()): boolean {
+function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {
   if (value === null || ['string', 'number', 'boolean', 'undefined'].includes(typeof value)) return true;
-  if (typeof value !== 'object' || ancestors.has(value)) return false;
+  if (typeof value !== 'object' || ancestors?.has(value)) return false;
   const prototype = Object.getPrototypeOf(value);
   if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) return false;
   if (!Object.isFrozen(value)) return false;
@@ -138,24 +142,23 @@ export class Schema {
       });
       if (current.isText) {
         if (current.content.length) throw new Error(`Text has children at ${path.join('.')}.`);
-        const cacheable = isDeeplyImmutable(current.attrs)
-          && current.marks.every((mark) => isDeeplyImmutable(mark.attrs));
-        if (cacheable) this.validatedNodes.add(current);
-        return cacheable;
-      }
-      if (current.marks.length && !current.type.isInline) {
-        throw new Error('Only inline nodes may carry marks.');
-      }
-      if (current.type.spec.atom && current.content.length) throw new Error(`Atom ${current.type.name} has children.`);
-      const expression = current.type.spec.content;
-      if (expression) {
-        if (!matchesContentExpression(current.content, expression)) {
-          throw new Error(`Content of ${current.type.name} does not match "${expression}".`);
+      } else {
+        if (current.marks.length && !current.type.isInline) {
+          throw new Error('Only inline nodes may carry marks.');
         }
-      } else if (current.content.length) {
-        throw new Error(`${current.type.name} cannot have children.`);
+        if (current.type.spec.atom && current.content.length) throw new Error(`Atom ${current.type.name} has children.`);
+        const expression = current.type.spec.content;
+        if (expression) {
+          if (!matchesContentExpression(current.content, expression)) {
+            throw new Error(`Content of ${current.type.name} does not match "${expression}".`);
+          }
+        } else if (current.content.length) {
+          throw new Error(`${current.type.name} cannot have children.`);
+        }
       }
-      const childrenCacheable = current.content
+      // Text has no children. Share the cache decision without allocating a
+      // child-validation array for the most frequent node kind.
+      const childrenCacheable = current.isText || current.content
         .map((child, index) => visit(child, [...path, index]))
         .every(Boolean);
       const cacheable = childrenCacheable

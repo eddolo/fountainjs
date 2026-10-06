@@ -1,4 +1,4 @@
-import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type NodeViewLike } from '../core';
+import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type DOMOutputSpec, type Mark, type NodeViewLike } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
@@ -128,12 +128,19 @@ function clearDecorationAttributes(element: HTMLElement): void {
   appliedDecorations.delete(element);
 }
 
-function renderMarks(node: Node, content: globalThis.Node): globalThis.Node {
+function renderMarks(node: Node, content: globalThis.Node, sharedLink?: Mark): globalThis.Node {
   for (const mark of node.marks) {
+    if (sharedLink?.eq(mark)) continue;
     const spec = mark.type.spec.toDOM?.(mark);
     if (!spec) continue;
     const { dom, contentDOM } = renderSpec(spec);
     (contentDOM ?? dom).appendChild(content);
+    if (dom.tagName === 'A') {
+      dom.dataset.fountainInlineLink = '';
+      // A preserved whitespace-only mark is not a usable navigation target.
+      // This changes only the view: JSON, source and export retain the mark.
+      if (node.isText && !dom.textContent?.trim()) dom.removeAttribute('href');
+    }
     content = dom;
   }
   return content;
@@ -179,7 +186,7 @@ function caretPlaceholder(): HTMLBRElement {
   return placeholder;
 }
 
-function renderText(node: Node, path: readonly number[], position: number, context: DOMRenderContext): HTMLElement {
+function renderText(node: Node, path: readonly number[], position: number, context: DOMRenderContext, sharedLink?: Mark): HTMLElement {
   const wrapper = document.createElement('span');
   wrapper.dataset.fountainTextPath = path.join('.');
 
@@ -207,7 +214,7 @@ function renderText(node: Node, path: readonly number[], position: number, conte
       .forEach((decoration) => wrapper.appendChild(renderWidget(decoration)));
     const to = boundaries[index + 1];
     if (to === undefined || to <= from) continue;
-    let content = renderMarks(node, document.createTextNode(value.slice(from, to)));
+    let content = renderMarks(node, document.createTextNode(value.slice(from, to)), sharedLink);
     inline.filter((decoration) => decoration.from < position + to && decoration.to > position + from)
       .forEach((decoration) => {
         const span = document.createElement('span');
@@ -272,21 +279,43 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
     decoration.type === 'node' && decoration.from === position && decoration.to === position + node.nodeSize
   )).forEach((decoration) => applyDecorationAttributes(dom, decoration));
   const target = contentDOM ?? dom;
+  if (contentDOM) contentDOM.dataset.fountainContentDom = '';
   if (custom && contentDOM) target.replaceChildren();
   delete dom.dataset.fountainEmptyTextBlock;
-  if (contentDOM && node.type.isBlock && !node.type.spec.atom && !node.childCount
+  if (contentDOM && (node.type.isBlock || node.type.isInline && node.type.spec.code) && !node.type.spec.atom && !node.childCount
     && node.type.spec.content && matchesContentExpression([node.type.schema.text('')], node.type.spec.content)) {
-    // Childless text blocks are valid model nodes. Give them a visible hit
+    // Childless text blocks and inline code sources are valid model nodes. Give them a visible hit
     // target without inventing a text child or mutating shared document state.
     dom.dataset.fountainEmptyTextBlock = 'true';
     target.appendChild(caretPlaceholder());
   }
   let childPosition = position + 1;
+  let linkedRun: { mark: Mark; dom: HTMLElement; target: HTMLElement } | undefined;
   node.content.forEach((child, index) => {
-    if (!child.isText) appendWidgets(target, childPosition, context);
-    target.appendChild(renderNode(child, [...path, index], context, childPosition));
+    const hasWidget = context.decorations?.find(childPosition, childPosition + child.nodeSize,
+      decoration => decoration.type === 'widget').length;
+    const link = child.isText && !hasWidget ? child.marks.find(mark => mark.type.name === 'link') : undefined;
+    const linkSpec = link?.type.spec.toDOM?.(link);
+    // Keep one actionable link across adjacent differently marked text runs,
+    // while each leaf still owns its original DOM/model path and decorations.
+    if (link && Array.isArray(linkSpec) && linkSpec[0] === 'a') {
+      if (!linkedRun?.mark.eq(link)) {
+        if (linkedRun && !linkedRun.dom.textContent?.trim()) linkedRun.dom.removeAttribute('href');
+        const renderedLink = renderSpec(linkSpec);
+        renderedLink.dom.dataset.fountainInlineLink = '';
+        linkedRun = { mark: link, dom: renderedLink.dom, target: renderedLink.contentDOM ?? renderedLink.dom };
+        target.appendChild(linkedRun.dom);
+      }
+      linkedRun.target.appendChild(renderText(child, [...path, index], childPosition, context, link));
+    } else {
+      if (linkedRun && !linkedRun.dom.textContent?.trim()) linkedRun.dom.removeAttribute('href');
+      linkedRun = undefined;
+      if (!child.isText) appendWidgets(target, childPosition, context);
+      target.appendChild(renderNode(child, [...path, index], context, childPosition));
+    }
     childPosition += child.nodeSize;
   });
+  if (linkedRun && !linkedRun.dom.textContent?.trim()) linkedRun.dom.removeAttribute('href');
   const last = node.content.at(-1);
   if (!last?.isText || (last.text?.length ?? 0) > 0) appendWidgets(target, childPosition, context);
   return node.type.isInline && node.marks.length ? renderMarks(node, dom) : dom;

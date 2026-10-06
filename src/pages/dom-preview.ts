@@ -1,4 +1,5 @@
 import type { PageGeometry } from './layout';
+import { repeatedDOMTableRows } from '../core/table-layout';
 import type { PagePresentationPage, ProjectedPageTemplate } from './presentation';
 import type {
   DOMPageContentPlacement,
@@ -234,10 +235,6 @@ function tableRows(element: HTMLElement): readonly HTMLTableRowElement[] {
   )));
 }
 
-function isTableHeaderRow(row: HTMLTableRowElement): boolean {
-  return row.querySelectorAll(':scope > th').length > 0 && row.querySelectorAll(':scope > td').length === 0;
-}
-
 function structuralClone(
   clone: HTMLElement,
   placement: DOMPageContentPlacement,
@@ -260,8 +257,9 @@ function structuralClone(
       if (!retained.has(element.dataset.fountainSourcePath ?? '')) element.remove();
     });
   } else if (kind === 'table-row-group') {
+    const headers = new Set(repeatedDOMTableRows(tableRows(clone)));
     tableRows(clone).forEach((row) => {
-      const repeatHeader = placement.continuedBefore && isTableHeaderRow(row);
+      const repeatHeader = placement.continuedBefore && headers.has(row);
       if (!repeatHeader && !retained.has(row.dataset.fountainSourcePath ?? '')) row.remove();
     });
   }

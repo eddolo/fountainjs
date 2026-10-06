@@ -4,6 +4,7 @@ import { fontFamilyCSS } from '../../text-style/values';
 import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/markdown-importer';
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
+import { literalLinkAttributes } from '../link-destination';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -57,7 +58,7 @@ interface RenderContext {
 
 const SUPPORTED_MARKS = new Set(['code', 'strong', 'em', 'strike', 'link', 'highlight']);
 const DELIMITED_MARKS = new Set(['strong', 'em', 'strike']);
-const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'font_size', 'line_height']);
+const TEXT_STYLE_MARKS = new Set(['text_color', 'highlight', 'font_family', 'font_size', 'line_height', 'letter_spacing']);
 const LIST_TYPES = new Set(['bullet_list', 'ordered_list', 'task_list']);
 
 function escapeInline(text: string, protectAutolinks = true): string {
@@ -86,12 +87,7 @@ function codeSpan(text: string): string {
 }
 
 function escapeHTML(text: unknown): string {
-  return String(text ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return String(text ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 }
 
 function escapeTitle(value: unknown): string {
@@ -101,7 +97,7 @@ function escapeTitle(value: unknown): string {
 
 function destination(value: unknown): string {
   const href = String(value ?? '');
-  const needsAngles = /[\s()<>]/.test(href);
+  const needsAngles = /[\\\s()<>]/.test(href);
   const escaped = needsAngles ? href.replace(/([\\<>])/g, '\\$1') : href;
   const protectedHref = escapeMarkdownEntityOpeners(escaped);
   return needsAngles ? `<${protectedHref}>` : protectedHref;
@@ -153,6 +149,11 @@ function link(
   return `${prefix}[${label}](${destination(href)}${suffix})`;
 }
 
+function HTMLLinkAttributes(href: unknown, htmlSource?: unknown): string {
+  return Object.entries(literalLinkAttributes(String(href ?? ''), htmlSource)).map(([name, value]) =>
+    ` ${name}="${escapeHTML(value).replace(/[\t\n\r]/gu, c => `&#${c.charCodeAt(0)};`)}"`).join('');
+}
+
 function reportNodeAttributes(
   node: Node,
   context: RenderContext,
@@ -160,6 +161,18 @@ function reportNodeAttributes(
   tableAlignmentRepresented = false,
 ): void {
   const name = node.type.name;
+  if (name === 'blockquote' && node.attrs.appearance === 'explicit') {
+    report(context, 'attribute', name, path, 'Explicit quote appearance is omitted by ordinary Markdown. Retain Fountain JSON, HTML or a supported paged format.');
+  }
+  if (['paragraph', 'heading'].includes(name) && node.attrs.emphasis === 'explicit') {
+    report(context, 'attribute', name, path, 'Explicit normal-weight/non-italic block emphasis is not represented by ordinary Markdown; renderer defaults may differ.');
+  }
+  if (['paragraph', 'heading'].includes(name) && node.attrs.layout != null) {
+    report(context, 'attribute', name, path, 'Paragraph spacing, font context, indentation, borders and pagination controls are not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
+  }
+  if (name === 'doc' && node.attrs.pageSettings != null) {
+    report(context, 'attribute', name, path, 'Physical page settings are not represented by ordinary Markdown; retain Fountain JSON or a supported paged format.');
+  }
   if (!tableAlignmentRepresented && ['paragraph', 'heading'].includes(name) && node.attrs.align && node.attrs.align !== 'left') {
     report(context, 'attribute', name, path, 'Text alignment is not represented by ordinary Markdown.');
   }
@@ -169,6 +182,9 @@ function reportNodeAttributes(
   if (['inline_math', 'math_block'].includes(name) && node.attrs.ariaLabel) {
     report(context, 'attribute', name, path, 'The accessible math label is not represented by TeX delimiters.');
   }
+  if (['inline_math', 'math_block'].includes(name) && node.attrs.expression) {
+    report(context, 'attribute', name, path, 'The typed semantic math tree is projected to TeX source in Markdown; retain Fountain JSON or HTML for the lossless representation.');
+  }
   if (['image_super', 'inline_image'].includes(name)) {
     const nonDefaultLayout = node.attrs.width !== '100%'
       || node.attrs.height !== 'auto'
@@ -177,10 +193,22 @@ function reportNodeAttributes(
       || Boolean(node.attrs.sizes)
       || node.attrs.loading !== 'lazy'
       || node.attrs.decoding !== 'async'
-      || (name === 'image_super' && Boolean(node.attrs.caption));
+      || (name === 'image_super' && Boolean(node.textContent || node.attrs.caption));
     if (nonDefaultLayout) {
       report(context, 'attribute', name, path, 'Image layout, responsive-source, loading, and caption metadata may be projected or omitted.');
     }
+  }
+  if (name === 'table' && node.attrs.layout !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent fixed or automatic table layout.');
+  }
+  if (name === 'table' && node.attrs.preferredWidth !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent preferred table width.');
+  }
+  if (name === 'table_row' && node.attrs.repeatHeader !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent explicit row repetition. Use HTML tables to retain it.');
+  }
+  if (['table', 'table_header', 'table_cell'].includes(name) && node.attrs.appearance !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent table borders, padding or explicit appearance resets.');
   }
   if (['table_header', 'table_cell'].includes(name)) {
     if (Number(node.attrs.colspan) !== 1 || Number(node.attrs.rowspan) !== 1 || node.attrs.colwidth) {
@@ -208,10 +236,11 @@ function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[
     else if (name === 'font_family') value = `<span style="font-family:${escapeHTML(fontFamilyCSS(mark.attrs.family))}">${value}</span>`;
     else if (name === 'font_size') value = `<span style="font-size:${escapeHTML(mark.attrs.size)}">${value}</span>`;
     else if (name === 'line_height') value = `<span style="line-height:${escapeHTML(mark.attrs.lineHeight)}">${value}</span>`;
+    else if (name === 'letter_spacing') value = `<span style="letter-spacing:${escapeHTML(mark.attrs.spacing)}">${value}</span>`;
     else if (name === 'link') {
       const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
       const target = mark.attrs.target === '_self' ? '_self' : '_blank';
-      value = `<a href="${escapeHTML(mark.attrs.href)}"${title} target="${target}">${value}</a>`;
+      value = `<a${HTMLLinkAttributes(mark.attrs.href, mark.attrs.htmlHref)}${title} target="${target}">${value}</a>`;
     } else report(context, 'mark', name, path, 'This custom mark cannot be represented inside semantic ruby HTML and is omitted.');
   }
   return value;
@@ -219,7 +248,7 @@ function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[
 
 function needsTextStyleHTML(node: Node): boolean {
   return node.marks.some((mark) => (
-    ['text_color', 'font_family', 'font_size', 'line_height'].includes(mark.type.name)
+    ['text_color', 'font_family', 'font_size', 'line_height', 'letter_spacing'].includes(mark.type.name)
       || (mark.type.name === 'highlight' && mark.attrs.color !== '#fff3a3')
   ));
 }
@@ -232,6 +261,7 @@ function textStyleHTML(node: Node, context: RenderContext, path: readonly number
     else if (mark.type.name === 'font_family') styles.push(`font-family:${fontFamilyCSS(mark.attrs.family)}`);
     else if (mark.type.name === 'font_size') styles.push(`font-size:${String(mark.attrs.size)}`);
     else if (mark.type.name === 'line_height') styles.push(`line-height:${String(mark.attrs.lineHeight)}`);
+    else if (mark.type.name === 'letter_spacing') styles.push(`letter-spacing:${String(mark.attrs.spacing)}`);
   });
   let value = encodeTextNewlines(escapeHTML(node.text ?? ''));
   for (const mark of [...node.marks].reverse().filter((mark) => !TEXT_STYLE_MARKS.has(mark.type.name))) {
@@ -246,7 +276,7 @@ function textStyleHTML(node: Node, context: RenderContext, path: readonly number
     else if (name === 'link') {
       const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
       const target = mark.attrs.target === '_self' ? '_self' : '_blank';
-      value = `<a href="${escapeHTML(mark.attrs.href)}"${title} target="${target}">${value}</a>`;
+      value = `<a${HTMLLinkAttributes(mark.attrs.href, mark.attrs.htmlHref)}${title} target="${target}">${value}</a>`;
     } else report(context, 'mark', name, path, 'This custom mark cannot be represented inside lossless text-style HTML and is omitted.');
   }
   return `<span data-fountain-text-style="true" style="${escapeHTML(styles.join(';'))}">${value}</span>`;
@@ -281,12 +311,26 @@ function markdownMarks(
   return value;
 }
 
+function schemaHTML(node: Node, context: RenderContext, path: readonly number[]): string {
+  // Walk once for diagnostics, serialize once (not once per descendant).
+  node.descendants((child, childPath) => {
+    if (child.type.spec.markdown === 'html' || (child === node && ['html_container', 'definition_list', 'table'].includes(child.type.name))) report(context, 'node', child.type.name, [...path, ...childPath], 'HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed.');
+  });
+  return encodeTextNewlines(HTMLExporter.export(node, { document: false }));
+}
+
 function inline(node: Node, context: RenderContext, path: readonly number[], preserveMarkBoundary = false): string {
+  if (node.type.spec.markdown === 'html') return schemaHTML(node, context, path);
+  if (node.marks.some(mark => mark.type.name === 'link' && mark.attrs.htmlHref !== undefined)) {
+    report(context, 'attribute', 'link', path, 'HTML-source link navigation uses a safe HTML carrier and requires an HTML-enabled Markdown reader with the matching link schema.');
+    return schemaHTML(node, context, path);
+  }
   if (!node.isText && node.type.isInline && node.marks.length) {
     return markdownMarks(node, inline(node.withMarks([]), context, path, preserveMarkBoundary), context, path);
   }
   reportNodeAttributes(node, context, path);
   if (!node.isText) {
+    if (node.type.name === 'html_comment') return HTMLExporter.export(node, { document: false });
     if (node.type.name === 'hard_break') return '  \n';
     if (node.type.name === 'footnote_reference') return `[^${String(node.attrs.id)}]`;
     if (node.type.name === 'inline_math') return `$${String(node.attrs.latex ?? '')}$`;
@@ -467,6 +511,7 @@ function render(
   tableAlignmentRepresented = false,
   alternateListMarker = false,
 ): string {
+  if (node.type.spec.markdown === 'html') return schemaHTML(node, context, path);
   reportNodeAttributes(node, context, path, tableAlignmentRepresented);
   const children = () => node.content
     .map((child, index) => render(child, context, [...path, index], depth))
@@ -475,6 +520,12 @@ function render(
     case 'doc': return renderBlockSequence(node.content, context, []);
     case 'text': return inline(node, context, path);
     case 'paragraph': {
+      // Raw comments at the beginning of a Markdown line start an HTML block.
+      // Export this paragraph as HTML so neighboring marks/text are not parsed
+      // as literal Markdown inside that block on reopen.
+      if (node.content.some(child => child.type.name === 'html_comment' || child.type.spec.markdown === 'html')) {
+        return schemaHTML(node, context, path);
+      }
       const value = inlineContent(node, context, path);
       if (!tableAlignmentRepresented && context.options.emptyParagraphs === 'omit'
         && (!value || node.content.every(child => child.isText && !child.text
@@ -487,7 +538,9 @@ function render(
       if (node.childCount > 1) report(context, 'node', 'paragraph', path, 'Multiple empty text nodes are canonicalized to one caret text node.');
       return `<p data-fountain-empty="${node.childCount ? 'text' : 'block'}"></p>`;
     }
-    case 'heading': return `${'#'.repeat(Number(node.attrs.level) || 1)} ${inlineContent(node, context, path)}`;
+    case 'heading': return node.content.some(child => child.type.name === 'html_comment' || child.type.spec.markdown === 'html')
+      ? schemaHTML(node, context, path)
+      : `${'#'.repeat(Number(node.attrs.level) || 1)} ${inlineContent(node, context, path)}`;
     case 'blockquote': return renderBlockSequence(node.content, context, path, depth)
       .split('\n')
       .map((line) => `> ${line}`)
@@ -503,9 +556,17 @@ function render(
       return `<details${node.attrs.open ? ' open' : ''}>\n<summary>${label}</summary>\n\n${body}\n</details>`;
     }
     case 'details_summary': return inlineContent(node, context, path);
+    case 'html_flow': {
+      // Native HTML intentionally has no artificial blank paragraph. The
+      // canonical carrier still needs to retain an unmarked empty caret leaf.
+      const empty = node.childCount === 1 && node.child(0).isText && node.child(0).text === '' && !node.child(0).marks.length;
+      // Physical newlines are Markdown block boundaries; keep literal flow
+      // CR/LF as character references, like the container carrier below.
+      const body = schemaHTML(node, context, path);
+      return `<div data-fountain-html-flow="true"${empty ? ' data-fountain-empty-text="true"' : ''}>${body}</div>`;
+    }
     case 'html_container': case 'definition_list':
-      report(context, 'node', node.type.name, path, `${node.type.name === 'definition_list' ? 'Definition list' : 'HTML container'} projected as HTML: re-import requires an HTML-enabled Markdown reader. Arbitrary schema metadata is not guaranteed to survive the HTML boundary.`);
-      return HTMLExporter.export(node, { document: false }).replace(/\r/g, '&#13;').replace(/\n/g, '&#10;');
+      return schemaHTML(node, context, path);
     case 'bullet_list': case 'ordered_list': case 'task_list': return node.content.map((item, index) => {
       const marker = node.type.name === 'ordered_list'
         ? `${((node.attrs.start as number) + index) % 1e9}${alternateListMarker ? ')' : '.'} `
@@ -535,7 +596,8 @@ function render(
     case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;
     case 'image_super': {
       const image = link(escapeInline(String(node.attrs.alt ?? ''), false), node.attrs.src, node.attrs.title, context, true);
-      return `${image}${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
+      const caption = node.childCount ? inlineContent(node, context, path) : escapeInline(String(node.attrs.caption ?? ''));
+      return `${image}${caption ? `\n_${caption}_` : ''}`;
     }
     case 'audio':
       report(context, 'node', node.type.name, path, 'Typed audio is projected to a link and cannot be reconstructed from Markdown alone.');
@@ -551,14 +613,14 @@ function render(
       return `${link(`Embedded content: ${escapeInline(String(node.attrs.title || node.attrs.provider || 'Open'))}`, node.attrs.src, '', context)}${node.attrs.caption ? `\n_${escapeInline(String(node.attrs.caption))}_` : ''}`;
     case 'table': {
       if (context.options.tableFormat === 'html') {
-        report(context, 'node', 'table', path, 'Table projected as HTML: re-import requires an HTML-enabled Markdown reader. Arbitrary schema metadata is not guaranteed to survive the HTML boundary.');
         // CommonMark HTML blocks end at a blank physical line. Keep authored
         // code/text newlines as HTML character references, not block terminators.
-        return HTMLExporter.export(node, { document: false }).replace(/\r/g, '&#13;').replace(/\n/g, '&#10;');
+        return schemaHTML(node, context, path);
       }
       const firstRow = node.content[0];
       const alignments = firstRow?.content.map(tableAlignment) ?? [];
       return node.content.map((row, rowIndex) => {
+        reportNodeAttributes(row, context, [...path, rowIndex]);
         if (row.content.some(cell => cell.type.name !== (rowIndex === 0 ? 'table_header' : 'table_cell'))) {
           report(context, 'node', 'table_row', [...path, rowIndex], 'Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.');
         }

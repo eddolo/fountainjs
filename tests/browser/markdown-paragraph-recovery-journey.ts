@@ -21,7 +21,12 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   const source = page.getByLabel('Markdown input', { exact: true });
   await source.fill('Before <h2>Recovered heading</h2> After');
   const output = page.locator('.demo-output');
-  await output.getByRole('button', { name: 'html', exact: true }).click();
+  const selectHTML = async () => {
+    const button = output.getByRole('button', { name: 'html', exact: true });
+    await button.click();
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+  };
+  await selectHTML();
   await expect(output.locator('pre')).toContainText('&lt;h2&gt;');
   await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
   await expect(output.locator('pre')).toContainText('<h2>Recovered heading</h2>');
@@ -102,7 +107,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto('/demos/node-markdown.html');
   await source.fill('Before <pre>&#13;\nfirst line&#13;\n  second line\nlast line</pre> After');
-  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await selectHTML();
   await page.getByRole('checkbox', { name: 'Recover block tags inside paragraphs' }).check();
   await expect(output.locator('pre')).toContainText('first line\n  second line\nlast line');
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Preformatted HTML became a code block');
@@ -139,7 +144,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto('/demos/node-markdown.html');
   await source.fill('<div><pre>\n\n# Recovery note\n\nfirst line\n  second line\n\n```\nconst n = 1;\n```\n\n</pre></div>');
-  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await selectHTML();
   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
   const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
   await expect(output.locator('pre')).toContainText(recoveredText);
@@ -182,7 +187,7 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await page.setViewportSize({ width: 1440, height: 960 });
   await page.goto('/demos/node-markdown.html');
   await source.fill('<div>\n\n```c++\nint n = 1;\n```\n\n</div>');
-  await output.getByRole('button', { name: 'html', exact: true }).click();
+  await selectHTML();
   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
   await expect(output.locator('pre')).toContainText('data-language="c++"');
   const cppHTML = await output.locator('pre').innerText();

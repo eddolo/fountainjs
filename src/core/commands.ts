@@ -25,7 +25,7 @@ export interface TableOptions {
 }
 
 const SAFE_CONTENT_URL = /^(https?:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
-const TEXT_BLOCKS = ['paragraph', 'heading'];
+const TEXT_BLOCKS = ['paragraph', 'heading', 'html_flow'];
 const LIST_ITEMS = ['list_item', 'task_item'];
 
 function dispatchTextSelection(editor: Editor, transaction: ReturnType<Editor['createTransaction']>, path: readonly number[], from: number, to: number): boolean {
@@ -63,7 +63,7 @@ function replaceAllSelection(editor: Editor, text: string): boolean {
 function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: string): boolean {
   const selected = getNodeAtPath(editor.state.doc, selection.nodePath);
   const typed = text === undefined ? undefined : editor.state.schema.text(text, editor.state.storedMarks);
-  const fillEmptyBlock = typed && selected.type.isBlock && !selected.type.spec.atom && !selected.childCount
+  const fillEmptyBlock = typed && (selected.type.isBlock || selected.type.isInline && selected.type.spec.code) && !selected.type.spec.atom && !selected.childCount
     && selected.type.spec.content && matchesContentExpression([typed], selected.type.spec.content);
   const replacement = text === undefined
     ? []
@@ -86,7 +86,7 @@ function replaceNodeSelection(editor: Editor, selection: NodeSelection, text?: s
     return dispatchIfValid(editor, transaction);
   }
   if (text !== undefined) {
-    const caretPath = selected.type.isInline ? selection.nodePath : [...selection.nodePath, 0];
+    const caretPath = selected.type.isInline && !fillEmptyBlock ? selection.nodePath : [...selection.nodePath, 0];
     transaction = transaction.setSelection(Selection.cursor(caretPath, text.length));
   }
   if (dispatchIfValid(editor, transaction)) return true;
@@ -493,7 +493,7 @@ export function insertDocument(editor: Editor, document: Node): boolean {
   // Only unwrap that known text container. Atomic/leaf blocks have no children,
   // so a generic `every(isInline)` check is vacuously true and used to report a
   // successful paste while silently inserting nothing.
-  if (single?.type === state.schema.nodes.paragraph
+  if (single && (single.type === state.schema.nodes.paragraph || single.type === state.schema.nodes.html_flow)
     && single.content.every((node) => node.type.isInline)
     && parent.content.every((node) => node.type.isInline)) {
     const text = target.text ?? '';
@@ -637,7 +637,7 @@ function moveToNodeEdge(editor: Editor, path: readonly number[], direction: Sele
   return true;
 }
 
-/** Moves between a text boundary, an adjacent atomic node, a node selection, and a gap. */
+/** Moves between a text boundary, an adjacent whole-node target, a node selection, and a gap. */
 export function selectAdjacentNode(editor: Editor, direction: SelectionDirection): boolean {
   const { state } = editor;
   const selection = state.selection;
@@ -672,7 +672,7 @@ export function selectAdjacentNode(editor: Editor, direction: SelectionDirection
   const candidateIndex = direction === 'backward' ? blockIndex - 1 : blockIndex + 1;
   if (candidateIndex < 0 || candidateIndex >= state.doc.childCount) return false;
   const candidate = state.doc.child(candidateIndex);
-  if (!candidate.type.spec.atom) return false;
+  if (!candidate.type.spec.atom && !candidate.type.spec.selectable) return false;
   editor.dispatch(state.createTransaction().setSelection(new NodeSelection(state.doc, [candidateIndex])));
   return true;
 }
@@ -893,7 +893,7 @@ export function insertHardBreak(editor: Editor): boolean {
   const index = path.at(-1) as number;
   const replacement = [
     ...(before ? [target.withText(before)] : []),
-    hardBreak.create(),
+    hardBreak.create({}, [], undefined, state.storedMarks),
     state.schema.text(after, state.storedMarks),
   ];
   const landing = [...path.slice(0, -1), index + (before ? 2 : 1)];
@@ -922,7 +922,9 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
     for (const blockPath of blockPaths) {
       const block = getNodeAtPath(transaction.doc, blockPath);
       if (!TEXT_BLOCKS.includes(block.type.name)) return false;
-      transaction.replaceNode(blockPath, [type.create(attrs, block.content)]);
+      const emphasis = block.attrs.emphasis === 'explicit' && type.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {};
+      const layout = block.attrs.layout !== undefined && type.spec.attrs?.layout ? { layout: block.attrs.layout } : {};
+      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...attrs }, block.content)]);
     }
     state.schema.validate(transaction.doc);
   } catch { return false; }
@@ -1225,8 +1227,13 @@ export function splitBlock(editor: Editor): boolean {
   const leftText = (text.text ?? '').slice(0, from);
   const rightText = (text.text ?? '').slice(to);
   const left = block.copy([...block.content.slice(0, textIndex), text.withText(leftText)]);
-  const nextType = block.type.name === 'heading' ? state.schema.nodes.paragraph : block.type;
-  const right = nextType.create(block.type === nextType ? block.attrs : {}, [text.withText(rightText), ...block.content.slice(textIndex + 1)]);
+  const nextType = ['heading', 'html_flow'].includes(block.type.name) ? state.schema.nodes.paragraph : block.type;
+  const nextAttrs = block.type === nextType ? block.attrs
+    : {
+        ...(block.attrs.emphasis === 'explicit' && nextType.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {}),
+        ...(block.attrs.layout !== undefined && nextType.spec.attrs?.layout ? { layout: block.attrs.layout } : {}),
+      };
+  const right = nextType.create(nextAttrs, [text.withText(rightText), ...block.content.slice(textIndex + 1)]);
   const itemPath = blockPath.slice(0, -1);
   const item = itemPath.length ? getNodeAtPath(state.doc, itemPath) : undefined;
   if (item && LIST_ITEMS.includes(item.type.name)) {

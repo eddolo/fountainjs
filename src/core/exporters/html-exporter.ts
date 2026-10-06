@@ -1,8 +1,16 @@
 import type { EditorState } from '../state';
 import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
 import { isSafeURL } from '../url';
-
-const SOURCE_NESTED_MARKS = new Set(['em', 'strong', 'strike', 'code', 'link']);
+import { tableBackground } from '../table-background';
+import { quoteDOMAttributes, textBlockDOMAttributes } from '../explicit-emphasis';
+import { isMathExpression } from '../math-expression';
+import { imageCaptionDOMAttributes } from '../image-caption';
+import { tableDOMSpec, tableRowDOMSpec } from '../table-layout';
+import { cellAppearanceDOMAttributes } from '../table-appearance';
+import type { NodeDOMContext } from '../schema';
+import { readDocumentPageSettings } from '../page-settings';
+import { htmlCommentSource } from '../html-comment';
+import { literalLinkAttributes } from '../link-destination';
 
 export interface HTMLExportOptions {
   document?: boolean;
@@ -19,6 +27,12 @@ function safeURL(value: unknown, allowDataImage = false): string {
   return isSafeURL(url, { allowDataImage }) ? escapeHTML(url) : '';
 }
 
+function mathExpressionAttribute(node: Node): string {
+  return isMathExpression(node.attrs.expression)
+    ? ` data-fountain-math-expression="${escapeHTML(JSON.stringify(node.attrs.expression))}"`
+    : '';
+}
+
 const SAFE_CUSTOM_TAGS = new Set([
   'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo',
   'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'data',
@@ -30,6 +44,7 @@ const SAFE_CUSTOM_TAGS = new Set([
   'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'u', 'ul',
   'var', 'video', 'wbr',
 ]);
+const VOID_CUSTOM_TAGS = new Set(['br', 'col', 'hr', 'img', 'source', 'track', 'wbr']);
 
 function safeStyle(value: unknown): string {
   const style = String(value ?? '').trim();
@@ -54,7 +69,10 @@ function renderDOMAttributes(attrs: Attributes): string {
       return style ? ` style="${escapeHTML(style)}"` : '';
     }
     if (name === 'target' && !['_blank', '_self', '_parent', '_top'].includes(String(value))) return '';
-    return value === true ? ` ${name}` : ` ${name}="${escapeHTML(value)}"`;
+    const escaped = name === 'data-fountain-html-href'
+      ? escapeHTML(value).replace(/[\t\n\r]/gu, c => `&#${c.charCodeAt(0)};`)
+      : escapeHTML(value);
+    return value === true ? ` ${name}` : ` ${name}="${escaped}"`;
   }).join('');
 }
 
@@ -72,7 +90,7 @@ function renderDOMOutputSpec(spec: DOMOutputSpec, content = ''): string {
     return Array.isArray(child) ? renderDOMOutputSpec(child, content) : '';
   }).join('');
   const opening = `<${tagName}${hasAttrs ? renderDOMAttributes(possibleAttrs as Attributes) : ''}>`;
-  return new Set(['br', 'col', 'hr', 'img', 'source', 'track', 'wbr']).has(normalizedTag)
+  return VOID_CUSTOM_TAGS.has(normalizedTag)
     ? opening
     : `${opening}${children}</${tagName}>`;
 }
@@ -133,17 +151,20 @@ function playbackAttributes(node: Node): string {
   return `src="${src}"${title}${booleanAttribute('controls', node.attrs.controls)}${booleanAttribute('autoplay', node.attrs.autoplay)}${booleanAttribute('loop', node.attrs.loop)}${booleanAttribute('muted', node.attrs.muted)} preload="${preload}"${controlsList}${crossOrigin}${booleanAttribute('disableremoteplayback', node.attrs.disableRemotePlayback)}`;
 }
 
-function tableCellSizeAttributes(node: Node): string {
+function tableCellSizeAttributes(node: Node, context: NodeDOMContext): string {
   const colspan = Number(node.attrs.colspan) || 1;
   const widths = Array.isArray(node.attrs.colwidth) ? node.attrs.colwidth.map(Number) : [];
   const valid = widths.length === colspan && widths.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000);
-  return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}" style="width:${widths.reduce((sum, width) => sum + width, 0)}px"` : ''}`;
+  const background = tableBackground(node.attrs.background);
+  const appearance = cellAppearanceDOMAttributes(node, context);
+  const styles = [appearance.style, valid ? `width:${widths.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
+  return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}"` : ''}${renderDOMAttributes({ ...appearance, ...(styles ? { style: styles } : {}) })}`;
 }
 
 function renderMarks(content: string, marks: readonly Mark[]): string {
-  const ordered = marks.every((mark) => SOURCE_NESTED_MARKS.has(mark.type.name))
-    ? [...marks].reverse()
-    : marks;
+  // Parse walks wrappers outside-in. Build them inside-out for every mark,
+  // including font marks, so a round trip retains the original mark sequence.
+  const ordered = [...marks].reverse();
   for (const mark of ordered) {
     switch (mark.type.name) {
       case 'strong': content = `<strong>${content}</strong>`; break;
@@ -156,11 +177,11 @@ function renderMarks(content: string, marks: readonly Mark[]): string {
       case 'subscript': content = `<sub>${content}</sub>`; break;
       case 'superscript': content = `<sup>${content}</sup>`; break;
       case 'link': {
-        const rawHref = String(mark.attrs.href ?? '').trim();
+        const rawHref = String(mark.attrs.href ?? '');
         const title = mark.attrs.title ? ` title="${escapeHTML(mark.attrs.title)}"` : '';
         const target = mark.attrs.target === '_self' ? '_self' : '_blank';
         content = isSafeURL(rawHref, { allowEmpty: true })
-          ? `<a href="${escapeHTML(rawHref)}"${title} target="${target}" rel="noopener noreferrer nofollow">${content}</a>`
+          ? `<a${renderDOMAttributes(literalLinkAttributes(rawHref, mark.attrs.htmlHref))}${title} target="${target}" rel="noopener noreferrer nofollow">${content}</a>`
           : content;
         break;
       }
@@ -177,6 +198,10 @@ function renderText(node: Node): string {
 }
 
 function mergeAdjacentMarks(value: string): string {
+  // Comment data is opaque source, not markup to optimize. In particular,
+  // closing/opening mark strings inside it must not be coalesced.
+  if (value.includes('<!--')) return value.split(/(<!--[\s\S]*?-->)/u)
+    .map(part => part.startsWith('<!--') ? part : mergeAdjacentMarks(part)).join('');
   let next: string;
   while ((next = value
     .replace(/<\/(em|strong|s)><\1>/g, '')
@@ -193,14 +218,21 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     return renderMarks(renderNode(node.withMarks([]), document, path), node.marks);
   }
   const context = { document, path };
+  if (node.type.name === 'html_comment') return htmlCommentSource(node.attrs.data);
   const children = () => mergeAdjacentMarks(node.content
     .map((child, index) => renderNode(child, document, [...path, index]))
     .join(''));
   switch (node.type.name) {
-    case 'doc': return node.content.map((child, index) => renderNode(child, document, [index])).join('\n');
-    case 'paragraph': return `<p${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</p>`;
-    case 'heading': return `<h${Number(node.attrs.level) || 1}${node.attrs.align !== 'left' ? ` style="text-align:${escapeHTML(node.attrs.align)}"` : ''}>${children()}</h${Number(node.attrs.level) || 1}>`;
-    case 'blockquote': return `<blockquote>${children()}</blockquote>`;
+    case 'doc': return node.content.map((child, index) => {
+      // An anonymous inline flow already owns its whitespace. Pretty-printing
+      // separators beside it would become new editable data on HTML reopen.
+      const separator = index && child.type.name !== 'html_flow' && node.child(index - 1).type.name !== 'html_flow' ? '\n' : '';
+      return separator + renderNode(child, document, [index]);
+    }).join('');
+    case 'html_flow': return children();
+    case 'paragraph': return `<p${node.childCount === 0 ? ' data-fountain-empty="block"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</p>`;
+    case 'heading': return `<h${Number(node.attrs.level) || 1}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</h${Number(node.attrs.level) || 1}>`;
+    case 'blockquote': return `<blockquote${renderDOMAttributes(quoteDOMAttributes(node.attrs))}>${children()}</blockquote>`;
     case 'bullet_list': return `<ul>${children()}</ul>`;
     case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}>${children()}</ol>`;
     case 'list_item': return `<li>${children()}</li>`;
@@ -209,11 +241,11 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"><code class="language-${escapeHTML(node.attrs.language)}">${escapeHTML(node.textContent)}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';
-    case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
+    case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
     case 'mention': case 'emoji': return node.type.spec.toDOM
       ? renderDOMOutputSpec(node.type.spec.toDOM(node, context), children())
       : escapeHTML(node.textContent);
-    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}" role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
+    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'inline_image': {
       const attributes = imageAttributes(node);
       if (!attributes) return '';
@@ -224,11 +256,12 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     case 'image_super': {
       const attributes = imageAttributes(node);
       if (!attributes) return '';
-      const caption = escapeHTML(node.attrs.caption);
+      const caption = node.childCount ? children() : escapeHTML(node.attrs.caption);
       const width = imageSize(node.attrs.width, '100%');
       const height = imageSize(node.attrs.height, 'auto');
       const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
-      return `<figure data-align="${align}" style="width:${escapeHTML(width)};max-width:100%"><img ${attributes} style="width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+      const captionAttributes = Object.entries(imageCaptionDOMAttributes(node.attrs)).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
+      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="width:${escapeHTML(width)};max-width:100%"><img ${attributes} style="width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
     }
     case 'audio': {
       const attributes = playbackAttributes(node);
@@ -267,10 +300,10 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
       return `<figure data-fountain-media="embed" data-provider="${escapeHTML(node.attrs.provider)}" data-align="${align}" style="width:${escapeHTML(width)};max-width:100%"><iframe class="fountain-embed" src="${src}" title="${escapeHTML(node.attrs.title)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="${escapeHTML(node.attrs.sandbox)}"${allow}${booleanAttribute('allowfullscreen', node.attrs.allowFullscreen)} style="width:100%;height:${escapeHTML(height)}"></iframe>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
     }
     case 'figcaption': return `<figcaption>${children()}</figcaption>`;
-    case 'table': return `<table><tbody>${children()}</tbody></table>`;
-    case 'table_row': return `<tr>${children()}</tr>`;
-    case 'table_header': return `<th${tableCellSizeAttributes(node)} scope="${escapeHTML(node.attrs.scope || 'col')}">${children()}</th>`;
-    case 'table_cell': return `<td${tableCellSizeAttributes(node)}>${children()}</td>`;
+    case 'table': return renderDOMOutputSpec(tableDOMSpec(node), children());
+    case 'table_row': return renderDOMOutputSpec(tableRowDOMSpec(node), children());
+    case 'table_header': return `<th${tableCellSizeAttributes(node, context)} scope="${escapeHTML(node.attrs.scope || 'col')}">${children()}</th>`;
+    case 'table_cell': return `<td${tableCellSizeAttributes(node, context)}>${children()}</td>`;
     default: return node.type.spec.toDOM ? renderDOMOutputSpec(node.type.spec.toDOM(node, context), children()) : children();
   }
 }
@@ -282,9 +315,17 @@ export class HTMLExporter {
     const node = 'doc' in stateOrNode ? stateOrNode.doc : stateOrNode;
     const fragment = renderNode(node);
     if (options.document === false) return fragment;
+    const settings = node.type === node.type.schema.topNodeType ? readDocumentPageSettings(node) : undefined;
+    const pageAttribute = settings ? ` data-fountain-page-settings="${escapeHTML(JSON.stringify(settings))}"` : '';
     const title = escapeHTML(options.title ?? 'FountainJS document');
-    const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em 1.5em}:is(dt,dd)>p{margin:.3em 0}</style>`;
-    return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>${title}</title>\n${styles}\n</head>\n<body>\n${fragment}\n</body>\n</html>`;
+    const first = node.type.name === 'doc' ? node.content[0] : node;
+    const last = node.type.name === 'doc' ? node.content.at(-1) : node;
+    const leading = first?.type.name === 'html_flow' ? '' : '\n';
+    const trailing = last?.type.name === 'html_flow' ? '' : '\n';
+    // Every paragraph occupies at least its own line, including empty marked
+    // runs. CSS keeps the model/text untouched; fragment hosts own their styles.
+    const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em 1.5em}:is(dt,dd)>p{margin:.3em 0}</style>`;
+    return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>${title}</title>\n${styles}\n</head>\n<body${pageAttribute}>${leading}${fragment}${trailing}</body>${trailing}</html>`;
   }
 
   static export(stateOrNode: EditorState | Node, options?: HTMLExportOptions): string {

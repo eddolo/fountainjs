@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   CellSelection,
+  GapSelection,
   EditorView,
   HTMLExporter,
   HTMLImporter,
@@ -25,6 +26,7 @@ import {
   toggleTableHeaderColumn,
   toggleTableHeaderRow,
   undo,
+  redo,
 } from '../src';
 
 const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
@@ -40,6 +42,114 @@ const table = (rows: readonly (readonly ReturnType<typeof cell>[])[]) => ({
 const documentWith = (value: ReturnType<typeof table>) => ({ type: 'doc', content: [value] });
 
 describe('production table editing', () => {
+  it('applies only the latest selection when a cell transaction supersedes a queued gap', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: documentWith(table([[cell('A'), cell('B')]])) });
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const handle = view.dom.querySelector<HTMLElement>('.fountain-table-cell__resize-handle')!;
+    let ranges: ReturnType<typeof vi.spyOn> | undefined;
+    try {
+      handle.focus();
+      await Promise.resolve();
+      ranges = vi.spyOn(document.getSelection()!, 'addRange');
+      editor.dispatch(editor.state.createTransaction().setSelection(new GapSelection(editor.state.doc, 0)));
+      editor.dispatch(editor.state.createTransaction().setSelection(new CellSelection(editor.state.doc, [0, 0, 0])));
+      await Promise.resolve();
+      expect(ranges).toHaveBeenCalledTimes(1);
+      const range = ranges.mock.calls[0]![0] as Range;
+      expect(range.startContainer).toBe(view.dom.querySelector('[data-fountain-path="0.0"]'));
+      expect(range.startOffset).toBe(0);
+      expect(range.endContainer).toBe(range.startContainer);
+      expect(range.endOffset).toBe(1);
+      expect(editor.state.selection.kind).toBe('cell');
+      expect(view.dom.querySelector('[data-fountain-path="0.0.0"]')?.getAttribute('data-fountain-selected-cell')).toBe('true');
+    } finally { ranges?.mockRestore(); view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it('projects resize geometry once per immutable table, including movement and remote-row widths', () => {
+    const rows = Array.from({ length: 30 }, (_, row) => Array.from({ length: 10 }, (_, column) =>
+      cell(`${row}:${column}`, row === 29 ? { colwidth: [80 + column * 10] } : {})));
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: documentWith(table(rows)) });
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const creates = vi.spyOn(TableMap, 'create');
+    const view = new EditorView(mount, editor);
+    try {
+      const handles = () => [...view.dom.querySelectorAll<HTMLElement>('.fountain-table-cell__resize-handle')];
+      expect(handles()).toHaveLength(300);
+      expect(handles().slice(0, 10).map(handle => handle.getAttribute('aria-valuenow')))
+        .toEqual(Array.from({ length: 10 }, (_, column) => String(80 + column * 10)));
+      // Appearance and resize each own a private projection, not 300 grid builds.
+      expect(creates.mock.calls.length).toBeLessThan(10);
+      creates.mockClear();
+      editor.dispatch(editor.state.createTransaction().replace(0, 0, [editor.state.schema.node('paragraph', {}, [editor.state.schema.text('Before')])]));
+      expect(handles()[9]!.getAttribute('aria-valuenow')).toBe('170');
+      expect(creates.mock.calls.length).toBeLessThan(10);
+      handles()[9]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+      expect(editor.state.doc.child(1).child(0).child(9).attrs.colwidth).toEqual([175]);
+      expect(handles()[299]!.getAttribute('aria-valuenow')).toBe('175');
+      expect(creates.mock.calls.length).toBeLessThan(15);
+    } finally { creates.mockRestore(); view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it('announces column widths before interaction and tracks resize, cancellation and history', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: documentWith(table([[cell('A'), cell('B')], [cell('C'), cell('D')]])) });
+    const original = editor.state.doc.toJSON();
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const handles = () => [...view.dom.querySelectorAll<HTMLElement>('.fountain-table-cell__resize-handle')];
+    try {
+      for (const handle of handles()) {
+        expect(handle.getAttribute('aria-valuemin')).toBe('40');
+        expect(handle.getAttribute('aria-valuemax')).toBe('2000');
+        expect(handle.getAttribute('aria-valuenow')).toBe('120');
+        expect(handle.getAttribute('aria-valuetext')).toBe('120 pixels');
+      }
+      handles()[0]!.focus();
+      await Promise.resolve();
+      expect(document.activeElement).toBe(handles()[0]);
+      handles()[0]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+      await Promise.resolve();
+      expect(document.activeElement).toBe(handles()[0]);
+      expect(handles().map(handle => handle.getAttribute('aria-valuenow'))).toEqual(['125', '120', '125', '120']);
+      expect(undo(editor)).toBe(true);
+      expect(editor.state.doc.toJSON()).toEqual(original);
+      expect(handles().map(handle => handle.getAttribute('aria-valuenow'))).toEqual(['120', '120', '120', '120']);
+      expect(redo(editor)).toBe(true);
+      handles()[0]!.dispatchEvent(new MouseEvent('pointerdown', { button: 0, clientX: 10, bubbles: true, cancelable: true }));
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 60 }));
+      expect(handles()[0]!.getAttribute('aria-valuenow')).toBe('175');
+      expect(handles()[0]!.getAttribute('aria-valuetext')).toBe('175 pixels');
+      window.dispatchEvent(new MouseEvent('pointercancel'));
+      expect(handles()[0]!.getAttribute('aria-valuenow')).toBe('125');
+      expect(handles()[0]!.getAttribute('aria-valuetext')).toBe('125 pixels');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it('announces the logical resized column of a merged cell, not its whole span', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: documentWith(table([
+        [cell('Merged', { colspan: 2, colwidth: [150, 250] }), cell('Other', { colwidth: [90] })],
+        [cell('Left', { colwidth: [150] }), cell('Right', { colwidth: [250] }), cell('Other row', { colwidth: [90] })],
+      ])) });
+    const original = editor.state.doc.toJSON();
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const handle = () => view.dom.querySelector<HTMLElement>('[data-fountain-path="0.0.0"] .fountain-table-cell__resize-handle')!;
+    try {
+      expect(handle().getAttribute('aria-valuenow')).toBe('250');
+      handle().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true, bubbles: true, cancelable: true }));
+      expect(handle().getAttribute('aria-valuenow')).toBe('275');
+      expect(editor.state.doc.child(0).child(0).child(0).attrs.colwidth).toEqual([150, 275]);
+      expect(editor.state.doc.child(0).child(1).child(1).attrs.colwidth).toEqual([275]);
+      expect(editor.state.doc.child(0).child(1).child(2).attrs.colwidth).toEqual([90]);
+      expect(undo(editor)).toBe(true);
+      expect(editor.state.doc.toJSON()).toEqual(original);
+      expect(handle().getAttribute('aria-valuenow')).toBe('250');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it('maps merged geometry and expands rectangular cell selections around spans', () => {
     const editor = createEditor({
       schema: StarterKit.schema,

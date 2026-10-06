@@ -17,6 +17,23 @@ After npm approval, install it explicitly with `npm install fountainjs-editor@0.
 The intended default tag is `latest`; npm tag changes require separate maintainer
 approval. See the [checkpoint and known limitations](docs/RELEASE_0_4_0_BETA_2.md).
 Newer changes listed under Unreleased are not in this package.
+The latest local [Markdown/HTML work](docs/MARKDOWN_DOCUMENT_FLOW.md) adds explicit
+inert-comment retention; its optional 613/652 reference profile is not a claim
+of full CommonMark compliance or native document-layout fidelity.
+An additional optional anonymous-flow model repairs the recorded cross-paragraph
+link-spacing case without dropping its whitespace. A stricter URL audit and
+source-bound HTML navigation repair leave the current checkpoint at 613:
+four previously hidden Markdown failures are fixed, the raw HTML regression is
+repaired, and two HTML-control cases now retain their actual navigation intent.
+Raw backslashes and encoded data are not always interchangeable browser
+destinations. [Link integrity and remaining differences](docs/MARKDOWN_DOCUMENT_FLOW.md#link-destination-integrity-and-oracle-correction).
+Its canonical save/reopen path also retains a cleared caret leaf, with public
+unmarked/childless editing examples. These remain unreleased; real Safari
+clipboard and broader native-format fidelity are not certified by those checks.
+The latest local [DOCX audit](docs/DOCX_FIDELITY_CHECKPOINT.md#source-owned-quote-appearance-and-desktop-audit-2026-10-05)
+fixes doubled imported quote decoration and checks real caption editing,
+Undo/Redo and native re-export. Independent-preview disagreements remain visible;
+this unreleased work does not certify native Word page fidelity.
 Try the [real-world workflow demos](https://eddolo.github.io/fountainjs/workflows.html):
 a GitLab-style issue editor and a Todoist-style task workspace, with linked
 [API walkthroughs](docs/WORKFLOW_DEMOS.md). These run the current development
@@ -276,7 +293,7 @@ the [ruby-annotation guide](docs/RUBY.md).
 ## Complete text styles
 
 `CoreExtension` and `StarterKit` include validated foreground/background
-colour, font-family, font-size, and line-height marks. The isolated
+colour, font-family, font-size, line-height, and signed character-spacing marks. The isolated
 `fountainjs-editor/text-style` entry exposes framework-neutral commands and
 selection inspection for both the supplied UI and custom controls:
 
@@ -286,11 +303,13 @@ import {
   setFontFamily,
   setFontSize,
   setLineHeight,
+  setLetterSpacing,
 } from 'fountainjs-editor/text-style'
 
 setFontFamily(editor, 'Atkinson Hyperlegible, sans-serif')
 setFontSize(editor, '18px')
 setLineHeight(editor, 1.7)
+setLetterSpacing(editor, '-0.5pt')
 console.log(getActiveTextStyle(editor))
 ```
 
@@ -695,6 +714,12 @@ accessible names. Stable group/action IDs let a product reorder groups and
 actions, hide controls, replace labels or icons, and wrap or replace any action.
 `FountainComposer` accepts the same configuration through `toolbarProps`.
 
+Unreleased configuration forms have named trigger ownership, keyboard opening
+focus and composition-safe Escape/Close return focus. Native fields keep their
+editing keys, and controls wrap inside the editor rather than clipping desktop
+Link or Find/Replace actions. These are non-modal forms, not focus traps or an
+accessibility certification; see the [toolbar contract](docs/TOOLBAR.md).
+
 ```tsx
 <FountainComposer editor={editor} toolbarProps={{
   toolbarLabel: 'Article formatting',
@@ -722,8 +747,9 @@ block elsewhere. The Highlight control opens its own colour/apply/remove panel.
 
 `MathExtension` is a first-party but opt-in module. It adds portable
 `inline_math` and `math_block` nodes, `$...$` / `$$...$$` typing and paste
-rules, insertion/update commands, accessible source fallback, and lossless
-JSON plus HTML/Markdown/text interchange.
+rules, insertion/update commands, accessible source fallback, and portable
+JSON plus HTML/Markdown/text interchange. A supported imported equation may
+also retain a typed semantic tree in JSON/HTML; Markdown/text project its TeX.
 
 ```ts
 import katex from 'katex'
@@ -743,7 +769,9 @@ const math = createMathExtension({
 const rendered = composeExtensions([...StarterKit.extensions, math])
 ```
 
-The editor stores TeX source—not renderer HTML. KaTeX is deliberately not a
+The editor stores TeX source—not renderer HTML. Supported DOCX imports may also
+store a validated platform-neutral `MathExpression`; editing the TeX clears that
+retained interpretation in the same undoable transaction. KaTeX is deliberately not a
 runtime dependency: applications choose their renderer/version and may provide
 another `MathRenderer` that returns a DOM node. Renderer errors keep the source
 visible and editable through `setMathSource`, and selecting a formula reveals
@@ -1099,6 +1127,25 @@ const document = ServerHTMLImporter.parse('<h1>Hello</h1><p>From Node.</p>', sch
 It includes malformed-input diagnostics, fail-explicit browser-only extension
 rules, and configurable hard resource limits. See the
 [server HTML contract](docs/SERVER_HTML.md).
+
+Unreleased: opt-in `sourceTokens: true` exposes immutable tag-boundary spelling
+with explicit HTML/Markdown provenance, not file offsets. The separate
+`fountainjs-editor/html/inert` factory preserves registered unknown inline tags
+as bounded data and editable children, never their behavior or layout. See the
+[retention/security contract and Node/Markdown workshop](docs/HTML_INERT_SOURCE.md).
+
+The same optional entry offers `createInertHTMLRawTextExtension` for explicitly
+registered script/style/textarea source. It shows editable, literal code with
+a visible inert-source badge—no execution, live CSS or form controls. HTML
+newline/entity parsing rules still apply; this is preservation, not original
+document rendering or a CommonMark conformance claim.
+
+`createInertHTMLBlockExtension({ tags })` retains explicitly owned unknown
+wrappers with editable headings, lists, tables and other supported block
+children. Original tags, handlers and styles stay inert. Imported empty wrappers
+remain empty until `appendInertHTMLBlockParagraph(editor, path)` adds an undoable
+paragraph. Try the structured block sample in the same workshop. Canonical
+text-leaf shape changes remain reported, not claimed as exact native retention.
 
 Persisted documents can use an explicit, independently versioned envelope.
 The migration runner accepts historical bare `NodeJSON` as format version 1,

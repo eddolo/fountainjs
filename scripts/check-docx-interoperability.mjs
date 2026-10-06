@@ -99,16 +99,18 @@ created.save(python_path)
   }
 
   const imported = importDOCX(await readFile(pythonPath), schema);
-  if (imported.report.fidelity !== 'lossy' || imported.report.issues.length !== 2
-    || imported.report.issues.some(issue => issue.code !== 'content-control-unwrapped')) {
-    throw new Error('Independent DOCX control projection did not report exactly its two removed controls.');
+  const controlIssues = imported.report.issues.filter(issue => issue.code === 'content-control-unwrapped');
+  if (imported.report.fidelity !== 'lossy' || controlIssues.length !== 2
+    || controlIssues.some(issue => !issue.path?.length)
+    || imported.report.issues.some(issue => issue.severity === 'error')) {
+    throw new Error(`Independent DOCX control projection did not report two located control losses without errors: ${JSON.stringify(imported.report.issues)}`);
   }
   if (!imported.document.content.some((node) => node.type.name === 'image_super')) throw new Error('Independent DOCX image did not import.');
   if (!imported.document.content.some((node) => node.type.name === 'table')) throw new Error('Independent DOCX table did not import.');
   if (!imported.document.textContent.includes('Strong from Python')) throw new Error('Independent DOCX text did not import.');
   const importedTable = imported.document.content.find(node => node.type.name === 'table');
   if (importedTable?.child(0).child(0).textContent !== 'Producer') throw new Error('Independent DOCX cell-control content did not import.');
-  console.log('python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with explicit behavior-loss warnings.');
+  console.log(`python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (${imported.report.issues.length - controlIssues.length} additional style/interchange diagnostics retained).`);
 } finally {
   await rm(folder, { recursive: true, force: true });
 }

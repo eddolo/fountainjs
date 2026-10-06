@@ -3,5 +3,5 @@ import { createTableCellNodeView, tableCellAttributes, tableCellDOMAttributes } 
 export const tableCell: NodeSpec = {
   content: 'block+', attrs: tableCellAttributes,
   nodeView: createTableCellNodeView('td'),
-  toDOM: (node) => ['td', tableCellDOMAttributes(node), 0],
+  toDOM: (node, context) => ['td', tableCellDOMAttributes(node, context), 0],
 };

@@ -7,8 +7,10 @@ const limits = Object.freeze({
   'dist/index.cjs': 93 * kibibyte,
   // The headless facade exports the existing engine and portable utilities;
   // shared implementation chunks are counted by the aggregate ceilings.
-  'dist/core.js': 8 * kibibyte,
-  'dist/core.cjs': 8 * kibibyte,
+  // Platform-neutral semantic-math validation adds ~0.4 KiB to the facade.
+  'dist/core.js': 9 * kibibyte,
+  // Row schema metadata reshuffles shared CJS aliases by less than 128 bytes.
+  'dist/core.cjs': 8 * kibibyte + 128,
   // Provider-neutral document tools are an isolated, DOM-free entry. Their
   // bounded reads, complete portable function schemas, strict structural
   // validation, and reviewed schema-valid mutations are all opt-in.
@@ -33,8 +35,47 @@ const limits = Object.freeze({
   // loss reports. Measured 71.2 / 57.0 KiB (+~0.5 each), no new dependency.
   // Versioned glossary controls, schema-validated role restoration and visible
   // paragraph presentation add ~3.7 / 3.1 KiB to this optional boundary only.
-  'dist/docx.js': 75 * kibibyte,
-  'dist/docx.cjs': 61 * kibibyte,
+  // The 2026-09-12 fidelity bridge adds bounded package inventory, footnotes,
+  // header/footer stories, page settings/breaks, styles/themes, paragraph and
+  // table geometry, and native OMML import. The entry is still opt-in and has
+  // no browser or Office runtime; measured raw/gzip output is ~148/44 KiB ESM
+  // and ~120/40 KiB CJS. Keep only a narrow raw regression allowance.
+  // Attached rich image captions reuse editable inline marks/hyperlinks and add
+  // ~0.7 KiB ESM / ~0.4 KiB CJS to this opt-in bridge.
+  // Fixed/automatic layout import/export adds ~0.4 KiB ESM / ~0.3 KiB CJS.
+  // Missing fixed-column geometry must be reported rather than silently filled.
+  // Those diagnostics add ~0.9 / 0.7 KiB; measured 152.1 / 123.0 KiB.
+  // Namespace-aware repeated-header on/off validation adds ~0.4 / 0.3 KiB;
+  // current measured DOCX entries are 152.5 / 123.3 KiB, within these limits.
+  // Direct table/cell border and margin import/export plus located loss reports
+  // add ~6.6 / 5.4 KiB. Identical-duplicate coalescing and conflict diagnostics
+  // add another ~1 / 0.8 KiB. Measured 160.1 / 129.5 KiB; no new dependency.
+  // Independent preferred table width validation/native units add ~2.2 / 1.9
+  // KiB to this optional bridge. Measured 162.3 / 131.4 KiB, no new dependency.
+  // Paragraph font context and native paragraph/run font projection add about
+  // 2.8 KiB ESM / 2.3 KiB CJS. Keep the increase bounded to measured growth.
+  // Break-run retention and unresolved paragraph-font reporting add 0.3 KiB.
+  // Signed character pitch in the native cascade and run import/export adds
+  // about 1.2 / 1.0 KiB. Measured 167.8 / 135.9 KiB; no new dependency.
+  // Located paragraph-mark pitch-loss reporting adds ~0.3 KiB. Keep a half-KiB
+  // allowance rather than widening the unrelated editor/framework ceilings.
+  // Independent repeat intent, strict semantic-cell controls and located
+  // native-policy diagnostics add ~2.1 / 1.7 KiB. No new codec/runtime dependency.
+  // Bounded table-style ancestry, namespace-aware property/edge merging and
+  // used-style loss diagnostics add ~5.4 / 4.4 KiB to this isolated entry.
+  // Measured 175.7 / 142.2 KiB; no new dependency or public API change.
+  // Conditional region selection, inherited overrides, Word row-wide margin
+  // semantics and explicit unsupported/merged-fill diagnostics add ~4.5 / 3.5
+  // KiB. Measured 180.2 / 145.6 KiB; still optional and dependency-free.
+  // Table-owned text uses the existing run/paragraph decoders and cascade,
+  // with Word-specific absolute toggles and explicit Normal-precedence warnings.
+  // Measured 182.1 / 147.1 KiB (+1.9 / 1.5); no new dependency/public API.
+  // Source-owned quote containers now use a neutral native paragraph style
+  // instead of reintroducing Word Quote's border/indent. Shared validation is
+  // reused. Measured 182.7 / 147.6 KiB; add only half a KiB to this optional
+  // entry's ceilings, leaving every editor/framework/CSS/performance cap fixed.
+  'dist/docx.js': 183 * kibibyte,
+  'dist/docx.cjs': 148 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -55,7 +96,9 @@ const limits = Object.freeze({
   // Live AI review plus the optional host-owned conversation surface remain
   // dependency-free and add no provider client or persistence SDK.
   'dist/react.js': 90 * kibibyte,
-  'dist/react.cjs': 67 * kibibyte,
+  // Named configuration panels, trigger ownership/focus and native field keys
+  // add ~1.6 KiB ESM / 1.4 KiB CJS only here; ESM still fits its existing cap.
+  'dist/react.cjs': 68 * kibibyte,
   // Vue remains an external optional peer; only lifecycle/state/view glue ships here.
   'dist/vue.js': 3 * kibibyte,
   'dist/vue.cjs': 3 * kibibyte,
@@ -131,6 +174,13 @@ const limits = Object.freeze({
   // the default editor, React, DOM, and collaboration entries do not import it.
   'dist/html-server.js': 270 * kibibyte,
   'dist/html-server.cjs': 225 * kibibyte,
+  // Explicit unknown-inline preservation is a separate entry, not StarterKit.
+  // The optional entry now includes explicitly inert raw-text capture as well
+  // as unknown-inline preservation. Existing editor-entry/CSS caps stay fixed.
+  // Shared block-wrapper mode + explicit paragraph authoring: measured
+  // 6.0 / 5.1 KiB. No new dependency; default editor/CSS ceilings stay fixed.
+  'dist/html-inert.js': 7 * kibibyte,
+  'dist/html-inert.cjs': 6 * kibibyte,
   // Portable widget definitions and commands, browser lifecycle/focus policy,
   // and the React bridge remain three opt-in surfaces. Hosts pay only for the
   // renderers they actually use.
@@ -175,7 +225,11 @@ const limits = Object.freeze({
   // themeable, responsive, accessible states to the shared stylesheet.
   // Generated-media review adds preview, state, and responsive decision styles
   // without importing a model/provider SDK or changing document rendering.
-  'dist/styles.css': 86 * kibibyte,
+  // Anonymous inline flow must override editable text's pre-wrap policy.
+  // One 93-byte rule; bound the addition at 128 bytes, not a whole new KiB.
+  // Link hit padding, code focus rings and background-preserving structural
+  // highlights add ~0.2 KiB. Bound the stylesheet at 86.4 KiB.
+  'dist/styles.css': 86.4 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -375,7 +429,68 @@ const limits = Object.freeze({
   // Only the aggregate ESM ceiling changes; entry/CSS/CJS caps stay unchanged.
   // Native Web Component form integration adds ~2.2 / 1.9 KiB ESM/CJS.
   // Measured 1407.2 / 1169.7; individual entry and CSS caps remain unchanged.
-  'all ESM runtime code': 1408 * kibibyte,
+  // The optional DOCX fidelity bridge above is the measured aggregate increase;
+  // default editor and framework entry ceilings remain unchanged.
+  // Rich image-caption content plus selectable non-atomic NodeView boundaries
+  // add ~2.2 KiB ESM across the optional format/view entries.
+  // Independent caption alignment/layout projection adds 1.6 KiB ESM (1500.8 total).
+  // Shared fixed-table view/grid projection adds ~1.7 KiB ESM (1502.6 total).
+  // Incomplete fixed-grid diagnostics bring the measured total to 1503.5 KiB.
+  // Repeated-header validation brings the current total to 1503.9 KiB.
+  // Validated portable table appearance and shared context projection plus the
+  // optional native bridge measure 1516.6 KiB after duplicate handling.
+  // Other entry/CSS/perf caps stay fixed.
+  // Preferred table width adds ~3.9 KiB across the native and shared projections.
+  // Default-width policy/reporting and border-inclusive fixed-grid ratios:
+  // measured 1521.2 KiB (+~0.7 KiB), no new dependency. Only this aggregate
+  // ceiling increases 1 KiB; individual entry, CSS and performance caps stay.
+  // Located paragraph-font diagnostics and active-mark break insertion add
+  // about 0.3 KiB to the previously measured font-context total.
+  // Character spacing adds ~4.0 KiB across the mark, commands, toolbar, native
+  // cascade and HTML/Markdown projections. Measured 1529.6 KiB; CSS and
+  // performance limits are unchanged.
+  // Inert body page-settings interchange and paragraph-mark loss diagnostics
+  // bring the measured total to 1530.6 KiB (+~1.0); no dependency or CSS change.
+  // Optional inert comment model/import/export and opaque-data safeguards:
+  // measured 1533.5 KiB, +2.9 KiB; no dependency, core CSS or performance change.
+  // Opt-in anonymous flow/model import, native whitespace boundaries and
+  // normal Enter/paste/join behavior: measured 1535.1 / 1276.9 KiB.
+  // No dependency or entry/performance ceiling changes.
+  // Separate row intent, HTML/page projection and the selectable React control
+  // add ~4.3 KiB overall, including the optional DOCX slice counted above.
+  // Table text projection adds ~1.9 KiB; measured total 1551.8 KiB.
+  // Protected Markdown block image/rule source projection and refusal guards:
+  // +~2.1 KiB, measured 1553.9 KiB; no dependency, entry or performance changes.
+  // Protected pipe-table cell source/default validation adds ~1.5 KiB;
+  // measured 1555.4 KiB. No dependency or entry/CSS/performance cap changes.
+  // Neutral quote DOM/HTML projection, strict marker import, Markdown loss
+  // reporting and the native style above bring the graph to 1556.7 KiB.
+  // Account for this bounded feature cost, not an unbounded safety margin.
+  // Initial resize ARIA values, private per-table geometry/width caching and
+  // control-owned cell selection add ~1.3 KiB; measured 1558.0 KiB. Allow only
+  // 1 KiB more here; individual entry, headless and performance limits remain.
+  // Continuous linked text paths and keyboard browsing/edit entry/paste for
+  // scrolling code and literal code paste add ~3.0 KiB ESM / 2.5 KiB CJS.
+  // Measured totals: 1561.1 / 1298.0 KiB. No runtime dependency.
+  // The same optional React panel behavior measures 1562.7 / 1299.4 KiB total.
+  // Public API, core/headless, CSS and performance limits remain unchanged.
+  // Opt-in lexical inspection and the isolated inert-inline factory add about
+  // 5 KiB ESM / 4 KiB CJS. No default editor import or runtime dependency;
+  // preserve every pre-existing entry, latency, scaling and heap ceiling.
+  // Explicit raw-text source capture, literal Unicode HTML import and empty
+  // inline-code input (including pointer targeting) add ~2.0 KiB ESM / 1.8 KiB
+  // CJS. Aggregate caps gain 2 / 1 KiB; the optional entry gains 1 KiB each.
+  // All unrelated entry/CSS/latency/scaling/heap ceilings remain unchanged.
+  // Literal HTML link controls, escaped Markdown destinations and bounded
+  // native backslash carriers add ~2.0 KiB ESM / ~1.9 KiB CJS over the raw-text
+  // checkpoint. Measured 1572.1 / 1307.7 KiB. No new runtime dependency;
+  // every entry/CSS/latency/scaling/heap ceiling remains unchanged.
+  // Source-bound HTML navigation preserves original URL interpretation without
+  // weakening literal Markdown links. Shared import/export and ruby-carrier
+  // handling measure 1574.7 / 1309.9 KiB (+2.6 / +2.2 KiB). Aggregate caps
+  // gain 2 KiB each; individual entries, CSS and performance caps stay fixed.
+  // Opt-in inert block wrappers add ~0.9 KiB; measured total 1575.6 KiB.
+  'all ESM runtime code': 1576.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -398,13 +513,38 @@ const limits = Object.freeze({
   // Same newline-stream correction: measured 1143.5 KiB.
   // Same definition-list feature: measured 1158.3 KiB CJS (+~4.4 KiB).
   // Same content-control projection: 1159.2 KiB. ESM/CSS/performance caps unchanged.
-  'all CommonJS runtime code': 1170 * kibibyte,
+  // The same rich-caption boundary adds ~0.8 KiB CJS.
+  // Equivalent caption layout retention adds 1.3 KiB CJS (1247.1 total).
+  // Equivalent table layout projection adds ~1.6 KiB CJS (1248.8 total).
+  // The same incomplete-grid diagnostics bring the measured total to 1249.5 KiB.
+  // Repeated-header validation brings the current total to 1249.8 KiB.
+  // The equivalent table-appearance increment measures 1260.7 KiB CommonJS.
+  // Equivalent preferred-width boundary: measured 1264.1 KiB total.
+  // Shift+Enter intent normalization with keyup/blur/IME cleanup adds ~0.6 KiB
+  // to the browser view only. Measured total 1268.5; no new dependency.
+  // Equivalent character-spacing implementation: +~3.4 KiB, 1271.9 measured.
+  // Equivalent HTML metadata/located loss boundary: 1272.8 KiB measured.
+  // Equivalent comment boundary: measured 1275.3 KiB, +2.6 KiB.
+  // The same addition measures ~3.8 KiB CJS. Other entry ceilings are unchanged.
+  // Table text projection adds ~1.5 KiB; measured total 1290.2 KiB.
+  // The same source/guard addition is ~1.7 KiB CJS, measured 1291.9 KiB.
+  // Equivalent table protection adds ~1.2 KiB, measured total 1293.1 KiB.
+  // Equivalent source-owned quote projection: measured 1294.4 KiB. No new
+  // dependency; all latency/scaling/heap limits remain unchanged.
+  // The equivalent accessibility/control-focus projection measures 1295.5 KiB.
+  // Narrow +1 KiB allowance; no dependency or individual entry cap increase.
+  // Same opt-in raw-text and empty-source editing addition as the ESM graph.
+  // Same measured link/carrier addition as ESM; no unrelated cap increase.
+  // Same optional block mode: measured total 1310.7 KiB.
+  'all CommonJS runtime code': 1311.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
 const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.endsWith('.map'));
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
+measured.set('dist/html-inert.js', await sizeOf('dist/html-inert.js'));
+measured.set('dist/html-inert.cjs', await sizeOf('dist/html-inert.cjs'));
 const esmEntityDecoder = runtimeFiles.find((entry) => /^(?:decode|markdown-html)-.*\.js$/u.test(entry.name));
 const cjsEntityDecoder = runtimeFiles.find((entry) => /^(?:decode|markdown-html)-.*\.cjs$/u.test(entry.name));
 if (!esmEntityDecoder || !cjsEntityDecoder) throw new Error('HTML5 entity decoder chunks were not emitted.');
@@ -430,7 +570,7 @@ const failures = [];
 for (const [name, limit] of Object.entries(limits)) {
   const size = measured.get(name);
   if (typeof size !== 'number') throw new Error(`No build measurement was produced for ${name}.`);
-  console.log(`${name}: ${(size / kibibyte).toFixed(1)} KiB / ${(limit / kibibyte).toFixed(0)} KiB`);
+  console.log(`${name}: ${(size / kibibyte).toFixed(1)} KiB / ${Number((limit / kibibyte).toFixed(1))} KiB`);
   if (size > limit) failures.push(`${name} exceeds its budget by ${((size - limit) / kibibyte).toFixed(1)} KiB`);
 }
 

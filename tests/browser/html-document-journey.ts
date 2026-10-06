@@ -25,7 +25,9 @@ export async function htmlDocumentJourney(page: Page, info: TestInfo): Promise<v
     expect(document.content[0].attrs.align).toBe('center');
     expect(document.content[2].attrs.start).toBe(7);
   }).toPass();
-  await expect(page.getByRole('list', { name: 'Server HTML conversion details' })).toContainText('Only the HTML document body');
+  const details = page.getByRole('list', { name: 'Server HTML conversion details' });
+  await expect(details).toContainText('The HTML document body and valid Fountain page settings were imported.');
+  await expect(details).toContainText('Head metadata, stylesheets, other document-shell attributes and non-body framesets are not preserved; external resources are not fetched.');
   await page.getByLabel('Server HTML input', { exact: true }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: info.outputPath('server-reopened-body-and-loss-report.png') });
   await output.getByRole('button', { name: 'html', exact: true }).click();

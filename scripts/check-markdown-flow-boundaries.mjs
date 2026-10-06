@@ -166,7 +166,7 @@ export function checkMarkdownFlowBoundaries({
     else assert.notDeepEqual(actual, expected, `${test.id}: omitted outer div remains an explicit structural mismatch`);
     textBlockChecks++;
   }
-  console.log(`Explicit structural source flow: ${textBlockChecks} LF/CRLF reference-code/source contracts. Paragraphs, headings, code, plain hard breaks and list/quote nesting supported; outer-div mismatches remain, other atoms still refused.`);
+  console.log(`Explicit structural source flow: ${textBlockChecks} LF/CRLF reference-code/source contracts. Paragraphs, headings, code, plain hard breaks and list/quote nesting supported; outer-div mismatches remain. Separate contracts cover protected Markdown images/rules and pipe tables; specialized unsupported blocks still refuse conversion.`);
   let containerChecks = 0;
   for (const body of ['- one\n- two', '- one\n\n- two', '3. one\n4. two',
     '- one\n  - nested\n  - second\n- two', '- one\n\n  > quoted\n  > line\n\n- two',
@@ -178,7 +178,10 @@ export function checkMarkdownFlowBoundaries({
     '> Before ![Diagram](/diagram.png "Caption") after',
     'Before **![Diagram](/diagram.png "Caption")** after',
     'Before [![Diagram](/diagram.png "Caption")](/details) after',
-    '**one  \ntwo**']) {
+    '**one  \ntwo**',
+    'Before\n\n---\n\nAfter',
+    '![Diagram](/diagram.png "Caption")',
+    '- Before\n\n  ---\n\n  ![Diagram](/diagram.png "Caption")\n\n  After']) {
     for (const ending of ['\n', '\r\n']) {
       const source = `<blockquote>\n\n${body}\n\n</blockquote>\n`.replaceAll('\n', ending);
       const fallbacks = [];

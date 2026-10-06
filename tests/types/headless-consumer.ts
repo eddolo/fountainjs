@@ -17,6 +17,8 @@ import {
 } from 'fountainjs-editor/core';
 import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
 import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
+import { createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
+import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 
 const documentExtension = defineExtension({
   name: 'headless-document',
@@ -42,9 +44,10 @@ const documentExtension = defineExtension({
 const collaborationExtension = createCoreCollaborationExtension({
   adapter: () => ({ connect() {} }),
 });
-const kit = composeExtensions([documentExtension, collaborationExtension]);
+const kit = composeExtensions([documentExtension, collaborationExtension, createInertHTMLInlineExtension({ tags: ['my-inline'] }), createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] })]);
 const schemaSpec: SchemaSpec = kit.schema;
 const schema = new Schema(schemaSpec);
+ServerHTMLImporter.parse('<p><my-inline>portable</my-inline></p>', schema, { sourceTokens: true });
 const editor = createEditor({
   schema: schemaSpec,
   plugins: [...kit.plugins, new Plugin({}), createHistoryPlugin()],

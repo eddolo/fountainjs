@@ -22,8 +22,15 @@ export async function docxControlsJourney(page: Page, info: TestInfo) {
   await expect(editor.locator('ol')).toHaveAttribute('start', '4');
   await expect(editor.locator('li')).toHaveCount(2);
   await expect(editor.locator('table')).toHaveCount(1);
-  expect(result.issues).toHaveLength(5);
-  expect(result.issues.every((issue: {code: string}) => issue.code === 'content-control-unwrapped')).toBe(true);
+  expect(result.issues.map((issue: { code: string; severity: string; path?: number[] }) =>
+    ({ code: issue.code, severity: issue.severity, path: issue.path }))).toEqual([
+    { code: 'content-control-unwrapped', severity: 'warning', path: [1] },
+    { code: 'content-control-unwrapped', severity: 'warning', path: [2] },
+    { code: 'content-control-unwrapped', severity: 'warning', path: [2, 1, 2] },
+    { code: 'table-style-materialized', severity: 'info', path: [3] },
+    { code: 'content-control-unwrapped', severity: 'warning', path: [3, 0, 1, 1] },
+    { code: 'content-control-unwrapped', severity: 'warning', path: [3, 0, 1, 1, 1, 1] },
+  ]);
   await root.screenshot({ path: info.outputPath('original-word-and-fountain.png') });
   await editor.getByText('Ready for review', { exact: true }).click();
   await page.keyboard.press('End');

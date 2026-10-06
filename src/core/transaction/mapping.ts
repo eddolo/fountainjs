@@ -29,11 +29,6 @@ export interface NodeRange {
   readonly to: number;
 }
 
-interface TextLeafPosition extends TextPoint {
-  readonly from: number;
-  readonly to: number;
-}
-
 function validatePosition(position: number): void {
   if (!Number.isInteger(position) || position < 0) throw new RangeError(`Invalid document position: ${position}.`);
 }
@@ -277,23 +272,6 @@ export function topLevelPosition(doc: Node, childIndex: number): number {
   return doc.content.slice(0, childIndex).reduce((position, child) => position + child.nodeSize, 0);
 }
 
-function textLeafPositions(doc: Node): readonly TextLeafPosition[] {
-  const leaves: TextLeafPosition[] = [];
-  const visit = (node: Node, path: readonly number[], before: number, root = false): void => {
-    if (node.isText) {
-      leaves.push({ path: Object.freeze([...path]), offset: 0, from: before, to: before + (node.text?.length ?? 0) });
-      return;
-    }
-    let position = before + (root ? 0 : 1);
-    node.content.forEach((child, index) => {
-      visit(child, [...path, index], position);
-      position += child.nodeSize;
-    });
-  };
-  visit(doc, [], 0, true);
-  return leaves;
-}
-
 /** Resolves a structural position to the nearest editable text point. */
 export function positionToTextPoint(doc: Node, position: number, association: MapAssociation = 1): TextPoint {
   const point = findTextPoint(doc, position, association);
@@ -303,25 +281,51 @@ export function positionToTextPoint(doc: Node, position: number, association: Ma
 
 function findTextPoint(doc: Node, position: number, association: MapAssociation): TextPoint | null {
   validatePosition(position);
-  const leaves = textLeafPositions(doc);
-  if (!leaves.length) return null;
-
-  const inside = leaves.find((leaf) => position > leaf.from && position < leaf.to);
-  if (inside) return { path: inside.path, offset: position - inside.from };
-
-  // A text endpoint is already an editable position, not a gap that needs
-  // recovery. Association chooses between adjacent marked leaves sharing that
-  // endpoint; it must not jump over block boundaries to a different paragraph.
-  const endpoints = leaves.filter(leaf => position === leaf.from || position === leaf.to);
-  const endpoint = association < 0 ? endpoints[0] : endpoints.at(-1);
-  if (endpoint) return { path: endpoint.path, offset: position - endpoint.from };
-
-  if (association < 0) {
-    const previous = [...leaves].reverse().find((leaf) => leaf.to <= position) ?? leaves[0] as TextLeafPosition;
-    return { path: previous.path, offset: Math.max(0, Math.min(position - previous.from, previous.to - previous.from)) };
-  }
-  const next = leaves.find((leaf) => leaf.from >= position) ?? leaves.at(-1) as TextLeafPosition;
-  return { path: next.path, offset: Math.max(0, Math.min(position - next.from, next.to - next.from)) };
+  const backward = association < 0;
+  const path: number[] = [];
+  const candidatePath: number[] = [];
+  let candidateFrom: number | undefined;
+  let candidateTo = 0;
+  let endpoint = false;
+  const remember = (from: number, to: number): void => {
+    candidatePath.length = path.length;
+    for (let index = 0; index < path.length; index++) candidatePath[index] = path[index]!;
+    candidateFrom = from;
+    candidateTo = to;
+  };
+  // Text ranges are ordered. Reuse two path buffers instead of materializing
+  // every leaf/path. Stop once interior, endpoint or nearest-gap choice is final.
+  const visit = (node: Node, before: number, root = false): boolean => {
+    if (node.isText) {
+      const to = before + (node.text?.length ?? 0);
+      if (position > before && position < to) { remember(before, to); return true; }
+      if (position === before || position === to) {
+        if (!endpoint || !backward) remember(before, to);
+        endpoint = true;
+        // Forward association still visits adjoining empty/marked endpoints.
+        return backward;
+      }
+      if (before > position) {
+        if (!endpoint && (!backward || candidateFrom === undefined)) remember(before, to);
+        return true;
+      }
+      if (!endpoint) remember(before, to);
+      return false;
+    }
+    let at = before + (root ? 0 : 1);
+    for (let index = 0; index < node.childCount; index++) {
+      const child = node.child(index);
+      path.push(index);
+      const done = visit(child, at);
+      path.pop();
+      if (done) return true;
+      at += child.nodeSize;
+    }
+    return false;
+  };
+  visit(doc, 0, true);
+  return candidateFrom === undefined ? null : { path: Object.freeze(candidatePath.slice()),
+    offset: Math.max(0, Math.min(position - candidateFrom, candidateTo - candidateFrom)) };
 }
 
 // A valid structural edit may remove every text leaf, including temporarily

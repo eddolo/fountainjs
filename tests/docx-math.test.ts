@@ -34,7 +34,9 @@ describe('experimental DOCX semantic math boundary', () => {
     expect(xml.match(/<m:oMath[ >]/g)).toHaveLength(4);
     expect(xml.match(/<w:tbl>/g)).toHaveLength(1);
     expect(xml.match(/<w:numPr>/g)).toHaveLength(1);
-    expect(result.report.issues.every(issue => issue.code === 'native-math-experimental')).toBe(true);
+    expect(result.report.issues.every(issue => ['native-math-experimental', 'page-settings-defaulted', 'table-width-defaulted', 'table-row-repeat-defaulted'].includes(issue.code))).toBe(true);
+    expect(result.report.issues).toContainEqual(expect.objectContaining({ code: 'table-row-repeat-defaulted', severity: 'info', path: [1, 0, 3, 0] }));
+    expect(result.report.issues).toContainEqual(expect.objectContaining({ code: 'table-width-defaulted', severity: 'info', path: [1, 0, 3] }));
     for (const paragraph of xml.matchAll(/<w:p>(.*?)<\/w:p>/gs)) {
       expect((paragraph[1].match(/<w:pPr>/g) ?? []).length).toBeLessThanOrEqual(1);
     }
@@ -46,7 +48,8 @@ describe('experimental DOCX semantic math boundary', () => {
       schema.node('heading', { level: 2 }, [schema.text('Heading')]),
     ])]);
     const xml = strFromU8(unzipSync(exportDOCX(doc).bytes)['word/document.xml']);
-    expect(xml).toContain('<w:pStyle w:val="Quote"/><w:jc w:val="center"/>');
+    expect(xml).toMatch(/<w:pPr><w:pStyle w:val="Quote"\/>[\s\S]*<w:jc w:val="center"\/>[\s\S]*<\/w:pPr>/);
+    expect(xml).toContain('<w:ind w:left="360"/>');
     expect(xml).toContain('<w:pStyle w:val="Heading2"/>');
     expect(xml).not.toContain('</w:pPr><w:pPr>');
   });
@@ -78,12 +81,14 @@ describe('experimental DOCX semantic math boundary', () => {
     expect(metadata).toContain('&lt;m:oMath');
     expect(strFromU8(parts['word/_rels/document.xml.rels'])).toContain('Target="../customXml/fountainMath.xml"');
     expect(result.report.fidelity).toBe('lossy');
-    expect(result.report.issues.map(issue => issue.code)).toEqual(['native-math-experimental', 'native-math-experimental']);
+    expect(result.report.issues.map(issue => issue.code)).toEqual(['native-math-experimental', 'native-math-experimental', 'page-settings-defaulted']);
     expect(doc.toJSON()).toEqual(before);
     const reopened = importDOCX(result.bytes, schema);
-    expect(reopened.report.issues.filter(issue => issue.code === 'unsupported-office-math')).toHaveLength(2);
-    expect(reopened.document.textContent).toContain('[Word equation: import not yet supported]');
-    expect(reopened.document.textContent).not.toContain('x2y');
+    expect(reopened.report.issues.filter(issue => issue.code === 'office-math-imported-experimental')).toHaveLength(2);
+    expect(reopened.document.child(0).child(1).type.name).toBe('inline_math');
+    expect(reopened.document.child(1).type.name).toBe('math_block');
+    expect(reopened.document.child(1).attrs.latex).toContain('\\frac');
+    expect(reopened.document.textContent).not.toContain('[Word equation:');
   });
 
   it('supports editable structures without flattening their arguments', () => {
@@ -94,14 +99,20 @@ describe('experimental DOCX semantic math boundary', () => {
       { type: 'nary', symbol: '∑', sub: text('i=0'), sup: text('n'), body: text('x'), limits: 'above-below' },
       { type: 'accent', character: '\u0302', body: text('x') },
       { type: 'fraction', numerator: text('n'), denominator: text('k'), bar: false },
+      { type: 'function', name: text('sin'), argument: text('x') },
+      { type: 'limit', base: text('lim'), limit: text('n→∞'), position: 'lower' },
+      { type: 'limit', base: text('x'), limit: text('2'), position: 'upper' },
+      { type: 'equation_array', rows: [text('x=1'), text('y=2')] },
     ];
     const xml = serializeDOCXMath({ type: 'row', content: values }, true);
-    for (const tag of ['sSubSup', 'rad', 'd', 'm', 'nary', 'acc', 'f']) expect(xml).toContain(`<m:${tag}>`);
+    for (const tag of ['sSubSup', 'rad', 'd', 'm', 'nary', 'acc', 'f', 'func', 'limLow', 'limUpp', 'eqArr']) expect(xml).toContain(`<m:${tag}>`);
     expect(xml).toContain('<m:limLoc m:val="undOvr"/>');
     expect(xml).toContain('<m:degHide m:val="0"/>');
     expect(xml).toContain('<m:type m:val="noBar"/>');
     expect(xml.match(/<m:mr>/g)).toHaveLength(2);
     expect(xml).toContain('<m:count m:val="2"/>');
+    expect(xml.match(/<m:eqArr>/g)).toHaveLength(1);
+    expect(xml.match(/<m:lim>/g)).toHaveLength(2);
   });
 
   it.each([

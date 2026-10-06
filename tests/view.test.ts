@@ -29,6 +29,122 @@ import {
 } from '../src';
 
 describe('EditorView', () => {
+  describe('Shift+Enter browser intent', () => {
+    function setup(type = 'paragraph', plugins: Plugin[] = [], editable = true) {
+      document.getSelection()?.removeAllRanges();
+      const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin(), ...plugins], editable,
+        content: { type: 'doc', content: [{ type, content: [
+          { type: 'text', text: 'After', ...(type === 'paragraph' ? { marks: [{ type: 'strong' }] } : {}) },
+        ] }] },
+      });
+      const mount = document.createElement('div');
+      document.body.appendChild(mount);
+      const view = new EditorView(mount, editor);
+      const key = (options: KeyboardEventInit = {}) => view.dom.dispatchEvent(new KeyboardEvent('keydown', {
+        bubbles: true, cancelable: true, key: 'Enter', shiftKey: true, ...options,
+      }));
+      const input = (inputType = 'insertParagraph', options: InputEventInit = {}) => view.dom.dispatchEvent(new InputEvent('beforeinput', {
+        bubbles: true, cancelable: true, inputType, ...options,
+      }));
+      const destroy = () => { view.destroy(); mount.remove(); document.getSelection()?.removeAllRanges(); };
+      return { editor, view, key, input, destroy };
+    }
+
+    it.each(['insertParagraph', 'insertLineBreak'])('normalizes Shift+Enter %s once with marks and undo/redo', inputType => {
+      const { editor, key, input, destroy } = setup();
+      const original = editor.getJSON();
+      expect(key()).toBe(true); // beforeinput remains available to extensions.
+      expect(input(inputType)).toBe(false);
+      expect(editor.state.doc.childCount).toBe(1);
+      const paragraph = editor.state.doc.child(0);
+      expect(paragraph.child(0).type.name).toBe('hard_break');
+      expect(paragraph.child(0).marks.map(mark => mark.type.name)).toEqual(['strong']);
+      expect(paragraph.child(1).text).toBe('After');
+      const changed = editor.getJSON();
+      expect(undo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(original);
+      expect(redo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(changed);
+      input('insertParagraph');
+      expect(editor.state.doc.childCount).toBe(2);
+      destroy();
+    });
+
+    it.each(['insertParagraph', 'insertLineBreak'])('keeps Shift+Enter %s literal inside code', inputType => {
+      const { editor, key, input, destroy } = setup('code_block');
+      key(); input(inputType);
+      expect(editor.state.doc.childCount).toBe(1);
+      expect(editor.state.doc.child(0).textContent).toBe('\nAfter');
+      expect(editor.state.doc.child(0).content.every(node => node.isText)).toBe(true);
+      destroy();
+    });
+
+    it.each(['keydown', 'beforeinput'])('preserves %s plugin precedence without leaking intent', intercepted => {
+      const calls: string[] = [];
+      let intercept = true;
+      const plugin = new Plugin({ props: {
+        handleKeyDown: () => { calls.push('keydown'); return intercept && intercepted === 'keydown'; },
+        handleBeforeInput: () => { calls.push('beforeinput'); return intercept && intercepted === 'beforeinput'; },
+      } });
+      const { editor, view, key, input, destroy } = setup('paragraph', [plugin]);
+      const original = editor.getJSON();
+      key();
+      if (intercepted === 'beforeinput') input();
+      view.dom.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'Enter' }));
+      expect(editor.getJSON()).toEqual(original);
+      expect(calls).toEqual(intercepted === 'keydown' ? ['keydown'] : ['keydown', 'beforeinput']);
+      intercept = false;
+      input();
+      expect(editor.state.doc.childCount).toBe(2);
+      destroy();
+    });
+
+    it.each(['keyup', 'blur', 'other-input'])('clears pending Shift+Enter on %s', cleared => {
+      const { editor, view, key, input, destroy } = setup();
+      key();
+      if (cleared === 'other-input') input('insertText', { data: 'X' });
+      else view.dom.dispatchEvent(cleared === 'keyup'
+        ? new KeyboardEvent('keyup', { bubbles: true, key: 'Enter' })
+        : new FocusEvent('blur'));
+      input();
+      expect(editor.state.doc.childCount).toBe(2);
+      expect(editor.state.doc.content.flatMap(node => node.content).some(node => node.type.name === 'hard_break')).toBe(false);
+      destroy();
+    });
+
+    it('leaves ordinary Enter as a paragraph split', () => {
+      const { editor, key, input, destroy } = setup();
+      key({ shiftKey: false }); input();
+      expect(editor.state.doc.childCount).toBe(2);
+      destroy();
+    });
+
+    it.each([{ ctrlKey: true }, { metaKey: true }, { altKey: true }])('does not reinterpret modified Enter (%j)', modifier => {
+      const { editor, key, input, destroy } = setup();
+      key(modifier); input();
+      expect(editor.state.doc.childCount).toBe(2);
+      destroy();
+    });
+
+    it.each(['keyboard-flag', 'composition-session'])('does not reinterpret an IME Enter (%s)', mode => {
+      const { editor, view, key, input, destroy } = setup();
+      const original = editor.getJSON();
+      if (mode === 'composition-session') view.dom.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+      key({ isComposing: mode === 'keyboard-flag' });
+      input('insertParagraph', { isComposing: true });
+      expect(editor.getJSON()).toEqual(original);
+      destroy();
+    });
+
+    it('does not modify a read-only document', () => {
+      const { editor, key, input, destroy } = setup('paragraph', [], false);
+      const original = editor.getJSON();
+      key(); input();
+      expect(editor.getJSON()).toEqual(original);
+      destroy();
+    });
+  });
+
   it('renders an accessible editor and handles beforeinput', () => {
     const editor = createEditor({ schema: CoreSchemaSpec });
     const mount = document.createElement('div');
@@ -506,6 +622,11 @@ describe('EditorView', () => {
     button?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(pluginClicks).toBe(0);
     expect(currentPath).toEqual([0]);
+    const beforeControlInput = editor.getJSON();
+    button?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter', shiftKey: true }));
+    button?.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertParagraph' }));
+    button?.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'Enter' }));
+    expect(editor.getJSON()).toEqual(beforeControlInput);
 
     expect(selectNode(editor, [0])).toBe(true);
     await new Promise<void>((resolve) => queueMicrotask(resolve));

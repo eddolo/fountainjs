@@ -1,7 +1,10 @@
 node_modules/
 playwright-report/
 test-results/
-artifacts/manual-ui-audit/
+# Local recordings, traces, generated fixtures, and diagnostic runtimes.
+# Small reviewed evidence reports can be explicitly force-added.
+/artifacts/
+/output/
 tmp/
 dist/
 coverage/

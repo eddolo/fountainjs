@@ -148,12 +148,15 @@ describe('explicit whole-document HTML source conversion', () => {
     expect(HTMLExporter.export(result, { document: false })).not.toMatch(/<(?:script|style|iframe)[ >]/);
   });
 
-  it('refuses a mixed unsupported table instead of silently converting only the easy paragraphs', () => {
+  it('now converts a supported mixed table along with its surrounding formatting instead of refusing the whole document', () => {
     const source = '<b>Before\n\n| A | B |\n|---|---|\n| 1 | 2 |\n\nAfter</b>';
     const fallback = vi.fn();
     const result = MarkdownImporter.parse(source, schema, { ...options, onHTMLFlowFallback: fallback });
-    expect(fallback).toHaveBeenCalledTimes(1);
-    expect(result.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(fallback).not.toHaveBeenCalled();
+    expect(result.content.map(node => node.type.name)).toEqual(['paragraph', 'table', 'paragraph']);
+    expect(result.child(1).child(1).child(0).child(0).child(0).marks.map(mark => mark.type.name)).toEqual(['strong']);
+    expect(result.child(1).textContent).toBe('AB12');
+    expect(MarkdownImporter.parse(MarkdownExporter.export(result), schema, options).toJSON()).toEqual(result.toJSON());
   });
 
   it('refuses custom metadata and propagates reporting callback errors', () => {

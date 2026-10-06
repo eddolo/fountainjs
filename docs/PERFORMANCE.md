@@ -1,5 +1,192 @@
 # Performance and memory contract
 
+## Blank-line appearance follow-up
+
+Unreleased, 2026-10-06: the default standalone HTML blank-line rule adds no
+dependency or API and stays within all existing caps (**1576.2 KiB ESM /
+1311.1 KiB CJS**, caps 1576.5/1311.5). No budget is increased for this follow-up.
+`artifacts/html-blank-lines-complete-gate-20261006.log` passes **2,619 tests /
+196 files**, packaging/runtime/types and all performance/memory gates.
+1,000→10,000 median growth: server HTML 8.79x, local 5.29x, remote 11.67x,
+all below 15x. Live growth remains 0.00 MiB / 8 MiB; destroyed editor 0.06 MiB /
+16 MiB. These are local benchmark results, not native Word print evidence.
+
+## Childless paragraph retention cost
+
+Unreleased, 2026-10-06: restoring the existing empty-paragraph marker in browser
+and server HTML importers and emitting it from HTML export measures **1576.1 KiB
+ESM / 1311.1 KiB CJS** overall. Aggregate ceilings rise by **0.5 KiB each** to
+1576.5/1311.5; all entry-specific/CSS, latency, scaling and heap limits remain
+unchanged. No API or runtime dependency is added. The initial full gate stops
+at the previous size cap (0.1 KiB over) in
+`artifacts/html-empty-paragraph-complete-gate-20261006.log`; it is not a passing
+full gate. This narrow allowance does not waive any remaining parity requirement.
+
+Verified final gate: `artifacts/html-empty-paragraph-complete-gate-verified-20261006.log`
+passes **2,618 tests / 196 files**, API/package/runtime/type checks and all budgets.
+1,000→10,000 median growth: server HTML **8.29x**, local **7.25x**, remote
+**10.48x**, all below 15x. Live 2,000-edit growth is 0.00 MiB / 8 MiB; destroyed
+editor retention 0.06 MiB / 16 MiB; retained server document 15.17 MiB / 48 MiB.
+The intermediate `html-empty-paragraph-complete-gate-final-20261006.log` is a
+failed run: its older DOCX test required the now-fixed empty-leaf mismatch. The
+test now checks complete JSON without an exception; it was not weakened.
+
+## Inert block-wrapper cost
+
+Unreleased, 2026-10-06: the shared optional block-wrapper mode, paragraph
+authoring command and explicit empty-paragraph flow guard measure
+**1575.9 KiB ESM / 1310.9 KiB CJS** overall. Aggregate ceilings rise narrowly
+by 1 KiB each to **1576/1311**; isolated `html-inert` entry ceilings rise from
+6/5 to **7/6 KiB** (measured about 6.0/5.1). All other entry/CSS limits and all
+latency/scaling/heap limits remain unchanged; no new runtime dependency.
+Initial size failure is retained in
+`artifacts/html-inert-block-budget-initial-20261006.log`.
+
+Final unchanged-source full gate:
+`artifacts/html-inert-block-complete-gate-final-20261006.log` passes 2,606 tests /
+195 files, API/package/headless/framework checks and performance budgets.
+1,000→10,000 median scaling: server HTML **8.83x**, local edits **8.97x**,
+incremental remote edits **9.80x**, all under 15x. Live 2,000-edit session heap
+growth: 0.00 MiB / 8 MiB; destroyed editor: 0.06 MiB / 16 MiB; retained 10,000-block
+server HTML document: 15.20 MiB / 48 MiB. These are local benchmarks, not mobile
+device or arbitrary custom-renderer guarantees.
+
+## Link destination integrity cost
+
+Unreleased source-bound navigation follow-up, 2026-10-06: measured totals are
+**1574.7 KiB ESM / 1309.9 KiB CJS**, +2.6/+2.2 KiB over the literal-link
+checkpoint. Aggregate ceilings gain 2 KiB each to **1575/1310**. Individual
+entries, CSS, latency, scaling and heap caps stay fixed; no runtime dependency
+is added. Retained initial aggregate failure:
+`artifacts/html-link-origin-budget-initial-20261006.log`; checked result:
+`artifacts/html-link-origin-budget-checked-20261006.log`. Version-11 CommonMark
+requires 563 default / 613 strongest opt-in. Actual browser navigation is tested
+separately from model/source retention.
+
+Unchanged-source full gate:
+`artifacts/html-link-origin-complete-gate-final-20261006.log` passes 2,585 tests /
+194 files, API/package/headless/framework checks and performance budgets. Server
+HTML median scaling (1,000→10,000) is 8.91x / 15x; local edits 9.97x / 15x;
+incremental remote edits 11.38x / 15x. Retained 10,000-block server HTML document:
+15.18 MiB / 48 MiB; destroyed editor: 0.06 MiB / 16 MiB. No performance limit
+was raised. The separate aggregate size increment above remains explicit.
+
+Historical literal-link checkpoint: shared literal-control validation, escaped Markdown
+destinations and bound native backslash carriers measure about **1572.1 KiB ESM /
+1307.7 KiB CJS**, approximately +2.0/+1.9 KiB over the raw-source checkpoint.
+Aggregate ceilings are narrowly 1573/1308 KiB. Every existing individual entry,
+CSS, latency, scaling and heap ceiling is unchanged; no runtime dependency is
+added. Retained pre-allowance failure:
+`artifacts/html-link-literal-budget-20261006.log`.
+
+The four repaired Markdown destination cases do not excuse falsely equating raw
+URL controls/backslashes with encoded data. Version-10 CommonMark verification
+required 563 default / 610 strongest opt-in. Four old false URL matches were
+repaired; that checkpoint introduced raw HTML navigation regression 21, now
+repaired by source-bound HTML intent. See
+[the oracle correction](MARKDOWN_DOCUMENT_FLOW.md#link-destination-integrity-and-oracle-correction).
+
+Historical frozen gate `artifacts/html-link-literal-complete-gate-final-20261006.log`
+passes 2,569 tests / 193 files, 409 declarations, packed ESM/CJS and actual
+Node/workerd (473 link contracts in each). Retained 10,000-block server HTML
+document: 15.18 MiB / 48 MiB; destroyed-editor retained heap: 0.06 MiB / 16 MiB.
+Server parse median growth 1,000→10,000 blocks: 9.96× / 15×. No performance cap
+was increased for this fix. The 681-file source checksum is recorded separately.
+
+## Literal raw-source and empty-code input cost (2026-10-06, Unreleased)
+
+The shared optional inline/raw-source factory measures 5,204 bytes ESM / 4,389
+bytes CJS. Explicit script/style/textarea source, literal Unicode HTML import,
+strict badge inspection and empty inline-code input bring total runtime code
+to 1,570.1 / 1,305.8 KiB, approximately +2.0 / +1.8 KiB over the prior source
+module checkpoint. Optional entry ceilings are 6 / 5 KiB; aggregate ceilings
+are 1,571 / 1,306. Keep every pre-existing entry/CSS, latency, scaling and heap
+ceiling fixed. The preceding 1,570 ESM ceiling failure is retained in
+`artifacts/html-inert-raw-text-complete-gate-20261006.log`, not hidden. This is
+an explicitly measured new-feature allowance, not an unchanged-bundle claim.
+
+`artifacts/html-inert-raw-text-complete-gate-checked-20261006.log` passes the
+complete gate: 2,551 tests / 191 files plus API/packed/runtime/headless/framework
+checks. Local 10k p50/p95 is 2.62/10.34 ms, incremental remote 2.92/11.47 ms;
+median scaling is 10.84x / 9.21x against 15x. Server HTML p50/p95 is
+450.78/478.15 ms, 8.71x scaling, retained document heap 15.16 MiB / 48 MiB.
+No sample/outlier/performance limit was relaxed. These default-importer
+performance checks do not certify dense opt-in raw-source/token retention at
+every scale. Earlier checkpoints below remain historical evidence.
+
+## Optional inert source preservation cost (2026-10-06, Unreleased)
+
+The separate `html-inert` entry measures 4,462 bytes ESM / 3,729 bytes CJS;
+its bounded entry ceilings are 5 / 4 KiB. Opt-in server lexical inspection and
+this module bring aggregate runtime code to 1,568.1 / 1,304.0 KiB. Account for
+the measured new feature with aggregate ceilings 1,569 / 1,305, retaining every
+pre-existing entry/CSS ceiling and all latency, scaling and heap contracts.
+The preceding 1,563 / 1,300 aggregate failures are retained in the source-token
+and inert-source budget logs. This is an explicit optional-feature cost, not a
+claim that the entire distribution is unchanged in size. Core/StarterKit do
+not import the optional factory; source inspection is disabled by default.
+
+On unchanged source, `artifacts/html-inert-production-complete-gate-20261006.log`
+passes 2,507 tests / 189 files and the full public/packed/runtime/type suite.
+Local 10k p50/p95 is 2.65/5.52 ms with 7.92x median scaling (limit 15x);
+incremental remote is 2.94/10.79 ms, 9.25x; server HTML 435.15/468.62 ms,
+8.88x, with retained heap 15.15 MiB / 48 MiB. No latency, scaling, sample,
+outlier, heap or pre-existing entry/CSS ceiling changed. This default-importer
+run does not certify dense opt-in token retention at every scale.
+
+## Streaming text-point lookup (2026-10-06, Unreleased)
+
+`src/core/transaction/mapping.ts` now walks to the required text point instead
+of allocating a full-document leaf-position table for each selection mapping.
+Endpoint association, empty runs, nested blocks, nearest-point behavior and
+invalid-position errors are unchanged. Four permanent regressions include an
+independent exhaustive oracle and a 10,000-block allocation check. The saved
+pre-change resolver agrees in 4,718 prototype comparisons; shipped root/core
+ESM/CommonJS agree in 40,588 comparisons per consumer. Complete edited JSON and
+selection match for carets at the first and last blocks. The diagnostic removes
+30,000 Array iterator creations per 10k edit (40,050 to 10,050), not all editing
+allocations. Child-validation and recursive node-size behavior remain unchanged.
+
+The serialized `artifacts/stream-text-point-complete-gate-20261006.log` passes
+all 2,457 tests / 186 files, types, 407 API snapshots, packed/runtime/headless
+checks and unchanged resource limits. Local 10k p50/p95 is 2.62/9.42 ms with
+7.22x median scaling (limit 15x); remote 3.02/10.51 ms, 10.06x; server HTML
+434.59/461.60 ms, 9.01x, retained heap 15.15 MiB / 48 MiB. Aggregate sizes are
+1,562.7 KiB ESM / 1,563 and 1,299.6 KiB CJS / 1,300. No limit, warmup, sample
+count or outlier rule changed. The preceding 16.85x failure below is retained.
+
+Fifty-one recorded desktop cases pass across Chromium/Firefox/WebKit with one
+worker and no retries, including typing/history, backward selection, tables,
+clipboard, drag feedback, collaboration and 100k virtualization. Source checks
+before/after match the same 664-file snapshot in
+`artifacts/stream-text-point-source-20261006.json`. This is a selected regression
+batch, not a new full matrix or physical mobile/IME certification. Captures also
+expose a translucent sticky-header readability issue; functional passes do not
+certify that visual detail. Evidence: `stream-text-point-recorded-20261006.log`
+and `stream-text-point-compiled-20261006.log` in `artifacts/`.
+
+Previous schema-owned Markdown boundary (2026-10-06, Unreleased): the serialized
+`artifacts/markdown-schema-html-complete-gate-20261006.log` fails local median
+growth at **16.85x / 15x** (1k 0.55 ms; 10k p50/p95 9.34/26.43 ms). It passes
+HTML scaling/latency/heap, build sizes and preceding runtime/format checks,
+but is not a complete green gate. Independent types, all 2,453 unit tests and
+18 recorded Markdown editing cases pass on its unchanged 663-file source.
+Older complete passes below are separate samples, not current failure erasure.
+
+The artifact-only `schema-child-walk-prototype-20261006.mjs` avoids constructing
+validation paths for already-cached immutable children and removes the temporary
+boolean array, while still visiting every uncacheable sibling. It checks 576
+integrity cases per variant, complete actual edited JSON and identical errors
+for mutable attributes, later invalid siblings and foreign-schema content.
+The 10k edit creates 40,050 versus 30,051 Array iterators under the counter.
+Paired unminified 10k medians are baseline/candidate 8.23/6.53 ms and 6.76/6.31 ms;
+candidate p95s are worse (13.13/13.12 versus 8.88/9.88 ms). This establishes an
+allocation reduction, not reliable tail improvement or a normal gate pass.
+The proposal remains unintegrated. Keep both the initial missing-CoreSchemaSpec
+diagnostic failure and corrected log:
+`artifacts/schema-child-walk-prototype-20261006.log`,
+`artifacts/schema-child-walk-prototype-checked-20261006.log`.
+
 FountainJS treats performance as a measured release property, not a claim that
 follows from using an immutable tree. The repository contains two enforced
 gates:
@@ -17,11 +204,53 @@ entry rather than TypeScript source. The browser suite measures the real input,
 state, reconciliation, selection, and next-animation-frame path in Chromium,
 Firefox, and WebKit.
 
-The complete contract is certified by the public 452-test package gate and
+The earlier published contract is certified by the public 452-test package gate and
 289-pass Chromium/Firefox/WebKit/mobile matrix in [CI run
 `8a6264e`](https://github.com/eddolo/fountainjs/actions/runs/33977243766), with
 the two non-passing matrix entries being intentional non-Chromium skips for the
 Chromium-only PDF-binary assertion.
+
+## Current allocation follow-up (2026-10-06, Unreleased)
+
+Primitive attribute checks no longer allocate an initial ancestry Set. Recursive
+objects still receive cycle tracking, cloning/freezing and cacheability checks.
+Simple top-level repeated schema names (`block+`, `inline*`, `table_row+`, etc.)
+now use direct cardinality/membership checks; the general position matcher is
+retained for complex expressions. A 10,000-child simple-rule check previously
+allocated 20,004 Sets and now allocates none. An isolated complete local edit
+measured 20,013 versus three Sets with identical edited JSON; this is allocation
+evidence, not a claim of zero total allocations or logarithmic editing.
+
+The serialized production-package gate passes with all limits, warmups, sample
+counts and outliers unchanged. Its current Windows / Node 24.19.0 sample is:
+
+| Blocks | Local p50 / p95 | Incremental remote p50 / p95 | Server HTML p50 / p95 |
+| ---: | ---: | ---: | ---: |
+| 100 | 0.22 / 1.87 ms | 0.12 / 0.17 ms | 7.18 / 11.20 ms |
+| 1,000 | 0.68 / 1.07 ms | 0.54 / 1.39 ms | 50.38 / 54.80 ms |
+| 5,000 | 2.38 / 4.78 ms | 3.42 / 4.16 ms | 232.00 / 253.00 ms |
+| 10,000 | 4.97 / 9.10 ms | 6.37 / 12.95 ms | 451.68 / 483.90 ms |
+
+Median growth is 7.35x local, 11.70x incremental remote and 8.96x HTML, below
+the unchanged 15x ceilings. Retained HTML-document heap is 15.17 MiB / 48 MiB.
+The full gate also passes 2,438 unit tests, package/runtime/type checks and size
+checks. See `artifacts/content-matcher-complete-gate-20261006.log` and its frozen
+662-file source snapshot. Earlier failures remain retained: 556.19 / 500 ms
+HTML p95, 40.89 / 35 ms HTML p95, and the first helper-only local curve
+15.31x / 15x. This passing sample does not prove the cause of every earlier
+outlier, predict all machines or certify physical-device input.
+
+After an explicit browser-fixture readiness assertion, the final serialized
+complete gate again passes 2,438 tests and all limits. Its local 10,000-block
+p50/p95 is 5.36/12.89 ms (10.16x median growth); HTML is 448.56/527.02 ms
+(8.61x), with 14.30 MiB retained heap. All 33 recorded editing plus 18
+structural/large-document browser cases pass with unchanged 662-file hashes;
+the three new instance-editing captures are inspected. The initial 32-pass/
+one-failure browser run and two startup document requests are retained, not
+counted as green. See `artifacts/content-matcher-ready-complete-gate-20261006.log`,
+`artifacts/content-matcher-ready-browser-20261006.log` and
+`artifacts/content-matcher-structure-browser-20261006.log`. This is selected
+desktop coverage, not a new full browser/mobile release matrix.
 
 ## Recorded baseline
 
@@ -72,7 +301,7 @@ including 111/93 KiB raw for the ESM/CommonJS root, 30/25 KiB for the optional
 Yjs adapter, 54/45 KiB for the isolated DOM pagination entry, 7/6 KiB for the
 DOM-free table-of-contents entry, 13/11 KiB for headless integrity, 6/5 KiB for
 its DOM behavior, 12/10 KiB for its optional React inspector, and 270/225 KiB
-for the self-contained server HTML entry. Aggregate ceilings are 1,184/992 KiB for all
+for the self-contained server HTML entry. Aggregate ceilings are 1,563/1,300 KiB for all
 emitted ESM/CommonJS runtime code excluding the isolated full emoji catalogue.
 Gzip sizes are printed by the build but raw sizes are enforced because they are
 deterministic. The self-contained server parser and source-aware browser paste
@@ -88,9 +317,10 @@ surface.
   validation. Failed and foreign-schema nodes are never trusted.
 - `Node.eq` immediately accepts shared identity. Transaction and NodeView
   comparison therefore stop at unchanged branches.
-- Repetition in schema content expressions accumulates accepted positions
-  without copying the complete set for every child. Ordinary `block+` and
-  `inline*` validation is linear rather than quadratic.
+- Simple repeated schema names use direct membership/cardinality checks without
+  per-child position Sets. Complex expressions retain the general matcher, which
+  accumulates accepted positions without copying the complete set for every
+  child. Ordinary `block+` and `inline*` validation remains linear.
 - The undecorated DOM renderer reconciles by immutable top-level identity. The
   1,000-block browser gate inserts through `beforeinput`, waits for the next
   animation frame, requires 999 unchanged block elements to retain identity,

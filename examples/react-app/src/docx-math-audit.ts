@@ -31,7 +31,7 @@ export function mountDOCXMathAudit() {
     <p data-import-status aria-live="polite"></p>
     <ul data-import-issues aria-label="Reopen warnings"></ul>
     <p role="status">Not exported</p>
-    <ul data-conversion-issues aria-label="Conversion warnings"></ul>
+    <ul data-conversion-issues aria-label="Conversion details"></ul>
     <p data-viewer-issues role="alert"></p>
     <div class="math-audit-grid"><article><h2>Fountain editor</h2><div data-source></div></article><article><h2>Independent DOCX viewer</h2><div data-word-styles></div><div data-word></div></article></div>`;
   const style = document.createElement('style');
@@ -73,10 +73,12 @@ export function mountDOCXMathAudit() {
       if (request !== revision || !root.isConnected) return;
       root.querySelector('[data-word]')!.replaceChildren(...content.childNodes);
       root.querySelector('[data-word-styles]')!.replaceChildren(...styles.childNodes);
-      root.querySelector('[data-conversion-issues]')!.replaceChildren(...result.report.issues
-        .filter(issue => issue.code !== 'native-math-experimental')
+      const details = result.report.issues.filter(issue => issue.code !== 'native-math-experimental');
+      root.querySelector('[data-conversion-issues]')!.replaceChildren(...details
         .map(issue => {
           const warning = document.createElement('li');
+          warning.dataset.code = issue.code;
+          warning.dataset.severity = issue.severity;
           warning.textContent = `${issue.code} at document path ${issue.path?.join('.') ?? 'root'}: ${issue.message}`;
           return warning;
         }));
@@ -96,7 +98,7 @@ export function mountDOCXMathAudit() {
       if (equations.some(math => math.getAttribute('display') !== 'block')) disagreements.push('Display equations are rendered as inline MathML');
       const issues = root.querySelector<HTMLElement>('[data-viewer-issues]')!;
       issues.textContent = disagreements.length ? `Viewer disagreements — not a passing fidelity check: ${disagreements.join('; ')}.` : 'No checked viewer disagreement detected; visual review and Word verification are still required.';
-      status.textContent = `${native} experimental equations exported; ${result.report.issues.length - native} other conversion warnings. Browser preview only; Word fidelity remains unverified.`;
+      status.textContent = `${native} experimental equations exported; ${details.filter(issue => issue.severity === 'warning').length} other conversion warnings, ${details.filter(issue => issue.severity === 'info').length} informational details, ${details.filter(issue => issue.severity === 'error').length} errors. Browser preview only; Word fidelity remains unverified.`;
     } catch (error) {
       if (request === revision) status.textContent = `Export failed: ${error instanceof Error ? error.message : String(error)}`;
     } finally { button.disabled = false; }
@@ -114,7 +116,8 @@ export function mountDOCXMathAudit() {
       const result = importDOCX(bytes, editor.state.schema, { restoreMathSource: true });
       if (!editor.dispatch(editor.state.createTransaction().replaceDocument(result.document))) throw new Error('Document replacement was rejected.');
       const count = result.report.issues.filter(issue => issue.code === 'math-source-restored-experimental').length;
-      root.querySelector('[data-import-status]')!.textContent = `${count} equations restored from matching package metadata. This is not general Word equation import or Word fidelity approval.`;
+      const converted = result.report.issues.filter(issue => issue.code === 'office-math-imported-experimental').length;
+      root.querySelector('[data-import-status]')!.textContent = `${count} equations restored from matching package metadata; ${converted} equations converted from supported native Word semantics. This is bounded import, not Word fidelity approval.`;
       const warnings = new Map<string, number>();
       for (const issue of result.report.issues) {
         const text = `${issue.code}: ${issue.message}`;

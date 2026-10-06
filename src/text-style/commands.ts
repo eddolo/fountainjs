@@ -12,11 +12,12 @@ import { getNodeAtPath, getTextLeaves, getTextRangeSegments } from '../core/tran
 import {
   normalizeFontFamily,
   normalizeFontSize,
+  normalizeLetterSpacing,
   normalizeLineHeight,
   normalizeTextStyleColor,
 } from './values';
 
-export type TextStyleMarkName = 'text_color' | 'highlight' | 'font_family' | 'font_size' | 'line_height';
+export type TextStyleMarkName = 'text_color' | 'highlight' | 'font_family' | 'font_size' | 'line_height' | 'letter_spacing';
 
 export interface ActiveTextStyle {
   readonly color?: string;
@@ -24,6 +25,7 @@ export interface ActiveTextStyle {
   readonly fontFamily?: string;
   readonly fontSize?: string;
   readonly lineHeight?: string;
+  readonly letterSpacing?: string;
   /** Properties with different values across the current selection. */
   readonly mixed: readonly (keyof Omit<ActiveTextStyle, 'mixed'>)[];
 }
@@ -71,6 +73,7 @@ export function getActiveTextStyle(editor: Editor): ActiveTextStyle {
     fontFamily: commonAttribute(markSets, 'font_family', 'family'),
     fontSize: commonAttribute(markSets, 'font_size', 'size'),
     lineHeight: commonAttribute(markSets, 'line_height', 'lineHeight'),
+    letterSpacing: commonAttribute(markSets, 'letter_spacing', 'spacing'),
   } as const;
   const mixed = Object.entries(properties)
     .filter(([, result]) => result.mixed)
@@ -124,6 +127,14 @@ export function setFontSize(editor: Editor, size: string | number): boolean {
 
 export function unsetFontSize(editor: Editor): boolean {
   return unsetMark(editor, 'font_size');
+}
+
+export function setLetterSpacing(editor: Editor, spacing: string | number): boolean {
+  return apply(editor, 'letter_spacing', 'spacing', spacing, normalizeLetterSpacing);
+}
+
+export function unsetLetterSpacing(editor: Editor): boolean {
+  return unsetMark(editor, 'letter_spacing');
 }
 
 export function setLineHeight(editor: Editor, lineHeight: string | number): boolean {

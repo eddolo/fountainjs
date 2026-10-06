@@ -778,7 +778,7 @@ describe('document model and transactions', () => {
     expect(setTextAlignment(editor, 'center')).toBe(true);
     let html = HTMLExporter.export(editor.state, { document: false });
     expect(html).toContain('<p style="text-align:center">');
-    expect(html).toContain('<span style="color:#ff0000"><sub>2</sub></span>');
+    expect(html).toContain('<sub><span style="color:#ff0000">2</span></sub>');
     expect(unsetMark(editor, 'text_color')).toBe(true);
 
     editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0], 5)));
@@ -786,6 +786,28 @@ describe('document model and transactions', () => {
     html = HTMLExporter.export(editor.state, { document: false });
     expect(html).toContain('<br>');
     expect(MarkdownExporter.export(editor.state)).toContain('  \n');
+  });
+
+  it.each([true, false])('inserts a hard break with active marks, including an explicit mark-off state (%s)', (active) => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin()], content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'BeforeAfter', marks: [
+        { type: 'strong' }, { type: 'em' }, { type: 'text_color', attrs: { color: '#ff0000' } },
+      ] }] }],
+    } });
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([0, 0], 6)));
+    if (!active) editor.dispatch(editor.state.createTransaction().setStoredMarks([]));
+    const marks = editor.state.storedMarks, original = editor.state.doc.toJSON();
+    expect(marks).toHaveLength(active ? 3 : 0);
+    expect(insertHardBreak(editor)).toBe(true);
+    const paragraph = editor.state.doc.child(0);
+    expect(paragraph.content.map(node => node.type.name)).toEqual(['text', 'hard_break', 'text']);
+    expect(paragraph.child(1).marks).toEqual(marks);
+    expect(paragraph.child(2).marks).toEqual(marks);
+    expect(editor.state.storedMarks).toEqual(marks);
+    expect(editor.state.selection).toEqual(Selection.cursor([0, 2], 0));
+    const split = editor.state.doc.toJSON();
+    expect(undo(editor)).toBe(true); expect(editor.state.doc.toJSON()).toEqual(original);
+    expect(redo(editor)).toBe(true); expect(editor.state.doc.toJSON()).toEqual(split);
   });
 
   it('finds across marked fragments and replaces every match as one undo step', () => {

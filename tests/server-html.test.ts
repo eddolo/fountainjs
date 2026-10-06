@@ -27,6 +27,14 @@ it('inherits block typography in pure Node without a DOM shim', () => {
   expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-block-wrapper' })]);
 });
 
+it('round-trips typed math semantics through HTML in pure Node', () => {
+  const expression = { type: 'fraction', numerator: { type: 'text', value: 'x' }, denominator: { type: 'text', value: 'y' } } as const;
+  const original = schema.node('doc', {}, [schema.node('math_block', { latex: '\\frac{x}{y}', expression })]);
+  const html = HTMLExporter.export(original, { document: false });
+  expect(html).toContain('data-fountain-math-expression=');
+  expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(original.toJSON());
+});
+
 it('does not retry the identical portable rule as a DOM callback when it declines', () => {
   const rule = { tag: '[style]', getAttrs: () => false as const };
   const target = new Schema(composeExtensions([CoreExtension, defineExtension({

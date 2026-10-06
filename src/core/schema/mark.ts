@@ -11,6 +11,7 @@ export class Mark {
 
   constructor(public readonly type: MarkType, attrs: Attributes = {}) {
     this.attrs = freezeAttributes(attrs);
+    Object.freeze(this);
   }
 
   eq(other: Mark): boolean {

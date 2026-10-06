@@ -34,6 +34,26 @@ function links(editor: ReturnType<typeof createEditor>) {
 }
 
 describe('link behavior extension', () => {
+  it.each([false, true])('keeps typed and pasted code literal, including trailing whitespace (nested=%s)', nested => {
+    const code = { type: 'code_block', content: [{ type: 'text', text: 'print(1)' }] };
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
+      type: 'doc', content: [nested ? { type: 'blockquote', content: [code] } : code],
+    } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    selectText(editor, nested ? [0, 0, 0] : [0, 0], 0);
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { getData: (type: string) => type === 'text/plain' ? '# copied\n' : '' } });
+    view.dom.dispatchEvent(event);
+    expect(editor.state.doc.textContent).toBe('# copied\nprint(1)');
+    expect(links(editor)).toEqual([]);
+    selectText(editor, nested ? [0, 0, 0] : [0, 0], 0);
+    type(view, 'https://example.com ');
+    expect(editor.state.doc.textContent).toBe('https://example.com # copied\nprint(1)');
+    expect(links(editor)).toEqual([]);
+    view.destroy(); editor.destroy(); mount.remove(); document.getSelection()?.removeAllRanges();
+  });
+
   it('autolinks typed web and email addresses without swallowing punctuation', () => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins });
     const mount = document.createElement('div');

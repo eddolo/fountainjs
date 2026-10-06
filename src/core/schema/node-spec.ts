@@ -10,9 +10,9 @@ export interface NodeDOMContext {
   readonly path: readonly number[];
 }
 
-function freezeAttributeValue(value: unknown, ancestors: ReadonlySet<object>): unknown {
+function freezeAttributeValue(value: unknown, ancestors?: ReadonlySet<object>): unknown {
   if (!value || typeof value !== 'object') return value;
-  if (ancestors.has(value)) throw new TypeError('Node and mark attributes cannot contain circular values.');
+  if (ancestors?.has(value)) throw new TypeError('Node and mark attributes cannot contain circular values.');
   const nextAncestors = new Set(ancestors).add(value);
   if (Array.isArray(value)) return Object.freeze(value.map((item) => freezeAttributeValue(item, nextAncestors)));
   const prototype = Object.getPrototypeOf(value);
@@ -26,21 +26,26 @@ function freezeAttributeValue(value: unknown, ancestors: ReadonlySet<object>): u
 /** Clones and recursively freezes portable attribute arrays and plain objects. */
 export function freezeAttributes(attrs: Attributes): Readonly<Attributes> {
   return Object.freeze(Object.fromEntries(
-    Object.entries(attrs).map(([name, value]) => [name, freezeAttributeValue(value, new Set())]),
+    Object.entries(attrs).map(([name, value]) => [name, freezeAttributeValue(value)]),
   ));
 }
 
 export interface AttributeSpec {
+  /** An explicit undefined default makes this optional; unset values are omitted. */
   default?: unknown;
   validate?: (value: unknown) => boolean;
 }
 
-/**
- * Read-only HTML element surface shared by browser and server parsers.
- *
- * The deliberately small contract covers portable attribute extraction. It
- * does not expose layout, live selection, events, mutation, or DOM identity.
- */
+/** Import-time lexical data, never permission to create a live HTML element. */
+export interface HTMLSourceTokens {
+  readonly startTag: string;
+  /** Null when the parser has no explicit closing token; never synthesized. */
+  readonly endTag: string | null;
+  /** Markdown adapters reconstruct input; these tokens are not file coordinates. */
+  readonly origin: 'html-input' | 'markdown-projection';
+}
+
+/** Read-only parser inspection, without layout, events, mutation or DOM identity. */
 export interface HTMLParseElement {
   readonly tagName: string;
   readonly textContent: string;
@@ -50,6 +55,14 @@ export interface HTMLParseElement {
   hasAttribute(name: string): boolean;
   /** Optional enumeration for rules that must decline unsupported attributes. */
   getAttributeNames?(): readonly string[];
+  /** Optional portable descendant inspection for validating structural carriers. */
+  querySelectorAll?(selector: string): ArrayLike<HTMLParseElement>;
+  /**
+   * Optional opt-in lexical inspection. Null for disabled/implied/recovered
+   * elements without an opening token; absent on ordinary browser DOM inputs.
+   * Does not expose offsets or promise full source/semantic/layout retention.
+   */
+  getSourceTokens?(): HTMLSourceTokens | null;
 }
 
 /** Declarative HTML rule that can run without browser globals or a fake DOM. */
@@ -125,6 +138,10 @@ export interface NodeSpec {
   group?: string;
   inline?: boolean;
   atom?: boolean;
+  /** Allow whole-node pointer/keyboard selection even when the node owns editable content. */
+  selectable?: boolean;
+  /** Code context. HTML rules on text*-only code nodes keep Unicode text as
+   * text, without emoji atoms. Representable formatting remains intact. */
   code?: boolean;
   /** Optional plain-text projection for atoms or other non-text content. */
   toText?: (node: Node) => string;
@@ -134,6 +151,13 @@ export interface NodeSpec {
   parseDOM?: readonly DOMParseRule[];
   /** HTML-import rules usable by both browser and server parsers. */
   parseHTML?: readonly HTMLParseRule[];
+  /**
+   * Opt this node into sanitized HTML projection during canonical Markdown
+   * export. Reopening requires an HTML-enabled reader and matching parse rules;
+   * this is not a promise to retain arbitrary attributes or original lexemes.
+   * The ordinary HTML exporter policy still applies, including tag/URL filters.
+   */
+  markdown?: 'html';
   /** Re-evaluate otherwise unchanged ancestors when model context affects their DOM. */
   contextualDOM?: boolean;
   toDOM?: (node: Node, context?: NodeDOMContext) => DOMOutputSpec;

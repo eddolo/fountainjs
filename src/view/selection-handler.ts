@@ -170,7 +170,13 @@ export class SelectionHandler {
   }
 
   ownsDOMSelection(): boolean {
-    const selection = document.getSelection();
+    const owner = this.dom.ownerDocument;
+    const active = owner.activeElement;
+    // Native controls (notably colour inputs) can leave an old editor range
+    // selected. Rendering/mutation repair must not reclaim their keyboard focus.
+    // Explicit view.focus() still applies the current logical editor selection.
+    if (active && active !== owner.body && active !== owner.documentElement && !this.dom.contains(active)) return false;
+    const selection = owner.getSelection();
     return Boolean(selection?.anchorNode && selection.focusNode
       && this.dom.contains(selection.anchorNode) && this.dom.contains(selection.focusNode));
   }
@@ -226,7 +232,13 @@ export class SelectionHandler {
       const first = cells[0];
       const last = cells.at(-1);
       if (!first || !last) return this.finishSync();
-      if (!applyDOM) return this.finishSync();
+      // Selecting/resizing this cell must not steal keyboard focus from its
+      // non-editable controls. Explicit editor focus or selection of another
+      // cell still applies the requested DOM range, as with atomic NodeViews.
+      const active = this.dom.ownerDocument.activeElement;
+      const ownsControl = active instanceof HTMLElement && cells.some(cell => cell.contains(active))
+        && active.closest<HTMLElement>('[contenteditable]')?.contentEditable === 'false';
+      if (!applyDOM || ownsControl) return this.finishSync();
       range.setStartBefore(first);
       range.setEndAfter(last);
       this.applyDOMSelection(domSelection, range);
@@ -332,12 +344,25 @@ export class SelectionHandler {
       }
     }
 
+    // A non-atomic NodeView may still expose a selectable outer shell. Its
+    // model-owned editable contentDOM owns ordinary browser text selection.
     const atom = target.closest<HTMLElement>('[data-fountain-node][data-fountain-path]');
     if (!atom) return;
+    const contentRegion = target.closest('[data-fountain-content-dom]');
+    // An inline atom inside somebody else's content region still owns node
+    // selection. Only bypass the shell that owns this editable region.
+    const emptyCode = atom.dataset.fountainEmptyTextBlock === 'true'
+      && contentRegion && atom.contains(contentRegion);
+    if (contentRegion && atom.contains(contentRegion) && !emptyCode) return;
     try {
       const path = parseNodePath(atom);
       const node = getNodeAtPath(this.editor.state.doc, path);
-      if (!node.type.spec.atom && !(atom.dataset.fountainEmptyTextBlock === 'true' && !node.childCount)) return;
+      // Chromium can place an empty inline code caret on the surrounding
+      // paragraph instead of inside its contentDOM. Keep the actual pointer
+      // target as a semantic selection until typing creates its first text.
+      if (emptyCode && (!node.type.isInline || !node.type.spec.code || node.childCount)) return;
+      if (!node.type.spec.atom && !node.type.spec.selectable
+        && !(atom.dataset.fountainEmptyTextBlock === 'true' && !node.childCount)) return;
       const selection = new NodeSelection(this.editor.state.doc, path);
       event.preventDefault();
       this.pointerSelectionHandled = true;

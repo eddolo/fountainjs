@@ -399,9 +399,12 @@ const browserHTMLSection = defineExtension({
   },
 });
 const browserKit = composeExtensions([...StarterKit.extensions, browserNodeView, browserHTMLSection, LeanExtension, ClipboardHistoryExtension]);
-
+const partialMarkdownMark = browserFixture === 'markdown-em-only' ? 'em'
+  : browserFixture === 'markdown-strong-only' ? 'strong' : undefined;
+const browserSchema = partialMarkdownMark ? { ...browserKit.schema,
+  marks: { [partialMarkdownMark]: browserKit.schema.marks![partialMarkdownMark] } } : browserKit.schema;
 const editor = createEditor({
-  schema: browserKit.schema,
+  schema: browserSchema,
   plugins: [...browserKit.plugins, decorations, pasteRules],
   content: {
     type: 'doc',
@@ -412,6 +415,14 @@ const editor = createEditor({
     ],
   },
 });
+// The importer and snapshot must use this editor's owning Schema instance;
+// equal specifications do not make foreign native nodes interchangeable.
+const partialMarkdown = partialMarkdownMark ? MarkdownImporter.parseWithSource(
+  partialMarkdownMark === 'em' ? '*before **inside** after*\n\n***alpha***\n'
+    : '**before *inside* after**\n\n***alpha***\n', editor.state.schema,
+) : undefined;
+if (partialMarkdown) editor.dispatch(editor.createTransaction()
+  .replaceDocument(partialMarkdown.document).setMeta('addToHistory', false));
 
 const mount = document.querySelector<HTMLElement>('#editor');
 const output = document.querySelector<HTMLOutputElement>('#document-json');
@@ -719,6 +730,15 @@ const importedStyledPrintGeometry = () => createPageGeometry({
 const splitEditablePagesFixture = browserFixture === 'editable-split-pages';
 const splitEditableListFixture = browserFixture === 'editable-list-pages';
 const splitEditableTableFixture = browserFixture === 'editable-table-pages';
+const tableRepeatFixture = new URLSearchParams(globalThis.location.search).get('repeat');
+const explicitRepeatTableContent = tableRepeatFixture === 'ordinary' || tableRepeatFixture === 'off'
+  ? { ...splitTableContent, content: splitTableContent.content.map(table => ({ ...table,
+      content: table.content.map((row, index) => index ? row : { ...row,
+        attrs: { repeatHeader: tableRepeatFixture === 'ordinary' },
+        content: row.content.map(cell => ({ ...cell, type: tableRepeatFixture === 'ordinary' ? 'table_cell' : 'table_header' })),
+      }),
+    })) }
+  : splitTableContent;
 const complexEditableTableFixture = browserFixture === 'editable-complex-table-pages';
 const oversizedEditableTableFixture = browserFixture === 'editable-oversized-table-pages';
 const editablePageIntentFixture = browserFixture === 'editable-page-intent';
@@ -751,7 +771,7 @@ const editablePagesFixture = (browserFixture === 'editable-pages'
             }],
           }],
         } : splitEditableListFixture ? splitListContent
-          : splitEditableTableFixture ? splitTableContent
+          : splitEditableTableFixture ? explicitRepeatTableContent
             : complexEditableTableFixture ? complexTableContent
               : oversizedEditableTableFixture ? oversizedTableContent
               : editablePageIntentFixture ? editablePageIntentContent
@@ -1222,6 +1242,22 @@ const runPaginationStructuralBudget = (blockCount = 5_000, iterations = 6) => {
 
 let docxVisualView: EditorView | undefined;
 let docxVisualEditor: ReturnType<typeof createEditor> | undefined;
+const reopenDOCXVisualComparison = (bytes: number[]) => {
+  const mount = document.querySelector<HTMLElement>('#browser-docx-visual-comparison [data-visual-fountain]');
+  if (!mount || !docxVisualEditor) throw new Error('Render the DOCX visual fixture before reopening it.');
+  const imported = importDOCX(Uint8Array.from(bytes), docxVisualEditor.state.schema);
+  docxVisualView?.destroy();
+  docxVisualEditor.destroy();
+  docxVisualEditor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: imported.document.toJSON() });
+  docxVisualView = new EditorView(mount, docxVisualEditor, { ariaLabel: 'Fountain reopened DOCX' });
+  return docxVisualEditor.state.doc.toJSON();
+};
+const exportDOCXVisualComparison = () => {
+  if (!docxVisualEditor) throw new Error('Render the DOCX visual fixture before exporting it.');
+  const exported = exportDOCX(docxVisualEditor.state.doc, { page: 'letter', title: 'Edited visual export parity' });
+  return { bytes: Array.from(exported.bytes), source: docxVisualEditor.state.doc.toJSON(),
+    reopened: importDOCX(exported.bytes, docxVisualEditor.state.schema).document.toJSON(), issues: exported.report.issues };
+};
 const renderDOCXVisualComparison = async (numbering = false) => {
   docxVisualView?.destroy();
   docxVisualEditor?.destroy();
@@ -1277,7 +1313,21 @@ const renderDOCXVisualComparison = async (numbering = false) => {
   section.id = 'browser-docx-visual-comparison';
   section.innerHTML = '<h2>Fountain editor ↔ independent DOCX render</h2><div class="visual-export-grid"><article><h3>Fountain editor</h3><div data-visual-fountain></div></article><article><h3>DOCX renderer</h3><div data-visual-docx-styles></div><div data-visual-docx></div></article></div>';
   const style = document.createElement('style');
-  style.textContent = '#browser-docx-visual-comparison{padding:24px;background:#eeeaf8;color:#181426;font-family:Arial,sans-serif}.visual-export-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.visual-export-grid>article{min-width:0;padding:16px;background:#fff;border:1px solid #cfc7df;border-radius:12px}.visual-export-grid h3{margin:0 0 12px}.visual-export-grid [data-visual-fountain]{min-height:760px;padding:48px}.visual-export-grid [data-visual-docx]{min-height:760px;overflow:hidden}.visual-export-grid .docx-wrapper{padding:0;background:#fff}.visual-export-grid .docx-wrapper>section.docx{margin:0 auto;box-shadow:none}';
+  // Compare complete Letter-sized surfaces at the same scale. A narrow two-
+  // column grid used to crop the native preview's right edge with overflow:
+  // hidden, making image alignment and wrapping impossible to judge honestly.
+  style.textContent = `
+    #browser-docx-visual-comparison{padding:24px;background:#eeeaf8;color:#181426;font-family:Arial,sans-serif}
+    .visual-export-grid{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}
+    .visual-export-grid>article{min-width:0;padding:16px;background:#fff;border:1px solid #cfc7df;border-radius:12px}
+    .visual-export-grid h3{margin:0 0 12px}
+    .visual-export-grid [data-visual-fountain]{width:816px;max-width:100%;min-height:1056px;margin:0 auto}
+    .visual-export-grid [data-visual-fountain]>.fountain-editor{min-height:1056px;padding:96px;font-family:Arial,sans-serif}
+    .visual-export-grid [data-visual-docx]{min-height:1056px;overflow:auto}
+    .visual-export-grid .docx-wrapper{padding:0;background:#fff}
+    .visual-export-grid .docx-wrapper>section.docx{margin:0 auto;box-shadow:none}
+    @media(min-width:1800px){.visual-export-grid{grid-template-columns:1fr 1fr}}
+  `;
   section.prepend(style);
   document.body.appendChild(section);
   const fountainMount = section.querySelector<HTMLElement>('[data-visual-fountain]')!;
@@ -1287,6 +1337,20 @@ const renderDOCXVisualComparison = async (numbering = false) => {
   docxVisualView = new EditorView(fountainMount, docxVisualEditor, { ariaLabel: 'Fountain export source' });
   const exported = exportDOCX(fixture, { page: 'letter', title: numbering ? 'Release procedure' : 'Visual export parity' });
   await renderIndependentDOCX(exported.bytes, docxMount, styleMount, { inWrapper: true, breakPages: true, useBase64URL: true });
+  // Keep the actual exported archive untouched. This third-party preview can
+  // omit cell content carried by a semantic content control; expose that
+  // disagreement rather than treating its incomplete text as export fidelity.
+  const sourceCells = [...fountainMount.querySelectorAll('td,th')].map(cell => cell.textContent?.trim() ?? '');
+  const previewCells = [...docxMount.querySelectorAll('td,th')].map(cell => cell.textContent?.trim() ?? '');
+  const missingCells = sourceCells.filter(text => text && !previewCells.includes(text));
+  const viewerIssues = missingCells.length ? [{ code: 'viewer-omits-table-cell-text',
+    sourceCellCount: sourceCells.length, previewCellCount: previewCells.length, missing: missingCells }] : [];
+  const viewerNotice = document.createElement('p');
+  viewerNotice.dataset.viewerIssues = '';
+  viewerNotice.textContent = missingCells.length
+    ? `Independent browser DOCX viewer omitted table-cell content: ${missingCells.join('; ')}. The untouched archive and native Fountain reopen are checked separately. This is not a passing native Word fidelity comparison.`
+    : 'No checked table-cell omission detected. This browser preview is not native Word fidelity approval.';
+  section.append(viewerNotice);
   section.scrollIntoView({ block: 'start' });
   return {
     fidelity: exported.report.fidelity,
@@ -1296,7 +1360,8 @@ const renderDOCXVisualComparison = async (numbering = false) => {
     fountainImages: fountainMount.querySelectorAll('img').length,
     docxImages: docxMount.querySelectorAll('img').length,
     docxPages: docxMount.querySelectorAll('section.docx').length,
-    ...(numbering ? { bytes: Array.from(exported.bytes), source: fixture.toJSON(), reopened: importDOCX(exported.bytes, schema).document.toJSON() } : {}),
+    viewerIssues, viewerCells: previewCells,
+    bytes: Array.from(exported.bytes), source: fixture.toJSON(), reopened: importDOCX(exported.bytes, schema).document.toJSON(),
   };
 };
 
@@ -1312,6 +1377,8 @@ Object.assign(globalThis, {
     clipboardHistory: () => getClipboardHistoryState(editor),
     inspectMarkdown,
     inspectMarkdownSource,
+    partialMarkdownSource: () => partialMarkdown
+      ? MarkdownExporter.exportWithSource(editor.state.doc, partialMarkdown.source) : undefined,
     importRegisteredHTMLFlow: async (source: string) => {
       const { ServerHTMLImporter } = await import('../../../src/html/server');
       const fallbacks: unknown[] = [];
@@ -1335,8 +1402,11 @@ Object.assign(globalThis, {
     performanceBudget: runPerformanceBudget,
     virtualizationBudget: runVirtualizationBudget,
     htmlContainers: async () => (await import('./html-container-audit')).mountHTMLContainerAudit(),
-    markdownDocument: async (referenceHTML: string, sample?: 'html' | 'plain') => (await import('./markdown-document-audit')).mountMarkdownDocumentAudit(referenceHTML, sample),
-    docxVisual: { render: renderDOCXVisualComparison, math: async () => (await import('./docx-math-audit')).mountDOCXMathAudit(), controls: async () => (await import('./docx-controls-audit')).mountDOCXControlsAudit(), glossary: async () => (await import('./docx-glossary-audit')).mountDOCXGlossaryAudit() },
+    markdownDocument: async (referenceHTML: string, sample?: 'html' | 'plain', inlineFlow?: boolean) => {
+      const result = (await import('./markdown-document-audit')).mountMarkdownDocumentAudit(referenceHTML, sample, inlineFlow);
+      return { source: result.source, paragraphs: result.paragraphs, issues: result.issues };
+    },
+    docxVisual: { render: renderDOCXVisualComparison, reopen: reopenDOCXVisualComparison, exportCurrent: exportDOCXVisualComparison, math: async () => (await import('./docx-math-audit')).mountDOCXMathAudit(), controls: async () => (await import('./docx-controls-audit')).mountDOCXControlsAudit(), glossary: async () => (await import('./docx-glossary-audit')).mountDOCXGlossaryAudit() },
     startImageUpload,
     collaboration: {
       leftEditor,

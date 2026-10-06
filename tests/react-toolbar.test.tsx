@@ -22,6 +22,25 @@ import {
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('React toolbar primitives', () => {
+  it('includes visible text-icon abbreviations in default accessible action names', async () => {
+    const kit = composeExtensions([CoreExtension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const root = createRoot(mount);
+    try {
+      await act(async () => root.render(<FountainToolbar editor={editor} />));
+      for (const [action, label] of [['heading-1', 'H1 — Heading 1'], ['heading-2', 'H2 — Heading 2'],
+        ['heading-3', 'H3 — Heading 3'], ['subscript', '2 — Subscript'], ['superscript', '2 — Superscript'],
+        ['ordered-list', '123 — Numbered list']]) {
+        const button = mount.querySelector(`[data-fountain-toolbar-action="${action}"]`)!;
+        expect(button.getAttribute('aria-label')).toBe(label);
+        expect(button.getAttribute('title')).toBe(label);
+        const visible = [...button.querySelectorAll('svg text')].map(text => text.textContent).join('');
+        expect(label).toContain(visible);
+      }
+    } finally { await act(async () => root.unmount()); editor.destroy(); mount.remove(); }
+  });
+
   it('runs pointer and keyboard activation once while preserving accessible state', async () => {
     const mount = document.createElement('div');
     document.body.append(mount);
@@ -191,7 +210,7 @@ describe('supplied React toolbar composition', () => {
     const root = createRoot(mount);
     await act(async () => root.render(<FountainToolbar editor={editor} groups={['marks']} />));
 
-    const styles = mount.querySelector<HTMLButtonElement>('[aria-label="Text styles"]')!;
+    const styles = mount.querySelector<HTMLButtonElement>('[aria-label="A — Text styles"]')!;
     await act(async () => styles.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, detail: 1 })));
     expect(styles.getAttribute('aria-pressed')).toBe('true');
     expect(mount.querySelector('.is-text-style strong')?.textContent).toBe('Text styles');

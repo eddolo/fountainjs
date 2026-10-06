@@ -49,7 +49,23 @@ try {
   }
   if (body.paragraphRecovered !== true) throw new Error('Worker paragraph HTML recovery failed.');
   if (body.paragraphSources !== true) throw new Error('Worker Markdown flow paragraph inspection failed.');
+  if (body.pageSettingsChecked !== true) throw new Error('Worker complete HTML page-settings interchange failed.');
+  if (body.commentsChecked !== true) throw new Error('Worker inert HTML comment interchange failed.');
+  if (body.flowChecked !== true) throw new Error('Worker anonymous HTML flow interchange failed.');
+  if (body.blockAtomsChecked !== true) throw new Error('Worker protected Markdown block-atom interchange/refusal failed.');
+  if (body.emphasisChecked !== 140) throw new Error('Worker native emphasis/partial-schema interchange failed.');
+  if (body.modelIntegrityChecked !== 576) throw new Error('Worker native model integrity failed.');
+  if (body.inertSourceChecked !== true) throw new Error('Worker inert inline source preservation failed.');
+  if (body.linkControlsChecked !== 486) throw new Error('Worker HTML link normalization/security/history failed.');
+  console.log(`Cloudflare workerd (Miniflare): ${body.linkControlsChecked} link normalization/security/history/destination contracts passed.`);
+  console.log('Cloudflare workerd (Miniflare): inert inline lexical data, complete reopen, transactions/history and carrier refusal passed.');
+  console.log('Cloudflare workerd (Miniflare): 576 owned-attribute checks plus immutable snapshots/history passed.');
+  console.log('Cloudflare workerd (Miniflare): 140 native emphasis and partial-schema retention checks passed.');
+  console.log('Cloudflare workerd (Miniflare): protected Markdown images/rules/tables, full reopen and refusal guards passed.');
+  console.log('Cloudflare workerd (Miniflare): anonymous HTML flow without synthetic paragraphs and native/canonical reopening passed.');
+  console.log('Cloudflare workerd (Miniflare): inert HTML comment retention, canonical reopen and breakout rejection passed.');
   console.log('Cloudflare workerd (Miniflare): DOM-free server HTML import/export passed.');
+  console.log('Cloudflare workerd (Miniflare): complete HTML page-settings retention and invalid/fragment boundaries passed.');
 } finally {
   await worker.dispose();
 }

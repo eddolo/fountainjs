@@ -1,5 +1,57 @@
 # FountainJS API
 
+Unreleased HTML blank-paragraph boundary: `HTMLExporter.export` includes
+`p{min-height:1em;min-height:1lh}` in its default standalone stylesheet. Empty
+paragraphs, including those containing empty marked spans, occupy one computed
+line without synthetic text or breaks. `document: false` and
+`includeStyles: false` do not add this stylesheet: fragment/unstyled hosts own
+the corresponding rule. Browser/server importers restore genuinely childless
+paragraphs only from a childless `data-fountain-empty="block"` element; the marker
+cannot hide source children. No new public API or document attribute is added.
+The inert workshop's **Download standalone HTML** control uses this actual
+exporter; its reader remains a separate basic theme, not an appearance oracle.
+
+Unreleased link boundary: `ServerHTMLImportIssueCode` includes
+`normalized-link-url` for safe HTML URL data/navigation projection. The supplied
+link mark has optional `htmlHref`: bounded inert HTML-source spelling, absent
+on ordinary/Markdown-authored links, validated and bound to stored `href` before
+rendering. Custom link schemas can omit it but then cannot promise HTML-origin
+navigation retention. Native literal/HTML carriers are validated private HTML
+data, not new callable APIs. Unsafe destinations remain rejected;
+invalid carriers/over-limit normalization use `invalid-rule-result`. See
+[the exact contract](SERVER_HTML.md#link-destination-policy).
+
+`HTMLFlowExtension` and `htmlFlow` are optional root/core exports for anonymous
+inline HTML outside authored paragraphs. Browser/server imports can retain it as
+a block-group `html_flow` with inline children; its editor carrier is inline and
+uses normal HTML whitespace. Native HTML exports its children, while canonical
+Markdown uses an inert `div[data-fountain-html-flow="true"]` envelope and requires
+the same schema/HTML conversion on reopening. Enter creates a real paragraph;
+ordinary joins, inline paste and history remain available. StarterKit is unchanged.
+The canonical envelope distinguishes a cleared unmarked caret leaf using inert
+`data-fountain-empty-text="true"`; a childless flow stays childless. This private
+conversion marker is not a new document attribute or a generic paragraph rule.
+Empty native HTML is a reader projection, not an exact model backup.
+This is not arbitrary HTML/CSS or native Word support. See
+[the contract](MARKDOWN_DOCUMENT_FLOW.md#optional-anonymous-inline-flow-2026-10-05-unreleased).
+
+`HTMLCommentExtension` and its `htmlComment` node spec are available from the
+root and platform-neutral `fountainjs-editor/core` entries. Add the extension to
+your schema to preserve safe inert HTML comments; enable HTML conversion
+separately for Markdown. The node's `data` attribute is validated source text,
+not executable HTML or a review thread. Author badges do not appear in native
+HTML output. Existing node-attribute transactions can edit it, and ordinary
+node selection/deletion/history apply. Explicit `toText: () => ''` projections
+are now honored by clipboard copy rather than replaced with author-control text.
+See [the detailed contract and demo](MARKDOWN_DOCUMENT_FLOW.md#optional-inert-html-comments-2026-10-05-unreleased).
+
+Standalone `HTMLExporter.export(doc)` files preserve supported physical
+`doc.attrs.pageSettings` as inert body metadata. `HTMLImporter.parse` and
+`ServerHTMLImporter.parse` restore it; `document: false` exports and fragment
+imports do not transfer document settings. This is not arbitrary root-metadata
+retention or native print-layout equivalence. See [SERVER_HTML.md](SERVER_HTML.md)
+for validation, bounds and the additive `invalid-page-settings` report code.
+
 ## Platform-neutral package entry
 
 `fountainjs-editor/core` is the enforced no-DOM engine entry. It exports the
@@ -29,7 +81,28 @@ These runtimes do not enter the headless core or the other framework surfaces.
 
 ## Document model
 
-`Schema` compiles a `SchemaSpec` into node and mark types. Use `schema.node()`, `schema.text()`, and `schema.mark()` to create values with attribute defaults and validation. `schema.validate()` enforces ownership, attributes, atom rules, mark placement, and node content expressions at every editor-state boundary. `Node` values are immutable and provide `textContent`, `nodeSize`, `child()`, `descendants()`, `eq()`, and `toJSON()`.
+`Schema` compiles a `SchemaSpec` into node and mark types. Use `schema.node()`, `schema.text()`, and `schema.mark()` to create values with attribute defaults and validation. `schema.validate()` enforces ownership, attributes, atom rules, mark placement, and node content expressions at every editor-state boundary. `Node` values are designed for immutable use and provide `textContent`, `nodeSize`, `child()`, `descendants()`, `eq()`, and `toJSON()`.
+
+Unreleased integrity correction (2026-10-06): native `Node` and `Mark` instances
+are now runtime-frozen as well as their content/mark arrays and portable
+attributes. Assignment, deletion and redefinition of their own fields cannot
+alter historical snapshots. Use transactions and `withAttrs`, `withText`,
+`withMarks` or `copy` to construct replacements; do not attach mutable application
+state to a node/mark instance or subclass it to add fields after construction.
+Use extension specs, plugins, services and renderer-owned node views instead.
+This does not freeze the entire schema/type configuration or arbitrary
+non-portable attribute instances. Mutable non-portable values remain outside
+the immutable validation cache.
+
+Attribute construction now reads only own supplied fields. Inherited fields
+cannot override defaults or satisfy required attributes, and own JSON keys
+such as `constructor`, `toString` and `__proto__` remain literal data rather than
+being discarded or interpreted as prototype changes. The internal scratch
+builder is prototype-free; final public attributes remain frozen ordinary
+objects. Native text-node reopening also passes its supplied attributes through
+the text type's normal defaults/validators rather than discarding them via
+`schema.text()`. This is a model/native-JSON retention guarantee, not full DOCX/PDF/FJS
+file fidelity. See the scoped verification in [the roadmap](ROADMAP.md).
 
 Marks belong to inline content, including atomic inline nodes—not only text.
 Pass them as the fifth argument to `schema.node(...)`, or use
@@ -38,6 +111,14 @@ validation. JSON, DOM rendering, browser/server HTML, Markdown's supported
 inline-node forms, and Yjs preserve this distinction.
 
 `CoreSchemaSpec` includes paragraphs, headings, quotes, ordered/bullet/task lists, code blocks, tables, block/inline images, dividers, hard breaks, and common inline marks. `StarterKit` adds the independently composable native-media module and behavior/format extensions. Applications may extend or replace either with a compatible `SchemaSpec`.
+
+Unreleased: the built-in `blockquote` optionally accepts
+`appearance: "explicit"` when child paragraphs own their source border, spacing
+and indentation. The semantic container adds no default decoration in that
+mode; ordinary quotes omit the attribute and remain unchanged. Browser/server
+HTML and native DOCX preserve it, while ordinary Markdown reports styling loss.
+Custom host schemas must declare the attribute to accept the native projection.
+See [the quote contract](DOCX.md#source-owned-quote-appearance).
 
 ## Extension composition
 
@@ -74,6 +155,20 @@ re-renders an otherwise unchanged ancestor after another part of the document
 changes; the context and flag affect only presentation, never JSON. Generic output accepts semantic HTML
 but strips executable tags, event/srcdoc attributes, unsafe URL protocols, and
 dangerous CSS URL/expression forms. See [FORMATS.md](FORMATS.md#html).
+
+Unreleased: set `NodeSpec.markdown: 'html'` to opt a schema-owned node into
+sanitized HTML projection during canonical Markdown export. This reuses
+`HTMLExporter` and `toDOM`; it is not a raw HTML callback or an exception to
+its tag, attribute, URL and CSS filters. Paragraphs/headings containing these
+nodes export as HTML too, keeping neighboring formatting from becoming literal
+Markdown inside an HTML block. Literal CR/LF are encoded as character references.
+The report identifies each opted-in node at its document path and warns that
+reopening requires matching `parseHTML` rules plus an HTML-enabled Markdown
+adapter (for example `parseHTMLDocument: ServerHTMLImporter.parseTextBlockFlow`).
+An opt-in is not an arbitrary-JSON or original-token fidelity guarantee: compare
+the complete native model in your extension tests. Without the opt-in the
+existing readable-text fallback and loss reporting remain unchanged. See
+[the scoped preservation work](MARKDOWN_DOCUMENT_FLOW.md#schema-owned-markdown-html-boundary-2026-10-06).
 
 `composeExtensions(extensions, options?)` returns a `FountainKit` with the combined schema and registries. Duplicate extension names are rejected. Manifest requirements must already appear earlier in the list. Contribution conflicts throw by default; pass `{ onConflict: 'replace' }` only for an intentional override. `CoreExtension` is the built-in rich-document module and publishes its operations through `kit.commands`; `CoreSchemaSpec` remains its ready-made schema for simple setups. `StarterKit` combines the core, history, Markdown shortcuts, safe link behavior, live syntax highlighting, automatic table repair, a guaranteed trailing editable block, and the HTML/Markdown/JSON/text format modules.
 
@@ -237,7 +332,7 @@ in Markdown, readable text, and generic Yjs synchronization are supported. See
 ### Text styles
 
 `CoreExtension` and `StarterKit` include the complete text-style schema:
-`text_color`, `highlight`, `font_family`, `font_size`, and `line_height`.
+`text_color`, `highlight`, `font_family`, `font_size`, `line_height`, and `letter_spacing`.
 Framework-neutral commands and normalizers are available from the isolated
 `fountainjs-editor/text-style` entry:
 
@@ -248,6 +343,7 @@ import {
   setFontFamily,
   setFontSize,
   setLineHeight,
+  setLetterSpacing,
   setTextColor,
   unsetFontFamily,
 } from 'fountainjs-editor/text-style'
@@ -255,12 +351,13 @@ import {
 setFontFamily(editor, 'Noto Sans JP, sans-serif')
 setFontSize(editor, '18px')
 setLineHeight(editor, 1.75)
+setLetterSpacing(editor, '-0.5pt')
 ```
 
 Every setter normalizes and bounds its value before calling the ordinary mark
 transaction path. Each property has a corresponding `unset…` command.
 `getActiveTextStyle(editor)` returns common values across the complete selection
-and lists differing properties in `mixed`. `TextStyleExtension` exposes all five
+and lists differing properties in `mixed`. `TextStyleExtension` exposes all six
 mark specs and named commands for a custom schema that does not use
 `CoreExtension`; composing both intentionally triggers the duplicate-mark guard.
 
@@ -269,6 +366,69 @@ Markdown adapter uses deterministic inline HTML when Markdown syntax cannot
 represent a style. The React toolbar action id is `text-style`; other framework
 surfaces call the same module directly. See [TEXT_STYLE.md](TEXT_STYLE.md) for
 the value grammar, interchange, UI, collaboration, and security contract.
+
+`setLetterSpacing(editor, value)` uses physical points for numeric values, or
+explicit signed `pt`/`px`/`em`/`rem` strings. `getActiveTextStyle()` exposes the
+common `letterSpacing` or names it in `mixed`. `unsetLetterSpacing()` removes
+the mark; setting `0pt` retains a distinct explicit zero reset. Word export
+supports physical values and reports normalization/rounding or unsupported
+relative units. This does not implement kerning or certify native font metrics.
+
+### Paragraph layout
+
+Paragraphs, headings and code blocks accept an optional `layout: ParagraphLayout`.
+It is portable document data, distinct from inline `line_height` marks or arbitrary
+browser CSS. `ParagraphLayout` and `isParagraphLayout` are available from
+`fountainjs-editor/core`; lengths use points. For example:
+
+```ts
+import type { ParagraphLayout } from 'fountainjs-editor/core'
+
+const layout: ParagraphLayout = {
+  unit: 'pt', fontFamily: 'Georgia', fontSize: 14,
+  spacingBefore: 0, spacingAfter: 8,
+  lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
+}
+const paragraph = schema.node('paragraph', { layout }, [schema.text('Body text')])
+```
+
+`fontFamily` is a validated canonical family name or CSS fallback list;
+`fontSize` is a physical size from 1 to 384 points. These set the paragraph's
+font context, including empty lines; inline font marks override it. Browser
+and server HTML retain that distinction rather than injecting paragraph fonts
+as inline marks. DOCX requires a named face, reports generic/fallback-list
+limitations and rounds sizes to half-points with a report. Fonts are not embedded
+or fetched. Image captions use the same profile through `captionLayout`.
+
+The profile also supports start/end and first-line/hanging indents, keep flags,
+page-break-before, RGB shading and solid borders. A physical line height uses
+`lineHeightUnit: 'pt'` with `lineHeightRule: 'exact'` or `'atLeast'`; a multiple
+uses `'auto'`. CSS cannot implement the native at-least rule exactly. Full Word
+font-dependent line metrics and pagination are not guaranteed by this profile.
+
+JSON, normal transactions/history, block splitting, collaboration and Fountain
+HTML retain the typed value. HTML's `data-fountain-paragraph-layout` carries the
+authoritative data; inline CSS is only its view projection. DOCX resolves its
+supported style hierarchy before materializing omitted before/after spacing as
+zero, omitted line spacing as a single-line multiple and never-declared keep/page-break
+flags as false, then exports those
+effective values explicitly. This avoids switching to browser/generated Word
+spacing on reopening, but does not retain original XML omissions or a live
+style binding. Fresh Fountain blocks with no layout still use application
+defaults. Word paragraph-mark font formatting is projected only when source
+text-run fonts are resolved independently (or the paragraph is empty). Otherwise
+a located conversion warning explains why inheriting that mark font into unknown
+text would be wrong. Markdown reports the unrepresentable presentation. See [DOCX layout
+limits](DOCX.md#paragraph-layout) for unsupported native properties and evidence.
+
+`insertHardBreak` preserves the active stored marks on the break and subsequent
+text, including an explicit empty mark set. DOCX imports text-wrapping line
+breaks with their containing run's marks. The DOM view preserves Shift+Enter's
+hard-break intent when WebKit emits `insertParagraph`, without bypassing plugin
+input handlers; code blocks insert literal newlines and ordinary Enter splits.
+DOCX export reports
+`paragraph-font-defaulted` when a typed layout has no resolved family or size;
+generated Word defaults may change line geometry even when inline fonts remain.
 
 ### Code blocks and syntax highlighting
 
@@ -320,6 +480,64 @@ untrusted content.
 `problems`, `cellAt()`, `cellInfo()`, `cellsInRect()`,
 `rectangleBetween()`, and `columnWidth()`. A `CellSelection` uses this map and
 expands automatically rather than cutting through a merged cell.
+
+The table node's optional `layout` attribute accepts `'fixed'` or `'auto'`.
+Undefined keeps the existing automatic view. Fixed layout uses the logical
+grid for HTML columns and, when every column has a stored width and there is no
+explicit preferred width, the table's pixel width is their sum. Long text wraps
+within those columns. Resize, Undo and Redo update the same cell `colwidth` data.
+The inferred width includes outer borders; HTML columns use the grid's ratios.
+A matching physical preferred width uses the same projection on reopen, while
+different explicit preferences remain independent of the absolute columns.
+JSON, browser/server HTML and DOCX preserve explicit layout modes; pipe Markdown
+reports their loss.
+Native Word/LibreOffice geometry is not yet visually certified.
+
+The table's independent `preferredWidth: TablePreferredWidth` accepts
+`{ unit: 'pt', value }` (0–10,000 pt), `{ unit: 'percent', value }` (0–1000%),
+`{ unit: 'auto' }` or `{ unit: 'nil' }`. `isTablePreferredWidth()` validates it
+without a DOM. Undefined keeps existing application/grid defaults; explicit
+`auto` uses intrinsic sizing and `nil` projects a zero-width preference, which
+content can exceed. The preference does not overwrite stored cell widths.
+DOCX import materializes an omitted native width as explicit `auto`, rather than
+confusing it with Fountain's undeclared full-width default. DOCX export projects
+an undeclared preference to 100% of page text width, or to the grid's physical
+sum for a fixed table with a complete stored grid. A located informational
+`table-width-defaulted` report explains the materialization; custom host CSS
+width overrides are not inferred. Export does not mutate the original document.
+Resizing a column leaves an explicit preference intact; applications may update
+both in one transaction if that is their intended interaction.
+
+JSON and Fountain HTML retain the typed data (`data-fountain-table-preferred-width`);
+this is not an arbitrary external CSS-width importer. DOCX stores supported
+native physical/percentage/automatic/zero declarations. Its export resolution
+is 0.05 pt or 0.02%, with located rounding reports. CSS percentages are relative
+to the containing surface, whereas native DOCX table percentages use page text
+extents; a host must use the matching content-width surface for page fidelity.
+The native layout algorithm may override any preference to satisfy content/grid
+constraints. No 1:1 layout claim follows from retaining the preference.
+
+Tables and cells may store optional `appearance: TableAppearance`. This is
+validated physical data, not arbitrary CSS: `unit: 'pt'`, optional `padding`
+(`top`, `right`, `bottom`, `left`, 0–1000 pt) and `borders`. Table borders also
+accept `insideH`/`insideV`; cell borders accept only the four physical edges.
+Line borders use `{ style: 'solid' | 'double' | 'dotted' | 'dashed', width, color }`
+with 0.125–12 pt widths and six-digit RGB colours. `{ style: 'none' }` permits
+the table fallback; `{ style: 'hidden' }` maps Word `nil` and suppresses it.
+Zero padding is retained, not treated as missing. `isTableAppearance(value, cell?)`
+validates this portable profile without a DOM.
+
+Undefined appearance keeps fresh/legacy Fountain defaults. `{ unit: 'pt' }`
+records that an imported table declared no supported appearance and must not
+acquire Fountain's generated grid/padding. Missing padding projects to zero
+in that browser profile; this does not certify Word's implicit/default margins.
+Use `editor.state.createTransaction().setNodeAttrs(tablePath, { ...table.attrs,
+appearance })` and dispatch it for an undoable change. The view refreshes cell
+edges from logical span geometry, including unchanged cells after a parent edit.
+JSON and Fountain HTML retain the declarations; DOCX rounds to its native
+eighth-point borders/twip margins with reports. Table-style inheritance and
+native merge-fragment/conflict layout are not yet covered. No style picker is
+added by this API; applications choose their author controls.
 
 The public commands are `addTableRow`, `deleteTableRow`, `addTableColumn`,
 `deleteTableColumn`, `deleteTable`, `moveTableCell`, `mergeTableCells`, `splitTableCell`,
@@ -594,8 +812,10 @@ starter extensions to add `inline_math` and `math_block` atom nodes:
 const kit = composeExtensions([...StarterKit.extensions, MathExtension])
 ```
 
-Both nodes store `{ latex, ariaLabel }`; TeX is capped at 20,000 characters and
-remains the lossless source of truth. The commands are:
+Both nodes store `{ latex, ariaLabel, expression? }`; TeX is capped at 20,000
+characters and remains the author-editable source of truth. `expression` is an
+optional bounded `MathExpression` retained by semantic format adapters. The
+commands are:
 
 - `insertInlineMath(editor, latex?, ariaLabel?)`, which can use the current
   single-text selection when `latex` is omitted;
@@ -604,11 +824,12 @@ remains the lossless source of truth. The commands are:
 - `setMathSource(editor, latex, ariaLabel?, path?)` for a selected or explicitly
   addressed math node.
 
-Typing `$...$` or `$$...$$` creates a semantic node, and immediate Backspace
+Typing `$...$` or `$$...$$` creates a math node, and immediate Backspace
 restores the literal delimiters. Pasted math Markdown is parsed through an
-independent paste rule. JSON is lossless; Markdown, safe HTML, and text
-import/export preserve TeX source. HTML carries a separate stored label so the
-computed accessible fallback does not change JSON on round trip.
+independent paste rule. JSON is lossless; safe HTML preserves TeX, label and a
+valid optional semantic expression. Markdown and text preserve/project the TeX;
+Markdown reports that it cannot retain the typed tree. HTML carries a separate
+stored label so the computed accessible fallback does not change JSON on round trip.
 
 Without a renderer, the NodeView exposes source in a `<code>` fallback with
 `role="math"`, an accessible label, full-source hover text, and selection/error
@@ -646,7 +867,9 @@ For document-level dependencies such as equation labels, opt into
   nor compiled output belongs in persisted document JSON.
 
 Unchanged mounted math nodes refresh when the document changes elsewhere; source
-textareas retain their identity and active native selection. Selection-only
+textareas retain their identity and active native selection. An actual source
+edit removes an older retained `expression`, preventing stale imported semantics
+from overriding the new TeX; Undo restores both values. Selection-only
 changes do not require recompilation. A host can batch-compile once per snapshot
 and retrieve each node's result from that cache. Implement invalidation and
 resource limits in the host compiler; a full-document compile on every keystroke
@@ -762,6 +985,15 @@ examples, endpoint constraints, stale-result handling, and loopback security.
 - `plugins`: optional `Plugin[]`.
 - `editable`: defaults to `true`.
 - `onUpdate(state, transaction)`: called after a dispatched state change.
+
+Native nodes belong to a particular `Schema` instance. For an existing editor,
+parse/import using `editor.state.schema` before dispatching the result. A node
+created with a separate `new Schema(spec)` is not interchangeable merely because
+its specification is equal; the foreign-node guard rejects it. For initial
+portable content, pass `node.toJSON()` to `createEditor`, or supply a prebuilt
+state with the owning schema. To retain a Markdown source snapshot through
+editing, parse with the editor's owning schema, rather than transferring the
+native snapshot between independently constructed schemas.
 
 `Editor` exposes `state`, `editable`, `createTransaction()`, `dispatch()`,
 `runCommandBatch()`, `subscribe()`, `getJSON()`, `getText()`, and `destroy()`.
@@ -1561,7 +1793,12 @@ data. React and Custom Element surfaces forward the same option.
 `image_super` is the captioned block image; `inline_image` is an atomic inline
 node for icons, badges, and images between text. Shared attributes are `src`,
 `alt`, `title`, `width`, `height`, `align`, `srcset`, `sizes`, `loading`, and
-`decoding`; block images also carry `caption`. URL, CSS-size, responsive-source,
+`decoding`. Block images accept editable inline caption content and retain the
+legacy `caption` string for compatibility. `captionAlign` optionally selects
+the caption's alignment independently of the image; `captionLayout` accepts
+the portable paragraph geometry used by text blocks. DOCX and browser/server
+HTML retain these values, and the image view applies them to the caption.
+URL, CSS-size, responsive-source,
 and enum values are schema-validated. `createImageNode` creates a node without
 dispatching, while `insertImage` and `insertInlineImage` use the active
 selection. `setImageAttributes`, `setImageAlignment`, and `deleteImage` operate
@@ -1572,11 +1809,18 @@ round-trip as an `inline_image` with a `link` mark through JSON, Markdown,
 browser/server HTML, the DOM renderer, and Yjs; no image-specific URL attribute
 or browser-only wrapper is required.
 
-The block-image NodeView supplies a multiline caption field, selection state,
-load-error status and retry, and two resize sliders. Drag either handle with a
+The block-image NodeView supplies a legacy caption field that promotes an edit
+to model-owned inline content, direct rich-caption editing, selection state,
+load-error status and retry, and two resize sliders. Image commands still target
+the parent image while the caret is in its caption. Drag either handle with a
 pointer/touch input, or focus it and use Left/Right (10 px), Shift+Left/Right
 (50 px), Home (minimum), or End (maximum). Captions and controls disappear
 safely in read-only mode while populated caption text remains visible.
+
+Extensions can set `NodeSpec.selectable` when a non-atomic NodeView needs both a
+whole-node selection shell and editable model-owned `contentDOM`. Pointer input
+inside that content remains ordinary text selection; clicks on the shell and
+adjacent-node keyboard navigation can select the whole node.
 
 `startImageUpload(editor, file, options)` returns an `ImageUploadTask` with
 `snapshot`, `completion`, `subscribe(listener)`, `cancel()`, and `retry()`.
@@ -2052,10 +2296,11 @@ page dimensions, internal equation destinations and no duplicated prose, plus
 independent Poppler rendering of all three sample pages. This is not a tagged
 accessible PDF, native editable math export, or full academic-paper comparison.
 Firefox/WebKit print layouts are tested; their native PDF generation is not
-covered by Playwright. DOCX defaults to TeX fallback text with a loss report.
-An experimental host-supplied semantic `resolveMath` projection can emit OMML;
-Word rendering, round-trip restoration, numbering and live references remain
-unverified or unimplemented. See [the DOCX boundary](DOCX.md#experimental-native-word-equations).
+covered by Playwright. DOCX writes a retained platform-neutral `MathExpression`
+directly as OMML when available; host-authored TeX can opt into `resolveMath`.
+The bounded OMML importer rebuilds real editable Fountain math. Native Word
+rendering/editing, complete OMML, numbering and live references remain unverified
+or unimplemented. See [the DOCX boundary](DOCX.md#experimental-native-word-equations).
 
 `createDOMPageLayoutController(root, getDocument, geometry, options)` adds an
 optional automatic lifecycle around the same functions. It coalesces subtree
@@ -2081,7 +2326,13 @@ from DOM-to-model offsets and model-to-DOM traversal, so carets on either side
 resolve to one logical boundary and a range crossing the widget retains its
 document offsets. A split table remains one editable
 table with the same row nodes; page shells render read-only, accessibility-hidden
-copies of its canonical leading header rows. Multi-row headers preserve
+copies of its canonical leading repeating rows. Unreleased:
+`table_row.attrs.repeatHeader` is an optional boolean independent of
+`table_header` cell roles. Explicit on/off intent wins; unspecified legacy rows
+use the existing all-header-cell default. Only a contiguous leading band repeats.
+JSON and HTML retain explicit intent, and the contextual/expanded React action
+`toggle-row-repeat-header` updates it through ordinary transactions/history.
+Multi-row headers preserve
 `rowspan` and `colspan` only when each rowspan closes within the leading header
 band; a header spanning into body rows is kept canonical but not repeated.
 Transitive body rowspans form one unsplittable row group. DOM order, model-node identity,
@@ -2163,13 +2414,26 @@ converter never fetches URLs. Reports contain immutable path-bearing issues and
 a `bounded` or `lossy` fidelity value. See [DOCX.md](DOCX.md) for the precise
 supported subset, fallback policy, resource limits, and security boundary.
 
-`DOCXExportOptions.resolveMath(node, path)` accepts an optional synchronous
-`DOCXMathExpression` projection for inline/display math, including nested nodes.
-It accepts semantic data, not XML, and adds no TeX parser or browser dependency.
-Validated trees emit experimental OMML plus original-source metadata; unsupported
-trees retain TeX fallback. The report deliberately remains `lossy`: native Word
-rendering/editing and source restoration are not certified. `importDOCX` reports
-`unsupported-office-math` instead of flattening equations into misleading text.
+`MathExpression` is the bounded, JSON-safe semantic representation shared by
+format adapters; `DOCXMathExpression` is its compatibility alias.
+`isMathExpression` and `parseMathExpressionJSON` validate untrusted boundaries.
+Math nodes may retain this optional `expression` attribute through Fountain JSON
+and HTML. Markdown projects it to TeX and reports that the semantic tree is not
+represented there. Editing a math node's TeX clears the retained expression in
+the same undoable transaction so stale semantics cannot override the edit.
+
+`DOCXExportOptions.resolveMath(node, path)` remains an optional synchronous
+projection for Fountain-authored inline/display TeX. It accepts semantic data,
+not XML, and adds no TeX parser or browser dependency. Retained or host-resolved
+trees emit experimental OMML plus source metadata; declined/invalid host
+conversions retain readable TeX fallback. `importDOCX` converts its supported
+OMML subset into typed math and generated editable TeX. It reports and visibly
+preserves unsupported structures rather than flattening them into misleading text.
+The current subset includes runs/rows, fractions, radicals, scripts, delimiters,
+n-ary operators, rectangular matrices, combining accents, function application,
+upper/lower limits and equation arrays.
+The report remains `lossy`: complete Office Math and native Word/LibreOffice
+rendering/editing are not certified.
 
 ## React
 
@@ -2223,3 +2487,32 @@ The standalone toolbar primitives can compose product-owned commands without
 mounting the supplied toolbar. See [TOOLBAR.md](TOOLBAR.md) for the complete ID
 registry, render context, keyboard/focus contract, responsive behavior, and
 non-React boundary.
+
+## Optional unknown-inline source retention (Unreleased)
+
+`fountainjs-editor/html/inert` exports `createInertHTMLInlineExtension({ tags })`.
+It also exports `createInertHTMLBlockExtension({ tags })` for explicitly owned
+unknown block wrappers and `appendInertHTMLBlockParagraph(editor, path)` for
+explicit empty-wrapper authoring. The block factory registers that command too.
+`html_inert_block` retains `block*` children and the same bounded inert data;
+it exports a safe `div` carrier, never the original behavior/CSS. Empty imports
+stay empty until the undoable paragraph action. Call `view.focus()` afterwards
+to restore its logical caret. Do not compete with inline rules for the same tag.
+See [the block contract and public workshop](HTML_INERT_SOURCE.md#registered-block-wrappers).
+It preserves explicitly registered unknown inline tags as inert attributes and
+editable children; it never renders the original tag or its behavior. The
+server importer adds opt-in `sourceTokens: true`, and portable HTML rules can
+inspect optional `getSourceTokens()` and `querySelectorAll()` methods.
+`HTMLSourceTokens` distinguishes direct HTML from reconstructed Markdown input,
+without exposing misleading file offsets. Source inspection is off by default.
+See [the bounded data/security/reopening contract](HTML_INERT_SOURCE.md) and the
+Node/Markdown demo's **Inert HTML preservation** workshop.
+
+The same entry separately exports `createInertHTMLRawTextExtension({ tags })`,
+restricted to explicitly registered `script`, `style` and `textarea`. It stores
+literal source in editable `html_inert_raw_text` code nodes and exports safe
+span/code carriers, never original executable HTML or live controls. HTML
+newline/entity rules still apply. `code: true` with `content: 'text*'` also
+keeps imported Unicode as text rather than emoji atoms; supported display
+marks remain representable. See the linked contract for raw-body, head/body,
+protected-source and bounded reopening limitations.

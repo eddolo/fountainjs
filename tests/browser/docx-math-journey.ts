@@ -44,7 +44,7 @@ export async function docxMathJourney(page: Page, info: TestInfo) {
   await expect(root.locator('[data-word] math')).toHaveCount(0);
   const edited = await exportCurrent('edited-equations');
   expect(strFromU8(edited['customXml/fountainMath.xml'])).toContain('z+1');
-  await expect(root.getByRole('status')).toContainText('8 experimental equations exported; 0 other conversion warnings');
+  await expect(root.getByRole('status')).toContainText('8 experimental equations exported; 0 other conversion warnings, 1 informational details, 0 errors');
   await expect(root.locator('[data-word]')).toContainText('z+1');
   await expect(root.locator('[data-word] math').first()).toHaveText('z+1');
   await root.screenshot({ path: info.outputPath('edited-equations.png') });
@@ -54,7 +54,7 @@ export async function docxMathJourney(page: Page, info: TestInfo) {
   await source.fill(String.raw`\frac{a^3+b}{\sqrt{c}}`);
   const compound = await exportCurrent('edited-compound-equations');
   expect(strFromU8(compound['customXml/fountainMath.xml'])).toContain('a^3+b');
-  await expect(root.getByRole('status')).toContainText('8 experimental equations exported; 0 other conversion warnings');
+  await expect(root.getByRole('status')).toContainText('8 experimental equations exported; 0 other conversion warnings, 1 informational details, 0 errors');
   await expect(root.locator('[data-word] math').first().locator('mfrac')).toHaveCount(1);
   await expect(root.locator('[data-word] math').first()).toHaveText('a3+bc');
   await root.screenshot({ path: info.outputPath('edited-compound-equations.png') });
@@ -64,15 +64,17 @@ export async function docxMathJourney(page: Page, info: TestInfo) {
   await source.fill(String.raw`z\quad 1`);
   const fallback = await exportCurrent('fallback-equations');
   expect(strFromU8(fallback['word/document.xml'])).toContain(String.raw`z\quad 1`);
-  await expect(root.getByRole('status')).toContainText('7 experimental equations exported; 2 other conversion warnings');
-  await expect(root.getByRole('list', { name: 'Conversion warnings' })).toContainText('Unsupported DOCX math mspace');
+  await expect(root.getByRole('status')).toContainText('7 experimental equations exported; 2 other conversion warnings, 1 informational details, 0 errors');
+  await expect(root.getByRole('list', { name: 'Conversion details' })).toContainText('Unsupported DOCX math mspace');
   await expect(root.locator('[data-word]')).toContainText(String.raw`z\quad 1`);
   await root.screenshot({ path: info.outputPath('fallback-equations.png') });
   await root.getByRole('button', { name: 'Undo equation edit' }).click();
   await expect(source).toHaveValue(String.raw`\frac{x^2}{\sqrt{y}}`);
   await exportCurrent('restored-equations');
   await expect(root.getByRole('status')).toContainText('8 experimental equations exported');
-  await expect(root.locator('[data-conversion-issues] li')).toHaveCount(0);
+  await expect(root.locator('[data-conversion-issues] li')).toHaveCount(1);
+  await expect(root.locator('[data-conversion-issues] li')).toHaveAttribute('data-code', 'page-settings-defaulted');
+  await expect(root.locator('[data-conversion-issues] li')).toHaveAttribute('data-severity', 'info');
   await root.screenshot({ path: info.outputPath('restored-equations.png') });
 
   // Reopen a real downloaded file through the user-facing file picker.
@@ -97,9 +99,13 @@ export async function docxMathJourney(page: Page, info: TestInfo) {
   await writeFile(changedPath, zipSync(parts));
   await open.setInputFiles(changedPath);
   await expect(root.locator('[data-import-status]')).toContainText('7 equations restored');
+  await expect(root.locator('[data-import-status]')).toContainText('1 equations converted from supported native Word semantics');
   await expect(root.getByRole('list', { name: 'Reopen warnings' })).toContainText('Equation OMML changed');
-  await expect(root.locator('[data-source]')).toContainText('[Word equation: import not yet supported]');
-  await expect(root.locator('[data-source] [data-document-mathjax] svg')).toHaveCount(7);
+  await expect(root.getByRole('list', { name: 'Reopen warnings' })).toContainText('Supported Word equation semantics were converted to editable TeX');
+  await expect(root.locator('[data-source]')).not.toContainText('[Word equation: import not yet supported]');
+  await expect(root.locator('[data-source] [data-document-mathjax] svg')).toHaveCount(8);
+  await first.click();
+  await expect(source).toHaveValue(String.raw`\frac{{\mathit{x}}^{\mathrm{9}}}{\sqrt{\mathit{y}}}`);
   await root.screenshot({ path: info.outputPath('changed-equation-refused.png') });
   await root.getByRole('button', { name: 'Undo equation edit' }).click();
   await expect(root.locator('[data-source] [data-document-mathjax] svg')).toHaveCount(8);

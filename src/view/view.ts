@@ -259,7 +259,11 @@ export class EditorView {
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
-    queueMicrotask(() => this.selections.sync(state.selection, ownsDOMSelection));
+    queueMicrotask(() => {
+      // A synchronous nested dispatch (for example restoring a resize control)
+      // can supersede this snapshot before its DOM selection task runs.
+      if (!this.destroyed && this.editor.state === state) this.selections.sync(state.selection, ownsDOMSelection);
+    });
   };
 
   private render(
