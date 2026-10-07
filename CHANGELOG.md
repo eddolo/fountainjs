@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Make RTL keyboard journeys compare each selection endpoint to an untouched
+  native control: Linux Firefox's Shift-arrow policy differs from Windows.
+  Keep exact selected-source replacement, Enter/history/direction/export
+  assertions. Let the CI release-policy guard recognize the independent
+  performance job only when mandatory, prepared and failure-gating; reject
+  seven bypass/unprepared variants. Runtime `d0dc2e7` passes unchanged Linux
+  performance limits, while failed local runs remain recorded.
 - Preserve an already-matching native text selection instead of reconstructing
   its range after capture. This retains browser-only bidi caret affinity while
   changed model endpoints and replaced DOM nodes still synchronize. Keep the

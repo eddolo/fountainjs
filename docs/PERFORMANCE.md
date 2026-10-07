@@ -1,5 +1,36 @@
 # Performance and memory contract
 
+## Linux follow-up: performance passes; two verification contracts corrected
+
+For frozen runtime `d0dc2e7`, [CI run 37676375997](https://github.com/eddolo/fountainjs/actions/runs/37676375997)
+passes the independent mandatory performance job with unchanged limits:
+server HTML 100/1k/5k/10k p95 **14.33/59.58/266.38/514.34ms**;
+server/local/remote median growth **8.82x/9.99x/10.16x**, all below 15x.
+Live growth is 0 MiB, destroyed editor 0.06 MiB and retained server document
+15.19 MiB. Lean passes and Pages deploys. This does not invalidate either
+failed local run below or establish the cause of timing variation.
+
+The full unit run is **2,664 passed, one failed / 201 files**: the release-policy
+test still looks only inside `verify`, not the new mandatory performance job.
+Its follow-up recognizes a separate job only with frozen install → build →
+the exact performance command and no skip, ignored-failure or dependency gate.
+Seven bypass/unprepared-job regressions plus the original three tests pass.
+
+Linux's native baseline reproduces the RTL expectation failure **without
+Fountain**. Home/Left yields offset one; two Shift+Left keys select `א` with
+anchor one/focus zero, rather than Windows' `בג` with anchor one/focus three.
+Reconstructing native ranges in the Linux probe reverses the first selection
+and then collapses it; this is not a causal reproduction of old Fountain code.
+The journey now compares every anchor/focus/text endpoint against untouched
+native behaviour and verifies exactly the selected source is replaced, plus
+unchanged Enter/history/direction/export checks. This corrects a Windows-only
+test expectation; it does not claim visual Shift-arrow semantics everywhere.
+The corrected native-oracle journey passes once in each Windows desktop
+engine, with retries disabled; nine PNGs match the previous reviewed captures.
+TypeScript and all ten release-policy tests pass. Full Linux verification of
+these test/policy corrections remains required. See
+`artifacts/linux-native-selection-policy-verification-20261007.json`.
+
 ## Shared-size/equality follow-up (not release approval)
 
 Unreleased, 2026-10-07: CI for `6b925d1` passed package, server runtimes,

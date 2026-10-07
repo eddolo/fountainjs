@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-07",
+  "runtimeCommit": "d0dc2e7c43cb57051c5498d57e9adf13087a5e8e",
+  "runtimeSourceChangedInFollowup": false,
+  "releaseApproval": false,
+  "previousRun": "https://github.com/eddolo/fountainjs/actions/runs/37676375997",
+  "previousRunConclusion": "failure",
+  "linuxPerformance": {
+    "conclusion": "success",
+    "log": "ci-d0dc2e7-performance-20261007.log",
+    "serverP95Ms": [14.33, 59.58, 266.38, 514.34],
+    "serverP95CapsMs": [35, 120, 500, 900],
+    "serverLocalRemoteMedianGrowth": [8.82, 9.99, 10.16],
+    "maximumGrowth": 15,
+    "liveDestroyedServerRetainedMiB": [0, 0.06, 15.19],
+    "heapCapsMiB": [8, 16, 48],
+    "limitsIterationsUnchanged": true,
+    "failedLocalRunsStillRetained": true,
+    "causeOfTimingVariationEstablished": false
+  },
+  "previousLinuxUnitRun": {
+    "passed": 2664,
+    "failed": 1,
+    "files": 201,
+    "failure": "tests/release.test.ts expected performance inside verify instead of the separate mandatory job",
+    "scope": "All other unit tests passed; later package-lint/type-distribution steps were skipped after the failure"
+  },
+  "linuxNativeObservations": {
+    "attempts": 3,
+    "allIdentical": true,
+    "keys": ["Home", "ArrowLeft", "Shift+ArrowLeft", "Shift+ArrowLeft"],
+    "untouched": [{"anchor":0,"focus":0,"text":""},{"anchor":1,"focus":1,"text":""},{"anchor":1,"focus":0,"text":"א"},{"anchor":1,"focus":0,"text":"א"}],
+    "reconstructed": [{"anchor":0,"focus":0,"text":""},{"anchor":1,"focus":1,"text":""},{"anchor":0,"focus":1,"text":"א"},{"anchor":0,"focus":0,"text":""}],
+    "interpretation": "The original expectation בג fails on plain Linux Firefox before opening Fountain. Native range reconstruction reverses then collapses the selection; that probe is not an exact reproduction of old Fountain code."
+  },
+  "followupContracts": {
+    "nativeKeyboard": "Compare every anchor/focus/text endpoint with an untouched native control, constrain final native selection to observed nonempty cases, replace precisely its ordered source range, undo and retain Enter/direction/export checks",
+    "ciPolicy": "Only an unconditional failure-gating performance job with frozen install before build before the exact performance command can satisfy the performance constituent gate",
+    "negativePolicyRegressions": ["job if", "job continue-on-error", "job needs", "step if", "step continue-on-error", "missing frozen install", "missing build"]
+  },
+  "localChecks": {
+    "releasePolicyTests": {"passed":10,"log":"ci-independent-performance-policy-20261007.log"},
+    "typescript": {"passed":true,"log":"native-selection-native-oracle-types-20261007.log"},
+    "recordedBrowser": {"passed":3,"workers":1,"retries":0,"engines":["chromium","firefox","webkit"],"platform":"Windows","log":"native-selection-native-oracle-recorded-20261007.log","directory":"native-selection-native-oracle-recorded-20261007"},
+    "visual": {"pngs":9,"allHashIdenticalToReviewed":true,"reference":"native-selection-final-recorded-20261007 corresponding engine and filename","videosRecorded":true,"videosManuallyWatched":false}
+  },
+  "sourceSha256": {
+    "tests/release.test.ts": "83053ccd186a18442eb020db0350193236cd6cddc5e6b6eef70fdf27c1bc08da",
+    "tests/browser/text-direction-journey.ts": "e22218532623fac49c76787c31a3e62bf656c9eb3db42968c6dc351e89594cae",
+    "tests/browser/editor.spec.ts": "c7e8d738b7e1da1926a052d9475d872c363b232bbe5eeff3af53c464ff1b4ead"
+  },
+  "remaining": ["Full Linux followup required", "RTL/localization remains Partial", "No npm or complete-parity claim", "CommonMark and ledger counts unchanged"]
+}

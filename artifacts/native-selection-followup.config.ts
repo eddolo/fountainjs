@@ -7,7 +7,7 @@ export default defineConfig({
   testDir: '../tests/browser',
   workers: 1,
   retries: 0,
-  outputDir: './native-selection-final-recorded-20261007',
+  outputDir: './native-selection-native-oracle-recorded-20261007',
   use: { ...base.use, baseURL: 'http://127.0.0.1:4196', video: 'on', trace: 'on' },
   webServer: {
     cwd: fileURLToPath(new URL('../', import.meta.url)),

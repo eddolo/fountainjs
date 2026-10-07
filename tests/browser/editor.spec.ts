@@ -32,7 +32,7 @@ import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-b
 import { htmlBlankLineJourney } from './html-blank-line-journey';
 import { textDirectionJourney } from './text-direction-journey';
 
-test('edits RTL blocks with native visual selection, direction controls, Enter history and HTML reader export', async ({ page }, info) => {
+test('edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export', async ({ page }, info) => {
   await textDirectionJourney(page, info);
 });
 

@@ -1,0 +1,46 @@
+{
+  "untouched": [
+    {
+      "anchor": 0,
+      "focus": 0,
+      "text": ""
+    },
+    {
+      "anchor": 1,
+      "focus": 1,
+      "text": ""
+    },
+    {
+      "anchor": 1,
+      "focus": 0,
+      "text": "א"
+    },
+    {
+      "anchor": 1,
+      "focus": 0,
+      "text": "א"
+    }
+  ],
+  "reconstructed": [
+    {
+      "anchor": 0,
+      "focus": 0,
+      "text": ""
+    },
+    {
+      "anchor": 1,
+      "focus": 1,
+      "text": ""
+    },
+    {
+      "anchor": 0,
+      "focus": 1,
+      "text": "א"
+    },
+    {
+      "anchor": 0,
+      "focus": 0,
+      "text": ""
+    }
+  ]
+}

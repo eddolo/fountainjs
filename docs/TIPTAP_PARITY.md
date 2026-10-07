@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest Linux checkpoint (2026-10-07, Unreleased): `d0dc2e7` passes unchanged
+performance/heap limits and real Lean integration. The full unit suite reports
+**2,664 passes, one release-policy failure** caused by the new independent
+mandatory performance job; the corrected guard also rejects seven bypass or
+unprepared-job variants. The Linux Firefox baseline selects `א` without
+Fountain, proving the previous `בג` assertion was Windows-specific. RTL checks
+now require identical native anchor/focus/text endpoints and replacement of the
+actual selection, without imposing one platform's Shift-arrow policy. New full
+CI is required; PROD-04, CommonMark scores and ledger coverage remain unchanged.
+
 Latest reliability follow-up (2026-10-07, Unreleased): `6b925d1` Linux CI
 finishes with **678 browser passes, 16 skips and one Firefox RTL selection
 failure**; the previous three comment-copy failures are resolved. Verify fails

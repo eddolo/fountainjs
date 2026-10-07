@@ -1,6 +1,16 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 
+interface NativeSelectionObservation { anchor: number; focus: number; text: string }
+
+function nativeSelection(page: Page): Promise<NativeSelectionObservation> {
+  return page.evaluate(() => {
+    const selection = getSelection();
+    if (!selection) throw new Error('Native selection is unavailable');
+    return { anchor: selection.anchorOffset, focus: selection.focusOffset, text: selection.toString() };
+  });
+}
+
 export async function textDirectionJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -8,8 +18,10 @@ export async function textDirectionJourney(page: Page, info: TestInfo) {
   // editor. Range reconstruction can lose bidi caret affinity even when the
   // visible selection endpoints look identical.
   const baseline = await page.context().newPage();
+  const keys = ['Home', 'ArrowLeft', 'Shift+ArrowLeft', 'Shift+ArrowLeft'];
+  let nativeSequence: NativeSelectionObservation[] = [];
   try {
-    const observations: Record<string, { anchor?: number; focus?: number; text?: string }[]> = {};
+    const observations: Record<string, NativeSelectionObservation[]> = {};
     for (const mode of ['untouched', 'reconstructed']) {
       await baseline.setContent('<div contenteditable="true"><p dir="rtl" style="text-align:start"><span>אבגד הוזח</span></p></div>');
       if (mode === 'reconstructed') {
@@ -22,19 +34,20 @@ export async function textDirectionJourney(page: Page, info: TestInfo) {
       }
       await baseline.locator('p').click();
       observations[mode] = [];
-      for (const key of ['Home', 'ArrowLeft', 'Shift+ArrowLeft', 'Shift+ArrowLeft']) {
+      for (const key of keys) {
         await baseline.keyboard.press(key);
-        observations[mode]!.push(await baseline.evaluate(() => {
-          const selection = getSelection();
-          return { anchor: selection?.anchorOffset, focus: selection?.focusOffset, text: selection?.toString() };
-        }));
+        observations[mode]!.push(await nativeSelection(baseline));
       }
     }
     const baselinePath = info.outputPath('native-rtl-selection-baseline.json');
     await writeFile(baselinePath, JSON.stringify(observations, null, 2));
     await info.attach('native-rtl-selection-baseline', { path: baselinePath, contentType: 'application/json' });
-    expect(observations.untouched?.[1]?.focus).toBe(1);
-    expect(observations.untouched?.[3]?.text).toBe('בג');
+    nativeSequence = observations.untouched!;
+    expect(nativeSequence[0]).toEqual({ anchor: 0, focus: 0, text: '' });
+    expect(nativeSequence[1]).toEqual({ anchor: 1, focus: 1, text: '' });
+    // Linux Firefox extends logically here; the other certified platforms
+    // extend visually. Match actual native endpoints, not a Windows-only rule.
+    expect([{ anchor: 1, focus: 3, text: 'בג' }, { anchor: 1, focus: 0, text: 'א' }]).toContainEqual(nativeSequence[3]);
   } finally { await baseline.close(); }
   await page.goto('/demos/go-docs-service.html');
   const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
@@ -54,14 +67,14 @@ export async function textDirectionJourney(page: Page, info: TestInfo) {
     await expect(block).toHaveCSS('text-align', 'start');
   }
   await blocks.first().click();
-  await page.keyboard.press('Home');
-  await page.keyboard.press('ArrowLeft');
-  await expect.poll(() => page.evaluate(() => getSelection()?.focusOffset)).toBe(1);
-  await page.keyboard.press('Shift+ArrowLeft');
-  await page.keyboard.press('Shift+ArrowLeft');
-  await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('בג');
+  for (let index = 0; index < keys.length; index += 1) {
+    await page.keyboard.press(keys[index]!);
+    await expect.poll(() => nativeSelection(page)).toEqual(nativeSequence[index]);
+  }
+  const selected = nativeSequence[3]!;
+  const from = Math.min(selected.anchor, selected.focus), to = Math.max(selected.anchor, selected.focus);
   await page.keyboard.insertText('XY');
-  await expect(blocks.first()).toHaveText('אXYד הוזח');
+  await expect(blocks.first()).toHaveText('אבגד הוזח'.slice(0, from) + 'XY' + 'אבגד הוזח'.slice(to));
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(blocks.first()).toHaveText('אבגד הוזח');
 

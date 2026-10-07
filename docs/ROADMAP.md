@@ -2565,6 +2565,26 @@ tests/type checks can complete despite performance failures. Full verification
 is required before publishing; ledger coverage and CommonMark counts are not
 promoted by this work.
 
+## 2026-10-07: Linux native selection evidence and CI-policy correction
+
+`d0dc2e7` passes unchanged Linux performance/heap limits and real Lean; Pages
+deploys. The independent job achieves server/local/remote growth
+8.82x/9.99x/10.16x against 15x. Failed local runs are retained, not reclassified.
+The full unit run reports 2,664 passes and one release-policy failure: that test
+expected every command inside `verify`. Its update recognizes performance only
+in a separate unconditional, failure-gating, frozen-install/build job; seven
+negative regressions prevent skipped, ignored or unprepared jobs from counting.
+
+The Firefox preflight fails its **plain native baseline**, before opening
+Fountain. Linux selects `א` (anchor one/focus zero) where Windows selects `בג`
+(one/three). Native range reconstruction also loses backward direction and
+then collapses the Linux selection. The journey now uses actual native
+anchor/focus/text endpoints at every keypress, with exact source-range
+replacement and undo assertions. Other history/direction/export checks stay.
+This is a browser-platform policy distinction, not proof of a current editor
+selection bug or universal visual navigation. Full follow-up CI remains
+required; the RTL/localization row is still Partial and no npm release follows.
+
 ## Sequencing rule
 
 Finish and certify one ledger outcome before beginning another. Each outcome
