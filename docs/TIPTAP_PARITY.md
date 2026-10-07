@@ -1,5 +1,19 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest native-colour checkpoint (2026-10-07, Unreleased): Linux WebKit's plain
+page baseline reproduces arrow-induced focus loss without Fountain. A narrow
+toolbar guard fixes the native default; Linux preflight passes on `88c541a`.
+Other field navigation and unhandled activation/Tab defaults are retained;
+native OS picker interaction remains outside headless certification. Complete
+local verification passes **2,636 tests / 197 files**, unchanged bundle and
+performance limits, plus nine retry-free serial three-engine recordings. All
+69 captures are visually verified by exact hashes (68) or direct comparison (one).
+The original
+all-defaults-unhandled colour unit assertion is deliberately updated to match
+the demonstrated workaround, not dropped. Complete browser CI remains pending.
+See `artifacts/native-colour-arrow-verification-20261007.json`.
+No ledger, CommonMark-score, percentage or npm promotion.
+
 Latest focus checkpoint (2026-10-07, Unreleased): preserve native form-control
 focus through formatting and ignore stale external selection-change events,
 while keeping explicit logical-selection restoration. The default unit suite

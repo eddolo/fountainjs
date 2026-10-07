@@ -1,5 +1,20 @@
 # FountainJS opportunity roadmap
 
+Latest native-colour follow-up (2026-10-07, Unreleased): an independent plain
+page reproduces Linux WebKit moving focus from a colour input into a retained
+editable selection. A toolbar-only four-key guard fixes that default without
+consuming ordinary field caret keys, Tab or picker activation. Linux preflight
+passes on `88c541a`; the complete browser matrix is still running. An older
+unit contract expecting those colour defaults to remain unhandled is updated
+explicitly, retaining focus assertions and all other field cases. The final
+complete local gate passes **2,636 tests / 197 files**, unchanged performance
+and bundle limits; nine serial three-engine workflows pass without retries.
+All 69 captures are visually verified (68 exact hashes, one direct comparison).
+The first new complete run passed
+performance/budgets/types but failed that old assertion; it remains retained.
+Evidence: `artifacts/native-colour-arrow-verification-20261007.json`.
+No roadmap-row, CommonMark-score or npm promotion.
+
 Latest focus follow-up (2026-10-07, Unreleased): formatting a retained selection
 no longer applies a native Range while an input, textarea or select owns focus;
 automatic external selection changes do not overwrite the logical selection.

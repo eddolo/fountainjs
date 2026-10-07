@@ -68,7 +68,7 @@ describe('toolbar configuration panel keyboard ownership', () => {
 });
 
 describe('toolbar native field key ownership', () => {
-  it.each(['text', 'number', 'color', 'textarea', 'select', 'contenteditable'])('does not hijack %s navigation', async kind => {
+  it.each(['text', 'number', 'color', 'textarea', 'select', 'contenteditable'])('keeps %s navigation inside its field', async kind => {
     const mount = document.createElement('div'); document.body.append(mount); const root = createRoot(mount);
     const field = kind === 'textarea' ? <textarea aria-label="Field" defaultValue="Editable" />
       : kind === 'select' ? <select aria-label="Field"><option>First</option><option>Second</option></select>
@@ -81,7 +81,10 @@ describe('toolbar native field key ownership', () => {
       for (const key of ['ArrowLeft', 'ArrowRight', 'Home', 'End']) {
         const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
         await act(async () => input.dispatchEvent(event));
-        expect(event.defaultPrevented).toBe(false); expect(document.activeElement).toBe(input);
+        // Linux WebKit applies colour-input navigation to an old editor range
+        // even without Fountain. Only that native default is suppressed; all
+        // ordinary fields retain their own navigation and none enter traversal.
+        expect(event.defaultPrevented).toBe(kind === 'color'); expect(document.activeElement).toBe(input);
       }
     } finally { await act(async () => root.unmount()); mount.remove(); }
   });

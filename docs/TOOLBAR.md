@@ -144,6 +144,13 @@ the accessible name. Products may use any icon system instead.
   follows computed LTR or RTL direction. Native inputs, selects, textareas,
   editable host fields and semantic text/combobox/spinbutton/slider widgets keep
   their own arrow/Home/End editing behavior rather than triggering traversal.
+  Exception: actual native colour inputs suppress those four navigation defaults
+  because Linux WebKit applies them to an old contenteditable range even on a
+  plain page without Fountain. This keeps the control focused, not a toolbar
+  traversal. Text fallbacks retain caret navigation; Tab, Enter, Space and
+  Escape are not consumed by this guard. Native OS picker interaction is not
+  certified by the headless focus test. See
+  `artifacts/native-colour-arrow-verification-20261007.json`.
 - Unreleased: configuration triggers announce `aria-expanded` and identify their
   named form through `aria-controls`. Opening focuses the first enabled field or
   action. Escape, unless already handled or composing text, closes the panel and

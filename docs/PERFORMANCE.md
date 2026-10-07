@@ -1,5 +1,23 @@
 # Performance and memory contract
 
+## Native-colour final local checkpoint
+
+Unreleased, 2026-10-07: the final narrow toolbar guard and explicit colour-key
+unit contract pass the complete local gate: **2,636 tests / 197 files**, API,
+package/server/headless/conformance, framework types and unchanged resource caps.
+Server HTML p95 at 100/1k/5k/10k is **11.20/60.75/252.24/469.35ms** against
+35/120/500/900ms. Server/local/remote median growth is **8.60x/7.50x/13.66x**
+against 15x. Live-session growth is 0 MiB; destroyed editor 0.06 MiB; retained
+server document 14.30 MiB, within existing limits. Aggregate ESM/CJS remains
+1576.4/1311.3 KiB against 1576.5/1311.5 KiB.
+
+Earlier failures below are retained, not replaced by this later pass. The
+toolbar change is not an importer speedup; the cause of timing variation is
+not established. Linux's native-control preflight passes; its full browser
+matrix remains pending. Nine recorded Windows workflows and all 69 captures
+are verified on the frozen final source. Exact evidence:
+`artifacts/native-colour-arrow-verification-20261007.json`.
+
 ## Native-control follow-up: failed complete gate retained
 
 Unreleased, 2026-10-07: the focus fix passes the complete default unit suite
