@@ -4,6 +4,7 @@ export async function htmlCommentJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/demos/node-markdown.html');
+  await page.evaluate(() => document.fonts.ready);
   const input = page.getByLabel('Markdown input', { exact: true });
   await input.click();
   await page.keyboard.press('ControlOrMeta+a');
@@ -44,9 +45,10 @@ export async function htmlCommentJourney(page: Page, info: TestInfo) {
   const saved = workshop.getByLabel('Saved comment Markdown');
   const original = await saved.inputValue();
   await expect(workshop.getByRole('status')).toHaveText('Source preservation: exact');
-  await expect(workshop.frameLocator('iframe[title="HTML comment reader snapshot"]').locator('body')).toContainText('Review the rollout.');
+  await expect(workshop.frameLocator('iframe[title="HTML comment reader snapshot"]').locator('p').last()).toHaveText('Review the rollout.');
   await workshop.locator('iframe').scrollIntoViewIfNeeded();
   await workshop.frameLocator('iframe[title="HTML comment reader snapshot"]').locator('body').screenshot({ path: info.outputPath('comment-reader-original.png') });
+  await editor.screenshot({ path: info.outputPath('comment-editor-original.png') });
   await workshop.screenshot({ path: info.outputPath('comment-author-original.png') });
   await editor.locator('p').last().click();
   await page.keyboard.press('End');
@@ -60,6 +62,7 @@ export async function htmlCommentJourney(page: Page, info: TestInfo) {
   await expect(saved).toContainText('Reviewed.');
   const reader = workshop.frameLocator('iframe[title="HTML comment reader snapshot"]');
   await expect(reader.locator('body')).toContainText('Release notes remain editable.');
+  await expect(reader.locator('p').last()).toHaveText('Review the rollout. Reviewed.');
   await expect(reader.locator('[data-fountain-html-comment]')).toHaveCount(0);
   await expect(reader.locator('script')).toHaveCount(0);
   await expect(reader.locator('html')).toHaveAttribute('lang', 'en');
@@ -74,6 +77,7 @@ export async function htmlCommentJourney(page: Page, info: TestInfo) {
   expect(comments).toEqual([' provenance: reviewed by Ada ']);
   await workshop.locator('iframe').scrollIntoViewIfNeeded();
   await reader.locator('body').screenshot({ path: info.outputPath('comment-reader-edited.png') });
+  await editor.screenshot({ path: info.outputPath('comment-editor-edited.png') });
   await workshop.screenshot({ path: info.outputPath('comment-author-edited-and-reader.png') });
   await workshop.getByLabel('HTML comment data', { exact: true }).fill('break --> <script>bad()</script>');
   await workshop.getByRole('button', { name: 'Apply comment data' }).click();
@@ -92,10 +96,15 @@ export async function htmlCommentJourney(page: Page, info: TestInfo) {
   await workshop.getByRole('button', { name: 'Save comment Markdown and preview' }).click();
   await expect(saved).toHaveValue(original);
   await page.setViewportSize({ width: 390, height: 844 });
+  // Saving recreates the sandboxed frame. Capture its restored content
+  // separately: tall workshop captures may obscure content with the sticky
+  // header or omit an off-screen iframe, so they are not reader-layout proof.
+  await expect(reader.locator('p').last()).toHaveText('Review the rollout.');
+  await workshop.locator('iframe').scrollIntoViewIfNeeded();
+  await reader.locator('body').screenshot({ path: info.outputPath('comment-reader-mobile.png') });
+  await editor.screenshot({ path: info.outputPath('comment-editor-mobile.png') });
   await workshop.getByLabel('HTML comment data', { exact: true }).scrollIntoViewIfNeeded();
   await expect(workshop.getByRole('button', { name: 'Apply comment data' })).toBeVisible();
   await workshop.screenshot({ path: info.outputPath('comment-author-mobile.png') });
-  await workshop.locator('iframe').scrollIntoViewIfNeeded();
-  await reader.locator('body').screenshot({ path: info.outputPath('comment-reader-mobile.png') });
   expect(errors).toEqual([]);
 }

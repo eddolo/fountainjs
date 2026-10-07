@@ -1988,7 +1988,9 @@ function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: 
   if ([left, right, firstLine, hanging].some(value => value !== undefined)) {
     properties.push(`<w:ind${left === undefined ? '' : ` w:left="${left}"`}${right === undefined ? '' : ` w:right="${right}"`}${firstLine === undefined ? '' : ` w:firstLine="${firstLine}"`}${hanging === undefined ? '' : ` w:hanging="${hanging}"`}/>`);
   }
-  const align = String(node.attrs.align ?? 'left');
+  const declaredAlign = String(node.attrs.align ?? 'left');
+  const align = declaredAlign === 'start' ? node.attrs.dir === 'rtl' ? 'right' : 'left'
+    : declaredAlign === 'end' ? node.attrs.dir === 'rtl' ? 'left' : 'right' : declaredAlign;
   if (align !== 'left') properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
   // One paragraph-mark rPr group only. Inline runs get the same defaults when
   // unmarked, since Word's pPr/rPr is not a text-run formatting declaration.
@@ -1999,6 +2001,10 @@ function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: 
 }
 
 function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: ExportList, quote: QuoteProjection = false, definition?: DefinitionLayout): string {
+  if (node.attrs.dir !== undefined) context.issues.push({ code: 'text-direction-not-exported', severity: 'warning',
+    message: 'HTML block direction is not projected to Word paragraph/run bidi properties. Text remains, but direction and visual ordering require Fountain JSON or HTML.', path });
+  if (['start', 'end'].includes(String(node.attrs.align))) context.issues.push({ code: 'logical-alignment-projected', severity: 'warning',
+    message: 'Logical start/end alignment became physical left/right using an explicit RTL override, otherwise LTR. Auto/inherited direction is not resolved; use Fountain JSON or HTML for exact semantics.', path });
   return `<w:p>${paragraphProperties(node, list, quote, definition)}${textRuns(node, context, path)}</w:p>`;
 }
 

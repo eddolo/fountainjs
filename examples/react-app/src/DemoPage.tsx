@@ -45,6 +45,7 @@ import {
   setMathSource,
   setMediaAttributes,
   setTextAlignment,
+  setTextDirection,
   topLevelPosition,
   splitTableCell,
   deleteMedia,
@@ -350,6 +351,10 @@ function DemoControls({ editor }: { editor: Editor | null }) {
     <button disabled={!editor} onClick={() => editor && setMark(editor, 'highlight', { color: highlightColor })}>Apply highlight</button>
     <button disabled={!editor} onClick={() => editor && unsetMark(editor, 'highlight')}>Remove highlight</button>
     <button disabled={!editor} onClick={() => editor && setTextAlignment(editor, 'center')}>Centre</button>
+    <button disabled={!editor} title="Set right-to-left reading direction without changing text" onClick={() => editor && setTextDirection(editor, 'rtl')}>RTL</button>
+    <button disabled={!editor} title="Set left-to-right reading direction without changing text" onClick={() => editor && setTextDirection(editor, 'ltr')}>LTR</button>
+    <button disabled={!editor} title="Let the first strong character choose this block's direction" onClick={() => editor && setTextDirection(editor, 'auto')}>Auto direction</button>
+    <button disabled={!editor} title="Align to the start of the reading direction" onClick={() => editor && setTextAlignment(editor, 'start')}>Align start</button>
     <button aria-pressed={Boolean(editor && isInsideNode(editor, 'blockquote'))} disabled={!editor} title="Turn the selected paragraph(s) into a quote, or remove the current quote" onClick={() => editor && toggleQuote(editor)}>{editor && isInsideNode(editor, 'blockquote') ? 'Remove quote' : 'Quote'}</button>
     <button disabled={!editor} onClick={() => editor && selectAll(editor)}>Select all</button>
     <button

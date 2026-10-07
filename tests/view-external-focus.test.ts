@@ -1,7 +1,46 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
-import { CoreSchemaSpec, EditorView, createEditor, selectText, setMark } from '../src';
+import { CellSelection, CoreSchemaSpec, EditorView, StarterKit, createEditor, selectText, setMark } from '../src';
 import { SelectionHandler } from '../src/view/selection-handler';
+import { HTMLCommentExtension } from '../src/extensions/html-comments';
+import { CoreExtension, NodeSelection, composeExtensions } from '../src';
+
+it.each([true, false])('claims editor focus when explicitly selecting an inert atom after an external field (editable=%s)', async editable => {
+  const kit = composeExtensions([CoreExtension, HTMLCommentExtension]);
+  const editor = createEditor({ schema: kit.schema, editable, content: { type: 'doc', content: [
+    { type: 'paragraph', content: [{ type: 'html_comment', attrs: { data: ' preserved ' } }, { type: 'text', text: 'Visible' }] },
+  ] } });
+  const mount = document.createElement('div'), field = document.createElement('input');
+  field.type = 'checkbox'; document.body.append(mount, field);
+  const view = new EditorView(mount, editor);
+  try {
+    field.focus();
+    view.dom.querySelector('[data-fountain-html-comment]')!.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true }));
+    await Promise.resolve();
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+    expect(document.activeElement).toBe(view.dom);
+    expect(document.getSelection()?.getRangeAt(0).cloneContents().querySelector('[data-fountain-html-comment]')).not.toBeNull();
+  } finally { view.destroy(); editor.destroy(); mount.remove(); field.remove(); document.getSelection()?.removeAllRanges(); }
+});
+
+it.each([true, false])('claims editor focus when explicitly extending a cell selection after an external field (editable=%s)', async editable => {
+  const cell = (text: string) => ({ type: 'table_cell', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] });
+  const editor = createEditor({ schema: StarterKit.schema, editable, content: { type: 'doc', content: [
+    { type: 'table', content: [{ type: 'table_row', content: [cell('A'), cell('B')] }] },
+  ] } });
+  const mount = document.createElement('div'), field = document.createElement('input');
+  field.type = 'checkbox'; document.body.append(mount, field);
+  const view = new EditorView(mount, editor);
+  try {
+    field.focus();
+    view.dom.querySelector('[data-fountain-path="0.0.1"]')!.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, shiftKey: true }));
+    await Promise.resolve();
+    expect(editor.state.selection).toBeInstanceOf(CellSelection);
+    expect((editor.state.selection as CellSelection).cellPaths).toEqual([[0, 0, 0], [0, 0, 1]]);
+    expect(document.activeElement).toBe(view.dom);
+    expect(view.dom.querySelectorAll('[data-fountain-selected-cell="true"]')).toHaveLength(2);
+  } finally { view.destroy(); editor.destroy(); mount.remove(); field.remove(); document.getSelection()?.removeAllRanges(); }
+});
 
 describe('external controls own focus while an editor range remains selected', () => {
   it('does not capture native selection changes made while an external colour field owns focus', async () => {

@@ -1,5 +1,24 @@
 # Performance and memory contract
 
+## Block-direction work in progress
+
+Unreleased, 2026-10-07: optional block direction/logical alignment and explicit
+Word loss reporting add about 2.4 KiB ESM / 2.1 KiB CJS, including the subsequent
+small explicit-pointer-focus repair. Only the aggregate runtime ceilings and
+the optional DOCX entry ceilings are updated for this new capability; existing
+editor/framework/CSS, latency, scaling and heap limits are unchanged. The
+pre-adjustment failure is retained in
+`artifacts/rtl-direction-budget-before-20261007.log`.
+
+Local verification uses one test worker and sequential check phases following
+a CPU-contention incident. The overlapping full unit attempt was stopped after
+multiple timing failures; it is not a completed or passing gate. The isolated
+direction browser workflow and focused unit checks pass. The final build,
+ESM/CJS consumer, API, headless boundary and framework type checks also pass;
+aggregate sizes are 1578.9 KiB ESM / 1313.6 KiB CJS. Full current-source
+performance/CI certification is pending. The native-colour checkpoint below
+describes the earlier frozen source, not this unverified addition.
+
 ## Native-colour final local checkpoint
 
 Unreleased, 2026-10-07: the final narrow toolbar guard and explicit colour-key

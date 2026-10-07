@@ -223,3 +223,60 @@ There is no headless toolbar state to synchronize. Read `editor.state`,
 subscribe with `editor.subscribe`, and call root-package commands from DOM,
 Vue, Svelte, Angular, a Custom Element wrapper, or another UI system. Command
 validity and transactions—not the supplied React control—remain authoritative.
+
+### Block direction and logical alignment
+
+`setTextDirection(editor, 'ltr' | 'rtl' | 'auto' | undefined)` changes the base
+direction of selected paragraphs/headings. `undefined` removes the override;
+it does not force LTR. The command leaves text and alignment unchanged, uses one
+undoable transaction, and supports text ranges, container/all selections and
+selected table cells. Code/media/custom blocks without a direction attribute
+are not reformatted. Custom schema validation and transaction filters remain
+authoritative.
+
+Use `setTextAlignment(editor, 'start')` or `'end'` for alignment relative to the
+reading direction. Existing left/right/center/justify values remain available;
+an explicitly directed block with left alignment stays physically left-aligned.
+Do not insert invisible Unicode controls merely to set paragraph direction.
+
+```ts
+import { setTextDirection, setTextAlignment } from 'fountainjs-editor/core';
+
+setTextDirection(editor, 'rtl');
+setTextAlignment(editor, 'start'); // right in RTL, left in LTR
+```
+
+The simple command-based demos provide RTL, LTR, Auto direction and Align start
+buttons. These are examples of host-owned controls, not new action IDs in the
+supplied React toolbar. The two calls above are separate undo steps; hosts can
+use `editor.runCommandBatch` if a combined UI action should be one history step.
+
+The document stores optional `dir` on paragraphs/headings. HTML import/export
+and the DOM view use HTML `dir`, separately from `text-align`. Fixed inherited
+LTR/RTL direction is materialized on imported text blocks, including list/cell
+paragraphs: canonical HTML may therefore add explicit direction and start
+alignment to children. Ordinary documents without direction keep their existing
+default JSON. Heading conversion and Enter preserve supported direction and
+alignment. JSON and Yjs retain these attributes without a DOM shim.
+
+This is not a complete RTL/localization or Word bidi bridge. Inherited `auto`
+depends on the ancestor's first strong character; flattening that wrapper is
+not certified. Inline bidi isolation, mirrored list/table structure, CSS-only
+direction import, native mobile keyboards and translated locale packages remain
+separate work. Ordinary Markdown reports omitted direction/logical alignment.
+DOCX reports unprojected direction and conversion of logical alignment to a
+physical approximation; it does not equate HTML `dir` with Word `w:bidi`.
+
+There is also an unresolved default-alignment boundary: legacy `align: 'left'`
+does not distinguish an authored physical-left override from the ordinary
+default. To preserve existing canonical HTML, default left without a block's
+own `dir` is not emitted as CSS. An inherited-auto container or an RTL host can
+therefore supply natural right alignment even though the child JSON says left;
+setting left again is a model no-op. Set explicit block direction before choosing
+physical left as the current workaround. An authored-versus-natural alignment
+contract and inherited/host-direction tests are required for full RTL support.
+
+The distinctions follow [W3C's structural direction guidance](https://www.w3.org/International/questions/qa-html-dir.en.html).
+[Microsoft's `BiDi` remarks](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.bidi?view=openxml-3.0.1)
+separately describe Word paragraph layout and run-level text ordering; those
+need their own import/export and native-rendering evidence.

@@ -15,6 +15,7 @@ import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
 import { matchesContentExpression } from './schema/content-expression';
+import { textAlignmentAttribute, textDirectionAttribute } from './text-direction';
 
 export type Command = (editor: Editor) => boolean;
 
@@ -836,8 +837,20 @@ export function unsetMark(editor: Editor, markName: string): boolean {
   return true;
 }
 
-export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'right' | 'justify'): boolean {
-  if (!editor.editable || !['left', 'center', 'right', 'justify'].includes(align)) return false;
+export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'right' | 'justify' | 'start' | 'end'): boolean {
+  return typeof align === 'string' && textAlignmentAttribute.validate(align) && setTextBlockAttribute(editor, 'align', align);
+}
+
+/** Set base direction without rewriting text or implicitly changing alignment.
+ * Pass undefined to remove the override. Use start/end alignment separately
+ * when text should align with its reading direction.
+ */
+export function setTextDirection(editor: Editor, dir: 'ltr' | 'rtl' | 'auto' | undefined): boolean {
+  return textDirectionAttribute.validate(dir) && setTextBlockAttribute(editor, 'dir', dir);
+}
+
+function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value: unknown): boolean {
+  if (!editor.editable) return false;
   const { state } = editor;
   const { selection } = state;
   if (selection instanceof GapSelection) return false;
@@ -857,7 +870,7 @@ export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'rig
         && comparePaths(path, end) === 0 && selection.to === 0 && selection.endPath.at(-1) === 0) return;
     }
     if (TEXT_BLOCKS.includes(node.type.name)) {
-      if (node.attrs.align !== align) paths.push(path);
+      if ((attribute === 'align' || node.type.spec.attrs?.dir) && node.attrs[attribute] !== value) paths.push(path);
       return;
     }
     if (!node.type.spec.atom) node.content.forEach((child, index) => visit(child, [...path, index]));
@@ -870,8 +883,9 @@ export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'rig
   try {
     paths.forEach(path => {
       const node = getNodeAtPath(state.doc, path);
-      node.type.create({ ...node.attrs, align }, node.content);
-      transaction.setNodeAttrs(path, { ...node.attrs, align });
+      const attrs = { ...node.attrs, [attribute]: value };
+      node.type.create(attrs, node.content);
+      transaction.setNodeAttrs(path, attrs);
     });
   } catch { return false; }
   return editor.dispatch(transaction);
@@ -924,7 +938,9 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
       if (!TEXT_BLOCKS.includes(block.type.name)) return false;
       const emphasis = block.attrs.emphasis === 'explicit' && type.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {};
       const layout = block.attrs.layout !== undefined && type.spec.attrs?.layout ? { layout: block.attrs.layout } : {};
-      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...attrs }, block.content)]);
+      const direction = block.attrs.dir !== undefined && type.spec.attrs?.dir ? { dir: block.attrs.dir } : {};
+      const alignment = block.attrs.align !== undefined && type.spec.attrs?.align ? { align: block.attrs.align } : {};
+      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...direction, ...alignment, ...attrs }, block.content)]);
     }
     state.schema.validate(transaction.doc);
   } catch { return false; }
@@ -1232,6 +1248,8 @@ export function splitBlock(editor: Editor): boolean {
     : {
         ...(block.attrs.emphasis === 'explicit' && nextType.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {}),
         ...(block.attrs.layout !== undefined && nextType.spec.attrs?.layout ? { layout: block.attrs.layout } : {}),
+        ...(block.attrs.dir !== undefined && nextType.spec.attrs?.dir ? { dir: block.attrs.dir } : {}),
+        ...(block.attrs.align !== undefined && nextType.spec.attrs?.align ? { align: block.attrs.align } : {}),
       };
   const right = nextType.create(nextAttrs, [text.withText(rightText), ...block.content.slice(textIndex + 1)]);
   const itemPath = blockPath.slice(0, -1);

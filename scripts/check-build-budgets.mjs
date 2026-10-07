@@ -74,8 +74,11 @@ const limits = Object.freeze({
   // instead of reintroducing Word Quote's border/indent. Shared validation is
   // reused. Measured 182.7 / 147.6 KiB; add only half a KiB to this optional
   // entry's ceilings, leaving every editor/framework/CSS/performance cap fixed.
-  'dist/docx.js': 183 * kibibyte,
-  'dist/docx.cjs': 148 * kibibyte,
+  // Block direction/logical alignment get explicit Word loss reports and a
+  // physical alignment approximation, not a claim of native bidi fidelity.
+  // Measured addition ~0.8 / 0.7 KiB to this optional entry, no new dependency.
+  'dist/docx.js': 184 * kibibyte,
+  'dist/docx.cjs': 148.5 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -490,7 +493,10 @@ const limits = Object.freeze({
   // handling measure 1574.7 / 1309.9 KiB (+2.6 / +2.2 KiB). Aggregate caps
   // gain 2 KiB each; individual entries, CSS and performance caps stay fixed.
   // Opt-in inert block wrappers add ~0.9 KiB; measured total 1575.6 KiB.
-  'all ESM runtime code': 1576.5 * kibibyte,
+  // Optional block direction, shared HTML projection, logical alignment and
+  // schema-normalized attribute steps add ~2.4 KiB. Explicit pointer focus
+  // adds a small existing-view fix; keep a narrow measured allowance only.
+  'all ESM runtime code': 1579.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -536,7 +542,8 @@ const limits = Object.freeze({
   // Same opt-in raw-text and empty-source editing addition as the ESM graph.
   // Same measured link/carrier addition as ESM; no unrelated cap increase.
   // Same optional block mode: measured total 1310.7 KiB.
-  'all CommonJS runtime code': 1311.5 * kibibyte,
+  // Same direction and explicit pointer-focus addition, ~2.1 KiB CJS.
+  'all CommonJS runtime code': 1314.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

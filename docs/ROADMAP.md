@@ -1249,7 +1249,8 @@ now resolves inline-content block boundaries while leaving structural cell,
 node, gap and all-document selections under their own handling. The recording
 and cross-browser workflow include backwards selection, formatting, replacing
 the selected text, undo/redo, whole-document formatting and HTML reader output.
-Explicit RTL direction/locales are still open; alignment is not that feature.
+At this checkpoint explicit RTL direction/locales were still open; the
+2026-10-07 direction work below is separate from this alignment evidence.
 
 Verification: `pnpm check` passes 1,218 tests in 105 files, the 385-declaration
 compatibility snapshot, package/Node/workerd/headless/type/conformance checks,
@@ -2495,6 +2496,49 @@ Recommendation: continue the technical programme under FountainJS. If renaming
 is revisited, choose/recheck a candidate, obtain the appropriate clearance and
 explicit maintainer decision, then plan redirects, package aliases, documentation
 and compatibility rather than breaking existing imports or stored documents.
+
+## 2026-10-07: block direction and explicit document focus
+
+PROD-04 remains **Partial**, and the ledger count is unchanged. Paragraphs and
+headings now have optional LTR/RTL/auto direction, selection-wide commands and
+logical start/end alignment. Source text is not rewritten. Direction/alignment
+survive heading conversion and Enter; browser/server HTML rules share fixed
+inheritance handling, and pure-Node/Yjs tests cover updates and clearing.
+Ordinary Markdown and DOCX explicitly report unretained direction; the latter
+uses a reported physical alignment approximation, not a native Word bidi bridge.
+
+The isolated public Go-docs workflow passes once each in Chromium, Firefox and
+WebKit with retries disabled. Real keyboard arrows/Shift-selection, replacement,
+Enter, undo, direction buttons and exported-reader direction are asserted;
+nine desktop/narrow/editor/reader captures were visually inspected. The reader
+uses default browser styling, not a claim of pixel-identical export. Broad bidi
+navigation, authored/default alignment under inherited-auto or RTL hosts,
+inherited-auto wrapper flattening, inline isolation, mirrored
+list/table structure, native mobile input, locales and native Word fidelity are
+still required before this row can close. Details/API are in [TOOLBAR.md](TOOLBAR.md).
+
+The published `421a329` CI run completed: verify and real Lean integration
+passed; the full browser job reported **673 passed, 16 skipped, 3 failed**.
+All three failures are comment-copy journeys after a previous external checkbox
+interaction. New focused tests reproduce the stale field focus in editable and
+read-only editors. Explicit pointer selection now focuses the document before
+applying the selected atom/cell range; background formatting still preserves
+native-field focus. The focused direction/model/HTML/history/focus set passes
+**117 tests in eight files**, including explicit atom and cell pointer focus
+after an external checkbox. The combined retry-free, one-worker recording
+passes **nine journeys across Chromium/Firefox/WebKit**. Visual review found
+an iframe capture readiness gap and sticky-header occlusion in tall workshop
+screenshots; the three-engine follow-up passes and includes separate reader and
+unoccluded editor captures. The tall workshop captures still have off-screen
+iframe/sticky-header artifacts and are not complete-layout evidence. The final
+emitted ESM/CJS root/core consumer checks verify direction/history/HTML and
+explicit loss reports without a DOM shim. API/headless/bundle checks pass;
+aggregate runtime is 1578.9 KiB ESM / 1313.6 KiB CJS against the documented
+1579.5 / 1314.5 ceilings. All existing per-editor/CSS/performance limits remain
+unchanged. Full current-source CI approval remains required. See
+`artifacts/block-direction-focus-verification-20261007.json` for exact scope.
+No npm release or complete-parity claim follows
+from this checkpoint.
 
 ## Sequencing rule
 

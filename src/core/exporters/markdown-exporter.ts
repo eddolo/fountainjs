@@ -161,6 +161,9 @@ function reportNodeAttributes(
   tableAlignmentRepresented = false,
 ): void {
   const name = node.type.name;
+  if (['paragraph', 'heading'].includes(name) && node.attrs.dir !== undefined) {
+    report(context, 'attribute', name, path, 'Text direction is not represented by ordinary Markdown; retain Fountain JSON or HTML.');
+  }
   if (name === 'blockquote' && node.attrs.appearance === 'explicit') {
     report(context, 'attribute', name, path, 'Explicit quote appearance is omitted by ordinary Markdown. Retain Fountain JSON, HTML or a supported paged format.');
   }
@@ -173,7 +176,7 @@ function reportNodeAttributes(
   if (name === 'doc' && node.attrs.pageSettings != null) {
     report(context, 'attribute', name, path, 'Physical page settings are not represented by ordinary Markdown; retain Fountain JSON or a supported paged format.');
   }
-  if (!tableAlignmentRepresented && ['paragraph', 'heading'].includes(name) && node.attrs.align && node.attrs.align !== 'left') {
+  if ((!tableAlignmentRepresented || ['start', 'end'].includes(String(node.attrs.align))) && ['paragraph', 'heading'].includes(name) && node.attrs.align && node.attrs.align !== 'left') {
     report(context, 'attribute', name, path, 'Text alignment is not represented by ordinary Markdown.');
   }
   if (name === 'code_block' && node.attrs.lineNumbers === false) {

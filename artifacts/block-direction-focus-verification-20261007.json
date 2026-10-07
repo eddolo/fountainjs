@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased; scoped local verification passes; complete current-source Linux CI required before release",
+  "baseCommit": "421a329d5cf05e350af57489672871c1d6b595ba",
+  "previousCI": {
+    "run": 37661935835,
+    "verify": "success",
+    "leanIntegration": "success",
+    "browser": { "status": "failure", "passed": 673, "skipped": 16, "failed": 3 },
+    "failures": "HTML comment copy after an external checkbox remained focused in Chromium, Firefox and WebKit",
+    "log": "artifacts/ci-421a329-browser-failed-20261007.log"
+  },
+  "changes": [
+    "Optional paragraph/heading ltr/rtl/auto direction, logical start/end alignment and selection-wide undoable commands",
+    "Shared browser/server HTML direction rules; heading/Enter retention; optional attribute normalization on transaction updates",
+    "Plain Node and Yjs direction updates and clearing, without text rewriting",
+    "Explicit Markdown and DOCX direction loss reports; Word logical alignment projection is approximate, not a bidi bridge",
+    "Explicit atom/cell pointer selection reclaims editor focus; background changes still preserve external field focus",
+    "Public demo controls and emitted ESM/CommonJS consumer checks, without adding framework coupling or runtime dependencies"
+  ],
+  "checks": {
+    "targetedUnits": { "passed": 117, "files": 8, "workers": 1, "log": "artifacts/rtl-and-focus-final-targeted-20261007.log" },
+    "finalRuntimeValueGuard": { "passed": 12, "log": "artifacts/rtl-direction-runtime-values-20261007.log" },
+    "recordedCombined": { "passed": 9, "engines": ["chromium", "firefox", "webkit"], "workers": 1, "retries": 0, "log": "artifacts/rtl-and-pointer-focus-recorded-20261007.log" },
+    "captureFollowup": { "passed": 3, "workers": 1, "retries": 0, "log": "artifacts/comment-focus-capture-verified-20261007.log" },
+    "finalBuild": "artifacts/rtl-and-focus-final-build-20261007.log",
+    "finalPackage": "artifacts/rtl-and-focus-final-package-20261007.log",
+    "finalAPI": "artifacts/rtl-and-focus-final-api-20261007.log",
+    "finalHeadless": "artifacts/rtl-and-focus-final-headless-20261007.log",
+    "finalBundle": { "esmKiB": 1578.9, "cjsKiB": 1313.6, "esmCeilingKiB": 1579.5, "cjsCeilingKiB": 1314.5, "log": "artifacts/rtl-and-focus-final-budget-20261007.log" },
+    "frameworkTypes": { "status": "passed", "includes": ["TypeScript", "Svelte: zero errors/warnings", "Angular library/demo"], "log": "artifacts/rtl-and-focus-final-types-20261007.log" },
+    "commonMark": { "default": "563/652", "strongestOptIn": "613/652", "changed": false, "log": "artifacts/rtl-and-focus-commonmark-20261007.log" }
+  },
+  "visualReview": {
+    "combinedDirectory": "artifacts/rtl-and-pointer-focus-recorded-20261007",
+    "combinedPNGCount": 30,
+    "rtl": "Nine captures are SHA256-identical to nine directly inspected isolated RTL editor/reader captures. Intact Hebrew/Arabic/Latin content, right/start alignment and narrow wrapping. Reader default font differs from editor: not pixel-identical output.",
+    "colour": "Three native-colour captures directly inspected; document and toolbar intact. Native OS picker UI is not certified.",
+    "comments": "Eighteen combined author/reader captures directly inspected. Nine reader captures retain visible prose and hide author badges. Nine tall workshop captures are NOT complete-layout proof: sticky-header occlusion and a blank off-screen Chromium iframe were observed.",
+    "followupDirectory": "artifacts/comment-focus-capture-verified-20261007",
+    "followup": "Nine separate editor captures directly inspected (original, edited, narrow x three engines). Nine reader captures exactly match inspected combined reader PNGs by SHA256. Three narrow full-workshop captures directly inspected: the off-screen Chromium iframe and sticky-header artifacts remain; do not promote those captures as visual fidelity proof.",
+    "video": "Playwright recordings and traces retained locally; recordings exist, but no claim of manually watching every video. These changes are tested through real keyboard/pointer journeys plus screenshot review."
+  },
+  "retainedFailures": [
+    "artifacts/atom-focus-before-20261007.log: explicit pointer focus regressions failed before repair",
+    "artifacts/rtl-direction-unit-suite-20261007.log: overlapping full suite stopped after timing failures; NOT a completed passing gate",
+    "artifacts/rtl-direction-recorded-20261007.log: Firefox timeout during overloaded attempt",
+    "artifacts/rtl-direction-recorded-isolated-20261007.log and rtl-direction-recorded-final-20261007.log: importer type errors before correction",
+    "artifacts/rtl-direction-budget-before-20261007.log: new capability exceeded old aggregate/DOCX sizes; narrowly documented capability ceilings adjusted, no latency/scaling/heap/CSS limits raised"
+  ],
+  "remaining": [
+    "Authored versus default physical-left alignment under inherited-auto containers or ambient RTL hosts; see docs/TOOLBAR.md",
+    "Inherited-auto flattening, inline bidi isolation, mirrored list/table structure and broader native bidi navigation",
+    "Real mobile keyboards, translated locale packages, native Word paragraph/run bidi import/export and renderer evidence",
+    "Full current-source CI/performance approval. Browser recordings preceded the final strict non-string alignment-command guard; its focused Node and emitted consumer tests pass, full CI must verify the combined source"
+  ],
+  "ledger": { "rows": 67, "delivered": 58, "partial": 7, "hostBoundary": 2, "changed": false, "PROD-04": "Partial" },
+  "npmReleaseApproved": false,
+  "nameChanged": false
+}

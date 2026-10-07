@@ -1,0 +1,72 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/view-external-focus.test.ts (10 tests | 2 failed) 355ms
+   × claims editor focus when explicitly selecting an inert atom after an external field (editable=true) 180ms
+   × claims editor focus when explicitly selecting an inert atom after an external field (editable=false) 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/view-external-focus.test.ts > claims editor focus when explicitly selecting an inert atom after an external field (editable=true)
+ FAIL  tests/view-external-focus.test.ts > claims editor focus when explicitly selecting an inert atom after an external field (editable=false)
+AssertionError: expected <input type="checkbox"></input> to be <div class="fountain-editor" …(5)>…(1)</div> // Object.is equality
+
+- Expected
++ Received
+
+- <div
+-   aria-label="Rich text editor"
+-   aria-multiline="true"
+-   class="fountain-editor"
+-   role="textbox"
+-   spellcheck="true"
+-   tabindex="0"
+- >
+-   <p
+-     data-fountain-content-dom=""
+-     data-fountain-node="paragraph"
+-     data-fountain-path="0"
+-   >
+-     <span
+-       aria-label="HTML comment:  preserved "
+-       contenteditable="false"
+-       data-fountain-html-comment="true"
+-       data-fountain-node="html_comment"
+-       data-fountain-path="0.0"
+-       data-fountain-selected-node="true"
+-       style="display:inline-block;padding:0 0.3em;border:1px solid currentColor;border-radius:0.2em;font-size:0.75em"
+-       title="HTML comment:  preserved "
+-     >
+-       HTML comment
+-     </span>
+-     <span
+-       data-fountain-text-path="0.1"
+-     >
+-       Visible
+-     </span>
+-   </p>
+- </div>
++ <input
++   type="checkbox"
++ />
+
+ ❯ tests/view-external-focus.test.ts:21:36
+     19|     await Promise.resolve();
+     20|     expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+     21|     expect(document.activeElement).toBe(view.dom);
+       |                                    ^
+     22|     expect(document.getSelection()?.getRangeAt(0).cloneContents().quer…
+     23|   } finally { view.destroy(); editor.destroy(); mount.remove(); field.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  19:18:33
+   Duration  7.57s (transform 33%, import 32%, environment 30%, tests 5%)
+
+  Transform  transforming modules took 2.35s · 33% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

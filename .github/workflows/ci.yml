@@ -93,9 +93,20 @@ jobs:
       - run: pnpm exec playwright install --with-deps
       # Keep native Linux WebKit colour-input failures visible before the full
       # matrix. Windows WebKit uses a text fallback and cannot certify this.
-      - name: Native control focus preflight
-        run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field"
+      - name: Native control and document focus preflight
+        run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks"
       - run: pnpm test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: direction-and-document-focus-evidence
+          path: |
+            test-results/**/rtl-*.png
+            test-results/**/comment-editor-*.png
+            test-results/**/comment-reader-*.png
+            test-results/**/native-colour-mapped-selection.png
+          if-no-files-found: ignore
+          retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.
       # Preserve this evidence on success too; it is not Word fidelity approval.
       - uses: actions/upload-artifact@v4

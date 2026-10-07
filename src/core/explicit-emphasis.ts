@@ -1,5 +1,6 @@
 import type { Attributes } from './schema';
 import { paragraphLayoutDOMAttributes } from './paragraph-layout';
+import { textDirectionAttribute } from './text-direction';
 
 /** In explicit mode, strong/em marks alone determine text emphasis. This lets
  * imported normal-weight headings and non-italic quotations remain editable,
@@ -13,10 +14,13 @@ export const explicitEmphasisAttribute = {
 export function textBlockDOMAttributes(attrs: Readonly<Attributes>): Attributes {
   const layout = paragraphLayoutDOMAttributes(attrs.layout);
   const styles: string[] = layout.style ? [String(layout.style)] : [];
-  if (['center', 'right', 'justify'].includes(String(attrs.align))) styles.push(`text-align:${attrs.align}`);
+  const dir = attrs.dir !== undefined && textDirectionAttribute.validate(attrs.dir) ? attrs.dir : undefined;
+  // Physical left must override RTL's natural start, just like physical right.
+  if (['center', 'right', 'justify', 'start', 'end'].includes(String(attrs.align)) || (dir && attrs.align === 'left')) styles.push(`text-align:${attrs.align}`);
   if (attrs.emphasis === 'explicit') styles.push('font-weight:normal', 'font-style:normal');
   return {
     ...layout,
+    ...(dir ? { dir } : {}),
     ...(attrs.emphasis === 'explicit' ? { 'data-fountain-emphasis': 'explicit' } : {}),
     ...(styles.length ? { style: styles.join(';') } : {}),
   };

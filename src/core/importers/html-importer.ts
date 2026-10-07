@@ -17,6 +17,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
 import { tableBackground } from '../table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
 import { readParagraphLayout } from '../paragraph-layout';
+import { readTextAlignment, readTextDirection } from '../text-direction';
 import { readImageCaptionAttributes } from '../image-caption';
 import { readTableLayout, readTableRow } from '../table-layout';
 import { readTableAppearance } from '../table-appearance';
@@ -459,9 +460,8 @@ function embedNode(element: HTMLIFrameElement, schema: Schema, container?: HTMLE
   } catch { return null; }
 }
 
-function alignment(element: Element): 'left' | 'center' | 'right' | 'justify' {
-  const value = (element as HTMLElement).style.textAlign || element.getAttribute('align') || 'left';
-  return ['left', 'center', 'right', 'justify'].includes(value) ? value as 'left' | 'center' | 'right' | 'justify' : 'left';
+function alignment(element: Element): string {
+  return readTextAlignment(element, (element as HTMLElement).style.textAlign);
 }
 
 function paragraph(element: Element, schema: Schema): FountainNode {
@@ -469,7 +469,7 @@ function paragraph(element: Element, schema: Schema): FountainNode {
   // Only a literally childless writer marker can suppress the normal caret
   // leaf. Text, media, comments and even whitespace must use ordinary parsing.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
-  return schema.node('paragraph', { align: alignment(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
+  return schema.node('paragraph', { align: alignment(element), ...readTextDirection(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: Element, colspan: number): number[] | null {
@@ -507,6 +507,8 @@ function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
 }
 
 function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
+  const dir = readTextDirection(element);
+  if (dir.dir) inlineParagraphAttrs = { align: alignment(element), ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
@@ -531,12 +533,14 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
 }
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
+  const dir = readTextDirection(element);
+  const attrs = dir.dir ? { align: alignment(element), ...dir } : {};
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
     const content = inlineChildren(inlineFragment, schema);
     const meaningful = content.some((node) => !node.isText || /[^\t\n\f\r ]/u.test(node.textContent) || node.marks.length);
-    if (meaningful) result.push(schema.node('paragraph', {}, content));
+    if (meaningful) result.push(schema.node('paragraph', attrs, content));
     inlineFragment = element.ownerDocument.createDocumentFragment();
   };
   element.childNodes.forEach((child) => {
@@ -552,7 +556,7 @@ function listItemContent(element: Element, schema: Schema): FountainNode[] {
   // A list item accepts block+, including a code block or heading first.
   // Only an actually empty item needs an editable paragraph fallback.
   if (!result.length) {
-    result.unshift(schema.node('paragraph', {}, [schema.text('')]));
+    result.unshift(schema.node('paragraph', attrs, [schema.text('')]));
   }
   return inheritElementMarks(element, result, schema);
 }
@@ -591,7 +595,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
-  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
+  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element), ...readTextDirection(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
     const children = blockChildren(element as HTMLElement, schema);
@@ -668,7 +672,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
         const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
         const rowspan = Math.max(1, Math.min(100, rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1));
-        const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell) });
+        const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell), ...readTextDirection(cell) });
         return schema.node(
           cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
           {

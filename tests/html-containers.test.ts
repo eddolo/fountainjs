@@ -15,7 +15,11 @@ describe('optional HTML section containers', () => {
     expect(result.document.child(0).type.name).toBe('html_container');
     expect(result.document.child(0).attrs).toEqual({ tag: 'section', id: 'release', className: 'notes', title: 'Release notes', lang: 'en', dir: 'ltr' });
     expect(result.document.child(0).child(1).content.map(node => node.textContent)).toEqual(['First paragraph.', 'Second paragraph.']);
-    expect(HTMLExporter.export(result.document, { document: false })).toBe(source);
+    // Canonical HTML materializes fixed inherited direction on editable text
+    // blocks, so moving a block out of its wrapper keeps its reading direction.
+    const canonical = '<section id="release" class="notes" title="Release notes" lang="en" dir="ltr"><h2 dir="ltr" style="text-align:start">Release</h2><div><p dir="ltr" style="text-align:start">First <em>paragraph</em>.</p><p dir="ltr" style="text-align:start">Second paragraph.</p></div></section>';
+    expect(HTMLExporter.export(result.document, { document: false })).toBe(canonical);
+    expect(ServerHTMLImporter.parse(canonical, schema).toJSON()).toEqual(result.document.toJSON());
   });
 
   it.each(['div', 'section', 'article', 'aside', 'nav', 'main', 'header', 'footer', 'address'])('retains an empty %s as an empty container, not a fake paragraph', tag => {

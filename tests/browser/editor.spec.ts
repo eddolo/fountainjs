@@ -30,6 +30,11 @@ import { htmlRawTextJourney } from './html-raw-text-journey';
 import { htmlLinkControlsJourney } from './html-link-controls-journey';
 import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-block-journey';
 import { htmlBlankLineJourney } from './html-blank-line-journey';
+import { textDirectionJourney } from './text-direction-journey';
+
+test('edits RTL blocks with native visual selection, direction controls, Enter history and HTML reader export', async ({ page }, info) => {
+  await textDirectionJourney(page, info);
+});
 
 test('separates the homepage framework descenders from the italic extend line', async ({ page }, info) => {
   for (const width of [1162, 1440, 390]) {

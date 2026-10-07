@@ -8,6 +8,7 @@ import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
 import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
 import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
 import { checkHTMLLinkControls } from './fixtures/html-link-controls-check.mjs';
+import { checkTextDirection } from './fixtures/text-direction-check.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -35,6 +36,7 @@ const coreNames = [
   'MediaExtension', 'startAssetUpload', 'registerFountainElement', 'BubbleMenuExtension',
   'FloatingMenuExtension', 'getEditorMenuAnchorRect', 'moveNode', 'canMoveNode',
   'BlockHandleManager', 'FOUNTAIN_NODE_DRAG_TYPE',
+  'setTextDirection', 'setTextAlignment',
   'getCollaborationAdapter', 'replaceCollaborationAdapter',
   'createLeanLoopbackProvider',
   'createStreamingAIAdapter',
@@ -46,6 +48,7 @@ const headlessCoreNames = [
   'createHistoryPlugin', 'MarkdownImporter', 'MarkdownExporter', 'MarkdownSourceSnapshot',
   'HTMLExporter', 'JSONExporter', 'TextExporter', 'FountainDocumentMigrator',
   'StableNodeIdIndex', 'defineStructuredAttribute',
+  'setTextDirection', 'setTextAlignment',
   'createCoreCollaborationExtension', 'getCollaborationState',
 ];
 const aiDocumentToolNames = ['AI_DOCUMENT_TOOL_NAMES', 'AI_DOCUMENT_TOOL_DEFINITIONS', 'AIDocumentToolbox', 'createAIDocumentToolbox'];
@@ -244,6 +247,9 @@ console.log(`Packed ESM: ${checkHTMLLinkControls(esmCore, esmServerHTML)} link n
 checkMarkdownBlockAtoms(esmCore, esmServerHTML);
 console.log(`Packed ESM: ${checkMarkdownEmphasis(esmCore)} native emphasis and partial-schema retention checks passed.`);
 console.log(`Packed ESM root/core: ${checkModelIntegrity(esmCore)}/${checkModelIntegrity(esmHeadlessCore, esmCore.CoreSchemaSpec)} owned-attribute checks plus immutable snapshots/history passed.`);
+checkTextDirection(esmCore, esmCore, esmServerHTML, esmDOCX);
+checkTextDirection(esmHeadlessCore, esmCore, esmServerHTML, esmDOCX);
+console.log('Packed ESM root/core: DOM-free direction/history/HTML/loss-report contracts passed.');
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
 const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
 if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
@@ -382,6 +388,9 @@ console.log(`Packed CommonJS: ${checkHTMLLinkControls(cjsCore, cjsServerHTML)} l
 checkMarkdownBlockAtoms(cjsCore, cjsServerHTML);
 console.log(`Packed CommonJS: ${checkMarkdownEmphasis(cjsCore)} native emphasis and partial-schema retention checks passed.`);
 console.log(`Packed CommonJS root/core: ${checkModelIntegrity(cjsCore)}/${checkModelIntegrity(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} owned-attribute checks plus immutable snapshots/history passed.`);
+checkTextDirection(cjsCore, cjsCore, cjsServerHTML, cjsDOCX);
+checkTextDirection(cjsHeadlessCore, cjsCore, cjsServerHTML, cjsDOCX);
+console.log('Packed CommonJS root/core: DOM-free direction/history/HTML/loss-report contracts passed.');
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
 const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
 if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');

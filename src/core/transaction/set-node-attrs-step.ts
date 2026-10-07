@@ -7,6 +7,9 @@ export class SetNodeAttrsStep extends Step {
 
   apply(doc: Node): Node {
     const node = getNodeAtPath(doc, this.path);
-    return replaceNodeAtPath(doc, this.path, node.withAttrs({ ...node.attrs, ...this.attrs }));
+    // Use schema normalization so optional undefined attributes become absence,
+    // matching node construction and portable JSON/Yjs representation.
+    const attrs = node.type.create({ ...node.attrs, ...this.attrs }, node.content, node.text, node.marks).attrs;
+    return replaceNodeAtPath(doc, this.path, node.withAttrs(attrs));
   }
 }

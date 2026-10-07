@@ -340,6 +340,7 @@ export class SelectionHandler {
           const selection = new CellSelection(this.editor.state.doc, anchor, head);
           event.preventDefault();
           this.pointerSelectionHandled = true;
+          this.dom.focus({ preventScroll: true });
           this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
           return;
         } catch { /* Let the browser place a regular text selection. */ }
@@ -368,6 +369,9 @@ export class SelectionHandler {
       const selection = new NodeSelection(this.editor.state.doc, path);
       event.preventDefault();
       this.pointerSelectionHandled = true;
+      // This is explicit document interaction, unlike a background render.
+      // preventDefault suppresses native focus transfer from the old field.
+      this.dom.focus({ preventScroll: true });
       this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
     } catch { /* Ignore stale DOM paths during a render boundary. */ }
   };
