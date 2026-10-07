@@ -1,5 +1,13 @@
 # Performance and memory contract
 
+Follow-up result (`a4d3d57`, 2026-10-07): the same unchanged complete performance
+contract passes. Local/remote/server-HTML growth is 4.85× / 4.61× / 9.14× versus
+15×. At 10,000 blocks, local/remote/JSON-boundary p95 is 1.20 / 0.82 / 113.27 ms;
+server HTML p95 is 691.88 ms against 900 ms. Live/destroyed editor heap growth
+is 0.00 / 0.06 MiB. Retain the previous growth failure below; the quote-rendering
+repair and diagnostic changes do not establish a performance root cause or fix.
+Raw evidence: `artifacts/ci-a4d3d57-performance-20261007.log`.
+
 Cloud result for structural direction (`9f56b8b`, 2026-10-07): the unchanged
 local-edit growth check fails at 15.11× versus its 15× ceiling. Rounded medians
 are 0.05 ms at 1,000 blocks and 0.79 ms at 10,000; the raw ratio uses unrounded

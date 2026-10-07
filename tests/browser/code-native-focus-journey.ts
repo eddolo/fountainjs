@@ -61,6 +61,19 @@ export async function nativeCodeClickBaseline(page: Page, editor: Locator, info:
   }));
   const nativePage = await page.context().newPage();
   const observations: Record<string, unknown> = {};
+  const requireKnownWidgetCaret = (focus: Awaited<ReturnType<typeof codeFocus>> & { text: string },
+    evidence: Awaited<ReturnType<typeof codeInputEvidence>>) => {
+    // This is specifically a caret inside the non-editable line-number widget,
+    // not a tolerance for arbitrary native insertion or event-delivery failure.
+    expect(info.project.name).toBe('webkit');
+    expect(process.platform).toBe('linux');
+    expect(focus).toMatchObject({ caretInCode: true, documentFocused: true, text: 'literal',
+      anchorNode: { widget: 'syntax-line-0.0.0-1', elementEditable: false },
+      focusNode: { widget: 'syntax-line-0.0.0-1', elementEditable: false } });
+    expect(evidence.events.filter((event: any) => event.type === 'keydown').map((event: any) => event.key))
+      .toEqual(['End', ' ', 'e', 'd', 'i', 't', 'e', 'd']);
+    expect(evidence.events.filter((event: any) => event.type === 'beforeinput' || event.type === 'input')).toEqual([]);
+  };
   try {
     await nativePage.setContent(`<base href="${new URL('/', page.url()).href}">${surface.styles}${surface.html}`);
     const nativeRoot = nativePage.locator('.fountain-editor');
@@ -74,22 +87,18 @@ export async function nativeCodeClickBaseline(page: Page, editor: Locator, info:
     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
     const nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
     observations.nativeAfterTyping = nativeAfterTyping;
-    observations.nativeInputEvidence = await codeInputEvidence(nativePage);
+    const nativeEvidence = await codeInputEvidence(nativePage);
+    observations.nativeInputEvidence = nativeEvidence;
     const rawEditingWorks = nativeAfterTyping.text === 'literal edited';
     if (!rawEditingWorks) {
-      // Linux WebKit can focus the tabbable scrolling PRE while leaving a DOM
-      // caret inside it, yet emit no native text insertion. Retain this exact
-      // known failure; it is not the reference behavior an editor should copy.
-      expect(info.project.name).toBe('webkit');
-      expect(process.platform).toBe('linux');
+      requireKnownWidgetCaret(nativeAfterTyping, nativeEvidence);
       expect(nativeAfterTyping).toMatchObject({ role: 'code', caretInCode: true, text: 'literal' });
-      observations.nativeLimitation = 'Tabbable code region receives focus/caret but native typing inserts no text.';
+      observations.nativeLimitation = 'Native caret is inside a non-editable line-number widget; keyboard events arrive but no text-input event is emitted.';
     } else await expect(nativeCode).toHaveText('literal edited');
     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
 
-    // Independent editing-source control: same untouched markup/styles, except
-    // PRE is not a separate Tab stop. Keep this distinct from the raw clone;
-    // neither control contains Fountain scripts, instances or input listeners.
+    // Isolate the Tab-stop hypothesis without removing the line-number widget.
+    // Linux evidence disproves that hypothesis: its caret remains in the widget.
     await nativePage.setContent(`<base href="${new URL('/', page.url()).href}">${surface.styles}${surface.html}`);
     await nativeRoot.evaluate((element, width) => {
       (element as HTMLElement).style.width = `${width}px`;
@@ -100,20 +109,47 @@ export async function nativeCodeClickBaseline(page: Page, editor: Locator, info:
     const sourceFocus = await codeFocus(nativePage); observations.nativeSourceClick = sourceFocus;
     expect(sourceFocus).toMatchObject({ role: 'editor', caretInCode: true });
     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
-    observations.nativeSourceAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
-    observations.nativeSourceInputEvidence = await codeInputEvidence(nativePage);
-    // Keep this failure red, but continue collecting actual Fountain evidence
-    // instead of failing before its first real keystroke. This is not a skip or
-    // an alternative passing oracle when the native control cannot edit.
-    await expect.soft(nativeCode).toHaveText('literal edited');
+    const sourceAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+    const sourceEvidence = await codeInputEvidence(nativePage);
+    observations.nativeSourceAfterTyping = sourceAfterTyping;
+    observations.nativeSourceInputEvidence = sourceEvidence;
+    if (sourceAfterTyping.text !== 'literal edited') {
+      requireKnownWidgetCaret(sourceAfterTyping, sourceEvidence);
+      observations.nativeSourceLimitation = 'Removing PRE tabindex does not remove the non-editable widget caret.';
+    } else await expect(nativeCode).toHaveText('literal edited');
     await expect(nativeRoot.locator(':scope > p')).toHaveText('After');
     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-source-edit.png') });
 
-    const expectedFocus = rawEditingWorks ? nativeFocus : sourceFocus;
+    // Independent source-only native control: preserve source markup/styles,
+    // but remove PRE's Tab stop and the editor-generated line-number widgets.
+    // No Fountain handlers or forced Range are installed. A real click, End and
+    // typing must work here before this control can establish editing behavior.
+    await nativePage.setContent(`<base href="${new URL('/', page.url()).href}">${surface.styles}${surface.html}`);
+    await nativeRoot.evaluate((element, width) => {
+      (element as HTMLElement).style.width = `${width}px`;
+      const pre = element.querySelector('pre')!;
+      pre.removeAttribute('tabindex');
+      pre.querySelectorAll('[data-fountain-widget]').forEach(widget => widget.remove());
+    }, surface.width);
+    await expect(nativeCode).toHaveText('literal');
+    await expect(nativeCode.locator('[data-fountain-widget]')).toHaveCount(0);
+    await observeCodeInput(nativePage);
+    await nativeCode.click();
+    const sourceOnlyFocus = await codeFocus(nativePage);
+    observations.nativeSourceOnlyClick = sourceOnlyFocus;
+    expect(sourceOnlyFocus).toMatchObject({ role: 'editor', caretInCode: true, documentFocused: true,
+      anchorNode: { elementEditable: true } });
+    await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+    observations.nativeSourceOnlyAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+    observations.nativeSourceOnlyInputEvidence = await codeInputEvidence(nativePage);
+    await expect(nativeCode).toHaveText('literal edited');
+    await expect(nativeRoot.locator(':scope > p')).toHaveText('After');
+    await nativeRoot.screenshot({ path: info.outputPath('code-click-native-source-only-edit.png') });
+
+    const expectedFocus = rawEditingWorks ? nativeFocus : sourceOnlyFocus;
     observations.expectedFountainClick = expectedFocus;
     observations.expectedFocusBasis = rawEditingWorks ? 'unchanged native region'
-      : await nativeCode.innerText() === 'literal edited' ? 'independent native editing-source control; raw region cannot type'
-      : 'native source focus only; source insertion failed and remains a failing assertion, not an editing oracle';
+      : 'independent source-only native control; raw and Tab-stop-only controls retain a proven non-editable widget caret';
     return expectedFocus;
   } finally {
     const path = info.outputPath('code-click-native-baseline.json');

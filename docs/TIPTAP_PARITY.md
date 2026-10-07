@@ -1,5 +1,28 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Native code-reference diagnosis (`a4d3d57`, 2026-10-07, Unreleased): complete
+Linux verification passes **2,724 tests / 207 files**, package/types/headless/
+Markdown gates, Lean and the unchanged performance limits. Local/remote median
+growth is 4.85× / 4.61× versus 15×; retain the preceding 15.11× failure rather
+than claiming a runtime performance repair. Browser preflight is still red,
+but passive evidence now proves that all three actual Fountain WebKit attempts
+type `literal edited`, preserve host focus/editable text caret and undo without
+an extra paragraph. Raw/native-Tab-stop-only clones instead place both caret
+endpoints inside `contenteditable=false` line-number widgets; eight keydowns
+arrive, but no beforeinput/input occurs. Removing tabindex cannot cure that
+widget endpoint. This is not missing keyboard dispatch or a Fountain input bug
+in this tested workflow; broader code/input reliability remains a separate goal.
+
+Correct the reference with a third, source-only native surface without editor handlers:
+same source markup/styles, no PRE Tab stop and no editor-generated line-number
+widgets. Real click/End/typing must succeed with an editable caret before its
+focus can be used as the editing reference. Keep raw and Tab-stop-only snapshots
+and strictly validate the known Linux widget failure; arbitrary native failures
+still fail. Actual Fountain text/undo/caret/focus/no-stray-paragraph assertions
+remain unchanged. Nine single-worker Windows Chromium/Firefox/WebKit journeys
+pass; new source-only controls and changed images are directly inspected.
+Full Linux follow-up remains required; no runtime, release or ledger promotion.
+
 Cloud follow-up for `9f56b8b` (2026-10-07, Unreleased): all nine independent
 Linux structural-direction/alignment/shared-auto preflights pass; Pages deploys.
 The complete unit run is **2,723 passed / one failed**: an ordinary quote gained

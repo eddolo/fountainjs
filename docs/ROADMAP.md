@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Latest input diagnosis (`a4d3d57`, 2026-10-07): complete Linux verification
+passes 2,724 tests / 207 files, package/types/headless/Markdown, Lean and unchanged
+performance limits. The remaining browser-reference failure is now localized:
+native clones put the caret inside a non-editable line-number widget, despite
+receiving keyboard events; actual Fountain typing, caret/focus and undo pass in
+all three Linux attempts. Use a separate source-only native control with no
+editor-generated widget before establishing editing expectations. Keep raw
+widget failures as narrowly asserted diagnostics, not a broken editing oracle.
+Nine recorded Windows journeys pass; full Linux follow-up and the complete
+matrix are next. Then continue the remaining RTL physical-column/list actions,
+bidi, accessibility, physical-device and CommonMark work. No npm release yet.
+
 Latest cloud checkpoint (`9f56b8b`, 2026-10-07): nine Linux structural-direction
 preflights and Pages pass. Full units expose one ordinary-quote DOM contract
 regression (2,723 passed / one failed); restore its unadorned output without

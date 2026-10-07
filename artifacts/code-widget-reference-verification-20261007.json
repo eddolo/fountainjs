@@ -1,0 +1,238 @@
+{
+  "date": "2026-10-07",
+  "baseCommit": "a4d3d5703f67e0250893999a0dc51b2e55a24e39",
+  "scope": "Diagnose and correct native source editing reference without changing Fountain runtime",
+  "cloud": {
+    "runId": 37695352160,
+    "conclusion": "failure",
+    "verify": {
+      "passed": 2724,
+      "files": 207,
+      "apiDeclarations": 409,
+      "headlessModules": 98,
+      "typesPackageMarkdown": "passed",
+      "log": "artifacts/ci-a4d3d57-verify-20261007.log"
+    },
+    "performance": {
+      "result": "passed under unchanged limits",
+      "localGrowth": 4.85,
+      "incrementalRemoteGrowth": 4.61,
+      "serverHTMLGrowth": 9.14,
+      "growthCeiling": 15,
+      "log": "artifacts/ci-a4d3d57-performance-20261007.log",
+      "priorFailureRetained": "9f56b8b local growth 15.11x; no claimed runtime root cause or fix"
+    },
+    "lean": "passed",
+    "browser": {
+      "structuralPreflight": "9 passed",
+      "nativeControlPreflight": "4 passed / 1 failed, only soft native source expectation",
+      "fullMatrix": "skipped",
+      "log": "artifacts/ci-a4d3d57-browser-20261007.log"
+    },
+    "pages": {
+      "runId": 37695352082,
+      "result": "success"
+    }
+  },
+  "linuxFindings": {
+    "attempts": 3,
+    "rawNative": {
+      "role": "code",
+      "documentFocused": true,
+      "caretNode": "SPAN",
+      "caretWidget": "syntax-line-0.0.0-1",
+      "caretEditable": false,
+      "keydownCount": 8,
+      "beforeinputCount": 0,
+      "inputCount": 0,
+      "textAfterTyping": "literal"
+    },
+    "tabStopRemovedNative": {
+      "role": "editor",
+      "caretWidget": "syntax-line-0.0.0-1",
+      "caretEditable": false,
+      "keydownCount": 8,
+      "beforeinputCount": 0,
+      "textAfterTyping": "literal"
+    },
+    "fountain": {
+      "role": "editor",
+      "caretNode": "#text",
+      "caretEditable": true,
+      "keydownCount": 8,
+      "beforeinputCount": 7,
+      "textAfterTyping": "literal edited",
+      "undoCaretFocusNoExtraParagraphAssertions": "passed in each attempt"
+    },
+    "diagnosis": "Native click lands inside an editor-generated contenteditable=false line-number widget. Events are delivered but no insertion is emitted. Changing PRE's tab stop does not make that widget editable. Fountain's existing click/selection handling establishes an editable text caret and successfully edits."
+  },
+  "referenceCorrection": {
+    "runtimeChanged": false,
+    "rawNative": "unchanged rendered clone retained",
+    "tabStopControl": "retained as independent diagnostic",
+    "knownLimitationValidation": "only Linux WebKit, exact line-number widget at both endpoints, document focused, exact eight keydown sequence, no beforeinput/input, unchanged literal",
+    "thirdSourceOnlyControl": "same source HTML and styles; remove PRE tabindex and generated widgets inside PRE only; no Fountain handler or forced Range; actual click/End/typing must insert literal edited with an editable caret",
+    "fountainAssertions": "real typing, undo, caret/focus, source integrity/no extra paragraph unchanged"
+  },
+  "localFollowup": {
+    "platform": "Windows",
+    "workers": 1,
+    "retries": 0,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "passed": 9,
+    "scope": [
+      "independent native code focus/editing journey",
+      "list-first paste and centre-click edit/undo",
+      "list-first paste and label-click edit/undo"
+    ],
+    "log": "artifacts/code-widget-native-source-control-20261007.log",
+    "visualCaptures": 21,
+    "directReviewThisTurn": 4,
+    "identicalReviewedCaptures": 17,
+    "linuxDirectReview": "three first-attempt raw/Tab-stop-only/Fountain screenshots inspected",
+    "recordings": "videos/traces retained locally, not watched"
+  },
+  "limitations": [
+    "Source-only native control requires new Linux verification",
+    "Complete current-source browser matrix not yet green",
+    "No general WebKit/native widget fix claimed",
+    "No production readiness/RTL ledger promotion",
+    "npm 0.4.0-beta.2 unchanged"
+  ],
+  "sourceHash": {
+    "path": "tests/browser/code-native-focus-journey.ts",
+    "sha256": "06bc0b85d484294245c8a9c85aa9ffa9a587b50c082ada246004dce72ce178a1"
+  },
+  "visualReview": [
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-fountain-edit.png",
+      "sha256": "3f2162a2d80cd34859823d97efb7e460aa9325659abedf7d7a2f7215c2cc8e10",
+      "review": "directly inspected this turn",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-fountain-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-source-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-source-only-edit.png",
+      "sha256": "a988ebb894292187b4bd763bffd3a33114137b141117a23f65979c2c15b0cc38",
+      "review": "directly inspected this turn",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-source-only-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-fountain-edit.png",
+      "sha256": "e9d78c7adf2a270a35f5295c0b1ebc62f6aaba7287e88196b669a45961d58ec6",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-fountain-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-edit.png",
+      "sha256": "4802347d51915d63be6ace930d1fa51ac9acbd4415eed6eaf1d3bc4868a8591c",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-edit.png",
+      "sha256": "ef11d869d9adbc3a26e01bc8fec501f4c8a79a8f28b2752df1326f4496d9e823",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-only-edit.png",
+      "sha256": "fbc3ea12690c79f8c8c6cfad9e2fd0e2f08c82e2a60f4b7fc790badfdb790972",
+      "review": "directly inspected this turn",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-only-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-fountain-edit.png",
+      "sha256": "007351b900d918ed33a566f5ff6460306e8966f21188e838d8e6dcab03d41d8a",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-fountain-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-source-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-source-only-edit.png",
+      "sha256": "11badccf7bde9479545d332fe7cdb6fd0a604cd2a95b3fca6266ae516cec6066",
+      "review": "directly inspected this turn",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-source-only-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-chromium/code-click-native-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-chromium/code-click-native-source-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-chromium/code-click-native-source-only-edit.png",
+      "sha256": "a988ebb894292187b4bd763bffd3a33114137b141117a23f65979c2c15b0cc38",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-source-only-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-firefox/code-click-native-edit.png",
+      "sha256": "4802347d51915d63be6ace930d1fa51ac9acbd4415eed6eaf1d3bc4868a8591c",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-firefox/code-click-native-source-edit.png",
+      "sha256": "ef11d869d9adbc3a26e01bc8fec501f4c8a79a8f28b2752df1326f4496d9e823",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-firefox/code-click-native-source-only-edit.png",
+      "sha256": "fbc3ea12690c79f8c8c6cfad9e2fd0e2f08c82e2a60f4b7fc790badfdb790972",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-only-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/code-click-native-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/code-click-native-source-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png"
+    },
+    {
+      "path": "artifacts/code-widget-native-source-control-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/code-click-native-source-only-edit.png",
+      "sha256": "11badccf7bde9479545d332fe7cdb6fd0a604cd2a95b3fca6266ae516cec6066",
+      "review": "SHA-256 identical to a reviewed capture",
+      "reviewedCapture": "artifacts/code-widget-native-source-control-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-source-only-edit.png"
+    }
+  ]
+}

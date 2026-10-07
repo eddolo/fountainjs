@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Distinguish a non-editable native line-number widget caret from an editing
+  reference. Linux diagnostics show real Fountain typing/undo succeeds while
+  raw/Tab-stop-only clones receive keys but emit no input. Preserve those raw
+  observations and narrowly assert the known widget endpoint. Require actual
+  click/End/typing in a separate source-only native control without editor handlers before
+  comparing Fountain focus. Keep all Fountain functional assertions unchanged.
+  Nine Windows desktop journeys pass; complete Linux follow-up remains required.
+  No runtime change or performance-threshold adjustment.
 - Restore ordinary quotes' existing attribute-free DOM output after complete
   Linux tests exposed an empty-attributes regression. Keep structural direction
   and explicit appearance unchanged. Add passive native/Fountain code-input

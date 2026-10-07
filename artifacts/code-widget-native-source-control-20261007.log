@@ -1,0 +1,24 @@
+[WebServer] (node:1540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:13812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface (2.3s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:3790:57 › pastes and edits list-first code without inventing a blank paragraph (1.7s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:3790:57 › pastes and edits list-first code without inventing a blank paragraph from its label area (933ms)
+(node:14460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface (6.0s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:3790:57 › pastes and edits list-first code without inventing a blank paragraph (3.6s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:3790:57 › pastes and edits list-first code without inventing a blank paragraph from its label area (1.8s)
+(node:20736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface (6.4s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:3790:57 › pastes and edits list-first code without inventing a blank paragraph (5.1s)
+  ok 9 [webkit] › tests\browser\editor.spec.ts:3790:57 › pastes and edits list-first code without inventing a blank paragraph from its label area (1.7s)
+
+  9 passed (38.7s)
