@@ -1,5 +1,23 @@
 # Performance and memory contract
 
+Physical table-column controls (2026-10-08, Unreleased): the private mounted
+view/focus/direction boundary adds about 2.3 KiB ESM / 2.0 KiB CJS overall and
+0.4 / 0.3 KiB to React relative to `14b3642`. Resolve computed layout once only while the table panel
+is open, then re-read at activation; ordinary typing does not query table layout.
+Retain the failed former-cap log. Narrow bundle capacities change: React ESM
+91.25 → 91.5 KiB / CJS 68.5 → 68.75 KiB; aggregate ESM 1,586.5 → 1,588.75 KiB
+/ CJS 1,319.75 → 1,322 KiB. No dependency, CSS, headless-entry, latency, growth
+or heap cap is relaxed. New-source complete cloud performance is required.
+Final measured aggregates are 1,588.6 / 1,321.6 KiB; the complete build-budget
+check passes. Identity-based ownership also keeps custom root CSS classes out
+of layout resolution; three final recorded merged-cell journeys reproduce the
+six already-inspected captures exactly by SHA-256.
+
+The preceding `14b3642` passes the same complete runtime contract: local,
+incremental remote and server-HTML median growth 9.76× / 7.75× / 9.15× versus
+15×. That does not erase the earlier 15.11× failure or establish its root cause.
+Raw log: `artifacts/ci-14b3642-performance-20261007.log`.
+
 Follow-up result (`a4d3d57`, 2026-10-07): the same unchanged complete performance
 contract passes. Local/remote/server-HTML growth is 4.85× / 4.61× / 9.14× versus
 15×. At 10,000 blocks, local/remote/JSON-boundary p95 is 1.20 / 0.82 / 113.27 ms;

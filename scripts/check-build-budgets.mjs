@@ -98,10 +98,13 @@ const limits = Object.freeze({
   // selection-aware controls while retaining an explicit compact allowance.
   // Live AI review plus the optional host-owned conversation surface remain
   // dependency-free and add no provider client or persistence SDK.
-  'dist/react.js': 91.25 * kibibyte,
+  // View-owned physical controls add ~0.4 KiB ESM / 0.3 KiB CJS here;
+  // including their shared DOM ownership boundary, ~2.3 / 2.0 KiB overall.
+  // No headless entry, dependency, CSS or runtime-performance cap is changed.
+  'dist/react.js': 91.5 * kibibyte,
   // Named configuration panels, trigger ownership/focus and native field keys
   // add ~1.6 KiB ESM / 1.4 KiB CJS only here; ESM still fits its existing cap.
-  'dist/react.cjs': 68.5 * kibibyte,
+  'dist/react.cjs': 68.75 * kibibyte,
   // Vue remains an external optional peer; only lifecycle/state/view glue ships here.
   'dist/vue.js': 3 * kibibyte,
   'dist/vue.cjs': 3 * kibibyte,
@@ -505,7 +508,7 @@ const limits = Object.freeze({
   // Structural dir attributes, guarded import inheritance, RTL view handling
   // and author controls: measured 1586.1 KiB after sharing DOCX loss reporting.
   // This adds feature capacity only; latency, growth and heap limits stay put.
-  'all ESM runtime code': 1586.5 * kibibyte,
+  'all ESM runtime code': 1588.75 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -557,7 +560,7 @@ const limits = Object.freeze({
   // runtime performance/heap limits are unchanged. Keep the failed old-cap log.
   // Structural RTL plus preserving cell overrides through rebuilds measures
   // 1,351,195 bytes (27 bytes over 1319.5 KiB); retain that failed build log.
-  'all CommonJS runtime code': 1319.75 * kibibyte,
+  'all CommonJS runtime code': 1322 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

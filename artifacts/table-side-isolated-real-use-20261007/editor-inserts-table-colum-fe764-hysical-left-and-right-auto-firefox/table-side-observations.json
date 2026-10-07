@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "name": "auto",
+      "side": "left",
+      "source": "<table dir=\"auto\"><tr><td><p>مرحبا</p></td><td dir=\"ltr\"><p>First</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "مرحبا",
+        "First",
+        "Inserted left"
+      ],
+      "activeBox": {
+        "x": 482.51666259765625,
+        "y": 477.45001220703125,
+        "width": 349.36663818359375,
+        "height": 44.5999755859375
+      },
+      "insertedBox": {
+        "x": 97.19999694824219,
+        "y": 477.45001220703125,
+        "width": 385.31666564941406,
+        "height": 44.5999755859375
+      }
+    },
+    {
+      "name": "auto",
+      "side": "right",
+      "source": "<table dir=\"auto\"><tr><td><p>مرحبا</p></td><td dir=\"ltr\"><p>First</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "مرحبا",
+        "Inserted right",
+        "First"
+      ],
+      "activeBox": {
+        "x": 97.19999694824219,
+        "y": 477.45001220703125,
+        "width": 334.13331604003906,
+        "height": 44.5999755859375
+      },
+      "insertedBox": {
+        "x": 431.3333435058594,
+        "y": 477.45001220703125,
+        "width": 412.4166564941406,
+        "height": 44.5999755859375
+      }
+    }
+  ],
+  "errors": [],
+  "navigations": [
+    "http://127.0.0.1:4196/conversion-lab.html"
+  ]
+}

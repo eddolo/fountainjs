@@ -7,13 +7,28 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Make the supplied toolbar's left/right column insertion follow the mounted
+  table's physical LTR/RTL/automatic/inherited CSS layout, independently of cell
+  text direction. Keep logical core `before`/`after` commands unchanged and
+  DOM-free. Track view ownership/focus privately; disable ambiguous or unmounted
+  physical controls instead of guessing. 35 focused tests and 15 recorded
+  single-worker desktop journeys pass, including merged/row-spanning cells,
+  pointer/keyboard activation, actual typing and undo. Visually inspect all
+  30 result captures. A final identity-based ownership check removes dependence
+  on root CSS classes; three further recorded merged-cell journeys pass with
+  six SHA-256-identical reviewed results. Public signatures remain unchanged;
+  refresh only the private cleanup-field declaration hashes. Linux follow-up is required for this new runtime change;
+  the preceding `14b3642` complete CI is green (2,724 units, 694 browser passes,
+  16 skips, performance and Lean). Narrow measured bundle capacity grows;
+  runtime latency/growth/heap limits and npm version are unchanged.
 - Distinguish a non-editable native line-number widget caret from an editing
   reference. Linux diagnostics show real Fountain typing/undo succeeds while
   raw/Tab-stop-only clones receive keys but emit no input. Preserve those raw
   observations and narrowly assert the known widget endpoint. Require actual
   click/End/typing in a separate source-only native control without editor handlers before
   comparing Fountain focus. Keep all Fountain functional assertions unchanged.
-  Nine Windows desktop journeys pass; complete Linux follow-up remains required.
+  Nine Windows desktop journeys pass; `14b3642` also passes complete Linux CI:
+  2,724 units / 207 files, 694 browser passes / 16 skips, performance and Lean.
   No runtime change or performance-threshold adjustment.
 - Restore ordinary quotes' existing attribute-free DOM output after complete
   Linux tests exposed an empty-attributes regression. Keep structural direction

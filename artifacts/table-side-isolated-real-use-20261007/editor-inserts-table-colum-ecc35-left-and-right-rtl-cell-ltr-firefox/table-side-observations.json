@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "name": "rtl-cell-ltr",
+      "side": "left",
+      "source": "<table dir=\"rtl\"><tr><td dir=\"ltr\"><p>First</p></td><td><p>Second</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "First",
+        "Inserted left",
+        "Second"
+      ],
+      "activeBox": {
+        "x": 831.8833618164062,
+        "y": 477.45001220703125,
+        "width": 350.91668701171875,
+        "height": 44.5999755859375
+      },
+      "insertedBox": {
+        "x": 443.01666259765625,
+        "y": 477.45001220703125,
+        "width": 388.86663818359375,
+        "height": 44.5999755859375
+      }
+    },
+    {
+      "name": "rtl-cell-ltr",
+      "side": "right",
+      "source": "<table dir=\"rtl\"><tr><td dir=\"ltr\"><p>First</p></td><td><p>Second</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "Inserted right",
+        "First",
+        "Second"
+      ],
+      "activeBox": {
+        "x": 431.3333435058594,
+        "y": 477.45001220703125,
+        "width": 339.0499572753906,
+        "height": 44.5999755859375
+      },
+      "insertedBox": {
+        "x": 770.3833618164062,
+        "y": 477.45001220703125,
+        "width": 412.41668701171875,
+        "height": 44.5999755859375
+      }
+    }
+  ],
+  "errors": [],
+  "navigations": [
+    "http://127.0.0.1:4196/conversion-lab.html"
+  ]
+}

@@ -1,0 +1,71 @@
+[WebServer] (node:21948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:11356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (16.3s)
+(node:4184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (44.2s)
+(node:10516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (23.4s)
+
+
+  1) [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('table').locator('td').filter({ has: getByText('First', { exact: true }) })
+    Expected: "ltr"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('table').locator('td').filter({ has: getByText('First', { exact: true }) })
+        - waiting for navigation to finish...
+        - navigated to "http://127.0.0.1:4196/conversion-lab.html"
+
+
+       at table-column-side-journey.ts:62
+
+      60 |         await expect(table.locator('td')).toHaveCount(originalCells);
+      61 |         await expect(table).toHaveCSS('direction', sample.direction);
+    > 62 |         await expect(active).toHaveCSS('direction', 'ltr');
+         |                              ^
+      63 |       }
+      64 |     }
+      65 |     expect(errors).toEqual([]);
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:62:30)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:42:3
+
+    attachment #1: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\table-side-built-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\attachments\table-side-observations-87a54599f9c5f420d398461292a6ac835385af44.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\table-side-built-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\table-side-built-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\table-side-built-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\table-side-built-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\table-side-built-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+  2 passed (1.7m)

@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "name": "rtl-spans",
+      "side": "left",
+      "source": "<table dir=\"rtl\"><tr><td rowspan=\"2\"><p>Row label</p></td><td colspan=\"2\" dir=\"ltr\"><p>Merged Latin</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "Row label",
+        "Merged Latin",
+        "Inserted left"
+      ],
+      "activeBox": {
+        "x": 388.875,
+        "y": 476.828125,
+        "width": 535.734375,
+        "height": 44.59375
+      },
+      "insertedBox": {
+        "x": 97.1875,
+        "y": 476.828125,
+        "width": 291.6875,
+        "height": 44.59375
+      }
+    },
+    {
+      "name": "rtl-spans",
+      "side": "right",
+      "source": "<table dir=\"rtl\"><tr><td rowspan=\"2\"><p>Row label</p></td><td colspan=\"2\" dir=\"ltr\"><p>Merged Latin</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "Row label",
+        "Inserted right",
+        "Merged Latin"
+      ],
+      "activeBox": {
+        "x": 97.1875,
+        "y": 476.828125,
+        "width": 520.3125,
+        "height": 44.59375
+      },
+      "insertedBox": {
+        "x": 617.5,
+        "y": 476.828125,
+        "width": 313.265625,
+        "height": 44.59375
+      }
+    }
+  ],
+  "errors": [],
+  "navigations": [
+    "http://127.0.0.1:4196/conversion-lab.html"
+  ]
+}

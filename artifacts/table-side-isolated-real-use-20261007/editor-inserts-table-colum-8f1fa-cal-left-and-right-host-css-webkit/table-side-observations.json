@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "name": "host-css",
+      "side": "left",
+      "source": "<table ><tr><td dir=\"ltr\"><p>First</p></td><td><p>Second</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "First",
+        "Inserted left",
+        "Second"
+      ],
+      "activeBox": {
+        "x": 828.1875,
+        "y": 476.828125,
+        "width": 354.65625,
+        "height": 44.59375
+      },
+      "insertedBox": {
+        "x": 441.90625,
+        "y": 476.828125,
+        "width": 386.28125,
+        "height": 44.59375
+      }
+    },
+    {
+      "name": "host-css",
+      "side": "right",
+      "source": "<table ><tr><td dir=\"ltr\"><p>First</p></td><td><p>Second</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "Inserted right",
+        "First",
+        "Second"
+      ],
+      "activeBox": {
+        "x": 431.203125,
+        "y": 476.828125,
+        "width": 343.640625,
+        "height": 44.59375
+      },
+      "insertedBox": {
+        "x": 774.84375,
+        "y": 476.828125,
+        "width": 407.984375,
+        "height": 44.59375
+      }
+    }
+  ],
+  "errors": [],
+  "navigations": [
+    "http://127.0.0.1:4196/conversion-lab.html"
+  ]
+}

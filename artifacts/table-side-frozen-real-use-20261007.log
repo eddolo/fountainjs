@@ -1,0 +1,115 @@
+[WebServer] (node:1332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:23480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (48.9s)
+(node:18680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (1.7m)
+(node:22020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (1.0m)
+
+
+  1) [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('table')
+    Expected: "rtl"
+    Received: ""
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('table')
+      - 
+
+
+       at table-column-side-journey.ts:52
+
+      50 |         if (side === 'left') expect(b.x + b.width).toBeLessThanOrEqual(a.x + 1);
+      51 |         else expect(b.x).toBeGreaterThanOrEqual(a.x + a.width - 1);
+    > 52 |         await expect(table).toHaveCSS('direction', sample.direction);
+         |                             ^
+      53 |         await expect(active).toHaveCSS('direction', 'ltr');
+      54 |         if (sample.spans) { await expect(active).toHaveAttribute('colspan', '2'); await expect(table.locator('td[rowspan="2"]')).toHaveCount(1); }
+      55 |         observations.push({ name: sample.name, side, source, direction: await table.evaluate(element => getComputedStyle(element).direction),
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:52:29)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:42:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\attachments\table-side-observations-f74728849c2aa2679b58bf458272ed02062877ee.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.focus: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: auto.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true })
+
+
+       at table-column-side-journey.ts:45
+
+      43 |         await expect(table.locator('td')).toHaveCount(originalCells + 2);
+      44 |         await workspace.getByRole('button', { name: 'Close', exact: true }).click();
+    > 45 |         await editor.focus();
+         |                      ^
+      46 |         await page.keyboard.insertText(`Inserted ${side}`);
+      47 |         const inserted = table.locator('td').filter({ has: page.getByText(`Inserted ${side}`, { exact: true }) });
+      48 |         await expect(inserted).toHaveCount(1);
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:45:22)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:42:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\attachments\table-side-observations-ad4a2d903f9229adddc97a431c1ad47ef3e321da.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\table-side-frozen-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+    [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+  1 passed (4.1m)

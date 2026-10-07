@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
+import { tableColumnSideCases, tableColumnSideJourney } from './table-column-side-journey';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { strFromU8, unzipSync } from 'fflate';
 import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
@@ -36,6 +37,12 @@ import { autoContainerDirectionJourney } from './auto-container-direction-journe
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
 import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
+
+for (const sample of tableColumnSideCases) {
+  test(`inserts table columns on the physical left and right: ${sample.name}`, async ({ page }, info) => {
+    await tableColumnSideJourney(page, info, sample);
+  });
+}
 
 test('retains structural RTL against native source through author controls, physical table editing and downloaded HTML', async ({ page }, info) => {
   await htmlStructuralDirectionJourney(page, info);

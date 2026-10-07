@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "name": "rtl-spans",
+      "side": "left",
+      "source": "<table dir=\"rtl\"><tr><td rowspan=\"2\"><p>Row label</p></td><td colspan=\"2\" dir=\"ltr\"><p>Merged Latin</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "Row label",
+        "Merged Latin",
+        "Inserted left"
+      ],
+      "activeBox": {
+        "x": 392.4166564941406,
+        "y": 477.45001220703125,
+        "width": 536.5332946777344,
+        "height": 44.5999755859375
+      },
+      "insertedBox": {
+        "x": 97.19999694824219,
+        "y": 477.45001220703125,
+        "width": 295.21669006347656,
+        "height": 44.5999755859375
+      }
+    },
+    {
+      "name": "rtl-spans",
+      "side": "right",
+      "source": "<table dir=\"rtl\"><tr><td rowspan=\"2\"><p>Row label</p></td><td colspan=\"2\" dir=\"ltr\"><p>Merged Latin</p></td></tr><tr><td><p>Lower one</p></td><td><p>Lower two</p></td></tr></table><p>After table</p>",
+      "direction": "rtl",
+      "cells": [
+        "Row label",
+        "Inserted right",
+        "Merged Latin"
+      ],
+      "activeBox": {
+        "x": 97.19999694824219,
+        "y": 477.45001220703125,
+        "width": 519.8666534423828,
+        "height": 44.5999755859375
+      },
+      "insertedBox": {
+        "x": 617.066650390625,
+        "y": 477.45001220703125,
+        "width": 318.5,
+        "height": 44.5999755859375
+      }
+    }
+  ],
+  "errors": [],
+  "navigations": [
+    "http://127.0.0.1:4196/conversion-lab.html"
+  ]
+}

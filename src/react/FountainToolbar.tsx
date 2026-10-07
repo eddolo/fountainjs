@@ -93,6 +93,7 @@ import {
 } from '../text-style';
 import { useFountainState } from './useFountain';
 import { tableRowRepeats } from '../core/table-layout';
+import { addTableColumnOnSide, getRenderedTableDirection, observeTableDirectionRoots } from '../view/table-direction';
 import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
 import {
   FountainToolbarButton,
@@ -169,6 +170,8 @@ export function FountainToolbar({
   const fontFamilyListId = useId();
   const state = useFountainState(editor);
   const [panel, setPanel] = useState<ToolbarPanel | null>(null);
+  const [, refreshTableViews] = useState(0);
+  useEffect(() => editor && panel === 'table' ? observeTableDirectionRoots(editor, () => refreshTableViews(value => value + 1)) : undefined, [editor, panel]);
   const panelProps = (name: ToolbarPanel) => ({ id: `${panelId}-${name}`, 'aria-label': panelLabels[name] });
   const closePanel = () => {
     setPanel(null);
@@ -248,6 +251,7 @@ export function FountainToolbar({
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
   const activeTable = getActiveTableCell(editor);
+  const tableDirection = panel === 'table' && activeTable ? getRenderedTableDirection(editor) : undefined;
   const activeRow = activeTable?.table.child(activeTable.cell.row);
   const rowRepeats = activeRow ? tableRowRepeats(activeRow) : false;
   const toggleRowRepetition = () => {
@@ -972,8 +976,9 @@ export function FountainToolbar({
           <p className="fountain-toolbar__hint">Only consecutive repeating rows at the top can repeat. A rowspan crossing into body rows prevents safe repeated copies. This does not change cell colour or header roles.</p>
         </fieldset>
         <fieldset><legend>Columns</legend>
-          {menuTool('add-table-column-left', 'Add column left', () => addTableColumn(editor, 'before'), { disabled: !activeTable })}
-          {menuTool('add-table-column-right', 'Add column right', () => addTableColumn(editor, 'after'), { disabled: !activeTable })}
+          {menuTool('add-table-column-left', 'Add column left', () => addTableColumnOnSide(editor, 'left'), { disabled: !activeTable || !tableDirection })}
+          {menuTool('add-table-column-right', 'Add column right', () => addTableColumnOnSide(editor, 'right'), { disabled: !activeTable || !tableDirection })}
+          {!tableDirection && <p className="fountain-toolbar__hint">Left/right insertion needs a mounted editor table. If multiple views have different layouts, focus the intended editor first.</p>}
           {menuTool('delete-table-column', 'Delete current column', () => deleteTableColumn(editor), { disabled: !activeTable })}
           {menuTool('toggle-header-column', 'Make/unmake header column', () => toggleTableHeaderColumn(editor), { disabled: !activeTable })}
         </fieldset>

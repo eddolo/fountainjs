@@ -1,0 +1,528 @@
+{
+  "date": "2026-10-08",
+  "status": "Unreleased; new-runtime Linux certification pending",
+  "baseCommit": "14b3642e88357fe08083d5470988aaeb822c1b47",
+  "baseCloud": {
+    "runId": 37696391809,
+    "result": "success",
+    "units": 2724,
+    "unitFiles": 207,
+    "browserPassed": 694,
+    "browserSkipped": 16,
+    "structuralPreflightPassed": 9,
+    "nativeWebkitPreflightPassed": 5,
+    "nativeFirefoxPreflightPassed": 2,
+    "performance": "passed unchanged latency/growth/heap limits",
+    "lean": "passed",
+    "pagesRunId": 37696391844,
+    "pages": "success",
+    "logs": [
+      "artifacts/ci-14b3642-verify-20261007.log",
+      "artifacts/ci-14b3642-browser-20261007.log",
+      "artifacts/ci-14b3642-performance-20261007.log"
+    ],
+    "visualReview": "Six Linux source-only/native-versus-Fountain result PNGs inspected together; source-only and actual Fountain both show literal edited."
+  },
+  "implementation": {
+    "owningLayer": "DOM view and supplied React toolbar, not platform-neutral core",
+    "behavior": "Map physical left/right from computed mounted table direction. Ignore individual cell text direction for grid geometry. Resolve only owned views, preserve intended focus through toolbar fields, reject ambiguous or unmounted layouts, release roots/listeners at view destruction. Nested ownership uses registered element identity, not CSS classes.",
+    "core": "Logical addTableColumn before/after signature and behavior unchanged; no DOM property added to Editor or document.",
+    "api": "409 declaration files; only two EditorView declaration hashes change. Removing the one added private cleanup declaration exactly reproduces both preceding snapshot hashes; public signatures unchanged."
+  },
+  "local": {
+    "units": {
+      "passed": 35,
+      "files": 3,
+      "workers": 1,
+      "log": "artifacts/table-side-frozen-units-20261007.log"
+    },
+    "browser": {
+      "passed": 15,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "cases": [
+        "ltr",
+        "rtl-cell-ltr",
+        "auto",
+        "host-css",
+        "rtl-spans"
+      ],
+      "interactions": 30,
+      "assertions": [
+        "actual pointer left insertion",
+        "actual keyboard Enter right insertion",
+        "real typing into new column",
+        "physical geometry relative to selected cell",
+        "rowspan/colspan unchanged",
+        "cell LTR override retained",
+        "undo typing and column insertion",
+        "one initial main-frame navigation only",
+        "no page errors"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "perTestTimeoutMs": 60000,
+      "affinityMask": 192,
+      "logicalProcessorsAllowed": 2,
+      "nodePriority": "BelowNormal",
+      "log": "artifacts/table-side-isolated-real-use-20261007.log",
+      "videos": "15 recordings retained locally; not watched",
+      "traces": "retained locally"
+    },
+    "visual": {
+      "capturesInspected": 30,
+      "method": "All 30 PNGs reviewed in three labelled ten-image contact sheets, with geometry assertions independently checked.",
+      "contactSheets": [
+        "artifacts/table-side-isolated-chromium-contact.png",
+        "artifacts/table-side-isolated-firefox-contact.png",
+        "artifacts/table-side-isolated-webkit-contact.png"
+      ]
+    },
+    "finalOwnershipFollowup": {
+      "passedUnits": 35,
+      "unitFiles": 3,
+      "unitLog": "artifacts/table-side-owned-root-units-20261008.log",
+      "passedBrowserJourneys": 3,
+      "case": "rtl-spans",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "browserLog": "artifacts/table-side-owned-root-real-use-20261008.log",
+      "workers": 1,
+      "retries": 0,
+      "affinityMask": 192,
+      "logicalProcessorsAllowed": 2,
+      "rootClassCoverage": "Unit tests replace the actual view root CSS class and nest a differently styled registered editor.",
+      "captures": [
+        {
+          "Path": "artifacts/table-side-owned-root-real-use-20261008/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-left.png",
+          "Sha256": "21473bb76de4be414a97efc54577a04e92cbd15d6913b14e3fa6c41fadc6db1d",
+          "identicalReviewedCapture": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-left.png"
+        },
+        {
+          "Path": "artifacts/table-side-owned-root-real-use-20261008/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-right.png",
+          "Sha256": "32793c9da11e97faa40868aa341b23cdb1b775f189ea7c520b6cd0242b444ce1",
+          "identicalReviewedCapture": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-right.png"
+        },
+        {
+          "Path": "artifacts/table-side-owned-root-real-use-20261008/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-left.png",
+          "Sha256": "99bc9ad690dd509866ee9a3da330f50f22394a34fcb58a72cb2a16f162314027",
+          "identicalReviewedCapture": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-left.png"
+        },
+        {
+          "Path": "artifacts/table-side-owned-root-real-use-20261008/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-right.png",
+          "Sha256": "c77e6f013261b12524925e07729ace600671302deda7395c02180f833c620904",
+          "identicalReviewedCapture": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-right.png"
+        },
+        {
+          "Path": "artifacts/table-side-owned-root-real-use-20261008/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-left.png",
+          "Sha256": "9af85dd0d5d6475865f0d7f28bcfe72d0c47d985d63b8751f7e539b8aa3182e1",
+          "identicalReviewedCapture": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-left.png"
+        },
+        {
+          "Path": "artifacts/table-side-owned-root-real-use-20261008/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-right.png",
+          "Sha256": "c7a9f65de09dff11fec9cb5b7dd90634fe2ad4d697ea3cf29a4264a71d1b2cf6",
+          "identicalReviewedCapture": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-right.png"
+        }
+      ],
+      "visualReview": "All six follow-up PNG SHA-256 hashes exactly match inspected matrix captures; no unchecked changed image."
+    },
+    "finalChecks": {
+      "build": "passed",
+      "types": "passed; Svelte zero errors/warnings, Angular passed",
+      "api": "409 declarations passed",
+      "headless": "98 modules plus headless TypeScript passed",
+      "package": "packed ESM/CJS and headless imports/contracts passed",
+      "budgets": "passed",
+      "markdown": "preceding implementation checks unchanged at 563/652 default, 613/652 strongest optional; not full CommonMark conformance",
+      "logs": [
+        "artifacts/table-side-owned-root-build-20261008.log",
+        "artifacts/table-side-owned-root-test-budget-20261008.log",
+        "artifacts/table-side-owned-root-test-api-20261008.log",
+        "artifacts/table-side-owned-root-test-headless-20261008.log",
+        "artifacts/table-side-owned-root-test-package-20261008.log",
+        "artifacts/table-side-owned-root-typecheck-20261008.log",
+        "artifacts/table-side-test-markdown-conformance-20261008.log"
+      ]
+    }
+  },
+  "failedEvidence": [
+    {
+      "log": "artifacts/table-side-real-use-20261007.log",
+      "result": "Three RTL physical-left failures against the unreconstructed preceding compiled demo, before rebuilding the library."
+    },
+    {
+      "log": "artifacts/table-side-built-real-use-20261007.log",
+      "result": "Chromium and Firefox passed; WebKit's combined workflow was interrupted by an unexpected document reload. No product root cause certified. Subsequent frozen workflows assert exactly one navigation."
+    },
+    {
+      "log": "artifacts/table-side-frozen-real-use-20261007.log",
+      "result": "Chromium passed. The combined five-workflow Firefox/WebKit runs exceeded the 60-second limit under two-core allocation after eight/four completed interactions respectively. No page errors or reloads; retain failures. Split workflows independently without relaxing deadlines/assertions."
+    },
+    {
+      "log": "artifacts/table-side-frozen-budget-failure-20261007.log",
+      "result": "Former feature bundle capacities fail by 0.2 KiB React ESM / 0.1 CJS and 2.0 KiB aggregate ESM / 1.8 CJS."
+    }
+  ],
+  "bundleCapacity": {
+    "reactESMKiB": [
+      91.25,
+      91.5
+    ],
+    "reactCJSKiB": [
+      68.5,
+      68.75
+    ],
+    "aggregateESMKiB": [
+      1586.5,
+      1588.75
+    ],
+    "aggregateCJSKiB": [
+      1319.75,
+      1322
+    ],
+    "unchanged": [
+      "all dependency constraints",
+      "CSS capacity",
+      "headless entry capacities",
+      "runtime latency",
+      "scaling/growth",
+      "retained heap"
+    ],
+    "measuredAggregateESMKiB": 1588.6,
+    "measuredAggregateCJSKiB": 1321.6,
+    "approximateSourceGrowthESMKiB": 2.3,
+    "approximateSourceGrowthCJSKiB": 2
+  },
+  "next": [
+    "Complete new-source Linux CI including all physical table-side preflights and full browser matrix.",
+    "Continue list outdent inherited direction and RTL reorder behavior.",
+    "Broader bidi, physical mobile/IME, assistive technology, locale evidence and remaining CommonMark differences remain outstanding."
+  ],
+  "npmVersion": "0.4.0-beta.2",
+  "ledger": "unchanged; PROD-04 Partial",
+  "sources": [
+    {
+      "Path": "src/react/FountainToolbar.tsx",
+      "Sha256": "95be4ea039b1542fc7c2eed390756690cf30ca051cc368f28d17490177924e72"
+    },
+    {
+      "Path": "src/view/view.ts",
+      "Sha256": "d00c356966578006dbb2b9c4be31d124f6690672e4b669823ce9ce933d6aff29"
+    },
+    {
+      "Path": "src/view/table-direction.ts",
+      "Sha256": "9cadb759913891876e64643ce5f2a47c9fa35c164e44fb5e85ff16e70ed9f23d"
+    },
+    {
+      "Path": "tests/table-direction-view.test.ts",
+      "Sha256": "9719db3a2e0121d9279c103b4ea0471ecd9c62a3a8ce67658c3ae1c54c8505be"
+    },
+    {
+      "Path": "tests/react-toolbar-panels.test.tsx",
+      "Sha256": "5eecc6cde8b7e534fabf16b9cf1b3271b3739197e8baeeea3f26c7af39d07e56"
+    },
+    {
+      "Path": "tests/browser/editor.spec.ts",
+      "Sha256": "bea3bebdc84e7e6834d50d3360c24ef07150d4da6ec2496e3d4e276807d76b84"
+    },
+    {
+      "Path": "tests/browser/table-column-side-journey.ts",
+      "Sha256": "bcda163c0de06b2adbac0b1b6cd9bde320e29a9d79187efb11386703ef77c615"
+    }
+  ],
+  "captures": [
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-chromium/table-side-ltr-left.png",
+      "Sha256": "14244c28abf8d9cf876d8111118727c71a94ef18127fd59ed6a8e550d418ff7a"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-chromium/table-side-ltr-right.png",
+      "Sha256": "41e4e82e566069a57fea51b58fdf52d78fc4ed8fbc4050db7ff0c58c52b89f07"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-firefox/table-side-ltr-left.png",
+      "Sha256": "37970c985358f21103f746ecdf3cff226e42a9d9f4ede5ad8792c8b0c69750f2"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-firefox/table-side-ltr-right.png",
+      "Sha256": "7f5bde581bbd4f39f026b8b64f78ebd55457d55709480f4d34db95ab36217df4"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-webkit/table-side-ltr-left.png",
+      "Sha256": "74618b6f3550bf8a5baf3006c6991452981d21bfc980285e4e4938b2068318ef"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-webkit/table-side-ltr-right.png",
+      "Sha256": "58d4637c24351e73646f6afdb3a69476de7a6a8446e08fba3d91df9aba580030"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-left.png",
+      "Sha256": "21473bb76de4be414a97efc54577a04e92cbd15d6913b14e3fa6c41fadc6db1d"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-right.png",
+      "Sha256": "32793c9da11e97faa40868aa341b23cdb1b775f189ea7c520b6cd0242b444ce1"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-left.png",
+      "Sha256": "99bc9ad690dd509866ee9a3da330f50f22394a34fcb58a72cb2a16f162314027"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-right.png",
+      "Sha256": "c77e6f013261b12524925e07729ace600671302deda7395c02180f833c620904"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-left.png",
+      "Sha256": "9af85dd0d5d6475865f0d7f28bcfe72d0c47d985d63b8751f7e539b8aa3182e1"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-right.png",
+      "Sha256": "c7a9f65de09dff11fec9cb5b7dd90634fe2ad4d697ea3cf29a4264a71d1b2cf6"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-chromium/table-side-host-css-left.png",
+      "Sha256": "625a55bfa58eebb202809213fa88e0dc5e674cdcd165ccb161d7d08ac1f1a137"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-chromium/table-side-host-css-right.png",
+      "Sha256": "c6bcf803efdeb7458a8b9624c6bfbbdb52a32a43fe0027ce256ab70fb9cf514d"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-firefox/table-side-host-css-left.png",
+      "Sha256": "bfabbc74c22f23e0f4ab31ae63b6004f8ae9e2e8456f420b22c8ccbc59b55d74"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-firefox/table-side-host-css-right.png",
+      "Sha256": "f5349ab0f1e3b394813d2dbe0d5f26b6a2b3b55d0503f368bb85df60988509d5"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-webkit/table-side-host-css-left.png",
+      "Sha256": "c6afffcd1a79d1d437e5ac5e9e13ba9b79ae72f3f6496e2c2c3563f57eb1265b"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-webkit/table-side-host-css-right.png",
+      "Sha256": "10c18707877756ead62775e63515d454377f7648c68d50159211a695822f310e"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-chromium/table-side-rtl-cell-ltr-left.png",
+      "Sha256": "40842c94a60406ae9584ff7f209f0f4bff3d1cd3580540b8753872d672bf1586"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-chromium/table-side-rtl-cell-ltr-right.png",
+      "Sha256": "4df9c617f6dd6b5d496768626a2f70a485af7c706fc953940cba109aae2cbd97"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-firefox/table-side-rtl-cell-ltr-left.png",
+      "Sha256": "870f1045de1aab010d4cd05b31891019cc533ac6bb553741b5ac25282a3dd9f8"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-firefox/table-side-rtl-cell-ltr-right.png",
+      "Sha256": "84da80676d24c8fa7d89be8ebe6753649c9d4360a9a504a6ea10c51451c10d01"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-webkit/table-side-rtl-cell-ltr-left.png",
+      "Sha256": "8762939e7be95693bb9a58a118fe4bc3a02e857e347387ae113d053df3a10661"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-webkit/table-side-rtl-cell-ltr-right.png",
+      "Sha256": "e6393df09ba83514c1124d751d655e3b5aca63b76761c39451206a26eb90fef3"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-chromium/table-side-auto-left.png",
+      "Sha256": "1af30644826f36fa10ec4ca38c291df826cc08394eaaee04401cac0e5ad40a0b"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-chromium/table-side-auto-right.png",
+      "Sha256": "181436e839ae88ea25c4b6448ddf38362901253a988862ac6e741b6573f4aea3"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-firefox/table-side-auto-left.png",
+      "Sha256": "b9bdbc143bee027de130cda981ab5f9bbfe046fba5f8ad08def3f47238748687"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-firefox/table-side-auto-right.png",
+      "Sha256": "1f4910288125618daff6e07f400c4d488d8bb0b322265aa077f3a7f3f323af44"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-webkit/table-side-auto-left.png",
+      "Sha256": "4fe4ccadc37b058125a4e9aae22496ea73efde43293c8f77fe207fca7386ec64"
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-webkit/table-side-auto-right.png",
+      "Sha256": "6e0f5e2bbe1fcc0b905cf7d71c04065a439194bfd62b943860313c3f99a322df"
+    }
+  ],
+  "workflows": [
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-chromium/table-side-observations.json",
+      "Sha256": "54267dc3f5e1a3697b97bcc983a8ff1bbd30d2271e9a7f24dc3bd4191a928cd0",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-firefox/table-side-observations.json",
+      "Sha256": "efcad62e1a17c653b73f1f2e4ce4421b185dd40976c35de46d16a4ba723ec4db",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-webkit/table-side-observations.json",
+      "Sha256": "24c30cfa35d9761f04237887e37521fcf94e5f78a494a70abe0c67619ae3c71d",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-observations.json",
+      "Sha256": "7516b24726a53f680efbd532830ad6891c0dbf711c4555406a46beb01126b172",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-observations.json",
+      "Sha256": "d271c500576ef082383470d1544b8fe5073d90974e4b623bb38346771336d834",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-observations.json",
+      "Sha256": "ec72c7c2035554b1648aabc9f14d6a608bd8e3ba6eb7e2d5401899c8fef78593",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-chromium/table-side-observations.json",
+      "Sha256": "7003afda4343b998004ab8b646f7c9de3ab4f97880f0a653b86804aea50bb30a",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-firefox/table-side-observations.json",
+      "Sha256": "5477b779cb413934578db8bf6d1d9832aa7f1b1666ac0c751b95275202e8a875",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-webkit/table-side-observations.json",
+      "Sha256": "415673817db2b5a625f0dead5d084754af068668dcedc1e670eb3470b80e3284",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-chromium/table-side-observations.json",
+      "Sha256": "1912abe308be05f2559ee49c340decb6f5e7f02bcfba691c7cfdfa6fa3041000",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-firefox/table-side-observations.json",
+      "Sha256": "6af4ea095e0efb8f40e1a1d07e28ae3836782aed627a4c4eda9ff095bd772563",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-webkit/table-side-observations.json",
+      "Sha256": "8cd07b7663a4430d5051b447c36426ded2c66a7ef7dc11b8dadf49ff3851a71a",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-chromium/table-side-observations.json",
+      "Sha256": "7a4cc98370a15386f0d56eec2c43a507c5da73777a1596d1c2135b4f6f34a600",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-firefox/table-side-observations.json",
+      "Sha256": "921d16a879773cba788e7df7281cbbb2165e6d270faf9b006dfeaf00f2172a21",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    },
+    {
+      "Path": "artifacts/table-side-isolated-real-use-20261007/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-webkit/table-side-observations.json",
+      "Sha256": "b5b7cc6aeb7cdb55d69c450e746a1904115abc2c6fd8cf4231ed9a0aca2471a6",
+      "Interactions": 2,
+      "Navigations": [
+        "http://127.0.0.1:4196/conversion-lab.html"
+      ],
+      "Errors": []
+    }
+  ],
+  "physicalMatrixSourceSnapshot": [
+    {
+      "Path": "src/react/FountainToolbar.tsx",
+      "Sha256": "95be4ea039b1542fc7c2eed390756690cf30ca051cc368f28d17490177924e72"
+    },
+    {
+      "Path": "src/view/view.ts",
+      "Sha256": "d00c356966578006dbb2b9c4be31d124f6690672e4b669823ce9ce933d6aff29"
+    },
+    {
+      "Path": "src/view/table-direction.ts",
+      "Sha256": "dc815c313f3cd93f26ba21352295d8f528f020e36333f70ec8226d4f0a077e7f"
+    },
+    {
+      "Path": "tests/table-direction-view.test.ts",
+      "Sha256": "7bb409190b268422c6cad15b486f856776771f0dc2becbb0e158f5f07b564166"
+    },
+    {
+      "Path": "tests/react-toolbar-panels.test.tsx",
+      "Sha256": "5eecc6cde8b7e534fabf16b9cf1b3271b3739197e8baeeea3f26c7af39d07e56"
+    },
+    {
+      "Path": "tests/browser/editor.spec.ts",
+      "Sha256": "bea3bebdc84e7e6834d50d3360c24ef07150d4da6ec2496e3d4e276807d76b84"
+    },
+    {
+      "Path": "tests/browser/table-column-side-journey.ts",
+      "Sha256": "bcda163c0de06b2adbac0b1b6cd9bde320e29a9d79187efb11386703ef77c615"
+    }
+  ]
+}

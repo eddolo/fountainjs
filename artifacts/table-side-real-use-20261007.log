@@ -1,0 +1,145 @@
+[WebServer] (node:20156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:21444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (6.0s)
+(node:17644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (10.5s)
+(node:16016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells (11.7s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 443.953125
+    Received:    1182.8125
+
+       at table-column-side-journey.ts:49
+
+      47 |         await expect(inserted).toHaveCount(1);
+      48 |         const a = (await active.boundingBox())!, b = (await inserted.boundingBox())!;
+    > 49 |         if (side === 'left') expect(b.x + b.width).toBeLessThanOrEqual(a.x + 1);
+         |                                                    ^
+      50 |         else expect(b.x).toBeGreaterThanOrEqual(a.x + a.width - 1);
+      51 |         await expect(table).toHaveCSS('direction', sample.direction);
+      52 |         await expect(active).toHaveCSS('direction', 'ltr');
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:49:52)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:42:3
+
+    attachment #1: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-chromium\attachments\table-side-observations-51241264bd1393d3c43abd340af201ab5c87a359.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 444
+    Received:    1182.800048828125
+
+       at table-column-side-journey.ts:49
+
+      47 |         await expect(inserted).toHaveCount(1);
+      48 |         const a = (await active.boundingBox())!, b = (await inserted.boundingBox())!;
+    > 49 |         if (side === 'left') expect(b.x + b.width).toBeLessThanOrEqual(a.x + 1);
+         |                                                    ^
+      50 |         else expect(b.x).toBeGreaterThanOrEqual(a.x + a.width - 1);
+      51 |         await expect(table).toHaveCSS('direction', sample.direction);
+      52 |         await expect(active).toHaveCSS('direction', 'ltr');
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:49:52)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:42:3
+
+    attachment #1: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\attachments\table-side-observations-383321217baa8243936ff54dc337e0436ab087b2.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 442.90625
+    Received:    1182.84375
+
+       at table-column-side-journey.ts:49
+
+      47 |         await expect(inserted).toHaveCount(1);
+      48 |         const a = (await active.boundingBox())!, b = (await inserted.boundingBox())!;
+    > 49 |         if (side === 'left') expect(b.x + b.width).toBeLessThanOrEqual(a.x + 1);
+         |                                                    ^
+      50 |         else expect(b.x).toBeGreaterThanOrEqual(a.x + a.width - 1);
+      51 |         await expect(table).toHaveCSS('direction', sample.direction);
+      52 |         await expect(active).toHaveCSS('direction', 'ltr');
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:49:52)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:42:3
+
+    attachment #1: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\attachments\table-side-observations-7447a63af3b111a912f80fa8821b6da8a273b1b2.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\table-side-real-use-20261007\editor-inserts-table-colum-dc0aa-o-host-CSS-and-merged-cells-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+    [firefox] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 
+    [webkit] › tests\browser\editor.spec.ts:41:1 › inserts table columns on the physical left and right through RTL auto host CSS and merged cells 

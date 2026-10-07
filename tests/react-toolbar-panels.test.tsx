@@ -2,12 +2,48 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { describe, expect, it } from 'vitest';
-import { StarterKit, createEditor, insertTable, selectText } from '../src';
+import { EditorView, StarterKit, createEditor, insertTable, selectText } from '../src';
+import { undo } from '../src/extensions/plugins/history';
 import { FountainToolbar, FountainToolbarButton, FountainToolbarRoot } from '../src/react';
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('toolbar configuration panel keyboard ownership', () => {
+  it('follows a separately mounted focused table view and disables ambiguous/unmounted physical controls', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
+      type: 'doc', content: [{ type: 'table', content: [{ type: 'table_row', content: ['First', 'Second'].map(text => ({
+        type: 'table_cell', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+      })) }] }],
+    } });
+    selectText(editor, [0, 0, 0, 0, 0], 0);
+    const mount = document.createElement('div'), a = document.createElement('div'), b = document.createElement('div');
+    document.body.append(mount, a, b); const root = createRoot(mount);
+    let ltr: EditorView | undefined, rtl: EditorView | undefined;
+    const cells = () => editor.state.doc.child(0).child(0).content.map(cell => cell.textContent);
+    try {
+      await act(async () => root.render(<FountainToolbar editor={editor} />));
+      await act(async () => {
+        ltr = new EditorView(a, editor); rtl = new EditorView(b, editor);
+        ltr.dom.querySelector('table')!.style.direction = 'ltr'; rtl.dom.querySelector('table')!.style.direction = 'rtl';
+      });
+      await act(async () => mount.querySelector<HTMLButtonElement>('[data-fountain-toolbar-action="table-menu"]')!.click());
+      const left = () => mount.querySelector<HTMLButtonElement>('[data-fountain-toolbar-action="add-table-column-left"]')!;
+      expect(left().disabled).toBe(true);
+      await act(async () => rtl!.dom.focus()); expect(left().disabled).toBe(false);
+      await act(async () => left().click()); expect(cells()).toEqual(['First', '', 'Second']);
+      await act(async () => {
+        undo(editor); ltr!.dom.querySelector('table')!.style.direction = 'ltr'; rtl!.dom.querySelector('table')!.style.direction = 'rtl';
+        ltr!.dom.focus();
+      });
+      await act(async () => left().click()); expect(cells()).toEqual(['', 'First', 'Second']);
+      await act(async () => { ltr!.destroy(); rtl!.destroy(); });
+      expect(left().disabled).toBe(true);
+    } finally {
+      await act(async () => root.unmount()); ltr?.destroy(); rtl?.destroy(); editor.destroy();
+      mount.remove(); a.remove(); b.remove(); document.getSelection()?.removeAllRanges();
+    }
+  });
+
   it.each([
     ['link', 'link', 'Link URL'], ['search', 'search', 'Find text'],
     ['highlight', 'highlight', 'Highlight colour'], ['text-style', 'text-style', 'Font family'],

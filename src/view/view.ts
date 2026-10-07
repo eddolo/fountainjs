@@ -35,6 +35,7 @@ import { DropCursorManager, type DropCursorOptions } from './drop-cursor';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import type { ExternalPasteOptions } from './paste';
 import { SelectionHandler } from './selection-handler';
+import { registerTableDirectionRoot } from './table-direction';
 import {
   VirtualBlockLayout,
   type VirtualBlockLayoutOptions,
@@ -107,6 +108,7 @@ export class EditorView {
   private readonly blockHandles?: BlockHandleManager;
   private readonly dropCursor?: DropCursorManager;
   private readonly unsubscribe: () => void;
+  private readonly unregisterTableDirectionRoot: () => void;
   private nodeViews: MountedNodeView[] = [];
   private readonly nodeViewDocuments = new WeakMap<NodeViewLike, Node>();
   private readonly onError: (error: unknown) => void;
@@ -179,6 +181,7 @@ export class EditorView {
     this.unsubscribe = editor.subscribe(this.onStateChange);
     this.startVirtualization();
     this.syncNodeViewSelection(editor.state.selection);
+    this.unregisterTableDirectionRoot = registerTableDirectionRoot(editor, this.dom);
     queueMicrotask(() => this.selections.sync(editor.state.selection, false));
   }
 
@@ -238,6 +241,7 @@ export class EditorView {
     this.mutationObserver?.disconnect();
     this.stopVirtualization();
     this.unsubscribe();
+    this.unregisterTableDirectionRoot();
     this.input.destroy();
     this.selections.destroy();
     this.blockHandles?.destroy();

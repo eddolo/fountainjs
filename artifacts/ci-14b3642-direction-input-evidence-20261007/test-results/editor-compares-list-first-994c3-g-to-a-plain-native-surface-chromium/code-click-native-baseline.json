@@ -1,0 +1,997 @@
+{
+  "nativeClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true
+  },
+  "nativeAfterTyping": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 14,
+    "focus": 14,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal edited",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal edited",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true,
+    "text": "literal edited"
+  },
+  "nativeInputEvidence": {
+    "events": [
+      {
+        "type": "focusin",
+        "target": "PRE",
+        "editable": true,
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "focusin",
+        "target": "DIV",
+        "editable": true,
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "End",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "End",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      }
+    ],
+    "html": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Browser contract editor\" spellcheck=\"true\" data-fountain-block-handles-enabled=\"\" style=\"width: 1264px;\"><ul data-fountain-node=\"bullet_list\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\"><li data-fountain-node=\"list_item\" data-fountain-path=\"0.0\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\"><pre tabindex=\"0\" role=\"region\" aria-label=\"text code\" data-language=\"text\" data-line-numbers=\"true\" data-fountain-node=\"code_block\" data-fountain-path=\"0.0.0\" title=\"text\" class=\"fjs-code-block fjs-highlight--dark\" data-fountain-decoration=\"syntax-block-0.0.0\" data-fountain-block-reorderable=\"true\"><code data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0.0.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-0.0.0-1\" contenteditable=\"false\"></span>literal edited</span></code></pre></li></ul><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\" data-fountain-block-active=\"true\"><span data-fountain-text-path=\"1.0\">After</span></p></div>",
+    "codeStyle": {
+      "userModify": "read-write",
+      "userSelect": "auto",
+      "pointerEvents": "auto",
+      "whiteSpace": "pre"
+    }
+  },
+  "nativeSourceClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true
+  },
+  "nativeSourceAfterTyping": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 14,
+    "focus": 14,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal edited",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal edited",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true,
+    "text": "literal edited"
+  },
+  "nativeSourceInputEvidence": {
+    "events": [
+      {
+        "type": "focusin",
+        "target": "DIV",
+        "editable": true,
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "End",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "End",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      }
+    ],
+    "html": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Browser contract editor\" spellcheck=\"true\" data-fountain-block-handles-enabled=\"\" style=\"width: 1264px;\"><ul data-fountain-node=\"bullet_list\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\"><li data-fountain-node=\"list_item\" data-fountain-path=\"0.0\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\"><pre role=\"region\" aria-label=\"text code\" data-language=\"text\" data-line-numbers=\"true\" data-fountain-node=\"code_block\" data-fountain-path=\"0.0.0\" title=\"text\" class=\"fjs-code-block fjs-highlight--dark\" data-fountain-decoration=\"syntax-block-0.0.0\" data-fountain-block-reorderable=\"true\"><code data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0.0.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-0.0.0-1\" contenteditable=\"false\"></span>literal edited</span></code></pre></li></ul><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\" data-fountain-block-active=\"true\"><span data-fountain-text-path=\"1.0\">After</span></p></div>",
+    "codeStyle": {
+      "userModify": "read-write",
+      "userSelect": "auto",
+      "pointerEvents": "auto",
+      "whiteSpace": "pre"
+    }
+  },
+  "nativeSourceOnlyClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true
+  },
+  "nativeSourceOnlyAfterTyping": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 14,
+    "focus": 14,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal edited",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal edited",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true,
+    "text": "literal edited"
+  },
+  "nativeSourceOnlyInputEvidence": {
+    "events": [
+      {
+        "type": "focusin",
+        "target": "DIV",
+        "editable": true,
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "End",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "End",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": " ",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "i",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "t",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "e",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keydown",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "beforeinput",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "input",
+        "target": "DIV",
+        "editable": true,
+        "inputType": "insertText",
+        "data": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      },
+      {
+        "type": "keyup",
+        "target": "DIV",
+        "editable": true,
+        "key": "d",
+        "trusted": true,
+        "defaultPrevented": false
+      }
+    ],
+    "html": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Browser contract editor\" spellcheck=\"true\" data-fountain-block-handles-enabled=\"\" style=\"width: 1264px;\"><ul data-fountain-node=\"bullet_list\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\"><li data-fountain-node=\"list_item\" data-fountain-path=\"0.0\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\"><pre role=\"region\" aria-label=\"text code\" data-language=\"text\" data-line-numbers=\"true\" data-fountain-node=\"code_block\" data-fountain-path=\"0.0.0\" title=\"text\" class=\"fjs-code-block fjs-highlight--dark\" data-fountain-decoration=\"syntax-block-0.0.0\" data-fountain-block-reorderable=\"true\"><code data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0.0.0\">literal edited</span></code></pre></li></ul><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\" data-fountain-block-reorderable=\"true\" data-fountain-block-active=\"true\"><span data-fountain-text-path=\"1.0\">After</span></p></div>",
+    "codeStyle": {
+      "userModify": "read-write",
+      "userSelect": "auto",
+      "pointerEvents": "auto",
+      "whiteSpace": "pre"
+    }
+  },
+  "expectedFountainClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7,
+    "documentFocused": true,
+    "visibility": "visible",
+    "anchorNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "focusNode": {
+      "name": "#text",
+      "text": "literal",
+      "parent": "SPAN",
+      "parentEditable": true,
+      "elementEditable": true
+    },
+    "rootEditable": true,
+    "codeEditable": true
+  },
+  "expectedFocusBasis": "unchanged native region"
+}

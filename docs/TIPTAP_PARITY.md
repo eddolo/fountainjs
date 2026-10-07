@@ -1,5 +1,34 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest verified checkpoint (2026-10-08, Unreleased): `14b3642` completes all
+Linux CI jobs successfully: **2,724 tests / 207 files**, **694 browser passes /
+16 skips**, package/types/headless/Markdown, performance and Lean. Pages also
+deploys. The browser skips remain skips, not proof of coverage. Passive Linux
+WebKit evidence and directly inspected source-only/Fountain captures confirm
+the corrected independent editing reference; the previous raw widget failures
+are retained, not silently discarded. Raw logs are in
+`artifacts/ci-14b3642-{verify,browser,performance}-20261007.log`.
+
+Next runtime improvement: physical left/right table-column insertion now uses
+the mounted table's computed direction, not the cell's text override. It handles
+LTR, RTL, auto and host CSS, including merged/row-spanning cells. A private
+view-owned boundary supports separate toolbar mounting and multiple views;
+ambiguous/unmounted layouts are disabled with an explanation. Logical core
+`addTableColumn(editor, 'before' | 'after')` remains DOM-free and unchanged.
+35 focused tests and **15 recorded Windows desktop journeys** pass; all 30
+result captures are visually checked. Splitting five workflows into independent
+tests retains the original 60-second limit and every assertion after the
+two-core grouped audit timed out. Keep those failures as evidence.
+Final ownership uses registered element identity, not CSS class names. Repeat
+35 focused tests with custom-class/nested-view cases and three recorded
+merged-cell journeys; their six result captures exactly match reviewed images.
+
+New-source Linux certification is next, not already achieved by the preceding
+green commit. PROD-04 remains Partial: list outdent inheritance, reordering,
+broader bidi, native mobile/assistive technology and locales remain open.
+Native Word direction fidelity and the remaining CommonMark differences are
+not certified. npm remains `0.4.0-beta.2`; no ledger promotion or rename.
+
 Native code-reference diagnosis (`a4d3d57`, 2026-10-07, Unreleased): complete
 Linux verification passes **2,724 tests / 207 files**, package/types/headless/
 Markdown gates, Lean and the unchanged performance limits. Local/remote median

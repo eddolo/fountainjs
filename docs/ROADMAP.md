@@ -1,5 +1,25 @@
 # FountainJS opportunity roadmap
 
+Current checkpoint (2026-10-08): `14b3642` passes complete Linux CI: 2,724 units
+/ 207 files, 694 browser passes / 16 skips, types/package/headless/Markdown,
+performance and Lean; Pages succeeds. The corrected source-only native editing
+reference is now verified in Linux, with its rendered result inspected against
+Fountain. Preserve the raw non-editable-widget failures as diagnostics.
+
+Physical left/right column insertion is implemented next, with private mounted
+view ownership and computed table direction. Core before/after commands remain
+platform-neutral. 35 focused tests and 15 recorded Windows desktop journeys
+pass across LTR/RTL/auto/host CSS and merged cells; 30 captures are visually
+checked. Independent tests retain the 60-second limit and all assertions after
+the grouped two-core audit timed out. New-source Linux verification is required.
+Final custom-class/nested-view ownership checks pass 35 focused tests and three
+more recorded merged-cell journeys; six captures match reviewed SHA-256 hashes.
+
+Then continue list outdent inheritance and RTL reordering, broader bidi,
+physical devices/assistive technology, locales and CommonMark classification.
+PROD-04 remains Partial; the ledger and npm version are not promoted by this
+subset. Keep the wider parity objective intact.
+
 Latest input diagnosis (`a4d3d57`, 2026-10-07): complete Linux verification
 passes 2,724 tests / 207 files, package/types/headless/Markdown, Lean and unchanged
 performance limits. The remaining browser-reference failure is now localized:

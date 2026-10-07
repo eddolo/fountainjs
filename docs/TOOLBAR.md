@@ -7,6 +7,26 @@ or replace the UI completely while using the same editor and commands.
 
 Import toolbar APIs from `fountainjs-editor/react`.
 
+## Physical table sides and document order
+
+The table panel's **Add column left/right** controls follow the mounted table's
+computed layout direction, including RTL, `dir="auto"` and inherited host CSS.
+An individual cell's LTR text override does not reverse the table's columns.
+The toolbar can be mounted separately from `FountainEditor`/`EditorView`; it
+does not locate an editor by a global selector or a nearby CSS wrapper.
+Ownership uses registered elements rather than root class names, so custom
+surface styling does not decide which table belongs to the editor.
+
+If one editor has multiple mounted views with different layouts, focus the
+intended view before using its toolbar. Focus ownership survives moving into
+toolbar fields. Unmounted or ambiguous physical controls are disabled with an
+explanation; destroying a view removes its ownership and focus listeners.
+
+The platform-neutral `addTableColumn(editor, 'before' | 'after')` command still
+uses **document order**, not screen sides. Its default `after` and the expanded
+toolbar's generic Add column action are unchanged. Custom UIs choose their own
+physical-side mapping; no DOM state is added to the document or core engine.
+
 ## Configure the supplied toolbar
 
 `FountainToolbar` and `FountainComposer.toolbarProps` accept stable group and
