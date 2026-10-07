@@ -1,5 +1,40 @@
 # Performance and memory contract
 
+## Current browser/unit follow-up (2026-10-07, Unreleased)
+
+`14c2ba5` passes functional, performance and Lean jobs, but its full browser
+matrix ends at 678 passes, 16 skips and one Linux Firefox list-first-code
+text-click root-focus failure. Native RTL preflight passes. `f1c49ed` also
+passes performance/Lean and deploys Pages; its full unit suite reports 2,680
+passes and one expected-DOCX-defaults mismatch. The native Quote style already
+declares physical left; its expected reopened tree must retain `alignExplicit`
+instead of discarding that source property. Focused tests retain the full-tree
+appearance and run-emphasis assertions. The code click requires independent
+native focus/typing diagnosis before an engine change or full-suite claim.
+
+The Windows reproduction shows native Firefox focusing the accessible `pre`
+region rather than the outer host. Both native and Fountain clicks type into
+the intended code; Fountain undo restores it. The corrected text-click assertion
+requires the exact host/region focus policy from an isolated native copy, not
+arbitrary focus anywhere. Label-click host-focus assertions stay unchanged.
+Nine recorded comparison/centre/label journeys pass without retries; ten
+CI-policy regressions and final framework types pass. No engine patch follows
+this test-contract correction; Linux native-oracle/full-matrix proof is pending.
+Source/capture hashes and retained failures are recorded in
+`artifacts/auto-section-code-focus-verification-20261007.json`.
+
+Frozen runtime `f1c49ed` passes unchanged Linux server/local/remote growth at
+8.89x/5.27x/8.54x against 15x. Server HTML 100/1k/5k/10k p95 is
+18.27/77.76/316.99/639.96ms; heap bounds pass. This does not reclassify retained
+local failures or prove their cause. See
+`artifacts/ci-f1c49ed-performance-20261007.log`.
+
+The retained automatic-section route needs no runtime change or additional
+bundle allowance: 76 focused tests / eight files, framework types and three
+recorded one-worker/no-retry desktop workflows pass. Twelve screenshots were
+directly inspected; the scope is direction/geometry and reader snapshots, not
+pixel-identical typography. Failed setup/selector runs remain available.
+
 ## Authored physical-left boundary (Unreleased, 2026-10-07)
 
 The optional authored/default-left distinction adds approximately 1.3 KiB ESM

@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/auto-container-direction.test.ts (3 tests | 1 failed) 22ms
+   × keeps the shared automatic context through first-strong-text edits and history without resolving bidi in core 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/auto-container-direction.test.ts > keeps the shared automatic context through first-strong-text edits and history without resolving bidi in core
+Error: Foreign node at 0.0.
+ ❯ visit src/core/schema/schema.ts:134:47
+    132|       // invalid, so transactions only need to revisit their newly-cre…
+    133|       if (this.validatedNodes.has(current)) return true;
+    134|       if (current.type.schema !== this) throw new Error(`Foreign node …
+       |                                               ^
+    135|       computeAttrs(current.type.spec.attrs, current.attrs);
+    136|       if (current.type.spec.validate && !current.type.spec.validate(cu…
+ ❯ visit src/core/schema/schema.ts:166:14
+ ❯ visit src/core/schema/schema.ts:166:14
+ ❯ Schema.validate src/core/schema/schema.ts:174:5
+ ❯ new EditorState src/core/state.ts:75:17
+ ❯ EditorState.apply src/core/state.ts:108:21
+ ❯ Editor.dispatch src/core/editor.ts:69:43
+ ❯ tests/auto-container-direction.test.ts:34:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 36 passed (37)
+   Start at  21:20:27
+   Duration  6.34s (import 44%, transform 38%, environment 15%, tests 3%)
+
+     Import  189 modules were evaluated 356 times · 2.55s total, 44% of tracked time
+             ~1.19s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

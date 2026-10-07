@@ -25,6 +25,30 @@ The same `parseHTML` rules work with the browser `HTMLImporter`. You can also
 import the public `htmlContainer` node specification and use it in your own
 schema. The portable core module has no DOM or rendering-service dependency.
 
+## Shared automatic direction
+
+To retain `<section dir="auto">`, install this extension before importing. The
+wrapper stores the automatic context; its children do not acquire independent
+`dir="auto"` declarations. A Hebrew heading can therefore make the following
+English paragraph inherit RTL, and replacing that heading with English changes
+the whole section to LTR. The document core preserves the structure; the browser
+resolves first-strong direction at render time, including after edits and undo.
+
+Try **Create and edit sections** on the Node/Markdown demo: edit the first
+section's heading, choose **Automatic** in its Direction menu, apply the section
+properties, then preview for readers. Reader snapshots change only when you
+refresh them. Recorded Chromium/Firefox/WebKit journeys verify both reading
+directions, actual text alignment, undo/redo and independent reader snapshots.
+The pure-Node tests retain nested fixed-direction sections and explicit left
+alignment through JSON and canonical HTML reopening.
+
+This does not resolve automatic direction in the headless core or preserve an
+unsupported wrapper after flattening. Without the extension, the server report
+identifies lost wrapper attributes/behavior; paragraphs are not assigned guessed
+automatic directions. Full document-shell/body direction, unsupported wrapper
+attributes, arbitrary CSS inheritance and inline bidi isolation remain separate
+contracts. Removing a wrapper intentionally removes its shared direction too.
+
 ## What it preserves
 
 The `html_container` node has `block*` content and a validated `tag` attribute:

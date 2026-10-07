@@ -22,7 +22,13 @@ describe('native DOCX explicit emphasis', () => {
     expect(xml).toContain(`${reset}<w:t>Normal</w:t>`);
     expect(xml).toContain('<w:i w:val="0"/><w:b/></w:rPr><w:t>Bold</w:t>');
     expect(xml).toContain('<w:b w:val="0"/><w:i/></w:rPr><w:t>Italic</w:t>');
-    expect(importDOCX(exported.bytes, schema).document.toJSON()).toEqual(withDOCXExportDefaults(source.toJSON()));
+    const reopened = importDOCX(exported.bytes, schema).document;
+    // Quote's existing native style supplies explicit left justification;
+    // Normal/Heading do not. Keep the full-tree appearance assertion below.
+    expect(strFromU8(unzipSync(exported.bytes)['word/styles.xml']!)).toContain('<w:jc w:val="left"/>');
+    expect(reopened.child(0).attrs).not.toHaveProperty('alignExplicit');
+    expect(reopened.child(1).child(0).attrs.alignExplicit).toBe(true);
+    expect(reopened.toJSON()).toEqual(withDOCXExportDefaults(source.toJSON()));
   });
 
   it('preserves an empty explicit paragraph and heading', () => {

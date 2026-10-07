@@ -111,7 +111,7 @@ jobs:
       - name: Native control and document focus preflight
         run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks"
       - name: Firefox native RTL selection preflight
-        run: pnpm exec playwright test --project=firefox --grep "edits RTL blocks"
+        run: pnpm exec playwright test --project=firefox --grep "edits RTL blocks|compares list-first code text-click"
       - run: pnpm test:browser
       - uses: actions/upload-artifact@v4
         if: always()
@@ -126,6 +126,10 @@ jobs:
             test-results/**/inherited-auto-explicit-left-reader.png
             test-results/**/word-reopened-explicit-left-reader.png
             test-results/**/explicit-left.docx
+            test-results/**/auto-container-*.png
+            test-results/**/code-click-*.png
+            test-results/**/code-click-native-focus.json
+            test-results/**/code-click-native-baseline.json
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

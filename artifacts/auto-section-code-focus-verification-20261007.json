@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "date": "2026-10-07",
+  "baseCommit": "f1c49ed84e56d4f18c417f8ce5fb48823e470dcb",
+  "runtimeChanges": false,
+  "scope": "Verify the existing retained HTML-container auto-direction route, retain native Quote appearance in DOCX expected defaults, and compare code text-click focus with an independent plain native DOM/style copy.",
+  "checks": {
+    "focused": {
+      "status": "passed",
+      "tests": 76,
+      "files": 8,
+      "workers": 1,
+      "fileParallelism": false,
+      "log": "artifacts/auto-container-direction-corrected-units-20261007.log"
+    },
+    "policy": {
+      "status": "passed",
+      "tests": 10,
+      "log": "artifacts/auto-code-focus-ci-policy-20261007.log"
+    },
+    "types": {
+      "status": "passed",
+      "scope": "TypeScript, Svelte library/demo (0 errors/0 warnings), Angular library/demo",
+      "log": "artifacts/auto-code-focus-certified-types-20261007.log"
+    },
+    "autoBrowser": {
+      "status": "passed",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "journeys": 3,
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/auto-container-direction-corrected-20261007.log",
+      "folder": "artifacts/auto-container-direction-corrected-20261007",
+      "assertions": [
+        "first-strong heading change switches shared direction of separate English paragraph",
+        "actual text right/left geometry",
+        "no independent child dir invented",
+        "undo/redo",
+        "reader snapshots independent until explicitly refreshed",
+        "no page errors"
+      ],
+      "screenshots": 12,
+      "videos": 3
+    },
+    "codeBrowser": {
+      "status": "passed locally; Linux follow-up required",
+      "journeys": 9,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/code-native-focus-corrected-20261007.log",
+      "folder": "artifacts/code-native-focus-corrected-20261007",
+      "baseline": "Only rendered DOM and styles copied to a separate page, with no editor/framework/scripts/event listeners. Native focus must be editor/code and caret inside code; native End/typing must modify intended code.",
+      "assertions": [
+        "native and Fountain text-click active role identical",
+        "caret in intended code",
+        "actual End/typing edits intended text",
+        "no stray list paragraph",
+        "Fountain undo restores source",
+        "original centre-click exact native host/region focus",
+        "original label-click still requires host focus"
+      ],
+      "screenshots": 9,
+      "videos": 15,
+      "scopeLimits": "Source paste is a controlled synthetic clipboard fixture; this does not certify OS clipboard or exact pointer caret coordinates. Windows Firefox's native and Fountain focus role is code; native and Fountain typing work."
+    },
+    "visual": {
+      "screenshots": 21,
+      "scope": "Twelve auto-section screenshots directly inspected. Six initial code screenshots directly inspected; five final diagnostic images match them and the changed Chromium image was inspected directly. Three additional native-baseline images hash-match their reviewed counterparts.",
+      "videos": "Recorded, not manually watched.",
+      "typography": "Direction, text geometry, code editing and independent reader snapshots; not pixel-identical editor/reader typography."
+    }
+  },
+  "historicalCloud": {
+    "nativeSelectionCI": {
+      "run": 37677391117,
+      "conclusion": "failure",
+      "functional": "success",
+      "performance": "success",
+      "lean": "success",
+      "nativeRTLPreflight": "success",
+      "browser": {
+        "passed": 678,
+        "skipped": 16,
+        "failed": 1,
+        "problem": "Linux Firefox original list-first-code centre-click outer-host focus expectation; all three attempts fail before typing."
+      },
+      "log": "artifacts/ci-14c2ba5-browser-20261007.log"
+    },
+    "authoredLeftCI": {
+      "run": 37680697319,
+      "performance": "success",
+      "lean": "success",
+      "pages": {
+        "run": 37680696874,
+        "status": "success"
+      },
+      "functional": {
+        "passed": 2680,
+        "failed": 1,
+        "files": 202,
+        "problem": "Expected DOCX Quote defaults omitted the generated native style's explicit physical-left declaration. Corrected helper retains it; full-tree/normal-bold-italic assertions remain."
+      },
+      "fullBrowser": "in_progress at evidence capture",
+      "logs": [
+        "artifacts/ci-f1c49ed-verify-20261007.log",
+        "artifacts/ci-f1c49ed-performance-20261007.log"
+      ],
+      "performanceMetrics": {
+        "serverLocalRemoteMedianGrowth": [
+          8.89,
+          5.27,
+          8.54
+        ],
+        "ratioCap": 15,
+        "serverP95Ms": [
+          18.27,
+          77.76,
+          316.99,
+          639.96
+        ],
+        "serverCapsMs": [
+          35,
+          120,
+          500,
+          900
+        ],
+        "heapMiB": [
+          0,
+          0.06,
+          14.3
+        ],
+        "heapCapsMiB": [
+          8,
+          16,
+          48
+        ]
+      },
+      "note": "These passing cloud timing gates do not reclassify retained local failures or establish their cause."
+    }
+  },
+  "retainedLocalSetupFailures": [
+    {
+      "log": "artifacts/auto-container-direction-units-20261007.log",
+      "cause": "Replacement test node used another schema instance; fixed to editor.state.schema, retaining foreign-node validation."
+    },
+    {
+      "log": "artifacts/auto-container-direction-initial-20261007.log",
+      "cause": "Exact getByLabel selector did not match option-bearing label text; accessible exact combobox name does. Same intended control and all direction assertions retained."
+    }
+  ],
+  "remaining": [
+    "Current-source full Linux unit/browser verification and native-focus preflight",
+    "Auto wrapper/body flattening",
+    "General CSS inheritance and inline bidi isolation",
+    "Mirrored structure and broader bidi/mobile/locale certification",
+    "Native Word appearance fidelity"
+  ],
+  "release": {
+    "npmPublished": false,
+    "version": "0.4.0-beta.2",
+    "PROD04": "Partial",
+    "ledgerChanged": false,
+    "commonmarkScoresChanged": false
+  },
+  "sources": [
+    {
+      "path": "tests/auto-container-direction.test.ts",
+      "sha256": "68e239946ba52b6f8bd10f91a2614b999e253d0b8fd14e8cf7b2ee001501f109"
+    },
+    {
+      "path": "tests/html-containers-browser.test.ts",
+      "sha256": "9f50f0a5428ae74cdce44181b5a8b104859d42bcdba781d705064bd15e8fb848"
+    },
+    {
+      "path": "tests/browser/auto-container-direction-journey.ts",
+      "sha256": "de2ae5e635b5645d8cc8a2d9f42cb78013b3e5d19787aecc200c5b67c21b39e0"
+    },
+    {
+      "path": "tests/browser/code-native-focus-journey.ts",
+      "sha256": "1c1c2d7aeb1a31af8bfb6b8bf8a3eba80fa36aa88951c0fa4080a77f2379f612"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "e704767487119b85c7582fe71e183a97e11186bb0fa176291ae1efb07227d64a"
+    },
+    {
+      "path": "tests/docx-explicit-emphasis.test.ts",
+      "sha256": "526516f2d0dcdeace87f08f340fa46369bbb30b3c57aec9ec33c3ecfcd319a7f"
+    },
+    {
+      "path": "tests/fixtures/docx-page-defaults.ts",
+      "sha256": "01a30436dc2baea1089ee090516f974b9f6181f0e93fb2b546828582a0bf83bb"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "206e34c64167ed309aa66c756aa91390de3476a04d67dd99983c8aa404080d8e"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-editor.png",
+      "sha256": "17a24624b51739940c0812180f525519ad90ee0939dee9486fc7fbd2e4d71e5c"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-reader.png",
+      "sha256": "549980d7b1aff8148fd4b1205b57def731bfecade19c299da1833b0f986605a3"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-editor.png",
+      "sha256": "c7f0cbda5ae0fdc382189c1a08c16994798e595ee5bfc9d05993ac1429db2c37"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-reader.png",
+      "sha256": "c8076cb23f702ffe7df2fdeaddecba837328f0d74515227ba71eb395d75c3fdf"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-editor.png",
+      "sha256": "f635d728fb4e5f903d281e6744a0801079d390eb023bb36e08d66bc2c5b4b901"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-reader.png",
+      "sha256": "81c1fa1593e477678df8901120e2b6cf21ed91b10d525458b33b9e0dd4a8cf4e"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-editor.png",
+      "sha256": "f7912521ac1c33e23d309de72e0fb8dd125ef95f1159d7aa2b134ba59e470624"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-reader.png",
+      "sha256": "333205ee228f571d2a02d38de9a00441877e4f1dcbddf80ee701018aedd026d9"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-editor.png",
+      "sha256": "d136f3c0edb529c08eac8521efbb3b1a15818988adbce961082ab56028890348"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-reader.png",
+      "sha256": "4f4bd69c64a9d9681ada2b783749dca6e4f43b640c8d0858a6ec1342206acd79"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-editor.png",
+      "sha256": "6c5c67f2e43a795d88f38d3607683baa44132d8671a1d55d202b15599938f7b8"
+    },
+    {
+      "path": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-reader.png",
+      "sha256": "3f06263a10abe537c6b7c8ade2fc1c3df528e813bd2549f964fb5a1acf9e9c28"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-fountain-edit.png",
+      "sha256": "d9738f50a49a32cae6f7b77684412da8797f90e403d532cc75b0bb231fdd5334"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-fountain-edit.png",
+      "sha256": "e9d78c7adf2a270a35f5295c0b1ebc62f6aaba7287e88196b669a45961d58ec6"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-edit.png",
+      "sha256": "4802347d51915d63be6ace930d1fa51ac9acbd4415eed6eaf1d3bc4868a8591c"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-fountain-edit.png",
+      "sha256": "007351b900d918ed33a566f5ff6460306e8966f21188e838d8e6dcab03d41d8a"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-chromium/code-click-native-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-firefox/code-click-native-edit.png",
+      "sha256": "4802347d51915d63be6ace930d1fa51ac9acbd4415eed6eaf1d3bc4868a8591c"
+    },
+    {
+      "path": "artifacts/code-native-focus-corrected-20261007/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/code-click-native-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332"
+    }
+  ],
+  "windowsCodeFocus": [
+    {
+      "engine": "editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium",
+      "observations": {
+        "nativeClick": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 7,
+          "focus": 7
+        },
+        "editorClick": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 7,
+          "focus": 7
+        },
+        "editorAfterTyping": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 14,
+          "focus": 14,
+          "text": "literal edited"
+        }
+      }
+    },
+    {
+      "engine": "editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox",
+      "observations": {
+        "nativeClick": {
+          "role": "code",
+          "caretInCode": true,
+          "anchor": 7,
+          "focus": 7
+        },
+        "editorClick": {
+          "role": "code",
+          "caretInCode": true,
+          "anchor": 7,
+          "focus": 7
+        },
+        "editorAfterTyping": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 14,
+          "focus": 14,
+          "text": "literal edited"
+        }
+      }
+    },
+    {
+      "engine": "editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit",
+      "observations": {
+        "nativeClick": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 7,
+          "focus": 7
+        },
+        "editorClick": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 0,
+          "focus": 0
+        },
+        "editorAfterTyping": {
+          "role": "editor",
+          "caretInCode": true,
+          "anchor": 14,
+          "focus": 14,
+          "text": "literal edited"
+        }
+      }
+    }
+  ]
+}

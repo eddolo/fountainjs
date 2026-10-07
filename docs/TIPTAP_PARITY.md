@@ -1,5 +1,24 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest follow-up (2026-10-07, Unreleased): the existing optional section module
+retains shared `dir="auto"` without guessing a direction for each paragraph.
+Recorded Chromium/Firefox/WebKit author/edit/history/reader journeys pass;
+76 focused tests / eight files and framework types pass. This is a supported
+retained-wrapper route, not certification of flattened automatic contexts.
+The completed `14c2ba5` browser matrix reports **678 passed, 16 skipped, one
+failed**: Linux Firefox's list-first code text-click fails the editor-root focus
+assertion; native RTL preflight passes. `f1c49ed` passes performance/Lean and
+deploys Pages, but full units report **2,680 passed, one failed**. Its expected
+DOCX Quote defaults now retain the generated native style's explicit physical
+left declaration rather than erasing it; full-tree and emphasis assertions
+remain. Code-click native-focus diagnosis and complete follow-up CI are still
+required. A Windows native baseline now reproduces Firefox's accessible-code
+region focus; typing and Fountain undo work. Text-click assertions follow that
+isolated native host/region policy while label-click host focus and all
+typing/stray-paragraph/undo checks remain. Nine recorded code journeys and ten
+CI-policy regressions pass. Linux proof remains required; PROD-04 and
+ledger/CommonMark counts stay unchanged, with no npm release.
+
 Latest authored-left checkpoint (2026-10-07, Unreleased): first-party text blocks
 distinguish ordinary legacy/default left from an explicit physical-left command
 with optional `alignExplicit: true`. The override survives history, Enter,

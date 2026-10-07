@@ -18,6 +18,7 @@ it('uses equivalent browser and DOM-free container rules', () => {
   for (const source of [
     '<section id="release" dir="rtl"><div class="notes"><p>One <em>paragraph</em>.</p><p>Two.</p></div></section>',
     '<div></div>', '<article><ol start="3"><li>One</li><li>Two</li></ol></article>',
+    '<section dir="auto"><h2>שלום</h2><p>English inherits.</p><p style="text-align:left">Explicit left</p><section dir="ltr"><p>Fixed context</p></section></section>',
   ]) expect(HTMLImporter.parse(source, schema).toJSON()).toEqual(ServerHTMLImporter.parse(source, schema).toJSON());
 });
 

@@ -1,0 +1,139 @@
+[WebServer] (node:16828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:24132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (1.0m)
+(node:10956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (1.0m)
+(node:4972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (1.0m)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Section authoring workshop' }).getByLabel('Direction', { exact: true })
+
+
+       at auto-container-direction-journey.ts:21
+
+      19 |   };
+      20 |   await replaceHeading('שלום');
+    > 21 |   await workshop.getByLabel('Direction', { exact: true }).selectOption('auto');
+         |                                                           ^
+      22 |   await workshop.getByRole('button', { name: 'Apply section properties', exact: true }).click();
+      23 |   await expect(section).toHaveAttribute('dir', 'auto');
+      24 |   await expect(paragraph).not.toHaveAttribute('dir');
+        at autoContainerDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\auto-container-direction-journey.ts:21:59)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:38:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Section authoring workshop' }).getByLabel('Direction', { exact: true })
+
+
+       at auto-container-direction-journey.ts:21
+
+      19 |   };
+      20 |   await replaceHeading('שלום');
+    > 21 |   await workshop.getByLabel('Direction', { exact: true }).selectOption('auto');
+         |                                                           ^
+      22 |   await workshop.getByRole('button', { name: 'Apply section properties', exact: true }).click();
+      23 |   await expect(section).toHaveAttribute('dir', 'auto');
+      24 |   await expect(paragraph).not.toHaveAttribute('dir');
+        at autoContainerDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\auto-container-direction-journey.ts:21:59)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:38:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Section authoring workshop' }).getByLabel('Direction', { exact: true })
+
+
+       at auto-container-direction-journey.ts:21
+
+      19 |   };
+      20 |   await replaceHeading('שלום');
+    > 21 |   await workshop.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('auto');
+         |                                                           ^
+      22 |   await workshop.getByRole('button', { name: 'Apply section properties', exact: true }).click();
+      23 |   await expect(section).toHaveAttribute('dir', 'auto');
+      24 |   await expect(paragraph).not.toHaveAttribute('dir');
+        at autoContainerDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\auto-container-direction-journey.ts:21:59)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:38:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\auto-container-direction-initial-20261007\editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview 
+    [firefox] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview 
+    [webkit] › tests\browser\editor.spec.ts:37:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview 

@@ -2613,6 +2613,37 @@ without retries; 15 final PNGs match reviewed captures. Nine videos are recorded
 not manually watched. Source/capture hashes, exact scope and failed diagnostic
 logs are in `artifacts/explicit-left-verification-20261007.json`.
 
+## 2026-10-07: retained automatic sections and unresolved code-click focus
+
+The optional HTMLContainerExtension already preserves a supported `dir="auto"`
+section as a shared context, rather than assigning each child its own automatic
+direction. Three recorded desktop journeys edit the first strong text through
+the existing section workshop, verify both directions and actual alignment,
+undo/redo, and independent reader snapshots. Twelve PNGs are visually inspected.
+The 76-test / eight-file focused set and framework types pass. Pure-Node and
+browser importers agree on retained auto/nested fixed/explicit-left structure;
+default-schema flattening still reports wrapper loss. This bounded route needs
+no engine rewrite and does not certify automatic wrapper/body flattening.
+
+`14c2ba5` ends at 678 browser passes, 16 skips and one Linux Firefox code-click
+root-focus failure; native RTL preflight passes. `f1c49ed` passes performance,
+Lean and Pages but reports 2,680 unit passes and one DOCX Quote expectation
+mismatch. The corrected expected tree retains that native style's explicit
+left declaration; complete tree/emphasis assertions remain. Determine whether
+code-click focus reflects a browser policy or a real typing problem using a
+plain native surface before altering the engine. Full follow-up cloud gates
+remain required; PROD-04, ledger/CommonMark scores and npm stay unchanged.
+
+The Windows native baseline reproduces Firefox focusing the accessible code
+region while its caret and typing remain in the code. Fountain matches and undo
+works. The text-click assertion now requires exactly that independently observed
+host/region policy; label clicks still require the host handoff and all original
+typing/stray-paragraph/undo checks remain. Nine recorded code workflows, ten
+CI-policy tests and final framework types pass. No runtime patch or cap change
+is justified by this focus-policy distinction. Linux proof is still pending.
+Exact verification scope, hashes and retained failures are in
+`artifacts/auto-section-code-focus-verification-20261007.json`.
+
 ## Sequencing rule
 
 Finish and certify one ledger outcome before beginning another. Each outcome

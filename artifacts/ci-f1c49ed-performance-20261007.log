@@ -1,0 +1,432 @@
+﻿2026-10-07T20:16:05.8421508Z Current runner version: '2.337.0'
+2026-10-07T20:16:05.8451239Z ##[group]Runner Image Provisioner
+2026-10-07T20:16:05.8452112Z Hosted Compute Agent
+2026-10-07T20:16:05.8452789Z Version: 20260901.588
+2026-10-07T20:16:05.8453546Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-07T20:16:05.8454312Z Build Date: 2026-09-01T19:56:44Z
+2026-10-07T20:16:05.8455159Z Worker ID: {3eeeaf5d-5c83-48f5-b832-d07b4c2c0822}
+2026-10-07T20:16:05.8455920Z Azure Region: northcentralus
+2026-10-07T20:16:05.8456926Z ##[endgroup]
+2026-10-07T20:16:05.8458497Z ##[group]Operating System
+2026-10-07T20:16:05.8459151Z Ubuntu
+2026-10-07T20:16:05.8459794Z 24.04.5
+2026-10-07T20:16:05.8460367Z LTS
+2026-10-07T20:16:05.8460856Z ##[endgroup]
+2026-10-07T20:16:05.8461511Z ##[group]Runner Image
+2026-10-07T20:16:05.8462109Z Image: ubuntu-24.04
+2026-10-07T20:16:05.8462764Z Version: 20260927.320.1
+2026-10-07T20:16:05.8464021Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-07T20:16:05.8465624Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-07T20:16:05.8466873Z ##[endgroup]
+2026-10-07T20:16:05.8468091Z ##[group]GITHUB_TOKEN Permissions
+2026-10-07T20:16:05.8470276Z Contents: read
+2026-10-07T20:16:05.8471350Z Metadata: read
+2026-10-07T20:16:05.8471995Z ##[endgroup]
+2026-10-07T20:16:05.8474074Z Secret source: Actions
+2026-10-07T20:16:05.8475159Z Cache mode: write
+2026-10-07T20:16:05.8476069Z Prepare workflow directory
+2026-10-07T20:16:05.8901560Z Prepare all required actions
+2026-10-07T20:16:05.8971420Z Getting action download info
+2026-10-07T20:16:06.1532627Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-07T20:16:06.2510017Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+2026-10-07T20:16:06.6350410Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-07T20:16:06.8342629Z Complete job name: performance
+2026-10-07T20:16:06.9159405Z ##[group]Run actions/checkout@v4
+2026-10-07T20:16:06.9160387Z with:
+2026-10-07T20:16:06.9160875Z   repository: eddolo/fountainjs
+2026-10-07T20:16:06.9164783Z   token: ***
+2026-10-07T20:16:06.9165259Z   ssh-strict: true
+2026-10-07T20:16:06.9165733Z   ssh-user: git
+2026-10-07T20:16:06.9166213Z   persist-credentials: true
+2026-10-07T20:16:06.9167280Z   clean: true
+2026-10-07T20:16:06.9167784Z   sparse-checkout-cone-mode: true
+2026-10-07T20:16:06.9168346Z   fetch-depth: 1
+2026-10-07T20:16:06.9168814Z   fetch-tags: false
+2026-10-07T20:16:06.9169295Z   show-progress: true
+2026-10-07T20:16:06.9169776Z   lfs: false
+2026-10-07T20:16:06.9170241Z   submodules: false
+2026-10-07T20:16:06.9170757Z   set-safe-directory: true
+2026-10-07T20:16:06.9171298Z   allow-unsafe-pr-checkout: false
+2026-10-07T20:16:06.9172182Z ##[endgroup]
+2026-10-07T20:16:07.0142669Z Syncing repository: eddolo/fountainjs
+2026-10-07T20:16:07.0144583Z ##[group]Getting Git version info
+2026-10-07T20:16:07.0145525Z Working directory is '/home/runner/work/fountainjs/fountainjs'
+2026-10-07T20:16:07.0147124Z [command]/usr/bin/git version
+2026-10-07T20:16:07.0227017Z git version 2.55.0
+2026-10-07T20:16:07.0247508Z ##[endgroup]
+2026-10-07T20:16:07.0261648Z Temporarily overriding HOME='/home/runner/work/_temp/59813921-18ae-4da6-9ac1-3d45a3fd867b' before making global git config changes
+2026-10-07T20:16:07.0264205Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-07T20:16:07.0266917Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+2026-10-07T20:16:07.0315673Z Deleting the contents of '/home/runner/work/fountainjs/fountainjs'
+2026-10-07T20:16:07.0320791Z ##[group]Initializing the repository
+2026-10-07T20:16:07.0324577Z [command]/usr/bin/git init /home/runner/work/fountainjs/fountainjs
+2026-10-07T20:16:07.0428389Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-07T20:16:07.0429780Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-07T20:16:07.0430799Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-07T20:16:07.0432244Z hint: call:
+2026-10-07T20:16:07.0432709Z hint:
+2026-10-07T20:16:07.0433337Z hint: 	git config --global init.defaultBranch <name>
+2026-10-07T20:16:07.0434541Z hint:
+2026-10-07T20:16:07.0435196Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-07T20:16:07.0437230Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-07T20:16:07.0438661Z hint:
+2026-10-07T20:16:07.0439149Z hint: 	git branch -m <name>
+2026-10-07T20:16:07.0439674Z hint:
+2026-10-07T20:16:07.0440349Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-07T20:16:07.0442063Z Initialized empty Git repository in /home/runner/work/fountainjs/fountainjs/.git/
+2026-10-07T20:16:07.0444139Z [command]/usr/bin/git remote add origin https://github.com/eddolo/fountainjs
+2026-10-07T20:16:07.0489326Z ##[endgroup]
+2026-10-07T20:16:07.0490864Z ##[group]Disabling automatic garbage collection
+2026-10-07T20:16:07.0493327Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-07T20:16:07.0524346Z ##[endgroup]
+2026-10-07T20:16:07.0525932Z ##[group]Setting up auth
+2026-10-07T20:16:07.0532121Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-07T20:16:07.0563945Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-07T20:16:07.0898480Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-07T20:16:07.0928876Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-07T20:16:07.1148097Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-07T20:16:07.1179157Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-07T20:16:07.1394041Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-07T20:16:07.1428729Z ##[endgroup]
+2026-10-07T20:16:07.1429588Z ##[group]Fetching the repository
+2026-10-07T20:16:07.1440042Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f1c49ed84e56d4f18c417f8ce5fb48823e470dcb:refs/remotes/origin/master
+2026-10-07T20:16:08.4962011Z From https://github.com/eddolo/fountainjs
+2026-10-07T20:16:08.4962647Z  * [new ref]         f1c49ed84e56d4f18c417f8ce5fb48823e470dcb -> origin/master
+2026-10-07T20:16:08.4966800Z ##[endgroup]
+2026-10-07T20:16:08.4967329Z ##[group]Determining the checkout info
+2026-10-07T20:16:08.4969193Z ##[endgroup]
+2026-10-07T20:16:08.4974472Z [command]/usr/bin/git sparse-checkout disable
+2026-10-07T20:16:08.5024429Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-07T20:16:08.5052957Z ##[group]Checking out the ref
+2026-10-07T20:16:08.5057370Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2026-10-07T20:16:08.8602117Z Reset branch 'master'
+2026-10-07T20:16:08.8606724Z branch 'master' set up to track 'origin/master'.
+2026-10-07T20:16:08.8619882Z ##[endgroup]
+2026-10-07T20:16:08.8663736Z [command]/usr/bin/git log -1 --format=%H
+2026-10-07T20:16:08.8688206Z f1c49ed84e56d4f18c417f8ce5fb48823e470dcb
+2026-10-07T20:16:08.8942461Z ##[group]Run pnpm/action-setup@v4
+2026-10-07T20:16:08.8942778Z with:
+2026-10-07T20:16:08.8942970Z   version: 11.19.0
+2026-10-07T20:16:08.8943177Z   dest: ~/setup-pnpm
+2026-10-07T20:16:08.8943387Z   run_install: null
+2026-10-07T20:16:08.8943592Z   cache: false
+2026-10-07T20:16:08.8943809Z   cache_dependency_path: pnpm-lock.yaml
+2026-10-07T20:16:08.8944331Z   package_json_file: package.json
+2026-10-07T20:16:08.8944582Z   standalone: false
+2026-10-07T20:16:08.8944797Z ##[endgroup]
+2026-10-07T20:16:09.0363497Z ##[group]Running self-installer...
+2026-10-07T20:16:09.4294370Z (node:2292) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-07T20:16:09.4296804Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T20:16:09.6099362Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-10-07T20:16:09.6103723Z Packages: +1
+2026-10-07T20:16:09.6104590Z +
+2026-10-07T20:16:10.0944928Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+2026-10-07T20:16:10.1223113Z 
+2026-10-07T20:16:10.1223797Z dependencies:
+2026-10-07T20:16:10.1224512Z + pnpm 11.19.0 (12.10.1 is available)
+2026-10-07T20:16:10.1225116Z 
+2026-10-07T20:16:10.1271851Z Done in 925ms
+2026-10-07T20:16:10.2144606Z ##[endgroup]
+2026-10-07T20:16:10.2145077Z Installation Completed!
+2026-10-07T20:16:10.2331054Z ##[group]Run actions/setup-node@v4
+2026-10-07T20:16:10.2331341Z with:
+2026-10-07T20:16:10.2331541Z   node-version: 24
+2026-10-07T20:16:10.2331748Z   cache: pnpm
+2026-10-07T20:16:10.2331945Z   always-auth: false
+2026-10-07T20:16:10.2332161Z   check-latest: false
+2026-10-07T20:16:10.2334578Z   token: ***
+2026-10-07T20:16:10.2334773Z env:
+2026-10-07T20:16:10.2335019Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T20:16:10.2335327Z ##[endgroup]
+2026-10-07T20:16:10.3742350Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-07T20:16:10.3746236Z (node:2307) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-07T20:16:10.3747232Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T20:16:10.3749610Z ##[group]Environment details
+2026-10-07T20:16:10.7869793Z node: v24.21.0
+2026-10-07T20:16:10.7870243Z npm: 11.19.0
+2026-10-07T20:16:10.7870761Z yarn: 1.22.22
+2026-10-07T20:16:10.7872274Z ##[endgroup]
+2026-10-07T20:16:10.7913022Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+2026-10-07T20:16:11.3969258Z /home/runner/setup-pnpm/node_modules/.bin/store/v11
+2026-10-07T20:16:11.5329027Z Cache hit for: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+2026-10-07T20:16:11.5442194Z (node:2307) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-07T20:16:12.6630870Z Received 134217728 of 143139869 (93.8%), 128.0 MBs/sec
+2026-10-07T20:16:12.8210083Z Received 143139869 of 143139869 (100.0%), 117.9 MBs/sec
+2026-10-07T20:16:12.8212094Z Cache Size: ~137 MB (143139869 B)
+2026-10-07T20:16:12.8315203Z [command]/usr/bin/tar -xf /home/runner/work/_temp/05561b8d-6ac1-4d27-bacc-dfbf29185996/cache.tzst -P -C /home/runner/work/fountainjs/fountainjs --use-compress-program unzstd
+2026-10-07T20:16:14.3263529Z Cache restored successfully
+2026-10-07T20:16:14.3338931Z Cache restored from key: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+2026-10-07T20:16:14.3534177Z ##[group]Run pnpm install --frozen-lockfile
+2026-10-07T20:16:14.3534595Z [36;1mpnpm install --frozen-lockfile[0m
+2026-10-07T20:16:14.3835057Z shell: /usr/bin/bash -e {0}
+2026-10-07T20:16:14.3835403Z env:
+2026-10-07T20:16:14.3835735Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T20:16:14.3836167Z ##[endgroup]
+2026-10-07T20:16:14.8348936Z Scope: all 3 workspace projects
+2026-10-07T20:16:14.9064410Z ? Verifying lockfile against supply-chain policies (340 entries)...
+2026-10-07T20:16:14.9144655Z Lockfile is up to date, resolution step is skipped
+2026-10-07T20:16:15.0363493Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-10-07T20:16:15.1177758Z Packages: +281
+2026-10-07T20:16:15.1187725Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2026-10-07T20:16:15.8574059Z Packages are hard linked from the content-addressable store to the virtual store.
+2026-10-07T20:16:15.8613075Z   Content-addressable store is at: /home/runner/setup-pnpm/node_modules/.bin/store/v11
+2026-10-07T20:16:15.8647770Z   Virtual store is at:             node_modules/.pnpm
+2026-10-07T20:16:16.0522089Z Progress: resolved 281, reused 281, downloaded 0, added 8
+2026-10-07T20:16:16.6809634Z Progress: resolved 281, reused 281, downloaded 0, added 281, done
+2026-10-07T20:16:18.7415028Z ✓ Lockfile passes supply-chain policies (340 entries in 3.8s)
+2026-10-07T20:16:18.7996788Z 
+2026-10-07T20:16:18.7997924Z devDependencies:
+2026-10-07T20:16:18.7998447Z + @angular/common 22.1.5
+2026-10-07T20:16:18.7998929Z + @angular/compiler 22.1.5
+2026-10-07T20:16:18.7999398Z + @angular/core 22.1.5
+2026-10-07T20:16:18.7999920Z + @angular/platform-browser 22.1.5
+2026-10-07T20:16:18.8000558Z + @angular/platform-server 22.1.5
+2026-10-07T20:16:18.8001130Z + @mathjax/mathjax-tex-font 4.1.3
+2026-10-07T20:16:18.8001613Z + @mathjax/src 4.1.3
+2026-10-07T20:16:18.8002040Z + @playwright/test 1.62.1
+2026-10-07T20:16:18.8002581Z + @sveltejs/vite-plugin-svelte 7.3.0
+2026-10-07T20:16:18.8003133Z + @types/node 26.4.1
+2026-10-07T20:16:18.8003563Z + @types/react 19.2.18
+2026-10-07T20:16:18.8003991Z + @types/react-dom 19.2.7
+2026-10-07T20:16:18.8004467Z + @vitejs/plugin-react 6.1.1
+2026-10-07T20:16:18.8005030Z + commonmark 0.31.2
+2026-10-07T20:16:18.8005451Z + commonmark-spec 0.31.2
+2026-10-07T20:16:18.8005886Z + css-select 7.0.0
+2026-10-07T20:16:18.8006302Z + docx-preview 0.4.0
+2026-10-07T20:16:18.8007751Z + entities 8.0.0
+2026-10-07T20:16:18.8008167Z + fflate 0.8.3
+2026-10-07T20:16:18.8008635Z + jsdom 30.0.1
+2026-10-07T20:16:18.8009000Z + katex 0.18.6
+2026-10-07T20:16:18.8009396Z + miniflare 3.20250718.3
+2026-10-07T20:16:18.8009799Z + parse5 8.0.1
+2026-10-07T20:16:18.8010151Z + parse5-htmlparser2-tree-adapter 8.0.1
+2026-10-07T20:16:18.8010493Z + pdfjs-dist 6.3.289
+2026-10-07T20:16:18.8010733Z + react 19.2.8
+2026-10-07T20:16:18.8010958Z + react-dom 19.2.8
+2026-10-07T20:16:18.8011166Z + rxjs 7.8.2
+2026-10-07T20:16:18.8011359Z + svelte 5.57.0
+2026-10-07T20:16:18.8011581Z + typescript 7.0.2
+2026-10-07T20:16:18.8011844Z + unicode-emoji-json 0.9.0
+2026-10-07T20:16:18.8012087Z + vite 8.2.2
+2026-10-07T20:16:18.8012290Z + vitest 5.0.0
+2026-10-07T20:16:18.8012486Z + vue 3.5.42
+2026-10-07T20:16:18.8012675Z + yjs 13.6.32
+2026-10-07T20:16:18.8012794Z 
+2026-10-07T20:16:18.8392917Z Done in 4.4s using pnpm v11.19.0
+2026-10-07T20:16:18.8970719Z ##[group]Run pnpm build
+2026-10-07T20:16:18.8971026Z [36;1mpnpm build[0m
+2026-10-07T20:16:18.9033189Z shell: /usr/bin/bash -e {0}
+2026-10-07T20:16:18.9033454Z env:
+2026-10-07T20:16:18.9033716Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T20:16:18.9034051Z ##[endgroup]
+2026-10-07T20:16:19.3525045Z $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+2026-10-07T20:16:19.5804461Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+2026-10-07T20:16:19.5918788Z transforming...
+2026-10-07T20:16:19.7199859Z ✓ 302 modules transformed.
+2026-10-07T20:16:19.8034584Z rendering chunks...
+2026-10-07T20:16:19.9055832Z computing gzip size...
+2026-10-07T20:16:19.9214739Z dist/step-doAGd4iU.js                       0.20 kB │ gzip:  0.18 kB │ map:   0.41 kB
+2026-10-07T20:16:19.9216063Z dist/plugin-B0KSKRXJ.js                     0.39 kB │ gzip:  0.28 kB │ map:   3.23 kB
+2026-10-07T20:16:19.9217627Z dist/node-spec-Dl5lMC1C.js                  0.64 kB │ gzip:  0.37 kB │ map:   8.05 kB
+2026-10-07T20:16:19.9218729Z dist/text-style.js                          0.87 kB │ gzip:  0.39 kB
+2026-10-07T20:16:19.9219431Z dist/url-sjMj-efj.js                        1.03 kB │ gzip:  0.52 kB │ map:   2.68 kB
+2026-10-07T20:16:19.9220079Z dist/svelte.js                              1.08 kB │ gzip:  0.55 kB │ map:   3.58 kB
+2026-10-07T20:16:19.9221022Z dist/useFountain-DQ8gXlvr.js                1.09 kB │ gzip:  0.57 kB │ map:   3.25 kB
+2026-10-07T20:16:19.9221733Z dist/command-manager-CSDUCeVE.js            1.32 kB │ gzip:  0.62 kB │ map:   6.46 kB
+2026-10-07T20:16:19.9222440Z dist/collaboration-BubriAbK.js              1.44 kB │ gzip:  0.71 kB │ map:   3.60 kB
+2026-10-07T20:16:19.9223239Z dist/react-widgets.js                       1.57 kB │ gzip:  0.67 kB │ map:   5.52 kB
+2026-10-07T20:16:19.9224383Z dist/vue.js                                 1.72 kB │ gzip:  0.86 kB │ map:   4.53 kB
+2026-10-07T20:16:19.9225463Z dist/inline-atom-BLfPalX5.js                1.76 kB │ gzip:  0.78 kB │ map:   5.30 kB
+2026-10-07T20:16:19.9226163Z dist/path-B7Cr90vg.js                       1.89 kB │ gzip:  0.89 kB │ map:   5.80 kB
+2026-10-07T20:16:19.9227036Z dist/search-CLj2oPC9.js                     1.99 kB │ gzip:  0.95 kB │ map:   6.14 kB
+2026-10-07T20:16:19.9227871Z dist/history-CluGKD04.js                    2.71 kB │ gzip:  1.12 kB │ map:   7.84 kB
+2026-10-07T20:16:19.9229189Z dist/html-page-settings-BniO1ltv.js         2.78 kB │ gzip:  1.16 kB │ map:   8.24 kB
+2026-10-07T20:16:19.9230639Z dist/content-expression-CuobUc-r.js         2.87 kB │ gzip:  1.12 kB │ map:   7.89 kB
+2026-10-07T20:16:19.9232009Z dist/input-rules-EH0whXGW.js                2.99 kB │ gzip:  1.31 kB │ map:   9.02 kB
+2026-10-07T20:16:19.9233302Z dist/decoration-CuT1b7BC.js                 3.14 kB │ gzip:  1.23 kB │ map:  10.15 kB
+2026-10-07T20:16:19.9234576Z dist/extension-Cfbujo9B.js                  3.20 kB │ gzip:  1.27 kB │ map:  10.62 kB
+2026-10-07T20:16:19.9235352Z dist/replace-text-range-step-DDj1wpRU.js    3.28 kB │ gzip:  1.21 kB │ map:   9.56 kB
+2026-10-07T20:16:19.9236077Z dist/table-map-Du2VwT8u.js                  3.47 kB │ gzip:  1.41 kB │ map:  10.05 kB
+2026-10-07T20:16:19.9237133Z dist/mark-range-step-Jo1iPQSu.js            3.48 kB │ gzip:  1.08 kB │ map:  10.32 kB
+2026-10-07T20:16:19.9237830Z dist/node-CMohf4dR.js                       3.90 kB │ gzip:  1.36 kB │ map:  10.26 kB
+2026-10-07T20:16:19.9238516Z dist/html-flow-DD-oI2l-.js                  4.47 kB │ gzip:  1.85 kB │ map:  11.72 kB
+2026-10-07T20:16:19.9239167Z dist/widgets-dom.js                         4.74 kB │ gzip:  1.67 kB │ map:  13.70 kB
+2026-10-07T20:16:19.9239820Z dist/text-style-BpVAJwKH.js                 4.82 kB │ gzip:  1.60 kB │ map:  15.05 kB
+2026-10-07T20:16:19.9240477Z dist/integrity-dom.js                       5.07 kB │ gzip:  1.98 kB │ map:  14.22 kB
+2026-10-07T20:16:19.9241149Z dist/link-destination-C_zXSnoz.js           5.47 kB │ gzip:  2.03 kB │ map:  16.08 kB
+2026-10-07T20:16:19.9242084Z dist/table-of-contents.js                   5.69 kB │ gzip:  2.34 kB │ map:  17.63 kB
+2026-10-07T20:16:19.9242768Z dist/html-inert.js                          6.16 kB │ gzip:  2.55 kB │ map:  13.93 kB
+2026-10-07T20:16:19.9243384Z dist/testing.js                             6.49 kB │ gzip:  2.31 kB │ map:  18.97 kB
+2026-10-07T20:16:19.9244026Z dist/selection-Du4v48EK.js                  6.52 kB │ gzip:  2.21 kB │ map:  19.93 kB
+2026-10-07T20:16:19.9244705Z dist/table-layout-CcmXrWN5.js               6.98 kB │ gzip:  2.51 kB │ map:  19.64 kB
+2026-10-07T20:16:19.9245366Z dist/migrations.js                          7.04 kB │ gzip:  2.23 kB │ map:  19.76 kB
+2026-10-07T20:16:19.9246016Z dist/react-tracked-changes.js               7.65 kB │ gzip:  2.34 kB │ map:  13.99 kB
+2026-10-07T20:16:19.9246830Z dist/details.js                             7.72 kB │ gzip:  2.65 kB │ map:  21.54 kB
+2026-10-07T20:16:19.9247494Z dist/mapping-BbhEodcc.js                    7.76 kB │ gzip:  2.66 kB │ map:  24.89 kB
+2026-10-07T20:16:19.9248143Z dist/react-integrity.js                     8.09 kB │ gzip:  2.42 kB │ map:  13.31 kB
+2026-10-07T20:16:19.9248806Z dist/menu-position-BhHjnREO.js              8.23 kB │ gzip:  3.04 kB │ map:  25.35 kB
+2026-10-07T20:16:19.9249455Z dist/node-ids.js                            8.74 kB │ gzip:  3.14 kB │ map:  28.06 kB
+2026-10-07T20:16:19.9250234Z dist/widgets.js                             8.78 kB │ gzip:  3.21 kB │ map:  27.94 kB
+2026-10-07T20:16:19.9250792Z dist/core.js                                9.04 kB │ gzip:  3.16 kB
+2026-10-07T20:16:19.9251402Z dist/react-comments.js                      9.78 kB │ gzip:  2.75 kB │ map:  17.76 kB
+2026-10-07T20:16:19.9252060Z dist/structured-attributes.js              10.03 kB │ gzip:  2.96 kB │ map:  31.46 kB
+2026-10-07T20:16:19.9252716Z dist/react-versions.js                     10.06 kB │ gzip:  2.75 kB │ map:  18.26 kB
+2026-10-07T20:16:19.9253408Z dist/collaboration-core-B-I53ZbT.js        10.29 kB │ gzip:  3.23 kB │ map:  32.95 kB
+2026-10-07T20:16:19.9254091Z dist/ai-generated-media.js                 10.71 kB │ gzip:  3.28 kB │ map:  27.57 kB
+2026-10-07T20:16:19.9254712Z dist/ruby.js                               10.92 kB │ gzip:  3.49 kB │ map:  28.83 kB
+2026-10-07T20:16:19.9255354Z dist/page-settings-Bqt82pEY.js             11.19 kB │ gzip:  3.73 kB │ map:  32.14 kB
+2026-10-07T20:16:19.9256019Z dist/pages.js                              11.27 kB │ gzip:  3.60 kB │ map:  28.76 kB
+2026-10-07T20:16:19.9256835Z dist/integrity.js                          11.46 kB │ gzip:  3.63 kB │ map:  30.86 kB
+2026-10-07T20:16:19.9257483Z dist/pages-preview.js                      13.47 kB │ gzip:  4.45 kB │ map:  37.18 kB
+2026-10-07T20:16:19.9258124Z dist/editor-CMX7ABLq.js                    15.16 kB │ gzip:  4.48 kB │ map:  43.81 kB
+2026-10-07T20:16:19.9258761Z dist/ai-conversation.js                    15.96 kB │ gzip:  4.46 kB │ map:  41.86 kB
+2026-10-07T20:16:19.9259419Z dist/ai-document-tools.js                  16.83 kB │ gzip:  4.71 kB │ map:  45.73 kB
+2026-10-07T20:16:19.9260058Z dist/emoji-Dcd6cwiM.js                     17.42 kB │ gzip:  5.72 kB │ map:  46.29 kB
+2026-10-07T20:16:19.9260716Z dist/link-behavior-oYZGk5x4.js             18.29 kB │ gzip:  6.84 kB │ map:  48.24 kB
+2026-10-07T20:16:19.9261399Z dist/presentation-_RsWq19D.js              21.37 kB │ gzip:  6.17 kB │ map:  64.52 kB
+2026-10-07T20:16:19.9262072Z dist/document-utilities.js                 23.88 kB │ gzip:  7.49 kB │ map:  67.80 kB
+2026-10-07T20:16:19.9262685Z dist/yjs.js                                27.47 kB │ gzip:  7.82 kB │ map:  75.97 kB
+2026-10-07T20:16:19.9263293Z dist/tracked-changes.js                    28.57 kB │ gzip:  8.09 kB │ map:  85.58 kB
+2026-10-07T20:16:19.9263908Z dist/versions.js                           29.34 kB │ gzip:  7.76 kB │ map:  80.63 kB
+2026-10-07T20:16:19.9264500Z dist/comments.js                           29.77 kB │ gzip:  8.57 kB │ map:  87.59 kB
+2026-10-07T20:16:19.9265389Z dist/extensions-C1DRY4_P.js                32.94 kB │ gzip:  9.34 kB │ map:  85.95 kB
+2026-10-07T20:16:19.9266107Z dist/media-DZiyIJlx.js                     42.44 kB │ gzip: 12.02 kB │ map: 109.48 kB
+2026-10-07T20:16:19.9267094Z dist/markdown-html-83ZGjqmO.js             43.57 kB │ gzip: 23.96 kB │ map:  74.66 kB
+2026-10-07T20:16:19.9267768Z dist/pages-dom.js                          53.72 kB │ gzip: 13.34 kB │ map: 147.72 kB
+2026-10-07T20:16:19.9268428Z dist/commands-DasHTUlW.js                  82.06 kB │ gzip: 21.35 kB │ map: 235.36 kB
+2026-10-07T20:16:19.9269062Z dist/index.js                              82.79 kB │ gzip: 24.38 kB │ map: 179.78 kB
+2026-10-07T20:16:19.9269701Z dist/text-exporter-BdE6tUJU.js             87.20 kB │ gzip: 25.32 kB │ map: 267.14 kB
+2026-10-07T20:16:19.9270330Z dist/react.js                              92.10 kB │ gzip: 21.58 kB │ map: 183.72 kB
+2026-10-07T20:16:19.9270944Z dist/view-CqmBpraA.js                     116.38 kB │ gzip: 28.76 kB │ map: 299.21 kB
+2026-10-07T20:16:19.9271554Z dist/docx.js                              188.06 kB │ gzip: 54.00 kB │ map: 517.08 kB
+2026-10-07T20:16:19.9272151Z dist/html-server.js                       261.41 kB │ gzip: 59.34 kB │ map: 770.11 kB
+2026-10-07T20:16:19.9272789Z dist/emoji-data.js                        331.40 kB │ gzip: 30.88 kB │ map: 467.62 kB
+2026-10-07T20:16:19.9273074Z 
+2026-10-07T20:16:19.9327388Z transforming...
+2026-10-07T20:16:20.0516187Z ✓ 302 modules transformed.
+2026-10-07T20:16:20.1228152Z rendering chunks...
+2026-10-07T20:16:20.2052062Z computing gzip size...
+2026-10-07T20:16:20.2169841Z dist/step-CICBu9Xg.cjs                       0.20 kB │ gzip:  0.18 kB │ map:   0.42 kB
+2026-10-07T20:16:20.2171848Z dist/plugin-DlQkwKdU.cjs                     0.48 kB │ gzip:  0.27 kB │ map:   3.21 kB
+2026-10-07T20:16:20.2173894Z dist/node-spec-owlJN_nc.cjs                  0.59 kB │ gzip:  0.36 kB │ map:   8.05 kB
+2026-10-07T20:16:20.2175754Z dist/rolldown-runtime-Chgba0Kb.cjs           0.77 kB │ gzip:  0.41 kB
+2026-10-07T20:16:20.2177600Z dist/text-style.cjs                          0.87 kB │ gzip:  0.36 kB
+2026-10-07T20:16:20.2178977Z dist/svelte.cjs                              0.89 kB │ gzip:  0.51 kB │ map:   3.64 kB
+2026-10-07T20:16:20.2180405Z dist/url-Co8QRAHd.cjs                        0.92 kB │ gzip:  0.51 kB │ map:   2.68 kB
+2026-10-07T20:16:20.2181940Z dist/useFountain-C16zq9TV.cjs                0.96 kB │ gzip:  0.52 kB │ map:   3.30 kB
+2026-10-07T20:16:20.2183537Z dist/command-manager-DU4ahU5C.cjs            1.06 kB │ gzip:  0.55 kB │ map:   6.45 kB
+2026-10-07T20:16:20.2185070Z dist/collaboration-DHfWMt2l.cjs              1.26 kB │ gzip:  0.63 kB │ map:   3.61 kB
+2026-10-07T20:16:20.2186924Z dist/react-widgets.cjs                       1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+2026-10-07T20:16:20.2188535Z dist/vue.cjs                                 1.45 kB │ gzip:  0.76 kB │ map:   4.76 kB
+2026-10-07T20:16:20.2190030Z dist/inline-atom-Cg88XSNe.cjs                1.53 kB │ gzip:  0.70 kB │ map:   5.34 kB
+2026-10-07T20:16:20.2191584Z dist/search-Cb5HWhnF.cjs                     1.76 kB │ gzip:  0.87 kB │ map:   6.15 kB
+2026-10-07T20:16:20.2193186Z dist/path-DDY3uxw-.cjs                       1.98 kB │ gzip:  0.82 kB │ map:   5.79 kB
+2026-10-07T20:16:20.2194919Z dist/content-expression-YXcFdjFU.cjs         2.15 kB │ gzip:  0.98 kB │ map:   7.85 kB
+2026-10-07T20:16:20.2196852Z dist/html-page-settings-CHmUedrc.cjs         2.52 kB │ gzip:  1.03 kB │ map:   8.22 kB
+2026-10-07T20:16:20.2198559Z dist/table-map-Dbo_d2TT.cjs                  2.65 kB │ gzip:  1.23 kB │ map:  10.02 kB
+2026-10-07T20:16:20.2200157Z dist/input-rules-HXvPuvbc.cjs                2.66 kB │ gzip:  1.16 kB │ map:   9.04 kB
+2026-10-07T20:16:20.2201750Z dist/decoration-jVx4B2Pl.cjs                 2.68 kB │ gzip:  1.13 kB │ map:  10.14 kB
+2026-10-07T20:16:20.2203381Z dist/replace-text-range-step-VHOaDNVn.cjs    2.69 kB │ gzip:  1.07 kB │ map:   9.63 kB
+2026-10-07T20:16:20.2204987Z dist/history-C1iHQbdz.cjs                    2.76 kB │ gzip:  1.03 kB │ map:   7.85 kB
+2026-10-07T20:16:20.2207191Z dist/extension-Sb4ErwsF.cjs                  2.86 kB │ gzip:  1.17 kB │ map:  10.59 kB
+2026-10-07T20:16:20.2208895Z dist/mark-range-step-DOJDyOsP.cjs            3.02 kB │ gzip:  0.92 kB │ map:  10.34 kB
+2026-10-07T20:16:20.2210438Z dist/node-D26sG_e5.cjs                       3.35 kB │ gzip:  1.25 kB │ map:  10.25 kB
+2026-10-07T20:16:20.2211876Z dist/widgets-dom.cjs                         4.02 kB │ gzip:  1.53 kB │ map:  13.67 kB
+2026-10-07T20:16:20.2213397Z dist/html-flow-BHL-hkt_.cjs                  4.18 kB │ gzip:  1.68 kB │ map:  11.78 kB
+2026-10-07T20:16:20.2214918Z dist/integrity-dom.cjs                       4.36 kB │ gzip:  1.82 kB │ map:  14.27 kB
+2026-10-07T20:16:20.2216397Z dist/table-of-contents.cjs                   4.75 kB │ gzip:  2.12 kB │ map:  17.66 kB
+2026-10-07T20:16:20.2218797Z dist/text-style-Bj101slt.cjs                 5.08 kB │ gzip:  1.44 kB │ map:  15.23 kB
+2026-10-07T20:16:20.2220283Z dist/html-inert.cjs                          5.19 kB │ gzip:  2.36 kB │ map:  13.94 kB
+2026-10-07T20:16:20.2221784Z dist/testing.cjs                             5.43 kB │ gzip:  2.08 kB │ map:  18.97 kB
+2026-10-07T20:16:20.2223255Z dist/selection-DrO1gWsj.cjs                  5.65 kB │ gzip:  1.97 kB │ map:  19.95 kB
+2026-10-07T20:16:20.2224844Z dist/react-tracked-changes.cjs               5.71 kB │ gzip:  2.01 kB │ map:  14.60 kB
+2026-10-07T20:16:20.2226719Z dist/link-destination-vEg16Tuc.cjs           5.72 kB │ gzip:  1.73 kB │ map:  16.11 kB
+2026-10-07T20:16:20.2228326Z dist/migrations.cjs                          6.10 kB │ gzip:  2.00 kB │ map:  19.78 kB
+2026-10-07T20:16:20.2229480Z dist/react-integrity.cjs                     6.18 kB │ gzip:  2.18 kB │ map:  14.15 kB
+2026-10-07T20:16:20.2230639Z dist/details.cjs                             6.35 kB │ gzip:  2.39 kB │ map:  21.62 kB
+2026-10-07T20:16:20.2231804Z dist/mapping-LRwd6pqd.cjs                    6.55 kB │ gzip:  2.36 kB │ map:  24.97 kB
+2026-10-07T20:16:20.2233001Z dist/table-layout-r-zMRyTz.cjs               6.66 kB │ gzip:  2.26 kB │ map:  19.62 kB
+2026-10-07T20:16:20.2234183Z dist/react-comments.cjs                      7.05 kB │ gzip:  2.28 kB │ map:  18.76 kB
+2026-10-07T20:16:20.2234989Z dist/node-ids.cjs                            7.18 kB │ gzip:  2.82 kB │ map:  28.03 kB
+2026-10-07T20:16:20.2235730Z dist/menu-position-DgAmLXYm.cjs              7.21 kB │ gzip:  2.71 kB │ map:  25.43 kB
+2026-10-07T20:16:20.2236424Z dist/widgets.cjs                             7.33 kB │ gzip:  2.88 kB │ map:  28.00 kB
+2026-10-07T20:16:20.2237597Z dist/react-versions.cjs                      7.37 kB │ gzip:  2.35 kB │ map:  19.28 kB
+2026-10-07T20:16:20.2238229Z dist/core.cjs                                8.24 kB │ gzip:  2.43 kB
+2026-10-07T20:16:20.2238873Z dist/structured-attributes.cjs               8.41 kB │ gzip:  2.71 kB │ map:  31.45 kB
+2026-10-07T20:16:20.2239565Z dist/ai-generated-media.cjs                  9.11 kB │ gzip:  2.97 kB │ map:  27.49 kB
+2026-10-07T20:16:20.2240220Z dist/ruby.cjs                                9.18 kB │ gzip:  3.14 kB │ map:  28.80 kB
+2026-10-07T20:16:20.2240835Z dist/integrity.cjs                           9.36 kB │ gzip:  3.32 kB │ map:  30.88 kB
+2026-10-07T20:16:20.2241443Z dist/pages.cjs                               9.36 kB │ gzip:  3.21 kB │ map:  28.86 kB
+2026-10-07T20:16:20.2242112Z dist/collaboration-core-6QLxBCsv.cjs         9.37 kB │ gzip:  2.92 kB │ map:  32.93 kB
+2026-10-07T20:16:20.2242821Z dist/page-settings-BTDzBnRH.cjs             10.15 kB │ gzip:  3.43 kB │ map:  32.11 kB
+2026-10-07T20:16:20.2243491Z dist/pages-preview.cjs                      11.42 kB │ gzip:  4.09 kB │ map:  37.00 kB
+2026-10-07T20:16:20.2244126Z dist/editor-Ce4QfnkJ.cjs                    13.24 kB │ gzip:  4.10 kB │ map:  43.90 kB
+2026-10-07T20:16:20.2244794Z dist/ai-conversation.cjs                    13.42 kB │ gzip:  4.04 kB │ map:  41.75 kB
+2026-10-07T20:16:20.2245441Z dist/ai-document-tools.cjs                  13.93 kB │ gzip:  4.22 kB │ map:  45.71 kB
+2026-10-07T20:16:20.2246284Z dist/emoji-DAGrlUem.cjs                     14.66 kB │ gzip:  5.12 kB │ map:  46.33 kB
+2026-10-07T20:16:20.2247289Z dist/link-behavior-DxFlB9w3.cjs             16.42 kB │ gzip:  6.31 kB │ map:  48.32 kB
+2026-10-07T20:16:20.2247986Z dist/presentation-DrPDmb6z.cjs              17.92 kB │ gzip:  5.47 kB │ map:  64.36 kB
+2026-10-07T20:16:20.2248800Z dist/document-utilities.cjs                 19.37 kB │ gzip:  6.71 kB │ map:  67.92 kB
+2026-10-07T20:16:20.2249490Z dist/yjs.cjs                                22.89 kB │ gzip:  7.13 kB │ map:  75.74 kB
+2026-10-07T20:16:20.2250101Z dist/tracked-changes.cjs                    23.66 kB │ gzip:  7.30 kB │ map:  85.59 kB
+2026-10-07T20:16:20.2250724Z dist/comments.cjs                           24.18 kB │ gzip:  7.65 kB │ map:  87.59 kB
+2026-10-07T20:16:20.2251326Z dist/versions.cjs                           24.36 kB │ gzip:  7.06 kB │ map:  80.44 kB
+2026-10-07T20:16:20.2251961Z dist/extensions-DjBSNlD7.cjs                30.75 kB │ gzip:  8.30 kB │ map:  86.30 kB
+2026-10-07T20:16:20.2252622Z dist/media-Bzb45r2G.cjs                     35.05 kB │ gzip: 10.80 kB │ map: 109.58 kB
+2026-10-07T20:16:20.2253307Z dist/markdown-html-DD8ATANg.cjs             41.42 kB │ gzip: 23.40 kB │ map:  74.55 kB
+2026-10-07T20:16:20.2253959Z dist/pages-dom.cjs                          44.81 kB │ gzip: 12.13 kB │ map: 147.15 kB
+2026-10-07T20:16:20.2254605Z dist/text-exporter-C4h-egmn.cjs             68.19 kB │ gzip: 22.75 kB │ map: 266.49 kB
+2026-10-07T20:16:20.2255443Z dist/react.cjs                              69.17 kB │ gzip: 18.66 kB │ map: 192.48 kB
+2026-10-07T20:16:20.2256039Z dist/index.cjs                              70.12 kB │ gzip: 21.12 kB │ map: 179.78 kB
+2026-10-07T20:16:20.2257130Z dist/commands-DBqTIH1U.cjs                  73.03 kB │ gzip: 19.69 kB │ map: 236.40 kB
+2026-10-07T20:16:20.2257835Z dist/view-DRhFzAAp.cjs                      99.22 kB │ gzip: 26.21 kB │ map: 298.54 kB
+2026-10-07T20:16:20.2258461Z dist/docx.cjs                              152.04 kB │ gzip: 48.58 kB │ map: 516.01 kB
+2026-10-07T20:16:20.2259081Z dist/html-server.cjs                       212.53 kB │ gzip: 54.15 kB │ map: 767.25 kB
+2026-10-07T20:16:20.2259711Z dist/emoji-data.cjs                        274.54 kB │ gzip: 30.24 kB │ map: 451.98 kB
+2026-10-07T20:16:20.2259994Z 
+2026-10-07T20:16:20.2260653Z [32m✓ built in 640ms[39m
+2026-10-07T20:16:21.8403957Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+2026-10-07T20:16:24.5791611Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+2026-10-07T20:16:27.1683904Z ##[group]Run pnpm test:performance
+2026-10-07T20:16:27.1684245Z [36;1mpnpm test:performance[0m
+2026-10-07T20:16:27.1744221Z shell: /usr/bin/bash -e {0}
+2026-10-07T20:16:27.1744468Z env:
+2026-10-07T20:16:27.1744722Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T20:16:27.1745040Z ##[endgroup]
+2026-10-07T20:16:27.6145887Z $ node --expose-gc scripts/check-performance-budgets.mjs
+2026-10-07T20:16:27.7518748Z 100 blocks: local p50 0.13 ms, p95 0.27 ms; incremental remote p50 0.14 ms, p95 0.19 ms; JSON boundary p50 1.07 ms, p95 1.45 ms
+2026-10-07T20:16:27.8464571Z 1,000 blocks: local p50 0.15 ms, p95 0.23 ms; incremental remote p50 0.09 ms, p95 0.21 ms; JSON boundary p50 8.28 ms, p95 16.01 ms
+2026-10-07T20:16:28.2055383Z 5,000 blocks: local p50 0.40 ms, p95 0.45 ms; incremental remote p50 0.41 ms, p95 2.75 ms; JSON boundary p50 32.55 ms, p95 40.96 ms
+2026-10-07T20:16:29.0054282Z 10,000 blocks: local p50 0.77 ms, p95 1.25 ms; incremental remote p50 0.78 ms, p95 0.82 ms; JSON boundary p50 75.88 ms, p95 121.27 ms
+2026-10-07T20:16:29.1157832Z 100 HTML blocks: server parse p50 11.38 ms, p95 18.27 ms
+2026-10-07T20:16:29.5994715Z 1,000 HTML blocks: server parse p50 65.08 ms, p95 77.76 ms
+2026-10-07T20:16:31.7737996Z 5,000 HTML blocks: server parse p50 296.68 ms, p95 316.99 ms
+2026-10-07T20:16:35.9986257Z 10,000 HTML blocks: server parse p50 578.68 ms, p95 639.96 ms
+2026-10-07T20:16:35.9987835Z server HTML 1,000→10,000 median growth: 8.89x / 15x
+2026-10-07T20:16:35.9988623Z local 1,000→10,000 median growth: 5.27x / 15x
+2026-10-07T20:16:35.9989500Z incremental remote 1,000→10,000 median growth: 8.54x / 15x
+2026-10-07T20:16:36.2051571Z 2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+2026-10-07T20:16:36.2934915Z destroyed-editor retained heap: 0.06 MiB / 16 MiB
+2026-10-07T20:16:37.0720630Z retained 10,000-block server HTML document: 14.30 MiB / 48 MiB
+2026-10-07T20:16:37.1543418Z Post job cleanup.
+2026-10-07T20:16:37.2750006Z (node:2616) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-07T20:16:37.2751080Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T20:16:37.2754001Z Cache hit occurred on the primary key node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870, not saving cache.
+2026-10-07T20:16:37.2860608Z Post job cleanup.
+2026-10-07T20:16:37.4278808Z Pruning is unnecessary.
+2026-10-07T20:16:37.4417646Z Post job cleanup.
+2026-10-07T20:16:37.5286644Z [command]/usr/bin/git version
+2026-10-07T20:16:37.5328258Z git version 2.55.0
+2026-10-07T20:16:37.5368082Z Temporarily overriding HOME='/home/runner/work/_temp/615701a3-c570-4cc2-a327-62f48c7f129a' before making global git config changes
+2026-10-07T20:16:37.5369875Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-07T20:16:37.5374080Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+2026-10-07T20:16:37.5413590Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-07T20:16:37.5450772Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-07T20:16:37.5698305Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-07T20:16:37.5727240Z http.https://github.com/.extraheader
+2026-10-07T20:16:37.5738446Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-07T20:16:37.5771665Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-07T20:16:37.5995922Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-07T20:16:37.6028847Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-07T20:16:37.6390438Z Cleaning up orphan processes
+2026-10-07T20:16:37.6785574Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

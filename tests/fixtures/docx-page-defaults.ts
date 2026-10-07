@@ -122,6 +122,10 @@ export function withDOCXExportStyles(document: NodeJSON, role = '', context: DOC
   return { ...document,
     ...(document.type === 'blockquote' ? { attrs: { ...document.attrs, appearance: 'explicit' } } : {}),
     ...(block ? { attrs: { ...document.attrs, ...(layout ? { layout } : {}),
+      // The generated native Quote style explicitly declares physical left.
+      // Reopen must retain that source declaration, not erase the new marker.
+      ...(document.type === 'paragraph' && currentRole === 'quote'
+        && (document.attrs?.align === undefined || document.attrs.align === 'left') ? { alignExplicit: true } : {}),
       ...(document.type !== 'code_block' ? { emphasis: 'explicit' } : {}) } } : {}),
     ...(children ? { content: children } : {}),
   };

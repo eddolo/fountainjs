@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add recorded retained-auto section direction checks using the existing
+  optional container module: first-strong editing, geometry, undo/redo and
+  reader snapshots in all desktop engines, plus pure-Node and browser HTML
+  retention contracts. Do not reinterpret flattened auto wrappers as separate
+  automatic paragraphs. Keep generated native Quote style's physical-left
+  declaration in the expected DOCX defaults, without removing full-tree or
+  emphasis assertions. Verify code text-click focus against a plain native
+  DOM/style copy: Firefox can focus its accessible code region while typing
+  works. Keep exact native host/region focus, caret, typing and undo checks;
+  label-click host handoff remains unchanged. Linux verification is pending.
 - Distinguish authored physical-left alignment from the ordinary legacy default
   with optional paragraph/heading `alignExplicit: true`. Keep direction
   independent; preserve the override through history, heading conversion,

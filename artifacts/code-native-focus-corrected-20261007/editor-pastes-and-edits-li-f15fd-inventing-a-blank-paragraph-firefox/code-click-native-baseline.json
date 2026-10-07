@@ -1,0 +1,15 @@
+{
+  "nativeClick": {
+    "role": "code",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7
+  },
+  "nativeAfterTyping": {
+    "role": "code",
+    "caretInCode": true,
+    "anchor": 14,
+    "focus": 14,
+    "text": "literal edited"
+  }
+}

@@ -260,8 +260,12 @@ default JSON. Heading conversion and Enter preserve supported direction and
 alignment. JSON and Yjs retain these attributes without a DOM shim.
 
 This is not a complete RTL/localization or Word bidi bridge. Inherited `auto`
-depends on the ancestor's first strong character; flattening that wrapper is
-not certified. Inline bidi isolation, mirrored list/table structure, CSS-only
+depends on the ancestor's first strong character. The optional
+`HTMLContainerExtension` retains supported section wrappers and their shared
+automatic context; recorded author/edit/history/reader checks verify that
+bounded route. See [HTML_CONTAINERS.md](HTML_CONTAINERS.md). Flattening that
+wrapper or the document shell is not equivalent. Inline bidi isolation,
+mirrored list/table structure, CSS-only
 direction import, native mobile keyboards and translated locale packages remain
 separate work. Ordinary Markdown reports omitted direction/logical alignment.
 DOCX reports unprojected direction and conversion of logical alignment to a

@@ -32,6 +32,16 @@ import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-b
 import { htmlBlankLineJourney } from './html-blank-line-journey';
 import { textDirectionJourney } from './text-direction-journey';
 import { explicitTextAlignmentJourney } from './explicit-text-alignment-journey';
+import { autoContainerDirectionJourney } from './auto-container-direction-journey';
+import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
+
+test('compares list-first code text-click focus and editing to a plain native surface', async ({ page }, info) => {
+  await codeNativeFocusJourney(page, info);
+});
+
+test('retains a shared automatic section direction through first-strong-text editing, history and reader preview', async ({ page }, info) => {
+  await autoContainerDirectionJourney(page, info);
+});
 
 test('authors physical-left alignment under an RTL host and inherited-auto reader with history', async ({ page }, info) => {
   await explicitTextAlignmentJourney(page, info);
@@ -3767,7 +3777,7 @@ test('pastes empty formatting and applies it to subsequently typed text', async 
   expect(marks).toEqual(['strong']);
 });
 
-for (const clickTarget of ['centre', 'label'] as const) test(`pastes and edits list-first code without inventing a blank paragraph${clickTarget === 'label' ? ' from its label area' : ''}`, async ({ page }) => {
+for (const clickTarget of ['centre', 'label'] as const) test(`pastes and edits list-first code without inventing a blank paragraph${clickTarget === 'label' ? ' from its label area' : ''}`, async ({ page }, info) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.selectAll());
   await editor.evaluate(target => {
@@ -3782,8 +3792,11 @@ for (const clickTarget of ['centre', 'label'] as const) test(`pastes and edits l
   });
   await expect(editor.locator('li > p')).toHaveCount(0);
   await expect(editor.locator('li > pre')).toHaveText('literal');
+  const native = clickTarget === 'centre' ? await nativeCodeClickBaseline(page, editor, info) : undefined;
   await editor.locator('pre').click(clickTarget === 'label' ? { position: { x: 40, y: 24 } } : {});
-  await expect(editor).toBeFocused();
+  // A text click can natively focus the accessible code region in Firefox.
+  // Label clicks still require the plugin's explicit host-focus handoff.
+  await expect(native?.role === 'code' ? editor.locator('pre') : editor).toBeFocused();
   await page.keyboard.press('End');
   await page.keyboard.type(' edited');
   await expect(editor.locator('li > pre')).toHaveText('literal edited');
