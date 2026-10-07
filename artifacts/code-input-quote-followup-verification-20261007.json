@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-07",
+  "baseCommit": "9f56b8bf8d8ca8684bcdec8b66b64a7c86ac3b36",
+  "status": "Unreleased; diagnostic follow-up, not Linux code-input or production-performance certification",
+  "cloudBase": {
+    "runId": 37694469023,
+    "conclusion": "failure",
+    "structuralPreflight": "9 passed on Linux Chromium/Firefox/WebKit in 58.6 seconds",
+    "unitTests": "2723 passed / 1 failed / 207 files",
+    "unitFailure": "ordinary quote DOM array acquired empty attributes object; existing contract expected ['blockquote', 0]",
+    "performance": "local median growth 15.11x exceeds unchanged 15x cap; other measured limits passed",
+    "lean": "passed",
+    "browser": "native control preflight 4 passed / 1 failed; full matrix skipped",
+    "pages": {
+      "runId": 37694468917,
+      "conclusion": "success"
+    },
+    "rawLogs": [
+      "artifacts/ci-9f56b8b-failure-20261007.log",
+      "artifacts/ci-9f56b8b-browser-20261007.log"
+    ]
+  },
+  "priorCdb98b7": {
+    "runId": 37686433794,
+    "conclusion": "failure",
+    "browser": {
+      "passed": 689,
+      "skipped": 16,
+      "failed": 2
+    },
+    "rawLog": "artifacts/ci-cdb98b7-final-failure-20261007.log"
+  },
+  "repair": "Restore ordinary quotes' attribute-free DOM spec. Keep direction/explicit appearance attributes when present. Existing assertions unchanged.",
+  "inputDiagnostics": {
+    "runtimeChanged": false,
+    "retainedFailure": "Native source insertion expectation remains an expect.soft assertion: a failure still fails the test, while Fountain typing/undo can run and collect evidence",
+    "observations": [
+      "document.hasFocus and visibility",
+      "anchor/focus DOM-node and widget/editability descriptions",
+      "passive native/Fountain keydown, keyup, beforeinput, input, focusin events",
+      "actual rendered markup and code editability style"
+    ],
+    "traceFinding": "Both Linux controls retain a leading contenteditable=false line-number widget. Existing focus/offset-only data cannot identify caret boundary or distinguish missing keyboard dispatch from rejected input; this is not a proven root cause."
+  },
+  "verification": {
+    "quoteFollowup": {
+      "passed": 39,
+      "files": 4,
+      "workers": 1,
+      "log": "artifacts/structural-rtl-quote-contract-followup-20261007.log"
+    },
+    "recordedInputFollowup": {
+      "passed": 3,
+      "platform": "Windows",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/code-input-event-frozen-20261007.log",
+      "nativeAndFountainInsertion": "literal edited",
+      "fountainKeydowns": 8,
+      "fountainBeforeinputs": 7,
+      "undo": "literal restored in all three engines"
+    },
+    "visual": "Nine native/raw-source/Fountain screenshots directly inspected; videos/traces retained, not watched",
+    "completeCloud": "pending for follow-up source",
+    "performanceThresholds": "unchanged"
+  },
+  "release": "npm 0.4.0-beta.2 unchanged; PROD-04 remains Partial",
+  "sourceHashes": [
+    {
+      "path": "src/extensions/nodes/blockquote.ts",
+      "sha256": "9846fc78d7abf636cc9419f40089c4ad80ab58ea65e5201b704b9027681c5ee4"
+    },
+    {
+      "path": "tests/browser/code-native-focus-journey.ts",
+      "sha256": "b2c55f489453d0ada463ad008b790de0ba1abb0a98adf41fb430b5c2648f12cf"
+    }
+  ],
+  "visualReview": [
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-fountain-edit.png",
+      "sha256": "56cfbabdbf071896deac10b4642b34bb6df29f1fc4ab2177b0b8d9fbb383b14b",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-native-source-edit.png",
+      "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-fountain-edit.png",
+      "sha256": "e9d78c7adf2a270a35f5295c0b1ebc62f6aaba7287e88196b669a45961d58ec6",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-edit.png",
+      "sha256": "4802347d51915d63be6ace930d1fa51ac9acbd4415eed6eaf1d3bc4868a8591c",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-native-source-edit.png",
+      "sha256": "ef11d869d9adbc3a26e01bc8fec501f4c8a79a8f28b2752df1326f4496d9e823",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-fountain-edit.png",
+      "sha256": "007351b900d918ed33a566f5ff6460306e8966f21188e838d8e6dcab03d41d8a",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-input-event-frozen-20261007/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-native-source-edit.png",
+      "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332",
+      "review": "directly inspected"
+    }
+  ]
+}

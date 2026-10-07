@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Restore ordinary quotes' existing attribute-free DOM output after complete
+  Linux tests exposed an empty-attributes regression. Keep structural direction
+  and explicit appearance unchanged. Add passive native/Fountain code-input
+  event, editability, document-focus and caret/widget diagnostics; native source
+  insertion remains a failing assertion but no longer prevents collecting actual
+  Fountain typing/undo. No runtime code-input workaround or threshold relaxation.
 - Retain optional validated LTR/RTL/auto direction on built-in lists/items,
   quotations, tables/rows/cells and definition lists in browser/server HTML,
   JSON, Yjs and HTML readers. Child blocks inherit parent changes. Whole-node

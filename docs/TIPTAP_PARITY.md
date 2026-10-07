@@ -1,5 +1,19 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Cloud follow-up for `9f56b8b` (2026-10-07, Unreleased): all nine independent
+Linux structural-direction/alignment/shared-auto preflights pass; Pages deploys.
+The complete unit run is **2,723 passed / one failed**: an ordinary quote gained
+an empty DOM attributes object. Restore its existing `['blockquote', 0]`
+contract rather than changing the assertion; 39 focused follow-up tests pass.
+Performance fails the unchanged local 1,000→10,000 growth cap at **15.11× / 15×**
+(0.05 ms / 0.79 ms rounded medians); do not certify it or relax the cap. Lean
+passes. WebKit still fails native code insertion before Fountain typing.
+New passive key/input/caret diagnostics retain that failing assertion while
+allowing actual Fountain typing/undo evidence to be collected. This is not an
+editing-oracle replacement or runtime input fix. The older `cdb98b7` full matrix
+is now terminal: **689 passed, 16 skipped, two WebKit code-input failures**.
+The quote repair and diagnostic follow-up still need complete cloud checks.
+
 Current structural-direction implementation (2026-10-07, Unreleased): optional
 validated LTR/RTL/auto attributes now retain list/item, quote, table/row/cell and
 definition-list context in both HTML importers, JSON, Yjs and HTML readers.

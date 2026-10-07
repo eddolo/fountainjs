@@ -1,0 +1,1015 @@
+browser	Run pnpm test:browser	﻿2026-10-07T21:42:17.3288101Z ##[group]Run pnpm test:browser
+browser	Run pnpm test:browser	2026-10-07T21:42:17.3288432Z ^[[36;1mpnpm test:browser^[[0m
+browser	Run pnpm test:browser	2026-10-07T21:42:17.3350174Z shell: /usr/bin/bash -e {0}
+browser	Run pnpm test:browser	2026-10-07T21:42:17.3350481Z env:
+browser	Run pnpm test:browser	2026-10-07T21:42:17.3350782Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+browser	Run pnpm test:browser	2026-10-07T21:42:17.3351163Z ##[endgroup]
+browser	Run pnpm test:browser	2026-10-07T21:42:17.7800946Z $ playwright test
+browser	Run pnpm test:browser	2026-10-07T21:42:18.7666955Z [WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+browser	Run pnpm test:browser	2026-10-07T21:42:18.7667934Z 
+browser	Run pnpm test:browser	2026-10-07T21:42:21.1469204Z [WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+browser	Run pnpm test:browser	2026-10-07T21:42:21.1470113Z 
+browser	Run pnpm test:browser	2026-10-07T21:42:23.5193328Z [WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+browser	Run pnpm test:browser	2026-10-07T21:42:23.5194103Z 
+browser	Run pnpm test:browser	2026-10-07T21:42:28.1446900Z 
+browser	Run pnpm test:browser	2026-10-07T21:42:28.1447614Z Running 707 tests using 2 workers
+browser	Run pnpm test:browser	2026-10-07T21:42:28.1447908Z 
+browser	Run pnpm test:browser	2026-10-07T21:42:29.1311080Z [1/707] [chromium] › tests/browser/editor.spec.ts:39:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+browser	Run pnpm test:browser	2026-10-07T21:42:29.1330307Z [2/707] [chromium] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface
+browser	Run pnpm test:browser	2026-10-07T21:42:32.9231470Z [3/707] [chromium] › tests/browser/editor.spec.ts:47:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:42:34.3498392Z [4/707] [chromium] › tests/browser/editor.spec.ts:51:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history
+browser	Run pnpm test:browser	2026-10-07T21:42:37.3058186Z [5/707] [chromium] › tests/browser/editor.spec.ts:55:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+browser	Run pnpm test:browser	2026-10-07T21:42:38.5600430Z [6/707] [chromium] › tests/browser/editor.spec.ts:59:1 › separates the homepage framework descenders from the italic extend line
+browser	Run pnpm test:browser	2026-10-07T21:42:42.2328404Z [7/707] [chromium] › tests/browser/editor.spec.ts:78:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML
+browser	Run pnpm test:browser	2026-10-07T21:42:45.2590023Z [8/707] [chromium] › tests/browser/editor.spec.ts:82:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo
+browser	Run pnpm test:browser	2026-10-07T21:42:47.1299110Z [9/707] [chromium] › tests/browser/editor.spec.ts:86:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening
+browser	Run pnpm test:browser	2026-10-07T21:42:50.0140114Z [10/707] [chromium] › tests/browser/editor.spec.ts:90:1 › retains HTML link navigation and literal Markdown data through real editing and reopening
+browser	Run pnpm test:browser	2026-10-07T21:42:54.0097344Z [11/707] [chromium] › tests/browser/editor.spec.ts:94:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening
+browser	Run pnpm test:browser	2026-10-07T21:42:59.2815801Z [12/707] [chromium] › tests/browser/editor.spec.ts:98:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions
+browser	Run pnpm test:browser	2026-10-07T21:42:59.9984302Z [13/707] [chromium] › tests/browser/editor.spec.ts:102:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening
+browser	Run pnpm test:browser	2026-10-07T21:43:03.8803284Z [14/707] [chromium] › tests/browser/editor.spec.ts:106:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening
+browser	Run pnpm test:browser	2026-10-07T21:43:05.2621958Z [15/707] [chromium] › tests/browser/editor.spec.ts:110:1 › imports private files in the conversion lab with reports and export reopen
+browser	Run pnpm test:browser	2026-10-07T21:43:06.0957580Z [16/707] [chromium] › tests/browser/editor.spec.ts:114:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen
+browser	Run pnpm test:browser	2026-10-07T21:43:10.9788172Z [17/707] [chromium] › tests/browser/editor.spec.ts:119:3 › retains partial Markdown em scope through real typing history and canonical reopening
+browser	Run pnpm test:browser	2026-10-07T21:43:11.5856851Z [18/707] [chromium] › tests/browser/editor.spec.ts:119:3 › retains partial Markdown strong scope through real typing history and canonical reopening
+browser	Run pnpm test:browser	2026-10-07T21:43:12.9705770Z [19/707] [chromium] › tests/browser/editor.spec.ts:124:1 › submits resets and disables a native form-associated Web Component
+browser	Run pnpm test:browser	2026-10-07T21:43:13.4887121Z [20/707] [chromium] › tests/browser/editor.spec.ts:128:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+browser	Run pnpm test:browser	2026-10-07T21:43:16.1915099Z [21/707] [chromium] › tests/browser/editor.spec.ts:132:1 › preserves inert HTML comments through human editing source and reader output
+browser	Run pnpm test:browser	2026-10-07T21:43:18.6719361Z [22/707] [chromium] › tests/browser/editor.spec.ts:136:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard
+browser	Run pnpm test:browser	2026-10-07T21:43:21.3587132Z [23/707] [chromium] › tests/browser/editor.spec.ts:141:1 › retains cleared anonymous flow through real cut save reopen and continued editing
+browser	Run pnpm test:browser	2026-10-07T21:43:23.0728303Z [24/707] [chromium] › tests/browser/editor.spec.ts:145:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output
+browser	Run pnpm test:browser	2026-10-07T21:43:25.7096942Z [25/707] [chromium] › tests/browser/editor.spec.ts:149:1 › retains literal flow newlines through actual Markdown export and source reimport
+browser	Run pnpm test:browser	2026-10-07T21:43:28.4497207Z [26/707] [chromium] › tests/browser/editor.spec.ts:153:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening
+browser	Run pnpm test:browser	2026-10-07T21:43:28.8529221Z [27/707] [chromium] › tests/browser/editor.spec.ts:157:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening
+browser	Run pnpm test:browser	2026-10-07T21:43:32.7937781Z [28/707] [chromium] › tests/browser/editor.spec.ts:161:1 › authors sections with properties, empty content, undo and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:43:33.8679170Z [29/707] [chromium] › tests/browser/editor.spec.ts:165:1 › preserves optional section containers through real editing and reader output
+browser	Run pnpm test:browser	2026-10-07T21:43:37.2432063Z [30/707] [chromium] › tests/browser/editor.spec.ts:169:1 › edits and reopens a Word glossary with term and description roles
+browser	Run pnpm test:browser	2026-10-07T21:43:39.0881219Z [31/707] [chromium] › tests/browser/editor.spec.ts:173:1 › imports and edits Word content controls without losing visible content
+browser	Run pnpm test:browser	2026-10-07T21:43:43.2630194Z [32/707] [chromium] › tests/browser/editor.spec.ts:195:1 › preserves code endings through source recovery and reader handoff
+browser	Run pnpm test:browser	2026-10-07T21:43:44.5857299Z [33/707] [chromium] › tests/browser/editor.spec.ts:199:1 › edits definition lists and reopens a glossary in a reader
+browser	Run pnpm test:browser	2026-10-07T21:43:49.2699372Z [34/707] [chromium] › tests/browser/editor.spec.ts:203:1 › edits registered HTML wrappers after Markdown source recovery
+browser	Run pnpm test:browser	2026-10-07T21:43:49.8727857Z [35/707] [chromium] › tests/browser/editor.spec.ts:207:1 › retains the complete document through pointer and keyboard output-format changes
+browser	Run pnpm test:browser	2026-10-07T21:43:51.6066937Z [36/707] [chromium] › tests/browser/editor.spec.ts:211:1 › recovers nested Markdown lists and quotes through an editor and reader
+browser	Run pnpm test:browser	2026-10-07T21:44:01.5792810Z [37/707] [chromium] › tests/browser/editor.spec.ts:215:1 › edits opaque code labels and reopens them safely in a reader
+browser	Run pnpm test:browser	2026-10-07T21:44:02.0869261Z [38/707] [chromium] › tests/browser/editor.spec.ts:220:1 › guards editor actions against page reloads without suppressing failures
+browser	Run pnpm test:browser	2026-10-07T21:44:04.1277065Z [39/707] [chromium] › tests/browser/editor.spec.ts:230:1 › recovers paragraph HTML into editable blocks and a reopened reader
+browser	Run pnpm test:browser	2026-10-07T21:44:06.7330183Z [40/707] [chromium] › tests/browser/editor.spec.ts:234:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+browser	Run pnpm test:browser	2026-10-07T21:44:11.0581145Z [41/707] [chromium] › tests/browser/editor.spec.ts:238:1 › preserves headerless and mixed tables through source and file handoff
+browser	Run pnpm test:browser	2026-10-07T21:44:15.0858432Z [42/707] [chromium] › tests/browser/editor.spec.ts:242:1 › retains HTML block formatting through server import, paste and draft handoff
+browser	Run pnpm test:browser	2026-10-07T21:44:21.2324308Z [43/707] [chromium] › tests/browser/editor.spec.ts:246:1 › discovers product workflows and preserves separate task drafts and histories
+browser	Run pnpm test:browser	2026-10-07T21:44:24.2351633Z [44/707] [chromium] › tests/browser/editor.spec.ts:250:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff
+browser	Run pnpm test:browser	2026-10-07T21:44:28.6269036Z [45/707] [chromium] › tests/browser/editor.spec.ts:254:1 › retains literal text lines through editing and Markdown handoff
+browser	Run pnpm test:browser	2026-10-07T21:44:32.2973841Z [46/707] [chromium] › tests/browser/editor.spec.ts:258:1 › keeps literal syntax unformatted through visual edits and Markdown reopen
+browser	Run pnpm test:browser	2026-10-07T21:44:32.5318661Z [47/707] [chromium] › tests/browser/editor.spec.ts:262:1 › chooses literal address import and retains links through DOCX handoff
+browser	Run pnpm test:browser	2026-10-07T21:44:36.2026937Z [48/707] [chromium] › tests/browser/editor.spec.ts:266:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:44:39.7278148Z [49/707] [chromium] › tests/browser/editor.spec.ts:270:1 › issue workflow preserves root references and validates local image files
+browser	Run pnpm test:browser	2026-10-07T21:44:41.1557301Z [50/707] [chromium] › tests/browser/editor.spec.ts:302:1 › issue workflow preserves reference prefixes and reports container fallback
+browser	Run pnpm test:browser	2026-10-07T21:44:42.9211777Z [51/707] [chromium] › tests/browser/editor.spec.ts:326:1 › reopens a full HTML report without promoting page metadata into editor content
+browser	Run pnpm test:browser	2026-10-07T21:44:44.6642256Z [52/707] [chromium] › tests/browser/editor.spec.ts:330:1 › matches native document parsing for HTML envelopes, recovery, and noscript
+browser	Run pnpm test:browser	2026-10-07T21:44:46.5553672Z [53/707] [chromium] › tests/browser/editor.spec.ts:344:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export
+browser	Run pnpm test:browser	2026-10-07T21:44:47.5995831Z [54/707] [chromium] › tests/browser/editor.spec.ts:348:1 › exports independent DOCX list starts and renders the same procedure beside the editor
+browser	Run pnpm test:browser	2026-10-07T21:44:49.6207041Z [55/707] [chromium] › tests/browser/editor.spec.ts:352:1 › retains zero-based list numbers through keyboard outdent history and export
+browser	Run pnpm test:browser	2026-10-07T21:44:51.0319788Z [56/707] [chromium] › tests/browser/editor.spec.ts:356:1 › imports ordered-list starts like the native browser integer parser
+browser	Run pnpm test:browser	2026-10-07T21:44:53.4407980Z [57/707] [chromium] › tests/browser/editor.spec.ts:370:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup
+browser	Run pnpm test:browser	2026-10-07T21:44:53.4547583Z [58/707] [chromium] › tests/browser/editor.spec.ts:374:1 › disposes Svelte custom block views before their owned engine
+browser	Run pnpm test:browser	2026-10-07T21:44:55.4463356Z [59/707] [chromium] › tests/browser/editor.spec.ts:383:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal
+browser	Run pnpm test:browser	2026-10-07T21:45:01.6752784Z [60/707] [chromium] › tests/browser/editor.spec.ts:387:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts
+browser	Run pnpm test:browser	2026-10-07T21:45:03.0900732Z [61/707] [chromium] › tests/browser/editor.spec.ts:391:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding
+browser	Run pnpm test:browser	2026-10-07T21:45:08.0591216Z [62/707] [chromium] › tests/browser/editor.spec.ts:395:1 › saves and reopens equation files with source, references and history intact
+browser	Run pnpm test:browser	2026-10-07T21:45:08.8412401Z [63/707] [chromium] › tests/browser/editor.spec.ts:399:1 › recovers from textless replacement for native typing, lines and history
+browser	Run pnpm test:browser	2026-10-07T21:45:10.8766167Z [64/707] [chromium] › tests/browser/editor.spec.ts:403:1 › renders labelled equations and reader links through real editing and recovery
+browser	Run pnpm test:browser	2026-10-07T21:45:16.5360031Z [65/707] [chromium] › tests/browser/editor.spec.ts:407:1 › keeps moved math source attached to its formula through native editing, undo, and export
+browser	Run pnpm test:browser	2026-10-07T21:45:17.8457151Z [66/707] [chromium] › tests/browser/editor.spec.ts:411:1 › imports the published TeX table with visible losses and editable numeric values
+browser	Run pnpm test:browser	2026-10-07T21:45:19.6199014Z [67/707] [chromium] › tests/browser/editor.spec.ts:495:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport
+browser	Run pnpm test:browser	2026-10-07T21:45:20.6179791Z [68/707] [chromium] › tests/browser/editor.spec.ts:523:1 › renders, edits, and measures portable page intent in a real browser
+browser	Run pnpm test:browser	2026-10-07T21:45:21.7487373Z [69/707] [chromium] › tests/browser/editor.spec.ts:592:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments
+browser	Run pnpm test:browser	2026-10-07T21:45:22.1587297Z [70/707] [chromium] › tests/browser/editor.spec.ts:686:1 › continues measured long footnotes through editable and print page projections
+browser	Run pnpm test:browser	2026-10-07T21:45:23.0027732Z [71/707] [chromium] › tests/browser/editor.spec.ts:794:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss
+browser	Run pnpm test:browser	2026-10-07T21:45:24.7990686Z [72/707] [chromium] › tests/browser/editor.spec.ts:902:1 › paginates imported styled semantic HTML without structural or PDF text loss
+browser	Run pnpm test:browser	2026-10-07T21:45:26.5515503Z [73/707] [chromium] › tests/browser/editor.spec.ts:1047:1 › uses a host print renderer without moving or exposing live custom DOM
+browser	Run pnpm test:browser	2026-10-07T21:45:27.4146908Z [74/707] [chromium] › tests/browser/editor.spec.ts:1070:1 › projects exact A4 and Letter print sheets in every browser engine
+browser	Run pnpm test:browser	2026-10-07T21:45:27.6477299Z [75/707] [chromium] › tests/browser/editor.spec.ts:1187:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+browser	Run pnpm test:browser	2026-10-07T21:45:29.3919068Z [76/707] [chromium] › tests/browser/editor.spec.ts:1227:1 › keeps 1,000-block pagination reflow local to the changed block
+browser	Run pnpm test:browser	2026-10-07T21:45:29.4900476Z [77/707] [chromium] › tests/browser/editor.spec.ts:1239:1 › bounds alternating edge reflow across 5,000 rendered page blocks
+browser	Run pnpm test:browser	2026-10-07T21:45:30.7604810Z [78/707] [chromium] › tests/browser/editor.spec.ts:1262:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal
+browser	Run pnpm test:browser	2026-10-07T21:45:32.2545388Z [79/707] [chromium] › tests/browser/editor.spec.ts:1288:1 › edits, selects, and composes across guarded page shells in one contenteditable
+browser	Run pnpm test:browser	2026-10-07T21:45:33.3106974Z [80/707] [chromium] › tests/browser/editor.spec.ts:1364:1 › keeps one paragraph editable when its measured lines span page shells
+browser	Run pnpm test:browser	2026-10-07T21:45:34.1811347Z [81/707] [chromium] › tests/browser/editor.spec.ts:1491:1 › maps carets, ranges, and composition around injected paragraph page gaps
+browser	Run pnpm test:browser	2026-10-07T21:45:35.3360482Z [82/707] [chromium] › tests/browser/editor.spec.ts:1595:1 › keeps one canonical ordered list editable and numbered across page shells
+browser	Run pnpm test:browser	2026-10-07T21:45:36.0002603Z [83/707] [chromium] › tests/browser/editor.spec.ts:1730:52 › honours explicit table repetition independently of cell roles (ordinary)
+browser	Run pnpm test:browser	2026-10-07T21:45:37.2830243Z [84/707] [chromium] › tests/browser/editor.spec.ts:1730:52 › honours explicit table repetition independently of cell roles (off)
+browser	Run pnpm test:browser	2026-10-07T21:45:38.3866374Z [85/707] [chromium] › tests/browser/editor.spec.ts:1763:1 › keeps one canonical table editable with repeated headers across page shells
+browser	Run pnpm test:browser	2026-10-07T21:45:39.4678347Z [86/707] [chromium] › tests/browser/editor.spec.ts:1913:1 › keeps merged header and body rowspans intact across editable table pages
+browser	Run pnpm test:browser	2026-10-07T21:45:40.7646221Z [87/707] [chromium] › tests/browser/editor.spec.ts:1979:1 › reports an oversized table row without clipping or splitting its editable model
+browser	Run pnpm test:browser	2026-10-07T21:45:41.4126911Z [88/707] [chromium] › tests/browser/editor.spec.ts:2021:1 › keeps canonical page furniture and footnotes editable while projecting every page copy
+browser	Run pnpm test:browser	2026-10-07T21:45:42.5609014Z [89/707] [chromium] › tests/browser/editor.spec.ts:2106:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages
+browser	Run pnpm test:browser	2026-10-07T21:45:43.5303060Z [90/707] [chromium] › tests/browser/editor.spec.ts:2241:1 › keeps tracked review and Yjs live between list items split across pages
+browser	Run pnpm test:browser	2026-10-07T21:45:44.9051209Z [91/707] [chromium] › tests/browser/editor.spec.ts:2307:1 › keeps tracked review and Yjs live between table rows split across pages
+browser	Run pnpm test:browser	2026-10-07T21:45:45.9480385Z [92/707] [chromium] › tests/browser/editor.spec.ts:2384:13 › keeps comments attached and synchronized inside a continued list
+browser	Run pnpm test:browser	2026-10-07T21:45:47.5391637Z [93/707] [chromium] › tests/browser/editor.spec.ts:2384:13 › keeps comments attached and synchronized inside a continued table
+browser	Run pnpm test:browser	2026-10-07T21:45:48.8576875Z [94/707] [chromium] › tests/browser/editor.spec.ts:2438:1 › keeps tracked review and Yjs live inside a paragraph split across pages
+browser	Run pnpm test:browser	2026-10-07T21:45:49.6060992Z [95/707] [chromium] › tests/browser/editor.spec.ts:2499:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries
+browser	Run pnpm test:browser	2026-10-07T21:45:51.6660967Z [96/707] [chromium] › tests/browser/editor.spec.ts:2574:1 › tracks real browser insertion and replacement with reversible review decisions
+browser	Run pnpm test:browser	2026-10-07T21:45:51.7132457Z [97/707] [chromium] › tests/browser/editor.spec.ts:2603:1 › runs the package-backed full-text tracked review panel
+browser	Run pnpm test:browser	2026-10-07T21:45:52.9843334Z [98/707] [chromium] › tests/browser/editor.spec.ts:2621:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration
+browser	Run pnpm test:browser	2026-10-07T21:45:54.6456878Z [99/707] [chromium] › tests/browser/editor.spec.ts:2651:1 › edits and persists package-backed collapsible details in the public playground
+browser	Run pnpm test:browser	2026-10-07T21:45:56.0866808Z [100/707] [chromium] › tests/browser/editor.spec.ts:2677:1 › edits semantic ruby annotations through the package-backed public playground
+browser	Run pnpm test:browser	2026-10-07T21:45:57.9941143Z [101/707] [chromium] › tests/browser/editor.spec.ts:2707:1 › converges live and offline Yjs edits and keeps collaborative undo author-local
+browser	Run pnpm test:browser	2026-10-07T21:45:59.2003527Z [102/707] [chromium] › tests/browser/editor.spec.ts:2736:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser
+browser	Run pnpm test:browser	2026-10-07T21:45:59.4477845Z [103/707] [chromium] › tests/browser/editor.spec.ts:2761:1 › round-trips variable-delimiter Markdown code spans in the browser package
+browser	Run pnpm test:browser	2026-10-07T21:46:00.3055288Z [104/707] [chromium] › tests/browser/editor.spec.ts:3329:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items
+browser	Run pnpm test:browser	2026-10-07T21:46:00.7517967Z [105/707] [chromium] › tests/browser/editor.spec.ts:3359:1 › round-trips marker-relative list containers and exact code whitespace
+browser	Run pnpm test:browser	2026-10-07T21:46:01.8107400Z [106/707] [chromium] › tests/browser/editor.spec.ts:3403:1 › preserves raw Markdown and inert frontmatter through the browser package
+browser	Run pnpm test:browser	2026-10-07T21:46:02.8347344Z [107/707] [chromium] › tests/browser/editor.spec.ts:3429:1 › edits through real beforeinput events and undoes a Markdown input rule
+browser	Run pnpm test:browser	2026-10-07T21:46:04.0224989Z [108/707] [chromium] › tests/browser/editor.spec.ts:3443:1 › groups adjacent browser typing and respects explicit undo boundaries
+browser	Run pnpm test:browser	2026-10-07T21:46:04.8909100Z [109/707] [chromium] › tests/browser/editor.spec.ts:3464:3 › preserves replacement formatting across subsequent typing input
+browser	Run pnpm test:browser	2026-10-07T21:46:05.2727354Z [110/707] [chromium] › tests/browser/editor.spec.ts:3464:3 › preserves replacement formatting across subsequent composition input
+browser	Run pnpm test:browser	2026-10-07T21:46:06.0927479Z [111/707] [chromium] › tests/browser/editor.spec.ts:3495:1 › commits cross-browser composition sequences once and supports replacement input
+browser	Run pnpm test:browser	2026-10-07T21:46:06.5531492Z [112/707] [chromium] › tests/browser/editor.spec.ts:3527:1 › maps decorations through typing without persisting widget content
+browser	Run pnpm test:browser	2026-10-07T21:46:07.2356533Z [113/707] [chromium] › tests/browser/editor.spec.ts:3542:1 › highlights editable code and updates language metadata through public commands
+browser	Run pnpm test:browser	2026-10-07T21:46:07.7209840Z [114/707] [chromium] › tests/browser/editor.spec.ts:3572:1 › runs a view-focused chain and checks it without preview side effects
+browser	Run pnpm test:browser	2026-10-07T21:46:08.5055236Z [115/707] [chromium] › tests/browser/editor.spec.ts:3593:1 › applies every configured paste-rule match through a browser paste event
+browser	Run pnpm test:browser	2026-10-07T21:46:08.8423126Z [116/707] [chromium] › tests/browser/editor.spec.ts:3611:1 › autolinks, safely activates, edits, and removes links in a real browser
+browser	Run pnpm test:browser	2026-10-07T21:46:09.6926969Z [117/707] [chromium] › tests/browser/editor.spec.ts:3642:1 › preserves structured rich HTML from a real browser clipboard event
+browser	Run pnpm test:browser	2026-10-07T21:46:10.3578603Z [118/707] [chromium] › tests/browser/editor.spec.ts:3663:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting
+browser	Run pnpm test:browser	2026-10-07T21:46:10.7699238Z [119/707] [chromium] › tests/browser/editor.spec.ts:3684:1 › honors strict raw HTML token boundaries in the public Markdown pipeline
+browser	Run pnpm test:browser	2026-10-07T21:46:11.6156881Z [120/707] [chromium] › tests/browser/editor.spec.ts:3701:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists
+browser	Run pnpm test:browser	2026-10-07T21:46:12.9353507Z [121/707] [chromium] › tests/browser/editor.spec.ts:3721:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks
+browser	Run pnpm test:browser	2026-10-07T21:46:13.5559387Z [122/707] [chromium] › tests/browser/editor.spec.ts:3744:1 › retains standalone non-collapsible Unicode text during rich paste
+browser	Run pnpm test:browser	2026-10-07T21:46:14.4760267Z [123/707] [chromium] › tests/browser/editor.spec.ts:3761:1 › pastes empty formatting and applies it to subsequently typed text
+browser	Run pnpm test:browser	2026-10-07T21:46:14.8574791Z [124/707] [chromium] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph
+browser	Run pnpm test:browser	2026-10-07T21:46:15.6854397Z [125/707] [chromium] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph from its label area
+browser	Run pnpm test:browser	2026-10-07T21:46:16.4798126Z [126/707] [chromium] › tests/browser/editor.spec.ts:3812:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine
+browser	Run pnpm test:browser	2026-10-07T21:46:16.9353255Z [127/707] [chromium] › tests/browser/editor.spec.ts:3865:1 › imports an extension-defined HTML node through the schema contract
+browser	Run pnpm test:browser	2026-10-07T21:46:17.9973729Z [128/707] [chromium] › tests/browser/editor.spec.ts:3890:1 › pastes mixed nested HTML lists without flattening their hierarchy
+browser	Run pnpm test:browser	2026-10-07T21:46:18.3577890Z [129/707] [chromium] › tests/browser/editor.spec.ts:3913:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys
+browser	Run pnpm test:browser	2026-10-07T21:46:19.1690570Z [130/707] [chromium] › tests/browser/editor.spec.ts:3943:1 › edits bidirectional and deeply nested text by logical document positions
+browser	Run pnpm test:browser	2026-10-07T21:46:19.6636691Z [131/707] [chromium] › tests/browser/editor.spec.ts:3970:1 › moves a selected top-level block through native drag data
+browser	Run pnpm test:browser	2026-10-07T21:46:20.3433737Z [132/707] [chromium] › tests/browser/editor.spec.ts:3988:1 › shows a host-replaceable drop cursor for inline text and atomic block targets
+browser	Run pnpm test:browser	2026-10-07T21:46:20.9572017Z [133/707] [chromium] › tests/browser/editor.spec.ts:4049:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo
+browser	Run pnpm test:browser	2026-10-07T21:46:21.3659675Z [134/707] [chromium] › tests/browser/editor.spec.ts:4124:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes
+browser	Run pnpm test:browser	2026-10-07T21:46:22.3360697Z [135/707] [chromium] › tests/browser/editor.spec.ts:4220:1 › replaces a DOM selection that crosses block boundaries
+browser	Run pnpm test:browser	2026-10-07T21:46:23.4268835Z [136/707] [chromium] › tests/browser/editor.spec.ts:4259:1 › keeps a visible editable paragraph after a terminal non-text block
+browser	Run pnpm test:browser	2026-10-07T21:46:24.1618381Z [137/707] [chromium] › tests/browser/editor.spec.ts:4281:1 › uses Ctrl+A as an explicit all-document selection and replaces the document
+browser	Run pnpm test:browser	2026-10-07T21:46:24.7136267Z [138/707] [chromium] › tests/browser/editor.spec.ts:4293:1 › selects and deletes a block image through real pointer and keyboard input
+browser	Run pnpm test:browser	2026-10-07T21:46:25.3918271Z [139/707] [chromium] › tests/browser/editor.spec.ts:4316:1 › edits, aligns, resizes, and undoes a production image through accessible controls
+browser	Run pnpm test:browser	2026-10-07T21:46:26.1169266Z [140/707] [chromium] › tests/browser/editor.spec.ts:4372:1 › inserts and removes a true inline image without breaking surrounding text
+browser	Run pnpm test:browser	2026-10-07T21:46:26.9770108Z [141/707] [chromium] › tests/browser/editor.spec.ts:4390:1 › tracks and cancels browser-native image upload tasks
+browser	Run pnpm test:browser	2026-10-07T21:46:27.2272641Z [142/707] [chromium] › tests/browser/editor.spec.ts:4430:1 › extends and replaces a rectangular cell selection through real pointer input
+browser	Run pnpm test:browser	2026-10-07T21:46:28.2617969Z [143/707] [chromium] › tests/browser/editor.spec.ts:4458:1 › keeps mixed-format links intact through backward selection typing and history
+browser	Run pnpm test:browser	2026-10-07T21:46:28.8176974Z [144/707] [chromium] › tests/browser/editor.spec.ts:4490:1 › reaches overflowing code by keyboard and leaves it without modifying the document
+browser	Run pnpm test:browser	2026-10-07T21:46:29.7244042Z [145/707] [chromium] › tests/browser/editor.spec.ts:4536:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+browser	Run pnpm test:browser	2026-10-07T21:46:30.4374425Z [146/707] [chromium] › tests/browser/editor.spec.ts:4560:1 › announces table resize values through real keyboard, pointer and history workflows
+browser	Run pnpm test:browser	2026-10-07T21:46:31.0669474Z [147/707] [chromium] › tests/browser/editor.spec.ts:4613:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids
+browser	Run pnpm test:browser	2026-10-07T21:46:32.1395353Z [148/707] [chromium] › tests/browser/editor.spec.ts:4686:1 › keeps normal paste while offering bounded editor-local clipboard slots
+browser	Run pnpm test:browser	2026-10-07T21:46:32.9462060Z [149/707] [chromium] › tests/browser/editor.spec.ts:4725:1 › renders and types into a structural gap as a new block
+browser	Run pnpm test:browser	2026-10-07T21:46:33.1268050Z [150/707] [chromium] › tests/browser/editor.spec.ts:4737:1 › edits Lean without a mandatory server and renders transient provider diagnostics
+browser	Run pnpm test:browser	2026-10-07T21:46:34.1702989Z [151/707] [chromium] › tests/browser/editor.spec.ts:4764:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM
+browser	Run pnpm test:browser	2026-10-07T21:46:34.4862854Z [152/707] [chromium] › tests/browser/editor.spec.ts:4801:1 › loads the public React playground without console or page errors
+browser	Run pnpm test:browser	2026-10-07T21:46:35.3979533Z [153/707] [chromium] › tests/browser/editor.spec.ts:4826:1 › publishes actionable extension authoring, conformance, and doctor guidance
+browser	Run pnpm test:browser	2026-10-07T21:46:36.9976522Z [154/707] [chromium] › tests/browser/editor.spec.ts:4844:1 › pairs the optional AI demo with developer recipes for every public workflow
+browser	Run pnpm test:browser	2026-10-07T21:46:37.4946715Z [155/707] [chromium] › tests/browser/editor.spec.ts:4865:1 › runs the public two-editor collaboration demo with presence and author-local undo
+browser	Run pnpm test:browser	2026-10-07T21:46:39.1639562Z [156/707] [chromium] › tests/browser/editor.spec.ts:4932:1 › replaces both live collaboration documents without remounting the public editors
+browser	Run pnpm test:browser	2026-10-07T21:46:40.5146920Z [157/707] [chromium] › tests/browser/editor.spec.ts:4991:1 › merges nested collaborative settings through the public two-editor demo
+browser	Run pnpm test:browser	2026-10-07T21:46:42.5354142Z [158/707] [chromium] › tests/browser/editor.spec.ts:5010:1 › keeps headline phrases together and makes full-page navigation explicit
+browser	Run pnpm test:browser	2026-10-07T21:46:43.6203133Z [159/707] [chromium] › tests/browser/editor.spec.ts:5035:1 › runs shared threaded comments through the public provider-neutral review panel
+browser	Run pnpm test:browser	2026-10-07T21:46:46.2380527Z [160/707] [chromium] › tests/browser/editor.spec.ts:5092:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground
+browser	Run pnpm test:browser	2026-10-07T21:46:46.9386770Z [161/707] [chromium] › tests/browser/editor.spec.ts:5153:1 › runs grouped default and product slash commands in the public React playground
+browser	Run pnpm test:browser	2026-10-07T21:46:50.3576825Z [162/707] [chromium] › tests/browser/editor.spec.ts:5184:1 › runs accessible bubble and floating menus in the public React playground
+browser	Run pnpm test:browser	2026-10-07T21:46:52.6699174Z [163/707] [chromium] › tests/browser/editor.spec.ts:5226:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs
+browser	Run pnpm test:browser	2026-10-07T21:46:54.2107532Z [164/707] [chromium] › tests/browser/editor.spec.ts:5263:1 › applies the complete text-style suite through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:46:55.7276995Z [165/707] [chromium] › tests/browser/editor.spec.ts:5324:1 › uses the public React image workflow for metadata, alignment, and replacement
+browser	Run pnpm test:browser	2026-10-07T21:46:58.5687183Z [166/707] [chromium] › tests/browser/editor.spec.ts:5368:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+browser	Run pnpm test:browser	2026-10-07T21:46:59.8886201Z [167/707] [chromium] › tests/browser/editor.spec.ts:5486:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+browser	Run pnpm test:browser	2026-10-07T21:47:02.6067056Z [168/707] [chromium] › tests/browser/editor.spec.ts:5513:1 › keeps table configuration labels legible on pointer hover
+browser	Run pnpm test:browser	2026-10-07T21:47:05.7685231Z [169/707] [chromium] › tests/browser/editor.spec.ts:5552:1 › creates and edits a link through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:47:09.0043629Z [170/707] [chromium] › tests/browser/editor.spec.ts:5583:1 › toggles a selected block through the public React list controls
+browser	Run pnpm test:browser	2026-10-07T21:47:09.4546924Z [171/707] [chromium] › tests/browser/editor.spec.ts:5598:1 › edits code language and line numbers through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:47:12.1526870Z [172/707] [chromium] › tests/browser/editor.spec.ts:5617:1 › opens the searchable clipboard-history picker in the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:47:12.8111011Z [173/707] [chromium] › tests/browser/editor.spec.ts:5650:1 › keeps the public outline stable, hierarchical, active, and navigable
+browser	Run pnpm test:browser	2026-10-07T21:47:15.1796277Z [174/707] [chromium] › tests/browser/editor.spec.ts:5675:1 › exposes and explicitly cleans invisible text in the public playground
+browser	Run pnpm test:browser	2026-10-07T21:47:16.4898265Z [175/707] [chromium] › tests/browser/editor.spec.ts:5716:1 › runs the public plain-DOM first-class widget demo
+browser	Run pnpm test:browser	2026-10-07T21:47:19.0618668Z [176/707] [chromium] › tests/browser/editor.spec.ts:5763:1 › runs the public React first-class widget demo without losing control focus
+browser	Run pnpm test:browser	2026-10-07T21:47:19.1562736Z [177/707] [chromium] › tests/browser/editor.spec.ts:5801:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo
+browser	Run pnpm test:browser	2026-10-07T21:47:21.6047382Z [178/707] [chromium] › tests/browser/editor.spec.ts:5815:1 › retains table captions and reports their projected association in the conversion demo
+browser	Run pnpm test:browser	2026-10-07T21:47:21.7416165Z [179/707] [chromium] › tests/browser/editor.spec.ts:5832:1 › preserves complex figure content in the public Markdown conversion demo
+browser	Run pnpm test:browser	2026-10-07T21:47:24.4320955Z [180/707] [chromium] › tests/browser/editor.spec.ts:5850:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline
+browser	Run pnpm test:browser	2026-10-07T21:47:24.7139420Z [181/707] [chromium] › tests/browser/editor.spec.ts:5921:1 › records native DOCX viewer disagreements without certifying math fidelity
+browser	Run pnpm test:browser	2026-10-07T21:47:29.2936891Z [182/707] [chromium] › tests/browser/editor.spec.ts:5926:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission
+browser	Run pnpm test:browser	2026-10-07T21:47:31.1292818Z [183/707] [chromium] › tests/browser/editor.spec.ts:6042:1 › renders real KaTeX while reporting published-equation and trust failures without source loss
+browser	Run pnpm test:browser	2026-10-07T21:47:33.1167036Z [184/707] [chromium] › tests/browser/editor.spec.ts:6073:1 › edits multiline math without losing line breaks, descriptions, or undo history
+browser	Run pnpm test:browser	2026-10-07T21:47:35.8407008Z [185/707] [chromium] › tests/browser/editor.spec.ts:6110:1 › renders and inserts native math in the public DOM integration
+browser	Run pnpm test:browser	2026-10-07T21:47:38.2963030Z [186/707] [chromium] › tests/browser/editor.spec.ts:6167:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+browser	Run pnpm test:browser	2026-10-07T21:47:39.2847885Z [187/707] [chromium] › tests/browser/editor.spec.ts:6215:1 › keeps rich and multiline paste structurally predictable in the public editor
+browser	Run pnpm test:browser	2026-10-07T21:47:41.5346075Z [188/707] [chromium] › tests/browser/editor.spec.ts:6288:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+browser	Run pnpm test:browser	2026-10-07T21:47:41.7827239Z [189/707] [chromium] › tests/browser/editor.spec.ts:6355:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+browser	Run pnpm test:browser	2026-10-07T21:47:43.3847616Z [190/707] [chromium] › tests/browser/editor.spec.ts:6404:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+browser	Run pnpm test:browser	2026-10-07T21:47:43.5244124Z [191/707] [chromium] › tests/browser/editor.spec.ts:6491:1 › copies clean semantic Fountain HTML into an external browser editor
+browser	Run pnpm test:browser	2026-10-07T21:47:45.2145092Z [192/707] [chromium] › tests/browser/editor.spec.ts:6546:1 › copies readable Fountain text into a plain-text external editor
+browser	Run pnpm test:browser	2026-10-07T21:47:45.3367312Z [193/707] [chromium] › tests/browser/editor.spec.ts:6605:1 › copies math to external rich and plain-text editors without renderer controls
+browser	Run pnpm test:browser	2026-10-07T21:47:47.0353182Z [194/707] [chromium] › tests/browser/editor.spec.ts:6650:1 › renders repeated empty paragraphs and removes each visible line
+browser	Run pnpm test:browser	2026-10-07T21:47:47.8804887Z [195/707] [chromium] › tests/browser/editor.spec.ts:6680:1 › undoes and redoes real typing with both common browser keyboard chords
+browser	Run pnpm test:browser	2026-10-07T21:47:49.0469623Z [196/707] [chromium] › tests/browser/editor.spec.ts:6697:1 › keeps a backward DOM selection backward after model synchronization
+browser	Run pnpm test:browser	2026-10-07T21:47:49.6978615Z [197/707] [chromium] › tests/browser/editor.spec.ts:6721:1 › preserves a backward selection made with real keyboard input
+browser	Run pnpm test:browser	2026-10-07T21:47:50.1011916Z [198/707] [chromium] › tests/browser/editor.spec.ts:6736:1 › replaces a backward selection made by a real reverse pointer drag
+browser	Run pnpm test:browser	2026-10-07T21:47:50.9647118Z [199/707] [chromium] › tests/browser/editor.spec.ts:6772:1 › turns multi-format and multi-block selections into visible paragraph boundaries
+browser	Run pnpm test:browser	2026-10-07T21:47:51.5515557Z [200/707] [chromium] › tests/browser/editor.spec.ts:6830:1 › visibly splits and joins ordinary paragraphs with both deletion directions
+browser	Run pnpm test:browser	2026-10-07T21:47:52.7536848Z [201/707] [chromium] › tests/browser/editor.spec.ts:6855:1 › deletes an adjacent inline atom without eating surrounding text
+browser	Run pnpm test:browser	2026-10-07T21:47:52.7753851Z [202/707] [chromium] › tests/browser/editor.spec.ts:6885:1 › unwraps and exits an inserted quote with ordinary browser keys
+browser	Run pnpm test:browser	2026-10-07T21:47:53.9112870Z [203/707] [chromium] › tests/browser/editor.spec.ts:6914:1 › publishes semantic selection controls and table interaction in the demo gallery
+browser	Run pnpm test:browser	2026-10-07T21:47:56.3976757Z [204/707] [chromium] › tests/browser/editor.spec.ts:6931:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries
+browser	Run pnpm test:browser	2026-10-07T21:47:56.4257989Z [205/707] [chromium] › tests/browser/editor.spec.ts:7008:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads
+browser	Run pnpm test:browser	2026-10-07T21:48:01.0053200Z [206/707] [chromium] › tests/browser/editor.spec.ts:7053:1 › streams an optional AI proposal outside the document until review is ready
+browser	Run pnpm test:browser	2026-10-07T21:48:02.2242474Z [207/707] [chromium] › tests/browser/editor.spec.ts:7078:1 › preserves whitespace when an AI proposal ends at a formatting boundary
+browser	Run pnpm test:browser	2026-10-07T21:48:04.5481829Z [208/707] [chromium] › tests/browser/editor.spec.ts:7093:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation
+browser	Run pnpm test:browser	2026-10-07T21:48:05.5744894Z [209/707] [chromium] › tests/browser/editor.spec.ts:7121:1 › reviews generated media before the normal host upload inserts one undoable node
+browser	Run pnpm test:browser	2026-10-07T21:48:08.6748464Z [210/707] [chromium] › tests/browser/editor.spec.ts:7147:1 › reviews a schema-aware agent tool proposal before one-step apply and undo
+browser	Run pnpm test:browser	2026-10-07T21:48:11.3331476Z [211/707] [chromium] › tests/browser/editor.spec.ts:7172:1 › keeps a 1,000-block input update local and paints within budget
+browser	Run pnpm test:browser	2026-10-07T21:48:12.5727247Z [212/707] [chromium] › tests/browser/editor.spec.ts:7193:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+browser	Run pnpm test:browser	2026-10-07T21:48:12.7982952Z [213/707] [chromium] › tests/browser/editor.spec.ts:7251:1 › exports rich tables as HTML Markdown and exposes the compatibility note
+browser	Run pnpm test:browser	2026-10-07T21:48:14.5227077Z [214/707] [chromium] › tests/browser/editor.spec.ts:7273:1 › HTML comments do not insert phantom paragraphs in converted Markdown
+browser	Run pnpm test:browser	2026-10-07T21:48:16.0659576Z [215/707] [chromium] › tests/browser/editor.spec.ts:7285:1 › imported table section order matches the physically rendered source table
+browser	Run pnpm test:browser	2026-10-07T21:48:17.2593094Z [216/707] [chromium] › tests/browser/editor.spec.ts:7316:1 › imports zero-rowspan cells with the same row-group geometry in server and browser
+browser	Run pnpm test:browser	2026-10-07T21:48:19.4826250Z [217/707] [chromium] › tests/browser/editor.spec.ts:7347:1 › reconstructs HTML tables across Markdown block boundaries
+browser	Run pnpm test:browser	2026-10-07T21:48:20.6739212Z [218/707] [chromium] › tests/browser/editor.spec.ts:7368:1 › applies surrounding HTML formatting without replacing Markdown block content
+browser	Run pnpm test:browser	2026-10-07T21:48:22.2132749Z [219/707] [chromium] › tests/browser/editor.spec.ts:7381:1 › converts raw HTML blocks only when the headless demo option is enabled
+browser	Run pnpm test:browser	2026-10-07T21:48:23.1726994Z [220/707] [chromium] › tests/browser/editor.spec.ts:7397:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback
+browser	Run pnpm test:browser	2026-10-07T21:48:24.9728136Z [221/707] [chromium] › tests/browser/editor.spec.ts:7422:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces
+browser	Run pnpm test:browser	2026-10-07T21:48:27.7947049Z [222/707] [firefox] › tests/browser/editor.spec.ts:39:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+browser	Run pnpm test:browser	2026-10-07T21:48:29.0887276Z [223/707] [firefox] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface
+browser	Run pnpm test:browser	2026-10-07T21:48:33.8317912Z [224/707] [firefox] › tests/browser/editor.spec.ts:47:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:48:34.4432980Z [225/707] [firefox] › tests/browser/editor.spec.ts:51:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history
+browser	Run pnpm test:browser	2026-10-07T21:48:38.8407043Z [226/707] [firefox] › tests/browser/editor.spec.ts:55:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+browser	Run pnpm test:browser	2026-10-07T21:48:39.1570624Z [227/707] [firefox] › tests/browser/editor.spec.ts:59:1 › separates the homepage framework descenders from the italic extend line
+browser	Run pnpm test:browser	2026-10-07T21:48:44.0320740Z [228/707] [firefox] › tests/browser/editor.spec.ts:78:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML
+browser	Run pnpm test:browser	2026-10-07T21:48:44.4017341Z [229/707] [firefox] › tests/browser/editor.spec.ts:82:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo
+browser	Run pnpm test:browser	2026-10-07T21:48:49.2179078Z [230/707] [firefox] › tests/browser/editor.spec.ts:86:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening
+browser	Run pnpm test:browser	2026-10-07T21:48:49.2679188Z [231/707] [firefox] › tests/browser/editor.spec.ts:90:1 › retains HTML link navigation and literal Markdown data through real editing and reopening
+browser	Run pnpm test:browser	2026-10-07T21:48:56.9336681Z [232/707] [firefox] › tests/browser/editor.spec.ts:94:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:01.0838727Z [233/707] [firefox] › tests/browser/editor.spec.ts:98:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions
+browser	Run pnpm test:browser	2026-10-07T21:49:04.5275539Z [234/707] [firefox] › tests/browser/editor.spec.ts:102:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:06.0723177Z [235/707] [firefox] › tests/browser/editor.spec.ts:106:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:07.8805624Z [236/707] [firefox] › tests/browser/editor.spec.ts:110:1 › imports private files in the conversion lab with reports and export reopen
+browser	Run pnpm test:browser	2026-10-07T21:49:11.6262941Z [237/707] [firefox] › tests/browser/editor.spec.ts:114:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen
+browser	Run pnpm test:browser	2026-10-07T21:49:14.3043075Z [238/707] [firefox] › tests/browser/editor.spec.ts:119:3 › retains partial Markdown em scope through real typing history and canonical reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:16.5982535Z [239/707] [firefox] › tests/browser/editor.spec.ts:119:3 › retains partial Markdown strong scope through real typing history and canonical reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:16.9216178Z [240/707] [firefox] › tests/browser/editor.spec.ts:124:1 › submits resets and disables a native form-associated Web Component
+browser	Run pnpm test:browser	2026-10-07T21:49:20.4951865Z [241/707] [firefox] › tests/browser/editor.spec.ts:128:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+browser	Run pnpm test:browser	2026-10-07T21:49:20.8719072Z [242/707] [firefox] › tests/browser/editor.spec.ts:132:1 › preserves inert HTML comments through human editing source and reader output
+browser	Run pnpm test:browser	2026-10-07T21:49:27.1892961Z [243/707] [firefox] › tests/browser/editor.spec.ts:136:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard
+browser	Run pnpm test:browser	2026-10-07T21:49:29.4060732Z [244/707] [firefox] › tests/browser/editor.spec.ts:141:1 › retains cleared anonymous flow through real cut save reopen and continued editing
+browser	Run pnpm test:browser	2026-10-07T21:49:30.5433837Z [245/707] [firefox] › tests/browser/editor.spec.ts:145:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output
+browser	Run pnpm test:browser	2026-10-07T21:49:34.9478072Z [246/707] [firefox] › tests/browser/editor.spec.ts:149:1 › retains literal flow newlines through actual Markdown export and source reimport
+browser	Run pnpm test:browser	2026-10-07T21:49:37.6005697Z [247/707] [firefox] › tests/browser/editor.spec.ts:153:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:38.3227303Z [248/707] [firefox] › tests/browser/editor.spec.ts:157:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening
+browser	Run pnpm test:browser	2026-10-07T21:49:43.1170482Z [249/707] [firefox] › tests/browser/editor.spec.ts:161:1 › authors sections with properties, empty content, undo and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:49:44.6966543Z [250/707] [firefox] › tests/browser/editor.spec.ts:165:1 › preserves optional section containers through real editing and reader output
+browser	Run pnpm test:browser	2026-10-07T21:49:48.8906296Z [251/707] [firefox] › tests/browser/editor.spec.ts:169:1 › edits and reopens a Word glossary with term and description roles
+browser	Run pnpm test:browser	2026-10-07T21:49:49.2319146Z [252/707] [firefox] › tests/browser/editor.spec.ts:173:1 › imports and edits Word content controls without losing visible content
+browser	Run pnpm test:browser	2026-10-07T21:49:54.6348123Z [253/707] [firefox] › tests/browser/editor.spec.ts:195:1 › preserves code endings through source recovery and reader handoff
+browser	Run pnpm test:browser	2026-10-07T21:49:54.6856243Z [254/707] [firefox] › tests/browser/editor.spec.ts:199:1 › edits definition lists and reopens a glossary in a reader
+browser	Run pnpm test:browser	2026-10-07T21:49:59.8958290Z [255/707] [firefox] › tests/browser/editor.spec.ts:203:1 › edits registered HTML wrappers after Markdown source recovery
+browser	Run pnpm test:browser	2026-10-07T21:50:01.1376978Z [256/707] [firefox] › tests/browser/editor.spec.ts:207:1 › retains the complete document through pointer and keyboard output-format changes
+browser	Run pnpm test:browser	2026-10-07T21:50:02.8476568Z [257/707] [firefox] › tests/browser/editor.spec.ts:211:1 › recovers nested Markdown lists and quotes through an editor and reader
+browser	Run pnpm test:browser	2026-10-07T21:50:12.8796360Z [258/707] [firefox] › tests/browser/editor.spec.ts:215:1 › edits opaque code labels and reopens them safely in a reader
+browser	Run pnpm test:browser	2026-10-07T21:50:15.4398398Z [259/707] [firefox] › tests/browser/editor.spec.ts:220:1 › guards editor actions against page reloads without suppressing failures
+browser	Run pnpm test:browser	2026-10-07T21:50:17.8824968Z [260/707] [firefox] › tests/browser/editor.spec.ts:230:1 › recovers paragraph HTML into editable blocks and a reopened reader
+browser	Run pnpm test:browser	2026-10-07T21:50:18.1573584Z [261/707] [firefox] › tests/browser/editor.spec.ts:234:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+browser	Run pnpm test:browser	2026-10-07T21:50:24.1987733Z [262/707] [firefox] › tests/browser/editor.spec.ts:238:1 › preserves headerless and mixed tables through source and file handoff
+browser	Run pnpm test:browser	2026-10-07T21:50:28.6768216Z [263/707] [firefox] › tests/browser/editor.spec.ts:242:1 › retains HTML block formatting through server import, paste and draft handoff
+browser	Run pnpm test:browser	2026-10-07T21:50:34.5724968Z [264/707] [firefox] › tests/browser/editor.spec.ts:246:1 › discovers product workflows and preserves separate task drafts and histories
+browser	Run pnpm test:browser	2026-10-07T21:50:37.4179045Z [265/707] [firefox] › tests/browser/editor.spec.ts:250:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff
+browser	Run pnpm test:browser	2026-10-07T21:50:41.8351996Z [266/707] [firefox] › tests/browser/editor.spec.ts:254:1 › retains literal text lines through editing and Markdown handoff
+browser	Run pnpm test:browser	2026-10-07T21:50:45.0427281Z [267/707] [firefox] › tests/browser/editor.spec.ts:258:1 › keeps literal syntax unformatted through visual edits and Markdown reopen
+browser	Run pnpm test:browser	2026-10-07T21:50:46.2260926Z [268/707] [firefox] › tests/browser/editor.spec.ts:262:1 › chooses literal address import and retains links through DOCX handoff
+browser	Run pnpm test:browser	2026-10-07T21:50:48.9507166Z [269/707] [firefox] › tests/browser/editor.spec.ts:266:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:50:53.3470451Z [270/707] [firefox] › tests/browser/editor.spec.ts:270:1 › issue workflow preserves root references and validates local image files
+browser	Run pnpm test:browser	2026-10-07T21:50:53.7908971Z [271/707] [firefox] › tests/browser/editor.spec.ts:302:1 › issue workflow preserves reference prefixes and reports container fallback
+browser	Run pnpm test:browser	2026-10-07T21:50:56.8981779Z [272/707] [firefox] › tests/browser/editor.spec.ts:326:1 › reopens a full HTML report without promoting page metadata into editor content
+browser	Run pnpm test:browser	2026-10-07T21:50:57.3828930Z [273/707] [firefox] › tests/browser/editor.spec.ts:330:1 › matches native document parsing for HTML envelopes, recovery, and noscript
+browser	Run pnpm test:browser	2026-10-07T21:50:59.8726057Z [274/707] [firefox] › tests/browser/editor.spec.ts:344:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export
+browser	Run pnpm test:browser	2026-10-07T21:51:01.7656283Z [275/707] [firefox] › tests/browser/editor.spec.ts:348:1 › exports independent DOCX list starts and renders the same procedure beside the editor
+browser	Run pnpm test:browser	2026-10-07T21:51:04.1252496Z [276/707] [firefox] › tests/browser/editor.spec.ts:352:1 › retains zero-based list numbers through keyboard outdent history and export
+browser	Run pnpm test:browser	2026-10-07T21:51:05.7545661Z [277/707] [firefox] › tests/browser/editor.spec.ts:356:1 › imports ordered-list starts like the native browser integer parser
+browser	Run pnpm test:browser	2026-10-07T21:51:08.3897073Z [278/707] [firefox] › tests/browser/editor.spec.ts:370:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup
+browser	Run pnpm test:browser	2026-10-07T21:51:08.4184474Z [279/707] [firefox] › tests/browser/editor.spec.ts:374:1 › disposes Svelte custom block views before their owned engine
+browser	Run pnpm test:browser	2026-10-07T21:51:12.4636959Z [280/707] [firefox] › tests/browser/editor.spec.ts:383:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal
+browser	Run pnpm test:browser	2026-10-07T21:51:17.7837585Z [281/707] [firefox] › tests/browser/editor.spec.ts:387:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts
+browser	Run pnpm test:browser	2026-10-07T21:51:17.8785821Z [282/707] [firefox] › tests/browser/editor.spec.ts:391:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding
+browser	Run pnpm test:browser	2026-10-07T21:51:23.2553466Z [283/707] [firefox] › tests/browser/editor.spec.ts:395:1 › saves and reopens equation files with source, references and history intact
+browser	Run pnpm test:browser	2026-10-07T21:51:24.8487556Z [284/707] [firefox] › tests/browser/editor.spec.ts:399:1 › recovers from textless replacement for native typing, lines and history
+browser	Run pnpm test:browser	2026-10-07T21:51:29.0946485Z [285/707] [firefox] › tests/browser/editor.spec.ts:403:1 › renders labelled equations and reader links through real editing and recovery
+browser	Run pnpm test:browser	2026-10-07T21:51:32.0669434Z [286/707] [firefox] › tests/browser/editor.spec.ts:407:1 › keeps moved math source attached to its formula through native editing, undo, and export
+browser	Run pnpm test:browser	2026-10-07T21:51:35.4059666Z [287/707] [firefox] › tests/browser/editor.spec.ts:411:1 › imports the published TeX table with visible losses and editable numeric values
+browser	Run pnpm test:browser	2026-10-07T21:51:37.2370501Z [288/707] [firefox] › tests/browser/editor.spec.ts:495:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport
+browser	Run pnpm test:browser	2026-10-07T21:51:38.1172554Z [289/707] [firefox] › tests/browser/editor.spec.ts:523:1 › renders, edits, and measures portable page intent in a real browser
+browser	Run pnpm test:browser	2026-10-07T21:51:39.8954960Z [290/707] [firefox] › tests/browser/editor.spec.ts:592:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments
+browser	Run pnpm test:browser	2026-10-07T21:51:39.9388562Z [291/707] [firefox] › tests/browser/editor.spec.ts:686:1 › continues measured long footnotes through editable and print page projections
+browser	Run pnpm test:browser	2026-10-07T21:51:41.5443886Z [292/707] [firefox] › tests/browser/editor.spec.ts:794:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss
+browser	Run pnpm test:browser	2026-10-07T21:51:43.7501771Z [293/707] [firefox] › tests/browser/editor.spec.ts:902:1 › paginates imported styled semantic HTML without structural or PDF text loss
+browser	Run pnpm test:browser	2026-10-07T21:51:45.9007031Z [294/707] [firefox] › tests/browser/editor.spec.ts:1047:1 › uses a host print renderer without moving or exposing live custom DOM
+browser	Run pnpm test:browser	2026-10-07T21:51:46.0079006Z [295/707] [firefox] › tests/browser/editor.spec.ts:1070:1 › projects exact A4 and Letter print sheets in every browser engine
+browser	Run pnpm test:browser	2026-10-07T21:51:48.3753023Z [296/707] [firefox] › tests/browser/editor.spec.ts:1187:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+browser	Run pnpm test:browser	2026-10-07T21:51:48.8697744Z [297/707] [firefox] › tests/browser/editor.spec.ts:1227:1 › keeps 1,000-block pagination reflow local to the changed block
+browser	Run pnpm test:browser	2026-10-07T21:51:48.8756508Z [298/707] [firefox] › tests/browser/editor.spec.ts:1239:1 › bounds alternating edge reflow across 5,000 rendered page blocks
+browser	Run pnpm test:browser	2026-10-07T21:51:50.5787672Z [299/707] [firefox] › tests/browser/editor.spec.ts:1262:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal
+browser	Run pnpm test:browser	2026-10-07T21:51:52.1966972Z [300/707] [firefox] › tests/browser/editor.spec.ts:1288:1 › edits, selects, and composes across guarded page shells in one contenteditable
+browser	Run pnpm test:browser	2026-10-07T21:51:53.8190235Z [301/707] [firefox] › tests/browser/editor.spec.ts:1364:1 › keeps one paragraph editable when its measured lines span page shells
+browser	Run pnpm test:browser	2026-10-07T21:51:54.5872656Z [302/707] [firefox] › tests/browser/editor.spec.ts:1491:1 › maps carets, ranges, and composition around injected paragraph page gaps
+browser	Run pnpm test:browser	2026-10-07T21:51:56.5391882Z [303/707] [firefox] › tests/browser/editor.spec.ts:1595:1 › keeps one canonical ordered list editable and numbered across page shells
+browser	Run pnpm test:browser	2026-10-07T21:51:57.1231325Z [304/707] [firefox] › tests/browser/editor.spec.ts:1730:52 › honours explicit table repetition independently of cell roles (ordinary)
+browser	Run pnpm test:browser	2026-10-07T21:51:59.3814057Z [305/707] [firefox] › tests/browser/editor.spec.ts:1730:52 › honours explicit table repetition independently of cell roles (off)
+browser	Run pnpm test:browser	2026-10-07T21:52:00.1955371Z [306/707] [firefox] › tests/browser/editor.spec.ts:1763:1 › keeps one canonical table editable with repeated headers across page shells
+browser	Run pnpm test:browser	2026-10-07T21:52:03.2868453Z [307/707] [firefox] › tests/browser/editor.spec.ts:1913:1 › keeps merged header and body rowspans intact across editable table pages
+browser	Run pnpm test:browser	2026-10-07T21:52:03.2927160Z [308/707] [firefox] › tests/browser/editor.spec.ts:1979:1 › reports an oversized table row without clipping or splitting its editable model
+browser	Run pnpm test:browser	2026-10-07T21:52:05.9386638Z [309/707] [firefox] › tests/browser/editor.spec.ts:2021:1 › keeps canonical page furniture and footnotes editable while projecting every page copy
+browser	Run pnpm test:browser	2026-10-07T21:52:05.9679050Z [310/707] [firefox] › tests/browser/editor.spec.ts:2106:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages
+browser	Run pnpm test:browser	2026-10-07T21:52:08.9737083Z [311/707] [firefox] › tests/browser/editor.spec.ts:2241:1 › keeps tracked review and Yjs live between list items split across pages
+browser	Run pnpm test:browser	2026-10-07T21:52:09.4028001Z [312/707] [firefox] › tests/browser/editor.spec.ts:2307:1 › keeps tracked review and Yjs live between table rows split across pages
+browser	Run pnpm test:browser	2026-10-07T21:52:12.6807122Z [313/707] [firefox] › tests/browser/editor.spec.ts:2384:13 › keeps comments attached and synchronized inside a continued list
+browser	Run pnpm test:browser	2026-10-07T21:52:14.8987398Z [314/707] [firefox] › tests/browser/editor.spec.ts:2384:13 › keeps comments attached and synchronized inside a continued table
+browser	Run pnpm test:browser	2026-10-07T21:52:15.8327625Z [315/707] [firefox] › tests/browser/editor.spec.ts:2438:1 › keeps tracked review and Yjs live inside a paragraph split across pages
+browser	Run pnpm test:browser	2026-10-07T21:52:18.7257113Z [316/707] [firefox] › tests/browser/editor.spec.ts:2499:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries
+browser	Run pnpm test:browser	2026-10-07T21:52:19.7526439Z [317/707] [firefox] › tests/browser/editor.spec.ts:2574:1 › tracks real browser insertion and replacement with reversible review decisions
+browser	Run pnpm test:browser	2026-10-07T21:52:21.2537302Z [318/707] [firefox] › tests/browser/editor.spec.ts:2603:1 › runs the package-backed full-text tracked review panel
+browser	Run pnpm test:browser	2026-10-07T21:52:21.8436665Z [319/707] [firefox] › tests/browser/editor.spec.ts:2621:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration
+browser	Run pnpm test:browser	2026-10-07T21:52:24.4391754Z [320/707] [firefox] › tests/browser/editor.spec.ts:2651:1 › edits and persists package-backed collapsible details in the public playground
+browser	Run pnpm test:browser	2026-10-07T21:52:25.4563411Z [321/707] [firefox] › tests/browser/editor.spec.ts:2677:1 › edits semantic ruby annotations through the package-backed public playground
+browser	Run pnpm test:browser	2026-10-07T21:52:28.4044355Z [322/707] [firefox] › tests/browser/editor.spec.ts:2707:1 › converges live and offline Yjs edits and keeps collaborative undo author-local
+browser	Run pnpm test:browser	2026-10-07T21:52:29.3947149Z [323/707] [firefox] › tests/browser/editor.spec.ts:2736:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser
+browser	Run pnpm test:browser	2026-10-07T21:52:30.1653935Z [324/707] [firefox] › tests/browser/editor.spec.ts:2761:1 › round-trips variable-delimiter Markdown code spans in the browser package
+browser	Run pnpm test:browser	2026-10-07T21:52:30.7143754Z [325/707] [firefox] › tests/browser/editor.spec.ts:3329:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items
+browser	Run pnpm test:browser	2026-10-07T21:52:31.8035573Z [326/707] [firefox] › tests/browser/editor.spec.ts:3359:1 › round-trips marker-relative list containers and exact code whitespace
+browser	Run pnpm test:browser	2026-10-07T21:52:34.1518716Z [327/707] [firefox] › tests/browser/editor.spec.ts:3403:1 › preserves raw Markdown and inert frontmatter through the browser package
+browser	Run pnpm test:browser	2026-10-07T21:52:35.4193519Z [328/707] [firefox] › tests/browser/editor.spec.ts:3429:1 › edits through real beforeinput events and undoes a Markdown input rule
+browser	Run pnpm test:browser	2026-10-07T21:52:35.5307298Z [329/707] [firefox] › tests/browser/editor.spec.ts:3443:1 › groups adjacent browser typing and respects explicit undo boundaries
+browser	Run pnpm test:browser	2026-10-07T21:52:36.8941458Z [330/707] [firefox] › tests/browser/editor.spec.ts:3464:3 › preserves replacement formatting across subsequent typing input
+browser	Run pnpm test:browser	2026-10-07T21:52:37.1533918Z [331/707] [firefox] › tests/browser/editor.spec.ts:3464:3 › preserves replacement formatting across subsequent composition input
+browser	Run pnpm test:browser	2026-10-07T21:52:38.4068046Z [332/707] [firefox] › tests/browser/editor.spec.ts:3495:1 › commits cross-browser composition sequences once and supports replacement input
+browser	Run pnpm test:browser	2026-10-07T21:52:38.6385857Z [333/707] [firefox] › tests/browser/editor.spec.ts:3527:1 › maps decorations through typing without persisting widget content
+browser	Run pnpm test:browser	2026-10-07T21:52:39.9218910Z [334/707] [firefox] › tests/browser/editor.spec.ts:3542:1 › highlights editable code and updates language metadata through public commands
+browser	Run pnpm test:browser	2026-10-07T21:52:40.1469375Z [335/707] [firefox] › tests/browser/editor.spec.ts:3572:1 › runs a view-focused chain and checks it without preview side effects
+browser	Run pnpm test:browser	2026-10-07T21:52:41.5836904Z [336/707] [firefox] › tests/browser/editor.spec.ts:3593:1 › applies every configured paste-rule match through a browser paste event
+browser	Run pnpm test:browser	2026-10-07T21:52:41.6337004Z [337/707] [firefox] › tests/browser/editor.spec.ts:3611:1 › autolinks, safely activates, edits, and removes links in a real browser
+browser	Run pnpm test:browser	2026-10-07T21:52:42.9876318Z [338/707] [firefox] › tests/browser/editor.spec.ts:3642:1 › preserves structured rich HTML from a real browser clipboard event
+browser	Run pnpm test:browser	2026-10-07T21:52:44.1678284Z [339/707] [firefox] › tests/browser/editor.spec.ts:3663:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting
+browser	Run pnpm test:browser	2026-10-07T21:52:45.0629810Z [340/707] [firefox] › tests/browser/editor.spec.ts:3684:1 › honors strict raw HTML token boundaries in the public Markdown pipeline
+browser	Run pnpm test:browser	2026-10-07T21:52:45.3806732Z [341/707] [firefox] › tests/browser/editor.spec.ts:3701:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists
+browser	Run pnpm test:browser	2026-10-07T21:52:47.2907575Z [342/707] [firefox] › tests/browser/editor.spec.ts:3721:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks
+browser	Run pnpm test:browser	2026-10-07T21:52:48.4345162Z [343/707] [firefox] › tests/browser/editor.spec.ts:3744:1 › retains standalone non-collapsible Unicode text during rich paste
+browser	Run pnpm test:browser	2026-10-07T21:52:49.6873158Z [344/707] [firefox] › tests/browser/editor.spec.ts:3761:1 › pastes empty formatting and applies it to subsequently typed text
+browser	Run pnpm test:browser	2026-10-07T21:52:50.8703421Z [345/707] [firefox] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph
+browser	Run pnpm test:browser	2026-10-07T21:52:50.9366141Z [346/707] [firefox] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph from its label area
+browser	Run pnpm test:browser	2026-10-07T21:52:52.5779999Z [347/707] [firefox] › tests/browser/editor.spec.ts:3812:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine
+browser	Run pnpm test:browser	2026-10-07T21:52:53.4824819Z [348/707] [firefox] › tests/browser/editor.spec.ts:3865:1 › imports an extension-defined HTML node through the schema contract
+browser	Run pnpm test:browser	2026-10-07T21:52:54.7773614Z [349/707] [firefox] › tests/browser/editor.spec.ts:3890:1 › pastes mixed nested HTML lists without flattening their hierarchy
+browser	Run pnpm test:browser	2026-10-07T21:52:54.8757118Z [350/707] [firefox] › tests/browser/editor.spec.ts:3913:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys
+browser	Run pnpm test:browser	2026-10-07T21:52:56.2505393Z [351/707] [firefox] › tests/browser/editor.spec.ts:3943:1 › edits bidirectional and deeply nested text by logical document positions
+browser	Run pnpm test:browser	2026-10-07T21:52:56.3835882Z [352/707] [firefox] › tests/browser/editor.spec.ts:3970:1 › moves a selected top-level block through native drag data
+browser	Run pnpm test:browser	2026-10-07T21:52:57.8413780Z [353/707] [firefox] › tests/browser/editor.spec.ts:3988:1 › shows a host-replaceable drop cursor for inline text and atomic block targets
+browser	Run pnpm test:browser	2026-10-07T21:52:58.0157457Z [354/707] [firefox] › tests/browser/editor.spec.ts:4049:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo
+browser	Run pnpm test:browser	2026-10-07T21:52:59.1875188Z [355/707] [firefox] › tests/browser/editor.spec.ts:4124:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes
+browser	Run pnpm test:browser	2026-10-07T21:52:59.8932651Z [356/707] [firefox] › tests/browser/editor.spec.ts:4220:1 › replaces a DOM selection that crosses block boundaries
+browser	Run pnpm test:browser	2026-10-07T21:53:01.3306893Z [357/707] [firefox] › tests/browser/editor.spec.ts:4259:1 › keeps a visible editable paragraph after a terminal non-text block
+browser	Run pnpm test:browser	2026-10-07T21:53:02.6677122Z [358/707] [firefox] › tests/browser/editor.spec.ts:4281:1 › uses Ctrl+A as an explicit all-document selection and replaces the document
+browser	Run pnpm test:browser	2026-10-07T21:53:03.1450969Z [359/707] [firefox] › tests/browser/editor.spec.ts:4293:1 › selects and deletes a block image through real pointer and keyboard input
+browser	Run pnpm test:browser	2026-10-07T21:53:04.3677132Z [360/707] [firefox] › tests/browser/editor.spec.ts:4316:1 › edits, aligns, resizes, and undoes a production image through accessible controls
+browser	Run pnpm test:browser	2026-10-07T21:53:05.9809939Z [361/707] [firefox] › tests/browser/editor.spec.ts:4390:1 › tracks and cancels browser-native image upload tasks
+browser	Run pnpm test:browser	2026-10-07T21:53:05.9832913Z [362/707] [firefox] › tests/browser/editor.spec.ts:4372:1 › inserts and removes a true inline image without breaking surrounding text
+browser	Run pnpm test:browser	2026-10-07T21:53:07.5727153Z [363/707] [firefox] › tests/browser/editor.spec.ts:4430:1 › extends and replaces a rectangular cell selection through real pointer input
+browser	Run pnpm test:browser	2026-10-07T21:53:08.9873352Z [364/707] [firefox] › tests/browser/editor.spec.ts:4458:1 › keeps mixed-format links intact through backward selection typing and history
+browser	Run pnpm test:browser	2026-10-07T21:53:09.1227364Z [365/707] [firefox] › tests/browser/editor.spec.ts:4490:1 › reaches overflowing code by keyboard and leaves it without modifying the document
+browser	Run pnpm test:browser	2026-10-07T21:53:10.7890714Z [366/707] [firefox] › tests/browser/editor.spec.ts:4536:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+browser	Run pnpm test:browser	2026-10-07T21:53:11.2876561Z [367/707] [firefox] › tests/browser/editor.spec.ts:4560:1 › announces table resize values through real keyboard, pointer and history workflows
+browser	Run pnpm test:browser	2026-10-07T21:53:11.3223535Z [368/707] [firefox] › tests/browser/editor.spec.ts:4613:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids
+browser	Run pnpm test:browser	2026-10-07T21:53:13.0786778Z [369/707] [firefox] › tests/browser/editor.spec.ts:4686:1 › keeps normal paste while offering bounded editor-local clipboard slots
+browser	Run pnpm test:browser	2026-10-07T21:53:14.1466777Z [370/707] [firefox] › tests/browser/editor.spec.ts:4725:1 › renders and types into a structural gap as a new block
+browser	Run pnpm test:browser	2026-10-07T21:53:14.2712057Z [371/707] [firefox] › tests/browser/editor.spec.ts:4737:1 › edits Lean without a mandatory server and renders transient provider diagnostics
+browser	Run pnpm test:browser	2026-10-07T21:53:15.7153556Z [372/707] [firefox] › tests/browser/editor.spec.ts:4764:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM
+browser	Run pnpm test:browser	2026-10-07T21:53:15.7268361Z [373/707] [firefox] › tests/browser/editor.spec.ts:4801:1 › loads the public React playground without console or page errors
+browser	Run pnpm test:browser	2026-10-07T21:53:17.3712809Z [374/707] [firefox] › tests/browser/editor.spec.ts:4826:1 › publishes actionable extension authoring, conformance, and doctor guidance
+browser	Run pnpm test:browser	2026-10-07T21:53:18.4896342Z [375/707] [firefox] › tests/browser/editor.spec.ts:4844:1 › pairs the optional AI demo with developer recipes for every public workflow
+browser	Run pnpm test:browser	2026-10-07T21:53:19.6288755Z [376/707] [firefox] › tests/browser/editor.spec.ts:4865:1 › runs the public two-editor collaboration demo with presence and author-local undo
+browser	Run pnpm test:browser	2026-10-07T21:53:20.9064099Z [377/707] [firefox] › tests/browser/editor.spec.ts:4932:1 › replaces both live collaboration documents without remounting the public editors
+browser	Run pnpm test:browser	2026-10-07T21:53:23.1513486Z [378/707] [firefox] › tests/browser/editor.spec.ts:4991:1 › merges nested collaborative settings through the public two-editor demo
+browser	Run pnpm test:browser	2026-10-07T21:53:25.5285792Z [379/707] [firefox] › tests/browser/editor.spec.ts:5010:1 › keeps headline phrases together and makes full-page navigation explicit
+browser	Run pnpm test:browser	2026-10-07T21:53:26.4599471Z [380/707] [firefox] › tests/browser/editor.spec.ts:5035:1 › runs shared threaded comments through the public provider-neutral review panel
+browser	Run pnpm test:browser	2026-10-07T21:53:30.2101997Z [381/707] [firefox] › tests/browser/editor.spec.ts:5092:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground
+browser	Run pnpm test:browser	2026-10-07T21:53:30.4091096Z [382/707] [firefox] › tests/browser/editor.spec.ts:5153:1 › runs grouped default and product slash commands in the public React playground
+browser	Run pnpm test:browser	2026-10-07T21:53:35.4550684Z [383/707] [firefox] › tests/browser/editor.spec.ts:5184:1 › runs accessible bubble and floating menus in the public React playground
+browser	Run pnpm test:browser	2026-10-07T21:53:38.0231956Z [384/707] [firefox] › tests/browser/editor.spec.ts:5226:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs
+browser	Run pnpm test:browser	2026-10-07T21:53:39.4568415Z [385/707] [firefox] › tests/browser/editor.spec.ts:5263:1 › applies the complete text-style suite through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:53:41.9246800Z [386/707] [firefox] › tests/browser/editor.spec.ts:5324:1 › uses the public React image workflow for metadata, alignment, and replacement
+browser	Run pnpm test:browser	2026-10-07T21:53:45.1848260Z [387/707] [firefox] › tests/browser/editor.spec.ts:5368:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+browser	Run pnpm test:browser	2026-10-07T21:53:47.2326972Z [388/707] [firefox] › tests/browser/editor.spec.ts:5486:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+browser	Run pnpm test:browser	2026-10-07T21:53:50.0337018Z [389/707] [firefox] › tests/browser/editor.spec.ts:5513:1 › keeps table configuration labels legible on pointer hover
+browser	Run pnpm test:browser	2026-10-07T21:53:53.6851471Z [390/707] [firefox] › tests/browser/editor.spec.ts:5552:1 › creates and edits a link through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:53:58.2791837Z [391/707] [firefox] › tests/browser/editor.spec.ts:5583:1 › toggles a selected block through the public React list controls
+browser	Run pnpm test:browser	2026-10-07T21:53:59.1376919Z [392/707] [firefox] › tests/browser/editor.spec.ts:5598:1 › edits code language and line numbers through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:54:02.4344380Z [393/707] [firefox] › tests/browser/editor.spec.ts:5617:1 › opens the searchable clipboard-history picker in the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T21:54:03.1107022Z [394/707] [firefox] › tests/browser/editor.spec.ts:5650:1 › keeps the public outline stable, hierarchical, active, and navigable
+browser	Run pnpm test:browser	2026-10-07T21:54:06.5546620Z [395/707] [firefox] › tests/browser/editor.spec.ts:5675:1 › exposes and explicitly cleans invisible text in the public playground
+browser	Run pnpm test:browser	2026-10-07T21:54:07.1527307Z [396/707] [firefox] › tests/browser/editor.spec.ts:5716:1 › runs the public plain-DOM first-class widget demo
+browser	Run pnpm test:browser	2026-10-07T21:54:10.8376847Z [397/707] [firefox] › tests/browser/editor.spec.ts:5763:1 › runs the public React first-class widget demo without losing control focus
+browser	Run pnpm test:browser	2026-10-07T21:54:11.6860022Z [398/707] [firefox] › tests/browser/editor.spec.ts:5801:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo
+browser	Run pnpm test:browser	2026-10-07T21:54:14.2254340Z [399/707] [firefox] › tests/browser/editor.spec.ts:5815:1 › retains table captions and reports their projected association in the conversion demo
+browser	Run pnpm test:browser	2026-10-07T21:54:14.7287861Z [400/707] [firefox] › tests/browser/editor.spec.ts:5832:1 › preserves complex figure content in the public Markdown conversion demo
+browser	Run pnpm test:browser	2026-10-07T21:54:17.7918774Z [401/707] [firefox] › tests/browser/editor.spec.ts:5850:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline
+browser	Run pnpm test:browser	2026-10-07T21:54:20.5124438Z [402/707] [firefox] › tests/browser/editor.spec.ts:5921:1 › records native DOCX viewer disagreements without certifying math fidelity
+browser	Run pnpm test:browser	2026-10-07T21:54:23.8407064Z [403/707] [firefox] › tests/browser/editor.spec.ts:5926:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission
+browser	Run pnpm test:browser	2026-10-07T21:54:27.5364834Z [404/707] [firefox] › tests/browser/editor.spec.ts:6042:1 › renders real KaTeX while reporting published-equation and trust failures without source loss
+browser	Run pnpm test:browser	2026-10-07T21:54:29.3771100Z [405/707] [firefox] › tests/browser/editor.spec.ts:6073:1 › edits multiline math without losing line breaks, descriptions, or undo history
+browser	Run pnpm test:browser	2026-10-07T21:54:30.3539593Z [406/707] [firefox] › tests/browser/editor.spec.ts:6110:1 › renders and inserts native math in the public DOM integration
+browser	Run pnpm test:browser	2026-10-07T21:54:33.4059927Z [407/707] [firefox] › tests/browser/editor.spec.ts:6167:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+browser	Run pnpm test:browser	2026-10-07T21:54:33.5172763Z [408/707] [firefox] › tests/browser/editor.spec.ts:6215:1 › keeps rich and multiline paste structurally predictable in the public editor
+browser	Run pnpm test:browser	2026-10-07T21:54:36.8229538Z [409/707] [firefox] › tests/browser/editor.spec.ts:6288:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+browser	Run pnpm test:browser	2026-10-07T21:54:37.2652539Z [410/707] [firefox] › tests/browser/editor.spec.ts:6355:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+browser	Run pnpm test:browser	2026-10-07T21:54:37.7550024Z [411/707] [firefox] › tests/browser/editor.spec.ts:6404:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+browser	Run pnpm test:browser	2026-10-07T21:54:38.7307092Z [412/707] [firefox] › tests/browser/editor.spec.ts:6491:1 › copies clean semantic Fountain HTML into an external browser editor
+browser	Run pnpm test:browser	2026-10-07T21:54:39.1210606Z [413/707] [firefox] › tests/browser/editor.spec.ts:6546:1 › copies readable Fountain text into a plain-text external editor
+browser	Run pnpm test:browser	2026-10-07T21:54:39.3737234Z [414/707] [firefox] › tests/browser/editor.spec.ts:6605:1 › copies math to external rich and plain-text editors without renderer controls
+browser	Run pnpm test:browser	2026-10-07T21:54:39.5847652Z [415/707] [firefox] › tests/browser/editor.spec.ts:6650:1 › renders repeated empty paragraphs and removes each visible line
+browser	Run pnpm test:browser	2026-10-07T21:54:39.8057870Z [416/707] [firefox] › tests/browser/editor.spec.ts:6680:1 › undoes and redoes real typing with both common browser keyboard chords
+browser	Run pnpm test:browser	2026-10-07T21:54:41.5863603Z [417/707] [firefox] › tests/browser/editor.spec.ts:6697:1 › keeps a backward DOM selection backward after model synchronization
+browser	Run pnpm test:browser	2026-10-07T21:54:42.8455467Z [418/707] [firefox] › tests/browser/editor.spec.ts:6721:1 › preserves a backward selection made with real keyboard input
+browser	Run pnpm test:browser	2026-10-07T21:54:44.2039009Z [419/707] [firefox] › tests/browser/editor.spec.ts:6736:1 › replaces a backward selection made by a real reverse pointer drag
+browser	Run pnpm test:browser	2026-10-07T21:54:45.2837280Z [420/707] [firefox] › tests/browser/editor.spec.ts:6772:1 › turns multi-format and multi-block selections into visible paragraph boundaries
+browser	Run pnpm test:browser	2026-10-07T21:54:45.8816010Z [421/707] [firefox] › tests/browser/editor.spec.ts:6830:1 › visibly splits and joins ordinary paragraphs with both deletion directions
+browser	Run pnpm test:browser	2026-10-07T21:54:47.8876348Z [422/707] [firefox] › tests/browser/editor.spec.ts:6855:1 › deletes an adjacent inline atom without eating surrounding text
+browser	Run pnpm test:browser	2026-10-07T21:54:47.9366778Z [423/707] [firefox] › tests/browser/editor.spec.ts:6885:1 › unwraps and exits an inserted quote with ordinary browser keys
+browser	Run pnpm test:browser	2026-10-07T21:54:49.6625561Z [424/707] [firefox] › tests/browser/editor.spec.ts:6914:1 › publishes semantic selection controls and table interaction in the demo gallery
+browser	Run pnpm test:browser	2026-10-07T21:54:52.5366691Z [425/707] [firefox] › tests/browser/editor.spec.ts:6931:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries
+browser	Run pnpm test:browser	2026-10-07T21:54:53.8696675Z [426/707] [firefox] › tests/browser/editor.spec.ts:7008:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads
+browser	Run pnpm test:browser	2026-10-07T21:54:57.6457716Z [427/707] [firefox] › tests/browser/editor.spec.ts:7053:1 › streams an optional AI proposal outside the document until review is ready
+browser	Run pnpm test:browser	2026-10-07T21:55:01.0927183Z [428/707] [firefox] › tests/browser/editor.spec.ts:7078:1 › preserves whitespace when an AI proposal ends at a formatting boundary
+browser	Run pnpm test:browser	2026-10-07T21:55:01.3861274Z [429/707] [firefox] › tests/browser/editor.spec.ts:7093:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation
+browser	Run pnpm test:browser	2026-10-07T21:55:05.4895263Z [430/707] [firefox] › tests/browser/editor.spec.ts:7121:1 › reviews generated media before the normal host upload inserts one undoable node
+browser	Run pnpm test:browser	2026-10-07T21:55:06.5133035Z [431/707] [firefox] › tests/browser/editor.spec.ts:7147:1 › reviews a schema-aware agent tool proposal before one-step apply and undo
+browser	Run pnpm test:browser	2026-10-07T21:55:10.0396496Z [432/707] [firefox] › tests/browser/editor.spec.ts:7172:1 › keeps a 1,000-block input update local and paints within budget
+browser	Run pnpm test:browser	2026-10-07T21:55:10.3402105Z [433/707] [firefox] › tests/browser/editor.spec.ts:7193:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+browser	Run pnpm test:browser	2026-10-07T21:55:12.3760063Z [434/707] [firefox] › tests/browser/editor.spec.ts:7251:1 › exports rich tables as HTML Markdown and exposes the compatibility note
+browser	Run pnpm test:browser	2026-10-07T21:55:13.2525817Z [435/707] [firefox] › tests/browser/editor.spec.ts:7273:1 › HTML comments do not insert phantom paragraphs in converted Markdown
+browser	Run pnpm test:browser	2026-10-07T21:55:16.3569048Z [436/707] [firefox] › tests/browser/editor.spec.ts:7285:1 › imported table section order matches the physically rendered source table
+browser	Run pnpm test:browser	2026-10-07T21:55:16.5151690Z [437/707] [firefox] › tests/browser/editor.spec.ts:7316:1 › imports zero-rowspan cells with the same row-group geometry in server and browser
+browser	Run pnpm test:browser	2026-10-07T21:55:20.2816882Z [438/707] [firefox] › tests/browser/editor.spec.ts:7347:1 › reconstructs HTML tables across Markdown block boundaries
+browser	Run pnpm test:browser	2026-10-07T21:55:22.3261465Z [439/707] [firefox] › tests/browser/editor.spec.ts:7368:1 › applies surrounding HTML formatting without replacing Markdown block content
+browser	Run pnpm test:browser	2026-10-07T21:55:23.4228390Z [440/707] [firefox] › tests/browser/editor.spec.ts:7381:1 › converts raw HTML blocks only when the headless demo option is enabled
+browser	Run pnpm test:browser	2026-10-07T21:55:25.6645057Z [441/707] [firefox] › tests/browser/editor.spec.ts:7397:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback
+browser	Run pnpm test:browser	2026-10-07T21:55:26.8722859Z [442/707] [firefox] › tests/browser/editor.spec.ts:7422:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces
+browser	Run pnpm test:browser	2026-10-07T21:55:32.6615399Z [443/707] [webkit] › tests/browser/editor.spec.ts:39:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+browser	Run pnpm test:browser	2026-10-07T21:55:33.4626822Z [444/707] [webkit] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface
+browser	Run pnpm test:browser	2026-10-07T21:55:37.5103928Z [445/707] [webkit] › tests/browser/editor.spec.ts:47:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:55:43.2797119Z [446/707] (retries) [webkit] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface (retry #1)
+browser	Run pnpm test:browser	2026-10-07T21:55:46.0009196Z [447/707] [webkit] › tests/browser/editor.spec.ts:51:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history
+browser	Run pnpm test:browser	2026-10-07T21:55:51.5033198Z [448/707] [webkit] › tests/browser/editor.spec.ts:55:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+browser	Run pnpm test:browser	2026-10-07T21:55:52.9676352Z [449/707] (retries) [webkit] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface (retry #2)
+browser	Run pnpm test:browser	2026-10-07T21:55:59.3256651Z [450/707] [webkit] › tests/browser/editor.spec.ts:59:1 › separates the homepage framework descenders from the italic extend line
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0356995Z   1) [webkit] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0358513Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0366714Z     Error: expect(locator).toHaveText(expected) failed
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0367462Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0376877Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0377932Z     Expected: "literal edited"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0378622Z     Received: "literal"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0379257Z     Timeout:  5000ms
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0379703Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0380005Z     Call log:
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0380704Z       - Expect "toHaveText" with timeout 5000ms
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0381723Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0385945Z         14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0388651Z            - unexpected value "literal"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0389214Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0389363Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0390216Z        at code-native-focus-journey.ts:33
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0390706Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0391343Z       31 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0392807Z       32 |     observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0393999Z     > 33 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0394937Z          |                              ^
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0395939Z       34 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0396746Z       35 |
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0397177Z       36 |     return nativeFocus;
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0398388Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:33:30)
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0400142Z         at codeNativeFocusJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:57:23)
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0401826Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:44:3
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0402431Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0403335Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0405623Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/attachments/code-click-native-baseline-fa645fabb0da038980eba776c617b5cd40ba0d2a.json
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0407690Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0408246Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0408994Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0410382Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/test-failed-1.png
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0411897Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0412441Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0413280Z     Error Context: test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/error-context.md
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0414177Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0416412Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0417997Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/trace.zip
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0419256Z     Usage:
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0419450Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0420349Z         pnpm exec playwright show-trace test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/trace.zip
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0421275Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0422006Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0422559Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0423265Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0423801Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0424147Z     Error: expect(locator).toHaveText(expected) failed
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0424843Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0425200Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0425868Z     Expected: "literal edited"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0426305Z     Received: "literal"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0426684Z     Timeout:  5000ms
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0426916Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0427062Z     Call log:
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0427542Z       - Expect "toHaveText" with timeout 5000ms
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0428338Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0431446Z         14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0433814Z            - unexpected value "literal"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0434429Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0434442Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0434969Z        at code-native-focus-journey.ts:33
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0435331Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0435910Z       31 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0437267Z       32 |     observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0438414Z     > 33 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0439750Z          |                              ^
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0440709Z       34 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0441519Z       35 |
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0442020Z       36 |     return nativeFocus;
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0443132Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:33:30)
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0445073Z         at codeNativeFocusJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:57:23)
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0446427Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:44:3
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0447010Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0447876Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0449912Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/attachments/code-click-native-baseline-1e9e098e63986c336a8195b9137a73c74777634c.json
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0451981Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0452521Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0453298Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0455060Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/test-failed-1.png
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0456696Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0457233Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0458136Z     Error Context: test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/error-context.md
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0459093Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0459890Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0461564Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/trace.zip
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0462525Z     Usage:
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0462722Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0463710Z         pnpm exec playwright show-trace test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/trace.zip
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0475775Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0476571Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0477155Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0477852Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0478419Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0478738Z     Error: expect(locator).toHaveText(expected) failed
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0479148Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0479542Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0480184Z     Expected: "literal edited"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0480631Z     Received: "literal"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0481017Z     Timeout:  5000ms
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0481238Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0481380Z     Call log:
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0481825Z       - Expect "toHaveText" with timeout 5000ms
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0482549Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0486176Z         14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0488768Z            - unexpected value "literal"
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0489106Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0489118Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0489410Z        at code-native-focus-journey.ts:33
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0489785Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0490355Z       31 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0491750Z       32 |     observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0492884Z     > 33 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0493538Z          |                              ^
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0494456Z       34 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0495570Z       35 |
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0495975Z       36 |     return nativeFocus;
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0497101Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:33:30)
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0498791Z         at codeNativeFocusJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:57:23)
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0500158Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:44:3
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0501086Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0501956Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0504044Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/attachments/code-click-native-baseline-7fc7f949efa1dee9b39442fe79c1ea63f3ee2a1e.json
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0506428Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0507018Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0507816Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0509270Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/test-failed-1.png
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0510827Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0511370Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0512275Z     Error Context: test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/error-context.md
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0513267Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0514030Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0515740Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/trace.zip
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0516700Z     Usage:
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0516892Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0517890Z         pnpm exec playwright show-trace test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/trace.zip
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0519180Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0519890Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0520437Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:01.0520448Z 
+browser	Run pnpm test:browser	2026-10-07T21:56:02.3732250Z [451/707] [webkit] › tests/browser/editor.spec.ts:78:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML
+browser	Run pnpm test:browser	2026-10-07T21:56:05.4199394Z [452/707] [webkit] › tests/browser/editor.spec.ts:82:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo
+browser	Run pnpm test:browser	2026-10-07T21:56:17.9406197Z [453/707] [webkit] › tests/browser/editor.spec.ts:86:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening
+browser	Run pnpm test:browser	2026-10-07T21:56:18.2596737Z [454/707] [webkit] › tests/browser/editor.spec.ts:90:1 › retains HTML link navigation and literal Markdown data through real editing and reopening
+browser	Run pnpm test:browser	2026-10-07T21:56:39.8056967Z [455/707] [webkit] › tests/browser/editor.spec.ts:94:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening
+browser	Run pnpm test:browser	2026-10-07T21:56:45.9978042Z [456/707] [webkit] › tests/browser/editor.spec.ts:98:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions
+browser	Run pnpm test:browser	2026-10-07T21:56:56.6907660Z [457/707] [webkit] › tests/browser/editor.spec.ts:102:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening
+browser	Run pnpm test:browser	2026-10-07T21:56:57.8397701Z [458/707] [webkit] › tests/browser/editor.spec.ts:106:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening
+browser	Run pnpm test:browser	2026-10-07T21:57:00.3625028Z [459/707] [webkit] › tests/browser/editor.spec.ts:110:1 › imports private files in the conversion lab with reports and export reopen
+browser	Run pnpm test:browser	2026-10-07T21:57:10.6287656Z [460/707] [webkit] › tests/browser/editor.spec.ts:114:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen
+browser	Run pnpm test:browser	2026-10-07T21:57:15.8969043Z [461/707] [webkit] › tests/browser/editor.spec.ts:119:3 › retains partial Markdown em scope through real typing history and canonical reopening
+browser	Run pnpm test:browser	2026-10-07T21:57:18.5598976Z [462/707] [webkit] › tests/browser/editor.spec.ts:119:3 › retains partial Markdown strong scope through real typing history and canonical reopening
+browser	Run pnpm test:browser	2026-10-07T21:57:19.2432136Z [463/707] [webkit] › tests/browser/editor.spec.ts:124:1 › submits resets and disables a native form-associated Web Component
+browser	Run pnpm test:browser	2026-10-07T21:57:21.1359049Z [464/707] [webkit] › tests/browser/editor.spec.ts:128:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+browser	Run pnpm test:browser	2026-10-07T21:57:25.3606621Z [465/707] [webkit] › tests/browser/editor.spec.ts:132:1 › preserves inert HTML comments through human editing source and reader output
+browser	Run pnpm test:browser	2026-10-07T21:57:30.0914219Z [466/707] [webkit] › tests/browser/editor.spec.ts:136:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard
+browser	Run pnpm test:browser	2026-10-07T21:57:36.0885827Z [467/707] [webkit] › tests/browser/editor.spec.ts:141:1 › retains cleared anonymous flow through real cut save reopen and continued editing
+browser	Run pnpm test:browser	2026-10-07T21:57:45.7027484Z [468/707] [webkit] › tests/browser/editor.spec.ts:145:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output
+browser	Run pnpm test:browser	2026-10-07T21:57:46.5392550Z [469/707] [webkit] › tests/browser/editor.spec.ts:149:1 › retains literal flow newlines through actual Markdown export and source reimport
+browser	Run pnpm test:browser	2026-10-07T21:57:54.8316914Z [470/707] [webkit] › tests/browser/editor.spec.ts:153:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening
+browser	Run pnpm test:browser	2026-10-07T21:58:00.5527003Z [471/707] [webkit] › tests/browser/editor.spec.ts:157:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening
+browser	Run pnpm test:browser	2026-10-07T21:58:06.7328138Z [472/707] [webkit] › tests/browser/editor.spec.ts:161:1 › authors sections with properties, empty content, undo and reader preview
+browser	Run pnpm test:browser	2026-10-07T21:58:14.6074901Z [473/707] [webkit] › tests/browser/editor.spec.ts:165:1 › preserves optional section containers through real editing and reader output
+browser	Run pnpm test:browser	2026-10-07T21:58:20.7636139Z [474/707] [webkit] › tests/browser/editor.spec.ts:169:1 › edits and reopens a Word glossary with term and description roles
+browser	Run pnpm test:browser	2026-10-07T21:58:24.4117208Z [475/707] [webkit] › tests/browser/editor.spec.ts:173:1 › imports and edits Word content controls without losing visible content
+browser	Run pnpm test:browser	2026-10-07T21:58:33.4806852Z [476/707] [webkit] › tests/browser/editor.spec.ts:195:1 › preserves code endings through source recovery and reader handoff
+browser	Run pnpm test:browser	2026-10-07T21:58:36.9226660Z [477/707] [webkit] › tests/browser/editor.spec.ts:199:1 › edits definition lists and reopens a glossary in a reader
+browser	Run pnpm test:browser	2026-10-07T21:58:44.8489165Z [478/707] [webkit] › tests/browser/editor.spec.ts:203:1 › edits registered HTML wrappers after Markdown source recovery
+browser	Run pnpm test:browser	2026-10-07T21:58:45.9240798Z [479/707] [webkit] › tests/browser/editor.spec.ts:207:1 › retains the complete document through pointer and keyboard output-format changes
+browser	Run pnpm test:browser	2026-10-07T21:58:47.7144448Z [480/707] [webkit] › tests/browser/editor.spec.ts:211:1 › recovers nested Markdown lists and quotes through an editor and reader
+browser	Run pnpm test:browser	2026-10-07T21:59:01.5873555Z [481/707] [webkit] › tests/browser/editor.spec.ts:215:1 › edits opaque code labels and reopens them safely in a reader
+browser	Run pnpm test:browser	2026-10-07T21:59:10.2316526Z [482/707] [webkit] › tests/browser/editor.spec.ts:220:1 › guards editor actions against page reloads without suppressing failures
+browser	Run pnpm test:browser	2026-10-07T21:59:11.8267959Z [483/707] [webkit] › tests/browser/editor.spec.ts:230:1 › recovers paragraph HTML into editable blocks and a reopened reader
+browser	Run pnpm test:browser	2026-10-07T21:59:11.9488656Z [484/707] [webkit] › tests/browser/editor.spec.ts:234:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+browser	Run pnpm test:browser	2026-10-07T21:59:19.9328094Z [485/707] [webkit] › tests/browser/editor.spec.ts:238:1 › preserves headerless and mixed tables through source and file handoff
+browser	Run pnpm test:browser	2026-10-07T21:59:27.5618938Z [486/707] [webkit] › tests/browser/editor.spec.ts:242:1 › retains HTML block formatting through server import, paste and draft handoff
+browser	Run pnpm test:browser	2026-10-07T21:59:40.8899434Z [487/707] [webkit] › tests/browser/editor.spec.ts:246:1 › discovers product workflows and preserves separate task drafts and histories
+browser	Run pnpm test:browser	2026-10-07T21:59:51.2379159Z [488/707] [webkit] › tests/browser/editor.spec.ts:250:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff
+browser	Run pnpm test:browser	2026-10-07T21:59:58.9555952Z [489/707] [webkit] › tests/browser/editor.spec.ts:254:1 › retains literal text lines through editing and Markdown handoff
+browser	Run pnpm test:browser	2026-10-07T21:59:59.5861980Z [490/707] [webkit] › tests/browser/editor.spec.ts:258:1 › keeps literal syntax unformatted through visual edits and Markdown reopen
+browser	Run pnpm test:browser	2026-10-07T22:00:05.7487016Z [491/707] [webkit] › tests/browser/editor.spec.ts:262:1 › chooses literal address import and retains links through DOCX handoff
+browser	Run pnpm test:browser	2026-10-07T22:00:05.8311216Z [492/707] [webkit] › tests/browser/editor.spec.ts:266:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview
+browser	Run pnpm test:browser	2026-10-07T22:00:15.0633781Z [493/707] [webkit] › tests/browser/editor.spec.ts:270:1 › issue workflow preserves root references and validates local image files
+browser	Run pnpm test:browser	2026-10-07T22:00:20.0575055Z [494/707] [webkit] › tests/browser/editor.spec.ts:302:1 › issue workflow preserves reference prefixes and reports container fallback
+browser	Run pnpm test:browser	2026-10-07T22:00:24.0213761Z [495/707] [webkit] › tests/browser/editor.spec.ts:326:1 › reopens a full HTML report without promoting page metadata into editor content
+browser	Run pnpm test:browser	2026-10-07T22:00:24.2176832Z [496/707] [webkit] › tests/browser/editor.spec.ts:330:1 › matches native document parsing for HTML envelopes, recovery, and noscript
+browser	Run pnpm test:browser	2026-10-07T22:00:26.2084859Z [497/707] [webkit] › tests/browser/editor.spec.ts:344:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export
+browser	Run pnpm test:browser	2026-10-07T22:00:32.4134289Z [498/707] [webkit] › tests/browser/editor.spec.ts:348:1 › exports independent DOCX list starts and renders the same procedure beside the editor
+browser	Run pnpm test:browser	2026-10-07T22:00:35.5087424Z [499/707] [webkit] › tests/browser/editor.spec.ts:352:1 › retains zero-based list numbers through keyboard outdent history and export
+browser	Run pnpm test:browser	2026-10-07T22:00:36.2597802Z [500/707] [webkit] › tests/browser/editor.spec.ts:356:1 › imports ordered-list starts like the native browser integer parser
+browser	Run pnpm test:browser	2026-10-07T22:00:40.0027000Z [501/707] [webkit] › tests/browser/editor.spec.ts:370:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup
+browser	Run pnpm test:browser	2026-10-07T22:00:43.5658355Z [502/707] [webkit] › tests/browser/editor.spec.ts:374:1 › disposes Svelte custom block views before their owned engine
+browser	Run pnpm test:browser	2026-10-07T22:00:45.5669218Z [503/707] [webkit] › tests/browser/editor.spec.ts:383:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal
+browser	Run pnpm test:browser	2026-10-07T22:00:57.1736073Z [504/707] [webkit] › tests/browser/editor.spec.ts:387:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts
+browser	Run pnpm test:browser	2026-10-07T22:00:57.4827921Z [505/707] [webkit] › tests/browser/editor.spec.ts:391:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding
+browser	Run pnpm test:browser	2026-10-07T22:01:05.0141013Z [506/707] [webkit] › tests/browser/editor.spec.ts:395:1 › saves and reopens equation files with source, references and history intact
+browser	Run pnpm test:browser	2026-10-07T22:01:10.8166007Z [507/707] [webkit] › tests/browser/editor.spec.ts:399:1 › recovers from textless replacement for native typing, lines and history
+browser	Run pnpm test:browser	2026-10-07T22:01:13.9115924Z [508/707] [webkit] › tests/browser/editor.spec.ts:403:1 › renders labelled equations and reader links through real editing and recovery
+browser	Run pnpm test:browser	2026-10-07T22:01:16.0959312Z [509/707] [webkit] › tests/browser/editor.spec.ts:407:1 › keeps moved math source attached to its formula through native editing, undo, and export
+browser	Run pnpm test:browser	2026-10-07T22:01:20.9168743Z [510/707] [webkit] › tests/browser/editor.spec.ts:411:1 › imports the published TeX table with visible losses and editable numeric values
+browser	Run pnpm test:browser	2026-10-07T22:01:24.3391682Z [511/707] [webkit] › tests/browser/editor.spec.ts:495:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport
+browser	Run pnpm test:browser	2026-10-07T22:01:25.1029185Z [512/707] [webkit] › tests/browser/editor.spec.ts:523:1 › renders, edits, and measures portable page intent in a real browser
+browser	Run pnpm test:browser	2026-10-07T22:01:26.8747980Z [513/707] [webkit] › tests/browser/editor.spec.ts:592:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments
+browser	Run pnpm test:browser	2026-10-07T22:01:27.4508593Z [514/707] [webkit] › tests/browser/editor.spec.ts:686:1 › continues measured long footnotes through editable and print page projections
+browser	Run pnpm test:browser	2026-10-07T22:01:28.6475489Z [515/707] [webkit] › tests/browser/editor.spec.ts:794:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss
+browser	Run pnpm test:browser	2026-10-07T22:01:30.8217859Z [516/707] [webkit] › tests/browser/editor.spec.ts:902:1 › paginates imported styled semantic HTML without structural or PDF text loss
+browser	Run pnpm test:browser	2026-10-07T22:01:32.8055104Z [517/707] [webkit] › tests/browser/editor.spec.ts:1047:1 › uses a host print renderer without moving or exposing live custom DOM
+browser	Run pnpm test:browser	2026-10-07T22:01:32.8383585Z [518/707] [webkit] › tests/browser/editor.spec.ts:1070:1 › projects exact A4 and Letter print sheets in every browser engine
+browser	Run pnpm test:browser	2026-10-07T22:01:34.3695058Z [519/707] [webkit] › tests/browser/editor.spec.ts:1187:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+browser	Run pnpm test:browser	2026-10-07T22:01:35.0148102Z [520/707] [webkit] › tests/browser/editor.spec.ts:1227:1 › keeps 1,000-block pagination reflow local to the changed block
+browser	Run pnpm test:browser	2026-10-07T22:01:35.0873861Z [521/707] [webkit] › tests/browser/editor.spec.ts:1239:1 › bounds alternating edge reflow across 5,000 rendered page blocks
+browser	Run pnpm test:browser	2026-10-07T22:01:36.9346889Z [522/707] [webkit] › tests/browser/editor.spec.ts:1262:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal
+browser	Run pnpm test:browser	2026-10-07T22:01:39.1375268Z [523/707] [webkit] › tests/browser/editor.spec.ts:1288:1 › edits, selects, and composes across guarded page shells in one contenteditable
+browser	Run pnpm test:browser	2026-10-07T22:01:40.3722926Z [524/707] [webkit] › tests/browser/editor.spec.ts:1364:1 › keeps one paragraph editable when its measured lines span page shells
+browser	Run pnpm test:browser	2026-10-07T22:01:41.2415532Z [525/707] [webkit] › tests/browser/editor.spec.ts:1491:1 › maps carets, ranges, and composition around injected paragraph page gaps
+browser	Run pnpm test:browser	2026-10-07T22:01:42.8971157Z [526/707] [webkit] › tests/browser/editor.spec.ts:1595:1 › keeps one canonical ordered list editable and numbered across page shells
+browser	Run pnpm test:browser	2026-10-07T22:01:43.6586507Z [527/707] [webkit] › tests/browser/editor.spec.ts:1730:52 › honours explicit table repetition independently of cell roles (ordinary)
+browser	Run pnpm test:browser	2026-10-07T22:01:45.5943865Z [528/707] [webkit] › tests/browser/editor.spec.ts:1730:52 › honours explicit table repetition independently of cell roles (off)
+browser	Run pnpm test:browser	2026-10-07T22:01:47.7234445Z [529/707] [webkit] › tests/browser/editor.spec.ts:1763:1 › keeps one canonical table editable with repeated headers across page shells
+browser	Run pnpm test:browser	2026-10-07T22:01:49.1019033Z [530/707] [webkit] › tests/browser/editor.spec.ts:1913:1 › keeps merged header and body rowspans intact across editable table pages
+browser	Run pnpm test:browser	2026-10-07T22:01:51.0642799Z [531/707] [webkit] › tests/browser/editor.spec.ts:1979:1 › reports an oversized table row without clipping or splitting its editable model
+browser	Run pnpm test:browser	2026-10-07T22:01:51.7567423Z [532/707] [webkit] › tests/browser/editor.spec.ts:2021:1 › keeps canonical page furniture and footnotes editable while projecting every page copy
+browser	Run pnpm test:browser	2026-10-07T22:01:53.4067081Z [533/707] [webkit] › tests/browser/editor.spec.ts:2106:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages
+browser	Run pnpm test:browser	2026-10-07T22:01:54.9432101Z [534/707] [webkit] › tests/browser/editor.spec.ts:2241:1 › keeps tracked review and Yjs live between list items split across pages
+browser	Run pnpm test:browser	2026-10-07T22:01:56.9970824Z [535/707] [webkit] › tests/browser/editor.spec.ts:2307:1 › keeps tracked review and Yjs live between table rows split across pages
+browser	Run pnpm test:browser	2026-10-07T22:01:58.7028014Z [536/707] [webkit] › tests/browser/editor.spec.ts:2384:13 › keeps comments attached and synchronized inside a continued list
+browser	Run pnpm test:browser	2026-10-07T22:02:00.9664207Z [537/707] [webkit] › tests/browser/editor.spec.ts:2384:13 › keeps comments attached and synchronized inside a continued table
+browser	Run pnpm test:browser	2026-10-07T22:02:01.8003734Z [538/707] [webkit] › tests/browser/editor.spec.ts:2438:1 › keeps tracked review and Yjs live inside a paragraph split across pages
+browser	Run pnpm test:browser	2026-10-07T22:02:03.8638069Z [539/707] [webkit] › tests/browser/editor.spec.ts:2499:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries
+browser	Run pnpm test:browser	2026-10-07T22:02:05.6701871Z [540/707] [webkit] › tests/browser/editor.spec.ts:2574:1 › tracks real browser insertion and replacement with reversible review decisions
+browser	Run pnpm test:browser	2026-10-07T22:02:06.9946675Z [541/707] [webkit] › tests/browser/editor.spec.ts:2603:1 › runs the package-backed full-text tracked review panel
+browser	Run pnpm test:browser	2026-10-07T22:02:07.4176010Z [542/707] [webkit] › tests/browser/editor.spec.ts:2621:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration
+browser	Run pnpm test:browser	2026-10-07T22:02:11.3022810Z [543/707] [webkit] › tests/browser/editor.spec.ts:2651:1 › edits and persists package-backed collapsible details in the public playground
+browser	Run pnpm test:browser	2026-10-07T22:02:12.7046715Z [544/707] [webkit] › tests/browser/editor.spec.ts:2677:1 › edits semantic ruby annotations through the package-backed public playground
+browser	Run pnpm test:browser	2026-10-07T22:02:17.8086549Z [545/707] [webkit] › tests/browser/editor.spec.ts:2707:1 › converges live and offline Yjs edits and keeps collaborative undo author-local
+browser	Run pnpm test:browser	2026-10-07T22:02:18.3360208Z [546/707] [webkit] › tests/browser/editor.spec.ts:2736:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser
+browser	Run pnpm test:browser	2026-10-07T22:02:19.9357708Z [547/707] [webkit] › tests/browser/editor.spec.ts:2761:1 › round-trips variable-delimiter Markdown code spans in the browser package
+browser	Run pnpm test:browser	2026-10-07T22:02:20.0963570Z [548/707] [webkit] › tests/browser/editor.spec.ts:3329:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items
+browser	Run pnpm test:browser	2026-10-07T22:02:21.4624196Z [549/707] [webkit] › tests/browser/editor.spec.ts:3359:1 › round-trips marker-relative list containers and exact code whitespace
+browser	Run pnpm test:browser	2026-10-07T22:02:22.8793735Z [550/707] [webkit] › tests/browser/editor.spec.ts:3403:1 › preserves raw Markdown and inert frontmatter through the browser package
+browser	Run pnpm test:browser	2026-10-07T22:02:24.2721959Z [551/707] [webkit] › tests/browser/editor.spec.ts:3429:1 › edits through real beforeinput events and undoes a Markdown input rule
+browser	Run pnpm test:browser	2026-10-07T22:02:25.9185791Z [552/707] [webkit] › tests/browser/editor.spec.ts:3443:1 › groups adjacent browser typing and respects explicit undo boundaries
+browser	Run pnpm test:browser	2026-10-07T22:02:27.3073419Z [553/707] [webkit] › tests/browser/editor.spec.ts:3464:3 › preserves replacement formatting across subsequent typing input
+browser	Run pnpm test:browser	2026-10-07T22:02:27.6167026Z [554/707] [webkit] › tests/browser/editor.spec.ts:3464:3 › preserves replacement formatting across subsequent composition input
+browser	Run pnpm test:browser	2026-10-07T22:02:28.7935524Z [555/707] [webkit] › tests/browser/editor.spec.ts:3495:1 › commits cross-browser composition sequences once and supports replacement input
+browser	Run pnpm test:browser	2026-10-07T22:02:29.1330547Z [556/707] [webkit] › tests/browser/editor.spec.ts:3527:1 › maps decorations through typing without persisting widget content
+browser	Run pnpm test:browser	2026-10-07T22:02:30.2612530Z [557/707] [webkit] › tests/browser/editor.spec.ts:3542:1 › highlights editable code and updates language metadata through public commands
+browser	Run pnpm test:browser	2026-10-07T22:02:30.6177258Z [558/707] [webkit] › tests/browser/editor.spec.ts:3572:1 › runs a view-focused chain and checks it without preview side effects
+browser	Run pnpm test:browser	2026-10-07T22:02:31.9189682Z [559/707] [webkit] › tests/browser/editor.spec.ts:3593:1 › applies every configured paste-rule match through a browser paste event
+browser	Run pnpm test:browser	2026-10-07T22:02:32.1287695Z [560/707] [webkit] › tests/browser/editor.spec.ts:3611:1 › autolinks, safely activates, edits, and removes links in a real browser
+browser	Run pnpm test:browser	2026-10-07T22:02:33.3343315Z [561/707] [webkit] › tests/browser/editor.spec.ts:3642:1 › preserves structured rich HTML from a real browser clipboard event
+browser	Run pnpm test:browser	2026-10-07T22:02:33.9329749Z [562/707] [webkit] › tests/browser/editor.spec.ts:3663:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting
+browser	Run pnpm test:browser	2026-10-07T22:02:34.7857117Z [563/707] [webkit] › tests/browser/editor.spec.ts:3684:1 › honors strict raw HTML token boundaries in the public Markdown pipeline
+browser	Run pnpm test:browser	2026-10-07T22:02:35.4932008Z [564/707] [webkit] › tests/browser/editor.spec.ts:3701:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists
+browser	Run pnpm test:browser	2026-10-07T22:02:37.2249567Z [565/707] [webkit] › tests/browser/editor.spec.ts:3721:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks
+browser	Run pnpm test:browser	2026-10-07T22:02:38.8456875Z [566/707] [webkit] › tests/browser/editor.spec.ts:3744:1 › retains standalone non-collapsible Unicode text during rich paste
+browser	Run pnpm test:browser	2026-10-07T22:02:39.4969336Z [567/707] [webkit] › tests/browser/editor.spec.ts:3761:1 › pastes empty formatting and applies it to subsequently typed text
+browser	Run pnpm test:browser	2026-10-07T22:02:40.4907142Z [568/707] [webkit] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph
+browser	Run pnpm test:browser	2026-10-07T22:02:41.3156740Z [569/707] [webkit] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph from its label area
+browser	Run pnpm test:browser	2026-10-07T22:02:42.8268998Z [570/707] [webkit] › tests/browser/editor.spec.ts:3812:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine
+browser	Run pnpm test:browser	2026-10-07T22:02:44.2792401Z [571/707] [webkit] › tests/browser/editor.spec.ts:3865:1 › imports an extension-defined HTML node through the schema contract
+browser	Run pnpm test:browser	2026-10-07T22:02:45.2581802Z [572/707] [webkit] › tests/browser/editor.spec.ts:3890:1 › pastes mixed nested HTML lists without flattening their hierarchy
+browser	Run pnpm test:browser	2026-10-07T22:02:46.3042220Z [573/707] [webkit] › tests/browser/editor.spec.ts:3913:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys
+browser	Run pnpm test:browser	2026-10-07T22:02:47.4014411Z [574/707] [webkit] › tests/browser/editor.spec.ts:3943:1 › edits bidirectional and deeply nested text by logical document positions
+browser	Run pnpm test:browser	2026-10-07T22:02:48.7358171Z [575/707] [webkit] › tests/browser/editor.spec.ts:3970:1 › moves a selected top-level block through native drag data
+browser	Run pnpm test:browser	2026-10-07T22:02:49.1400759Z [576/707] (retries) [webkit] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph (retry #1)
+browser	Run pnpm test:browser	2026-10-07T22:02:50.3221160Z [577/707] [webkit] › tests/browser/editor.spec.ts:3988:1 › shows a host-replaceable drop cursor for inline text and atomic block targets
+browser	Run pnpm test:browser	2026-10-07T22:02:51.5528307Z [578/707] [webkit] › tests/browser/editor.spec.ts:4049:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo
+browser	Run pnpm test:browser	2026-10-07T22:02:53.1505991Z [579/707] [webkit] › tests/browser/editor.spec.ts:4124:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes
+browser	Run pnpm test:browser	2026-10-07T22:02:56.0211753Z [580/707] [webkit] › tests/browser/editor.spec.ts:4220:1 › replaces a DOM selection that crosses block boundaries
+browser	Run pnpm test:browser	2026-10-07T22:02:57.1492194Z [581/707] [webkit] › tests/browser/editor.spec.ts:4259:1 › keeps a visible editable paragraph after a terminal non-text block
+browser	Run pnpm test:browser	2026-10-07T22:02:58.1629724Z [582/707] (retries) [webkit] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph (retry #2)
+browser	Run pnpm test:browser	2026-10-07T22:02:58.5237556Z [583/707] [webkit] › tests/browser/editor.spec.ts:4281:1 › uses Ctrl+A as an explicit all-document selection and replaces the document
+browser	Run pnpm test:browser	2026-10-07T22:03:00.2408031Z [584/707] [webkit] › tests/browser/editor.spec.ts:4293:1 › selects and deletes a block image through real pointer and keyboard input
+browser	Run pnpm test:browser	2026-10-07T22:03:02.1993042Z [585/707] [webkit] › tests/browser/editor.spec.ts:4316:1 › edits, aligns, resizes, and undoes a production image through accessible controls
+browser	Run pnpm test:browser	2026-10-07T22:03:03.8077668Z [586/707] [webkit] › tests/browser/editor.spec.ts:4372:1 › inserts and removes a true inline image without breaking surrounding text
+browser	Run pnpm test:browser	2026-10-07T22:03:04.8799257Z [587/707] [webkit] › tests/browser/editor.spec.ts:4390:1 › tracks and cancels browser-native image upload tasks
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8552963Z   2) [webkit] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8564457Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8565895Z     Error: expect(locator).toHaveText(expected) failed
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8566396Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8567037Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8568231Z     Expected: "literal edited"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8568778Z     Received: "literal"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8569224Z     Timeout:  5000ms
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8569469Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8569643Z     Call log:
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8570445Z       - Expect "toHaveText" with timeout 5000ms
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8571492Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8574475Z         14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8576908Z            - unexpected value "literal"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8577203Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8577213Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8577441Z        at code-native-focus-journey.ts:33
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8577758Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8578282Z       31 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8579530Z       32 |     observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8580547Z     > 33 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8581118Z          |                              ^
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8581965Z       34 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8582719Z       35 |
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8583061Z       36 |     return nativeFocus;
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8584078Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:33:30)
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8585827Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:3800:45
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8586420Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8587149Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8588948Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/attachments/code-click-native-baseline-81ee18389a3f9a303631eba4d9c512b96d6c1774.json
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8590775Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8591788Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8592462Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8593609Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/test-failed-1.png
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8595398Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8595921Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8596699Z     Error Context: test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/error-context.md
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8598484Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8599225Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8600449Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/trace.zip
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8601551Z     Usage:
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8601729Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8602606Z         pnpm exec playwright show-trace test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit/trace.zip
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8603534Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8604166Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8604907Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8605575Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8606121Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8606419Z     Error: expect(locator).toHaveText(expected) failed
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8606805Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8607125Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8607754Z     Expected: "literal edited"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8608132Z     Received: "literal"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8608474Z     Timeout:  5000ms
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8608684Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8608819Z     Call log:
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8609242Z       - Expect "toHaveText" with timeout 5000ms
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8609904Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8612944Z         14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8615666Z            - unexpected value "literal"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8615986Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8615999Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8616236Z        at code-native-focus-journey.ts:33
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8616575Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8617100Z       31 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8618412Z       32 |     observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8619487Z     > 33 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8620081Z          |                              ^
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8620898Z       34 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8621610Z       35 |
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8621954Z       36 |     return nativeFocus;
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8622967Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:33:30)
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8624209Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:3800:45
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8625314Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8626104Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8627994Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry1/attachments/code-click-native-baseline-20f7d1457321feadde59e6f018eaedf5e9d7e790.json
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8629865Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8630349Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8631001Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8632296Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry1/test-failed-1.png
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8633694Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8634171Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8635240Z     Error Context: test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry1/error-context.md
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8636190Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8636915Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8638227Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry1/trace.zip
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8639433Z     Usage:
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8639627Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8640595Z         pnpm exec playwright show-trace test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry1/trace.zip
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8641597Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8642197Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8642666Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8643452Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8643934Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8644207Z     Error: expect(locator).toHaveText(expected) failed
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8644784Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8645129Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8645747Z     Expected: "literal edited"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8646177Z     Received: "literal"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8646552Z     Timeout:  5000ms
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8646773Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8646931Z     Call log:
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8647373Z       - Expect "toHaveText" with timeout 5000ms
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8648107Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8651031Z         14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8653312Z            - unexpected value "literal"
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8653623Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8653632Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8653859Z        at code-native-focus-journey.ts:33
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8654193Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8654927Z       31 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8656257Z       32 |     observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8657305Z     > 33 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8657886Z          |                              ^
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8658707Z       34 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8659478Z       35 |
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8659847Z       36 |     return nativeFocus;
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8660880Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:33:30)
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8662122Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:3800:45
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8662658Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8663373Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8665439Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry2/attachments/code-click-native-baseline-0a358dab4a3e7dd31befb0e77ceb5f5694a60d5f.json
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8667525Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8668016Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8668658Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8669933Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry2/test-failed-1.png
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8671335Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8671810Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8672630Z     Error Context: test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry2/error-context.md
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8673494Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8674147Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8675536Z     test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry2/trace.zip
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8676427Z     Usage:
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8676592Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8677489Z         pnpm exec playwright show-trace test-results/editor-pastes-and-edits-li-f15fd-inventing-a-blank-paragraph-webkit-retry2/trace.zip
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8678409Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8679012Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8679673Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:05.8679682Z 
+browser	Run pnpm test:browser	2026-10-07T22:03:06.0609187Z [588/707] [webkit] › tests/browser/editor.spec.ts:4458:1 › keeps mixed-format links intact through backward selection typing and history
+browser	Run pnpm test:browser	2026-10-07T22:03:07.2741750Z [589/707] [webkit] › tests/browser/editor.spec.ts:4430:1 › extends and replaces a rectangular cell selection through real pointer input
+browser	Run pnpm test:browser	2026-10-07T22:03:07.8846136Z [590/707] [webkit] › tests/browser/editor.spec.ts:4490:1 › reaches overflowing code by keyboard and leaves it without modifying the document
+browser	Run pnpm test:browser	2026-10-07T22:03:09.4917396Z [591/707] [webkit] › tests/browser/editor.spec.ts:4536:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+browser	Run pnpm test:browser	2026-10-07T22:03:09.9793745Z [592/707] [webkit] › tests/browser/editor.spec.ts:4560:1 › announces table resize values through real keyboard, pointer and history workflows
+browser	Run pnpm test:browser	2026-10-07T22:03:10.0107071Z [593/707] [webkit] › tests/browser/editor.spec.ts:4613:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids
+browser	Run pnpm test:browser	2026-10-07T22:03:11.7707126Z [594/707] [webkit] › tests/browser/editor.spec.ts:4686:1 › keeps normal paste while offering bounded editor-local clipboard slots
+browser	Run pnpm test:browser	2026-10-07T22:03:13.1040134Z [595/707] [webkit] › tests/browser/editor.spec.ts:4725:1 › renders and types into a structural gap as a new block
+browser	Run pnpm test:browser	2026-10-07T22:03:13.1127312Z [596/707] [webkit] › tests/browser/editor.spec.ts:4737:1 › edits Lean without a mandatory server and renders transient provider diagnostics
+browser	Run pnpm test:browser	2026-10-07T22:03:14.5530253Z [597/707] [webkit] › tests/browser/editor.spec.ts:4764:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM
+browser	Run pnpm test:browser	2026-10-07T22:03:14.6327100Z [598/707] [webkit] › tests/browser/editor.spec.ts:4801:1 › loads the public React playground without console or page errors
+browser	Run pnpm test:browser	2026-10-07T22:03:16.3582817Z [599/707] [webkit] › tests/browser/editor.spec.ts:4826:1 › publishes actionable extension authoring, conformance, and doctor guidance
+browser	Run pnpm test:browser	2026-10-07T22:03:17.9568575Z [600/707] [webkit] › tests/browser/editor.spec.ts:4844:1 › pairs the optional AI demo with developer recipes for every public workflow
+browser	Run pnpm test:browser	2026-10-07T22:03:18.8821879Z [601/707] [webkit] › tests/browser/editor.spec.ts:4865:1 › runs the public two-editor collaboration demo with presence and author-local undo
+browser	Run pnpm test:browser	2026-10-07T22:03:20.6620462Z [602/707] [webkit] › tests/browser/editor.spec.ts:4932:1 › replaces both live collaboration documents without remounting the public editors
+browser	Run pnpm test:browser	2026-10-07T22:03:23.2965057Z [603/707] [webkit] › tests/browser/editor.spec.ts:4991:1 › merges nested collaborative settings through the public two-editor demo
+browser	Run pnpm test:browser	2026-10-07T22:03:26.6746446Z [604/707] [webkit] › tests/browser/editor.spec.ts:5010:1 › keeps headline phrases together and makes full-page navigation explicit
+browser	Run pnpm test:browser	2026-10-07T22:03:28.6037513Z [605/707] [webkit] › tests/browser/editor.spec.ts:5035:1 › runs shared threaded comments through the public provider-neutral review panel
+browser	Run pnpm test:browser	2026-10-07T22:03:31.2702180Z [606/707] [webkit] › tests/browser/editor.spec.ts:5092:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground
+browser	Run pnpm test:browser	2026-10-07T22:03:36.2616913Z [607/707] [webkit] › tests/browser/editor.spec.ts:5153:1 › runs grouped default and product slash commands in the public React playground
+browser	Run pnpm test:browser	2026-10-07T22:03:36.4000497Z [608/707] [webkit] › tests/browser/editor.spec.ts:5184:1 › runs accessible bubble and floating menus in the public React playground
+browser	Run pnpm test:browser	2026-10-07T22:03:43.4708548Z [609/707] [webkit] › tests/browser/editor.spec.ts:5226:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs
+browser	Run pnpm test:browser	2026-10-07T22:03:43.8162879Z [610/707] [webkit] › tests/browser/editor.spec.ts:5263:1 › applies the complete text-style suite through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T22:03:48.1462471Z [611/707] [webkit] › tests/browser/editor.spec.ts:5324:1 › uses the public React image workflow for metadata, alignment, and replacement
+browser	Run pnpm test:browser	2026-10-07T22:03:55.5136951Z [612/707] [webkit] › tests/browser/editor.spec.ts:5368:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+browser	Run pnpm test:browser	2026-10-07T22:03:57.2220068Z [613/707] [webkit] › tests/browser/editor.spec.ts:5486:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+browser	Run pnpm test:browser	2026-10-07T22:04:02.5906493Z [614/707] [webkit] › tests/browser/editor.spec.ts:5513:1 › keeps table configuration labels legible on pointer hover
+browser	Run pnpm test:browser	2026-10-07T22:04:10.8753007Z [615/707] [webkit] › tests/browser/editor.spec.ts:5552:1 › creates and edits a link through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T22:04:18.7610623Z [616/707] [webkit] › tests/browser/editor.spec.ts:5583:1 › toggles a selected block through the public React list controls
+browser	Run pnpm test:browser	2026-10-07T22:04:19.8198670Z [617/707] [webkit] › tests/browser/editor.spec.ts:5598:1 › edits code language and line numbers through the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T22:04:24.0119017Z [618/707] [webkit] › tests/browser/editor.spec.ts:5617:1 › opens the searchable clipboard-history picker in the public React toolbar
+browser	Run pnpm test:browser	2026-10-07T22:04:26.1476776Z [619/707] [webkit] › tests/browser/editor.spec.ts:5650:1 › keeps the public outline stable, hierarchical, active, and navigable
+browser	Run pnpm test:browser	2026-10-07T22:04:28.8566795Z [620/707] [webkit] › tests/browser/editor.spec.ts:5675:1 › exposes and explicitly cleans invisible text in the public playground
+browser	Run pnpm test:browser	2026-10-07T22:04:30.9086425Z [621/707] [webkit] › tests/browser/editor.spec.ts:5716:1 › runs the public plain-DOM first-class widget demo
+browser	Run pnpm test:browser	2026-10-07T22:04:35.4013340Z [622/707] [webkit] › tests/browser/editor.spec.ts:5763:1 › runs the public React first-class widget demo without losing control focus
+browser	Run pnpm test:browser	2026-10-07T22:04:37.2338155Z [623/707] [webkit] › tests/browser/editor.spec.ts:5801:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo
+browser	Run pnpm test:browser	2026-10-07T22:04:39.5580926Z [624/707] [webkit] › tests/browser/editor.spec.ts:5815:1 › retains table captions and reports their projected association in the conversion demo
+browser	Run pnpm test:browser	2026-10-07T22:04:42.1192065Z [625/707] [webkit] › tests/browser/editor.spec.ts:5832:1 › preserves complex figure content in the public Markdown conversion demo
+browser	Run pnpm test:browser	2026-10-07T22:04:45.2077250Z [626/707] [webkit] › tests/browser/editor.spec.ts:5850:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline
+browser	Run pnpm test:browser	2026-10-07T22:04:47.6996613Z [627/707] [webkit] › tests/browser/editor.spec.ts:5921:1 › records native DOCX viewer disagreements without certifying math fidelity
+browser	Run pnpm test:browser	2026-10-07T22:04:55.7521441Z [628/707] [webkit] › tests/browser/editor.spec.ts:5926:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission
+browser	Run pnpm test:browser	2026-10-07T22:05:00.3779451Z [629/707] [webkit] › tests/browser/editor.spec.ts:6042:1 › renders real KaTeX while reporting published-equation and trust failures without source loss
+browser	Run pnpm test:browser	2026-10-07T22:05:01.5310500Z [630/707] [webkit] › tests/browser/editor.spec.ts:6073:1 › edits multiline math without losing line breaks, descriptions, or undo history
+browser	Run pnpm test:browser	2026-10-07T22:05:02.9561437Z [631/707] [webkit] › tests/browser/editor.spec.ts:6110:1 › renders and inserts native math in the public DOM integration
+browser	Run pnpm test:browser	2026-10-07T22:05:06.3629256Z [632/707] [webkit] › tests/browser/editor.spec.ts:6167:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+browser	Run pnpm test:browser	2026-10-07T22:05:07.9366781Z [633/707] [webkit] › tests/browser/editor.spec.ts:6215:1 › keeps rich and multiline paste structurally predictable in the public editor
+browser	Run pnpm test:browser	2026-10-07T22:05:11.4238578Z [634/707] [webkit] › tests/browser/editor.spec.ts:6288:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+browser	Run pnpm test:browser	2026-10-07T22:05:12.1758634Z [635/707] [webkit] › tests/browser/editor.spec.ts:6355:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+browser	Run pnpm test:browser	2026-10-07T22:05:13.4635521Z [636/707] [webkit] › tests/browser/editor.spec.ts:6404:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+browser	Run pnpm test:browser	2026-10-07T22:05:14.2217672Z [637/707] [webkit] › tests/browser/editor.spec.ts:6491:1 › copies clean semantic Fountain HTML into an external browser editor
+browser	Run pnpm test:browser	2026-10-07T22:05:14.8267107Z [638/707] [webkit] › tests/browser/editor.spec.ts:6546:1 › copies readable Fountain text into a plain-text external editor
+browser	Run pnpm test:browser	2026-10-07T22:05:14.8489946Z [639/707] [webkit] › tests/browser/editor.spec.ts:6605:1 › copies math to external rich and plain-text editors without renderer controls
+browser	Run pnpm test:browser	2026-10-07T22:05:15.4139586Z [640/707] [webkit] › tests/browser/editor.spec.ts:6650:1 › renders repeated empty paragraphs and removes each visible line
+browser	Run pnpm test:browser	2026-10-07T22:05:15.4175961Z [641/707] [webkit] › tests/browser/editor.spec.ts:6680:1 › undoes and redoes real typing with both common browser keyboard chords
+browser	Run pnpm test:browser	2026-10-07T22:05:17.0616561Z [642/707] [webkit] › tests/browser/editor.spec.ts:6697:1 › keeps a backward DOM selection backward after model synchronization
+browser	Run pnpm test:browser	2026-10-07T22:05:18.5000324Z [643/707] [webkit] › tests/browser/editor.spec.ts:6736:1 › replaces a backward selection made by a real reverse pointer drag
+browser	Run pnpm test:browser	2026-10-07T22:05:18.5004356Z [644/707] [webkit] › tests/browser/editor.spec.ts:6721:1 › preserves a backward selection made with real keyboard input
+browser	Run pnpm test:browser	2026-10-07T22:05:20.1608361Z [645/707] [webkit] › tests/browser/editor.spec.ts:6772:1 › turns multi-format and multi-block selections into visible paragraph boundaries
+browser	Run pnpm test:browser	2026-10-07T22:05:20.2202569Z [646/707] [webkit] › tests/browser/editor.spec.ts:6830:1 › visibly splits and joins ordinary paragraphs with both deletion directions
+browser	Run pnpm test:browser	2026-10-07T22:05:22.1419355Z [647/707] [webkit] › tests/browser/editor.spec.ts:6855:1 › deletes an adjacent inline atom without eating surrounding text
+browser	Run pnpm test:browser	2026-10-07T22:05:22.2948600Z [648/707] [webkit] › tests/browser/editor.spec.ts:6885:1 › unwraps and exits an inserted quote with ordinary browser keys
+browser	Run pnpm test:browser	2026-10-07T22:05:23.6262179Z [649/707] [webkit] › tests/browser/editor.spec.ts:6914:1 › publishes semantic selection controls and table interaction in the demo gallery
+browser	Run pnpm test:browser	2026-10-07T22:05:26.8637204Z [650/707] [webkit] › tests/browser/editor.spec.ts:6931:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries
+browser	Run pnpm test:browser	2026-10-07T22:05:28.1322321Z [651/707] [webkit] › tests/browser/editor.spec.ts:7008:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads
+browser	Run pnpm test:browser	2026-10-07T22:05:33.5223289Z [652/707] [webkit] › tests/browser/editor.spec.ts:7053:1 › streams an optional AI proposal outside the document until review is ready
+browser	Run pnpm test:browser	2026-10-07T22:05:39.2249475Z [653/707] [webkit] › tests/browser/editor.spec.ts:7078:1 › preserves whitespace when an AI proposal ends at a formatting boundary
+browser	Run pnpm test:browser	2026-10-07T22:05:40.4808365Z [654/707] [webkit] › tests/browser/editor.spec.ts:7093:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation
+browser	Run pnpm test:browser	2026-10-07T22:05:46.3116998Z [655/707] [webkit] › tests/browser/editor.spec.ts:7121:1 › reviews generated media before the normal host upload inserts one undoable node
+browser	Run pnpm test:browser	2026-10-07T22:05:49.8107954Z [656/707] [webkit] › tests/browser/editor.spec.ts:7147:1 › reviews a schema-aware agent tool proposal before one-step apply and undo
+browser	Run pnpm test:browser	2026-10-07T22:05:54.0442011Z [657/707] [webkit] › tests/browser/editor.spec.ts:7172:1 › keeps a 1,000-block input update local and paints within budget
+browser	Run pnpm test:browser	2026-10-07T22:05:56.0077679Z [658/707] [webkit] › tests/browser/editor.spec.ts:7193:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy
+browser	Run pnpm test:browser	2026-10-07T22:05:56.0746836Z [659/707] [webkit] › tests/browser/editor.spec.ts:7251:1 › exports rich tables as HTML Markdown and exposes the compatibility note
+browser	Run pnpm test:browser	2026-10-07T22:05:59.8396647Z [660/707] [webkit] › tests/browser/editor.spec.ts:7273:1 › HTML comments do not insert phantom paragraphs in converted Markdown
+browser	Run pnpm test:browser	2026-10-07T22:06:01.6401890Z [661/707] [webkit] › tests/browser/editor.spec.ts:7285:1 › imported table section order matches the physically rendered source table
+browser	Run pnpm test:browser	2026-10-07T22:06:03.6617949Z [662/707] [webkit] › tests/browser/editor.spec.ts:7316:1 › imports zero-rowspan cells with the same row-group geometry in server and browser
+browser	Run pnpm test:browser	2026-10-07T22:06:06.4079421Z [663/707] [webkit] › tests/browser/editor.spec.ts:7347:1 › reconstructs HTML tables across Markdown block boundaries
+browser	Run pnpm test:browser	2026-10-07T22:06:08.9307613Z [664/707] [webkit] › tests/browser/editor.spec.ts:7368:1 › applies surrounding HTML formatting without replacing Markdown block content
+browser	Run pnpm test:browser	2026-10-07T22:06:11.4647253Z [665/707] [webkit] › tests/browser/editor.spec.ts:7381:1 › converts raw HTML blocks only when the headless demo option is enabled
+browser	Run pnpm test:browser	2026-10-07T22:06:13.1662626Z [666/707] [webkit] › tests/browser/editor.spec.ts:7397:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback
+browser	Run pnpm test:browser	2026-10-07T22:06:16.0375465Z [667/707] [webkit] › tests/browser/editor.spec.ts:7422:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces
+browser	Run pnpm test:browser	2026-10-07T22:06:19.5606963Z [668/707] [mobile-chrome] › tests/browser/mobile.spec.ts:4:1 › submits resets and disables a native form-associated Web Component on mobile
+browser	Run pnpm test:browser	2026-10-07T22:06:22.0707817Z [669/707] [mobile-chrome] › tests/browser/mobile.spec.ts:9:1 › uses Angular campaign controls on a touch viewport and preserves history across view remount
+browser	Run pnpm test:browser	2026-10-07T22:06:22.4600840Z [670/707] [mobile-chrome] › tests/browser/mobile.spec.ts:36:1 › uses the real Svelte report on a touch viewport with retained edits and history
+browser	Run pnpm test:browser	2026-10-07T22:06:25.0582772Z [671/707] [mobile-chrome] › tests/browser/mobile.spec.ts:66:1 › uses the real Vue runbook on a touch viewport without losing task state
+browser	Run pnpm test:browser	2026-10-07T22:06:27.1424391Z [672/707] [mobile-chrome] › tests/browser/mobile.spec.ts:89:1 › handles virtual-keyboard replacement, composition, deletion, and history input
+browser	Run pnpm test:browser	2026-10-07T22:06:28.0287023Z [673/707] [mobile-chrome] › tests/browser/mobile.spec.ts:128:1 › shows every empty line created and removed by repeated mobile Enter and Backspace
+browser	Run pnpm test:browser	2026-10-07T22:06:28.3631228Z [674/707] [mobile-chrome] › tests/browser/mobile.spec.ts:155:1 › inserts and updates native math from the phone controls
+browser	Run pnpm test:browser	2026-10-07T22:06:29.7807296Z [675/707] [mobile-chrome] › tests/browser/mobile.spec.ts:169:1 › keeps Word export and re-import understandable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:29.9595859Z [676/707] [mobile-chrome] › tests/browser/mobile.spec.ts:190:1 › keeps editable page content continuous on a narrow screen
+browser	Run pnpm test:browser	2026-10-07T22:06:31.1527033Z [677/707] [mobile-chrome] › tests/browser/mobile.spec.ts:213:1 › preserves split-paragraph selection and composition through mobile page fallback
+browser	Run pnpm test:browser	2026-10-07T22:06:31.8283826Z [678/707] [mobile-chrome] › tests/browser/mobile.spec.ts:321:1 › keeps the public editor usable without horizontal overflow at a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:32.5018127Z [679/707] [mobile-chrome] › tests/browser/mobile.spec.ts:343:1 › keeps the closing promise in four intentional mobile phrases
+browser	Run pnpm test:browser	2026-10-07T22:06:33.8631361Z [680/707] [mobile-chrome] › tests/browser/mobile.spec.ts:376:1 › keeps tracked review complete and touch-operable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:34.2277027Z [681/707] [mobile-chrome] › tests/browser/mobile.spec.ts:394:1 › keeps complete version names and guarded restore touch-operable on a phone
+browser	Run pnpm test:browser	2026-10-07T22:06:35.8127240Z [682/707] [mobile-chrome] › tests/browser/mobile.spec.ts:413:1 › keeps native collapsible details readable and touch-operable on a phone
+browser	Run pnpm test:browser	2026-10-07T22:06:36.3062012Z [683/707] [mobile-chrome] › tests/browser/mobile.spec.ts:428:1 › keeps ruby annotation editing touch-operable and inside the phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:37.7786869Z [684/707] [mobile-chrome] › tests/browser/mobile.spec.ts:449:1 › keeps the suggestion picker visible and touch-selectable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:38.5048905Z [685/707] [mobile-chrome] › tests/browser/mobile.spec.ts:496:1 › keeps contextual menus reachable and touch-selectable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:41.0762977Z [686/707] [mobile-chrome] › tests/browser/mobile.spec.ts:546:1 › keeps a composed icon toolbar reachable and touch-operable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:06:41.2184934Z [687/707] [mobile-chrome] › tests/browser/mobile.spec.ts:568:1 › keeps the complete text-style panel usable without mobile page overflow
+browser	Run pnpm test:browser	2026-10-07T22:06:43.3915346Z [688/707] [mobile-chrome] › tests/browser/mobile.spec.ts:590:1 › exposes touch-sized block movement controls without page overflow
+browser	Run pnpm test:browser	2026-10-07T22:06:43.5055152Z [689/707] [mobile-chrome] › tests/browser/mobile.spec.ts:607:1 › keeps a 100,000-block virtual document bounded on mobile engines
+browser	Run pnpm test:browser	2026-10-07T22:06:45.9075557Z [690/707] [mobile-safari] › tests/browser/mobile.spec.ts:4:1 › submits resets and disables a native form-associated Web Component on mobile
+browser	Run pnpm test:browser	2026-10-07T22:06:46.1027552Z [691/707] [mobile-safari] › tests/browser/mobile.spec.ts:9:1 › uses Angular campaign controls on a touch viewport and preserves history across view remount
+browser	Run pnpm test:browser	2026-10-07T22:06:51.2466536Z [692/707] [mobile-safari] › tests/browser/mobile.spec.ts:36:1 › uses the real Svelte report on a touch viewport with retained edits and history
+browser	Run pnpm test:browser	2026-10-07T22:06:54.7883112Z [693/707] [mobile-safari] › tests/browser/mobile.spec.ts:66:1 › uses the real Vue runbook on a touch viewport without losing task state
+browser	Run pnpm test:browser	2026-10-07T22:06:56.6952519Z [694/707] [mobile-safari] › tests/browser/mobile.spec.ts:89:1 › handles virtual-keyboard replacement, composition, deletion, and history input
+browser	Run pnpm test:browser	2026-10-07T22:06:58.0557720Z [695/707] [mobile-safari] › tests/browser/mobile.spec.ts:128:1 › shows every empty line created and removed by repeated mobile Enter and Backspace
+browser	Run pnpm test:browser	2026-10-07T22:06:59.0627971Z [696/707] [mobile-safari] › tests/browser/mobile.spec.ts:155:1 › inserts and updates native math from the phone controls
+browser	Run pnpm test:browser	2026-10-07T22:07:00.0800443Z [697/707] [mobile-safari] › tests/browser/mobile.spec.ts:169:1 › keeps Word export and re-import understandable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:01.8224226Z [698/707] [mobile-safari] › tests/browser/mobile.spec.ts:190:1 › keeps editable page content continuous on a narrow screen
+browser	Run pnpm test:browser	2026-10-07T22:07:03.2272673Z [699/707] [mobile-safari] › tests/browser/mobile.spec.ts:213:1 › preserves split-paragraph selection and composition through mobile page fallback
+browser	Run pnpm test:browser	2026-10-07T22:07:03.7493589Z [700/707] [mobile-safari] › tests/browser/mobile.spec.ts:321:1 › keeps the public editor usable without horizontal overflow at a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:05.0730654Z [701/707] [mobile-safari] › tests/browser/mobile.spec.ts:343:1 › keeps the closing promise in four intentional mobile phrases
+browser	Run pnpm test:browser	2026-10-07T22:07:07.0525088Z [702/707] [mobile-safari] › tests/browser/mobile.spec.ts:376:1 › keeps tracked review complete and touch-operable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:07.7225639Z [703/707] [mobile-safari] › tests/browser/mobile.spec.ts:394:1 › keeps complete version names and guarded restore touch-operable on a phone
+browser	Run pnpm test:browser	2026-10-07T22:07:10.5107037Z [704/707] [mobile-safari] › tests/browser/mobile.spec.ts:413:1 › keeps native collapsible details readable and touch-operable on a phone
+browser	Run pnpm test:browser	2026-10-07T22:07:10.9487405Z [705/707] [mobile-safari] › tests/browser/mobile.spec.ts:428:1 › keeps ruby annotation editing touch-operable and inside the phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:13.3897591Z [706/707] [mobile-safari] › tests/browser/mobile.spec.ts:449:1 › keeps the suggestion picker visible and touch-selectable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:14.6175381Z [707/707] [mobile-safari] › tests/browser/mobile.spec.ts:496:1 › keeps contextual menus reachable and touch-selectable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:18.7351669Z [708/707] [mobile-safari] › tests/browser/mobile.spec.ts:546:1 › keeps a composed icon toolbar reachable and touch-operable on a phone viewport
+browser	Run pnpm test:browser	2026-10-07T22:07:21.1340372Z [709/707] [mobile-safari] › tests/browser/mobile.spec.ts:568:1 › keeps the complete text-style panel usable without mobile page overflow
+browser	Run pnpm test:browser	2026-10-07T22:07:23.5189458Z [710/707] [mobile-safari] › tests/browser/mobile.spec.ts:590:1 › exposes touch-sized block movement controls without page overflow
+browser	Run pnpm test:browser	2026-10-07T22:07:26.6497011Z [711/707] [mobile-safari] › tests/browser/mobile.spec.ts:607:1 › keeps a 100,000-block virtual document bounded on mobile engines
+browser	Run pnpm test:browser	2026-10-07T22:07:29.2354812Z   2 failed
+browser	Run pnpm test:browser	2026-10-07T22:07:29.2356308Z     [webkit] › tests/browser/editor.spec.ts:43:1 › compares list-first code text-click focus and editing to a plain native surface 
+browser	Run pnpm test:browser	2026-10-07T22:07:29.2357976Z     [webkit] › tests/browser/editor.spec.ts:3785:57 › pastes and edits list-first code without inventing a blank paragraph 
+browser	Run pnpm test:browser	2026-10-07T22:07:29.2358886Z   16 skipped
+browser	Run pnpm test:browser	2026-10-07T22:07:29.2359268Z   689 passed (25.2m)
+browser	Run pnpm test:browser	2026-10-07T22:07:30.1393363Z [ELIFECYCLE] Command failed with exit code 1.
+browser	Run pnpm test:browser	2026-10-07T22:07:30.1632762Z ##[error]Process completed with exit code 1.

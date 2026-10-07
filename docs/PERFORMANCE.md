@@ -1,5 +1,13 @@
 # Performance and memory contract
 
+Cloud result for structural direction (`9f56b8b`, 2026-10-07): the unchanged
+local-edit growth check fails at 15.11× versus its 15× ceiling. Rounded medians
+are 0.05 ms at 1,000 blocks and 0.79 ms at 10,000; the raw ratio uses unrounded
+measurements. Other latency, server-HTML growth and retained-heap checks pass.
+This is a failed gate, not a certified performance result or justification to
+raise the threshold. The follow-up must pass the same complete contract.
+Raw evidence: `artifacts/ci-9f56b8b-failure-20261007.log`.
+
 ## Structural reading direction (2026-10-07, Unreleased)
 
 Optional structural direction, inheritance boundaries, author controls and RTL

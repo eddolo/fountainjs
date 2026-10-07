@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Latest cloud checkpoint (`9f56b8b`, 2026-10-07): nine Linux structural-direction
+preflights and Pages pass. Full units expose one ordinary-quote DOM contract
+regression (2,723 passed / one failed); restore its unadorned output without
+changing the existing test. 39 focused follow-up tests pass. Performance fails
+the unchanged 15× local growth cap at 15.11×; keep the evidence and limits.
+Linux WebKit native code typing still fails, so add passive event/caret/widget
+diagnostics and continue collecting Fountain typing/undo while preserving the
+native failure. The previous `cdb98b7` full matrix finishes at 689 passed,
+16 skipped and two code-input failures. Next is complete follow-up cloud
+verification and diagnosing actual native/Fountain dispatch, not an npm release.
+
 Current structural RTL work (2026-10-07, Unreleased): implemented validated
 list/item, quote, table/row/cell and definition-list direction, parent inheritance,
 undoable author controls, logical decorations, physical RTL cell selection and
