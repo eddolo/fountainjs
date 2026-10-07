@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse compiled server HTML selectors in a private, bounded per-tree cache, never on the importer/schema or globally; preserve relative/scoped query behavior and diagnostics, and pass existing performance, heap and bundle limits without increasing them. Verify separate imports, 270-rule eviction, full functional checks and recorded editing/reopening; retain the initial concurrent timing-test failure and document the unchanged isolated pass. Linux native-color focus remains separate and open.
+
 - Reduce shared-subtree edit allocations and redundant deep equality: skip cached child validation before creating paths, match exact single groups without token arrays, and compare unchanged child identity directly. Preserve mutable-host revalidation, foreign-schema refusal, marks/attributes/text equality, and existing budgets. The original edit-scaling check passes locally; a server HTML p95 performance failure and Linux WebKit native-color focus remain open.
 - Scope the public headless demo's JSON-tab browser selector to its output navigation, avoiding ambiguity with the inert workshop's JSON reopen action. Capture native color focus state before and after arrow navigation without skipping the Linux WebKit assertion.
 

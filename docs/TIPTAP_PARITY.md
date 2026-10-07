@@ -1,5 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest import-performance checkpoint (2026-10-07, Unreleased): private,
+tree-owned selector compilation preserves complex query/rule behavior while
+avoiding recompilation for every element. Bound 256 entries, no result caching,
+no global/importer/schema ownership, no dependency/API/budget increase. All
+required local checks pass across separate frozen-source runs, including
+**2,626 tests / 197 files**, 589.28ms server HTML p95 / 900ms, and twelve recorded
+Windows three-engine workflows. All 75 captures are visually verified directly
+or by exact hashes; the reader remains a fallback, not original layout.
+Initial concurrent timing failure and exact scope are retained in
+`artifacts/server-html-selector-verification-20261007.json`. Linux native-color
+focus remains open. No ledger, CommonMark-score or npm release promotion.
+
 Latest CI follow-up (2026-10-07, Unreleased): shared-subtree validation, group
 matching and equality avoid redundant work without bypassing mutable attribute
 validation or schema ownership. **2,623 tests / 196 files** and nine serial,

@@ -1,0 +1,565 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased; local checks verified, Linux WebKit native color focus remains separate",
+  "source": {
+    "file": "artifacts/server-html-selector-source-20261007.json",
+    "files": 688,
+    "digest": "02dc1053d9a002f8ab9c2a79c1b68012030a6a72b5f4adba64765021ff9efe2e"
+  },
+  "ownership": {
+    "file": "src/html/server.ts",
+    "cache": "Private to one parsed tree, shared by child/query/parent wrappers; never global, importer-owned or schema-owned.",
+    "maximumEntries": 256,
+    "eviction": "Clear at the bound before inserting a newly compiled query.",
+    "resultCaching": false,
+    "newDependency": false,
+    "newPublicAPI": false
+  },
+  "tests": {
+    "functionalChecksLog": "artifacts/server-html-selector-functional-gate-20261007.log",
+    "functionalChecksBeforeUnitTestsPassed": true,
+    "initialAggregateExitCode": 1,
+    "initialUnitPassed": 2625,
+    "initialUnitFailed": 1,
+    "failure": "Existing 100,000 ID lookup timing measured 1550.45ms / 1500ms with concurrent browser recording; assertion unchanged.",
+    "isolatedUnitLog": "artifacts/server-html-selector-tests-isolated-20261007.log",
+    "isolatedUnitExitCode": 0,
+    "tests": 2626,
+    "files": 197,
+    "declarations": 409,
+    "qualification": "All required local functional, budget and performance checks pass on this frozen source across separate runs; the initial aggregate run is retained as a failure.",
+    "focused": {
+      "file": "tests/server-html-selectors.test.ts",
+      "cases": 3,
+      "checks": [
+        "Per-tree compilation counts and recompilation for a separate input tree.",
+        "18 document/fragment imports compared with uncached css-select over relatives, :has, :scope and ordered/hidden children.",
+        "270 rule contributions, observed 256-entry maximum, preserved matches after eviction and unchanged invalid-selector diagnostics."
+      ]
+    }
+  },
+  "performance": {
+    "log": "artifacts/server-html-selector-performance-20261007.log",
+    "exitCode": 0,
+    "server10000P50Ms": 533.07,
+    "server10000P95Ms": 589.28,
+    "server10000P95LimitMs": 900,
+    "serverGrowth": 8.34,
+    "localGrowth": 7.17,
+    "remoteGrowth": 7.55,
+    "growthLimit": 15,
+    "liveHeapMiB": 0,
+    "destroyedEditorHeapMiB": 0.08,
+    "retainedServerDocMiB": 14.31,
+    "serverHeapLimitMiB": 48,
+    "budgetLog": "artifacts/server-html-selector-budget-private-20261007.log",
+    "ESMKiB": 1576.5,
+    "CJSKiB": 1311.4,
+    "changedLimits": false,
+    "qualification": "Same-machine observations; not a cross-hardware latency guarantee."
+  },
+  "experiment": {
+    "log": "artifacts/server-html-selector-prototype-20261007.log",
+    "semanticPairs": 60,
+    "warmupsPerImplementation": 2,
+    "alternatingPairs": 6,
+    "baselineMs": [
+      512.9499,
+      539.3375,
+      503.1696,
+      425.2642,
+      502.3805,
+      537.2695
+    ],
+    "candidateMs": [
+      414.6444,
+      410.378,
+      403.92,
+      342.7153,
+      471.6052,
+      386.8079
+    ],
+    "qualification": "Artifact-only experiment before integration; production tests now verify the implemented boundary."
+  },
+  "browser": {
+    "log": "artifacts/server-html-selector-recorded-20261007.log",
+    "passed": 12,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "host": "Windows",
+    "workers": 1,
+    "retries": 0,
+    "video": true,
+    "trace": true,
+    "workflows": [
+      "Structured inert block/table/image editing and reopening.",
+      "Literal script/style/textarea editing, Enter/Backspace/history and reader.",
+      "Registered inline source editing, hostile data and Markdown/HTML/JSON reopening.",
+      "Headless Markdown/HTML plus actual DOCX download and embedded-image reimport."
+    ]
+  },
+  "visualReview": {
+    "captured": 75,
+    "directlyInspected": 30,
+    "hashIdenticalToInspected": 45,
+    "observations": [
+      "Embedded purple image and edited table contents remain visible in the block editor and reader.",
+      "Literal technical source, registered empty/dotted/nested tags and hostile attributes remain inert data.",
+      "Reader is explicitly a basic fallback, not original-application appearance.",
+      "Tall element screenshots can include the sticky site header across their middle; this capture limitation is not print-layout evidence.",
+      "WebKit uses different device density/font rendering; no cross-engine pixel-equivalence claim."
+    ]
+  },
+  "captures": [
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-editor-edited.png",
+      "sha256": "1583e21fac66377fbe9600ae5a386662a47499c58c35497c7652ccf878ecca88",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-editor-edited.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-editor-mobile.png",
+      "sha256": "cae67b34153523386f02fbfe587dcaa6287feb895d685fccaec02ae1f43bd378",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-editor-mobile.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-empty-filled.png",
+      "sha256": "e9beaddb5864b7d53de075379900fb3827fbc15d9e3228e191aa074cf0d4854b",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-empty-filled.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-edited.png",
+      "sha256": "34469bf10b54310d94e2e2c0f055a5a7aa1057a9472ddc0e5007eccbd3e0f967",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-edited.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-mobile.png",
+      "sha256": "506356d8c4a5fa70c17f9bfedd93d8bbc3750014816cc0fe498471f039b40e86",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-reader-mobile.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-retained-data.png",
+      "sha256": "450bf59f592d957c836a2787c033cc8c26331de18f194bf705f11db5e59a3ff0",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-chromium/raw-text-retained-data.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-edited.png",
+      "sha256": "5083a959ef514efc510e16db6a755f8570a337d0abc75d844313af8052d0c0bd",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-edited.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-mobile.png",
+      "sha256": "045420a33af7ac731030193a8a8fedb90f9de790d3bbc411ac82692693f52e56",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-editor-mobile.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-empty-filled.png",
+      "sha256": "6e1458f9ff4b08517626be55803482b4cccb933c86a3ac0ccf8ed59404137032",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-empty-filled.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-reader-edited.png",
+      "sha256": "322225ac84e7e0255cace2486ee792a7d116dfc5473111f38ae143f64b62d6f5",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-reader-edited.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-reader-mobile.png",
+      "sha256": "300b3f64b9d19e4528575dc02940210b69829b0a53f44334865b2efde89c9105",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-reader-mobile.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-retained-data.png",
+      "sha256": "acee9e474a4481c15b64e8795cad2a07544ba551044af58105bc1ac7c26ddd0e",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-firefox/raw-text-retained-data.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-editor-edited.png",
+      "sha256": "bff43fd6c425ba0955edace08942fa89511da5e5cdf71e92c7fede6aed00ed32",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-editor-edited.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-editor-mobile.png",
+      "sha256": "78879b64dc148a7db4b3f7d453c565fd5ecf828aed56d09aa30faacc1c6f5057",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-editor-mobile.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-empty-filled.png",
+      "sha256": "392a42c3638e94339e03ede0bf92641df0d3fe76d5c664696e4288ac89b7803b",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-empty-filled.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-reader-edited.png",
+      "sha256": "52a875147adff45e5f12ccf74743a6b9a0f99a2d35c0c7d4af3ae73172c01957",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-reader-edited.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-reader-mobile.png",
+      "sha256": "74b46b5a0c8c320ff8cc8e8bf35a5da9c0f26ff7f5bbfb2198c2db2917d205ee",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-reader-mobile.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-retained-data.png",
+      "sha256": "99925f83301be0f38a8bb8164c35cb9020b535adb469cb50961263216b1769ab",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-inert-script--304b0-y-and-safe-reader-reopening-webkit/raw-text-retained-data.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-editor.png",
+      "sha256": "2756e68611ef615bd9901f67da2a33edb6bfc94c5690643d3446315e3c87d52d",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-editor.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-editor.png",
+      "sha256": "3117baebdc176b61b24d2d149402706396874751917b818222f36d7721fe8b91",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-editor.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-bottom.png",
+      "sha256": "b1371f58c06ff8eda4091e43cd2c9eb5ea5ac1f52ddc9141c6e08dbb9b631220",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-table.png",
+      "sha256": "e9814d3c94e79e744ee98706bb4449303ef5d417169657a71850a7f4d3ae55c9",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-table.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-top.png",
+      "sha256": "0c3319c7d8294a4a470a6025150f08f5c030d8022759b8a18b3d1521940d56c8",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-mobile-reader-top.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-bottom.png",
+      "sha256": "6c7aed71c59b110208fd3da3d926b26ef989674110703d6f1550462c5dac1645",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-table.png",
+      "sha256": "ca037a64718c412735ad78c044a68ed3d1d2fc9e70ebd50f90f0868085e754a9",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-table.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-top.png",
+      "sha256": "3bcebc48f0904f062a9a8c605170ddd91d71ab58173127e8ae587aab7ba23e75",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-chromium/inert-block-reader-top.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-editor.png",
+      "sha256": "2c8717373cd299f26e752b4876f95ef2fc401a20d486700d4c0de7b29210dc2b",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-editor.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-editor.png",
+      "sha256": "68d9366d1889a14909fb442507f16b704872807ff63dab95a34a127930e084ec",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-editor.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-bottom.png",
+      "sha256": "9d6a75aaaa249b1a4b705b2c21722b98f8c388f67080165a5f0d6a3cccb2cdec",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-table.png",
+      "sha256": "20d8dfe0a250564b79979404153f1deabb76f750a2d7ff5bb5f81a3ba89e33c2",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-table.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-top.png",
+      "sha256": "588ccb0e6321f70bc60cd6531600411eed510181be1df94a614ceead7118cb63",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-mobile-reader-top.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-bottom.png",
+      "sha256": "77113077f18efacd2ec671d0d76d2c963d142f4754153a22cf4bfa4aaa0e808d",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-table.png",
+      "sha256": "57256436e5ab5f102a39a7bfab6e74415a2618ca4e562f8e561e43cd9aee30a1",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-table.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-top.png",
+      "sha256": "529c28d01f5febd7699d1655d5004523c16e7ffb3d2a64a63a410ed03312ea55",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-firefox/inert-block-reader-top.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-editor.png",
+      "sha256": "74cdb17f2cd714e3a5b12268f0a607465b3c06726d041d4396efae3c515e0a55",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-editor.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-editor.png",
+      "sha256": "740491d15fd6d0a94ecdd97ece13e32335c6e75b74a62934d0f77ad2a30a6721",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-editor.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-bottom.png",
+      "sha256": "86adadccec7d27c4641a28fa52ead637f672549098bbb4b731310e35b174d47f",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-table.png",
+      "sha256": "17ba21fc7deb10999e53163fedc348e843e607407f4b517cea0a5cd2a263fbf9",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-table.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-top.png",
+      "sha256": "761a5a37f0895a2b63ddd2bfbc6ff8882da7c2e92104926e05c63a006dfc0843",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-mobile-reader-top.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-bottom.png",
+      "sha256": "d4c878d9ce9a1a02290b641a66389180d3cff8cf88055cede31aa160d4f79c6d",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-table.png",
+      "sha256": "6472f8b52baae84ca733bce7a4f40fa80572c0e68f793dd3b191baf70eccce5a",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-table.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-top.png",
+      "sha256": "249f464b0a265852b11fd77017fc22a290f0a612eb53e05415a2e7d01d5cfc2f",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-inert-block-regressions-final-20261006/editor-edits-structured-in-1ebb2--history-and-safe-reopening-webkit/inert-block-reader-top.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-editor-mobile.png",
+      "sha256": "7a8a7abd102342ca6eb3cd7d67098799065c793888e94edfc8efa06b307a2a09",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-empty-dotted.png",
+      "sha256": "34e423ee93d60aca104cabc363ac7aac26b0a25f9a229fb216ff6f2081e3af8e",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-empty-reader.png",
+      "sha256": "6be2f548abcb66d5ea5472d2b0b8e0bc2f5a59f62445280d1591fdf31f2a7044",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-hostile-edited.png",
+      "sha256": "99689fe4b793216952e0ca010896cbba5d9970fd6e68a55fccf5b1c3db9b8f88",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-hostile-reader.png",
+      "sha256": "8aba7d019a0540c8eb1d1f29c99d20e59617402b05071c8972b078d64ac24c49",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-nested-edited-reopened.png",
+      "sha256": "e54f10a60a78f502f55bee5376649c7179369602ea157f9d77a6d24917a179c3",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-nested-reader.png",
+      "sha256": "eb253decfb11c39c245c69d11a28913f89d90b53aeb34720cda5f1cdbf188b9c",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-reader-mobile.png",
+      "sha256": "75c1521f68d3711f1668966630e8373b6aebeef2928205249ea945d10f0b3842",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-editor-mobile.png",
+      "sha256": "8f666dd38a00e610238c9535f27735a3bb1f4420d2dc791c27f2335b7b54bc19",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-empty-dotted.png",
+      "sha256": "22e14868aa5f9c753d52a4b9e270586ed002bfba18037f7448c0c0cf3ace0551",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-empty-reader.png",
+      "sha256": "47ec58f3ce0eb650523a64b656b46ea31469571f68a9583373434591926d129f",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-hostile-edited.png",
+      "sha256": "6be449ce9fcf017cb3a908c180967c2941a4af8b6c8547a23dff6671addbd5ad",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-hostile-reader.png",
+      "sha256": "4e2655fc3691adbacb4d2e7119a7e55763a766e9e84a0a44bd6ecd9d9d0cd119",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-nested-edited-reopened.png",
+      "sha256": "1aa2b254cdc10882f36c213229b19da2e4b8bd8e3010bd0faf2802acbec5045c",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-nested-reader.png",
+      "sha256": "6e3a8b9017794dab0eb1d7cadb74d90f8ffdebcac170e86b4b59de73fbb4d667",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-reader-mobile.png",
+      "sha256": "3fca7332df1c239302e58918927d9d090b8f979a08e94cf30dbb7223b3595fa1",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-editor-mobile.png",
+      "sha256": "1d44d0376f73c58980a58fccf61ce76bea311cb6e25540464503826af9421f71",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-empty-dotted.png",
+      "sha256": "36a660139dd93d9f7e1c4d2bd154bde5b7f7d68965e65adc8e8c34f2e414af4a",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-empty-reader.png",
+      "sha256": "df9e695882d79304086ce99e438c84ec10e6b9371b97617369e0e8a9d73ab2ed",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-hostile-edited.png",
+      "sha256": "9bb61466755119103a1939a5f34b803c1cfa3502244e9b1085f9a8c0b9625270",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-hostile-reader.png",
+      "sha256": "a2a4155a6c0350f48a182533e2debdd3782253322d6ff89d5009f423fe318b0f",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-nested-edited-reopened.png",
+      "sha256": "9ed2df7fdf303300205c6c884e8e72e649784e0ac3d7784e65caaef339a569cb",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-nested-reader.png",
+      "sha256": "3052ea35f36827e1ea1296ddaaae201e21bc0efa0cf2e406fbf09df4d3cb06ec",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-reader-mobile.png",
+      "sha256": "1fcc33793c07be509e1cab987c748f8604b456278a8bfe42a06461459aaed18e",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-docx-image-preview.png",
+      "sha256": "4027e96a11c60c4acde87b0d09dd724250279a5ba45dc5385a1dbd70a8218da7",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-docx-image-preview.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-markdown-source.png",
+      "sha256": "e803adba62d15b4abe29e5fd7a8300f9f60465235d22dedf03b7b9dd204705db",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-markdown-source.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-server-html-source.png",
+      "sha256": "06c18736de7991dea374b230fa720bb57852e8d1c1612c06c168886146294494",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-server-html-source.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-docx-image-preview.png",
+      "sha256": "9a031125d71511f3a806f095542ecb8a59379b770217c291aade6f09167f2a9c",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-docx-image-preview.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-markdown-source.png",
+      "sha256": "846f89b5aaa9da7a6f127bd7aef8771d556e05eae2553b727cdc60cff0ff5796",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-markdown-source.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-server-html-source.png",
+      "sha256": "aab570e1431ea33448f855591d26d4df9b73fed81eeb51bf932800a9e4699b9e",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-server-html-source.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-docx-image-preview.png",
+      "sha256": "664c0f25aca618de8d77e35a95b5837dc54cfae2dc1b9fff696032a7a6b04fd4",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-docx-image-preview.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-markdown-source.png",
+      "sha256": "093374e97436a5d04eb443506b1918b73996d4e3efd7a910d310d5a1ecde4ad0",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-markdown-source.png"
+    },
+    {
+      "path": "artifacts/server-html-selector-recorded-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-server-html-source.png",
+      "sha256": "3ffb6871765660425b156ea52c31ebe541a1f7f37b61af369b080cccc9da0750",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-server-html-source.png"
+    }
+  ],
+  "ci": {
+    "precedingSourceCommit": "a4dac82a3e5efedde16d3ebd8091483d628063c3",
+    "run": "https://github.com/eddolo/fountainjs/actions/runs/37650465228",
+    "verification": "success",
+    "leanIntegration": "success",
+    "browser": "in_progress when recorded; does not certify this subsequent cache source",
+    "website": "https://github.com/eddolo/fountainjs/actions/runs/37650465229 succeeded"
+  },
+  "limits": [
+    "Linux native color-input focus unresolved; Windows WebKit uses a text fallback.",
+    "No full CommonMark, native Word/PDF page-layout, physical mobile or assistive-technology certification.",
+    "CommonMark scores and parity rows unchanged; no npm release."
+  ],
+  "retainedFailures": [
+    {
+      "log": "artifacts/server-html-selector-focused-20261007.log",
+      "reason": "Test harness needed ESM module spying and the correct document-vs-fragment oracle parser; corrected permanent tests pass."
+    },
+    {
+      "log": "artifacts/server-html-selector-budget-compact-20261007.log",
+      "reason": "Intermediate cache representation exceeds aggregate ESM by 0.1 KiB; final private field fits unchanged cap."
+    },
+    {
+      "log": "artifacts/server-html-selector-functional-gate-20261007.log",
+      "reason": "Initial concurrent full unit run fails the unchanged ID-lookup timing assertion; isolated full unit rerun passes."
+    }
+  ]
+}

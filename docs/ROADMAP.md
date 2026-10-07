@@ -1,5 +1,15 @@
 # FountainJS opportunity roadmap
 
+Latest server-import follow-up (2026-10-07, Unreleased): bounded, tree-owned
+selector compilation lowers import overhead without global tree retention,
+schema/API changes, new dependencies, or increased budgets. All local gates pass
+on one frozen source across separate runs: **2,626 tests / 197 files**, twelve
+recorded three-engine workflows, and 75 visually verified captures. The initial
+concurrent ID-lookup timing failure remains documented; the unchanged full unit
+suite passes in isolation. Linux native-color focus remains open. Details and
+exact evidence: [PERFORMANCE.md](PERFORMANCE.md#tree-owned-server-selector-compilation).
+No ledger, percentage, CommonMark or release promotion.
+
 Latest production follow-up (2026-10-07, Unreleased): profiling the GitHub
 checkpoint's failed edit-scaling gate led to lower shared-subtree validation,
 group-matching, and equality costs without relaxing limits or validation. The

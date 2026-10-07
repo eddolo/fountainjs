@@ -1,4 +1,4 @@
-import { is as matchesSelector, selectAll } from 'css-select';
+import { compile as compileSelector, selectAll } from 'css-select';
 import { readImageCaptionAttributes } from '../core/image-caption';
 import { readTableLayout, readTableRow } from '../core/table-layout';
 import { readTableAppearance } from '../core/table-appearance';
@@ -39,6 +39,7 @@ import type { MarkdownHTMLFlowBlockSource, MarkdownHTMLFlowContext, MarkdownHTML
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
+type SelectorCache = Map<string, (node: RawNode) => boolean>;
 type RawParent = Htmlparser2TreeAdapterMap['parentNode'];
 type RawElement = Htmlparser2TreeAdapterMap['element'];
 type ParseRule = HTMLParseRule | DOMParseRule;
@@ -298,14 +299,14 @@ function rawText(node: RawNode): string {
   return htmlparser2Adapter.getChildNodes(node as RawParent).map((child) => rawText(child)).join('');
 }
 
-function wrapNode(node: RawNode, source?: SourceInput): SourceNode | null {
+function wrapNode(node: RawNode, source: SourceInput | undefined, selectors: SelectorCache): SourceNode | null {
   if (htmlparser2Adapter.isCommentNode(node)) {
     return Object.freeze({ kind: 'comment', raw: node, data: htmlparser2Adapter.getCommentNodeContent(node), textContent: '' });
   }
   if (htmlparser2Adapter.isTextNode(node)) {
     return Object.freeze({ kind: 'text', textContent: htmlparser2Adapter.getTextNodeContent(node) });
   }
-  return htmlparser2Adapter.isElementNode(node) ? new ServerElement(node, source) : null;
+  return htmlparser2Adapter.isElementNode(node) ? new ServerElement(node, source, selectors) : null;
 }
 
 function reportCommentLoss(nodes: readonly FountainNode[], context: ImportContext): void {
@@ -333,23 +334,25 @@ function reportCommentLoss(nodes: readonly FountainNode[], context: ImportContex
   context.issues.splice(context.commentIssueOffset ?? 0, 0, ...comments);
 }
 
-function wrapChildren(parent: RawParent, source?: SourceInput): SourceNode[] {
+function wrapChildren(parent: RawParent, source: SourceInput | undefined, selectors: SelectorCache): SourceNode[] {
   return htmlparser2Adapter.getChildNodes(parent).flatMap((node) => {
-    const wrapped = wrapNode(node, source);
+    const wrapped = wrapNode(node, source, selectors);
     return wrapped ? [wrapped] : [];
   });
 }
 
 class ServerElement implements SourceElement {
   readonly #source?: SourceInput;
+  readonly #selectors: SelectorCache;
   readonly kind = 'element' as const;
   readonly raw: RawElement;
   readonly tagName: string;
   readonly style: Readonly<Record<string, string>>;
   readonly dataset: Readonly<Record<string, string | undefined>>;
 
-  constructor(raw: RawElement, source?: SourceInput) {
+  constructor(raw: RawElement, source: SourceInput | undefined, selectors: SelectorCache) {
     this.#source = source;
+    this.#selectors = selectors;
     this.raw = raw;
     this.tagName = htmlparser2Adapter.getTagName(raw).toLowerCase();
     this.style = parseStyle(this.getAttribute('style') ?? '');
@@ -360,7 +363,7 @@ class ServerElement implements SourceElement {
     this.dataset = Object.freeze(dataset);
   }
 
-  get childNodes(): readonly SourceNode[] { return wrapChildren(this.raw, this.#source); }
+  get childNodes(): readonly SourceNode[] { return wrapChildren(this.raw, this.#source, this.#selectors); }
   get children(): readonly SourceElement[] {
     return this.childNodes.filter((node): node is SourceElement => node.kind === 'element');
   }
@@ -388,10 +391,21 @@ class ServerElement implements SourceElement {
 
   get parentElement(): SourceElement | null {
     const parent = this.raw.parent;
-    return parent && htmlparser2Adapter.isElementNode(parent) ? new ServerElement(parent, this.#source) : null;
+    return parent && htmlparser2Adapter.isElementNode(parent) ? new ServerElement(parent, this.#source, this.#selectors) : null;
   }
 
-  matches(selector: string): boolean { return matchesSelector<RawNode, RawElement>(this.raw, selector); }
+  matches(selector: string): boolean {
+    let query = this.#selectors.get(selector);
+    if (!query) {
+      // Relative :has selectors retain scope state even without result caching.
+      // Own this bounded cache only within one parsed tree, never on the importer
+      // or schema; descendant/query/parent wrappers share that tree's cache.
+      query = compileSelector<RawNode, RawElement>(selector, { cacheResults: false });
+      if (this.#selectors.size >= 256) this.#selectors.clear();
+      this.#selectors.set(selector, query);
+    }
+    return query(this.raw);
+  }
 
   querySelector(selector: string): SourceElement | null {
     return this.querySelectorAll(selector)[0] ?? null;
@@ -399,12 +413,12 @@ class ServerElement implements SourceElement {
 
   querySelectorAll(selector: string): readonly SourceElement[] {
     return selectAll<RawNode, RawElement>(selector, this.raw.children, { context: this.raw })
-      .map((element) => new ServerElement(element, this.#source));
+      .map((element) => new ServerElement(element, this.#source, this.#selectors));
   }
 }
 
 function rootSource(parent: RawParent, source?: SourceInput): SourceParent {
-  const childNodes = wrapChildren(parent, source);
+  const childNodes = wrapChildren(parent, source, new Map());
   return Object.freeze({
     childNodes,
     textContent: rawText(parent as RawNode),

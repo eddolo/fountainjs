@@ -1,5 +1,39 @@
 # Performance and memory contract
 
+## Tree-owned server selector compilation
+
+Unreleased, 2026-10-07: the earlier artifact-only selector experiment is now
+implemented after warmed alternating measurements and permanent equivalence
+checks. `src/html/server.ts` shares a private compiled-selector map only within
+one parsed tree, including descendant/query/parent wrappers. The map clears at
+256 entries and disables query-result caching. Nothing is retained on the
+importer or schema; separate imports recompile their queries. Relative `:has`
+scope closures therefore cannot keep previous trees through a global cache.
+There is no new dependency or public API.
+
+Permanent tests compare complex/relative/scoped selectors with the uncached
+library in document and fragment modes, check compilation counts across separate
+imports, and exercise 270 contributions with an observed 256-entry bound and
+unchanged invalid-selector reports. Local performance passes **589.28ms p95 /
+900ms** for 10,000 HTML blocks; server/local/remote growth is **8.34x/7.17x/7.55x**
+against 15x. Heap and bundle limits also pass: **1576.5 KiB ESM / 1311.4 KiB CJS**.
+No limit is increased. These are local observations, not hardware-independent
+promises. Initial candidates exceeded ESM by 0.1 KiB; the compact-candidate
+failed budget log remains evidence. Making the cache genuinely private keeps the final build
+inside the existing cap.
+
+All functional/package/runtime/type checks and **2,626 tests / 197 files** pass
+on the frozen source across separate runs. The first aggregate test run, with
+simultaneous browser recording, failed the existing ID-lookup timing assertion
+at 1550.45ms / 1500ms; all other 2,625 tests passed. The full unchanged unit suite
+passes after recording ends, without weakening that assertion. Twelve recorded
+retry-free three-engine workflows pass; all 75 captures are visually verified
+(30 directly, 45 exact hashes to inspected evidence). See
+`artifacts/server-html-selector-verification-20261007.json` for exact logs,
+source digest, failed attempts and limitations. Linux native-color focus is
+separate and still open; preceding Linux verification/Lean jobs succeeded, but
+do not certify this subsequent cache source.
+
 ## Shared-subtree edit cost follow-up
 
 Unreleased, 2026-10-07: the GitHub checkpoint's Linux job rejected local edit
