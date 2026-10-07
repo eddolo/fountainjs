@@ -1,0 +1,2 @@
+$ node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json
+Headless source boundary verified across 98 modules.

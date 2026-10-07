@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Current structural-direction audit (2026-10-07, Unreleased): a native original,
+the conversion-lab editor and actual downloaded HTML expose lost list/table/
+quote direction despite retained paragraph direction. The server importer now
+warns explicitly; this does not fix RTL markers, column order or decorations.
+Recorded three-engine typing/history/download checks and 101 focused tests /
+nine files pass. Those diagnostic passes document remaining gaps, not a ledger
+promotion. `411be29` passes full Linux verification (2,695 tests / 205 files),
+performance and Lean; its browser installation step remains live. New-source
+complete checks remain required; npm and all parity scores are unchanged.
+
 Current follow-up (2026-10-07, Unreleased): supported inline HTML alignment is
 materialized across ancestor wrappers in both importers, including anonymous
 wrapper/list/cell text, nearest overrides and explicit inheritance/reset values.

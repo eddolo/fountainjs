@@ -132,6 +132,7 @@ jobs:
             test-results/**/code-click-native-baseline.json
             test-results/**/inherited-alignment-*.png
             test-results/**/native-inline-alignment.json
+            test-results/**/rtl-structural-observations.json
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

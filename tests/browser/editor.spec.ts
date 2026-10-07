@@ -35,6 +35,11 @@ import { explicitTextAlignmentJourney } from './explicit-text-alignment-journey'
 import { autoContainerDirectionJourney } from './auto-container-direction-journey';
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
+import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
+
+test('reports known structural RTL import gaps against a native original and downloaded HTML reader', async ({ page }, info) => {
+  await htmlStructuralDirectionJourney(page, info);
+});
 
 test('imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML', async ({ page }, info) => {
   await htmlInheritedAlignmentJourney(page, info);

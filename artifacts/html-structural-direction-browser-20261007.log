@@ -1,0 +1,178 @@
+[WebServer] (node:13456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:21072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader (7.0s)
+(node:13508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader (9.7s)
+(node:24900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader (7.8s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: structural-rtl.html', exact: true }).getByText('ul reading direction (rtl) is not retained on the structural container.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: structural-rtl.html', exact: true }).getByText('ul reading direction (rtl) is not retained on the structural container.')
+
+
+       at html-structural-direction-journey.ts:47
+
+      45 |     // warnings must not claim paragraph retention also preserves structure.
+      46 |     for (const tag of ['ul', 'blockquote', 'table']) {
+    > 47 |       await expect(workspace.getByText(`${tag} reading direction (rtl) is not retained on the structural container.`, { exact: false })).toBeVisible();
+         |                                                                                                                                          ^
+      48 |     }
+      49 |     observations.report = await workspace.locator('.lab-notice').filter({ hasText: 'Import report' }).innerText();
+      50 |     await workspace.screenshot({ path: info.outputPath('rtl-structural-imported-with-report.png') });
+        at htmlStructuralDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-structural-direction-journey.ts:47:138)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:41:3
+
+    attachment #1: rtl-structural-observations (application/json) ──────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\attachments\rtl-structural-observations-e4ba511f9e84bcd4bc71d47b13a28c94476e3370.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: structural-rtl.html', exact: true }).getByText('ul reading direction (rtl) is not retained on the structural container.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: structural-rtl.html', exact: true }).getByText('ul reading direction (rtl) is not retained on the structural container.')
+
+
+       at html-structural-direction-journey.ts:47
+
+      45 |     // warnings must not claim paragraph retention also preserves structure.
+      46 |     for (const tag of ['ul', 'blockquote', 'table']) {
+    > 47 |       await expect(workspace.getByText(`${tag} reading direction (rtl) is not retained on the structural container.`, { exact: false })).toBeVisible();
+         |                                                                                                                                          ^
+      48 |     }
+      49 |     observations.report = await workspace.locator('.lab-notice').filter({ hasText: 'Import report' }).innerText();
+      50 |     await workspace.screenshot({ path: info.outputPath('rtl-structural-imported-with-report.png') });
+        at htmlStructuralDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-structural-direction-journey.ts:47:138)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:41:3
+
+    attachment #1: rtl-structural-observations (application/json) ──────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\attachments\rtl-structural-observations-53f8ec9179c53dd714db9516b4fdd2a23370bcfd.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: structural-rtl.html', exact: true }).getByText('ul reading direction (rtl) is not retained on the structural container.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: structural-rtl.html', exact: true }).getByText('ul reading direction (rtl) is not retained on the structural container.')
+
+
+       at html-structural-direction-journey.ts:47
+
+      45 |     // warnings must not claim paragraph retention also preserves structure.
+      46 |     for (const tag of ['ul', 'blockquote', 'table']) {
+    > 47 |       await expect(workspace.getByText(`${tag} reading direction (rtl) is not retained on the structural container.`, { exact: false })).toBeVisible();
+         |                                                                                                                                          ^
+      48 |     }
+      49 |     observations.report = await workspace.locator('.lab-notice').filter({ hasText: 'Import report' }).innerText();
+      50 |     await workspace.screenshot({ path: info.outputPath('rtl-structural-imported-with-report.png') });
+        at htmlStructuralDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-structural-direction-journey.ts:47:138)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:41:3
+
+    attachment #1: rtl-structural-observations (application/json) ──────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\attachments\rtl-structural-observations-7f0363a2f5d6fed42fffe3ae63750d7cc6e80d6d.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-structural-direction-browser-20261007\editor-reports-known-struc-2229f--and-downloaded-HTML-reader-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader 
+    [firefox] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader 
+    [webkit] › tests\browser\editor.spec.ts:40:1 › reports known structural RTL import gaps against a native original and downloaded HTML reader 

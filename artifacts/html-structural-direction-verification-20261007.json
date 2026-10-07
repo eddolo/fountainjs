@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-07",
+  "baseCommit": "411be296a02d054a0209cd718e5e00275a4d97fb",
+  "status": "Unreleased; reporting fixed, structural RTL layout not fixed; complete new-source CI required",
+  "scope": "Make previously unreported structural-direction loss visible in the opt-in server HTML adapter and conversion lab. No document/schema/API/dependency change.",
+  "evidence": {
+    "source": "tests/browser/html-structural-direction-journey.ts",
+    "native": { "listDirection": "rtl", "quoteDirection": "rtl", "tableDirection": "rtl", "firstColumnIsRight": true, "paragraphDirections": ["rtl", "rtl", "rtl", "rtl", "rtl", "rtl", "rtl"] },
+    "importedAndDownloadedReader": { "listDirection": "ltr", "quoteDirection": "ltr", "tableDirection": "ltr", "firstColumnIsRight": false, "paragraphDirections": ["rtl", "rtl", "rtl", "rtl", "rtl", "rtl", "rtl"] },
+    "review": "Directly inspected all nine Windows Chromium/Firefox/WebKit native/editor/reader captures. Native markers are on the right and first source column is on the right. Fountain/downloaded HTML keep left-side structural markers and LTR column order despite RTL paragraphs. Native quote uses explicitly logical border CSS; Fountain's physical-left quote decoration differs. WebKit markers can visually collide with the right-aligned list text. This is failure evidence, not fidelity approval.",
+    "observationsRoot": "artifacts/html-structural-direction-final-browser-20261007/editor-reports-known-struc-2229f--and-downloaded-HTML-reader-{engine}/rtl-structural-observations.json",
+    "reference": "https://www.w3.org/International/questions/qa-html-dir.en.html"
+  },
+  "implementation": {
+    "file": "src/html/server.ts",
+    "owningLayer": "optional server import reporting, not document transformations or rendering",
+    "code": "block-html-projection; existing issue type reused",
+    "contexts": ["built-in bullet/ordered/task lists", "blockquote", "table", "definition list", "inherited fixed dir", "own auto context"],
+    "behavior": "Warn if the built-in structural node does not retain the direction found on its source. Leave accepted extension parseHTML rules authoritative; directionless structures are unchanged. Reports are deduplicated, not a per-occurrence loss inventory.",
+    "notImplemented": ["container direction attributes/rendering/import/export", "author direction controls on structures", "mirrored logical decorations", "RTL-aware table keyboard/resize/drag coordinates", "automatic-context flattening", "inline isolation", "native mobile/assistive-technology certification"],
+    "smallestRequiredBoundaries": [
+      "Optional validated container direction state and canonical DOM/HTML output, independent of paragraph direction.",
+      "Shared browser/server import projection with explicit loss when a custom receiving schema cannot retain it.",
+      "Undoable structural author controls, retaining explicit child overrides and shared auto context.",
+      "Logical CSS decoration and table view coordinate mapping without reversing document/model cell order.",
+      "Native-reference real pointer/keyboard editing, spans, resizing, history, Yjs and downloaded-reader/export-loss verification."
+    ]
+  },
+  "verification": {
+    "units": { "passed": 101, "files": 9, "workers": 1, "log": "artifacts/html-structural-direction-regressions-20261007.log" },
+    "newPureNodeContracts": 10,
+    "browsers": { "platform": "Windows", "engines": ["chromium", "firefox", "webkit"], "newDiagnosticPassed": 3, "existingRegressionPassed": 6, "workers": 1, "retries": 0, "logs": ["artifacts/html-structural-direction-final-browser-20261007.log", "artifacts/html-structural-direction-browser-regressions-20261007.log"], "realInput": "File picker import, native original inspection, real pointer/keyboard typing and undo, export button download, separate reader opened from downloaded bytes." },
+    "types": "TypeScript/Svelte/Angular library/Angular demo passed",
+    "api": "409 declaration files, unchanged",
+    "headless": "98 source modules, unchanged; new reporting contracts execute in pure Node with no document or DOM shim",
+    "CommonMark": "563/652 default and 613/652 strongest opt-in, unchanged",
+    "recording": "Videos/traces recorded, not manually watched; screenshots directly inspected.",
+    "regressionImages": "All 21 existing inherited-alignment/retained-auto images exactly match previously reviewed captures by SHA-256."
+  },
+  "build": {
+    "esmRuntimeBytes": 1619364,
+    "cjsRuntimeBytes": 1347359,
+    "formerCJSBudgetBytes": 1347072,
+    "formerCJSExcessBytes": 287,
+    "newCJSBudgetKiB": 1316,
+    "unchangedESMBudgetKiB": 1581.5,
+    "change": "Only aggregate CJS increases 0.5 KiB for the measured warning feature. No entry, CSS, performance, growth or heap cap change.",
+    "failedLog": "artifacts/html-structural-direction-budget-20261007.log",
+    "passingLog": "artifacts/html-structural-direction-final-budget-20261007.log"
+  },
+  "retainedFailures": [
+    { "log": "artifacts/html-structural-direction-before-20261007.log", "reason": "Nine initial failures: eight missing warning contracts and one incomplete custom-rule fixture, subsequently given a registered list_item rule." },
+    { "log": "artifacts/html-structural-direction-browser-20261007.log", "reason": "Three failures against stale built package without the new warnings. After rebuilding, all three recorded workflows pass. Not misrepresented as new-source runtime failures." }
+  ],
+  "sourceHashes": [
+    { "path": "src/html/server.ts", "sha256": "c1cd89dee9c40dc6f10a06b0c55a282e705acd51bf821c88a33d18679277d79a" },
+    { "path": "tests/html-structural-direction-report.test.ts", "sha256": "479e94e5296e82c95aa82e0ca69085600a36c5e11d0c6793336ef8728191b559" },
+    { "path": "tests/browser/html-structural-direction-journey.ts", "sha256": "d7cc63350c7825ddd6c38e0050d42fc7acddcfdccc4b4976166fbd832684e24f" },
+    { "path": "tests/browser/editor.spec.ts", "sha256": "d1826ebb05dc80dc54e719df21af86813b2d45f116c3771bc08997935f0fc5f7" },
+    { "path": "scripts/check-build-budgets.mjs", "sha256": "ce572c220e5dd5d4d4b5b84fb41ceff4a13d437d23eaab16b389caa81fd4769b" },
+    { "path": ".github/workflows/ci.yml", "sha256": "17c601589e73f6a20e2812e83f2653340fbdec5f4fd51ba2fa213850a530f9e2" }
+  ],
+  "captureHashes": [
+    { "engine": "chromium", "file": "rtl-structural-native.png", "sha256": "2dba23455495b08ae58eec9376868a4f27d311bfbd408dc2a4d67984af47285c" },
+    { "engine": "chromium", "file": "rtl-structural-imported-with-report.png", "sha256": "ff9839a52db90b2420080b9cc6f67625467340d747140b00fefc3bb6db75fc6b" },
+    { "engine": "chromium", "file": "rtl-structural-downloaded-reader.png", "sha256": "d571f90589b994e082cb6eedb0fc13107997c02b5218a010a442e9a27bc43a68" },
+    { "engine": "firefox", "file": "rtl-structural-native.png", "sha256": "caa28c55a6c5bb0a521f8d614fb52bdc8236fff9beb76333852051f446839431" },
+    { "engine": "firefox", "file": "rtl-structural-imported-with-report.png", "sha256": "61f76e1eeb5add96512276f905c3c711145ac0583c00b7d0b9e8ed3091cfcc9c" },
+    { "engine": "firefox", "file": "rtl-structural-downloaded-reader.png", "sha256": "7b8514c9c9e0a0bfda8e2e87a656dd0f863eb884be50f5910285a6286f6d003a" },
+    { "engine": "webkit", "file": "rtl-structural-native.png", "sha256": "234160cf0c26631f1c363fcc295378843c13ebf4f2a517db69e6d0456fe904e9" },
+    { "engine": "webkit", "file": "rtl-structural-imported-with-report.png", "sha256": "23f586262252af7c0d26db65f7eef457c1de7cf1430fe9983838f9a9f8a55a26" },
+    { "engine": "webkit", "file": "rtl-structural-downloaded-reader.png", "sha256": "2dcdcba5909e0da0b39e3eb8ab8078530450eeb558e01216ece215d726f97ef3" }
+  ],
+  "priorCI": {
+    "commit": "411be296a02d054a0209cd718e5e00275a4d97fb",
+    "run": "https://github.com/eddolo/fountainjs/actions/runs/37688029442",
+    "verify": "success; 2695 tests / 205 files; raw log artifacts/ci-411be29-verify-20261007.log",
+    "performance": "success",
+    "lean": "success",
+    "browser": "in_progress, browser installation step live; logs not available yet (BlobNotFound). Observation failure is not a terminal job or reason to restart."
+  },
+  "release": "npm remains 0.4.0-beta.2; ledger counts, CommonMark scores and PROD-04 Partial status unchanged. Goal remains active."
+}

@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Current structural RTL audit (2026-10-07, Unreleased): the conversion lab now
+reports when built-in list/table/quote/definition containers lose direction,
+instead of treating retained paragraph direction as structural fidelity.
+An independent native original and actual downloaded reader expose misplaced
+markers and LTR columns in all desktop engines. 101 focused tests / nine files
+and three recorded diagnostics pass; the layout mismatch intentionally remains
+visible. Next: retain container direction in both importers/model/HTML readers,
+provide undoable author controls, use logical decorations, and verify RTL table
+navigation, spans, column sizing/reordering and export losses. Do not merely
+flip CSS while keyboard/resize coordinates still assume LTR. PROD-04 remains
+Partial. `411be29` passes full Linux units/types/package/performance/Lean but its
+browser installation remains live; new-source certification is still required.
+
 Current inline-alignment follow-up (2026-10-07, Unreleased): preserve supported
 ancestor inline `text-align` while flattening HTML wrappers, with nearest
 overrides, inheritance/reset values and anonymous wrapper/list/cell paragraphs.

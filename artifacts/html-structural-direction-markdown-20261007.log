@@ -1,0 +1,28 @@
+$ node scripts/check-markdown-conformance.mjs
+Delimiter neighbors: 6674 generated LF/CRLF reference-semantic, exact-source and complete native canonical contracts passed; not official-corpus matches.
+Code labels: 34 LF/CRLF full reference-semantic, exact-source and canonical round-trip contracts passed.
+Identity-preserving flow: 48 safe-fallback/source checks; 8 fixtures still declined on this route. Lazy paragraph context distinguishes the legacy collision.
+Explicit paragraph-source flow: 8 LF/CRLF exact-code/source contracts; 2 full structural matches. Outer-div mismatches retained; 4 structural fixture kinds still declined.
+Explicit structural source flow: 58 LF/CRLF reference-code/source contracts. Paragraphs, headings, code, plain hard breaks and list/quote nesting supported; outer-div mismatches remain. Separate contracts cover protected Markdown images/rules and pipe tables; specialized unsupported blocks still refuse conversion.
+Structural source flow: 44 LF/CRLF full reference-structure and exact-source contracts outside pre.
+Entity newlines: 12 reference text-character and canonical round-trip contracts passed.
+Code origins: 20 LF/CRLF import/source contracts; identical-HTML provenance distinguished; 6 newline corruptions rejected.
+Table projection: unit spans/cell wrappers equivalent; 14 structural/content corruptions rejected.
+Formatting scopes: 20 reference semantic/source contracts; 10 corruptions rejected.
+Inline block HTML: 2 existing literal fallbacks retained, explicitly not counted as conformance.
+Paragraph recovery: 76 opt-in reference/source contracts; existing baselines unchanged.
+Paragraph recovery: 1304 corpus source-retention checks; not full semantic conformance.
+Reference parser reproduced all 652 official HTML outputs exactly.
+Inert raw HTML: 72/72 semantic, 72/72 exact token contracts; 144/144 generated boundary/round-trip contracts.
+Oracle sensitivity: 8 semantic and 2 literal-whitespace corruptions rejected; reference parser absent from 148 runtime source maps.
+URL oracle sensitivity: 4 raw-control/backslash aliases rejected; 3 TAB/LF/CR preprocessing equivalences; 2 reviewed URI equivalents retained.
+Literal-address import policy: 566/566 reference semantic contracts passed (default baseline unchanged).
+CommonMark 0.31.2: 563/652 examples match Fountain's neutral semantic projection.
+Baseline classifications: 563 matching, 72 pending, 17 intentional divergences.
+Opt-in HTML flow: 1304 exact-source contracts passed (LF/CRLF); not semantic conformance.
+Opt-in HTML block + inline semantics: 579/652 exact neutral-projection matches; remaining differences unresolved, not full conformance.
+Optional HTML containers: 26 reference-semantic and 26 exact-source checks; existing schema/profile scores unchanged.
+Opt-in source recovery: 580/652 neutral-projection matches on LF and CRLF; 1304 separate exact-source checks. Not full CommonMark conformance.
+Whole-document optional-container profile: 601/652; 1304 separate exact-source checks.
+Whole-document optional-container+comment profile: 613/652; 1304 separate exact-source checks.
+Whole-document optional-container+comment+anonymous-flow profile: 613/652; 1304 separate exact-source checks.

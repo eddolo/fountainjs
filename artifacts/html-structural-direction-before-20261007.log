@@ -1,0 +1,199 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-structural-direction-report.test.ts (10 tests | 9 failed) 27ms
+   × reports lost ul container direction separately from retained paragraph direction 12ms
+   × reports lost ol container direction separately from retained paragraph direction 1ms
+   × reports lost ul container direction separately from retained paragraph direction 1ms
+   × reports lost blockquote container direction separately from retained paragraph direction 1ms
+   × reports lost table container direction separately from retained paragraph direction 3ms
+   × reports lost dl container direction separately from retained paragraph direction 1ms
+   × reports inherited fixed structural direction even when child text direction survives 2ms
+   × reports an omitted shared automatic direction without guessing it on every child 1ms
+   × leaves extension-owned direction retention authoritative 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports lost ul container direction separately from retained paragraph direction
+ FAIL  tests/html-structural-direction-report.test.ts > reports lost ul container direction separately from retained paragraph direction
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "block-html-projection",
+  "message": StringContaining "ul reading direction (rtl) is not retained on the structural container",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-structural-direction-report.test.ts:28:25
+     26|   visit(result.document);
+     27|   expect(leaves.length).toBeGreaterThan(0);
+     28|   expect(result.issues).toContainEqual(expect.objectContaining({
+       |                         ^
+     29|     code: 'block-html-projection',
+     30|     message: expect.stringContaining(`${tag} reading direction (rtl) i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports lost ol container direction separately from retained paragraph direction
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "block-html-projection",
+  "message": StringContaining "ol reading direction (rtl) is not retained on the structural container",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-structural-direction-report.test.ts:28:25
+     26|   visit(result.document);
+     27|   expect(leaves.length).toBeGreaterThan(0);
+     28|   expect(result.issues).toContainEqual(expect.objectContaining({
+       |                         ^
+     29|     code: 'block-html-projection',
+     30|     message: expect.stringContaining(`${tag} reading direction (rtl) i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports lost blockquote container direction separately from retained paragraph direction
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "block-html-projection",
+  "message": StringContaining "blockquote reading direction (rtl) is not retained on the structural container",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-structural-direction-report.test.ts:28:25
+     26|   visit(result.document);
+     27|   expect(leaves.length).toBeGreaterThan(0);
+     28|   expect(result.issues).toContainEqual(expect.objectContaining({
+       |                         ^
+     29|     code: 'block-html-projection',
+     30|     message: expect.stringContaining(`${tag} reading direction (rtl) i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports lost table container direction separately from retained paragraph direction
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "block-html-projection",
+  "message": StringContaining "table reading direction (rtl) is not retained on the structural container",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-structural-direction-report.test.ts:28:25
+     26|   visit(result.document);
+     27|   expect(leaves.length).toBeGreaterThan(0);
+     28|   expect(result.issues).toContainEqual(expect.objectContaining({
+       |                         ^
+     29|     code: 'block-html-projection',
+     30|     message: expect.stringContaining(`${tag} reading direction (rtl) i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports lost dl container direction separately from retained paragraph direction
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "block-html-projection",
+  "message": StringContaining "dl reading direction (rtl) is not retained on the structural container",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-structural-direction-report.test.ts:28:25
+     26|   visit(result.document);
+     27|   expect(leaves.length).toBeGreaterThan(0);
+     28|   expect(result.issues).toContainEqual(expect.objectContaining({
+       |                         ^
+     29|     code: 'block-html-projection',
+     30|     message: expect.stringContaining(`${tag} reading direction (rtl) i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports inherited fixed structural direction even when child text direction survives
+AssertionError: expected [ { …(2) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "message": StringContaining "ul reading direction (rtl)",
+}
+
++ Received:
+[
+  {
+    "code": "unmapped-block-wrapper",
+    "message": "Unmapped HTML block wrappers were removed. Descendant content was imported using the schema; wrapper identity, attributes, and behavior were not preserved.",
+  },
+]
+
+ ❯ tests/html-structural-direction-report.test.ts:38:25
+     36|   expect(result.document.child(0).child(0).child(0).attrs.dir).toBe('r…
+     37|   expect(result.issues).toContainEqual(expect.objectContaining({ code:…
+     38|   expect(result.issues).toContainEqual(expect.objectContaining({ messa…
+       |                         ^
+     39| });
+     40|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > reports an omitted shared automatic direction without guessing it on every child
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "message": StringContaining "ul reading direction (auto)",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-structural-direction-report.test.ts:44:25
+     42|   const result = ServerHTMLImporter.parseWithReport('<ul dir="auto"><l…
+     43|   expect(result.document.child(0).child(0).content.every(node => node.…
+     44|   expect(result.issues).toContainEqual(expect.objectContaining({ messa…
+       |                         ^
+     45| });
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  tests/html-structural-direction-report.test.ts > leaves extension-owned direction retention authoritative
+AssertionError: expected undefined to be 'rtl' // Object.is equality
+
+- Expected:
+"rtl"
+
++ Received:
+undefined
+
+ ❯ tests/html-structural-direction-report.test.ts:59:46
+     57|   } } });
+     58|   const result = ServerHTMLImporter.parseWithReport('<ul dir="rtl"><li…
+     59|   expect(result.document.child(0).attrs.dir).toBe('rtl');
+       |                                              ^
+     60|   expect(result.issues.filter(issue => issue.message.includes('structu…
+     61| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 1 passed (10)
+   Start at  22:20:00
+   Duration  1.93s (import 50%, transform 48%, tests 2%)
+

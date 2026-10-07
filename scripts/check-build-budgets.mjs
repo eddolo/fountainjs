@@ -549,7 +549,10 @@ const limits = Object.freeze({
   // Same measured link/carrier addition as ESM; no unrelated cap increase.
   // Same optional block mode: measured total 1310.7 KiB.
   // Same direction and explicit pointer-focus addition, ~2.1 KiB CJS.
-  'all CommonJS runtime code': 1315.5 * kibibyte,
+  // Structural-direction warnings add ~0.4 KiB to the opt-in server importer.
+  // Only aggregate CJS gains 0.5 KiB feature capacity; ESM, entries, CSS and
+  // runtime performance/heap limits are unchanged. Keep the failed old-cap log.
+  'all CommonJS runtime code': 1316 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

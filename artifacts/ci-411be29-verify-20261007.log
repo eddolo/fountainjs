@@ -1,0 +1,2373 @@
+﻿2026-10-07T21:14:59.8182934Z Current runner version: '2.337.0'
+2026-10-07T21:14:59.8208364Z ##[group]Runner Image Provisioner
+2026-10-07T21:14:59.8209374Z Hosted Compute Agent
+2026-10-07T21:14:59.8209958Z Version: 20261002.596
+2026-10-07T21:14:59.8210676Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-07T21:14:59.8211438Z Build Date: 2026-10-02T22:28:27Z
+2026-10-07T21:14:59.8212122Z Worker ID: {04d38d48-3946-4224-af72-86be3f43de88}
+2026-10-07T21:14:59.8212875Z Region: westus
+2026-10-07T21:14:59.8213828Z Cloud: Azure
+2026-10-07T21:14:59.8214823Z ##[endgroup]
+2026-10-07T21:14:59.8216544Z ##[group]Operating System
+2026-10-07T21:14:59.8217185Z Ubuntu
+2026-10-07T21:14:59.8217787Z 24.04.5
+2026-10-07T21:14:59.8218298Z LTS
+2026-10-07T21:14:59.8218832Z ##[endgroup]
+2026-10-07T21:14:59.8219443Z ##[group]Runner Image
+2026-10-07T21:14:59.8220048Z Image: ubuntu-24.04
+2026-10-07T21:14:59.8220700Z Version: 20261004.327.1
+2026-10-07T21:14:59.8222006Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-07T21:14:59.8223942Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-07T21:14:59.8224918Z ##[endgroup]
+2026-10-07T21:14:59.8226108Z ##[group]GITHUB_TOKEN Permissions
+2026-10-07T21:14:59.8228252Z Contents: read
+2026-10-07T21:14:59.8228991Z Metadata: read
+2026-10-07T21:14:59.8229561Z ##[endgroup]
+2026-10-07T21:14:59.8231619Z Secret source: Actions
+2026-10-07T21:14:59.8232682Z Cache mode: write
+2026-10-07T21:14:59.8233698Z Prepare workflow directory
+2026-10-07T21:14:59.8565746Z Prepare all required actions
+2026-10-07T21:14:59.8615184Z Getting action download info
+2026-10-07T21:15:00.2668650Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-07T21:15:00.3655226Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+2026-10-07T21:15:00.8876372Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-07T21:15:00.9727458Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-07T21:15:01.0587809Z Download action repository 'oven-sh/setup-bun@v2' (SHA:0c5077e51419868618aeaa5fe8019c62421857d6)
+2026-10-07T21:15:01.4424846Z Download action repository 'denoland/setup-deno@v2' (SHA:22d081ff2d3a40755e97629de92e3bcbfa7cf2ed)
+2026-10-07T21:15:01.8947942Z Complete job name: verify
+2026-10-07T21:15:01.9910625Z ##[group]Run actions/checkout@v4
+2026-10-07T21:15:01.9911724Z with:
+2026-10-07T21:15:01.9912396Z   repository: eddolo/fountainjs
+2026-10-07T21:15:01.9916247Z   token: ***
+2026-10-07T21:15:01.9916919Z   ssh-strict: true
+2026-10-07T21:15:01.9917587Z   ssh-user: git
+2026-10-07T21:15:01.9918264Z   persist-credentials: true
+2026-10-07T21:15:01.9918972Z   clean: true
+2026-10-07T21:15:01.9919671Z   sparse-checkout-cone-mode: true
+2026-10-07T21:15:01.9920438Z   fetch-depth: 1
+2026-10-07T21:15:01.9921097Z   fetch-tags: false
+2026-10-07T21:15:01.9921800Z   show-progress: true
+2026-10-07T21:15:01.9922476Z   lfs: false
+2026-10-07T21:15:01.9923246Z   submodules: false
+2026-10-07T21:15:01.9923933Z   set-safe-directory: true
+2026-10-07T21:15:01.9924673Z   allow-unsafe-pr-checkout: false
+2026-10-07T21:15:01.9925672Z ##[endgroup]
+2026-10-07T21:15:02.0929453Z Syncing repository: eddolo/fountainjs
+2026-10-07T21:15:02.0931643Z ##[group]Getting Git version info
+2026-10-07T21:15:02.0932702Z Working directory is '/home/runner/work/fountainjs/fountainjs'
+2026-10-07T21:15:02.0934533Z [command]/usr/bin/git version
+2026-10-07T21:15:02.1031254Z git version 2.55.0
+2026-10-07T21:15:02.1054190Z ##[endgroup]
+2026-10-07T21:15:02.1068097Z Temporarily overriding HOME='/home/runner/work/_temp/78a6be47-403a-4ce9-a5a2-370e1369a4da' before making global git config changes
+2026-10-07T21:15:02.1069874Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-07T21:15:02.1073929Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+2026-10-07T21:15:02.1128037Z Deleting the contents of '/home/runner/work/fountainjs/fountainjs'
+2026-10-07T21:15:02.1133333Z ##[group]Initializing the repository
+2026-10-07T21:15:02.1136797Z [command]/usr/bin/git init /home/runner/work/fountainjs/fountainjs
+2026-10-07T21:15:02.1278399Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-07T21:15:02.1280335Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-07T21:15:02.1282797Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-07T21:15:02.1285450Z hint: call:
+2026-10-07T21:15:02.1287259Z hint:
+2026-10-07T21:15:02.1288640Z hint: 	git config --global init.defaultBranch <name>
+2026-10-07T21:15:02.1290202Z hint:
+2026-10-07T21:15:02.1291687Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-07T21:15:02.1293936Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-07T21:15:02.1295759Z hint:
+2026-10-07T21:15:02.1296968Z hint: 	git branch -m <name>
+2026-10-07T21:15:02.1298199Z hint:
+2026-10-07T21:15:02.1299562Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-07T21:15:02.1301685Z Initialized empty Git repository in /home/runner/work/fountainjs/fountainjs/.git/
+2026-10-07T21:15:02.1305142Z [command]/usr/bin/git remote add origin https://github.com/eddolo/fountainjs
+2026-10-07T21:15:02.1348497Z ##[endgroup]
+2026-10-07T21:15:02.1349838Z ##[group]Disabling automatic garbage collection
+2026-10-07T21:15:02.1351923Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-07T21:15:02.1381025Z ##[endgroup]
+2026-10-07T21:15:02.1382494Z ##[group]Setting up auth
+2026-10-07T21:15:02.1387408Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-07T21:15:02.1417861Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-07T21:15:02.1799866Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-07T21:15:02.1833339Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-07T21:15:02.2057480Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-07T21:15:02.2088419Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-07T21:15:02.2307847Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-07T21:15:02.2344770Z ##[endgroup]
+2026-10-07T21:15:02.2345973Z ##[group]Fetching the repository
+2026-10-07T21:15:02.2353932Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +411be296a02d054a0209cd718e5e00275a4d97fb:refs/remotes/origin/master
+2026-10-07T21:15:03.7151665Z From https://github.com/eddolo/fountainjs
+2026-10-07T21:15:03.7153373Z  * [new ref]         411be296a02d054a0209cd718e5e00275a4d97fb -> origin/master
+2026-10-07T21:15:03.7158499Z ##[endgroup]
+2026-10-07T21:15:03.7159736Z ##[group]Determining the checkout info
+2026-10-07T21:15:03.7161978Z ##[endgroup]
+2026-10-07T21:15:03.7169645Z [command]/usr/bin/git sparse-checkout disable
+2026-10-07T21:15:03.7222355Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-07T21:15:03.7252337Z ##[group]Checking out the ref
+2026-10-07T21:15:03.7258249Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2026-10-07T21:15:04.0856785Z Reset branch 'master'
+2026-10-07T21:15:04.0872853Z branch 'master' set up to track 'origin/master'.
+2026-10-07T21:15:04.0878063Z ##[endgroup]
+2026-10-07T21:15:04.0928181Z [command]/usr/bin/git log -1 --format=%H
+2026-10-07T21:15:04.0955042Z 411be296a02d054a0209cd718e5e00275a4d97fb
+2026-10-07T21:15:04.1208836Z ##[group]Run pnpm/action-setup@v4
+2026-10-07T21:15:04.1209210Z with:
+2026-10-07T21:15:04.1209457Z   version: 11.19.0
+2026-10-07T21:15:04.1209719Z   dest: ~/setup-pnpm
+2026-10-07T21:15:04.1209987Z   run_install: null
+2026-10-07T21:15:04.1210238Z   cache: false
+2026-10-07T21:15:04.1210521Z   cache_dependency_path: pnpm-lock.yaml
+2026-10-07T21:15:04.1210890Z   package_json_file: package.json
+2026-10-07T21:15:04.1211192Z   standalone: false
+2026-10-07T21:15:04.1211454Z ##[endgroup]
+2026-10-07T21:15:04.2701421Z ##[group]Running self-installer...
+2026-10-07T21:15:04.6769220Z (node:2312) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-07T21:15:04.6771399Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T21:15:04.8050194Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-10-07T21:15:04.8167943Z Packages: +1
+2026-10-07T21:15:04.8168850Z +
+2026-10-07T21:15:05.2560794Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+2026-10-07T21:15:05.2838680Z 
+2026-10-07T21:15:05.2839140Z dependencies:
+2026-10-07T21:15:05.2839750Z + pnpm 11.19.0 (12.10.1 is available)
+2026-10-07T21:15:05.2840027Z 
+2026-10-07T21:15:05.2863238Z Done in 843ms
+2026-10-07T21:15:05.4099285Z ##[endgroup]
+2026-10-07T21:15:05.4099834Z Installation Completed!
+2026-10-07T21:15:05.4279701Z ##[group]Run actions/setup-node@v4
+2026-10-07T21:15:05.4280022Z with:
+2026-10-07T21:15:05.4280225Z   node-version: 24
+2026-10-07T21:15:05.4280468Z   cache: pnpm
+2026-10-07T21:15:05.4280678Z   always-auth: false
+2026-10-07T21:15:05.4280907Z   check-latest: false
+2026-10-07T21:15:05.4283917Z   token: ***
+2026-10-07T21:15:05.4284134Z env:
+2026-10-07T21:15:05.4284395Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:05.4284714Z ##[endgroup]
+2026-10-07T21:15:05.5754877Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-07T21:15:05.5758532Z (node:2326) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-07T21:15:05.5760123Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T21:15:05.5761286Z ##[group]Environment details
+2026-10-07T21:15:06.0216114Z node: v24.21.0
+2026-10-07T21:15:06.0216420Z npm: 11.19.0
+2026-10-07T21:15:06.0216650Z yarn: 1.22.22
+2026-10-07T21:15:06.0217726Z ##[endgroup]
+2026-10-07T21:15:06.0256632Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+2026-10-07T21:15:06.6500416Z /home/runner/setup-pnpm/node_modules/.bin/store/v11
+2026-10-07T21:15:06.9416386Z Cache hit for: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+2026-10-07T21:15:06.9530367Z (node:2326) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-07T21:15:08.2594202Z Received 0 of 143139869 (0.0%), 0.0 MBs/sec
+2026-10-07T21:15:09.2591596Z Received 92274688 of 143139869 (64.5%), 44.0 MBs/sec
+2026-10-07T21:15:10.0114515Z Received 143139869 of 143139869 (100.0%), 49.6 MBs/sec
+2026-10-07T21:15:10.0123647Z Cache Size: ~137 MB (143139869 B)
+2026-10-07T21:15:10.0210039Z [command]/usr/bin/tar -xf /home/runner/work/_temp/d51ef71f-1d4b-4213-a27e-07320cb26f0d/cache.tzst -P -C /home/runner/work/fountainjs/fountainjs --use-compress-program unzstd
+2026-10-07T21:15:11.4225947Z Cache restored successfully
+2026-10-07T21:15:11.4299646Z Cache restored from key: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+2026-10-07T21:15:11.4482974Z ##[group]Run actions/setup-python@v5
+2026-10-07T21:15:11.4483655Z with:
+2026-10-07T21:15:11.4483874Z   python-version: 3.13
+2026-10-07T21:15:11.4484117Z   check-latest: false
+2026-10-07T21:15:11.4486948Z   token: ***
+2026-10-07T21:15:11.4487176Z   update-environment: true
+2026-10-07T21:15:11.4487427Z   allow-prereleases: false
+2026-10-07T21:15:11.4487664Z   freethreaded: false
+2026-10-07T21:15:11.4487875Z env:
+2026-10-07T21:15:11.4488122Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:11.4488437Z ##[endgroup]
+2026-10-07T21:15:11.5837682Z ##[group]Installed versions
+2026-10-07T21:15:11.5957779Z (node:2382) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-07T21:15:11.5958773Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T21:15:11.5959367Z Successfully set up CPython (3.13.16)
+2026-10-07T21:15:11.5959922Z ##[endgroup]
+2026-10-07T21:15:11.6081932Z ##[group]Run oven-sh/setup-bun@v2
+2026-10-07T21:15:11.6082238Z with:
+2026-10-07T21:15:11.6082452Z   no-cache: false
+2026-10-07T21:15:11.6085377Z   token: ***
+2026-10-07T21:15:11.6085592Z env:
+2026-10-07T21:15:11.6085874Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:11.6086280Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:11.6086738Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:11.6087184Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:11.6087574Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:11.6087963Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:11.6088614Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:11.6089116Z ##[endgroup]
+2026-10-07T21:15:12.4790673Z Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-linux-x64.zip
+2026-10-07T21:15:12.7710815Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/4898bc83-61af-4535-b383-5e8e58ffbbf6.zip
+2026-10-07T21:15:13.3748400Z [command]/home/runner/.bun/bin/bun --revision
+2026-10-07T21:15:13.3793145Z 1.4.2+744846f84
+2026-10-07T21:15:13.3951783Z ##[group]Run denoland/setup-deno@v2
+2026-10-07T21:15:13.3952083Z with:
+2026-10-07T21:15:13.3952289Z   deno-version: lts
+2026-10-07T21:15:13.3952515Z   deno-binary-name: deno
+2026-10-07T21:15:13.3952746Z   cache: false
+2026-10-07T21:15:13.3952947Z env:
+2026-10-07T21:15:13.3953522Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:13.3953923Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:13.3954358Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:13.3954794Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:13.3955188Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:13.3955585Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:13.3955982Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:13.3956312Z ##[endgroup]
+2026-10-07T21:15:13.6202113Z Going to install lts version 2.9.3.
+2026-10-07T21:15:13.6217593Z Downloading Deno from https://github.com/denoland/deno/releases/download/v2.9.3/deno-x86_64-unknown-linux-gnu.zip.
+2026-10-07T21:15:14.0165279Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/bc96b362-6989-4832-af77-3e332061051b
+2026-10-07T21:15:14.8620894Z Cached Deno to /opt/hostedtoolcache/deno/2.9.3/x64.
+2026-10-07T21:15:14.8631083Z Installation complete.
+2026-10-07T21:15:14.8797429Z ##[group]Run pnpm install --frozen-lockfile
+2026-10-07T21:15:14.8797869Z [36;1mpnpm install --frozen-lockfile[0m
+2026-10-07T21:15:14.9326930Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:14.9327381Z env:
+2026-10-07T21:15:14.9327795Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:14.9328260Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:14.9328708Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:14.9329554Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:14.9330644Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:14.9331547Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:14.9332249Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:14.9332852Z ##[endgroup]
+2026-10-07T21:15:15.4030792Z Scope: all 3 workspace projects
+2026-10-07T21:15:15.5574682Z ? Verifying lockfile against supply-chain policies (340 entries)...
+2026-10-07T21:15:15.5653208Z Lockfile is up to date, resolution step is skipped
+2026-10-07T21:15:15.6717141Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-10-07T21:15:15.7289245Z Packages: +281
+2026-10-07T21:15:15.7290165Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2026-10-07T21:15:16.4972211Z Packages are hard linked from the content-addressable store to the virtual store.
+2026-10-07T21:15:16.4994506Z   Content-addressable store is at: /home/runner/setup-pnpm/node_modules/.bin/store/v11
+2026-10-07T21:15:16.4995747Z   Virtual store is at:             node_modules/.pnpm
+2026-10-07T21:15:16.6794675Z Progress: resolved 281, reused 281, downloaded 0, added 14
+2026-10-07T21:15:17.3562137Z Progress: resolved 281, reused 281, downloaded 0, added 281, done
+2026-10-07T21:15:19.3456978Z ✓ Lockfile passes supply-chain policies (340 entries in 3.7s)
+2026-10-07T21:15:19.4223316Z 
+2026-10-07T21:15:19.4224265Z devDependencies:
+2026-10-07T21:15:19.4224895Z + @angular/common 22.1.5
+2026-10-07T21:15:19.4225432Z + @angular/compiler 22.1.5
+2026-10-07T21:15:19.4225895Z + @angular/core 22.1.5
+2026-10-07T21:15:19.4226431Z + @angular/platform-browser 22.1.5
+2026-10-07T21:15:19.4227012Z + @angular/platform-server 22.1.5
+2026-10-07T21:15:19.4227579Z + @mathjax/mathjax-tex-font 4.1.3
+2026-10-07T21:15:19.4228060Z + @mathjax/src 4.1.3
+2026-10-07T21:15:19.4228538Z + @playwright/test 1.62.1
+2026-10-07T21:15:19.4228875Z + @sveltejs/vite-plugin-svelte 7.3.0
+2026-10-07T21:15:19.4229198Z + @types/node 26.4.1
+2026-10-07T21:15:19.4229468Z + @types/react 19.2.18
+2026-10-07T21:15:19.4229747Z + @types/react-dom 19.2.7
+2026-10-07T21:15:19.4230024Z + @vitejs/plugin-react 6.1.1
+2026-10-07T21:15:19.4230320Z + commonmark 0.31.2
+2026-10-07T21:15:19.4230575Z + commonmark-spec 0.31.2
+2026-10-07T21:15:19.4230846Z + css-select 7.0.0
+2026-10-07T21:15:19.4231098Z + docx-preview 0.4.0
+2026-10-07T21:15:19.4231340Z + entities 8.0.0
+2026-10-07T21:15:19.4231561Z + fflate 0.8.3
+2026-10-07T21:15:19.4231782Z + jsdom 30.0.1
+2026-10-07T21:15:19.4232018Z + katex 0.18.6
+2026-10-07T21:15:19.4232251Z + miniflare 3.20250718.3
+2026-10-07T21:15:19.4232494Z + parse5 8.0.1
+2026-10-07T21:15:19.4232791Z + parse5-htmlparser2-tree-adapter 8.0.1
+2026-10-07T21:15:19.4233529Z + pdfjs-dist 6.3.289
+2026-10-07T21:15:19.4234123Z + react 19.2.8
+2026-10-07T21:15:19.4234500Z + react-dom 19.2.8
+2026-10-07T21:15:19.4234875Z + rxjs 7.8.2
+2026-10-07T21:15:19.4235223Z + svelte 5.57.0
+2026-10-07T21:15:19.4235596Z + typescript 7.0.2
+2026-10-07T21:15:19.4236004Z + unicode-emoji-json 0.9.0
+2026-10-07T21:15:19.4236449Z + vite 8.2.2
+2026-10-07T21:15:19.4236785Z + vitest 5.0.0
+2026-10-07T21:15:19.4237113Z + vue 3.5.42
+2026-10-07T21:15:19.4237482Z + yjs 13.6.32
+2026-10-07T21:15:19.4237678Z 
+2026-10-07T21:15:19.4629080Z Done in 4.4s using pnpm v11.19.0
+2026-10-07T21:15:19.5172454Z ##[group]Run python -m pip install --disable-pip-version-check python-docx==1.2.0
+2026-10-07T21:15:19.5173377Z [36;1mpython -m pip install --disable-pip-version-check python-docx==1.2.0[0m
+2026-10-07T21:15:19.5235898Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:19.5236162Z env:
+2026-10-07T21:15:19.5236438Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:19.5236868Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:19.5237337Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:19.5237803Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:19.5238225Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:19.5238853Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:19.5239282Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:19.5239639Z ##[endgroup]
+2026-10-07T21:15:23.1083386Z Collecting python-docx==1.2.0
+2026-10-07T21:15:23.1606339Z   Downloading python_docx-1.2.0-py3-none-any.whl.metadata (2.0 kB)
+2026-10-07T21:15:23.4131557Z Collecting lxml>=3.1.0 (from python-docx==1.2.0)
+2026-10-07T21:15:23.4166236Z   Downloading lxml-6.1.3-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+2026-10-07T21:15:23.4324709Z Collecting typing_extensions>=4.9.0 (from python-docx==1.2.0)
+2026-10-07T21:15:23.4359059Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-07T21:15:23.4428351Z Downloading python_docx-1.2.0-py3-none-any.whl (252 kB)
+2026-10-07T21:15:23.4704550Z Downloading lxml-6.1.3-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)
+2026-10-07T21:15:23.4923812Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 277.0 MB/s  0:00:00
+2026-10-07T21:15:23.4957944Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-07T21:15:23.6358187Z Installing collected packages: typing_extensions, lxml, python-docx
+2026-10-07T21:15:23.9288678Z 
+2026-10-07T21:15:23.9301157Z Successfully installed lxml-6.1.3 python-docx-1.2.0 typing_extensions-4.16.0
+2026-10-07T21:15:23.9917734Z ##[group]Run pnpm build
+2026-10-07T21:15:23.9918043Z [36;1mpnpm build[0m
+2026-10-07T21:15:23.9980293Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:23.9980560Z env:
+2026-10-07T21:15:23.9980830Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:23.9981259Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:23.9981746Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:23.9982232Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:23.9982650Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:23.9983333Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:23.9983770Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:23.9984127Z ##[endgroup]
+2026-10-07T21:15:24.4627919Z $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+2026-10-07T21:15:24.6926372Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+2026-10-07T21:15:24.7074862Z transforming...
+2026-10-07T21:15:24.8381786Z ✓ 302 modules transformed.
+2026-10-07T21:15:24.9178203Z rendering chunks...
+2026-10-07T21:15:25.0011971Z computing gzip size...
+2026-10-07T21:15:25.0169670Z dist/step-doAGd4iU.js                       0.20 kB │ gzip:  0.18 kB │ map:   0.41 kB
+2026-10-07T21:15:25.0170938Z dist/plugin-B0KSKRXJ.js                     0.39 kB │ gzip:  0.28 kB │ map:   3.23 kB
+2026-10-07T21:15:25.0172081Z dist/node-spec-Dl5lMC1C.js                  0.64 kB │ gzip:  0.37 kB │ map:   8.05 kB
+2026-10-07T21:15:25.0173539Z dist/text-style.js                          0.87 kB │ gzip:  0.39 kB
+2026-10-07T21:15:25.0174714Z dist/url-sjMj-efj.js                        1.03 kB │ gzip:  0.52 kB │ map:   2.68 kB
+2026-10-07T21:15:25.0175459Z dist/svelte.js                              1.08 kB │ gzip:  0.55 kB │ map:   3.58 kB
+2026-10-07T21:15:25.0176162Z dist/useFountain-DQ8gXlvr.js                1.09 kB │ gzip:  0.57 kB │ map:   3.25 kB
+2026-10-07T21:15:25.0177301Z dist/command-manager-CSDUCeVE.js            1.32 kB │ gzip:  0.62 kB │ map:   6.46 kB
+2026-10-07T21:15:25.0178609Z dist/collaboration-BubriAbK.js              1.44 kB │ gzip:  0.71 kB │ map:   3.60 kB
+2026-10-07T21:15:25.0179962Z dist/react-widgets.js                       1.57 kB │ gzip:  0.67 kB │ map:   5.52 kB
+2026-10-07T21:15:25.0181248Z dist/vue.js                                 1.72 kB │ gzip:  0.86 kB │ map:   4.53 kB
+2026-10-07T21:15:25.0182491Z dist/inline-atom-BLfPalX5.js                1.76 kB │ gzip:  0.78 kB │ map:   5.30 kB
+2026-10-07T21:15:25.0184582Z dist/path-B7Cr90vg.js                       1.89 kB │ gzip:  0.89 kB │ map:   5.80 kB
+2026-10-07T21:15:25.0185826Z dist/search-CLj2oPC9.js                     1.99 kB │ gzip:  0.95 kB │ map:   6.14 kB
+2026-10-07T21:15:25.0187145Z dist/history-CluGKD04.js                    2.71 kB │ gzip:  1.12 kB │ map:   7.84 kB
+2026-10-07T21:15:25.0188566Z dist/html-page-settings-BniO1ltv.js         2.78 kB │ gzip:  1.16 kB │ map:   8.24 kB
+2026-10-07T21:15:25.0190038Z dist/content-expression-CuobUc-r.js         2.87 kB │ gzip:  1.12 kB │ map:   7.89 kB
+2026-10-07T21:15:25.0191430Z dist/input-rules-EH0whXGW.js                2.99 kB │ gzip:  1.31 kB │ map:   9.02 kB
+2026-10-07T21:15:25.0192740Z dist/decoration-CuT1b7BC.js                 3.14 kB │ gzip:  1.23 kB │ map:  10.15 kB
+2026-10-07T21:15:25.0194396Z dist/extension-Cfbujo9B.js                  3.20 kB │ gzip:  1.27 kB │ map:  10.62 kB
+2026-10-07T21:15:25.0195778Z dist/replace-text-range-step-DDj1wpRU.js    3.28 kB │ gzip:  1.21 kB │ map:   9.56 kB
+2026-10-07T21:15:25.0197111Z dist/table-map-Du2VwT8u.js                  3.47 kB │ gzip:  1.41 kB │ map:  10.05 kB
+2026-10-07T21:15:25.0198417Z dist/mark-range-step-Jo1iPQSu.js            3.48 kB │ gzip:  1.08 kB │ map:  10.32 kB
+2026-10-07T21:15:25.0199699Z dist/node-CMohf4dR.js                       3.90 kB │ gzip:  1.36 kB │ map:  10.26 kB
+2026-10-07T21:15:25.0201286Z dist/html-flow-Bqt2vfNB.js                  4.47 kB │ gzip:  1.84 kB │ map:  11.72 kB
+2026-10-07T21:15:25.0202646Z dist/widgets-dom.js                         4.74 kB │ gzip:  1.67 kB │ map:  13.70 kB
+2026-10-07T21:15:25.0204268Z dist/text-style-B_ydZW8M.js                 4.82 kB │ gzip:  1.60 kB │ map:  15.05 kB
+2026-10-07T21:15:25.0205585Z dist/integrity-dom.js                       5.07 kB │ gzip:  1.98 kB │ map:  14.22 kB
+2026-10-07T21:15:25.0206612Z dist/link-destination-Cg-dC4G1.js           5.68 kB │ gzip:  2.10 kB │ map:  17.31 kB
+2026-10-07T21:15:25.0207350Z dist/table-of-contents.js                   5.69 kB │ gzip:  2.34 kB │ map:  17.63 kB
+2026-10-07T21:15:25.0208035Z dist/html-inert.js                          6.16 kB │ gzip:  2.55 kB │ map:  13.93 kB
+2026-10-07T21:15:25.0208669Z dist/testing.js                             6.49 kB │ gzip:  2.31 kB │ map:  18.97 kB
+2026-10-07T21:15:25.0209311Z dist/selection-Du4v48EK.js                  6.52 kB │ gzip:  2.21 kB │ map:  19.93 kB
+2026-10-07T21:15:25.0210016Z dist/table-layout-CcmXrWN5.js               6.98 kB │ gzip:  2.51 kB │ map:  19.64 kB
+2026-10-07T21:15:25.0210701Z dist/migrations.js                          7.04 kB │ gzip:  2.23 kB │ map:  19.76 kB
+2026-10-07T21:15:25.0211365Z dist/react-tracked-changes.js               7.65 kB │ gzip:  2.34 kB │ map:  13.99 kB
+2026-10-07T21:15:25.0212006Z dist/details.js                             7.72 kB │ gzip:  2.65 kB │ map:  21.54 kB
+2026-10-07T21:15:25.0212646Z dist/mapping-BbhEodcc.js                    7.76 kB │ gzip:  2.66 kB │ map:  24.89 kB
+2026-10-07T21:15:25.0213668Z dist/react-integrity.js                     8.09 kB │ gzip:  2.42 kB │ map:  13.31 kB
+2026-10-07T21:15:25.0214379Z dist/menu-position-Sln4-uCf.js              8.23 kB │ gzip:  3.05 kB │ map:  25.35 kB
+2026-10-07T21:15:25.0215037Z dist/node-ids.js                            8.74 kB │ gzip:  3.14 kB │ map:  28.06 kB
+2026-10-07T21:15:25.0215639Z dist/widgets.js                             8.78 kB │ gzip:  3.21 kB │ map:  27.94 kB
+2026-10-07T21:15:25.0216203Z dist/core.js                                9.04 kB │ gzip:  3.16 kB
+2026-10-07T21:15:25.0216810Z dist/react-comments.js                      9.78 kB │ gzip:  2.75 kB │ map:  17.76 kB
+2026-10-07T21:15:25.0217475Z dist/structured-attributes.js              10.03 kB │ gzip:  2.96 kB │ map:  31.46 kB
+2026-10-07T21:15:25.0218139Z dist/react-versions.js                     10.06 kB │ gzip:  2.75 kB │ map:  18.26 kB
+2026-10-07T21:15:25.0218926Z dist/collaboration-core-B-I53ZbT.js        10.29 kB │ gzip:  3.23 kB │ map:  32.95 kB
+2026-10-07T21:15:25.0219745Z dist/ai-generated-media.js                 10.71 kB │ gzip:  3.28 kB │ map:  27.57 kB
+2026-10-07T21:15:25.0220629Z dist/ruby.js                               10.92 kB │ gzip:  3.49 kB │ map:  28.83 kB
+2026-10-07T21:15:25.0221798Z dist/page-settings-Bqt82pEY.js             11.19 kB │ gzip:  3.73 kB │ map:  32.14 kB
+2026-10-07T21:15:25.0223428Z dist/pages.js                              11.27 kB │ gzip:  3.60 kB │ map:  28.76 kB
+2026-10-07T21:15:25.0224733Z dist/integrity.js                          11.46 kB │ gzip:  3.63 kB │ map:  30.86 kB
+2026-10-07T21:15:25.0225438Z dist/pages-preview.js                      13.47 kB │ gzip:  4.45 kB │ map:  37.18 kB
+2026-10-07T21:15:25.0226116Z dist/editor-CMX7ABLq.js                    15.16 kB │ gzip:  4.48 kB │ map:  43.81 kB
+2026-10-07T21:15:25.0226779Z dist/ai-conversation.js                    15.96 kB │ gzip:  4.46 kB │ map:  41.86 kB
+2026-10-07T21:15:25.0227429Z dist/ai-document-tools.js                  16.83 kB │ gzip:  4.71 kB │ map:  45.73 kB
+2026-10-07T21:15:25.0228076Z dist/emoji-cW4ke4sV.js                     17.42 kB │ gzip:  5.72 kB │ map:  46.29 kB
+2026-10-07T21:15:25.0228755Z dist/link-behavior-Darz56lg.js             18.29 kB │ gzip:  6.84 kB │ map:  48.24 kB
+2026-10-07T21:15:25.0229448Z dist/presentation-_RsWq19D.js              21.37 kB │ gzip:  6.17 kB │ map:  64.52 kB
+2026-10-07T21:15:25.0230129Z dist/document-utilities.js                 23.88 kB │ gzip:  7.49 kB │ map:  67.80 kB
+2026-10-07T21:15:25.0230958Z dist/yjs.js                                27.47 kB │ gzip:  7.82 kB │ map:  75.97 kB
+2026-10-07T21:15:25.0231594Z dist/tracked-changes.js                    28.57 kB │ gzip:  8.09 kB │ map:  85.58 kB
+2026-10-07T21:15:25.0232234Z dist/versions.js                           29.34 kB │ gzip:  7.76 kB │ map:  80.63 kB
+2026-10-07T21:15:25.0232866Z dist/comments.js                           29.77 kB │ gzip:  8.57 kB │ map:  87.59 kB
+2026-10-07T21:15:25.0233995Z dist/extensions-B9c6kOQO.js                32.94 kB │ gzip:  9.34 kB │ map:  85.95 kB
+2026-10-07T21:15:25.0234709Z dist/media-CJTvtkRp.js                     42.48 kB │ gzip: 12.03 kB │ map: 109.56 kB
+2026-10-07T21:15:25.0235385Z dist/markdown-html-83ZGjqmO.js             43.57 kB │ gzip: 23.96 kB │ map:  74.66 kB
+2026-10-07T21:15:25.0236037Z dist/pages-dom.js                          53.72 kB │ gzip: 13.34 kB │ map: 147.72 kB
+2026-10-07T21:15:25.0236686Z dist/commands-ClpBIECY.js                  82.06 kB │ gzip: 21.35 kB │ map: 235.36 kB
+2026-10-07T21:15:25.0237307Z dist/index.js                              82.79 kB │ gzip: 24.38 kB │ map: 179.78 kB
+2026-10-07T21:15:25.0238296Z dist/text-exporter-B5RmV4RM.js             87.20 kB │ gzip: 25.32 kB │ map: 267.14 kB
+2026-10-07T21:15:25.0239511Z dist/react.js                              92.10 kB │ gzip: 21.58 kB │ map: 183.72 kB
+2026-10-07T21:15:25.0240721Z dist/view-DUapfWc3.js                     116.38 kB │ gzip: 28.76 kB │ map: 299.21 kB
+2026-10-07T21:15:25.0241860Z dist/docx.js                              188.06 kB │ gzip: 54.00 kB │ map: 517.08 kB
+2026-10-07T21:15:25.0242934Z dist/html-server.js                       261.46 kB │ gzip: 59.35 kB │ map: 770.20 kB
+2026-10-07T21:15:25.0244357Z dist/emoji-data.js                        331.40 kB │ gzip: 30.88 kB │ map: 467.62 kB
+2026-10-07T21:15:25.0244885Z 
+2026-10-07T21:15:25.0264134Z transforming...
+2026-10-07T21:15:25.1448798Z ✓ 302 modules transformed.
+2026-10-07T21:15:25.2142630Z rendering chunks...
+2026-10-07T21:15:25.2934722Z computing gzip size...
+2026-10-07T21:15:25.3065114Z dist/step-CICBu9Xg.cjs                       0.20 kB │ gzip:  0.18 kB │ map:   0.42 kB
+2026-10-07T21:15:25.3066741Z dist/plugin-DlQkwKdU.cjs                     0.48 kB │ gzip:  0.27 kB │ map:   3.21 kB
+2026-10-07T21:15:25.3068331Z dist/node-spec-owlJN_nc.cjs                  0.59 kB │ gzip:  0.36 kB │ map:   8.05 kB
+2026-10-07T21:15:25.3069860Z dist/rolldown-runtime-Chgba0Kb.cjs           0.77 kB │ gzip:  0.41 kB
+2026-10-07T21:15:25.3071019Z dist/text-style.cjs                          0.87 kB │ gzip:  0.36 kB
+2026-10-07T21:15:25.3072197Z dist/svelte.cjs                              0.89 kB │ gzip:  0.51 kB │ map:   3.64 kB
+2026-10-07T21:15:25.3074099Z dist/url-Co8QRAHd.cjs                        0.92 kB │ gzip:  0.51 kB │ map:   2.68 kB
+2026-10-07T21:15:25.3075375Z dist/useFountain-C16zq9TV.cjs                0.96 kB │ gzip:  0.52 kB │ map:   3.30 kB
+2026-10-07T21:15:25.3076799Z dist/command-manager-DU4ahU5C.cjs            1.06 kB │ gzip:  0.55 kB │ map:   6.45 kB
+2026-10-07T21:15:25.3078189Z dist/collaboration-DHfWMt2l.cjs              1.26 kB │ gzip:  0.63 kB │ map:   3.61 kB
+2026-10-07T21:15:25.3079512Z dist/react-widgets.cjs                       1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+2026-10-07T21:15:25.3080606Z dist/vue.cjs                                 1.45 kB │ gzip:  0.76 kB │ map:   4.76 kB
+2026-10-07T21:15:25.3081863Z dist/inline-atom-Cg88XSNe.cjs                1.53 kB │ gzip:  0.70 kB │ map:   5.34 kB
+2026-10-07T21:15:25.3083427Z dist/search-Cb5HWhnF.cjs                     1.76 kB │ gzip:  0.87 kB │ map:   6.15 kB
+2026-10-07T21:15:25.3084728Z dist/path-DDY3uxw-.cjs                       1.98 kB │ gzip:  0.82 kB │ map:   5.79 kB
+2026-10-07T21:15:25.3086033Z dist/content-expression-YXcFdjFU.cjs         2.15 kB │ gzip:  0.98 kB │ map:   7.85 kB
+2026-10-07T21:15:25.3087446Z dist/html-page-settings-CHmUedrc.cjs         2.52 kB │ gzip:  1.03 kB │ map:   8.22 kB
+2026-10-07T21:15:25.3089041Z dist/table-map-Dbo_d2TT.cjs                  2.65 kB │ gzip:  1.23 kB │ map:  10.02 kB
+2026-10-07T21:15:25.3090364Z dist/input-rules-HXvPuvbc.cjs                2.66 kB │ gzip:  1.16 kB │ map:   9.04 kB
+2026-10-07T21:15:25.3091665Z dist/decoration-jVx4B2Pl.cjs                 2.68 kB │ gzip:  1.13 kB │ map:  10.14 kB
+2026-10-07T21:15:25.3093273Z dist/replace-text-range-step-VHOaDNVn.cjs    2.69 kB │ gzip:  1.07 kB │ map:   9.63 kB
+2026-10-07T21:15:25.3094662Z dist/history-C1iHQbdz.cjs                    2.76 kB │ gzip:  1.03 kB │ map:   7.85 kB
+2026-10-07T21:15:25.3095938Z dist/extension-Sb4ErwsF.cjs                  2.86 kB │ gzip:  1.17 kB │ map:  10.59 kB
+2026-10-07T21:15:25.3097362Z dist/mark-range-step-DOJDyOsP.cjs            3.02 kB │ gzip:  0.92 kB │ map:  10.34 kB
+2026-10-07T21:15:25.3098666Z dist/node-D26sG_e5.cjs                       3.35 kB │ gzip:  1.25 kB │ map:  10.25 kB
+2026-10-07T21:15:25.3099866Z dist/widgets-dom.cjs                         4.02 kB │ gzip:  1.53 kB │ map:  13.67 kB
+2026-10-07T21:15:25.3101111Z dist/html-flow-C20BftBL.cjs                  4.18 kB │ gzip:  1.68 kB │ map:  11.78 kB
+2026-10-07T21:15:25.3102345Z dist/integrity-dom.cjs                       4.36 kB │ gzip:  1.82 kB │ map:  14.27 kB
+2026-10-07T21:15:25.3103819Z dist/table-of-contents.cjs                   4.75 kB │ gzip:  2.12 kB │ map:  17.66 kB
+2026-10-07T21:15:25.3105121Z dist/text-style-DrBKE712.cjs                 5.08 kB │ gzip:  1.44 kB │ map:  15.23 kB
+2026-10-07T21:15:25.3106378Z dist/html-inert.cjs                          5.19 kB │ gzip:  2.36 kB │ map:  13.94 kB
+2026-10-07T21:15:25.3107588Z dist/testing.cjs                             5.43 kB │ gzip:  2.08 kB │ map:  18.97 kB
+2026-10-07T21:15:25.3108827Z dist/selection-DrO1gWsj.cjs                  5.65 kB │ gzip:  1.97 kB │ map:  19.95 kB
+2026-10-07T21:15:25.3110132Z dist/react-tracked-changes.cjs               5.71 kB │ gzip:  2.01 kB │ map:  14.60 kB
+2026-10-07T21:15:25.3111471Z dist/link-destination-BYPbw7q2.cjs           5.88 kB │ gzip:  1.79 kB │ map:  17.35 kB
+2026-10-07T21:15:25.3112775Z dist/migrations.cjs                          6.10 kB │ gzip:  2.00 kB │ map:  19.78 kB
+2026-10-07T21:15:25.3114238Z dist/react-integrity.cjs                     6.18 kB │ gzip:  2.18 kB │ map:  14.15 kB
+2026-10-07T21:15:25.3115422Z dist/details.cjs                             6.35 kB │ gzip:  2.39 kB │ map:  21.62 kB
+2026-10-07T21:15:25.3116684Z dist/mapping-LRwd6pqd.cjs                    6.55 kB │ gzip:  2.36 kB │ map:  24.97 kB
+2026-10-07T21:15:25.3117941Z dist/table-layout-r-zMRyTz.cjs               6.66 kB │ gzip:  2.26 kB │ map:  19.62 kB
+2026-10-07T21:15:25.3119159Z dist/react-comments.cjs                      7.05 kB │ gzip:  2.28 kB │ map:  18.76 kB
+2026-10-07T21:15:25.3120543Z dist/node-ids.cjs                            7.18 kB │ gzip:  2.82 kB │ map:  28.03 kB
+2026-10-07T21:15:25.3121676Z dist/menu-position-_lijqiB1.cjs              7.21 kB │ gzip:  2.71 kB │ map:  25.43 kB
+2026-10-07T21:15:25.3122891Z dist/widgets.cjs                             7.33 kB │ gzip:  2.88 kB │ map:  28.00 kB
+2026-10-07T21:15:25.3124350Z dist/react-versions.cjs                      7.37 kB │ gzip:  2.35 kB │ map:  19.28 kB
+2026-10-07T21:15:25.3125442Z dist/core.cjs                                8.24 kB │ gzip:  2.43 kB
+2026-10-07T21:15:25.3126593Z dist/structured-attributes.cjs               8.41 kB │ gzip:  2.71 kB │ map:  31.45 kB
+2026-10-07T21:15:25.3127865Z dist/ai-generated-media.cjs                  9.11 kB │ gzip:  2.97 kB │ map:  27.49 kB
+2026-10-07T21:15:25.3129063Z dist/ruby.cjs                                9.18 kB │ gzip:  3.14 kB │ map:  28.80 kB
+2026-10-07T21:15:25.3130224Z dist/integrity.cjs                           9.36 kB │ gzip:  3.32 kB │ map:  30.88 kB
+2026-10-07T21:15:25.3131292Z dist/pages.cjs                               9.36 kB │ gzip:  3.21 kB │ map:  28.86 kB
+2026-10-07T21:15:25.3132474Z dist/collaboration-core-6QLxBCsv.cjs         9.37 kB │ gzip:  2.92 kB │ map:  32.93 kB
+2026-10-07T21:15:25.3133954Z dist/page-settings-BTDzBnRH.cjs             10.15 kB │ gzip:  3.43 kB │ map:  32.11 kB
+2026-10-07T21:15:25.3135361Z dist/pages-preview.cjs                      11.42 kB │ gzip:  4.09 kB │ map:  37.00 kB
+2026-10-07T21:15:25.3136719Z dist/editor-Ce4QfnkJ.cjs                    13.24 kB │ gzip:  4.10 kB │ map:  43.90 kB
+2026-10-07T21:15:25.3138038Z dist/ai-conversation.cjs                    13.42 kB │ gzip:  4.04 kB │ map:  41.75 kB
+2026-10-07T21:15:25.3139312Z dist/ai-document-tools.cjs                  13.93 kB │ gzip:  4.22 kB │ map:  45.71 kB
+2026-10-07T21:15:25.3140581Z dist/emoji-DJLmfeJl.cjs                     14.66 kB │ gzip:  5.12 kB │ map:  46.33 kB
+2026-10-07T21:15:25.3141857Z dist/link-behavior-Bgy809Kn.cjs             16.42 kB │ gzip:  6.30 kB │ map:  48.32 kB
+2026-10-07T21:15:25.3143447Z dist/presentation-DrPDmb6z.cjs              17.92 kB │ gzip:  5.47 kB │ map:  64.36 kB
+2026-10-07T21:15:25.3144787Z dist/document-utilities.cjs                 19.37 kB │ gzip:  6.71 kB │ map:  67.92 kB
+2026-10-07T21:15:25.3145998Z dist/yjs.cjs                                22.89 kB │ gzip:  7.13 kB │ map:  75.74 kB
+2026-10-07T21:15:25.3147204Z dist/tracked-changes.cjs                    23.66 kB │ gzip:  7.30 kB │ map:  85.59 kB
+2026-10-07T21:15:25.3148430Z dist/comments.cjs                           24.18 kB │ gzip:  7.65 kB │ map:  87.59 kB
+2026-10-07T21:15:25.3149447Z dist/versions.cjs                           24.36 kB │ gzip:  7.06 kB │ map:  80.44 kB
+2026-10-07T21:15:25.3150633Z dist/extensions-CBclZb2f.cjs                30.75 kB │ gzip:  8.30 kB │ map:  86.30 kB
+2026-10-07T21:15:25.3151980Z dist/media-6BEBDS2B.cjs                     35.08 kB │ gzip: 10.81 kB │ map: 109.67 kB
+2026-10-07T21:15:25.3153258Z dist/markdown-html-DD8ATANg.cjs             41.42 kB │ gzip: 23.40 kB │ map:  74.55 kB
+2026-10-07T21:15:25.3154067Z dist/pages-dom.cjs                          44.81 kB │ gzip: 12.13 kB │ map: 147.15 kB
+2026-10-07T21:15:25.3154770Z dist/text-exporter-BPSREm_5.cjs             68.19 kB │ gzip: 22.75 kB │ map: 266.49 kB
+2026-10-07T21:15:25.3155457Z dist/react.cjs                              69.17 kB │ gzip: 18.66 kB │ map: 192.48 kB
+2026-10-07T21:15:25.3156075Z dist/index.cjs                              70.12 kB │ gzip: 21.12 kB │ map: 179.78 kB
+2026-10-07T21:15:25.3156965Z dist/commands-2YHotcJj.cjs                  73.03 kB │ gzip: 19.69 kB │ map: 236.40 kB
+2026-10-07T21:15:25.3157904Z dist/view-CGy9G2p9.cjs                      99.22 kB │ gzip: 26.21 kB │ map: 298.54 kB
+2026-10-07T21:15:25.3159136Z dist/docx.cjs                              152.04 kB │ gzip: 48.58 kB │ map: 516.01 kB
+2026-10-07T21:15:25.3160371Z dist/html-server.cjs                       212.56 kB │ gzip: 54.16 kB │ map: 767.33 kB
+2026-10-07T21:15:25.3161643Z dist/emoji-data.cjs                        274.54 kB │ gzip: 30.24 kB │ map: 451.98 kB
+2026-10-07T21:15:25.3162523Z 
+2026-10-07T21:15:25.3163579Z [32m✓ built in 618ms[39m
+2026-10-07T21:15:26.9408359Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+2026-10-07T21:15:29.3162656Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+2026-10-07T21:15:31.7442752Z ##[group]Run pnpm test:api
+2026-10-07T21:15:31.7443368Z [36;1mpnpm test:api[0m
+2026-10-07T21:15:31.7505806Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:31.7506074Z env:
+2026-10-07T21:15:31.7506342Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:31.7506750Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:31.7507206Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:31.7507658Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:31.7508061Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:31.7508476Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:31.7508871Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:31.7509206Z ##[endgroup]
+2026-10-07T21:15:32.2130696Z $ node scripts/check-api-surface.mjs
+2026-10-07T21:15:32.2846523Z Public API surface verified across 409 declaration files.
+2026-10-07T21:15:32.3046808Z ##[group]Run pnpm test:server-runtimes
+2026-10-07T21:15:32.3047186Z [36;1mpnpm test:server-runtimes[0m
+2026-10-07T21:15:32.3109433Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:32.3109706Z env:
+2026-10-07T21:15:32.3109980Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:32.3110395Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:32.3110862Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:32.3111325Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:32.3111742Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:32.3112165Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:32.3112573Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:32.3112913Z ##[endgroup]
+2026-10-07T21:15:32.7692554Z $ node scripts/smoke-server-html-runtime.mjs && node scripts/check-server-html-worker.mjs
+2026-10-07T21:15:33.1144573Z Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+2026-10-07T21:15:33.1146462Z Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+2026-10-07T21:15:33.1221511Z Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+2026-10-07T21:15:33.2071438Z Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+2026-10-07T21:15:33.2073394Z Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+2026-10-07T21:15:33.2074988Z Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+2026-10-07T21:15:33.2090822Z Node 24.21.0: DOM-free server HTML import/export passed.
+2026-10-07T21:15:33.2144284Z Node 24.21.0: inert HTML comment retention, canonical reopen and breakout rejection passed.
+2026-10-07T21:15:33.2145929Z Node 24.21.0: complete HTML page-settings retention and invalid/fragment boundaries passed.
+2026-10-07T21:15:33.2147163Z Node 24.21.0: block-returning Markdown paragraph recovery passed.
+2026-10-07T21:15:33.2315443Z Node 24.21.0: lazy Markdown flow paragraph sources passed.
+2026-10-07T21:15:34.4472989Z Cloudflare workerd (Miniflare): 486 link normalization/security/history/destination contracts passed.
+2026-10-07T21:15:34.4475469Z Cloudflare workerd (Miniflare): inert inline lexical data, complete reopen, transactions/history and carrier refusal passed.
+2026-10-07T21:15:34.4477396Z Cloudflare workerd (Miniflare): 576 owned-attribute checks plus immutable snapshots/history passed.
+2026-10-07T21:15:34.4479277Z Cloudflare workerd (Miniflare): 140 native emphasis and partial-schema retention checks passed.
+2026-10-07T21:15:34.4480303Z Cloudflare workerd (Miniflare): protected Markdown images/rules/tables, full reopen and refusal guards passed.
+2026-10-07T21:15:34.4481338Z Cloudflare workerd (Miniflare): anonymous HTML flow without synthetic paragraphs and native/canonical reopening passed.
+2026-10-07T21:15:34.4482323Z Cloudflare workerd (Miniflare): inert HTML comment retention, canonical reopen and breakout rejection passed.
+2026-10-07T21:15:34.4483432Z Cloudflare workerd (Miniflare): DOM-free server HTML import/export passed.
+2026-10-07T21:15:34.4484846Z Cloudflare workerd (Miniflare): complete HTML page-settings retention and invalid/fragment boundaries passed.
+2026-10-07T21:15:34.5011271Z ##[group]Run bun scripts/smoke-server-html-runtime.mjs
+2026-10-07T21:15:34.5012067Z [36;1mbun scripts/smoke-server-html-runtime.mjs[0m
+2026-10-07T21:15:34.5085972Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:34.5086262Z env:
+2026-10-07T21:15:34.5086542Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:34.5086978Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:34.5087431Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:34.5087875Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:34.5088289Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:34.5088703Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:34.5089135Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:34.5089489Z ##[endgroup]
+2026-10-07T21:15:34.8659144Z Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+2026-10-07T21:15:34.8660695Z Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+2026-10-07T21:15:34.8734890Z Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+2026-10-07T21:15:34.9769764Z Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+2026-10-07T21:15:34.9770777Z Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+2026-10-07T21:15:34.9771861Z Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+2026-10-07T21:15:34.9807108Z Bun 1.4.2: DOM-free server HTML import/export passed.
+2026-10-07T21:15:34.9856481Z Bun 1.4.2: inert HTML comment retention, canonical reopen and breakout rejection passed.
+2026-10-07T21:15:34.9857612Z Bun 1.4.2: complete HTML page-settings retention and invalid/fragment boundaries passed.
+2026-10-07T21:15:34.9862606Z Bun 1.4.2: block-returning Markdown paragraph recovery passed.
+2026-10-07T21:15:35.0044673Z Bun 1.4.2: lazy Markdown flow paragraph sources passed.
+2026-10-07T21:15:35.0137319Z ##[group]Run deno run --allow-read scripts/smoke-server-html-runtime.mjs
+2026-10-07T21:15:35.0137912Z [36;1mdeno run --allow-read scripts/smoke-server-html-runtime.mjs[0m
+2026-10-07T21:15:35.0200714Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:35.0200990Z env:
+2026-10-07T21:15:35.0201257Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:35.0201669Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.0202115Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:35.0202565Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.0203249Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.0203754Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.0204168Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:35.0204503Z ##[endgroup]
+2026-10-07T21:15:35.3969454Z Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+2026-10-07T21:15:35.3972012Z Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+2026-10-07T21:15:35.4061373Z Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+2026-10-07T21:15:35.4919500Z Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+2026-10-07T21:15:35.4921116Z Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+2026-10-07T21:15:35.4922714Z Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+2026-10-07T21:15:35.4938185Z Deno 2.9.3: DOM-free server HTML import/export passed.
+2026-10-07T21:15:35.4976362Z Deno 2.9.3: inert HTML comment retention, canonical reopen and breakout rejection passed.
+2026-10-07T21:15:35.4977963Z Deno 2.9.3: complete HTML page-settings retention and invalid/fragment boundaries passed.
+2026-10-07T21:15:35.4983478Z Deno 2.9.3: block-returning Markdown paragraph recovery passed.
+2026-10-07T21:15:35.5146448Z Deno 2.9.3: lazy Markdown flow paragraph sources passed.
+2026-10-07T21:15:35.5374036Z ##[group]Run pnpm test:package
+2026-10-07T21:15:35.5374385Z [36;1mpnpm test:package[0m
+2026-10-07T21:15:35.5437632Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:35.5437909Z env:
+2026-10-07T21:15:35.5438185Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:35.5438597Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.5439087Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:35.5439543Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.5439959Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.5440365Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:35.5440792Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:35.5441137Z ##[endgroup]
+2026-10-07T21:15:35.9995997Z $ node scripts/smoke-package.mjs
+2026-10-07T21:15:37.4539138Z Packed ESM: 486 link normalization/security/history/destination contracts passed.
+2026-10-07T21:15:37.5206439Z Packed ESM: 140 native emphasis and partial-schema retention checks passed.
+2026-10-07T21:15:37.5329341Z Packed ESM root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+2026-10-07T21:15:37.5404151Z Packed ESM root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+2026-10-07T21:15:37.8824873Z Packed CommonJS: 486 link normalization/security/history/destination contracts passed.
+2026-10-07T21:15:37.9460104Z Packed CommonJS: 140 native emphasis and partial-schema retention checks passed.
+2026-10-07T21:15:37.9625069Z Packed CommonJS root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+2026-10-07T21:15:37.9687005Z Packed CommonJS root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+2026-10-07T21:15:38.1903905Z ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.
+2026-10-07T21:15:38.2282495Z ##[group]Run pnpm test:headless
+2026-10-07T21:15:38.2283330Z [36;1mpnpm test:headless[0m
+2026-10-07T21:15:38.2374886Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:38.2375226Z env:
+2026-10-07T21:15:38.2375568Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:38.2376087Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.2376675Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:38.2377274Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.2378070Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.2378601Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.2379128Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:38.2379566Z ##[endgroup]
+2026-10-07T21:15:38.6967941Z $ node scripts/check-headless-boundary.mjs && tsc -p tsconfig.headless.json
+2026-10-07T21:15:38.7420464Z Headless source boundary verified across 98 modules.
+2026-10-07T21:15:38.9712382Z ##[group]Run pnpm test:markdown-conformance
+2026-10-07T21:15:38.9712772Z [36;1mpnpm test:markdown-conformance[0m
+2026-10-07T21:15:38.9776899Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:38.9777157Z env:
+2026-10-07T21:15:38.9777426Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:38.9777826Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.9778273Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:38.9778726Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.9779127Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.9779524Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:38.9779947Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:38.9780282Z ##[endgroup]
+2026-10-07T21:15:39.4347687Z $ node scripts/check-markdown-conformance.mjs
+2026-10-07T21:15:41.0694916Z Delimiter neighbors: 6674 generated LF/CRLF reference-semantic, exact-source and complete native canonical contracts passed; not official-corpus matches.
+2026-10-07T21:15:41.0981468Z Code labels: 34 LF/CRLF full reference-semantic, exact-source and canonical round-trip contracts passed.
+2026-10-07T21:15:41.1622146Z Identity-preserving flow: 48 safe-fallback/source checks; 8 fixtures still declined on this route. Lazy paragraph context distinguishes the legacy collision.
+2026-10-07T21:15:41.1831102Z Explicit paragraph-source flow: 8 LF/CRLF exact-code/source contracts; 2 full structural matches. Outer-div mismatches retained; 4 structural fixture kinds still declined.
+2026-10-07T21:15:41.2476978Z Explicit structural source flow: 58 LF/CRLF reference-code/source contracts. Paragraphs, headings, code, plain hard breaks and list/quote nesting supported; outer-div mismatches remain. Separate contracts cover protected Markdown images/rules and pipe tables; specialized unsupported blocks still refuse conversion.
+2026-10-07T21:15:41.2901970Z Structural source flow: 44 LF/CRLF full reference-structure and exact-source contracts outside pre.
+2026-10-07T21:15:41.2923239Z Entity newlines: 12 reference text-character and canonical round-trip contracts passed.
+2026-10-07T21:15:41.3035050Z Code origins: 20 LF/CRLF import/source contracts; identical-HTML provenance distinguished; 6 newline corruptions rejected.
+2026-10-07T21:15:41.3064736Z Table projection: unit spans/cell wrappers equivalent; 14 structural/content corruptions rejected.
+2026-10-07T21:15:41.3239531Z Formatting scopes: 20 reference semantic/source contracts; 10 corruptions rejected.
+2026-10-07T21:15:41.3258237Z Inline block HTML: 2 existing literal fallbacks retained, explicitly not counted as conformance.
+2026-10-07T21:15:41.3954203Z Paragraph recovery: 76 opt-in reference/source contracts; existing baselines unchanged.
+2026-10-07T21:15:41.6174069Z Paragraph recovery: 1304 corpus source-retention checks; not full semantic conformance.
+2026-10-07T21:15:41.8745525Z Reference parser reproduced all 652 official HTML outputs exactly.
+2026-10-07T21:15:41.8746869Z Inert raw HTML: 72/72 semantic, 72/72 exact token contracts; 144/144 generated boundary/round-trip contracts.
+2026-10-07T21:15:41.8749126Z Oracle sensitivity: 8 semantic and 2 literal-whitespace corruptions rejected; reference parser absent from 148 runtime source maps.
+2026-10-07T21:15:41.8751839Z URL oracle sensitivity: 4 raw-control/backslash aliases rejected; 3 TAB/LF/CR preprocessing equivalences; 2 reviewed URI equivalents retained.
+2026-10-07T21:15:41.9435097Z Literal-address import policy: 566/566 reference semantic contracts passed (default baseline unchanged).
+2026-10-07T21:15:41.9462928Z CommonMark 0.31.2: 563/652 examples match Fountain's neutral semantic projection.
+2026-10-07T21:15:41.9464061Z Baseline classifications: 563 matching, 72 pending, 17 intentional divergences.
+2026-10-07T21:15:42.0759448Z Opt-in HTML flow: 1304 exact-source contracts passed (LF/CRLF); not semantic conformance.
+2026-10-07T21:15:42.1932290Z Opt-in HTML block + inline semantics: 579/652 exact neutral-projection matches; remaining differences unresolved, not full conformance.
+2026-10-07T21:15:42.2182933Z Optional HTML containers: 26 reference-semantic and 26 exact-source checks; existing schema/profile scores unchanged.
+2026-10-07T21:15:42.5867668Z Opt-in source recovery: 580/652 neutral-projection matches on LF and CRLF; 1304 separate exact-source checks. Not full CommonMark conformance.
+2026-10-07T21:15:42.9794847Z Whole-document optional-container profile: 601/652; 1304 separate exact-source checks.
+2026-10-07T21:15:43.4195457Z Whole-document optional-container+comment profile: 613/652; 1304 separate exact-source checks.
+2026-10-07T21:15:43.8412044Z Whole-document optional-container+comment+anonymous-flow profile: 613/652; 1304 separate exact-source checks.
+2026-10-07T21:15:43.8763971Z ##[group]Run pnpm test:math-reference
+2026-10-07T21:15:43.8764348Z [36;1mpnpm test:math-reference[0m
+2026-10-07T21:15:43.8826871Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:43.8827166Z env:
+2026-10-07T21:15:43.8827443Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:43.8827864Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:43.8828316Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:43.8828767Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:43.8829195Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:43.8829639Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:43.8830066Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:43.8830419Z ##[endgroup]
+2026-10-07T21:15:44.3439984Z $ node scripts/audit-math-labels.mjs
+2026-10-07T21:15:44.6691663Z {
+2026-10-07T21:15:44.6692250Z   "renderer": "MathJax 4.1.3",
+2026-10-07T21:15:44.6692702Z   "status": "reference-semantics-verified",
+2026-10-07T21:15:44.6693921Z   "fountainStatus": "document-context API and bounded host SVG/reader lab implemented; this script checks semantics only, not whole-paper or export parity",
+2026-10-07T21:15:44.6694801Z   "equations": [
+2026-10-07T21:15:44.6695050Z     {
+2026-10-07T21:15:44.6695531Z       "sha256": "d43aafd64986470149793169e6c1f001eae2f66706335d4b5e6864ff4fc465b7",
+2026-10-07T21:15:44.6696041Z       "tags": [
+2026-10-07T21:15:44.6696289Z         {
+2026-10-07T21:15:44.6696577Z           "id": "mjx-eqn:eq:dNFE",
+2026-10-07T21:15:44.6696910Z           "text": "(1)",
+2026-10-07T21:15:44.6697205Z           "row": 0
+2026-10-07T21:15:44.6697453Z         }
+2026-10-07T21:15:44.6697705Z       ]
+2026-10-07T21:15:44.6697931Z     },
+2026-10-07T21:15:44.6698157Z     {
+2026-10-07T21:15:44.6698630Z       "sha256": "b8ae1e0dc1cbaf7c15846891804d22fa0581f45f54e14e4da7857061ab57d3ec",
+2026-10-07T21:15:44.6699227Z       "tags": [
+2026-10-07T21:15:44.6699481Z         {
+2026-10-07T21:15:44.6699763Z           "id": "mjx-eqn:eq:dSNFE",
+2026-10-07T21:15:44.6700126Z           "text": "(2)",
+2026-10-07T21:15:44.6700415Z           "row": 1
+2026-10-07T21:15:44.6700671Z         }
+2026-10-07T21:15:44.6700920Z       ]
+2026-10-07T21:15:44.6701138Z     }
+2026-10-07T21:15:44.6701379Z   ],
+2026-10-07T21:15:44.6701680Z   "backwardReferences": [
+2026-10-07T21:15:44.6701967Z     [
+2026-10-07T21:15:44.6702207Z       {
+2026-10-07T21:15:44.6702444Z         "text": "(1)",
+2026-10-07T21:15:44.6702799Z         "href": "#mjx-eqn%3Aeq%3AdNFE"
+2026-10-07T21:15:44.6703281Z       }
+2026-10-07T21:15:44.6703922Z     ],
+2026-10-07T21:15:44.6704131Z     [
+2026-10-07T21:15:44.6704322Z       {
+2026-10-07T21:15:44.6704546Z         "text": "(2)",
+2026-10-07T21:15:44.6704865Z         "href": "#mjx-eqn%3Aeq%3AdSNFE"
+2026-10-07T21:15:44.6705170Z       }
+2026-10-07T21:15:44.6705378Z     ]
+2026-10-07T21:15:44.6705590Z   ],
+2026-10-07T21:15:44.6705864Z   "reorderedForwardReferences": [
+2026-10-07T21:15:44.6706139Z     [
+2026-10-07T21:15:44.6706326Z       {
+2026-10-07T21:15:44.6706530Z         "text": "(2)",
+2026-10-07T21:15:44.6706816Z         "href": "#mjx-eqn%3Aeq%3AdNFE"
+2026-10-07T21:15:44.6707084Z       }
+2026-10-07T21:15:44.6707275Z     ],
+2026-10-07T21:15:44.6707473Z     [
+2026-10-07T21:15:44.6707700Z       {
+2026-10-07T21:15:44.6707978Z         "text": "(1)",
+2026-10-07T21:15:44.6708341Z         "href": "#mjx-eqn%3Aeq%3AdSNFE"
+2026-10-07T21:15:44.6708698Z       }
+2026-10-07T21:15:44.6708913Z     ]
+2026-10-07T21:15:44.6709115Z   ],
+2026-10-07T21:15:44.6709337Z   "deletedTarget": [
+2026-10-07T21:15:44.6709581Z     {
+2026-10-07T21:15:44.6709811Z       "text": "(???)",
+2026-10-07T21:15:44.6710086Z       "href": "#"
+2026-10-07T21:15:44.6710298Z     }
+2026-10-07T21:15:44.6710513Z   ],
+2026-10-07T21:15:44.6710728Z   "checks": [
+2026-10-07T21:15:44.6710971Z     "unchanged source",
+2026-10-07T21:15:44.6711286Z     "nonumber defers label to numbered row",
+2026-10-07T21:15:44.6711899Z     "backward references",
+2026-10-07T21:15:44.6712199Z     "forward references",
+2026-10-07T21:15:44.6712477Z     "reorder renumbering",
+2026-10-07T21:15:44.6712791Z     "fresh-snapshot repeatability",
+2026-10-07T21:15:44.6713386Z     "deleted target remains unresolved",
+2026-10-07T21:15:44.6713799Z     "duplicate labels rejected",
+2026-10-07T21:15:44.6714134Z     "starred environments",
+2026-10-07T21:15:44.6714406Z     "manual tags",
+2026-10-07T21:15:44.6714686Z     "unsupported commands rejected"
+2026-10-07T21:15:44.6714972Z   ]
+2026-10-07T21:15:44.6715170Z }
+2026-10-07T21:15:44.6936645Z ##[group]Run pnpm test:docx-interoperability
+2026-10-07T21:15:44.6937056Z [36;1mpnpm test:docx-interoperability[0m
+2026-10-07T21:15:44.6999839Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:44.7000110Z env:
+2026-10-07T21:15:44.7000383Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:44.7000797Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:44.7001254Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:44.7001712Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:44.7002113Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:44.7002519Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:44.7002926Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:44.7003467Z ##[endgroup]
+2026-10-07T21:15:45.1611704Z $ node scripts/check-docx-interoperability.mjs && node scripts/check-docx-table-text.mjs && node scripts/check-docx-quote-appearance.mjs
+2026-10-07T21:15:45.4899848Z python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (49 additional style/interchange diagnostics retained).
+2026-10-07T21:15:45.6786509Z ESM: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+2026-10-07T21:15:45.7095799Z CommonJS: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+2026-10-07T21:15:45.9614952Z ESM: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+2026-10-07T21:15:46.1594592Z CommonJS: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+2026-10-07T21:15:46.1875450Z ##[group]Run pnpm test:budget
+2026-10-07T21:15:46.1875781Z [36;1mpnpm test:budget[0m
+2026-10-07T21:15:46.1938809Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:46.1939079Z env:
+2026-10-07T21:15:46.1939357Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:46.1939768Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.1940213Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:46.1940655Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.1941073Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.1941475Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.1941864Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:46.1942205Z ##[endgroup]
+2026-10-07T21:15:46.6567760Z $ node scripts/check-build-budgets.mjs
+2026-10-07T21:15:46.7028516Z dist/index.js: 80.9 KiB / 111 KiB
+2026-10-07T21:15:46.7035006Z dist/index.cjs: 68.5 KiB / 93 KiB
+2026-10-07T21:15:46.7035752Z dist/core.js: 8.8 KiB / 9 KiB
+2026-10-07T21:15:46.7036419Z dist/core.cjs: 8.0 KiB / 8.1 KiB
+2026-10-07T21:15:46.7037137Z dist/ai-document-tools.js: 16.4 KiB / 18 KiB
+2026-10-07T21:15:46.7037903Z dist/ai-document-tools.cjs: 13.6 KiB / 15 KiB
+2026-10-07T21:15:46.7038688Z dist/ai-conversation.js: 15.6 KiB / 17 KiB
+2026-10-07T21:15:46.7039382Z dist/ai-conversation.cjs: 13.1 KiB / 14 KiB
+2026-10-07T21:15:46.7046488Z dist/ai-generated-media.js: 10.5 KiB / 11 KiB
+2026-10-07T21:15:46.7047350Z dist/ai-generated-media.cjs: 8.9 KiB / 10 KiB
+2026-10-07T21:15:46.7048069Z dist/docx.js: 183.7 KiB / 184 KiB
+2026-10-07T21:15:46.7048736Z dist/docx.cjs: 148.5 KiB / 148.5 KiB
+2026-10-07T21:15:46.7049463Z HTML5 entity decoder ESM: 42.6 KiB / 43 KiB
+2026-10-07T21:15:46.7050217Z HTML5 entity decoder CommonJS: 40.4 KiB / 41 KiB
+2026-10-07T21:15:46.7051087Z dist/document-utilities.js: 23.3 KiB / 36 KiB
+2026-10-07T21:15:46.7051938Z dist/document-utilities.cjs: 18.9 KiB / 30 KiB
+2026-10-07T21:15:46.7052728Z dist/emoji-data.js: 323.6 KiB / 340 KiB
+2026-10-07T21:15:46.7055230Z dist/emoji-data.cjs: 268.1 KiB / 280 KiB
+2026-10-07T21:15:46.7055871Z dist/react.js: 89.9 KiB / 90 KiB
+2026-10-07T21:15:46.7056545Z dist/react.cjs: 67.6 KiB / 68 KiB
+2026-10-07T21:15:46.7057090Z dist/vue.js: 1.7 KiB / 3 KiB
+2026-10-07T21:15:46.7057580Z dist/vue.cjs: 1.4 KiB / 3 KiB
+2026-10-07T21:15:46.7057931Z dist/svelte.js: 1.1 KiB / 2 KiB
+2026-10-07T21:15:46.7058279Z dist/svelte.cjs: 0.9 KiB / 2 KiB
+2026-10-07T21:15:46.7058638Z dist/angular/index.js: 4.1 KiB / 5 KiB
+2026-10-07T21:15:46.7059025Z dist/yjs.js: 26.8 KiB / 30 KiB
+2026-10-07T21:15:46.7059376Z dist/yjs.cjs: 22.4 KiB / 25 KiB
+2026-10-07T21:15:46.7059716Z dist/comments.js: 29.1 KiB / 30 KiB
+2026-10-07T21:15:46.7060084Z dist/comments.cjs: 23.6 KiB / 25 KiB
+2026-10-07T21:15:46.7060507Z dist/react-comments.js: 9.6 KiB / 11 KiB
+2026-10-07T21:15:46.7060899Z dist/react-comments.cjs: 6.9 KiB / 8 KiB
+2026-10-07T21:15:46.7061311Z dist/tracked-changes.js: 27.9 KiB / 30 KiB
+2026-10-07T21:15:46.7061721Z dist/tracked-changes.cjs: 23.1 KiB / 25 KiB
+2026-10-07T21:15:46.7062168Z dist/react-tracked-changes.js: 7.5 KiB / 9 KiB
+2026-10-07T21:15:46.7062614Z dist/react-tracked-changes.cjs: 5.6 KiB / 7 KiB
+2026-10-07T21:15:46.7063293Z dist/versions.js: 28.7 KiB / 35 KiB
+2026-10-07T21:15:46.7063731Z dist/versions.cjs: 23.8 KiB / 30 KiB
+2026-10-07T21:15:46.7064110Z dist/react-versions.js: 9.8 KiB / 18 KiB
+2026-10-07T21:15:46.7064525Z dist/react-versions.cjs: 7.2 KiB / 14 KiB
+2026-10-07T21:15:46.7064907Z dist/details.js: 7.5 KiB / 10 KiB
+2026-10-07T21:15:46.7065266Z dist/details.cjs: 6.2 KiB / 8 KiB
+2026-10-07T21:15:46.7065615Z dist/ruby.js: 10.7 KiB / 12 KiB
+2026-10-07T21:15:46.7065966Z dist/ruby.cjs: 9.0 KiB / 10 KiB
+2026-10-07T21:15:46.7066294Z dist/text-style.js: 0.9 KiB / 2 KiB
+2026-10-07T21:15:46.7066618Z dist/text-style.cjs: 0.9 KiB / 2 KiB
+2026-10-07T21:15:46.7066955Z dist/testing.js: 6.3 KiB / 7 KiB
+2026-10-07T21:15:46.7067685Z dist/testing.cjs: 5.3 KiB / 6 KiB
+2026-10-07T21:15:46.7068180Z dist/migrations.js: 6.9 KiB / 8 KiB
+2026-10-07T21:15:46.7069913Z dist/migrations.cjs: 6.0 KiB / 7 KiB
+2026-10-07T21:15:46.7070577Z dist/node-ids.js: 8.5 KiB / 9 KiB
+2026-10-07T21:15:46.7070917Z dist/node-ids.cjs: 7.0 KiB / 8 KiB
+2026-10-07T21:15:46.7071271Z dist/table-of-contents.js: 5.6 KiB / 7 KiB
+2026-10-07T21:15:46.7071660Z dist/table-of-contents.cjs: 4.6 KiB / 6 KiB
+2026-10-07T21:15:46.7072015Z dist/integrity.js: 11.2 KiB / 13 KiB
+2026-10-07T21:15:46.7072362Z dist/integrity.cjs: 9.1 KiB / 11 KiB
+2026-10-07T21:15:46.7072703Z dist/integrity-dom.js: 5.0 KiB / 6 KiB
+2026-10-07T21:15:46.7073374Z dist/integrity-dom.cjs: 4.3 KiB / 5 KiB
+2026-10-07T21:15:46.7073760Z dist/react-integrity.js: 7.9 KiB / 12 KiB
+2026-10-07T21:15:46.7074146Z dist/react-integrity.cjs: 6.0 KiB / 10 KiB
+2026-10-07T21:15:46.7074550Z dist/structured-attributes.js: 9.8 KiB / 11 KiB
+2026-10-07T21:15:46.7074961Z dist/structured-attributes.cjs: 8.2 KiB / 9 KiB
+2026-10-07T21:15:46.7075350Z dist/html-server.js: 255.3 KiB / 270 KiB
+2026-10-07T21:15:46.7075712Z dist/html-server.cjs: 207.6 KiB / 225 KiB
+2026-10-07T21:15:46.7076064Z dist/html-inert.js: 6.0 KiB / 7 KiB
+2026-10-07T21:15:46.7076676Z dist/html-inert.cjs: 5.1 KiB / 6 KiB
+2026-10-07T21:15:46.7077200Z dist/widgets.js: 8.6 KiB / 9 KiB
+2026-10-07T21:15:46.7077576Z dist/widgets.cjs: 7.2 KiB / 8 KiB
+2026-10-07T21:15:46.7078115Z dist/widgets-dom.js: 4.6 KiB / 5 KiB
+2026-10-07T21:15:46.7078674Z dist/widgets-dom.cjs: 3.9 KiB / 5 KiB
+2026-10-07T21:15:46.7079232Z dist/react-widgets.js: 1.5 KiB / 2 KiB
+2026-10-07T21:15:46.7079802Z dist/react-widgets.cjs: 1.3 KiB / 2 KiB
+2026-10-07T21:15:46.7080361Z dist/pages.js: 11.0 KiB / 23 KiB
+2026-10-07T21:15:46.7080892Z dist/pages.cjs: 9.1 KiB / 19 KiB
+2026-10-07T21:15:46.7081441Z dist/pages-dom.js: 52.5 KiB / 54 KiB
+2026-10-07T21:15:46.7082012Z dist/pages-dom.cjs: 43.8 KiB / 45 KiB
+2026-10-07T21:15:46.7082586Z dist/pages-preview.js: 13.2 KiB / 14 KiB
+2026-10-07T21:15:46.7083404Z dist/pages-preview.cjs: 11.2 KiB / 12 KiB
+2026-10-07T21:15:46.7084002Z dist/styles.css: 86.3 KiB / 86.4 KiB
+2026-10-07T21:15:46.7084611Z all ESM runtime code: 1581.0 KiB / 1581.5 KiB
+2026-10-07T21:15:46.7085289Z all CommonJS runtime code: 1315.4 KiB / 1315.5 KiB
+2026-10-07T21:15:46.7268570Z ##[group]Run pnpm typecheck
+2026-10-07T21:15:46.7268892Z [36;1mpnpm typecheck[0m
+2026-10-07T21:15:46.7331627Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:15:46.7331890Z env:
+2026-10-07T21:15:46.7332147Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:15:46.7332551Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.7333448Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:15:46.7333927Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.7334334Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.7334751Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:15:46.7335168Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:15:46.7335503Z ##[endgroup]
+2026-10-07T21:15:47.1948504Z $ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+2026-10-07T21:15:49.7967777Z $ pnpm --dir tools/svelte-check exec svelte-check --workspace ../.. --tsconfig tsconfig.svelte.json --fail-on-warnings
+2026-10-07T21:15:55.4749534Z Loading svelte-check in workspace: /home/runner/work/fountainjs/fountainjs
+2026-10-07T21:15:55.4750403Z Getting Svelte diagnostics...
+2026-10-07T21:15:55.4750760Z 
+2026-10-07T21:15:55.4787865Z [32msvelte-check found 0 errors and 0 warnings
+2026-10-07T21:15:55.9926418Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json --noEmit && pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json --noEmit
+2026-10-07T21:16:00.1112369Z [39m
+2026-10-07T21:16:00.1146648Z ##[group]Run pnpm test
+2026-10-07T21:16:00.1146948Z [36;1mpnpm test[0m
+2026-10-07T21:16:00.1209283Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:16:00.1209553Z env:
+2026-10-07T21:16:00.1209822Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:16:00.1210263Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:16:00.1210934Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:16:00.1211387Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:16:00.1211799Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:16:00.1212222Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:16:00.1212638Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:16:00.1213198Z ##[endgroup]
+2026-10-07T21:16:00.5749029Z $ vitest run
+2026-10-07T21:16:00.8678306Z 
+2026-10-07T21:16:00.8682533Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/fountainjs/fountainjs[39m
+2026-10-07T21:16:00.8683348Z 
+2026-10-07T21:16:02.7996383Z  [32m✓[39m tests/core.test.ts [2m([22m[2m55 tests[22m[2m)[22m[32m 164[2mms[22m[39m
+2026-10-07T21:16:03.2503733Z  [32m✓[39m tests/markdown-format.test.ts [2m([22m[2m113 tests[22m[2m)[22m[33m 589[2mms[22m[39m
+2026-10-07T21:16:03.2506025Z    [32m✓[39m Markdown interchange [2m(113)[22m
+2026-10-07T21:16:03.2508001Z      [33m[2m✓[22m[39m bounds per-block provenance while retaining whole-source exactness[33m 327[2mms[22m[39m
+2026-10-07T21:16:04.3794438Z  [32m✓[39m tests/pages-dom.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 854[2mms[22m[39m
+2026-10-07T21:16:04.9156198Z  [32m✓[39m tests/view.test.ts [2m([22m[2m45 tests[22m[2m)[22m[33m 792[2mms[22m[39m
+2026-10-07T21:16:05.2134273Z  [32m✓[39m tests/pages-dom-preview.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 565[2mms[22m[39m
+2026-10-07T21:16:05.3663479Z  [32m✓[39m tests/docx.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 220[2mms[22m[39m
+2026-10-07T21:16:05.7728470Z  [32m✓[39m tests/server-html.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 196[2mms[22m[39m
+2026-10-07T21:16:06.8475580Z  [32m✓[39m tests/media.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 317[2mms[22m[39m
+2026-10-07T21:16:07.0000697Z  [32m✓[39m tests/document-utilities.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 188[2mms[22m[39m
+2026-10-07T21:16:08.4618424Z  [32m✓[39m tests/server-html-parity.test.ts [2m([22m[2m83 tests[22m[2m)[22m[33m 1336[2mms[22m[39m
+2026-10-07T21:16:08.6689930Z  [32m✓[39m tests/yjs-collaboration.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 205[2mms[22m[39m
+2026-10-07T21:16:09.2128459Z  [32m✓[39m tests/react-toolbar.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 698[2mms[22m[39m
+2026-10-07T21:16:09.3575169Z  [32m✓[39m tests/versions.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+2026-10-07T21:16:10.1415074Z  [32m✓[39m tests/math.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 409[2mms[22m[39m
+2026-10-07T21:16:10.8557841Z  [32m✓[39m tests/text-style.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 152[2mms[22m[39m
+2026-10-07T21:16:10.9369596Z  [32m✓[39m tests/external-paste.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 529[2mms[22m[39m
+2026-10-07T21:16:11.3757473Z  [32m✓[39m tests/markdown-html-flow-adapter.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+2026-10-07T21:16:11.9011986Z  [32m✓[39m tests/model-integrity.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 181[2mms[22m[39m
+2026-10-07T21:16:12.3982515Z  [32m✓[39m tests/docx-table-styles.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 161[2mms[22m[39m
+2026-10-07T21:16:12.5145262Z  [32m✓[39m tests/lean.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 339[2mms[22m[39m
+2026-10-07T21:16:12.5637588Z  [32m✓[39m tests/table.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1031[2mms[22m[39m
+2026-10-07T21:16:12.5645951Z    [32m✓[39m production table editing [2m(12)[22m
+2026-10-07T21:16:12.5647942Z      [33m[2m✓[22m[39m projects resize geometry once per immutable table, including movement and remote-row widths[33m 660[2mms[22m[39m
+2026-10-07T21:16:12.9345327Z  [32m✓[39m tests/pages.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+2026-10-07T21:16:13.5209972Z  [32m✓[39m tests/docx-table-conditions.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 220[2mms[22m[39m
+2026-10-07T21:16:14.1220127Z  [32m✓[39m tests/comments.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 257[2mms[22m[39m
+2026-10-07T21:16:14.1484928Z  [32m✓[39m tests/image.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 255[2mms[22m[39m
+2026-10-07T21:16:14.9145080Z  [32m✓[39m tests/list.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+2026-10-07T21:16:14.9947324Z  [32m✓[39m tests/docx-math-source.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 427[2mms[22m[39m
+2026-10-07T21:16:15.1069119Z  [32m✓[39m tests/docx-style-reader.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+2026-10-07T21:16:15.6906392Z  [32m✓[39m tests/docx-paragraph-fonts.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 189[2mms[22m[39m
+2026-10-07T21:16:15.7885355Z  [32m✓[39m tests/tracked-changes.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 243[2mms[22m[39m
+2026-10-07T21:16:16.1485232Z  [32m✓[39m tests/selection.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+2026-10-07T21:16:16.2541674Z  [32m✓[39m tests/html-flow.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 172[2mms[22m[39m
+2026-10-07T21:16:16.5546467Z  [32m✓[39m tests/collaboration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 202[2mms[22m[39m
+2026-10-07T21:16:16.6813542Z  [32m✓[39m tests/docx-table-text.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+2026-10-07T21:16:17.1595198Z  [32m✓[39m tests/docx-math.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 184[2mms[22m[39m
+2026-10-07T21:16:17.2285670Z  [32m✓[39m tests/docx-table-widths.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 165[2mms[22m[39m
+2026-10-07T21:16:17.6315244Z  [32m✓[39m tests/extensions.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+2026-10-07T21:16:17.8385067Z  [32m✓[39m tests/block-reordering.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 359[2mms[22m[39m
+2026-10-07T21:16:17.8624912Z  [32m✓[39m tests/docx-style-cascade.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+2026-10-07T21:16:18.2055539Z  [32m✓[39m tests/markdown-reference-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 666[2mms[22m[39m
+2026-10-07T21:16:18.2056980Z    [32m✓[39m reference-definition source provenance [2m(18)[22m
+2026-10-07T21:16:18.2063454Z      [33m[2m✓[22m[39m shares a large definition context without losing unrelated source when moving blocks[33m 569[2mms[22m[39m
+2026-10-07T21:16:18.4615794Z  [32m✓[39m tests/text-direction.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+2026-10-07T21:16:19.3285056Z  [32m✓[39m tests/details.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 213[2mms[22m[39m
+2026-10-07T21:16:19.8417458Z  [32m✓[39m tests/ruby.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 310[2mms[22m[39m
+2026-10-07T21:16:19.9105945Z  [32m✓[39m tests/markdown-html-inline-adapter.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+2026-10-07T21:16:20.2525394Z  [32m✓[39m tests/quote-appearance.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 253[2mms[22m[39m
+2026-10-07T21:16:20.3738085Z  [32m✓[39m tests/markdown-document-flow.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 143[2mms[22m[39m
+2026-10-07T21:16:20.8180597Z  [32m✓[39m tests/html-inert-block.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 188[2mms[22m[39m
+2026-10-07T21:16:20.9658424Z  [32m✓[39m tests/node-ids.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 724[2mms[22m[39m
+2026-10-07T21:16:20.9661205Z    [32m✓[39m stable node identities [2m(12)[22m
+2026-10-07T21:16:20.9662900Z      [33m[2m✓[22m[39m normalizes and maintains a 10,000-block live index within explicit budgets[33m 464[2mms[22m[39m
+2026-10-07T21:16:21.3174998Z  [32m✓[39m tests/widgets.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+2026-10-07T21:16:21.5680512Z  [32m✓[39m tests/page-layout.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-10-07T21:16:21.9467716Z  [32m✓[39m tests/selection-view.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 326[2mms[22m[39m
+2026-10-07T21:16:23.3325066Z  [32m✓[39m tests/link.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 437[2mms[22m[39m
+2026-10-07T21:16:23.8024965Z  [32m✓[39m tests/html-link-origin.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 628[2mms[22m[39m
+2026-10-07T21:16:23.8148754Z  [32m✓[39m tests/docx-footnotes.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+2026-10-07T21:16:23.9818596Z  [32m✓[39m tests/html-link-controls.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 1868[2mms[22m[39m
+2026-10-07T21:16:23.9820645Z    [32m✓[39m literal control data in imported HTML link destinations [2m(20)[22m
+2026-10-07T21:16:23.9823303Z      [33m[2m✓[22m[39m still rejects unsafe schemes, network paths, other controls and broken authorities: inserted controls in "javascript:alert(…[33m 427[2mms[22m[39m
+2026-10-07T21:16:23.9827422Z      [33m[2m✓[22m[39m still rejects unsafe schemes, network paths, other controls and broken authorities: inserted controls in "data:text/html,ba…[33m 326[2mms[22m[39m
+2026-10-07T21:16:24.3125967Z  [32m✓[39m tests/ai.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 143[2mms[22m[39m
+2026-10-07T21:16:24.7816749Z  [32m✓[39m tests/markdown-html-block-adapter.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 93[2mms[22m[39m
+2026-10-07T21:16:25.0681503Z  [32m✓[39m tests/ai-generated-media.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+2026-10-07T21:16:25.7038179Z  [32m✓[39m tests/docx-character-spacing.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 189[2mms[22m[39m
+2026-10-07T21:16:26.0235306Z  [32m✓[39m tests/docx-page-settings.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 157[2mms[22m[39m
+2026-10-07T21:16:26.2295138Z  [32m✓[39m tests/html-format.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 212[2mms[22m[39m
+2026-10-07T21:16:26.5224809Z  [32m✓[39m tests/docx-table-appearance.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 140[2mms[22m[39m
+2026-10-07T21:16:26.6858176Z  [32m✓[39m tests/ai-conversation.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 127[2mms[22m[39m
+2026-10-07T21:16:27.0221252Z  [32m✓[39m tests/markdown-text-block-flow.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+2026-10-07T21:16:27.5193535Z  [32m✓[39m tests/markdown-html-flow-sources.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+2026-10-07T21:16:28.0315895Z  [32m✓[39m tests/markdown-html-paragraph.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 111[2mms[22m[39m
+2026-10-07T21:16:28.6087908Z  [32m✓[39m tests/html-inert-raw-text.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 198[2mms[22m[39m
+2026-10-07T21:16:28.7385738Z  [32m✓[39m tests/virtual-view.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 1742[2mms[22m[39m
+2026-10-07T21:16:28.7387612Z    [32m✓[39m virtual EditorView [2m(9)[22m
+2026-10-07T21:16:28.7389390Z      [33m[2m✓[22m[39m mounts a bounded viewport while retaining the full scroll geometry[33m 1041[2mms[22m[39m
+2026-10-07T21:16:29.5583980Z  [32m✓[39m tests/docx-definition-lists.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 332[2mms[22m[39m
+2026-10-07T21:16:30.0695530Z  [32m✓[39m tests/yjs-structured-attributes.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+2026-10-07T21:16:30.5536343Z  [32m✓[39m tests/headless-docx-demo.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1085[2mms[22m[39m
+2026-10-07T21:16:30.5554354Z    [32m✓[39m headless DOCX file ownership and readiness [2m(9)[22m
+2026-10-07T21:16:30.5565439Z      [33m[2m✓[22m[39m does not announce an undefined document as valid[33m 356[2mms[22m[39m
+2026-10-07T21:16:30.7300301Z  [32m✓[39m tests/explicit-text-alignment.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 132[2mms[22m[39m
+2026-10-07T21:16:31.0545283Z  [32m✓[39m tests/markdown-html-block-atoms.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 135[2mms[22m[39m
+2026-10-07T21:16:31.3349418Z  [32m✓[39m tests/markdown-protected-table-flow.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 209[2mms[22m[39m
+2026-10-07T21:16:31.5137258Z  [32m✓[39m tests/math-document-context.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 574[2mms[22m[39m
+2026-10-07T21:16:31.5149972Z    [32m✓[39m document-aware math view context [2m(6)[22m
+2026-10-07T21:16:31.5195213Z      [33m[2m✓[22m[39m compiles unchanged published source and forward references once per snapshot, including reorder/undo/redo[33m 307[2mms[22m[39m
+2026-10-07T21:16:31.5585245Z  [32m✓[39m tests/docx-math-import.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+2026-10-07T21:16:31.7515959Z  [32m✓[39m tests/ai-document-tools.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+2026-10-07T21:16:32.0175405Z  [32m✓[39m tests/docx-page-templates.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 145[2mms[22m[39m
+2026-10-07T21:16:32.0365203Z  [32m✓[39m tests/html-inert-inline.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+2026-10-07T21:16:33.4049547Z  [32m✓[39m tests/widgets-dom.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 225[2mms[22m[39m
+2026-10-07T21:16:33.6915049Z  [32m✓[39m tests/html-inert-browser.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 573[2mms[22m[39m
+2026-10-07T21:16:33.8691209Z  [32m✓[39m tests/markdown-empty-paragraphs.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+2026-10-07T21:16:34.1983898Z  [32m✓[39m tests/trailing-editable-block.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+2026-10-07T21:16:35.4631710Z  [32m✓[39m tests/mathjax-document-renderer.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1961[2mms[22m[39m
+2026-10-07T21:16:35.4633475Z    [32m✓[39m optional host MathJax SVG integration [2m(12)[22m
+2026-10-07T21:16:35.4635181Z      [33m[2m✓[22m[39m typesets exact published equations and resolves namespaced forward links to actual SVG anchors[33m 465[2mms[22m[39m
+2026-10-07T21:16:35.4637423Z      [33m[2m✓[22m[39m refreshes real SVG labels/references after moving/deleting equations and restores them on undo[33m 591[2mms[22m[39m
+2026-10-07T21:16:35.5864095Z  [32m✓[39m tests/vue-lifecycle.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 357[2mms[22m[39m
+2026-10-07T21:16:36.0272095Z  [32m✓[39m tests/markdown-html.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+2026-10-07T21:16:36.0463458Z  [32m✓[39m tests/docx-paragraph-layout.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 165[2mms[22m[39m
+2026-10-07T21:16:36.0475967Z  [32m✓[39m tests/view-external-focus.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 397[2mms[22m[39m
+2026-10-07T21:16:36.5535988Z  [32m✓[39m tests/markdown-preformatted.test.ts [2m([22m[2m38 tests[22m[2m)[22m[32m 141[2mms[22m[39m
+2026-10-07T21:16:36.5734684Z  [32m✓[39m tests/text-alignment.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+2026-10-07T21:16:36.9715797Z  [32m✓[39m tests/structured-attributes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+2026-10-07T21:16:37.0064059Z  [32m✓[39m tests/html-source-tokens.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 126[2mms[22m[39m
+2026-10-07T21:16:37.5287741Z  [32m✓[39m tests/docx-theme-fonts.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 130[2mms[22m[39m
+2026-10-07T21:16:37.7814776Z  [32m✓[39m tests/html-figure-retention.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 427[2mms[22m[39m
+2026-10-07T21:16:38.0032286Z  [32m✓[39m tests/docx-inherited-styles.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+2026-10-07T21:16:38.3045027Z  [32m✓[39m tests/markdown-schema-html.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+2026-10-07T21:16:38.3353595Z  [32m✓[39m tests/migrations.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+2026-10-07T21:16:38.7315095Z  [32m✓[39m tests/table-appearance.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 463[2mms[22m[39m
+2026-10-07T21:16:40.0824159Z  [32m✓[39m tests/react-node-view.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 386[2mms[22m[39m
+2026-10-07T21:16:40.2248528Z  [32m✓[39m tests/syntax-highlight.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 290[2mms[22m[39m
+2026-10-07T21:16:40.5214224Z  [32m✓[39m tests/react-toolbar-panels.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 937[2mms[22m[39m
+2026-10-07T21:16:40.5336547Z  [32m✓[39m tests/docx-content-controls.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+2026-10-07T21:16:41.0310110Z  [32m✓[39m tests/html-container-editing.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+2026-10-07T21:16:41.1095305Z  [32m✓[39m tests/server-html-loss-report.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 472[2mms[22m[39m
+2026-10-07T21:16:42.0405295Z  [32m✓[39m tests/drop-cursor.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 224[2mms[22m[39m
+2026-10-07T21:16:42.3895363Z  [32m✓[39m tests/inline-link-view.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 238[2mms[22m[39m
+2026-10-07T21:16:42.5145284Z  [32m✓[39m tests/docx-page-breaks.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 139[2mms[22m[39m
+2026-10-07T21:16:42.7202907Z  [32m✓[39m tests/explicit-emphasis.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 133[2mms[22m[39m
+2026-10-07T21:16:42.8742089Z  [32m✓[39m tests/lean-loopback.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+2026-10-07T21:16:42.9892707Z  [32m✓[39m tests/docx-preferred-table-width.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 202[2mms[22m[39m
+2026-10-07T21:16:43.3591464Z  [32m✓[39m tests/integrity.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-07T21:16:43.7424970Z  [32m✓[39m tests/mcp.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+2026-10-07T21:16:44.1654875Z  [32m✓[39m tests/docx-package-inventory.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+2026-10-07T21:16:44.3440414Z  [32m✓[39m tests/react-document-utilities.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 295[2mms[22m[39m
+2026-10-07T21:16:44.4809342Z  [32m✓[39m tests/pages-html.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 283[2mms[22m[39m
+2026-10-07T21:16:44.7048775Z  [32m✓[39m tests/markdown-html-tables.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 95[2mms[22m[39m
+2026-10-07T21:16:44.8699954Z  [32m✓[39m tests/markdown-paragraph-flow.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 96[2mms[22m[39m
+2026-10-07T21:16:45.2189632Z  [32m✓[39m tests/html-comments.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+2026-10-07T21:16:45.5838194Z  [32m✓[39m tests/markdown-tex-tables.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+2026-10-07T21:16:45.9004467Z  [32m✓[39m tests/definition-list-editing.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 218[2mms[22m[39m
+2026-10-07T21:16:46.0594508Z  [32m✓[39m tests/definition-lists.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+2026-10-07T21:16:46.2995315Z  [32m✓[39m tests/selection-no-text.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+2026-10-07T21:16:46.4625028Z  [32m✓[39m tests/clipboard-history.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 305[2mms[22m[39m
+2026-10-07T21:16:46.7505281Z  [32m✓[39m tests/server-html-selectors.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 266[2mms[22m[39m
+2026-10-07T21:16:46.8603887Z  [32m✓[39m tests/markdown-flow-tasks.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 168[2mms[22m[39m
+2026-10-07T21:16:46.9844867Z  [32m✓[39m tests/markdown-tex.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+2026-10-07T21:16:47.3702275Z  [32m✓[39m tests/content-expression.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 284[2mms[22m[39m
+2026-10-07T21:16:47.4370701Z  [32m✓[39m tests/markdown-flow-inline-nodes.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+2026-10-07T21:16:47.8232746Z  [32m✓[39m tests/html-containers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+2026-10-07T21:16:48.9057803Z  [32m✓[39m tests/angular-lifecycle.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 361[2mms[22m[39m
+2026-10-07T21:16:49.0376331Z  [32m✓[39m tests/code-region-keyboard.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 284[2mms[22m[39m
+2026-10-07T21:16:49.2174990Z  [32m✓[39m tests/node-view-context.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 224[2mms[22m[39m
+2026-10-07T21:16:49.7445693Z  [32m✓[39m tests/stream-text-point.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 251[2mms[22m[39m
+2026-10-07T21:16:49.9071714Z  [32m✓[39m tests/mathjax-docx.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 400[2mms[22m[39m
+2026-10-07T21:16:50.2042507Z  [32m✓[39m tests/docx-table-headers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+2026-10-07T21:16:50.3818005Z  [32m✓[39m tests/docx-fonts.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 105[2mms[22m[39m
+2026-10-07T21:16:50.4625112Z  [32m✓[39m tests/paragraph-layout.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+2026-10-07T21:16:50.6899654Z  [32m✓[39m tests/markdown-structural-flow.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+2026-10-07T21:16:50.8716699Z  [32m✓[39m tests/release.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 234[2mms[22m[39m
+2026-10-07T21:16:51.2778130Z  [32m✓[39m tests/markdown-emphasis-runs.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+2026-10-07T21:16:51.9352304Z  [32m✓[39m tests/web-component-forms.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 264[2mms[22m[39m
+2026-10-07T21:16:52.3138548Z  [32m✓[39m tests/html-table-caption.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 275[2mms[22m[39m
+2026-10-07T21:16:52.3495476Z  [32m✓[39m tests/headless-core.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+2026-10-07T21:16:52.4255264Z  [32m✓[39m tests/floating-menu.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+2026-10-07T21:16:52.7347589Z  [32m✓[39m tests/markdown-html-incomplete-source.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+2026-10-07T21:16:52.8128793Z  [32m✓[39m tests/pages-presentation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+2026-10-07T21:16:53.0039032Z  [32m✓[39m tests/conversion-lab.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 150[2mms[22m[39m
+2026-10-07T21:16:53.2031546Z  [32m✓[39m tests/docx-cell-shading.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 96[2mms[22m[39m
+2026-10-07T21:16:53.3645711Z  [32m✓[39m tests/table-of-contents.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-10-07T21:16:53.6735154Z  [32m✓[39m tests/markdown-text-newlines.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+2026-10-07T21:16:53.9277310Z  [32m✓[39m tests/markdown-combination-retention.test.ts [2m([22m[2m41 tests[22m[2m)[22m[32m 214[2mms[22m[39m
+2026-10-07T21:16:54.3580252Z [90mstderr[2m | tests/react-widgets.test.tsx
+2026-10-07T21:16:54.3584552Z [22m[39mAn update to Root inside a test was not wrapped in act(...).
+2026-10-07T21:16:54.3594834Z  [32m✓[39m tests/react-widgets.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 236[2mms[22m[39m
+2026-10-07T21:16:54.3602474Z 
+2026-10-07T21:16:54.3603659Z When testing, code that causes React state updates should be wrapped into act(...):
+2026-10-07T21:16:54.3605508Z 
+2026-10-07T21:16:54.3605923Z act(() => {
+2026-10-07T21:16:54.3606656Z   /* fire events that update state */
+2026-10-07T21:16:54.3607396Z });
+2026-10-07T21:16:54.3608082Z /* assert on the output */
+2026-10-07T21:16:54.3608622Z 
+2026-10-07T21:16:54.3612493Z This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+2026-10-07T21:16:54.3614020Z 
+2026-10-07T21:16:54.4069908Z  [32m✓[39m tests/markdown-flow-custom-wrappers.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+2026-10-07T21:16:55.1215087Z  [32m✓[39m tests/html-page-settings.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+2026-10-07T21:16:55.3225257Z  [32m✓[39m tests/table-row-repetition.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 301[2mms[22m[39m
+2026-10-07T21:16:56.0422227Z  [32m✓[39m tests/table-layout.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 392[2mms[22m[39m
+2026-10-07T21:16:56.7694012Z  [32m✓[39m tests/svelte-action.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 210[2mms[22m[39m
+2026-10-07T21:16:56.9425482Z  [32m✓[39m tests/react-versions.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 192[2mms[22m[39m
+2026-10-07T21:16:57.1211504Z  [32m✓[39m tests/node-size-sharing.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+2026-10-07T21:16:57.7467963Z  [32m✓[39m tests/html-block-mark-inheritance.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 355[2mms[22m[39m
+2026-10-07T21:16:58.1985453Z  [32m✓[39m tests/markdown-autolink-policy.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+2026-10-07T21:16:58.5101930Z  [32m✓[39m tests/react-floating-menu.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 268[2mms[22m[39m
+2026-10-07T21:16:58.5920478Z  [32m✓[39m tests/react-comments.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 154[2mms[22m[39m
+2026-10-07T21:16:59.0218908Z  [32m✓[39m tests/markdown-tables-gfm.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+2026-10-07T21:16:59.9305440Z  [32m✓[39m tests/table-background.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 344[2mms[22m[39m
+2026-10-07T21:17:00.1362234Z  [32m✓[39m tests/html-flow-browser.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 474[2mms[22m[39m
+2026-10-07T21:17:00.5145426Z  [32m✓[39m tests/html-inherited-alignment.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 160[2mms[22m[39m
+2026-10-07T21:17:00.6038288Z  [32m✓[39m tests/docx-explicit-emphasis.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+2026-10-07T21:17:01.6107487Z  [32m✓[39m tests/react-lifecycle.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 302[2mms[22m[39m
+2026-10-07T21:17:02.0375427Z  [32m✓[39m tests/markdown-html-lexical.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+2026-10-07T21:17:02.0513810Z  [32m✓[39m tests/table-preferred-width.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 278[2mms[22m[39m
+2026-10-07T21:17:02.2542991Z  [32m✓[39m tests/text-direction-dom.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 269[2mms[22m[39m
+2026-10-07T21:17:02.4543678Z  [32m✓[39m tests/document-replacement.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+2026-10-07T21:17:02.7036151Z  [32m✓[39m tests/auto-container-direction.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+2026-10-07T21:17:02.9144634Z  [32m✓[39m tests/html-empty-paragraph.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+2026-10-07T21:17:03.0309383Z  [32m✓[39m tests/virtual-layout.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 626[2mms[22m[39m
+2026-10-07T21:17:03.0311145Z    [32m✓[39m virtual block layout [2m(4)[22m
+2026-10-07T21:17:03.0313458Z      [33m[2m✓[22m[39m plans a small visible window plus distant selection islands[33m 619[2mms[22m[39m
+2026-10-07T21:17:03.1333586Z  [32m✓[39m tests/markdown-flow-code-endings.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+2026-10-07T21:17:04.4027581Z  [32m✓[39m tests/react-ai-conversation.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 110[2mms[22m[39m
+2026-10-07T21:17:04.5875613Z  [32m✓[39m tests/html-comment-workshop.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 439[2mms[22m[39m
+2026-10-07T21:17:04.5914782Z    [32m✓[39m HTML comment reader snapshot lifecycle [2m(1)[22m
+2026-10-07T21:17:04.5920512Z      [33m[2m✓[22m[39m replaces changed snapshots without navigating a retired iframe, but keeps unchanged snapshots mounted[33m 437[2mms[22m[39m
+2026-10-07T21:17:04.6365680Z  [32m✓[39m tests/view-native-selection.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 262[2mms[22m[39m
+2026-10-07T21:17:04.9430649Z  [32m✓[39m tests/extension-scaffold.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+2026-10-07T21:17:05.0332651Z  [32m✓[39m tests/markdown-literal-export.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+2026-10-07T21:17:05.3825073Z  [32m✓[39m tests/widgets-yjs.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 31[2mms[22m[39m
+2026-10-07T21:17:05.7092135Z  [32m✓[39m tests/math-document-files.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-07T21:17:05.9775094Z  [32m✓[39m tests/html-comments-browser.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 295[2mms[22m[39m
+2026-10-07T21:17:06.1621486Z  [32m✓[39m tests/node-ids-yjs.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 40[2mms[22m[39m
+2026-10-07T21:17:06.4365268Z  [32m✓[39m tests/react-ai-generated-media.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 137[2mms[22m[39m
+2026-10-07T21:17:06.5731483Z  [32m✓[39m tests/math-expression.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+2026-10-07T21:17:06.9900612Z  [32m✓[39m tests/markdown-code-labels.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+2026-10-07T21:17:07.2894549Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.2897038Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.2898079Z 
+2026-10-07T21:17:07.3479301Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.3504497Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3533564Z 
+2026-10-07T21:17:07.3656644Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.3658026Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3658372Z 
+2026-10-07T21:17:07.3687165Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.3714730Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3734053Z 
+2026-10-07T21:17:07.3808515Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.3812790Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3814576Z The current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3815454Z 
+2026-10-07T21:17:07.3817805Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.3821015Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3821926Z 
+2026-10-07T21:17:07.3848610Z [90mstderr[2m | tests/react-tracked-changes.test.tsx[2m > [22m[2mFountainTrackedChanges[2m > [22m[2mshows full review information and drives selection, discussion, and decisions
+2026-10-07T21:17:07.3851694Z [22m[39mThe current testing environment is not configured to support act(...)
+2026-10-07T21:17:07.3852707Z 
+2026-10-07T21:17:07.3870248Z  [32m✓[39m tests/react-tracked-changes.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 117[2mms[22m[39m
+2026-10-07T21:17:07.4363326Z  [32m✓[39m tests/issue-markdown-tables.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 68[2mms[22m[39m
+2026-10-07T21:17:07.7699172Z [90mstderr[2m | tests/react-ai-review.test.tsx[2m > [22m[2mFountainAIReview streaming UI[2m > [22m[2mshows partial output and a stop action, then enables review only after completion
+2026-10-07T21:17:07.7724530Z [22m[39mAn update to FountainAIReview inside a test was not wrapped in act(...).
+2026-10-07T21:17:07.7753421Z 
+2026-10-07T21:17:07.7754399Z When testing, code that causes React state updates should be wrapped into act(...):
+2026-10-07T21:17:07.7783521Z 
+2026-10-07T21:17:07.7813859Z act(() => {
+2026-10-07T21:17:07.7843742Z   /* fire events that update state */
+2026-10-07T21:17:07.7844293Z });
+2026-10-07T21:17:07.7844708Z /* assert on the output */
+2026-10-07T21:17:07.7845030Z 
+2026-10-07T21:17:07.7846139Z This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+2026-10-07T21:17:07.7847714Z An update to FountainAIReview inside a test was not wrapped in act(...).
+2026-10-07T21:17:07.7848305Z 
+2026-10-07T21:17:07.7848969Z When testing, code that causes React state updates should be wrapped into act(...):
+2026-10-07T21:17:07.7849629Z 
+2026-10-07T21:17:07.7849829Z act(() => {
+2026-10-07T21:17:07.7850306Z   /* fire events that update state */
+2026-10-07T21:17:07.7850813Z });
+2026-10-07T21:17:07.7851232Z /* assert on the output */
+2026-10-07T21:17:07.7851534Z 
+2026-10-07T21:17:07.7852632Z This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+2026-10-07T21:17:07.7854070Z 
+2026-10-07T21:17:07.8033908Z  [32m✓[39m tests/react-ai-review.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
+2026-10-07T21:17:07.8097990Z  [32m✓[39m tests/text-style-node.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+2026-10-07T21:17:07.8286095Z  [32m✓[39m tests/text-boundary-mapping.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+2026-10-07T21:17:08.2425467Z  [32m✓[39m tests/html-inherited-alignment-node.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+2026-10-07T21:17:09.2857497Z  [32m✓[39m tests/html-containers-browser.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+2026-10-07T21:17:09.3232687Z  [32m✓[39m tests/html-code-language.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 182[2mms[22m[39m
+2026-10-07T21:17:09.4401246Z  [32m✓[39m tests/html-page-settings-browser.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+2026-10-07T21:17:09.5063756Z  [32m✓[39m tests/stable-document-guard.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+2026-10-07T21:17:09.8375251Z  [32m✓[39m tests/markdown-url-destinations.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+2026-10-07T21:17:10.0870684Z  [32m✓[39m tests/svelte-ssr.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 64[2mms[22m[39m
+2026-10-07T21:17:10.5493519Z  [32m✓[39m tests/vue-ssr.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-07T21:17:10.5665509Z [90mstdout[2m | tests/angular-ssr.test.ts[2m > [22m[2mkeeps the Angular editor inert during real Angular server rendering
+2026-10-07T21:17:10.5714048Z [22m[39mAngular is running in development mode.
+2026-10-07T21:17:10.5743347Z 
+2026-10-07T21:17:10.6012641Z  [32m✓[39m tests/angular-ssr.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 110[2mms[22m[39m
+2026-10-07T21:17:10.7670636Z  [32m✓[39m tests/emoji-data.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+2026-10-07T21:17:10.8872883Z  [32m✓[39m examples/extensions/callout-extension.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-07T21:17:10.8951065Z 
+2026-10-07T21:17:10.8961251Z [2m Test Files [22m [1m[32m205 passed[39m[22m[90m (205)[39m
+2026-10-07T21:17:10.8975050Z [2m      Tests [22m [1m[32m2695 passed[39m[22m[90m (2695)[39m
+2026-10-07T21:17:10.8975572Z [2m   Start at [22m 21:16:00
+2026-10-07T21:17:10.8984763Z [2m   Duration [22m 70.01s[2m (environment 41%, tests 27%, import 24%, transform 7%, worker 1%)[22m
+2026-10-07T21:17:10.9000658Z 
+2026-10-07T21:17:10.9001812Z [2m    Isolate [22m [33m205 workers spawned[39m[2m · ~498ms startup each (spawn + environment, per file)[22m
+2026-10-07T21:17:10.9003320Z [2m            [22m [2mat least ~33.56s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+2026-10-07T21:17:10.9003846Z 
+2026-10-07T21:17:10.9742542Z ##[group]Run pnpm dlx publint@0.3.24
+2026-10-07T21:17:10.9742896Z [36;1mpnpm dlx publint@0.3.24[0m
+2026-10-07T21:17:10.9805052Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:17:10.9805312Z env:
+2026-10-07T21:17:10.9805574Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:17:10.9805981Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:10.9806424Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:17:10.9806876Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:10.9807290Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:10.9807686Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:10.9808082Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:17:10.9808413Z ##[endgroup]
+2026-10-07T21:17:11.5480975Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-10-07T21:17:11.6214496Z Packages: +7
+2026-10-07T21:17:11.6215044Z +++++++
+2026-10-07T21:17:11.6988228Z Progress: resolved 7, reused 3, downloaded 4, added 7, done
+2026-10-07T21:17:11.7902422Z Running [1mpublint v0.3.24[22m for [1mfountainjs-editor[22m...
+2026-10-07T21:17:11.7940287Z Packing files with `pnpm pack`...
+2026-10-07T21:17:13.1441906Z Linting...
+2026-10-07T21:17:13.2503616Z [1m[32mAll good![39m[22m
+2026-10-07T21:17:13.2897583Z ##[group]Run pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./docx ./document-utilities ./emoji-data ./react ./vue ./svelte ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+2026-10-07T21:17:13.2901002Z [36;1mpnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./docx ./document-utilities ./emoji-data ./react ./vue ./svelte ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview[0m
+2026-10-07T21:17:13.2965157Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:17:13.2965416Z env:
+2026-10-07T21:17:13.2965672Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:17:13.2966073Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:13.2966521Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:17:13.2966983Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:13.2967385Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:13.2967793Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:13.2968202Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:17:13.2968531Z ##[endgroup]
+2026-10-07T21:17:13.8754075Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-10-07T21:17:14.7598853Z Packages: +56
+2026-10-07T21:17:14.7623993Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2026-10-07T21:17:14.8394275Z Progress: resolved 56, reused 5, downloaded 51, added 56, done
+2026-10-07T21:17:24.4034283Z 
+2026-10-07T21:17:24.4421624Z fountainjs-editor v0.4.0-beta.2
+2026-10-07T21:17:24.4422075Z 
+2026-10-07T21:17:24.4422264Z Build tools:
+2026-10-07T21:17:24.4422696Z - typescript@^7.0.2
+2026-10-07T21:17:24.4423337Z - vite@^8.2.2
+2026-10-07T21:17:24.4423541Z 
+2026-10-07T21:17:24.4423956Z  No problems found 🌟
+2026-10-07T21:17:24.4424188Z 
+2026-10-07T21:17:24.4424199Z 
+2026-10-07T21:17:24.4424986Z ┌───────────────────────────────────────────┬────────┬───────────────────┬───────────────────┬─────────┐
+2026-10-07T21:17:24.4426223Z │                                           │ node10 │ node16 (from CJS) │ node16 (from ESM) │ bundler │
+2026-10-07T21:17:24.4427595Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4428957Z │ "fountainjs-editor"                       │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4430289Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4431680Z │ "fountainjs-editor/core"                  │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4433272Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4434662Z │ "fountainjs-editor/ai/document-tools"     │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4436179Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4437443Z │ "fountainjs-editor/ai/conversation"       │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4439024Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4440494Z │ "fountainjs-editor/ai/generated-media"    │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4441760Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4443350Z │ "fountainjs-editor/docx"                  │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4444910Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4446170Z │ "fountainjs-editor/document-utilities"    │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4447458Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4448662Z │ "fountainjs-editor/emoji-data"            │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4449914Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4451089Z │ "fountainjs-editor/react"                 │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4452316Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4453699Z │ "fountainjs-editor/vue"                   │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4455044Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4456248Z │ "fountainjs-editor/svelte"                │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4457488Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4458681Z │ "fountainjs-editor/yjs"                   │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4459926Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4461370Z │ "fountainjs-editor/comments"              │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4462680Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4464343Z │ "fountainjs-editor/react/comments"        │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4465981Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4467533Z │ "fountainjs-editor/tracked-changes"       │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4469431Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4471115Z │ "fountainjs-editor/react/tracked-changes" │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4472754Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4474457Z │ "fountainjs-editor/versions"              │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4475992Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4477438Z │ "fountainjs-editor/react/versions"        │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4478984Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4480434Z │ "fountainjs-editor/details"               │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4481984Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4483534Z │ "fountainjs-editor/ruby"                  │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4485424Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4486805Z │ "fountainjs-editor/text-style"            │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4488413Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4489854Z │ "fountainjs-editor/testing"               │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4491399Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4492923Z │ "fountainjs-editor/migrations"            │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4495018Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4496482Z │ "fountainjs-editor/node-ids"              │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4498078Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4499642Z │ "fountainjs-editor/structured-attributes" │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4501306Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4502755Z │ "fountainjs-editor/html/server"           │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4504511Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4506041Z │ "fountainjs-editor/widgets"               │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4507608Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4509386Z │ "fountainjs-editor/widgets/dom"           │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4510968Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4512308Z │ "fountainjs-editor/react/widgets"         │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4514068Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4515516Z │ "fountainjs-editor/pages"                 │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4517096Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4518825Z │ "fountainjs-editor/pages/dom"             │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4520394Z ├───────────────────────────────────────────┼────────┼───────────────────┼───────────────────┼─────────┤
+2026-10-07T21:17:24.4521901Z │ "fountainjs-editor/pages/preview"         │ 🟢     │ 🟢 (CJS)          │ 🟢 (ESM)          │ 🟢      │
+2026-10-07T21:17:24.4523649Z └───────────────────────────────────────────┴────────┴───────────────────┴───────────────────┴─────────┘
+2026-10-07T21:17:24.5439896Z ##[group]Run pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
+2026-10-07T21:17:24.5440646Z [36;1mpnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only[0m
+2026-10-07T21:17:24.5503840Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:17:24.5504101Z env:
+2026-10-07T21:17:24.5504362Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:17:24.5504777Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:24.5505225Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:17:24.5505678Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:24.5506075Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:24.5506472Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:24.5506864Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:17:24.5507233Z ##[endgroup]
+2026-10-07T21:17:28.2993780Z 
+2026-10-07T21:17:28.3205906Z fountainjs-editor v0.4.0-beta.2
+2026-10-07T21:17:28.3206361Z 
+2026-10-07T21:17:28.3206558Z Build tools:
+2026-10-07T21:17:28.3207005Z - typescript@^7.0.2
+2026-10-07T21:17:28.3207446Z - vite@^8.2.2
+2026-10-07T21:17:28.3207681Z 
+2026-10-07T21:17:28.3208003Z  (ignoring resolutions: 'node10', 'node16-cjs')
+2026-10-07T21:17:28.3208426Z 
+2026-10-07T21:17:28.3210103Z (ignored per resolution) ⚠️ A require call resolved to an ESM JavaScript file, which is an error in Node and some bundlers. CommonJS consumers will need to use a dynamic import. https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/CJSResolvesToESM.md
+2026-10-07T21:17:28.3211619Z 
+2026-10-07T21:17:28.3211630Z 
+2026-10-07T21:17:28.3212149Z ┌───────────────────┬────────────────────────────────────────┐
+2026-10-07T21:17:28.3212939Z │                   │ "fountainjs-editor/angular"            │
+2026-10-07T21:17:28.3214064Z ├───────────────────┼────────────────────────────────────────┤
+2026-10-07T21:17:28.3214907Z │ node16 (from ESM) │ 🟢 (ESM)                               │
+2026-10-07T21:17:28.3215747Z ├───────────────────┼────────────────────────────────────────┤
+2026-10-07T21:17:28.3216636Z │ bundler           │ 🟢                                     │
+2026-10-07T21:17:28.3217529Z ├───────────────────┼────────────────────────────────────────┤
+2026-10-07T21:17:28.3218293Z │ node10            │ (ignored) 🟢                           │
+2026-10-07T21:17:28.3219577Z ├───────────────────┼────────────────────────────────────────┤
+2026-10-07T21:17:28.3220462Z │ node16 (from CJS) │ (ignored) ⚠️ ESM (dynamic import only) │
+2026-10-07T21:17:28.3221396Z └───────────────────┴────────────────────────────────────────┘
+2026-10-07T21:17:28.3629580Z ##[group]Run pnpm exec vite build --base /fountainjs/
+2026-10-07T21:17:28.3630016Z [36;1mpnpm exec vite build --base /fountainjs/[0m
+2026-10-07T21:17:28.3692141Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:17:28.3692411Z env:
+2026-10-07T21:17:28.3692672Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:17:28.3693400Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:28.3693867Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:17:28.3694322Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:28.3694759Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:28.3695167Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:28.3695554Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:17:28.3695890Z ##[endgroup]
+2026-10-07T21:17:29.8428964Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+2026-10-07T21:17:29.8557867Z transforming...
+2026-10-07T21:17:30.9318350Z ✓ 769 modules transformed.
+2026-10-07T21:17:31.0794537Z rendering chunks...
+2026-10-07T21:17:31.3000275Z computing gzip size...
+2026-10-07T21:17:31.3373464Z examples/react-app/dist/workflows.html                                       0.75 kB │ gzip:   0.42 kB
+2026-10-07T21:17:31.3375025Z examples/react-app/dist/developers.html                                      0.80 kB │ gzip:   0.42 kB
+2026-10-07T21:17:31.3376440Z examples/react-app/dist/demos.html                                           0.98 kB │ gzip:   0.46 kB
+2026-10-07T21:17:31.3377855Z examples/react-app/dist/task-workflow.html                                   1.01 kB │ gzip:   0.46 kB
+2026-10-07T21:17:31.3379333Z examples/react-app/dist/issue-editor.html                                    1.14 kB │ gzip:   0.47 kB
+2026-10-07T21:17:31.3380769Z examples/react-app/dist/math-renderer.html                                   1.21 kB │ gzip:   0.48 kB
+2026-10-07T21:17:31.3382199Z examples/react-app/dist/index.html                                           1.27 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3383271Z examples/react-app/dist/math-references.html                                 1.36 kB │ gzip:   0.52 kB
+2026-10-07T21:17:31.3384133Z examples/react-app/dist/demos/vue-runbook.html                               1.57 kB │ gzip:   0.50 kB
+2026-10-07T21:17:31.3384998Z examples/react-app/dist/demos/svelte-report.html                             1.57 kB │ gzip:   0.50 kB
+2026-10-07T21:17:31.3385851Z examples/react-app/dist/demos/angular-media.html                             1.57 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3386685Z examples/react-app/dist/demos/react-article.html                             1.58 kB │ gzip:   0.50 kB
+2026-10-07T21:17:31.3387782Z examples/react-app/dist/demos/python-content-api.html                        1.58 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3389215Z examples/react-app/dist/demos/go-docs-service.html                           1.59 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3390628Z examples/react-app/dist/demos/node-markdown.html                             1.59 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3391514Z examples/react-app/dist/demos/web-component-cms.html                         1.59 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3392404Z examples/react-app/dist/demos/plain-dom-notes.html                           1.59 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3393451Z examples/react-app/dist/demos/java-approval-workflow.html                    1.59 kB │ gzip:   0.51 kB
+2026-10-07T21:17:31.3394331Z examples/react-app/dist/conversion-lab.html                                  1.96 kB │ gzip:   0.72 kB
+2026-10-07T21:17:31.3395051Z examples/react-app/dist/assets/KaTeX_Size3-Regular-CTq5MqoE.woff             4.42 kB
+2026-10-07T21:17:31.3396200Z examples/react-app/dist/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2            4.92 kB
+2026-10-07T21:17:31.3397443Z examples/react-app/dist/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2            5.20 kB
+2026-10-07T21:17:31.3398931Z examples/react-app/dist/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2            5.46 kB
+2026-10-07T21:17:31.3399923Z examples/react-app/dist/assets/KaTeX_Size4-Regular-BF-4gkZK.woff             5.98 kB
+2026-10-07T21:17:31.3400594Z examples/react-app/dist/assets/KaTeX_Size2-Regular-oD1tc_U0.woff             6.18 kB
+2026-10-07T21:17:31.3401262Z examples/react-app/dist/assets/KaTeX_Size1-Regular-C195tn64.woff             6.49 kB
+2026-10-07T21:17:31.3401945Z examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2      6.90 kB
+2026-10-07T21:17:31.3402641Z examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2         6.91 kB
+2026-10-07T21:17:31.3403483Z examples/react-app/dist/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf              7.58 kB
+2026-10-07T21:17:31.3404168Z examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff       7.65 kB
+2026-10-07T21:17:31.3404851Z examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff          7.71 kB
+2026-10-07T21:17:31.3405528Z examples/react-app/dist/assets/KaTeX_Script-Regular-D3wIWfF6.woff2           9.64 kB
+2026-10-07T21:17:31.3406454Z examples/react-app/dist/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2       10.34 kB
+2026-10-07T21:17:31.3407132Z examples/react-app/dist/assets/KaTeX_Size4-Regular-DWFBv043.ttf             10.36 kB
+2026-10-07T21:17:31.3407805Z examples/react-app/dist/assets/KaTeX_Script-Regular-D5yQViql.woff           10.58 kB
+2026-10-07T21:17:31.3408907Z examples/react-app/dist/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2         11.31 kB
+2026-10-07T21:17:31.3409907Z examples/react-app/dist/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2            11.34 kB
+2026-10-07T21:17:31.3410857Z examples/react-app/dist/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf             11.50 kB
+2026-10-07T21:17:31.3411825Z examples/react-app/dist/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2        12.02 kB
+2026-10-07T21:17:31.3412797Z examples/react-app/dist/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2          12.21 kB
+2026-10-07T21:17:31.3414623Z examples/react-app/dist/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf             12.22 kB
+2026-10-07T21:17:31.3415604Z examples/react-app/dist/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff        12.31 kB
+2026-10-07T21:17:31.3416679Z examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf       12.34 kB
+2026-10-07T21:17:31.3417644Z examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf          12.36 kB
+2026-10-07T21:17:31.3418598Z examples/react-app/dist/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff          13.20 kB
+2026-10-07T21:17:31.3419577Z examples/react-app/dist/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff             13.29 kB
+2026-10-07T21:17:31.3420697Z examples/react-app/dist/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2      13.56 kB
+2026-10-07T21:17:31.3421940Z examples/react-app/dist/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff         14.11 kB
+2026-10-07T21:17:31.3422927Z examples/react-app/dist/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff           14.40 kB
+2026-10-07T21:17:31.3424142Z examples/react-app/dist/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff       16.02 kB
+2026-10-07T21:17:31.3425114Z examples/react-app/dist/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2         16.40 kB
+2026-10-07T21:17:31.3426070Z examples/react-app/dist/assets/KaTeX_Math-Italic-t53AETM-.woff2             16.44 kB
+2026-10-07T21:17:31.3427021Z examples/react-app/dist/assets/KaTeX_Script-Regular-C5JkGWo-.ttf            16.64 kB
+2026-10-07T21:17:31.3427978Z examples/react-app/dist/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2         16.78 kB
+2026-10-07T21:17:31.3428977Z examples/react-app/dist/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2             16.98 kB
+2026-10-07T21:17:31.3429951Z examples/react-app/dist/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff          18.66 kB
+2026-10-07T21:17:31.3430627Z examples/react-app/dist/assets/KaTeX_Math-Italic-DA0__PXp.woff              18.74 kB
+2026-10-07T21:17:31.3431291Z examples/react-app/dist/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff          19.41 kB
+2026-10-07T21:17:31.3432130Z examples/react-app/dist/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf         19.43 kB
+2026-10-07T21:17:31.3432832Z examples/react-app/dist/assets/KaTeX_Fraktur-Regular-CB_wures.ttf           19.57 kB
+2026-10-07T21:17:31.3433799Z examples/react-app/dist/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf              19.58 kB
+2026-10-07T21:17:31.3434471Z examples/react-app/dist/assets/KaTeX_Main-Italic-BMLOBm91.woff              19.67 kB
+2026-10-07T21:17:31.3435146Z examples/react-app/dist/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf          22.36 kB
+2026-10-07T21:17:31.3435816Z examples/react-app/dist/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf            24.50 kB
+2026-10-07T21:17:31.3436482Z examples/react-app/dist/assets/KaTeX_Main-Bold-Cx986IdX.woff2               25.32 kB
+2026-10-07T21:17:31.3437161Z examples/react-app/dist/assets/KaTeX_Main-Regular-B22Nviop.woff2            26.27 kB
+2026-10-07T21:17:31.3437830Z examples/react-app/dist/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf        27.55 kB
+2026-10-07T21:17:31.3438492Z examples/react-app/dist/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2             28.07 kB
+2026-10-07T21:17:31.3439153Z examples/react-app/dist/assets/KaTeX_Main-Bold-Jm3AIy58.woff                29.91 kB
+2026-10-07T21:17:31.3439809Z examples/react-app/dist/assets/KaTeX_Main-Regular-Dr94JaBh.woff             30.77 kB
+2026-10-07T21:17:31.3440469Z examples/react-app/dist/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf           31.19 kB
+2026-10-07T21:17:31.3441138Z examples/react-app/dist/assets/KaTeX_Math-Italic-flOr_0UB.ttf               31.30 kB
+2026-10-07T21:17:31.3441807Z examples/react-app/dist/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf           32.96 kB
+2026-10-07T21:17:31.3442469Z examples/react-app/dist/assets/KaTeX_AMS-Regular-DMm9YOAa.woff              33.51 kB
+2026-10-07T21:17:31.3443364Z examples/react-app/dist/assets/KaTeX_Main-Italic-3WenGoN9.ttf               33.58 kB
+2026-10-07T21:17:31.3444036Z examples/react-app/dist/assets/KaTeX_Main-Bold-waoOVXN0.ttf                 51.33 kB
+2026-10-07T21:17:31.3444700Z examples/react-app/dist/assets/KaTeX_Main-Regular-ypZvNtVU.ttf              53.58 kB
+2026-10-07T21:17:31.3445368Z examples/react-app/dist/assets/KaTeX_AMS-Regular-DRggAlZN.ttf               63.63 kB
+2026-10-07T21:17:31.3446268Z examples/react-app/dist/assets/mathReferences-DZkUsBC7.css                   1.44 kB │ gzip:   0.49 kB
+2026-10-07T21:17:31.3447164Z examples/react-app/dist/assets/math-renderer-Bzeyzs68.css                    1.92 kB │ gzip:   0.78 kB
+2026-10-07T21:17:31.3448053Z examples/react-app/dist/assets/issueEditor-BvOhe8Ue.css                      2.93 kB │ gzip:   1.07 kB
+2026-10-07T21:17:31.3448914Z examples/react-app/dist/assets/demo-main-C6B5dMq3.css                        3.51 kB │ gzip:   1.14 kB
+2026-10-07T21:17:31.3449931Z examples/react-app/dist/assets/conversionLab-D1_ybtx_.css                    4.49 kB │ gzip:   1.42 kB
+2026-10-07T21:17:31.3450784Z examples/react-app/dist/assets/workflows-CUVZY_k3.css                        5.28 kB │ gzip:   1.55 kB
+2026-10-07T21:17:31.3451640Z examples/react-app/dist/assets/developers-oZ5wSwzo.css                       7.85 kB │ gzip:   2.20 kB
+2026-10-07T21:17:31.3452495Z examples/react-app/dist/assets/demos-8OEply4J.css                           20.89 kB │ gzip:   4.69 kB
+2026-10-07T21:17:31.3453569Z examples/react-app/dist/assets/src-B23quapa.css                             28.26 kB │ gzip:   6.30 kB
+2026-10-07T21:17:31.3454403Z examples/react-app/dist/assets/katex-QAR1SwR3.css                           30.38 kB │ gzip:   7.96 kB
+2026-10-07T21:17:31.3455235Z examples/react-app/dist/assets/styles-BAjglHY7.css                          79.85 kB │ gzip:  12.18 kB
+2026-10-07T21:17:31.3456085Z examples/react-app/dist/assets/math-renderer-D9snoi-1.js                     0.95 kB │ gzip:   0.36 kB
+2026-10-07T21:17:31.3456969Z examples/react-app/dist/assets/inline-atom-BLfPalX5-DB1U8pSs.js              1.31 kB │ gzip:   0.61 kB
+2026-10-07T21:17:31.3457973Z examples/react-app/dist/assets/workflows-B0fiELdy.js                         4.50 kB │ gzip:   1.58 kB
+2026-10-07T21:17:31.3458628Z [33m[plugin builtin:vite-reporter] 
+2026-10-07T21:17:31.3459096Z (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-10-07T21:17:31.3459588Z - Using dynamic import() to code-split the application
+2026-10-07T21:17:31.3460407Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+2026-10-07T21:17:31.3461318Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+2026-10-07T21:17:31.3462145Z examples/react-app/dist/assets/node-ids-D00KOTvl.js                          6.12 kB │ gzip:   2.44 kB
+2026-10-07T21:17:31.3463273Z examples/react-app/dist/assets/mathRenderer-CcZdHraK.js                      6.51 kB │ gzip:   2.77 kB
+2026-10-07T21:17:31.3464181Z examples/react-app/dist/assets/demos-CuWppJEq.js                             6.93 kB │ gzip:   2.51 kB
+2026-10-07T21:17:31.3465054Z examples/react-app/dist/assets/taskWorkflow-FuSO6hvZ.js                      7.47 kB │ gzip:   3.00 kB
+2026-10-07T21:17:31.3465946Z examples/react-app/dist/assets/issueEditor-CycQXcOQ.js                      11.05 kB │ gzip:   4.38 kB
+2026-10-07T21:17:31.3466798Z examples/react-app/dist/assets/demos-Bs5m_CXW.js                            20.73 kB │ gzip:   7.89 kB
+2026-10-07T21:17:31.3467655Z examples/react-app/dist/assets/svelte-report-D1jnOMDc.js                    46.00 kB │ gzip:  18.17 kB
+2026-10-07T21:17:31.3468509Z examples/react-app/dist/assets/dist-CXEssy9B.js                             46.27 kB │ gzip:  13.87 kB
+2026-10-07T21:17:31.3469353Z examples/react-app/dist/assets/vue-runbook-BoUsoUQ6.js                      59.35 kB │ gzip:  23.62 kB
+2026-10-07T21:17:31.3470228Z examples/react-app/dist/assets/conversionLab-CQUh8daN.js                    59.88 kB │ gzip:  19.71 kB
+2026-10-07T21:17:31.3471088Z examples/react-app/dist/assets/demo-main-CstSZSQl.js                        91.15 kB │ gzip:  28.14 kB
+2026-10-07T21:17:31.3471949Z examples/react-app/dist/assets/react-PLl1fru6.js                            91.55 kB │ gzip:  25.97 kB
+2026-10-07T21:17:31.3472798Z examples/react-app/dist/assets/developers--j-vqihE.js                      105.23 kB │ gzip:  29.79 kB
+2026-10-07T21:17:31.3473894Z examples/react-app/dist/assets/docx-CO0uBC4i.js                            151.89 kB │ gzip:  48.43 kB
+2026-10-07T21:17:31.3474754Z examples/react-app/dist/assets/SitePageLink-F6rtmo3i.js                    191.26 kB │ gzip:  60.33 kB
+2026-10-07T21:17:31.3475618Z examples/react-app/dist/assets/html-server-Cr4IgEOB.js                     212.43 kB │ gzip:  54.10 kB
+2026-10-07T21:17:31.3476493Z examples/react-app/dist/assets/AmsConfiguration-CajuTF5y.js                243.82 kB │ gzip:  75.28 kB
+2026-10-07T21:17:31.3477526Z examples/react-app/dist/assets/katex.min-C7iIJkK6.js                       258.39 kB │ gzip:  77.55 kB
+2026-10-07T21:17:31.3478362Z examples/react-app/dist/assets/main-DsoaPXp9.js                            346.19 kB │ gzip:  98.66 kB
+2026-10-07T21:17:31.3479202Z examples/react-app/dist/assets/styles-CYCCBFQp.js                          417.25 kB │ gzip: 133.29 kB
+2026-10-07T21:17:31.3480046Z examples/react-app/dist/assets/campaign-D9zXREkn.js                        471.28 kB │ gzip: 153.44 kB
+2026-10-07T21:17:31.3480918Z examples/react-app/dist/assets/mathReferences-CsUlgvoE.js                1,613.86 kB │ gzip: 627.29 kB
+2026-10-07T21:17:31.3481329Z 
+2026-10-07T21:17:31.3481499Z [32m✓ built in 1.49s[39m
+2026-10-07T21:17:31.4763326Z ##[group]Run pnpm pack --dry-run
+2026-10-07T21:17:31.4763681Z [36;1mpnpm pack --dry-run[0m
+2026-10-07T21:17:31.4825786Z shell: /usr/bin/bash -e {0}
+2026-10-07T21:17:31.4826043Z env:
+2026-10-07T21:17:31.4826308Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-07T21:17:31.4826733Z   pythonLocation: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:31.4827182Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib/pkgconfig
+2026-10-07T21:17:31.4827632Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:31.4828067Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:31.4828581Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.13.16/x64
+2026-10-07T21:17:31.4828985Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.16/x64/lib
+2026-10-07T21:17:31.4829321Z ##[endgroup]
+2026-10-07T21:17:32.2604815Z package: fountainjs-editor@0.4.0-beta.2
+2026-10-07T21:17:32.2605530Z Tarball Contents
+2026-10-07T21:17:32.2606131Z api-surface.json
+2026-10-07T21:17:32.2606557Z CHANGELOG.md
+2026-10-07T21:17:32.2607020Z dist/ai-conversation.cjs
+2026-10-07T21:17:32.2607507Z dist/ai-conversation.cjs.map
+2026-10-07T21:17:32.2607983Z dist/ai-conversation.js
+2026-10-07T21:17:32.2608483Z dist/ai-conversation.js.map
+2026-10-07T21:17:32.2609038Z dist/ai-document-tools.cjs
+2026-10-07T21:17:32.2609857Z dist/ai-document-tools.cjs.map
+2026-10-07T21:17:32.2610403Z dist/ai-document-tools.js
+2026-10-07T21:17:32.2610913Z dist/ai-document-tools.js.map
+2026-10-07T21:17:32.2611421Z dist/ai-generated-media.cjs
+2026-10-07T21:17:32.2611987Z dist/ai-generated-media.cjs.map
+2026-10-07T21:17:32.2613784Z dist/ai-generated-media.js
+2026-10-07T21:17:32.2614319Z dist/ai-generated-media.js.map
+2026-10-07T21:17:32.2614821Z dist/ai/controller.d.cts
+2026-10-07T21:17:32.2615274Z dist/ai/controller.d.ts
+2026-10-07T21:17:32.2615727Z dist/ai/conversation.d.cts
+2026-10-07T21:17:32.2616184Z dist/ai/conversation.d.ts
+2026-10-07T21:17:32.2616666Z dist/ai/document-tools.d.cts
+2026-10-07T21:17:32.2617157Z dist/ai/document-tools.d.ts
+2026-10-07T21:17:32.2617631Z dist/ai/generated-media.d.cts
+2026-10-07T21:17:32.2618119Z dist/ai/generated-media.d.ts
+2026-10-07T21:17:32.2618634Z dist/ai/index.d.cts
+2026-10-07T21:17:32.2619069Z dist/ai/index.d.ts
+2026-10-07T21:17:32.2619527Z dist/ai/mcp-adapter.d.cts
+2026-10-07T21:17:32.2620032Z dist/ai/mcp-adapter.d.ts
+2026-10-07T21:17:32.2620468Z dist/ai/types.d.cts
+2026-10-07T21:17:32.2620856Z dist/ai/types.d.ts
+2026-10-07T21:17:32.2621331Z dist/angular/index.d.ts
+2026-10-07T21:17:32.2621874Z dist/angular/index.js
+2026-10-07T21:17:32.2622329Z dist/angular/index.js.map
+2026-10-07T21:17:32.2622905Z dist/collaboration-BubriAbK.js
+2026-10-07T21:17:32.2623693Z dist/collaboration-BubriAbK.js.map
+2026-10-07T21:17:32.2624327Z dist/collaboration-core-6QLxBCsv.cjs
+2026-10-07T21:17:32.2624811Z dist/collaboration-core-6QLxBCsv.cjs.map
+2026-10-07T21:17:32.2625189Z dist/collaboration-core-B-I53ZbT.js
+2026-10-07T21:17:32.2625564Z dist/collaboration-core-B-I53ZbT.js.map
+2026-10-07T21:17:32.2625931Z dist/collaboration-DHfWMt2l.cjs
+2026-10-07T21:17:32.2626302Z dist/collaboration-DHfWMt2l.cjs.map
+2026-10-07T21:17:32.2626683Z dist/command-manager-CSDUCeVE.js
+2026-10-07T21:17:32.2627034Z dist/command-manager-CSDUCeVE.js.map
+2026-10-07T21:17:32.2627728Z dist/command-manager-DU4ahU5C.cjs
+2026-10-07T21:17:32.2628081Z dist/command-manager-DU4ahU5C.cjs.map
+2026-10-07T21:17:32.2628430Z dist/commands-2YHotcJj.cjs
+2026-10-07T21:17:32.2628752Z dist/commands-2YHotcJj.cjs.map
+2026-10-07T21:17:32.2629077Z dist/commands-ClpBIECY.js
+2026-10-07T21:17:32.2629375Z dist/commands-ClpBIECY.js.map
+2026-10-07T21:17:32.2629685Z dist/comments.cjs
+2026-10-07T21:17:32.2629946Z dist/comments.cjs.map
+2026-10-07T21:17:32.2630195Z dist/comments.js
+2026-10-07T21:17:32.2630439Z dist/comments.js.map
+2026-10-07T21:17:32.2630724Z dist/comments/index.d.cts
+2026-10-07T21:17:32.2631007Z dist/comments/index.d.ts
+2026-10-07T21:17:32.2631331Z dist/content-expression-CuobUc-r.js
+2026-10-07T21:17:32.2631953Z dist/content-expression-CuobUc-r.js.map
+2026-10-07T21:17:32.2632371Z dist/content-expression-YXcFdjFU.cjs
+2026-10-07T21:17:32.2632752Z dist/content-expression-YXcFdjFU.cjs.map
+2026-10-07T21:17:32.2633487Z dist/core.cjs
+2026-10-07T21:17:32.2633721Z dist/core.js
+2026-10-07T21:17:32.2633963Z dist/core/commands.d.cts
+2026-10-07T21:17:32.2634243Z dist/core/commands.d.ts
+2026-10-07T21:17:32.2634519Z dist/core/decoration.d.cts
+2026-10-07T21:17:32.2634821Z dist/core/decoration.d.ts
+2026-10-07T21:17:32.2635093Z dist/core/editor.d.cts
+2026-10-07T21:17:32.2635360Z dist/core/editor.d.ts
+2026-10-07T21:17:32.2635662Z dist/core/explicit-emphasis.d.cts
+2026-10-07T21:17:32.2636003Z dist/core/explicit-emphasis.d.ts
+2026-10-07T21:17:32.2636354Z dist/core/exporters/html-exporter.d.cts
+2026-10-07T21:17:32.2636735Z dist/core/exporters/html-exporter.d.ts
+2026-10-07T21:17:32.2637094Z dist/core/exporters/json-exporter.d.cts
+2026-10-07T21:17:32.2637475Z dist/core/exporters/json-exporter.d.ts
+2026-10-07T21:17:32.2637853Z dist/core/exporters/markdown-exporter.d.cts
+2026-10-07T21:17:32.2638265Z dist/core/exporters/markdown-exporter.d.ts
+2026-10-07T21:17:32.2638643Z dist/core/exporters/text-exporter.d.cts
+2026-10-07T21:17:32.2639019Z dist/core/exporters/text-exporter.d.ts
+2026-10-07T21:17:32.2639351Z dist/core/html-comment.d.cts
+2026-10-07T21:17:32.2639651Z dist/core/html-comment.d.ts
+2026-10-07T21:17:32.2639946Z dist/core/html-flow.d.cts
+2026-10-07T21:17:32.2640223Z dist/core/html-flow.d.ts
+2026-10-07T21:17:32.2640524Z dist/core/image-caption.d.cts
+2026-10-07T21:17:32.2640837Z dist/core/image-caption.d.ts
+2026-10-07T21:17:32.2641113Z dist/core/image.d.cts
+2026-10-07T21:17:32.2641353Z dist/core/image.d.ts
+2026-10-07T21:17:32.2641711Z dist/core/importers/html-definition-list.d.cts
+2026-10-07T21:17:32.2642132Z dist/core/importers/html-definition-list.d.ts
+2026-10-07T21:17:32.2642536Z dist/core/importers/html-importer.d.cts
+2026-10-07T21:17:32.2642907Z dist/core/importers/html-importer.d.ts
+2026-10-07T21:17:32.2643521Z dist/core/importers/html-link-url.d.cts
+2026-10-07T21:17:32.2643881Z dist/core/importers/html-link-url.d.ts
+2026-10-07T21:17:32.2644230Z dist/core/importers/html-list.d.cts
+2026-10-07T21:17:32.2644575Z dist/core/importers/html-list.d.ts
+2026-10-07T21:17:32.2644959Z dist/core/importers/html-page-settings.d.cts
+2026-10-07T21:17:32.2645357Z dist/core/importers/html-page-settings.d.ts
+2026-10-07T21:17:32.2645757Z dist/core/importers/html-table.d.cts
+2026-10-07T21:17:32.2646099Z dist/core/importers/html-table.d.ts
+2026-10-07T21:17:32.2646477Z dist/core/importers/markdown-importer.d.cts
+2026-10-07T21:17:32.2646871Z dist/core/importers/markdown-importer.d.ts
+2026-10-07T21:17:32.2647198Z dist/core/index.d.cts
+2026-10-07T21:17:32.2647458Z dist/core/index.d.ts
+2026-10-07T21:17:32.2647756Z dist/core/link-destination.d.cts
+2026-10-07T21:17:32.2648084Z dist/core/link-destination.d.ts
+2026-10-07T21:17:32.2648415Z dist/core/markdown-entities.d.cts
+2026-10-07T21:17:32.2648768Z dist/core/markdown-entities.d.ts
+2026-10-07T21:17:32.2649094Z dist/core/markdown-html.d.cts
+2026-10-07T21:17:32.2649395Z dist/core/markdown-html.d.ts
+2026-10-07T21:17:32.2649688Z dist/core/markdown-tex.d.cts
+2026-10-07T21:17:32.2649987Z dist/core/markdown-tex.d.ts
+2026-10-07T21:17:32.2650298Z dist/core/math-expression.d.cts
+2026-10-07T21:17:32.2650832Z dist/core/math-expression.d.ts
+2026-10-07T21:17:32.2651146Z dist/core/page-settings.d.cts
+2026-10-07T21:17:32.2651452Z dist/core/page-settings.d.ts
+2026-10-07T21:17:32.2651785Z dist/core/paragraph-layout.d.cts
+2026-10-07T21:17:32.2652120Z dist/core/paragraph-layout.d.ts
+2026-10-07T21:17:32.2652418Z dist/core/platform.d.cts
+2026-10-07T21:17:32.2652692Z dist/core/platform.d.ts
+2026-10-07T21:17:32.2653178Z dist/core/plugin.d.cts
+2026-10-07T21:17:32.2653478Z dist/core/plugin.d.ts
+2026-10-07T21:17:32.2653800Z dist/core/schema/content-expression.d.cts
+2026-10-07T21:17:32.2654203Z dist/core/schema/content-expression.d.ts
+2026-10-07T21:17:32.2654542Z dist/core/schema/index.d.cts
+2026-10-07T21:17:32.2654848Z dist/core/schema/index.d.ts
+2026-10-07T21:17:32.2655327Z dist/core/schema/mark-spec.d.cts
+2026-10-07T21:17:32.2655666Z dist/core/schema/mark-spec.d.ts
+2026-10-07T21:17:32.2655964Z dist/core/schema/mark.d.cts
+2026-10-07T21:17:32.2656248Z dist/core/schema/mark.d.ts
+2026-10-07T21:17:32.2656557Z dist/core/schema/node-spec.d.cts
+2026-10-07T21:17:32.2656901Z dist/core/schema/node-spec.d.ts
+2026-10-07T21:17:32.2657194Z dist/core/schema/node.d.cts
+2026-10-07T21:17:32.2657476Z dist/core/schema/node.d.ts
+2026-10-07T21:17:32.2657762Z dist/core/schema/schema.d.cts
+2026-10-07T21:17:32.2658058Z dist/core/schema/schema.d.ts
+2026-10-07T21:17:32.2658340Z dist/core/search.d.cts
+2026-10-07T21:17:32.2658606Z dist/core/search.d.ts
+2026-10-07T21:17:32.2658904Z dist/core/selection.d.cts
+2026-10-07T21:17:32.2659191Z dist/core/selection.d.ts
+2026-10-07T21:17:32.2659464Z dist/core/state.d.cts
+2026-10-07T21:17:32.2659717Z dist/core/state.d.ts
+2026-10-07T21:17:32.2660014Z dist/core/structure-commands.d.cts
+2026-10-07T21:17:32.2660372Z dist/core/structure-commands.d.ts
+2026-10-07T21:17:32.2660718Z dist/core/table-appearance.d.cts
+2026-10-07T21:17:32.2661043Z dist/core/table-appearance.d.ts
+2026-10-07T21:17:32.2661384Z dist/core/table-background.d.cts
+2026-10-07T21:17:32.2661710Z dist/core/table-background.d.ts
+2026-10-07T21:17:32.2662036Z dist/core/table-commands.d.cts
+2026-10-07T21:17:32.2662335Z dist/core/table-commands.d.ts
+2026-10-07T21:17:32.2662637Z dist/core/table-layout.d.cts
+2026-10-07T21:17:32.2662941Z dist/core/table-layout.d.ts
+2026-10-07T21:17:32.2663453Z dist/core/table-map.d.cts
+2026-10-07T21:17:32.2663739Z dist/core/table-map.d.ts
+2026-10-07T21:17:32.2664019Z dist/core/table-width.d.cts
+2026-10-07T21:17:32.2664301Z dist/core/table-width.d.ts
+2026-10-07T21:17:32.2664580Z dist/core/tex-table.d.cts
+2026-10-07T21:17:32.2664858Z dist/core/tex-table.d.ts
+2026-10-07T21:17:32.2665158Z dist/core/text-direction.d.cts
+2026-10-07T21:17:32.2665458Z dist/core/text-direction.d.ts
+2026-10-07T21:17:32.2665817Z dist/core/text-replacement-selection.d.cts
+2026-10-07T21:17:32.2666234Z dist/core/text-replacement-selection.d.ts
+2026-10-07T21:17:32.2666617Z dist/core/transaction/add-mark-step.d.cts
+2026-10-07T21:17:32.2667012Z dist/core/transaction/add-mark-step.d.ts
+2026-10-07T21:17:32.2667361Z dist/core/transaction/index.d.cts
+2026-10-07T21:17:32.2667695Z dist/core/transaction/index.d.ts
+2026-10-07T21:17:32.2668076Z dist/core/transaction/insert-text-step.d.cts
+2026-10-07T21:17:32.2668472Z dist/core/transaction/insert-text-step.d.ts
+2026-10-07T21:17:32.2668863Z dist/core/transaction/mapping.d.cts
+2026-10-07T21:17:32.2669215Z dist/core/transaction/mapping.d.ts
+2026-10-07T21:17:32.2669577Z dist/core/transaction/mark-range-step.d.cts
+2026-10-07T21:17:32.2669974Z dist/core/transaction/mark-range-step.d.ts
+2026-10-07T21:17:32.2670328Z dist/core/transaction/path.d.cts
+2026-10-07T21:17:32.2670671Z dist/core/transaction/path.d.ts
+2026-10-07T21:17:32.2671024Z dist/core/transaction/remove-mark-step.d.cts
+2026-10-07T21:17:32.2671415Z dist/core/transaction/remove-mark-step.d.ts
+2026-10-07T21:17:32.2671863Z dist/core/transaction/replace-document-step.d.cts
+2026-10-07T21:17:32.2672313Z dist/core/transaction/replace-document-step.d.ts
+2026-10-07T21:17:32.2672728Z dist/core/transaction/replace-node-step.d.cts
+2026-10-07T21:17:32.2673440Z dist/core/transaction/replace-node-step.d.ts
+2026-10-07T21:17:32.2674004Z dist/core/transaction/replace-step.d.cts
+2026-10-07T21:17:32.2674382Z dist/core/transaction/replace-step.d.ts
+2026-10-07T21:17:32.2674812Z dist/core/transaction/replace-text-range-step.d.cts
+2026-10-07T21:17:32.2675275Z dist/core/transaction/replace-text-range-step.d.ts
+2026-10-07T21:17:32.2675696Z dist/core/transaction/replace-text-step.d.cts
+2026-10-07T21:17:32.2676124Z dist/core/transaction/replace-text-step.d.ts
+2026-10-07T21:17:32.2676528Z dist/core/transaction/set-node-attrs-step.d.cts
+2026-10-07T21:17:32.2676965Z dist/core/transaction/set-node-attrs-step.d.ts
+2026-10-07T21:17:32.2677342Z dist/core/transaction/step.d.cts
+2026-10-07T21:17:32.2677671Z dist/core/transaction/step.d.ts
+2026-10-07T21:17:32.2678146Z dist/core/transaction/transaction.d.cts
+2026-10-07T21:17:32.2678532Z dist/core/transaction/transaction.d.ts
+2026-10-07T21:17:32.2678896Z dist/core/transaction/transform.d.cts
+2026-10-07T21:17:32.2679252Z dist/core/transaction/transform.d.ts
+2026-10-07T21:17:32.2679645Z dist/core/unicode-case-fold-data.d.cts
+2026-10-07T21:17:32.2680036Z dist/core/unicode-case-fold-data.d.ts
+2026-10-07T21:17:32.2680388Z dist/core/unicode-case-fold.d.cts
+2026-10-07T21:17:32.2680726Z dist/core/unicode-case-fold.d.ts
+2026-10-07T21:17:32.2681036Z dist/core/url.d.cts
+2026-10-07T21:17:32.2681286Z dist/core/url.d.ts
+2026-10-07T21:17:32.2681552Z dist/decoration-CuT1b7BC.js
+2026-10-07T21:17:32.2681872Z dist/decoration-CuT1b7BC.js.map
+2026-10-07T21:17:32.2682204Z dist/decoration-jVx4B2Pl.cjs
+2026-10-07T21:17:32.2682530Z dist/decoration-jVx4B2Pl.cjs.map
+2026-10-07T21:17:32.2682811Z dist/details.cjs
+2026-10-07T21:17:32.2683288Z dist/details.cjs.map
+2026-10-07T21:17:32.2683542Z dist/details.js
+2026-10-07T21:17:32.2683791Z dist/details.js.map
+2026-10-07T21:17:32.2684040Z dist/details/index.d.cts
+2026-10-07T21:17:32.2684316Z dist/details/index.d.ts
+2026-10-07T21:17:32.2684595Z dist/document-utilities.cjs
+2026-10-07T21:17:32.2684916Z dist/document-utilities.cjs.map
+2026-10-07T21:17:32.2685233Z dist/document-utilities.d.cts
+2026-10-07T21:17:32.2685559Z dist/document-utilities.d.ts
+2026-10-07T21:17:32.2685838Z dist/document-utilities.js
+2026-10-07T21:17:32.2686173Z dist/document-utilities.js.map
+2026-10-07T21:17:32.2686429Z dist/docx.cjs
+2026-10-07T21:17:32.2686664Z dist/docx.cjs.map
+2026-10-07T21:17:32.2686903Z dist/docx.js
+2026-10-07T21:17:32.2687103Z dist/docx.js.map
+2026-10-07T21:17:32.2687352Z dist/docx/index.d.cts
+2026-10-07T21:17:32.2687618Z dist/docx/index.d.ts
+2026-10-07T21:17:32.2687886Z dist/docx/math-parser.d.cts
+2026-10-07T21:17:32.2688176Z dist/docx/math-parser.d.ts
+2026-10-07T21:17:32.2688450Z dist/docx/math.d.cts
+2026-10-07T21:17:32.2688689Z dist/docx/math.d.ts
+2026-10-07T21:17:32.2688985Z dist/docx/paragraph-style.d.cts
+2026-10-07T21:17:32.2689321Z dist/docx/paragraph-style.d.ts
+2026-10-07T21:17:32.2689634Z dist/docx/style-cascade.d.cts
+2026-10-07T21:17:32.2689943Z dist/docx/style-cascade.d.ts
+2026-10-07T21:17:32.2690286Z dist/docx/style-projection.d.cts
+2026-10-07T21:17:32.2690628Z dist/docx/style-projection.d.ts
+2026-10-07T21:17:32.2690934Z dist/docx/style-reader.d.cts
+2026-10-07T21:17:32.2691225Z dist/docx/style-reader.d.ts
+2026-10-07T21:17:32.2691553Z dist/docx/table-appearance.d.cts
+2026-10-07T21:17:32.2691917Z dist/docx/table-appearance.d.ts
+2026-10-07T21:17:32.2692223Z dist/docx/table-style.d.cts
+2026-10-07T21:17:32.2692541Z dist/docx/table-style.d.ts
+2026-10-07T21:17:32.2693152Z dist/docx/table-text.d.cts
+2026-10-07T21:17:32.2693555Z dist/docx/table-text.d.ts
+2026-10-07T21:17:32.2693828Z dist/docx/table-width.d.cts
+2026-10-07T21:17:32.2694102Z dist/docx/table-width.d.ts
+2026-10-07T21:17:32.2694390Z dist/docx/theme-fonts.d.cts
+2026-10-07T21:17:32.2694657Z dist/docx/theme-fonts.d.ts
+2026-10-07T21:17:32.2694941Z dist/docx/xml-parser.d.cts
+2026-10-07T21:17:32.2695217Z dist/docx/xml-parser.d.ts
+2026-10-07T21:17:32.2695657Z dist/docx/xml-types.d.cts
+2026-10-07T21:17:32.2695958Z dist/docx/xml-types.d.ts
+2026-10-07T21:17:32.2696218Z dist/editor-Ce4QfnkJ.cjs
+2026-10-07T21:17:32.2696646Z dist/editor-Ce4QfnkJ.cjs.map
+2026-10-07T21:17:32.2696919Z dist/editor-CMX7ABLq.js
+2026-10-07T21:17:32.2697181Z dist/editor-CMX7ABLq.js.map
+2026-10-07T21:17:32.2697440Z dist/emoji-cW4ke4sV.js
+2026-10-07T21:17:32.2697690Z dist/emoji-cW4ke4sV.js.map
+2026-10-07T21:17:32.2697949Z dist/emoji-data.cjs
+2026-10-07T21:17:32.2698186Z dist/emoji-data.cjs.map
+2026-10-07T21:17:32.2698436Z dist/emoji-data.d.cts
+2026-10-07T21:17:32.2698678Z dist/emoji-data.d.ts
+2026-10-07T21:17:32.2698913Z dist/emoji-data.js
+2026-10-07T21:17:32.2699145Z dist/emoji-data.js.map
+2026-10-07T21:17:32.2699420Z dist/emoji-DJLmfeJl.cjs
+2026-10-07T21:17:32.2699684Z dist/emoji-DJLmfeJl.cjs.map
+2026-10-07T21:17:32.2699955Z dist/extension-Cfbujo9B.js
+2026-10-07T21:17:32.2700363Z dist/extension-Cfbujo9B.js.map
+2026-10-07T21:17:32.2700656Z dist/extension-Sb4ErwsF.cjs
+2026-10-07T21:17:32.2701059Z dist/extension-Sb4ErwsF.cjs.map
+2026-10-07T21:17:32.2701428Z dist/extensions-B9c6kOQO.js
+2026-10-07T21:17:32.2701731Z dist/extensions-B9c6kOQO.js.map
+2026-10-07T21:17:32.2702026Z dist/extensions-CBclZb2f.cjs
+2026-10-07T21:17:32.2702332Z dist/extensions-CBclZb2f.cjs.map
+2026-10-07T21:17:32.2702658Z dist/extensions/character-count.d.cts
+2026-10-07T21:17:32.2703315Z dist/extensions/character-count.d.ts
+2026-10-07T21:17:32.2704799Z dist/extensions/clipboard-history.d.cts
+2026-10-07T21:17:32.2705289Z dist/extensions/clipboard-history.d.ts
+2026-10-07T21:17:32.2705662Z dist/extensions/collaboration-core.d.cts
+2026-10-07T21:17:32.2706062Z dist/extensions/collaboration-core.d.ts
+2026-10-07T21:17:32.2706405Z dist/extensions/collaboration.d.cts
+2026-10-07T21:17:32.2706741Z dist/extensions/collaboration.d.ts
+2026-10-07T21:17:32.2707070Z dist/extensions/command-manager.d.cts
+2026-10-07T21:17:32.2707416Z dist/extensions/command-manager.d.ts
+2026-10-07T21:17:32.2707722Z dist/extensions/emoji.d.cts
+2026-10-07T21:17:32.2707993Z dist/extensions/emoji.d.ts
+2026-10-07T21:17:32.2708279Z dist/extensions/extension.d.cts
+2026-10-07T21:17:32.2708579Z dist/extensions/extension.d.ts
+2026-10-07T21:17:32.2708902Z dist/extensions/floating-menu.d.cts
+2026-10-07T21:17:32.2709225Z dist/extensions/floating-menu.d.ts
+2026-10-07T21:17:32.2709546Z dist/extensions/html-comments.d.cts
+2026-10-07T21:17:32.2709871Z dist/extensions/html-comments.d.ts
+2026-10-07T21:17:32.2710198Z dist/extensions/html-containers.d.cts
+2026-10-07T21:17:32.2710530Z dist/extensions/html-containers.d.ts
+2026-10-07T21:17:32.2710855Z dist/extensions/html-flow.d.cts
+2026-10-07T21:17:32.2711153Z dist/extensions/html-flow.d.ts
+2026-10-07T21:17:32.2711433Z dist/extensions/index.d.cts
+2026-10-07T21:17:32.2711702Z dist/extensions/index.d.ts
+2026-10-07T21:17:32.2711993Z dist/extensions/inline-atom.d.cts
+2026-10-07T21:17:32.2712305Z dist/extensions/inline-atom.d.ts
+2026-10-07T21:17:32.2712587Z dist/extensions/lean.d.cts
+2026-10-07T21:17:32.2712858Z dist/extensions/lean.d.ts
+2026-10-07T21:17:32.2713587Z dist/extensions/link-behavior.d.cts
+2026-10-07T21:17:32.2714200Z dist/extensions/link-behavior.d.ts
+2026-10-07T21:17:32.2714573Z dist/extensions/marks/code.d.cts
+2026-10-07T21:17:32.2715023Z dist/extensions/marks/code.d.ts
+2026-10-07T21:17:32.2715390Z dist/extensions/marks/em.d.cts
+2026-10-07T21:17:32.2715678Z dist/extensions/marks/em.d.ts
+2026-10-07T21:17:32.2715990Z dist/extensions/marks/font-family.d.cts
+2026-10-07T21:17:32.2716328Z dist/extensions/marks/font-family.d.ts
+2026-10-07T21:17:32.2716671Z dist/extensions/marks/font-size.d.cts
+2026-10-07T21:17:32.2716996Z dist/extensions/marks/font-size.d.ts
+2026-10-07T21:17:32.2717323Z dist/extensions/marks/highlight.d.cts
+2026-10-07T21:17:32.2717650Z dist/extensions/marks/highlight.d.ts
+2026-10-07T21:17:32.2718000Z dist/extensions/marks/letter-spacing.d.cts
+2026-10-07T21:17:32.2718358Z dist/extensions/marks/letter-spacing.d.ts
+2026-10-07T21:17:32.2718712Z dist/extensions/marks/line-height.d.cts
+2026-10-07T21:17:32.2719059Z dist/extensions/marks/line-height.d.ts
+2026-10-07T21:17:32.2719387Z dist/extensions/marks/link.d.cts
+2026-10-07T21:17:32.2719686Z dist/extensions/marks/link.d.ts
+2026-10-07T21:17:32.2720236Z dist/extensions/marks/strike.d.cts
+2026-10-07T21:17:32.2720551Z dist/extensions/marks/strike.d.ts
+2026-10-07T21:17:32.2720860Z dist/extensions/marks/strong.d.cts
+2026-10-07T21:17:32.2721172Z dist/extensions/marks/strong.d.ts
+2026-10-07T21:17:32.2721490Z dist/extensions/marks/subscript.d.cts
+2026-10-07T21:17:32.2721816Z dist/extensions/marks/subscript.d.ts
+2026-10-07T21:17:32.2722156Z dist/extensions/marks/superscript.d.cts
+2026-10-07T21:17:32.2722495Z dist/extensions/marks/superscript.d.ts
+2026-10-07T21:17:32.2722829Z dist/extensions/marks/text-color.d.cts
+2026-10-07T21:17:32.2723481Z dist/extensions/marks/text-color.d.ts
+2026-10-07T21:17:32.2723817Z dist/extensions/marks/underline.d.cts
+2026-10-07T21:17:32.2724271Z dist/extensions/marks/underline.d.ts
+2026-10-07T21:17:32.2724573Z dist/extensions/math.d.cts
+2026-10-07T21:17:32.2724841Z dist/extensions/math.d.ts
+2026-10-07T21:17:32.2725103Z dist/extensions/media.d.cts
+2026-10-07T21:17:32.2725367Z dist/extensions/media.d.ts
+2026-10-07T21:17:32.2725641Z dist/extensions/mention.d.cts
+2026-10-07T21:17:32.2725916Z dist/extensions/mention.d.ts
+2026-10-07T21:17:32.2726224Z dist/extensions/nodes/blockquote.d.cts
+2026-10-07T21:17:32.2726706Z dist/extensions/nodes/blockquote.d.ts
+2026-10-07T21:17:32.2727258Z dist/extensions/nodes/bullet-list.d.cts
+2026-10-07T21:17:32.2727619Z dist/extensions/nodes/bullet-list.d.ts
+2026-10-07T21:17:32.2728110Z dist/extensions/nodes/code-block.d.cts
+2026-10-07T21:17:32.2728690Z dist/extensions/nodes/code-block.d.ts
+2026-10-07T21:17:32.2729293Z dist/extensions/nodes/definition-list.d.cts
+2026-10-07T21:17:32.2729923Z dist/extensions/nodes/definition-list.d.ts
+2026-10-07T21:17:32.2730501Z dist/extensions/nodes/doc.d.cts
+2026-10-07T21:17:32.2731020Z dist/extensions/nodes/doc.d.ts
+2026-10-07T21:17:32.2731558Z dist/extensions/nodes/figcaption.d.cts
+2026-10-07T21:17:32.2732140Z dist/extensions/nodes/figcaption.d.ts
+2026-10-07T21:17:32.2732713Z dist/extensions/nodes/hard-break.d.cts
+2026-10-07T21:17:32.2733522Z dist/extensions/nodes/hard-break.d.ts
+2026-10-07T21:17:32.2734093Z dist/extensions/nodes/heading.d.cts
+2026-10-07T21:17:32.2734646Z dist/extensions/nodes/heading.d.ts
+2026-10-07T21:17:32.2735236Z dist/extensions/nodes/horizontal-rule.d.cts
+2026-10-07T21:17:32.2735868Z dist/extensions/nodes/horizontal-rule.d.ts
+2026-10-07T21:17:32.2736504Z dist/extensions/nodes/image-attributes.d.cts
+2026-10-07T21:17:32.2737146Z dist/extensions/nodes/image-attributes.d.ts
+2026-10-07T21:17:32.2737787Z dist/extensions/nodes/image-node-view.d.cts
+2026-10-07T21:17:32.2738408Z dist/extensions/nodes/image-node-view.d.ts
+2026-10-07T21:17:32.2739032Z dist/extensions/nodes/image-super.d.cts
+2026-10-07T21:17:32.2739629Z dist/extensions/nodes/image-super.d.ts
+2026-10-07T21:17:32.2740235Z dist/extensions/nodes/inline-image.d.cts
+2026-10-07T21:17:32.2740816Z dist/extensions/nodes/inline-image.d.ts
+2026-10-07T21:17:32.2741384Z dist/extensions/nodes/list-item.d.cts
+2026-10-07T21:17:32.2741952Z dist/extensions/nodes/list-item.d.ts
+2026-10-07T21:17:32.2742527Z dist/extensions/nodes/ordered-list.d.cts
+2026-10-07T21:17:32.2743308Z dist/extensions/nodes/ordered-list.d.ts
+2026-10-07T21:17:32.2744235Z dist/extensions/nodes/paragraph.d.cts
+2026-10-07T21:17:32.2744995Z dist/extensions/nodes/paragraph.d.ts
+2026-10-07T21:17:32.2745731Z dist/extensions/nodes/table-cell-view.d.cts
+2026-10-07T21:17:32.2746590Z dist/extensions/nodes/table-cell-view.d.ts
+2026-10-07T21:17:32.2747421Z dist/extensions/nodes/table-cell.d.cts
+2026-10-07T21:17:32.2748188Z dist/extensions/nodes/table-cell.d.ts
+2026-10-07T21:17:32.2748881Z dist/extensions/nodes/table-header.d.cts
+2026-10-07T21:17:32.2766795Z dist/extensions/nodes/table-header.d.ts
+2026-10-07T21:17:32.2767414Z dist/extensions/nodes/table-row.d.cts
+2026-10-07T21:17:32.2768059Z dist/extensions/nodes/table-row.d.ts
+2026-10-07T21:17:32.2768598Z dist/extensions/nodes/table.d.cts
+2026-10-07T21:17:32.2769110Z dist/extensions/nodes/table.d.ts
+2026-10-07T21:17:32.2769663Z dist/extensions/nodes/task-item.d.cts
+2026-10-07T21:17:32.2770261Z dist/extensions/nodes/task-item.d.ts
+2026-10-07T21:17:32.2771065Z dist/extensions/nodes/task-list.d.cts
+2026-10-07T21:17:32.2771637Z dist/extensions/nodes/task-list.d.ts
+2026-10-07T21:17:32.2772174Z dist/extensions/nodes/text.d.cts
+2026-10-07T21:17:32.2772488Z dist/extensions/nodes/text.d.ts
+2026-10-07T21:17:32.2772817Z dist/extensions/plugins/history.d.cts
+2026-10-07T21:17:32.2773503Z dist/extensions/plugins/history.d.ts
+2026-10-07T21:17:32.2773872Z dist/extensions/plugins/input-rules.d.cts
+2026-10-07T21:17:32.2774250Z dist/extensions/plugins/input-rules.d.ts
+2026-10-07T21:17:32.2774635Z dist/extensions/plugins/markdown-shortcuts.d.cts
+2026-10-07T21:17:32.2775357Z dist/extensions/plugins/markdown-shortcuts.d.ts
+2026-10-07T21:17:32.2776514Z dist/extensions/plugins/mcp-integration.d.cts
+2026-10-07T21:17:32.2777203Z dist/extensions/plugins/mcp-integration.d.ts
+2026-10-07T21:17:32.2777593Z dist/extensions/plugins/paste-rules.d.cts
+2026-10-07T21:17:32.2777949Z dist/extensions/plugins/paste-rules.d.ts
+2026-10-07T21:17:32.2778326Z dist/extensions/plugins/syntax-highlight.d.cts
+2026-10-07T21:17:32.2778720Z dist/extensions/plugins/syntax-highlight.d.ts
+2026-10-07T21:17:32.2779093Z dist/extensions/plugins/table-editing.d.cts
+2026-10-07T21:17:32.2779471Z dist/extensions/plugins/table-editing.d.ts
+2026-10-07T21:17:32.2779827Z dist/extensions/slash-command.d.cts
+2026-10-07T21:17:32.2780152Z dist/extensions/slash-command.d.ts
+2026-10-07T21:17:32.2780468Z dist/extensions/suggestion.d.cts
+2026-10-07T21:17:32.2780778Z dist/extensions/suggestion.d.ts
+2026-10-07T21:17:32.2781122Z dist/extensions/trailing-editable-block.d.cts
+2026-10-07T21:17:32.2781508Z dist/extensions/trailing-editable-block.d.ts
+2026-10-07T21:17:32.2781858Z dist/extensions/typography.d.cts
+2026-10-07T21:17:32.2782178Z dist/extensions/typography.d.ts
+2026-10-07T21:17:32.2782461Z dist/headless/index.d.cts
+2026-10-07T21:17:32.2782717Z dist/headless/index.d.ts
+2026-10-07T21:17:32.2783215Z dist/history-C1iHQbdz.cjs
+2026-10-07T21:17:32.2783591Z dist/history-C1iHQbdz.cjs.map
+2026-10-07T21:17:32.2783882Z dist/history-CluGKD04.js
+2026-10-07T21:17:32.2784156Z dist/history-CluGKD04.js.map
+2026-10-07T21:17:32.2784426Z dist/html-flow-Bqt2vfNB.js
+2026-10-07T21:17:32.2784717Z dist/html-flow-Bqt2vfNB.js.map
+2026-10-07T21:17:32.2784996Z dist/html-flow-C20BftBL.cjs
+2026-10-07T21:17:32.2785294Z dist/html-flow-C20BftBL.cjs.map
+2026-10-07T21:17:32.2785561Z dist/html-inert.cjs
+2026-10-07T21:17:32.2785794Z dist/html-inert.cjs.map
+2026-10-07T21:17:32.2786038Z dist/html-inert.js
+2026-10-07T21:17:32.2786271Z dist/html-inert.js.map
+2026-10-07T21:17:32.2786561Z dist/html-page-settings-BniO1ltv.js
+2026-10-07T21:17:32.2786911Z dist/html-page-settings-BniO1ltv.js.map
+2026-10-07T21:17:32.2787262Z dist/html-page-settings-CHmUedrc.cjs
+2026-10-07T21:17:32.2787613Z dist/html-page-settings-CHmUedrc.cjs.map
+2026-10-07T21:17:32.2787925Z dist/html-server.cjs
+2026-10-07T21:17:32.2788170Z dist/html-server.cjs.map
+2026-10-07T21:17:32.2788416Z dist/html-server.js
+2026-10-07T21:17:32.2788655Z dist/html-server.js.map
+2026-10-07T21:17:32.2788906Z dist/html/inert.d.cts
+2026-10-07T21:17:32.2789139Z dist/html/inert.d.ts
+2026-10-07T21:17:32.2789369Z dist/html/server.d.cts
+2026-10-07T21:17:32.2789607Z dist/html/server.d.ts
+2026-10-07T21:17:32.2789823Z dist/index.cjs
+2026-10-07T21:17:32.2790042Z dist/index.cjs.map
+2026-10-07T21:17:32.2790263Z dist/index.d.cts
+2026-10-07T21:17:32.2790471Z dist/index.d.ts
+2026-10-07T21:17:32.2790676Z dist/index.js
+2026-10-07T21:17:32.2790889Z dist/index.js.map
+2026-10-07T21:17:32.2791137Z dist/inline-atom-BLfPalX5.js
+2026-10-07T21:17:32.2791445Z dist/inline-atom-BLfPalX5.js.map
+2026-10-07T21:17:32.2791743Z dist/inline-atom-Cg88XSNe.cjs
+2026-10-07T21:17:32.2792062Z dist/inline-atom-Cg88XSNe.cjs.map
+2026-10-07T21:17:32.2792362Z dist/input-rules-EH0whXGW.js
+2026-10-07T21:17:32.2792661Z dist/input-rules-EH0whXGW.js.map
+2026-10-07T21:17:32.2792953Z dist/input-rules-HXvPuvbc.cjs
+2026-10-07T21:17:32.2793588Z dist/input-rules-HXvPuvbc.cjs.map
+2026-10-07T21:17:32.2793880Z dist/integrity-dom.cjs
+2026-10-07T21:17:32.2794289Z dist/integrity-dom.cjs.map
+2026-10-07T21:17:32.2794551Z dist/integrity-dom.js
+2026-10-07T21:17:32.2794802Z dist/integrity-dom.js.map
+2026-10-07T21:17:32.2795050Z dist/integrity.cjs
+2026-10-07T21:17:32.2795281Z dist/integrity.cjs.map
+2026-10-07T21:17:32.2795515Z dist/integrity.js
+2026-10-07T21:17:32.2795740Z dist/integrity.js.map
+2026-10-07T21:17:32.2795984Z dist/integrity/dom.d.cts
+2026-10-07T21:17:32.2796232Z dist/integrity/dom.d.ts
+2026-10-07T21:17:32.2796482Z dist/integrity/index.d.cts
+2026-10-07T21:17:32.2796745Z dist/integrity/index.d.ts
+2026-10-07T21:17:32.2796999Z dist/lean/controller.d.cts
+2026-10-07T21:17:32.2797254Z dist/lean/controller.d.ts
+2026-10-07T21:17:32.2797509Z dist/lean/diagnostics.d.cts
+2026-10-07T21:17:32.2797888Z dist/lean/diagnostics.d.ts
+2026-10-07T21:17:32.2798144Z dist/lean/index.d.cts
+2026-10-07T21:17:32.2798381Z dist/lean/index.d.ts
+2026-10-07T21:17:32.2798618Z dist/lean/info-view.d.cts
+2026-10-07T21:17:32.2798866Z dist/lean/info-view.d.ts
+2026-10-07T21:17:32.2799157Z dist/lean/loopback-provider.d.cts
+2026-10-07T21:17:32.2799484Z dist/lean/loopback-provider.d.ts
+2026-10-07T21:17:32.2799756Z dist/lean/types.d.cts
+2026-10-07T21:17:32.2799988Z dist/lean/types.d.ts
+2026-10-07T21:17:32.2800267Z dist/link-behavior-Bgy809Kn.cjs
+2026-10-07T21:17:32.2800581Z dist/link-behavior-Bgy809Kn.cjs.map
+2026-10-07T21:17:32.2800901Z dist/link-behavior-Darz56lg.js
+2026-10-07T21:17:32.2801218Z dist/link-behavior-Darz56lg.js.map
+2026-10-07T21:17:32.2801539Z dist/link-destination-BYPbw7q2.cjs
+2026-10-07T21:17:32.2802065Z dist/link-destination-BYPbw7q2.cjs.map
+2026-10-07T21:17:32.2802417Z dist/link-destination-Cg-dC4G1.js
+2026-10-07T21:17:32.2802746Z dist/link-destination-Cg-dC4G1.js.map
+2026-10-07T21:17:32.2803328Z dist/mapping-BbhEodcc.js
+2026-10-07T21:17:32.2803813Z dist/mapping-BbhEodcc.js.map
+2026-10-07T21:17:32.2804113Z dist/mapping-LRwd6pqd.cjs
+2026-10-07T21:17:32.2804386Z dist/mapping-LRwd6pqd.cjs.map
+2026-10-07T21:17:32.2804703Z dist/mark-range-step-DOJDyOsP.cjs
+2026-10-07T21:17:32.2805043Z dist/mark-range-step-DOJDyOsP.cjs.map
+2026-10-07T21:17:32.2805376Z dist/mark-range-step-Jo1iPQSu.js
+2026-10-07T21:17:32.2805704Z dist/mark-range-step-Jo1iPQSu.js.map
+2026-10-07T21:17:32.2806066Z dist/markdown-html-83ZGjqmO.js
+2026-10-07T21:17:32.2806375Z dist/markdown-html-83ZGjqmO.js.map
+2026-10-07T21:17:32.2806691Z dist/markdown-html-DD8ATANg.cjs
+2026-10-07T21:17:32.2807011Z dist/markdown-html-DD8ATANg.cjs.map
+2026-10-07T21:17:32.2807300Z dist/media-6BEBDS2B.cjs
+2026-10-07T21:17:32.2807556Z dist/media-6BEBDS2B.cjs.map
+2026-10-07T21:17:32.2807815Z dist/media-CJTvtkRp.js
+2026-10-07T21:17:32.2808070Z dist/media-CJTvtkRp.js.map
+2026-10-07T21:17:32.2808362Z dist/menu-position-_lijqiB1.cjs
+2026-10-07T21:17:32.2808668Z dist/menu-position-_lijqiB1.cjs.map
+2026-10-07T21:17:32.2808991Z dist/menu-position-Sln4-uCf.js
+2026-10-07T21:17:32.2809304Z dist/menu-position-Sln4-uCf.js.map
+2026-10-07T21:17:32.2809588Z dist/migrations.cjs
+2026-10-07T21:17:32.2809830Z dist/migrations.cjs.map
+2026-10-07T21:17:32.2810071Z dist/migrations.js
+2026-10-07T21:17:32.2810307Z dist/migrations.js.map
+2026-10-07T21:17:32.2810562Z dist/migrations/index.d.cts
+2026-10-07T21:17:32.2810826Z dist/migrations/index.d.ts
+2026-10-07T21:17:32.2811079Z dist/node-CMohf4dR.js
+2026-10-07T21:17:32.2811324Z dist/node-CMohf4dR.js.map
+2026-10-07T21:17:32.2811581Z dist/node-D26sG_e5.cjs
+2026-10-07T21:17:32.2811825Z dist/node-D26sG_e5.cjs.map
+2026-10-07T21:17:32.2812069Z dist/node-ids.cjs
+2026-10-07T21:17:32.2812301Z dist/node-ids.cjs.map
+2026-10-07T21:17:32.2812523Z dist/node-ids.js
+2026-10-07T21:17:32.2812748Z dist/node-ids.js.map
+2026-10-07T21:17:32.2813282Z dist/node-ids/index.d.cts
+2026-10-07T21:17:32.2813634Z dist/node-ids/index.d.ts
+2026-10-07T21:17:32.2813897Z dist/node-spec-Dl5lMC1C.js
+2026-10-07T21:17:32.2814194Z dist/node-spec-Dl5lMC1C.js.map
+2026-10-07T21:17:32.2814475Z dist/node-spec-owlJN_nc.cjs
+2026-10-07T21:17:32.2814765Z dist/node-spec-owlJN_nc.cjs.map
+2026-10-07T21:17:32.2815064Z dist/page-settings-Bqt82pEY.js
+2026-10-07T21:17:32.2815381Z dist/page-settings-Bqt82pEY.js.map
+2026-10-07T21:17:32.2815862Z dist/page-settings-BTDzBnRH.cjs
+2026-10-07T21:17:32.2816178Z dist/page-settings-BTDzBnRH.cjs.map
+2026-10-07T21:17:32.2816464Z dist/pages-dom.cjs
+2026-10-07T21:17:32.2816695Z dist/pages-dom.cjs.map
+2026-10-07T21:17:32.2816929Z dist/pages-dom.js
+2026-10-07T21:17:32.2817159Z dist/pages-dom.js.map
+2026-10-07T21:17:32.2817406Z dist/pages-preview.cjs
+2026-10-07T21:17:32.2817658Z dist/pages-preview.cjs.map
+2026-10-07T21:17:32.2817915Z dist/pages-preview.js
+2026-10-07T21:17:32.2818172Z dist/pages-preview.js.map
+2026-10-07T21:17:32.2818410Z dist/pages.cjs
+2026-10-07T21:17:32.2818628Z dist/pages.cjs.map
+2026-10-07T21:17:32.2818846Z dist/pages.js
+2026-10-07T21:17:32.2819065Z dist/pages.js.map
+2026-10-07T21:17:32.2819420Z dist/pages/dom-preview.d.cts
+2026-10-07T21:17:32.2819702Z dist/pages/dom-preview.d.ts
+2026-10-07T21:17:32.2819965Z dist/pages/dom.d.cts
+2026-10-07T21:17:32.2820198Z dist/pages/dom.d.ts
+2026-10-07T21:17:32.2820430Z dist/pages/index.d.cts
+2026-10-07T21:17:32.2820673Z dist/pages/index.d.ts
+2026-10-07T21:17:32.2820912Z dist/pages/layout.d.cts
+2026-10-07T21:17:32.2821153Z dist/pages/layout.d.ts
+2026-10-07T21:17:32.2821414Z dist/pages/presentation.d.cts
+2026-10-07T21:17:32.2821696Z dist/pages/presentation.d.ts
+2026-10-07T21:17:32.2821963Z dist/pages/preview.d.cts
+2026-10-07T21:17:32.2822221Z dist/pages/preview.d.ts
+2026-10-07T21:17:32.2822472Z dist/pages/settings.d.cts
+2026-10-07T21:17:32.2822729Z dist/pages/settings.d.ts
+2026-10-07T21:17:32.2823222Z dist/pages/templates.d.cts
+2026-10-07T21:17:32.2823553Z dist/pages/templates.d.ts
+2026-10-07T21:17:32.2823805Z dist/path-B7Cr90vg.js
+2026-10-07T21:17:32.2824054Z dist/path-B7Cr90vg.js.map
+2026-10-07T21:17:32.2824495Z dist/path-DDY3uxw-.cjs
+2026-10-07T21:17:32.2824935Z dist/path-DDY3uxw-.cjs.map
+2026-10-07T21:17:32.2825324Z dist/plugin-B0KSKRXJ.js
+2026-10-07T21:17:32.2825597Z dist/plugin-B0KSKRXJ.js.map
+2026-10-07T21:17:32.2825865Z dist/plugin-DlQkwKdU.cjs
+2026-10-07T21:17:32.2826282Z dist/plugin-DlQkwKdU.cjs.map
+2026-10-07T21:17:32.2826580Z dist/presentation-_RsWq19D.js
+2026-10-07T21:17:32.2826890Z dist/presentation-_RsWq19D.js.map
+2026-10-07T21:17:32.2827304Z dist/presentation-DrPDmb6z.cjs
+2026-10-07T21:17:32.2827701Z dist/presentation-DrPDmb6z.cjs.map
+2026-10-07T21:17:32.2828006Z dist/react-comments.cjs
+2026-10-07T21:17:32.2828264Z dist/react-comments.cjs.map
+2026-10-07T21:17:32.2828697Z dist/react-comments.js
+2026-10-07T21:17:32.2828964Z dist/react-comments.js.map
+2026-10-07T21:17:32.2829226Z dist/react-integrity.cjs
+2026-10-07T21:17:32.2829493Z dist/react-integrity.cjs.map
+2026-10-07T21:17:32.2829914Z dist/react-integrity.js
+2026-10-07T21:17:32.2830181Z dist/react-integrity.js.map
+2026-10-07T21:17:32.2830477Z dist/react-tracked-changes.cjs
+2026-10-07T21:17:32.2830792Z dist/react-tracked-changes.cjs.map
+2026-10-07T21:17:32.2831095Z dist/react-tracked-changes.js
+2026-10-07T21:17:32.2831407Z dist/react-tracked-changes.js.map
+2026-10-07T21:17:32.2831688Z dist/react-versions.cjs
+2026-10-07T21:17:32.2831948Z dist/react-versions.cjs.map
+2026-10-07T21:17:32.2832209Z dist/react-versions.js
+2026-10-07T21:17:32.2832465Z dist/react-versions.js.map
+2026-10-07T21:17:32.2832726Z dist/react-widgets.cjs
+2026-10-07T21:17:32.2833204Z dist/react-widgets.cjs.map
+2026-10-07T21:17:32.2833479Z dist/react-widgets.js
+2026-10-07T21:17:32.2833730Z dist/react-widgets.js.map
+2026-10-07T21:17:32.2833972Z dist/react.cjs
+2026-10-07T21:17:32.2834192Z dist/react.cjs.map
+2026-10-07T21:17:32.2834400Z dist/react.js
+2026-10-07T21:17:32.2834619Z dist/react.js.map
+2026-10-07T21:17:32.2834899Z dist/react/ClipboardHistoryMenu.d.cts
+2026-10-07T21:17:32.2835239Z dist/react/ClipboardHistoryMenu.d.ts
+2026-10-07T21:17:32.2835544Z dist/react/comments.d.cts
+2026-10-07T21:17:32.2835807Z dist/react/comments.d.ts
+2026-10-07T21:17:32.2836111Z dist/react/FountainAIConversation.d.cts
+2026-10-07T21:17:32.2836464Z dist/react/FountainAIConversation.d.ts
+2026-10-07T21:17:32.2836824Z dist/react/FountainAIGeneratedMedia.d.cts
+2026-10-07T21:17:32.2837185Z dist/react/FountainAIGeneratedMedia.d.ts
+2026-10-07T21:17:32.2837705Z dist/react/FountainAIReview.d.cts
+2026-10-07T21:17:32.2838021Z dist/react/FountainAIReview.d.ts
+2026-10-07T21:17:32.2838348Z dist/react/FountainCharacterCount.d.cts
+2026-10-07T21:17:32.2838699Z dist/react/FountainCharacterCount.d.ts
+2026-10-07T21:17:32.2839028Z dist/react/FountainComments.d.cts
+2026-10-07T21:17:32.2839337Z dist/react/FountainComments.d.ts
+2026-10-07T21:17:32.2839651Z dist/react/FountainComposer.d.cts
+2026-10-07T21:17:32.2839955Z dist/react/FountainComposer.d.ts
+2026-10-07T21:17:32.2840259Z dist/react/FountainEditor.d.cts
+2026-10-07T21:17:32.2840568Z dist/react/FountainEditor.d.ts
+2026-10-07T21:17:32.2840883Z dist/react/FountainFloatingMenu.d.cts
+2026-10-07T21:17:32.2841338Z dist/react/FountainFloatingMenu.d.ts
+2026-10-07T21:17:32.2841695Z dist/react/FountainIntegrityInspector.d.cts
+2026-10-07T21:17:32.2842073Z dist/react/FountainIntegrityInspector.d.ts
+2026-10-07T21:17:32.2842437Z dist/react/FountainSlashCommandMenu.d.cts
+2026-10-07T21:17:32.2842797Z dist/react/FountainSlashCommandMenu.d.ts
+2026-10-07T21:17:32.2843374Z dist/react/FountainSuggestionMenu.d.cts
+2026-10-07T21:17:32.2843722Z dist/react/FountainSuggestionMenu.d.ts
+2026-10-07T21:17:32.2844049Z dist/react/FountainToolbar.d.cts
+2026-10-07T21:17:32.2844353Z dist/react/FountainToolbar.d.ts
+2026-10-07T21:17:32.2844678Z dist/react/FountainToolbarPrimitives.d.cts
+2026-10-07T21:17:32.2845039Z dist/react/FountainToolbarPrimitives.d.ts
+2026-10-07T21:17:32.2845398Z dist/react/FountainTrackedChanges.d.cts
+2026-10-07T21:17:32.2845742Z dist/react/FountainTrackedChanges.d.ts
+2026-10-07T21:17:32.2846075Z dist/react/FountainVersions.d.cts
+2026-10-07T21:17:32.2846389Z dist/react/FountainVersions.d.ts
+2026-10-07T21:17:32.2846666Z dist/react/index.d.cts
+2026-10-07T21:17:32.2846905Z dist/react/index.d.ts
+2026-10-07T21:17:32.2847149Z dist/react/integrity.d.cts
+2026-10-07T21:17:32.2847415Z dist/react/integrity.d.ts
+2026-10-07T21:17:32.2847672Z dist/react/Navigator.d.cts
+2026-10-07T21:17:32.2847931Z dist/react/Navigator.d.ts
+2026-10-07T21:17:32.2848218Z dist/react/ReactNodeView.d.cts
+2026-10-07T21:17:32.2848497Z dist/react/ReactNodeView.d.ts
+2026-10-07T21:17:32.2848793Z dist/react/tracked-changes.d.cts
+2026-10-07T21:17:32.2849104Z dist/react/tracked-changes.d.ts
+2026-10-07T21:17:32.2849383Z dist/react/useFountain.d.cts
+2026-10-07T21:17:32.2849652Z dist/react/useFountain.d.ts
+2026-10-07T21:17:32.2849953Z dist/react/useNavigatorState.d.cts
+2026-10-07T21:17:32.2850274Z dist/react/useNavigatorState.d.ts
+2026-10-07T21:17:32.2850562Z dist/react/versions.d.cts
+2026-10-07T21:17:32.2850817Z dist/react/versions.d.ts
+2026-10-07T21:17:32.2851075Z dist/react/widgets.d.cts
+2026-10-07T21:17:32.2851324Z dist/react/widgets.d.ts
+2026-10-07T21:17:32.2851634Z dist/replace-text-range-step-DDj1wpRU.js
+2026-10-07T21:17:32.2852029Z dist/replace-text-range-step-DDj1wpRU.js.map
+2026-10-07T21:17:32.2852414Z dist/replace-text-range-step-VHOaDNVn.cjs
+2026-10-07T21:17:32.2852803Z dist/replace-text-range-step-VHOaDNVn.cjs.map
+2026-10-07T21:17:32.2853442Z dist/rolldown-runtime-Chgba0Kb.cjs
+2026-10-07T21:17:32.2853711Z dist/ruby.cjs
+2026-10-07T21:17:32.2853924Z dist/ruby.cjs.map
+2026-10-07T21:17:32.2854130Z dist/ruby.js
+2026-10-07T21:17:32.2854336Z dist/ruby.js.map
+2026-10-07T21:17:32.2854563Z dist/ruby/index.d.cts
+2026-10-07T21:17:32.2854796Z dist/ruby/index.d.ts
+2026-10-07T21:17:32.2855041Z dist/search-Cb5HWhnF.cjs
+2026-10-07T21:17:32.2855306Z dist/search-Cb5HWhnF.cjs.map
+2026-10-07T21:17:32.2855577Z dist/search-CLj2oPC9.js
+2026-10-07T21:17:32.2855840Z dist/search-CLj2oPC9.js.map
+2026-10-07T21:17:32.2856109Z dist/selection-DrO1gWsj.cjs
+2026-10-07T21:17:32.2856403Z dist/selection-DrO1gWsj.cjs.map
+2026-10-07T21:17:32.2856685Z dist/selection-Du4v48EK.js
+2026-10-07T21:17:32.2856996Z dist/selection-Du4v48EK.js.map
+2026-10-07T21:17:32.2857267Z dist/step-CICBu9Xg.cjs
+2026-10-07T21:17:32.2857519Z dist/step-CICBu9Xg.cjs.map
+2026-10-07T21:17:32.2857777Z dist/step-doAGd4iU.js
+2026-10-07T21:17:32.2858030Z dist/step-doAGd4iU.js.map
+2026-10-07T21:17:32.2858499Z dist/structured-attributes.cjs
+2026-10-07T21:17:32.2858814Z dist/structured-attributes.cjs.map
+2026-10-07T21:17:32.2859117Z dist/structured-attributes.js
+2026-10-07T21:17:32.2859433Z dist/structured-attributes.js.map
+2026-10-07T21:17:32.2859760Z dist/structured-attributes/index.d.cts
+2026-10-07T21:17:32.2860104Z dist/structured-attributes/index.d.ts
+2026-10-07T21:17:32.2860376Z dist/styles.css
+2026-10-07T21:17:32.2860604Z dist/svelte.cjs
+2026-10-07T21:17:32.2860825Z dist/svelte.cjs.map
+2026-10-07T21:17:32.2861038Z dist/svelte.js
+2026-10-07T21:17:32.2861255Z dist/svelte.js.map
+2026-10-07T21:17:32.2861489Z dist/svelte/index.d.cts
+2026-10-07T21:17:32.2861739Z dist/svelte/index.d.ts
+2026-10-07T21:17:32.2861997Z dist/table-layout-CcmXrWN5.js
+2026-10-07T21:17:32.2862423Z dist/table-layout-CcmXrWN5.js.map
+2026-10-07T21:17:32.2862749Z dist/table-layout-r-zMRyTz.cjs
+2026-10-07T21:17:32.2863312Z dist/table-layout-r-zMRyTz.cjs.map
+2026-10-07T21:17:32.2863617Z dist/table-map-Dbo_d2TT.cjs
+2026-10-07T21:17:32.2863911Z dist/table-map-Dbo_d2TT.cjs.map
+2026-10-07T21:17:32.2864195Z dist/table-map-Du2VwT8u.js
+2026-10-07T21:17:32.2864482Z dist/table-map-Du2VwT8u.js.map
+2026-10-07T21:17:32.2864757Z dist/table-of-contents.cjs
+2026-10-07T21:17:32.2865048Z dist/table-of-contents.cjs.map
+2026-10-07T21:17:32.2865321Z dist/table-of-contents.js
+2026-10-07T21:17:32.2865588Z dist/table-of-contents.js.map
+2026-10-07T21:17:32.2865899Z dist/table-of-contents/index.d.cts
+2026-10-07T21:17:32.2866213Z dist/table-of-contents/index.d.ts
+2026-10-07T21:17:32.2866468Z dist/testing.cjs
+2026-10-07T21:17:32.2866697Z dist/testing.cjs.map
+2026-10-07T21:17:32.2866917Z dist/testing.js
+2026-10-07T21:17:32.2867137Z dist/testing.js.map
+2026-10-07T21:17:32.2867370Z dist/testing/index.d.cts
+2026-10-07T21:17:32.2867631Z dist/testing/index.d.ts
+2026-10-07T21:17:32.2867908Z dist/text-exporter-B5RmV4RM.js
+2026-10-07T21:17:32.2868214Z dist/text-exporter-B5RmV4RM.js.map
+2026-10-07T21:17:32.2868535Z dist/text-exporter-BPSREm_5.cjs
+2026-10-07T21:17:32.2868849Z dist/text-exporter-BPSREm_5.cjs.map
+2026-10-07T21:17:32.2869146Z dist/text-style-B_ydZW8M.js
+2026-10-07T21:17:32.2869436Z dist/text-style-B_ydZW8M.js.map
+2026-10-07T21:17:32.2869716Z dist/text-style-DrBKE712.cjs
+2026-10-07T21:17:32.2870015Z dist/text-style-DrBKE712.cjs.map
+2026-10-07T21:17:32.2870289Z dist/text-style.cjs
+2026-10-07T21:17:32.2870517Z dist/text-style.js
+2026-10-07T21:17:32.2870775Z dist/text-style/commands.d.cts
+2026-10-07T21:17:32.2871050Z dist/text-style/commands.d.ts
+2026-10-07T21:17:32.2871326Z dist/text-style/index.d.cts
+2026-10-07T21:17:32.2871586Z dist/text-style/index.d.ts
+2026-10-07T21:17:32.2871846Z dist/text-style/values.d.cts
+2026-10-07T21:17:32.2872117Z dist/text-style/values.d.ts
+2026-10-07T21:17:32.2872376Z dist/tracked-changes.cjs
+2026-10-07T21:17:32.2872642Z dist/tracked-changes.cjs.map
+2026-10-07T21:17:32.2872913Z dist/tracked-changes.js
+2026-10-07T21:17:32.2873378Z dist/tracked-changes.js.map
+2026-10-07T21:17:32.2873672Z dist/tracked-changes/index.d.cts
+2026-10-07T21:17:32.2873984Z dist/tracked-changes/index.d.ts
+2026-10-07T21:17:32.2874285Z dist/tracked-changes/model.d.cts
+2026-10-07T21:17:32.2874580Z dist/tracked-changes/model.d.ts
+2026-10-07T21:17:32.2874841Z dist/url-Co8QRAHd.cjs
+2026-10-07T21:17:32.2875093Z dist/url-Co8QRAHd.cjs.map
+2026-10-07T21:17:32.2875345Z dist/url-sjMj-efj.js
+2026-10-07T21:17:32.2875590Z dist/url-sjMj-efj.js.map
+2026-10-07T21:17:32.2875858Z dist/useFountain-C16zq9TV.cjs
+2026-10-07T21:17:32.2876166Z dist/useFountain-C16zq9TV.cjs.map
+2026-10-07T21:17:32.2876457Z dist/useFountain-DQ8gXlvr.js
+2026-10-07T21:17:32.2876762Z dist/useFountain-DQ8gXlvr.js.map
+2026-10-07T21:17:32.2877028Z dist/versions.cjs
+2026-10-07T21:17:32.2877258Z dist/versions.cjs.map
+2026-10-07T21:17:32.2877480Z dist/versions.js
+2026-10-07T21:17:32.2877719Z dist/versions.js.map
+2026-10-07T21:17:32.2877966Z dist/versions/diff.d.cts
+2026-10-07T21:17:32.2878216Z dist/versions/diff.d.ts
+2026-10-07T21:17:32.2878471Z dist/versions/index.d.cts
+2026-10-07T21:17:32.2878728Z dist/versions/index.d.ts
+2026-10-07T21:17:32.2879116Z dist/versions/model.d.cts
+2026-10-07T21:17:32.2879374Z dist/versions/model.d.ts
+2026-10-07T21:17:32.2879634Z dist/view-CGy9G2p9.cjs
+2026-10-07T21:17:32.2879887Z dist/view-CGy9G2p9.cjs.map
+2026-10-07T21:17:32.2880143Z dist/view-DUapfWc3.js
+2026-10-07T21:17:32.2880397Z dist/view-DUapfWc3.js.map
+2026-10-07T21:17:32.2880662Z dist/view/block-handles.d.cts
+2026-10-07T21:17:32.2880939Z dist/view/block-handles.d.ts
+2026-10-07T21:17:32.2881216Z dist/view/dom-renderer.d.cts
+2026-10-07T21:17:32.2881481Z dist/view/dom-renderer.d.ts
+2026-10-07T21:17:32.2881745Z dist/view/drop-cursor.d.cts
+2026-10-07T21:17:32.2882012Z dist/view/drop-cursor.d.ts
+2026-10-07T21:17:32.2882297Z dist/view/generated-media.d.cts
+2026-10-07T21:17:32.2882714Z dist/view/generated-media.d.ts
+2026-10-07T21:17:32.2883192Z dist/view/index.d.cts
+2026-10-07T21:17:32.2883515Z dist/view/index.d.ts
+2026-10-07T21:17:32.2883753Z dist/view/input.d.cts
+2026-10-07T21:17:32.2883986Z dist/view/input.d.ts
+2026-10-07T21:17:32.2884224Z dist/view/media.d.cts
+2026-10-07T21:17:32.2884459Z dist/view/media.d.ts
+2026-10-07T21:17:32.2884705Z dist/view/menu-position.d.cts
+2026-10-07T21:17:32.2884991Z dist/view/menu-position.d.ts
+2026-10-07T21:17:32.2885257Z dist/view/node-view.d.cts
+2026-10-07T21:17:32.2885509Z dist/view/node-view.d.ts
+2026-10-07T21:17:32.2885760Z dist/view/paste.d.cts
+2026-10-07T21:17:32.2885992Z dist/view/paste.d.ts
+2026-10-07T21:17:32.2886262Z dist/view/selection-handler.d.cts
+2026-10-07T21:17:32.2886576Z dist/view/selection-handler.d.ts
+2026-10-07T21:17:32.2886850Z dist/view/view.d.cts
+2026-10-07T21:17:32.2887076Z dist/view/view.d.ts
+2026-10-07T21:17:32.2887558Z dist/view/virtual-layout.d.cts
+2026-10-07T21:17:32.2887876Z dist/view/virtual-layout.d.ts
+2026-10-07T21:17:32.2888156Z dist/view/web-component.d.cts
+2026-10-07T21:17:32.2888427Z dist/view/web-component.d.ts
+2026-10-07T21:17:32.2888679Z dist/vue.cjs
+2026-10-07T21:17:32.2888879Z dist/vue.cjs.map
+2026-10-07T21:17:32.2889084Z dist/vue.js
+2026-10-07T21:17:32.2889282Z dist/vue.js.map
+2026-10-07T21:17:32.2889514Z dist/vue/index.d.cts
+2026-10-07T21:17:32.2889745Z dist/vue/index.d.ts
+2026-10-07T21:17:32.2890011Z dist/widgets-dom.cjs
+2026-10-07T21:17:32.2890259Z dist/widgets-dom.cjs.map
+2026-10-07T21:17:32.2890506Z dist/widgets-dom.js
+2026-10-07T21:17:32.2890743Z dist/widgets-dom.js.map
+2026-10-07T21:17:32.2890976Z dist/widgets.cjs
+2026-10-07T21:17:32.2891200Z dist/widgets.cjs.map
+2026-10-07T21:17:32.2891416Z dist/widgets.js
+2026-10-07T21:17:32.2891636Z dist/widgets.js.map
+2026-10-07T21:17:32.2891871Z dist/widgets/dom.d.cts
+2026-10-07T21:17:32.2892109Z dist/widgets/dom.d.ts
+2026-10-07T21:17:32.2892348Z dist/widgets/index.d.cts
+2026-10-07T21:17:32.2892602Z dist/widgets/index.d.ts
+2026-10-07T21:17:32.2892824Z dist/yjs.cjs
+2026-10-07T21:17:32.2893185Z dist/yjs.cjs.map
+2026-10-07T21:17:32.2893399Z dist/yjs.js
+2026-10-07T21:17:32.2893594Z dist/yjs.js.map
+2026-10-07T21:17:32.2893812Z dist/yjs/index.d.cts
+2026-10-07T21:17:32.2894036Z dist/yjs/index.d.ts
+2026-10-07T21:17:32.2894315Z dist/yjs/structured-attributes.d.cts
+2026-10-07T21:17:32.2894653Z dist/yjs/structured-attributes.d.ts
+2026-10-07T21:17:32.2894948Z docs/AI_CONVERSATIONS.md
+2026-10-07T21:17:32.2895208Z docs/AI_DOCUMENT_TOOLS.md
+2026-10-07T21:17:32.2895466Z docs/AI_GENERATED_MEDIA.md
+2026-10-07T21:17:32.2895700Z docs/ANGULAR.md
+2026-10-07T21:17:32.2895908Z docs/API.md
+2026-10-07T21:17:32.2896120Z docs/ARCHITECTURE.md
+2026-10-07T21:17:32.2896355Z docs/BLOCK_REORDERING.md
+2026-10-07T21:17:32.2896613Z docs/BROWSER_AUDIT_RELOADS.md
+2026-10-07T21:17:32.2896880Z docs/COLLABORATION.md
+2026-10-07T21:17:32.2897100Z docs/COMMENTS.md
+2026-10-07T21:17:32.2897328Z docs/CONTEXTUAL_MENUS.md
+2026-10-07T21:17:32.2897579Z docs/CONVERSION_LAB.md
+2026-10-07T21:17:32.2897865Z docs/CONVERSION_REAL_DOCUMENT_AUDIT.md
+2026-10-07T21:17:32.2898159Z docs/DEFINITION_LISTS.md
+2026-10-07T21:17:32.2898393Z docs/DETAILS.md
+2026-10-07T21:17:32.2898620Z docs/DOCUMENT_UTILITIES.md
+2026-10-07T21:17:32.2898888Z docs/DOCX_CONTENT_CONTROLS.md
+2026-10-07T21:17:32.2899183Z docs/DOCX_FIDELITY_CHECKPOINT.md
+2026-10-07T21:17:32.2899623Z docs/DOCX_GLOSSARIES.md
+2026-10-07T21:17:32.2899848Z docs/DOCX.md
+2026-10-07T21:17:32.2900066Z docs/EXTENSIONS.md
+2026-10-07T21:17:32.2900315Z docs/FORMAT_BRIDGE_PLAN.md
+2026-10-07T21:17:32.2900560Z docs/FORMATS.md
+2026-10-07T21:17:32.2900786Z docs/HEADLESS_CORE.md
+2026-10-07T21:17:32.2901032Z docs/HTML_CONTAINERS.md
+2026-10-07T21:17:32.2901281Z docs/HTML_INERT_SOURCE.md
+2026-10-07T21:17:32.2901536Z docs/ISSUE_EDITOR_DEMO.md
+2026-10-07T21:17:32.2901761Z docs/LEAN.md
+2026-10-07T21:17:32.2902014Z docs/MARKDOWN_DOCUMENT_FLOW.md
+2026-10-07T21:17:32.2902315Z docs/MARKDOWN_FLOW_PROVENANCE.md
+2026-10-07T21:17:32.2902589Z docs/MARKDOWN_SOURCE.md
+2026-10-07T21:17:32.2902816Z docs/MCP.md
+2026-10-07T21:17:32.2903288Z docs/MIGRATIONS.md
+2026-10-07T21:17:32.2903581Z docs/NATIVE_RENDERER_FEASIBILITY.md
+2026-10-07T21:17:32.2903854Z docs/NODE_IDS.md
+2026-10-07T21:17:32.2904077Z docs/PAGINATION.md
+2026-10-07T21:17:32.2904306Z docs/PERFORMANCE.md
+2026-10-07T21:17:32.2904546Z docs/PORTABILITY_AUDIT.md
+2026-10-07T21:17:32.2904842Z docs/PROSEMIRROR_COMPARISON.md
+2026-10-07T21:17:32.2905140Z docs/REFERENCE_DOCUMENT_AUDIT.md
+2026-10-07T21:17:32.2905420Z docs/RELEASE_0_4_0_BETA_2.md
+2026-10-07T21:17:32.2905668Z docs/RELEASES.md
+2026-10-07T21:17:32.2905877Z docs/ROADMAP.md
+2026-10-07T21:17:32.2906115Z docs/RUBY.md
+2026-10-07T21:17:32.2906330Z docs/SERVER_HTML.md
+2026-10-07T21:17:32.2906561Z docs/SLASH_COMMANDS.md
+2026-10-07T21:17:32.2906815Z docs/STRUCTURED_ATTRIBUTES.md
+2026-10-07T21:17:32.2907060Z docs/SVELTE.md
+2026-10-07T21:17:32.2907293Z docs/TABLE_OF_CONTENTS.md
+2026-10-07T21:17:32.2907540Z docs/TEXT_INTEGRITY.md
+2026-10-07T21:17:32.2907771Z docs/TEXT_STYLE.md
+2026-10-07T21:17:32.2908002Z docs/TIPTAP_PARITY.md
+2026-10-07T21:17:32.2908226Z docs/TOOLBAR.md
+2026-10-07T21:17:32.2908448Z docs/TRACKED_CHANGES.md
+2026-10-07T21:17:32.2908725Z docs/TRAILING_EDITABLE_BLOCK.md
+2026-10-07T21:17:32.2908973Z docs/VERSIONS.md
+2026-10-07T21:17:32.2909199Z docs/VIRTUALIZATION.md
+2026-10-07T21:17:32.2909421Z docs/VUE.md
+2026-10-07T21:17:32.2909649Z docs/WEB_COMPONENT_FORMS.md
+2026-10-07T21:17:32.2909889Z docs/WIDGETS.md
+2026-10-07T21:17:32.2910110Z docs/WORKFLOW_DEMOS.md
+2026-10-07T21:17:32.2910333Z LICENSE
+2026-10-07T21:17:32.2910530Z package.json
+2026-10-07T21:17:32.2910732Z README.md
+2026-10-07T21:17:32.2911004Z schemas/fountain-document.schema.json
+2026-10-07T21:17:32.2911323Z scripts/check-api-surface.mjs
+2026-10-07T21:17:32.2911630Z scripts/check-build-budgets.mjs
+2026-10-07T21:17:32.2911954Z scripts/check-performance-budgets.mjs
+2026-10-07T21:17:32.2912264Z scripts/check-release.mjs
+2026-10-07T21:17:32.2912535Z scripts/create-extension.mjs
+2026-10-07T21:17:32.2912836Z scripts/lean-loopback-bridge.mjs
+2026-10-07T21:17:32.2913293Z scripts/smoke-package.mjs
+2026-10-07T21:17:32.2913551Z THIRD_PARTY_NOTICES.md
+2026-10-07T21:17:32.2913775Z Tarball Details
+2026-10-07T21:17:32.2914050Z fountainjs-editor-0.4.0-beta.2.tgz
+2026-10-07T21:17:32.2977988Z Post job cleanup.
+2026-10-07T21:17:32.4171711Z Caching is not enabled. Caching is skipped.
+2026-10-07T21:17:32.4308899Z Post job cleanup.
+2026-10-07T21:17:32.6084430Z Post job cleanup.
+2026-10-07T21:17:32.7290969Z (node:5109) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-07T21:17:32.7292468Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T21:17:32.7418186Z Post job cleanup.
+2026-10-07T21:17:32.8630898Z (node:5117) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-07T21:17:32.8632436Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-07T21:17:32.8635196Z Cache hit occurred on the primary key node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870, not saving cache.
+2026-10-07T21:17:32.8739236Z Post job cleanup.
+2026-10-07T21:17:33.0200968Z Pruning is unnecessary.
+2026-10-07T21:17:33.0341453Z Post job cleanup.
+2026-10-07T21:17:33.1175642Z [command]/usr/bin/git version
+2026-10-07T21:17:33.1213441Z git version 2.55.0
+2026-10-07T21:17:33.1251700Z Temporarily overriding HOME='/home/runner/work/_temp/baef5db6-cd56-4413-8fd1-fc39149b41bc' before making global git config changes
+2026-10-07T21:17:33.1253570Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-07T21:17:33.1258154Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+2026-10-07T21:17:33.1294383Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-07T21:17:33.1331251Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-07T21:17:33.1572402Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-07T21:17:33.1596966Z http.https://github.com/.extraheader
+2026-10-07T21:17:33.1607324Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-07T21:17:33.1638149Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-07T21:17:33.1871437Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-07T21:17:33.1903505Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-07T21:17:33.2262954Z Cleaning up orphan processes
+2026-10-07T21:17:33.2579435Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/setup-python@v5, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

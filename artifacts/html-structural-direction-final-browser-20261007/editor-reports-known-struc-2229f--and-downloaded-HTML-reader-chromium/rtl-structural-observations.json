@@ -1,0 +1,51 @@
+{
+  "status": "Known structural-direction loss; not RTL layout parity approval",
+  "source": "<h2>Structural RTL audit</h2><ul dir=\"rtl\"><li><p>List alpha</p></li><li><p>List beta</p></li></ul><blockquote dir=\"rtl\"><p>Quoted text</p></blockquote><table dir=\"rtl\"><tr><th><p>First column</p></th><th><p>Second column</p></th></tr><tr><td><p>First value</p></td><td><p>Second value</p></td></tr></table><p>Edit audit note</p>",
+  "native": {
+    "listDirection": "rtl",
+    "quoteDirection": "rtl",
+    "tableDirection": "rtl",
+    "firstColumnIsRight": true,
+    "paragraphDirections": [
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl"
+    ]
+  },
+  "imported": {
+    "listDirection": "ltr",
+    "quoteDirection": "ltr",
+    "tableDirection": "ltr",
+    "firstColumnIsRight": false,
+    "paragraphDirections": [
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl"
+    ]
+  },
+  "report": "Import report\n\nThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.\n\nblock-html-projection — ul reading direction (rtl) is not retained on the structural container. Descendant text blocks may retain supported direction, but container layout and a shared automatic context are not preserved.\nblock-html-projection — blockquote reading direction (rtl) is not retained on the structural container. Descendant text blocks may retain supported direction, but container layout and a shared automatic context are not preserved.\nblock-html-projection — table reading direction (rtl) is not retained on the structural container. Descendant text blocks may retain supported direction, but container layout and a shared automatic context are not preserved.",
+  "downloadedHTML": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>FountainJS document</title>\n<style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) \".\";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em 1.5em}:is(dt,dd)>p{margin:.3em 0}</style>\n</head>\n<body>\n<h2>Structural RTL audit</h2>\n<ul><li><p dir=\"rtl\" style=\"text-align:start\">List alpha</p></li><li><p dir=\"rtl\" style=\"text-align:start\">List beta</p></li></ul>\n<blockquote><p dir=\"rtl\" style=\"text-align:start\">Quoted text</p></blockquote>\n<table><tbody><tr><th colspan=\"1\" rowspan=\"1\" scope=\"col\"><p dir=\"rtl\" style=\"text-align:start\">First column</p></th><th colspan=\"1\" rowspan=\"1\" scope=\"col\"><p dir=\"rtl\" style=\"text-align:start\">Second column</p></th></tr><tr><td colspan=\"1\" rowspan=\"1\"><p dir=\"rtl\" style=\"text-align:start\">First value</p></td><td colspan=\"1\" rowspan=\"1\"><p dir=\"rtl\" style=\"text-align:start\">Second value</p></td></tr></tbody></table>\n<p>Edit audit note</p>\n</body>\n</html>",
+  "reader": {
+    "listDirection": "ltr",
+    "quoteDirection": "ltr",
+    "tableDirection": "ltr",
+    "firstColumnIsRight": false,
+    "paragraphDirections": [
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl",
+      "rtl"
+    ]
+  }
+}

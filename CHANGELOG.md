@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Report structural HTML direction loss for built-in lists, definition lists,
+  quotations and tables, including inherited fixed and own automatic contexts.
+  Retained paragraph direction is not proof of preserved markers, column order
+  or container layout. A recorded three-engine conversion-lab diagnostic checks
+  a native original, real typing/undo and actual downloaded HTML; the known
+  layout gaps remain explicit. No schema or public API change. Only aggregate
+  CJS feature capacity grows 0.5 KiB for the measured optional server warnings;
+  all other limits remain unchanged.
 - Distinguish the raw native code-region focus baseline from an independent
   native source-editing control. Preserve Linux WebKit's observed failure to
   insert text into the focused raw region rather than requiring Fountain to

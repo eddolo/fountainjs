@@ -471,6 +471,17 @@ function reportOnce(context: ImportContext, issue: ServerHTMLImportIssue): void 
   context.issues.push(Object.freeze(issue));
 }
 
+/** Direction on a paragraph is not the direction of its enclosing structure.
+ * Keep this loss visible until the receiving container retains that context. */
+function reportStructuralDirection(element: SourceElement, node: FountainNode, context: ImportContext): FountainNode {
+  const dir = readTextDirection(element).dir;
+  if (dir !== undefined && node.attrs.dir !== dir) reportOnce(context, {
+    code: 'block-html-projection',
+    message: `${element.tagName} reading direction (${dir}) is not retained on the structural container. Descendant text blocks may retain supported direction, but container layout and a shared automatic context are not preserved.`,
+  });
+  return node;
+}
+
 function reportRuleFailure(context: ImportContext, rule: ParseRule, contribution: string, reason: string): void {
   reportOnce(context, {
     code: 'invalid-rule-result',
@@ -1235,7 +1246,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
       branch.inlineSlots?.atomVisits.forEach(offset => context.inlineSlots!.atomVisits.push(offset));
       branch.issues.forEach(issue => reportOnce(context, issue));
-      return [list];
+      return [reportStructuralDirection(element, list, context)];
     }
   }
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
@@ -1252,7 +1263,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   if (tag === 'p') return [paragraph(element, schema, context)];
   if (tag === 'blockquote') {
     const children = blockChildren(element, schema, context);
-    return [schema.node('blockquote', readExplicitQuoteAppearance(element), children.length ? children : [paragraph(element, schema, context)])];
+    return [reportStructuralDirection(element, schema.node('blockquote', readExplicitQuoteAppearance(element), children.length ? children : [paragraph(element, schema, context)]), context)];
   }
   if (tag === 'pre') {
     const codeClass = directChild(element, 'code')?.getAttribute('class') ?? '';
@@ -1337,7 +1348,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         message: 'Ordered-list numbering was normalized. Negative starts, reversed numbering, non-decimal marker types and per-item value overrides are not retained by the supplied list schema.',
       });
     }
-    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}, items)];
+    return [reportStructuralDirection(element, schema.node(listType, tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}, items), context)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');
@@ -1432,7 +1443,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       return parent && parent !== element.raw && htmlparser2Adapter.isElementNode(parent)
         ? inheritElementMarks(row.parentElement!, marked, schema, context)[0] : marked[0];
     });
-    return [...captions, ...rows.length ? [schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element) }, rows)] : []];
+    return [...captions, ...rows.length ? [reportStructuralDirection(element, schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element) }, rows), context)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element, schema, 'image_super', context);

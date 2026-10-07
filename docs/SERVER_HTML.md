@@ -258,6 +258,25 @@ browser importer:
   breaks, footnotes, page templates, fields, and portable widgets;
 - extension nodes and marks that declare a platform-neutral `parseHTML` rule.
 
+Direction retention has two distinct scopes. Supported paragraph/heading
+direction can survive while a first-party list, definition list, quotation or
+table loses its own structural `dir`. The server report now emits
+`block-html-projection` for that lost fixed or shared automatic context,
+including inherited fixed direction. This matters for list markers, table
+column order and container decoration, not just paragraph text alignment.
+Ordinary directionless structures do not receive that warning; accepted custom
+`parseHTML` rules still own their retention contract. The browser importer has
+no report API; the conversion lab uses this server adapter and shows the warning.
+
+A recorded three-engine diagnostic compares an independent native original,
+the imported editor and its actual downloaded HTML. All seven paragraph
+directions survive in the fixture, but list markers remain on the wrong side,
+table columns remain LTR and the native logical quote border is not reproduced.
+These are known failures, not approved RTL layout. Structural retention,
+RTL-aware table navigation/resizing, logical decorations and read/export
+agreement must be implemented and verified before claiming that capability.
+See [W3C's structural direction guidance](https://www.w3.org/International/questions/qa-html-dir.en.html).
+
 Unmapped wrappers containing block descendants no longer flatten those
 descendants into one paragraph. Both server import and browser paste retain
 headings, separate paragraphs, lists, and tables through nested unfamiliar

@@ -1,5 +1,14 @@
 # Performance and memory contract
 
+## Structural-direction loss diagnostics (2026-10-07, Unreleased)
+
+The opt-in server HTML importer now reports lost direction on structural
+containers separately from preserved child paragraph direction. The measured
+warning implementation adds roughly 0.4 KiB. The former aggregate CJS cap fails;
+retain that log and add only 0.5 KiB feature capacity (1,315.5 → 1,316 KiB).
+Aggregate ESM, entry, CSS, latency, growth and heap caps remain unchanged.
+This is explicit import-loss reporting, not structural RTL layout support.
+
 ## Supported inline alignment follow-up (2026-10-07, Unreleased)
 
 The shared inline inheritance resolver and anonymous wrapper/list projection
