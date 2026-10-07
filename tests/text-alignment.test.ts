@@ -88,6 +88,8 @@ describe('selection-wide block alignment', () => {
 
   it('does not mutate on no-op, invalid input, read-only state, or a rejected transaction', () => {
     const editor = editorFor();
+    expect(setTextAlignment(editor, 'left')).toBe(true);
+    expect(editor.state.doc.child(0).attrs.alignExplicit).toBe(true);
     const before = editor.state;
     expect(setTextAlignment(editor, 'left')).toBe(false);
     expect(setTextAlignment(editor, 'right;display:none' as 'right')).toBe(false);

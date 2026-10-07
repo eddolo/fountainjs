@@ -870,7 +870,9 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
         && comparePaths(path, end) === 0 && selection.to === 0 && selection.endPath.at(-1) === 0) return;
     }
     if (TEXT_BLOCKS.includes(node.type.name)) {
-      if ((attribute === 'align' || node.type.spec.attrs?.dir) && node.attrs[attribute] !== value) paths.push(path);
+      const explicit = attribute === 'align' && node.type.spec.attrs?.alignExplicit;
+      if ((attribute === 'align' || node.type.spec.attrs?.dir)
+        && (node.attrs[attribute] !== value || (explicit && node.attrs.alignExplicit !== (value === 'left' ? true : undefined)))) paths.push(path);
       return;
     }
     if (!node.type.spec.atom) node.content.forEach((child, index) => visit(child, [...path, index]));
@@ -884,6 +886,7 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
     paths.forEach(path => {
       const node = getNodeAtPath(state.doc, path);
       const attrs = { ...node.attrs, [attribute]: value };
+      if (attribute === 'align' && node.type.spec.attrs?.alignExplicit) attrs.alignExplicit = value === 'left' ? true : undefined;
       node.type.create(attrs, node.content);
       transaction.setNodeAttrs(path, attrs);
     });
@@ -940,7 +943,8 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
       const layout = block.attrs.layout !== undefined && type.spec.attrs?.layout ? { layout: block.attrs.layout } : {};
       const direction = block.attrs.dir !== undefined && type.spec.attrs?.dir ? { dir: block.attrs.dir } : {};
       const alignment = block.attrs.align !== undefined && type.spec.attrs?.align ? { align: block.attrs.align } : {};
-      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...direction, ...alignment, ...attrs }, block.content)]);
+      const explicitAlignment = block.attrs.alignExplicit === true && type.spec.attrs?.alignExplicit ? { alignExplicit: true } : {};
+      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...direction, ...alignment, ...explicitAlignment, ...attrs }, block.content)]);
     }
     state.schema.validate(transaction.doc);
   } catch { return false; }
@@ -1250,6 +1254,7 @@ export function splitBlock(editor: Editor): boolean {
         ...(block.attrs.layout !== undefined && nextType.spec.attrs?.layout ? { layout: block.attrs.layout } : {}),
         ...(block.attrs.dir !== undefined && nextType.spec.attrs?.dir ? { dir: block.attrs.dir } : {}),
         ...(block.attrs.align !== undefined && nextType.spec.attrs?.align ? { align: block.attrs.align } : {}),
+        ...(block.attrs.alignExplicit === true && nextType.spec.attrs?.alignExplicit ? { alignExplicit: true } : {}),
       };
   const right = nextType.create(nextAttrs, [text.withText(rightText), ...block.content.slice(textIndex + 1)]);
   const itemPath = blockPath.slice(0, -1);

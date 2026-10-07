@@ -123,6 +123,9 @@ jobs:
             test-results/**/comment-reader-*.png
             test-results/**/native-colour-mapped-selection.png
             test-results/**/native-rtl-selection-baseline.json
+            test-results/**/inherited-auto-explicit-left-reader.png
+            test-results/**/word-reopened-explicit-left-reader.png
+            test-results/**/explicit-left.docx
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

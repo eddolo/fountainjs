@@ -17,7 +17,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
 import { tableBackground } from '../table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
 import { readParagraphLayout } from '../paragraph-layout';
-import { readTextAlignment, readTextDirection } from '../text-direction';
+import { readTextAlignmentAttributes, readTextDirection } from '../text-direction';
 import { readImageCaptionAttributes } from '../image-caption';
 import { readTableLayout, readTableRow } from '../table-layout';
 import { readTableAppearance } from '../table-appearance';
@@ -460,8 +460,8 @@ function embedNode(element: HTMLIFrameElement, schema: Schema, container?: HTMLE
   } catch { return null; }
 }
 
-function alignment(element: Element, direction?: Readonly<Attributes>): string {
-  return readTextAlignment(element, (element as HTMLElement).style.textAlign, direction);
+function alignment(element: Element, direction: Readonly<Attributes>): Attributes {
+  return readTextAlignmentAttributes(element, (element as HTMLElement).style.textAlign, direction);
 }
 
 function paragraph(element: Element, schema: Schema): FountainNode {
@@ -470,7 +470,7 @@ function paragraph(element: Element, schema: Schema): FountainNode {
   // leaf. Text, media, comments and even whitespace must use ordinary parsing.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
   const dir = readTextDirection(element);
-  return schema.node('paragraph', { align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
+  return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: Element, colspan: number): number[] | null {
@@ -509,7 +509,8 @@ function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
 
 function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const dir = readTextDirection(element);
-  if (dir.dir) inlineParagraphAttrs = { align: alignment(element, dir), ...dir, ...inlineParagraphAttrs };
+  const align = alignment(element, dir);
+  if (dir.dir || align.alignExplicit) inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
@@ -535,7 +536,8 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
   const dir = readTextDirection(element);
-  const attrs = dir.dir ? { align: alignment(element, dir), ...dir } : {};
+  const align = alignment(element, dir);
+  const attrs = dir.dir || align.alignExplicit ? { ...align, ...dir } : {};
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
@@ -598,7 +600,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   }
   if (/^h[1-6]$/.test(tag)) {
     const dir = readTextDirection(element);
-    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
+    return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
   }
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
@@ -677,7 +679,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
         const rowspan = Math.max(1, Math.min(100, rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1));
         const dir = readTextDirection(cell);
-        const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell, dir), ...dir });
+        const content = blockChildren(cell as HTMLElement, schema, { ...alignment(cell, dir), ...dir });
         return schema.node(
           cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
           {

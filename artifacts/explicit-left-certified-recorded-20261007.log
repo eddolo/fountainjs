@@ -1,0 +1,18 @@
+[WebServer] (node:20884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:23784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:36:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history (3.1s)
+(node:24404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:36:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history (5.9s)
+(node:7864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\editor.spec.ts:36:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history (6.5s)
+
+  3 passed (22.6s)

@@ -10,6 +10,13 @@ export const textDirectionAttribute = {
   validate: (value: unknown) => value === undefined || value === 'ltr' || value === 'rtl' || value === 'auto',
 };
 
+// Legacy left is the ordinary inherited/default presentation unless the block
+// already owns direction. This marker records an authored physical override.
+export const explicitTextAlignmentAttribute = {
+  default: undefined,
+  validate: (value: unknown) => value === undefined || value === true,
+};
+
 interface DirectionElement {
   getAttribute(name: string): string | null;
   readonly parentElement?: DirectionElement | null;
@@ -31,4 +38,11 @@ export function readTextDirection(element: DirectionElement): Attributes {
 export function readTextAlignment(element: DirectionElement, styleAlign: string | undefined, direction?: Readonly<Attributes>): string {
   const align = styleAlign || element.getAttribute('align');
   return align && textAlignmentAttribute.validate(align) ? align : (direction ?? readTextDirection(element)).dir ? 'start' : 'left';
+}
+
+export function readTextAlignmentAttributes(element: DirectionElement, styleAlign: string | undefined, direction: Readonly<Attributes>): Attributes {
+  const align = readTextAlignment(element, styleAlign, direction);
+  const explicit = element.getAttribute('data-fountain-align-explicit') === 'true'
+    || (!direction.dir && align === 'left' && (styleAlign || element.getAttribute('align')) === 'left');
+  return { align, ...(explicit ? { alignExplicit: true } : {}) };
 }

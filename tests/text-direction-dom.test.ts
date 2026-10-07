@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { expect, it } from 'vitest';
-import { CoreSchemaSpec, EditorView, HTMLExporter, HTMLImporter, Schema, createEditor } from '../src';
+import { CoreSchemaSpec, EditorView, HTMLExporter, HTMLImporter, Schema, createEditor, setTextAlignment } from '../src';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(CoreSchemaSpec);
@@ -26,5 +26,24 @@ it('renders direction and physical alignment in the DOM view, not by rewriting U
     expect(view.dom.querySelector('p')?.style.textAlign).toBe('left');
     expect(view.dom.querySelector('h1')?.getAttribute('dir')).toBe('auto');
     expect(view.dom.textContent).toBe('שלום worldعنوان');
+  } finally { view.destroy(); editor.destroy(); mount.remove(); }
+});
+
+it('applies explicit physical left inside an RTL host without inventing block direction', async () => {
+  const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'שלום world' }] },
+  ] } });
+  const mount = document.createElement('div'); mount.dir = 'rtl'; document.body.append(mount);
+  const view = new EditorView(mount, editor);
+  try {
+    expect(view.dom.querySelector('p')?.style.textAlign).toBe('');
+    expect(setTextAlignment(editor, 'left')).toBe(true);
+    await Promise.resolve();
+    expect(view.dom.querySelector('p')?.style.textAlign).toBe('left');
+    expect(view.dom.querySelector('p')?.hasAttribute('dir')).toBe(false);
+    const html = '<section dir="auto"><p>שלום</p><p style="text-align:left">Left</p><h2 align="left">Heading</h2><ul><li style="text-align:left">Item</li></ul><table><tr><td style="text-align:left">Cell</td></tr></table></section>';
+    const browser = HTMLImporter.parse(html, schema);
+    expect(browser.toJSON()).toEqual(ServerHTMLImporter.parse(html, schema).toJSON());
+    expect(HTMLImporter.parse(HTMLExporter.export(browser, { document: false }), schema).toJSON()).toEqual(browser.toJSON());
   } finally { view.destroy(); editor.destroy(); mount.remove(); }
 });

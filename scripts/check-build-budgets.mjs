@@ -496,7 +496,9 @@ const limits = Object.freeze({
   // Optional block direction, shared HTML projection, logical alignment and
   // schema-normalized attribute steps add ~2.4 KiB. Explicit pointer focus
   // adds a small existing-view fix; keep a narrow measured allowance only.
-  'all ESM runtime code': 1579.5 * kibibyte,
+  // Explicit physical-left authoring/projection adds ~1.3 KiB across entries.
+  // Existing per-entry/CSS and all latency/scaling/heap ceilings stay fixed.
+  'all ESM runtime code': 1581 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -543,7 +545,7 @@ const limits = Object.freeze({
   // Same measured link/carrier addition as ESM; no unrelated cap increase.
   // Same optional block mode: measured total 1310.7 KiB.
   // Same direction and explicit pointer-focus addition, ~2.1 KiB CJS.
-  'all CommonJS runtime code': 1314.5 * kibibyte,
+  'all CommonJS runtime code': 1315.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

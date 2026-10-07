@@ -2585,6 +2585,34 @@ This is a browser-platform policy distinction, not proof of a current editor
 selection bug or universal visual navigation. Full follow-up CI remains
 required; the RTL/localization row is still Partial and no npm release follows.
 
+## 2026-10-07: authored physical-left alignment under inherited direction
+
+The legacy default `align: 'left'` omitted CSS to preserve natural host layout;
+an explicit left command was previously indistinguishable from that default.
+First-party paragraphs/headings now declare optional `alignExplicit: true`.
+The first left command is undoable, repeated left is a no-op, and other
+alignments clear the marker. Reading direction stays independent. Default
+JSON/canonical HTML remain unchanged; custom schemas without the marker retain
+their old command contract. Supported conversion, Enter, JSON/Yjs and HTML
+retain the override. Supported DOCX physical-left paragraph projection emits
+and reimports explicit justification, including rich code-style fallback;
+Markdown reports the unsupported presentation.
+
+Recorded one-worker Chromium/Firefox/WebKit use verifies natural-right versus
+authored-left text geometry, undo/redo, Enter, inherited-auto HTML readers,
+DOCX export/reopen into Fountain and narrow viewports. The reader screenshots
+do not certify native Word appearance or native mobile keyboards. General CSS
+ancestor inheritance, inherited-auto flattening, inline isolation, mirrored
+structure, broader bidi navigation and translated locales remain open; PROD-04
+stays Partial and ledger/CommonMark counts do not change. The measured feature
+needs only narrow aggregate bundle allowances; all other caps stay unchanged.
+Current-source cloud verification is required before stronger claims or npm.
+Focused checks pass 68 tests / seven files, plus package/API/headless/framework
+types and unchanged CommonMark profiles. Three recorded desktop journeys pass
+without retries; 15 final PNGs match reviewed captures. Nine videos are recorded,
+not manually watched. Source/capture hashes, exact scope and failed diagnostic
+logs are in `artifacts/explicit-left-verification-20261007.json`.
+
 ## Sequencing rule
 
 Finish and certify one ledger outcome before beginning another. Each outcome

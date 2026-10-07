@@ -16,11 +16,12 @@ export function textBlockDOMAttributes(attrs: Readonly<Attributes>): Attributes 
   const styles: string[] = layout.style ? [String(layout.style)] : [];
   const dir = attrs.dir !== undefined && textDirectionAttribute.validate(attrs.dir) ? attrs.dir : undefined;
   // Physical left must override RTL's natural start, just like physical right.
-  if (['center', 'right', 'justify', 'start', 'end'].includes(String(attrs.align)) || (dir && attrs.align === 'left')) styles.push(`text-align:${attrs.align}`);
+  if (['center', 'right', 'justify', 'start', 'end'].includes(String(attrs.align)) || ((dir || attrs.alignExplicit === true) && attrs.align === 'left')) styles.push(`text-align:${attrs.align}`);
   if (attrs.emphasis === 'explicit') styles.push('font-weight:normal', 'font-style:normal');
   return {
     ...layout,
     ...(dir ? { dir } : {}),
+    ...(attrs.alignExplicit === true ? { 'data-fountain-align-explicit': 'true' } : {}),
     ...(attrs.emphasis === 'explicit' ? { 'data-fountain-emphasis': 'explicit' } : {}),
     ...(styles.length ? { style: styles.join(';') } : {}),
   };

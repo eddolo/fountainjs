@@ -29,7 +29,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow
 import { tableBackground } from '../core/table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../core/explicit-emphasis';
 import { readParagraphLayout } from '../core/paragraph-layout';
-import { readTextAlignment, readTextDirection } from '../core/text-direction';
+import { readTextAlignmentAttributes, readTextDirection } from '../core/text-direction';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
 import { importDefinitionList } from '../core/importers/html-definition-list';
@@ -1067,8 +1067,8 @@ function embedNode(element: SourceElement, schema: Schema, container?: SourceEle
   } catch { return null; }
 }
 
-function alignment(element: SourceElement, direction?: Readonly<Attributes>): string {
-  return readTextAlignment(element, element.style.textAlign, direction);
+function alignment(element: SourceElement, direction: Readonly<Attributes>): Attributes {
+  return readTextAlignmentAttributes(element, element.style.textAlign, direction);
 }
 
 function paragraph(element: SourceElement, schema: Schema, context: ImportContext): FountainNode {
@@ -1077,7 +1077,7 @@ function paragraph(element: SourceElement, schema: Schema, context: ImportContex
   // children, including comments, whitespace or unsupported descendant tags.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
   const dir = readTextDirection(element);
-  return schema.node('paragraph', { align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
+  return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: SourceElement, colspan: number): number[] | null {
@@ -1119,7 +1119,8 @@ function inlineGroup(content: readonly SourceNode[]): SourceParent {
 
 function blockChildren(element: SourceParent, schema: Schema, context: ImportContext, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const dir = element instanceof ServerElement ? readTextDirection(element) : {};
-  if (dir.dir && element instanceof ServerElement) inlineParagraphAttrs = { align: alignment(element, dir), ...dir, ...inlineParagraphAttrs };
+  const align: Attributes = element instanceof ServerElement ? alignment(element, dir) : {};
+  if ((dir.dir || align.alignExplicit) && element instanceof ServerElement) inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
@@ -1143,7 +1144,8 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
 
 function listItemContent(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
   const dir = readTextDirection(element);
-  const attrs = dir.dir ? { align: alignment(element, dir), ...dir } : {};
+  const align = alignment(element, dir);
+  const attrs = dir.dir || align.alignExplicit ? { ...align, ...dir } : {};
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
@@ -1245,7 +1247,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   }
   if (/^h[1-6]$/.test(tag)) {
     const dir = readTextDirection(element);
-    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
+    return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
   }
   if (tag === 'p') return [paragraph(element, schema, context)];
   if (tag === 'blockquote') {
@@ -1410,7 +1412,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
           code: 'block-html-projection', message: 'Table spans above the supported 100-row/column limit were clamped; table geometry may differ.',
         });
         const dir = readTextDirection(cell);
-        const content = blockChildren(cell, schema, context, { align: alignment(cell, dir), ...dir });
+        const content = blockChildren(cell, schema, context, { ...alignment(cell, dir), ...dir });
         return schema.node(
           cell.tagName === 'th' ? 'table_header' : 'table_cell',
           {

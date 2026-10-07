@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Distinguish authored physical-left alignment from the ordinary legacy default
+  with optional paragraph/heading `alignExplicit: true`. Keep direction
+  independent; preserve the override through history, heading conversion,
+  Enter, JSON/Yjs, browser/server HTML and supported DOCX paragraph projection,
+  including rich code-style fallback. Markdown reports its loss. Recorded
+  desktop browser journeys verify RTL-host geometry and exported/reopened
+  reader views, not native Word fidelity. Only aggregate runtime bundle
+  allowances rise narrowly for the measured feature; other limits stay fixed.
 - Make RTL keyboard journeys compare each selection endpoint to an untouched
   native control: Linux Firefox's Shift-arrow policy differs from Windows.
   Keep exact selected-source replacement, Enter/history/direction/export

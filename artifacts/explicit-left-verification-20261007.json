@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "date": "2026-10-07",
+  "baseCommit": "14c2ba58f8e8ceeb24cc6e62c80c75513e54d9c0",
+  "scope": "Unreleased authored physical-left distinction for first-party paragraphs/headings; not full RTL/localization or native Word certification.",
+  "behavior": [
+    "Legacy default JSON/canonical HTML unchanged; first explicit left command records alignExplicit:true as an undoable transaction; repeat left is a no-op.",
+    "Other alignment commands clear the marker; direction remains independent.",
+    "Heading conversion, Enter, JSON/Yjs and supported browser/server HTML and DOCX paragraph projection retain the marker.",
+    "Rich code-styled DOCX content falling back to a paragraph retains explicit left; Markdown loss is reported, including table cells.",
+    "Legacy custom schemas without the marker keep their old alignment command contract."
+  ],
+  "checks": {
+    "focused": {
+      "status": "passed",
+      "tests": 68,
+      "files": 7,
+      "newExplicitAlignmentTests": 8,
+      "workers": 1,
+      "fileParallelism": false,
+      "log": "artifacts/explicit-left-final-units-20261007.log"
+    },
+    "build": {
+      "status": "passed",
+      "log": "artifacts/explicit-left-final-build-20261007.log"
+    },
+    "types": {
+      "status": "passed",
+      "scope": "TypeScript, Svelte (0 errors/0 warnings), Angular library/demo",
+      "log": "artifacts/explicit-left-final-types-20261007.log"
+    },
+    "api": {
+      "status": "passed",
+      "declarationFiles": 409,
+      "log": "artifacts/explicit-left-final-api-20261007.log"
+    },
+    "package": {
+      "status": "passed",
+      "scope": "Packed ESM/CommonJS public entries and root/core contract smoke",
+      "log": "artifacts/explicit-left-final-package-20261007.log"
+    },
+    "headless": {
+      "status": "passed",
+      "modules": 98,
+      "scope": "Boundary checker and headless TypeScript",
+      "log": "artifacts/explicit-left-final-headless-20261007.log"
+    },
+    "commonmark": {
+      "status": "passed",
+      "default": 563,
+      "strongestOptIn": 613,
+      "total": 652,
+      "scoresChanged": false,
+      "log": "artifacts/explicit-left-final-markdown-20261007.log"
+    },
+    "bundle": {
+      "status": "passed after measured feature allowance",
+      "esmKiB": 1580.7,
+      "cjsKiB": 1315.2,
+      "oldAggregateCapsKiB": [
+        1579.5,
+        1314.5
+      ],
+      "newAggregateCapsKiB": [
+        1581,
+        1315.5
+      ],
+      "otherCapsChanged": false,
+      "initialFailureLog": "artifacts/explicit-left-budget-20261007.log",
+      "log": "artifacts/explicit-left-final-budget-20261007.log"
+    },
+    "browser": {
+      "status": "passed",
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "journeys": 3,
+      "workers": 1,
+      "retries": 0,
+      "folder": "artifacts/explicit-left-certified-recorded-20261007",
+      "log": "artifacts/explicit-left-certified-recorded-20261007.log",
+      "screenshots": 15,
+      "recordedVideos": 9,
+      "docxFiles": 3,
+      "assertions": [
+        "actual default right and authored left Range geometry under RTL host",
+        "unchanged text/no invented block dir",
+        "undo/redo and Enter source split",
+        "inherited-auto HTML reader computed direction/alignment",
+        "actual UI JSON exported as DOCX, actual bytes reopened and rendered through Fountain",
+        "390px narrow viewport",
+        "no page errors"
+      ]
+    },
+    "visual": {
+      "scope": "All 15 final screenshots match previously directly inspected images. Three DOCX-reopened reader images directly inspected, including two differing prior captures. Text physically left, no clipping/overlap in tested content.",
+      "videos": "Recorded for inspection, not manually watched.",
+      "nativeWord": "Not rendered in Microsoft Word/LibreOffice; Fountain DOCX-reopened HTML projection only."
+    },
+    "previousCI": {
+      "run": 37677391117,
+      "commit": "14c2ba58f8e8ceeb24cc6e62c80c75513e54d9c0",
+      "functional": "success",
+      "performance": "success",
+      "lean": "success",
+      "firefoxNativeOraclePreflight": "success",
+      "fullBrowser": "in_progress at evidence capture",
+      "pages": {
+        "run": 37677391252,
+        "status": "success"
+      }
+    },
+    "currentSourceFullCI": "Required after commit; prior revision's success is not certification of this feature."
+  },
+  "retainedDiagnosticFailure": {
+    "log": "artifacts/explicit-left-word-recorded-20261007.log",
+    "cause": "Test helper incorrectly imported CoreSchemaSpec from headless core; corrected to root public entry. Not an application/runtime failure."
+  },
+  "remaining": [
+    "Inherited-auto wrapper flattening",
+    "General ancestor CSS alignment/direction cascade",
+    "Inline bidi isolation and mirrored list/table structure",
+    "Broader bidi selection/navigation and native mobile keyboard/IME",
+    "Translated locales",
+    "Native Word appearance/bidi fidelity",
+    "Current-source full Linux performance/browser/functional gates"
+  ],
+  "release": {
+    "npmPublished": false,
+    "versionUnchanged": "0.4.0-beta.2",
+    "PROD04": "Partial",
+    "ledgerPromoted": false
+  },
+  "sources": [
+    {
+      "path": "src/core/commands.ts",
+      "sha256": "d58b8444d5b7c05ec228beff92f12b03086295960752e16dc7f6f94f99421609"
+    },
+    {
+      "path": "src/core/text-direction.ts",
+      "sha256": "6a08000c8503c43126360b75c2e62817749a3f6452aa0d5639bf4deb743f35cd"
+    },
+    {
+      "path": "src/core/explicit-emphasis.ts",
+      "sha256": "52a247d1b11329e252e7081952a388c305bf78d6f20c7a95bc5bb24457fb95b4"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "06d248093b0446341b8ec3908f6820cc303828994cf27af42dc1c155b8166ef6"
+    },
+    {
+      "path": "src/core/exporters/markdown-exporter.ts",
+      "sha256": "f21bed82999dcc97ae79fbd63dfbc43c18419fec8fe351357d45a4df32fec023"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "617cb226d5b0250d7e86228ecd24fafd170d8aaf58f120b4652b12cc3048dbef"
+    },
+    {
+      "path": "src/docx/index.ts",
+      "sha256": "bdac8b58f4b1c06ad6fee874080bc41a7f3ff33c07f3cf0cbab91537a16a993a"
+    },
+    {
+      "path": "src/docx/paragraph-style.ts",
+      "sha256": "5c41b4d62620baefa6b6effd90e0e89038877949d5438cb0862a62e760100a76"
+    },
+    {
+      "path": "src/extensions/nodes/paragraph.ts",
+      "sha256": "ed2f132ab9f8cfc580655f0a434436a9610b8de4336697f8c1e312ed6f104dcc"
+    },
+    {
+      "path": "src/extensions/nodes/heading.ts",
+      "sha256": "572542e3d14e52e01330c4fc7d4f261a9031bcd8f20a96479485168c85733747"
+    },
+    {
+      "path": "examples/react-app/src/DemoPage.tsx",
+      "sha256": "8b1ecf1982a4cc7f4e4c2fbc4c9dad6e7258507ba7fc1b212c1e57867d47c021"
+    },
+    {
+      "path": "tests/browser/explicit-text-alignment-journey.ts",
+      "sha256": "61c918200a08bcfee2a22e68adc9e3add582045bda436233050715f675051619"
+    },
+    {
+      "path": "tests/explicit-text-alignment.test.ts",
+      "sha256": "9e78389aa07c3b98bd55465be1d121b3e6655a4325d74f8e393ab14fb0ddc078"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "fbaab155e14823da5649220ad95cf0dbbc2ea81d3ce255c7f6e8c0789e45fb3d"
+    }
+  ],
+  "captures": [
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/inherited-auto-explicit-left-reader.png",
+      "sha256": "4694e86ad1318813dc1e7b245c33295b675d3f591dc6dbebab06e70a5e127a41",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/rtl-host-explicit-left-mobile.png",
+      "sha256": "29b53e5d9c7e8c072435ee1e7354940c79ee8a1e16bdb340a0c1a8703889fdad",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/rtl-host-explicit-left.png",
+      "sha256": "ffd7f0a0e1f337cb549470ed81f7e10d1e85b6f4bdeaed31bdd376b075fcdbd3",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/rtl-host-natural-alignment.png",
+      "sha256": "6858b417d3deaaed2f49bc03d9d89331900782117f2be757a43b83d357138833",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/word-reopened-explicit-left-reader.png",
+      "sha256": "a754410dc0e13a7f46718b03c7767d690e4b40bc62c9ccbf8ca3bcc1eb3bff48",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/inherited-auto-explicit-left-reader.png",
+      "sha256": "9e159d38092c3e6e91ac57d7ec50a6e08194a8a899628dcb02bd94c8083d3310",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/rtl-host-explicit-left-mobile.png",
+      "sha256": "8b4736d3ab486648a0c3d8fce63049277920034e4830f13442acbaff831224b3",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/rtl-host-explicit-left.png",
+      "sha256": "ff7a525d2fa9423cda7d958faf466e005a22ba5831ebc0bd4dc69be24c676732",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/rtl-host-natural-alignment.png",
+      "sha256": "438b0498cefba0947bfc1c3cb14cd2c379750e148cf1e00a3831d3062b325b57",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/word-reopened-explicit-left-reader.png",
+      "sha256": "d63e7aa84ef41892bcec8ad2eba466594a6684113ec6c53b04e1aef2b035a2f6",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/inherited-auto-explicit-left-reader.png",
+      "sha256": "9061f1018e5525ace224786f9e75bc67228e43231fec28d6624080fa89456e63",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/rtl-host-explicit-left-mobile.png",
+      "sha256": "f506b7c95fbd8a7077ce613aa052cd1acc6787ca2baed71b1ca54a4e84ab88b9",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/rtl-host-explicit-left.png",
+      "sha256": "2292ea83f4acf718fe54ff55dd4b1ec40bfe21a78d05753dc588cfbe531929b6",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/rtl-host-natural-alignment.png",
+      "sha256": "b4c9118f45c2e8249246a3b6baac44dc4c69fce8bceaed9700e52f8a765b40bb",
+      "matchesReviewed": true
+    },
+    {
+      "path": "editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/word-reopened-explicit-left-reader.png",
+      "sha256": "6d5b823375fe9590ac9a02568b9ce9ad88b2929696dd3e33e830164b1ffa327a",
+      "matchesReviewed": true
+    }
+  ]
+}

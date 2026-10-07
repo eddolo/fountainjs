@@ -31,6 +31,11 @@ import { htmlLinkControlsJourney } from './html-link-controls-journey';
 import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-block-journey';
 import { htmlBlankLineJourney } from './html-blank-line-journey';
 import { textDirectionJourney } from './text-direction-journey';
+import { explicitTextAlignmentJourney } from './explicit-text-alignment-journey';
+
+test('authors physical-left alignment under an RTL host and inherited-auto reader with history', async ({ page }, info) => {
+  await explicitTextAlignmentJourney(page, info);
+});
 
 test('edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export', async ({ page }, info) => {
   await textDirectionJourney(page, info);

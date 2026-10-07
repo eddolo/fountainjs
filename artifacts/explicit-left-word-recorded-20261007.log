@@ -1,0 +1,10 @@
+[WebServer] (node:5656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "../vite.config" without a file extension (artifacts/vite-quiet-audit.config.ts:2:18). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+SyntaxError: The requested module 'fountainjs-editor/core' does not provide an export named 'CoreSchemaSpec'
+Error: No tests found
+

@@ -21,7 +21,7 @@ function paragraphIssue(issue: WordStyleReadIssue) {
  */
 export function projectWordParagraphStyle(properties: XMLElement | undefined,
   sheet: ReturnType<typeof readWordStyleSheet> | undefined,
-  warn: (code: string, message: string) => void, table?: WordTableTextFormatting): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly layout?: ParagraphLayout } {
+  warn: (code: string, message: string) => void, table?: WordTableTextFormatting): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly layout?: ParagraphLayout } {
   const paragraphStyle = sheet ? wordStyleReference(properties, 'pStyle') : undefined;
   const filtered = properties && {
     ...properties,
@@ -95,5 +95,5 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
       ...(border.space === undefined ? {} : { space: border.space }) });
   }
   if (Object.keys(borders).length) layout.borders = Object.freeze(borders);
-  return Object.freeze({ align, ...(Object.keys(layout).length > 1 ? { layout: Object.freeze(layout) as ParagraphLayout } : {}) });
+  return Object.freeze({ align, ...(source.align === 'left' ? { alignExplicit: true as const } : {}), ...(Object.keys(layout).length > 1 ? { layout: Object.freeze(layout) as ParagraphLayout } : {}) });
 }

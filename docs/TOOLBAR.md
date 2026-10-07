@@ -267,14 +267,25 @@ separate work. Ordinary Markdown reports omitted direction/logical alignment.
 DOCX reports unprojected direction and conversion of logical alignment to a
 physical approximation; it does not equate HTML `dir` with Word `w:bidi`.
 
-There is also an unresolved default-alignment boundary: legacy `align: 'left'`
-does not distinguish an authored physical-left override from the ordinary
-default. To preserve existing canonical HTML, default left without a block's
-own `dir` is not emitted as CSS. An inherited-auto container or an RTL host can
-therefore supply natural right alignment even though the child JSON says left;
-setting left again is a model no-op. Set explicit block direction before choosing
-physical left as the current workaround. An authored-versus-natural alignment
-contract and inherited/host-direction tests are required for full RTL support.
+An authored physical-left override is distinct from the legacy default. The
+first `setTextAlignment(editor, 'left')` records optional `alignExplicit: true`
+on first-party paragraphs/headings and is one undoable transaction. Repeating
+it is a no-op; choosing another alignment clears the marker. Ordinary default
+JSON and canonical HTML remain unchanged. Authored left emits `text-align:left`
+and `data-fountain-align-explicit="true"`, independently of reading direction:
+it works under an RTL host or a retained inherited-auto wrapper without
+inventing a block `dir`. Heading conversion, Enter, JSON, Yjs, browser/server
+HTML and supported DOCX paragraph projection retain the override. Custom
+schemas can opt into the optional marker; those without it retain their old
+command contract. Markdown reports its loss instead of silently discarding it.
+
+Recorded Chromium/Firefox/WebKit journeys check actual left/right text geometry,
+undo/redo, Enter, HTML readers and DOCX export/reopen into a Fountain reader.
+That last check is not native Word appearance certification. Import currently
+recognizes own paragraph/heading left styles and anonymous list/cell wrapper
+left alignment; arbitrary ancestor CSS alignment and CSS-only direction are
+not a complete cascade implementation. Inherited-auto flattening and the other
+bidi/localization boundaries above remain open.
 
 The distinctions follow [W3C's structural direction guidance](https://www.w3.org/International/questions/qa-html-dir.en.html).
 [Microsoft's `BiDi` remarks](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.bidi?view=openxml-3.0.1)

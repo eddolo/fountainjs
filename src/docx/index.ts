@@ -664,7 +664,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   const properties = child(element, 'pPr');
   const style = attr(child(properties, 'pStyle'), 'val') ?? '';
   const isQuote = /^(?:(?:intense)?quote|FountainExplicitQuote)$/i.test(style) && Boolean(schema.nodes.blockquote);
-  const { align, layout: geometry } = projectWordParagraphStyle(properties, media.styles, (code, message) => {
+  const { align, alignExplicit, layout: geometry } = projectWordParagraphStyle(properties, media.styles, (code, message) => {
     issues.push({ code, severity: 'warning', message, path });
   }, media.tableText);
   const content = inlineContent(element, schema, media, issues, path);
@@ -713,6 +713,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     if (schema.nodes[type]?.spec.attrs?.emphasis) attrs.emphasis = 'explicit';
     else if (media.styles) issues.push({ code: 'block-emphasis-not-imported', severity: 'warning', message: 'The schema cannot represent explicit Word block emphasis; host heading/quote defaults may differ.', path });
   }
+  if ((type === 'paragraph' || type === 'heading') && alignExplicit) attrs.alignExplicit = true;
   if (type === 'paragraph' && !isQuote && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
     return { node: schema.node('image_super', { ...content[0].attrs, align, caption: '' }) };
   }
@@ -723,7 +724,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   const flush = () => {
     if (!inline.length) return;
     if (type === 'code_block' && inline.some(node => !node.isText)) {
-      parts.push(schema.node('paragraph', { align, ...(layout ? { layout } : {}) }, inline));
+      parts.push(schema.node('paragraph', { align, ...(alignExplicit ? { alignExplicit: true } : {}), ...(layout ? { layout } : {}) }, inline));
       issues.push({ code: 'code-style-not-applied', severity: 'warning', message: 'The Word code-styled paragraph contains rich content; it was preserved as a paragraph rather than invalid text-only code.', path });
     } else parts.push(schema.node(type, attrs, inline));
     inline = [];
@@ -1991,7 +1992,7 @@ function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: 
   const declaredAlign = String(node.attrs.align ?? 'left');
   const align = declaredAlign === 'start' ? node.attrs.dir === 'rtl' ? 'right' : 'left'
     : declaredAlign === 'end' ? node.attrs.dir === 'rtl' ? 'left' : 'right' : declaredAlign;
-  if (align !== 'left') properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
+  if (align !== 'left' || node.attrs.alignExplicit === true) properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
   // One paragraph-mark rPr group only. Inline runs get the same defaults when
   // unmarked, since Word's pPr/rPr is not a text-run formatting declaration.
   const font = paragraphFontProperties(layout, [], []);

@@ -1,5 +1,24 @@
 # Performance and memory contract
 
+## Authored physical-left boundary (Unreleased, 2026-10-07)
+
+The optional authored/default-left distinction adds approximately 1.3 KiB ESM
+and 1.2 KiB CJS across runtime entries. The pre-adjustment build fails the old
+aggregate caps at 1580.7/1315.2 KiB; that failed log remains retained. Only the
+aggregate allowance changes, from 1579.5/1314.5 to 1581/1315.5 KiB. Per-entry,
+editor, CSS, latency, scaling, iteration and heap limits remain unchanged. This
+is a measured feature-size allowance, not a passing performance claim.
+
+Focused model/import checks pass **68 tests / seven files**; the three recorded
+one-worker, retry-free browser journeys pass. All 15 final PNGs match reviewed
+captures; nine videos are recorded but not manually watched. Package, API (409
+declaration files), headless (98 modules), framework types and unchanged
+CommonMark scores pass. Exact source/capture hashes and retained failures are
+in `artifacts/explicit-left-verification-20261007.json`.
+Current-source Linux/full-suite verification remains
+required. The prior `14c2ba5` functional, performance and Lean jobs pass;
+its full browser job is still running at this checkpoint. Pages deployed.
+
 ## Linux follow-up: performance passes; two verification contracts corrected
 
 For frozen runtime `d0dc2e7`, [CI run 37676375997](https://github.com/eddolo/fountainjs/actions/runs/37676375997)
