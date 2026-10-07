@@ -1,0 +1,18 @@
+[WebServer] (node:14932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:23308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:5921:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission (5.4s)
+(node:22880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:5921:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission (5.1s)
+(node:5952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\editor.spec.ts:5921:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission (5.0s)
+
+  3 passed (23.5s)

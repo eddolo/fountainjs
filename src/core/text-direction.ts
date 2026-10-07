@@ -20,6 +20,7 @@ export const explicitTextAlignmentAttribute = {
 interface DirectionElement {
   getAttribute(name: string): string | null;
   readonly parentElement?: DirectionElement | null;
+  readonly style?: { readonly textAlign?: string };
 }
 
 /** Materialize fixed inherited direction when an HTML wrapper is flattened.
@@ -35,14 +36,33 @@ export function readTextDirection(element: DirectionElement): Attributes {
   return {};
 }
 
+/** Resolve only supported inline declarations, not stylesheets or computed CSS.
+ * text-align is inherited even across wrappers that an importer must flatten.
+ * Materialize its value on each text block without inventing reading direction.
+ */
+function alignmentDeclaration(element: DirectionElement, styleAlign: string | undefined): string | undefined {
+  for (let current: DirectionElement | null | undefined = element; current; current = current.parentElement) {
+    const own = current === element;
+    const style = (own ? styleAlign : current.style?.textAlign)?.trim().toLowerCase();
+    if (style === 'initial') return 'start';
+    if (textAlignmentAttribute.validate(style)) return style;
+    // Explicit inheritance overrides the element's legacy presentational hint.
+    if (own && style !== 'inherit' && style !== 'unset') {
+      const hint = current.getAttribute('align')?.trim().toLowerCase();
+      if (hint && textAlignmentAttribute.validate(hint)) return hint;
+    }
+  }
+  return undefined;
+}
+
 export function readTextAlignment(element: DirectionElement, styleAlign: string | undefined, direction?: Readonly<Attributes>): string {
-  const align = styleAlign || element.getAttribute('align');
-  return align && textAlignmentAttribute.validate(align) ? align : (direction ?? readTextDirection(element)).dir ? 'start' : 'left';
+  return alignmentDeclaration(element, styleAlign) ?? ((direction ?? readTextDirection(element)).dir ? 'start' : 'left');
 }
 
 export function readTextAlignmentAttributes(element: DirectionElement, styleAlign: string | undefined, direction: Readonly<Attributes>): Attributes {
-  const align = readTextAlignment(element, styleAlign, direction);
+  const declaration = alignmentDeclaration(element, styleAlign);
+  const align = declaration ?? (direction.dir ? 'start' : 'left');
   const explicit = element.getAttribute('data-fountain-align-explicit') === 'true'
-    || (!direction.dir && align === 'left' && (styleAlign || element.getAttribute('align')) === 'left');
+    || (!direction.dir && declaration === 'left');
   return { align, ...(explicit ? { alignExplicit: true } : {}) };
 }

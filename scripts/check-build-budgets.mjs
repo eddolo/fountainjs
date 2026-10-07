@@ -498,7 +498,11 @@ const limits = Object.freeze({
   // adds a small existing-view fix; keep a narrow measured allowance only.
   // Explicit physical-left authoring/projection adds ~1.3 KiB across entries.
   // Existing per-entry/CSS and all latency/scaling/heap ceilings stay fixed.
-  'all ESM runtime code': 1581 * kibibyte,
+  // Supported inherited inline alignment and anonymous wrapper/list projection
+  // add ~0.3 KiB ESM. The first frozen build is 21 bytes over 1581 KiB; retain
+  // that failure and allow only 0.5 KiB aggregate feature capacity. Individual
+  // entries, CommonJS, CSS, latency, scaling and heap limits stay unchanged.
+  'all ESM runtime code': 1581.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

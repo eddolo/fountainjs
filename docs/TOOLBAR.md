@@ -286,9 +286,14 @@ command contract. Markdown reports its loss instead of silently discarding it.
 Recorded Chromium/Firefox/WebKit journeys check actual left/right text geometry,
 undo/redo, Enter, HTML readers and DOCX export/reopen into a Fountain reader.
 That last check is not native Word appearance certification. Import currently
-recognizes own paragraph/heading left styles and anonymous list/cell wrapper
-left alignment; arbitrary ancestor CSS alignment and CSS-only direction are
-not a complete cascade implementation. Inherited-auto flattening and the other
+recognizes supported inline `text-align` inherited through ancestor wrappers,
+including explicit and anonymous list/cell text. Nearest inline declarations
+win; `inherit`/`unset` continue inheritance and `initial` resets to `start`.
+An inherited physical-left declaration is retained independently of reading
+direction. This is the bounded inline inheritance contract described by
+[CSS Text](https://www.w3.org/TR/css-text-3/#text-align-property), not a computed
+stylesheet cascade: class rules, `match-parent`, CSS variables, unsupported
+values and CSS-only direction remain unprojected. Inherited-auto flattening and the other
 bidi/localization boundaries above remain open.
 
 The distinctions follow [W3C's structural direction guidance](https://www.w3.org/International/questions/qa-html-dir.en.html).

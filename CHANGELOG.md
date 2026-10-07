@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain supported inherited inline HTML text alignment in both importers,
+  including nearest overrides, explicit inheritance/reset values and anonymous
+  wrapper/list/cell text. Keep physical left distinct from inherited/default
+  left without guessing automatic direction or evaluating arbitrary CSS.
+  Recorded conversion-lab import/edit/history/downloaded-reader checks compare
+  with an independent native surface; wider stylesheet fidelity stays open.
 - Add recorded retained-auto section direction checks using the existing
   optional container module: first-strong editing, geometry, undo/redo and
   reader snapshots in all desktop engines, plus pure-Node and browser HTML

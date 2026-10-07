@@ -34,6 +34,11 @@ import { textDirectionJourney } from './text-direction-journey';
 import { explicitTextAlignmentJourney } from './explicit-text-alignment-journey';
 import { autoContainerDirectionJourney } from './auto-container-direction-journey';
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
+import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
+
+test('imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML', async ({ page }, info) => {
+  await htmlInheritedAlignmentJourney(page, info);
+});
 
 test('compares list-first code text-click focus and editing to a plain native surface', async ({ page }, info) => {
   await codeNativeFocusJourney(page, info);

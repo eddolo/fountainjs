@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Current inline-alignment follow-up (2026-10-07, Unreleased): preserve supported
+ancestor inline `text-align` while flattening HTML wrappers, with nearest
+overrides, inheritance/reset values and anonymous wrapper/list/cell paragraphs.
+Keep automatic reading direction and unsupported stylesheet behavior separate.
+Real conversion-lab import/edit/history/downloaded-reader checks use a native
+surface as the independent alignment oracle. The preceding `7a01046` checkpoint
+passes full verification (2,684 tests / 203 files), performance, Lean and both
+Linux native preflights; its complete browser matrix remains live. Full new
+runtime certification remains required. PROD-04 stays Partial; no percentage,
+CommonMark score or npm promotion.
+
 Latest native-colour follow-up (2026-10-07, Unreleased): an independent plain
 page reproduces Linux WebKit moving focus from a colour input into a retained
 editable selection. A toolbar-only four-key guard fixes that default without

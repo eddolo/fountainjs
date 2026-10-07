@@ -1,0 +1,21 @@
+[WebServer] (node:28556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:9712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:39:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (3.3s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:47:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (12.4s)
+(node:16644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:39:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (5.9s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:47:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (4.2s)
+(node:20180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\editor.spec.ts:39:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (4.5s)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:47:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (6.2s)
+
+  6 passed (44.7s)

@@ -1,0 +1,42 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-inherited-alignment.test.ts (8 tests | 1 failed) 80ms
+   × keeps inherited alignment for explicit and anonymous list/cell paragraphs 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-inherited-alignment.test.ts > keeps inherited alignment for explicit and anonymous list/cell paragraphs
+AssertionError: expected [ 'left', 'right', 'right', 'right' ] to deeply equal [ 'right', 'right', 'right', 'right' ]
+
+- Expected
++ Received
+
+  [
+-   "right",
++   "left",
+    "right",
+    "right",
+    "right",
+  ]
+
+ ❯ tests/html-inherited-alignment.test.ts:42:54
+     40|     browser.child(1).child(0).child(0).child(0), browser.child(1).chil…
+     41|   expect(paragraphs.map(block => block.textContent)).toEqual(['Anonymo…
+     42|   expect(paragraphs.map(block => block.attrs.align)).toEqual(['right',…
+       |                                                      ^
+     43| });
+     44|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  1 failed | 121 passed (122)
+   Start at  21:49:56
+   Duration  11.69s (import 37%, environment 33%, transform 23%, tests 7%)
+
+     Import  204 modules were evaluated 479 times · 3.82s total, 37% of tracked time
+             ~2.19s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

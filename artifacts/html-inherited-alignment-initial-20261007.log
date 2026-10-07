@@ -1,0 +1,114 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-inherited-alignment.test.ts (6 tests | 6 failed) 55ms
+   × materializes supported inherited inline alignment right in both importers 28ms
+   × materializes supported inherited inline alignment center in both importers 7ms
+   × materializes supported inherited inline alignment left in both importers 5ms
+   × materializes supported inherited inline alignment right in both importers 5ms
+   × materializes supported inherited inline alignment start in both importers 4ms
+   × keeps a child override independent from its surrounding physical alignment 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-inherited-alignment.test.ts > materializes supported inherited inline alignment right in both importers
+ FAIL  tests/html-inherited-alignment.test.ts > materializes supported inherited inline alignment right in both importers
+AssertionError: expected 'left' to be 'right' // Object.is equality
+
+Expected: "right"
+Received: "left"
+
+ ❯ tests/html-inherited-alignment.test.ts:20:31
+     18|   expect(browser.childCount).toBe(2);
+     19|   for (const block of browser.content) {
+     20|     expect(block.attrs.align).toBe(align);
+       |                               ^
+     21|     expect(block.attrs.alignExplicit).toBe(align === 'left' ? true : u…
+     22|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/html-inherited-alignment.test.ts > materializes supported inherited inline alignment center in both importers
+AssertionError: expected 'left' to be 'center' // Object.is equality
+
+Expected: "center"
+Received: "left"
+
+ ❯ tests/html-inherited-alignment.test.ts:20:31
+     18|   expect(browser.childCount).toBe(2);
+     19|   for (const block of browser.content) {
+     20|     expect(block.attrs.align).toBe(align);
+       |                               ^
+     21|     expect(block.attrs.alignExplicit).toBe(align === 'left' ? true : u…
+     22|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/html-inherited-alignment.test.ts > materializes supported inherited inline alignment left in both importers
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/html-inherited-alignment.test.ts:21:39
+     19|   for (const block of browser.content) {
+     20|     expect(block.attrs.align).toBe(align);
+     21|     expect(block.attrs.alignExplicit).toBe(align === 'left' ? true : u…
+       |                                       ^
+     22|   }
+     23|   const html = HTMLExporter.export(server, { document: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/html-inherited-alignment.test.ts > materializes supported inherited inline alignment start in both importers
+AssertionError: expected 'left' to be 'start' // Object.is equality
+
+Expected: "start"
+Received: "left"
+
+ ❯ tests/html-inherited-alignment.test.ts:20:31
+     18|   expect(browser.childCount).toBe(2);
+     19|   for (const block of browser.content) {
+     20|     expect(block.attrs.align).toBe(align);
+       |                               ^
+     21|     expect(block.attrs.alignExplicit).toBe(align === 'left' ? true : u…
+     22|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/html-inherited-alignment.test.ts > keeps a child override independent from its surrounding physical alignment
+AssertionError: expected [ Array(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  [
+    {
+-     "align": "center",
++     "align": "start",
+      "dir": "rtl",
+    },
+    {
+      "align": "end",
+      "dir": "rtl",
+
+ ❯ tests/html-inherited-alignment.test.ts:32:6
+     30|   expect(browser.toJSON()).toEqual(ServerHTMLImporter.parse(source, sc…
+     31|   expect(browser.content.map(block => ({ align: block.attrs.align, dir…
+     32|     .toEqual([{ align: 'center', dir: 'rtl' }, { align: 'end', dir: 'r…
+       |      ^
+     33| });
+     34|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  21:46:18
+   Duration  3.17s (import 36%, transform 34%, environment 28%, tests 2%)
+

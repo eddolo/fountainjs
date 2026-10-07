@@ -49,6 +49,16 @@ automatic directions. Full document-shell/body direction, unsupported wrapper
 attributes, arbitrary CSS inheritance and inline bidi isolation remain separate
 contracts. Removing a wrapper intentionally removes its shared direction too.
 
+Supported inline `text-align` is a separate projection. Browser and server
+importers now materialize the nearest supported ancestor declaration onto text
+blocks, even if the surrounding wrapper is flattened. This includes anonymous
+list/cell text and physical-left overrides. `inherit`/`unset` continue the inline
+chain; `initial` resets alignment to `start`. No direction is guessed, and this
+does not retain arbitrary wrapper styles or evaluate stylesheets, variables or
+`match-parent`. The container module still declines unsupported style attributes
+and reports its structural loss; preserving a paragraph's alignment does not
+mean the original wrapper survived.
+
 ## What it preserves
 
 The `html_container` node has `block*` content and a validated `tag` attribute:

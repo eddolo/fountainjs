@@ -1120,7 +1120,7 @@ function inlineGroup(content: readonly SourceNode[]): SourceParent {
 function blockChildren(element: SourceParent, schema: Schema, context: ImportContext, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const dir = element instanceof ServerElement ? readTextDirection(element) : {};
   const align: Attributes = element instanceof ServerElement ? alignment(element, dir) : {};
-  if ((dir.dir || align.alignExplicit) && element instanceof ServerElement) inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
+  if (element instanceof ServerElement && (dir.dir || align.alignExplicit || align.align !== 'left')) inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
@@ -1145,7 +1145,7 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
 function listItemContent(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
   const dir = readTextDirection(element);
   const align = alignment(element, dir);
-  const attrs = dir.dir || align.alignExplicit ? { ...align, ...dir } : {};
+  const attrs = dir.dir || align.alignExplicit || align.align !== 'left' ? { ...align, ...dir } : {};
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {

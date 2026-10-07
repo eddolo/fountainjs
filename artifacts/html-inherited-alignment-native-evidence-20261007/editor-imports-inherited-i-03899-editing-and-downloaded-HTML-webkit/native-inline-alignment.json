@@ -1,0 +1,17 @@
+[
+  {
+    "text": "Inherited center",
+    "align": "center",
+    "dir": "rtl"
+  },
+  {
+    "text": "Inherited right",
+    "align": "right",
+    "dir": "rtl"
+  },
+  {
+    "text": "Physical left",
+    "align": "left",
+    "dir": "rtl"
+  }
+]

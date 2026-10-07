@@ -1,5 +1,29 @@
 # Performance and memory contract
 
+## Supported inline alignment follow-up (2026-10-07, Unreleased)
+
+The shared inline inheritance resolver and anonymous wrapper/list projection
+add approximately 0.3 KiB ESM. The frozen build measures 1,618,965 bytes,
+**21 bytes over** the former 1,581 KiB aggregate limit; failed logs are retained.
+Only ESM aggregate feature capacity increases by 0.5 KiB to 1,581.5 KiB.
+CommonJS, individual entries, CSS, latency, scaling and heap caps are unchanged.
+This is not a relaxation of a failed runtime performance threshold.
+
+The preceding frozen `7a01046` source passes full Linux verification:
+**2,684 tests / 203 files**, framework types, API, package, headless, CommonMark,
+DOCX interoperability and website build. Performance/Lean also pass; server
+HTML 100/1k/5k/10k p95 is 20.92/90.55/371.44/744.48ms and server/local/remote
+growth is 8.10x/5.73x/6.86x against 15x. Both native browser preflights pass;
+its complete browser matrix is still live. Those results do not certify the
+new inherited-alignment runtime or erase retained local failures.
+
+The older `f1c49ed` browser result is 678 passes, 16 skips and four failures:
+one code-click focus expectation and the same Quote-default mismatch in all
+three engines. The corrected DOCX comparison passes three recorded local
+workflows, with all nine captures directly inspected. The independent renderer
+still omits header-cell text and differs in appearance; this is retention
+evidence, not native Word/PDF fidelity approval.
+
 ## Current browser/unit follow-up (2026-10-07, Unreleased)
 
 `14c2ba5` passes functional, performance and Lean jobs, but its full browser

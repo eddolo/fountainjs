@@ -1,5 +1,21 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Current follow-up (2026-10-07, Unreleased): supported inline HTML alignment is
+materialized across ancestor wrappers in both importers, including anonymous
+wrapper/list/cell text, nearest overrides and explicit inheritance/reset values.
+The conversion lab is checked against a separate native surface, with real
+typing, Enter, history and actual downloaded HTML reopening. This is not an
+arbitrary stylesheet cascade or automatic-direction flattening guarantee.
+`7a01046` has passed complete verification (**2,684 tests / 203 files**),
+performance and Lean; both Linux browser preflights pass, including the native
+Firefox code-click oracle. Its complete browser matrix is still running.
+The earlier `f1c49ed` browser result is **678 passed, 16 skipped, four failed**:
+the code-focus expectation and three-engine Quote-default mismatches, not four
+new engine failures. The corrected DOCX comparison passes in all three desktop
+engines; all nine captures are directly inspected, with the independent viewer's
+known header omission still visible. Full current-source CI is required before
+release claims; ledger/CommonMark scores and npm remain unchanged.
+
 Latest follow-up (2026-10-07, Unreleased): the existing optional section module
 retains shared `dir="auto"` without guessing a direction for each paragraph.
 Recorded Chromium/Firefox/WebKit author/edit/history/reader journeys pass;

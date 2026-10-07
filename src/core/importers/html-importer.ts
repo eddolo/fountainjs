@@ -510,7 +510,7 @@ function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
 function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const dir = readTextDirection(element);
   const align = alignment(element, dir);
-  if (dir.dir || align.alignExplicit) inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
+  if (dir.dir || align.alignExplicit || align.align !== 'left') inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
@@ -537,7 +537,7 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
   const dir = readTextDirection(element);
   const align = alignment(element, dir);
-  const attrs = dir.dir || align.alignExplicit ? { ...align, ...dir } : {};
+  const attrs = dir.dir || align.alignExplicit || align.align !== 'left' ? { ...align, ...dir } : {};
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {

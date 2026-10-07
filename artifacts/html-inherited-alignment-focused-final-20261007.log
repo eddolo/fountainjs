@@ -1,0 +1,45 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-inherited-alignment-node.test.ts (2 tests | 2 failed) 9ms
+   × retains inherited physical left without a DOM or a guessed automatic direction 5ms
+   × does not make stylesheet rules or unsupported CSS values part of the inline contract 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-inherited-alignment-node.test.ts > retains inherited physical left without a DOM or a guessed automatic direction
+TypeError: Cannot read properties of undefined (reading 'nodes')
+ ❯ new Schema src/core/schema/schema.ts:84:27
+     82|   constructor(public readonly spec: SchemaSpec) {
+     83|     this.nodes = Object.fromEntries(
+     84|       Object.entries(spec.nodes).map(([name, nodeSpec]) => [name, new …
+       |                           ^
+     85|     );
+     86|     this.marks = Object.fromEntries(
+ ❯ tests/html-inherited-alignment-node.test.ts:8:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/html-inherited-alignment-node.test.ts > does not make stylesheet rules or unsupported CSS values part of the inline contract
+TypeError: Cannot read properties of undefined (reading 'nodes')
+ ❯ new Schema src/core/schema/schema.ts:84:27
+     82|   constructor(public readonly spec: SchemaSpec) {
+     83|     this.nodes = Object.fromEntries(
+     84|       Object.entries(spec.nodes).map(([name, nodeSpec]) => [name, new …
+       |                           ^
+     85|     );
+     86|     this.marks = Object.fromEntries(
+ ❯ tests/html-inherited-alignment-node.test.ts:21:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  2 failed | 36 passed (38)
+   Start at  21:48:20
+   Duration  8.15s (import 41%, transform 31%, environment 24%, tests 4%)
+
+     Import  191 modules were evaluated 358 times · 3.00s total, 41% of tracked time
+             ~1.40s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

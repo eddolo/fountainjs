@@ -1,0 +1,441 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased; full new-source Linux CI still required",
+  "baseCommit": "7a0104632eed3cdea9a3d9dc8bee7ddcc813fbad",
+  "changes": [
+    "Share supported ancestor inline text-align resolution between DOM and server importers.",
+    "Retain nondefault alignment in anonymous wrapper/list/cell paragraphs instead of discarding it.",
+    "Keep direction separate; do not resolve first-strong auto contexts in the headless core.",
+    "No public API or schema change; no runtime dependency."
+  ],
+  "contract": {
+    "values": [
+      "left",
+      "center",
+      "right",
+      "justify",
+      "start",
+      "end"
+    ],
+    "inheritance": [
+      "nearest supported inline declaration",
+      "inherit/unset continue parent chain",
+      "initial resets to start",
+      "own supported legacy align hint retained"
+    ],
+    "notCertified": [
+      "stylesheets/class cascade",
+      "match-parent",
+      "CSS variables or unsupported values",
+      "CSS-only direction",
+      "automatic wrapper/body flattening",
+      "inline bidi isolation",
+      "native mobile input",
+      "Word/PDF pixel fidelity"
+    ],
+    "reference": "https://www.w3.org/TR/css-text-3/#text-align-property"
+  },
+  "localVerification": {
+    "units": {
+      "passed": 123,
+      "files": 10,
+      "log": "artifacts/html-inherited-alignment-frozen-units-20261007.log",
+      "workers": 1
+    },
+    "ciPolicy": {
+      "passed": 10,
+      "log": "artifacts/html-inherited-alignment-final-ci-policy-20261007.log"
+    },
+    "types": {
+      "result": "passed; Svelte zero errors/warnings; Angular library/demo passed",
+      "log": "artifacts/html-inherited-alignment-certified-types-20261007.log"
+    },
+    "api": {
+      "declarationFiles": 409,
+      "log": "artifacts/html-inherited-alignment-frozen-api-20261007.log"
+    },
+    "headless": {
+      "sourceModules": 98,
+      "log": "artifacts/html-inherited-alignment-frozen-headless-20261007.log"
+    },
+    "markdown": {
+      "projection": 11,
+      "default": "563/652",
+      "strongestOptIn": "613/652",
+      "log": "artifacts/html-inherited-alignment-frozen-markdown-20261007.log"
+    },
+    "browser": {
+      "engines": [
+        "Windows Chromium",
+        "Windows Firefox",
+        "Windows WebKit"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "journeys": 9,
+      "logs": [
+        "artifacts/html-inherited-alignment-native-evidence-20261007.log",
+        "artifacts/html-inherited-alignment-frozen-browser-20261007.log",
+        "artifacts/html-inherited-alignment-left-regression-20261007.log"
+      ],
+      "actions": [
+        "upload actual HTML file through public conversion lab",
+        "compare computed alignment/direction to isolated native page",
+        "measure relative text alignment in imported editor",
+        "pointer/keyboard typing",
+        "Enter and undo",
+        "download actual HTML bytes",
+        "open downloaded HTML in independent page",
+        "retained auto-section editing/reader/history regression",
+        "physical-left RTL-host/reader/DOCX reopening regression"
+      ],
+      "visualReview": {
+        "directlyInspectedNewCaptures": 9,
+        "finalNewCapturesHashMatchThoseCaptures": 9,
+        "automaticSectionCapturesMatchPreviouslyReviewed": 12,
+        "physicalLeftCapturesMatchPreviouslyReviewed": 15,
+        "totalCertifiedCaptures": 36
+      },
+      "videos": "Recorded; not manually watched. Geometry evidence is not pixel-identical typography."
+    },
+    "bundle": {
+      "result": "passed after explicit ESM feature-capacity allowance",
+      "esmBytes": 1618965,
+      "oldESMLimitBytes": 1618944,
+      "excessOverOldBytes": 21,
+      "newESMLimitKiB": 1581.5,
+      "unchangedLimits": [
+        "CommonJS aggregate 1315.5 KiB",
+        "individual entries",
+        "CSS",
+        "runtime latency",
+        "scaling",
+        "heap"
+      ],
+      "log": "artifacts/html-inherited-alignment-allowance-budget-20261007.log"
+    }
+  },
+  "retainedFailures": [
+    {
+      "log": "artifacts/html-inherited-alignment-initial-20261007.log",
+      "result": "6 failing regression cases before the runtime repair."
+    },
+    {
+      "log": "artifacts/html-inherited-alignment-focused-final-20261007.log",
+      "result": "New Node test imported CoreSchemaSpec from an entry that does not export it; corrected test import only."
+    },
+    {
+      "log": "artifacts/html-inherited-alignment-regressions-20261007.log",
+      "result": "121 pass/1 fail: anonymous list paragraph still discarded nondefault alignment; fixed both importers without dropping the assertion."
+    },
+    {
+      "log": "artifacts/html-inherited-alignment-frozen-budget-20261007.log",
+      "result": "Frozen ESM runtime exceeds former feature capacity by 21 bytes; retained, not reclassified as passing."
+    }
+  ],
+  "precedingCloudCheckpoint": {
+    "commit": "7a0104632eed3cdea9a3d9dc8bee7ddcc813fbad",
+    "run": 37683791765,
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/37683791765",
+    "verify": {
+      "passed": 2684,
+      "files": 203,
+      "result": "success",
+      "log": "artifacts/ci-7a01046-verify-20261007.log"
+    },
+    "performance": {
+      "result": "success",
+      "serverHTMLP95ms": [
+        20.92,
+        90.55,
+        371.44,
+        744.48
+      ],
+      "serverLocalRemoteGrowth": [
+        8.1,
+        5.73,
+        6.86
+      ],
+      "growthCap": 15,
+      "log": "artifacts/ci-7a01046-performance-20261007.log"
+    },
+    "lean": "success",
+    "nativePreflights": "Both success, including Firefox native code-click comparison.",
+    "browser": "Confirmed live job 113006264454; full result not certified at report creation.",
+    "pages": "success",
+    "scope": "Preceding source only; not proof of the new runtime."
+  },
+  "precedingFailures": {
+    "commit": "f1c49ed84e56d4f18c417f8ce5fb48823e470dcb",
+    "browser": {
+      "passed": 678,
+      "skipped": 16,
+      "failed": 4,
+      "log": "artifacts/ci-f1c49ed-browser-20261007.log",
+      "failures": [
+        "Firefox original code-root focus expectation",
+        "Quote-default expectation across Chromium/Firefox/WebKit"
+      ]
+    },
+    "correctedDocxLocal": {
+      "passed": 3,
+      "log": "artifacts/docx-quote-default-browser-20261007.log",
+      "capturesDirectlyInspected": 9,
+      "scope": "Executed on 7a01046 before inherited-alignment runtime changes; independent preview header omission remains visible and explicitly asserted."
+    }
+  },
+  "ledger": {
+    "delivered": 58,
+    "partial": 7,
+    "hostBoundary": 2,
+    "changed": false,
+    "PROD04": "Partial"
+  },
+  "npmVersion": "0.4.0-beta.2; unchanged; no npm publication",
+  "sourceHashes": [
+    {
+      "path": "src/core/text-direction.ts",
+      "sha256": "1c82a11510d7c5cab2ebfea96d833aec2e73da73444d249b01b0ddd00d6242d2"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "02a9414484551fd4aea677713812fd835ffe00f4f9a28d9a6f0a3e365e2d1fb6"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "12b80a4ff24d79cbce7554de1129cfca170e924b6ca758e0f032ec780c020bb5"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "b0125eef5f7cfa4e5f156f77ece873086ab09d90dc29a0dcf013c57889840e2b"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "60a4e34dbb8ef03af5c6b259b044e894c5575fe4df3d5f57242d8909df5d4a87"
+    },
+    {
+      "path": "tests/html-inherited-alignment.test.ts",
+      "sha256": "5571d2538e4491ff1dcf60e77f7b52201db9660f932dc79a79961f75f94f6348"
+    },
+    {
+      "path": "tests/html-inherited-alignment-node.test.ts",
+      "sha256": "4dd004f2eef54c5197a3160709a7a6269da3eae264d38fbdddf39697d8221b48"
+    },
+    {
+      "path": "tests/browser/html-inherited-alignment-journey.ts",
+      "sha256": "b2cb176d79c38dafeef23f5a2019d20e34bbdec5603cdd2ce38381216efaa18c"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "7ecc890359a6574a29d828aa62e24293061024f5052a64b0aa1f58d1754a626c"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-downloaded-reader.png",
+      "sha256": "31435202d76fdab21b52da93e95a0df80ee81b3ab8c3daff830468ccee5dac1c"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-editor.png",
+      "sha256": "0b6de18cfbc26ebcc6217166353aadfe330b886d4835c075232fd17bd7923958"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-native.png",
+      "sha256": "bd5e4c0c4f53fe9070ae8e454e9e86f3b1084d7316f8d4eec95463721c1512e2"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-downloaded-reader.png",
+      "sha256": "66b9c73595b44864e8730d1060578459254afad920607dead275a863cc9fec66"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-editor.png",
+      "sha256": "7004552d62620a5527c008b0f7883e95b64f979f4d593b63b88bba1ecdf4e1bb"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-native.png",
+      "sha256": "62a9b78446a48ce0bd4748218be1184444e28f9a410530d9334ec94cc3aa8a5b"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-downloaded-reader.png",
+      "sha256": "25cbb84cb7d05cd3412227c30e09a2e8971aa71df100f4889cb966d73235167b"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-editor.png",
+      "sha256": "e10f14684b3552603bf1b0029cd05a7e2a2bc2e45aa7a244210ec1ae98b057e9"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-native.png",
+      "sha256": "c50452c30424f670a5899e72ff8088ce245d2ed201bee1c19581dd731fe1c889"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/inherited-auto-explicit-left-reader.png",
+      "sha256": "4694e86ad1318813dc1e7b245c33295b675d3f591dc6dbebab06e70a5e127a41"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/rtl-host-explicit-left-mobile.png",
+      "sha256": "29b53e5d9c7e8c072435ee1e7354940c79ee8a1e16bdb340a0c1a8703889fdad"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/rtl-host-explicit-left.png",
+      "sha256": "ffd7f0a0e1f337cb549470ed81f7e10d1e85b6f4bdeaed31bdd376b075fcdbd3"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/rtl-host-natural-alignment.png",
+      "sha256": "6858b417d3deaaed2f49bc03d9d89331900782117f2be757a43b83d357138833"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-chromium/word-reopened-explicit-left-reader.png",
+      "sha256": "a754410dc0e13a7f46718b03c7767d690e4b40bc62c9ccbf8ca3bcc1eb3bff48"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/inherited-auto-explicit-left-reader.png",
+      "sha256": "9e159d38092c3e6e91ac57d7ec50a6e08194a8a899628dcb02bd94c8083d3310"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/rtl-host-explicit-left-mobile.png",
+      "sha256": "8b4736d3ab486648a0c3d8fce63049277920034e4830f13442acbaff831224b3"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/rtl-host-explicit-left.png",
+      "sha256": "ff7a525d2fa9423cda7d958faf466e005a22ba5831ebc0bd4dc69be24c676732"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/rtl-host-natural-alignment.png",
+      "sha256": "438b0498cefba0947bfc1c3cb14cd2c379750e148cf1e00a3831d3062b325b57"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-firefox/word-reopened-explicit-left-reader.png",
+      "sha256": "d63e7aa84ef41892bcec8ad2eba466594a6684113ec6c53b04e1aef2b035a2f6"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/inherited-auto-explicit-left-reader.png",
+      "sha256": "9061f1018e5525ace224786f9e75bc67228e43231fec28d6624080fa89456e63"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/rtl-host-explicit-left-mobile.png",
+      "sha256": "f506b7c95fbd8a7077ce613aa052cd1acc6787ca2baed71b1ca54a4e84ab88b9"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/rtl-host-explicit-left.png",
+      "sha256": "2292ea83f4acf718fe54ff55dd4b1ec40bfe21a78d05753dc588cfbe531929b6"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/rtl-host-natural-alignment.png",
+      "sha256": "b4c9118f45c2e8249246a3b6baac44dc4c69fce8bceaed9700e52f8a765b40bb"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-left-regression-20261007/editor-authors-physical-le-48253-ed-auto-reader-with-history-webkit/word-reopened-explicit-left-reader.png",
+      "sha256": "6d5b823375fe9590ac9a02568b9ce9ad88b2929696dd3e33e830164b1ffa327a"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-editor.png",
+      "sha256": "17a24624b51739940c0812180f525519ad90ee0939dee9486fc7fbd2e4d71e5c"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-reader.png",
+      "sha256": "549980d7b1aff8148fd4b1205b57def731bfecade19c299da1833b0f986605a3"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-editor.png",
+      "sha256": "c7f0cbda5ae0fdc382189c1a08c16994798e595ee5bfc9d05993ac1429db2c37"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-reader.png",
+      "sha256": "c8076cb23f702ffe7df2fdeaddecba837328f0d74515227ba71eb395d75c3fdf"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-editor.png",
+      "sha256": "f635d728fb4e5f903d281e6744a0801079d390eb023bb36e08d66bc2c5b4b901"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-reader.png",
+      "sha256": "81c1fa1593e477678df8901120e2b6cf21ed91b10d525458b33b9e0dd4a8cf4e"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-editor.png",
+      "sha256": "f7912521ac1c33e23d309de72e0fb8dd125ef95f1159d7aa2b134ba59e470624"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-reader.png",
+      "sha256": "333205ee228f571d2a02d38de9a00441877e4f1dcbddf80ee701018aedd026d9"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-editor.png",
+      "sha256": "d136f3c0edb529c08eac8521efbb3b1a15818988adbce961082ab56028890348"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-reader.png",
+      "sha256": "4f4bd69c64a9d9681ada2b783749dca6e4f43b640c8d0858a6ec1342206acd79"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-editor.png",
+      "sha256": "6c5c67f2e43a795d88f38d3607683baa44132d8671a1d55d202b15599938f7b8"
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-reader.png",
+      "sha256": "3f06263a10abe537c6b7c8ade2fc1c3df528e813bd2549f964fb5a1acf9e9c28"
+    }
+  ],
+  "nativeBaselines": [
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/native-inline-alignment.json",
+      "data": [
+        {
+          "text": "Inherited center",
+          "align": "center",
+          "dir": "rtl"
+        },
+        {
+          "text": "Inherited right",
+          "align": "right",
+          "dir": "rtl"
+        },
+        {
+          "text": "Physical left",
+          "align": "left",
+          "dir": "rtl"
+        }
+      ]
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/native-inline-alignment.json",
+      "data": [
+        {
+          "text": "Inherited center",
+          "align": "center",
+          "dir": "rtl"
+        },
+        {
+          "text": "Inherited right",
+          "align": "right",
+          "dir": "rtl"
+        },
+        {
+          "text": "Physical left",
+          "align": "left",
+          "dir": "rtl"
+        }
+      ]
+    },
+    {
+      "path": "artifacts/html-inherited-alignment-native-evidence-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/native-inline-alignment.json",
+      "data": [
+        {
+          "text": "Inherited center",
+          "align": "center",
+          "dir": "rtl"
+        },
+        {
+          "text": "Inherited right",
+          "align": "right",
+          "dir": "rtl"
+        },
+        {
+          "text": "Physical left",
+          "align": "left",
+          "dir": "rtl"
+        }
+      ]
+    }
+  ]
+}
