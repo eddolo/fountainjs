@@ -39,4 +39,27 @@ export function checkTextDirection(api, root, serverHTML, docx) {
     assert.equal(api.setTextAlignment(editor, { toString: () => 'right' }), false);
     assert.deepEqual(editor.getJSON(), unchanged);
   } finally { editor.destroy(); }
+  const listEditor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {
+    type: 'doc', content: [{ type: 'ordered_list', attrs: { dir: 'rtl', start: 0 }, content:
+      ['Before', 'Moved Latin', 'After'].map(text => ({ type: 'list_item', content: [
+        { type: 'paragraph', content: [{ type: 'text', text }] },
+      ] })),
+    }],
+  } });
+  try {
+    listEditor.dispatch(listEditor.createTransaction().setSelection(api.Selection.cursor([0, 1, 0, 0], 2)));
+    const original = listEditor.getJSON();
+    assert.equal(api.outdentListItem(listEditor), true);
+    assert.equal(listEditor.state.doc.child(1).attrs.dir, 'rtl');
+    assert.equal(listEditor.state.doc.child(1).attrs.align, 'start');
+    assert.equal(listEditor.state.doc.child(2).attrs.start, 2);
+    assert.deepEqual(listEditor.state.selection.path, [1, 0]);
+    const html = api.HTMLExporter.export(listEditor.state.doc, { document: false });
+    assert.match(html, /dir="rtl" style="text-align:start"/);
+    assert.deepEqual(serverHTML.ServerHTMLImporter.parse(html, listEditor.state.schema).toJSON(), listEditor.getJSON());
+    assert.equal(api.undo(listEditor), true);
+    assert.deepEqual(listEditor.getJSON(), original);
+    assert.equal(api.redo(listEditor), true);
+    assert.equal(listEditor.state.doc.child(1).attrs.dir, 'rtl');
+  } finally { listEditor.destroy(); }
 }

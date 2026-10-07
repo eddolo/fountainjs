@@ -508,7 +508,10 @@ const limits = Object.freeze({
   // Structural dir attributes, guarded import inheritance, RTL view handling
   // and author controls: measured 1586.1 KiB after sharing DOCX loss reporting.
   // This adds feature capacity only; latency, growth and heap limits stay put.
-  'all ESM runtime code': 1588.75 * kibibyte,
+  // Schema-aware fixed list-direction retention and atomic transform rejection
+  // add ~1.4 KiB ESM. Measured 1590.0 KiB; preserve the failed prior-cap log.
+  // Only measured code capacity grows; entry/CSS/runtime performance caps stay.
+  'all ESM runtime code': 1590.25 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -560,7 +563,8 @@ const limits = Object.freeze({
   // runtime performance/heap limits are unchanged. Keep the failed old-cap log.
   // Structural RTL plus preserving cell overrides through rebuilds measures
   // 1,351,195 bytes (27 bytes over 1319.5 KiB); retain that failed build log.
-  'all CommonJS runtime code': 1322 * kibibyte,
+  // The same list boundary adds ~1.1 KiB CJS, measured 1322.7 KiB.
+  'all CommonJS runtime code': 1323 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

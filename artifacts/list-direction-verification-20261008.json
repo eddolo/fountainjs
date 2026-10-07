@@ -1,0 +1,972 @@
+{
+  "date": "2026-10-08",
+  "status": "local-list-transform-verification-passed-new-source-Linux-matrix-pending",
+  "scope": "Known fixed model LTR/RTL through indent/lift, quote/table-cell unwrap, nested tails, explicit overrides, same-type identity, schema/filter rejection and discoverable Conversion Lab controls. Not complete bidi or full-format fidelity.",
+  "baseline": {
+    "commit": "acfd54f",
+    "ci": "https://github.com/eddolo/fountainjs/actions/runs/37700907927",
+    "status": "success",
+    "unitTests": 2734,
+    "testFiles": 208,
+    "browserPasses": 709,
+    "browserSkips": 16,
+    "structuralPreflightPasses": 24,
+    "performance": "passed-unchanged-runtime-limits",
+    "lean": "passed",
+    "pages": "https://github.com/eddolo/fountainjs/actions/runs/37700908010"
+  },
+  "localChecks": {
+    "focused": {
+      "tests": 64,
+      "files": 4,
+      "log": "artifacts/list-direction-final-focused-20261008.log"
+    },
+    "build": "artifacts/list-direction-build-20261008.log",
+    "api": {
+      "declarations": 409,
+      "changed": false,
+      "log": "artifacts/list-direction-test-api-20261008.log"
+    },
+    "headless": {
+      "sourceModules": 98,
+      "fakeDOM": false,
+      "log": "artifacts/list-direction-test-headless-20261008.log"
+    },
+    "packedESMCommonJS": "artifacts/list-direction-test-package-20261008.log",
+    "types": "artifacts/list-direction-typecheck-20261008.log",
+    "browser": {
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "workflows": 12,
+      "workers": 1,
+      "retries": 0,
+      "timeoutMilliseconds": 60000,
+      "durationMinutes": 2.5,
+      "affinityLogicalCores": [
+        6,
+        7
+      ],
+      "priority": "BelowNormal-runner-inherited-affinity",
+      "videoAndTraceRecorded": true,
+      "videosWatched": false,
+      "log": "artifacts/list-direction-native-reference-browser-20261008.log"
+    }
+  },
+  "visualQA": {
+    "reviewedEditorCaptures": 24,
+    "reviewedDownloadedReaderCaptures": 12,
+    "totalReviewedResults": 36,
+    "boards": [
+      "artifacts/list-direction-chromium-editors-20261008.png",
+      "artifacts/list-direction-firefox-editors-20261008.png",
+      "artifacts/list-direction-webkit-editors-20261008.png",
+      "artifacts/list-direction-readers-20261008.png"
+    ],
+    "nativeSourceCaptures": 12,
+    "note": "Native baseline semantics/geometry asserted per engine. Only the 36 post-transform editor/reader captures are claimed as visually reviewed; not all videos."
+  },
+  "nativeAlignmentProbe": {
+    "path": "artifacts/list-native-alignment-probe-20261008.json",
+    "result": {
+      "chromium": {
+        "chain": [
+          {
+            "tag": "P",
+            "dir": "rtl",
+            "align": "start"
+          },
+          {
+            "tag": "LI",
+            "dir": "rtl",
+            "align": "start"
+          },
+          {
+            "tag": "OL",
+            "dir": "rtl",
+            "align": "start"
+          },
+          {
+            "tag": "LI",
+            "dir": "rtl",
+            "align": "start"
+          },
+          {
+            "tag": "OL",
+            "dir": "ltr",
+            "align": "start"
+          },
+          {
+            "tag": "BODY",
+            "dir": "ltr",
+            "align": "start"
+          },
+          {
+            "tag": "HTML",
+            "dir": "ltr",
+            "align": "start"
+          }
+        ],
+        "leftGap": 508.90625,
+        "rightGap": 0
+      },
+      "firefox": {
+        "chain": [
+          {
+            "tag": "P",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "LI",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "OL",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "LI",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "OL",
+            "dir": "ltr",
+            "align": "start"
+          },
+          {
+            "tag": "BODY",
+            "dir": "ltr",
+            "align": "start"
+          },
+          {
+            "tag": "HTML",
+            "dir": "ltr",
+            "align": "start"
+          }
+        ],
+        "leftGap": 0,
+        "rightGap": 508.8999938964844
+      },
+      "webkit": {
+        "chain": [
+          {
+            "tag": "P",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "LI",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "OL",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "LI",
+            "dir": "rtl",
+            "align": "left"
+          },
+          {
+            "tag": "OL",
+            "dir": "ltr",
+            "align": "start"
+          },
+          {
+            "tag": "BODY",
+            "dir": "ltr",
+            "align": "start"
+          },
+          {
+            "tag": "HTML",
+            "dir": "ltr",
+            "align": "start"
+          }
+        ],
+        "leftGap": 0,
+        "rightGap": 508.9140625
+      }
+    },
+    "conclusion": "In this mixed-direction source, Chromium resolves text-align:start/right geometry; Firefox/WebKit inherit physical left. Require matching this engine's native source and retain its original geometry, not forced physical-right alignment."
+  },
+  "retainedFailures": [
+    {
+      "log": "artifacts/list-direction-red-20261008.log",
+      "note": "Initial 15-red run also had an invalid harness setOptions call; do not count that as product evidence."
+    },
+    {
+      "log": "artifacts/list-direction-red-corrected-20261008.log",
+      "note": "All 15 corrected initial regression cases fail before runtime changes."
+    },
+    {
+      "log": "artifacts/list-direction-browser-20261008.log",
+      "note": "Stopped after confirmed missing demo list controls. Controls exposed; not a timeout-based restart."
+    },
+    {
+      "log": "artifacts/list-direction-full-toolbar-browser-20261008.log",
+      "note": "Stopped after confirmed incorrect test assumptions about existing trailing paragraph/default HTML start=1. Tighten moved-parent and native start-property assertions, same deadlines."
+    },
+    {
+      "log": "artifacts/list-direction-final-browser-20261008.log",
+      "passes": 7,
+      "failures": 5,
+      "note": "Three editor td>p selectors ignore the cell content wrapper; two nested native references incorrectly force RTL=physical right. Probe establishes source-owned alignment; tests retain direction/content/geometry/typing/history/download checks."
+    },
+    {
+      "log": "artifacts/list-direction-budget-20261008.log",
+      "note": "Old aggregate code ceilings fail by ~1.3 KiB ESM/~0.7 KiB CJS. No runtime performance fix claimed."
+    }
+  ],
+  "codeCapacity": {
+    "measuredESMKiB": 1590,
+    "measuredCommonJSKiB": 1322.7,
+    "approximateGrowthFromBaselineKiB": {
+      "esm": 1.4,
+      "cjs": 1.1
+    },
+    "aggregateCapsKiB": {
+      "esm": 1590.25,
+      "cjs": 1323
+    },
+    "individualEntryCSSLatencyGrowthHeapCapsChanged": false,
+    "dependenciesChanged": false,
+    "log": "artifacts/list-direction-test-budget-20261008.log"
+  },
+  "outstanding": [
+    "New-source complete Linux CI and performance checks",
+    "Shared automatic scope preservation when moving/removing the scope itself",
+    "Host stylesheet semantics and direction-incapable code/custom blocks",
+    "RTL reorder and broader bidi",
+    "Native physical mobile keyboards, assistive technology and locale coverage",
+    "Native Word bidi fidelity",
+    "Remaining CommonMark differences"
+  ],
+  "npmVersion": "0.4.0-beta.2",
+  "npmPublished": false,
+  "ledgerPromoted": false,
+  "renamed": false,
+  "sourceHashes": [
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "46e0b55185d5a40ce616383605cc23d7ec0181589016ea90e3bd8e954f7cd517"
+    },
+    {
+      "path": "examples/react-app/src/ConversionLab.tsx",
+      "sha256": "9454161cbf6da0ef185ac58a66549808d9f1e73e8c69c412540eef75e8fdc28e"
+    },
+    {
+      "path": "tests/browser/list-direction-transform-journey.ts",
+      "sha256": "b068a77c024a82ba06eb99095ea466daaf0c307c23160321d68c3aabcc6275dd"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "bbc9d05152eafe4cd2334f1c982cc39912082c055b0317acbd3493bad8087336"
+    },
+    {
+      "path": "tests/list-direction-transforms.test.ts",
+      "sha256": "091527f71c5ed36c1843c4039a02a90b61ede6b2120ad07e774419009fda1265"
+    },
+    {
+      "path": "scripts/fixtures/text-direction-check.mjs",
+      "sha256": "9edd5a669e243b72a2a6a430d6988ea7fb053cddcd00243f365924ae55e5960b"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "7aeb82d604d214d2be808e23f347c1f867a3b50297fdbe59c0c8903469abf3c9"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "288bb3d327dc509113b969c9283b4a76c87669a58bf69c68bcac59688db1447b"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-chromium/list-direction-downloaded-reader.png",
+      "sha256": "29fae40c8550d85068891376566f8dbe5934774befa93139efb2de0d08567f2d"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-chromium/list-direction-keyboard-history.png",
+      "sha256": "32a797e152c6675bf9575001c1c0342b9043f16350ce6f6a8852cbbbab7065c7"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-chromium/list-direction-native.png",
+      "sha256": "ae7a6c73888dc9607d04bd231a9e866e6758424b1ccf65eea14557ad307d8c61"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-chromium/list-direction-pointer-transformed.png",
+      "sha256": "32a797e152c6675bf9575001c1c0342b9043f16350ce6f6a8852cbbbab7065c7"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-firefox/list-direction-downloaded-reader.png",
+      "sha256": "c8db007ef1677397ed7f26f91935414a4713ec457007537f1901d5bfae00c52f"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-firefox/list-direction-keyboard-history.png",
+      "sha256": "03ea8fc64eab36159bf8de13547003e4c4d8dd1caccb5f16cee56f7a3197b70b"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-firefox/list-direction-native.png",
+      "sha256": "77b000d9085a4ceb319978af728e0dfb62253816430fd2395507bc46877a764c"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-firefox/list-direction-pointer-transformed.png",
+      "sha256": "03ea8fc64eab36159bf8de13547003e4c4d8dd1caccb5f16cee56f7a3197b70b"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-webkit/list-direction-downloaded-reader.png",
+      "sha256": "da34313b15e7eab8693ec019234cc076123dbf5b8b4f87c8d091375932a4ccb7"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-webkit/list-direction-keyboard-history.png",
+      "sha256": "fdcd6780ad2890c39571015c0acb61a0aece821752f6d292f7b54fb881b750a4"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-webkit/list-direction-native.png",
+      "sha256": "e29c3428dfebe4daac3140666abf102de52084c0068e517e4bc0ece2bd1e0cf1"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-webkit/list-direction-pointer-transformed.png",
+      "sha256": "fdcd6780ad2890c39571015c0acb61a0aece821752f6d292f7b54fb881b750a4"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-chromium/list-direction-downloaded-reader.png",
+      "sha256": "42c057be6c6a149f7677b9cdf3f9b8210cc2d8d29e079efb2515db0187a56324"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-chromium/list-direction-keyboard-history.png",
+      "sha256": "f2611887deafa6d3c961c865fadeeabae81a883e25ba5cb272007e94e60b2742"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-chromium/list-direction-native.png",
+      "sha256": "2a458700447eed9ea5203b38f4c9170773b0242760b54f3b357054a1faf3cd3b"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-chromium/list-direction-pointer-transformed.png",
+      "sha256": "f2611887deafa6d3c961c865fadeeabae81a883e25ba5cb272007e94e60b2742"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox/list-direction-downloaded-reader.png",
+      "sha256": "87efad1c4473b511bfa3c25911bfc2d5a2fb0b13b52d0e1b0c46014ca70bf924"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox/list-direction-keyboard-history.png",
+      "sha256": "b39905b5a4ebd52ceb2b49c0f0abb5b0ce1c8ef190eb7628c63edf3c8048ab51"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox/list-direction-native.png",
+      "sha256": "dfda1a15194d70022ff37b0699a4afad7df2ae11f7512897c76433a6e6606a6d"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox/list-direction-pointer-transformed.png",
+      "sha256": "b39905b5a4ebd52ceb2b49c0f0abb5b0ce1c8ef190eb7628c63edf3c8048ab51"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit/list-direction-downloaded-reader.png",
+      "sha256": "d28d9883f779d4d11a3dc60343ed3a39531d3da8a5f1fb8a1331f6b1f9296381"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit/list-direction-keyboard-history.png",
+      "sha256": "0f94957f8a96ac7e1fa2cfe3de3b0f1c7c01991462a3a3e620bee5fa08402aab"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit/list-direction-native.png",
+      "sha256": "b83c268363de2fc09f324d771af173709fb7d94c9af5ac7e28149ba3b824b5ea"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit/list-direction-pointer-transformed.png",
+      "sha256": "0f94957f8a96ac7e1fa2cfe3de3b0f1c7c01991462a3a3e620bee5fa08402aab"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium/list-direction-downloaded-reader.png",
+      "sha256": "1c2417f17cbd20b332e8a5b2f7a088794122eba6537c112cb9bc841a3a787caa"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium/list-direction-keyboard-history.png",
+      "sha256": "465b875d0ff3d61ccb42b75553bae1ad5bf1362eaab21d709ff159d6f4e79eda"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium/list-direction-native.png",
+      "sha256": "0d2618d9e8dd04ab32662876ea00bfb6aebbd5b60e70537fab6126b58b1909b2"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium/list-direction-pointer-transformed.png",
+      "sha256": "604702b0ccf661b6d85ec38c6593bbdb32c8f2da53edd241844cef726690cb12"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox/list-direction-downloaded-reader.png",
+      "sha256": "8a11c9a7add3ed6240b6aa53557d3ea55a5100def4ace6aa3ad97c08b1adcc1f"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox/list-direction-keyboard-history.png",
+      "sha256": "193760cb7ef914250feb1600b3879beaaf9b92b3ecc9fd54d1f8363a40735b64"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox/list-direction-native.png",
+      "sha256": "b80a82261507e4284e84aeb55e652a2258e22c2722900636df30a93e8777b2f2"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox/list-direction-pointer-transformed.png",
+      "sha256": "0975203b731b97251d7da9b884a6db64111aedd5e40317bc7e8461e185dfa414"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit/list-direction-downloaded-reader.png",
+      "sha256": "e3207ac37c615c51b224a161b3bfd789c4dfc3f9dbea25e8583ad0b3f6032b56"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit/list-direction-keyboard-history.png",
+      "sha256": "87f52ac98290c1a487c46b80d13fcc0601b967a4ee829fbab05851c45b0c203e"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit/list-direction-native.png",
+      "sha256": "254fe4d2978822560396f61841eda72f61d5e8757ab9179278ff6649e9b2af3c"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit/list-direction-pointer-transformed.png",
+      "sha256": "01ad11b7542c7a16665174fbee6ac1ce464433ca4a84430fdcd69cbe824dc946"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-chromium/list-direction-downloaded-reader.png",
+      "sha256": "91f983acf3c3fafd36facad7609d99d6ea5b838e5a95ab83db4ba91eaa9d092e"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-chromium/list-direction-keyboard-history.png",
+      "sha256": "a67d7b2fd3eec9a79b516c1c4a9ca28b6d03f1a0bc6a94de19f1d854ca135928"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-chromium/list-direction-native.png",
+      "sha256": "ce1c00d91de0885769195ff785435aff666a63632a390ee6239a77bff52f77ca"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-chromium/list-direction-pointer-transformed.png",
+      "sha256": "a67d7b2fd3eec9a79b516c1c4a9ca28b6d03f1a0bc6a94de19f1d854ca135928"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-firefox/list-direction-downloaded-reader.png",
+      "sha256": "3492f24e56c0430514a814a11fdc26f12f68eeb5fbca448958d9788c5c5616ca"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-firefox/list-direction-keyboard-history.png",
+      "sha256": "9f5c94fdd561f334d62c537846d459c290ad2ea281a2d485606feabae0b95dc9"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-firefox/list-direction-native.png",
+      "sha256": "3d2e3c2cc2881c5c68dd82ade3d9402c757ec2a9c9a63656e17e5eca815dae5c"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-firefox/list-direction-pointer-transformed.png",
+      "sha256": "9f5c94fdd561f334d62c537846d459c290ad2ea281a2d485606feabae0b95dc9"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-webkit/list-direction-downloaded-reader.png",
+      "sha256": "5ad11f7780eda0e8c0c57c3092191de3d8e4e9ee71ab74379f6b4cc84d4e37e3"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-webkit/list-direction-keyboard-history.png",
+      "sha256": "14e42191aa367bd560dbc96cd9629806ede5868c5431fffbf226259f8272b968"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-webkit/list-direction-native.png",
+      "sha256": "9b425a3d1c5a852b2ebac92b251d0d960f4fca9245fe50d000bf674be7967d1e"
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-webkit/list-direction-pointer-transformed.png",
+      "sha256": "14e42191aa367bd560dbc96cd9629806ede5868c5431fffbf226259f8272b968"
+    }
+  ],
+  "workflowEvidence": [
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-chromium/list-direction-observations.json",
+      "sha256": "56b2d9fa73fd4c6f057b4b5fa7f397c8fe597223b1f2fdbb210c081057323c49",
+      "observations": {
+        "sample": "indent",
+        "native": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-firefox/list-direction-observations.json",
+      "sha256": "581e947c391f075f30e7786b1e9dea25d0e1093846525768c6ccac451a30fac4",
+      "observations": {
+        "sample": "indent",
+        "native": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-60104--and-downloaded-HTML-indent-webkit/list-direction-observations.json",
+      "sha256": "581e947c391f075f30e7786b1e9dea25d0e1093846525768c6ccac451a30fac4",
+      "observations": {
+        "sample": "indent",
+        "native": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-chromium/list-direction-observations.json",
+      "sha256": "accd5b787972368ce14481fc48b5c8863c6335f3dc89f5afd5f53dbfd4de8ffb",
+      "observations": {
+        "sample": "nested-lift",
+        "native": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox/list-direction-observations.json",
+      "sha256": "4b858b2d9f6457eab152763faf04466d330c69c22cc1de622425144bbe7e5d71",
+      "observations": {
+        "sample": "nested-lift",
+        "native": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit/list-direction-observations.json",
+      "sha256": "4b858b2d9f6457eab152763faf04466d330c69c22cc1de622425144bbe7e5d71",
+      "observations": {
+        "sample": "nested-lift",
+        "native": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "left",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": false
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium/list-direction-observations.json",
+      "sha256": "616243979fdafa67e6642eb4e530fed00e963c3ce21ba751e1e1c0dc1d00d67c",
+      "observations": {
+        "sample": "contained",
+        "native": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "cellBefore": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Cell Latin text",
+          "textOnRight": true
+        },
+        "cell": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Cell Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox/list-direction-observations.json",
+      "sha256": "eaef633020353ef688477774d212cdb426e3e2ad2d86e3244b1f544497da9721",
+      "observations": {
+        "sample": "contained",
+        "native": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "cellBefore": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Cell Latin text",
+          "textOnRight": true
+        },
+        "cell": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Cell Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit/list-direction-observations.json",
+      "sha256": "eaef633020353ef688477774d212cdb426e3e2ad2d86e3244b1f544497da9721",
+      "observations": {
+        "sample": "contained",
+        "native": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "cellBefore": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Cell Latin text",
+          "textOnRight": true
+        },
+        "cell": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Cell Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-chromium/list-direction-observations.json",
+      "sha256": "b0d602b31b9f3c86526e0475ac3e7cae5b5cbbbbf44e8b897d2dda2c087922aa",
+      "observations": {
+        "sample": "unwrap",
+        "native": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-firefox/list-direction-observations.json",
+      "sha256": "b23fbca8757730f9b2988e913fde04ab564bfd1756f39e5b65f98865f4228c7e",
+      "observations": {
+        "sample": "unwrap",
+        "native": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    },
+    {
+      "path": "artifacts/list-direction-native-reference-recorded-20261008/editor-preserves-list-dire-f62d1--and-downloaded-HTML-unwrap-webkit/list-direction-observations.json",
+      "sha256": "b23fbca8757730f9b2988e913fde04ab564bfd1756f39e5b65f98865f4228c7e",
+      "observations": {
+        "sample": "unwrap",
+        "native": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "imported": {
+          "direction": "rtl",
+          "align": "right",
+          "dirAttribute": null,
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "transformed": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "reader": {
+          "direction": "rtl",
+          "align": "start",
+          "dirAttribute": "rtl",
+          "text": "Moved Latin text",
+          "textOnRight": true
+        },
+        "pageErrors": [],
+        "navigations": 1
+      }
+    }
+  ]
+}

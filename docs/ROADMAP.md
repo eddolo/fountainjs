@@ -1,21 +1,32 @@
 # FountainJS opportunity roadmap
 
-Current checkpoint (2026-10-08): `14b3642` passes complete Linux CI: 2,724 units
-/ 207 files, 694 browser passes / 16 skips, types/package/headless/Markdown,
+Current checkpoint (2026-10-08): `acfd54f` passes complete Linux CI: 2,734 units
+/ 208 files, 709 browser passes / 16 skips, types/package/headless/Markdown,
 performance and Lean; Pages succeeds. The corrected source-only native editing
 reference is now verified in Linux, with its rendered result inspected against
 Fountain. Preserve the raw non-editable-widget failures as diagnostics.
 
-Physical left/right column insertion is implemented next, with private mounted
+Physical left/right column insertion is verified, with private mounted
 view ownership and computed table direction. Core before/after commands remain
 platform-neutral. 35 focused tests and 15 recorded Windows desktop journeys
 pass across LTR/RTL/auto/host CSS and merged cells; 30 captures are visually
 checked. Independent tests retain the 60-second limit and all assertions after
-the grouped two-core audit timed out. New-source Linux verification is required.
+the grouped two-core audit timed out. Complete new-source Linux CI passes.
 Final custom-class/nested-view ownership checks pass 35 focused tests and three
 more recorded merged-cell journeys; six captures match reviewed SHA-256 hashes.
 
-Then continue list outdent inheritance and RTL reordering, broader bidi,
+Current fixed-direction list transforms retain model LTR/RTL at changed
+inheritance boundaries, including quote/cell unwrapping, trailing nested lists,
+independent child overrides and same-type item identity. Invalid schema and
+host-filter rejection are atomic. The Conversion Lab exposes list/quote and
+alignment author controls. 64 focused tests/build/package/headless/API/types and
+12 recorded Windows desktop journeys pass. All 36 editor/downloaded-reader result
+captures are visually checked; new-source complete Linux verification is next.
+Mixed-direction native list alignment is engine-specific,
+so use an independent per-engine reference rather than assuming RTL=right.
+
+Then continue shared-auto list scopes, direction-incapable code/custom blocks,
+host stylesheet semantics and RTL reordering, broader bidi,
 physical devices/assistive technology, locales and CommonMark classification.
 PROD-04 remains Partial; the ledger and npm version are not promoted by this
 subset. Keep the wider parity objective intact.

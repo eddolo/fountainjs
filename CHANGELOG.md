@@ -7,6 +7,18 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve known fixed inherited LTR/RTL across list indent/lift boundaries,
+  including unwrapping inside quotes/table cells and reparented nested tails.
+  Keep explicit child directions/physical alignment and same-type item identity;
+  carry shared declared attributes during list-kind conversion. Reject invalid
+  schema and host-filtered indent/lift transactions atomically. Conversion Lab
+  exposes the existing list/quote/alignment toolbar controls. 64 focused tests,
+  build/package/headless/API/types and 12 recorded desktop journeys pass; visually
+  inspect all 36 editor/downloaded-reader results. Packed ESM/CJS root/core
+  consumers verify list lift/history/HTML without a fake DOM. Removed shared
+  automatic scopes and host CSS/custom direction-incapable blocks remain open.
+  Code capacity increases by measured ~1.4/1.1 KiB ESM/CJS only; retain the old
+  budget failure. No API/dependency/CSS/runtime performance/heap cap changes.
 - Make the supplied toolbar's left/right column insertion follow the mounted
   table's physical LTR/RTL/automatic/inherited CSS layout, independently of cell
   text direction. Keep logical core `before`/`after` commands unchanged and
@@ -17,9 +29,9 @@ policy on reopen. Native layout certification remains outstanding.
   30 result captures. A final identity-based ownership check removes dependence
   on root CSS classes; three further recorded merged-cell journeys pass with
   six SHA-256-identical reviewed results. Public signatures remain unchanged;
-  refresh only the private cleanup-field declaration hashes. Linux follow-up is required for this new runtime change;
-  the preceding `14b3642` complete CI is green (2,724 units, 694 browser passes,
-  16 skips, performance and Lean). Narrow measured bundle capacity grows;
+  refresh only the private cleanup-field declaration hashes. `acfd54f` complete
+  Linux CI is green (2,734 units, 709 browser passes, 16 skips, performance and
+  Lean), including 24 structural preflight journeys. Narrow measured bundle capacity grows;
   runtime latency/growth/heap limits and npm version are unchanged.
 - Distinguish a non-editable native line-number widget caret from an editing
   reference. Linux diagnostics show real Fountain typing/undo succeeds while

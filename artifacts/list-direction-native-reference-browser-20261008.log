@@ -1,0 +1,27 @@
+[WebServer] (node:22520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:18936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (6.8s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (5.0s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (6.3s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (5.6s)
+(node:6300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (13.4s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (8.4s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (12.4s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (13.0s)
+(node:15744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (16.4s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (16.9s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (13.9s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (15.2s)
+
+  12 passed (2.5m)

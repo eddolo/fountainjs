@@ -1,0 +1,125 @@
+{
+  "chromium": {
+    "chain": [
+      {
+        "tag": "P",
+        "dir": "rtl",
+        "align": "start"
+      },
+      {
+        "tag": "LI",
+        "dir": "rtl",
+        "align": "start"
+      },
+      {
+        "tag": "OL",
+        "dir": "rtl",
+        "align": "start"
+      },
+      {
+        "tag": "LI",
+        "dir": "rtl",
+        "align": "start"
+      },
+      {
+        "tag": "OL",
+        "dir": "ltr",
+        "align": "start"
+      },
+      {
+        "tag": "BODY",
+        "dir": "ltr",
+        "align": "start"
+      },
+      {
+        "tag": "HTML",
+        "dir": "ltr",
+        "align": "start"
+      }
+    ],
+    "leftGap": 508.90625,
+    "rightGap": 0
+  },
+  "firefox": {
+    "chain": [
+      {
+        "tag": "P",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "LI",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "OL",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "LI",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "OL",
+        "dir": "ltr",
+        "align": "start"
+      },
+      {
+        "tag": "BODY",
+        "dir": "ltr",
+        "align": "start"
+      },
+      {
+        "tag": "HTML",
+        "dir": "ltr",
+        "align": "start"
+      }
+    ],
+    "leftGap": 0,
+    "rightGap": 508.8999938964844
+  },
+  "webkit": {
+    "chain": [
+      {
+        "tag": "P",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "LI",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "OL",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "LI",
+        "dir": "rtl",
+        "align": "left"
+      },
+      {
+        "tag": "OL",
+        "dir": "ltr",
+        "align": "start"
+      },
+      {
+        "tag": "BODY",
+        "dir": "ltr",
+        "align": "start"
+      },
+      {
+        "tag": "HTML",
+        "dir": "ltr",
+        "align": "start"
+      }
+    ],
+    "leftGap": 0,
+    "rightGap": 508.9140625
+  }
+}

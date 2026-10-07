@@ -1,0 +1,276 @@
+[WebServer] (node:5228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:14896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (16.2s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (8.4s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (9.7s)
+  x   4 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (14.8s)
+(node:3452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (25.6s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (18.5s)
+  x   7 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (8.6s)
+(node:9560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   8 [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (24.8s)
+(node:2416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (19.3s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (20.0s)
+  x  11 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (6.1s)
+(node:26800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  12 [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (20.5s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: list-direction-contained.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td > p')
+    Expected: "Cell Latin text"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: list-direction-contained.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td > p')
+
+
+       at list-direction-transform-journey.ts:94
+
+      92 |     // Tab in a table is table navigation; use the explicit toolbar lift action.
+      93 |     await workspace.getByRole('button', { name: 'Lift list item', exact: true }).click();
+    > 94 |     await expect(editor.locator('td > p')).toHaveText('Cell Latin text');
+         |                                            ^
+      95 |     observations.cell = await layout(cell);
+      96 |     expect(observations.cell).toMatchObject({ direction: 'rtl', textOnRight: true });
+      97 |   }
+        at listDirectionTransformJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-direction-transform-journey.ts:94:44)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:44:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "direction": "rtl",
+    -   "textOnRight": true,
+    +   "textOnRight": false,
+      }
+
+       at list-direction-transform-journey.ts:37
+
+      35 |     await native.setContent(`<style>body{width:700px}p{margin:16px 0}</style>${source}`);
+      36 |     observations.native = await layout(native.locator('p').filter({ hasText: 'Moved Latin text' }));
+    > 37 |     expect(observations.native).toMatchObject({ direction: 'rtl', textOnRight: true });
+         |                                 ^
+      38 |     await native.locator('body').screenshot({ path: info.outputPath('list-direction-native.png') });
+      39 |   } finally { await native.close(); }
+      40 |
+        at listDirectionTransformJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-direction-transform-journey.ts:37:33)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:44:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: list-direction-contained.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td > p')
+    Expected: "Cell Latin text"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: list-direction-contained.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td > p')
+
+
+       at list-direction-transform-journey.ts:94
+
+      92 |     // Tab in a table is table navigation; use the explicit toolbar lift action.
+      93 |     await workspace.getByRole('button', { name: 'Lift list item', exact: true }).click();
+    > 94 |     await expect(editor.locator('td > p')).toHaveText('Cell Latin text');
+         |                                            ^
+      95 |     observations.cell = await layout(cell);
+      96 |     expect(observations.cell).toMatchObject({ direction: 'rtl', textOnRight: true });
+      97 |   }
+        at listDirectionTransformJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-direction-transform-journey.ts:94:44)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:44:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "direction": "rtl",
+    -   "textOnRight": true,
+    +   "textOnRight": false,
+      }
+
+       at list-direction-transform-journey.ts:37
+
+      35 |     await native.setContent(`<style>body{width:700px}p{margin:16px 0}</style>${source}`);
+      36 |     observations.native = await layout(native.locator('p').filter({ hasText: 'Moved Latin text' }));
+    > 37 |     expect(observations.native).toMatchObject({ direction: 'rtl', textOnRight: true });
+         |                                 ^
+      38 |     await native.locator('body').screenshot({ path: info.outputPath('list-direction-native.png') });
+      39 |   } finally { await native.close(); }
+      40 |
+        at listDirectionTransformJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-direction-transform-journey.ts:37:33)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:44:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-a2c56-downloaded-HTML-nested-lift-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: list-direction-contained.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td > p')
+    Expected: "Cell Latin text"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: list-direction-contained.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td > p')
+
+
+       at list-direction-transform-journey.ts:94
+
+      92 |     // Tab in a table is table navigation; use the explicit toolbar lift action.
+      93 |     await workspace.getByRole('button', { name: 'Lift list item', exact: true }).click();
+    > 94 |     await expect(editor.locator('td > p')).toHaveText('Cell Latin text');
+         |                                            ^
+      95 |     observations.cell = await layout(cell);
+      96 |     expect(observations.cell).toMatchObject({ direction: 'rtl', textOnRight: true });
+      97 |   }
+        at listDirectionTransformJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-direction-transform-journey.ts:94:44)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:44:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-direction-final-recorded-20261008\editor-preserves-list-dire-cfd67-d-downloaded-HTML-contained-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained 
+    [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift 
+    [firefox] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained 
+    [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift 
+    [webkit] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained 
+  7 passed (3.8m)

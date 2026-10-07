@@ -1,0 +1,19 @@
+[WebServer] (node:16932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:26384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: unwrap (12.0s)
+(node:25672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: indent (8.9s)
+  x   3 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (11.0s)
+(node:1536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   4 [chromium] › tests\browser\editor.spec.ts:43:3 › preserves list direction through real transforms and downloaded HTML: contained (14.7s)
+(node:22848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

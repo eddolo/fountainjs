@@ -1,0 +1,33 @@
+{
+  "sample": "unwrap",
+  "native": {
+    "direction": "rtl",
+    "align": "start",
+    "dirAttribute": null,
+    "text": "Moved Latin text",
+    "textOnRight": true
+  },
+  "imported": {
+    "direction": "rtl",
+    "align": "start",
+    "dirAttribute": null,
+    "text": "Moved Latin text",
+    "textOnRight": true
+  },
+  "transformed": {
+    "direction": "rtl",
+    "align": "start",
+    "dirAttribute": "rtl",
+    "text": "Moved Latin text",
+    "textOnRight": true
+  },
+  "reader": {
+    "direction": "rtl",
+    "align": "start",
+    "dirAttribute": "rtl",
+    "text": "Moved Latin text",
+    "textOnRight": true
+  },
+  "pageErrors": [],
+  "navigations": 1
+}

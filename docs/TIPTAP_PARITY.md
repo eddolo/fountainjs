@@ -1,15 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-Latest verified checkpoint (2026-10-08, Unreleased): `14b3642` completes all
-Linux CI jobs successfully: **2,724 tests / 207 files**, **694 browser passes /
+Latest verified checkpoint (2026-10-08, Unreleased): `acfd54f` completes all
+Linux CI jobs successfully: **2,734 tests / 208 files**, **709 browser passes /
 16 skips**, package/types/headless/Markdown, performance and Lean. Pages also
 deploys. The browser skips remain skips, not proof of coverage. Passive Linux
 WebKit evidence and directly inspected source-only/Fountain captures confirm
 the corrected independent editing reference; the previous raw widget failures
 are retained, not silently discarded. Raw logs are in
-`artifacts/ci-14b3642-{verify,browser,performance}-20261007.log`.
+`artifacts/ci-acfd54f-{verify,browser,performance}-20261008.log`.
 
-Next runtime improvement: physical left/right table-column insertion now uses
+Verified runtime improvement: physical left/right table-column insertion uses
 the mounted table's computed direction, not the cell's text override. It handles
 LTR, RTL, auto and host CSS, including merged/row-spanning cells. A private
 view-owned boundary supports separate toolbar mounting and multiple views;
@@ -23,8 +23,24 @@ Final ownership uses registered element identity, not CSS class names. Repeat
 35 focused tests with custom-class/nested-view cases and three recorded
 merged-cell journeys; their six result captures exactly match reviewed images.
 
-New-source Linux certification is next, not already achieved by the preceding
-green commit. PROD-04 remains Partial: list outdent inheritance, reordering,
+The complete new-source Linux matrix certifies those table-side workflows.
+Current list work preserves known fixed model LTR/RTL when indenting/lifting
+changes the inheritance boundary, including quote and table-cell parents,
+remaining nested tails, explicit child direction/alignment and same-type item
+identity. Schema/host-filter rejection is atomic. Conversion Lab now exposes
+the existing list/quote/alignment controls rather than hiding them. 64 focused
+tests, build/package/headless/API/types checks and **12 recorded Windows desktop
+journeys** pass; 24 editor and 12 downloaded-reader captures are visually checked.
+Public declarations are unchanged. Pure-Node packed ESM/CJS root/core consumers
+verify list lift, exact undo/redo and server-HTML round trips without a fake DOM.
+The new list source still needs its own complete Linux matrix; the preceding
+table checkpoint cannot certify it.
+Native mixed-direction list alignment differs by engine (Chromium logical
+start, Firefox/WebKit inherited physical left). Compare to each independent
+native source; RTL is not an instruction to force physical-right alignment.
+Keep the native probe and failed reference/selector recordings.
+PROD-04 remains Partial: shared-auto boundaries removed/reparented by list
+transforms, host CSS and direction-incapable custom/code blocks, RTL reordering,
 broader bidi, native mobile/assistive technology and locales remain open.
 Native Word direction fidelity and the remaining CommonMark differences are
 not certified. npm remains `0.4.0-beta.2`; no ledger promotion or rename.

@@ -1,0 +1,33 @@
+{
+  "sample": "nested-lift",
+  "native": {
+    "direction": "rtl",
+    "align": "left",
+    "dirAttribute": null,
+    "text": "Moved Latin text",
+    "textOnRight": false
+  },
+  "imported": {
+    "direction": "rtl",
+    "align": "left",
+    "dirAttribute": null,
+    "text": "Moved Latin text",
+    "textOnRight": false
+  },
+  "transformed": {
+    "direction": "rtl",
+    "align": "left",
+    "dirAttribute": null,
+    "text": "Moved Latin text",
+    "textOnRight": false
+  },
+  "reader": {
+    "direction": "rtl",
+    "align": "left",
+    "dirAttribute": null,
+    "text": "Moved Latin text",
+    "textOnRight": false
+  },
+  "pageErrors": [],
+  "navigations": 1
+}

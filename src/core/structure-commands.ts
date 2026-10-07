@@ -84,9 +84,10 @@ function selectedListRange(editor: Editor): ListRange | null {
 function convertListItem(editor: Editor, item: Node, targetName: string): Node | null {
   const target = editor.state.schema.nodes[targetName];
   if (!target) return null;
+  if (item.type === target) return item;
   try {
     return target.create(
-      { ...(target.spec.attrs?.dir && item.attrs.dir !== undefined ? { dir: item.attrs.dir } : {}), ...(targetName === 'task_item'
+      { ...Object.fromEntries(Object.entries(item.attrs).filter(([name]) => Object.hasOwn(target.spec.attrs ?? {}, name))), ...(targetName === 'task_item'
         ? { checked: item.type.name === 'task_item' ? Boolean(item.attrs.checked) : false }
         : {}) },
       item.content,
@@ -94,6 +95,47 @@ function convertListItem(editor: Editor, item: Node, targetName: string): Node |
   } catch {
     return null;
   }
+}
+
+type ListDirection = 'ltr' | 'rtl' | 'auto' | undefined;
+
+function ownListDirection(node: Node): ListDirection {
+  const dir = node.type.spec.attrs?.dir ? node.attrs.dir : undefined;
+  return dir === 'ltr' || dir === 'rtl' || dir === 'auto' ? dir : undefined;
+}
+
+/** Model declarations only: never infer host CSS or freeze an automatic scope. */
+function listDirectionAt(doc: Node, path: readonly number[]): ListDirection {
+  for (let length = path.length; length >= 0; length -= 1) {
+    const dir = ownListDirection(getNodeAtPath(doc, path.slice(0, length)));
+    if (dir) return dir;
+  }
+  return undefined;
+}
+
+/** Retain a removed fixed inheritance boundary on the first capable descendant.
+ * Explicit child directions (including auto) remain independently owned.
+ * A shared automatic scope cannot be faithfully copied onto each child.
+ */
+function retainListDirection(node: Node, source: ListDirection, destination: ListDirection): Node | null {
+  if (!source || source === 'auto' || source === destination || ownListDirection(node)) return node;
+  if (node.type.spec.attrs?.dir) {
+    const attrs: Attributes = { ...node.attrs, dir: source };
+    // Adding an owned dir must not turn the legacy implicit left default into
+    // a physical-left override. Authored alignment stays exactly as authored.
+    if (node.type.spec.attrs.align && attrs.align === 'left' && attrs.alignExplicit !== true) attrs.align = 'start';
+    try { return node.type.create(attrs, node.content, node.text, node.marks); }
+    catch { return null; }
+  }
+  const content = node.content.map(child => retainListDirection(child, source, destination));
+  if (content.some(child => !child)) return null;
+  return content.some((child, index) => child !== node.content[index]) ? node.copy(content as Node[]) : node;
+}
+
+function dispatchListTransform(editor: Editor, transaction: ReturnType<Editor['createTransaction']>): boolean {
+  try { editor.state.schema.validate(transaction.doc); }
+  catch { return false; }
+  return editor.dispatch(transaction);
 }
 
 function copyListSlice(list: Node, content: readonly Node[], offset = 0): Node {
@@ -327,12 +369,19 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
   const target = listNames(nestedKind ?? sourceKind);
   const nestedType = editor.state.schema.nodes[target.list];
   if (!nestedType) return false;
-  const moved = range.list.content.slice(range.from, range.to + 1)
-    .map((item) => convertListItem(editor, item, target.item));
-  if (moved.some((item) => !item)) return false;
-  const items = moved as Node[];
   const previous = range.list.child(range.from - 1);
   const existingNested = previous.content.at(-1)?.type === nestedType ? previous.content.at(-1) : undefined;
+  const previousPath = [...range.listPath, range.from - 1];
+  const destination = listDirectionAt(editor.state.doc, existingNested
+    ? [...previousPath, previous.childCount - 1] : previousPath);
+  const moved = range.list.content.slice(range.from, range.to + 1)
+    .map((item, index) => {
+      const converted = convertListItem(editor, item, target.item);
+      return converted && retainListDirection(converted,
+        listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
+    });
+  if (moved.some((item) => !item)) return false;
+  const items = moved as Node[];
   const nestedIndex = existingNested?.childCount ?? 0;
   const nested = existingNested
     ? existingNested.copy([...existingNested.content, ...items])
@@ -360,8 +409,7 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
       nestedIndex + items.length - 1,
       ...endRelative,
     ]));
-  editor.dispatch(transaction);
-  return true;
+  return dispatchListTransform(editor, transaction);
 }
 
 export function outdentListItem(editor: Editor): boolean {
@@ -371,16 +419,22 @@ export function outdentListItem(editor: Editor): boolean {
   const startRelative = editor.state.selection.path.slice(range.startItemPath.length);
   const endRelative = editor.state.selection.endPath.slice(range.endItemPath.length);
 
-  if (range.listPath.length === 1) {
+  const parentItemPath = range.listPath.slice(0, -1);
+  const parentItem = getNodeAtPath(editor.state.doc, parentItemPath);
+  if (!['list_item', 'task_item'].includes(parentItem.type.name)) {
     const before = range.list.content.slice(0, range.from);
     const selected = range.list.content.slice(range.from, range.to + 1);
     const after = range.list.content.slice(range.to + 1);
+    const destination = listDirectionAt(editor.state.doc, parentItemPath);
+    const unwrapped = selected.flatMap((item, index) => item.content.map(child => retainListDirection(child,
+      listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination)));
+    if (unwrapped.some(node => !node)) return false;
     const replacements = [
       ...(before.length ? [copyListSlice(range.list, before)] : []),
-      ...selected.flatMap((item) => item.content),
+      ...(unwrapped as Node[]),
       ...(after.length ? [copyListSlice(range.list, after, range.to + 1)] : []),
     ];
-    const blockIndex = range.listPath[0] as number;
+    const blockIndex = range.listPath.at(-1) as number;
     const firstBlockIndex = blockIndex + (before.length ? 1 : 0);
     const selectedBlockPrefix = (itemIndex: number) => selected
       .slice(0, itemIndex)
@@ -390,23 +444,25 @@ export function outdentListItem(editor: Editor): boolean {
     const transaction = editor.state.createTransaction()
       .replaceNode(range.listPath, replacements)
       .setSelection(rangeSelection(editor,
-        [startBlock, ...startRelative.slice(1)],
-        [endBlock, ...endRelative.slice(1)],
+        [...parentItemPath, startBlock, ...startRelative.slice(1)],
+        [...parentItemPath, endBlock, ...endRelative.slice(1)],
       ));
-    editor.dispatch(transaction);
-    return true;
+    return dispatchListTransform(editor, transaction);
   }
 
-  const parentItemPath = range.listPath.slice(0, -1);
-  const parentItem = getNodeAtPath(editor.state.doc, parentItemPath);
-  if (!['list_item', 'task_item'].includes(parentItem.type.name)) return false;
   const outerListPath = parentItemPath.slice(0, -1);
   const outerList = getNodeAtPath(editor.state.doc, outerListPath);
+  if (!kindForList(outerList)) return false;
   const parentItemIndex = parentItemPath.at(-1) as number;
   const nestedListIndex = range.listPath.at(-1) as number;
   const targetItemName = outerList.type.name === 'task_list' ? 'task_item' : 'list_item';
+  const destination = listDirectionAt(editor.state.doc, outerListPath);
   const lifted = range.list.content.slice(range.from, range.to + 1)
-    .map((item) => convertListItem(editor, item, targetItemName));
+    .map((item, index) => {
+      const converted = convertListItem(editor, item, targetItemName);
+      return converted && retainListDirection(converted,
+        listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
+    });
   if (lifted.some((item) => !item)) return false;
   const liftedItems = lifted as Node[];
   const before = range.list.content.slice(0, range.from);
@@ -418,9 +474,12 @@ export function outdentListItem(editor: Editor): boolean {
   ]);
   if (after.length) {
     const last = liftedItems.at(-1) as Node;
+    const suffix = retainListDirection(copyListSlice(range.list, after, range.to + 1),
+      listDirectionAt(editor.state.doc, range.listPath), ownListDirection(last) ?? destination);
+    if (!suffix) return false;
     liftedItems[liftedItems.length - 1] = last.copy([
       ...last.content,
-      copyListSlice(range.list, after, range.to + 1),
+      suffix,
     ]);
   }
   const updatedOuter = outerList.copy([
@@ -435,8 +494,7 @@ export function outdentListItem(editor: Editor): boolean {
       [...outerListPath, parentItemIndex + 1, ...startRelative],
       [...outerListPath, parentItemIndex + liftedItems.length, ...endRelative],
     ));
-  editor.dispatch(transaction);
-  return true;
+  return dispatchListTransform(editor, transaction);
 }
 
 /** Wraps selected top-level text blocks, converts a selected list range, or toggles it off. */

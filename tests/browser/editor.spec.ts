@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
+import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
 import { tableColumnSideCases, tableColumnSideJourney } from './table-column-side-journey';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { strFromU8, unzipSync } from 'fflate';
@@ -37,6 +38,12 @@ import { autoContainerDirectionJourney } from './auto-container-direction-journe
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
 import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
+
+for (const sample of listDirectionCases) {
+  test(`preserves list direction through real transforms and downloaded HTML: ${sample}`, async ({ page }, info) => {
+    await listDirectionTransformJourney(page, info, sample);
+  });
+}
 
 for (const sample of tableColumnSideCases) {
   test(`inserts table columns on the physical left and right: ${sample.name}`, async ({ page }, info) => {

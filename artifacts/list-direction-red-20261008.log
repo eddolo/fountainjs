@@ -1,0 +1,398 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/list-direction-transforms.test.ts (15 tests | 15 failed) 271ms
+   ❯ platform-neutral direction through list transformations (15)
+     × retains inherited ltr and implicit start alignment when unwrapping a middle item 35ms
+     × retains inherited rtl and implicit start alignment when unwrapping a middle item 2ms
+     × preserves item overrides, explicitly physical alignment and independent child direction 8ms
+     × retains source direction when indenting under an opposite parent (existing nested list: false) 2ms
+     × retains source direction when indenting under an opposite parent (existing nested list: true) 2ms
+     × lifts inherited nested direction and retains the trailing list context independently 3ms
+     × lifts multiple nested items with their own overrides and keeps a range selection 3ms
+     × unwraps a list inside blockquote rather than refusing to lift 2ms
+     × unwraps a list inside table_cell rather than refusing to lift 1ms
+     × retains direction on the actual backspace list exit 1ms
+     × retains direction on the actual empty-enter list exit 1ms
+     × retains custom item attributes and identity when indenting within the same type/context 96ms
+     × returns false when a host filter rejects indent without changing state 3ms
+     × returns false when a host filter rejects outdent without changing state 1ms
+     × rejects an unrepresentable lift in a restricted schema atomically 102ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains inherited ltr and implicit start alignment when unwrapping a middle item
+AssertionError: expected { align: 'left' } to match object { dir: 'ltr', align: 'start' }
+
+- Expected
++ Received
+
+  {
+-   "align": "start",
+-   "dir": "ltr",
++   "align": "left",
+  }
+
+ ❯ tests/list-direction-transforms.test.ts:23:45
+     21|     const before = editor.getJSON();
+     22|     expect(outdentListItem(editor)).toBe(true);
+     23|     expect(editor.state.doc.child(1).attrs).toMatchObject({ dir, align…
+       |                                             ^
+     24|     expect(editor.state.doc.child(0).attrs).toMatchObject({ dir, start…
+     25|     expect(editor.state.doc.child(2).attrs).toMatchObject({ dir, start…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains inherited rtl and implicit start alignment when unwrapping a middle item
+AssertionError: expected { align: 'left' } to match object { dir: 'rtl', align: 'start' }
+
+- Expected
++ Received
+
+  {
+-   "align": "start",
+-   "dir": "rtl",
++   "align": "left",
+  }
+
+ ❯ tests/list-direction-transforms.test.ts:23:45
+     21|     const before = editor.getJSON();
+     22|     expect(outdentListItem(editor)).toBe(true);
+     23|     expect(editor.state.doc.child(1).attrs).toMatchObject({ dir, align…
+       |                                             ^
+     24|     expect(editor.state.doc.child(0).attrs).toMatchObject({ dir, start…
+     25|     expect(editor.state.doc.child(2).attrs).toMatchObject({ dir, start…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > preserves item overrides, explicitly physical alignment and independent child direction
+AssertionError: expected { align: 'left', alignExplicit: true } to match object { dir: 'ltr', align: 'left', …(1) }
+
+- Expected
++ Received
+
+  {
+    "align": "left",
+    "alignExplicit": true,
+-   "dir": "ltr",
+  }
+
+ ❯ tests/list-direction-transforms.test.ts:40:45
+     38|     const independent = editor.state.doc.child(0).child(0).child(2);
+     39|     expect(outdentListItem(editor)).toBe(true);
+     40|     expect(editor.state.doc.child(0).attrs).toMatchObject({ dir: 'ltr'…
+       |                                             ^
+     41|     expect(editor.state.doc.child(1).attrs).toMatchObject({ dir: 'ltr'…
+     42|     expect(editor.state.doc.child(2)).toBe(independent);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains source direction when indenting under an opposite parent (existing nested list: false)
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains source direction when indenting under an opposite parent (existing nested list: true)
+AssertionError: expected undefined to be 'rtl' // Object.is equality
+
+- Expected:
+"rtl"
+
++ Received:
+undefined
+
+ ❯ tests/list-direction-transforms.test.ts:51:54
+     49|     expect(indentListItem(editor)).toBe(true);
+     50|     const nested = editor.state.doc.child(0).child(0).child(1);
+     51|     expect(nested.child(existing ? 1 : 0).attrs.dir).toBe('rtl');
+       |                                                      ^
+     52|     expect(nested.child(existing ? 1 : 0).child(0).attrs.dir).toBeUnde…
+     53|     expect(editor.state.doc.textContent).toBe(originalText);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > lifts inherited nested direction and retains the trailing list context independently
+AssertionError: expected { start: 2 } to match object { dir: 'rtl', start: 2 }
+
+- Expected
++ Received
+
+  {
+-   "dir": "rtl",
+    "start": 2,
+  }
+
+ ❯ tests/list-direction-transforms.test.ts:63:35
+     61|     const lifted = editor.state.doc.child(0).child(1);
+     62|     expect(lifted.attrs.dir).toBe('ltr');
+     63|     expect(lifted.child(1).attrs).toMatchObject({ dir: 'rtl', start: 2…
+       |                                   ^
+     64|     expect(editor.state.doc.child(0).child(0).child(1).attrs.start).to…
+     65|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > lifts multiple nested items with their own overrides and keeps a range selection
+AssertionError: expected [ undefined, undefined, 'auto' ] to deeply equal [ undefined, 'rtl', 'auto' ]
+
+- Expected
++ Received
+
+  [
+    undefined,
+-   "rtl",
++   undefined,
+    "auto",
+  ]
+
+ ❯ tests/list-direction-transforms.test.ts:72:55
+     70|     expect(outdentListItem(editor)).toBe(true);
+     71|     const outer = editor.state.doc.child(0);
+     72|     expect(outer.content.map(node => node.attrs.dir)).toEqual([undefin…
+       |                                                       ^
+     73|     expect(editor.state.selection.eq(Selection.range([0, 1, 0, 0], 0, …
+     74|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > unwraps a list inside blockquote rather than refusing to lift
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > unwraps a list inside table_cell rather than refusing to lift
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/list-direction-transforms.test.ts:84:37
+     82|     const prefix = parentName === 'table_cell' ? [0, 0, 0] : [0];
+     83|     const editor = make(content, [...prefix, 0, 0, 0, 0]);
+     84|     expect(outdentListItem(editor)).toBe(true);
+       |                                     ^
+     85|     let parentNode = editor.state.doc;
+     86|     for (const part of prefix) parentNode = parentNode.child(part);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains direction on the actual backspace list exit
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains direction on the actual empty-enter list exit
+AssertionError: expected { align: 'left' } to match object { dir: 'rtl', align: 'start' }
+
+- Expected
++ Received
+
+  {
+-   "align": "start",
+-   "dir": "rtl",
++   "align": "left",
+  }
+
+ ❯ tests/list-direction-transforms.test.ts:96:45
+     94|     expect(action === 'backspace' ? joinBackward(editor) : splitBlock(…
+     95|     expect(editor.state.doc.child(0).type.name).toBe('paragraph');
+     96|     expect(editor.state.doc.child(0).attrs).toMatchObject({ dir: 'rtl'…
+       |                                             ^
+     97|   });
+     98|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > retains custom item attributes and identity when indenting within the same type/context
+AssertionError: expected Node{ type: NodeType{ …(5) }, …(4) } to be Node{ type: NodeType{ …(5) }, …(4) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,10 +1,6 @@
+  {
+-   "attrs": {
+-     "nodeId": "stable-item",
+-     "note": "keep",
+-   },
+    "content": [
+      {
+        "attrs": {
+          "align": "left",
+        },
+
+ ❯ tests/list-direction-transforms.test.ts:106:66
+    104|     const moved = editor.state.doc.child(0).child(1);
+    105|     expect(indentListItem(editor)).toBe(true);
+    106|     expect(editor.state.doc.child(0).child(0).child(1).child(0)).toBe(…
+       |                                                                  ^
+    107|   });
+    108|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > returns false when a host filter rejects indent without changing state
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > returns false when a host filter rejects outdent without changing state
+TypeError: editor.setOptions is not a function
+ ❯ tests/list-direction-transforms.test.ts:111:12
+    109|   it.each(['indent', 'outdent'])('returns false when a host filter rej…
+    110|     const editor = make([list([item([p('Parent')]), item([p('Selected'…
+    111|     editor.setOptions({ plugins: [new Plugin({ filterTransaction: tr =…
+       |            ^
+    112|     const before = editor.state;
+    113|     expect(action === 'indent' ? indentListItem(editor) : outdentListI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  tests/list-direction-transforms.test.ts > platform-neutral direction through list transformations > rejects an unrepresentable lift in a restricted schema atomically
+AssertionError: expected EditorState{ …(6) } to be EditorState{ …(6) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,18 +1,10 @@
+  EditorState {
+    "doc": {
+      "content": [
+        {
+          "attrs": {
+-           "dir": "rtl",
+-           "start": 0,
+-         },
+-         "content": [
+-           {
+-             "content": [
+-               {
+-                 "attrs": {
+            "align": "left",
+          },
+          "content": [
+            {
+              "text": "Keep",
+@@ -20,16 +12,10 @@
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+-             "type": "list_item",
+-           },
+-         ],
+-         "type": "ordered_list",
+-       },
+-     ],
+      "type": "doc",
+    },
+    "pluginStates": Map {
+      Plugin {
+        "key": PluginKey {
+@@ -46,11 +32,77 @@
+            "apply": [Function apply],
+            "init": [Function init],
+          },
+        },
+      } => {
+-       "done": [],
++       "done": [
++         {
++           "doc": {
++             "content": [
++               {
++                 "attrs": {
++                   "dir": "rtl",
++                   "start": 0,
++                 },
++                 "content": [
++                   {
++                     "content": [
++                       {
++                         "attrs": {
++                           "align": "left",
++                         },
++                         "content": [
++                           {
++                             "text": "Keep",
++                             "type": "text",
++                           },
++                         ],
++                         "type": "paragraph",
++                       },
++                     ],
++                     "type": "list_item",
++                   },
++                 ],
++                 "type": "ordered_list",
++               },
++             ],
++             "type": "doc",
++           },
++           "selection": Selection {
++             "endPath": [
++               0,
++               0,
++               0,
++               0,
++             ],
++             "from": 0,
++             "kind": "text",
++             "path": [
++               0,
++               0,
++               0,
++               0,
++             ],
++             "to": 0,
++           },
++         },
++       ],
++       "lastAddedAt": 1791415303608,
++       "lastGroup": undefined,
++       "lastSelection": Selection {
++         "endPath": [
++           0,
++           0,
++         ],
++         "from": 0,
++         "kind": "text",
++         "path": [
++           0,
++           0,
++         ],
++         "to": 0,
++       },
+        "undone": [],
+      },
+    },
+    "plugins": [
+      Plugin {
+@@ -1436,18 +1488,14 @@
+    },
+    "selection": Selection {
+      "endPath": [
+        0,
+        0,
+-       0,
+-       0,
+      ],
+      "from": 0,
+      "kind": "text",
+      "path": [
+-       0,
+-       0,
+        0,
+        0,
+      ],
+      "to": 0,
+    },
+
+ ❯ tests/list-direction-transforms.test.ts:125:26
+    123|     expect(() => outdentListItem(editor)).not.toThrow();
+    124|     expect(outdentListItem(editor)).toBe(false);
+    125|     expect(editor.state).toBe(before);
+       |                          ^
+    126|   });
+    127| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  15 failed (15)
+   Start at  00:21:37
+   Duration  6.87s (transform 61%, import 34%, tests 4%)
+
+  Transform  transforming modules took 3.77s · 61% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
