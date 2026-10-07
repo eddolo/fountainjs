@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased; new two-control Linux preflight and full CI required",
+  "baseCommit": "cdb98b7872db07259a2c12aba59db7987cf91797",
+  "scope": "Test-only diagnosis; no engine, API, dependency or budget changes",
+  "cause": {
+    "run": "https://github.com/eddolo/fountainjs/actions/runs/37683791765",
+    "browserJob": 113006264454,
+    "matrix": { "passed": 686, "skipped": 16, "failed": 2 },
+    "failure": "Both Linux WebKit tests stop inside the plain native clone before Fountain typing. PRE owns focus and code caret, but End followed by typing inserts no text.",
+    "retries": "Both tests reproduce on all three attempts; original JSON and full failure log retained.",
+    "log": "artifacts/ci-7a01046-browser-20261007.log"
+  },
+  "controls": {
+    "raw": "Rendered DOM and styles copied into a separate page without Fountain code or listeners; includes PRE tabindex=0.",
+    "editingSource": "Separate reset to the same DOM/styles with only PRE tabindex removed; must focus the editor, retain a caret in code and insert exactly literal edited without changing After.",
+    "rawException": "Only Linux WebKit, only focused code region with a code caret and unchanged literal text. Other platforms/engines or text mutations still fail.",
+    "fountain": "Match the unchanged native focus when native editing works; otherwise match the independently working native source control. Require exact typing, code caret, no invented list paragraph, and undo restoring literal.",
+    "label": "Existing explicit editor-focus handoff, typing and undo assertions unchanged.",
+    "accessibility": "No renderer change; PRE remains a keyboard-focusable scrolling region in Fountain. Existing keyboard region tests stay in the full matrix."
+  },
+  "local": {
+    "platform": "Windows",
+    "command": "pnpm exec playwright test --config artifacts/native-selection-followup.config.ts --project chromium --project firefox --project webkit --grep \"compares list-first code text-click|pastes and edits list-first code\" --output artifacts/code-native-source-control-20261007",
+    "passed": 9,
+    "failed": 0,
+    "workers": 1,
+    "retries": 0,
+    "durationSeconds": 30,
+    "log": "artifacts/code-native-source-control-20261007.log",
+    "ciPolicy": { "passed": 10, "log": "artifacts/code-native-source-control-ci-policy-20261007.log" },
+    "types": { "passed": true, "frameworks": ["TypeScript", "Svelte", "Angular library", "Angular demo"], "log": "artifacts/code-native-source-control-types-20261007.log" },
+    "focus": { "chromium": "editor", "firefox": "code", "webkit": "editor" },
+    "notProofOf": ["Linux WebKit source-control behavior", "complete current-source matrix", "physical mobile or assistive technology", "full parity"]
+  },
+  "visualReview": {
+    "method": "Direct inspection of all nine diagnostic captures; six captures in the existing centre-click test match the corresponding directly reviewed native captures by SHA-256.",
+    "observed": "Each Windows surface shows literal edited inside the list code block, no stray empty paragraph, and unchanged After. Native Firefox raw region has a focus ring; its non-Tab-stop source control does not. Fountain shows its block handle separately. Native copies retain DOM-only stale decorations, not Fountain selection state.",
+    "recording": "Video/trace recorded; videos not watched. PNGs are visual evidence, not pixel-perfect editor/native typography parity.",
+    "root": "artifacts/code-native-source-control-20261007",
+    "diagnosticDirectories": "editor-compares-list-first-994c3-g-to-a-plain-native-surface-{engine}",
+    "captures": [
+      { "engine": "chromium", "file": "code-click-native-edit.png", "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29" },
+      { "engine": "chromium", "file": "code-click-native-source-edit.png", "sha256": "c12a2f55997ec4549384a90efbef6679ef9cc66c5a3a6b06af55527cd7284a29" },
+      { "engine": "chromium", "file": "code-click-fountain-edit.png", "sha256": "3f2162a2d80cd34859823d97efb7e460aa9325659abedf7d7a2f7215c2cc8e10" },
+      { "engine": "firefox", "file": "code-click-native-edit.png", "sha256": "4802347d51915d63be6ace930d1fa51ac9acbd4415eed6eaf1d3bc4868a8591c" },
+      { "engine": "firefox", "file": "code-click-native-source-edit.png", "sha256": "ef11d869d9adbc3a26e01bc8fec501f4c8a79a8f28b2752df1326f4496d9e823" },
+      { "engine": "firefox", "file": "code-click-fountain-edit.png", "sha256": "e9d78c7adf2a270a35f5295c0b1ebc62f6aaba7287e88196b669a45961d58ec6" },
+      { "engine": "webkit", "file": "code-click-native-edit.png", "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332" },
+      { "engine": "webkit", "file": "code-click-native-source-edit.png", "sha256": "6dc7e639461bf798ff95c2d58625f7b9a41e15d25088a36b5b3f88bfca16d332" },
+      { "engine": "webkit", "file": "code-click-fountain-edit.png", "sha256": "007351b900d918ed33a566f5ff6460306e8966f21188e838d8e6dcab03d41d8a" }
+    ]
+  },
+  "sourceHashes": [
+    { "path": ".github/workflows/ci.yml", "sha256": "0cde9cb5a2cbbe3fe5a27eced51ca1510956bca8e34b3a817e22cea26ac9c7b6" },
+    { "path": "tests/browser/code-native-focus-journey.ts", "sha256": "a921e5c35d6deb300037961d6688cc2f4df74b5095d5461494cff777b30f34cb" },
+    { "path": "tests/browser/editor.spec.ts", "sha256": "24f52456546abf14eb6f88099b606a9971cca4708ddf3054bc112749fa0e39bc" }
+  ],
+  "priorRuntimeCI": {
+    "commit": "cdb98b7872db07259a2c12aba59db7987cf91797",
+    "run": "https://github.com/eddolo/fountainjs/actions/runs/37686433794",
+    "verify": { "status": "success", "tests": 2695, "files": 205, "log": "artifacts/ci-cdb98b7-verify-20261007.log" },
+    "performance": { "status": "success", "serverHTMLP95Milliseconds": [9.10, 47.25, 205.26, 428.47], "serverLocalRemoteGrowth": [9.14, 7.21, 11.32], "growthCap": 15, "heapMiB": [0, 0.06, 15.20], "heapCapsMiB": [8, 16, 48], "log": "artifacts/ci-cdb98b7-performance-20261007.log" },
+    "lean": "success",
+    "browserAtSnapshot": "in_progress; browser installation step live",
+    "notCertificationOf": "new two-control Linux diagnostics or full current-source browser behavior"
+  },
+  "release": { "npm": "0.4.0-beta.2 unchanged", "ledger": "67 rows: 58 Delivered, 7 Partial, 2 Host boundary; unchanged", "CommonMark": "563/652 default, 613/652 strongest opt-in; unchanged", "PROD04": "Partial", "goal": "active" }
+}

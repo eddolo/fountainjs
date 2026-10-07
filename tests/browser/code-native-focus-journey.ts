@@ -29,11 +29,41 @@ export async function nativeCodeClickBaseline(page: Page, editor: Locator, info:
     expect(['editor', 'code']).toContain(nativeFocus.role);
     expect(nativeFocus.caretInCode).toBe(true);
     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
-    observations.nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
-    await expect(nativeCode).toHaveText('literal edited');
+    const nativeAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+    observations.nativeAfterTyping = nativeAfterTyping;
+    const rawEditingWorks = nativeAfterTyping.text === 'literal edited';
+    if (!rawEditingWorks) {
+      // Linux WebKit can focus the tabbable scrolling PRE while leaving a DOM
+      // caret inside it, yet emit no native text insertion. Retain this exact
+      // known failure; it is not the reference behavior an editor should copy.
+      expect(info.project.name).toBe('webkit');
+      expect(process.platform).toBe('linux');
+      expect(nativeAfterTyping).toMatchObject({ role: 'code', caretInCode: true, text: 'literal' });
+      observations.nativeLimitation = 'Tabbable code region receives focus/caret but native typing inserts no text.';
+    } else await expect(nativeCode).toHaveText('literal edited');
     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-edit.png') });
 
-    return nativeFocus;
+    // Independent editing-source control: same untouched markup/styles, except
+    // PRE is not a separate Tab stop. Keep this distinct from the raw clone;
+    // neither control contains Fountain scripts, instances or input listeners.
+    await nativePage.setContent(`<base href="${new URL('/', page.url()).href}">${surface.styles}${surface.html}`);
+    await nativeRoot.evaluate((element, width) => {
+      (element as HTMLElement).style.width = `${width}px`;
+      element.querySelector('pre')!.removeAttribute('tabindex');
+    }, surface.width);
+    await nativeCode.click();
+    const sourceFocus = await codeFocus(nativePage); observations.nativeSourceClick = sourceFocus;
+    expect(sourceFocus).toMatchObject({ role: 'editor', caretInCode: true });
+    await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+    observations.nativeSourceAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+    await expect(nativeCode).toHaveText('literal edited');
+    await expect(nativeRoot.locator(':scope > p')).toHaveText('After');
+    await nativeRoot.screenshot({ path: info.outputPath('code-click-native-source-edit.png') });
+
+    const expectedFocus = rawEditingWorks ? nativeFocus : sourceFocus;
+    observations.expectedFountainClick = expectedFocus;
+    observations.expectedFocusBasis = rawEditingWorks ? 'unchanged native region' : 'independent native editing-source control; raw region cannot type';
+    return expectedFocus;
   } finally {
     const path = info.outputPath('code-click-native-baseline.json');
     await writeFile(path, JSON.stringify(observations, null, 2));

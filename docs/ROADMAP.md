@@ -5,11 +5,16 @@ ancestor inline `text-align` while flattening HTML wrappers, with nearest
 overrides, inheritance/reset values and anonymous wrapper/list/cell paragraphs.
 Keep automatic reading direction and unsupported stylesheet behavior separate.
 Real conversion-lab import/edit/history/downloaded-reader checks use a native
-surface as the independent alignment oracle. The preceding `7a01046` checkpoint
-passes full verification (2,684 tests / 203 files), performance, Lean and both
-Linux native preflights; its complete browser matrix remains live. Full new
-runtime certification remains required. PROD-04 stays Partial; no percentage,
-CommonMark score or npm promotion.
+surface as the independent alignment oracle. `cdb98b7` passes full Linux
+verification (2,695 tests / 205 files), performance and Lean; its browser job
+remains live. The preceding `7a01046` matrix finishes at 686 passes, 16 skips
+and two failures in the plain native WebKit code clone before Fountain input.
+The diagnostic now distinguishes that unchanged focusable region from an
+independent native source-editing control, retaining Fountain's strict typing,
+caret/focus, no-stray-paragraph and undo assertions. Nine recorded local
+three-engine workflows and framework types pass; Linux two-control proof and
+full new-source certification remain required. PROD-04 stays Partial; no
+percentage, CommonMark score or npm promotion.
 
 Latest native-colour follow-up (2026-10-07, Unreleased): an independent plain
 page reproduces Linux WebKit moving focus from a colour input into a retained

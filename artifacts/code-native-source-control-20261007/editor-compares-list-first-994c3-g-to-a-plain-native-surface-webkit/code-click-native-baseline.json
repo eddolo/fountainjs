@@ -1,0 +1,35 @@
+{
+  "nativeClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7
+  },
+  "nativeAfterTyping": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 14,
+    "focus": 14,
+    "text": "literal edited"
+  },
+  "nativeSourceClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7
+  },
+  "nativeSourceAfterTyping": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 14,
+    "focus": 14,
+    "text": "literal edited"
+  },
+  "expectedFountainClick": {
+    "role": "editor",
+    "caretInCode": true,
+    "anchor": 7,
+    "focus": 7
+  },
+  "expectedFocusBasis": "unchanged native region"
+}

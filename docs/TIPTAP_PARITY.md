@@ -6,9 +6,17 @@ wrapper/list/cell text, nearest overrides and explicit inheritance/reset values.
 The conversion lab is checked against a separate native surface, with real
 typing, Enter, history and actual downloaded HTML reopening. This is not an
 arbitrary stylesheet cascade or automatic-direction flattening guarantee.
-`7a01046` has passed complete verification (**2,684 tests / 203 files**),
-performance and Lean; both Linux browser preflights pass, including the native
-Firefox code-click oracle. Its complete browser matrix is still running.
+`cdb98b7` passes complete Linux verification (**2,695 tests / 205 files**),
+performance and Lean; its browser job remains live. The preceding `7a01046`
+complete browser matrix finishes at **686 passed, 16 skipped, two failed**.
+Both failures occur in the untouched native Linux WebKit code-region clone,
+before Fountain editing: a focusable PRE owns focus/caret but typing inserts
+no text. Keep that observation separate from a second native source-editing
+control with only PRE's Tab stop removed. Fountain must still support real
+typing, exact caret/focus policy, no stray paragraph and undo. Nine recorded
+Windows workflows pass without retries; all nine diagnostic captures are
+directly inspected. Linux verification of the new two-control journey remains
+required; WebKit now runs it in preflight as well as the full matrix.
 The earlier `f1c49ed` browser result is **678 passed, 16 skipped, four failed**:
 the code-focus expectation and three-engine Quote-default mismatches, not four
 new engine failures. The corrected DOCX comparison passes in all three desktop

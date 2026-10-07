@@ -3799,7 +3799,8 @@ for (const clickTarget of ['centre', 'label'] as const) test(`pastes and edits l
   await expect(editor.locator('li > pre')).toHaveText('literal');
   const native = clickTarget === 'centre' ? await nativeCodeClickBaseline(page, editor, info) : undefined;
   await editor.locator('pre').click(clickTarget === 'label' ? { position: { x: 40, y: 24 } } : {});
-  // A text click can natively focus the accessible code region in Firefox.
+  // Match the independent editing-capable native control: ordinary region
+  // focus where typing works, host focus where a raw tabbable PRE cannot type.
   // Label clicks still require the plugin's explicit host-focus handoff.
   await expect(native?.role === 'code' ? editor.locator('pre') : editor).toBeFocused();
   await page.keyboard.press('End');

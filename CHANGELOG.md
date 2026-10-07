@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Distinguish the raw native code-region focus baseline from an independent
+  native source-editing control. Preserve Linux WebKit's observed failure to
+  insert text into the focused raw region rather than requiring Fountain to
+  copy it. Keep Fountain's real typing, caret/focus, no-stray-paragraph and undo
+  checks; run the diagnostic in both WebKit and Firefox CI preflights and the
+  full matrix. Nine recorded Windows workflows pass; Linux follow-up remains
+  required. No runtime, API, dependency, threshold or release change.
 - Retain supported inherited inline HTML text alignment in both importers,
   including nearest overrides, explicit inheritance/reset values and anonymous
   wrapper/list/cell text. Keep physical left distinct from inherited/default

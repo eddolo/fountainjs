@@ -9,13 +9,24 @@ Only ESM aggregate feature capacity increases by 0.5 KiB to 1,581.5 KiB.
 CommonJS, individual entries, CSS, latency, scaling and heap caps are unchanged.
 This is not a relaxation of a failed runtime performance threshold.
 
+The inherited-alignment runtime `cdb98b7` passes full Linux verification:
+**2,695 tests / 205 files**, performance and Lean. Server HTML 100/1k/5k/10k
+p95 is 9.10/47.25/205.26/428.47ms; server/local/remote median growth is
+9.14x/7.21x/11.32x against 15x. Live/destroyed/server retained heap is
+0.00/0.06/15.20 MiB against 8/16/48 MiB. The browser job remains live;
+performance success alone is not full production certification.
+
 The preceding frozen `7a01046` source passes full Linux verification:
 **2,684 tests / 203 files**, framework types, API, package, headless, CommonMark,
 DOCX interoperability and website build. Performance/Lean also pass; server
 HTML 100/1k/5k/10k p95 is 20.92/90.55/371.44/744.48ms and server/local/remote
 growth is 8.10x/5.73x/6.86x against 15x. Both native browser preflights pass;
-its complete browser matrix is still live. Those results do not certify the
-new inherited-alignment runtime or erase retained local failures.
+its complete matrix ends at 686 passes, 16 skips and two failures in the plain
+native Linux WebKit code-region clone before Fountain editing. The follow-up
+keeps that raw limitation visible and adds a separate native editing control;
+it changes test diagnostics, not runtime thresholds or editor code. Nine
+recorded Windows workflows pass, with Linux follow-up still required. None of
+these results erase retained local failures.
 
 The older `f1c49ed` browser result is 678 passes, 16 skips and four failures:
 one code-click focus expectation and the same Quote-default mismatch in all
