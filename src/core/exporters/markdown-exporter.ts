@@ -161,7 +161,8 @@ function reportNodeAttributes(
   tableAlignmentRepresented = false,
 ): void {
   const name = node.type.name;
-  if (['paragraph', 'heading'].includes(name) && node.attrs.dir !== undefined) {
+  if (node.attrs.dir !== undefined && name !== 'definition_list'
+    && !(name === 'table' && context.options.tableFormat === 'html')) {
     report(context, 'attribute', name, path, 'Text direction is not represented by ordinary Markdown; retain Fountain JSON or HTML.');
   }
   if (name === 'blockquote' && node.attrs.appearance === 'explicit') {
@@ -573,6 +574,7 @@ function render(
     case 'html_container': case 'definition_list':
       return schemaHTML(node, context, path);
     case 'bullet_list': case 'ordered_list': case 'task_list': return node.content.map((item, index) => {
+      reportNodeAttributes(item, context, [...path, index]);
       const marker = node.type.name === 'ordered_list'
         ? `${((node.attrs.start as number) + index) % 1e9}${alternateListMarker ? ')' : '.'} `
         : alternateListMarker ? '+ ' : '- ';

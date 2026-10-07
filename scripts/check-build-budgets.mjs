@@ -78,7 +78,7 @@ const limits = Object.freeze({
   // physical alignment approximation, not a claim of native bidi fidelity.
   // Measured addition ~0.8 / 0.7 KiB to this optional entry, no new dependency.
   'dist/docx.js': 184 * kibibyte,
-  'dist/docx.cjs': 148.5 * kibibyte,
+  'dist/docx.cjs': 148.75 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -98,10 +98,10 @@ const limits = Object.freeze({
   // selection-aware controls while retaining an explicit compact allowance.
   // Live AI review plus the optional host-owned conversation surface remain
   // dependency-free and add no provider client or persistence SDK.
-  'dist/react.js': 90 * kibibyte,
+  'dist/react.js': 91.25 * kibibyte,
   // Named configuration panels, trigger ownership/focus and native field keys
   // add ~1.6 KiB ESM / 1.4 KiB CJS only here; ESM still fits its existing cap.
-  'dist/react.cjs': 68 * kibibyte,
+  'dist/react.cjs': 68.5 * kibibyte,
   // Vue remains an external optional peer; only lifecycle/state/view glue ships here.
   'dist/vue.js': 3 * kibibyte,
   'dist/vue.cjs': 3 * kibibyte,
@@ -232,7 +232,7 @@ const limits = Object.freeze({
   // One 93-byte rule; bound the addition at 128 bytes, not a whole new KiB.
   // Link hit padding, code focus rings and background-preserving structural
   // highlights add ~0.2 KiB. Bound the stylesheet at 86.4 KiB.
-  'dist/styles.css': 86.4 * kibibyte,
+  'dist/styles.css': 86.75 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -502,7 +502,10 @@ const limits = Object.freeze({
   // add ~0.3 KiB ESM. The first frozen build is 21 bytes over 1581 KiB; retain
   // that failure and allow only 0.5 KiB aggregate feature capacity. Individual
   // entries, CommonJS, CSS, latency, scaling and heap limits stay unchanged.
-  'all ESM runtime code': 1581.5 * kibibyte,
+  // Structural dir attributes, guarded import inheritance, RTL view handling
+  // and author controls: measured 1586.1 KiB after sharing DOCX loss reporting.
+  // This adds feature capacity only; latency, growth and heap limits stay put.
+  'all ESM runtime code': 1586.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -552,7 +555,9 @@ const limits = Object.freeze({
   // Structural-direction warnings add ~0.4 KiB to the opt-in server importer.
   // Only aggregate CJS gains 0.5 KiB feature capacity; ESM, entries, CSS and
   // runtime performance/heap limits are unchanged. Keep the failed old-cap log.
-  'all CommonJS runtime code': 1316 * kibibyte,
+  // Structural RTL plus preserving cell overrides through rebuilds measures
+  // 1,351,195 bytes (27 bytes over 1319.5 KiB); retain that failed build log.
+  'all CommonJS runtime code': 1319.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

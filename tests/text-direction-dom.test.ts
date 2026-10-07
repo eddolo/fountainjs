@@ -9,8 +9,10 @@ it('uses the same direction/alignment projection in browser and server HTML impo
   const browser = HTMLImporter.parse(html, schema);
   expect(browser.toJSON()).toEqual(ServerHTMLImporter.parse(html, schema).toJSON());
   expect(browser.child(0).attrs).toMatchObject({ dir: 'rtl', align: 'start' });
-  expect(browser.child(4).child(0).child(0).attrs).toMatchObject({ dir: 'rtl', align: 'start' });
-  expect(browser.child(5).child(0).child(0).child(0).attrs).toMatchObject({ dir: 'rtl', align: 'start' });
+  expect(browser.child(4).attrs.dir).toBe('rtl');
+  expect(browser.child(5).attrs.dir).toBe('rtl');
+  expect(browser.child(4).child(0).child(0).attrs.dir).toBeUndefined();
+  expect(browser.child(5).child(0).child(0).child(0).attrs.dir).toBeUndefined();
   expect(HTMLImporter.parse(HTMLExporter.export(browser, { document: false }), schema).toJSON()).toEqual(browser.toJSON());
 });
 

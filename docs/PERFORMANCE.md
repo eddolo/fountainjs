@@ -1,5 +1,20 @@
 # Performance and memory contract
 
+## Structural reading direction (2026-10-07, Unreleased)
+
+Optional structural direction, inheritance boundaries, author controls and RTL
+table view handling add measured feature code. Sharing DOCX direction-loss
+reporting reduces the first build by about 0.7 KiB ESM / 0.6 KiB CJS; both
+initial failed budget logs are retained. Feature capacity changes narrowly:
+aggregate ESM 1,581.5 → 1,586.5 KiB; CJS 1,316 → 1,319.75 KiB; React ESM
+90 → 91.25 KiB / CJS 68 → 68.5 KiB; DOCX CJS 148.5 → 148.75 KiB; CSS
+86.4 → 86.75 KiB. DOCX ESM and all other entry caps are unchanged.
+No dependency, latency, scaling or retained-heap limit is relaxed. Full
+new-source cloud performance verification is required before production claims.
+Preserving cell overrides through table rebuilds measures 1,351,195 CJS bytes,
+27 bytes over the intermediate 1,319.5 KiB cap. That failure is retained too;
+only a further 0.25 KiB feature-capacity adjustment is made.
+
 ## Structural-direction loss diagnostics (2026-10-07, Unreleased)
 
 The opt-in server HTML importer now reports lost direction on structural

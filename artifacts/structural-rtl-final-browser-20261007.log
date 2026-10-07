@@ -1,0 +1,221 @@
+[WebServer] (node:12924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:11044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (13.0s)
+(node:28132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:44:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (4.4s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:52:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (14.9s)
+(node:8824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [firefox] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (19.6s)
+(node:21972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:44:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (11.3s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:52:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (8.4s)
+(node:9480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [webkit] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (18.1s)
+(node:21948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:44:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (7.4s)
+  ok 9 [webkit] › tests\browser\editor.spec.ts:52:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (9.9s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td[colspan="2"]')
+    Expected: "ltr"
+    Received: "rtl"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td[colspan="2"]')
+        14 × locator resolved to <td colspan="2" rowspan="1" data-colwidth="150,255" data-fountain-path="0.0.1" data-fountain-node="table_cell" data-fountain-selected-cell="true" data-fountain-column-direction="rtl">…</td>
+           - unexpected value "rtl"
+
+
+       at html-structural-direction-journey.ts:137
+
+      135 |     await expect(merged).toHaveAttribute('data-colwidth', '150,255');
+      136 |     await expect(spanEditor.locator('td').last()).toHaveAttribute('data-colwidth', '255');
+    > 137 |     await expect(merged).toHaveCSS('direction', 'ltr');
+          |                          ^
+      138 |     await spanEditor.screenshot({ path: info.outputPath('rtl-structural-merged-cell-resize.png') });
+      139 |     await spanWorkspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      140 |     await expect(merged).toHaveAttribute('data-colwidth', '150,250');
+        at htmlStructuralDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-structural-direction-journey.ts:137:26)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:41:3
+
+    attachment #1: rtl-structural-observations (application/json) ──────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\attachments\rtl-structural-observations-f02a483cb891167903a60042c616098ba5f5f2e5.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\video-3.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\error-context.md
+
+    attachment #8: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td[colspan="2"]')
+    Expected: "ltr"
+    Received: "rtl"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td[colspan="2"]')
+        13 × locator resolved to <td colspan="2" rowspan="1" data-colwidth="150,255" data-fountain-path="0.0.1" data-fountain-node="table_cell" data-fountain-selected-cell="true" data-fountain-column-direction="rtl">…</td>
+           - unexpected value "rtl"
+
+
+       at html-structural-direction-journey.ts:137
+
+      135 |     await expect(merged).toHaveAttribute('data-colwidth', '150,255');
+      136 |     await expect(spanEditor.locator('td').last()).toHaveAttribute('data-colwidth', '255');
+    > 137 |     await expect(merged).toHaveCSS('direction', 'ltr');
+          |                          ^
+      138 |     await spanEditor.screenshot({ path: info.outputPath('rtl-structural-merged-cell-resize.png') });
+      139 |     await spanWorkspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      140 |     await expect(merged).toHaveAttribute('data-colwidth', '150,250');
+        at htmlStructuralDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-structural-direction-journey.ts:137:26)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:41:3
+
+    attachment #1: rtl-structural-observations (application/json) ──────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\attachments\rtl-structural-observations-14ca04d19bcc6735d4bd86070ca6ed476e1e7957.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\video-3.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\error-context.md
+
+    attachment #8: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td[colspan="2"]')
+    Expected: "ltr"
+    Received: "rtl"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: rtl-spans.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('td[colspan="2"]')
+        13 × locator resolved to <td colspan="2" rowspan="1" data-colwidth="150,255" data-fountain-path="0.0.1" data-fountain-node="table_cell" data-fountain-selected-cell="true" data-fountain-column-direction="rtl">…</td>
+           - unexpected value "rtl"
+
+
+       at html-structural-direction-journey.ts:137
+
+      135 |     await expect(merged).toHaveAttribute('data-colwidth', '150,255');
+      136 |     await expect(spanEditor.locator('td').last()).toHaveAttribute('data-colwidth', '255');
+    > 137 |     await expect(merged).toHaveCSS('direction', 'ltr');
+          |                          ^
+      138 |     await spanEditor.screenshot({ path: info.outputPath('rtl-structural-merged-cell-resize.png') });
+      139 |     await spanWorkspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      140 |     await expect(merged).toHaveAttribute('data-colwidth', '150,250');
+        at htmlStructuralDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-structural-direction-journey.ts:137:26)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:41:3
+
+    attachment #1: rtl-structural-observations (application/json) ──────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\attachments\rtl-structural-observations-1f049f505e6d23614dcf09d78191ba65bac2022d.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\video-3.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\error-context.md
+
+    attachment #8: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-rtl-final-browser-20261007\editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML 
+    [firefox] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML 
+    [webkit] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML 
+  6 passed (2.1m)

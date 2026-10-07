@@ -25,6 +25,7 @@ import {
   setBlockType,
   setMark,
   setTextAlignment,
+  setNodeAttributes,
   setImageAlignment,
   setImageAttributes,
   deleteImage,
@@ -949,6 +950,13 @@ export function FountainToolbar({
           <strong>Table options</strong>
           <p className="fountain-toolbar__hint">Changes apply to the cell containing the cursor. Select adjacent cells with Shift-click before merging.</p>
         </div>
+        {activeTable?.table.type.spec.attrs?.dir && <fieldset><legend>Reading direction</legend>
+          <label>Table reading direction <select aria-label="Table reading direction" value={String(activeTable.table.attrs.dir ?? '')} disabled={!editor.editable}
+            onChange={(event) => setNodeAttributes(editor, activeTable.tablePath, { dir: event.target.value || undefined })}>
+            <option value="">Inherit</option><option value="ltr">Left to right</option><option value="rtl">Right to left</option><option value="auto">Automatic</option>
+          </select></label>
+          <p className="fountain-toolbar__hint">Changes column layout and inherited text direction. Explicit cell and paragraph overrides remain unchanged.</p>
+        </fieldset>}
         <fieldset><legend>Selection</legend>
           {menuTool('select-row', 'Select row', () => selectTableRow(editor), { disabled: !activeTable })}
           {menuTool('select-column', 'Select column', () => selectTableColumn(editor), { disabled: !activeTable })}

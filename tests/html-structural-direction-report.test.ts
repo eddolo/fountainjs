@@ -4,7 +4,13 @@ import { Schema } from '../src/headless';
 import { CoreSchemaSpec } from '../src/extensions';
 import { ServerHTMLImporter } from '../src/html/server';
 
-const schema = new Schema(CoreSchemaSpec);
+// Keep the loss contract for hosts supplying older/custom schemas without
+// structural direction, even though the first-party schema now retains it.
+const schema = new Schema({ ...CoreSchemaSpec, nodes: Object.fromEntries(Object.entries(CoreSchemaSpec.nodes).map(([name, spec]) => {
+  if (['paragraph', 'heading'].includes(name) || !spec.attrs?.dir) return [name, spec];
+  const { dir: _dir, ...attrs } = spec.attrs;
+  return [name, { ...spec, attrs }];
+})) });
 const cases = [
   ['ul', '<ul dir="rtl"><li>List text</li></ul>'],
   ['ol', '<ol dir="rtl"><li>Ordered text</li></ol>'],

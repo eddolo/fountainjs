@@ -27,6 +27,7 @@ import {
   toggleTableHeaderRow,
   undo,
   redo,
+  setNodeAttributes,
 } from '../src';
 
 const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
@@ -42,6 +43,46 @@ const table = (rows: readonly (readonly ReturnType<typeof cell>[])[]) => ({
 const documentWith = (value: ReturnType<typeof table>) => ({ type: 'doc', content: [value] });
 
 describe('production table editing', () => {
+  it('resizes the logical end of an RTL merged cell despite its own LTR text override', async () => {
+    const value = { ...table([
+      [cell('Merged', { dir: 'ltr', colspan: 2, colwidth: [150, 250] }), cell('Other', { colwidth: [90] })],
+      [cell('First', { colwidth: [150] }), cell('Second', { colwidth: [250] }), cell('Third', { colwidth: [90] })],
+    ]), attrs: { dir: 'rtl' } };
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: documentWith(value) });
+    const mount = document.createElement('div'); document.body.append(mount);
+    // jsdom does not lay out/inherit HTML dir; exercise the direction contract
+    // here and verify actual computed layout in all three real browsers.
+    const originalStyle = globalThis.getComputedStyle;
+    const computed = vi.spyOn(globalThis, 'getComputedStyle').mockImplementation(element => {
+      const style = originalStyle(element);
+      return element.tagName === 'TABLE' ? new Proxy(style, { get(target, key) {
+        return key === 'direction' ? element.getAttribute('dir') ?? 'ltr' : Reflect.get(target, key);
+      } }) : style;
+    });
+    const view = new EditorView(mount, editor);
+    const handle = () => view.dom.querySelector<HTMLElement>('[data-fountain-path="0.0.0"] .fountain-table-cell__resize-handle')!;
+    try {
+      expect(handle().style.left).toBe('-4px');
+      handle().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+      expect(editor.state.doc.child(0).child(0).child(0).attrs.colwidth).toEqual([150, 255]);
+      expect(editor.state.doc.child(0).child(0).child(0).attrs.dir).toBe('ltr');
+      expect(editor.state.doc.child(0).child(1).child(1).attrs.colwidth).toEqual([255]);
+      expect(undo(editor)).toBe(true);
+      handle().dispatchEvent(new MouseEvent('pointerdown', { button: 0, clientX: 100, bubbles: true, cancelable: true }));
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 70 }));
+      window.dispatchEvent(new MouseEvent('pointerup'));
+      expect(editor.state.doc.child(0).child(0).child(0).attrs.colwidth).toEqual([150, 280]);
+      expect(editor.state.doc.child(0).child(0).child(0).attrs.dir).toBe('ltr');
+      expect(undo(editor)).toBe(true);
+      handle().dispatchEvent(new MouseEvent('pointerdown', { button: 0, clientX: 100, bubbles: true, cancelable: true }));
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 70 }));
+      setNodeAttributes(editor, [0], { dir: 'ltr' });
+      window.dispatchEvent(new MouseEvent('pointerup'));
+      expect(editor.state.doc.child(0).child(0).child(0).attrs.colwidth).toEqual([150, 250]);
+      expect(handle().style.right).toBe('-4px');
+      await Promise.resolve();
+    } finally { view.destroy(); computed.mockRestore(); editor.destroy(); mount.remove(); }
+  });
   it('applies only the latest selection when a cell transaction supersedes a queued gap', async () => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
       content: documentWith(table([[cell('A'), cell('B')]])) });

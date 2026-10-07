@@ -1,4 +1,4 @@
-import type { Node, Schema } from '../schema';
+import type { Attributes, Node, Schema } from '../schema';
 
 interface ElementLike {
   readonly tagName: string;
@@ -9,6 +9,7 @@ interface ElementLike {
 export function importDefinitionList<T extends ElementLike>(
   element: T, schema: Schema, readBlocks: (element: T) => Node[],
   readRegisteredItem: (element: T) => Node | null = () => null, onGroupRemoved: () => void = () => {},
+  readAttributes: (element: T) => Attributes = () => ({}),
 ): Node | null {
   if (!schema.nodes.definition_list || !schema.nodes.definition_term || !schema.nodes.definition_description) return null;
   const items: Node[] = [];
@@ -23,13 +24,13 @@ export function importDefinitionList<T extends ElementLike>(
     const registered = readRegisteredItem(child as unknown as T);
     if (registered) { items.push(registered); return true; }
     const blocks = readBlocks(child as unknown as T);
-    items.push(schema.node(tag === 'dt' ? 'definition_term' : 'definition_description', {},
+    items.push(schema.node(tag === 'dt' ? 'definition_term' : 'definition_description', readAttributes(child as unknown as T),
       blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]));
     return true;
   });
   try {
     if (!visit(element)) return null;
-    const result = schema.node('definition_list', {}, items);
+    const result = schema.node('definition_list', readAttributes(element), items);
     schema.validate(result);
     if (groups) onGroupRemoved();
     return result;

@@ -1,17 +1,26 @@
 # FountainJS opportunity roadmap
 
-Current structural RTL audit (2026-10-07, Unreleased): the conversion lab now
-reports when built-in list/table/quote/definition containers lose direction,
-instead of treating retained paragraph direction as structural fidelity.
-An independent native original and actual downloaded reader expose misplaced
-markers and LTR columns in all desktop engines. 101 focused tests / nine files
-and three recorded diagnostics pass; the layout mismatch intentionally remains
-visible. Next: retain container direction in both importers/model/HTML readers,
-provide undoable author controls, use logical decorations, and verify RTL table
-navigation, spans, column sizing/reordering and export losses. Do not merely
-flip CSS while keyboard/resize coordinates still assume LTR. PROD-04 remains
-Partial. `411be29` passes full Linux units/types/package/performance/Lean but its
-browser installation remains live; new-source certification is still required.
+Current structural RTL work (2026-10-07, Unreleased): implemented validated
+list/item, quote, table/row/cell and definition-list direction, parent inheritance,
+undoable author controls, logical decorations, physical RTL cell selection and
+pointer/keyboard column resizing. Recorded native-source/import/edit/download
+journeys include rowspan/colspan and a merged cell's independent LTR override;
+they found and fixed direction loss when table commands rebuilt cells. 196
+focused tests / 17 files, build/types/package boundaries/budgets/CommonMark and
+nine single-worker Windows Chromium/Firefox/WebKit journeys pass. New/changed
+captures are directly inspected; unchanged captures reuse verified SHA-256
+matches. This is layout-direction evidence, not source pixel identity.
+
+Next: diagnose Linux WebKit native code input, then physical-left/right RTL
+column insertion/reordering and list outdent inheritance; retain inline bidi
+isolation, unsupported automatic wrapper flattening, native devices, assistive
+technology, Word bidi and locale work as open. PROD-04 remains Partial.
+`4f3a795` passes full Linux verification (2,705 tests / 206 files), performance
+and Lean but fails code-input preflight before Fountain typing, even in the
+second native control with PRE's Tab stop removed. `411be29` also finishes with
+4 passes / 1 preflight failure; `cdb98b7`'s full matrix remains live as inspected.
+A separate structural-direction preflight retains evidence independently.
+Full new-source Linux certification and npm publication remain outstanding.
 
 Current inline-alignment follow-up (2026-10-07, Unreleased): preserve supported
 ancestor inline `text-align` while flattening HTML wrappers, with nearest

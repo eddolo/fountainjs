@@ -12,7 +12,7 @@ describe('toolbar configuration panel keyboard ownership', () => {
     ['link', 'link', 'Link URL'], ['search', 'search', 'Find text'],
     ['highlight', 'highlight', 'Highlight colour'], ['text-style', 'text-style', 'Font family'],
     ['image', 'image', 'Image placement'], ['insert-table', 'insert-table', 'Table rows'],
-    ['media', 'media', 'Media type'], ['code-block', 'code', 'Code language'], ['table-menu', 'table-tools', 'Select row'],
+    ['media', 'media', 'Media type'], ['code-block', 'code', 'Code language'], ['table-menu', 'table-tools', 'Table reading direction'],
   ])('opens %s with owned focus and cancels without changing the document', async (action, panel, field) => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
       type: 'doc', content: [{ type: action === 'code-block' ? 'code_block' : 'paragraph', content: [{ type: 'text', text: 'Keep this selection' }] }],

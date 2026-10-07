@@ -1,5 +1,26 @@
 # FountainJS API
 
+Unreleased structural reading direction (2026-10-07): the supplied list,
+list-item/task-item, quote, definition-list/term/description and table/row/cell
+schemas accept optional `dir: 'ltr' | 'rtl' | 'auto'`. Ordinary documents omit
+this attribute. Supported HTML containers retain their shared direction;
+implicit descendants inherit it rather than receiving copied overrides.
+Explicit descendant overrides remain independent. Unsupported fixed-direction
+wrappers can still project their context onto supported descendants; a flattened
+shared `auto` context is not guessed.
+
+`setTextDirection(editor, dir)` changes a selected direction-capable
+`NodeSelection` container itself, preserving child overrides and history.
+Text ranges and cell selections keep their existing text-block behavior.
+Pass `undefined` to remove an override. The React table-options panel exposes
+table reading direction; hosts can use the same commands for their own block
+controls. View input maps physical horizontal cell-range keys and resize edges
+through the table's computed direction, not a cell's text override. Core table
+positions, widths and commands remain in source/logical order. HTML and JSON
+retain this state; ordinary Markdown and native Word projections report losses.
+This is not general bidi isolation, native mobile/Word certification or a
+promise that every table interaction is already RTL-aware.
+
 Unreleased HTML blank-paragraph boundary: `HTMLExporter.export` includes
 `p{min-height:1em;min-height:1lh}` in its default standalone stylesheet. Empty
 paragraphs, including those containing empty marked spans, occupy one computed

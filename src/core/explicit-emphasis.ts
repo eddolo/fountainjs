@@ -1,6 +1,6 @@
 import type { Attributes } from './schema';
 import { paragraphLayoutDOMAttributes } from './paragraph-layout';
-import { textDirectionAttribute } from './text-direction';
+import { textDirectionAttribute, textDirectionDOMAttributes } from './text-direction';
 
 /** In explicit mode, strong/em marks alone determine text emphasis. This lets
  * imported normal-weight headings and non-italic quotations remain editable,
@@ -36,10 +36,10 @@ export function readExplicitEmphasis(element: { getAttribute(name: string): stri
 export const explicitQuoteAppearanceAttribute = explicitEmphasisAttribute;
 
 export function quoteDOMAttributes(attrs: Readonly<Attributes>): Attributes {
-  return attrs.appearance === 'explicit' ? {
+  return { ...textDirectionDOMAttributes(attrs), ...(attrs.appearance === 'explicit' ? {
     'data-fountain-quote-appearance': 'explicit',
     style: 'margin:0;padding:0;border:0;color:inherit',
-  } : {};
+  } : {}) };
 }
 
 export function readExplicitQuoteAppearance(element: { getAttribute(name: string): string | null }): Attributes {

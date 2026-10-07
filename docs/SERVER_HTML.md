@@ -258,23 +258,28 @@ browser importer:
   breaks, footnotes, page templates, fields, and portable widgets;
 - extension nodes and marks that declare a platform-neutral `parseHTML` rule.
 
-Direction retention has two distinct scopes. Supported paragraph/heading
-direction can survive while a first-party list, definition list, quotation or
-table loses its own structural `dir`. The server report now emits
-`block-html-projection` for that lost fixed or shared automatic context,
-including inherited fixed direction. This matters for list markers, table
-column order and container decoration, not just paragraph text alignment.
-Ordinary directionless structures do not receive that warning; accepted custom
-`parseHTML` rules still own their retention contract. The browser importer has
-no report API; the conversion lab uses this server adapter and shows the warning.
+Direction retention has two distinct scopes. The supplied schemas now retain
+structural `dir` on lists/items, task lists/items, quotes, definition lists and
+entries, tables/rows/cells. Children inherit the retained context without
+copied direction attributes; explicit child overrides remain independent when
+an author changes the parent. Shared `auto` contexts are retained rather than
+guessed separately for every paragraph. Unsupported wrappers can still project
+fixed direction, but flattened automatic contexts are not reconstructed.
 
-A recorded three-engine diagnostic compares an independent native original,
-the imported editor and its actual downloaded HTML. All seven paragraph
-directions survive in the fixture, but list markers remain on the wrong side,
-table columns remain LTR and the native logical quote border is not reproduced.
-These are known failures, not approved RTL layout. Structural retention,
-RTL-aware table navigation/resizing, logical decorations and read/export
-agreement must be implemented and verified before claiming that capability.
+Older/custom schemas without structural direction still get the explicit
+`block-html-projection` warning; retained paragraph direction alone is not
+proof of preserved markers, column ordering or decorations. Accepted custom
+`parseHTML` rules remain authoritative. The browser importer has no report API;
+the conversion lab uses this server adapter and shows its warnings.
+
+Recorded desktop checks compare a separate native source, real conversion-lab
+editing and the actual downloaded HTML in a separate reader. Logical quote
+decoration and table column flow are now retained. Physical horizontal
+cell-range keys and resize gestures use the table's direction, including a
+merged cell with an independent LTR text override. Source order is never
+reversed in the document. Broader bidi/inline isolation, native mobile typing,
+direction-aware insertion/reordering controls and native Word fidelity remain
+separate outstanding work, not implied by this fixture.
 See [W3C's structural direction guidance](https://www.w3.org/International/questions/qa-html-dir.en.html).
 
 Unmapped wrappers containing block descendants no longer flatten those

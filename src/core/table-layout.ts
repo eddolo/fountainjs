@@ -2,6 +2,7 @@ import type { Attributes, DOMOutputSpec, Node } from './schema';
 import { TableMap } from './table-map';
 import { tableAppearanceDOMAttributes } from './table-appearance';
 import { isTablePreferredWidth, readTablePreferredWidth, tablePreferredWidthDOMAttributes } from './table-width';
+import { textDirectionDOMAttributes } from './text-direction';
 
 export const tableLayoutAttribute = {
   default: undefined,
@@ -14,8 +15,8 @@ export function readTableRow(element: { getAttribute(name: string): string | nul
 }
 
 export function tableRowDOMSpec(node: Node): DOMOutputSpec {
-  return ['tr', typeof node.attrs.repeatHeader === 'boolean'
-    ? { 'data-fountain-repeat-header': String(node.attrs.repeatHeader) } : {}, 0];
+  return ['tr', { ...textDirectionDOMAttributes(node.attrs), ...(typeof node.attrs.repeatHeader === 'boolean'
+    ? { 'data-fountain-repeat-header': String(node.attrs.repeatHeader) } : {}) }, 0];
 }
 
 /** A role is the legacy host default, not a replacement for explicit page intent. */
@@ -51,7 +52,7 @@ export function tableDOMSpec(node: Node): DOMOutputSpec {
   const preferred = tablePreferredWidthDOMAttributes(node.attrs.preferredWidth);
   const paint = tableAppearanceDOMAttributes(node.attrs.appearance);
   const combinedStyle = [paint.style, preferred.style].filter(Boolean).join(';');
-  const appearance = { ...paint, ...preferred, ...(combinedStyle ? { style: combinedStyle } : {}) };
+  const appearance = { ...paint, ...preferred, ...textDirectionDOMAttributes(node.attrs), ...(combinedStyle ? { style: combinedStyle } : {}) };
   const style = appearance.style ? `${appearance.style};` : '';
   if (node.attrs.layout !== 'fixed' && node.attrs.layout !== 'auto') return ['table', appearance, ['tbody', 0]];
   if (node.attrs.layout === 'auto') return ['table', { ...appearance, 'data-fountain-table-layout': 'auto', style: `${style}table-layout:auto` }, ['tbody', 0]];

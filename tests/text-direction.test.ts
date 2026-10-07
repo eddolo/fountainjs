@@ -80,7 +80,8 @@ describe('portable block direction', () => {
     expect(directions(editor.state.doc)).toEqual(['rtl', undefined, undefined, undefined]);
     editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [2])));
     expect(setTextDirection(editor, 'ltr')).toBe(true);
-    expect(directions(editor.state.doc)[2]).toBe('ltr');
+    expect(editor.state.doc.child(2).attrs.dir).toBe('ltr');
+    expect(directions(editor.state.doc)[2]).toBeUndefined();
     const cell = (text: string) => schema.node('table_cell', {}, [p(text)]);
     const table = createEditor({ schema: CoreSchemaSpec, content: schema.node('doc', {}, [schema.node('table', {}, [
       schema.node('table_row', {}, [cell('A'), cell('B'), cell('C')]),

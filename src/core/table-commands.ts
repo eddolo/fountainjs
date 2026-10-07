@@ -62,6 +62,9 @@ function cellAttrs(cell: Node, overrides: Attributes = {}, targetName = cell.typ
     background: overrides.background ?? cell.attrs.background ?? '',
     appearance: overrides.appearance ?? cell.attrs.appearance,
   };
+  if (cell.type.schema.nodes[targetName]?.spec.attrs?.dir) {
+    attrs.dir = Object.hasOwn(overrides, 'dir') ? overrides.dir : cell.attrs.dir;
+  }
   if (targetName === 'table_header') {
     attrs.scope = overrides.scope ?? cell.attrs.scope ?? 'col';
   }

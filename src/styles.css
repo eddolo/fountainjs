@@ -164,10 +164,10 @@
 .fountain-editor [data-fountain-gap="inside"] { min-height: 1.5em; outline: 2px dashed color-mix(in srgb, var(--fountain-accent) 55%, transparent); outline-offset: 2px; }
 .fountain-editor h1 { font-size: 2.25em; line-height: 1.15; letter-spacing: normal; }
 .fountain-editor h2 { font-size: 1.65em; line-height: 1.2; letter-spacing: normal; }
-.fountain-editor blockquote { padding: 4px 0 4px 18px; color: var(--fountain-muted); border-left: 3px solid var(--fountain-accent); }
+.fountain-editor blockquote { padding: 4px 0; padding-inline-start: 18px; color: var(--fountain-muted); border-inline-start: 3px solid var(--fountain-accent); }
 .fountain-editor dl { margin: 1em 0; }
 .fountain-editor dt { font-weight: 600; }
-.fountain-editor dd { margin: 0 0 0.8em 1.5em; }
+.fountain-editor dd { margin: 0 0 0.8em; margin-inline-start: 1.5em; }
 .fountain-editor :is(dt, dd) > p { margin: 0.3em 0; }
 .fountain-editor .fountain-page-header, .fountain-editor .fountain-page-footer { position: relative; margin-block: 1.25rem; padding: 1.5rem 1rem .75rem; border: 1px dashed var(--fountain-border); border-radius: 8px; background: color-mix(in srgb, var(--fountain-accent-soft) 42%, transparent); }
 .fountain-editor .fountain-page-header::before, .fountain-editor .fountain-page-footer::before { position: absolute; inset-block-start: .4rem; inset-inline-start: 1rem; color: var(--fountain-muted); font: 700 .65rem/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; user-select: none; }
@@ -278,6 +278,8 @@
 .fountain-table-cell__resize-handle:hover, .fountain-table-cell__resize-handle:focus-visible, [data-fountain-resizing="true"] > .fountain-table-cell__resize-handle { background: color-mix(in srgb, var(--fountain-accent) 45%, transparent); outline: 0; }
 .fountain-editor tr:last-child > * { border-bottom: 0; }
 .fountain-editor tr > *:last-child { border-right: 0; }
+.fountain-editor :is(td,th)[data-fountain-column-direction="rtl"] { border-right: 0; border-left: 1px solid var(--fountain-border); }
+.fountain-editor tr > [data-fountain-column-direction="rtl"]:last-child { border-left: 0; }
 .fountain-editor figure { margin-block: 1.5em; }
 .fountain-editor figure[data-align="left"] { margin-inline: 0 auto; }
 .fountain-editor figure[data-align="center"] { margin-inline: auto; }

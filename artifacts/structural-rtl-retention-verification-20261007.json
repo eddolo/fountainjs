@@ -1,0 +1,543 @@
+{
+  "date": "2026-10-07",
+  "scope": "Structural reading-direction retention and physical table input; not complete bidi/localization parity",
+  "release": "Unreleased; npm 0.4.0-beta.2 unchanged",
+  "baseCommit": "4f3a7953d895c52e1573c503c967abb167c6964d",
+  "checks": {
+    "focused": {
+      "passed": 196,
+      "files": 17,
+      "workers": 1,
+      "log": "artifacts/structural-rtl-frozen-focused-20261007.log"
+    },
+    "browser": {
+      "passed": 9,
+      "failed": 0,
+      "retries": 0,
+      "workers": 1,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "platform": "Windows",
+      "duration": "3.2 minutes",
+      "log": "artifacts/structural-rtl-frozen-browser-20261007.log",
+      "scope": [
+        "structural RTL native-source/import/edit/undo/table-panel/physical selection/keyboard and pointer resize/downloaded reader",
+        "mixed rowspan/colspan with merged-cell LTR override",
+        "inherited inline alignment native-source regression",
+        "retained shared automatic section direction regression"
+      ]
+    },
+    "build": {
+      "result": "passed",
+      "log": "artifacts/structural-rtl-frozen-build-20261007.log"
+    },
+    "budgets": {
+      "result": "passed",
+      "log": "artifacts/structural-rtl-frozen-final-budget-20261007.log",
+      "cjsAggregateBytes": 1351195,
+      "intermediateCjsCeilingBytes": 1351168,
+      "intermediateFailure": "27 bytes above intermediate aggregate CJS feature capacity; retained failed log, no performance/runtime thresholds relaxed",
+      "latencyGrowthHeapLimits": "unchanged"
+    },
+    "types": {
+      "result": "passed",
+      "log": "artifacts/structural-rtl-frozen-types-20261007.log"
+    },
+    "publicApi": {
+      "result": "passed",
+      "declarationFiles": 409,
+      "log": "artifacts/structural-rtl-frozen-api-20261007.log"
+    },
+    "headless": {
+      "result": "passed",
+      "boundaryModules": 98,
+      "log": "artifacts/structural-rtl-frozen-headless-20261007.log"
+    },
+    "commonmark": {
+      "result": "existing baseline passed; not full conformance",
+      "defaultMatches": 563,
+      "strongestOptInMatches": 613,
+      "total": 652,
+      "log": "artifacts/structural-rtl-frozen-markdown-20261007.log"
+    }
+  },
+  "discoveredRegression": {
+    "before": {
+      "browserPassed": 6,
+      "browserFailed": 3,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "log": "artifacts/structural-rtl-final-browser-20261007.log",
+      "symptom": "Keyboard column resize preserved geometry but rebuilt merged cell without its independent LTR text direction"
+    },
+    "repair": "src/core/table-commands.ts shared cellAttrs preserves optional dir for receiving cell/header schemas, respecting explicit overrides",
+    "after": "All three expanded journeys pass and retain LTR override through resize/undo/download; no assertion weakened"
+  },
+  "visualReviewSummary": {
+    "captures": 45,
+    "directlyInspectedThisTurn": 10,
+    "sha256IdenticalToPreviouslyReviewed": 35,
+    "recording": "video.webm and trace.zip retained locally, not watched",
+    "finding": "Logical markers/quote edge and right-to-left first table column retained; merged Latin cell remains LTR within RTL grid; source/editor/reader themes and dimensions intentionally differ, not pixel-identical certification"
+  },
+  "cloud": {
+    "previous4f3a795": {
+      "runId": 37689744474,
+      "conclusion": "failure",
+      "verify": "2705 passed / 206 files; gates passed",
+      "performance": "passed",
+      "lean": "passed",
+      "browser": "4 passed / 1 failed preflight; full matrix skipped",
+      "failure": "Second independent Linux WebKit native code control also fails to insert literal edited after removing PRE tabindex; Fountain typing not reached",
+      "rawFailureLog": "artifacts/ci-4f3a795-failure-20261007.log",
+      "pagesRun": 37689744434,
+      "pages": "success"
+    },
+    "previous411be29": {
+      "runId": 37688029442,
+      "conclusion": "failure",
+      "browser": "4 passed / 1 failed preflight",
+      "rawBrowserLog": "artifacts/ci-411be29-final-browser-20261007.log"
+    },
+    "previousCdb98b7": {
+      "runId": 37686433794,
+      "status": "in_progress as last inspected",
+      "browserJob": 113015332581,
+      "activeStep": "Run pnpm test:browser"
+    },
+    "currentSource": "not yet pushed/verified in cloud at report creation; independent structural preflight added before unrelated native code-input checks"
+  },
+  "remaining": [
+    "Linux WebKit native and Fountain code input investigation",
+    "Physical-left/right RTL column insertion controls and column/block reordering",
+    "List outdent direction inheritance",
+    "Inline bidi isolation and broader navigation",
+    "Unsupported shared-auto wrapper flattening and arbitrary CSS cascades",
+    "Complete nested structural-loss diagnostics for legacy/custom receiving schemas",
+    "Physical mobile IME/assistive-technology evidence",
+    "Native Word bidi fidelity",
+    "Translated locale packages",
+    "Remaining CommonMark semantic differences"
+  ],
+  "parityLedger": "PROD-04 remains Partial; no row promotion or percent change",
+  "sourceHashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "92850c3c0831c14fcfc0864bef7c076cc21b5db5fd620f2f99cd7c095531695b"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "218172f296892b82d8f8385cb467f502c353e22e8a9cc899aef4462d1f331bcc"
+    },
+    {
+      "path": "src/core/commands.ts",
+      "sha256": "a5a8d40015de5feb063a944b28c0306d5d20c90d82ab9b48d25f1ab983d8db9a"
+    },
+    {
+      "path": "src/core/explicit-emphasis.ts",
+      "sha256": "021cbe3a7d7f8221ea72c8d1f43afd300a843bc4c63f45b265d2589e0f437bba"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "d0928b784347f51db7a7de958937502e1c8acfd0379ff0628f566e1db7997553"
+    },
+    {
+      "path": "src/core/exporters/markdown-exporter.ts",
+      "sha256": "2e785e89d80b08235cdd2833dde11b6d5257c67a52a10731025dca08ae6d00a0"
+    },
+    {
+      "path": "src/core/importers/html-definition-list.ts",
+      "sha256": "48fc4f29b411f84dd91101a0ba0bde4ada2056c4af317ed9ff0a1e57b431def5"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "012e16c770971f52b66e1966a73b86f1bca63aa7aeeb9610fd2b9194363ab4d5"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "af8ed728f71ea7ac100c4629b6f189ab3c5cc5bd1ef86e8f608712679314b8ff"
+    },
+    {
+      "path": "src/core/table-commands.ts",
+      "sha256": "9723e3d75d2c29f4e57ff5a402e20d10a659e284c0527fcfc120f7832cf1157e"
+    },
+    {
+      "path": "src/core/table-layout.ts",
+      "sha256": "9848ca51f676259e9be1a034291b92e5cfa50aff16089713eb393781bed8921f"
+    },
+    {
+      "path": "src/core/text-direction.ts",
+      "sha256": "378ebd6bb66e3db9a7fff4b479bb8c331c6b28a7f05a253084761a0a87980f68"
+    },
+    {
+      "path": "src/docx/index.ts",
+      "sha256": "688ebc98676754cbfa2e656c43a6d5117b90bf468a2b25dfb7785e07eccb74ff"
+    },
+    {
+      "path": "src/extensions/nodes/blockquote.ts",
+      "sha256": "b88b442762596fa13f9431e5b4e59c1c4f5f363fa2125819107036b19dd6a42e"
+    },
+    {
+      "path": "src/extensions/nodes/bullet-list.ts",
+      "sha256": "711074730deb45f16deed151ad7c4f6359aed773c3255767831e9563174ab4c6"
+    },
+    {
+      "path": "src/extensions/nodes/definition-list.ts",
+      "sha256": "a43a9f6749cd59bc9e709124b3514cd136fad56ff544bd7390cf5d810b4a16df"
+    },
+    {
+      "path": "src/extensions/nodes/list-item.ts",
+      "sha256": "fca9d368aab89b305981d2b4762566c70404b0092cb4598a9a0eab3a9d1ac2e7"
+    },
+    {
+      "path": "src/extensions/nodes/ordered-list.ts",
+      "sha256": "d1355106f6cda7b73d3928892638d39132622a2e739983bf9d44f3ad177d2e64"
+    },
+    {
+      "path": "src/extensions/nodes/table-cell-view.ts",
+      "sha256": "2c6b52c656def1d7ab198ebe47cde1d08b0db646344da7e19bb4cb5ef5bc3b74"
+    },
+    {
+      "path": "src/extensions/nodes/table-row.ts",
+      "sha256": "0a0bd753d890fcaf3fb637c9d373c8cf20e524cc08fff8293b9a7ebfd1bd1e98"
+    },
+    {
+      "path": "src/extensions/nodes/table.ts",
+      "sha256": "b3b7179155704a1259644555a3db49d32dac77be6faee3c84049bb96a5e79f54"
+    },
+    {
+      "path": "src/extensions/nodes/task-item.ts",
+      "sha256": "51cb0b57d9e2a813ea4bf125b93aa1bf14b2e02a12ea153336048b116c5044dd"
+    },
+    {
+      "path": "src/extensions/nodes/task-list.ts",
+      "sha256": "448eaf1651d3203c97a546b1cfa9434b2650c816c39baac3283eab60a0578659"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "43e2d050c846a88acc1bb931a929474467659f520b7a43050a43735d0bac87b5"
+    },
+    {
+      "path": "src/react/FountainToolbar.tsx",
+      "sha256": "59c01817aee5df570223e73d8eafdb5dae4e55e00639d621f2d8b4e2e809a6e8"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "f8180f80a1a5a78dc244e64300772bb25872dd075f0c0a9aa6178e12c010d1ee"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "33108cb0a7daa6f2549f96bb9de967f35fc8018fc9ebed87cb53e5a74af19acc"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "fca5d914cfe06bd73a8fe70915a0214d7876e1c42e892d8004d4eefdbd40c6ca"
+    },
+    {
+      "path": "tests/browser/html-structural-direction-journey.ts",
+      "sha256": "cf23c6b6575cdde942f61fc22373d43fe40de32d8cd50b383c48ae38ab197212"
+    },
+    {
+      "path": "tests/html-structural-direction-report.test.ts",
+      "sha256": "c355421ce4d6cdf4ae7e4417f9ddcad7666ec30e92092c3a2a9e5b7d87f0065b"
+    },
+    {
+      "path": "tests/html-structural-direction.test.ts",
+      "sha256": "b4e02209c9d2086d6ae5c8af054f6620054ac67009e14d9e371b3cb8be6578c0"
+    },
+    {
+      "path": "tests/react-toolbar-panels.test.tsx",
+      "sha256": "75d1bed7365a02a34c3c6cb4caf5b8831a91d76fc70003d53ed024c98de048a7"
+    },
+    {
+      "path": "tests/table.test.ts",
+      "sha256": "c0b153049b8985db4c9104ba17d7b5e504272b6091464a032c2e9ff8a135e925"
+    },
+    {
+      "path": "tests/text-direction-dom.test.ts",
+      "sha256": "8111d8b9a991c818cee77e64f9a86c792665203f90cc271c15bcc50db1d74c9c"
+    },
+    {
+      "path": "tests/text-direction.test.ts",
+      "sha256": "38a3de0200320c3395518392df390215681faac5577a5b0be0d7df5ee3239def"
+    }
+  ],
+  "visualReview": [
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-downloaded-reader.png",
+      "sha256": "31435202d76fdab21b52da93e95a0df80ee81b3ab8c3daff830468ccee5dac1c",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-editor.png",
+      "sha256": "0b6de18cfbc26ebcc6217166353aadfe330b886d4835c075232fd17bd7923958",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-native.png",
+      "sha256": "bd5e4c0c4f53fe9070ae8e454e9e86f3b1084d7316f8d4eec95463721c1512e2",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-chromium/inherited-alignment-native.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-downloaded-reader.png",
+      "sha256": "66b9c73595b44864e8730d1060578459254afad920607dead275a863cc9fec66",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-editor.png",
+      "sha256": "7004552d62620a5527c008b0f7883e95b64f979f4d593b63b88bba1ecdf4e1bb",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-native.png",
+      "sha256": "62a9b78446a48ce0bd4748218be1184444e28f9a410530d9334ec94cc3aa8a5b",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-firefox/inherited-alignment-native.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-downloaded-reader.png",
+      "sha256": "25cbb84cb7d05cd3412227c30e09a2e8971aa71df100f4889cb966d73235167b",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-editor.png",
+      "sha256": "e10f14684b3552603bf1b0029cd05a7e2a2bc2e45aa7a244210ec1ae98b057e9",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-native.png",
+      "sha256": "c50452c30424f670a5899e72ff8088ce245d2ed201bee1c19581dd731fe1c889",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/html-inherited-alignment-frozen-browser-20261007/editor-imports-inherited-i-03899-editing-and-downloaded-HTML-webkit/inherited-alignment-native.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-editor.png",
+      "sha256": "17a24624b51739940c0812180f525519ad90ee0939dee9486fc7fbd2e4d71e5c",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-reader.png",
+      "sha256": "549980d7b1aff8148fd4b1205b57def731bfecade19c299da1833b0f986605a3",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-ltr-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-editor.png",
+      "sha256": "c7f0cbda5ae0fdc382189c1a08c16994798e595ee5bfc9d05993ac1429db2c37",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-reader.png",
+      "sha256": "c8076cb23f702ffe7df2fdeaddecba837328f0d74515227ba71eb395d75c3fdf",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-chromium/auto-container-rtl-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-editor.png",
+      "sha256": "f635d728fb4e5f903d281e6744a0801079d390eb023bb36e08d66bc2c5b4b901",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-reader.png",
+      "sha256": "81c1fa1593e477678df8901120e2b6cf21ed91b10d525458b33b9e0dd4a8cf4e",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-ltr-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-editor.png",
+      "sha256": "f7912521ac1c33e23d309de72e0fb8dd125ef95f1159d7aa2b134ba59e470624",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-reader.png",
+      "sha256": "333205ee228f571d2a02d38de9a00441877e4f1dcbddf80ee701018aedd026d9",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-firefox/auto-container-rtl-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-editor.png",
+      "sha256": "d136f3c0edb529c08eac8521efbb3b1a15818988adbce961082ab56028890348",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-reader.png",
+      "sha256": "4f4bd69c64a9d9681ada2b783749dca6e4f43b640c8d0858a6ec1342206acd79",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-ltr-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-editor.png",
+      "sha256": "6c5c67f2e43a795d88f38d3607683baa44132d8671a1d55d202b15599938f7b8",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-editor.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-reader.png",
+      "sha256": "3f06263a10abe537c6b7c8ade2fc1c3df528e813bd2549f964fb5a1acf9e9c28",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/auto-container-direction-corrected-20261007/editor-retains-a-shared-au-e50a2--history-and-reader-preview-webkit/auto-container-rtl-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-downloaded-reader.png",
+      "sha256": "bc9744c0633f38b8e97045dfd4aef735f59f8f6e786166fd2ce21be9cab3474a",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-downloaded-spans.png",
+      "sha256": "a23ee5bd92528e8928a50f8e062c4419fb0686e478dee24bbd21e02ed716c538",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-imported-with-report.png",
+      "sha256": "1d1d079d365ce957248b85bee3f4d723533c7a2fefae13d90e6c3537a7fb4141",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-imported-with-report.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-merged-cell-resize.png",
+      "sha256": "5644d4a3bd098a5be87cb02388d57657a46e17a28bd733c1b968157195794caf",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-native-spans.png",
+      "sha256": "5d348143c34dfc899db5fb95523174e4fe444fcc79e03052981194bb184c50b8",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-native.png",
+      "sha256": "2dba23455495b08ae58eec9376868a4f27d311bfbd408dc2a4d67984af47285c",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-native.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-physical-cell-selection.png",
+      "sha256": "7f1eec228ca251112d1e4f59bf889ea6a4ef50334991f412f3fe2381307aa585",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-resized.png",
+      "sha256": "195108cd7e804e0eb4d5ad0f07e4f4eee9f4f8ec6be5776e2f4180c0948dbef5",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-chromium/rtl-structural-resized.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-downloaded-reader.png",
+      "sha256": "ee7a983eca07cb8e2a2c8c51b625045dfdf196edfb10dbf62719a45045df737c",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-downloaded-spans.png",
+      "sha256": "664274237c6231af472a7ff334aa79125d8573150743517a28519eebe59ced9b",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-imported-with-report.png",
+      "sha256": "0348a27e7652e5f7fe2acc697823f0f98e67bfc1901324a00961710e0155c7df",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-imported-with-report.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-merged-cell-resize.png",
+      "sha256": "2446c37e60f602abb779bacc9df1058ba26c4012fb12f7d0e2a17ee7f251d796",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-native-spans.png",
+      "sha256": "d843b9e21154303affe63dea1c29715c283aa0310d0080206787763721e9eeea",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-native.png",
+      "sha256": "caa28c55a6c5bb0a521f8d614fb52bdc8236fff9beb76333852051f446839431",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-native.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-physical-cell-selection.png",
+      "sha256": "2199b42e243a207e8b973b77be320d32052f9620c6c29d505dd084fb0d246815",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-physical-cell-selection.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-resized.png",
+      "sha256": "6ee9f32f3eac2e346bbb1490d5dfe71031d9ee516f7dc02a293c7c0aff200f30",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-firefox/rtl-structural-resized.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-downloaded-reader.png",
+      "sha256": "92c9e8112471f66e295abbaa6accb1c016044b8ed67e9885d9290c9d6ed2fb63",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-downloaded-spans.png",
+      "sha256": "d2aa10897458a2af00aae80a6de7e00ebd523dc3b5b8b4f7c5ccb4ae678bdafb",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-imported-with-report.png",
+      "sha256": "89d998c862d4b2705cd430ca180dc89086f053130528ad70d111551ea406dae3",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-imported-with-report.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-merged-cell-resize.png",
+      "sha256": "aebf6fbfa65b5a81a2e9bd7f3ad70ee317bb3c5585251139cac4eef81b068e61",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-native-spans.png",
+      "sha256": "be7b16866f205d82991f899d215417bf77342056f7fdba5e44173384ef4656be",
+      "review": "directly-inspected-this-turn",
+      "predecessor": null
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-native.png",
+      "sha256": "234160cf0c26631f1c363fcc295378843c13ebf4f2a517db69e6d0456fe904e9",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-native.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-physical-cell-selection.png",
+      "sha256": "2f1b0a2a7ebafa14d9d816faa295e5fa8ee33a78d272ac75e933ae7a1e43df55",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-physical-cell-selection.png"
+    },
+    {
+      "path": "artifacts/structural-rtl-frozen-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-resized.png",
+      "sha256": "08a81d78ea7abc34e763643f826a54a285286eb31734e3804df7fe60e7f185b2",
+      "review": "identical-to-reviewed-predecessor",
+      "predecessor": "artifacts/structural-rtl-browser-20261007/editor-retains-structural--27d85-editing-and-downloaded-HTML-webkit/rtl-structural-resized.png"
+    }
+  ]
+}

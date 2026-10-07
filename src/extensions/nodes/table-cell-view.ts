@@ -12,6 +12,7 @@ import {
 import { getNodeAtPath } from '../../core/transaction/path';
 import { tableBackground } from '../../core/table-background';
 import { cellAppearanceAttribute, cellAppearanceDOMAttributes } from '../../core/table-appearance';
+import { textDirectionAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
 
 const MIN_WIDTH = 40;
 const MAX_WIDTH = 2_000;
@@ -44,6 +45,7 @@ function validColwidth(value: unknown): boolean {
 }
 
 export const tableCellAttributes = {
+  dir: textDirectionAttribute,
   colspan: { default: 1, validate: (value: unknown) => Number.isInteger(value) && Number(value) >= 1 && Number(value) <= 100 },
   rowspan: { default: 1, validate: (value: unknown) => Number.isInteger(value) && Number(value) >= 1 && Number(value) <= 100 },
   colwidth: { default: null, validate: validColwidth },
@@ -62,6 +64,7 @@ export function tableCellDOMAttributes(node: Node, context?: NodeDOMContext): At
   const appearance = cellAppearanceDOMAttributes(node, context);
   const style = [appearance.style, complete ? `width:${colwidth.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
   return {
+    ...textDirectionDOMAttributes(node.attrs),
     ...appearance,
     colspan: node.attrs.colspan,
     rowspan: node.attrs.rowspan,
@@ -87,6 +90,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
     private startDOMWidth = 0;
     private previewWidth = 0;
     private dragging = false;
+    private dragDirection = 1;
 
     constructor(node: Node, private readonly view: unknown, private readonly getPath: () => number[]) {
       this.current = node;
@@ -140,6 +144,13 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       const attrs = tableCellDOMAttributes(this.current, editor ? { document: editor.state.doc, path: this.getPath() } : undefined);
       this.dom.colSpan = Number(attrs.colspan) || 1;
       this.dom.rowSpan = Number(attrs.rowspan) || 1;
+      if (attrs.dir) this.dom.setAttribute('dir', String(attrs.dir));
+      else this.dom.removeAttribute('dir');
+      const direction = this.columnDirection;
+      this.dom.dataset.fountainColumnDirection = direction === -1 ? 'rtl' : 'ltr';
+      // Column geometry belongs to the table, not a cell's text override.
+      this.handle.style.left = direction === -1 ? '-4px' : 'auto';
+      this.handle.style.right = direction === -1 ? 'auto' : '-4px';
       if (tagName === 'th') this.dom.setAttribute('scope', String(this.current.attrs.scope ?? 'col'));
       const colwidth = String(attrs['data-colwidth'] ?? '');
       if (colwidth) this.dom.dataset.colwidth = colwidth;
@@ -161,6 +172,10 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       if (width === undefined) return;
       this.handle.setAttribute('aria-valuenow', String(width));
       this.handle.setAttribute('aria-valuetext', `${width} pixels`);
+    }
+
+    private get columnDirection(): number {
+      return getComputedStyle(this.dom.closest('table') ?? this.dom).direction === 'rtl' ? -1 : 1;
     }
 
     private activeColumn(): { column: number; tablePath: readonly number[]; width: number } | null {
@@ -195,6 +210,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       this.handle.focus({ preventScroll: true });
       this.dragging = true;
       this.startX = event.clientX;
+      this.dragDirection = this.columnDirection;
       this.startWidth = active.width;
       this.startDOMWidth = this.dom.getBoundingClientRect().width || active.width * Number(this.current.attrs.colspan || 1);
       this.previewWidth = active.width;
@@ -207,8 +223,9 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
 
     private onPointerMove = (event: PointerEvent): void => {
       if (!this.dragging) return;
-      this.previewWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, Math.round(this.startWidth + event.clientX - this.startX)));
-      this.dom.style.width = `${Math.max(MIN_WIDTH, this.startDOMWidth + event.clientX - this.startX)}px`;
+      const delta = (event.clientX - this.startX) * this.dragDirection;
+      this.previewWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, Math.round(this.startWidth + delta)));
+      this.dom.style.width = `${Math.max(MIN_WIDTH, this.startDOMWidth + delta)}px`;
       this.updateResizeValue();
     };
 
@@ -235,7 +252,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       window.removeEventListener('pointerup', this.onPointerUp);
       window.removeEventListener('pointercancel', this.onPointerCancel);
       delete this.dom.dataset.fountainResizing;
-      if (commit) this.commit(this.previewWidth);
+      if (commit && this.columnDirection === this.dragDirection) this.commit(this.previewWidth);
       this.renderAttributes();
     }
 
@@ -245,7 +262,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       const active = this.activeColumn();
       if (!active) return;
       event.preventDefault();
-      this.commit(active.width + direction * (event.shiftKey ? 25 : 5));
+      this.commit(active.width + direction * this.columnDirection * (event.shiftKey ? 25 : 5));
     };
   };
 }

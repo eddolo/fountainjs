@@ -17,7 +17,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
 import { tableBackground } from '../table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
 import { readParagraphLayout } from '../paragraph-layout';
-import { readTextAlignmentAttributes, readTextDirection } from '../text-direction';
+import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../text-direction';
 import { readImageCaptionAttributes } from '../image-caption';
 import { readTableLayout, readTableRow } from '../table-layout';
 import { readTableAppearance } from '../table-appearance';
@@ -464,12 +464,12 @@ function alignment(element: Element, direction: Readonly<Attributes>): Attribute
   return readTextAlignmentAttributes(element, (element as HTMLElement).style.textAlign, direction);
 }
 
-function paragraph(element: Element, schema: Schema): FountainNode {
+function paragraph(element: Element, schema: Schema, childContext = false): FountainNode {
   const content = inlineChildren(element, schema);
   // Only a literally childless writer marker can suppress the normal caret
   // leaf. Text, media, comments and even whitespace must use ordinary parsing.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
-  const dir = readTextDirection(element);
+  const dir = readTextDirection(element, schema, childContext);
   return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
@@ -508,7 +508,7 @@ function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
 }
 
 function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
-  const dir = readTextDirection(element);
+  const dir = readTextDirection(element, schema, true);
   const align = alignment(element, dir);
   if (dir.dir || align.alignExplicit || align.align !== 'left') inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
@@ -535,7 +535,7 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
 }
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
-  const dir = readTextDirection(element);
+  const dir = readTextDirection(element, schema, true);
   const align = alignment(element, dir);
   const attrs = dir.dir || align.alignExplicit || align.align !== 'left' ? { ...align, ...dir } : {};
   const result: FountainNode[] = [];
@@ -588,7 +588,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   if (customNode) return [customNode];
   if (tag === 'dl') {
     const list = importDefinitionList(element as HTMLElement, schema, item => blockChildren(item, schema),
-      item => configuredNode(item, schema, false));
+      item => configuredNode(item, schema, false), undefined, item => readContainerDirection(item, schema));
     if (list) return [list];
   }
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
@@ -599,13 +599,13 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {
-    const dir = readTextDirection(element);
+    const dir = readTextDirection(element, schema);
     return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
   }
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
     const children = blockChildren(element as HTMLElement, schema);
-    return [schema.node('blockquote', readExplicitQuoteAppearance(element), children.length ? children : [paragraph(element, schema)])];
+    return [schema.node('blockquote', { ...readExplicitQuoteAppearance(element), ...readContainerDirection(element, schema) }, children.length ? children : [paragraph(element, schema, true)])];
   }
   if (tag === 'pre') return [schema.node('code_block', {
     language: element.getAttribute('data-language') || directChild(element, 'code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
@@ -619,13 +619,13 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const items = Array.from(element.children).filter((child) => child.tagName.toLowerCase() === 'li').map((item) => {
       return schema.node(
         itemType,
-        isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {},
+        { ...readContainerDirection(item, schema), ...(isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
         listItemContent(item, schema),
       );
     });
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
     const start = htmlOrderedListStart(element.getAttribute('start'));
-    return [schema.node(listType, tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}, items)];
+    return [schema.node(listType, { ...readContainerDirection(element, schema), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');
@@ -673,12 +673,12 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const sourceRows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'));
     const remaining = remainingHTMLTableRows(sourceRows, row => row.parentElement);
     const rows = orderedHTMLTableRows(sourceRows, row => row.parentElement?.tagName ?? '').map((row) => {
-      const node = schema.node('table_row', readTableRow(row),
+      const node = schema.node('table_row', { ...readTableRow(row), ...readContainerDirection(row, schema) },
       Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
         const rowspan = Math.max(1, Math.min(100, rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1));
-        const dir = readTextDirection(cell);
+        const dir = readTextDirection(cell, schema, true);
         const content = blockChildren(cell as HTMLElement, schema, { ...alignment(cell, dir), ...dir });
         return schema.node(
           cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
@@ -688,16 +688,17 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
             colwidth: tableCellWidths(cell, colspan),
             background: tableBackground((cell as HTMLElement).style.backgroundColor),
             ...readTableAppearance(cell, true),
+            ...readContainerDirection(cell, schema),
             ...(cell.tagName.toLowerCase() === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
           },
-          content.length ? content : [paragraph(cell, schema)],
+          content.length ? content : [paragraph(cell, schema, true)],
         );
       }),
       );
       const marked = inheritElementMarks(row, [node], schema);
       return row.parentElement && row.parentElement !== element ? inheritElementMarks(row.parentElement, marked, schema)[0] : marked[0];
     });
-    return [...captions, ...rows.length ? [schema.node('table', { ...readTableLayout(element as HTMLElement), ...readTableAppearance(element) }, rows)] : []];
+    return [...captions, ...rows.length ? [schema.node('table', { ...readTableLayout(element as HTMLElement), ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element as HTMLImageElement, schema, 'image_super');

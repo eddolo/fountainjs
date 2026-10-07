@@ -2001,9 +2001,13 @@ function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: 
   return properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : '';
 }
 
-function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: ExportList, quote: QuoteProjection = false, definition?: DefinitionLayout): string {
+function reportDirectionLoss(node: FountainNode, context: ExportContext, path: readonly number[]): void {
   if (node.attrs.dir !== undefined) context.issues.push({ code: 'text-direction-not-exported', severity: 'warning',
-    message: 'HTML block direction is not projected to Word paragraph/run bidi properties. Text remains, but direction and visual ordering require Fountain JSON or HTML.', path });
+    message: 'Reading direction is not projected to native Word bidi properties. Retain Fountain JSON or HTML for text and column ordering.', path });
+}
+
+function paragraphXML(node: FountainNode, context: ExportContext, path: readonly number[], list?: ExportList, quote: QuoteProjection = false, definition?: DefinitionLayout): string {
+  reportDirectionLoss(node, context, path);
   if (['start', 'end'].includes(String(node.attrs.align))) context.issues.push({ code: 'logical-alignment-projected', severity: 'warning',
     message: 'Logical start/end alignment became physical left/right using an explicit RTL override, otherwise LTR. Auto/inherited direction is not resolved; use Fountain JSON or HTML for exact semantics.', path });
   return `<w:p>${paragraphProperties(node, list, quote, definition)}${textRuns(node, context, path)}</w:p>`;
@@ -2052,6 +2056,7 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
   const continuations = new Map<number, Array<{ column: number; colspan: number; appearance: string }>>();
   let leadingRepeat = true;
   const rows = node.content.map((row, rowIndex) => {
+    reportDirectionLoss(row, context, [...path, rowIndex]);
     const pending = [...(continuations.get(rowIndex) ?? [])].sort((left, right) => left.column - right.column);
     let continuationIndex = 0;
     let sourceIndex = 0;
@@ -2068,6 +2073,7 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
       if (continuation && continuation.column < column) { continuationIndex += 1; continue; }
       const cell = row.content[sourceIndex++];
       if (!cell) break;
+      reportDirectionLoss(cell, context, [...path, rowIndex, sourceIndex - 1]);
       const colspan = Math.max(1, Number(cell.attrs.colspan) || 1);
       const rowspan = Math.max(1, Number(cell.attrs.rowspan) || 1);
       const shading = exportTableShading(cell, context, [...path, rowIndex, sourceIndex - 1]);
@@ -2128,6 +2134,7 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
 }
 
 function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote: QuoteProjection = false, list?: ExportList, definition?: DefinitionLayout): string {
+  if (!['paragraph', 'heading'].includes(node.type.name)) reportDirectionLoss(node, context, path);
   if (node.type.name === 'math_block') {
     const math = nativeMath(node, context, path);
     if (math) return `<w:p>${paragraphProperties(node, list, quote, definition)}${math}</w:p>`;

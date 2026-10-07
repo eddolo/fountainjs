@@ -3,6 +3,7 @@ import {
   deleteForward,
   deleteSelection,
   extendCellSelection,
+  getActiveTableCell,
   insertPlainText,
   insertHardBreak,
   insertDocument,
@@ -267,7 +268,13 @@ export class InputManager {
       event.preventDefault();
       selectAll(this.editor);
     } else if (event.altKey && event.shiftKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(key)) {
-      const direction = key.replace('arrow', '') as 'left' | 'right' | 'up' | 'down';
+      let direction = key.replace('arrow', '') as 'left' | 'right' | 'up' | 'down';
+      const active = getActiveTableCell(this.editor);
+      const table = active && this.dom.querySelector<HTMLElement>(`table[data-fountain-path="${active.tablePath.join('.')}"]`);
+      if (table && getComputedStyle(table).direction === 'rtl') {
+        if (direction === 'left') direction = 'right';
+        else if (direction === 'right') direction = 'left';
+      }
       if (extendCellSelection(this.editor, direction)) event.preventDefault();
     } else if (!modifier && !event.altKey && !event.shiftKey && (key === 'arrowleft' || key === 'arrowright')) {
       const direction = key === 'arrowleft' ? 'backward' : 'forward';

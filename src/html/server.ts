@@ -29,7 +29,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow
 import { tableBackground } from '../core/table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../core/explicit-emphasis';
 import { readParagraphLayout } from '../core/paragraph-layout';
-import { readTextAlignmentAttributes, readTextDirection } from '../core/text-direction';
+import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../core/text-direction';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
 import { importDefinitionList } from '../core/importers/html-definition-list';
@@ -473,8 +473,8 @@ function reportOnce(context: ImportContext, issue: ServerHTMLImportIssue): void 
 
 /** Direction on a paragraph is not the direction of its enclosing structure.
  * Keep this loss visible until the receiving container retains that context. */
-function reportStructuralDirection(element: SourceElement, node: FountainNode, context: ImportContext): FountainNode {
-  const dir = readTextDirection(element).dir;
+function reportStructuralDirection(element: SourceElement, node: FountainNode, context: ImportContext, schema: Schema): FountainNode {
+  const dir = readTextDirection(element, schema).dir;
   if (dir !== undefined && node.attrs.dir !== dir) reportOnce(context, {
     code: 'block-html-projection',
     message: `${element.tagName} reading direction (${dir}) is not retained on the structural container. Descendant text blocks may retain supported direction, but container layout and a shared automatic context are not preserved.`,
@@ -1082,12 +1082,12 @@ function alignment(element: SourceElement, direction: Readonly<Attributes>): Att
   return readTextAlignmentAttributes(element, element.style.textAlign, direction);
 }
 
-function paragraph(element: SourceElement, schema: Schema, context: ImportContext): FountainNode {
+function paragraph(element: SourceElement, schema: Schema, context: ImportContext, childContext = false): FountainNode {
   const content = inlineChildren(element, schema, [], context);
   // Match the browser importer: a marker never takes precedence over source
   // children, including comments, whitespace or unsupported descendant tags.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
-  const dir = readTextDirection(element);
+  const dir = readTextDirection(element, schema, childContext);
   return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
@@ -1129,7 +1129,7 @@ function inlineGroup(content: readonly SourceNode[]): SourceParent {
 }
 
 function blockChildren(element: SourceParent, schema: Schema, context: ImportContext, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
-  const dir = element instanceof ServerElement ? readTextDirection(element) : {};
+  const dir = element instanceof ServerElement ? readTextDirection(element, schema, true) : {};
   const align: Attributes = element instanceof ServerElement ? alignment(element, dir) : {};
   if (element instanceof ServerElement && (dir.dir || align.alignExplicit || align.align !== 'left')) inlineParagraphAttrs = { ...align, ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
@@ -1154,7 +1154,7 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
 }
 
 function listItemContent(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
-  const dir = readTextDirection(element);
+  const dir = readTextDirection(element, schema, true);
   const align = alignment(element, dir);
   const attrs = dir.dir || align.alignExplicit || align.align !== 'left' ? { ...align, ...dir } : {};
   const result: FountainNode[] = [];
@@ -1241,12 +1241,12 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const list = importDefinitionList(element, schema, item => blockChildren(item, schema, branch),
       item => configuredNode(item, schema, false, [], branch), () => {
       reportOnce(branch, { code: 'unmapped-block-wrapper', message: 'Definition-list grouping wrappers were removed; term and description order was retained.' });
-    });
+    }, item => readContainerDirection(item, schema));
     if (list) {
       branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
       branch.inlineSlots?.atomVisits.forEach(offset => context.inlineSlots!.atomVisits.push(offset));
       branch.issues.forEach(issue => reportOnce(context, issue));
-      return [reportStructuralDirection(element, list, context)];
+      return [reportStructuralDirection(element, list, context, schema)];
     }
   }
   if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
@@ -1257,13 +1257,13 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {
-    const dir = readTextDirection(element);
+    const dir = readTextDirection(element, schema);
     return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
   }
   if (tag === 'p') return [paragraph(element, schema, context)];
   if (tag === 'blockquote') {
     const children = blockChildren(element, schema, context);
-    return [reportStructuralDirection(element, schema.node('blockquote', readExplicitQuoteAppearance(element), children.length ? children : [paragraph(element, schema, context)]), context)];
+    return [reportStructuralDirection(element, schema.node('blockquote', { ...readExplicitQuoteAppearance(element), ...readContainerDirection(element, schema) }, children.length ? children : [paragraph(element, schema, context, true)]), context, schema)];
   }
   if (tag === 'pre') {
     const codeClass = directChild(element, 'code')?.getAttribute('class') ?? '';
@@ -1332,10 +1332,10 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const itemType = isTask ? 'task_item' : 'list_item';
     const items = element.children.filter((child) => child.tagName === 'li').map((item) => schema.node(
       itemType,
-      isTask ? {
+      { ...readContainerDirection(item, schema), ...(isTask ? {
         checked: item.getAttribute('data-checked') === 'true'
           || item.querySelector('input')?.hasAttribute('checked') === true,
-      } : {},
+      } : {}) },
       listItemContent(item, schema, context),
     ));
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
@@ -1348,7 +1348,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         message: 'Ordered-list numbering was normalized. Negative starts, reversed numbering, non-decimal marker types and per-item value overrides are not retained by the supplied list schema.',
       });
     }
-    return [reportStructuralDirection(element, schema.node(listType, tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}, items), context)];
+    return [reportStructuralDirection(element, schema.node(listType, { ...readContainerDirection(element, schema), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items), context, schema)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');
@@ -1408,7 +1408,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const rows = orderedRows.map((row) => {
       const node = schema.node(
       'table_row',
-      readTableRow(row),
+      { ...readTableRow(row), ...readContainerDirection(row, schema) },
       row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
         const columnSpan = htmlTableSpan(cell.getAttribute('colspan'));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
@@ -1422,7 +1422,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         if (resolvedRows > 100 || (columnSpan ?? 1) > 100) reportOnce(context, {
           code: 'block-html-projection', message: 'Table spans above the supported 100-row/column limit were clamped; table geometry may differ.',
         });
-        const dir = readTextDirection(cell);
+        const dir = readTextDirection(cell, schema, true);
         const content = blockChildren(cell, schema, context, { ...alignment(cell, dir), ...dir });
         return schema.node(
           cell.tagName === 'th' ? 'table_header' : 'table_cell',
@@ -1432,9 +1432,10 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
             colwidth: tableCellWidths(cell, colspan),
             background: tableBackground(cell.style.backgroundColor),
             ...readTableAppearance(cell, true),
+            ...readContainerDirection(cell, schema),
             ...(cell.tagName === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
           },
-          content.length ? content : [paragraph(cell, schema, context)],
+          content.length ? content : [paragraph(cell, schema, context, true)],
         );
       }),
       );
@@ -1443,7 +1444,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       return parent && parent !== element.raw && htmlparser2Adapter.isElementNode(parent)
         ? inheritElementMarks(row.parentElement!, marked, schema, context)[0] : marked[0];
     });
-    return [...captions, ...rows.length ? [reportStructuralDirection(element, schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element) }, rows), context)] : []];
+    return [...captions, ...rows.length ? [reportStructuralDirection(element, schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows), context, schema)] : []];
   }
   if (tag === 'img') {
     const image = imageNode(element, schema, 'image_super', context);

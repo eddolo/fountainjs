@@ -1,0 +1,24 @@
+[WebServer] (node:11612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:11488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (10.1s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:44:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (5.5s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:52:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (5.3s)
+(node:22844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (21.5s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:44:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (14.1s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:52:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (16.0s)
+(node:15212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:40:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (26.7s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:44:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (14.8s)
+  ok 9 [webkit] › tests\browser\editor.spec.ts:52:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (56.3s)
+
+  9 passed (3.2m)

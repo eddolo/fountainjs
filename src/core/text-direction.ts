@@ -1,4 +1,4 @@
-import type { Attributes } from './schema';
+import type { Attributes, Schema } from './schema';
 
 export const textAlignmentAttribute = {
   default: 'left',
@@ -19,16 +19,38 @@ export const explicitTextAlignmentAttribute = {
 
 interface DirectionElement {
   getAttribute(name: string): string | null;
+  readonly tagName?: string;
   readonly parentElement?: DirectionElement | null;
   readonly style?: { readonly textAlign?: string };
 }
 
-/** Materialize fixed inherited direction when an HTML wrapper is flattened.
- * Inherited auto depends on the ancestor's first strong character, not this
- * paragraph's text; leave that to a retained container rather than guessing.
+export function textDirectionDOMAttributes(attrs: Readonly<Attributes>): Attributes {
+  return attrs.dir !== undefined && textDirectionAttribute.validate(attrs.dir) ? { dir: attrs.dir } : {};
+}
+
+const directionContainers: Record<string, string> = { blockquote: 'blockquote', ul: 'bullet_list', ol: 'ordered_list', li: 'list_item',
+  table: 'table', tr: 'table_row', td: 'table_cell', th: 'table_header', dl: 'definition_list', dt: 'definition_term', dd: 'definition_description' };
+
+function retainedDirectionContainer(element: DirectionElement, schema: Schema): boolean {
+  const tag = element.tagName?.toLowerCase();
+  const name = tag === 'ul' && element.getAttribute('data-type') === 'task-list' ? 'task_list'
+    : tag === 'li' && element.parentElement?.getAttribute('data-type') === 'task-list' ? 'task_item' : tag && directionContainers[tag];
+  return Boolean(name && schema.nodes[name]?.spec.attrs?.dir);
+}
+
+export function readContainerDirection(element: DirectionElement, schema: Schema): Attributes {
+  return retainedDirectionContainer(element, schema) ? readTextDirection(element, schema) : {};
+}
+
+/** Materialize fixed direction only across wrappers the supplied schema flattens.
+ * childContext is for an anonymous paragraph inside this element, not the
+ * retained element itself. Shared auto contexts must never be guessed per child.
  */
-export function readTextDirection(element: DirectionElement): Attributes {
+export function readTextDirection(element: DirectionElement, schema?: Schema, childContext = false): Attributes {
   for (let current: DirectionElement | null | undefined = element; current; current = current.parentElement) {
+    // A retained structure owns its shared context. Materializing that value
+    // on each child would freeze inheritance when an author changes the parent.
+    if ((current !== element || childContext) && schema && retainedDirectionContainer(current, schema)) break;
     const dir = current.getAttribute('dir')?.toLowerCase();
     if (dir === 'ltr' || dir === 'rtl' || (dir === 'auto' && current === element)) return { dir };
     if (dir === 'auto') break;

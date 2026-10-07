@@ -846,7 +846,19 @@ export function setTextAlignment(editor: Editor, align: 'left' | 'center' | 'rig
  * when text should align with its reading direction.
  */
 export function setTextDirection(editor: Editor, dir: 'ltr' | 'rtl' | 'auto' | undefined): boolean {
-  return textDirectionAttribute.validate(dir) && setTextBlockAttribute(editor, 'dir', dir);
+  if (!textDirectionAttribute.validate(dir)) return false;
+  const selection = editor.state.selection;
+  if (selection instanceof NodeSelection) {
+    const node = getNodeAtPath(editor.state.doc, selection.nodePath);
+    if (node.type.spec.attrs?.dir) {
+      if (!editor.editable || node.attrs.dir === dir) return false;
+      const attrs = { ...node.attrs, dir };
+      try { node.type.create(attrs, node.content, node.text, node.marks); }
+      catch { return false; }
+      return editor.dispatch(editor.createTransaction().setNodeAttrs(selection.nodePath, attrs));
+    }
+  }
+  return setTextBlockAttribute(editor, 'dir', dir);
 }
 
 function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value: unknown): boolean {

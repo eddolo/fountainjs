@@ -37,7 +37,7 @@ import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-f
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
 import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
 
-test('reports known structural RTL import gaps against a native original and downloaded HTML reader', async ({ page }, info) => {
+test('retains structural RTL against native source through author controls, physical table editing and downloaded HTML', async ({ page }, info) => {
   await htmlStructuralDirectionJourney(page, info);
 });
 

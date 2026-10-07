@@ -11,6 +11,7 @@ import type { NodeDOMContext } from '../schema';
 import { readDocumentPageSettings } from '../page-settings';
 import { htmlCommentSource } from '../html-comment';
 import { literalLinkAttributes } from '../link-destination';
+import { textDirectionDOMAttributes } from '../text-direction';
 
 export interface HTMLExportOptions {
   document?: boolean;
@@ -158,7 +159,7 @@ function tableCellSizeAttributes(node: Node, context: NodeDOMContext): string {
   const background = tableBackground(node.attrs.background);
   const appearance = cellAppearanceDOMAttributes(node, context);
   const styles = [appearance.style, valid ? `width:${widths.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
-  return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}"` : ''}${renderDOMAttributes({ ...appearance, ...(styles ? { style: styles } : {}) })}`;
+  return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}"` : ''}${renderDOMAttributes({ ...appearance, ...textDirectionDOMAttributes(node.attrs), ...(styles ? { style: styles } : {}) })}`;
 }
 
 function renderMarks(content: string, marks: readonly Mark[]): string {
@@ -233,11 +234,11 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     case 'paragraph': return `<p${node.childCount === 0 ? ' data-fountain-empty="block"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</p>`;
     case 'heading': return `<h${Number(node.attrs.level) || 1}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</h${Number(node.attrs.level) || 1}>`;
     case 'blockquote': return `<blockquote${renderDOMAttributes(quoteDOMAttributes(node.attrs))}>${children()}</blockquote>`;
-    case 'bullet_list': return `<ul>${children()}</ul>`;
-    case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}>${children()}</ol>`;
-    case 'list_item': return `<li>${children()}</li>`;
-    case 'task_list': return `<ul data-type="task-list">${children()}</ul>`;
-    case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;
+    case 'bullet_list': return `<ul${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
+    case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ol>`;
+    case 'list_item': return `<li${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</li>`;
+    case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
+    case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"><code class="language-${escapeHTML(node.attrs.language)}">${escapeHTML(node.textContent)}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';
@@ -308,7 +309,7 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
   }
 }
 
-const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:left}blockquote{padding-left:16px;color:#5f6673;border-left:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
+const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
 
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {
@@ -324,7 +325,7 @@ export class HTMLExporter {
     const trailing = last?.type.name === 'html_flow' ? '' : '\n';
     // Every paragraph occupies at least its own line, including empty marked
     // runs. CSS keeps the model/text untouched; fragment hosts own their styles.
-    const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em 1.5em}:is(dt,dd)>p{margin:.3em 0}</style>`;
+    const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>`;
     return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>${title}</title>\n${styles}\n</head>\n<body${pageAttribute}>${leading}${fragment}${trailing}</body>${trailing}</html>`;
   }
 

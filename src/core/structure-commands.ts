@@ -86,9 +86,9 @@ function convertListItem(editor: Editor, item: Node, targetName: string): Node |
   if (!target) return null;
   try {
     return target.create(
-      targetName === 'task_item'
+      { ...(target.spec.attrs?.dir && item.attrs.dir !== undefined ? { dir: item.attrs.dir } : {}), ...(targetName === 'task_item'
         ? { checked: item.type.name === 'task_item' ? Boolean(item.attrs.checked) : false }
-        : {},
+        : {}) },
       item.content,
     );
   } catch {
@@ -453,7 +453,9 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
     if (selected.some((item) => !item)) return false;
     const before = range.list.content.slice(0, range.from);
     const after = range.list.content.slice(range.to + 1);
-    const converted = targetListType.create(target.attrs, selected as Node[]);
+    const converted = targetListType.create({ ...target.attrs,
+      ...(targetListType.spec.attrs?.dir && range.list.attrs.dir !== undefined ? { dir: range.list.attrs.dir } : {}),
+    }, selected as Node[]);
     const replacements = [
       ...(before.length ? [copyListSlice(range.list, before)] : []),
       converted,
@@ -484,7 +486,10 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
   const items = blocks.map((block) => {
     const paragraph = block.type.name === 'paragraph'
       ? block
-      : schema.node('paragraph', { align: block.attrs.align ?? 'left' }, block.content);
+      : schema.node('paragraph', { align: block.attrs.align ?? 'left',
+        ...(schema.nodes.paragraph.spec.attrs?.dir && block.attrs.dir !== undefined ? { dir: block.attrs.dir } : {}),
+        ...(schema.nodes.paragraph.spec.attrs?.alignExplicit && block.attrs.alignExplicit ? { alignExplicit: true } : {}),
+      }, block.content);
     return schema.node(target.item, target.item === 'task_item' ? { checked: false } : {}, [paragraph]);
   });
   const list = targetListType.create(target.attrs, items);

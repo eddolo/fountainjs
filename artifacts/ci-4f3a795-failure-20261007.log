@@ -1,0 +1,168 @@
+browser	Native control and document focus preflight	﻿2026-10-07T21:36:30.3231319Z ##[group]Run pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
+browser	Native control and document focus preflight	2026-10-07T21:36:30.3233496Z ^[[36;1mpnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"^[[0m
+browser	Native control and document focus preflight	2026-10-07T21:36:30.3301820Z shell: /usr/bin/bash -e {0}
+browser	Native control and document focus preflight	2026-10-07T21:36:30.3302106Z env:
+browser	Native control and document focus preflight	2026-10-07T21:36:30.3302383Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+browser	Native control and document focus preflight	2026-10-07T21:36:30.3302710Z ##[endgroup]
+browser	Native control and document focus preflight	2026-10-07T21:36:31.8525001Z [WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+browser	Native control and document focus preflight	2026-10-07T21:36:31.8525909Z 
+browser	Native control and document focus preflight	2026-10-07T21:36:34.1555429Z [WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+browser	Native control and document focus preflight	2026-10-07T21:36:34.1556056Z 
+browser	Native control and document focus preflight	2026-10-07T21:36:36.4885882Z [WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+browser	Native control and document focus preflight	2026-10-07T21:36:36.4886618Z 
+browser	Native control and document focus preflight	2026-10-07T21:36:45.2245691Z 
+browser	Native control and document focus preflight	2026-10-07T21:36:45.2246396Z Running 5 tests using 2 workers
+browser	Native control and document focus preflight	2026-10-07T21:36:45.2246771Z 
+browser	Native control and document focus preflight	2026-10-07T21:36:46.2642281Z [1/5] [webkit] › tests/browser/editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface
+browser	Native control and document focus preflight	2026-10-07T21:36:46.2769960Z [2/5] [webkit] › tests/browser/editor.spec.ts:60:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export
+browser	Native control and document focus preflight	2026-10-07T21:37:00.8074622Z [3/5] [webkit] › tests/browser/editor.spec.ts:137:1 › preserves inert HTML comments through human editing source and reader output
+browser	Native control and document focus preflight	2026-10-07T21:37:03.3494100Z [4/5] (retries) [webkit] › tests/browser/editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface (retry #1)
+browser	Native control and document focus preflight	2026-10-07T21:37:13.5983907Z [5/5] (retries) [webkit] › tests/browser/editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface (retry #2)
+browser	Native control and document focus preflight	2026-10-07T21:37:17.0143636Z [6/5] [webkit] › tests/browser/editor.spec.ts:5374:1 › opens and cancels public configuration panels with keyboard focus and exact document retention
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1615400Z   1) [webkit] › tests/browser/editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1616412Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1616715Z     Error: expect(locator).toHaveText(expected) failed
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1617085Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1617366Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1617764Z     Expected: "literal edited"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1618113Z     Received: "literal"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1618489Z     Timeout:  5000ms
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1618708Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1618842Z     Call log:
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1619263Z       - Expect "toHaveText" with timeout 5000ms
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1620097Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1632440Z         14 × locator resolved to <pre title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1634462Z            - unexpected value "literal"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1634763Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1634774Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1634996Z        at code-native-focus-journey.ts:59
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1635314Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1635831Z       57 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1637033Z       58 |     observations.nativeSourceAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1638610Z     > 59 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1639171Z          |                              ^
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1639834Z       60 |     await expect(nativeRoot.locator(':scope > p')).toHaveText('After');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1640830Z       61 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-source-edit.png') });
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1641763Z       62 |
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1642650Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:59:30)
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1644098Z         at codeNativeFocusJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:87:23)
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1645221Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:49:3
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1645711Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1646447Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1648176Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/attachments/code-click-native-baseline-fa645fabb0da038980eba776c617b5cd40ba0d2a.json
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1649915Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1650356Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1650945Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1662613Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/test-failed-1.png
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1663555Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1663863Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1664342Z     Error Context: test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/error-context.md
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1664822Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1665247Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1665969Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/trace.zip
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1666746Z     Usage:
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1666874Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1667678Z         pnpm exec playwright show-trace test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/trace.zip
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1668268Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1668660Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1668953Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1669319Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1669596Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1669780Z     Error: expect(locator).toHaveText(expected) failed
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1670006Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1670208Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1670857Z     Expected: "literal edited"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1671328Z     Received: "literal"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1671768Z     Timeout:  5000ms
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1671904Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1672009Z     Call log:
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1679008Z       - Expect "toHaveText" with timeout 5000ms
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1679457Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1681152Z         14 × locator resolved to <pre title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1682577Z            - unexpected value "literal"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1682779Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1682785Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1682935Z        at code-native-focus-journey.ts:59
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1683135Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1683455Z       57 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1684250Z       58 |     observations.nativeSourceAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1684899Z     > 59 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1685266Z          |                              ^
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1685688Z       60 |     await expect(nativeRoot.locator(':scope > p')).toHaveText('After');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1686335Z       61 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-source-edit.png') });
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1686810Z       62 |
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1687427Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:59:30)
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1688937Z         at codeNativeFocusJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:87:23)
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1690144Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:49:3
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1690669Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1692091Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1694176Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/attachments/code-click-native-baseline-1e9e098e63986c336a8195b9137a73c74777634c.json
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1695391Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1696344Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1696973Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1698119Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/test-failed-1.png
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1699463Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1699918Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1700722Z     Error Context: test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/error-context.md
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1702016Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1702607Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1703338Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/trace.zip
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1703846Z     Usage:
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1703963Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1704493Z         pnpm exec playwright show-trace test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry1/trace.zip
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1705030Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1705391Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1705685Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1706051Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1706338Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1706744Z     Error: expect(locator).toHaveText(expected) failed
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1706975Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1707178Z     Locator:  locator('.fountain-editor').locator('li > pre')
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1707563Z     Expected: "literal edited"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1707826Z     Received: "literal"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1708059Z     Timeout:  5000ms
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1708191Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1708281Z     Call log:
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1708549Z       - Expect "toHaveText" with timeout 5000ms
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1708962Z       - waiting for locator('.fountain-editor').locator('li > pre')
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1710618Z         14 × locator resolved to <pre title="text" role="region" data-language="text" aria-label="text code" data-line-numbers="true" data-fountain-path="0.0.0" data-fountain-node="code_block" data-fountain-block-reorderable="true" class="fjs-code-block fjs-highlight--dark" data-fountain-decoration="syntax-block-0.0.0">…</pre>
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1712386Z            - unexpected value "literal"
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1712693Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1712702Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1712869Z        at code-native-focus-journey.ts:59
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1713227Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1713575Z       57 |     await nativePage.keyboard.press('End'); await nativePage.keyboard.type(' edited');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1714373Z       58 |     observations.nativeSourceAfterTyping = { ...await codeFocus(nativePage), text: await nativeCode.innerText() };
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1715023Z     > 59 |     await expect(nativeCode).toHaveText('literal edited');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1715388Z          |                              ^
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1715809Z       60 |     await expect(nativeRoot.locator(':scope > p')).toHaveText('After');
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1716528Z       61 |     await nativeRoot.screenshot({ path: info.outputPath('code-click-native-source-edit.png') });
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1717109Z       62 |
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1717686Z         at nativeCodeClickBaseline (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:59:30)
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1718601Z         at codeNativeFocusJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-native-focus-journey.ts:87:23)
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1719358Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:49:3
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1719813Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1720283Z     attachment #1: code-click-native-baseline (application/json) ───────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1721569Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/attachments/code-click-native-baseline-7fc7f949efa1dee9b39442fe79c1ea63f3ee2a1e.json
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1722999Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1723291Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1723836Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1724616Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/test-failed-1.png
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1725611Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1725917Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1726391Z     Error Context: test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/error-context.md
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1726899Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1727313Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1728051Z     test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/trace.zip
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1728689Z     Usage:
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1728806Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1729330Z         pnpm exec playwright show-trace test-results/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit-retry2/trace.zip
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1729863Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1730225Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1730528Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:22.1730534Z 
+browser	Native control and document focus preflight	2026-10-07T21:37:23.5430577Z [7/5] [webkit] › tests/browser/editor.spec.ts:5492:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor
+browser	Native control and document focus preflight	2026-10-07T21:37:35.4297683Z   1 failed
+browser	Native control and document focus preflight	2026-10-07T21:37:35.4299068Z     [webkit] › tests/browser/editor.spec.ts:48:1 › compares list-first code text-click focus and editing to a plain native surface 
+browser	Native control and document focus preflight	2026-10-07T21:37:35.4299696Z   4 passed (1.1m)
+browser	Native control and document focus preflight	2026-10-07T21:37:35.6163966Z ##[error]Process completed with exit code 1.

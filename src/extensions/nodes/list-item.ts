@@ -1,2 +1,3 @@
 import type { NodeSpec } from '../../core';
-export const listItem: NodeSpec = { content: 'block+', toDOM: () => ['li', 0] };
+import { textDirectionAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
+export const listItem: NodeSpec = { content: 'block+', attrs: { dir: textDirectionAttribute }, toDOM: node => ['li', textDirectionDOMAttributes(node.attrs), 0] };

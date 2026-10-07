@@ -7,7 +7,20 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
-- Report structural HTML direction loss for built-in lists, definition lists,
+- Retain optional validated LTR/RTL/auto direction on built-in lists/items,
+  quotations, tables/rows/cells and definition lists in browser/server HTML,
+  JSON, Yjs and HTML readers. Child blocks inherit parent changes. Whole-node
+  direction commands and table controls are undoable; quote/glossary decorations
+  use logical sides. RTL table selection and pointer/keyboard resizing follow
+  physical column geometry, including merged cells with independent text
+  direction. Preserve that override when table commands rebuild cells. Ordinary
+  Markdown and native DOCX report unsupported direction rather than implying
+  fidelity. 196 focused tests and nine recorded desktop journeys pass; native
+  source, imported editor and downloaded reader captures are visually checked.
+  Add an independent Linux structural-direction preflight. Measured bundle
+  capacities grow narrowly; runtime latency/growth/heap limits do not change.
+  Broader bidi, mobile, locale and Word evidence remains outstanding.
+- Initially report structural HTML direction loss for built-in lists, definition lists,
   quotations and tables, including inherited fixed and own automatic contexts.
   Retained paragraph direction is not proof of preserved markers, column order
   or container layout. A recorded three-engine conversion-lab diagnostic checks
