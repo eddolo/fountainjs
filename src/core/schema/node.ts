@@ -12,6 +12,10 @@ export interface NodeJSON {
 
 export type DescendantVisitor = (node: Node, path: number[], parent: Node | null) => boolean | void;
 
+// Size depends only on immutable text/content, not on possibly mutable host
+// attributes. Weak ownership releases entries with discarded snapshots.
+const nodeSizes = new WeakMap<Node, number>();
+
 export class Node {
   readonly attrs: Readonly<Attributes>;
   readonly content: readonly Node[];
@@ -42,7 +46,14 @@ export class Node {
     if (this.isText) return this.text ?? '';
     return this.type.spec.toText?.(this) ?? this.content.map((child) => child.textContent).join('');
   }
-  get nodeSize(): number { return this.isText ? (this.text?.length ?? 0) : 2 + this.content.reduce((size, child) => size + child.nodeSize, 0); }
+  get nodeSize(): number {
+    let size = nodeSizes.get(this);
+    if (size === undefined) {
+      size = this.isText ? (this.text?.length ?? 0) : 2 + this.content.reduce((total, child) => total + child.nodeSize, 0);
+      nodeSizes.set(this, size);
+    }
+    return size;
+  }
 
   child(index: number): Node {
     const child = this.content[index];
@@ -80,9 +91,13 @@ export class Node {
       || this.marks.length !== other.marks.length
       || !this.marks.every((mark, index) => mark.eq(other.marks[index]))
       || this.content.length !== other.content.length) return false;
-    // An unchanged immutable child is already equal. Avoid calling eq for
-    // thousands of shared siblings on every last-block edit/no-op check.
-    for (let index = 0; index < this.content.length; index += 1) {
+    // Check the tail before scanning shared siblings. Editing either end of a
+    // large document should not need a full sibling scan just to prove change.
+    // Equal documents still compare every non-identical interior child.
+    const last = this.content.length - 1;
+    if (last >= 0 && this.content[last] !== other.content[last]
+      && !this.content[last]!.eq(other.content[last]!)) return false;
+    for (let index = 0; index < last; index += 1) {
       const child = this.content[index] as Node;
       const counterpart = other.content[index] as Node;
       if (child !== counterpart && !child.eq(counterpart)) return false;

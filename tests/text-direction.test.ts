@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { strFromU8, unzipSync } from 'fflate';
 import { AllSelection, CellSelection, CoreExtension, CoreSchemaSpec, HTMLExporter, MarkdownExporter,
@@ -8,6 +8,7 @@ import { AllSelection, CellSelection, CoreExtension, CoreSchemaSpec, HTMLExporte
 import { ServerHTMLImporter } from '../src/html/server';
 import { exportDOCX } from '../src/docx';
 import { createYjsCollaborationExtension } from '../src/yjs';
+import { readTextAlignment, readTextDirection } from '../src/core/text-direction';
 
 const schema = new Schema(CoreSchemaSpec);
 const p = (text: string, attrs = {}) => schema.node('paragraph', attrs, [schema.text(text)]);
@@ -19,6 +20,18 @@ const directions = (node: ReturnType<typeof document>): unknown[] => ['paragraph
   ? [node.attrs.dir] : node.content.flatMap(directions);
 
 describe('portable block direction', () => {
+  it('uses an already-read direction without another ancestor walk, with no cross-element cache', () => {
+    const parent = { getAttribute: vi.fn((name: string) => name === 'dir' ? 'rtl' : null) };
+    const element = { getAttribute: vi.fn(() => null), parentElement: parent };
+    const dir = readTextDirection(element);
+    expect(readTextAlignment(element, undefined, dir)).toBe('start');
+    expect(parent.getAttribute).toHaveBeenCalledTimes(1);
+    expect(element.getAttribute.mock.calls).toEqual([['dir'], ['align']]);
+    parent.getAttribute.mockImplementation(() => null);
+    expect(readTextAlignment(element, undefined)).toBe('left');
+    expect(parent.getAttribute).toHaveBeenCalledTimes(2);
+    expect(readTextAlignment(element, 'right', {})).toBe('right');
+  });
   it('changes selected nested blocks in one undoable transaction without changing source or selection', () => {
     expect(typeof globalThis.document).toBe('undefined');
     const editor = make();

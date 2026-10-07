@@ -40,7 +40,6 @@ jobs:
       - run: pnpm test:math-reference
       - run: pnpm test:docx-interoperability
       - run: pnpm test:budget
-      - run: pnpm test:performance
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm dlx publint@0.3.24
@@ -50,6 +49,22 @@ jobs:
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
       - run: pnpm exec vite build --base /fountainjs/
       - run: pnpm pack --dry-run
+  # A performance failure must still fail CI, but must not prevent collecting
+  # the full functional/type/package evidence. Same runtime, command and caps.
+  performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test:performance
   lean-integration:
     runs-on: ubuntu-latest
     steps:
@@ -95,6 +110,8 @@ jobs:
       # matrix. Windows WebKit uses a text fallback and cannot certify this.
       - name: Native control and document focus preflight
         run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks"
+      - name: Firefox native RTL selection preflight
+        run: pnpm exec playwright test --project=firefox --grep "edits RTL blocks"
       - run: pnpm test:browser
       - uses: actions/upload-artifact@v4
         if: always()
@@ -105,6 +122,7 @@ jobs:
             test-results/**/comment-editor-*.png
             test-results/**/comment-reader-*.png
             test-results/**/native-colour-mapped-selection.png
+            test-results/**/native-rtl-selection-baseline.json
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

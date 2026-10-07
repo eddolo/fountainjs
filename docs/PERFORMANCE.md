@@ -1,5 +1,51 @@
 # Performance and memory contract
 
+## Shared-size/equality follow-up (not release approval)
+
+Unreleased, 2026-10-07: CI for `6b925d1` passed package, server runtimes,
+headless, API, conformance, math, DOCX and bundle checks, but failed local
+1k→10k edit scaling: **19.67x / 15x**. Incremental remote scaling was
+14.79x / 15x; absolute latency, server HTML and heap checks passed. The
+failure stopped that job before the full unit/type suite. Lean passed and
+the full browser job is now terminal: **678 passed, 16 skipped, one failed**.
+The remaining failure is Linux Firefox's RTL Shift-arrow selection (all three
+attempts selected `א` instead of `בג`); native-control preflight and comment-copy
+journeys pass. A separate selection-range repair preserves already-matching
+native endpoints instead of discarding browser bidi caret affinity. Linux proof
+of that repair is still required.
+
+The repair reuses size calculations keyed weakly by immutable nodes, without
+depending on opaque mutable attributes or introducing a strong/global document
+index. Equality checks the tail first, then still compares every non-identical
+interior child before returning true. No equality-result cache or schema
+validation bypass is added. HTML alignment uses the direction already read for
+that block, with no cross-element/import cache.
+
+The focused model/import set passes **138 tests / eight files**. The first
+unprofiled local performance run after the size/equality changes passes edit
+scaling (10.83x local / 9.13x remote), but fails server HTML 1k p95:
+**122.24ms / 120ms**. This is not a passing gate; its cause is not established.
+The later final local run still fails: local scaling **32.71x / 15x**, and
+server HTML 1k/5k/10k p95 **145.82/526.49/1468.90ms** against **120/500/900ms**.
+Remote/server median scaling and all heap bounds pass. This is not evidence of
+a fixed performance gate; the source of timing variation is not established.
+The original CI failure, diagnostic profiles and both failed runs are retained.
+Timing checks, iterations, ratios, heap and entry/aggregate caps are unchanged.
+CI now runs performance as a separate mandatory job; functional checks continue
+independently and any performance failure still fails the workflow.
+
+The final combined model/import/view set passes **154 tests in ten files**.
+The native-range repair passes **18 focused view tests** and **six recorded
+Windows browser journeys** with one worker and no retries. Twelve screenshots
+match the previous reviewed captures byte-for-byte; Firefox desktop/narrow
+views are also inspected directly. The unmodified native baseline and original
+RTL assertions pass locally. Package/API/headless/framework types and unchanged
+bundle caps pass (1579.4 KiB ESM / 1314.0 KiB CJS). CommonMark stays 563/652
+default and 613/652 strongest opt-in. None of these checks replaces the failed
+performance run or outstanding Linux Firefox/full-suite proof.
+Exact scope, frozen-source hashes and retained gate failures are recorded in
+`artifacts/shared-size-native-selection-verification-20261007.json`.
+
 ## Block-direction work in progress
 
 Unreleased, 2026-10-07: optional block direction/logical alignment and explicit

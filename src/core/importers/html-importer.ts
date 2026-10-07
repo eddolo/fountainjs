@@ -460,8 +460,8 @@ function embedNode(element: HTMLIFrameElement, schema: Schema, container?: HTMLE
   } catch { return null; }
 }
 
-function alignment(element: Element): string {
-  return readTextAlignment(element, (element as HTMLElement).style.textAlign);
+function alignment(element: Element, direction?: Readonly<Attributes>): string {
+  return readTextAlignment(element, (element as HTMLElement).style.textAlign, direction);
 }
 
 function paragraph(element: Element, schema: Schema): FountainNode {
@@ -469,7 +469,8 @@ function paragraph(element: Element, schema: Schema): FountainNode {
   // Only a literally childless writer marker can suppress the normal caret
   // leaf. Text, media, comments and even whitespace must use ordinary parsing.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
-  return schema.node('paragraph', { align: alignment(element), ...readTextDirection(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
+  const dir = readTextDirection(element);
+  return schema.node('paragraph', { align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: Element, colspan: number): number[] | null {
@@ -508,7 +509,7 @@ function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
 
 function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const dir = readTextDirection(element);
-  if (dir.dir) inlineParagraphAttrs = { align: alignment(element), ...dir, ...inlineParagraphAttrs };
+  if (dir.dir) inlineParagraphAttrs = { align: alignment(element, dir), ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
@@ -534,7 +535,7 @@ function blockChildren(element: HTMLElement, schema: Schema, inlineParagraphAttr
 
 function listItemContent(element: Element, schema: Schema): FountainNode[] {
   const dir = readTextDirection(element);
-  const attrs = dir.dir ? { align: alignment(element), ...dir } : {};
+  const attrs = dir.dir ? { align: alignment(element, dir), ...dir } : {};
   const result: FountainNode[] = [];
   let inlineFragment = element.ownerDocument.createDocumentFragment();
   const flushInline = () => {
@@ -595,7 +596,10 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
-  if (/^h[1-6]$/.test(tag)) return [schema.node('heading', { level: Number(tag[1]), align: alignment(element), ...readTextDirection(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
+  if (/^h[1-6]$/.test(tag)) {
+    const dir = readTextDirection(element);
+    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
+  }
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {
     const children = blockChildren(element as HTMLElement, schema);
@@ -672,7 +676,8 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
         const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
         const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
         const rowspan = Math.max(1, Math.min(100, rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1));
-        const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell), ...readTextDirection(cell) });
+        const dir = readTextDirection(cell);
+        const content = blockChildren(cell as HTMLElement, schema, { align: alignment(cell, dir), ...dir });
         return schema.node(
           cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
           {

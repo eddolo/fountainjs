@@ -28,7 +28,7 @@ export function readTextDirection(element: DirectionElement): Attributes {
   return {};
 }
 
-export function readTextAlignment(element: DirectionElement, styleAlign: string | undefined): string {
+export function readTextAlignment(element: DirectionElement, styleAlign: string | undefined, direction?: Readonly<Attributes>): string {
   const align = styleAlign || element.getAttribute('align');
-  return align && textAlignmentAttribute.validate(align) ? align : readTextDirection(element).dir ? 'start' : 'left';
+  return align && textAlignmentAttribute.validate(align) ? align : (direction ?? readTextDirection(element)).dir ? 'start' : 'left';
 }

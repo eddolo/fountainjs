@@ -1,5 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest reliability follow-up (2026-10-07, Unreleased): `6b925d1` Linux CI
+finishes with **678 browser passes, 16 skips and one Firefox RTL selection
+failure**; the previous three comment-copy failures are resolved. Verify fails
+local edit scaling before reaching the full unit/type suite; Lean passes.
+Weakly owned immutable sizes, tail-first complete equality and single-read HTML
+direction are under verification. A native-range guard avoids redundant DOM
+selection reconstruction. The local performance gate remains failed, with no
+limits loosened. Performance now has an independent mandatory CI job so this
+cannot suppress functional evidence. PROD-04 and the ledger remain unchanged;
+neither this checkpoint nor narrow local passes authorize an npm release.
+
 Latest direction/focus checkpoint (2026-10-07, Unreleased): optional
 paragraph/heading direction and logical alignment work in Node and browser
 views. The focused set passes **117 tests / eight files**; recorded RTL,

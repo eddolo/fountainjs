@@ -2540,6 +2540,31 @@ unchanged. Full current-source CI approval remains required. See
 No npm release or complete-parity claim follows
 from this checkpoint.
 
+## 2026-10-07: independent performance gate and native-selection follow-up
+
+The `6b925d1` Linux browser run is terminal: **678 passed, 16 skipped, one
+failed**. Comment-copy focus regressions no longer fail. Firefox RTL selection
+fails at Shift+Left after moving to offset one, selecting `א` instead of `בג`
+on every attempt. Matching native selection endpoints should not be replaced
+with a new browser range: that can lose browser-only caret affinity. A focused
+guard preserves such ranges; changed endpoints and replaced document nodes
+continue to synchronize. Unit tests check collapsed, forward and backward
+native ranges plus explicit commands and edited-node restoration. The public
+RTL journey retains its original assertions and additionally records an
+untouched native contenteditable baseline and an observational range-reconstruction
+probe. Both native sequences select `בג` in all three Windows engines; this does
+not reproduce or prove the cause of Linux's failure. Linux certification remains open.
+
+Immutable-node size reuse, tail-first complete equality and one direction read
+per imported HTML block are also under verification. The focused model/import
+set passes 138 tests; no schema-validation bypass or equality-result cache is
+introduced. Current local performance still fails local scaling and three
+server p95 caps. Passing diagnostic/focused runs do not replace those failures.
+CI performance remains mandatory but now runs independently so functional
+tests/type checks can complete despite performance failures. Full verification
+is required before publishing; ledger coverage and CommonMark counts are not
+promoted by this work.
+
 ## Sequencing rule
 
 Finish and certify one ledger outcome before beginning another. Each outcome

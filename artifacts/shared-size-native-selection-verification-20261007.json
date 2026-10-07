@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-07",
+  "baseCommit": "6b925d16e40268a2831b2e53d407c9438c8d7ce2",
+  "releaseApproval": false,
+  "changes": [
+    "Weakly owned immutable node sizes; tail-first complete equality without schema validation bypass",
+    "Reuse each block's already-read HTML direction for alignment",
+    "Preserve exactly matching native text-selection endpoints; synchronize changed endpoints and replaced DOM nodes",
+    "Independent mandatory CI performance job and Firefox RTL preflight; unchanged limits/iterations/assertions"
+  ],
+  "sourceSha256": {
+    "src/core/schema/node.ts": "459018924365519ef297b49d0d45cd45d3dc9067e65fb40f476cf06ee81a7913",
+    "src/core/text-direction.ts": "625e2772c8e0cd8e47c44df750314aae3f2281d8bf19d94c75c2a1283aaa622f",
+    "src/core/importers/html-importer.ts": "31407ea1a0950f12a7f01a6809d4ced34c2111585b1bf1c3412fa551b9f7b367",
+    "src/html/server.ts": "96c66e90309de730fe04c17e3452660de6d7ed6a2064a67cb45946b279e14c76",
+    "src/view/selection-handler.ts": "91b1b85978cec7b13a570ba18a815aa90ceff40cef709bad78a4e523a1b92b93",
+    "tests/view-native-selection.test.ts": "9bbcb966ec0637f7349364785d03fec0f4624de09f37c199186c8b1ec806e858",
+    "tests/node-size-sharing.test.ts": "8c4abc51c9b52c322d6bdba45d3c6c41b233908ad0f0fbb164e2fab1b5214e36",
+    "tests/text-direction.test.ts": "b5385cb53908cbbfb480dbb7df2b37736b8c24be2da39ada493f53aed98ab890",
+    "tests/browser/text-direction-journey.ts": "22f39fb48b8c2c19bc7e94da3c76ffacc553ccb3e36c888dae12ff91c07c6d00",
+    ".github/workflows/ci.yml": "14d6632c0dabbd43db8148ef68e6424fba389ec1f4ea934ab06a5342a4f64a09"
+  },
+  "previousLinuxCI": {
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/37668846363",
+    "conclusion": "failure",
+    "browser": { "passed": 678, "skipped": 16, "failed": 1, "failure": "Firefox RTL Shift+Left selected א instead of בג on all three attempts" },
+    "lean": "passed",
+    "verify": "Local scaling 19.67x / 15x failed; remaining unit/type steps skipped",
+    "commentCopy": "Passed in all desktop engines"
+  },
+  "checks": {
+    "build": { "passed": true, "log": "native-selection-followup-build-20261007.log" },
+    "focusedUnits": { "passed": 154, "files": 10, "workers": 1, "log": "native-selection-final-unit-20261007.log" },
+    "finalTypeScript": { "passed": true, "log": "native-selection-final-ts-20261007.log" },
+    "frameworkTypes": { "passed": true, "log": "native-selection-followup-types-20261007.log" },
+    "packageConsumers": { "passed": true, "log": "native-selection-followup-package-20261007.log" },
+    "headless": { "passed": true, "modules": 98, "log": "native-selection-followup-headless-20261007.log" },
+    "api": { "passed": true, "declarationFiles": 409, "log": "native-selection-followup-api-20261007.log" },
+    "bundle": { "passed": true, "esmKiB": 1579.4, "cjsKiB": 1314.0, "esmCapKiB": 1579.5, "cjsCapKiB": 1314.5, "log": "native-selection-followup-budget-20261007.log" },
+    "commonMark": { "default": "563/652", "strongestOptIn": "613/652", "unchanged": true, "log": "native-selection-followup-markdown-20261007.log" },
+    "browser": { "passed": 6, "workers": 1, "retries": 0, "platform": "Windows", "engines": ["chromium", "firefox", "webkit"], "log": "native-selection-final-recorded-20261007.log", "recordings": "native-selection-final-recorded-20261007" }
+  },
+  "visualReview": {
+    "pngs": 12,
+    "allSha256IdenticalToReviewed": "shared-node-size-recorded-20261007 corresponding engine/journey/image paths",
+    "additionallyInspectedDirectly": "Firefox RTL desktop and 390px editor captures",
+    "videosRecorded": true,
+    "videosManuallyWatched": false,
+    "scope": "RTL editor/narrow/exported reader and immutable-model typing/Enter/history/JSON reopening; not complete application layout certification",
+    "nativeBaseline": "Untouched and range-reconstructed native contenteditable both select בג in all three Windows engines. This is not reproduction or causal proof of the Linux failure. JSON observations are preserved with recordings and uploaded by CI."
+  },
+  "retainedPerformanceFailures": [
+    { "log": "node-size-sharing-performance-20261007.log", "localRatio": 10.83, "remoteRatio": 9.13, "failure": "1k server HTML p95 122.24ms exceeds 120ms" },
+    { "log": "shared-node-size-performance-final-20261007.log", "localRatio": 32.71, "remoteRatio": 7.58, "serverMedianRatio": 10.36, "serverP95Ms": [25.25, 145.82, 526.49, 1468.90], "serverP95CapsMs": [35, 120, 500, 900], "maximumRatio": 15, "failed": "Local scaling and server 1k/5k/10k p95", "allHeapBoundsPassed": true }
+  ],
+  "limitations": [
+    "Current full Linux functional/browser/performance certification still required",
+    "Performance failure cause not established; passing diagnostic profiles cannot replace failed gates",
+    "PROD-04 remains Partial, including default/authored left alignment, broader bidi/IME/mobile/localization and Word fidelity",
+    "No npm publication, CommonMark promotion or complete-parity claim",
+    "Two audit configuration startup failures and an unsupported Vitest CLI option are retained as failed invocation logs, not application failures"
+  ]
+}

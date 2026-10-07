@@ -1,0 +1,2 @@
+$ node scripts/check-api-surface.mjs
+Public API surface verified across 409 declaration files.

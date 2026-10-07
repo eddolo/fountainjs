@@ -1067,8 +1067,8 @@ function embedNode(element: SourceElement, schema: Schema, container?: SourceEle
   } catch { return null; }
 }
 
-function alignment(element: SourceElement): string {
-  return readTextAlignment(element, element.style.textAlign);
+function alignment(element: SourceElement, direction?: Readonly<Attributes>): string {
+  return readTextAlignment(element, element.style.textAlign, direction);
 }
 
 function paragraph(element: SourceElement, schema: Schema, context: ImportContext): FountainNode {
@@ -1076,7 +1076,8 @@ function paragraph(element: SourceElement, schema: Schema, context: ImportContex
   // Match the browser importer: a marker never takes precedence over source
   // children, including comments, whitespace or unsupported descendant tags.
   const childless = element.getAttribute('data-fountain-empty') === 'block' && element.childNodes.length === 0;
-  return schema.node('paragraph', { align: alignment(element), ...readTextDirection(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
+  const dir = readTextDirection(element);
+  return schema.node('paragraph', { align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
 function tableCellWidths(cell: SourceElement, colspan: number): number[] | null {
@@ -1118,7 +1119,7 @@ function inlineGroup(content: readonly SourceNode[]): SourceParent {
 
 function blockChildren(element: SourceParent, schema: Schema, context: ImportContext, inlineParagraphAttrs: Attributes = {}): FountainNode[] {
   const dir = element instanceof ServerElement ? readTextDirection(element) : {};
-  if (dir.dir && element instanceof ServerElement) inlineParagraphAttrs = { align: alignment(element), ...dir, ...inlineParagraphAttrs };
+  if (dir.dir && element instanceof ServerElement) inlineParagraphAttrs = { align: alignment(element, dir), ...dir, ...inlineParagraphAttrs };
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
@@ -1142,7 +1143,7 @@ function blockChildren(element: SourceParent, schema: Schema, context: ImportCon
 
 function listItemContent(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
   const dir = readTextDirection(element);
-  const attrs = dir.dir ? { align: alignment(element), ...dir } : {};
+  const attrs = dir.dir ? { align: alignment(element, dir), ...dir } : {};
   const result: FountainNode[] = [];
   let pending: SourceNode[] = [];
   const flushInline = () => {
@@ -1243,7 +1244,8 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {
-    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element), ...readTextDirection(element), ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
+    const dir = readTextDirection(element);
+    return [schema.node('heading', { level: Number(tag[1]), align: alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
   }
   if (tag === 'p') return [paragraph(element, schema, context)];
   if (tag === 'blockquote') {
@@ -1407,7 +1409,8 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         if (resolvedRows > 100 || (columnSpan ?? 1) > 100) reportOnce(context, {
           code: 'block-html-projection', message: 'Table spans above the supported 100-row/column limit were clamped; table geometry may differ.',
         });
-        const content = blockChildren(cell, schema, context, { align: alignment(cell), ...readTextDirection(cell) });
+        const dir = readTextDirection(cell);
+        const content = blockChildren(cell, schema, context, { align: alignment(cell, dir), ...dir });
         return schema.node(
           cell.tagName === 'th' ? 'table_header' : 'table_cell',
           {

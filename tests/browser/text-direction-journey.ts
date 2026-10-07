@@ -1,8 +1,41 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
+import { writeFile } from 'node:fs/promises';
 
 export async function textDirectionJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
+  // Record the platform's untouched contenteditable behaviour alongside the
+  // editor. Range reconstruction can lose bidi caret affinity even when the
+  // visible selection endpoints look identical.
+  const baseline = await page.context().newPage();
+  try {
+    const observations: Record<string, { anchor?: number; focus?: number; text?: string }[]> = {};
+    for (const mode of ['untouched', 'reconstructed']) {
+      await baseline.setContent('<div contenteditable="true"><p dir="rtl" style="text-align:start"><span>אבגד הוזח</span></p></div>');
+      if (mode === 'reconstructed') {
+        await baseline.evaluate(() => document.querySelector('[contenteditable]')!.addEventListener('keyup', () => {
+          const selection = getSelection();
+          if (!selection?.rangeCount) return;
+          const range = selection.getRangeAt(0).cloneRange();
+          selection.removeAllRanges(); selection.addRange(range);
+        }));
+      }
+      await baseline.locator('p').click();
+      observations[mode] = [];
+      for (const key of ['Home', 'ArrowLeft', 'Shift+ArrowLeft', 'Shift+ArrowLeft']) {
+        await baseline.keyboard.press(key);
+        observations[mode]!.push(await baseline.evaluate(() => {
+          const selection = getSelection();
+          return { anchor: selection?.anchorOffset, focus: selection?.focusOffset, text: selection?.toString() };
+        }));
+      }
+    }
+    const baselinePath = info.outputPath('native-rtl-selection-baseline.json');
+    await writeFile(baselinePath, JSON.stringify(observations, null, 2));
+    await info.attach('native-rtl-selection-baseline', { path: baselinePath, contentType: 'application/json' });
+    expect(observations.untouched?.[1]?.focus).toBe(1);
+    expect(observations.untouched?.[3]?.text).toBe('בג');
+  } finally { await baseline.close(); }
   await page.goto('/demos/go-docs-service.html');
   const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
   await editor.click();

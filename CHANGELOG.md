@@ -7,6 +7,18 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve an already-matching native text selection instead of reconstructing
+  its range after capture. This retains browser-only bidi caret affinity while
+  changed model endpoints and replaced DOM nodes still synchronize. Keep the
+  RTL journey's selection/edit/history assertions and record a plain native
+  baseline; Linux Firefox certification remains pending.
+- Reuse immutable node-size calculations with weak ownership and check the final
+  sibling before scanning equal shared content. Preserve complete equality,
+  fresh-equal/net-zero transaction detection and schema validation. Reuse each
+  block's already-read HTML direction for alignment instead of walking its
+  ancestors twice. Performance limits remain unchanged; performance has its
+  own mandatory CI job so failures cannot hide functional-suite evidence.
+
 - Add optional paragraph/heading LTR, RTL and automatic direction, a selection-wide `setTextDirection` command, and logical start/end alignment. Keep text unchanged, retain supported direction/alignment across heading conversion and Enter, and share browser/server HTML projection. Simple demos expose direction controls; ordinary Markdown and DOCX explicitly report unretained direction rather than claiming a complete bidi bridge. Normalize schema-declared optional attributes when applying attribute steps so clearing direction becomes absence in live state and JSON/Yjs.
 - Explicit pointer selection of an inert atom or table-cell range now focuses the document before applying its native range. Background rendering still leaves native input controls focused. This addresses the comment-copy failure after an external checkbox interaction; verification is separate from the RTL feature.
 

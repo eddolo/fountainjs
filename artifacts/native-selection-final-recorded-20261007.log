@@ -1,0 +1,21 @@
+[WebServer] (node:21976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:1380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:35:1 › edits RTL blocks with native visual selection, direction controls, Enter history and HTML reader export (3.6s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:86:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (1.5s)
+(node:8828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:35:1 › edits RTL blocks with native visual selection, direction controls, Enter history and HTML reader export (8.1s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:86:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (2.6s)
+(node:24880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\editor.spec.ts:35:1 › edits RTL blocks with native visual selection, direction controls, Enter history and HTML reader export (10.6s)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:86:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (2.6s)
+
+  6 passed (38.0s)

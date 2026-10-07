@@ -284,7 +284,18 @@ export class SelectionHandler {
     const start = locateOffset(wrapper, selection.from);
     const end = locateOffset(endWrapper, selection.to);
     if (!start || !end) return this.finishSync();
-    if ((this as SelectionHandler & DirectionState)._b?.eq(selection)) {
+    const backward = (this as SelectionHandler & DirectionState)._b?.eq(selection);
+    const anchor = backward ? end : start;
+    const focus = backward ? start : end;
+    // A native keyboard/pointer selection already has the correct endpoints.
+    // Replacing its range discards browser-only state such as bidi caret
+    // affinity (Firefox) and can reverse the next visual arrow movement.
+    // Changed endpoints or replaced DOM nodes still need model-to-DOM sync.
+    if (domSelection.anchorNode === anchor.node && domSelection.anchorOffset === anchor.offset
+      && domSelection.focusNode === focus.node && domSelection.focusOffset === focus.offset) {
+      return this.finishSync();
+    }
+    if (backward) {
       domSelection.setBaseAndExtent(end.node, end.offset, start.node, start.offset);
       return this.finishSync();
     }
