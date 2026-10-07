@@ -14,6 +14,15 @@ const links = (doc: ReturnType<typeof ServerHTMLImporter.parse>) => {
   return values;
 };
 const escaped = (value: string) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;');
+const rejectedURLGroups = [{ name: 'direct unsafe and malformed destinations', values: [
+  'javascript:alert(1)', '//evil.test/path', '\\evil.test', '/\\evil.test',
+  'custom:payload', 'mailto:a\nb@example.test', 'https://exa\nmple.test/path',
+  'https://safe.test\\@evil.test/path\n', 'https://safe.test\n/path', 'x\u0001y', 'x\u007fy',
+] }, ...['javascript:alert(1)', 'vbscript:payload', 'data:text/html,bad', '//evil.test/path', '\\evil.test'].map(base => ({
+  name: `inserted controls in ${JSON.stringify(base)}`,
+  values: ['\t', '\n', '\r'].flatMap(control => Array.from({ length: base.length + 1 }, (_, at) =>
+    base.slice(0, at) + control + base.slice(at))),
+}))];
 describe('literal control data in imported HTML link destinations', () => {
   it('renders model backslashes as data and restores their exact native spelling', () => {
     for (const href of ['foo\\bar', '/url\\bar*baz', 'https://example.com?find=\\*', 'https://example.com/\\[\\']) {
@@ -102,16 +111,10 @@ describe('literal control data in imported HTML link destinations', () => {
     expect(HTMLImporter.parse(source, schema).toJSON()).toEqual(doc.toJSON());
   });
 
-  it('still rejects unsafe schemes, network paths, other controls and broken authorities', () => {
-    const rejected = ['javascript:alert(1)', '//evil.test/path', '\\evil.test', '/\\evil.test',
-      'custom:payload', 'mailto:a\nb@example.test', 'https://exa\nmple.test/path',
-      'https://safe.test\\@evil.test/path\n', 'https://safe.test\n/path', 'x\u0001y', 'x\u007fy'];
-    for (const base of ['javascript:alert(1)', 'vbscript:payload', 'data:text/html,bad', '//evil.test/path', '\\evil.test']) {
-      for (const control of ['\t', '\n', '\r']) for (let at = 0; at <= base.length; at++) {
-        rejected.push(base.slice(0, at) + control + base.slice(at));
-      }
-    }
-    for (const href of rejected) {
+  // Each threat family is an independently reported semantic test, not one
+  // large DOM-import batch sharing a default five-second test timeout.
+  it.each(rejectedURLGroups)('still rejects unsafe schemes, network paths, other controls and broken authorities: $name', ({ values }) => {
+    for (const href of values) {
       const source = `<p><a href="${escaped(href)}">visible</a></p>`;
       const imported = new ServerHTMLImporter().parseWithReport(source, schema);
       expect(links(imported.document), JSON.stringify(href)).toEqual([]);

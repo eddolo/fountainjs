@@ -50,7 +50,7 @@ interface DirectionState {
 export class SelectionHandler {
   private syncing = false;
   private pointerSelectionHandled = false;
-  private domSyncRequested = false;
+  #domSyncRequested = false;
 
   constructor(
     private readonly editor: Editor,
@@ -182,17 +182,21 @@ export class SelectionHandler {
   }
 
   requestDOMSync(): void {
-    this.domSyncRequested = true;
-    queueMicrotask(() => { this.domSyncRequested = false; });
+    this.#domSyncRequested = true;
+    queueMicrotask(() => { this.#domSyncRequested = false; });
   }
 
   consumeDOMSyncRequest(): boolean {
-    const requested = this.domSyncRequested;
-    this.domSyncRequested = false;
+    const requested = this.#domSyncRequested;
+    this.#domSyncRequested = false;
     return requested;
   }
 
   sync(selection: AnySelection, applyDOM = true): void {
+    // A mapped model selection is not a request to leave a native field.
+    // Explicit view.focus() focuses the editing host before calling sync.
+    const active = this.dom.ownerDocument.activeElement;
+    applyDOM = applyDOM && !active?.matches('input,textarea,select');
     this.clearSemanticSelectionMarkers();
     const domSelection = document.getSelection();
     if (!domSelection) return;
@@ -211,12 +215,11 @@ export class SelectionHandler {
       if (!element) return this.finishSync();
       element.dataset.fountainSelectedNode = 'true';
       if (selection.nodePath.length === 1) element.draggable = true;
-      const active = this.dom.ownerDocument.activeElement;
       // Updating a selected node must not move the browser caret out of its
       // own native form control. Selecting a different node or explicitly
       // focusing the editor still applies the requested document selection.
       const ownsControl = active instanceof HTMLElement && element.contains(active)
-        && active.matches('input, textarea, select, button')
+        && active.matches('button')
         && active.closest<HTMLElement>('[contenteditable]')?.contentEditable === 'false';
       if (!applyDOM || ownsControl) return this.finishSync();
       range.selectNode(element);
@@ -235,7 +238,6 @@ export class SelectionHandler {
       // Selecting/resizing this cell must not steal keyboard focus from its
       // non-editable controls. Explicit editor focus or selection of another
       // cell still applies the requested DOM range, as with atomic NodeViews.
-      const active = this.dom.ownerDocument.activeElement;
       const ownsControl = active instanceof HTMLElement && cells.some(cell => cell.contains(active))
         && active.closest<HTMLElement>('[contenteditable]')?.contentEditable === 'false';
       if (!applyDOM || ownsControl) return this.finishSync();
@@ -309,7 +311,7 @@ export class SelectionHandler {
       && (activeElement.closest('[data-fountain-widget]') || activeEditingHost?.contentEditable === 'false')) {
       return;
     }
-    if (!this.syncing) this.capture();
+    if (!this.syncing && this.ownsDOMSelection()) this.capture();
   };
 
   private onSelectionInteraction = (event: Event): void => {

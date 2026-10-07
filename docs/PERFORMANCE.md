@@ -1,5 +1,27 @@
 # Performance and memory contract
 
+## Native-control follow-up: failed complete gate retained
+
+Unreleased, 2026-10-07: the focus fix passes the complete default unit suite
+(2,635 tests / 197 files), framework types and nine recorded three-engine
+Windows workflows. This does **not** make the complete local gate green:
+`artifacts/native-control-focus-verified-gate-20261007.log` fails server HTML
+p95 at 1k/5k/10k: **195.83/1000.72/1862.55ms** against **120/500/900ms**.
+Growth ratios and retained-heap checks pass; no budget or timeout was increased.
+
+A separate six-sample importer-only CPU/GC diagnostic measures
+107.54/396.04/783.93ms p95. Its different process history and profiling overhead
+mean it cannot replace the failed complete gate. Sampled GC accounts for roughly
+13% of its total time; repeated attribute projection and HTML-source processing
+remain visible hotspots. The cause of the complete-run slowdown is not yet
+established. See `artifacts/native-control-focus-verification-20261007.json`
+for frozen-source evidence, retained failures and visual-review scope.
+
+The ID lookup unit test still performs and checks every one of 100,000 lookups
+against the same 1.5-second bound, but does not include matcher allocations in
+the measured interval. Unsafe-link safety inputs/assertions are unchanged and
+split into independent threat families. Neither change is an engine speedup.
+
 ## Tree-owned server selector compilation
 
 Unreleased, 2026-10-07: the earlier artifact-only selector experiment is now

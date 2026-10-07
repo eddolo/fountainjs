@@ -1,5 +1,20 @@
 # FountainJS opportunity roadmap
 
+Latest focus follow-up (2026-10-07, Unreleased): formatting a retained selection
+no longer applies a native Range while an input, textarea or select owns focus;
+automatic external selection changes do not overwrite the logical selection.
+Explicit `EditorView.focus()` still restores it. All **2,635 tests / 197 files**
+and framework type checks pass. Unsafe-link cases retain every input/assertion
+in independently reported families; the ID lookup test retains its volume and
+time limit while excluding assertion-library overhead. Nine recorded Windows
+three-engine workflows pass without retries; all 69 captures are visually
+verified directly or by exact hashes to inspected captures. Linux native-color
+verification remains pending. Exact evidence:
+`artifacts/native-control-focus-verification-20261007.json`. The latest
+complete local gate fails server HTML p95 at 1k/5k/10k blocks; its limits remain
+unchanged, so this is not a fully green release checkpoint. No ledger,
+CommonMark-score, percentage or npm promotion.
+
 Latest server-import follow-up (2026-10-07, Unreleased): bounded, tree-owned
 selector compilation lowers import overhead without global tree retention,
 schema/API changes, new dependencies, or increased budgets. All local gates pass

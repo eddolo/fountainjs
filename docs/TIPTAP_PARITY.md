@@ -1,5 +1,19 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest focus checkpoint (2026-10-07, Unreleased): preserve native form-control
+focus through formatting and ignore stale external selection-change events,
+while keeping explicit logical-selection restoration. The default unit suite
+passes **2,635 tests / 197 files**, including four new focus regressions;
+framework type checks pass. Threat-family splitting adds five reported tests,
+not five new capabilities, and retains all safety cases. Nine recorded Windows
+three-engine workflows pass without retries, with 69 visually verified captures
+(direct inspection or exact hashes to inspected evidence). Linux native-color
+verification remains pending. See
+`artifacts/native-control-focus-verification-20261007.json`. The latest complete local gate
+fails server HTML p95 (195.83/1000.72/1862.55ms against 120/500/900ms at
+1k/5k/10k); no limits were raised. No ledger or CommonMark-score promotion and
+no npm release approval.
+
 Latest import-performance checkpoint (2026-10-07, Unreleased): private,
 tree-owned selector compilation preserves complex query/rule behavior while
 avoiding recompilation for every element. Bound 256 entries, no result caching,

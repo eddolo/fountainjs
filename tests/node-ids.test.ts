@@ -193,11 +193,16 @@ describe('stable node identities', () => {
       content: content(...Array.from({ length: 10_000 }, (_, index) => paragraph(`Line ${index}`, `node-${index}`))),
     });
     const index = createStableNodeIdIndex(editor.state.doc);
+    let missing = 0;
     const started = performance.now();
     for (let iteration = 0; iteration < 100_000; iteration += 1) {
-      expect(index.get(`node-${iteration % 10_000}`)).toBeDefined();
+      if (index.get(`node-${iteration % 10_000}`) === undefined) missing += 1;
     }
-    expect(performance.now() - started).toBeLessThan(1_500);
+    const elapsed = performance.now() - started;
+    // Measure all lookups, not 100,000 matcher allocations as well. Every
+    // result is still checked, and the volume/time bound is unchanged.
+    expect(missing).toBe(0);
+    expect(elapsed).toBeLessThan(1_500);
     expect(index.get('node-9999')?.path).toEqual([9_999]);
   });
 

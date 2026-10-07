@@ -76,6 +76,8 @@ export async function htmlInertJourney(page: Page, info: TestInfo) {
   const json = workshop.getByLabel('Inert native document JSON');
   const data = workshop.getByLabel('Retained inert source data');
   await expect(editor.locator('[data-fountain-inert-inline]')).toHaveCount(2);
+  // The DOM view mounts in an effect before React publishes its JSON field.
+  await expect(json).toHaveValue(/"type": "doc"/);
   const before = JSON.parse(await json.inputValue());
   await expect(data).toContainText("<FoO data-id='outer'>");
   await expect(data).toContainText('markdown-projection');

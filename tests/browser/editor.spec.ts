@@ -5400,7 +5400,7 @@ test('opens and cancels public configuration panels with keyboard focus and exac
         const rect = input.getBoundingClientRect();
         return { focused: active === input, activeTag: active?.tagName,
           activeAction: active?.closest('[data-fountain-toolbar-action]')?.getAttribute('data-fountain-toolbar-action'),
-          type: input.type, tabIndex: input.tabIndex, explicitTabIndex: input.getAttribute('tabindex'),
+          type: input.type, value: input.value, tabIndex: input.tabIndex, explicitTabIndex: input.getAttribute('tabindex'),
           visible: input.checkVisibility(), width: rect.width, height: rect.height };
       });
       await info.attach(`native-color-focus-${phase}-${width}`, {
@@ -5414,6 +5414,33 @@ test('opens and cancels public configuration panels with keyboard focus and exac
     await expect(color).toBeFocused();
     expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
   }
+});
+
+test('keeps the public native colour field focused while formatting selected text and allows undo in the editor', async ({ page }, info) => {
+  await page.goto('/demos/react-article.html');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
+  const json = page.locator('.demo-output pre');
+  await expect(json).toContainText('"type": "doc"');
+  const original = JSON.parse(await json.textContent() ?? '');
+  await editor.locator('[data-fountain-node="paragraph"]').first().click();
+  await page.keyboard.press('Home'); await page.keyboard.press('Shift+End');
+  const selected = await page.evaluate(() => document.getSelection()?.toString());
+  expect(selected?.length).toBeGreaterThan(0);
+  const color = page.locator('[data-fountain-toolbar-action="text-color"] input');
+  await color.focus();
+  await color.fill('#234567');
+  await expect(color).toBeFocused();
+  await expect.poll(async () => JSON.parse(await json.textContent() ?? '').content
+    .some((node: any) => node.type === 'paragraph' && node.content?.some((leaf: any) =>
+      leaf.marks?.some((mark: any) => mark.type === 'text_color' && mark.attrs.color === '#234567')))).toBe(true);
+  await page.locator('.demo-surface').screenshot({ path: info.outputPath('native-colour-mapped-selection.png') });
+  await expect(color).toBeFocused();
+  // A user returns by clicking the document. Raw HTMLElement.focus() is not
+  // the public EditorView.focus() API, which restores the model selection.
+  await editor.locator('[data-fountain-node="paragraph"]').first().click();
+  await expect(editor).toBeFocused();
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(async () => JSON.parse(await json.textContent() ?? '')).toEqual(original);
 });
 
 test('keeps table configuration labels legible on pointer hover', async ({ page }, info) => {

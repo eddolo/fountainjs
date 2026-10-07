@@ -157,6 +157,14 @@ the accessible name. Products may use any icon system instead.
   from an external control. View rendering and mutation repair preserve focus
   in configuration fields, including colour inputs that retain an old native
   range. Explicit `view.focus()` still returns to the logical editor selection.
+  Unreleased follow-up: this also applies when a formatting transaction remaps
+  the model selection. Automatic `selectionchange` events from a stale editor
+  range are ignored while another control owns focus. Selection markers still
+  update; only the browser Range application is deferred. Call the public view
+  or React editor-handle `focus()` method to restore the mapped range; raw
+  `HTMLElement.focus()` is not that API. Clicking the document places an ordinary
+  user caret. Linux native-colour coverage is separate from Windows WebKit's
+  hex-text fallback and runs first in CI before the complete browser matrix.
 - Pointer activation is de-duplicated. Mouse and pen commands run on pointer
   down while preventing the browser from replacing the editor selection; touch
   uses the resulting click so horizontal toolbar scrolling remains possible.

@@ -1,0 +1,573 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased; local functional/browser checks pass; complete local performance gate failed; Linux native-control CI pending",
+  "source": {
+    "file": "artifacts/native-control-focus-source-verified-20261007.json",
+    "files": 689,
+    "digest": "adde993a1e0abd90771067e606200365ff61a0b5e95c49501ee149cd2cdc5035",
+    "unchangedAfterRecordedVerification": true
+  },
+  "changes": [
+    "Do not apply native editor ranges while inputs, textareas or selects own focus; continue updating semantic markers.",
+    "Ignore automatic selectionchange capture while an external control owns selection; explicit EditorView.focus restores the logical selection.",
+    "Encapsulate existing DOM-sync latch as a JavaScript-private field; only two private declaration hashes changed, no supported signature change.",
+    "Wait for populated React JSON output before inert-inline document inspection.",
+    "Retain every unsafe URL input/assertion in separately reported threat families and measure all 100,000 ID lookups without matcher-allocation overhead; preserve 1.5s bound.",
+    "Require Linux WebKit native-control preflight before the existing complete browser matrix."
+  ],
+  "verification": {
+    "types": {
+      "passed": true,
+      "log": "artifacts/native-control-focus-types-verified-20261007.log"
+    },
+    "units": {
+      "passed": true,
+      "tests": 2635,
+      "files": 197,
+      "defaultWorkerSettings": true,
+      "log": "artifacts/native-control-focus-unit-verified-20261007.log"
+    },
+    "browser": {
+      "passed": 9,
+      "failed": 0,
+      "retries": 0,
+      "workers": 1,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "platform": "Windows",
+      "duration": "3.4m",
+      "log": "artifacts/native-control-focus-recorded-verified-20261007.log",
+      "captureRoot": "artifacts/native-control-focus-recorded-verified-20261007",
+      "command": "pnpm exec playwright test --config playwright.input-audit.config.ts --grep \"opens and cancels public configuration panels|keeps the public native colour field|preserves registered inert inline source\" --output artifacts/native-control-focus-recorded-verified-20261007"
+    },
+    "prePerformanceChecks": {
+      "passed": [
+        "build",
+        "409 declaration API snapshot",
+        "packed package",
+        "server runtimes",
+        "headless",
+        "CommonMark",
+        "math reference",
+        "DOCX interoperability",
+        "bundle"
+      ],
+      "log": "artifacts/native-control-focus-verified-gate-20261007.log"
+    },
+    "bundleKiB": {
+      "esm": 1576.4,
+      "esmLimit": 1576.5,
+      "cjs": 1311.3,
+      "cjsLimit": 1311.5,
+      "css": 86.3,
+      "cssLimit": 86.4,
+      "limitsRaised": false
+    },
+    "completeGate": {
+      "passed": false,
+      "log": "artifacts/native-control-focus-verified-gate-20261007.log",
+      "failure": "server HTML p95",
+      "samples": [
+        {
+          "blocks": 1000,
+          "p95Ms": 195.83,
+          "limitMs": 120
+        },
+        {
+          "blocks": 5000,
+          "p95Ms": 1000.72,
+          "limitMs": 500
+        },
+        {
+          "blocks": 10000,
+          "p95Ms": 1862.55,
+          "limitMs": 900
+        }
+      ],
+      "growthAndHeapPassed": true,
+      "limitsRaised": false,
+      "rootCause": "Not established. The targeted profile below is not complete-gate approval."
+    },
+    "diagnosticProfile": {
+      "command": "node --cpu-prof --cpu-prof-dir artifacts --cpu-prof-name native-control-server-profile-20261007.cpuprofile --trace-gc artifacts/server-html-profile-20261007.mjs",
+      "log": "artifacts/native-control-server-profile-20261007.log",
+      "profile": "artifacts/native-control-server-profile-20261007.cpuprofile",
+      "durationMs": 7733.874,
+      "serverP95Ms": {
+        "1000": 107.54,
+        "5000": 396.04,
+        "10000": 783.93
+      },
+      "qualification": "Different process history and profiling overhead; six-sample importer-only diagnostic, not a rerun or substitute for the complete gate.",
+      "observation": "Sampled GC time ~1032ms (~13% total); repeated attribute projection and HTML source processing remain visible hotspots."
+    }
+  },
+  "retainedFailures": [
+    {
+      "log": "artifacts/native-control-focus-complete-gate-20261007.log",
+      "failure": "Private declaration snapshot changed before review/update."
+    },
+    {
+      "log": "artifacts/native-control-focus-complete-gate-final-20261007.log",
+      "failure": "Existing unsafe-link aggregate test timeout and lookup benchmark matcher overhead; 2628 passed, 2 failed."
+    },
+    {
+      "log": "artifacts/native-control-focus-unit-bounded-diagnostic-20261007.log",
+      "failure": "Unsafe-link aggregate timeout still present with four workers; 2629 passed, 1 failed. No persistent worker/timeout changes."
+    },
+    {
+      "log": "artifacts/native-control-focus-recorded-20261007.log",
+      "failure": "New browser test incorrectly assumed raw HTMLElement.focus restored logical editor selection; 6 passed, 3 failed. Corrected test uses human click and undo, not weakened existing focus assertions."
+    }
+  ],
+  "upstreamCI": {
+    "baselineCommit": "77ceaef508374011c4695c0f7d35a5bbacb7647d",
+    "run": 37653802806,
+    "verify": "passed",
+    "lean": "passed",
+    "browser": "672 passed, 1 failed, 16 skipped",
+    "failure": "Linux WebKit native color focus, all retries",
+    "currentFix": "Not yet verified on Linux"
+  },
+  "visualReview": {
+    "captures": 69,
+    "exactHashMatchesToReviewedPreFinalRun": 68,
+    "directlyInspectedChangedCapture": 1,
+    "preFinalReview": "42 panel captures inspected through six unscaled contact sheets; three colour captures inspected directly with readable top crops; 24 inert captures exact-hash matched to previously inspected evidence.",
+    "reproducer": "artifacts/native-control-panel-sheets-20261007.ps1",
+    "limits": [
+      "Windows WebKit color field is a text fallback, not Linux native picker certification.",
+      "No physical-device, native Safari, manual assistive-technology or native Word/PDF certification.",
+      "These screen views are safe Fountain representations, not original-application fidelity."
+    ]
+  },
+  "roadmap": {
+    "delivered": 58,
+    "partial": 7,
+    "hostBoundary": 2,
+    "rows": 67,
+    "changed": false,
+    "commonMark": "0.31.2 projection11; 563/652 default, 613/652 strongest opt-in",
+    "npmVersion": "0.4.0-beta.2",
+    "npmPublished": false
+  },
+  "captures": [
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-chromium/native-colour-mapped-selection.png",
+      "sha256": "2eb83b60e63319066526d9a16220a14f12913643e72d232f1d3b2b84f97f3e82",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-chromium/native-colour-mapped-selection.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-firefox/native-colour-mapped-selection.png",
+      "sha256": "15cdc9f5c698309040ffddd35127efa54a31e0a081b3f5a1dda950168d2eb378",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-firefox/native-colour-mapped-selection.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-webkit/native-colour-mapped-selection.png",
+      "sha256": "8edc40ee1cfa6bf0ecbf96535df9dccb3fe1543a17e57a4dd91bb3d9912ab0fe",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-webkit/native-colour-mapped-selection.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-highlight-1280.png",
+      "sha256": "b9494ffef5b5e45a170facc51fa9b106302101fef58fb7c699a07bc8a37d7be3",
+      "reviewedReference": null,
+      "review": "directly-inspected-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-highlight-390.png",
+      "sha256": "902d26fe8b1b613c028bf03232ab53ce70f03aa029a2125e58b0b263e25ae077",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-highlight-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-image-1280.png",
+      "sha256": "ed51cd6a3349584417b9a53a25f4d53843d8f8cb3e815078c7da40d1e167f4be",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-image-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-image-390.png",
+      "sha256": "af77c99fcfefdeebb8bffd1c00a272d281a3829b29b4d191444968f860d6e42d",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-image-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-1280.png",
+      "sha256": "752034507d591af31f1301815d8b05c96aa3162003237e79b15bdc80ba34e1cd",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-390.png",
+      "sha256": "93d5fca42ef5565d970d2e560f1b979348230f8cb367f7fdb8d6966a410a384e",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-link-1280.png",
+      "sha256": "7f611265c0a8f62508b59c02b694b7263d030b11b00ef4cebbb402d8f22c9038",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-link-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-link-390.png",
+      "sha256": "e98097ae8fbf02b30947fe53d9169f70ac7fc676c39e5b6906e3e8b176e90c37",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-link-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-media-1280.png",
+      "sha256": "5a39e482181a07982d49a72bfa2777f24a0c4312852fe879075103c76c4be773",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-media-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-media-390.png",
+      "sha256": "a6c6a05524659dbbef16c01855705b755cbc4a2b63641e10ffaa26592ff9785b",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-media-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-search-1280.png",
+      "sha256": "aea3382bae12489fd90ca0da83a37574834619741a979067bed55aba17773061",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-search-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-search-390.png",
+      "sha256": "c86daa0edac5d050af1d950e8412836dc584884265d158086d62616794ea6fa9",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-search-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-1280.png",
+      "sha256": "4502837622c8c51295ebc14c41125d961566413f5450fdaa44b4e3826fed097c",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-390.png",
+      "sha256": "3582c75b87a4080772f1ee374f60c844dea961a407cbd0c62aa9744d0ef003c0",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-highlight-1280.png",
+      "sha256": "6a6b41099d9fd286ed93d63b3af75596d45c6b007bac4a19583b928aec689d76",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-highlight-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-highlight-390.png",
+      "sha256": "aebb3c81820204ecaf16b2b02fa2d960eafc394bd2f8b512a878ee819d04196b",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-highlight-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-image-1280.png",
+      "sha256": "37984fb47117cc160e2fecf4e32042482e8600b6cf1d9250aced00a6e035ad04",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-image-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-image-390.png",
+      "sha256": "ac0b4fb9b732a9de7d41ab7bd97f218c51abe4323c088c6e6046a53df49e510d",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-image-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-1280.png",
+      "sha256": "6dacf9867d608cefc5a3751b4815a863a3065c3376f42cd21346397e94dc65e5",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-390.png",
+      "sha256": "f5181ff2777c540f3255244de0ba9094388cada6851297384f7d74b6f698adbd",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-link-1280.png",
+      "sha256": "bd0257532c71c2289054dad18007e800635d9da04cec4800bca1afbab10392ee",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-link-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-link-390.png",
+      "sha256": "b56d7d816540a8216c771ff35e064e561464a88c2fa3b64d7eece3806342986d",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-link-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-media-1280.png",
+      "sha256": "44ce87ae15e376e95b143ebbb8c424f7680abd7d0a3944b742a09c03e78e6ad8",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-media-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-media-390.png",
+      "sha256": "ce87458692d868d784d063372f862506fcbebbb294facb910b5bb201d453e529",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-media-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-search-1280.png",
+      "sha256": "2d8523c2f5b1e2b21f66da98f784a9e998e25c29e25dc1ed66521e8e543c8753",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-search-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-search-390.png",
+      "sha256": "ac8ef2219b701abb79b9deb7ecf9bdbbe22b5ef998825929be0ecf4e3f858835",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-search-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-1280.png",
+      "sha256": "85ef4a144a4352c66559c99c0d5af1c8c44e610c7111fb7754a846c48fa9baa6",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-390.png",
+      "sha256": "4605d4eed39d5f2d3ae8801ff193cb189507af3eb8db922363ff44eff98f6ca0",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-highlight-1280.png",
+      "sha256": "f8cb863a1e5cf64220ede9638fefcdd2a65f0ca8ff65a42e2b9674ad97654537",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-highlight-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-highlight-390.png",
+      "sha256": "d51fb4ef6cc85d19c58c1bf904436bc2248aed4d4e2510d5032d683f53e47583",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-highlight-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-image-1280.png",
+      "sha256": "3d30438f619cd77a427ac7bc06501188651142666b422dfa0b81aedc8dbf8f42",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-image-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-image-390.png",
+      "sha256": "6247ac208951b97768f256ba1aaaef148f3a892e5cf377cb4a7a7e4483323f00",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-image-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-1280.png",
+      "sha256": "2f5be546ebd41f2d79450472060d2336de21ca9fe67b28d20518c5eaa83e39e9",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-390.png",
+      "sha256": "6f8e29859cbc088f7ad7ea507e1eea6cf0889b13828d62894c163a126d38adcb",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-link-1280.png",
+      "sha256": "be4f23edf99cdd4c6ce52174a7b2a5991921ba1e0a7ef5e319ad3f757d7516ed",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-link-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-link-390.png",
+      "sha256": "39889f82f679a0ef7901a79b5b5b34b9abb9707e79b6e63cc9c2e7447e4dfb7c",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-link-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-media-1280.png",
+      "sha256": "bdf152d70f5193fecff103a1a5c463155b3485c610711a4a064c1f323f68ecff",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-media-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-media-390.png",
+      "sha256": "4a40cae72b46ada4ca3dbdcb2078fc78e396f7a303f43f846f7bd486862bc187",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-media-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-search-1280.png",
+      "sha256": "cc40c603fa96e8dd20a027a1a98b92cf8cb0d33211a246b237bcf0d8a28c92c5",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-search-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-search-390.png",
+      "sha256": "d4645468b935987f9cc2d187bd337bd482ffba69d28dc588aaf824b6d9f0220f",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-search-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-1280.png",
+      "sha256": "1d63dd30593d33bb3544fef2ce30142f81bffed9c4d6d20b0bae99e6080710fa",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-1280.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-390.png",
+      "sha256": "f6d437bc8edbbe981815ab4492490e8ec7c8f04d55bf0bcdb3294b5d1f41ca7e",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-390.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-editor-mobile.png",
+      "sha256": "7a8a7abd102342ca6eb3cd7d67098799065c793888e94edfc8efa06b307a2a09",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-editor-mobile.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-empty-dotted.png",
+      "sha256": "34e423ee93d60aca104cabc363ac7aac26b0a25f9a229fb216ff6f2081e3af8e",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-empty-dotted.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-empty-reader.png",
+      "sha256": "6be2f548abcb66d5ea5472d2b0b8e0bc2f5a59f62445280d1591fdf31f2a7044",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-empty-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-hostile-edited.png",
+      "sha256": "99689fe4b793216952e0ca010896cbba5d9970fd6e68a55fccf5b1c3db9b8f88",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-hostile-edited.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-hostile-reader.png",
+      "sha256": "8aba7d019a0540c8eb1d1f29c99d20e59617402b05071c8972b078d64ac24c49",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-hostile-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-nested-edited-reopened.png",
+      "sha256": "e54f10a60a78f502f55bee5376649c7179369602ea157f9d77a6d24917a179c3",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-nested-edited-reopened.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-nested-reader.png",
+      "sha256": "eb253decfb11c39c245c69d11a28913f89d90b53aeb34720cda5f1cdbf188b9c",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-nested-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-reader-mobile.png",
+      "sha256": "75c1521f68d3711f1668966630e8373b6aebeef2928205249ea945d10f0b3842",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-chromium/inert-reader-mobile.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-editor-mobile.png",
+      "sha256": "8f666dd38a00e610238c9535f27735a3bb1f4420d2dc791c27f2335b7b54bc19",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-editor-mobile.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-empty-dotted.png",
+      "sha256": "22e14868aa5f9c753d52a4b9e270586ed002bfba18037f7448c0c0cf3ace0551",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-empty-dotted.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-empty-reader.png",
+      "sha256": "47ec58f3ce0eb650523a64b656b46ea31469571f68a9583373434591926d129f",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-empty-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-hostile-edited.png",
+      "sha256": "6be449ce9fcf017cb3a908c180967c2941a4af8b6c8547a23dff6671addbd5ad",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-hostile-edited.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-hostile-reader.png",
+      "sha256": "4e2655fc3691adbacb4d2e7119a7e55763a766e9e84a0a44bd6ecd9d9d0cd119",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-hostile-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-nested-edited-reopened.png",
+      "sha256": "1aa2b254cdc10882f36c213229b19da2e4b8bd8e3010bd0faf2802acbec5045c",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-nested-edited-reopened.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-nested-reader.png",
+      "sha256": "6e3a8b9017794dab0eb1d7cadb74d90f8ffdebcac170e86b4b59de73fbb4d667",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-nested-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-reader-mobile.png",
+      "sha256": "3fca7332df1c239302e58918927d9d090b8f979a08e94cf30dbb7223b3595fa1",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-firefox/inert-reader-mobile.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-editor-mobile.png",
+      "sha256": "1d44d0376f73c58980a58fccf61ce76bea311cb6e25540464503826af9421f71",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-editor-mobile.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-empty-dotted.png",
+      "sha256": "36a660139dd93d9f7e1c4d2bd154bde5b7f7d68965e65adc8e8c34f2e414af4a",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-empty-dotted.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-empty-reader.png",
+      "sha256": "df9e695882d79304086ce99e438c84ec10e6b9371b97617369e0e8a9d73ab2ed",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-empty-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-hostile-edited.png",
+      "sha256": "9bb61466755119103a1939a5f34b803c1cfa3502244e9b1085f9a8c0b9625270",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-hostile-edited.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-hostile-reader.png",
+      "sha256": "a2a4155a6c0350f48a182533e2debdd3782253322d6ff89d5009f423fe318b0f",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-hostile-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-nested-edited-reopened.png",
+      "sha256": "9ed2df7fdf303300205c6c884e8e72e649784e0ac3d7784e65caaef339a569cb",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-nested-edited-reopened.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-nested-reader.png",
+      "sha256": "3052ea35f36827e1ea1296ddaaae201e21bc0efa0cf2e406fbf09df4d3cb06ec",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-nested-reader.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    },
+    {
+      "path": "artifacts/native-control-focus-recorded-verified-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-reader-mobile.png",
+      "sha256": "1fcc33793c07be509e1cab987c748f8604b456278a8bfe42a06461459aaed18e",
+      "reviewedReference": "artifacts/native-control-focus-recorded-final-20261007/editor-preserves-registere-c28b5-arkdown-HTML-JSON-reopening-webkit/inert-reader-mobile.png",
+      "review": "sha256-identical-to-inspected-pre-final-capture"
+    }
+  ]
+}
