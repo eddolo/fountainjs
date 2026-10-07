@@ -9,7 +9,9 @@ in independently reported families; the ID lookup test retains its volume and
 time limit while excluding assertion-library overhead. Nine recorded Windows
 three-engine workflows pass without retries; all 69 captures are visually
 verified directly or by exact hashes to inspected captures. Linux native-color
-verification remains pending. Exact evidence:
+formatting/undo passes on Linux too, but arrow-focus still fails all retries;
+the complete browser matrix was not reached. Linux verification (including
+performance/units) and Lean pass on `802f9a5`. Exact evidence:
 `artifacts/native-control-focus-verification-20261007.json`. The latest
 complete local gate fails server HTML p95 at 1k/5k/10k blocks; its limits remain
 unchanged, so this is not a fully green release checkpoint. No ledger,

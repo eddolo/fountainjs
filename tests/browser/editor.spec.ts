@@ -5339,6 +5339,23 @@ test('uses the public React image workflow for metadata, alignment, and replacem
 
 test('opens and cancels public configuration panels with keyboard focus and exact document retention', async ({ page }, info) => {
   await page.goto('/demos/react-article.html');
+  // Observe the Linux native-control failure without changing event defaults.
+  // A JS focus call can be distinguished from the browser's native focus move.
+  await page.evaluate(() => {
+    const events: unknown[] = [];
+    (window as any).__nativeControlEvents = events;
+    const describe = (node: EventTarget | null) => node instanceof Element
+      ? { tag: node.tagName, role: node.getAttribute('role'), action: node.closest('[data-fountain-toolbar-action]')?.getAttribute('data-fountain-toolbar-action') } : null;
+    const focus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (...args) {
+      if (events.length < 200) events.push({ kind: 'script-focus', target: describe(this), stack: new Error().stack });
+      return focus.apply(this, args);
+    };
+    for (const name of ['keydown', 'keyup', 'focusin', 'focusout', 'selectionchange']) document.addEventListener(name, event => {
+      if (events.length < 200) events.push({ kind: event.type, key: (event as KeyboardEvent).key,
+        target: describe(event.target), active: describe(document.activeElement), prevented: event.defaultPrevented });
+    }, true);
+  });
   const editor = page.getByRole('textbox', { name: 'Rich text editor', exact: true });
   const json = page.locator('.demo-output pre');
   await expect(json).toContainText('"type": "doc"');
@@ -5392,6 +5409,7 @@ test('opens and cancels public configuration panels with keyboard focus and exac
     // This native field is inside the toolbar itself: arrows must not transfer
     // focus to a command button or start toolbar traversal.
     const color = page.locator('[data-fountain-toolbar-action="text-color"] input');
+    await page.evaluate(() => { (window as any).__nativeControlEvents.length = 0; });
     await color.focus();
     const colorFocus = async (phase: string) => {
       const state = await color.evaluate(element => {
@@ -5411,6 +5429,23 @@ test('opens and cancels public configuration panels with keyboard focus and exac
     await expect(color).toBeFocused();
     await color.press('ArrowRight');
     await colorFocus('after-arrow');
+    await info.attach(`native-color-event-history-${width}`, {
+      body: JSON.stringify(await page.evaluate(() => (window as any).__nativeControlEvents), null, 2), contentType: 'application/json',
+    });
+    // Independent native baseline, not a skipped or weakened editor assertion.
+    const baseline = await page.context().newPage();
+    try {
+      await baseline.setContent('<div contenteditable="true">Native retained selection</div><label>Colour<input type="color" value="#171923" style="width:20px;height:4px"></label>');
+      await baseline.locator('[contenteditable]').click();
+      await baseline.keyboard.press('Home'); await baseline.keyboard.press('Shift+End');
+      const native = baseline.locator('input');
+      await native.focus(); await expect(native).toBeFocused();
+      await native.press('ArrowRight');
+      await info.attach(`native-color-without-fountain-${width}`, {
+        body: JSON.stringify(await native.evaluate(input => ({ focused: document.activeElement === input,
+          activeTag: document.activeElement?.tagName, value: (input as HTMLInputElement).value })), null, 2), contentType: 'application/json',
+      });
+    } finally { await baseline.close(); }
     await expect(color).toBeFocused();
     expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
   }

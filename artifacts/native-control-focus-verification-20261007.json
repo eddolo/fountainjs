@@ -1,6 +1,6 @@
 {
   "date": "2026-10-07",
-  "status": "Unreleased; local functional/browser checks pass; complete local performance gate failed; Linux native-control CI pending",
+  "status": "Unreleased; 802f9a5 Linux verification and Lean passed; native-control preflight failed; local functional/browser checks pass but local complete performance gate failed",
   "source": {
     "file": "artifacts/native-control-focus-source-verified-20261007.json",
     "files": 689,
@@ -130,7 +130,13 @@
     "lean": "passed",
     "browser": "672 passed, 1 failed, 16 skipped",
     "failure": "Linux WebKit native color focus, all retries",
-    "currentFix": "Not yet verified on Linux"
+    "currentFix": "802f9a5 Linux native colour formatting/undo test passed; arrow-focus test still failed all retries. Full browser matrix did not run because preflight failed.",
+    "currentRun": 37658755398,
+    "currentCommit": "802f9a52645517ca6c44d0304ffb2bc09cb5bda2",
+    "currentVerify": "passed including performance and units",
+    "currentLean": "passed",
+    "currentBrowser": "1 passed, 1 failed, full matrix skipped",
+    "currentLog": "artifacts/github-ci-802-failures-20261007.log"
   },
   "visualReview": {
     "captures": 69,
@@ -153,6 +159,28 @@
     "commonMark": "0.31.2 projection11; 563/652 default, 613/652 strongest opt-in",
     "npmVersion": "0.4.0-beta.2",
     "npmPublished": false
+  },
+  "rejectedExperiment": {
+    "file": "artifacts/server-html-attribute-prototype-20261007.mjs",
+    "log": "artifacts/server-html-attribute-prototype-20261007.log",
+    "scope": "Artifact-only bundles; no production source or dist changes.",
+    "equivalenceFixtures": 7,
+    "attributeNames": 11,
+    "alternatingSamplesPerVariantPerSize": 12,
+    "medianMs": {
+      "baseline": {
+        "1000": 86.31,
+        "5000": 309.43,
+        "10000": 624.78
+      },
+      "candidate": {
+        "1000": 95.83,
+        "5000": 307.14,
+        "10000": 658.18
+      }
+    },
+    "decision": "Rejected: no consistent speedup, including worse 1k and 10k medians; 10k maximum improved but not sufficient to adopt.",
+    "budgetsChanged": false
   },
   "captures": [
     {

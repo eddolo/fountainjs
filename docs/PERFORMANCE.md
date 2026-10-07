@@ -14,7 +14,12 @@ A separate six-sample importer-only CPU/GC diagnostic measures
 mean it cannot replace the failed complete gate. Sampled GC accounts for roughly
 13% of its total time; repeated attribute projection and HTML-source processing
 remain visible hotspots. The cause of the complete-run slowdown is not yet
-established. See `artifacts/native-control-focus-verification-20261007.json`
+established. An artifact-only attribute-lookup experiment passes seven
+differential fixtures (including case-sensitive names, empty values, SVG
+namespaces and fresh reads after host mutation), but is rejected: alternating
+1k/10k medians worsen from 86.31/624.78ms to 95.83/658.18ms; 5k is similar.
+No production optimisation is adopted from that experiment.
+See `artifacts/native-control-focus-verification-20261007.json`
 for frozen-source evidence, retained failures and visual-review scope.
 
 The ID lookup unit test still performs and checks every one of 100,000 lookups
