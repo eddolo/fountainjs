@@ -5447,6 +5447,10 @@ test('opens and cancels public configuration panels with keyboard focus and exac
       });
     } finally { await baseline.close(); }
     await expect(color).toBeFocused();
+    for (const key of ['ArrowLeft', 'Home', 'End']) {
+      await color.press(key);
+      await expect(color).toBeFocused();
+    }
     expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
   }
 });

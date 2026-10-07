@@ -22,6 +22,30 @@ import {
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('React toolbar primitives', () => {
+  it('prevents native colour navigation from entering a retained editor range without trapping other field keys', async () => {
+    const mount = document.createElement('div'); document.body.append(mount);
+    const root = createRoot(mount);
+    await act(async () => root.render(<FountainToolbarRoot>
+      <input type="color" aria-label="Colour" defaultValue="#171923" />
+      <input aria-label="Text" defaultValue="ordinary caret" />
+      <FountainToolbarButton label="Command" onAction={() => undefined} />
+    </FountainToolbarRoot>));
+    try {
+      const colour = mount.querySelector<HTMLInputElement>('input[type=color]')!;
+      const text = mount.querySelector<HTMLInputElement>('input:not([type=color])')!;
+      for (const field of [colour, text]) {
+        field.focus();
+        for (const key of ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Tab', 'Enter', ' ', 'Escape']) {
+          const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+          await act(async () => field.dispatchEvent(event));
+          expect(event.defaultPrevented, `${field.type}: ${key}`).toBe(field === colour && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key));
+          expect(document.activeElement).toBe(field);
+          expect(field.value).toBe(field === colour ? '#171923' : 'ordinary caret');
+        }
+      }
+    } finally { await act(async () => root.unmount()); mount.remove(); }
+  });
+
   it('includes visible text-icon abbreviations in default accessible action names', async () => {
     const kit = composeExtensions([CoreExtension]);
     const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });

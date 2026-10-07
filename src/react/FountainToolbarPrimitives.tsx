@@ -157,12 +157,17 @@ export function FountainToolbarRoot({ label = 'Formatting and rich content', cla
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    const field = event.target;
+    // Linux WebKit applies these defaults to an old contenteditable range,
+    // even in a plain page. Closed colour controls have no text caret; their
+    // picker activation and Tab remain native. Text fallbacks keep caret keys.
+    if (field instanceof HTMLInputElement && field.type === 'color') event.preventDefault();
     // Fields own caret, value and option navigation; toolbar traversal applies
     // only to command controls, not editable/native widgets supplied by a host.
-    if (event.target instanceof HTMLElement
-      && event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"], [role="combobox"], [role="spinbutton"], [role="slider"]')) return;
+    if (field instanceof HTMLElement
+      && field.closest('input,textarea,select,[contenteditable]:not([contenteditable=false]),[role=textbox],[role=combobox],[role=spinbutton],[role=slider]')) return;
     const controls = [...event.currentTarget.querySelectorAll<HTMLElement>(
-      'button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([type="file"]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])',
+      ':is(button,input:not([type=hidden]):not([type=file]),select):not([disabled]):not([tabindex="-1"]),[tabindex]:not([tabindex="-1"])',
     )];
     if (!controls.length) return;
     const current = Math.max(0, controls.indexOf(document.activeElement as HTMLElement));

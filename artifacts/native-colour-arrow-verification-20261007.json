@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased; narrow native-colour guard passes focused units/build/API/TypeScript/bundle; final full and recorded checks pending",
+  "source": {
+    "file": "artifacts/native-colour-arrow-source-20261007.json",
+    "files": 689,
+    "digest": "8e7cd680b54635bfe43ac77338f6c2ba1da1afc7ac167c3dbe3e40f90e95bdd0"
+  },
+  "diagnosis": {
+    "run": 37659664760,
+    "commit": "f989daf932b943ace1d1ea041e42df5c1770541e",
+    "report": "artifacts/github-ci-f989-playwright-20261007/index.html",
+    "platform": "Linux WebKit",
+    "before": {
+      "focused": true,
+      "activeTag": "INPUT",
+      "type": "color",
+      "value": "#171923"
+    },
+    "after": {
+      "focused": false,
+      "activeTag": "DIV",
+      "value": "#171923"
+    },
+    "plainPage": {
+      "fountainCode": false,
+      "retainedContenteditableSelection": true,
+      "focusedAfterArrow": false,
+      "activeTag": "DIV",
+      "value": "#171923"
+    },
+    "events": [
+      "keydown ArrowRight target INPUT",
+      "focusout INPUT",
+      "focusin DIV role textbox",
+      "selectionchange",
+      "keyup ArrowRight target DIV"
+    ],
+    "qualification": "Native baseline reproduces focus loss without Fountain; no application focus call appears in main-world instrumentation. Existing original focus/document assertions remain."
+  },
+  "fix": {
+    "file": "src/react/FountainToolbarPrimitives.tsx",
+    "navigationKeys": [
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End"
+    ],
+    "scope": "Actual HTMLInputElement.type === color only; prevents browser editing an old document range. Native text fallback, other text inputs and other keys retain their own defaults.",
+    "tabAndActivationDefaultsChanged": false,
+    "querySelectorChange": "Equivalent :is grouping and unquoted identifier attribute values reduce selector bytes; existing keyboard traversal regressions retained.",
+    "engineChanged": false
+  },
+  "verification": {
+    "focusedTests": 17,
+    "focusedFiles": 2,
+    "focusedLog": "artifacts/native-colour-arrow-unit-compact-20261007.log",
+    "apiDeclarations": 409,
+    "typeScriptPassed": true,
+    "buildPassed": true,
+    "bundleLog": "artifacts/native-colour-arrow-budget-compact-20261007.log",
+    "esmKiB": 1576.4,
+    "esmLimit": 1576.5,
+    "cjsKiB": 1311.3,
+    "cjsLimit": 1311.5,
+    "limitsRaised": false
+  },
+  "retainedFailures": [
+    {
+      "log": "artifacts/native-colour-arrow-unit-before-20261007.log",
+      "failure": "New color ArrowLeft default-prevention assertion fails before implementation."
+    },
+    {
+      "log": "artifacts/native-colour-arrow-unit-after-20261007.log",
+      "failure": "Initial local variable collides with navigation target; corrected before build/commit."
+    },
+    {
+      "log": "artifacts/native-colour-arrow-budget-20261007.log",
+      "failure": "Initial guard exceeds React entry and aggregate ESM size; equivalent selector compaction restores unchanged caps."
+    }
+  ],
+  "limits": [
+    "Linux guard verification pending, not yet closure of the browser failure.",
+    "Native OS colour-picker interaction and physical-device/manual AT checks are not certified.",
+    "Previous complete local performance failure remains recorded; importer-only diagnostics are not replacement gate approval."
+  ],
+  "roadmapPromoted": false,
+  "npmPublished": false
+}

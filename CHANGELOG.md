@@ -7,6 +7,7 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Prevent colour-control navigation keys from moving focus into an old editor selection. Linux WebKit reproduces this default behaviour even on a plain page without Fountain. The guard applies only to actual native colour inputs; text fallbacks, other field caret keys, Tab and picker activation retain native defaults. Preserve existing focus/document assertions and compact equivalent toolbar selectors to stay within existing bundle caps. Linux confirmation and final recorded checks remain pending.
 - Keep native inputs, textareas and selects in control of focus when document formatting remaps a selection; ignore automatic stale-range changes while an external control owns focus. Explicit `EditorView.focus()` still restores the logical selection. The existing private DOM-sync latch is now JavaScript-private; supported methods/signatures are unchanged and the declaration snapshot records only that private-field change. Wait for the inert workshop's populated JSON field before inspecting it in browser tests. Linux native-color verification remains separate from Windows WebKit's text fallback.
 - Report unsafe-link import cases as separate threat families with every previous input/assertion retained. Time the same 100,000 stable-ID lookups without including matcher allocations; retain the 1.5-second limit. The complete default unit suite passes, but a separate server-import performance failure remains recorded and is not release approval.
 
