@@ -156,11 +156,15 @@ export class Schema {
           throw new Error(`${current.type.name} cannot have children.`);
         }
       }
-      // Text has no children. Share the cache decision without allocating a
-      // child-validation array for the most frequent node kind.
-      const childrenCacheable = current.isText || current.content
-        .map((child, index) => visit(child, [...path, index]))
-        .every(Boolean);
+      // Shared immutable children need no visit or diagnostic path allocation.
+      // Do not short-circuit on an uncacheable child: later siblings must still
+      // be validated, even when a host owns mutable, non-portable attributes.
+      let childrenCacheable = true;
+      for (let index = 0; index < current.content.length; index += 1) {
+        const child = current.content[index] as Node;
+        if (this.validatedNodes.has(child)) continue;
+        if (!visit(child, [...path, index])) childrenCacheable = false;
+      }
       const cacheable = childrenCacheable
         && isDeeplyImmutable(current.attrs)
         && current.marks.every((mark) => isDeeplyImmutable(mark.attrs));

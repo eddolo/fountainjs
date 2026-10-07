@@ -1,5 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Latest CI follow-up (2026-10-07, Unreleased): shared-subtree validation, group
+matching and equality avoid redundant work without bypassing mutable attribute
+validation or schema ownership. **2,623 tests / 196 files** and nine serial,
+retry-free Windows three-engine workflows pass. Local/remote scaling is
+7.50x/7.55x against unchanged 15x limits, but the complete performance run still
+fails server HTML p95 (931.09ms / 900ms). The ambiguous headless JSON-tab selector
+is repaired. Linux WebKit color-focus remains open: trace diagnostics show
+Windows WebKit uses a text fallback, unlike Chromium/Firefox's native color
+input. See `artifacts/shared-equality-verification-20261007.json` for the source
+digest and exact visual-review scope. No ledger, CommonMark or release promotion.
+
 Latest blank-line checkpoint (2026-10-06, Unreleased): recorded saved-file use
 found and fixed empty paragraphs visually collapsing outside the editor.
 Default standalone HTML and the workshop reader preserve a paragraph's own line

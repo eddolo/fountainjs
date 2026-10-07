@@ -64,7 +64,11 @@ function tokenize(source: string): string[] {
 }
 
 function matchesName(node: Node, name: string): boolean {
-  return node.type.name === name || node.type.spec.group?.split(/\s+/).includes(name) === true;
+  if (node.type.name === name) return true;
+  const group = node.type.spec.group;
+  // The usual single group (block/inline) needs no repeated token allocation.
+  // Multi-group and whitespace-padded declarations retain the same semantics.
+  return group === name || group?.split(/\s+/).includes(name) === true;
 }
 
 function match(expression: Expression, content: readonly Node[], start: number): Set<number> {
@@ -111,8 +115,11 @@ export function matchesContentExpression(content: readonly Node[], source: strin
   }
   if (expression.kind === 'repeat' && expression.value.kind === 'name') {
     const name = expression.value.value;
-    return content.length >= expression.min && content.length <= expression.max
-      && content.every(node => matchesName(node, name));
+    if (content.length < expression.min || content.length > expression.max) return false;
+    for (let index = 0; index < content.length; index += 1) {
+      if (!matchesName(content[index] as Node, name)) return false;
+    }
+    return true;
   }
   return match(expression, content, 0).has(content.length);
 }

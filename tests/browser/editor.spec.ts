@@ -5392,7 +5392,26 @@ test('opens and cancels public configuration panels with keyboard focus and exac
     // This native field is inside the toolbar itself: arrows must not transfer
     // focus to a command button or start toolbar traversal.
     const color = page.locator('[data-fountain-toolbar-action="text-color"] input');
-    await color.focus(); await color.press('ArrowRight'); await expect(color).toBeFocused();
+    await color.focus();
+    const colorFocus = async (phase: string) => {
+      const state = await color.evaluate(element => {
+        const input = element as HTMLInputElement;
+        const active = document.activeElement;
+        const rect = input.getBoundingClientRect();
+        return { focused: active === input, activeTag: active?.tagName,
+          activeAction: active?.closest('[data-fountain-toolbar-action]')?.getAttribute('data-fountain-toolbar-action'),
+          type: input.type, tabIndex: input.tabIndex, explicitTabIndex: input.getAttribute('tabindex'),
+          visible: input.checkVisibility(), width: rect.width, height: rect.height };
+      });
+      await info.attach(`native-color-focus-${phase}-${width}`, {
+        body: JSON.stringify(state, null, 2), contentType: 'application/json',
+      });
+    };
+    await colorFocus('before-arrow');
+    await expect(color).toBeFocused();
+    await color.press('ArrowRight');
+    await colorFocus('after-arrow');
+    await expect(color).toBeFocused();
     expect(JSON.parse(await json.textContent() ?? '')).toEqual(original);
   }
 });
@@ -5734,7 +5753,7 @@ test('preserves complex figure content in the public Markdown conversion demo', 
   await expect.poll(async () => JSON.parse(await output.locator('pre').innerText())).toEqual(original);
 });
 
-test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async ({ page }) => {
+test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async ({ page }, info) => {
   await page.goto('/demos/node-markdown.html');
   const source = page.getByLabel('Markdown input');
   await expect(source).toContainText('$E=mc^2$');
@@ -5750,16 +5769,18 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(page.getByText('Valid document · 2 top-level blocks')).toBeVisible();
   await page.locator('.demo-output nav').getByRole('button', { name: 'markdown', exact: true }).click();
   await expect(output).toContainText('$\\alpha+\\beta$');
+  await page.locator('.headless-surface').screenshot({ path: info.outputPath('headless-markdown-source.png') });
 
   await page.getByRole('button', { name: 'Server HTML' }).click();
   await expect(page.getByLabel('Server HTML input')).toContainText('<h1>Server-native document</h1>');
   await expect(page.getByText('Valid document · 5 top-level blocks · no reported HTML conversion details')).toBeVisible();
   await expect(page.getByText('HTML is converted into the supported document schema.', { exact: false })).toContainText('not a guarantee of lossless conversion');
-  await page.getByRole('button', { name: 'json' }).click();
+  await page.locator('.demo-output nav').getByRole('button', { name: 'json', exact: true }).click();
   await expect(output).toContainText('inline_math');
   await expect(output).toContainText('ordered_list');
   await expect(output).toContainText('table');
   await expect(output).toContainText('no jsdom');
+  await page.locator('.headless-surface').screenshot({ path: info.outputPath('headless-server-html-source.png') });
 
   await page.locator('.headless-input-tabs').getByRole('button', { name: 'Markdown', exact: true }).click();
   const downloadPromise = page.waitForEvent('download');
@@ -5800,6 +5821,7 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(output).toContainText('FountainJS violet sample');
   await expect(output).toContainText('A verified raster image packaged inside the Word document.');
   await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
+  await page.locator('.headless-surface').screenshot({ path: info.outputPath('headless-docx-image-preview.png') });
 });
 
 test('records native DOCX viewer disagreements without certifying math fidelity', async ({ page }, info) => {

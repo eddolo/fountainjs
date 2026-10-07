@@ -1,8 +1,23 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { CoreSchemaSpec, Schema } from '../src';
 import { matchesContentExpression } from '../src/core/schema/content-expression';
 
 describe('schema content expression matching', () => {
+  it('does not split exact single-group declarations for every child', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const content = Array.from({ length: 1000 }, () => schema.node('paragraph'));
+    matchesContentExpression([], 'block*');
+    const split = vi.spyOn(String.prototype, 'split');
+    let matches; let calls;
+    try { matches = matchesContentExpression(content, 'block*'); calls = split.mock.calls.length; }
+    finally { split.mockRestore(); }
+    expect(matches).toBe(true);
+    expect(calls).toBe(0);
+    const spec = { group: ' \tblock  special\n', content: 'inline*' };
+    const custom = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, widget: spec } });
+    expect(matchesContentExpression([custom.node('widget')], 'special+')).toBe(true);
+  });
+
   it('matches a 10,000-block simple repetition without allocating per-node position sets', () => {
     const schema = new Schema(CoreSchemaSpec);
     const content = Array.from({ length: 10000 }, () => schema.node('paragraph'));

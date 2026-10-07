@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  CoreSchemaSpec, Schema, Selection, createEditor, createHistoryPlugin,
+  CoreSchemaSpec, Node, Schema, Selection, createEditor, createHistoryPlugin,
   insertText, redo, undo,
 } from '../src';
 import { freezeAttributes } from '../src/core/schema/node-spec';
@@ -54,6 +54,63 @@ describe('attribute allocation and deep immutability', () => {
 });
 
 describe('native model snapshot integrity', () => {
+  it('compares shared sibling identity without invoking deep equality on every block', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const doc = schema.node('doc', {}, Array.from({ length: 1000 }, () =>
+      schema.node('paragraph', {}, [schema.text('Original')])));
+    const content = [...doc.content];
+    content[999] = content[999]!.copy([schema.text('Changed')]);
+    const edited = doc.copy(content);
+    const eq = vi.spyOn(Node.prototype, 'eq');
+    let equal; let calls;
+    try { equal = doc.eq(edited); calls = eq.mock.calls.length; }
+    finally { eq.mockRestore(); }
+    expect(equal).toBe(false);
+    expect(calls).toBe(3);
+    expect(doc.eq(schema.nodeFromJSON(doc.toJSON()))).toBe(true);
+    expect(doc.eq(doc.withAttrs({ title: 'Different' }))).toBe(false);
+    const marked = [...doc.content];
+    marked[999] = marked[999]!.copy([schema.text('Original', [schema.mark('em')])]);
+    expect(doc.eq(doc.copy(marked))).toBe(false);
+    expect(doc.eq(new Schema(CoreSchemaSpec).nodeFromJSON(doc.toJSON()))).toBe(false);
+  });
+
+  it('validates edited shared documents without per-child map allocations', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const doc = schema.node('doc', {}, Array.from({ length: 1000 }, () =>
+      schema.node('paragraph', {}, [schema.text('Original')])));
+    schema.validate(doc);
+    const content = [...doc.content];
+    content[999] = content[999]!.copy([schema.text('Changed')]);
+    const edited = doc.copy(content);
+    const map = vi.spyOn(Array.prototype, 'map');
+    let allocations;
+    try { schema.validate(edited); allocations = map.mock.calls.length; }
+    finally { map.mockRestore(); }
+    expect(allocations).toBe(0);
+    expect(edited.child(0)).toBe(doc.child(0));
+    expect(edited.child(999).textContent).toBe('Changed');
+  });
+
+  it('revalidates mutable host attributes and checks siblings after an uncacheable child', () => {
+    const schema = new Schema({ nodes: {
+      doc: { content: 'block*' }, text: { inline: true },
+      paragraph: { group: 'block', content: 'text*', attrs: {
+        hostDate: { default: undefined, validate: value => value instanceof Date && value.getTime() === 0 },
+      } },
+    } });
+    const date = new Date(0);
+    const mutable = schema.node('paragraph', { hostDate: date }, [schema.text('Host value')]);
+    const doc = schema.node('doc', {}, [mutable]);
+    schema.validate(doc);
+    date.setTime(1);
+    expect(() => schema.validate(doc)).toThrow('Invalid value for attribute: hostDate');
+    date.setTime(0);
+    const foreign = new Schema(CoreSchemaSpec);
+    const bad = schema.node('doc', {}, [mutable, foreign.node('paragraph', {}, [foreign.text('Foreign')])]);
+    expect(() => schema.validate(bad)).toThrow('Foreign node at 1.');
+  });
+
   const fields = ['type', 'attrs', 'content', 'text', 'marks'] as const;
   for (const field of fields) {
     it(`locks the node ${field} field against assignment, deletion and redefinition`, () => {

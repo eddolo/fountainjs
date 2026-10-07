@@ -1,5 +1,38 @@
 # Performance and memory contract
 
+## Shared-subtree edit cost follow-up
+
+Unreleased, 2026-10-07: the GitHub checkpoint's Linux job rejected local edit
+growth of 15.83x against the existing 15x limit. Revalidation reproduced the
+scaling failure. Profiling identified redundant validation path/result arrays,
+single-group token arrays, and deep-equality calls on unchanged siblings.
+Validation now skips already validated immutable children before allocating
+diagnostic paths, still checks every uncacheable sibling, and revalidates mutable
+host attributes. Simple group matching avoids splitting exact single groups;
+whitespace/multi-group declarations and live declaration changes retain their
+semantics. Equality uses shared-child identity before recursing and still checks
+changed attributes, marks, text, and schema ownership.
+
+The unchanged 300-edit diagnostic measured 10,000-block local p50 at 3.6018ms
+before and 1.0699ms after these changes on this machine. These ordered diagnostic
+observations are not a cross-hardware performance promise. The normal gate then
+measured local/remote growth at 7.50x/7.55x against 15x. Heap limits passed and
+bundle sizes stay inside the unchanged caps (1576.5 KiB ESM / 1311.3 KiB CJS).
+**The complete performance gate remains unproven:** that run rejected server
+HTML's 10,000-block p95 of 931.09ms against 900ms. Neither the limits nor sample
+counts have been increased, and the failed attempts remain local evidence.
+See `artifacts/shared-equality-performance-20261007.log` and
+`artifacts/shared-equality-verification-20261007.json`.
+
+The GitHub browser run also found an ambiguous unscoped JSON-tab test selector,
+now scoped to the output navigation, and a Linux WebKit native-color focus
+failure. Windows did not reproduce the latter; before/after focus diagnostics
+are added without removing the assertion or claiming Linux resolution.
+The recorded trace attachments confirm Chromium/Firefox use `type="color"`,
+whereas Windows WebKit exposes `type="text"`. Its text-fallback focus pass is
+not evidence for Linux's native color control. Functional checks pass **2,623
+tests / 196 files**; nine serial, retry-free three-engine workflows are recorded.
+
 ## Blank-line appearance follow-up
 
 Unreleased, 2026-10-06: the default standalone HTML blank-line rule adds no

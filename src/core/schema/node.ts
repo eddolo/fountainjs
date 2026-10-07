@@ -74,13 +74,20 @@ export class Node {
   }
 
   eq(other: Node): boolean {
-    return this === other || (this.type === other.type
-      && this.text === other.text
-      && JSON.stringify(this.attrs) === JSON.stringify(other.attrs)
-      && this.marks.length === other.marks.length
-      && this.marks.every((mark, index) => mark.eq(other.marks[index]))
-      && this.content.length === other.content.length
-      && this.content.every((child, index) => child.eq(other.content[index])));
+    if (this === other) return true;
+    if (this.type !== other.type || this.text !== other.text
+      || JSON.stringify(this.attrs) !== JSON.stringify(other.attrs)
+      || this.marks.length !== other.marks.length
+      || !this.marks.every((mark, index) => mark.eq(other.marks[index]))
+      || this.content.length !== other.content.length) return false;
+    // An unchanged immutable child is already equal. Avoid calling eq for
+    // thousands of shared siblings on every last-block edit/no-op check.
+    for (let index = 0; index < this.content.length; index += 1) {
+      const child = this.content[index] as Node;
+      const counterpart = other.content[index] as Node;
+      if (child !== counterpart && !child.eq(counterpart)) return false;
+    }
+    return true;
   }
 
   toJSON(): NodeJSON {

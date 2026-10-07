@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reduce shared-subtree edit allocations and redundant deep equality: skip cached child validation before creating paths, match exact single groups without token arrays, and compare unchanged child identity directly. Preserve mutable-host revalidation, foreign-schema refusal, marks/attributes/text equality, and existing budgets. The original edit-scaling check passes locally; a server HTML p95 performance failure and Linux WebKit native-color focus remain open.
+- Scope the public headless demo's JSON-tab browser selector to its output navigation, avoiding ambiguity with the inert workshop's JSON reopen action. Capture native color focus state before and after arrow navigation without skipping the Linux WebKit assertion.
+
 - Space the homepage italic tagline away from the preceding framework line so descenders do not collide. Recorded Chromium, Firefox, and WebKit checks cover 1162px, 1440px, and 390px widths, with screenshot review.
 
 - Fix visually collapsed blank paragraphs in the default standalone HTML export

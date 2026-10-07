@@ -1,0 +1,380 @@
+{
+  "date": "2026-10-07",
+  "status": "Unreleased progress; not full performance/CI certification",
+  "source": {
+    "file": "artifacts/shared-equality-source-final-20261007.json",
+    "files": 687,
+    "digest": "29370e17fff67c36376fda1ee7634f15ebeeb8ea381acb91964269da0eb8e82b"
+  },
+  "changes": [
+    "Skip cached immutable validation children before diagnostic path allocation; continue validating siblings after an uncacheable child.",
+    "Match exact single groups without splitting; preserve whitespace/multiple/live group declarations.",
+    "Skip redundant deep equality calls for shared child identity; preserve changed text, attrs, marks and foreign-schema differences.",
+    "Scope headless output JSON-tab selector to its navigation.",
+    "Attach before/after native color focus diagnostics; retain assertion.",
+    "Capture headless Markdown, HTML and embedded DOCX image preview."
+  ],
+  "gates": {
+    "functionalLog": "artifacts/shared-equality-functional-gate-20261007.log",
+    "functionalExitCode": 0,
+    "tests": 2623,
+    "testFiles": 196,
+    "declarationFiles": 409,
+    "performanceLog": "artifacts/shared-equality-performance-20261007.log",
+    "performanceExitCode": 1,
+    "localGrowth": 7.5,
+    "remoteGrowth": 7.55,
+    "growthLimit": 15,
+    "serverHTMLP95Ms": 931.09,
+    "serverHTMLP95LimitMs": 900,
+    "budgetChanged": false,
+    "aggregateESMKiB": 1576.5,
+    "aggregateCJSKiB": 1311.3
+  },
+  "diagnostic": {
+    "script": "artifacts/local-edit-profile-20261007.mjs",
+    "iterations": 300,
+    "unmeasuredWarmup": 30,
+    "before": "artifacts/local-edit-before-20261007.log",
+    "after": "artifacts/local-edit-equality-20261007.log",
+    "before10000P50Ms": 3.6018,
+    "after10000P50Ms": 1.0699,
+    "qualification": "Ordered same-machine diagnostic observations, not a cross-platform or cross-hardware benchmark."
+  },
+  "browser": {
+    "log": "artifacts/shared-equality-recorded-final-20261007.log",
+    "passed": 9,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "hostPlatform": "Windows",
+    "workers": 1,
+    "retries": 0,
+    "video": true,
+    "trace": true,
+    "colorFocusDiagnostics": {
+      "source": "native-color-focus-before-arrow/after-arrow trace attachments at 1280 and 390 CSS px",
+      "chromiumInputType": "color",
+      "firefoxInputType": "color",
+      "windowsWebKitInputType": "text",
+      "focusedBeforeAndAfterArrow": true,
+      "qualification": "Windows WebKit uses a text fallback, so its pass is not evidence for Linux WebKit's native color input."
+    }
+  },
+  "review": {
+    "captured": 57,
+    "directFinal": 9,
+    "identicalToInspectedSameTurn": 6,
+    "identicalToPriorInspected": 6,
+    "otherRecordedNotClaimedInspected": 36
+  },
+  "captures": [
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-editor.png",
+      "sha256": "b4f9fa8834a3fe0163c9848e8bd98f4b77cecdcd35236ae0800768ac63bd807c",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-editor.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-reader.png",
+      "sha256": "a98499d3128444b9e44f223897e14f2db26b7754fbb8e2aa0810bb4ae0c0a384",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-chromium/empty-paragraph-reader.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-editor.png",
+      "sha256": "865d0de4acaae5b53fdc62c1da5bc4fa2d29470736660675ae7fa97e6e00bed5",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-editor.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-reader.png",
+      "sha256": "d1d42f2b7ce2c6e7ffae59655cb3e80b4910dc75ca2b16f109cea754930556e7",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-firefox/empty-paragraph-reader.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-editor.png",
+      "sha256": "5839482855c2007a8976a4e680ae41c1a8815962021c709bce242fdbc0061094",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-editor.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-reader.png",
+      "sha256": "bfdee3ea9c47ddd3b01aa1564da668a823accd06b341ccbb93603a4b8648b8cb",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/html-blank-lines-recorded-final-20261006/editor-fills-and-reopens-a-57928-ng-Enter-Backspace-and-undo-webkit/empty-paragraph-reader.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-highlight-1280.png",
+      "sha256": "b9494ffef5b5e45a170facc51fa9b106302101fef58fb7c699a07bc8a37d7be3",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-highlight-390.png",
+      "sha256": "902d26fe8b1b613c028bf03232ab53ce70f03aa029a2125e58b0b263e25ae077",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-image-1280.png",
+      "sha256": "ed51cd6a3349584417b9a53a25f4d53843d8f8cb3e815078c7da40d1e167f4be",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-image-390.png",
+      "sha256": "af77c99fcfefdeebb8bffd1c00a272d281a3829b29b4d191444968f860d6e42d",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-1280.png",
+      "sha256": "752034507d591af31f1301815d8b05c96aa3162003237e79b15bdc80ba34e1cd",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-390.png",
+      "sha256": "93d5fca42ef5565d970d2e560f1b979348230f8cb367f7fdb8d6966a410a384e",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-insert-table-390.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-link-1280.png",
+      "sha256": "7f611265c0a8f62508b59c02b694b7263d030b11b00ef4cebbb402d8f22c9038",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-link-390.png",
+      "sha256": "e98097ae8fbf02b30947fe53d9169f70ac7fc676c39e5b6906e3e8b176e90c37",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-media-1280.png",
+      "sha256": "5a39e482181a07982d49a72bfa2777f24a0c4312852fe879075103c76c4be773",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-media-390.png",
+      "sha256": "a6c6a05524659dbbef16c01855705b755cbc4a2b63641e10ffaa26592ff9785b",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-search-1280.png",
+      "sha256": "aea3382bae12489fd90ca0da83a37574834619741a979067bed55aba17773061",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-search-390.png",
+      "sha256": "c86daa0edac5d050af1d950e8412836dc584884265d158086d62616794ea6fa9",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-1280.png",
+      "sha256": "4502837622c8c51295ebc14c41125d961566413f5450fdaa44b4e3826fed097c",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-390.png",
+      "sha256": "3582c75b87a4080772f1ee374f60c844dea961a407cbd0c62aa9744d0ef003c0",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-chromium/keyboard-panel-text-style-390.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-highlight-1280.png",
+      "sha256": "6a6b41099d9fd286ed93d63b3af75596d45c6b007bac4a19583b928aec689d76",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-highlight-390.png",
+      "sha256": "aebb3c81820204ecaf16b2b02fa2d960eafc394bd2f8b512a878ee819d04196b",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-image-1280.png",
+      "sha256": "37984fb47117cc160e2fecf4e32042482e8600b6cf1d9250aced00a6e035ad04",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-image-390.png",
+      "sha256": "ac0b4fb9b732a9de7d41ab7bd97f218c51abe4323c088c6e6046a53df49e510d",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-1280.png",
+      "sha256": "6dacf9867d608cefc5a3751b4815a863a3065c3376f42cd21346397e94dc65e5",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-390.png",
+      "sha256": "f5181ff2777c540f3255244de0ba9094388cada6851297384f7d74b6f698adbd",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-insert-table-390.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-link-1280.png",
+      "sha256": "bd0257532c71c2289054dad18007e800635d9da04cec4800bca1afbab10392ee",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-link-390.png",
+      "sha256": "b56d7d816540a8216c771ff35e064e561464a88c2fa3b64d7eece3806342986d",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-media-1280.png",
+      "sha256": "44ce87ae15e376e95b143ebbb8c424f7680abd7d0a3944b742a09c03e78e6ad8",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-media-390.png",
+      "sha256": "ce87458692d868d784d063372f862506fcbebbb294facb910b5bb201d453e529",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-search-1280.png",
+      "sha256": "2d8523c2f5b1e2b21f66da98f784a9e998e25c29e25dc1ed66521e8e543c8753",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-search-390.png",
+      "sha256": "ac8ef2219b701abb79b9deb7ecf9bdbbe22b5ef998825929be0ecf4e3f858835",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-1280.png",
+      "sha256": "85ef4a144a4352c66559c99c0d5af1c8c44e610c7111fb7754a846c48fa9baa6",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-390.png",
+      "sha256": "4605d4eed39d5f2d3ae8801ff193cb189507af3eb8db922363ff44eff98f6ca0",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-firefox/keyboard-panel-text-style-390.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-highlight-1280.png",
+      "sha256": "f8cb863a1e5cf64220ede9638fefcdd2a65f0ca8ff65a42e2b9674ad97654537",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-highlight-390.png",
+      "sha256": "d51fb4ef6cc85d19c58c1bf904436bc2248aed4d4e2510d5032d683f53e47583",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-image-1280.png",
+      "sha256": "3d30438f619cd77a427ac7bc06501188651142666b422dfa0b81aedc8dbf8f42",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-image-390.png",
+      "sha256": "6247ac208951b97768f256ba1aaaef148f3a892e5cf377cb4a7a7e4483323f00",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-1280.png",
+      "sha256": "2f5be546ebd41f2d79450472060d2336de21ca9fe67b28d20518c5eaa83e39e9",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-390.png",
+      "sha256": "6f8e29859cbc088f7ad7ea507e1eea6cf0889b13828d62894c163a126d38adcb",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-insert-table-390.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-link-1280.png",
+      "sha256": "be4f23edf99cdd4c6ce52174a7b2a5991921ba1e0a7ef5e319ad3f757d7516ed",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-link-390.png",
+      "sha256": "39889f82f679a0ef7901a79b5b5b34b9abb9707e79b6e63cc9c2e7447e4dfb7c",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-media-1280.png",
+      "sha256": "bdf152d70f5193fecff103a1a5c463155b3485c610711a4a064c1f323f68ecff",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-media-390.png",
+      "sha256": "4a40cae72b46ada4ca3dbdcb2078fc78e396f7a303f43f846f7bd486862bc187",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-search-1280.png",
+      "sha256": "cc40c603fa96e8dd20a027a1a98b92cf8cb0d33211a246b237bcf0d8a28c92c5",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-search-390.png",
+      "sha256": "d4645468b935987f9cc2d187bd337bd482ffba69d28dc588aaf824b6d9f0220f",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-1280.png",
+      "sha256": "1d63dd30593d33bb3544fef2ce30142f81bffed9c4d6d20b0bae99e6080710fa",
+      "review": "recorded-not-claimed-inspected"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-390.png",
+      "sha256": "f6d437bc8edbbe981815ab4492490e8ec7c8f04d55bf0bcdb3294b5d1f41ca7e",
+      "review": "sha256-identical-to-inspected-evidence",
+      "inspectionReference": "artifacts/shared-equality-recorded-20261007/editor-opens-and-cancels-p-ad701-nd-exact-document-retention-webkit/keyboard-panel-text-style-390.png"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-docx-image-preview.png",
+      "sha256": "4027e96a11c60c4acde87b0d09dd724250279a5ba45dc5385a1dbd70a8218da7",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-markdown-source.png",
+      "sha256": "e803adba62d15b4abe29e5fd7a8300f9f60465235d22dedf03b7b9dd204705db",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium/headless-server-html-source.png",
+      "sha256": "06c18736de7991dea374b230fa720bb57852e8d1c1612c06c168886146294494",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-docx-image-preview.png",
+      "sha256": "9a031125d71511f3a806f095542ecb8a59379b770217c291aade6f09167f2a9c",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-markdown-source.png",
+      "sha256": "846f89b5aaa9da7a6f127bd7aef8771d556e05eae2553b727cdc60cff0ff5796",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox/headless-server-html-source.png",
+      "sha256": "aab570e1431ea33448f855591d26d4df9b73fed81eeb51bf932800a9e4699b9e",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-docx-image-preview.png",
+      "sha256": "664c0f25aca618de8d77e35a95b5837dc54cfae2dc1b9fff696032a7a6b04fd4",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-markdown-source.png",
+      "sha256": "093374e97436a5d04eb443506b1918b73996d4e3efd7a910d310d5a1ecde4ad0",
+      "review": "direct-visual-inspection"
+    },
+    {
+      "path": "artifacts/shared-equality-recorded-final-20261007/editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit/headless-server-html-source.png",
+      "sha256": "3ffb6871765660425b156ea52c31ebe541a1f7f37b61af369b080cccc9da0750",
+      "review": "direct-visual-inspection"
+    }
+  ],
+  "remaining": [
+    "Linux WebKit native color focus needs fresh Linux evidence; Windows pass does not resolve it.",
+    "Server HTML absolute p95 still fails this run; complete performance gate is not passing.",
+    "The original GitHub run remains failed; no new GitHub CI success claimed.",
+    "Source-panel screenshots can include the sticky site header where a tall element is clipped across the viewport; they are not print-layout evidence.",
+    "No native Word/PDF layout or physical mobile certification.",
+    "CommonMark scores and parity ledger rows unchanged; no npm release."
+  ]
+}

@@ -1,5 +1,14 @@
 # FountainJS opportunity roadmap
 
+Latest production follow-up (2026-10-07, Unreleased): profiling the GitHub
+checkpoint's failed edit-scaling gate led to lower shared-subtree validation,
+group-matching, and equality costs without relaxing limits or validation. The
+original edit ratios pass locally, but the complete performance gate still
+rejects server HTML p95 on this machine. The browser JSON-tab selector is scoped
+correctly; Linux WebKit's native-color focus failure remains under investigation
+with new before/after diagnostics. See [PERFORMANCE.md](PERFORMANCE.md).
+No ledger row, percentage, CommonMark score, or release is promoted.
+
 Latest blank-line visual follow-up (2026-10-06, Unreleased): a real saved-file
 audit found and fixed blank paragraphs collapsing to 0px outside the editor.
 The default HTML stylesheet and workshop reader now preserve each paragraph's
