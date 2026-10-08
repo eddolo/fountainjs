@@ -49,6 +49,20 @@ automatic directions. Full document-shell/body direction, unsupported wrapper
 attributes, arbitrary CSS inheritance and inline bidi isolation remain separate
 contracts. Removing a wrapper intentionally removes its shared direction too.
 
+Current split-boundary audit (2026-10-08): converting or lifting a middle item
+from a list that owns `dir="auto"` splits/removes its shared context. Native
+Chromium, Firefox and WebKit render unchanged English paragraphs differently
+after that transform. Converting the entire list retains its context; converting
+part of a directionless list inside an automatic section retains that section's
+context. This is why a format-only split needs one neutral shared wrapper, not
+independent `auto` attributes on fragments. See
+`artifacts/auto-scope-boundary-audit-20261008.json`: twelve programmatic transforms
+undo exactly, but six results retain a known direction gap. All 24 source/result
+screenshots are visually checked. This is diagnostic evidence, not a passing
+full-editor or mobile conformance gate; no scope-retention implementation is
+introduced by this audit. Deliberate section unwrapping keeps its documented
+property-removal contract.
+
 Supported inline `text-align` is a separate projection. Browser and server
 importers now materialize the nearest supported ancestor declaration onto text
 blocks, even if the surrounding wrapper is flattened. This includes anonymous

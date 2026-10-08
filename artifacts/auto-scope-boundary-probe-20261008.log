@@ -1,0 +1,12 @@
+chromium middle-conversion: direction retention KNOWN GAP; exact undo true
+chromium middle-lift: direction retention KNOWN GAP; exact undo true
+chromium whole-conversion: direction retention SUPPORTED CONTROL; exact undo true
+chromium retained-section: direction retention SUPPORTED CONTROL; exact undo true
+firefox middle-conversion: direction retention KNOWN GAP; exact undo true
+firefox middle-lift: direction retention KNOWN GAP; exact undo true
+firefox whole-conversion: direction retention SUPPORTED CONTROL; exact undo true
+firefox retained-section: direction retention SUPPORTED CONTROL; exact undo true
+webkit middle-conversion: direction retention KNOWN GAP; exact undo true
+webkit middle-lift: direction retention KNOWN GAP; exact undo true
+webkit whole-conversion: direction retention SUPPORTED CONTROL; exact undo true
+webkit retained-section: direction retention SUPPORTED CONTROL; exact undo true

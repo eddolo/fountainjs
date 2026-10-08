@@ -1,0 +1,8 @@
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/auto-scope-boundary-probe-20261008.mjs:26
+  editor.replaceDocument(parsed.document);
+         ^
+
+TypeError: editor.replaceDocument is not a function
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/auto-scope-boundary-probe-20261008.mjs:26:10
+
+Node.js v24.19.0

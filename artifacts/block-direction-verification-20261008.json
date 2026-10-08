@@ -1,5 +1,6 @@
 {
   "date": "2026-10-08",
+  "hashMethod": "SHA-256 of measured local working-tree/artifact bytes. Git may normalize text CRLF to LF on other checkouts; compare the same measured bytes or account for line-ending normalization. PNG hashes are binary-exact.",
   "status": "verified-local-block-reordering-subset; current-source complete Linux CI pending",
   "scope": "Fixed model direction at generic moves; editor-owned RTL/LTR control geometry; whole-container keyboard/button tracking; focus-owned hover; dedicated bilingual runbook demo",
   "baseline": {

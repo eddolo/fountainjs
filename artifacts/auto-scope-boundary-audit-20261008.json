@@ -1,0 +1,235 @@
+{
+  "date": "2026-10-08",
+  "status": "evidence-backed remaining gap, not implemented or certified",
+  "sourceCommit": "0a6948d3548e1d38fd5981c0237c4da63954bace",
+  "specification": {
+    "url": "https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute",
+    "summary": "Automatic direction scans eligible descendant text in tree order, excluding nested independently directed elements. Shared automatic context is not equivalent to independent automatic children."
+  },
+  "probe": "artifacts/auto-scope-boundary-probe-20261008.mjs",
+  "log": "artifacts/auto-scope-boundary-probe-20261008.log",
+  "retainedHarnessError": "artifacts/auto-scope-boundary-probe-harness-error-20261008.log",
+  "rawObservations": "artifacts/auto-scope-boundary-20261008/observations.json",
+  "scope": {
+    "nativeEngines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "casesPerEngine": 4,
+    "knownGapResults": 6,
+    "supportedControlResults": 6,
+    "coreWithoutFakeDom": true,
+    "exactUndoCases": 12,
+    "localPriority": "BelowNormal",
+    "localProcessorAffinity": 192
+  },
+  "findings": [
+    {
+      "case": "middle-conversion",
+      "transform": "toggleList(editor, 'ordered') on the middle item of an automatic list",
+      "before": [
+        "rtl",
+        "rtl",
+        "rtl"
+      ],
+      "after": [
+        "rtl",
+        "ltr",
+        "ltr"
+      ],
+      "classification": "Format-only conversion divides one shared automatic list into independently resolved prefix/converted/suffix lists. The selected and trailing text changes direction."
+    },
+    {
+      "case": "middle-lift",
+      "transform": "outdentListItem(editor) on the middle item of an automatic list",
+      "before": [
+        "rtl",
+        "rtl",
+        "rtl"
+      ],
+      "after": [
+        "rtl",
+        "ltr",
+        "ltr"
+      ],
+      "classification": "The selected paragraph exits the list's context and the suffix becomes a new automatic list. The scope is lost/split."
+    },
+    {
+      "case": "whole-conversion",
+      "before": [
+        "rtl",
+        "rtl",
+        "rtl"
+      ],
+      "after": [
+        "rtl",
+        "rtl",
+        "rtl"
+      ],
+      "classification": "One shared automatic context remains intact."
+    },
+    {
+      "case": "retained-section",
+      "before": [
+        "rtl",
+        "rtl",
+        "rtl"
+      ],
+      "after": [
+        "rtl",
+        "rtl",
+        "rtl"
+      ],
+      "classification": "A directionless list split inside the existing optional automatic HTML section keeps that enclosing context."
+    }
+  ],
+  "visualReview": {
+    "pngsReviewed": 24,
+    "boardsReviewed": 8,
+    "method": "All source and transformed screenshots viewed in three-engine comparison boards.",
+    "captureHashes": [
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-middle-conversion-source.png",
+        "sha256": "2a1cb5dd6821b68baf3a7134ca19a9954df3a0ab83cf25c32ca3bb3581f26c56"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-middle-conversion-transformed.png",
+        "sha256": "851e1db8615f8f6911cbc8a0b5cf3a5a4ee068ebb5ed63c35f80273e0b5cf175"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-middle-lift-source.png",
+        "sha256": "e7299190572d6f3131a450a38ebabecee88061f2bdff736ac03e63dc9bf24238"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-middle-lift-transformed.png",
+        "sha256": "9afd94b43b208ecfbfd65fbbfb7c62e095e103d05d5be801af4f635098645f68"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-whole-conversion-source.png",
+        "sha256": "e9bf268772d7a8cc966b5cd97458b655e5947df1146cca402acc0169a1ae029c"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-whole-conversion-transformed.png",
+        "sha256": "4a4e3af3a888098498801ad8b55a8c310f5eacc7fff530f8d0d54bd46b339c11"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-retained-section-source.png",
+        "sha256": "0b4f42d98bd9cb844d6d1134ebdf3b08ecdf1f2c23674ab2ed3de97ec16203ae"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/chromium-retained-section-transformed.png",
+        "sha256": "3f61bc0dd3371eae731b55132dd59b1575511873d53ccd87f1a2bbafd55be173"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-middle-conversion-source.png",
+        "sha256": "65fd6a96f8bc0e06a009ccd4a426119ecdb34fa574a176af151e484d070ba582"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-middle-conversion-transformed.png",
+        "sha256": "cae47f122a17a4c4c5f10bc4063cbaed20a00dbbe73c7d5dcc3313dd9736d0f5"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-middle-lift-source.png",
+        "sha256": "6cef6a9765475c45a2fef8f5654492b848ffbc5e2c8d1b87c1bedc7741a7f703"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-middle-lift-transformed.png",
+        "sha256": "34e3d19d9af561166436e86de51bc5c74f4db265a197ab7c5480b5097b3c24f9"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-whole-conversion-source.png",
+        "sha256": "12422899309d91f2570e02e4083b866c30984f4f6c5346e78baa0d76d522249c"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-whole-conversion-transformed.png",
+        "sha256": "089f778466ed58cb8ac8973c48fa063b507742683a6fb41eace48dea6ce8bc81"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-retained-section-source.png",
+        "sha256": "f383fd6d1b9981bfa45626da9adce00c8daa75ae6671f0b0b959c9a3dbd0e4ce"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/firefox-retained-section-transformed.png",
+        "sha256": "30813d0b6331757d9d402840e329bd09496f68938613fd384a53cd4fe910d9eb"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-middle-conversion-source.png",
+        "sha256": "76666fad5417c9d0878682fd9d26f9dc505f97ae3e60e136816dadc20c13199d"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-middle-conversion-transformed.png",
+        "sha256": "a9ade3644aad1a65f228e8f2f2baa69f27ec8a6fc09bd36c9d2e7a96f84c9aaf"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-middle-lift-source.png",
+        "sha256": "a10953c69bfc523b4953f847b47b8da384312a66b7f6058911a9caab21661908"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-middle-lift-transformed.png",
+        "sha256": "bbaa3fc5f1c8c5aecfa926cb757a6c614728d2192561bcf0d604bcbb9fa88206"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-whole-conversion-source.png",
+        "sha256": "e397e54027d302768f95ba21b8e34135419bfacfe41e62db3aa3f04eb28c3f3b"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-whole-conversion-transformed.png",
+        "sha256": "b017aed918d5f25948315d371dd2e0d0f04164cd7ebb0fea09e3b9c329fefe52"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-retained-section-source.png",
+        "sha256": "fe783ffd69271120209a0a948ca63936fef0f74921144b85615879da2915ef31"
+      },
+      {
+        "path": "artifacts/auto-scope-boundary-20261008/webkit-retained-section-transformed.png",
+        "sha256": "ef3ec3a4ff2a883cfef809ccb4b39f6914df61f6393f034462ec41c18ae818b0"
+      }
+    ],
+    "anchorEditSnapshotsCaptured": false
+  },
+  "methodLimits": [
+    "Transforms are invoked programmatically in pure Node and their HTML is rendered by actual browsers. This is a diagnostic, not a recorded pointer/keyboard editor journey.",
+    "Changing the anchor text means rendering subsequent HTML snapshots with an English source anchor; it does not claim real-user typing, IME, selection or caret verification.",
+    "The diagnostic exits successfully when measurements finish. Its log labels known gaps explicitly; success is not a conformance pass.",
+    "Native HTML rendering isolates the direction-scope issue from host editor themes, CSS measurement, mutation repair and clipboard behavior.",
+    "No new engine runtime, schema, package dependency, public API or performance cap was changed by this audit."
+  ],
+  "nextImplementation": {
+    "formatOnlySplits": "Retain one explicit neutral direction context around all resulting siblings instead of assigning auto to each fragment or freezing the current computed RTL/LTR. The existing html_container extension demonstrates the needed model/view boundary.",
+    "schemaBoundary": "Establish a direction-scope wrapper capability for ordinary editor schemas; do not assume every host installs HTMLContainerExtension or silently add an unsupported node.",
+    "mappingAndPersistence": "Map text/node selections into the retained wrapper; retain child IDs and rich data; preserve one undo step, atomic schema/filter rejection, JSON/Yjs state and server/browser HTML equivalence.",
+    "deliberateRemoval": "Keep intentional unwrap/removal of wrapper properties distinct from format-only scope retention.",
+    "reparenting": "Moving a child to a different parent is a separate context change. A new wrapper around one child cannot reproduce its old shared scope. Do not claim this case solved by the sibling wrapper.",
+    "furtherValidation": "Add desired-result unit/packed-Node regressions, actual-user editor journeys, before/after source-anchor edits, reader/HTML reopen, independent native render comparisons and full cloud gates before certifying."
+  },
+  "programme": {
+    "PROD04": "Partial",
+    "goalComplete": false,
+    "npmVersion": "0.4.0-beta.2",
+    "coverageCountsChanged": false
+  },
+  "runtimeCheckpoint": {
+    "commit": "0a6948d",
+    "ciRun": 37707644407,
+    "verifyJob": 113085734174,
+    "verifyConclusion": "success",
+    "unitTests": 2768,
+    "unitFiles": 210,
+    "performanceJob": 113085734213,
+    "performanceConclusion": "success",
+    "leanConclusion": "success",
+    "browserJob": 113085734109,
+    "browserStatus": "in_progress",
+    "pagesRun": 37707644357,
+    "pagesConclusion": "success",
+    "publishedDemo": "https://eddolo.github.io/fountainjs/block-reordering.html",
+    "publishedHttpStatus": 200,
+    "deployedBundleChecks": [
+      "whole-block chooser present",
+      "reader preview present",
+      "explicit pixel-identical export warning present"
+    ],
+    "fullMatrixCertified": false
+  }
+}

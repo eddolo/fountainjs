@@ -39,6 +39,32 @@ failure; only 0.25 KiB ESM feature capacity is added. The new reordering source
 still needs complete Linux CI; the green list checkpoint cannot certify it.
 See `artifacts/block-direction-verification-20261008.json`.
 
+`0a6948d` is pushed. Its Linux verify job passes 2,768 tests / 210 files,
+package/types/headless/Markdown and package-quality checks; performance and Lean
+pass. Pages deploys, and the live reordering page/bundle returns 200 with the
+whole-block chooser, reader and export warning. The full browser matrix is
+still running in CI `37707644407`; do not call the checkpoint fully certified.
+
+The next shared-auto diagnostic now reproduces a concrete remaining gap:
+middle-item conversion/lift splits one automatic list, changing unchanged
+English content from RTL to LTR in Chromium, Firefox and WebKit. Whole-list
+conversion and splitting a directionless list inside one retained automatic
+section keep the shared context. All twelve transforms undo exactly; all 24
+native source/result captures are visually checked. These are programmatic
+Node transforms plus native rendered comparisons, not human editing journeys
+or twelve conformance passes. The script explicitly labels six known gaps.
+Evidence: `artifacts/auto-scope-boundary-audit-20261008.json`.
+
+Next implement the format-only split contract around a single neutral direction
+context, not guessed fixed direction or independent automatic children. The
+existing HTML section extension demonstrates the boundary, but ordinary schemas
+must have a declared scope capability before a transform can rely on it. Verify
+selection/ID/history, schema/filter refusal, JSON/Yjs and browser/server HTML,
+then real editing and live source-anchor changes. Deliberate wrapper removal and
+moving a child to another parent are separate semantics; a one-child wrapper
+cannot retain the former shared context. This audit does not change runtime,
+public API, bundle/performance caps, npm or the ledger.
+
 Then continue shared-auto scopes, direction-incapable code/custom blocks,
 host stylesheet semantics, broader bidi/reordering interactions,
 physical devices/assistive technology, locales and CommonMark classification.
