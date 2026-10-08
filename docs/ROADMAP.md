@@ -1,8 +1,11 @@
 # FountainJS opportunity roadmap
 
-Current checkpoint (2026-10-08): `b614858` passes complete Linux CI: 2,753 units
-/ 209 files, 721 browser passes / 16 skips, types/package/headless/Markdown,
-performance and Lean; Pages succeeds. The corrected source-only native editing
+Latest fully certified checkpoint (2026-10-08): `0a6948d` passes complete Linux
+CI: 2,768 units / 210 files, 730 browser passes / 16 skips, 45 structural
+preflight journeys, types/package/headless/Markdown, performance and Lean;
+Pages succeeds. This is the reordering checkpoint, not later scope source.
+The preceding `b614858` list checkpoint passed 2,753 units / 209 files and
+721 browser passes / 16 skips. The corrected source-only native editing
 reference is now verified in Linux, with its rendered result inspected against
 Fountain. Preserve the raw non-editable-widget failures as diagnostics.
 
@@ -35,17 +38,21 @@ runbook lab is linked from the gallery and developer guide; its whole-block
 chooser uses stable IDs. 52 focused tests, nine recorded desktop journeys and
 57 visually reviewed results pass, with package/headless/API/types and website
 build. Preserve reader/hover/whole-container failures and the narrow old ESM-cap
-failure; only 0.25 KiB ESM feature capacity is added. The new reordering source
-still needs complete Linux CI; the green list checkpoint cannot certify it.
+failure; only 0.25 KiB ESM feature capacity is added. The reordering checkpoint
+now passes its own complete Linux CI below; it does not certify later scope code.
 See `artifacts/block-direction-verification-20261008.json`.
 
 `0a6948d` is pushed. Its Linux verify job passes 2,768 tests / 210 files,
 package/types/headless/Markdown and package-quality checks; performance and Lean
 pass. Pages deploys, and the live reordering page/bundle returns 200 with the
 whole-block chooser, reader and export warning. The full browser matrix is
-still running in CI `37707644407`; do not call the checkpoint fully certified.
+now passes in CI `37707644407`: 730 browser passes / 16 skips, 45 structural
+preflight passes, five WebKit and two Firefox native-selection follow-ups.
+The complete reordering checkpoint is certified for those checks, not for
+physical devices or the later shared-auto source. Raw browser evidence is in
+`artifacts/ci-0a6948d-browser-20261008.log`.
 
-The next shared-auto diagnostic now reproduces a concrete remaining gap:
+The shared-auto baseline diagnostic reproduced a concrete gap before the fix:
 middle-item conversion/lift splits one automatic list, changing unchanged
 English content from RTL to LTR in Chromium, Firefox and WebKit. Whole-list
 conversion and splitting a directionless list inside one retained automatic
@@ -55,15 +62,41 @@ Node transforms plus native rendered comparisons, not human editing journeys
 or twelve conformance passes. The script explicitly labels six known gaps.
 Evidence: `artifacts/auto-scope-boundary-audit-20261008.json`.
 
-Next implement the format-only split contract around a single neutral direction
-context, not guessed fixed direction or independent automatic children. The
-existing HTML section extension demonstrates the boundary, but ordinary schemas
-must have a declared scope capability before a transform can rely on it. Verify
-selection/ID/history, schema/filter refusal, JSON/Yjs and browser/server HTML,
-then real editing and live source-anchor changes. Deliberate wrapper removal and
-moving a child to another parent are separate semantics; a one-child wrapper
-cannot retain the former shared context. This audit does not change runtime,
-public API, bundle/performance caps, npm or the ledger.
+The implementation now adds one neutral `direction_scope` block to the default
+core schema and keeps a shared context through partial automatic-list
+conversion/lift. Independently directed items retain their contexts when lifted.
+Sibling text blocks can be rewrapped inside their existing parent instead of
+leaving authors stuck after a lift. Pure-Node scope/selection/default-ID/history,
+schema/filter refusal, JSON/Yjs, browser/server HTML and DOCX loss reporting are
+covered by 87 focused tests across six files. Copy retains separate child lines
+and corrects zero-based numbering in the plain-text fallback. The scope node is
+an additive root/core descriptor export; API declarations are reviewed.
+
+Ten final recorded Windows desktop journeys pass: six editing journeys in
+Chromium/Firefox/WebKit and four genuine internal/outbound clipboard journeys
+in Chromium/Firefox. All 50 result captures are visually checked in 18 boards.
+Two Windows WebKit clipboard cases are skips, not passes: fresh independent
+textarea diagnostics reproduce the event-authored-payload failure without
+Fountain. Linux WebKit coverage and actual Safari/device clipboard evidence
+remain required. Internal paste temporarily replaces the document first, so a
+no-op cannot count as successful restoration. Keep the failed clipboard-marker
+expectation and the independently verified zero-numbering defect.
+
+Build, packed ESM/CJS root/core consumers, API (411 declarations), headless
+boundary (99 modules), framework types, unchanged CommonMark profiles and the
+website build pass. The complete single-worker local unit suite passes 2,792
+tests / 211 files; full new-source Linux
+certification remains required. Do not treat earlier checkpoint CI or raw
+recorded videos as visual approval of this source. Evidence:
+`artifacts/list-auto-scope-verification-20261008.json`.
+
+Deliberate wrapper removal and moving a child to another parent remain separate
+semantics; a one-child wrapper cannot retain the former shared context. Custom
+identity-attribute configurations are not certified by default-`nodeId` tests.
+Markdown reports the HTML projection; DOCX reports omitted shared direction
+while retaining child blocks/numbering. See `docs/HTML_CONTAINERS.md`. Only
+measured ESM/CJS and optional DOCX code capacity changes; dependencies, CSS,
+runtime/heap limits, npm and the ledger are unchanged.
 
 Then continue shared-auto scopes, direction-incapable code/custom blocks,
 host stylesheet semantics, broader bidi/reordering interactions,

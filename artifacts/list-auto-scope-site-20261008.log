@@ -1,0 +1,138 @@
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 772 modules transformed.
+rendering chunks...
+computing gzip size...
+examples/react-app/dist/workflows.html                                       0.75 kB │ gzip:   0.42 kB
+examples/react-app/dist/developers.html                                      0.80 kB │ gzip:   0.43 kB
+examples/react-app/dist/block-reordering.html                                0.97 kB │ gzip:   0.46 kB
+examples/react-app/dist/demos.html                                           0.98 kB │ gzip:   0.46 kB
+examples/react-app/dist/task-workflow.html                                   1.01 kB │ gzip:   0.46 kB
+examples/react-app/dist/issue-editor.html                                    1.14 kB │ gzip:   0.47 kB
+examples/react-app/dist/math-renderer.html                                   1.21 kB │ gzip:   0.48 kB
+examples/react-app/dist/index.html                                           1.28 kB │ gzip:   0.52 kB
+examples/react-app/dist/math-references.html                                 1.36 kB │ gzip:   0.53 kB
+examples/react-app/dist/demos/vue-runbook.html                               1.57 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/svelte-report.html                             1.57 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/angular-media.html                             1.57 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/react-article.html                             1.58 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/python-content-api.html                        1.58 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/go-docs-service.html                           1.59 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/node-markdown.html                             1.59 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/web-component-cms.html                         1.59 kB │ gzip:   0.51 kB
+examples/react-app/dist/demos/plain-dom-notes.html                           1.59 kB │ gzip:   0.52 kB
+examples/react-app/dist/demos/java-approval-workflow.html                    1.59 kB │ gzip:   0.51 kB
+examples/react-app/dist/conversion-lab.html                                  1.96 kB │ gzip:   0.73 kB
+examples/react-app/dist/assets/KaTeX_Size3-Regular-CTq5MqoE.woff             4.42 kB
+examples/react-app/dist/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2            4.92 kB
+examples/react-app/dist/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2            5.20 kB
+examples/react-app/dist/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2            5.46 kB
+examples/react-app/dist/assets/KaTeX_Size4-Regular-BF-4gkZK.woff             5.98 kB
+examples/react-app/dist/assets/KaTeX_Size2-Regular-oD1tc_U0.woff             6.18 kB
+examples/react-app/dist/assets/KaTeX_Size1-Regular-C195tn64.woff             6.49 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2      6.90 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2         6.91 kB
+examples/react-app/dist/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf              7.58 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff       7.65 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff          7.71 kB
+examples/react-app/dist/assets/KaTeX_Script-Regular-D3wIWfF6.woff2           9.64 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2       10.34 kB
+examples/react-app/dist/assets/KaTeX_Size4-Regular-DWFBv043.ttf             10.36 kB
+examples/react-app/dist/assets/KaTeX_Script-Regular-D5yQViql.woff           10.58 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2         11.31 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2            11.34 kB
+examples/react-app/dist/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf             11.50 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2        12.02 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2          12.21 kB
+examples/react-app/dist/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf             12.22 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff        12.31 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf       12.34 kB
+examples/react-app/dist/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf          12.36 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff          13.20 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff             13.29 kB
+examples/react-app/dist/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2      13.56 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff         14.11 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff           14.40 kB
+examples/react-app/dist/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff       16.02 kB
+examples/react-app/dist/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2         16.40 kB
+examples/react-app/dist/assets/KaTeX_Math-Italic-t53AETM-.woff2             16.44 kB
+examples/react-app/dist/assets/KaTeX_Script-Regular-C5JkGWo-.ttf            16.64 kB
+examples/react-app/dist/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2         16.78 kB
+examples/react-app/dist/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2             16.98 kB
+examples/react-app/dist/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff          18.66 kB
+examples/react-app/dist/assets/KaTeX_Math-Italic-DA0__PXp.woff              18.74 kB
+examples/react-app/dist/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff          19.41 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf         19.43 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Regular-CB_wures.ttf           19.57 kB
+examples/react-app/dist/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf              19.58 kB
+examples/react-app/dist/assets/KaTeX_Main-Italic-BMLOBm91.woff              19.67 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf          22.36 kB
+examples/react-app/dist/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf            24.50 kB
+examples/react-app/dist/assets/KaTeX_Main-Bold-Cx986IdX.woff2               25.32 kB
+examples/react-app/dist/assets/KaTeX_Main-Regular-B22Nviop.woff2            26.27 kB
+examples/react-app/dist/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf        27.55 kB
+examples/react-app/dist/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2             28.07 kB
+examples/react-app/dist/assets/KaTeX_Main-Bold-Jm3AIy58.woff                29.91 kB
+examples/react-app/dist/assets/KaTeX_Main-Regular-Dr94JaBh.woff             30.77 kB
+examples/react-app/dist/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf           31.19 kB
+examples/react-app/dist/assets/KaTeX_Math-Italic-flOr_0UB.ttf               31.30 kB
+examples/react-app/dist/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf           32.96 kB
+examples/react-app/dist/assets/KaTeX_AMS-Regular-DMm9YOAa.woff              33.51 kB
+examples/react-app/dist/assets/KaTeX_Main-Italic-3WenGoN9.ttf               33.58 kB
+examples/react-app/dist/assets/KaTeX_Main-Bold-waoOVXN0.ttf                 51.33 kB
+examples/react-app/dist/assets/KaTeX_Main-Regular-ypZvNtVU.ttf              53.58 kB
+examples/react-app/dist/assets/KaTeX_AMS-Regular-DRggAlZN.ttf               63.63 kB
+examples/react-app/dist/assets/mathReferences-DZkUsBC7.css                   1.44 kB │ gzip:   0.49 kB
+examples/react-app/dist/assets/math-renderer-Bzeyzs68.css                    1.92 kB │ gzip:   0.78 kB
+examples/react-app/dist/assets/blockReordering-GRvXrbLU.css                  2.61 kB │ gzip:   0.87 kB
+examples/react-app/dist/assets/issueEditor-BvOhe8Ue.css                      2.93 kB │ gzip:   1.07 kB
+examples/react-app/dist/assets/demo-main-C6B5dMq3.css                        3.51 kB │ gzip:   1.14 kB
+examples/react-app/dist/assets/conversionLab-D1_ybtx_.css                    4.49 kB │ gzip:   1.42 kB
+examples/react-app/dist/assets/workflows-CUVZY_k3.css                        5.28 kB │ gzip:   1.55 kB
+examples/react-app/dist/assets/developers-oZ5wSwzo.css                       7.85 kB │ gzip:   2.20 kB
+examples/react-app/dist/assets/demos-8OEply4J.css                           20.89 kB │ gzip:   4.69 kB
+examples/react-app/dist/assets/src-B23quapa.css                             28.26 kB │ gzip:   6.30 kB
+examples/react-app/dist/assets/katex-QAR1SwR3.css                           30.38 kB │ gzip:   7.96 kB
+examples/react-app/dist/assets/styles-D9W2rEJG.css                          80.10 kB │ gzip:  12.22 kB
+examples/react-app/dist/assets/math-renderer-D9snoi-1.js                     0.95 kB │ gzip:   0.36 kB
+examples/react-app/dist/assets/inline-atom-BLfPalX5-Ds6cgJUt.js              1.31 kB │ gzip:   0.61 kB
+examples/react-app/dist/assets/workflows-B0fiELdy.js                         4.50 kB │ gzip:   1.58 kB
+examples/react-app/dist/assets/node-ids-CIBE1vYY.js                          6.13 kB │ gzip:   2.45 kB
+examples/react-app/dist/assets/mathRenderer-Bs4ou2um.js                      6.51 kB │ gzip:   2.77 kB
+examples/react-app/dist/assets/demos-CCaQXFHM.js                             7.29 kB │ gzip:   2.66 kB
+examples/react-app/dist/assets/taskWorkflow-D_XvEo9f.js                      7.47 kB │ gzip:   3.00 kB
+examples/react-app/dist/assets/blockReordering-CCJPqfSD.js                   9.52 kB │ gzip:   3.83 kB
+examples/react-app/dist/assets/issueEditor-DYRu3Ptg.js                      11.05 kB │ gzip:   4.38 kB
+examples/react-app/dist/assets/demos-Bs5m_CXW.js                            20.73 kB │ gzip:   7.89 kB
+examples/react-app/dist/assets/svelte-report-HiMVyJzX.js                    46.00 kB │ gzip:  18.16 kB
+examples/react-app/dist/assets/dist-CmU2bgLF.js                             46.27 kB │ gzip:  13.92 kB
+examples/react-app/dist/assets/vue-runbook-CW-cm3GL.js                      59.35 kB │ gzip:  23.63 kB
+examples/react-app/dist/assets/conversionLab-DNSI96U8.js                    59.82 kB │ gzip:  19.67 kB
+examples/react-app/dist/assets/demo-main-DP1KKwsi.js                        91.16 kB │ gzip:  28.12 kB
+examples/react-app/dist/assets/react-B62_xZYq.js                            92.69 kB │ gzip:  26.28 kB
+examples/react-app/dist/assets/developers-x0IKUWg3.js                      105.34 kB │ gzip:  29.81 kB
+examples/react-app/dist/assets/docx-Cv3WnAKE.js                            152.29 kB │ gzip:  48.51 kB
+examples/react-app/dist/assets/SitePageLink-F6rtmo3i.js                    191.26 kB │ gzip:  60.33 kB
+examples/react-app/dist/assets/html-server-DiWc-sb6.js                     212.93 kB │ gzip:  54.31 kB
+examples/react-app/dist/assets/AmsConfiguration-BeA6DKhf.js                243.82 kB │ gzip:  75.29 kB
+examples/react-app/dist/assets/katex.min-C7iIJkK6.js                       258.39 kB │ gzip:  77.55 kB
+examples/react-app/dist/assets/main-D8DMrv3B.js                            346.22 kB │ gzip:  98.67 kB
+examples/react-app/dist/assets/styles-Bnt_DATa.js                          424.80 kB │ gzip: 135.40 kB
+examples/react-app/dist/assets/campaign-BMOgOaFr.js                        471.28 kB │ gzip: 153.44 kB
+examples/react-app/dist/assets/mathReferences-C7-4nElQ.js                1,613.86 kB │ gzip: 627.29 kB
+
+✓ built in 3.03s
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[PLUGIN_TIMINGS] Your build spent 76% of 3.0s inside plugin hooks (2.3s).
+Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+  - fountain-angular-linker transform (41%, 1.3s, 772 calls)
+Those rows are 41% of the build; the rest of the 76% is below.
+Not measurable — 2 hooks whose calls overlap, so elapsed time covers work other calls were doing. Profile with `node --cpu-prof`:
+  - vite:build-html transform (20 calls)
+  - vite:css transform (13 calls)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

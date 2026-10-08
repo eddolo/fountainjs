@@ -62,6 +62,28 @@ export function checkTextDirection(api, root, serverHTML, docx) {
     assert.equal(api.redo(listEditor), true);
     assert.equal(listEditor.state.doc.child(1).attrs.dir, 'rtl');
   } finally { listEditor.destroy(); }
+  const autoEditor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {
+    type: 'doc', content: [{ type: 'ordered_list', attrs: { dir: 'auto', start: 0 }, content:
+      ['שלום', 'English selected', 'English tail'].map(text => ({ type: 'list_item', content: [
+        { type: 'paragraph', content: [{ type: 'text', text }] },
+      ] })),
+    }],
+  } });
+  try {
+    autoEditor.dispatch(autoEditor.createTransaction().setSelection(api.Selection.cursor([0, 1, 0, 0], 2)));
+    const original = autoEditor.getJSON();
+    assert.equal(api.outdentListItem(autoEditor), true);
+    assert.equal(autoEditor.state.doc.child(0).type.name, 'direction_scope');
+    assert.equal(autoEditor.state.doc.child(0).attrs.dir, 'auto');
+    assert.equal(api.toggleList(autoEditor, 'bullet'), true);
+    assert.deepEqual(autoEditor.state.selection.path, [0, 1, 0, 0, 0]);
+    const html = api.HTMLExporter.export(autoEditor.state.doc, { document: false });
+    assert.equal(html.match(/dir="auto"/g).length, 1);
+    assert.deepEqual(serverHTML.ServerHTMLImporter.parse(html, autoEditor.state.schema).toJSON(), autoEditor.getJSON());
+    assert.equal(api.undo(autoEditor), true);
+    assert.equal(api.undo(autoEditor), true);
+    assert.deepEqual(autoEditor.getJSON(), original);
+  } finally { autoEditor.destroy(); }
   const moveEditor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {
     type: 'doc', content: [
       { type: 'blockquote', attrs: { dir: 'rtl' }, content: ['Keep', 'Move'].map(text => ({ type: 'paragraph', content: [{ type: 'text', text }] })) },

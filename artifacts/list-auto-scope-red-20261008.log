@@ -1,0 +1,148 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/list-auto-scope.test.ts (11 tests | 9 failed) 29ms
+   ❯ shared automatic list scopes (11)
+     × keeps one shared automatic group when converting the middle item to bullet 13ms
+     × keeps one shared automatic group when converting the middle item to task 2ms
+     × retains one group while lifting middle items out of an automatic list 2ms
+     × retains one group while lifting all items out of an automatic list 1ms
+     × keeps an independent automatic item context when removing its list-item wrapper 1ms
+     × preserves scope declarations through JSON, server HTML and explicit Markdown HTML projection 4ms
+     × refuses convert atomically when the schema has no direction-scope capability 1ms
+     × refuses lift atomically when the schema has no direction-scope capability 1ms
+     × returns false for a host-filtered convert with exact state retention 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > keeps one shared automatic group when converting the middle item to bullet
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > keeps one shared automatic group when converting the middle item to task
+AssertionError: expected 'ordered_list' to be 'direction_scope' // Object.is equality
+
+Expected: "direction_scope"
+Received: "ordered_list"
+
+ ❯ tests/list-auto-scope.test.ts:24:29
+     22|     expect(toggleList(editor, kind)).toBe(true);
+     23|     const group = editor.state.doc.child(0);
+     24|     expect(group.type.name).toBe('direction_scope');
+       |                             ^
+     25|     expect(group.attrs.dir).toBe('auto');
+     26|     expect(group.content.map(node => node.type.name)).toEqual(['ordere…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > retains one group while lifting middle items out of an automatic list
+AssertionError: expected 'ordered_list' to be 'direction_scope' // Object.is equality
+
+Expected: "direction_scope"
+Received: "ordered_list"
+
+ ❯ tests/list-auto-scope.test.ts:44:29
+     42|     expect(outdentListItem(editor)).toBe(true);
+     43|     const group = editor.state.doc.child(0);
+     44|     expect(group.type.name).toBe('direction_scope'); expect(group.attr…
+       |                             ^
+     45|     expect(group.content.map(node => node.type.name)).toEqual(amount =…
+     46|     expect(group.content.every(node => node.attrs.dir === undefined)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > retains one group while lifting all items out of an automatic list
+AssertionError: expected 'paragraph' to be 'direction_scope' // Object.is equality
+
+Expected: "direction_scope"
+Received: "paragraph"
+
+ ❯ tests/list-auto-scope.test.ts:44:29
+     42|     expect(outdentListItem(editor)).toBe(true);
+     43|     const group = editor.state.doc.child(0);
+     44|     expect(group.type.name).toBe('direction_scope'); expect(group.attr…
+       |                             ^
+     45|     expect(group.content.map(node => node.type.name)).toEqual(amount =…
+     46|     expect(group.content.every(node => node.attrs.dir === undefined)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > keeps an independent automatic item context when removing its list-item wrapper
+AssertionError: expected 'paragraph' to be 'direction_scope' // Object.is equality
+
+Expected: "direction_scope"
+Received: "paragraph"
+
+ ❯ tests/list-auto-scope.test.ts:57:29
+     55|     expect(outdentListItem(editor)).toBe(true);
+     56|     const scope = editor.state.doc.child(1);
+     57|     expect(scope.type.name).toBe('direction_scope'); expect(scope.attr…
+       |                             ^
+     58|     expect(scope.attrs.nodeId).toBe('auto-item');
+     59|     expect(scope.content.map(node => node.textContent)).toEqual(['שלום…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > preserves scope declarations through JSON, server HTML and explicit Markdown HTML projection
+AssertionError: expected '<ol start="0" dir="auto"><li><p>שלום<…' to contain 'data-fountain-direction-scope'
+
+- Expected
++ Received
+
+- data-fountain-direction-scope
++ <ol start="0" dir="auto"><li><p>שלום</p></li></ol>
++ <ul dir="auto"><li><p>English selected</p></li></ul>
++ <ol start="2" dir="auto"><li><p>English tail</p></li></ol>
+
+ ❯ tests/list-auto-scope.test.ts:67:18
+     65|     const editor = make(); expect(toggleList(editor, 'bullet')).toBe(t…
+     66|     const html = HTMLExporter.export(editor.state.doc, { document: fal…
+     67|     expect(html).toContain('data-fountain-direction-scope');
+       |                  ^
+     68|     expect(html.match(/dir="auto"/g)).toHaveLength(1);
+     69|     expect(ServerHTMLImporter.parseWithReport(html, editor.state.schem…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > refuses convert atomically when the schema has no direction-scope capability
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > refuses lift atomically when the schema has no direction-scope capability
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/list-auto-scope.test.ts:80:91
+     78|     const schema = { ...CoreSchemaSpec, nodes: Object.fromEntries(Obje…
+     79|     const editor = make(schema); const original = editor.state;
+     80|     expect(action === 'convert' ? toggleList(editor, 'bullet') : outde…
+       |                                                                                           ^
+     81|     expect(editor.state).toBe(original);
+     82|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > returns false for a host-filtered convert with exact state retention
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/list-auto-scope.test.ts:87:91
+     85|     const editor = make(CoreSchemaSpec, source, [new Plugin({ filterTr…
+     86|     const original = editor.state;
+     87|     expect(action === 'convert' ? toggleList(editor, 'bullet') : outde…
+       |                                                                                           ^
+     88|     expect(editor.state).toBe(original);
+     89|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 2 passed (11)
+   Start at  01:38:16
+   Duration  3.62s (transform 50%, import 49%, tests 1%)
+

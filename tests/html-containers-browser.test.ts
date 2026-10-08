@@ -22,6 +22,23 @@ it('uses equivalent browser and DOM-free container rules', () => {
   ]) expect(HTMLImporter.parse(source, schema).toJSON()).toEqual(ServerHTMLImporter.parse(source, schema).toJSON());
 });
 
+it('uses the same shared direction scope in browser and DOM-free parsing', () => {
+  const source = '<div data-fountain-direction-scope="" dir="auto"><ol start="0"><li><p>שלום</p></li></ol><p>English</p><ul><li><p>Tail</p></li></ul></div>';
+  const browser = HTMLImporter.parse(source, schema);
+  expect(browser.toJSON()).toEqual(ServerHTMLImporter.parse(source, schema).toJSON());
+  expect(browser.child(0).type.name).toBe('direction_scope');
+  expect(HTMLExporter.export(browser, { document: false })).toBe(source);
+  const unsupported = source.replace('dir="auto"', 'dir="auto" data-private="not-retained"');
+  const server = ServerHTMLImporter.parseWithReport(unsupported, schema);
+  expect(HTMLImporter.parse(unsupported, schema).toJSON()).toEqual(server.document.toJSON());
+  expect(server.document.child(0).type.name).not.toBe('direction_scope');
+  expect(server.issues.length).toBeGreaterThan(0);
+  const fixed = unsupported.replace('dir="auto"', 'dir="rtl"');
+  const fixedResult = ServerHTMLImporter.parseWithReport(fixed, schema);
+  expect(HTMLImporter.parse(fixed, schema).toJSON()).toEqual(fixedResult.document.toJSON());
+  expect(fixedResult.document.child(1).attrs.dir).toBe('rtl');
+});
+
 it('declines unsupported attributes in browser and server instead of claiming they survived', () => {
   const source = '<section data-private="secret"><p>Visible</p></section>';
   const server = ServerHTMLImporter.parseWithReport(source, schema);

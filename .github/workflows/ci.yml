@@ -109,7 +109,7 @@ jobs:
       # Keep native Linux WebKit colour-input failures visible before the full
       # matrix. Windows WebKit uses a text fallback and cannot certify this.
       - name: Structural direction and native-source preflight
-        run: pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks"
+        run: pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|copies shared automatic list scope"
       - name: Native control and document focus preflight
         run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
       - name: Firefox native RTL selection preflight
@@ -141,6 +141,8 @@ jobs:
             test-results/**/list-direction-observations.json
             test-results/**/block-direction-*.png
             test-results/**/block-direction-*-observations.json
+            test-results/**/auto-scope-*.png
+            test-results/**/auto-scope-observations.json
             structural-direction-preflight-results/**/rtl-*.png
             structural-direction-preflight-results/**/rtl-structural-observations.json
             structural-direction-preflight-results/**/inherited-alignment-*.png
@@ -152,6 +154,8 @@ jobs:
             structural-direction-preflight-results/**/list-direction-observations.json
             structural-direction-preflight-results/**/block-direction-*.png
             structural-direction-preflight-results/**/block-direction-*-observations.json
+            structural-direction-preflight-results/**/auto-scope-*.png
+            structural-direction-preflight-results/**/auto-scope-observations.json
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

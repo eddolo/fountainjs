@@ -2162,6 +2162,9 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       }).join(''));
     }
     case 'paragraph': case 'heading': case 'code_block': return paragraphXML(node, context, path, list, quote, definition);
+    case 'direction_scope':
+      context.issues.push({ code: 'direction-scope-omitted', severity: 'warning', message: 'Word output retains the child blocks but cannot represent this shared reading-direction context. Keep Fountain JSON or HTML for the scope.', path });
+      return node.content.map((item, index) => blockXML(item, context, [...path, index], level, quote, list, definition)).join('');
     case 'blockquote': return node.content.map((item, index) =>
       blockXML(item, context, [...path, index], level, node.attrs.appearance === 'explicit' ? 'explicit' : true, list, definition)
     ).join('');

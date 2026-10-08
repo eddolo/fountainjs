@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
+import { listAutoScopeJourney } from './list-auto-scope-journey';
 import { blockDirectionKeyboardJourney, blockDirectionPointerJourney } from './block-direction-reorder-journey';
 import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
 import { tableColumnSideCases, tableColumnSideJourney } from './table-column-side-journey';
@@ -39,6 +40,16 @@ import { autoContainerDirectionJourney } from './auto-container-direction-journe
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
 import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
+
+for (const action of ['convert', 'lift'] as const) {
+  test(`retains shared automatic list scope through real ${action}, typing and downloaded HTML`, async ({ page }, info) => {
+    await listAutoScopeJourney(page, info, action);
+  });
+  test(`copies shared automatic list scope through real internal and external clipboard: ${action}`, async ({ page, browserName }, info) => {
+    test.skip(browserName === 'webkit' && process.platform === 'win32', 'Independent native textarea diagnostics show Windows Playwright WebKit drops event-authored clipboard payloads. Actual Safari clipboard verification remains open. See scripts/check-browser-clipboard-capability.mjs.');
+    await listAutoScopeJourney(page, info, action, true);
+  });
+}
 
 for (const direction of ['ltr', 'rtl'] as const) {
   test(`reorders real runbook blocks with native pointer feedback in ${direction}`, async ({ page }, info) => {

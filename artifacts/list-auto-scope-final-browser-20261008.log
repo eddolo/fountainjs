@@ -1,0 +1,141 @@
+[WebServer] (node:15092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:27996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (6.1s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (5.6s)
+(node:20908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (9.5s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (6.9s)
+(node:18192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (16.1s)
+(node:27404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (18.0s)
+
+
+  1) [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByRole('textbox', { name: 'External automatic-scope text destination', exact: true })
+    Timeout: 5000ms
+    Expected: "0. English anchor
+    - English selectedReal new line
+    2. English tail
+    "
+    Received: ""
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'External automatic-scope text destination', exact: true })
+        13 × locator resolved to <textarea rows="5" cols="65" aria-label="External automatic-scope text destination"></textarea>
+           - unexpected value ""
+
+
+       at list-auto-scope-journey.ts:124
+
+      122 |   await external.focus();
+      123 |   await page.keyboard.press('ControlOrMeta+v');
+    > 124 |   await expect(external).toHaveValue(copied.plain);
+          |                          ^
+      125 |   await external.screenshot({ path: info.outputPath('auto-scope-external-paste.png') });
+      126 |   observations.clipboard = { ...copied, external: await external.inputValue(), internalParagraphs: beforePaste };
+      127 |   expect(errors).toEqual([]);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:124:26)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByRole('textbox', { name: 'External automatic-scope text destination', exact: true })
+    Timeout: 5000ms
+    Expected: "0. English anchor
+    English selectedReal new line
+    2. English tail
+    "
+    Received: ""
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'External automatic-scope text destination', exact: true })
+        13 × locator resolved to <textarea rows="5" cols="65" aria-label="External automatic-scope text destination"></textarea>
+           - unexpected value ""
+
+
+       at list-auto-scope-journey.ts:124
+
+      122 |   await external.focus();
+      123 |   await page.keyboard.press('ControlOrMeta+v');
+    > 124 |   await expect(external).toHaveValue(copied.plain);
+          |                          ^
+      125 |   await external.screenshot({ path: info.outputPath('auto-scope-external-paste.png') });
+      126 |   observations.clipboard = { ...copied, external: await external.inputValue(), internalParagraphs: beforePaste };
+      127 |   expect(errors).toEqual([]);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:124:26)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-final-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+    [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+  4 passed (1.2m)

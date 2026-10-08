@@ -1,0 +1,46 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/list-auto-scope.test.ts (11 tests | 1 failed) 37ms
+   ❯ shared automatic list scopes (11)
+     × preserves scope declarations through JSON, server HTML and explicit Markdown HTML projection 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > preserves scope declarations through JSON, server HTML and explicit Markdown HTML projection
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -1,9 +1,6 @@
+  {
+-   "attrs": {
+-     "title": "Keep root",
+-   },
+    "content": [
+      {
+        "attrs": {
+          "dir": "auto",
+        },
+
+ ❯ tests/list-auto-scope.test.ts:70:74
+     68|     expect(html.match(/dir="auto"/g)).toHaveLength(1);
+     69|     expect(ServerHTMLImporter.parseWithReport(html, editor.state.schem…
+     70|     expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON(…
+       |                                                                          ^
+     71|     const markdown = MarkdownExporter.exportWithReport(editor.state.do…
+     72|     expect(markdown.markdown).toContain('data-fountain-direction-scope…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 54 passed (55)
+   Start at  01:39:32
+   Duration  8.49s (transform 36%, import 35%, environment 26%, tests 2%, worker 1%)
+
+     Import  174 modules were evaluated 314 times · 2.66s total, 35% of tracked time
+             ~1.19s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

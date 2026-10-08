@@ -76,7 +76,7 @@ function clipboardText(node: Node): string {
       `- ${clipboardText(item).split('\n').join('\n  ')}`
     )).join('\n');
     case 'ordered_list': {
-      const start = Number(node.attrs.start) || 1;
+      const start = Number(node.attrs.start ?? 1);
       return node.content.map((item, index) => (
         `${start + index}. ${clipboardText(item).split('\n').join('\n   ')}`
       )).join('\n');
@@ -85,7 +85,7 @@ function clipboardText(node: Node): string {
       `${item.attrs.checked ? '[x]' : '[ ]'} ${clipboardText(item).split('\n').join('\n    ')}`
     )).join('\n');
     case 'list_item': case 'task_item':
-    case 'definition_list': case 'definition_term': case 'definition_description': case 'html_container':
+    case 'definition_list': case 'definition_term': case 'definition_description': case 'html_container': case 'direction_scope':
       return node.content.map(clipboardText).join('\n');
     case 'table': return node.content.map(clipboardText).join('\n');
     case 'table_row': return node.content.map(clipboardText).join('\t');

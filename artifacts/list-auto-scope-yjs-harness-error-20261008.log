@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/list-auto-scope.test.ts (18 tests | 1 failed) 77ms
+   ❯ shared automatic list scopes (18)
+     × transports the shared group and subsequent anchor edits through Yjs in pure Node 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > transports the shared group and subsequent anchor edits through Yjs in pure Node
+RangeError: No child at index E.
+ ❯ Node.child src/core/schema/node.ts:60:23
+     58|   child(index: number): Node {
+     59|     const child = this.content[index];
+     60|     if (!child) throw new RangeError(`No child at index ${index}.`);
+       |                       ^
+     61|     return child;
+     62|   }
+ ❯ getNodeAtPath src/core/transaction/path.ts:25:41
+ ❯ InsertTextStep.apply src/core/transaction/replace-text-step.ts:15:18
+ ❯ Transaction.step src/core/transaction/transform.ts:30:23
+ ❯ Transaction.insertText src/core/transaction/transform.ts:56:17
+ ❯ tests/list-auto-scope.test.ts:37:50
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 68 passed (69)
+   Start at  01:45:37
+   Duration  8.17s (import 35%, transform 34%, environment 27%, tests 4%)
+
+     Import  192 modules were evaluated 336 times · 2.57s total, 35% of tracked time
+             ~1.10s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

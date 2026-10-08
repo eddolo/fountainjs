@@ -139,6 +139,29 @@ function dispatchListTransform(editor: Editor, transaction: ReturnType<Editor['c
   return editor.dispatch(transaction);
 }
 
+/** Keep an authored shared context, never a guessed computed direction.
+ * A restricted host schema must explicitly support this neutral node.
+ */
+function retainedDirectionScope(editor: Editor, source: Node, content: readonly Node[]): Node | null {
+  const type = editor.state.schema.nodes.direction_scope;
+  if (!type?.spec.attrs?.dir) return null;
+  try {
+    return type.create({ dir: source.attrs.dir,
+      ...(typeof source.attrs.nodeId === 'string' ? { nodeId: source.attrs.nodeId } : {}),
+    }, content);
+  } catch { return null; }
+}
+
+function scopeFragment(node: Node, source: Node): Node | null {
+  try {
+    const attrs: Attributes = { ...node.attrs, dir: undefined };
+    // The retained context owns the original group's identity; new list
+    // fragments must not duplicate it before a stable-ID plugin repairs them.
+    if (source.attrs.nodeId !== undefined && attrs.nodeId === source.attrs.nodeId) delete attrs.nodeId;
+    return node.type.create(attrs, node.content, node.text, node.marks);
+  } catch { return null; }
+}
+
 function copyListSlice(list: Node, content: readonly Node[], offset = 0): Node {
   return list.type.create(
     list.type.name === 'ordered_list'
@@ -430,26 +453,54 @@ export function outdentListItem(editor: Editor): boolean {
     const selected = range.list.content.slice(range.from, range.to + 1);
     const after = range.list.content.slice(range.to + 1);
     const destination = listDirectionAt(editor.state.doc, parentItemPath);
-    const unwrapped = selected.flatMap((item, index) => item.content.map(child => retainListDirection(child,
-      listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination)));
-    if (unwrapped.some(node => !node)) return false;
-    const replacements = [
-      ...(before.length ? [copyListSlice(range.list, before)] : []),
-      ...(unwrapped as Node[]),
-      ...(after.length ? [copyListSlice(range.list, after, range.to + 1)] : []),
-    ];
+    const ownsAuto = ownListDirection(range.list) === 'auto';
+    const itemScopes = selected.map(item => ownListDirection(item) === 'auto'
+      || ownsAuto && ownListDirection(item) !== undefined);
+    const unwrapped: Node[] = [];
+    const offsets: number[] = [];
+    for (const [index, item] of selected.entries()) {
+      offsets.push(unwrapped.length);
+      if (itemScopes[index]) {
+        const scope = retainedDirectionScope(editor, item, item.content);
+        if (!scope) return false;
+        unwrapped.push(scope);
+      } else {
+        for (const child of item.content) {
+          const retained = retainListDirection(child,
+            listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
+          if (!retained) return false;
+          unwrapped.push(retained);
+        }
+      }
+    }
+    let replacements: Node[];
+    try {
+      replacements = [
+        ...(before.length ? [copyListSlice(range.list, before)] : []),
+        ...unwrapped,
+        ...(after.length ? [copyListSlice(range.list, after, range.to + 1)] : []),
+      ];
+    } catch { return false; }
     const blockIndex = range.listPath.at(-1) as number;
-    const firstBlockIndex = blockIndex + (before.length ? 1 : 0);
-    const selectedBlockPrefix = (itemIndex: number) => selected
-      .slice(0, itemIndex)
-      .reduce((total, item) => total + item.childCount, 0);
-    const startBlock = firstBlockIndex + selectedBlockPrefix(0) + (startRelative[0] ?? 0);
-    const endBlock = firstBlockIndex + selectedBlockPrefix(selected.length - 1) + (endRelative[0] ?? 0);
+    if (ownsAuto) {
+      const fragments = replacements.map(node => node.type === range.list.type ? scopeFragment(node, range.list) : node);
+      if (fragments.some(node => !node)) return false;
+      const scope = retainedDirectionScope(editor, range.list, fragments as Node[]);
+      if (!scope) return false;
+      replacements = [scope];
+    }
+    const movedPath = (index: number, relative: readonly number[]) => {
+      const slot = (before.length ? 1 : 0) + offsets[index]!;
+      const base = ownsAuto ? [...range.listPath] : [...parentItemPath];
+      return itemScopes[index]
+        ? [...base, (ownsAuto ? 0 : blockIndex) + slot, ...relative]
+        : [...base, (ownsAuto ? 0 : blockIndex) + slot + (relative[0] ?? 0), ...relative.slice(1)];
+    };
     const transaction = editor.state.createTransaction()
       .replaceNode(range.listPath, replacements)
       .setSelection(rangeSelection(editor,
-        [...parentItemPath, startBlock, ...startRelative.slice(1)],
-        [...parentItemPath, endBlock, ...endRelative.slice(1)],
+        movedPath(0, startRelative),
+        movedPath(selected.length - 1, endRelative),
       ));
     return dispatchListTransform(editor, transaction);
   }
@@ -501,7 +552,7 @@ export function outdentListItem(editor: Editor): boolean {
   return dispatchListTransform(editor, transaction);
 }
 
-/** Wraps selected top-level text blocks, converts a selected list range, or toggles it off. */
+/** Wraps sibling text blocks in their existing parent, converts a list range, or toggles it off. */
 export function toggleList(editor: Editor, kind: ListKind): boolean {
   if (!editor.editable || editor.state.selection.kind !== 'text') return false;
   const target = listNames(kind);
@@ -515,18 +566,31 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
     if (selected.some((item) => !item)) return false;
     const before = range.list.content.slice(0, range.from);
     const after = range.list.content.slice(range.to + 1);
-    const converted = targetListType.create({ ...target.attrs,
-      ...(targetListType.spec.attrs?.dir && range.list.attrs.dir !== undefined ? { dir: range.list.attrs.dir } : {}),
-    }, selected as Node[]);
-    const replacements = [
-      ...(before.length ? [copyListSlice(range.list, before)] : []),
-      converted,
-      ...(after.length ? [copyListSlice(range.list, after, range.to + 1)] : []),
-    ];
-    const convertedPath = [
+    const sharedAuto = ownListDirection(range.list) === 'auto'
+      && Boolean(before.length || after.length || !targetListType.spec.attrs?.dir);
+    let replacements: Node[];
+    try {
+      const converted = targetListType.create({ ...target.attrs,
+        ...(!sharedAuto && targetListType.spec.attrs?.dir && range.list.attrs.dir !== undefined ? { dir: range.list.attrs.dir } : {}),
+      }, selected as Node[]);
+      replacements = [
+        ...(before.length ? [copyListSlice(range.list, before)] : []),
+        converted,
+        ...(after.length ? [copyListSlice(range.list, after, range.to + 1)] : []),
+      ];
+    } catch { return false; }
+    let convertedPath = [
       ...range.listPath.slice(0, -1),
       (range.listPath.at(-1) as number) + (before.length ? 1 : 0),
     ];
+    if (sharedAuto) {
+      const fragments = replacements.map(node => scopeFragment(node, range.list));
+      if (fragments.some(node => !node)) return false;
+      const scope = retainedDirectionScope(editor, range.list, fragments as Node[]);
+      if (!scope) return false;
+      replacements = [scope];
+      convertedPath = [...range.listPath, before.length ? 1 : 0];
+    }
     const startRelative = editor.state.selection.path.slice(range.startItemPath.length);
     const endRelative = editor.state.selection.endPath.slice(range.endItemPath.length);
     const transaction = editor.state.createTransaction()
@@ -535,36 +599,48 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
         [...convertedPath, 0, ...startRelative],
         [...convertedPath, (selected as Node[]).length - 1, ...endRelative],
       ));
-    editor.dispatch(transaction);
-    return true;
+    return dispatchListTransform(editor, transaction);
   }
 
   const { selection, doc, schema } = editor.state;
-  const from = selection.path[0];
-  const to = selection.endPath[0];
+  const startBlockPath = ancestorPathFrom(editor, selection.path, ['paragraph', 'heading']);
+  const endBlockPath = ancestorPathFrom(editor, selection.endPath, ['paragraph', 'heading']);
+  if (!startBlockPath || !endBlockPath) return false;
+  const parentPath = startBlockPath.slice(0, -1);
+  if (endBlockPath.length !== startBlockPath.length
+    || parentPath.some((part, index) => part !== endBlockPath[index])) return false;
+  const parent = getNodeAtPath(doc, parentPath);
+  const from = startBlockPath.at(-1);
+  const to = endBlockPath.at(-1);
   if (!Number.isInteger(from) || !Number.isInteger(to)) return false;
-  const blocks = doc.content.slice(from, (to as number) + 1);
+  const blocks = parent.content.slice(from, (to as number) + 1);
   if (!blocks.length || blocks.some((block) => !['paragraph', 'heading'].includes(block.type.name))) return false;
-  const items = blocks.map((block) => {
-    const paragraph = block.type.name === 'paragraph'
-      ? block
-      : schema.node('paragraph', { align: block.attrs.align ?? 'left',
-        ...(schema.nodes.paragraph.spec.attrs?.dir && block.attrs.dir !== undefined ? { dir: block.attrs.dir } : {}),
-        ...(schema.nodes.paragraph.spec.attrs?.alignExplicit && block.attrs.alignExplicit ? { alignExplicit: true } : {}),
-      }, block.content);
-    return schema.node(target.item, target.item === 'task_item' ? { checked: false } : {}, [paragraph]);
-  });
-  const list = targetListType.create(target.attrs, items);
-  const startRelative = selection.path.slice(1);
-  const endRelative = selection.endPath.slice(1);
-  const transaction = editor.state.createTransaction()
-    .replace(from as number, (to as number) + 1, [list])
-    .setSelection(rangeSelection(editor,
-      [from as number, 0, 0, ...startRelative],
-      [from as number, items.length - 1, 0, ...endRelative],
-    ));
-  editor.dispatch(transaction);
-  return true;
+  let items: Node[];
+  let list: Node;
+  try {
+    items = blocks.map((block) => {
+      const paragraph = block.type.name === 'paragraph'
+        ? block
+        : schema.node('paragraph', { align: block.attrs.align ?? 'left',
+          ...(schema.nodes.paragraph.spec.attrs?.dir && block.attrs.dir !== undefined ? { dir: block.attrs.dir } : {}),
+          ...(schema.nodes.paragraph.spec.attrs?.alignExplicit && block.attrs.alignExplicit ? { alignExplicit: true } : {}),
+        }, block.content);
+      return schema.node(target.item, target.item === 'task_item' ? { checked: false } : {}, [paragraph]);
+    });
+    list = targetListType.create(target.attrs, items);
+  } catch { return false; }
+  const startRelative = selection.path.slice(startBlockPath.length);
+  const endRelative = selection.endPath.slice(endBlockPath.length);
+  const transaction = editor.state.createTransaction();
+  if (parentPath.length) transaction.replaceNode(parentPath, [parent.copy([
+    ...parent.content.slice(0, from), list, ...parent.content.slice((to as number) + 1),
+  ])]);
+  else transaction.replace(from as number, (to as number) + 1, [list]);
+  transaction.setSelection(rangeSelection(editor,
+    [...parentPath, from as number, 0, 0, ...startRelative],
+    [...parentPath, from as number, items.length - 1, 0, ...endRelative],
+  ));
+  return dispatchListTransform(editor, transaction);
 }
 
 export function addTableRow(editor: Editor, position: 'before' | 'after' = 'after'): boolean {

@@ -7,6 +7,27 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a neutral `direction_scope` block to the default core schema, exported as
+  `directionScope` from root/core. Format-only partial conversion/lift of an
+  automatic list retains one live shared context, not guessed fixed direction
+  or independent automatic fragments. Preserve selections, default stable group
+  identity, undo, JSON/Yjs and canonical HTML; permit sibling text blocks to be
+  rewrapped inside their existing parent. Restricted schemas/filter rejection
+  refuse unsupported transforms. Markdown uses an explicitly reported HTML
+  projection; DOCX reports shared-context loss and preserves the child blocks.
+  This does not certify reparenting shared-auto children, CSS, native devices,
+  Word bidi or full parity. 87 focused checks and ten recorded desktop journeys
+  pass, with all 50 captured results visually reviewed. Two Windows WebKit
+  clipboard cases remain explicit skips backed by fresh native diagnostics.
+  Build/package/headless/API/framework types/CommonMark/site checks pass;
+  all 2,792 local unit tests / 211 files pass. Current-source Linux verification
+  remains required. Aggregate code measures 1,593.3 / 1,325.3 KiB ESM/CJS;
+  only measured code capacity and the ~0.1 KiB DOCX reporting entries increase.
+  Dependency/CSS/runtime/heap limits and npm stay unchanged.
+- Correct plain-text clipboard numbering for lists starting at zero. Neutral
+  direction groups copy as separate child lines, retaining intentional portable
+  list markers; native copy/paste and outbound text-field verification accompany
+  the shared-auto browser journeys.
 - Retain known fixed model direction during generic cross-container node moves,
   preserving source, explicit child alignment/direction and identity/history.
   Keep keyboard and before/after handles on whole containers instead of their

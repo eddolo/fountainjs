@@ -36,6 +36,27 @@ function clipboardEvent(type: 'copy' | 'paste', values: Record<string, string> =
 }
 
 describe('external clipboard normalization', () => {
+  it('copies a shared direction group with distinct lines and zero-based numbering', () => {
+    const p = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
+    const editor = createEditor({ schema: composeExtensions([CoreExtension]).schema, content: { type: 'doc', content: [{
+      type: 'direction_scope', attrs: { dir: 'auto' }, content: [
+        { type: 'ordered_list', attrs: { start: 0 }, content: [{ type: 'list_item', content: [p('Anchor')] }] },
+        p('Selected'), { type: 'ordered_list', attrs: { start: 2 }, content: [{ type: 'list_item', content: [p('Tail')] }] },
+      ],
+    }] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    try {
+      editor.dispatch(editor.createTransaction().setSelection(new AllSelection(editor.state.doc)));
+      const copied = clipboardEvent('copy'); view.dom.dispatchEvent(copied.event);
+      expect(copied.data.get('text/plain')).toBe('0. Anchor\nSelected\n2. Tail');
+      expect(copied.data.get('text/html')).toContain('data-fountain-direction-scope');
+      const original = editor.getJSON();
+      const pasted = clipboardEvent('paste', Object.fromEntries(copied.data)); view.dom.dispatchEvent(pasted.event);
+      expect(editor.getJSON()).toEqual(original);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it('detects the source without depending on a proprietary clipboard MIME type', () => {
     expect(detectExternalPasteSource('<p data-fountain-node="paragraph">Own</p>')).toBe('fountain');
     expect(detectExternalPasteSource('<table style="mso-number-format:General"><tr><td>1</td></tr></table>')).toBe('microsoft-excel');

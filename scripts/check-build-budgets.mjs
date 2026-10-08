@@ -77,8 +77,11 @@ const limits = Object.freeze({
   // Block direction/logical alignment get explicit Word loss reports and a
   // physical alignment approximation, not a claim of native bidi fidelity.
   // Measured addition ~0.8 / 0.7 KiB to this optional entry, no new dependency.
-  'dist/docx.js': 184 * kibibyte,
-  'dist/docx.cjs': 148.75 * kibibyte,
+  // Report shared-direction scope omission and recurse into its child blocks:
+  // measured 184.1 / 148.9 KiB. Retain the prior-cap failure; this is code
+  // capacity only, not permission to relax conversion/runtime/heap contracts.
+  'dist/docx.js': 184.25 * kibibyte,
+  'dist/docx.cjs': 149 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -515,7 +518,10 @@ const limits = Object.freeze({
   // reuse the existing paths, adding ~0.4 KiB ESM / ~0.3 KiB CJS. Measured
   // 1590.4 / 1323.0 KiB: CJS still fits. Preserve the prior ESM-cap failure and
   // add only 0.25 KiB ESM feature capacity; no entry/CSS/runtime/heap cap change.
-  'all ESM runtime code': 1590.5 * kibibyte,
+  // Neutral shared-auto group, atomic list construction and sibling wrapping:
+  // measured 1593.3 KiB (+~2.9 over the previous source). Only the measured
+  // implementation capacity rises; dependencies/CSS/performance remain fixed.
+  'all ESM runtime code': 1593.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -568,7 +574,9 @@ const limits = Object.freeze({
   // Structural RTL plus preserving cell overrides through rebuilds measures
   // 1,351,195 bytes (27 bytes over 1319.5 KiB); retain that failed build log.
   // The same list boundary adds ~1.1 KiB CJS, measured 1322.7 KiB.
-  'all CommonJS runtime code': 1323 * kibibyte,
+  // Same shared-auto implementation: measured 1325.3 KiB (+~2.3).
+  // Preserve the prior-cap failure and all unrelated/runtime/heap ceilings.
+  'all CommonJS runtime code': 1325.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

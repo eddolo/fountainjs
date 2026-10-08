@@ -1,0 +1,40 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/external-paste.test.ts (14 tests | 1 failed) 561ms
+   ❯ external clipboard normalization (14)
+     × copies a shared direction group with distinct lines and zero-based numbering 232ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/external-paste.test.ts > external clipboard normalization > copies a shared direction group with distinct lines and zero-based numbering
+AssertionError: expected '1. Anchor\nSelected\n2. Tail' to be '0. Anchor\nSelected\n2. Tail' // Object.is equality
+
+- Expected
++ Received
+
+- 0. Anchor
++ 1. Anchor
+  Selected
+  2. Tail
+
+ ❯ tests/external-paste.test.ts:52:45
+     50|       editor.dispatch(editor.createTransaction().setSelection(new AllS…
+     51|       const copied = clipboardEvent('copy'); view.dom.dispatchEvent(co…
+     52|       expect(copied.data.get('text/plain')).toBe('0. Anchor\nSelected\…
+       |                                             ^
+     53|       expect(copied.data.get('text/html')).toContain('data-fountain-di…
+     54|       const original = editor.getJSON();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  01:54:08
+   Duration  7.42s (transform 44%, environment 32%, import 16%, tests 8%)
+
+  Transform  transforming modules took 3.13s · 44% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

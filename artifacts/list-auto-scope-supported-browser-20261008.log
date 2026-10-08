@@ -1,0 +1,28 @@
+[WebServer] (node:10852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:28080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (5.6s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:48:3 › copies shared automatic list scope through real internal and external clipboard: convert (4.5s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (5.3s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:48:3 › copies shared automatic list scope through real internal and external clipboard: lift (4.7s)
+(node:2124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (9.1s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:48:3 › copies shared automatic list scope through real internal and external clipboard: convert (6.5s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (7.3s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:48:3 › copies shared automatic list scope through real internal and external clipboard: lift (7.5s)
+(node:19312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (9.8s)
+  -  10 [webkit] › tests\browser\editor.spec.ts:48:3 › copies shared automatic list scope through real internal and external clipboard: convert
+  ok 11 [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (10.7s)
+  -  12 [webkit] › tests\browser\editor.spec.ts:48:3 › copies shared automatic list scope through real internal and external clipboard: lift
+
+  2 skipped
+  10 passed (1.4m)

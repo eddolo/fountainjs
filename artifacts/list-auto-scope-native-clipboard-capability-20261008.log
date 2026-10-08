@@ -1,0 +1,9 @@
+{"engine":"chromium","platform":"win32","formats":"native-default","transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"chromium","platform":"win32","formats":["text/plain"],"transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"chromium","platform":"win32","formats":["text/plain","text/html","application/x-fountainjs+json"],"transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"firefox","platform":"win32","formats":"native-default","transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"firefox","platform":"win32","formats":["text/plain"],"transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"firefox","platform":"win32","formats":["text/plain","text/html","application/x-fountainjs+json"],"transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"webkit","platform":"win32","formats":"native-default","transferred":true,"actual":"Native clipboard baseline"}
+{"engine":"webkit","platform":"win32","formats":["text/plain"],"transferred":false,"actual":""}
+{"engine":"webkit","platform":"win32","formats":["text/plain","text/html","application/x-fountainjs+json"],"transferred":false,"actual":""}

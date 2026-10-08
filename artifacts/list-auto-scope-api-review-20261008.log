@@ -1,0 +1,22 @@
+$ node scripts/check-api-surface.mjs
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-api-surface.mjs:96
+  throw new Error(
+        ^
+
+Error: The public TypeScript API surface changed:
+  added: dist/extensions/nodes/direction-scope.d.cts
+  added: dist/extensions/nodes/direction-scope.d.ts
+  changed: dist/core/structure-commands.d.cts
+  changed: dist/core/structure-commands.d.ts
+  changed: dist/extensions/index.d.cts
+  changed: dist/extensions/index.d.ts
+  changed: dist/headless/index.d.cts
+  changed: dist/headless/index.d.ts
+Review compatibility and CHANGELOG.md, then run pnpm test:api -- --write.
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-api-surface.mjs:96:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+[ELIFECYCLE] Command failed with exit code 1.

@@ -14,6 +14,7 @@ export * from '../extensions/extension';
 export * from '../extensions/html-containers';
 export * from '../extensions/html-comments';
 export * from '../extensions/html-flow';
+export * from '../extensions/nodes/direction-scope';
 export * from '../extensions/command-manager';
 export * from '../extensions/collaboration-core';
 export * from '../extensions/plugins/history';

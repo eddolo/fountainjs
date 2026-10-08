@@ -19,6 +19,7 @@ export const explicitTextAlignmentAttribute = {
 
 interface DirectionElement {
   getAttribute(name: string): string | null;
+  getAttributeNames?(): readonly string[];
   readonly tagName?: string;
   readonly parentElement?: DirectionElement | null;
   readonly style?: { readonly textAlign?: string };
@@ -33,7 +34,12 @@ const directionContainers: Record<string, string> = { blockquote: 'blockquote', 
 
 function retainedDirectionContainer(element: DirectionElement, schema: Schema): boolean {
   const tag = element.tagName?.toLowerCase();
-  const name = tag === 'ul' && element.getAttribute('data-type') === 'task-list' ? 'task_list'
+  // A marker whose extra attributes make the portable rule decline it is not
+  // a retained scope. Fixed inheritance must still reach its visible children.
+  const scopeNames = tag === 'div' && element.getAttribute('data-fountain-direction-scope') !== null
+    ? element.getAttributeNames?.() : undefined;
+  const name = scopeNames?.every(name => name === 'dir' || name === 'data-fountain-direction-scope') ? 'direction_scope'
+    : tag === 'ul' && element.getAttribute('data-type') === 'task-list' ? 'task_list'
     : tag === 'li' && element.parentElement?.getAttribute('data-type') === 'task-list' ? 'task_item' : tag && directionContainers[tag];
   return Boolean(name && schema.nodes[name]?.spec.attrs?.dir);
 }

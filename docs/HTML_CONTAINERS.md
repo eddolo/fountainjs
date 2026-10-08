@@ -49,7 +49,7 @@ automatic directions. Full document-shell/body direction, unsupported wrapper
 attributes, arbitrary CSS inheritance and inline bidi isolation remain separate
 contracts. Removing a wrapper intentionally removes its shared direction too.
 
-Current split-boundary audit (2026-10-08): converting or lifting a middle item
+Baseline split-boundary audit (2026-10-08, before the scope fix): converting or lifting a middle item
 from a list that owns `dir="auto"` splits/removes its shared context. Native
 Chromium, Firefox and WebKit render unchanged English paragraphs differently
 after that transform. Converting the entire list retains its context; converting
@@ -62,6 +62,37 @@ screenshots are visually checked. This is diagnostic evidence, not a passing
 full-editor or mobile conformance gate; no scope-retention implementation is
 introduced by this audit. Deliberate section unwrapping keeps its documented
 property-removal contract.
+
+### Format-only list splits
+
+The default core schema now includes `direction_scope`, a neutral shared block
+rendered as `<div data-fountain-direction-scope="" dir="auto">`. Converting a
+middle list range or lifting its items keeps the prefix, changed blocks and
+suffix inside **one** live automatic context. It does not assign `auto` to each
+fragment or snapshot RTL onto English children. An independently directed item
+keeps its own context when its item wrapper is removed. The document/transaction
+engine does not compute first-strong direction; browsers resolve it after edits.
+
+Sibling paragraphs/headings can be converted to lists inside their existing
+parent, including this group, quotes and table cells. Selections, default
+`nodeId` group identity and undo are retained. Schemas without the required group
+capability and invalid or host-filtered final trees refuse the operation instead
+of reporting success. Custom identity-attribute configurations are not certified
+by the default-`nodeId` test.
+
+`CoreExtension`, `CoreSchemaSpec` and StarterKit include the group. A custom
+schema can register the exported descriptor as `direction_scope: directionScope`
+from `fountainjs-editor/core`. No new browser dependency or renderer is required
+for Node-only transforms, JSON, Yjs or canonical server HTML processing. The
+marker rule declines unknown attributes rather than claiming they survived.
+
+JSON is the exact persistence path. HTML preserves the shared context; Markdown
+uses a reported HTML projection, not native CommonMark syntax. DOCX recursively
+keeps the child blocks and numbering but reports `direction-scope-omitted` and
+direction loss: Word layout is not certified by that export. Deliberate section
+unwrapping still removes section properties. Moving a child to another parent
+is a different operation and shared-auto reparenting remains open; wrapping that
+child alone would not reproduce the old group's live first-strong behavior.
 
 Supported inline `text-align` is a separate projection. Browser and server
 importers now materialize the nearest supported ancestor declaration onto text

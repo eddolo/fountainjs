@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/list-auto-scope.test.ts (19 tests | 1 failed) 86ms
+   ❯ shared automatic list scopes (19)
+     × refuses a destination direction validator without throwing or mutating 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/list-auto-scope.test.ts > shared automatic list scopes > refuses a destination direction validator without throwing or mutating
+Error: Invalid value for attribute: dir
+ ❯ computeAttrs src/core/schema/schema.ts:23:55
+     21|     const value = Object.hasOwn(supplied, name) ? supplied[name] : spe…
+     22|     if (value === undefined && !('default' in spec)) throw new Error(`…
+     23|     if (spec.validate && !spec.validate(value)) throw new Error(`Inval…
+       |                                                       ^
+     24|     // An explicitly undefined default declares an optional attribute.…
+     25|     // must stay absence: persisting undefined breaks portable JSON/Yj…
+ ❯ NodeType.create src/core/schema/schema.ts:58:33
+ ❯ toggleList src/core/structure-commands.ts:566:38
+ ❯ tests/list-auto-scope.test.ts:180:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  01:49:45
+   Duration  2.67s (transform 53%, import 44%, tests 3%)
+

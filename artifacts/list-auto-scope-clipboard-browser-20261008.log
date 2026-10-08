@@ -1,0 +1,343 @@
+[WebServer] (node:12764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:27776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (6.3s)
+(node:7828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (5.6s)
+(node:2288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (8.9s)
+(node:6116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (9.4s)
+(node:16256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (11.1s)
+(node:18792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (15.4s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 3
+    + Received  + 3
+
+    - English anchor
+    + 1. English anchor
+    - English selectedReal new line
+    + - English selectedReal new line
+    - English tail
+    + 2. English tail
+
+       at list-auto-scope-journey.ts:106
+
+      104 |   await page.keyboard.press('ControlOrMeta+c');
+      105 |   const copied = await page.evaluate(() => (globalThis as any).__autoScopeCopy as {plain: string; html: string});
+    > 106 |   expect(copied.plain.trim()).toBe((await group.locator('p').allTextContents()).join('\n'));
+          |                               ^
+      107 |   expect(copied.html).toContain('data-fountain-direction-scope');
+      108 |   await page.keyboard.press('ControlOrMeta+v');
+      109 |   await expect(group).toHaveCount(1);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:106:31)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    - English anchor
+    + 1. English anchor
+      English selectedReal new line
+    - English tail
+    + 2. English tail
+
+       at list-auto-scope-journey.ts:106
+
+      104 |   await page.keyboard.press('ControlOrMeta+c');
+      105 |   const copied = await page.evaluate(() => (globalThis as any).__autoScopeCopy as {plain: string; html: string});
+    > 106 |   expect(copied.plain.trim()).toBe((await group.locator('p').allTextContents()).join('\n'));
+          |                               ^
+      107 |   expect(copied.html).toContain('data-fountain-direction-scope');
+      108 |   await page.keyboard.press('ControlOrMeta+v');
+      109 |   await expect(group).toHaveCount(1);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:106:31)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 3
+    + Received  + 3
+
+    - English anchor
+    + 1. English anchor
+    - English selectedReal new line
+    + - English selectedReal new line
+    - English tail
+    + 2. English tail
+
+       at list-auto-scope-journey.ts:106
+
+      104 |   await page.keyboard.press('ControlOrMeta+c');
+      105 |   const copied = await page.evaluate(() => (globalThis as any).__autoScopeCopy as {plain: string; html: string});
+    > 106 |   expect(copied.plain.trim()).toBe((await group.locator('p').allTextContents()).join('\n'));
+          |                               ^
+      107 |   expect(copied.html).toContain('data-fountain-direction-scope');
+      108 |   await page.keyboard.press('ControlOrMeta+v');
+      109 |   await expect(group).toHaveCount(1);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:106:31)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    - English anchor
+    + 1. English anchor
+      English selectedReal new line
+    - English tail
+    + 2. English tail
+
+       at list-auto-scope-journey.ts:106
+
+      104 |   await page.keyboard.press('ControlOrMeta+c');
+      105 |   const copied = await page.evaluate(() => (globalThis as any).__autoScopeCopy as {plain: string; html: string});
+    > 106 |   expect(copied.plain.trim()).toBe((await group.locator('p').allTextContents()).join('\n'));
+          |                               ^
+      107 |   expect(copied.html).toContain('data-fountain-direction-scope');
+      108 |   await page.keyboard.press('ControlOrMeta+v');
+      109 |   await expect(group).toHaveCount(1);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:106:31)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 3
+    + Received  + 3
+
+    - English anchor
+    + 1. English anchor
+    - English selectedReal new line
+    + - English selectedReal new line
+    - English tail
+    + 2. English tail
+
+       at list-auto-scope-journey.ts:106
+
+      104 |   await page.keyboard.press('ControlOrMeta+c');
+      105 |   const copied = await page.evaluate(() => (globalThis as any).__autoScopeCopy as {plain: string; html: string});
+    > 106 |   expect(copied.plain.trim()).toBe((await group.locator('p').allTextContents()).join('\n'));
+          |                               ^
+      107 |   expect(copied.html).toContain('data-fountain-direction-scope');
+      108 |   await page.keyboard.press('ControlOrMeta+v');
+      109 |   await expect(group).toHaveCount(1);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:106:31)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    - English anchor
+    + 1. English anchor
+      English selectedReal new line
+    - English tail
+    + 2. English tail
+
+       at list-auto-scope-journey.ts:106
+
+      104 |   await page.keyboard.press('ControlOrMeta+c');
+      105 |   const copied = await page.evaluate(() => (globalThis as any).__autoScopeCopy as {plain: string; html: string});
+    > 106 |   expect(copied.plain.trim()).toBe((await group.locator('p').allTextContents()).join('\n'));
+          |                               ^
+      107 |   expect(copied.html).toContain('data-fountain-direction-scope');
+      108 |   await page.keyboard.press('ControlOrMeta+v');
+      109 |   await expect(group).toHaveCount(1);
+        at listAutoScopeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\list-auto-scope-journey.ts:106:31)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:46:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-auto-scope-clipboard-recorded-20261008\editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+    [chromium] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+    [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+    [firefox] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 
+    [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real convert, typing and downloaded HTML 
+    [webkit] › tests\browser\editor.spec.ts:45:3 › retains shared automatic list scope through real lift, typing and downloaded HTML 

@@ -1,0 +1,1097 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-08 01:11:33 UTC",
+  "status": "local-verified-current-source-linux-ci-required",
+  "scope": "Format-only automatic-list conversion/lift and sibling text-block wrapping; neutral shared direction contexts, native editing and clipboard retention. Not complete editor parity.",
+  "hashPolicy": "SHA-256 of measured local file bytes. Git can normalize CRLF; these are not portable Git blob hashes. Evidence/log hashing occurred after jobs completed.",
+  "implementation": {
+    "schema": "CoreExtension/CoreSchemaSpec/StarterKit add direction_scope; root/core export directionScope.",
+    "model": "One live shared context encloses prefix/changed blocks/suffix. Independent directed item contexts remain independent when lifted. No first-strong Unicode or CSS resolution is performed by the document engine.",
+    "behavior": "Sibling paragraphs/headings can be wrapped inside their existing parent. Selection endpoints, default nodeId identity, history and numbering are tested. Invalid final schema, unsupported scope capability and host-filtered transforms refuse without document mutation.",
+    "serialization": "JSON, Yjs and canonical HTML preserve the tested scope trees. Markdown reports an HTML projection. DOCX reports direction-scope-omitted/text-direction-not-exported while preserving distinct child paragraphs and list numbering.",
+    "clipboard": "Child lines remain separate; zero-start ordered lists retain 0 in portable plain-text markers. Real internal paste replaces the document temporarily before restoring the copied scope, so no-op paste cannot pass."
+  },
+  "verification": {
+    "focused": {
+      "files": 6,
+      "tests": 87,
+      "log": "artifacts/list-auto-scope-focused-20261008.log"
+    },
+    "completeLocalUnits": {
+      "files": 211,
+      "tests": 2792,
+      "workers": 1,
+      "log": "artifacts/list-auto-scope-full-unit-20261008.log"
+    },
+    "browser": {
+      "executedPasses": 10,
+      "editingPasses": 6,
+      "clipboardPasses": 4,
+      "skips": 2,
+      "platform": "Windows",
+      "engines": [
+        "Chromium",
+        "Firefox",
+        "WebKit"
+      ],
+      "clipboardEngines": [
+        "Chromium",
+        "Firefox"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/list-auto-scope-supported-browser-20261008.log",
+      "actions": [
+        "real HTML file import",
+        "normal toolbar list conversion/lift",
+        "rewrapping a lifted paragraph",
+        "keyboard Shift+Tab",
+        "visible Enter insertion and Backspace join",
+        "real first-strong anchor replacement",
+        "undo/redo changes group direction",
+        "actual HTML download and independent reader rendering",
+        "native internal replacement paste",
+        "native outbound paste to an ordinary textarea"
+      ],
+      "exclusions": [
+        "no forged input/paste/drag events",
+        "no programmatically forced DOM selection",
+        "not physical-device/actual Safari certification",
+        "textarea outbound destination is not Word or Google Docs"
+      ],
+      "reproduction": "pnpm exec playwright test --config artifacts/native-selection-followup.config.ts --grep 'retains shared automatic list scope|copies shared automatic list scope' --project=chromium --project=firefox --project=webkit --workers=1 --output artifacts/list-auto-scope-supported-recorded-20261008",
+      "recordedConfig": {
+        "path": "artifacts/native-selection-followup.config.ts",
+        "extends": "playwright.config.ts",
+        "port": 4196,
+        "video": "on",
+        "trace": "on",
+        "webServerConfig": "artifacts/vite-quiet-audit.config.ts",
+        "note": "Local audit configs/captures are retained in the workspace. Tests can also run using the repository's default Playwright configuration; CI retains explicit screenshots/observations."
+      }
+    },
+    "visualReview": {
+      "reviewed": true,
+      "sourceScreenshots": 50,
+      "boards": 18,
+      "method": "All 18 comparison boards were opened and inspected with image viewing. Six native references plus transformed/Enter/Backspace/anchor-edit/undo/downloaded-reader captures, and four internal/external clipboard pairs. Shared-group direction and real line changes are visible; no pixel-identical theme/Word fidelity is claimed.",
+      "videos": {
+        "files": 32,
+        "manuallyWatched": false,
+        "note": "Includes per-page recordings and skipped-test fixtures; file count is not a count of completed journeys."
+      },
+      "traces": {
+        "files": 12,
+        "manuallyOpened": false
+      }
+    },
+    "nativeClipboardDiagnostic": {
+      "script": "scripts/check-browser-clipboard-capability.mjs",
+      "log": "artifacts/list-auto-scope-native-clipboard-capability-20261008.log",
+      "observations": 9,
+      "result": "Chromium/Firefox transfer native-default, event-authored text/plain, and event-authored rich payloads. Windows WebKit transfers native-default but fails both event-authored variants in independent textareas with no Fountain code. Two Windows WebKit clipboard tests are explicit skips; Linux WebKit and actual Safari remain required."
+    },
+    "gates": {
+      "libraryBuild": true,
+      "packedESMAndCommonJSRootAndCore": true,
+      "apiDeclarationFiles": 411,
+      "headlessSourceModules": 99,
+      "typesIncludingSvelteAndAngular": true,
+      "commonMarkProfilesUnchanged": {
+        "spec": "0.31.2",
+        "default": 563,
+        "total": 652,
+        "strongestOptIn": 613
+      },
+      "websiteBuild": true
+    },
+    "size": {
+      "measuredKiB": {
+        "esm": 1593.3,
+        "cjs": 1325.3,
+        "docxESM": 184.1,
+        "docxCJS": 148.9
+      },
+      "ceilingsKiB": {
+        "esm": 1593.5,
+        "cjs": 1325.5,
+        "docxESM": 184.25,
+        "docxCJS": 149
+      },
+      "priorFailure": "artifacts/list-auto-scope-budget-prior-caps-20261008.log",
+      "scope": "Measured code capacity only. Dependency, CSS, runtime latency/growth and heap limits unchanged."
+    },
+    "previousCheckpoint": {
+      "shaPrefix": "0a6948d",
+      "ciRun": 37707644407,
+      "conclusion": "success",
+      "units": 2768,
+      "unitFiles": 210,
+      "browserPasses": 730,
+      "browserSkips": 16,
+      "structuralPreflightPasses": 45,
+      "webkitFollowups": 5,
+      "firefoxFollowups": 2,
+      "performance": "success",
+      "lean": "success",
+      "pages": "success",
+      "rawBrowserLog": "artifacts/ci-0a6948d-browser-20261008.log",
+      "note": "This completed checkpoint does not certify current shared-auto source."
+    }
+  },
+  "diagnosticsRetained": [
+    "Initial missing-scope tests fail before the implementation.",
+    "Nested paragraph rewrapping tests fail before the sibling-parent fix.",
+    "The first HTML assertion incorrectly required fragment HTML to preserve a root title; exact typed child trees and full JSON are now tested separately.",
+    "Yjs fixture initially used the wrong insertText argument order; the harness error is retained.",
+    "A destination direction validator initially threw; construction now refuses atomically and uses final shared-scope capabilities.",
+    "The clipboard expectation initially omitted intentional list markers. Independent unit evidence also exposed the real zero-to-one numbering defect.",
+    "The all-engine clipboard extension failed in Windows WebKit; independent native diagnostics confirm the environment limitation. Editing assertions remain enabled in WebKit."
+  ],
+  "remaining": [
+    "Full current-source Linux verify/browser/performance/Lean matrix.",
+    "Shared-auto child reparenting/indent/lift into a different parent is not solved by this format-only grouping contract.",
+    "Custom identity-attribute configurations are not certified by the default-nodeId identity test.",
+    "Arbitrary source-wrapper metadata, host CSS and direction-incapable custom/code-block inheritance are not newly certified.",
+    "Explicit section unwrapping still removes its section properties by design.",
+    "Physical devices, actual Safari clipboard/IME, assistive technology, broader bidi and locale interactions.",
+    "Native Word bidi/shared-context layout, not equivalent to reported DOCX child-content preservation.",
+    "CommonMark remains partial: existing scores do not establish full conformance."
+  ],
+  "release": {
+    "npm": "0.4.0-beta.2 unchanged",
+    "ledger": "unchanged; PROD-04 remains Partial",
+    "rename": "none",
+    "goal": "active; full parity is not achieved"
+  },
+  "sourceHashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "eab7c3d90a193974bd91d36ae62bbd4cb6fc4548b42fcd07b4ddf5dae99475b8"
+    },
+    {
+      "path": "api-surface.json",
+      "sha256": "10c3e6f07f2da777c9ef3858e78c1cc7117ee022da2c900b998badfbabca9808"
+    },
+    {
+      "path": "artifacts/compose-block-direction-captures.ps1",
+      "sha256": "dcccebf212e90b7672859c4885f78654735e02cabc0e6492e2e11631a02c1798"
+    },
+    {
+      "path": "artifacts/native-selection-followup.config.ts",
+      "sha256": "648bfb26b49472cf555decfcff1d0299ef397c973a29a60e04abf2869d37b46b"
+    },
+    {
+      "path": "artifacts/vite-quiet-audit.config.ts",
+      "sha256": "c33a3a149b159c5f380f75e318d45a5d51113e926fbabd69b88004fa9a742312"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "e729e98ee78e6191e6e628eccbd831049f32f8d90c56c3f5ffd3694772c46a68"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "20aecee4c37ae96b11109bd165d00f837263a36a93b13afe3e9cb83d245ada45"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "ae8d0754ec837cab061d14d7ccb1625155c50932af4f7465deafc4329a10d506"
+    },
+    {
+      "path": "package.json",
+      "sha256": "ffaccea7ae80fc63260c9d18094cd74474bda69f8b7d7f570bb16f47605bc78a"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "be687eeeee49926563a7dddae144943bc65b2d6e5f0d8853835ed54e256eb1a6"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "140875b85f8d69a60ef0b00623151dc95da4e7b29ef94bdf7acb2456e6ae5977"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "6f6cd5611f935ab85fd15a4221b12204bc5eea4b61083f23e8c46380a859fa4a"
+    },
+    {
+      "path": "scripts/fixtures/text-direction-check.mjs",
+      "sha256": "7caa6da50a8ed9d88479f8353118dbd52207a7c0aa9e36f1fed34d8b7c002863"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "5cfe1c37c3e3575dd517c75b537e1b658f0b1a7f427abb11882343ae4a4b2816"
+    },
+    {
+      "path": "src/core/text-direction.ts",
+      "sha256": "5accffba25f66aa5aeb35026a390888efea71187cc71d9b50dfde2d72f235df4"
+    },
+    {
+      "path": "src/docx/index.ts",
+      "sha256": "760657e424cf1eccd2a854e3985c3be7bdb9c3270e6c1cdcaf9a9b8ca49fb546"
+    },
+    {
+      "path": "src/extensions/index.ts",
+      "sha256": "82113ce63855938d53833be4532a13ff7e56a74e26930bb3177ea45a2179f7a5"
+    },
+    {
+      "path": "src/extensions/nodes/direction-scope.ts",
+      "sha256": "5fd56ada0a4475d74d6a2cc134688c6c8273f780583f0cf0c63360ca94cd7831"
+    },
+    {
+      "path": "src/headless/index.ts",
+      "sha256": "40990aae57780d57fa022bcc68c012ffca4c684ab00c7253a61949201a2781e2"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "7ffc230505f2bed17cfb6861a92c20e990a2541d1e74dac80987daa4288b4586"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "3f115765db3824557d1f751950f5333fc06f32fd5bcc8835025f216f3f25208b"
+    },
+    {
+      "path": "tests/browser/list-auto-scope-journey.ts",
+      "sha256": "bdf6d58052ed0d21a547e687109f774058e3d8b08b6436d586af980051116a06"
+    },
+    {
+      "path": "tests/external-paste.test.ts",
+      "sha256": "cb6b0eea974f969231cd16f5bec0c0f0f20bb8e09382ca81c8899b2520189de3"
+    },
+    {
+      "path": "tests/html-containers-browser.test.ts",
+      "sha256": "7fd4a7e050d6fa3423169ac81b439ea3a8ae26a09663c1fe60ef997f3a3f0d9a"
+    },
+    {
+      "path": "tests/list-auto-scope.test.ts",
+      "sha256": "ab5528b95c404e8c2b5ae81553a5a70635cbff4e5e67c8ceb3a95c08387f2e3c"
+    }
+  ],
+  "captureAndObservationHashes": [
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-anchor-edited-0.png",
+      "sha256": "771e260c876d66fcfdbb2782b57557f6d7dea866439ba4bedae279685c0d7a5f"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-anchor-edited-1.png",
+      "sha256": "9a1498624920e3231786e3d38809c1f747ac4938948b1e48476a7d4b620d5c3c"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-anchor-undo-0.png",
+      "sha256": "6c023ef1b332e24cab1fe227c8ff09b70400a51f4099bc75b4e29eabc461cca3"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-anchor-undo-1.png",
+      "sha256": "93e468dfb96c2bf2af61dfd8c03767773eb874fcac96b6c74db14a731912c29c"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-backspace-0.png",
+      "sha256": "4e968726617875f3cc76d159253c250ff5b66b33ea7f2f4851ae3ef2a9ac2bbb"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-backspace-1.png",
+      "sha256": "f346560cb28241b32789ddb8f2bcfe3e3ae9e509b8e0a16dd1f9c2c0c60205da"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-downloaded-reader-0.png",
+      "sha256": "ed7622f7bec5d8faa452555ae575decacadc87b272ef2f862adc023e6e4a1f61"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-downloaded-reader-1.png",
+      "sha256": "a8c76d3e3c02fa71ffc2d49a2a9e4832b7710e207bfeba258f7b8bbb4cfa2de9"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-enter-0.png",
+      "sha256": "e1a9a2e4da588258337eef8212f54f4a79682ed44a5974cca6b49261d891a74d"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-enter-1.png",
+      "sha256": "af23c02a5297ce523645905644f4b1840089bb6eb28d5168d3f3cd8d56e544cf"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-external-paste-0.png",
+      "sha256": "18d48c0a955e9ec3a95c680d4445d425a295db7db7ba7f6054f25d82ac347c62"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-external-paste-1.png",
+      "sha256": "98944e25d333c33b84659765e13fd3d16c43339effb66da59a40c774792dd9b9"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-internal-paste-0.png",
+      "sha256": "24f01922b3dc269756ab9fd2b0715fbdcb6206fd4852200f2f0dd2b84f480fdf"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-internal-paste-1.png",
+      "sha256": "3c9e3805d28088fb93f51764455fb818371ff0d4c10a71c495c6934e7dae5e40"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-native-0.png",
+      "sha256": "b38605a7ffedb082cd2289842b2f9ee736cf9e698565f6f09f7dc2839bf0e922"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-native-1.png",
+      "sha256": "b38605a7ffedb082cd2289842b2f9ee736cf9e698565f6f09f7dc2839bf0e922"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-transformed-0.png",
+      "sha256": "067f6d9b19f4d497b04ed66282616b10267508eab7a4337f550d454c2d42b6d7"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/qa-board-auto-scope-transformed-1.png",
+      "sha256": "4faa743ad6930b44fa5a77eb41d92363b17a57a35595bd849564191345e903ec"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-external-paste.png",
+      "sha256": "3da8e5f241527c88c8d00cc93712fd8d9c87e6336a4f8f2d04343b34543b926a"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-internal-paste.png",
+      "sha256": "91b44b44097fab52c60c5216e4b34cb2e038f95abbdb4a61efe9b587cedcac9a"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-observations.json",
+      "sha256": "dbec7437d28447694cdb4b02ec06730478c6641defde72698fcaef4df6e6ff8f"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-external-paste.png",
+      "sha256": "8fac81f476de5d173043b6e89b5d403603f38a1add200cb10ed09862f99bd2c9"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-internal-paste.png",
+      "sha256": "d58ea5775909bb97c4962ec457519ce4df5d97b2336b7507288212e70b03716e"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-observations.json",
+      "sha256": "dbec7437d28447694cdb4b02ec06730478c6641defde72698fcaef4df6e6ff8f"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-external-paste.png",
+      "sha256": "ce4d36f9bba11b5d178586882bfdbc1788ccbe45f2fb9306275cdc8b9c44a98b"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-internal-paste.png",
+      "sha256": "836a5996226855e704321e9005601e6ad07e94510ea5fad885cb73af3f24250f"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-observations.json",
+      "sha256": "c368037e6cc51a9ebd55dfbf8e871c6bdaef2da0a34f4e31da2b426a5291792c"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-external-paste.png",
+      "sha256": "e7a8e1cbb72f387315d4b2ac2ff008663938369403776512125d57bf61c33b4e"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-internal-paste.png",
+      "sha256": "dbbc324ced05d9cfdd0057153a010f2ea482ce6d9314cc265cc01d33f1869105"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-observations.json",
+      "sha256": "c368037e6cc51a9ebd55dfbf8e871c6bdaef2da0a34f4e31da2b426a5291792c"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-anchor-edited.png",
+      "sha256": "91b44b44097fab52c60c5216e4b34cb2e038f95abbdb4a61efe9b587cedcac9a"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-anchor-undo.png",
+      "sha256": "0108a7a1ea8013d5a315857e4b9302caab534ab76d378abf3b6c89e1f1e5f1ea"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-backspace.png",
+      "sha256": "fb2569d77f5ea1d64c09692f1fb690dd2af02012da087c05636a16e268bc29ce"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-downloaded-reader.png",
+      "sha256": "dfe386a77392e4c9c73f4cba3e34ccb99023080e19993a04358a07cf7f2ac205"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-enter.png",
+      "sha256": "bc4359fb94fb702f1b51b74e295a7642db62576da2870a051fca370a6d68754e"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-native.png",
+      "sha256": "bed42289db9b9b56ec83686d1b78a02616ee93f3d6d2677fe32a040b27946e08"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-observations.json",
+      "sha256": "0614981586e3436543c5d0762b87349e6f2fe700a79ae0cc5b05e5d661f71ed5"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-transformed.png",
+      "sha256": "4014457bb7cd26aede3e61b37b7555f7acc1dcf9e6819b8c37a3b7ae83a350b1"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-anchor-edited.png",
+      "sha256": "d58ea5775909bb97c4962ec457519ce4df5d97b2336b7507288212e70b03716e"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-anchor-undo.png",
+      "sha256": "ec324d3dd16a2021c1f31b4ed53a684a8c82a2820ea6adb5c6fce7a8120f1adb"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-backspace.png",
+      "sha256": "9efabce7b32515a1b6ce9893665ed8d84df18bd49cc91700f811b1080e679187"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-downloaded-reader.png",
+      "sha256": "6cbc68b0579574421efda3f453f649097e1fec03b0d8e2dde8c911aabcde9f65"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-enter.png",
+      "sha256": "1fd474dc03b651624e4e141250ca57b98ac5bc33a09209772161273470b02c75"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-native.png",
+      "sha256": "6c8fd166b46331da266ab0c610da98324fe5f3c3a5cb95caa49e5f82a82b3f94"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-observations.json",
+      "sha256": "0614981586e3436543c5d0762b87349e6f2fe700a79ae0cc5b05e5d661f71ed5"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-transformed.png",
+      "sha256": "888396afba8f6b32076fca1226256fd5168e2be094e79bc8a60f222363ef70fb"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-anchor-edited.png",
+      "sha256": "a146346843aa9e68605944cd1219fb98fa07438f8c048980cb7a27df004c5e26"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-anchor-undo.png",
+      "sha256": "8018a961462e24a12ab3eea67a2cbf92935f145cf9bc61a7c1a55e2e46d5c259"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-backspace.png",
+      "sha256": "0e96d6732cea2a471332e8055573a7b6d7ed901f33374b5621fd0185fe9e7c33"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-downloaded-reader.png",
+      "sha256": "ae31257bdae2086bf53e40cd6e314ba61ca49b4c07a7afbecb377c2e427465a4"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-enter.png",
+      "sha256": "ce6bd95193919fac29f324919d1b0014f26eb3491a9e6c163df821141865b686"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-native.png",
+      "sha256": "113055db1556017a65e31c878fd861b71303745cd3cb706952ddfa9d6240e77a"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-observations.json",
+      "sha256": "0614981586e3436543c5d0762b87349e6f2fe700a79ae0cc5b05e5d661f71ed5"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-transformed.png",
+      "sha256": "5ead20d2dbb5e793b71076c139be3c5c2fdbc79a52b6fdce403fa03420ecf26e"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-anchor-edited.png",
+      "sha256": "836a5996226855e704321e9005601e6ad07e94510ea5fad885cb73af3f24250f"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-anchor-undo.png",
+      "sha256": "61e8acd3003cc005dde51b16e003bc72cd817fc3eacf4e29b1fc499f508d9326"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-backspace.png",
+      "sha256": "71228fadf36e3a0bde6347accbcb8a2097fa2d1c08b5c708e3cc0c596f397bce"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-downloaded-reader.png",
+      "sha256": "188c6b205d68c08bd36616138bfec28ae35acd0c552bde6b4fc018027cc08b6f"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-enter.png",
+      "sha256": "2630ca31b468558976a87ff59ebaaa25d034b5a98a6637c39771263202eb9e6e"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-native.png",
+      "sha256": "bed42289db9b9b56ec83686d1b78a02616ee93f3d6d2677fe32a040b27946e08"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-observations.json",
+      "sha256": "f3bffa69c620fb89f003ea5690a362b51fee122e6fffa0ab90c947e7065304d8"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-transformed.png",
+      "sha256": "28d0071afc1b548add926eaf7b112335d3ffa79362343d7c33497887c7416e2b"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-anchor-edited.png",
+      "sha256": "dbbc324ced05d9cfdd0057153a010f2ea482ce6d9314cc265cc01d33f1869105"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-anchor-undo.png",
+      "sha256": "9aecbbd78d98505cde3a5a2deeb90d008f8b2887c9996c34889400542e22db03"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-backspace.png",
+      "sha256": "680f451781e9afc1c66326481e574f29e8ef2a661a62caece9f3749cf3ba33d1"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-downloaded-reader.png",
+      "sha256": "c960e5c5e6837c365c1b272633703ff52b9dae56cbc859ff08b89bfd7ea584ee"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-enter.png",
+      "sha256": "f8863b31d96e5988eed11671a363d7028f5f84b0756249c82a8b5b03c22d8352"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-native.png",
+      "sha256": "6c8fd166b46331da266ab0c610da98324fe5f3c3a5cb95caa49e5f82a82b3f94"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-observations.json",
+      "sha256": "f3bffa69c620fb89f003ea5690a362b51fee122e6fffa0ab90c947e7065304d8"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-transformed.png",
+      "sha256": "5ec750b58da43f76d9fe7d462415a5daae8e80dce87d2ba9e8f2a3da301f7f98"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-anchor-edited.png",
+      "sha256": "589fb5f707e2d7c37c6cfee29eb91a2d65fd00ec201eba8fbd7293026f831816"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-anchor-undo.png",
+      "sha256": "6266da19896cefb544cd8e6cd09b3ebab56d9294bec8c83d0f33a987eb8c97a1"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-backspace.png",
+      "sha256": "37d1688e216cbdda1eb9d9f99cb28b687dca37b635e8f32d01cb797fa1485711"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-downloaded-reader.png",
+      "sha256": "ee277bfaea50227bd5a388db266fa32f1a3596a4d7a1c4580fd48c9779ddeca6"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-enter.png",
+      "sha256": "26d40d9159eb51f193587570a999b8a6fb4bf220f54b17351d1a82fb2f03d0e9"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-native.png",
+      "sha256": "113055db1556017a65e31c878fd861b71303745cd3cb706952ddfa9d6240e77a"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-observations.json",
+      "sha256": "f3bffa69c620fb89f003ea5690a362b51fee122e6fffa0ab90c947e7065304d8"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-transformed.png",
+      "sha256": "89ea50f1162c52416ccc0415cad2bebb3ec1288469c257746d680862332b1812"
+    }
+  ],
+  "rawObservations": [
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-observations.json",
+      "observations": {
+        "action": "convert",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "clipboard": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><ul><li><p>English selectedReal new line</p></li></ul><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "external": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "internalParagraphs": [
+            "English anchor",
+            "English selectedReal new line",
+            "English tail",
+            ""
+          ]
+        },
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-observations.json",
+      "observations": {
+        "action": "convert",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "clipboard": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><ul><li><p>English selectedReal new line</p></li></ul><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "external": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "internalParagraphs": [
+            "English anchor",
+            "English selectedReal new line",
+            "English tail",
+            ""
+          ]
+        },
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-observations.json",
+      "observations": {
+        "action": "lift",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "clipboard": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><p>English selectedReal new line</p><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "external": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "internalParagraphs": [
+            "English anchor",
+            "English selectedReal new line",
+            "English tail",
+            ""
+          ]
+        },
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-observations.json",
+      "observations": {
+        "action": "lift",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "clipboard": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><p>English selectedReal new line</p><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "external": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "internalParagraphs": [
+            "English anchor",
+            "English selectedReal new line",
+            "English tail",
+            ""
+          ]
+        },
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-chromium/auto-scope-observations.json",
+      "observations": {
+        "action": "convert",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-firefox/auto-scope-observations.json",
+      "observations": {
+        "action": "convert",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-19aeb--typing-and-downloaded-HTML-webkit/auto-scope-observations.json",
+      "observations": {
+        "action": "convert",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-chromium/auto-scope-observations.json",
+      "observations": {
+        "action": "lift",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-firefox/auto-scope-observations.json",
+      "observations": {
+        "action": "lift",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-recorded-20261008/editor-retains-shared-auto-fb03f--typing-and-downloaded-HTML-webkit/auto-scope-observations.json",
+      "observations": {
+        "action": "lift",
+        "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+        "nativeBefore": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterTransform": [
+          "rtl",
+          "rtl",
+          "rtl"
+        ],
+        "afterAnchorEdit": [
+          "ltr",
+          "ltr",
+          "ltr"
+        ],
+        "reader": [
+          {
+            "text": "English anchor",
+            "direction": "ltr"
+          },
+          {
+            "text": "English selectedReal new line",
+            "direction": "ltr"
+          },
+          {
+            "text": "English tail",
+            "direction": "ltr"
+          }
+        ],
+        "pageErrors": []
+      }
+    }
+  ],
+  "logHashes": [
+    {
+      "path": "artifacts/list-auto-scope-api-20261008.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4"
+    },
+    {
+      "path": "artifacts/list-auto-scope-api-review-20261008.log",
+      "sha256": "302dbd210343f6c7e2b2233ad76f80fc1c15136cc58ac13c52a6f63193a53b7c"
+    },
+    {
+      "path": "artifacts/list-auto-scope-browser-20261008.log",
+      "sha256": "9892e0134b6175a591deaf6a43643e71102150f16c7c1aea8064d53f2cf66af1"
+    },
+    {
+      "path": "artifacts/list-auto-scope-budget-20261008.log",
+      "sha256": "e36a6c83f109139d0c23fe88323faaaae30d822417a40712426c400d5843be37"
+    },
+    {
+      "path": "artifacts/list-auto-scope-budget-prior-caps-20261008.log",
+      "sha256": "0167336185207fddb2fe05adc018b39c81581ce99e350f535e650747b4e966e8"
+    },
+    {
+      "path": "artifacts/list-auto-scope-build-20261008.log",
+      "sha256": "99836114dee110706d0d858b3ced62810236370711a1d24ebf37d1d60e70121b"
+    },
+    {
+      "path": "artifacts/list-auto-scope-clipboard-browser-20261008.log",
+      "sha256": "2d6d22e41d8a9bb6937160931e7ee5b8a96a74d9d611cb2c242d08d056d17694"
+    },
+    {
+      "path": "artifacts/list-auto-scope-clipboard-zero-red-20261008.log",
+      "sha256": "39e244d44c5de7e1738ddf64818b80c23f66f21245e12da24148717127c81b21"
+    },
+    {
+      "path": "artifacts/list-auto-scope-destination-validator-red-20261008.log",
+      "sha256": "5fdcd815c9c45dfdd6dc3269da48db3699ed79fe9282e9f1b99aed36be0b6a21"
+    },
+    {
+      "path": "artifacts/list-auto-scope-final-api-review-20261008.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4"
+    },
+    {
+      "path": "artifacts/list-auto-scope-final-browser-20261008.log",
+      "sha256": "48fc3326c16cffbf8dc873005d04c094eee4c975094ec223d4b4dcbfa0635ed7"
+    },
+    {
+      "path": "artifacts/list-auto-scope-focused-20261008.log",
+      "sha256": "516babcc09f2aef93dd8fc5a59c83c61de95476ffe64328d0e9aea25ef62d939"
+    },
+    {
+      "path": "artifacts/list-auto-scope-full-unit-20261008.log",
+      "sha256": "e37a2100ddc9f8e6dc99a917de08fa2f38773a29e12823d4db52494869445883"
+    },
+    {
+      "path": "artifacts/list-auto-scope-headless-20261008.log",
+      "sha256": "b00cfb6c7892c618bf1c7e612a13df0511a2ed939de3c30aa7824e7421f129d3"
+    },
+    {
+      "path": "artifacts/list-auto-scope-markdown-20261008.log",
+      "sha256": "a9cb5dd16b86abade61243cef34ee2c039c00dcfd6905aedd4acd408d51e5658"
+    },
+    {
+      "path": "artifacts/list-auto-scope-native-clipboard-capability-20261008.log",
+      "sha256": "c2ed908214c84cb947368d1cc7a96a3b242c3c5a9563daa69410bb8590ce55d4"
+    },
+    {
+      "path": "artifacts/list-auto-scope-package-20261008.log",
+      "sha256": "c33689638963302d52c0082d00b07df22fe4371603a47df7f3c33aac46139bfa"
+    },
+    {
+      "path": "artifacts/list-auto-scope-red-20261008.log",
+      "sha256": "a0621d0b13b5b237945e1cb442ea1aad1074a421298e2a7641e469e25ca75d86"
+    },
+    {
+      "path": "artifacts/list-auto-scope-retoggle-red-20261008.log",
+      "sha256": "9204dfde62868966f1221a4017dab15dd4c2ae6390cfe8621e990299ff2f3628"
+    },
+    {
+      "path": "artifacts/list-auto-scope-root-metadata-projection-diagnostic-20261008.log",
+      "sha256": "1288f7a128c13df18f8baedd358efa49f96ca32e22c8edb094dbfc23a15e4e11"
+    },
+    {
+      "path": "artifacts/list-auto-scope-site-20261008.log",
+      "sha256": "c033a37d02d2c8e1543440762995713b74c03b052e3772b9d0fb4040fc92ba94"
+    },
+    {
+      "path": "artifacts/list-auto-scope-supported-browser-20261008.log",
+      "sha256": "f0e674788b41eaa26a008aedb5ffce439e82611ace8b393fccea6beed1a2aa07"
+    },
+    {
+      "path": "artifacts/list-auto-scope-types-20261008.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/list-auto-scope-yjs-harness-error-20261008.log",
+      "sha256": "7c4a577da342870bef8ff89dfcfccf86f5597cbe37004d67f1ba4d0b2b75ac44"
+    }
+  ]
+}
