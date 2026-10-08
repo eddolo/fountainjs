@@ -1,0 +1,73 @@
+[WebServer] (node:20732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:25604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (9.0s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (9.0s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (13.6s)
+(node:15252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (16.6s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (13.1s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (49.6s)
+(node:16596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (22.6s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (31.1s)
+  x  9 [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (18.4s)
+
+
+  1) [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Runbook reordering editor' }).locator('[data-fountain-path="5"]')
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Runbook reordering editor' }).locator('[data-fountain-path="5"]')
+        13 × locator resolved to <ul draggable="true" data-fountain-path="5" data-fountain-content-dom="" data-fountain-node="bullet_list" data-fountain-selected-node="true" data-fountain-block-reorderable="true">…</ul>
+           - unexpected value "null"
+
+
+       at block-direction-reorder-journey.ts:128
+
+      126 |     await handle.press('Space');
+      127 |     await expect(handle).toHaveAttribute('aria-pressed', 'true');
+    > 128 |     await expect(block).toHaveAttribute('data-fountain-block-grabbed', 'true');
+          |                         ^
+      129 |     await snapshot(page, info, `keyboard-${index}-grabbed`);
+      130 |     await handle.press('ArrowDown');
+      131 |     await expect(controls).toHaveAttribute('data-fountain-block-path', String(index + 1));
+        at blockDirectionKeyboardJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\block-direction-reorder-journey.ts:128:25)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:49:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\block-direction-container-retained-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\block-direction-container-retained-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\block-direction-container-retained-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\block-direction-container-retained-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\block-direction-container-retained-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+  8 passed (3.4m)

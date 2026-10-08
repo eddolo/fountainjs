@@ -1,0 +1,646 @@
+{
+  "date": "2026-10-08",
+  "status": "verified-local-block-reordering-subset; current-source complete Linux CI pending",
+  "scope": "Fixed model direction at generic moves; editor-owned RTL/LTR control geometry; whole-container keyboard/button tracking; focus-owned hover; dedicated bilingual runbook demo",
+  "baseline": {
+    "commit": "b614858",
+    "ci": {
+      "runId": 37703772902,
+      "url": "https://github.com/eddolo/fountainjs/actions/runs/37703772902",
+      "conclusion": "success",
+      "unitTests": 2753,
+      "unitFiles": 209,
+      "browserPassed": 721,
+      "browserSkipped": 16,
+      "structuralPreflightPassed": 36,
+      "lean": "success",
+      "performance": "success"
+    },
+    "pages": {
+      "runId": 37703772950,
+      "conclusion": "success"
+    },
+    "warning": "This completed baseline does not certify the new reordering code."
+  },
+  "implemented": [
+    "Generic moves retain known fixed model LTR/RTL at a changed inheritance boundary, using the existing schema-aware list retention helper.",
+    "Own child directions, explicit alignment, stable IDs, document metadata, and exact undo/redo remain independently retained. No direction is guessed from CSS or Unicode.",
+    "An implicit physical-left default becomes logical start when fixed direction is materialized. Authored physical alignment is not rewritten.",
+    "Containers without a declared direction attribute recurse to capable descendants without inventing unsupported container attributes. Complete schema validation and host transaction filtering remain atomic.",
+    "Controls and destination-rule beads follow the editable surface's computed direction, not the surrounding mount.",
+    "Keyboard and before/after moves keep the active handle on the whole container instead of the core command's mapped text caret.",
+    "Grab/focus takes precedence over hover, including a WebKit stationary-pointer/scroll interaction found by the recorded journey.",
+    "The dedicated lab uses existing EditorView controls, stable-ID whole-block choice, editable custom notes, an embedded raster asset, reader preview, and JSON/HTML downloads. It is linked from the gallery and guide."
+  ],
+  "unit": {
+    "passed": 52,
+    "files": 4,
+    "testFiles": [
+      "tests/node-move-direction.test.ts",
+      "tests/block-reordering.test.ts",
+      "tests/list-direction-transforms.test.ts",
+      "tests/release.test.ts"
+    ],
+    "pureNodeMoveTests": 11,
+    "assertions": "Fixed RTL/LTR/undefined destinations; authored alignment and child directions; same-context and whole-auto identity; custom-container descendant retention; schema/filter atomic rejection; whole quote/list/table keyboard and button targeting; focused/grabbed hover ownership; dynamic direction geometry.",
+    "log": "artifacts/block-direction-focus-owned-final-20261008.log"
+  },
+  "browser": {
+    "passed": 9,
+    "failed": 0,
+    "platform": "Windows",
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "workers": 1,
+    "retries": 0,
+    "testTimeoutMs": 60000,
+    "localPriority": "BelowNormal",
+    "localProcessorAffinity": 192,
+    "log": "artifacts/block-direction-focus-owned-browser-20261008.log",
+    "recordedOutput": "artifacts/block-direction-focus-owned-recorded-20261008",
+    "journeys": [
+      "Actual native pointer drag in an LTR editor and LTR mount.",
+      "Actual native pointer drag in an RTL editor and LTR mount.",
+      "Keyboard whole paragraph/heading/list/table/media/custom/automatic quote selection, grab, reorder, release and exact undo; RTL roving focus; narrow LTR/RTL gutters; automatic surface direction without document mutation."
+    ],
+    "pointerAssertions": "Distinct whole-block hover/grab/drop line; inline-start marker geometry; cross-quote fixed RTL retention; stable ID; real typing after move; exact typing and move undo/redo; separate JSON-backed reader; actual downloaded HTML reopened and embedded image decoded at natural width 320.",
+    "visualReview": {
+      "resultPngs": 57,
+      "reviewedPngs": 57,
+      "comparisonBoardsReviewed": 19,
+      "method": "All final PNGs visually inspected in three-engine comparison boards, with earlier individual/failure captures also inspected.",
+      "videosRecorded": 15,
+      "videosReviewed": false,
+      "tracesRecorded": 9,
+      "nativeMobileCertified": false
+    },
+    "sourceAtCapture": {
+      "examplePath": "examples/react-app/src/block-reordering-main.tsx",
+      "sha256": "fd5d65ea996296131ef9fc036bf3f2bfd81c5c92950e921128f4ac7e3eb79515"
+    },
+    "postCaptureChange": "Only the prose export warning below the editor was added after the recorded run. Runtime/editor/sample/stylesheet markup remained unchanged; final-copy TypeScript and website build were separately rerun successfully.",
+    "artifactHashes": [
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-chromium/block-direction-drag-observations.json",
+        "sha256": "d16001d3fb1b960f05caf3b5908667762d4718a54d2790bf3123b0ea025b0186"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-chromium/block-direction-ltr-drag.png",
+        "sha256": "8f20906bdbd815b6109b042ff40e8003c97906ee77e34d3578fd3dba92262133"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-chromium/block-direction-ltr-export.png",
+        "sha256": "598bc9ca801822c36f6e08cc12cba52aff13627d9bdeb0bd59d7debfa955ba05"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-chromium/block-direction-ltr-hover.png",
+        "sha256": "5a3c70b95aca2d17c06650900fe27dec950b6bc6958a1d7fde0dfec046cbc11e"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-chromium/block-direction-ltr-moved.png",
+        "sha256": "eacd3acc7bb77b3a83919f7a4383f46d7f527f6f153b25da077ebfe47934f56b"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-chromium/block-direction-ltr-reader.png",
+        "sha256": "cf25c557b22be70c02328c055c2bb16b93bf5bd9d472c2f1f9919c37d9fc2aa1"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-firefox/block-direction-drag-observations.json",
+        "sha256": "d16001d3fb1b960f05caf3b5908667762d4718a54d2790bf3123b0ea025b0186"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-firefox/block-direction-ltr-drag.png",
+        "sha256": "79f2a4a4e5144ff4619d4ee1d7b390e7b0280ecc9954c8f334a73f94876248eb"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-firefox/block-direction-ltr-export.png",
+        "sha256": "2f82022c4c37c1ec31391c3eafc5c32151408812140f012855013566bdb57e81"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-firefox/block-direction-ltr-hover.png",
+        "sha256": "b34366a8fd9c6a897509762ccf5494fc3ec047aa358456d254ea53508fc0ccee"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-firefox/block-direction-ltr-moved.png",
+        "sha256": "d906f2390979c7b3a450d30507479cbeb7e93c3aae0e3c516d947c8fd5e62230"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-firefox/block-direction-ltr-reader.png",
+        "sha256": "135fbab2c45335652ede9a6f050eeec76578ecbe269541cc6a466671ad6362d3"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-webkit/block-direction-drag-observations.json",
+        "sha256": "d16001d3fb1b960f05caf3b5908667762d4718a54d2790bf3123b0ea025b0186"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-webkit/block-direction-ltr-drag.png",
+        "sha256": "633b592c657e0c2eb5fd5d288c5f22017aa5a9d687db25cd8b3621d6a705bbea"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-webkit/block-direction-ltr-export.png",
+        "sha256": "b62802b67a9e44dc78bb7fb9fb452b61e69a3dbe0d2358835eb7f76d15aa7c65"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-webkit/block-direction-ltr-hover.png",
+        "sha256": "d2c2725a96ef1d73c415c4fb44bcdcaea312b6f8239dbcf4ad6f305ceeed1b85"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-webkit/block-direction-ltr-moved.png",
+        "sha256": "79655348e6b3085bb95f55b559de291d4a8e690f043f7b706f2cdcb1aed6e9ef"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-1a0b5-ive-pointer-feedback-in-ltr-webkit/block-direction-ltr-reader.png",
+        "sha256": "81b7f41b877a356bd4dd4caec89f4601a9a6e34899a08470406c023e41c112a6"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-1-grabbed.png",
+        "sha256": "1f3f680564d961d874df6c9bef23b34e06e7ba8ed1f459c64760c722a346a567"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-4-grabbed.png",
+        "sha256": "73aafdb6d9b52de2364833fb0de1978ea142342c937db5a2324d708af802c4c5"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-5-grabbed.png",
+        "sha256": "d20ef9cac74873be3203862b003fc2f1a4f604991b75e02592fcaf8f34fb7616"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-6-grabbed.png",
+        "sha256": "03e1221467b51c44e32e670c4333ce6e192e8eec3b9e416bd3fff6d7987bbc77"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-7-grabbed.png",
+        "sha256": "19daeba4f59453df550f14ce4e92a02b22679f88da7b733d524be8b5fa7e295e"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-8-grabbed.png",
+        "sha256": "6c3f43ed6fbf1c33a513c3ccb04d14b9142e271fc69057583a4186259b9c10d0"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-9-grabbed.png",
+        "sha256": "9c78f34d6f3463d2e7847cfdaa5dd3b566f55e66970b096d8c1f965f0572452b"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-keyboard-observations.json",
+        "sha256": "fc14c5011e3c307b065a4e5806fbd67a6e4504f2f57e46c25e78db78311dba95"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-narrow-ltr.png",
+        "sha256": "ed063df6b57d1a087217ea2d0c0a80735829c0fe5498fe2de3460b37f04dc0ea"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium/block-direction-narrow-rtl.png",
+        "sha256": "7a02dc5b9e905541048db0c32795a297f7b35b21b795576dd68fe92e9f251523"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-1-grabbed.png",
+        "sha256": "316d17c343ea999e2a0d7d8943fe01b6cd4f6336c5c236e14908eb1da1a59421"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-4-grabbed.png",
+        "sha256": "f5a2e446c5cfde1b176da5e541fb7b11550cf6f2aff810e9bd266f05fbf3bd89"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-5-grabbed.png",
+        "sha256": "7fa669c4cceee58922a66b078d773981b9afe7f2d780b09c01d82891de39b64d"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-6-grabbed.png",
+        "sha256": "12c0afc409c840b2f0a54b4b75b5b49f5ffecb987587c38986b5181916ae133e"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-7-grabbed.png",
+        "sha256": "e1193edf49fc557ce1ca148a8f10c132fd58bee8fd60a11aa08de33ca9aec79f"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-8-grabbed.png",
+        "sha256": "f53c47d2487ca446a6d33973c32e174a7e141d0cc552785df039fae8992068ae"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-9-grabbed.png",
+        "sha256": "0c93e7ed5ecc0b91f44f20d53e1ba120285221b18b89b3cf0e6600ad19d0acce"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-keyboard-observations.json",
+        "sha256": "f1102e037fda914c4b5cbadd39b949bd4238d76cac95a8c99fc09d7901f625e6"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-narrow-ltr.png",
+        "sha256": "5c53192381da96ecd46be989d21d72672c31c722145116d635bd8dae674909d4"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox/block-direction-narrow-rtl.png",
+        "sha256": "7f117df61ed160538722dfc758e4881d6b2d4d5323bb1b67e8b11d395777cc86"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-1-grabbed.png",
+        "sha256": "ac05cd531460bf8fd3fdc0a23a04a15d9723b2cd1f6fa9026fbe5f1545e11fea"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-4-grabbed.png",
+        "sha256": "6be3695b567afb368e109ef2cc8dedaba26fc2e3e39f30b4a438946515d4ea85"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-5-grabbed.png",
+        "sha256": "49f0d1a2340ac31e8f88e1f865a36a590ed4c9860028a72a5fbd78c08f19ae2c"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-6-grabbed.png",
+        "sha256": "b31a9af39e577f87c22749145b6294aebca41a19061cbc2b1ac9abd8a94b3abb"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-7-grabbed.png",
+        "sha256": "45ec9f584927adae9b10215b823141e89b00c6d6d243478a1824aff9993c9bd7"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-8-grabbed.png",
+        "sha256": "d522059302a1f79884f0fa759b64fb4fb62e3ab513aef2917f0979afdc854ede"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-9-grabbed.png",
+        "sha256": "916fea27eb1374cd98a0f67a7b040cb2c207396d0ee8166b1944591e4cfce30f"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-keyboard-observations.json",
+        "sha256": "fc14c5011e3c307b065a4e5806fbd67a6e4504f2f57e46c25e78db78311dba95"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-narrow-ltr.png",
+        "sha256": "b8618bb08e2b661688369be6097023055f17eb4d9fd9219bb49562c54fc00dd1"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit/block-direction-narrow-rtl.png",
+        "sha256": "57a01f98de6c55f674af64919d24c675007ebe8186efa2c76ccf4a0f8ea833f9"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-chromium/block-direction-drag-observations.json",
+        "sha256": "9c62d1f8c97ee1916c55b919c778d2204f0d05ae28a2310aa03b3e4631c7c190"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-chromium/block-direction-rtl-drag.png",
+        "sha256": "ed3bfe263957ae89d577224eaa895143c6e72ecdf70d5faa6db3a80d312cc864"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-chromium/block-direction-rtl-export.png",
+        "sha256": "598bc9ca801822c36f6e08cc12cba52aff13627d9bdeb0bd59d7debfa955ba05"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-chromium/block-direction-rtl-hover.png",
+        "sha256": "14fee2733bf9b6b5f760c7390d34abe002bbfa0cacaa0ecd212e437973ae5de2"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-chromium/block-direction-rtl-moved.png",
+        "sha256": "ea3208c7bcbfaaa09ac1da945b108fbddbda19452a0658d9ed678ca1ef02aeb4"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-chromium/block-direction-rtl-reader.png",
+        "sha256": "765dd34a854afb2268ff16f61178cdf8f0d11f1aeb750e9c18710a901d1e91bb"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-firefox/block-direction-drag-observations.json",
+        "sha256": "9c62d1f8c97ee1916c55b919c778d2204f0d05ae28a2310aa03b3e4631c7c190"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-firefox/block-direction-rtl-drag.png",
+        "sha256": "e3e53375fed452cebdbadec86a7169c80063914e28f6115e48cee4ad84d42186"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-firefox/block-direction-rtl-export.png",
+        "sha256": "2f82022c4c37c1ec31391c3eafc5c32151408812140f012855013566bdb57e81"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-firefox/block-direction-rtl-hover.png",
+        "sha256": "d0940dcad33d660f38d2fef08b6d54e87cb81c5bc4c439731a018e6b7f955f2a"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-firefox/block-direction-rtl-moved.png",
+        "sha256": "94923f46bc53f83e75d78f31a2a319b5c00aaa020b556e197842fb292f2ea9c2"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-firefox/block-direction-rtl-reader.png",
+        "sha256": "4cd53dec2878b3df714a5cef1283be66e81965389d6bf74c9f324cd0cee07288"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-webkit/block-direction-drag-observations.json",
+        "sha256": "9c62d1f8c97ee1916c55b919c778d2204f0d05ae28a2310aa03b3e4631c7c190"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-webkit/block-direction-rtl-drag.png",
+        "sha256": "53dc617cbdd2af403a45a9ca19e5a9500bba93244c905559bb5532c2c2a4af94"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-webkit/block-direction-rtl-export.png",
+        "sha256": "b62802b67a9e44dc78bb7fb9fb452b61e69a3dbe0d2358835eb7f76d15aa7c65"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-webkit/block-direction-rtl-hover.png",
+        "sha256": "ba4375cb50fbd00143cf3b44b49d8395d81c6b1827a8bf857a8f421048e380a0"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-webkit/block-direction-rtl-moved.png",
+        "sha256": "77334cfd17e798a3e852e6380e92d0db8600a03f22a839ffaf9f7ebac495ba39"
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-recorded-20261008/editor-reorders-real-runbo-fc418-ive-pointer-feedback-in-rtl-webkit/block-direction-rtl-reader.png",
+        "sha256": "e74fbe48947ab9a136afbffe455ca49ae1e8ce5ea0d5e222fba2740dd9482399"
+      }
+    ]
+  },
+  "gates": {
+    "libraryBuild": "passed",
+    "api": {
+      "status": "passed",
+      "declarationFiles": 409,
+      "publicSurfaceChanged": false
+    },
+    "headless": {
+      "status": "passed",
+      "modules": 98,
+      "fakeDomRequired": false
+    },
+    "packedPackage": {
+      "status": "passed",
+      "formats": [
+        "ESM",
+        "CommonJS"
+      ],
+      "entries": [
+        "root",
+        "core"
+      ],
+      "newContract": "Generic fixed-direction node move/history/server-HTML tested with no document/window."
+    },
+    "types": {
+      "status": "passed",
+      "includes": [
+        "TypeScript",
+        "Svelte (0 errors, 0 warnings)",
+        "Angular"
+      ]
+    },
+    "finalCopyTypeScript": {
+      "status": "passed",
+      "exitCode": 0
+    },
+    "finalWebsiteBuild": {
+      "status": "passed",
+      "entry": "block-reordering.html",
+      "log": "artifacts/block-direction-final-site-build-20261008.log"
+    },
+    "budget": {
+      "status": "passed",
+      "measuredKiB": {
+        "allESM": 1590.4,
+        "allCJS": 1323
+      },
+      "limitsKiB": {
+        "allESM": 1590.5,
+        "allCJS": 1323
+      },
+      "oldESMLimitKiB": 1590.25,
+      "capacityIncreaseKiB": 0.25,
+      "unchangedCaps": [
+        "CJS",
+        "entry",
+        "CSS",
+        "runtime performance",
+        "heap"
+      ],
+      "failedPriorCapLog": "artifacts/block-direction-test-budget-20261008.log",
+      "passingLog": "artifacts/block-direction-budget-final-20261008.log"
+    },
+    "logHashes": [
+      {
+        "path": "artifacts/block-direction-focus-owned-final-20261008.log",
+        "sha256": "0d52eabcf5a98f58bb1931130ed16da5698c7697682f103e35d4af2cf38c8912",
+        "bytes": 533
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-browser-20261008.log",
+        "sha256": "8fc21eb9fac4267d389e5eb7553ee17a37e6460db37228e461cd839791f83a46",
+        "bytes": 2126
+      },
+      {
+        "path": "artifacts/block-direction-focus-owned-build-20261008.log",
+        "sha256": "f94685929a9932a741a27317fddc150aa5a6b88f924a0b58d3d9250dc1489ec4",
+        "bytes": 14797
+      },
+      {
+        "path": "artifacts/block-direction-test-api-20261008.log",
+        "sha256": "7051de2b59c15a12550d78a58b1488158b4472b3d15d20e838cc37485920c320",
+        "bytes": 97
+      },
+      {
+        "path": "artifacts/block-direction-test-headless-20261008.log",
+        "sha256": "187ebc8d1d04418a6a3c1fe554e73f95a11239b3528a7f9a75487dd15d2bf7f2",
+        "bytes": 131
+      },
+      {
+        "path": "artifacts/block-direction-test-package-20261008.log",
+        "sha256": "c33689638963302d52c0082d00b07df22fe4371603a47df7f3c33aac46139bfa",
+        "bytes": 1262
+      },
+      {
+        "path": "artifacts/block-direction-typecheck-20261008.log",
+        "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+        "bytes": 529
+      },
+      {
+        "path": "artifacts/block-direction-final-copy-tsc-20261008.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "artifacts/block-direction-final-site-build-20261008.log",
+        "sha256": "a2e3a8645b3396c2c66df3e6f6941b4fe82fdb59a6ac1c5cdd5ac05a8c4d8d29",
+        "bytes": 14784
+      },
+      {
+        "path": "artifacts/block-direction-test-budget-20261008.log",
+        "sha256": "0047ad612893d7ddf0c44e6b90147f4faf4c6e2abbdede7743316f4d7dd1631a",
+        "bytes": 3702
+      },
+      {
+        "path": "artifacts/block-direction-budget-final-20261008.log",
+        "sha256": "24ed3784663dae3f30f7030b5eaff44d21b26d1a481cbd287773f4537587400f",
+        "bytes": 3217
+      },
+      {
+        "path": "artifacts/ci-b614858-verify-20261008.log",
+        "sha256": "69c47b6f39da9e4c8f30749214dcf42adbd19e16ffb3f801100d0a76c126b3c3",
+        "bytes": 211131
+      },
+      {
+        "path": "artifacts/ci-b614858-browser-20261008.log",
+        "sha256": "ea0a67f1df89529dd53c8c990e16db6599d3aebcab3801d7ff91ac431d780541",
+        "bytes": 295276
+      },
+      {
+        "path": "artifacts/ci-b614858-performance-20261008.log",
+        "sha256": "f2cb93b153768e4d9a9d2e68a38d433884844207cd85436eb57858ab501ffd0e",
+        "bytes": 39697
+      },
+      {
+        "path": "artifacts/node-move-direction-red-20261008.log",
+        "sha256": "2b4e64f162762c6a669001a0d9b59ea66b4672119f7345751787d0abfb9c1aa4",
+        "bytes": 6494
+      },
+      {
+        "path": "artifacts/block-direction-view-red-20261008.log",
+        "sha256": "0e8abb5353029bb9c6ed46242b0abfa3b7071d14b9b56b115c429126445249b8",
+        "bytes": 1514
+      },
+      {
+        "path": "artifacts/whole-block-keyboard-red-20261008.log",
+        "sha256": "bb683920c71840b0a112c4c9b3d2b8afb18561b518d5084d3d97b65de1bfa8e1",
+        "bytes": 3041
+      },
+      {
+        "path": "artifacts/whole-block-focused-hover-red-20261008.log",
+        "sha256": "fc08346138c617c60e0b0fef38eb1b2bc630f48a5b929f6ba107f82d887a0845",
+        "bytes": 2506
+      },
+      {
+        "path": "artifacts/block-direction-first-browser-20261008.log",
+        "sha256": "2e00c072003cd2942162e5027acd020b974f19a4bb92dad240ff62b6a75f0d7c",
+        "bytes": 9438
+      },
+      {
+        "path": "artifacts/block-direction-final-browser-20261008.log",
+        "sha256": "b000cf53871170824ba36da824496a66428f9b0b1f6406e75b6ae91ac7235325",
+        "bytes": 14048
+      },
+      {
+        "path": "artifacts/block-direction-whole-block-browser-20261008.log",
+        "sha256": "9a2b131b537dd03983b25364b986ef900a5ec6924ab6decc9f0aa25acbdac23a",
+        "bytes": 1834
+      },
+      {
+        "path": "artifacts/block-direction-container-retained-browser-20261008.log",
+        "sha256": "d5740506fe2f24718bc30f03b04b0511a980e6f25acbb4507b424f64476c0471",
+        "bytes": 6231
+      }
+    ]
+  },
+  "diagnosticEvidence": [
+    {
+      "log": "artifacts/node-move-direction-red-20261008.log",
+      "result": "7 failures, 3 passes before fixed model retention"
+    },
+    {
+      "log": "artifacts/block-direction-view-red-20261008.log",
+      "result": "1 failure, 8 passes before editor-owned overlay direction"
+    },
+    {
+      "log": "artifacts/whole-block-keyboard-red-20261008.log",
+      "result": "3 failures, 9 passes before whole-container handle tracking"
+    },
+    {
+      "log": "artifacts/whole-block-focused-hover-red-20261008.log",
+      "result": "3 failures, 9 passes before focus-owned hover"
+    },
+    {
+      "log": "artifacts/block-direction-first-browser-20261008.log",
+      "result": "Cancelled after known reader schema-instance errors; not a completed matrix. Reader now crosses the schema boundary using JSON."
+    },
+    {
+      "log": "artifacts/block-direction-final-browser-20261008.log",
+      "result": "6 passed, 3 failed; guessed container-edge targeting selected inner leaves. A real stable-ID whole-block chooser was added, not an assertion bypass."
+    },
+    {
+      "log": "artifacts/block-direction-whole-block-browser-20261008.log",
+      "result": "Cancelled after whole-container post-move handles retargeted an inner leaf; not a completed matrix."
+    },
+    {
+      "log": "artifacts/block-direction-container-retained-browser-20261008.log",
+      "result": "8 passed, 1 failed; WebKit hover stole a focused whole-container handle."
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "2d26776b31144de1a00cabbe4328cef8cc08656e41bad3e3900fd613b5bfe7ed"
+    },
+    {
+      "path": "src/view/block-handles.ts",
+      "sha256": "9dfc0e6852faebc511aec3f27bc0f66ee96be73e8c193a855a636e2d632133bb"
+    },
+    {
+      "path": "tests/node-move-direction.test.ts",
+      "sha256": "cfa9ca2ec25e3aee832638e61c22303f2625fca302b08745f403154ff5b28ee8"
+    },
+    {
+      "path": "tests/block-reordering.test.ts",
+      "sha256": "8aa3542efc83cd85080eddc335156bafaab4a2ba5525a31f81c1416d3cd5f20d"
+    },
+    {
+      "path": "tests/browser/block-direction-reorder-journey.ts",
+      "sha256": "4172e4d6a5226948d22f2f1bf355d855ca9916f87fa41a5a323ccb4ea18d719f"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "914da8b4fcd938a894be44798c4f25eec84c4918279e6706124b21da08e1882e"
+    },
+    {
+      "path": "examples/react-app/src/block-reordering-main.tsx",
+      "sha256": "82bdcd54777c7ecfa09a2587f30e546b91c62ce3fc1d8c525688d432c6e0ec57"
+    },
+    {
+      "path": "examples/react-app/src/block-reordering.css",
+      "sha256": "3a2c5bf257e5b5f985733361c4a008b52c23e346ccf8221117cfc617fcdd0ffd"
+    },
+    {
+      "path": "examples/react-app/block-reordering.html",
+      "sha256": "f0feb051b4a1fe69759ea0cc8e97e5245fc54a2dab2de215819e222ff8ff6035"
+    },
+    {
+      "path": "examples/react-app/src/DemoGallery.tsx",
+      "sha256": "d789e114716801a0fd9325a0c70b2ad9d26ecd472fb05e4b1a5e4836a2e0fd1b"
+    },
+    {
+      "path": "examples/react-app/src/Developers.tsx",
+      "sha256": "05f5bfc6f7d1989627857087f31d9ea3ee364f21ce60e1d395649a17f0edbecb"
+    },
+    {
+      "path": "scripts/fixtures/text-direction-check.mjs",
+      "sha256": "8cd9a2b59c18fa9e0978a466c949bbe7aa2cc72bcc1677e42452e4c1b3b33d1a"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "5c1cf9dfa25ae124f8fa8241be068bb658fd551ce84562d1788e98282b12d43f"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "3453df3e77301cd3a22f86ffa3204aab129ca187e0899529e4efe607763d90da"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "29a0c9f1496ad8d4a73ca989555a7240adb273346de8a5a3797d69908728711d"
+    }
+  ],
+  "remaining": [
+    "Complete current-source Linux CI, including the newly registered structural journeys.",
+    "Shared automatic direction scopes removed or split by transforms; copying auto onto children or freezing a guessed first-strong direction is not equivalent.",
+    "Host CSS inheritance and direction-incapable code/custom atomic blocks.",
+    "Broader bidi, inline isolation and reorder interactions.",
+    "Physical mobile input, assistive technology and translated locale packages.",
+    "HTML exports retain structured content/direction and embedded diagram, but do not include the lab's custom note theme or editor-only surface direction. They are not pixel-identical.",
+    "Read-only reader behavior is not backend access control.",
+    "Native Word layout certification and full CommonMark conformance are not established by this checkpoint."
+  ],
+  "programme": {
+    "ledgerRows": 67,
+    "delivered": 58,
+    "partial": 7,
+    "hostBoundary": 2,
+    "PROD04": "Partial",
+    "npmVersion": "0.4.0-beta.2",
+    "npmPublishedThisCheckpoint": false,
+    "renamed": false,
+    "goalComplete": false
+  },
+  "retainedArtifacts": "Source/test hashes, small raw logs and observation JSONs are tracked. Large PNGs, videos, traces and generated site builds remain local ignored artifacts; CI separately retains its own capture artifacts."
+}

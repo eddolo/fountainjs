@@ -1,0 +1,167 @@
+[WebServer] (node:15544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:22072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (5.3s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (4.1s)
+  x  3 [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (8.7s)
+(node:4184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (9.1s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (7.0s)
+  x  6 [firefox] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (22.8s)
+(node:3744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (10.6s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (8.5s)
+  x  9 [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (11.1s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-fountain-block-controls]')
+    Expected: "5"
+    Received: "5.0.0"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for locator('[data-fountain-block-controls]')
+        14 × locator resolved to <div dir="rtl" role="toolbar" contenteditable="false" class="fountain-block-controls" data-fountain-block-controls="" data-fountain-block-path="5.0.0" aria-label="Paragraph block controls">…</div>
+           - unexpected value "5.0.0"
+
+
+       at block-direction-reorder-journey.ts:114
+
+      112 |     await block.hover({ position: { x: 2, y: 2 } });
+      113 |     const controls = page.locator('[data-fountain-block-controls]');
+    > 114 |     await expect(controls).toHaveAttribute('data-fountain-block-path', String(index));
+          |                            ^
+      115 |     const handle = controls.locator('[data-fountain-block-action="drag"]');
+      116 |     await handle.focus();
+      117 |     await expect(block).toHaveAttribute('data-fountain-block-handle-active', 'true');
+        at blockDirectionKeyboardJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\block-direction-reorder-journey.ts:114:28)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:49:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-fountain-block-controls]')
+    Expected: "5"
+    Received: "5.0.0"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for locator('[data-fountain-block-controls]')
+        14 × locator resolved to <div dir="rtl" role="toolbar" contenteditable="false" class="fountain-block-controls" data-fountain-block-controls="" data-fountain-block-path="5.0.0" aria-label="Paragraph block controls">…</div>
+           - unexpected value "5.0.0"
+
+
+       at block-direction-reorder-journey.ts:114
+
+      112 |     await block.hover({ position: { x: 2, y: 2 } });
+      113 |     const controls = page.locator('[data-fountain-block-controls]');
+    > 114 |     await expect(controls).toHaveAttribute('data-fountain-block-path', String(index));
+          |                            ^
+      115 |     const handle = controls.locator('[data-fountain-block-action="drag"]');
+      116 |     await handle.focus();
+      117 |     await expect(block).toHaveAttribute('data-fountain-block-handle-active', 'true');
+        at blockDirectionKeyboardJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\block-direction-reorder-journey.ts:114:28)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:49:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('[data-fountain-block-controls]')
+    Expected: "5"
+    Received: "5.0.0"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for locator('[data-fountain-block-controls]')
+        13 × locator resolved to <div dir="rtl" role="toolbar" contenteditable="false" class="fountain-block-controls" data-fountain-block-controls="" data-fountain-block-path="5.0.0" aria-label="Paragraph block controls">…</div>
+           - unexpected value "5.0.0"
+
+
+       at block-direction-reorder-journey.ts:114
+
+      112 |     await block.hover({ position: { x: 2, y: 2 } });
+      113 |     const controls = page.locator('[data-fountain-block-controls]');
+    > 114 |     await expect(controls).toHaveAttribute('data-fountain-block-path', String(index));
+          |                            ^
+      115 |     const handle = controls.locator('[data-fountain-block-action="drag"]');
+      116 |     await handle.focus();
+      117 |     await expect(block).toHaveAttribute('data-fountain-block-handle-active', 'true');
+        at blockDirectionKeyboardJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\block-direction-reorder-journey.ts:114:28)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:49:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\block-direction-final-recorded-20261008\editor-reorders-real-runbo-3cb42-eyboard-structural-feedback-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+    [firefox] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+    [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback 
+  6 passed (1.7m)

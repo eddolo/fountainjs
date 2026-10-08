@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
+import { blockDirectionKeyboardJourney, blockDirectionPointerJourney } from './block-direction-reorder-journey';
 import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
 import { tableColumnSideCases, tableColumnSideJourney } from './table-column-side-journey';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
@@ -38,6 +39,15 @@ import { autoContainerDirectionJourney } from './auto-container-direction-journe
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
 import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
+
+for (const direction of ['ltr', 'rtl'] as const) {
+  test(`reorders real runbook blocks with native pointer feedback in ${direction}`, async ({ page }, info) => {
+    await blockDirectionPointerJourney(page, info, direction);
+  });
+}
+test('reorders real runbook blocks with keyboard structural feedback', async ({ page }, info) => {
+  await blockDirectionKeyboardJourney(page, info);
+});
 
 for (const sample of listDirectionCases) {
   test(`preserves list direction through real transforms and downloaded HTML: ${sample}`, async ({ page }, info) => {

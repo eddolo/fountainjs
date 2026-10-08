@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { describe, expect, it, vi } from 'vitest';
+import { BlockHandleManager } from '../src/view/block-handles';
 import {
   CoreSchemaSpec,
   EditorView,
@@ -25,6 +26,49 @@ const listItem = (text: string) => ({
 });
 
 describe('path-based node moves', () => {
+  it.each([
+    { type: 'blockquote', content: [paragraph('Quote one'), paragraph('Quote two')] },
+    { type: 'bullet_list', content: [listItem('One'), listItem('Two')] },
+    { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', content: [paragraph('Cell')] }] }] },
+  ])('keeps the whole $type grabbed across repeated keyboard moves', block => {
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [historyPlugin], content: {
+      type: 'doc', content: [paragraph('Before'), block, paragraph('After')],
+    } });
+    editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [1])));
+    const original = editor.getJSON();
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor, { blockHandles: true });
+    const controls = mount.querySelector<HTMLElement>('[data-fountain-block-controls]')!;
+    const handle = controls.querySelector<HTMLButtonElement>('[data-fountain-block-action="drag"]')!;
+    const key = (value: string) => handle.dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
+    try {
+      handle.focus();
+      // Native scrolling can move an inner paragraph under a stationary
+      // pointer while the handle owns keyboard focus (notably in WebKit).
+      view.dom.querySelector('[data-fountain-path="1.0"]')!.dispatchEvent(new MouseEvent('pointermove', { bubbles: true }));
+      expect(controls.dataset.fountainBlockPath).toBe('1');
+      key(' ');
+      view.dom.querySelector('[data-fountain-path="0"]')!.dispatchEvent(new MouseEvent('pointermove', { bubbles: true }));
+      expect(controls.dataset.fountainBlockPath).toBe('1');
+      key('ArrowDown');
+      expect(editor.state.doc.child(2).type.name).toBe(block.type);
+      expect(controls.dataset.fountainBlockPath).toBe('2');
+      expect(view.dom.querySelector('[data-fountain-path="2"]')?.getAttribute('data-fountain-block-grabbed')).toBe('true');
+      expect(view.dom.querySelector('[data-fountain-path="2.0.0"]')?.hasAttribute('data-fountain-block-grabbed')).not.toBe(true);
+      key('ArrowUp');
+      expect(editor.getJSON()).toEqual(original);
+      expect(controls.dataset.fountainBlockPath).toBe('1');
+      key('Escape'); expect(handle.getAttribute('aria-pressed')).toBe('false');
+      controls.querySelector<HTMLButtonElement>('[data-fountain-block-action="after"]')!.click();
+      expect(controls.dataset.fountainBlockPath).toBe('2');
+      controls.querySelector<HTMLButtonElement>('[data-fountain-block-action="before"]')!.click();
+      expect(controls.dataset.fountainBlockPath).toBe('1');
+      expect(editor.getJSON()).toEqual(original);
+      expect(undo(editor)).toBe(true);
+      expect(editor.state.doc.child(2).type.name).toBe(block.type);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it('reorders nested list items atomically, restores selection, and undoes in one step', () => {
     const update = vi.fn();
     const editor = createEditor({
@@ -122,6 +166,31 @@ describe('path-based node moves', () => {
 });
 
 describe('framework-neutral block handles', () => {
+  it('takes handle and drop-marker direction from the editor, including a host CSS change', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [paragraph('A'), paragraph('B')] } });
+    const mount = document.createElement('div');
+    mount.style.direction = 'ltr';
+    document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    view.dom.style.direction = 'rtl';
+    const manager = new BlockHandleManager(mount, view.dom, editor, {});
+    try {
+      manager.refresh(editor.state.doc, editor.state.selection);
+      const target = view.dom.querySelector<HTMLElement>('[data-fountain-path="1"]')!;
+      const over = new MouseEvent('dragover', { bubbles: true, cancelable: true, clientY: 1 });
+      Object.defineProperty(over, 'target', { value: target });
+      expect(manager.showDrop(over as DragEvent, [0])).toBe(true);
+      const marker = mount.querySelector<HTMLElement>('[data-fountain-block-drop-indicator]')!;
+      const controls = mount.querySelector<HTMLElement>('[data-fountain-block-controls]')!;
+      expect(marker.dir).toBe('rtl');
+      expect(controls.dir).toBe('rtl');
+      view.dom.style.direction = 'ltr';
+      window.dispatchEvent(new Event('resize'));
+      expect(marker.dir).toBe('ltr');
+      expect(controls.dir).toBe('ltr');
+    } finally { manager.destroy(); view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it('renders external accessible controls and moves a nested block with buttons', () => {
     const editor = createEditor({
       schema: CoreSchemaSpec,

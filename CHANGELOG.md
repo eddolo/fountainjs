@@ -7,6 +7,23 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain known fixed model direction during generic cross-container node moves,
+  preserving source, explicit child alignment/direction and identity/history.
+  Keep keyboard and before/after handles on whole containers instead of their
+  mapped inner text leaves; prevent stationary hover from stealing focused or
+  grabbed controls. Give controls/drop-rule beads the editor's computed direction,
+  not the outer mount's. A dedicated bilingual reordering lab is linked from the
+  gallery and guide, with a whole-block chooser, reader preview and JSON/HTML
+  download. 52 focused tests and nine recorded Windows desktop journeys pass;
+  all 57 capture results are visually reviewed. Package/headless/API/types and website build
+  pass. HTML host-theme/view-setting differences are explicit. Aggregate ESM
+  code grows about 0.4 KiB; add 0.25 KiB ESM capacity only, retaining the prior
+  failure. No CJS/entry/CSS/runtime/heap threshold changes. Current-source Linux
+  verification remains required; shared auto/CSS/mobile/broader bidi stay open.
+- The preceding `b614858` list/Conversion Lab checkpoint passes complete Linux
+  CI: 2,753 tests / 209 files, 721 browser passes / 16 skips, 36 structural
+  preflight passes, performance and Lean. Pages succeeds. Retain raw logs;
+  this baseline does not certify later reordering source.
 - Preserve known fixed inherited LTR/RTL across list indent/lift boundaries,
   including unwrapping inside quotes/table cells and reparented nested tails.
   Keep explicit child directions/physical alignment and same-type item identity;

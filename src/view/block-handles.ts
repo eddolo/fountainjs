@@ -205,6 +205,9 @@ export class BlockHandleManager {
   }
 
   syncSelection(selection: AnySelection): void {
+    // A move maps the text caret into the container's first leaf. While its
+    // handle is grabbed, that caret must not retarget the grab to an inner block.
+    if (this.keyboardGrabbed && (this.keyboardFocusRestorePending || this.controls.contains(document.activeElement))) return;
     const key = this.candidateKeyForSelection(selection);
     if (key) this.activate(key);
   }
@@ -413,6 +416,9 @@ export class BlockHandleManager {
     });
     if (!moved) this.keyboardFocusRestorePending = false;
     if (moved) {
+      // moveNode intentionally selects a text leaf for ordinary editing. Keep
+      // these container controls on the source's final path instead of that leaf.
+      this.activate([...candidate.path.slice(0, -1), index + direction].join('.'), true);
       if (this.keyboardFocusFrame !== undefined) cancelAnimationFrame(this.keyboardFocusFrame);
       this.keyboardFocusFrame = requestAnimationFrame(() => {
         this.keyboardFocusFrame = undefined;
@@ -430,6 +436,7 @@ export class BlockHandleManager {
   private positionDropIndicator(): void {
     if (!this.dropElement || !this.dropPosition || !this.dropElement.isConnected) return;
     const target = this.dropElement.getBoundingClientRect();
+    this.dropIndicator.dir = getComputedStyle(this.dom).direction;
     const container = this.mount.getBoundingClientRect();
     const top = (this.dropPosition === 'before' ? target.top : target.bottom)
       - container.top + this.mount.scrollTop;
@@ -448,7 +455,9 @@ export class BlockHandleManager {
     const target = candidate.element.getBoundingClientRect();
     const editor = this.dom.getBoundingClientRect();
     const container = this.mount.getBoundingClientRect();
-    const rtl = getComputedStyle(this.dom).direction === 'rtl';
+    const direction = getComputedStyle(this.dom).direction;
+    this.controls.dir = direction;
+    const rtl = direction === 'rtl';
     const inlineOffset = rtl
       ? container.right - editor.right + this.mount.scrollLeft + 7
       : editor.left - container.left + this.mount.scrollLeft + 7;
@@ -496,6 +505,9 @@ export class BlockHandleManager {
   };
 
   private onPointerMove = (event: PointerEvent): void => {
+    // Hover must not steal a focused/grabbed whole-container handle. A browser
+    // scroll can move an inner leaf under a stationary pointer during focus.
+    if (this.draggedKey || this.keyboardGrabbed || this.controls.contains(document.activeElement)) return;
     const candidate = this.candidateFromTarget(event.target);
     if (candidate) this.activate(candidate.path.join('.'));
   };
@@ -519,12 +531,7 @@ export class BlockHandleManager {
     const action = control.dataset.fountainBlockAction;
     if (action === 'drag') return;
     event.preventDefault();
-    const index = candidate.path.at(-1) as number;
-    const moved = moveNode(this.editor, {
-      fromPath: candidate.path,
-      toParentPath: candidate.path.slice(0, -1),
-      toIndex: action === 'before' ? index - 1 : index + 1,
-    });
+    const moved = this.moveActive(action === 'before' ? -1 : 1);
     if (moved) queueMicrotask(() => (action === 'before' ? this.beforeButton : this.afterButton).focus());
   };
 

@@ -511,7 +511,11 @@ const limits = Object.freeze({
   // Schema-aware fixed list-direction retention and atomic transform rejection
   // add ~1.4 KiB ESM. Measured 1590.0 KiB; preserve the failed prior-cap log.
   // Only measured code capacity grows; entry/CSS/runtime performance caps stay.
-  'all ESM runtime code': 1590.25 * kibibyte,
+  // Fixed-direction generic moves and focus-owned whole-container controls
+  // reuse the existing paths, adding ~0.4 KiB ESM / ~0.3 KiB CJS. Measured
+  // 1590.4 / 1323.0 KiB: CJS still fits. Preserve the prior ESM-cap failure and
+  // add only 0.25 KiB ESM feature capacity; no entry/CSS/runtime/heap cap change.
+  'all ESM runtime code': 1590.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;

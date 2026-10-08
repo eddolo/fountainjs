@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/block-reordering.test.ts (9 tests | 1 failed) 948ms
+   ❯ framework-neutral block handles (5)
+     × takes handle and drop-marker direction from the editor, including a host CSS change 356ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/block-reordering.test.ts > framework-neutral block handles > takes handle and drop-marker direction from the editor, including a host CSS change
+AssertionError: expected '' to be 'rtl' // Object.is equality
+
+- Expected
++ Received
+
+- rtl
+
+ ❯ tests/block-reordering.test.ts:142:26
+    140|       const marker = mount.querySelector<HTMLElement>('[data-fountain-…
+    141|       const controls = mount.querySelector<HTMLElement>('[data-fountai…
+    142|       expect(marker.dir).toBe('rtl');
+       |                          ^
+    143|       expect(controls.dir).toBe('rtl');
+    144|       view.dom.style.direction = 'ltr';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  00:47:11
+   Duration  9.23s (environment 35%, transform 33%, import 22%, tests 11%)
+
+  Transform  transforming modules took 2.80s · 33% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

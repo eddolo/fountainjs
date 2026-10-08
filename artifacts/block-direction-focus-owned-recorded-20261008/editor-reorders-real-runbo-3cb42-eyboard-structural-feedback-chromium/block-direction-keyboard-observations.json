@@ -1,0 +1,44 @@
+{
+  "observations": [
+    {
+      "index": 1,
+      "nodeType": "paragraph",
+      "keyboardMoveAndUndo": true
+    },
+    {
+      "index": 4,
+      "nodeType": "heading",
+      "keyboardMoveAndUndo": true
+    },
+    {
+      "index": 5,
+      "nodeType": "bullet_list",
+      "keyboardMoveAndUndo": true
+    },
+    {
+      "index": 6,
+      "nodeType": "table",
+      "keyboardMoveAndUndo": true
+    },
+    {
+      "index": 7,
+      "nodeType": "image_super",
+      "keyboardMoveAndUndo": true
+    },
+    {
+      "index": 8,
+      "nodeType": "runbook_note",
+      "keyboardMoveAndUndo": true
+    },
+    {
+      "index": 9,
+      "nodeType": "blockquote",
+      "keyboardMoveAndUndo": true
+    }
+  ],
+  "wrap": {
+    "height": 127.96875,
+    "lineHeight": 25.6
+  },
+  "nativeMobileCertification": false
+}

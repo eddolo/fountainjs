@@ -1,0 +1,20 @@
+[WebServer] (node:6588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:8932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (5.2s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (4.8s)
+  x  3 [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (9.3s)
+(node:5756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (9.4s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (6.5s)
+  x  6 [firefox] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (9.6s)
+(node:20176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (10.3s)

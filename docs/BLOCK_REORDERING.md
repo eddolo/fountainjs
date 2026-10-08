@@ -46,6 +46,21 @@ does not serialize through HTML and does not flatten custom node attributes.
 Use it for disabled controls and drop previews. Both functions return `false`
 for a read-only editor.
 
+Unreleased fixed-direction retention: when moving across a model-authored
+LTR/RTL inheritance boundary, the moved node retains the known fixed direction
+if its destination differs. An explicit child direction remains independent;
+same-context moves do not freeze inherited attributes. Direction-capable nodes
+materialize that direction, and implicit default physical-left alignment becomes
+logical `start`; explicitly authored alignment is not rewritten. For containers
+without a direction attribute, eligible descendants are visited without adding
+unsupported attributes. Schema validation still decides whether the complete
+move is available, and host transaction filters can refuse the actual dispatch.
+
+This is not general CSS inheritance or shared-automatic-scope preservation.
+Moving a whole `dir="auto"` container retains its scope; taking a child out of
+one can change mixed-text interpretation. Copying `auto` onto each child or
+guessing the first strong character would not preserve that shared scope.
+
 ## Supplied DOM controls
 
 Enable the optional controls on `EditorView`:
@@ -78,6 +93,15 @@ keyboard and pointer users receive the same structural feedback. This applies
 to wrapped multi-line paragraphs, headings, whole lists and tables, media,
 widgets, and custom block NodeViews.
 
+Unreleased: repeated keyboard moves retain the whole container as the active
+handle target even though the editing caret maps into its first text leaf.
+The explicit before/after buttons use the same active-target tracking. Hover
+cannot steal a focused/grabbed handle: scrolling during focus can move an inner
+paragraph under a stationary pointer, particularly in WebKit. Explicit editor
+pointer selection still chooses a new block. The lab's whole-block selector
+uses stable node IDs and `selectNodeById`; it provides an accessible alternative
+to locating a container's border when its descendants are independently movable.
+
 Unreleased: the supplied active/handle tint uses an inset shadow rather than
 overwriting the node background, so dark code and source-owned custom colours
 remain legible. The stronger ring and separate drop rule remain distinct.
@@ -87,6 +111,9 @@ While dragging, only schema-valid targets show a visible before/after rule. The
 rule is a separate overlay from both the target-block highlight and the grabbed
 source state; it answers where the block will land rather than which block is
 being moved.
+Controls and the rule's inline-start bead use the editable surface's computed
+direction, not that of the surrounding mount. A host can keep its page LTR while
+making the editor RTL. Repositioning refreshes both directions when layout changes.
 The input layer climbs from the deepest hovered block to an eligible ancestor,
 so dragging a list item over its own paragraph cannot create an invalid tree.
 A successful drop is one normal transaction and one undo step. Drag state,
@@ -116,6 +143,17 @@ drag state, and drop indicators.
 
 Try the same public option in the [homepage editor](https://eddolo.github.io/fountainjs/#playground),
 then use this guide as the API counterpart to that live behavior.
+The [block-reordering lab](https://eddolo.github.io/fountainjs/block-reordering.html)
+provides a bilingual incident runbook with wrapped paragraphs, headings, a list,
+table, embedded diagram and custom editable note. It exposes surface-direction
+selection, undo/redo, read-only preview and JSON/HTML download, with automatic
+scope limits labelled. The [example source](../examples/react-app/src/block-reordering-main.tsx)
+uses existing `EditorView` controls and a registered custom node, not a second
+reordering engine.
+JSON retains the example's data, IDs and embedded raster. Its supplied HTML
+download retains structure/direction declarations and media, but does not bundle
+the host-specific note theme or the editor-only surface direction. It is not a
+pixel-identical export or an access-control product.
 
 ## Candidate and label policy
 

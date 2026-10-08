@@ -1,0 +1,110 @@
+[WebServer] (node:9220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:19992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 00:55:59 [vite] (client) [Unhandled error] Error: Foreign node at root.
+[WebServer]  > t ../../src/core/schema/schema.ts:134:50
+[WebServer]     132 |        // invalid, so transactions only need to revisit their newly-created path.
+[WebServer]     133 |        if (this.validatedNodes.has(current)) return true;
+[WebServer]     134 |        if (current.type.schema !== this) throw new Error(`Foreign node at ${path.join('.') || 'root'}.`);
+[WebServer]         |                                                    ^
+[WebServer]     135 |        computeAttrs(current.type.spec.attrs, current.attrs);
+[WebServer]     136 |        if (current.type.spec.validate && !current.type.spec.validate(current)) {
+[WebServer]  > O.validate ../../src/core/schema/schema.ts:174:4
+[WebServer]  > new e ../../src/core/state.ts:75:16
+[WebServer]  > e.create ../../src/core/state.ts:95:11
+[WebServer]  > H ../../src/core/editor.ts:159:28
+[WebServer]  > src/block-reordering-main.tsx:54:19
+[WebServer]  > Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25989:19
+[WebServer]  > runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > commitHookEffectListMount ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13249:28
+[WebServer]  > commitHookPassiveMountEffects ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13336:10
+[WebServer] 
+[WebServer] 00:55:59 [vite] (client) [console.warn] An error occurred in the <Reader> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+[WebServer] 00:55:59 [vite] (client) [Unhandled error] Error: Foreign node at root.
+[WebServer]  > t ../../src/core/schema/schema.ts:134:50
+[WebServer]     132 |        // invalid, so transactions only need to revisit their newly-created path.
+[WebServer]     133 |        if (this.validatedNodes.has(current)) return true;
+[WebServer]     134 |        if (current.type.schema !== this) throw new Error(`Foreign node at ${path.join('.') || 'root'}.`);
+[WebServer]         |                                                    ^
+[WebServer]     135 |        computeAttrs(current.type.spec.attrs, current.attrs);
+[WebServer]     136 |        if (current.type.spec.validate && !current.type.spec.validate(current)) {
+[WebServer]  > O.validate ../../src/core/schema/schema.ts:174:4
+[WebServer]  > new e ../../src/core/state.ts:75:16
+[WebServer]  > e.create ../../src/core/state.ts:95:11
+[WebServer]  > H ../../src/core/editor.ts:159:28
+[WebServer]  > src/block-reordering-main.tsx:54:19
+[WebServer]  > Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25989:19
+[WebServer]  > runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > commitHookEffectListMount ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13249:28
+[WebServer]  > commitHookPassiveMountEffects ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13336:10
+[WebServer] 
+[WebServer] 00:55:59 [vite] (client) [console.warn] An error occurred in the <Reader> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  x  1 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (9.9s)
+(node:27808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 00:56:11 [vite] (client) [Unhandled error] Error: Foreign node at root.
+[WebServer]  > t ../../src/core/schema/schema.ts:134:50
+[WebServer]     132 |        // invalid, so transactions only need to revisit their newly-created path.
+[WebServer]     133 |        if (this.validatedNodes.has(current)) return true;
+[WebServer]     134 |        if (current.type.schema !== this) throw new Error(`Foreign node at ${path.join('.') || 'root'}.`);
+[WebServer]         |                                                    ^
+[WebServer]     135 |        computeAttrs(current.type.spec.attrs, current.attrs);
+[WebServer]     136 |        if (current.type.spec.validate && !current.type.spec.validate(current)) {
+[WebServer]  > O.validate ../../src/core/schema/schema.ts:174:4
+[WebServer]  > new e ../../src/core/state.ts:75:16
+[WebServer]  > e.create ../../src/core/state.ts:95:11
+[WebServer]  > H ../../src/core/editor.ts:159:28
+[WebServer]  > src/block-reordering-main.tsx:54:19
+[WebServer]  > Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25989:19
+[WebServer]  > runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > commitHookEffectListMount ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13249:28
+[WebServer]  > commitHookPassiveMountEffects ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13336:10
+[WebServer] 
+[WebServer] 00:56:11 [vite] (client) [console.warn] An error occurred in the <Reader> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+[WebServer] 00:56:11 [vite] (client) [Unhandled error] Error: Foreign node at root.
+[WebServer]  > t ../../src/core/schema/schema.ts:134:50
+[WebServer]     132 |        // invalid, so transactions only need to revisit their newly-created path.
+[WebServer]     133 |        if (this.validatedNodes.has(current)) return true;
+[WebServer]     134 |        if (current.type.schema !== this) throw new Error(`Foreign node at ${path.join('.') || 'root'}.`);
+[WebServer]         |                                                    ^
+[WebServer]     135 |        computeAttrs(current.type.spec.attrs, current.attrs);
+[WebServer]     136 |        if (current.type.spec.validate && !current.type.spec.validate(current)) {
+[WebServer]  > O.validate ../../src/core/schema/schema.ts:174:4
+[WebServer]  > new e ../../src/core/state.ts:75:16
+[WebServer]  > e.create ../../src/core/state.ts:95:11
+[WebServer]  > H ../../src/core/editor.ts:159:28
+[WebServer]  > src/block-reordering-main.tsx:54:19
+[WebServer]  > Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25989:19
+[WebServer]  > runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+[WebServer]  > commitHookEffectListMount ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13249:28
+[WebServer]  > commitHookPassiveMountEffects ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:13336:10
+[WebServer] 
+[WebServer] 00:56:11 [vite] (client) [console.warn] An error occurred in the <Reader> component.
+[WebServer] 
+[WebServer] Consider adding an error boundary to your tree to customize error handling behavior.
+[WebServer] Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+[WebServer] 
+  x  2 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (11.1s)
+(node:23856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (10.3s)
+(node:26436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

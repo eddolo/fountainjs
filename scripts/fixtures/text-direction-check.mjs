@@ -62,4 +62,26 @@ export function checkTextDirection(api, root, serverHTML, docx) {
     assert.equal(api.redo(listEditor), true);
     assert.equal(listEditor.state.doc.child(1).attrs.dir, 'rtl');
   } finally { listEditor.destroy(); }
+  const moveEditor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {
+    type: 'doc', content: [
+      { type: 'blockquote', attrs: { dir: 'rtl' }, content: ['Keep', 'Move'].map(text => ({ type: 'paragraph', content: [{ type: 'text', text }] })) },
+      { type: 'blockquote', attrs: { dir: 'ltr' }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Target' }] }] },
+    ],
+  } });
+  try {
+    const original = moveEditor.getJSON();
+    const move = { fromPath: [0, 1], toParentPath: [1], toIndex: 0 };
+    assert.equal(api.canMoveNode(moveEditor, move), true);
+    assert.equal(api.moveNode(moveEditor, move), true);
+    const moved = moveEditor.state.doc.child(1).child(0);
+    assert.equal(moved.textContent, 'Move');
+    assert.equal(moved.attrs.dir, 'rtl');
+    assert.equal(moved.attrs.align, 'start');
+    const html = api.HTMLExporter.export(moveEditor.state.doc, { document: false });
+    assert.deepEqual(serverHTML.ServerHTMLImporter.parse(html, moveEditor.state.schema).toJSON(), moveEditor.getJSON());
+    assert.equal(api.undo(moveEditor), true);
+    assert.deepEqual(moveEditor.getJSON(), original);
+    assert.equal(api.redo(moveEditor), true);
+    assert.equal(moveEditor.state.doc.child(1).child(0).attrs.dir, 'rtl');
+  } finally { moveEditor.destroy(); }
 }

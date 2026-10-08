@@ -1,0 +1,24 @@
+[WebServer] (node:17288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:11292) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (12.3s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (11.4s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (21.3s)
+(node:27076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (20.6s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (14.2s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (16.9s)
+(node:10752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in ltr (18.0s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:44:3 › reorders real runbook blocks with native pointer feedback in rtl (45.1s)
+  ok 9 [webkit] › tests\browser\editor.spec.ts:48:1 › reorders real runbook blocks with keyboard structural feedback (34.9s)
+
+  9 passed (3.7m)

@@ -45,6 +45,7 @@ function DemoGallery() {
       </section>
 
       <section className="boundary-section" id="boundaries">
+        <p><a href="./block-reordering.html">Block reordering lab →</a> — organize a bilingual runbook with whole-block hover/grab feedback, separate drop markers, keyboard/touch controls, undo, stable identities and a reader preview. Fixed-direction moves and shared automatic-scope limits are labelled explicitly.</p>
         <p><a href="./issue-editor.html">Issue editor workflow →</a> — an unofficial GitLab-style bug report with visual/Markdown switching, source-fidelity diagnostics, local image insertion, draft download/reopen, and a separate reader preview. No account or submission server is connected.</p>
         <p><a href="./math-renderer.html">Math renderer lab →</a> — edit typeset formulas, import a real paper’s table, and inspect equation failures and table-layout losses. This capability lab is separate from the ten environment demos.</p>
         <p><a href="./math-references.html">Equation references lab →</a> — edit and reorder the original labelled equations with locally bundled MathJax, save/reopen JSON files, inspect missing/duplicate references, and follow links across paged snapshots. Print or save a current snapshot as PDF; whole-paper layout, accessible PDF and native DOCX math remain separate audit work.</p>

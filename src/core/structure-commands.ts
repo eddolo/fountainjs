@@ -113,7 +113,8 @@ function listDirectionAt(doc: Node, path: readonly number[]): ListDirection {
   return undefined;
 }
 
-/** Retain a removed fixed inheritance boundary on the first capable descendant.
+/** Retain a changed fixed inheritance boundary on the first capable descendant
+ * for list transforms and generic node reparenting alike.
  * Explicit child directions (including auto) remain independently owned.
  * A shared automatic scope cannot be faithfully copied onto each child.
  */
@@ -313,14 +314,17 @@ function resolveNodeMove(editor: Editor, move: NodeMove): ResolvedNodeMove | nul
   if (toIndex > maximum) return null;
 
   try {
+    const retained = retainListDirection(node,
+      listDirectionAt(editor.state.doc, fromPath), listDirectionAt(editor.state.doc, toParentPath));
+    if (!retained) return null;
     const withoutSource = replaceNodeWithNodes(editor.state.doc, fromPath, []);
     const mappedParentPath = pathAfterRemoval(toParentPath, fromPath);
     const parentAfterRemoval = getNodeAtPath(withoutSource, mappedParentPath);
     const content = [...parentAfterRemoval.content];
-    content.splice(toIndex, 0, node);
+    content.splice(toIndex, 0, retained);
     const document = replaceNodeAtPath(withoutSource, mappedParentPath, parentAfterRemoval.copy(content));
     editor.state.schema.validate(document);
-    return { document, node, path: Object.freeze([...mappedParentPath, toIndex]) };
+    return { document, node: retained, path: Object.freeze([...mappedParentPath, toIndex]) };
   } catch { return null; }
 }
 

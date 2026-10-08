@@ -1,0 +1,54 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/block-reordering.test.ts (12 tests | 3 failed) 648ms
+   ❯ path-based node moves (7)
+     × keeps the whole blockquote grabbed across repeated keyboard moves 291ms
+     × keeps the whole bullet_list grabbed across repeated keyboard moves 59ms
+     × keeps the whole table grabbed across repeated keyboard moves 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/block-reordering.test.ts > path-based node moves > keeps the whole blockquote grabbed across repeated keyboard moves
+ FAIL  tests/block-reordering.test.ts > path-based node moves > keeps the whole bullet_list grabbed across repeated keyboard moves
+AssertionError: expected '1.0' to be '1' // Object.is equality
+
+Expected: "1"
+Received: "1.0"
+
+ ❯ tests/block-reordering.test.ts:49:50
+     47|       // pointer while the handle owns keyboard focus (notably in WebK…
+     48|       view.dom.querySelector('[data-fountain-path="1.0"]')!.dispatchEv…
+     49|       expect(controls.dataset.fountainBlockPath).toBe('1');
+       |                                                  ^
+     50|       key(' ');
+     51|       view.dom.querySelector('[data-fountain-path="0"]')!.dispatchEven…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/block-reordering.test.ts > path-based node moves > keeps the whole table grabbed across repeated keyboard moves
+AssertionError: expected '0' to be '1' // Object.is equality
+
+Expected: "1"
+Received: "0"
+
+ ❯ tests/block-reordering.test.ts:52:50
+     50|       key(' ');
+     51|       view.dom.querySelector('[data-fountain-path="0"]')!.dispatchEven…
+     52|       expect(controls.dataset.fountainBlockPath).toBe('1');
+       |                                                  ^
+     53|       key('ArrowDown');
+     54|       expect(editor.state.doc.child(2).type.name).toBe(block.type);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 9 passed (12)
+   Start at  01:07:29
+   Duration  8.67s (transform 39%, environment 29%, import 24%, tests 8%)
+
+  Transform  transforming modules took 3.18s · 39% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

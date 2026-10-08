@@ -1,7 +1,7 @@
 # FountainJS opportunity roadmap
 
-Current checkpoint (2026-10-08): `acfd54f` passes complete Linux CI: 2,734 units
-/ 208 files, 709 browser passes / 16 skips, types/package/headless/Markdown,
+Current checkpoint (2026-10-08): `b614858` passes complete Linux CI: 2,753 units
+/ 209 files, 721 browser passes / 16 skips, types/package/headless/Markdown,
 performance and Lean; Pages succeeds. The corrected source-only native editing
 reference is now verified in Linux, with its rendered result inspected against
 Fountain. Preserve the raw non-editable-widget failures as diagnostics.
@@ -21,12 +21,26 @@ independent child overrides and same-type item identity. Invalid schema and
 host-filter rejection are atomic. The Conversion Lab exposes list/quote and
 alignment author controls. 64 focused tests/build/package/headless/API/types and
 12 recorded Windows desktop journeys pass. All 36 editor/downloaded-reader result
-captures are visually checked; new-source complete Linux verification is next.
+captures are visually checked. This list source now passes its own complete
+Linux matrix, including 36 structural preflight journeys. Keep the 16 skips as
+skips, not additional evidence.
 Mixed-direction native list alignment is engine-specific,
 so use an independent per-engine reference rather than assuming RTL=right.
 
-Then continue shared-auto list scopes, direction-incapable code/custom blocks,
-host stylesheet semantics and RTL reordering, broader bidi,
+Current reordering work retains fixed model direction across generic moves,
+keeps whole-container handles through repeated keyboard/button moves, and
+prevents stationary hover from stealing focus/grab. Controls and marker beads
+follow editor direction independently of the mount. The dedicated bilingual
+runbook lab is linked from the gallery and developer guide; its whole-block
+chooser uses stable IDs. 52 focused tests, nine recorded desktop journeys and
+57 visually reviewed results pass, with package/headless/API/types and website
+build. Preserve reader/hover/whole-container failures and the narrow old ESM-cap
+failure; only 0.25 KiB ESM feature capacity is added. The new reordering source
+still needs complete Linux CI; the green list checkpoint cannot certify it.
+See `artifacts/block-direction-verification-20261008.json`.
+
+Then continue shared-auto scopes, direction-incapable code/custom blocks,
+host stylesheet semantics, broader bidi/reordering interactions,
 physical devices/assistive technology, locales and CommonMark classification.
 PROD-04 remains Partial; the ledger and npm version are not promoted by this
 subset. Keep the wider parity objective intact.

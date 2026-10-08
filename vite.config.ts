@@ -48,6 +48,7 @@ export default defineConfig({
         issueEditor: fileURLToPath(new URL('./examples/react-app/issue-editor.html', import.meta.url)),
         mathRenderer: fileURLToPath(new URL('./examples/react-app/math-renderer.html', import.meta.url)),
         mathReferences: fileURLToPath(new URL('./examples/react-app/math-references.html', import.meta.url)),
+        blockReordering: fileURLToPath(new URL('./examples/react-app/block-reordering.html', import.meta.url)),
         ...Object.fromEntries(demoSlugs.map((slug) => [
           `demo-${slug}`,
           fileURLToPath(new URL(`./examples/react-app/demos/${slug}.html`, import.meta.url)),

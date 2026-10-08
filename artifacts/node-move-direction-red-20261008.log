@@ -1,0 +1,157 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/node-move-direction.test.ts (10 tests | 7 failed) 61ms
+   ❯ platform-neutral direction at generic move boundaries (10)
+     × retains fixed rtl when moving into ltr 40ms
+     × retains fixed ltr when moving into rtl 8ms
+     × retains fixed rtl when moving into undefined 2ms
+     × retains explicit alignment {"align":"left","alignExplicit":true} independently of direction 2ms
+     × retains explicit alignment {"align":"center"} independently of direction 1ms
+     × retains explicit alignment {"align":"end"} independently of direction 1ms
+     × makes canMoveNode reject a boundary the paragraph schema cannot represent 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > retains fixed rtl when moving into ltr
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > retains fixed rtl when moving into undefined
+AssertionError: expected { align: 'left', …(2) } to match object { dir: 'rtl', align: 'start', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "align": "start",
+-   "dir": "rtl",
++   "align": "left",
+    "nodeId": "stable-paragraph",
+    "note": "keep source metadata",
+  }
+
+ ❯ tests/node-move-direction.test.ts:23:54
+     21|     expect(editor.getJSON()).toEqual(before);
+     22|     expect(moveNode(editor, move)).toBe(true);
+     23|     expect(editor.state.doc.child(1).child(1).attrs).toMatchObject({ d…
+       |                                                      ^
+     24|     expect(editor.state.selection.path).toEqual([1, 1, 0]);
+     25|     expect(editor.state.doc.attrs.title).toBe('Retained root metadata'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > retains fixed ltr when moving into rtl
+AssertionError: expected { align: 'left', …(2) } to match object { dir: 'ltr', align: 'start', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "align": "start",
+-   "dir": "ltr",
++   "align": "left",
+    "nodeId": "stable-paragraph",
+    "note": "keep source metadata",
+  }
+
+ ❯ tests/node-move-direction.test.ts:23:54
+     21|     expect(editor.getJSON()).toEqual(before);
+     22|     expect(moveNode(editor, move)).toBe(true);
+     23|     expect(editor.state.doc.child(1).child(1).attrs).toMatchObject({ d…
+       |                                                      ^
+     24|     expect(editor.state.selection.path).toEqual([1, 1, 0]);
+     25|     expect(editor.state.doc.attrs.title).toBe('Retained root metadata'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > retains explicit alignment {"align":"left","alignExplicit":true} independently of direction
+AssertionError: expected { align: 'left', alignExplicit: true } to match object { align: 'left', …(2) }
+
+- Expected
++ Received
+
+  {
+    "align": "left",
+    "alignExplicit": true,
+-   "dir": "rtl",
+  }
+
+ ❯ tests/node-move-direction.test.ts:36:54
+     34|     const editor = make([quote([p('Keep'), p('Move', attrs)], 'rtl'), …
+     35|     expect(moveNode(editor, move)).toBe(true);
+     36|     expect(editor.state.doc.child(1).child(1).attrs).toMatchObject({ .…
+       |                                                      ^
+     37|   });
+     38|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > retains explicit alignment {"align":"center"} independently of direction
+AssertionError: expected { align: 'center' } to match object { align: 'center', dir: 'rtl' }
+
+- Expected
++ Received
+
+  {
+    "align": "center",
+-   "dir": "rtl",
+  }
+
+ ❯ tests/node-move-direction.test.ts:36:54
+     34|     const editor = make([quote([p('Keep'), p('Move', attrs)], 'rtl'), …
+     35|     expect(moveNode(editor, move)).toBe(true);
+     36|     expect(editor.state.doc.child(1).child(1).attrs).toMatchObject({ .…
+       |                                                      ^
+     37|   });
+     38|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > retains explicit alignment {"align":"end"} independently of direction
+AssertionError: expected { align: 'end' } to match object { align: 'end', dir: 'rtl' }
+
+- Expected
++ Received
+
+  {
+    "align": "end",
+-   "dir": "rtl",
+  }
+
+ ❯ tests/node-move-direction.test.ts:36:54
+     34|     const editor = make([quote([p('Keep'), p('Move', attrs)], 'rtl'), …
+     35|     expect(moveNode(editor, move)).toBe(true);
+     36|     expect(editor.state.doc.child(1).child(1).attrs).toMatchObject({ .…
+       |                                                      ^
+     37|   });
+     38|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/node-move-direction.test.ts > platform-neutral direction at generic move boundaries > makes canMoveNode reject a boundary the paragraph schema cannot represent
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/node-move-direction.test.ts:67:39
+     65|     const editor = make([quote([p('Keep'), p('Move')], 'rtl'), quote([…
+     66|     const before = editor.state;
+     67|     expect(canMoveNode(editor, move)).toBe(false);
+       |                                       ^
+     68|     expect(moveNode(editor, move)).toBe(false);
+     69|     expect(editor.state).toBe(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 3 passed (10)
+   Start at  00:46:16
+   Duration  6.26s (transform 63%, import 35%, tests 1%)
+
+  Transform  transforming modules took 3.66s · 63% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
