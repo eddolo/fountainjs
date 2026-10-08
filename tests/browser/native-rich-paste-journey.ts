@@ -21,6 +21,29 @@ export async function nativeRichPasteJourney(page: Page, info: TestInfo): Promis
       }, { capture: true });
     });
   };
+  // Measure actual painted source text, not the pre's inherited foreground:
+  // native clipboard markup can include its own nested colour marks.
+  const codeAppearance = async (surface: import('@playwright/test').Locator) => surface.locator('pre code').evaluate(code => {
+    const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+    let text = walker.nextNode();
+    while (text && !text.textContent?.trim()) text = walker.nextNode();
+    if (!text?.parentElement) throw new Error('No visible code source to inspect');
+    const foreground = getComputedStyle(text.parentElement).color;
+    let background = 'rgb(255, 255, 255)';
+    for (let ancestor: Element | null = text.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      const value = getComputedStyle(ancestor).backgroundColor;
+      if (value !== 'transparent' && value !== 'rgba(0, 0, 0, 0)') { background = value; break; }
+    }
+    const luminance = (value: string) => {
+      const channels = value.match(/[\d.]+/g)!.slice(0, 3).map(value => {
+        const channel = Number(value) / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+      return channels[0]! * .2126 + channels[1]! * .7152 + channels[2]! * .0722;
+    };
+    const light = luminance(foreground), dark = luminance(background);
+    return { foreground, background, contrast: (Math.max(light, dark) + .05) / (Math.min(light, dark) + .05) };
+  });
   try {
     await native.setContent(`<style>body{font:18px/1.5 sans-serif;width:760px}td{border:1px solid #bbb;padding:8px}blockquote{border-inline-start:3px solid #7650ff;padding:12px}</style><div contenteditable="true" role="textbox" aria-label="Native source">${source}</div><hr><div contenteditable="true" role="textbox" aria-label="Native destination"></div>`);
     const original = native.getByLabel('Native source'), control = native.getByLabel('Native destination');
@@ -32,7 +55,8 @@ export async function nativeRichPasteJourney(page: Page, info: TestInfo): Promis
     await control.screenshot({ path: info.outputPath('native-rich-paste-control.png') });
     const nativeEvents = await native.evaluate(() => (globalThis as any).__nativeRichPasteEvents);
     const nativeHTML = await control.innerHTML();
-    await writeFile(info.outputPath('native-rich-paste-control.json'), JSON.stringify({ source, nativeEvents, nativeHTML }, null, 2));
+    const nativeAppearance = await codeAppearance(control);
+    await writeFile(info.outputPath('native-rich-paste-control.json'), JSON.stringify({ source, nativeEvents, nativeHTML, nativeAppearance }, null, 2));
     await expect(control.locator('h2')).toHaveText('Research note');
     await expect(control.locator('strong, b')).toHaveText('bold');
     await expect(control.locator('em, i')).toHaveText('emphasis');
@@ -50,8 +74,9 @@ export async function nativeRichPasteJourney(page: Page, info: TestInfo): Promis
     await observe(editor); await editor.click();
     await page.keyboard.press('ControlOrMeta+a'); await page.keyboard.press('ControlOrMeta+v');
     await editor.screenshot({ path: info.outputPath('native-rich-paste-editor.png') });
+    const editorAppearance = await codeAppearance(editor);
     await writeFile(info.outputPath('native-rich-paste-editor.json'), JSON.stringify({ source, nativeEvents, nativeHTML,
-      editorEvents: await page.evaluate(() => (globalThis as any).__nativeRichPasteEvents), editorHTML: await editor.innerHTML(), pageErrors: errors }, null, 2));
+      nativeAppearance, editorAppearance, editorEvents: await page.evaluate(() => (globalThis as any).__nativeRichPasteEvents), editorHTML: await editor.innerHTML(), pageErrors: errors }, null, 2));
     await expect(editor).not.toContainText('Replace this destination');
     await expect(editor.locator('h2')).toHaveText('Research note');
     await expect(editor.locator('strong')).toHaveText('bold');
@@ -67,5 +92,7 @@ export async function nativeRichPasteJourney(page: Page, info: TestInfo): Promis
     await expect(editor.locator('strong')).toHaveText('bold');
     await expect(editor.locator('td')).toHaveCount(4);
     expect(errors).toEqual([]);
+    expect(nativeAppearance.contrast, JSON.stringify(nativeAppearance)).toBeGreaterThanOrEqual(4.5);
+    expect(editorAppearance.contrast, JSON.stringify(editorAppearance)).toBeGreaterThanOrEqual(4.5);
   } finally { await native.close(); }
 }

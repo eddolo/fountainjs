@@ -1,0 +1,108 @@
+[WebServer] (node:19924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:2376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (7.2s)
+(node:17152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (12.4s)
+(node:364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (15.0s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo 
+
+    Error: {"foreground":"rgb(0, 0, 0)","background":"rgb(32, 28, 51)","contrast":1.27532006095}
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 4.5
+    Received:    1.27532006095
+
+       at native-rich-paste-journey.ts:96
+
+      94 |     expect(errors).toEqual([]);
+      95 |     expect(nativeAppearance.contrast, JSON.stringify(nativeAppearance)).toBeGreaterThanOrEqual(4.5);
+    > 96 |     expect(editorAppearance.contrast, JSON.stringify(editorAppearance)).toBeGreaterThanOrEqual(4.5);
+         |                                                                         ^
+      97 |   } finally { await native.close(); }
+      98 | }
+      99 |
+        at nativeRichPasteJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\native-rich-paste-journey.ts:96:73)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:47:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo 
+
+    Error: {"foreground":"rgb(0, 0, 0)","background":"rgb(32, 28, 51)","contrast":1.27532006095}
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 4.5
+    Received:    1.27532006095
+
+       at native-rich-paste-journey.ts:96
+
+      94 |     expect(errors).toEqual([]);
+      95 |     expect(nativeAppearance.contrast, JSON.stringify(nativeAppearance)).toBeGreaterThanOrEqual(4.5);
+    > 96 |     expect(editorAppearance.contrast, JSON.stringify(editorAppearance)).toBeGreaterThanOrEqual(4.5);
+         |                                                                         ^
+      97 |   } finally { await native.close(); }
+      98 | }
+      99 |
+        at nativeRichPasteJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\native-rich-paste-journey.ts:96:73)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:47:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-rich-code-contrast-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo 
+    [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo 
+  1 passed (48.0s)

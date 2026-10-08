@@ -95,6 +95,12 @@ jobs:
       - run: pnpm test:lean-integration
   browser:
     runs-on: ubuntu-latest
+    env:
+      # All four clipboard workflows still run with their unchanged assertions.
+      # Independent controls prove headless Linux WebKit loses rich clipboard
+      # data while the real Xvfb-backed display retains it. Serialize native
+      # clipboard owners; keep the rest of the matrix headless.
+      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -117,12 +123,15 @@ jobs:
       # Keep native Linux WebKit colour-input failures visible before the full
       # matrix. Windows WebKit uses a text fallback and cannot certify this.
       - name: Structural direction and native-source preflight
-        run: pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|copies shared automatic list scope|retains technical code reading direction|pastes native rich research notes"
+        run: pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|retains technical code reading direction" --grep-invert "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"
+      - name: Native clipboard workflows on the Linux display
+        run: xvfb-run --auto-servernum pnpm exec playwright test --headed --project=chromium --project=firefox --project=webkit --workers=1 --output=structural-direction-clipboard-results --grep "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"
       - name: Native control and document focus preflight
         run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
       - name: Firefox native RTL selection preflight
         run: pnpm exec playwright test --project=firefox --grep "edits RTL blocks|compares list-first code text-click"
-      - run: pnpm test:browser
+      - name: Remaining headless browser matrix
+        run: pnpm exec playwright test --grep-invert "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -130,6 +139,14 @@ jobs:
           path: |
             native-clipboard-capability.jsonl
             native-clipboard-headed-capability.jsonl
+            structural-direction-clipboard-results/**/native-rich-paste-*.png
+            structural-direction-clipboard-results/**/native-rich-paste-*.json
+            structural-direction-clipboard-results/**/code-direction-*.png
+            structural-direction-clipboard-results/**/code-direction-observations.json
+            structural-direction-clipboard-results/**/code-direction-native-clipboard-delivery.json
+            structural-direction-clipboard-results/**/auto-scope-*.png
+            structural-direction-clipboard-results/**/auto-scope-observations.json
+            structural-direction-clipboard-results/**/auto-scope-native-clipboard-delivery*.json
             test-results/**/native-rich-paste-*.png
             test-results/**/native-rich-paste-*.json
             structural-direction-preflight-results/**/native-rich-paste-*.png

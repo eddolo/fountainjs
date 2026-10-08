@@ -1,0 +1,314 @@
+{
+  "date": "2026-10-08",
+  "baseCommit": "2a84949f835e2f8f878b6928a6e4887768411c45",
+  "status": "source-aware live palette and strict display-backed Linux clipboard partition; verified local checkpoint, Linux execution pending, parity goal active",
+  "implementation": [
+    "Source-aware default live palette preserves source colour marks, owned backgrounds and code bytes",
+    "Explicit host light/dark configuration wins; unstyled and standalone defaults remain dark",
+    "Own highlighted text backgrounds do not force a block palette change",
+    "No new public API/dependency/stylesheet changes; immutable data/history preserved",
+    "Actual native paste assertion now measures the painted source text foreground and opaque background",
+    "CI runs four clipboard workflows in three engines serially with Xvfb; remaining tests stay headless; no new functional skip or relaxed assertions"
+  ],
+  "verification": {
+    "redUnits": {
+      "passes": 14,
+      "files": 1,
+      "failures": 2
+    },
+    "redBrowser": {
+      "passes": 1,
+      "failedEditorContrast": 1.28,
+      "failedEngines": [
+        "chromium",
+        "webkit"
+      ],
+      "failures": 2,
+      "nativeContrast": 21
+    },
+    "focused": {
+      "tests": 45,
+      "files": 3,
+      "workers": 1
+    },
+    "fullUnits": {
+      "tests": 2831,
+      "exitCode": 0,
+      "files": 213,
+      "workers": 1
+    },
+    "browser": {
+      "passes": 3,
+      "platform": "Windows",
+      "directlyReviewedPNGs": 9,
+      "retries": 0,
+      "journey": "Native external source copy, replacement, independent rich control, Fountain paste, structure/marks/link/RTL/code/table, undo/redo and contrast",
+      "workers": 1
+    },
+    "paintedCode": [
+      {
+        "engine": "chromium",
+        "native": {
+          "foreground": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 21
+        },
+        "fountain": {
+          "foreground": "rgb(0, 0, 0)",
+          "background": "rgb(244, 241, 235)",
+          "contrast": 18.628369780657312
+        }
+      },
+      {
+        "engine": "firefox",
+        "native": {
+          "foreground": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 21
+        },
+        "fountain": {
+          "foreground": "rgb(244, 239, 255)",
+          "background": "rgb(32, 28, 51)",
+          "contrast": 14.613759059726211
+        }
+      },
+      {
+        "engine": "webkit",
+        "native": {
+          "foreground": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)",
+          "contrast": 21
+        },
+        "fountain": {
+          "foreground": "rgb(0, 0, 0)",
+          "background": "rgb(244, 241, 235)",
+          "contrast": 18.628369780657312
+        }
+      }
+    ],
+    "gates": {
+      "markdown": "unchanged projection 11: default 563/652, strongest optional 613/652, not full CommonMark",
+      "headless": "99 modules passed",
+      "site": "passed, existing optional large-chunk warning",
+      "size": "passed after reviewed aggregate capacity increase",
+      "serverRuntimes": "Node/workerd passed",
+      "build": "passed",
+      "package": "packed consumers passed",
+      "api": "411 declaration files; snapshot unchanged",
+      "types": "passed"
+    },
+    "sizes": {
+      "aggregateCJSCapKiB": 1329,
+      "aggregateESMCapKiB": 1597.75,
+      "esmKiB": 1597.5,
+      "note": "Measured ~0.9 KiB ESM/~0.7 KiB CJS feature capacity only; individual entry/CSS/dependency/latency/heap allowances unchanged; old cap failure retained",
+      "cjsKiB": 1328.7
+    },
+    "browserPartition": {
+      "headless": 761,
+      "missingOrExtra": 0,
+      "overlap": 0,
+      "allCases": 773,
+      "proof": "Complete discovered spec.id/projectName set equality; discovery only, execution not certified",
+      "display": 12
+    }
+  },
+  "precedingLinuxCI": {
+    "pages": "success",
+    "independentHeadlessWebkit": {
+      "richCases": 6,
+      "boldRetained": 0
+    },
+    "verify": "success",
+    "browser": {
+      "passes": 68,
+      "fullMatrix": "not run",
+      "nativeExternal": "fails independent headless native control before Fountain",
+      "failures": 4
+    },
+    "status": "terminal failure",
+    "lean": "success",
+    "run": 37722051277,
+    "nextAction": "Execute strict display-backed restoration gate; controls are not Fountain editor passes",
+    "commit": "2a84949",
+    "performance": "success",
+    "independentHeadedWebkit": {
+      "mode": "headed Xvfb",
+      "cases": 12,
+      "transferred": 12,
+      "richCases": 6,
+      "boldRetained": 4,
+      "note": "Native default and rich event-authored rich cases retain bold; plain-only cases intentionally have none"
+    }
+  },
+  "remaining": [
+    "Actual new-source Linux headed restoration and remaining complete matrix unverified",
+    "Mixed conflicting colours, explicit low-contrast themes, translucent backgrounds/custom CSS are not universal readability approval",
+    "Real Safari/mobile/assistive-technology/Word remain open",
+    "Native code contrast samples first rendered code text, not every possible syntax/mark combination",
+    "Performance for many styled code runs needs dedicated evidence; previous-checkpoint CI latency green is not this-source certification",
+    "Nested shared-auto direction gaps and remaining CommonMark differences remain open",
+    "Npm 0.4.0-beta.2 and coverage ledger unchanged; not parity completion"
+  ],
+  "hashPolicy": "Raw local source/evidence bytes at verification time; Git may normalize CRLF for text artifacts",
+  "sourceHashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "e34f12726738ed8760ce575149cc280dbe1d8bb4ef4bc3196b6ab3cf94ca0599"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "61125dbf211d943f6c689e3071949324423cbf6eefe0b9aa19bbbc025ad13924"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "878db2b82f974e2378abfd0653f183fe566baea1a0724a3c8e0b00209bc61385"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "1f31cfbb2e4c56e8d46be580025bf1f0d7ef3d5d1c79f4319c97893eb7152757"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "3d711636c26f303bff65040c59cc44ef2c421af2b059d5c382f60e6b05811db8"
+    },
+    {
+      "path": "src/extensions/plugins/syntax-highlight.ts",
+      "sha256": "fdc3775ad9d5eb42c7f499b59667e82ec122c363efdbfc62fa623f1b4d4fab8b"
+    },
+    {
+      "path": "tests/browser/native-rich-paste-journey.ts",
+      "sha256": "4abee476d0685924a0605a5a0d645e1af92cb4f03c6f0b067334e1a61b4bf899"
+    },
+    {
+      "path": "tests/syntax-highlight.test.ts",
+      "sha256": "bfe295e0ccdc6d1ea63ce505a3b91ad8d08a1292a39d91d18e318cf453a91cff"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "artifacts/code-source-contrast-unit-red-20261008.log",
+      "sha256": "183309d35699176a7e61765f09a86dfa25efc49f97da2ca0cdb36645eeceffd0"
+    },
+    {
+      "path": "artifacts/native-rich-code-contrast-red-20261008.log",
+      "sha256": "66f86400a7bddb9a91ab913d75736c179278b032807884a8e30191e00009c91e"
+    },
+    {
+      "path": "artifacts/code-source-contrast-focused-final-20261008.log",
+      "sha256": "76fd14feb14a02668de0f299ca78ab52ad3fc1b6df8abaaa1384e89a238ae256"
+    },
+    {
+      "path": "artifacts/code-source-contrast-full-unit-20261008.log",
+      "sha256": "f087a2fd4fdcb32d9f6a5cbaf3d5620c7ec9fd6181f9f80badf3a90fb88743f9"
+    },
+    {
+      "path": "artifacts/code-source-contrast-build-20261008.log",
+      "sha256": "e5e22df49b282ba98868e09238ed9c17ceca623bd49a587992dc333c7ee2782d"
+    },
+    {
+      "path": "artifacts/code-source-contrast-browser-20261008.log",
+      "sha256": "73427a2f658e45df248e5688f0f03a3a82a5a5ce44b432cd1673ddd5eaa440f5"
+    },
+    {
+      "path": "artifacts/code-source-contrast-test-budget-20261008.log",
+      "sha256": "453711791aa2d0c8b276d0388a9b7441e8d25645a5e853cbbb3db17078234b77"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-test-api-20261008.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-test-package-20261008.log",
+      "sha256": "c33689638963302d52c0082d00b07df22fe4371603a47df7f3c33aac46139bfa"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-test-headless-20261008.log",
+      "sha256": "b00cfb6c7892c618bf1c7e612a13df0511a2ed939de3c30aa7824e7421f129d3"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-test-budget-20261008.log",
+      "sha256": "55d100869d353000c97a01bc50be5373c4a6012d926bc320668997e3d3158eec"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-typecheck-20261008.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-test-markdown-conformance-20261008.log",
+      "sha256": "a9cb5dd16b86abade61243cef34ee2c039c00dcfd6905aedd4acd408d51e5658"
+    },
+    {
+      "path": "artifacts/code-source-contrast-final-test-server-runtimes-20261008.log",
+      "sha256": "a8bd9f604be4762de7dee020af9c4e89f021122d2247703e11c9608f4480ef00"
+    },
+    {
+      "path": "artifacts/code-source-contrast-site-20261008.log",
+      "sha256": "184bfa648b7eaa60834e079c4c1da6508f45082fc89d1e48b93bf58e4d5b714b"
+    },
+    {
+      "path": "artifacts/ci-2a84949-browser-20261008.log",
+      "sha256": "3834217d5a4f1267c6cb6a13a940efe0ba45899ea3b2436863c4f7302c8e1b1e"
+    },
+    {
+      "path": "artifacts/ci-2a84949-direction/native-clipboard-headed-capability.jsonl",
+      "sha256": "6aa31c6230f2a9b11f902050d09ce5f57efb15d681f43d8d921f5d51423dac8a"
+    },
+    {
+      "path": "artifacts/ci-2a84949-direction/native-clipboard-capability.jsonl",
+      "sha256": "172160ddb0e15a98aac20302cdfe27f835184acda0af61748931182bc9c2bfaa"
+    },
+    {
+      "path": "artifacts/code-source-contrast-browser-partition-20261008.json",
+      "sha256": "112392aa13158a9010980c4d0eee1dba9bba3072b2c9458b97e22cfd339b3c55"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-control.png",
+      "sha256": "ecb1b3502a78816c5548bf8e0c4b03045b720453b91682890e9e334c5257a40b",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-editor.png",
+      "sha256": "5cb39889c215799058b7a5ed90ae89b1849e00916103e0a0f5a2975e4fa6b8d7",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-original.png",
+      "sha256": "9ed035620c04a24743b943aac647ba72de1391343d1cd41cc0c7dc219069884b",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-control.png",
+      "sha256": "4001eae403367b428b23431827afab1bcb052b7147eee59ba5b29756a58c0f13",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-editor.png",
+      "sha256": "747765c910d77a8f6985c178230886b37943a42d7b36264087116bcca43067a1",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-original.png",
+      "sha256": "dae0a751bd3377b6edae8ce2babbb989259f2c01d80a820dc2663afbb93c2450",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-control.png",
+      "sha256": "78d7ecad4ecfe532f34bca044b55a32609feee3f0f77b5ef2ecf19abe220e0cf",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-editor.png",
+      "sha256": "c5ea4b3ca7baae95436a2df2b324dc6dd3afe2c01191b8b06f950e6d2858864f",
+      "review": "direct visual inspection in three comparison boards"
+    },
+    {
+      "path": "artifacts/code-source-contrast-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-original.png",
+      "sha256": "661f646b8136bf58bea9d2274d2ffe2376485274ac8036428fd6b03a6345adc1",
+      "review": "direct visual inspection in three comparison boards"
+    }
+  ],
+  "videoReview": "Recorded, not manually watched"
+}

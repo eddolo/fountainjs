@@ -527,7 +527,9 @@ const limits = Object.freeze({
   // Native rich paste handoff adds bounded selection/lifecycle guards and
   // shared clipboard import in the browser view only (~1.8 KiB ESM).
   // No individual entry, CSS, dependency, latency or heap allowance changes.
-  'all ESM runtime code': 1596.75 * kibibyte,
+  // Source-aware code palette selection: measured 1597.5 KiB (+~0.9).
+  // Original colour/background data is retained; no CSS/dependency/performance increase.
+  'all ESM runtime code': 1597.75 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -584,7 +586,8 @@ const limits = Object.freeze({
   // Preserve the prior-cap failure and all unrelated/runtime/heap ceilings.
   // Same code direction boundary: measured 1326.2 KiB.
   // Equivalent native rich handoff adds ~1.6 KiB CJS; same boundaries as ESM.
-  'all CommonJS runtime code': 1328.25 * kibibyte,
+  // Same palette selection: measured 1328.7 KiB (+~0.7); aggregate only.
+  'all CommonJS runtime code': 1329 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

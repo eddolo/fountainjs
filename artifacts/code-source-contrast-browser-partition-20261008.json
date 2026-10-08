@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-08",
+  "baseCommit": "2a84949",
+  "allDiscoveredCases": 773,
+  "headlessCases": 761,
+  "displayCases": 12,
+  "missingOrExtra": 0,
+  "overlap": 0,
+  "method": "Compare complete Playwright discovered spec.id/projectName sets, not counts alone",
+  "displayPattern": "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy",
+  "displayProjects": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "displayWorkers": 1,
+  "scope": "Discovery only; does not claim execution or passing Linux restoration",
+  "independentEvidence": "artifacts/ci-2a84949-direction/native-clipboard-headed-capability.jsonl",
+  "headedWebkitControls": {
+    "cases": 12,
+    "textTransferred": 12,
+    "richCases": 6,
+    "boldRetained": 4
+  },
+  "headlessEvidence": "artifacts/ci-2a84949-direction/native-clipboard-capability.jsonl",
+  "headlessWebkitRichControls": {
+    "cases": 6,
+    "boldRetained": 0
+  },
+  "notes": "Native default and rich event-authored headed cases retain bold; plain-only copies intentionally carry no formatting. Existing headless rich transport limitations remain visible. No new functional skip or relaxed assertions."
+}

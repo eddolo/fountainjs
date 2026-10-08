@@ -1,5 +1,43 @@
 # FountainJS opportunity roadmap
 
+Source-aware code contrast follow-up (2026-10-08, current source): strengthening
+the real native-paste journey reproduces two visual failures / one pass. Native
+code controls measure 21:1 contrast; Chromium/WebKit imported code measures only
+1.28:1 against the demo's dark background. The live highlighter now selects its
+default palette from solid source colours or an owned block background, without
+changing document marks, layout, code bytes or history. Explicit host themes win;
+text with its own highlight background does not force a block-theme change.
+Unstyled code and the standalone highlighter retain their dark default. Conflicting
+mixed source colours, explicit low-contrast themes and arbitrary host CSS are not
+universally repaired. Three retry-free recorded native browser journeys now pass
+structure/history and the rendered contrast assertion (18.63:1 in Chromium/WebKit,
+14.61:1 in Firefox). All nine PNGs are directly reviewed. The complete single-worker
+regression passes 2,831 tests / 213 files. Final packed consumers, API/headless,
+framework types, unchanged CommonMark profiles, Node/workerd, measured size gates
+and website build pass; this is not a new npm release. Focused
+checks pass 45 tests / three files, including real colour-command undo and
+highlight-background ownership.
+API (411 declarations), headless (99 modules) and framework types pass. Only the
+measured aggregate code allowance grows (~0.9 KiB ESM / ~0.7 KiB CJS), not CSS,
+dependencies, individual entries or performance/heap caps. Original cap failures
+remain in `artifacts/code-source-contrast-test-budget-20261008.log`.
+Evidence: `artifacts/code-source-contrast-verification-20261008.json`.
+
+`2a84949` Linux CI is terminal: verification, performance and Lean pass; browser
+preflight has 68 passes / four WebKit clipboard failures. The added native external
+workflow fails in its independent control, before reaching Fountain. Its twelve
+headed Xvfb controls all transfer text; four of six rich cases retain bold (native
+default and rich event-authored cases), unlike the headless controls. CI therefore
+partitions these four clipboard workflows into a serial, headed, three-engine
+display-backed gate, retaining every functional assertion and the independent
+headless diagnostics. The remaining matrix stays headless. No new test skip is
+added. Complete discovered test identities prove an exact partition: 773 total,
+761 headless + 12 display cases, zero omissions or overlap. This is discovery,
+not execution; actual new-source Linux restoration still needs verification.
+Partition evidence: `artifacts/code-source-contrast-browser-partition-20261008.json`.
+Raw evidence: `artifacts/ci-2a84949-browser-20261008.log` and
+`artifacts/ci-2a84949-direction/native-clipboard-headed-capability.jsonl`.
+
 Native rich-paste follow-up (2026-10-08, Unreleased): an independent native
 research-note workflow reproduces a real Windows WebKit bug: the native control
 keeps headings, marks, links, RTL quote, literal code and a table, while Fountain

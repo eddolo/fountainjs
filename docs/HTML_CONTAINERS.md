@@ -137,6 +137,17 @@ undo/redo and downloaded HTML reopening. This is not general bidi certification.
 
 ### Remaining automatic-scope gaps
 
+Current-source follow-up: default live code themes now respond to retained solid
+colour marks or owned block backgrounds, rather than placing copied black text
+on a dark background. Explicit host themes win; no source or marks are stripped.
+The native pasted-code contrast journey passes all three Windows browsers and
+its nine PNGs are visually inspected. Conflicting mixed colours/custom CSS remain
+host policy; this is not identical source styling or universal contrast approval.
+The previous Linux checkpoint's twelve headed Xvfb controls transfer rich data
+in native/rich event-authored cases. CI now runs the four clipboard workflows
+serially against that display and the remainder headless, without new skips or
+relaxed assertions. Complete partition/current-source Linux evidence is pending.
+
 Native clipboard handoff: some browsers advertise rich HTML at `paste` but
 provide it only in a subsequent cancelable `beforeinput`. Fountain defers just
 that announced-but-empty case and reuses the sanitized importer; ordinary plain,

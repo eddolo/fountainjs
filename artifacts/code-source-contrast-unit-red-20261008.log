@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/syntax-highlight.test.ts (16 tests | 2 failed) 210ms
+   ❯ language-aware code blocks (16)
+     × uses readable source-aware defaults without changing marks or owned layout: #000000/undefined/undefined 13ms
+     × uses readable source-aware defaults without changing marks or owned layout: undefined/#ffffff/undefined 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/syntax-highlight.test.ts > language-aware code blocks > uses readable source-aware defaults without changing marks or owned layout: #000000/undefined/undefined
+ FAIL  tests/syntax-highlight.test.ts > language-aware code blocks > uses readable source-aware defaults without changing marks or owned layout: undefined/#ffffff/undefined
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/syntax-highlight.test.ts:154:95
+    152|     const view = new EditorView(mount, editor);
+    153|     try {
+    154|       expect(view.dom.querySelector('pre')?.classList.contains(`fjs-hi…
+       |                                                                                               ^
+    155|       if (color) expect(view.dom.querySelector('code span[style*="colo…
+    156|       if (background) expect(view.dom.querySelector('pre')?.getAttribu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  04:22:06
+   Duration  4.13s (transform 34%, import 33%, environment 27%, tests 5%)
+

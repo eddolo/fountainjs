@@ -7,6 +7,20 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep imported code readable with a source-aware live default palette, retaining
+  original solid colour marks, owned backgrounds, source and history. Explicit
+  light/dark host choices still win; unstyled and standalone code remain dark.
+  The real native-paste contrast regression first fails Chromium/WebKit at 1.28:1,
+  then passes all three Windows browsers after the fix; nine PNGs are directly
+  reviewed. Mixed conflicting colours/custom CSS are not general contrast approval.
+  The complete single-worker regression passes 2,831 tests / 213 files; final
+  packed consumers, API/headless, types, unchanged CommonMark, Node/workerd,
+  measured size and website checks pass. New-source Linux CI is pending. Aggregate-only
+  measured code capacity grows ~0.9 KiB ESM / ~0.7 KiB CJS; all unrelated caps remain.
+  Linux headed Xvfb controls retain rich clipboard data that headless WebKit loses;
+  run the four affected workflows serially in a strict display-backed gate, with
+  the remaining matrix headless. No new Linux skip or relaxed assertion.
+
 - Fix native rich clipboard handoff when a browser advertises HTML at `paste`
   but releases its value only at cancelable `beforeinput`. Use the existing
   sanitized importer and atomic history; keep explicit plugin ownership, original

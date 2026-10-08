@@ -3,6 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CoreExtension,
+  AllSelection,
   EditorView,
   StarterKit,
   SyntaxHighlighter,
@@ -11,8 +12,10 @@ import {
   createSyntaxHighlightExtension,
   getActiveCodeBlock,
   setCodeBlockLanguage,
+  setTextColor,
   toggleCodeBlockLineNumbers,
   tokenizeCode,
+  undo,
 } from '../src';
 
 const codeDocument = (language = 'typescript', lineNumbers = true) => ({
@@ -132,6 +135,33 @@ describe('language-aware code blocks', () => {
     view.destroy();
   });
 
+  it.each([
+    ['#000000', undefined, undefined, 'light'],
+    ['#ffffff', undefined, undefined, 'dark'],
+    [undefined, '#ffffff', undefined, 'light'],
+    [undefined, '#151823', undefined, 'dark'],
+    ['#000000', undefined, 'dark', 'dark'],
+    ['#ffffff', undefined, 'light', 'light'],
+  ] as const)('uses readable source-aware defaults without changing marks or owned layout: %s/%s/%s', (color, background, theme, expected) => {
+    const kit = composeExtensions([CoreExtension, createSyntaxHighlightExtension({ theme })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'code_block', attrs: { language: 'python',
+        ...(background ? { layout: { unit: 'pt', background } } : {}) },
+      content: [{ type: 'text', text: 'value = 1\nprint(value)',
+        ...(color ? { marks: [{ type: 'text_color', attrs: { color } }] } : {}) }] }],
+    } });
+    const before = editor.getJSON();
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    try {
+      expect(view.dom.querySelector('pre')?.classList.contains(`fjs-highlight--${expected}`)).toBe(true);
+      if (color) expect(view.dom.querySelector('code span[style*="color"]')?.getAttribute('style')).toContain(color);
+      if (background) expect(view.dom.querySelector('pre')?.getAttribute('style')).toContain(background);
+      expect(editor.getJSON()).toEqual(before);
+      expect(view.dom.querySelector('pre')?.textContent).toBe('value = 1\nprint(value)');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it('reports a host tokenizer failure and falls back without breaking rendering', () => {
     const failures: unknown[] = [];
     const highlighter = new SyntaxHighlighter({
@@ -142,5 +172,35 @@ describe('language-aware code blocks', () => {
     container.innerHTML = highlighter.highlight('const safe = 1;', 'javascript');
     expect(failures).toHaveLength(1);
     expect(container.querySelector('.fjs-token--keyword')?.textContent).toBe('const');
+  });
+
+  it('updates the source-aware palette through a real colour transaction and undo', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: { type: 'doc', content: [{ type: 'code_block', content: [{ type: 'text', text: 'value',
+        marks: [{ type: 'text_color', attrs: { color: '#000000' } }] }] }] } });
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor); const before = editor.getJSON();
+    try {
+      expect(view.dom.querySelector('pre.fjs-highlight--light')).toBeTruthy();
+      editor.dispatch(editor.createTransaction().setSelection(new AllSelection(editor.state.doc)));
+      expect(setTextColor(editor, '#ffffff')).toBe(true);
+      expect(view.dom.querySelector('pre.fjs-highlight--dark')).toBeTruthy();
+      expect(undo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(before);
+      expect(view.dom.querySelector('pre.fjs-highlight--light')).toBeTruthy();
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it('does not change the default palette for text with its own highlight background', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
+      content: { type: 'doc', content: [{ type: 'code_block', content: [{ type: 'text', text: 'value',
+        marks: [{ type: 'text_color', attrs: { color: '#000000' } }, { type: 'highlight', attrs: { color: '#ffffff' } }] }] }] } });
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor); const before = editor.getJSON();
+    try {
+      expect(view.dom.querySelector('pre.fjs-highlight--dark')).toBeTruthy();
+      expect(view.dom.querySelector('code mark')).toBeTruthy();
+      expect(editor.getJSON()).toEqual(before);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
   });
 });
