@@ -1,5 +1,40 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Current local runtime follow-up (2026-10-08, Unreleased): omitted HTML
+bookmark/anchor identity is now explicitly reported without echoing private
+source values. Empty linked/formatted model runs keep their metadata and
+wrappers, including widget boundaries; empty links remain non-actionable in
+the live view. Three serial recorded desktop conversion-lab journeys verify
+file import, typing, undo/redo, JSON reopening and actual JSON/HTML downloads.
+The complete local suite passes **2,872 tests / 215 files** and framework types
+pass. Current CommonMark scores are unchanged. The performance gate's unchanged
+remote ratio fails once at 17.11x, then passes at 10.58x against 15x; both logs
+remain evidence, not a hidden retry or relaxed threshold. Source/visual/gate
+details: `artifacts/anchor-view-verification-20261008.json`. This is loss
+reporting and rendering reliability, not bookmark support or parity completion.
+
+Newer historical Linux checkpoint: [`0928289` CI](https://github.com/eddolo/fountainjs/actions/runs/37725304063)
+completes every job and Pages: **2,855 units / 214 files**, **756 clean unique
+browser passes + one retry-pass + sixteen skips**. The 773-case partition is
+744 clean headless passes + one Firefox Angular retry-pass + sixteen skips,
+plus twelve strict display clipboard passes. Sixty-seven repeated preflights
+are separate executions. Keep the selected-media-controls retry as a reliability
+follow-up; do not describe this as a completely clean matrix or as certifying
+later runtime edits. Evidence: `artifacts/ci-0928289-verification-20261008.json`.
+
+Previous clean broad runtime checkpoint (2026-10-08): [`1e90cde` CI](https://github.com/eddolo/fountainjs/actions/runs/37723568273)
+passes all jobs, **2,831 tests / 213 files**, and **757 unique browser passes /
+16 skips**. The exact 773-case partition executes 745 passes / 16 skips headless
+and twelve strict serial display-backed clipboard passes. Sixty-seven additional
+preflight executions repeat subsets; they are not extra unique coverage. Package,
+types, headless, CommonMark, server runtimes, performance, Lean and Pages pass.
+Nine Linux native-source/control/Fountain paste captures are directly reviewed;
+source structure and readable code survive, while themes/layout differ. Evidence:
+`artifacts/ci-1e90cde-verification-20261008.json`. The skips, six nested-auto
+diagnostic gaps, physical-device proof and wider parity remain open. Newer
+development-oracle and anchor-report changes require their own verification;
+this historical commit's CI must not certify later edits. No npm/row promotion.
+
 Latest verified checkpoint (2026-10-08, Unreleased): `b614858` completes all
 Linux CI jobs successfully: **2,753 tests / 209 files**, **721 browser passes /
 16 skips**, package/types/headless/Markdown, performance and Lean. Pages also

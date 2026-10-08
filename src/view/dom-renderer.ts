@@ -229,7 +229,9 @@ function renderText(node: Node, path: readonly number[], position: number, conte
     decoration.type === 'node' && decoration.from === position && decoration.to === end
   )).forEach((decoration) => applyDecorationAttributes(wrapper, decoration));
   if (value.length === 0) {
-    wrapper.appendChild(document.createTextNode(''));
+    // Empty runs still own formatting. Keep their wrappers even when a boundary
+    // widget prevents shared-link grouping; the caret filler remains view-only.
+    wrapper.appendChild(renderMarks(node, document.createTextNode(''), sharedLink));
     if (needsCaretPlaceholder(path, context)) {
       wrapper.appendChild(caretPlaceholder());
     }

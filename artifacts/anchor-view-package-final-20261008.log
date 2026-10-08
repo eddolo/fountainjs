@@ -1,0 +1,13 @@
+$ node scripts/smoke-package.mjs
+Packed ESM: 486 link normalization/security/history/destination contracts passed.
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/fixtures/html-anchor-loss-check.mjs:10
+      throw new Error('Named-anchor loss/privacy/immutable-report contract failed.');
+            ^
+
+Error: Named-anchor loss/privacy/immutable-report contract failed.
+    at reported (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/fixtures/html-anchor-loss-check.mjs:10:13)
+    at checkHTMLAnchorLoss (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/fixtures/html-anchor-loss-check.mjs:61:3)
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/smoke-package.mjs:248:38
+
+Node.js v24.19.0
+[ELIFECYCLE] Command failed with exit code 1.

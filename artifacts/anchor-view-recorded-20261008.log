@@ -1,0 +1,158 @@
+[WebServer] (node:23560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:22896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:15816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:15396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:8152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (1.0m)
+(node:25932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (1.0m)
+(node:23384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (1.0m)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByLabel('Export format', { exact: true })
+
+
+       at html-anchor-loss-journey.ts:32
+
+      30 |   await expect(paragraph).toHaveText('Before Section after.');
+      31 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+    > 32 |   await expect(paragraph).toHaveText('Edited: Before Section after.');
+         |                                                                ^
+      33 |   await workspace.getByLabel('Export format', { exact: true }).selectOption('json');
+      34 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+      35 |   await expect(workspace.getByLabel('Round-trip result', { exact: true })).toContainText('Exact Fountain document equality after reopening.');
+        at htmlAnchorLossJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-anchor-loss-journey.ts:32:64)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:52:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByLabel('Export format', { exact: true })
+
+
+       at html-anchor-loss-journey.ts:32
+
+      30 |   await expect(paragraph).toHaveText('Before Section after.');
+      31 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+    > 32 |   await expect(paragraph).toHaveText('Edited: Before Section after.');
+         |                                                                ^
+      33 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('json');
+      34 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+      35 |   await expect(workspace.getByLabel('Round-trip result', { exact: true })).toContainText('Exact Fountain document equality after reopening.');
+        at htmlAnchorLossJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-anchor-loss-journey.ts:32:64)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:52:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByLabel('Export format', { exact: true })
+
+
+       at html-anchor-loss-journey.ts:32
+
+      30 |   await expect(paragraph).toHaveText('Before Section after.');
+      31 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+    > 32 |   await expect(paragraph).toHaveText('Edited: Before Section after.');
+         |                                                                ^
+      33 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('json');
+      34 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+      35 |   await expect(workspace.getByLabel('Round-trip result', { exact: true })).toContainText('Exact Fountain document equality after reopening.');
+        at htmlAnchorLossJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-anchor-loss-journey.ts:32:64)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:52:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\anchor-view-recorded-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+    [firefox] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+    [webkit] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 

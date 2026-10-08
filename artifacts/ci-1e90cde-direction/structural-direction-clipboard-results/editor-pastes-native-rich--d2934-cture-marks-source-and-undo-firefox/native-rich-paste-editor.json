@@ -1,0 +1,57 @@
+{
+  "source": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+  "nativeEvents": [
+    {
+      "type": "paste",
+      "trusted": true,
+      "cancelable": true,
+      "types": [
+        "text/html",
+        "text/plain"
+      ],
+      "plain": "Research note\n\nResult is bold with emphasis and reference.\n\n    שלום source\n\nvalue = 1\nprint(value)\n\nSample\tValue\nA\t42",
+      "html": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+      "json": ""
+    },
+    {
+      "type": "beforeinput",
+      "trusted": true,
+      "cancelable": true,
+      "inputType": "insertFromPaste",
+      "types": [
+        "text/html",
+        "text/plain"
+      ],
+      "plain": "Research note\n\nResult is bold with emphasis and reference.\n\n    שלום source\n\nvalue = 1\nprint(value)\n\nSample\tValue\nA\t42",
+      "html": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+      "json": ""
+    }
+  ],
+  "nativeHTML": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+  "nativeAppearance": {
+    "foreground": "rgb(0, 0, 0)",
+    "background": "rgb(255, 255, 255)",
+    "contrast": 21
+  },
+  "editorAppearance": {
+    "foreground": "rgb(244, 239, 255)",
+    "background": "rgb(32, 28, 51)",
+    "contrast": 14.613759059726211
+  },
+  "editorEvents": [
+    {
+      "type": "paste",
+      "trusted": true,
+      "cancelable": true,
+      "types": [
+        "text/html",
+        "text/plain"
+      ],
+      "plain": "Research note\n\nResult is bold with emphasis and reference.\n\n    שלום source\n\nvalue = 1\nprint(value)\n\nSample\tValue\nA\t42",
+      "html": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+      "json": ""
+    }
+  ],
+  "editorHTML": "<h2 data-fountain-node=\"heading\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">Research note</span></h2><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">Result is </span><span data-fountain-text-path=\"1.1\"><strong>bold</strong></span><span data-fountain-text-path=\"1.2\"> with </span><span data-fountain-text-path=\"1.3\"><em>emphasis</em></span><span data-fountain-text-path=\"1.4\"> and </span><a href=\"https://example.org/reference\" title=\"\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" data-fountain-inline-link=\"\"><span data-fountain-text-path=\"1.5\">reference</span></a><span data-fountain-text-path=\"1.6\">.</span></p><blockquote dir=\"rtl\" data-fountain-node=\"blockquote\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"2.0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0.0\">שלום source</span></p></blockquote><pre dir=\"ltr\" tabindex=\"0\" role=\"region\" aria-label=\"text code\" data-language=\"text\" data-line-numbers=\"true\" data-fountain-node=\"code_block\" data-fountain-path=\"3\" title=\"text\" class=\"fjs-code-block fjs-highlight--dark\" data-fountain-decoration=\"syntax-block-3\"><code data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-1\" contenteditable=\"false\" style=\"\"></span>value = <span data-fountain-syntax-token=\"number\" class=\"fjs-token fjs-token--number\" data-fountain-decoration=\"syntax-3-8-9-number\">1</span>\n<span class=\"fjs-code-line-number\" data-line=\"2\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-2\" contenteditable=\"false\" style=\"\"></span>print(value)</span></code></pre><table data-fountain-node=\"table\" data-fountain-path=\"4\"><tbody data-fountain-content-dom=\"\"><tr data-fountain-node=\"table_row\" data-fountain-path=\"4.0\" data-fountain-content-dom=\"\"><td colspan=\"1\" rowspan=\"1\" data-fountain-column-direction=\"ltr\" style=\"\" data-fountain-node=\"table_cell\" data-fountain-path=\"4.0.0\"><div class=\"fountain-table-cell__content\" data-fountain-content-dom=\"\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"4.0.0.0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"4.0.0.0.0\">Sample</span></p></div><span class=\"fountain-table-cell__resize-handle\" contenteditable=\"false\" tabindex=\"0\" role=\"separator\" aria-orientation=\"vertical\" aria-label=\"Resize table column\" aria-valuemin=\"40\" aria-valuemax=\"2000\" style=\"left: auto; right: -4px;\" aria-valuenow=\"603\" aria-valuetext=\"603 pixels\"></span></td><td colspan=\"1\" rowspan=\"1\" data-fountain-column-direction=\"ltr\" style=\"\" data-fountain-node=\"table_cell\" data-fountain-path=\"4.0.1\"><div class=\"fountain-table-cell__content\" data-fountain-content-dom=\"\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"4.0.1.0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"4.0.1.0.0\">Value</span></p></div><span class=\"fountain-table-cell__resize-handle\" contenteditable=\"false\" tabindex=\"0\" role=\"separator\" aria-orientation=\"vertical\" aria-label=\"Resize table column\" aria-valuemin=\"40\" aria-valuemax=\"2000\" style=\"left: auto; right: -4px;\" aria-valuenow=\"482\" aria-valuetext=\"482 pixels\"></span></td></tr><tr data-fountain-node=\"table_row\" data-fountain-path=\"4.1\" data-fountain-content-dom=\"\"><td colspan=\"1\" rowspan=\"1\" data-fountain-column-direction=\"ltr\" style=\"\" data-fountain-node=\"table_cell\" data-fountain-path=\"4.1.0\"><div class=\"fountain-table-cell__content\" data-fountain-content-dom=\"\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"4.1.0.0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"4.1.0.0.0\">A</span></p></div><span class=\"fountain-table-cell__resize-handle\" contenteditable=\"false\" tabindex=\"0\" role=\"separator\" aria-orientation=\"vertical\" aria-label=\"Resize table column\" aria-valuemin=\"40\" aria-valuemax=\"2000\" style=\"left: auto; right: -4px;\" aria-valuenow=\"603\" aria-valuetext=\"603 pixels\"></span></td><td colspan=\"1\" rowspan=\"1\" data-fountain-column-direction=\"ltr\" style=\"\" data-fountain-node=\"table_cell\" data-fountain-path=\"4.1.1\"><div class=\"fountain-table-cell__content\" data-fountain-content-dom=\"\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"4.1.1.0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"4.1.1.0.0\">42</span></p></div><span class=\"fountain-table-cell__resize-handle\" contenteditable=\"false\" tabindex=\"0\" role=\"separator\" aria-orientation=\"vertical\" aria-label=\"Resize table column\" aria-valuemin=\"40\" aria-valuemax=\"2000\" style=\"left: auto; right: -4px;\" aria-valuenow=\"482\" aria-valuetext=\"482 pixels\"></span></td></tr></tbody></table><p data-fountain-node=\"paragraph\" data-fountain-path=\"5\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+  "pageErrors": []
+}

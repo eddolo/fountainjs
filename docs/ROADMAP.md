@@ -1,5 +1,36 @@
 # FountainJS opportunity roadmap
 
+Anchor-loss and empty-mark follow-up (2026-10-08, Unreleased): report omitted
+built-in HTML bookmark/anchor identity with bounded, source-free diagnostics;
+accepted custom projections retain ownership. Safe empty links remain in
+JSON/HTML, while their live empty view stays deliberately non-actionable.
+Empty formatting wrappers now survive boundary widgets without changing text,
+caret fillers or model state. Three recorded desktop import/edit/history/export
+journeys pass; original warnings are not erased by exact JSON reopening. The
+complete local suite passes 2,872 tests / 215 files, framework types and current
+CommonMark profiles pass. The unchanged performance check fails its remote
+scaling ratio once (17.11x / 15x), then passes at 10.58x; both runs are retained.
+No performance/heap, individual entry or CSS cap changes. Evidence and limits:
+`artifacts/anchor-view-verification-20261008.json`. Bookmarks, nested-auto gaps,
+physical devices and full CommonMark/parity remain open; npm/ledger unchanged.
+
+The separate `0928289` Linux checkpoint completes every job and Pages, with
+2,855 units / 214 files. Its 773 unique browser cases include 756 clean passes,
+one retry-pass (Firefox Angular selected-media attributes) and sixteen skips.
+The retry is a reliability follow-up, not an extra pass or clean first attempt.
+This older commit does not certify the runtime follow-up above. Raw job logs
+and exact counts: `artifacts/ci-0928289-verification-20261008.json`.
+
+Completed broad runtime CI checkpoint (2026-10-08): `1e90cde` passes every Linux
+job, 2,831 units / 213 files, performance, Lean and Pages. Its disjoint 773-case
+browser matrix passes 757 with sixteen existing skips: 745 headless + twelve
+strict display clipboard passes. Sixty-seven repeated preflights are separate,
+not extra unique coverage. Nine Linux native paste comparison PNGs are directly
+reviewed. Themes and sizing differ; preserved structure/readable code are not
+pixel fidelity. Six nested-auto diagnostic gaps, physical devices and wider
+parity stay open. Later changes need separate verification. Frozen evidence:
+`artifacts/ci-1e90cde-verification-20261008.json`. Npm and ledger stay unchanged.
+
 CommonMark remaining-work audit (2026-10-08, Unreleased): comparator version 12
 no longer conflates absent-href anchor placeholders with empty-href hyperlinks;
 three negative guards enforce the distinction. Twenty-four official LF/CRLF
@@ -8,7 +39,7 @@ not original HTML behavior. Focused tests pass 111 / five files, the complete
 single-worker suite passes 2,855 / 214 files and framework types pass. The
 strongest profile's remaining 22 unclassified cases are now
 split into twelve inert-retention cases, three unfinished-tag source fallbacks,
-one doctype-only representation and six anchor/mixed-wrapper representations.
+one doctype-only representation and six anchor/mixed-wrapper/URL-policy cases.
 All required profile ranges and scores stay unchanged: 563/652 default and
 613/652 strongest opt-in. No delivered row, percentage or npm promotion.
 See [the explicit remaining work](MARKDOWN_DOCUMENT_FLOW.md#current-remaining-commonmark-work-2026-10-08-unreleased).
@@ -47,7 +78,8 @@ display-backed gate, retaining every functional assertion and the independent
 headless diagnostics. The remaining matrix stays headless. No new test skip is
 added. Complete discovered test identities prove an exact partition: 773 total,
 761 headless + 12 display cases, zero omissions or overlap. This is discovery,
-not execution; actual new-source Linux restoration still needs verification.
+not execution. The completed `1e90cde` checkpoint above now verifies the strict
+display gate and full remaining matrix without omitting these cases.
 Partition evidence: `artifacts/code-source-contrast-browser-partition-20261008.json`.
 Raw evidence: `artifacts/ci-2a84949-browser-20261008.log` and
 `artifacts/ci-2a84949-direction/native-clipboard-headed-capability.jsonl`.

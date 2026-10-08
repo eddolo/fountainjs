@@ -31,6 +31,22 @@ Previous block gate: `artifacts/html-inert-block-complete-gate-final-20261006.lo
 
 ## Link destination policy
 
+Unreleased follow-up, 2026-10-08: the built-in link mark does not preserve
+non-hyperlink `<a>` wrappers or `id`/`name` bookmark identity. Default server
+import now reports these with the existing `unmapped-inline-element` code and
+`contribution: 'element:a'`, retaining readable descendants and supported link
+formatting. A receiving schema without a link mark also gets a navigation-loss
+report. Reports are deduplicated and never echo the identifier or destination.
+Accepted custom node/mark projections own their contract and are not mislabeled
+as unrepresented built-in anchors. This is explicit loss reporting, **not new
+bookmark support** or proof that every unsupported attribute is diagnosed.
+Ordinary safe empty hyperlinks remain represented in the document and exports.
+Their live empty/whitespace-only view intentionally omits an actionable `href`;
+visible link text restores it. Boundary widgets no longer discard empty mark
+wrappers, and caret placeholders remain view-only. The CommonMark case with
+a leading backslash destination is rejected by the current conservative URL
+policy; it is not evidence that all empty links disappear. No URL gate is relaxed.
+
 Unreleased, 2026-10-06: supported TAB/LF/CR destination data is percent-encoded
 only after validating its browser-compacted spelling. Unsafe schemes/network
 paths, ambiguous HTTP authorities, other controls and schema-over-limit expansion

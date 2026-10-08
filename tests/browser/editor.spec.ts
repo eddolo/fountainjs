@@ -1,6 +1,7 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { codeDirectionJourney } from './code-direction-journey';
 import { nativeRichPasteJourney } from './native-rich-paste-journey';
+import { htmlAnchorLossJourney } from './html-anchor-loss-journey';
 import { listAutoScopeJourney } from './list-auto-scope-journey';
 import { blockDirectionKeyboardJourney, blockDirectionPointerJourney } from './block-direction-reorder-journey';
 import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
@@ -45,6 +46,10 @@ import { htmlStructuralDirectionJourney } from './html-structural-direction-jour
 
 test('pastes native rich research notes with structure, marks, source and undo', async ({ page }, info) => {
   await nativeRichPasteJourney(page, info);
+});
+
+test('reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks', async ({ page }, info) => {
+  await htmlAnchorLossJourney(page, info);
 });
 
 for (const dir of ['ltr', 'rtl', 'auto'] as const) {

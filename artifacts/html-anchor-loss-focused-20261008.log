@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/server-html-parity.test.ts (83 tests | 1 failed) 941ms
+   ❯ browser and server HTML semantic parity (33)
+     × produces identical validated Fountain JSON for <p><a href="">Empty link</a> <a>Anchor without href</a></p> 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/server-html-parity.test.ts > browser and server HTML semantic parity > produces identical validated Fountain JSON for <p><a href="">Empty link</a> <a>Anchor without href</a></p>
+AssertionError: expected [ { …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "code": "unmapped-inline-element",
++     "contribution": "element:a",
++     "message": "An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark.",
++   },
++ ]
+
+ ❯ tests/server-html-parity.test.ts:296:84
+    294|     const browser = HTMLImporter.parse(html, schema);
+    295|     const server = ServerHTMLImporter.parseWithReport(html, schema);
+    296|     expect(server.issues.filter(issue => issue.code !== 'document-shel…
+       |                                                                                    ^
+    297|     expect(server.document.toJSON()).toEqual(browser.toJSON());
+    298|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 132 passed (133)
+   Start at  05:09:21
+   Duration  10.29s (transform 29%, import 27%, environment 26%, tests 17%)
+
+     Import  178 modules were evaluated 321 times · 2.59s total, 27% of tracked time
+             ~1.16s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

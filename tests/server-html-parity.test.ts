@@ -293,7 +293,9 @@ describe('browser and server HTML semantic parity', () => {
   it.each(fixtures)('produces identical validated Fountain JSON for %s', (html) => {
     const browser = HTMLImporter.parse(html, schema);
     const server = ServerHTMLImporter.parseWithReport(html, schema);
-    expect(server.issues.filter(issue => issue.code !== 'document-shell-omitted')).toEqual([]);
+    const expectedLosses = html === '<p><a href="">Empty link</a> <a>Anchor without href</a></p>'
+      ? [expect.objectContaining({ code: 'unmapped-inline-element', contribution: 'element:a' })] : [];
+    expect(server.issues.filter(issue => issue.code !== 'document-shell-omitted')).toEqual(expectedLosses);
     expect(server.document.toJSON()).toEqual(browser.toJSON());
   });
 

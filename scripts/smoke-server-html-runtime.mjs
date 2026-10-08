@@ -10,6 +10,7 @@ import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
 import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
 import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
 import { checkHTMLLinkControls } from './fixtures/html-link-controls-check.mjs';
+import { checkHTMLAnchorLoss } from './fixtures/html-anchor-loss-check.mjs';
 import * as inertHTML from '../dist/html-inert.js';
 
 for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationObserver']) {
@@ -19,6 +20,7 @@ for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationO
 const schema = new Schema(CoreSchemaSpec);
 checkInertHTMLSource(blockAtomCore, { ServerHTMLImporter }, inertHTML);
 console.log(`Compiled runtime: ${checkHTMLLinkControls(blockAtomCore, { ServerHTMLImporter })} link normalization/security/history/destination contracts passed.`);
+console.log(`Compiled runtime: ${checkHTMLAnchorLoss(blockAtomCore, { ServerHTMLImporter })} anchor loss/privacy/retention contracts passed.`);
 console.log('Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.');
 console.log(`Compiled runtime: ${checkModelIntegrity(blockAtomCore)} owned-attribute checks plus immutable snapshots/history passed.`);
 checkHTMLFlow();

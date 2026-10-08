@@ -149,6 +149,10 @@ jobs:
             structural-direction-clipboard-results/**/auto-scope-native-clipboard-delivery*.json
             test-results/**/native-rich-paste-*.png
             test-results/**/native-rich-paste-*.json
+            test-results/**/anchor-loss-*.png
+            test-results/**/anchor-loss-observations.json
+            test-results/**/anchor-loss-export.json
+            test-results/**/anchor-loss-export.html
             structural-direction-preflight-results/**/native-rich-paste-*.png
             structural-direction-preflight-results/**/native-rich-paste-*.json
             test-results/**/code-direction-*.png

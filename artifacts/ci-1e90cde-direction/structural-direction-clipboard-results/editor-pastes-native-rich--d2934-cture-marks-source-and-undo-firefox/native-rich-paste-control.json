@@ -1,0 +1,36 @@
+{
+  "source": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+  "nativeEvents": [
+    {
+      "type": "paste",
+      "trusted": true,
+      "cancelable": true,
+      "types": [
+        "text/html",
+        "text/plain"
+      ],
+      "plain": "Research note\n\nResult is bold with emphasis and reference.\n\n    שלום source\n\nvalue = 1\nprint(value)\n\nSample\tValue\nA\t42",
+      "html": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+      "json": ""
+    },
+    {
+      "type": "beforeinput",
+      "trusted": true,
+      "cancelable": true,
+      "inputType": "insertFromPaste",
+      "types": [
+        "text/html",
+        "text/plain"
+      ],
+      "plain": "Research note\n\nResult is bold with emphasis and reference.\n\n    שלום source\n\nvalue = 1\nprint(value)\n\nSample\tValue\nA\t42",
+      "html": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+      "json": ""
+    }
+  ],
+  "nativeHTML": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+  "nativeAppearance": {
+    "foreground": "rgb(0, 0, 0)",
+    "background": "rgb(255, 255, 255)",
+    "contrast": 21
+  }
+}

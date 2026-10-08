@@ -10,6 +10,7 @@ import { checkMarkdownEmphasis } from './markdown-emphasis-check.mjs';
 import { checkModelIntegrity } from './model-integrity-check.mjs';
 import { checkInertHTMLSource } from './html-inert-source-check.mjs';
 import { checkHTMLLinkControls } from './html-link-controls-check.mjs';
+import { checkHTMLAnchorLoss } from './html-anchor-loss-check.mjs';
 import * as inertHTML from '../../dist/html-inert.js';
 
 const schema = new Schema(CoreSchemaSpec);
@@ -47,6 +48,7 @@ export default {
       modelIntegrityChecked: checkModelIntegrity(blockAtomCore),
       inertSourceChecked: checkInertHTMLSource(blockAtomCore, { ServerHTMLImporter }, inertHTML),
       linkControlsChecked: checkHTMLLinkControls(blockAtomCore, { ServerHTMLImporter }),
+      anchorsChecked: checkHTMLAnchorLoss(blockAtomCore, { ServerHTMLImporter }),
       paragraphRecovered: paragraph.childCount === 4 && paragraph.child(1).type.name === 'heading'
         && paragraph.child(1).textContent === 'Heading',
     }), { headers: { 'content-type': 'application/json' } });

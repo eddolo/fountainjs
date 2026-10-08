@@ -52,6 +52,69 @@ describe('explicit server HTML conversion losses', () => {
     expect(result.issues.map(issue => issue.code)).toEqual(['unmapped-inline-element']);
   });
 
+  it.each([
+    '<a id="private-bookmark">Section</a>',
+    '<a id="private-bookmark"></a>',
+    '<a>Section</a>',
+    '<a href="/next" id="private-bookmark">Section</a>',
+    '<a href="/next" name="private-bookmark">Section</a>',
+    '<a href="" name="private-bookmark"></a>',
+  ])('reports an unrepresented anchor wrapper or bookmark without exposing its value: %s', anchor => {
+    const result = ServerHTMLImporter.parseWithReport(`<p>Before ${anchor} after.</p>`, schema);
+    expect(result.document.textContent).toBe(`Before ${anchor.includes('Section') ? 'Section' : ''} after.`);
+    expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-inline-element' })]);
+    expect(JSON.stringify(result.issues)).not.toMatch(/private-bookmark|\/next/);
+    expect(Object.isFrozen(result.issues[0])).toBe(true);
+  });
+
+  it('reports navigation loss when the receiving schema has no link mark', () => {
+    const { link: _link, ...marks } = CoreSchemaSpec.marks!;
+    const result = ServerHTMLImporter.parseWithReport('<p><a href="/private-path">Readable</a></p>', new Schema({ ...CoreSchemaSpec, marks }));
+    expect(result.document.textContent).toBe('Readable');
+    expect(result.issues.map(issue => issue.code)).toEqual(['unmapped-inline-element']);
+    expect(JSON.stringify(result.issues)).not.toContain('private-path');
+  });
+
+  it.each(['/next', ''])('does not mislabel a represented empty %j hyperlink as lost', href => {
+    const result = ServerHTMLImporter.parseWithReport(`<p>Before <a href="${href}"></a> after.</p>`, schema);
+    expect(result.document.child(0).content.some(node => node.isText && node.text === ''
+      && node.marks.some(mark => mark.type.name === 'link' && mark.attrs.href === href))).toBe(true);
+    expect(result.issues).toEqual([]);
+  });
+
+  it.each(['node', 'mark'])('respects an accepted registered anchor %s projection', kind => {
+    const attrs = { id: { default: '' } };
+    const parseHTML = [{ tag: 'a[id]', getAttrs: (element: { getAttribute(name: string): string | null }) => ({ id: element.getAttribute('id') }) }];
+    const custom = new Schema({ ...CoreSchemaSpec,
+      ...(kind === 'node' ? { nodes: { ...CoreSchemaSpec.nodes, bookmark: { inline: true, group: 'inline', content: 'inline*', attrs, parseHTML } } }
+        : { marks: { ...CoreSchemaSpec.marks, bookmark: { attrs, parseHTML } } }),
+    });
+    const result = ServerHTMLImporter.parseWithReport('<p><a id="kept">Section</a></p>', custom);
+    const first = result.document.child(0).child(0);
+    expect(kind === 'node' ? first.attrs.id : first.marks[0]?.attrs.id).toBe('kept');
+    expect(result.issues).toEqual([]);
+  });
+
+  it('bounds repeated bookmark losses rather than echoing every imported anchor', () => {
+    const result = ServerHTMLImporter.parseWithReport(`<p>${'<a id="private-bookmark">Section</a>'.repeat(1000)}</p>`, schema);
+    expect(result.document.textContent).toBe('Section'.repeat(1000));
+    expect(result.issues).toEqual([expect.objectContaining({ code: 'unmapped-inline-element' })]);
+  });
+
+  it('surfaces bookmark loss through the explicit Markdown inline report adapter', () => {
+    const importer = new ServerHTMLImporter();
+    const codes: string[] = [];
+    const doc = MarkdownImporter.parse('Before <a id="private-bookmark">Section</a> after.', schema, {
+      parseHTMLInline(segments, target) {
+        const result = importer.parseInlineWithReport(segments, target);
+        codes.push(...result.issues.map(issue => issue.code));
+        return result.nodes;
+      },
+    });
+    expect(doc.textContent).toBe('Before Section after.');
+    expect(codes).toEqual(['unmapped-inline-element', 'inline-html-projection']);
+  });
+
   it('does not label registered inline nodes or marks as unknown elements', () => {
     const custom = new Schema({ ...CoreSchemaSpec,
       nodes: { ...CoreSchemaSpec.nodes, badge: { inline: true, group: 'inline', atom: true, parseHTML: [{ tag: 'badge-chip' }] } },

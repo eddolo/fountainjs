@@ -19,7 +19,8 @@ security, GFM-autolink or editable-caret-host contracts. The other 22 are:
 | 163, 170–173, 176, 178, 201, 491, 524, 536, 617 | Existing explicit inert adapters preserve original element names, attributes and parsed body content as data. New official-corpus tests cover LF/CRLF, exact untouched Markdown, complete JSON reopening and canonical HTML/Markdown reopening. Original scripts/styles/controls and unknown-tag behavior are **not** rendered; these remain semantic mismatches. |
 | 156–158 | Unfinished tags deliberately remain literal editable source with a fallback report rather than letting HTML recovery discard them. This retains source, not the reference renderer's empty fragment. |
 | 181 | A doctype-only source retains its Markdown snapshot, but produces an editable empty paragraph. Doctype metadata/canonical export remain unresolved; this example has not been reclassified as an intentional caret-host divergence. |
-| 150, 613–616, 631 | Mixed unknown wrappers, non-hyperlink anchors/attributes and empty hyperlink structure remain unrepresented in the existing profiles. Link marks cannot represent every empty/transparent HTML anchor. Source snapshots are not a substitute for these model/rendering semantics. |
+| 150, 613–616 | Mixed unknown wrappers and non-hyperlink anchors/attributes remain unrepresented in the existing profiles. Link marks cannot represent every transparent HTML anchor. Source snapshots are not a substitute for these model/rendering semantics. |
+| 631 | The current conservative URL policy rejects a leading backslash destination. Ordinary safe empty hyperlinks are represented; this case is not proof that all empty links disappear. It remains pending a reviewed policy contract rather than being automatically promoted or weakening the URL gate. |
 
 `tests/commonmark-inert-preservation.test.ts` adds **24 Node-only contracts**
 for the first group. The development-only reference parser must reproduce the

@@ -1,0 +1,175 @@
+{
+  "date": "2026-10-08",
+  "sourceCommit": "1e90cde7997243d65aaea7d5e8477495d78d184b",
+  "status": "completed successful Linux runtime CI checkpoint; goal remains active",
+  "ci": {
+    "run": 37723568273,
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/37723568273",
+    "conclusion": "success",
+    "jobs": {
+      "verify": 113136493939,
+      "browser": 113136493999,
+      "performance": 113136493786,
+      "lean": 113136493659
+    },
+    "allJobs": "success",
+    "pages": {
+      "run": 37723568271,
+      "conclusion": "success"
+    }
+  },
+  "verification": {
+    "units": {
+      "tests": 2831,
+      "files": 213
+    },
+    "uniqueBrowserMatrix": {
+      "scheduled": 773,
+      "passed": 757,
+      "skipped": 16,
+      "headless": {
+        "scheduled": 761,
+        "passed": 745,
+        "skipped": 16
+      },
+      "displayClipboard": {
+        "scheduled": 12,
+        "passed": 12,
+        "workers": 1
+      }
+    },
+    "additionalPreflightExecutions": {
+      "structural": 60,
+      "nativeFocus": 5,
+      "firefoxSelection": 2,
+      "note": "67 repeated subset executions; do not add to unique matrix coverage"
+    },
+    "functionalRetryObservation": "No retry/flaky/failure markers found in the completed functional browser log; configured CI retries are not themselves evidence of retries",
+    "gates": [
+      "Package/API/headless/types/CommonMark/math/DOCX/Node/Bun/Deno/workerd gates successful",
+      "Performance, scaling, heap and measured code/CSS/dependency budgets successful",
+      "Real pinned Lean integration successful",
+      "Website deployment successful"
+    ]
+  },
+  "visualReview": {
+    "directlyInspectedPNGs": 9,
+    "reviewedPaths": [
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-control.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-editor.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-original.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-control.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-editor.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-original.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-control.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-editor.png",
+      "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-original.png"
+    ],
+    "observations": [
+      "All three original/native-control/imported-editor comparisons show heading, bold, emphasis, link, RTL quote, two literal code lines and four table cells",
+      "Code is visibly readable: Chromium/WebKit retain black source against the light default, Firefox uses its ordinary dark palette",
+      "The three engines preserve the measured RTL quote boundary; theme, link colour, font and table/paragraph sizing differ from native source"
+    ],
+    "measuredFirstCodeGlyphContrast": {
+      "native": 21,
+      "chromium": 18.628369780657312,
+      "firefox": 14.613759059726211,
+      "webkit": 18.628369780657312
+    },
+    "videos": "No CI video review claimed",
+    "notCertified": [
+      "Pixel equivalence, all token/mark contrast combinations, arbitrary CSS, physical devices, full CommonMark, native Word fidelity",
+      "Other direction/focus capture files downloaded but not newly visually certified by this nine-image review"
+    ]
+  },
+  "limitations": [
+    "Six nested automatic-direction diagnostic gaps remain open; no parity row promotion",
+    "The 16 skips remain missing coverage, not passes",
+    "Newer 0928289 development-only tests are not certified by this older commit's CI; its separate CI is live",
+    "Current uncommitted anchor-report/public-guide follow-up is not certified by this checkpoint",
+    "Npm stays 0.4.0-beta.2; no new release"
+  ],
+  "hashContract": "SHA-256 of local raw files; Git CRLF normalization may change text-log hashes after checkout",
+  "evidenceHashes": [
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-control.png",
+      "sha256": "d5be3e2183c6a36232d8c955679cf31f29d919893b56909f6782e89a4bd9d07f"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-editor.png",
+      "sha256": "cf7721ad599def0b61cd3bff4c78b943f8e57614166319a4d5c1ce102c4deffb"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-original.png",
+      "sha256": "05d528d38903c958e1773e406dbd6a5634b4f51f3b4b9f3d2896b87148520a56"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-control.png",
+      "sha256": "5e026198d5f631e2a136b5ff2d4bd5bd3e88d792f162d5d873f3244acb93018c"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-editor.png",
+      "sha256": "af2b6053ffcb6fcff90acec4aa9eac8e3955ad397c52eaabd27c8a7671c5d4ad"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-original.png",
+      "sha256": "ff5bc2f07cfdcd9a0c0bffcf837437445474901ce5b59aed7e8efb342a4f3723"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-control.png",
+      "sha256": "03a3a7e574166999ed3367b480c0ba6a30f2f03602c0a42f77f772878d3d3c5e"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-editor.png",
+      "sha256": "05380a804ac3698fe4b6c3a3e876b706704ce860c78eefba758017c1c59e464a"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-original.png",
+      "sha256": "9a6c73093856381f37084297f893637aa5515ba1404918ed4e60ab9dd3d30910"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-control.json",
+      "sha256": "3899fc8220604d788d6edb987324ce2e3ceedcc3ced7258fe6edb335a1d75470"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-editor.json",
+      "sha256": "3b0c55234422674a4114f799c97fd928790f003a12872a55a5f63ed875f1ae52"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-control.json",
+      "sha256": "d9dda5e0a516e4c4fec50755503473fbf51b5b2e78315dd5b95ef481055a839f"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-editor.json",
+      "sha256": "952e0cdbff50078b64e7708ce8b08e4badd5f6a4bc92b578cce52e2eeb009ab2"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-control.json",
+      "sha256": "589b62523501651671bb82642ffc03b49710ad00e74f7f40a8cc3689f11d01e9"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/structural-direction-clipboard-results/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-editor.json",
+      "sha256": "9aaee1fca9a787b18b1cb98bb86e9d40feffbf13687bc28155d7c00b9023af98"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-browser-20261008.log",
+      "sha256": "fd126b4646cf49805eb3bba2b71ac13fa12885ea8aa807adcdfadb00eeae1b2b"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-verify-20261008.log",
+      "sha256": "cba3da41f830c9b0607438e8107fef69fb9e7bc4bbd53b0ead08ea9f8241790d"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-performance-20261008.log",
+      "sha256": "2f09a997c64be73a3ed4c9f0bbdfbd5997e0c5efb949f60d0a0f593ee2987d93"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/native-clipboard-capability.jsonl",
+      "sha256": "172160ddb0e15a98aac20302cdfe27f835184acda0af61748931182bc9c2bfaa"
+    },
+    {
+      "path": "artifacts/ci-1e90cde-direction/native-clipboard-headed-capability.jsonl",
+      "sha256": "6aa31c6230f2a9b11f902050d09ce5f57efb15d681f43d8d921f5d51423dac8a"
+    }
+  ]
+}

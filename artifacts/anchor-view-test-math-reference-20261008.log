@@ -1,0 +1,75 @@
+$ node scripts/audit-math-labels.mjs
+{
+  "renderer": "MathJax 4.1.3",
+  "status": "reference-semantics-verified",
+  "fountainStatus": "document-context API and bounded host SVG/reader lab implemented; this script checks semantics only, not whole-paper or export parity",
+  "equations": [
+    {
+      "sha256": "d43aafd64986470149793169e6c1f001eae2f66706335d4b5e6864ff4fc465b7",
+      "tags": [
+        {
+          "id": "mjx-eqn:eq:dNFE",
+          "text": "(1)",
+          "row": 0
+        }
+      ]
+    },
+    {
+      "sha256": "b8ae1e0dc1cbaf7c15846891804d22fa0581f45f54e14e4da7857061ab57d3ec",
+      "tags": [
+        {
+          "id": "mjx-eqn:eq:dSNFE",
+          "text": "(2)",
+          "row": 1
+        }
+      ]
+    }
+  ],
+  "backwardReferences": [
+    [
+      {
+        "text": "(1)",
+        "href": "#mjx-eqn%3Aeq%3AdNFE"
+      }
+    ],
+    [
+      {
+        "text": "(2)",
+        "href": "#mjx-eqn%3Aeq%3AdSNFE"
+      }
+    ]
+  ],
+  "reorderedForwardReferences": [
+    [
+      {
+        "text": "(2)",
+        "href": "#mjx-eqn%3Aeq%3AdNFE"
+      }
+    ],
+    [
+      {
+        "text": "(1)",
+        "href": "#mjx-eqn%3Aeq%3AdSNFE"
+      }
+    ]
+  ],
+  "deletedTarget": [
+    {
+      "text": "(???)",
+      "href": "#"
+    }
+  ],
+  "checks": [
+    "unchanged source",
+    "nonumber defers label to numbered row",
+    "backward references",
+    "forward references",
+    "reorder renumbering",
+    "fresh-snapshot repeatability",
+    "deleted target remains unresolved",
+    "duplicate labels rejected",
+    "starred environments",
+    "manual tags",
+    "unsupported commands rejected"
+  ]
+}

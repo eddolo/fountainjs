@@ -1,0 +1,92 @@
+{
+  "source": "<h2>Anchor import audit</h2><p>Before <a id=\"private-bookmark\">Section</a> after.</p><p>Safe <a href=\"/next\"></a> empty link. <a href=\"/guide\">Guide</a></p>",
+  "original": "<h2>Anchor import audit</h2><p>Before <a id=\"private-bookmark\">Section</a> after.</p><p>Safe <a href=\"/next\"></a> empty link. <a href=\"/guide\">Guide</a></p>",
+  "report": "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark.",
+  "editorHTML": "<h2 data-fountain-node=\"heading\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">Anchor import audit</span></h2><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">Edited: Before </span><span data-fountain-text-path=\"1.1\">Section</span><span data-fountain-text-path=\"1.2\"> after.</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">Safe </span><a title=\"\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" data-fountain-inline-link=\"\"><span data-fountain-text-path=\"2.1\"></span></a><span data-fountain-text-path=\"2.2\"> empty link. </span><a href=\"/guide\" title=\"\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" data-fountain-inline-link=\"\"><span data-fountain-text-path=\"2.3\">Guide</span></a></p>",
+  "exportedDocument": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2,
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Anchor import audit"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Edited: Before "
+          },
+          {
+            "type": "text",
+            "text": "Section"
+          },
+          {
+            "type": "text",
+            "text": " after."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Safe "
+          },
+          {
+            "type": "text",
+            "text": "",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/next",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " empty link. "
+          },
+          {
+            "type": "text",
+            "text": "Guide",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/guide",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "exportedHTML": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>FountainJS document</title>\n<style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) \".\";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>\n</head>\n<body>\n<h2>Anchor import audit</h2>\n<p>Edited: Before Section after.</p>\n<p>Safe <a href=\"/next\" target=\"_blank\" rel=\"noopener noreferrer nofollow\"></a> empty link. <a href=\"/guide\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">Guide</a></p>\n</body>\n</html>",
+  "viewPolicy": "Empty links retain marks in JSON/HTML but intentionally have no actionable href in the view.",
+  "roundTrip": "The reopened Fountain document differs. Inspect the preview and report.This compares only the current Fountain draft, not the original file. Original import findings: 1. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.html-export-boundary: HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.document-shell-omitted: The HTML document body and valid Fountain page settings were imported. Head metadata, stylesheets, other document-shell attributes and non-body framesets are not preserved; external resources are not fetched.Anchor import auditEdited: Before Section after.Safe  empty link. Guide",
+  "pageErrors": []
+}

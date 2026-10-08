@@ -1,0 +1,179 @@
+[WebServer] (node:6252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:16732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:18232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:12928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:21256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (8.3s)
+(node:10752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (12.0s)
+(node:8800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (8.6s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('a[href="/next"]')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('a[href="/next"]')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at html-anchor-loss-journey.ts:19
+
+      17 |   await expect(workspace.getByLabel('Original source', { exact: true })).toHaveText(source);
+      18 |   await expect(editor.locator('[id="private-bookmark"]')).toHaveCount(0);
+    > 19 |   await expect(editor.locator('a[href="/next"]')).toHaveCount(1);
+         |                                                   ^
+      20 |   await workspace.screenshot({ path: info.outputPath('anchor-loss-imported.png') });
+      21 |
+      22 |   const paragraph = editor.locator('p').filter({ hasText: 'Before Section after.' });
+        at htmlAnchorLossJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-anchor-loss-journey.ts:19:51)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:52:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('a[href="/next"]')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('a[href="/next"]')
+        13 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at html-anchor-loss-journey.ts:19
+
+      17 |   await expect(workspace.getByLabel('Original source', { exact: true })).toHaveText(source);
+      18 |   await expect(editor.locator('[id="private-bookmark"]')).toHaveCount(0);
+    > 19 |   await expect(editor.locator('a[href="/next"]')).toHaveCount(1);
+         |                                                   ^
+      20 |   await workspace.screenshot({ path: info.outputPath('anchor-loss-imported.png') });
+      21 |
+      22 |   const paragraph = editor.locator('p').filter({ hasText: 'Before Section after.' });
+        at htmlAnchorLossJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-anchor-loss-journey.ts:19:51)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:52:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('a[href="/next"]')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: anchors.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('a[href="/next"]')
+        13 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at html-anchor-loss-journey.ts:19
+
+      17 |   await expect(workspace.getByLabel('Original source', { exact: true })).toHaveText(source);
+      18 |   await expect(editor.locator('[id="private-bookmark"]')).toHaveCount(0);
+    > 19 |   await expect(editor.locator('a[href="/next"]')).toHaveCount(1);
+         |                                                   ^
+      20 |   await workspace.screenshot({ path: info.outputPath('anchor-loss-imported.png') });
+      21 |
+      22 |   const paragraph = editor.locator('p').filter({ hasText: 'Before Section after.' });
+        at htmlAnchorLossJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-anchor-loss-journey.ts:19:51)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:52:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-anchor-loss-final-browser-20261008\editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+    [firefox] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 
+    [webkit] › tests\browser\editor.spec.ts:51:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks 

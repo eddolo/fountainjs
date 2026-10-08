@@ -15,6 +15,47 @@ function setup(content: NodeJSON[], editable = true) {
 const link = (href = '/guide', title = '') => ({ type: 'link', attrs: { href, title } });
 
 describe('inline link view projection', () => {
+  it.each([
+    ['strong', [{ type: 'strong' }]],
+    ['link', [link()]],
+    ['strong-link', [{ type: 'strong' }, link()]],
+  ] as const)('retains empty %s wrappers with and without a boundary widget', (kind, marks) => {
+    const { editor, view, exported, destroy } = setup([{ type: 'paragraph', content: [
+      { type: 'text', text: '', marks: [...marks] },
+    ] }]);
+    try {
+      const original = editor.getJSON();
+      for (const decorated of [false, true]) {
+        const dom = renderNode(editor.state.doc.child(0), [0], { document: editor.state.doc,
+          ...(decorated ? { decorations: DecorationSet.create(editor.state.doc, [Decoration.widget(1, () => {
+            const button = document.createElement('button'); button.textContent = 'Comment'; return button;
+          })]) } : {}),
+        }, 0) as HTMLElement;
+        const leaf = dom.querySelector('[data-fountain-text-path="0.0"]')!;
+        if (kind.includes('strong')) expect(leaf.querySelector('strong')).not.toBeNull();
+        if (kind.includes('link')) {
+          expect(dom.querySelector('a')).not.toBeNull();
+          expect(dom.querySelector('a[href]')).toBeNull();
+        }
+        expect(leaf.querySelectorAll('[data-fountain-caret-placeholder]')).toHaveLength(1);
+        expect(dom.querySelectorAll('button')).toHaveLength(decorated ? 1 : 0);
+        expect(dom.querySelector('a button, strong button')).toBeNull();
+        expect(leaf.textContent).toBe(decorated ? 'Comment' : '');
+        expect(editor.getJSON()).toEqual(original);
+      }
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+      expect(insertText(editor, 'Label')).toBe(true);
+      if (kind.includes('strong')) expect(view.dom.querySelector('strong')?.textContent).toBe('Label');
+      if (kind.includes('link')) expect(view.dom.querySelector('a[href="/guide"]')?.textContent).toBe('Label');
+      const edited = editor.getJSON();
+      expect(undo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(original);
+      expect(HTMLExporter.export(editor.state.doc, { document: false })).toBe(exported);
+      expect(redo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(edited);
+    } finally { destroy(); }
+  });
+
   it.each([true, false])('keeps one link across mixed text marks without changing paths or export (editable=%s)', editable => {
     const { editor, view, exported, destroy } = setup([{ type: 'paragraph', content: [
       { type: 'text', text: 'Second ', marks: [link()] },

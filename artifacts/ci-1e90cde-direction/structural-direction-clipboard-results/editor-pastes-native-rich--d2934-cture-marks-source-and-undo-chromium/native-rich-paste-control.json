@@ -1,0 +1,36 @@
+{
+  "source": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+  "nativeEvents": [
+    {
+      "type": "paste",
+      "trusted": true,
+      "cancelable": true,
+      "types": [
+        "text/plain",
+        "text/html"
+      ],
+      "plain": "Research note\nResult is bold with emphasis and reference.\n\nשלום source\n\nvalue = 1\nprint(value)\nSample\tValue\nA\t42\n",
+      "html": "<h2 style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Research note</h2><p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Result is<span> </span><strong>bold</strong><span> </span>with<span> </span><em>emphasis</em><span> </span>and<span> </span><a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\" style=\"border-inline-start: 3px solid rgb(118, 80, 255); padding: 12px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><p>שלום source</p></blockquote><pre dir=\"ltr\" style=\"color: rgb(0, 0, 0); font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><code>value = 1\nprint(value)</code></pre><table style=\"font-family: sans-serif; letter-spacing: normal; orphans: 2; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><tbody><tr><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">Sample</td><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">Value</td></tr><tr><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">A</td><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">42</td></tr></tbody></table>",
+      "json": ""
+    },
+    {
+      "type": "beforeinput",
+      "trusted": true,
+      "cancelable": true,
+      "inputType": "insertFromPaste",
+      "types": [
+        "text/plain",
+        "text/html"
+      ],
+      "plain": "Research note\nResult is bold with emphasis and reference.\n\nשלום source\n\nvalue = 1\nprint(value)\nSample\tValue\nA\t42\n",
+      "html": "<h2 style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Research note</h2><p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\">Result is<span> </span><strong>bold</strong><span> </span>with<span> </span><em>emphasis</em><span> </span>and<span> </span><a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\" style=\"border-inline-start: 3px solid rgb(118, 80, 255); padding: 12px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><p>שלום source</p></blockquote><pre dir=\"ltr\" style=\"color: rgb(0, 0, 0); font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><code>value = 1\nprint(value)</code></pre><table style=\"font-family: sans-serif; letter-spacing: normal; orphans: 2; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\"><tbody><tr><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">Sample</td><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">Value</td></tr><tr><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">A</td><td style=\"border: 1px solid rgb(187, 187, 187); padding: 8px;\">42</td></tr></tbody></table>",
+      "json": ""
+    }
+  ],
+  "nativeHTML": "<h2>Research note</h2><p>Result is <strong>bold</strong> with <em>emphasis</em> and <a href=\"https://example.org/reference\">reference</a>.</p><blockquote dir=\"rtl\"><p>שלום source</p></blockquote><pre dir=\"ltr\"><code>value = 1\nprint(value)</code></pre><table><tbody><tr><td>Sample</td><td>Value</td></tr><tr><td>A</td><td>42</td></tr></tbody></table>",
+  "nativeAppearance": {
+    "foreground": "rgb(0, 0, 0)",
+    "background": "rgb(255, 255, 255)",
+    "contrast": 21
+  }
+}

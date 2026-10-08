@@ -1,0 +1,82 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2,
+        "align": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Anchor import audit"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Edited: Before "
+        },
+        {
+          "type": "text",
+          "text": "Section"
+        },
+        {
+          "type": "text",
+          "text": " after."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Safe "
+        },
+        {
+          "type": "text",
+          "text": "",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/next",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " empty link. "
+        },
+        {
+          "type": "text",
+          "text": "Guide",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "/guide",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

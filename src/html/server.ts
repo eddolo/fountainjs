@@ -766,6 +766,14 @@ function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark
     code: 'unmapped-inline-element',
     message: 'Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.',
   });
+  // The built-in link mark owns navigation, not HTML bookmark identity or
+  // non-hyperlink anchor wrappers. Accepted custom projections own their own
+  // contract; configured inline nodes have already returned before this path.
+  if (reportUnknown && tag === 'a' && !customMarks.length
+    && (!child.hasAttribute('href') || !schema.marks.link || child.hasAttribute('id') || child.hasAttribute('name'))) reportOnce(context, {
+    code: 'unmapped-inline-element', contribution: 'element:a',
+    message: 'An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark.',
+  });
   if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
     color: colorValue(child.style.backgroundColor ?? '') ?? '#fff3a3',
   });

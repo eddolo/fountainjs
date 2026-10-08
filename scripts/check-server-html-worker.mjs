@@ -58,6 +58,8 @@ try {
   if (body.inertSourceChecked !== true) throw new Error('Worker inert inline source preservation failed.');
   if (body.linkControlsChecked !== 486) throw new Error('Worker HTML link normalization/security/history failed.');
   console.log(`Cloudflare workerd (Miniflare): ${body.linkControlsChecked} link normalization/security/history/destination contracts passed.`);
+  if (body.anchorsChecked !== 13) throw new Error('Worker anchor loss/privacy/retention failed.');
+  console.log(`Cloudflare workerd (Miniflare): ${body.anchorsChecked} anchor loss/privacy/retention contracts passed.`);
   console.log('Cloudflare workerd (Miniflare): inert inline lexical data, complete reopen, transactions/history and carrier refusal passed.');
   console.log('Cloudflare workerd (Miniflare): 576 owned-attribute checks plus immutable snapshots/history passed.');
   console.log('Cloudflare workerd (Miniflare): 140 native emphasis and partial-schema retention checks passed.');

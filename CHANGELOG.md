@@ -7,6 +7,35 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Record the successful `0928289` Linux checkpoint separately: 2,855 units /
+  214 files; 756 clean unique browser passes, one Firefox Angular retry-pass
+  and sixteen skips across 773 cases. Keep the retry visible as follow-up work;
+  this older commit does not certify subsequent runtime changes.
+
+- Report default HTML anchor/bookmark identity and unavailable link navigation
+  instead of silently omitting it. Reuse `unmapped-inline-element` with bounded,
+  source-free messages; accepted custom projections keep ownership. Supported
+  empty hyperlink metadata remains intact in JSON/HTML; the empty live view
+  remains intentionally non-actionable. Preserve empty mark wrappers when a
+  boundary widget prevents shared-link grouping, without fake text or document
+  mutation. This does not implement bookmarks or relax
+  URL policy. Correct public CommonMark counts and regression-lock them against
+  the enforced fixtures. Add an isolated serial video/trace recording config
+  rather than stopping an occupied user editor server.
+  Local suite: 2,872 tests / 215 files; three recorded desktop journeys pass.
+  Add thirteen named-anchor privacy/retention contracts to packed ESM/CJS root
+  and headless consumers, emitted Node and real workerd. The unchanged remote
+  scaling gate fails once at 17.11x and passes on repeat at 10.58x (limit 15x);
+  preserve both logs, with no performance/heap-limit changes. No npm promotion.
+
+- Complete the `1e90cde` Linux checkpoint: all jobs pass, 2,831 units / 213 files,
+  and 757 unique browser passes / sixteen existing skips. Twelve strict serial
+  display clipboard cases and 761 headless cases form the exact 773-case matrix;
+  67 repeated preflights are not added to unique coverage. Directly inspect nine
+  Linux native-source/control/Fountain captures: retained structure and readable
+  code, not pixel-equivalent themes/layout. Later edits need their own evidence;
+  wider parity, physical-device proof and nested-auto gaps remain open.
+
 - Strengthen the development-only CommonMark comparator with three absent-href
   placeholder versus empty-href hyperlink guards. Add 24 official LF/CRLF
   Node-only inert-adapter source/data/reopening contracts, keeping native HTML
@@ -23,7 +52,8 @@ policy on reopen. Native layout certification remains outstanding.
   reviewed. Mixed conflicting colours/custom CSS are not general contrast approval.
   The complete single-worker regression passes 2,831 tests / 213 files; final
   packed consumers, API/headless, types, unchanged CommonMark, Node/workerd,
-  measured size and website checks pass. New-source Linux CI is pending. Aggregate-only
+  measured size and website checks pass. The separate completed `1e90cde` Linux
+  checkpoint is recorded above. Aggregate-only
   measured code capacity grows ~0.9 KiB ESM / ~0.7 KiB CJS; all unrelated caps remain.
   Linux headed Xvfb controls retain rich clipboard data that headless WebKit loses;
   run the four affected workflows serially in a strict display-backed gate, with

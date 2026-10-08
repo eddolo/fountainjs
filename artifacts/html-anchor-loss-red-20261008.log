@@ -1,0 +1,107 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/server-html-loss-report.test.ts (34 tests | 9 failed) 382ms
+   ❯ explicit server HTML conversion losses (34)
+     × reports an unrepresented anchor wrapper or bookmark without exposing its value: <a id="private-bookmark">Section</a> 9ms
+     × reports an unrepresented anchor wrapper or bookmark without exposing its value: <a id="private-bookmark"></a> 3ms
+     × reports an unrepresented anchor wrapper or bookmark without exposing its value: <a>Section</a> 2ms
+     × reports an unrepresented anchor wrapper or bookmark without exposing its value: <a href="/next" id="private-bookmark">Section</a> 2ms
+     × reports an unrepresented anchor wrapper or bookmark without exposing its value: <a href="/next" name="private-bookmark">Section</a> 1ms
+     × reports an unrepresented anchor wrapper or bookmark without exposing its value: <a href="" name="private-bookmark"></a> 1ms
+     × reports navigation loss when the receiving schema has no link mark 1ms
+     × bounds repeated bookmark losses rather than echoing every imported anchor 42ms
+     × surfaces bookmark loss through the explicit Markdown inline report adapter 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports an unrepresented anchor wrapper or bookmark without exposing its value: <a id="private-bookmark">Section</a>
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports an unrepresented anchor wrapper or bookmark without exposing its value: <a id="private-bookmark"></a>
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports an unrepresented anchor wrapper or bookmark without exposing its value: <a>Section</a>
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports an unrepresented anchor wrapper or bookmark without exposing its value: <a href="/next" id="private-bookmark">Section</a>
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports an unrepresented anchor wrapper or bookmark without exposing its value: <a href="/next" name="private-bookmark">Section</a>
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports an unrepresented anchor wrapper or bookmark without exposing its value: <a href="" name="private-bookmark"></a>
+AssertionError: expected [] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+- [
+-   ObjectContaining {
+-     "code": "unmapped-inline-element",
+-   },
+- ]
++ []
+
+ ❯ tests/server-html-loss-report.test.ts:65:27
+     63|     const result = ServerHTMLImporter.parseWithReport(`<p>Before ${anc…
+     64|     expect(result.document.textContent).toBe(`Before ${anchor.includes…
+     65|     expect(result.issues).toEqual([expect.objectContaining({ code: 'un…
+       |                           ^
+     66|     expect(JSON.stringify(result.issues)).not.toMatch(/private-bookmar…
+     67|     expect(Object.isFrozen(result.issues[0])).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > reports navigation loss when the receiving schema has no link mark
+AssertionError: expected [] to deeply equal [ 'unmapped-inline-element' ]
+
+- Expected
++ Received
+
+- [
+-   "unmapped-inline-element",
+- ]
++ []
+
+ ❯ tests/server-html-loss-report.test.ts:74:52
+     72|     const result = ServerHTMLImporter.parseWithReport('<p><a href="/pr…
+     73|     expect(result.document.textContent).toBe('Readable');
+     74|     expect(result.issues.map(issue => issue.code)).toEqual(['unmapped-…
+       |                                                    ^
+     75|     expect(JSON.stringify(result.issues)).not.toContain('private-path'…
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > bounds repeated bookmark losses rather than echoing every imported anchor
+AssertionError: expected [] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+- [
+-   ObjectContaining {
+-     "code": "unmapped-inline-element",
+-   },
+- ]
++ []
+
+ ❯ tests/server-html-loss-report.test.ts:101:27
+     99|     const result = ServerHTMLImporter.parseWithReport(`<p>${'<a id="pr…
+    100|     expect(result.document.textContent).toBe('Section'.repeat(1000));
+    101|     expect(result.issues).toEqual([expect.objectContaining({ code: 'un…
+       |                           ^
+    102|   });
+    103|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/server-html-loss-report.test.ts > explicit server HTML conversion losses > surfaces bookmark loss through the explicit Markdown inline report adapter
+AssertionError: expected [ 'inline-html-projection' ] to include 'unmapped-inline-element'
+ ❯ tests/server-html-loss-report.test.ts:115:19
+    113|     });
+    114|     expect(doc.textContent).toBe('Before Section after.');
+    115|     expect(codes).toContain('unmapped-inline-element');
+       |                   ^
+    116|   });
+    117|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 25 passed (34)
+   Start at  05:08:49
+   Duration  3.07s (transform 47%, import 39%, tests 14%)
+

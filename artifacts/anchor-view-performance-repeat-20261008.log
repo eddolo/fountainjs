@@ -1,0 +1,15 @@
+$ node --expose-gc scripts/check-performance-budgets.mjs
+100 blocks: local p50 0.09 ms, p95 0.15 ms; incremental remote p50 0.07 ms, p95 1.29 ms; JSON boundary p50 0.75 ms, p95 0.97 ms
+1,000 blocks: local p50 0.09 ms, p95 0.21 ms; incremental remote p50 0.09 ms, p95 0.10 ms; JSON boundary p50 6.05 ms, p95 26.11 ms
+5,000 blocks: local p50 0.28 ms, p95 4.09 ms; incremental remote p50 0.44 ms, p95 0.51 ms; JSON boundary p50 54.03 ms, p95 63.81 ms
+10,000 blocks: local p50 0.87 ms, p95 1.37 ms; incremental remote p50 0.91 ms, p95 2.92 ms; JSON boundary p50 72.18 ms, p95 125.64 ms
+100 HTML blocks: server parse p50 11.38 ms, p95 26.74 ms
+1,000 HTML blocks: server parse p50 64.19 ms, p95 90.67 ms
+5,000 HTML blocks: server parse p50 252.74 ms, p95 290.10 ms
+10,000 HTML blocks: server parse p50 494.36 ms, p95 532.29 ms
+server HTML 1,000→10,000 median growth: 7.70x / 15x
+local 1,000→10,000 median growth: 9.99x / 15x
+incremental remote 1,000→10,000 median growth: 10.58x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.06 MiB / 16 MiB
+retained 10,000-block server HTML document: 15.21 MiB / 48 MiB

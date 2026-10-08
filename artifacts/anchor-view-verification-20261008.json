@@ -1,0 +1,575 @@
+{
+  "date": "2026-10-08",
+  "sourceBaseCommit": "0928289f323e6b76ee1924c96ef5989381dddf2f",
+  "status": "locally verified unreleased runtime follow-up; fresh Linux CI required; goal active",
+  "changes": [
+    "Report omitted built-in HTML anchor wrappers/bookmark IDs or unsupported navigation through existing bounded immutable unmapped-inline-element diagnostics without echoing private source values.",
+    "Accepted registered node/mark projections retain ownership; default bookmark semantics are still unsupported.",
+    "Preserve empty text mark wrappers, including widget boundaries, without inserting fake text or changing caret-placeholder/model state.",
+    "Keep deliberate non-actionable empty/whitespace-only live links while retaining JSON/HTML metadata.",
+    "Correct and regression-lock public CommonMark profile counts; add serial isolated recording config without disturbing the occupied user server."
+  ],
+  "verification": {
+    "fullUnits": {
+      "tests": 2872,
+      "files": 215,
+      "durationSeconds": 206.36,
+      "workers": 1,
+      "note": "After this full run, the existing Markdown loss-report test was strengthened to require both existing inline-projection and new anchor-loss reports. The final unchanged-runtime file rerun passed all 34 tests."
+    },
+    "focusedInitial": {
+      "tests": 147,
+      "files": 5
+    },
+    "finalLossReport": {
+      "tests": 34,
+      "files": 1
+    },
+    "compiledContracts": {
+      "casesPerConsumer": 13,
+      "packedESM": [
+        "root",
+        "DOM-free core"
+      ],
+      "packedCommonJS": [
+        "root",
+        "DOM-free core"
+      ],
+      "emittedNode": "passed",
+      "realWorkerd": "passed",
+      "fakeDOM": false,
+      "note": "Separate environment repetitions, not additional unit-test coverage. Bun/Deno are not newly executed locally."
+    },
+    "browser": {
+      "uniqueJourneys": 3,
+      "browsers": [
+        "Chromium",
+        "Firefox",
+        "WebKit"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "recording": true,
+      "durationSeconds": 46.1,
+      "actions": [
+        "real HTML file selection",
+        "private-value-free warning inspection",
+        "text editing",
+        "undo/redo",
+        "exact JSON draft reopening",
+        "actual JSON/HTML download inspection",
+        "reader preview"
+      ],
+      "noDocumentOrSelectionAPIWrites": true,
+      "allPageErrors": [],
+      "note": "Earlier successful three-case run is repeated evidence, not three additional unique workflows. HTML pixel fidelity/exact complete HTML JSON equality is not asserted."
+    },
+    "gates": [
+      "library build and declaration emit",
+      "public API",
+      "packed consumers",
+      "Node/workerd",
+      "headless boundary",
+      "strict CommonMark profiles",
+      "math reference",
+      "DOCX interoperability",
+      "build size",
+      "framework types",
+      "full unit suite",
+      "production website build"
+    ],
+    "commonMark": {
+      "default": 563,
+      "html": 579,
+      "sourceRecovery": 580,
+      "containers": 601,
+      "comments": 613,
+      "anonymousFlow": 613,
+      "total": 652,
+      "unchanged": true
+    },
+    "performance": {
+      "firstRun": {
+        "conclusion": "failed",
+        "remoteRatio": 17.11,
+        "absoluteLatencyAndHeap": "passed"
+      },
+      "sameConfigurationRepeat": {
+        "conclusion": "passed",
+        "remoteRatio": 10.58
+      },
+      "maximumRatio": 15,
+      "limitsChanged": false,
+      "note": "Both raw logs retained. Variation is observed; a repeat pass does not erase the failed run or prove broad performance reliability."
+    },
+    "budgets": {
+      "aggregateESMKiB": 1598,
+      "aggregateCJSKiB": 1329.1,
+      "ESMLimitKiB": 1598.25,
+      "CJSLimitKiB": 1329.5,
+      "previousESMLimitKiB": 1597.75,
+      "previousCJSLimitKiB": 1329,
+      "reason": "Measured anchor diagnostics and empty wrapper feature cost (~0.5 KiB ESM / 0.4 KiB CJS).",
+      "individualEntriesChanged": false,
+      "CSSLimitChanged": false,
+      "dependencyChanged": false,
+      "performanceOrHeapChanged": false
+    }
+  },
+  "visualReview": {
+    "directlyViewed": [
+      "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-imported-editor.png",
+      "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-reopened-editor.png",
+      "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-imported-editor.png",
+      "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-reopened-editor.png",
+      "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-imported-editor.png",
+      "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-reopened-editor.png"
+    ],
+    "findings": [
+      "Imported heading, readable anchor descendants and visible Guide hyperlink remain readable.",
+      "Edited text and reopened reader agree; no clipping or sticky navigation overlay in the tight editor captures.",
+      "The named bookmark itself remains unsupported and is explicitly reported; empty links are not visible/actionable navigation.",
+      "Earlier full-workspace screenshots show sticky-nav capture overlays. Tight screenshots avoid that screenshot artifact; no web layout redesign or pixel-equality claim."
+    ],
+    "videos": "Recorded locally but not watched; not claimed as video visual review."
+  },
+  "retainedFailures": [
+    {
+      "log": "artifacts/html-anchor-loss-red-20261008.log",
+      "result": "9 expected pre-fix diagnostic failures"
+    },
+    {
+      "log": "artifacts/html-anchor-loss-focused-20261008.log",
+      "result": "existing parity fixture expected no loss report; corrected only the actual placeholder fixture"
+    },
+    {
+      "log": "artifacts/empty-inline-widget-red-20261008.log",
+      "result": "invalid Vitest minWorkers flag; no tests executed"
+    },
+    {
+      "log": "artifacts/empty-inline-widget-real-red-20261008.log",
+      "result": "3 genuine empty-mark wrapper failures before renderer fix"
+    },
+    {
+      "log": "artifacts/html-anchor-loss-browser-20261008.log",
+      "result": "occupied port; no browser cases started; user server preserved"
+    },
+    {
+      "log": "artifacts/html-anchor-loss-isolated-browser-20261008.log",
+      "result": "worker fixture configuration inside describe rejected before cases; settings moved to recording config"
+    },
+    {
+      "log": "artifacts/html-anchor-loss-final-browser-20261008.log",
+      "result": "3 incorrect actionable empty-href expectations; existing documented view policy retained and stronger actual-download contracts added"
+    },
+    {
+      "log": "artifacts/anchor-view-recorded-20261008.log",
+      "result": "3 locator timeouts after successful editing/history; use existing accessible combobox role rather than incorrect exact label selector"
+    },
+    {
+      "log": "artifacts/anchor-view-test-performance-20261008.log",
+      "result": "remote scaling ratio 17.11x exceeds unchanged 15x"
+    },
+    {
+      "log": "artifacts/anchor-view-package-final-20261008.log",
+      "result": "new fixture wrongly assumed inline adapter emitted one report; require both precise existing/new reports instead"
+    }
+  ],
+  "limitations": [
+    "No new native bookmark implementation or complete unknown-attribute loss detection.",
+    "Full CommonMark semantics, six nested-auto gaps, physical devices and broader parity remain incomplete.",
+    "Fresh Linux CI is needed for these runtime edits. Previous 0928289 CI is not reused as certification.",
+    "Firefox Angular selected-media first-attempt timeout in 0928289 is an open reliability follow-up.",
+    "No npm version/ledger/percentage promotion or Inkognito rename."
+  ],
+  "hashScope": "sha256 records local worktree/file bytes; gitBlob records Git-filtered content for LF-normalized repository reproducibility. Source base plus source hashes identifies the patch; old raw logs intentionally retain failures.",
+  "sourceHashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "37114ae91d02dee80ea72a0b5755e13267ebf6d8058f8c5a3ccc8797b0972789",
+      "gitBlob": "e3a3a107c3ae97ca6b26dc18cd014994c6cc6238"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "1dfcaaeace96c5737161ea3ee278d0cc5b6904d3203be48aa5f6afc4d59784dc",
+      "gitBlob": "102998be5bffbe65f259b37d83917368e2c4fb9f"
+    },
+    {
+      "path": "docs/MARKDOWN_DOCUMENT_FLOW.md",
+      "sha256": "09d951003eef01a1547d024f8ba943d6eca02049103ea9d9f0295d54fbe95646",
+      "gitBlob": "becb6210b816327865962fdd97033f17c4949725"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "e246e226e72078d0ac63a639f9a06cfeb447b129582b42df7f59051532d6c210",
+      "gitBlob": "c3cef3d3f50c3ac047def9933c2518c815ef90dc"
+    },
+    {
+      "path": "docs/SERVER_HTML.md",
+      "sha256": "57472840ca7286f7f05d74eb1a0016aef24c37074437b848eb0deddd650e3f5f",
+      "gitBlob": "87de190727073b1a0e85e2fe2415d3356203d4b7"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "b5675d88469b1790f9e84c08a49964f97b5ced06229f033df750de988a6482b4",
+      "gitBlob": "929e779322214c3176d186c0ed758ed9be755650"
+    },
+    {
+      "path": "examples/react-app/src/Developers.tsx",
+      "sha256": "1b21d4b9c303c621c6f286c00aca345ba4db4625eb3badbdde8757c7a19f7f40",
+      "gitBlob": "860107be889628395af6d5758c2958d64233485a"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "325c2c7d4eb190ab30d575d8a33ed71b62e6e42f19d45e70e59162d2e50ee1aa",
+      "gitBlob": "2b56d2ba6e7b9c221d1c07511d26aa1d3f5cf4c9"
+    },
+    {
+      "path": "scripts/check-server-html-worker.mjs",
+      "sha256": "f4a4bda0cd64ea302c01b4ad93b293dbfbd77bc604800643339d7417e76d8555",
+      "gitBlob": "2b1e6d83899fb0f874b286d49d28c6c1f0df66c3"
+    },
+    {
+      "path": "scripts/fixtures/server-html-worker.mjs",
+      "sha256": "9dbc01f7408b74b697980aebdce048a035f38cd0d266154b7ec6771a3400a41d",
+      "gitBlob": "0685e5bb61673c6a28d45256c124fd9d71e2ce4c"
+    },
+    {
+      "path": "scripts/smoke-package.mjs",
+      "sha256": "e71518aa2e16b490cf03cb353399b49f66fb21778c77954663ce8921f95b086b",
+      "gitBlob": "42d0c52db509002e15383b659802ba5896247b49"
+    },
+    {
+      "path": "scripts/smoke-server-html-runtime.mjs",
+      "sha256": "bc130113bfba5179517dabfd9d5ab49fd83613478289be55412c14fcb1dbb3ff",
+      "gitBlob": "c4bf487378fa74037b4e76522fd2fd46ce75cd60"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "313267c20ecce3002199edf6305c7a0ff738be942ccd4dc5626aef5f5917d2cc",
+      "gitBlob": "b9cd8902f3b97180bf7f0824b7bf2cc134493d5f"
+    },
+    {
+      "path": "src/view/dom-renderer.ts",
+      "sha256": "603b824071eef7b325aee93f45e9ec7c56809c56767e7fa1b71eae9f7d96f482",
+      "gitBlob": "16b22e8904f61c942216b176af42106e2f972afc"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "d8368dd4b59545aa3dd30417fe9e79513b68c47af00ae2cc504ddb43fc61fbfa",
+      "gitBlob": "535764f1d6feb12fee1860ab5a15ad842d44b333"
+    },
+    {
+      "path": "tests/inline-link-view.test.ts",
+      "sha256": "8404f524df8a922e1d1a3e56fb570ce8cee78dc66f0cae472571719fa95cb870",
+      "gitBlob": "2b91241ebfbb78e0b4c2451b11aee6d21582d523"
+    },
+    {
+      "path": "tests/server-html-loss-report.test.ts",
+      "sha256": "e769c430bdd050c13945d9e63ab866fb494edebc33de0774c8a4a6bcbd4259a4",
+      "gitBlob": "130e0141a3ce1ccdff3be07cbd9fcc88f8195004"
+    },
+    {
+      "path": "tests/server-html-parity.test.ts",
+      "sha256": "d1856a82317bba61d4d549a8813b361d52de9a65c611558582f37b75be3fb0ed",
+      "gitBlob": "f9070ccc0d6db1554ccbe1ded8f15aea089714f2"
+    },
+    {
+      "path": "playwright.recorded.config.ts",
+      "sha256": "13b798f13b822d3ccf937c004108e568e5d2cbec9a277956693846f744290b83",
+      "gitBlob": "f602b94815582dc339837c80c6f05ea317f418a5"
+    },
+    {
+      "path": "tests/browser/html-anchor-loss-journey.ts",
+      "sha256": "35e259f72deb86fefad82d0d8ffc3a67a18d884aea8bac2684aafbd02c4f5fc9",
+      "gitBlob": "fe86481dbc57b1e34857cbbe976b7186b48ac661"
+    },
+    {
+      "path": "tests/developer-markdown-status.test.ts",
+      "sha256": "fd0ab976ef0b2aee397d4d5d346e834d07ce071aa76ca5558c05e6030ffd66ce",
+      "gitBlob": "9b60a50d6ee5a33247c69bf03b51cdef06943f76"
+    },
+    {
+      "path": "scripts/fixtures/html-anchor-loss-check.mjs",
+      "sha256": "c44bf443b58e1a2789494e67cee26f786b02bf65924b0e379b2b20ada27e02b8",
+      "gitBlob": "ac00a8cb42880685e6aca23046b594a97d63dd97"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "artifacts/html-anchor-loss-red-20261008.log",
+      "sha256": "232ec812b5ebfbc7972165b3c9ea861c9d7113d6cbaabc54e7364b3eb7204b04",
+      "gitBlob": "24cecd2caa438623c04e91a82a543df7414483a5"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-focused-20261008.log",
+      "sha256": "6c201f26e1dd0fb29a60834b609b44d04a8217392c4fc98fef33fbb45f1a86c6",
+      "gitBlob": "9f07cc1b60834076b2b57f150a66d6d7f34c0ec5"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-focused-final-20261008.log",
+      "sha256": "0b66ff7af1ddb70ddc6faff7144dda9d67a4cdea94803583ad257f42c474111b",
+      "gitBlob": "a199de10c3057551a293a73b16dc4e0d28555ba6"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-build-20261008.log",
+      "sha256": "f82b95b475913cb0d422589e0c54d716c078ec8554b5ff7c315250c78d79aecb",
+      "gitBlob": "a3e9724ba91244057201dfdf5d696ff6592e554a"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-api-20261008.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4",
+      "gitBlob": "ecb1916d3b26b8064d84e0f6930e90304c603107"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-headless-20261008.log",
+      "sha256": "b00cfb6c7892c618bf1c7e612a13df0511a2ed939de3c30aa7824e7421f129d3",
+      "gitBlob": "33d580a9a11dbfb45ffb93bf015dbcd9635d7f1c"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-markdown-20261008.log",
+      "sha256": "1e353f3b0fcbcf1acafc7a49367041d56b71933e71b2065bf367dacfe71442cb",
+      "gitBlob": "7a1411ce4e61d14d0ad218f2d6a257e86c9ce488"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-budget-20261008.log",
+      "sha256": "0e57174b73d42e33135dde63175499e5f8bb890bb3512c50663c6b08a86d9c63",
+      "gitBlob": "9445bdb2ea27486197fe9b81c2247e454a65ce27"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-browser-20261008.log",
+      "sha256": "e0809de5961bd8257f3dfa12bcc4b28dc35afda9a5a046f847c57506aaf414c7",
+      "gitBlob": "9d1746c8ae2fbdaa7c7649a444b0caf56a9a38f5"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-isolated-browser-20261008.log",
+      "sha256": "cf2e6a19e6e5a6ac163e5f107583d773a110a85b7c96f195ca579a78a9a08818",
+      "gitBlob": "7fe780826fd6478fa9eff69427f9debdc4af7249"
+    },
+    {
+      "path": "artifacts/html-anchor-loss-final-browser-20261008.log",
+      "sha256": "5132397ee2982d4458647e2270a25453efe5a5f2b6b8a74c455055c5c3eae3f3",
+      "gitBlob": "dc38bfa7efc97ef1602148c6f03369f050f9c106"
+    },
+    {
+      "path": "artifacts/empty-inline-widget-red-20261008.log",
+      "sha256": "f3173ef563a588267829c4c3d81013fad871d3095d239a3559ee6ed85ebd25c4",
+      "gitBlob": "3beb643de0a1d5bff250dcee0311578017e2e0b2"
+    },
+    {
+      "path": "artifacts/empty-inline-widget-real-red-20261008.log",
+      "sha256": "4b885de57f5e3793aaffc22c90e0a4ed255c1a8f705899c21dbeb64855f8344a",
+      "gitBlob": "3f190c88363a8a0a7e92981387dc1b7da80e2d37"
+    },
+    {
+      "path": "artifacts/anchor-view-focused-20261008.log",
+      "sha256": "915c744418b88b3f1758c9f4e2c968b08e701b3b222c09ac93f90562165cc521",
+      "gitBlob": "e656eb36f57761062861050d13577f62a1557d05"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-20261008.log",
+      "sha256": "83facbe54e35bf7c2298cbb5874321567d02320ef6fa9031e9c6fe01a0084c03",
+      "gitBlob": "bf36e560b16818e953ccb2e42ba57a5efda3c7bb"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-final-20261008.log",
+      "sha256": "273cfaea79302f97c1f612dd826922de81be27f81bf58f53aef76cac9224218c",
+      "gitBlob": "9ecbefbcd307526d677059a7a48ae28236b52b9e"
+    },
+    {
+      "path": "artifacts/anchor-view-test-api-20261008.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4",
+      "gitBlob": "ecb1916d3b26b8064d84e0f6930e90304c603107"
+    },
+    {
+      "path": "artifacts/anchor-view-test-package-20261008.log",
+      "sha256": "c33689638963302d52c0082d00b07df22fe4371603a47df7f3c33aac46139bfa",
+      "gitBlob": "b2929adc1af44012f0ef4e0152999d19dad3b0a5"
+    },
+    {
+      "path": "artifacts/anchor-view-test-server-runtimes-20261008.log",
+      "sha256": "a8bd9f604be4762de7dee020af9c4e89f021122d2247703e11c9608f4480ef00",
+      "gitBlob": "71a2f631a73e6d7e29fe50a725049df2c951306f"
+    },
+    {
+      "path": "artifacts/anchor-view-test-headless-20261008.log",
+      "sha256": "b00cfb6c7892c618bf1c7e612a13df0511a2ed939de3c30aa7824e7421f129d3",
+      "gitBlob": "33d580a9a11dbfb45ffb93bf015dbcd9635d7f1c"
+    },
+    {
+      "path": "artifacts/anchor-view-test-markdown-conformance-20261008.log",
+      "sha256": "1e353f3b0fcbcf1acafc7a49367041d56b71933e71b2065bf367dacfe71442cb",
+      "gitBlob": "7a1411ce4e61d14d0ad218f2d6a257e86c9ce488"
+    },
+    {
+      "path": "artifacts/anchor-view-test-math-reference-20261008.log",
+      "sha256": "461df24a6d363ddf9d84374e1baa064db673e27fc1ac2f0a2ed96a5b4b2852e5",
+      "gitBlob": "5c7fb5a6402b8bb5baebe1a364476ddaf99f607c"
+    },
+    {
+      "path": "artifacts/anchor-view-test-docx-interoperability-20261008.log",
+      "sha256": "f65170d8c7a57f408d2504d30402b84590f4ac93b8995a67f51206746ebcfd41",
+      "gitBlob": "7c53d20c6609a48121cd10fb1bb73899dd441067"
+    },
+    {
+      "path": "artifacts/anchor-view-test-budget-20261008.log",
+      "sha256": "b7d949f63941f48244aed5eec8eb1d730a719fa136fb689d3b31da73d9c636e1",
+      "gitBlob": "195a56ad2a60a66d45396658dbe8e0f615c94814"
+    },
+    {
+      "path": "artifacts/anchor-view-test-performance-20261008.log",
+      "sha256": "83680b61ee7b4e9523205abeb7e8657483499fd3a81fc1a389ffaebc9c054d5b",
+      "gitBlob": "7d51aecd33d121bac6cd5edebdb24e23312a9b31"
+    },
+    {
+      "path": "artifacts/anchor-view-performance-repeat-20261008.log",
+      "sha256": "f8699655eb452559552b47a72c57e8279acbb7c326c3f378f10ee7b017ccb3e6",
+      "gitBlob": "de5a5683720f00f3c21409710f6c9d5dd78f3a38"
+    },
+    {
+      "path": "artifacts/anchor-view-types-20261008.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "gitBlob": "7d7f996b0d05ba3daa04e2474d964589fcb01f11"
+    },
+    {
+      "path": "artifacts/anchor-view-full-units-20261008.log",
+      "sha256": "98ffd76720cb1a52fab0d077979b6f020eaaaad24638e18d33c86636a4e568fd",
+      "gitBlob": "48f1cef98250c969e047ef1d1a2e48dd2c6a93a0"
+    },
+    {
+      "path": "artifacts/anchor-view-site-20261008.log",
+      "sha256": "2ffaa8ed8831110273815bf4166720fdc9c9ba2bdf41662720ce6949f8d5af21",
+      "gitBlob": "775d05d7fc124a002e862a4a9d7ecc5d7ee5f547"
+    },
+    {
+      "path": "artifacts/anchor-view-package-final-20261008.log",
+      "sha256": "185da61779d4e5923fe647846e05a260bd4bc2ea6e95d5052d1f71105382b6b1",
+      "gitBlob": "50c364b257cea73a7c8689ae82de5439b67f74eb"
+    },
+    {
+      "path": "artifacts/anchor-view-package-complete-20261008.log",
+      "sha256": "dcccddc9077417964235c5fb084ae9ee0442fbc8241df7d67d3e77e3c017eed2",
+      "gitBlob": "3fc192d14704b51de0d6f015e194bcfb28e234d4"
+    },
+    {
+      "path": "artifacts/anchor-view-runtimes-complete-20261008.log",
+      "sha256": "3dd3215252d82dda665a67c0209ebb3b081e8387b62899f52dff2492c476da0c",
+      "gitBlob": "1957a53665227db1cabf14429721c3d1864cc6c3"
+    },
+    {
+      "path": "artifacts/anchor-view-loss-report-final-20261008.log",
+      "sha256": "a654999ff9e4e5b3827fd679ed4224d3bd3d64008f0008c63cf0f0753912e61b",
+      "gitBlob": "8508bdbd4a679d1cee98db2081428863438f6ab6"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008.log",
+      "sha256": "af12efc6d08d3b64641c374fb944e31319719cda58570bccbd97c3e840e6630f",
+      "gitBlob": "2ae5c10cf9f386307fc0f55cb229b6617e63f638"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-edited-reopened.png",
+      "sha256": "a7dd5830c2e5bef98cfdd4f08aff2f6140422e9af2e37a53d05b716a36198c7e",
+      "gitBlob": "c5913065dafcff1cb6fd5da7245110b6fb09a270"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-export.html",
+      "sha256": "f5537895f07682fb867b9df6a27f6924ae521991963f3211700bff33c14f376e",
+      "gitBlob": "44be14486ced10de8aa49a12e7fe734a45082772"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-export.json",
+      "sha256": "e397e5f421cf3a1891f68ca739a9598474ed1986fc5648133a9c4b1cf5c72b88",
+      "gitBlob": "539a885ef14981230bd2a0d08da96d9f43e37caf"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-imported-editor.png",
+      "sha256": "09aeeb835b857e017e0e5f4c5eaae2eba2c0471040887bd5b0eaf93bb0bb2eff",
+      "gitBlob": "9ac35b7077a675c00bca678da124c5e139f2514e"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-imported.png",
+      "sha256": "04ad0958ef44cf120dcdd31fa1fbaaac64881fb58cc78b5c5f5e0763caf40d0c",
+      "gitBlob": "2043966fc39d88a5ea8969620a5afca9835f3d5b"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-observations.json",
+      "sha256": "c118d1b9d6a58363809ff278179d5e85a638b0c92a4d16767bf874f4bb74993f",
+      "gitBlob": "6e4d7fc7a9b60a248b7633865757af025e4ffd45"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-chromium/anchor-loss-reopened-editor.png",
+      "sha256": "23948c0118276af350ed97ce08db43bca78f0b08e0dc678ba48c9f2ad54e8b51",
+      "gitBlob": "01dde55cc60679c545f15b128b8edab694537081"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-edited-reopened.png",
+      "sha256": "4c0790253ebbcecbbf10019d7cd7d06948ea200bf3ba59368d8023d6070c3cd2",
+      "gitBlob": "046c5ec94a689d4140d9dbcde97124db55a9c7a1"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-export.html",
+      "sha256": "f5537895f07682fb867b9df6a27f6924ae521991963f3211700bff33c14f376e",
+      "gitBlob": "44be14486ced10de8aa49a12e7fe734a45082772"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-export.json",
+      "sha256": "e397e5f421cf3a1891f68ca739a9598474ed1986fc5648133a9c4b1cf5c72b88",
+      "gitBlob": "539a885ef14981230bd2a0d08da96d9f43e37caf"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-imported-editor.png",
+      "sha256": "bed66f7663eda0f2e980a3678a9b4620e06e60d964a47bcc39633e93bbeba6ff",
+      "gitBlob": "91e003839893ca49f0c9abd9fa557a94638e9ec0"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-imported.png",
+      "sha256": "4421869fc0475a2ff79d58b027670300be477ff378d7ceb44650efcab394af42",
+      "gitBlob": "7752a453bd6821559fb79c4740bbc384f0683ee3"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-observations.json",
+      "sha256": "c118d1b9d6a58363809ff278179d5e85a638b0c92a4d16767bf874f4bb74993f",
+      "gitBlob": "6e4d7fc7a9b60a248b7633865757af025e4ffd45"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-firefox/anchor-loss-reopened-editor.png",
+      "sha256": "802688e7a84ad644f72efcd8e02e73952c9b079a9ba7fcf1bccdb1e622efc42a",
+      "gitBlob": "b49043aef6fce7e930e18cf059cc4de9223a6497"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-edited-reopened.png",
+      "sha256": "61f15b120a03853c7096df66d642ddead15d3156e41629073be8498ce9debd53",
+      "gitBlob": "f24955dbefc1de5dc1e898fe32ab9f171cf0102e"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-export.html",
+      "sha256": "f5537895f07682fb867b9df6a27f6924ae521991963f3211700bff33c14f376e",
+      "gitBlob": "44be14486ced10de8aa49a12e7fe734a45082772"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-export.json",
+      "sha256": "e397e5f421cf3a1891f68ca739a9598474ed1986fc5648133a9c4b1cf5c72b88",
+      "gitBlob": "539a885ef14981230bd2a0d08da96d9f43e37caf"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-imported-editor.png",
+      "sha256": "666fcdd48167347b5db034c70ef6a00ede25199a4ae13a12c5650d26a63e83dd",
+      "gitBlob": "42665939814ef9cb22d0987033091d6885252d77"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-imported.png",
+      "sha256": "b1b1856c7c799c473e4c10a7b133a956f3eacff6bb1050c302e201bb909fd8b0",
+      "gitBlob": "364715b45d6e78f46d1bfa276b01621dc0cd8de0"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-observations.json",
+      "sha256": "c118d1b9d6a58363809ff278179d5e85a638b0c92a4d16767bf874f4bb74993f",
+      "gitBlob": "6e4d7fc7a9b60a248b7633865757af025e4ffd45"
+    },
+    {
+      "path": "artifacts/anchor-view-recorded-tight-20261008/editor-reports-dropped-nam-71595-ining-safe-empty-hyperlinks-webkit/anchor-loss-reopened-editor.png",
+      "sha256": "2dd0bf9890c2b4b87b05f4196835e017f0baafa631ed6ca17a6d69e98a235cd6",
+      "gitBlob": "9370300ca7ac43b458cad5d5fc513b85f082e5b4"
+    }
+  ]
+}

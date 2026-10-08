@@ -1,0 +1,48 @@
+[WebServer] (node:17232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:21048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:24600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:26012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+Cannot use({ video }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at editor.spec.ts:52
+
+  50 |
+  51 | test.describe('anchor import diagnostics', () => {
+> 52 |   test.use({ video: 'on', trace: 'on' });
+     |        ^
+  53 |   test('reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks', async ({ page }, info) => {
+  54 |     await htmlAnchorLossJourney(page, info);
+  55 |   });
+Cannot use({ trace }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at editor.spec.ts:52
+
+  50 |
+  51 | test.describe('anchor import diagnostics', () => {
+> 52 |   test.use({ video: 'on', trace: 'on' });
+     |        ^
+  53 |   test('reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks', async ({ page }, info) => {
+  54 |     await htmlAnchorLossJourney(page, info);
+  55 |   });
+

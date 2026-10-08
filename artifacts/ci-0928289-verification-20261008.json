@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-08",
+  "sourceCommit": "0928289f323e6b76ee1924c96ef5989381dddf2f",
+  "status": "terminal successful Linux CI; one flaky browser case retained as open reliability evidence",
+  "ci": {
+    "run": 37725304063,
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/37725304063",
+    "conclusion": "success",
+    "jobs": {
+      "browser": 113142004257,
+      "verify": 113142004432,
+      "performance": 113142004468,
+      "lean": 113142004371
+    },
+    "allJobs": "success",
+    "pages": {
+      "run": 37725304060,
+      "conclusion": "success"
+    }
+  },
+  "units": {
+    "tests": 2855,
+    "files": 214
+  },
+  "uniqueBrowserMatrix": {
+    "scheduled": 773,
+    "cleanPassed": 756,
+    "retryPassed": 1,
+    "skipped": 16,
+    "headless": {
+      "scheduled": 761,
+      "cleanPassed": 744,
+      "retryPassed": 1,
+      "skipped": 16
+    },
+    "displayClipboard": {
+      "scheduled": 12,
+      "cleanPassed": 12,
+      "workers": 1
+    }
+  },
+  "additionalPreflightExecutions": {
+    "structural": 60,
+    "nativeFocus": 5,
+    "firefoxSelection": 2,
+    "note": "67 repeated subset executions; not extra unique cases"
+  },
+  "retry": {
+    "browser": "Linux Firefox",
+    "test": "uses first-party Angular signals and directive for campaign editing and owner cleanup",
+    "firstAttempt": "60-second timeout waiting for the Selected media attributes group after clicking Select attachment",
+    "location": "tests/browser/angular-campaign-journey.ts:13",
+    "result": "passed retry #1; not a clean first attempt",
+    "followUp": "Inspect failing native click/selection and Angular toolbar propagation; do not raise timeout or hide retry."
+  },
+  "performance": {
+    "serverHTMLRatio": 8.71,
+    "localRatio": 10.48,
+    "incrementalRemoteRatio": 8.83,
+    "maximumRatio": 15,
+    "conclusion": "success on this commit"
+  },
+  "limitations": [
+    "This historical commit does not certify later anchor-report/empty-mark runtime changes.",
+    "No new visual certification is claimed for its artifacts; separate 1e90cde visual evidence is historical.",
+    "Six nested-auto diagnostic gaps, physical-device coverage, sixteen browser skips and full parity remain open.",
+    "Npm version and delivered ledger remain unchanged."
+  ],
+  "hashScope": "sha256 records local downloaded bytes; gitBlob records Git-filtered content for LF-normalized repository reproducibility.",
+  "evidenceHashes": [
+    {
+      "path": "artifacts/ci-0928289-browser-20261008.log",
+      "sha256": "805906929f7ea8f87e01897f04dd10d55377e833e4bb63186ebf37492503ebbc",
+      "gitBlob": "90e50d6d5d433460b01d9ae5974e6ca5a9e6eb8b"
+    },
+    {
+      "path": "artifacts/ci-0928289-verify-20261008.log",
+      "sha256": "cce9fa10bde637f22fe0144eb886bbf55f6a1b344ffd97fed373d6409852d40d",
+      "gitBlob": "057c02efb00bdc048c7aa5abb7a9294ce9ffb456"
+    },
+    {
+      "path": "artifacts/ci-0928289-performance-20261008.log",
+      "sha256": "a95198322502a82545a7ec25de32701a364af1cd439101a9c6423a813f8e0106",
+      "gitBlob": "18e8fb51efee5927d894f7facf16f2fcb53cccb5"
+    }
+  ]
+}
