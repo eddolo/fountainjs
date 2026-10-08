@@ -1,0 +1,61 @@
+[WebServer] (node:16216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:18240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (8.6s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        "right",
+    -   "left",
+    +   "right",
+      ]
+
+       at code-direction-journey.ts:62
+
+      60 |   await expect(inherited).not.toHaveAttribute('dir');
+      61 |   expect(await editor.locator('pre').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).direction))).toEqual(evidence.nativeDirections);
+    > 62 |   expect([await latinLineAlignment(inherited), await latinLineAlignment(owned)]).toEqual(evidence.nativeLatinAlignment);
+         |                                                                                  ^
+      63 |   await editor.screenshot({ path: info.outputPath('code-direction-imported.png') });
+      64 |   const changeDirection = async (value: string) => {
+      65 |     // The generated language label is a supported user-facing way to enter a
+        at codeDirectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\code-direction-journey.ts:62:82)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:47:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-direction-geometry-red-20261008\editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-direction-geometry-red-20261008\editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-direction-geometry-red-20261008\editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-direction-geometry-red-20261008\editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-direction-geometry-red-20261008\editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-direction-geometry-red-20261008\editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto 

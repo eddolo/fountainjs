@@ -6,6 +6,18 @@ export function checkTextDirection(api, root, serverHTML, docx) {
   assert.equal('window' in globalThis, false);
   assert.equal(typeof api.setTextDirection, 'function');
   assert.equal(typeof api.setTextAlignment, 'function');
+  const codeEditor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {
+    type: 'doc', content: [{ type: 'code_block', attrs: { language: 'python' }, content: [{ type: 'text', text: '# שלום\nprint("مرحبا")' }] }],
+  } });
+  try {
+    const original = codeEditor.getJSON();
+    assert.equal(api.setTextDirection(codeEditor, 'rtl'), true);
+    assert.equal(codeEditor.state.doc.child(0).attrs.dir, 'rtl');
+    assert.equal(codeEditor.state.doc.child(0).textContent, '# שלום\nprint("مرحبا")');
+    const html = api.HTMLExporter.export(codeEditor.state.doc, { document: false });
+    assert.deepEqual(serverHTML.ServerHTMLImporter.parse(html, codeEditor.state.schema).toJSON(), codeEditor.getJSON());
+    assert.equal(api.undo(codeEditor), true); assert.deepEqual(codeEditor.getJSON(), original);
+  } finally { codeEditor.destroy(); }
   const kit = api.composeExtensions([root.CoreExtension]);
   assert.equal(typeof kit.commands.setTextDirection, 'function');
   const editor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {

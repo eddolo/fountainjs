@@ -1,9 +1,27 @@
 // @vitest-environment jsdom
 import { expect, it } from 'vitest';
-import { CoreSchemaSpec, EditorView, HTMLExporter, HTMLImporter, Schema, createEditor, setTextAlignment } from '../src';
+import { CoreSchemaSpec, EditorView, HTMLExporter, HTMLImporter, Schema, Selection, createEditor, setTextAlignment, setTextDirection } from '../src';
 import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(CoreSchemaSpec);
+it.each(['ltr', 'rtl', 'auto'] as const)('retains %s code direction in browser/server imports and the editable view', async dir => {
+  const html = `<pre dir="${dir}" data-language="python"><code># שלום\nprint("مرحبا")</code></pre>`;
+  const imported = HTMLImporter.parse(html, schema);
+  expect(imported.toJSON()).toEqual(ServerHTMLImporter.parse(html, schema).toJSON());
+  expect(imported.child(0).attrs.dir).toBe(dir);
+  expect(HTMLImporter.parse(HTMLExporter.export(imported, { document: false }), schema).toJSON()).toEqual(imported.toJSON());
+  const editor = createEditor({ schema: CoreSchemaSpec, content: imported.toJSON() });
+  const mount = document.createElement('div'); document.body.append(mount);
+  const view = new EditorView(mount, editor);
+  try {
+    expect(view.dom.querySelector('pre')?.getAttribute('dir')).toBe(dir);
+    expect(view.dom.querySelector('code')?.textContent).toBe('# שלום\nprint("مرحبا")');
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+    expect(setTextDirection(editor, undefined)).toBe(true);
+    await Promise.resolve();
+    expect(view.dom.querySelector('pre')?.hasAttribute('dir')).toBe(false);
+  } finally { view.destroy(); editor.destroy(); mount.remove(); }
+});
 it('uses the same direction/alignment projection in browser and server HTML importers', () => {
   const html = '<section dir="rtl"><h2>عنوان</h2><blockquote><p>שלום</p></blockquote><p dir="LTR" style="text-align:left">Latin</p><p dir="auto" style="text-align:end">مرحبا</p><ul><li>قائمة</li></ul><table><tr><td>خلية</td></tr></table></section>';
   const browser = HTMLImporter.parse(html, schema);

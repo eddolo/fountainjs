@@ -239,7 +239,7 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     case 'list_item': return `<li${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</li>`;
     case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
     case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;
-    case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"><code class="language-${escapeHTML(node.attrs.language)}">${escapeHTML(node.textContent)}</code></pre>`;
+    case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><code class="language-${escapeHTML(node.attrs.language)}">${escapeHTML(node.textContent)}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';
     case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;

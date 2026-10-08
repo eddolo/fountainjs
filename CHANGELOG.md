@@ -7,6 +7,24 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add optional reading direction to first-party code buffers, capability-gated
+  code-property controls, DOM-free/browser HTML agreement and exact source,
+  selection, undo and Yjs retention. Code alignment remains unsupported; Markdown
+  and DOCX report direction loss. Strengthen browser evidence with real rendered
+  line geometry: syntax decoration previously overrode native per-line automatic
+  bidi despite correct `pre` computed direction. Restore that native presentation
+  with scoped plaintext-bidi CSS. Nine retry-free recorded desktop journeys and
+  2,807 local tests / 212 files pass; all 63 final PNGs are reviewed directly or
+  by exact hashes to inspected captures. New-source Linux verification is required.
+  Keep `a9af193` Linux WebKit's two rich-paste failures and the six nested-auto
+  boundary gaps open. Add native MIME-delivery observations and an independent
+  clipboard control, not a Linux skip or cached-text workaround. Four Windows
+  Chromium/Firefox restoration journeys assert rich structure and 0/2 numbering;
+  Firefox's private-JSON omission makes broader HTML-fallback fidelity a separate
+  audit. Package/API/headless/types/CommonMark/budgets/site pass. Only measured
+  React/aggregate code capacity grows; CSS/dependency/runtime/heap caps and npm
+  stay unchanged. Evidence: `artifacts/code-direction-verification-20261008.json`.
+
 - Add a neutral `direction_scope` block to the default core schema, exported as
   `directionScope` from root/core. Format-only partial conversion/lift of an
   automatic list retains one live shared context, not guessed fixed direction

@@ -1,0 +1,21 @@
+[WebServer] (node:26236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:16916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (9.5s)
+(node:9560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (9.3s)
+(node:21272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (5.4s)
+(node:8824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [firefox] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (16.2s)
+(node:21688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,0 +1,17 @@
+[WebServer] (node:26656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:21736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:55:3 › copies shared automatic list scope through real internal and external clipboard: convert (19.9s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:55:3 › copies shared automatic list scope through real internal and external clipboard: lift (12.2s)
+(node:24840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:55:3 › copies shared automatic list scope through real internal and external clipboard: convert (14.9s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:55:3 › copies shared automatic list scope through real internal and external clipboard: lift (12.8s)
+
+  4 passed (1.3m)

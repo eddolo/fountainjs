@@ -254,6 +254,8 @@
 .fountain-editor pre.fjs-code-block { position: relative; tab-size: 2; }
 .fountain-editor pre.fjs-code-block::before { display: block; margin-bottom: 12px; white-space: normal; overflow-wrap: anywhere; color: #9298aa; font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .1em; content: attr(data-language); user-select: none; }
 .fountain-editor pre.fjs-code-block > code { display: block; min-width: max-content; }
+/* Preserve native per-line auto bidi in decorated code. */
+.fountain-editor pre[dir="auto"] > code { unicode-bidi: plaintext; }
 .fountain-editor .fjs-code-line-number { display: inline-block; width: 2.8em; margin-right: 1em; color: #697084; text-align: right; user-select: none; }
 .fountain-editor .fjs-code-line-number::before { content: attr(data-line); }
 .fountain-editor .fjs-token--keyword { color: #c9a7ff; }

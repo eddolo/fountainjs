@@ -9,6 +9,31 @@ import { FountainToolbar, FountainToolbarButton, FountainToolbarRoot } from '../
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('toolbar configuration panel keyboard ownership', () => {
+  it('changes code reading direction through the panel without rewriting source or selection', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
+      type: 'doc', content: [{ type: 'code_block', attrs: { language: 'python' }, content: [{ type: 'text', text: '# שלום\nprint("مرحبا")' }] }],
+    } });
+    selectText(editor, [0, 0], 2, 6);
+    const original = editor.getJSON(), selection = editor.state.selection;
+    const mount = document.createElement('div'); document.body.append(mount); const root = createRoot(mount);
+    try {
+      await act(async () => root.render(<FountainToolbar editor={editor} />));
+      await act(async () => mount.querySelector<HTMLButtonElement>('[data-fountain-toolbar-action="code-block"]')!.click());
+      const direction = () => mount.querySelector<HTMLSelectElement>('[aria-label="Code reading direction"]')!;
+      expect(direction().value).toBe('');
+      await act(async () => { direction().value = 'rtl'; direction().dispatchEvent(new Event('change', { bubbles: true })); });
+      expect(direction().value).toBe('rtl');
+      expect(editor.state.doc.child(0).attrs.dir).toBe('rtl');
+      expect(editor.state.doc.child(0).textContent).toBe('# שלום\nprint("مرحبا")');
+      expect(editor.state.selection.eq(selection)).toBe(true);
+      await act(async () => undo(editor)); expect(editor.getJSON()).toEqual(original);
+      expect(direction().value).toBe('');
+      await act(async () => { direction().value = 'auto'; direction().dispatchEvent(new Event('change', { bubbles: true })); });
+      expect(editor.state.doc.child(0).attrs.dir).toBe('auto');
+      await act(async () => { direction().value = ''; direction().dispatchEvent(new Event('change', { bubbles: true })); });
+      expect(editor.getJSON()).toEqual(original);
+    } finally { await act(async () => root.unmount()); editor.destroy(); mount.remove(); }
+  });
   it('follows a separately mounted focused table view and disables ambiguous/unmounted physical controls', async () => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
       type: 'doc', content: [{ type: 'table', content: [{ type: 'table_row', content: ['First', 'Second'].map(text => ({

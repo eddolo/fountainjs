@@ -1,0 +1,1875 @@
+{
+  "date": "2026-10-08",
+  "kind": "pure-Node command plus native rendered diagnostic, not an interactive journey or passing parity gate",
+  "documents": [
+    {
+      "name": "nested-lift-auto",
+      "source": "<ul dir=\"ltr\"><li><p>Outer parent</p><ol dir=\"auto\" start=\"0\"><li><p>שלום anchor</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol></li><li><p>Outer after</p></li></ul>",
+      "html": "<ul dir=\"ltr\"><li><p>Outer parent</p><ol start=\"0\" dir=\"auto\"><li><p>שלום anchor</p></li></ol></li><li><p>English selected</p><ol start=\"2\" dir=\"auto\"><li><p>English tail</p></li></ol></li><li><p>Outer after</p></li></ul>",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "bullet_list",
+            "attrs": {
+              "dir": "ltr"
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer parent"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "dir": "auto",
+                      "start": 0
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "שלום anchor"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English selected"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English tail"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer after"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformed": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "bullet_list",
+            "attrs": {
+              "dir": "ltr"
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer parent"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "dir": "auto",
+                      "start": 0
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "שלום anchor"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English selected"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "dir": "auto",
+                      "start": 2
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English tail"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer after"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "exactUndo": true
+    },
+    {
+      "name": "nested-lift-fixed-control",
+      "source": "<ul dir=\"ltr\"><li><p>Outer parent</p><ol dir=\"rtl\" start=\"0\"><li><p>שלום anchor</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol></li><li><p>Outer after</p></li></ul>",
+      "html": "<ul dir=\"ltr\"><li><p>Outer parent</p><ol start=\"0\" dir=\"rtl\"><li><p>שלום anchor</p></li></ol></li><li dir=\"rtl\"><p>English selected</p><ol start=\"2\" dir=\"rtl\"><li><p>English tail</p></li></ol></li><li><p>Outer after</p></li></ul>",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "bullet_list",
+            "attrs": {
+              "dir": "ltr"
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer parent"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "dir": "rtl",
+                      "start": 0
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "שלום anchor"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English selected"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English tail"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer after"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformed": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "bullet_list",
+            "attrs": {
+              "dir": "ltr"
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer parent"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "dir": "rtl",
+                      "start": 0
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "שלום anchor"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "attrs": {
+                  "dir": "rtl"
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English selected"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "dir": "rtl",
+                      "start": 2
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English tail"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Outer after"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "exactUndo": true
+    },
+    {
+      "name": "indent-under-fixed-item",
+      "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום anchor</p></li><li dir=\"ltr\"><p>Parent paragraph</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+      "html": "<ol start=\"0\" dir=\"auto\"><li><p>שלום anchor</p></li><li dir=\"ltr\"><p>Parent paragraph</p><ol><li><p>English selected</p></li></ol></li><li><p>English tail</p></li></ol>",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "ordered_list",
+            "attrs": {
+              "dir": "auto",
+              "start": 0
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "שלום anchor"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "attrs": {
+                  "dir": "ltr"
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Parent paragraph"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English selected"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English tail"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformed": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "ordered_list",
+            "attrs": {
+              "dir": "auto",
+              "start": 0
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "שלום anchor"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "attrs": {
+                  "dir": "ltr"
+                },
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Parent paragraph"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "start": 1
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English selected"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English tail"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "exactUndo": true
+    },
+    {
+      "name": "indent-same-context-control",
+      "source": "<ol dir=\"auto\" start=\"0\"><li><p>שלום anchor</p></li><li><p>Parent paragraph</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol>",
+      "html": "<ol start=\"0\" dir=\"auto\"><li><p>שלום anchor</p></li><li><p>Parent paragraph</p><ol><li><p>English selected</p></li></ol></li><li><p>English tail</p></li></ol>",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "ordered_list",
+            "attrs": {
+              "dir": "auto",
+              "start": 0
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "שלום anchor"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Parent paragraph"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English selected"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English tail"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformed": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "ordered_list",
+            "attrs": {
+              "dir": "auto",
+              "start": 0
+            },
+            "content": [
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "שלום anchor"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Parent paragraph"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ordered_list",
+                    "attrs": {
+                      "start": 1
+                    },
+                    "content": [
+                      {
+                        "type": "list_item",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "English selected"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "list_item",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "English tail"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "exactUndo": true
+    }
+  ],
+  "observations": [
+    {
+      "engine": "chromium",
+      "name": "nested-lift-auto",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": false,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "chromium",
+      "name": "nested-lift-fixed-control",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": true,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "chromium",
+      "name": "indent-under-fixed-item",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": false,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "chromium",
+      "name": "indent-same-context-control",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": true,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "firefox",
+      "name": "nested-lift-auto",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": false,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "firefox",
+      "name": "nested-lift-fixed-control",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": true,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "firefox",
+      "name": "indent-under-fixed-item",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": false,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "firefox",
+      "name": "indent-same-context-control",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": true,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "webkit",
+      "name": "nested-lift-auto",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": false,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "webkit",
+      "name": "nested-lift-fixed-control",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "Outer parent",
+          "direction": "ltr"
+        },
+        {
+          "text": "English anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        },
+        {
+          "text": "Outer after",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": true,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "webkit",
+      "name": "indent-under-fixed-item",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": false,
+      "dynamicAnchorRetained": true
+    },
+    {
+      "engine": "webkit",
+      "name": "indent-same-context-control",
+      "exactUndo": true,
+      "source": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "sourceAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "transformed": [
+        {
+          "text": "שלום anchor",
+          "direction": "rtl"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "rtl"
+        },
+        {
+          "text": "English selected",
+          "direction": "rtl"
+        },
+        {
+          "text": "English tail",
+          "direction": "rtl"
+        }
+      ],
+      "transformedAfterAnchorEdit": [
+        {
+          "text": "English anchor",
+          "direction": "ltr"
+        },
+        {
+          "text": "Parent paragraph",
+          "direction": "ltr"
+        },
+        {
+          "text": "English selected",
+          "direction": "ltr"
+        },
+        {
+          "text": "English tail",
+          "direction": "ltr"
+        }
+      ],
+      "directionRetained": true,
+      "dynamicAnchorRetained": true
+    }
+  ]
+}

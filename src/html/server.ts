@@ -1320,11 +1320,12 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         message: 'Preformatted HTML became a code block. Text-node attributes and marks remain in the document; code exports render plain text, not HTML formatting. Physical soft breaks were restored, CR/CRLF normalized as HTML newlines, and HTML initial-LF handling applied. Inline atoms require a specialized adapter.',
       });
     } else content = [schema.text(element.textContent)];
-    return [schema.node('code_block', {
+    return [reportStructuralDirection(element, schema.node('code_block', {
       language: element.getAttribute('data-language') || codeClass.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
       lineNumbers: true,
       ...readParagraphLayout(element),
-    }, content)];
+      ...(schema.nodes.code_block.spec.attrs?.dir ? readTextDirection(element, schema) : {}),
+    }, content), context, schema)];
   }
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {

@@ -93,6 +93,7 @@ import {
 } from '../text-style';
 import { useFountainState } from './useFountain';
 import { tableRowRepeats } from '../core/table-layout';
+import { getNodeAtPath } from '../core/transaction/path';
 import { addTableColumnOnSide, getRenderedTableDirection, observeTableDirectionRoots } from '../view/table-direction';
 import { ClipboardHistoryMenu } from './ClipboardHistoryMenu';
 import {
@@ -250,6 +251,7 @@ export function FountainToolbar({
   const mark = (name: string) => () => toggleMark(editor, name);
   const activeLink = getActiveLink(editor);
   const activeCodeBlock = getActiveCodeBlock(editor);
+  const activeCodeNode = activeCodeBlock ? getNodeAtPath(editor.state.doc, activeCodeBlock.path) : undefined;
   const activeTable = getActiveTableCell(editor);
   const tableDirection = panel === 'table' && activeTable ? getRenderedTableDirection(editor) : undefined;
   const activeRow = activeTable?.table.child(activeTable.cell.row);
@@ -937,6 +939,14 @@ export function FountainToolbar({
         <datalist id={languageListId}>
           {CODE_BLOCK_LANGUAGES.map((language) => <option key={language} value={language} />)}
         </datalist>
+        {activeCodeNode?.type.spec.attrs?.dir && <label>Reading direction
+          <select aria-label="Code reading direction" value={String(activeCodeNode.attrs.dir ?? '')} disabled={!editor.editable}
+            onChange={(event) => activeCodeBlock && setNodeAttributes(editor, activeCodeBlock.path, { dir: event.target.value || undefined })}>
+            <option value="">Inherit from document</option><option value="ltr">Left to right</option>
+            <option value="rtl">Right to left</option><option value="auto">Automatic</option>
+          </select>
+          <span className="fountain-toolbar__hint">Presentation only; source characters are unchanged. Ordinary Markdown fences do not store reading direction.</span>
+        </label>}
         <label className="fountain-toolbar__check">
           <input
             aria-label="Show code line numbers"

@@ -104,10 +104,12 @@ const limits = Object.freeze({
   // View-owned physical controls add ~0.4 KiB ESM / 0.3 KiB CJS here;
   // including their shared DOM ownership boundary, ~2.3 / 2.0 KiB overall.
   // No headless entry, dependency, CSS or runtime-performance cap is changed.
-  'dist/react.js': 91.5 * kibibyte,
+  // Capability-gated code direction adds ~1.1 / 0.6 KiB to the labelled panel.
+  // Measured 92.57 / 69.35 KiB; no dependency or runtime-performance increase.
+  'dist/react.js': 92.75 * kibibyte,
   // Named configuration panels, trigger ownership/focus and native field keys
   // add ~1.6 KiB ESM / 1.4 KiB CJS only here; ESM still fits its existing cap.
-  'dist/react.cjs': 68.75 * kibibyte,
+  'dist/react.cjs': 69.5 * kibibyte,
   // Vue remains an external optional peer; only lifecycle/state/view glue ships here.
   'dist/vue.js': 3 * kibibyte,
   'dist/vue.cjs': 3 * kibibyte,
@@ -521,7 +523,8 @@ const limits = Object.freeze({
   // Neutral shared-auto group, atomic list construction and sibling wrapping:
   // measured 1593.3 KiB (+~2.9 over the previous source). Only the measured
   // implementation capacity rises; dependencies/CSS/performance remain fixed.
-  'all ESM runtime code': 1593.5 * kibibyte,
+  // Code direction capability/import/export and its UI: measured 1594.6 KiB.
+  'all ESM runtime code': 1595 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -576,7 +579,8 @@ const limits = Object.freeze({
   // The same list boundary adds ~1.1 KiB CJS, measured 1322.7 KiB.
   // Same shared-auto implementation: measured 1325.3 KiB (+~2.3).
   // Preserve the prior-cap failure and all unrelated/runtime/heap ceilings.
-  'all CommonJS runtime code': 1325.5 * kibibyte,
+  // Same code direction boundary: measured 1326.2 KiB.
+  'all CommonJS runtime code': 1326.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

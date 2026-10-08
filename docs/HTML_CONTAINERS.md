@@ -104,6 +104,48 @@ does not retain arbitrary wrapper styles or evaluate stylesheets, variables or
 and reports its structural loss; preserving a paragraph's alignment does not
 mean the original wrapper survived.
 
+### Code buffers and direction
+
+First-party `code_block` now supports an optional `dir` declaration. Use
+`setTextDirection(editor, 'ltr' | 'rtl' | 'auto')` at a code caret/selection, or
+the supplied **Code block and language → Code reading direction** setting.
+Choose **Inherit from document** to remove the owned declaration. This changes
+presentation, not the technical source, language, normalization or execution.
+Code alignment remains a separate unsupported command; adding direction does
+not turn code into ordinary prose.
+
+Browser and DOM-free server HTML import preserve a code buffer's supported
+owned declaration and fixed inherited direction when its wrapper is flattened.
+Retained quotes/sections continue owning their shared context. HTML/JSON retain
+the declaration; Markdown fences and DOCX cannot represent this code-direction
+contract and report their projection/loss. Custom schemas must explicitly
+declare the capability. No browser direction computation enters the core.
+
+For `dir="auto"`, native preformatted HTML resolves each source line's bidi
+paragraph separately. The syntax-decorated block `code` child must also use
+`unicode-bidi: plaintext`; checking only computed direction on `pre` missed a
+real visual regression. Browser verification measures a Latin line against an
+independent native source and exercises settings, typing, Enter/Backspace,
+undo/redo and downloaded HTML reopening. This is not general bidi certification.
+
+### Remaining automatic-scope gaps
+
+The Linux shared-scope checkpoint `a9af193` passes verification, performance,
+Lean and Pages, but its structural browser preflight fails two WebKit rich-paste
+restorations (55 passes / two failures). Plain text reaches the target; shared
+rich structure does not survive. Copy-event `setData` alone is not proof of
+native paste delivery. New diagnostics record delivered MIME payloads and use
+an independent native control; no Linux skip or cached-text restoration is added.
+The full browser matrix was not reached.
+
+A separate nested-boundary audit finds direction loss when lifting an automatic
+list's child across parents or indenting it under an independently fixed item.
+Fixed-direction and same-context controls retain direction; all twelve tested
+transforms undo exactly. The six observed engine/case failures remain open.
+Wrapping the moved child alone or freezing RTL would not preserve the original
+group's live first-strong context. These diagnostic cases are not conformance
+passes and do not certify native mobile devices.
+
 ## What it preserves
 
 The `html_container` node has `block*` content and a validated `tag` attribute:

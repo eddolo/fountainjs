@@ -1,0 +1,216 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/code-block-direction.test.ts (11 tests | 11 failed) 84ms
+   ❯ portable code-block reading direction (11)
+     × imports and reopens an owned ltr declaration without changing the buffer 38ms
+     × imports and reopens an owned rtl declaration without changing the buffer 2ms
+     × imports and reopens an owned auto declaration without changing the buffer 1ms
+     × authors direction from a text caret or node selection with exact selection/history and no code alignment API 7ms
+     × retains inherited rtl when code moves into ltr, with exact buffer and undo 3ms
+     × retains inherited ltr when code moves into rtl, with exact buffer and undo 4ms
+     × materializes only fixed flattened inheritance, preserving retained and automatic contexts 3ms
+     × reports an incapable receiving schema instead of hiding a lost declaration 3ms
+     × respects no-op, read-only, invalid direction and host-filter rejection 3ms
+     × retains paragraph direction when converted to code and reports ordinary Markdown/Word loss 6ms
+     × synchronizes owned code direction through Yjs in pure Node 10ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > imports and reopens an owned ltr declaration without changing the buffer
+AssertionError: expected undefined to be 'ltr' // Object.is equality
+
+- Expected:
+"ltr"
+
++ Received:
+undefined
+
+ ❯ tests/code-block-direction.test.ts:21:41
+     19|     expect(typeof globalThis.document).toBe('undefined');
+     20|     const imported = ServerHTMLImporter.parse(`<pre dir="${dir.toUpper…
+     21|     expect(imported.child(0).attrs.dir).toBe(dir);
+       |                                         ^
+     22|     expect(imported.child(0).textContent).toBe(raw);
+     23|     const html = HTMLExporter.export(imported, { document: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > imports and reopens an owned rtl declaration without changing the buffer
+AssertionError: expected undefined to be 'rtl' // Object.is equality
+
+- Expected:
+"rtl"
+
++ Received:
+undefined
+
+ ❯ tests/code-block-direction.test.ts:21:41
+     19|     expect(typeof globalThis.document).toBe('undefined');
+     20|     const imported = ServerHTMLImporter.parse(`<pre dir="${dir.toUpper…
+     21|     expect(imported.child(0).attrs.dir).toBe(dir);
+       |                                         ^
+     22|     expect(imported.child(0).textContent).toBe(raw);
+     23|     const html = HTMLExporter.export(imported, { document: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > imports and reopens an owned auto declaration without changing the buffer
+AssertionError: expected undefined to be 'auto' // Object.is equality
+
+- Expected:
+"auto"
+
++ Received:
+undefined
+
+ ❯ tests/code-block-direction.test.ts:21:41
+     19|     expect(typeof globalThis.document).toBe('undefined');
+     20|     const imported = ServerHTMLImporter.parse(`<pre dir="${dir.toUpper…
+     21|     expect(imported.child(0).attrs.dir).toBe(dir);
+       |                                         ^
+     22|     expect(imported.child(0).textContent).toBe(raw);
+     23|     const html = HTMLExporter.export(imported, { document: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > authors direction from a text caret or node selection with exact selection/history and no code alignment API
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/code-block-direction.test.ts:34:45
+     32|     editor.dispatch(editor.createTransaction().setSelection(selection)…
+     33|     const original = editor.getJSON();
+     34|     expect(setTextDirection(editor, 'rtl')).toBe(true);
+       |                                             ^
+     35|     expect(editor.state.doc.child(0).attrs.dir).toBe('rtl');
+     36|     expect(editor.state.doc.child(0).textContent).toBe(raw);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > retains inherited rtl when code moves into ltr, with exact buffer and undo
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > retains inherited ltr when code moves into rtl, with exact buffer and undo
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/code-block-direction.test.ts:55:39
+     53|     const original = editor.getJSON();
+     54|     const move = { fromPath: [0, 0], toParentPath: [1], toIndex: 1 };
+     55|     expect(canMoveNode(editor, move)).toBe(true); expect(moveNode(edit…
+       |                                       ^
+     56|     const moved = editor.state.doc.child(1).child(1);
+     57|     expect(moved.attrs.dir).toBe(source); expect(moved.textContent).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > materializes only fixed flattened inheritance, preserving retained and automatic contexts
+AssertionError: expected undefined to be 'rtl' // Object.is equality
+
+- Expected:
+"rtl"
+
++ Received:
+undefined
+
+ ❯ tests/code-block-direction.test.ts:64:128
+     62|
+     63|   it('materializes only fixed flattened inheritance, preserving retain…
+     64|     expect(ServerHTMLImporter.parse(`<section dir="rtl"><pre><code>${r…
+       |                                                                                                                                ^
+     65|     const retained = ServerHTMLImporter.parse(`<blockquote dir="rtl"><…
+     66|     expect(retained.child(0).attrs.dir).toBe('rtl'); expect(retained.c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > reports an incapable receiving schema instead of hiding a lost declaration
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "block-html-projection",
+  "message": StringContaining "reading direction (rtl)",
+}
+
++ Received:
+[]
+
+ ❯ tests/code-block-direction.test.ts:78:27
+     76|     const result = ServerHTMLImporter.parseWithReport('<pre dir="rtl">…
+     77|     expect(result.document.child(0).attrs.dir).toBeUndefined();
+     78|     expect(result.issues).toContainEqual(expect.objectContaining({ cod…
+       |                           ^
+     79|   });
+     80|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > respects no-op, read-only, invalid direction and host-filter rejection
+AssertionError: expected [Function] to throw an error
+ ❯ tests/code-block-direction.test.ts:90:35
+     88|     const guardedBefore = guarded.state;
+     89|     expect(setTextDirection(guarded, 'rtl')).toBe(false); expect(guard…
+     90|     expect(() => code('invalid')).toThrow();
+       |                                   ^
+     91|   });
+     92|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > retains paragraph direction when converted to code and reports ordinary Markdown/Word loss
+AssertionError: expected undefined to be 'rtl' // Object.is equality
+
+- Expected:
+"rtl"
+
++ Received:
+undefined
+
+ ❯ tests/code-block-direction.test.ts:96:49
+     94|     const editor = createEditor({ schema: CoreSchemaSpec, content: sch…
+     95|     expect(setBlockType(editor, 'code_block', { language: 'python' }))…
+     96|     expect(editor.state.doc.child(0).attrs.dir).toBe('rtl'); expect(ed…
+       |                                                 ^
+     97|     expect(MarkdownExporter.exportWithReport(editor.state.doc).losses)…
+     98|     expect(exportDOCX(editor.state.doc).report.issues).toContainEqual(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > synchronizes owned code direction through Yjs in pure Node
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/code-block-direction.test.ts:109:46
+    107|     const first = peer(left, 'Ada'); Y.applyUpdate(right, Y.encodeStat…
+    108|     try {
+    109|       expect(setTextDirection(first, 'rtl')).toBe(true); Y.applyUpdate…
+       |                                              ^
+    110|       expect(second.getJSON()).toEqual(first.getJSON()); expect(second…
+    111|       expect(setTextDirection(second, undefined)).toBe(true); Y.applyU…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed (11)
+   Start at  02:21:13
+   Duration  6.06s (transform 61%, import 38%, tests 2%)
+
+  Transform  transforming modules took 3.32s · 61% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

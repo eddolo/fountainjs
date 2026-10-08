@@ -1,0 +1,91 @@
+$ node scripts/check-build-budgets.mjs
+dist/index.js: 80.9 KiB / 111 KiB
+dist/index.cjs: 68.5 KiB / 93 KiB
+dist/core.js: 8.9 KiB / 9 KiB
+dist/core.cjs: 8.1 KiB / 8.1 KiB
+dist/ai-document-tools.js: 16.4 KiB / 18 KiB
+dist/ai-document-tools.cjs: 13.6 KiB / 15 KiB
+dist/ai-conversation.js: 15.6 KiB / 17 KiB
+dist/ai-conversation.cjs: 13.1 KiB / 14 KiB
+dist/ai-generated-media.js: 10.5 KiB / 11 KiB
+dist/ai-generated-media.cjs: 8.9 KiB / 10 KiB
+dist/docx.js: 184.1 KiB / 184.3 KiB
+dist/docx.cjs: 148.9 KiB / 149 KiB
+HTML5 entity decoder ESM: 42.6 KiB / 43 KiB
+HTML5 entity decoder CommonJS: 40.4 KiB / 41 KiB
+dist/document-utilities.js: 23.3 KiB / 36 KiB
+dist/document-utilities.cjs: 18.9 KiB / 30 KiB
+dist/emoji-data.js: 323.6 KiB / 340 KiB
+dist/emoji-data.cjs: 268.1 KiB / 280 KiB
+dist/react.js: 92.6 KiB / 92.8 KiB
+dist/react.cjs: 69.4 KiB / 69.5 KiB
+dist/vue.js: 1.7 KiB / 3 KiB
+dist/vue.cjs: 1.4 KiB / 3 KiB
+dist/svelte.js: 1.1 KiB / 2 KiB
+dist/svelte.cjs: 0.9 KiB / 2 KiB
+dist/angular/index.js: 4.1 KiB / 5 KiB
+dist/yjs.js: 26.8 KiB / 30 KiB
+dist/yjs.cjs: 22.4 KiB / 25 KiB
+dist/comments.js: 29.1 KiB / 30 KiB
+dist/comments.cjs: 23.6 KiB / 25 KiB
+dist/react-comments.js: 9.6 KiB / 11 KiB
+dist/react-comments.cjs: 6.9 KiB / 8 KiB
+dist/tracked-changes.js: 27.9 KiB / 30 KiB
+dist/tracked-changes.cjs: 23.1 KiB / 25 KiB
+dist/react-tracked-changes.js: 7.5 KiB / 9 KiB
+dist/react-tracked-changes.cjs: 5.6 KiB / 7 KiB
+dist/versions.js: 28.7 KiB / 35 KiB
+dist/versions.cjs: 23.8 KiB / 30 KiB
+dist/react-versions.js: 9.8 KiB / 18 KiB
+dist/react-versions.cjs: 7.2 KiB / 14 KiB
+dist/details.js: 7.5 KiB / 10 KiB
+dist/details.cjs: 6.2 KiB / 8 KiB
+dist/ruby.js: 10.7 KiB / 12 KiB
+dist/ruby.cjs: 9.0 KiB / 10 KiB
+dist/text-style.js: 0.9 KiB / 2 KiB
+dist/text-style.cjs: 0.9 KiB / 2 KiB
+dist/testing.js: 6.3 KiB / 7 KiB
+dist/testing.cjs: 5.3 KiB / 6 KiB
+dist/migrations.js: 6.9 KiB / 8 KiB
+dist/migrations.cjs: 6.0 KiB / 7 KiB
+dist/node-ids.js: 8.5 KiB / 9 KiB
+dist/node-ids.cjs: 7.0 KiB / 8 KiB
+dist/table-of-contents.js: 5.6 KiB / 7 KiB
+dist/table-of-contents.cjs: 4.6 KiB / 6 KiB
+dist/integrity.js: 11.2 KiB / 13 KiB
+dist/integrity.cjs: 9.1 KiB / 11 KiB
+dist/integrity-dom.js: 5.0 KiB / 6 KiB
+dist/integrity-dom.cjs: 4.3 KiB / 5 KiB
+dist/react-integrity.js: 7.9 KiB / 12 KiB
+dist/react-integrity.cjs: 6.0 KiB / 10 KiB
+dist/structured-attributes.js: 9.8 KiB / 11 KiB
+dist/structured-attributes.cjs: 8.2 KiB / 9 KiB
+dist/html-server.js: 256.0 KiB / 270 KiB
+dist/html-server.cjs: 208.1 KiB / 225 KiB
+dist/html-inert.js: 6.0 KiB / 7 KiB
+dist/html-inert.cjs: 5.1 KiB / 6 KiB
+dist/widgets.js: 8.6 KiB / 9 KiB
+dist/widgets.cjs: 7.2 KiB / 8 KiB
+dist/widgets-dom.js: 4.6 KiB / 5 KiB
+dist/widgets-dom.cjs: 3.9 KiB / 5 KiB
+dist/react-widgets.js: 1.5 KiB / 2 KiB
+dist/react-widgets.cjs: 1.3 KiB / 2 KiB
+dist/pages.js: 11.0 KiB / 23 KiB
+dist/pages.cjs: 9.1 KiB / 19 KiB
+dist/pages-dom.js: 52.5 KiB / 54 KiB
+dist/pages-dom.cjs: 43.8 KiB / 45 KiB
+dist/pages-preview.js: 13.2 KiB / 14 KiB
+dist/pages-preview.cjs: 11.2 KiB / 12 KiB
+dist/styles.css: 86.8 KiB / 86.8 KiB
+all ESM runtime code: 1594.6 KiB / 1595 KiB
+all CommonJS runtime code: 1326.2 KiB / 1326.5 KiB
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-build-budgets.mjs:621
+if (failures.length) throw new Error(`Build budget failed:\n- ${failures.join('\n- ')}`);
+                           ^
+
+Error: Build budget failed:
+- dist/styles.css exceeds its budget by 0.0 KiB
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-build-budgets.mjs:621:28
+
+Node.js v24.19.0
+[ELIFECYCLE] Command failed with exit code 1.

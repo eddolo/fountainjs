@@ -1,0 +1,626 @@
+{
+  "date": "2026-10-08",
+  "baseCommit": "a9af193954d65966d23cf2ca898424ed630fd4fa",
+  "status": "bounded local code-direction verification; new-source Linux certification required; parity goal remains active",
+  "implementation": [
+    "Optional validated code_block.dir; text/node-selection command without enabling code alignment; fixed-context moves; capability-gated code-property UI",
+    "Browser and pure-Node HTML import/export retain owned direction and fixed flattened inheritance; retained containers own shared direction",
+    "Exact technical source, selection/history, JSON and pure-Node Yjs checked; ordinary Markdown/DOCX direction loss reported",
+    "Syntax-decorated block CODE keeps native per-line plaintext bidi; no model-side direction computation or new dependency"
+  ],
+  "verification": {
+    "fullUnits": {
+      "tests": 2807,
+      "files": 212,
+      "log": "artifacts/code-direction-full-unit-20261008.log"
+    },
+    "focused": {
+      "tests": 69,
+      "files": 6,
+      "log": "artifacts/code-direction-focused-panels-20261008.log"
+    },
+    "codeBrowser": {
+      "cases": 9,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "platform": "Windows",
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/code-direction-all-lines-20261008.log",
+      "journey": "real HTML upload, labelled property UI, undo/redo, literal typing, Enter/Backspace, independent native line geometry, actual HTML download and reopened editor",
+      "finalPngs": 63,
+      "visualReview": "54 exact matches to 54 directly inspected visual-built PNGs; nine native-newline PNGs inspected in three boards (identical per-engine references across the three source-direction cases)"
+    },
+    "clipboardBrowser": {
+      "cases": 4,
+      "engines": [
+        "chromium",
+        "firefox"
+      ],
+      "platform": "Windows",
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/code-direction-clipboard-structure-20261008.log",
+      "finalPngs": 8,
+      "visualReview": "all eight final internal/external paste PNGs inspected in four boards",
+      "assertions": [
+        "copy event observed, not injected",
+        "replace original document before paste",
+        "restore one shared direction scope",
+        "two ordered fragments start at 0 and 2",
+        "converted bullet list versus lifted direct paragraph retained",
+        "full paragraph text and resolved direction retained",
+        "native external textarea receives exact authored plain text"
+      ]
+    },
+    "gates": {
+      "build": "artifacts/code-direction-final-build-20261008.log",
+      "package": "artifacts/code-direction-final-test-package-20261008.log",
+      "api": "411 declarations; artifacts/code-direction-final-test-api-20261008.log",
+      "headless": "99 modules; artifacts/code-direction-final-test-headless-20261008.log",
+      "markdown": "unchanged profiles; artifacts/code-direction-final-test-markdown-conformance-20261008.log",
+      "types": "artifacts/code-direction-final-typecheck-20261008.log",
+      "budget": "artifacts/code-direction-final-budget-trimmed-20261008.log",
+      "site": "artifacts/code-direction-final-site-20261008.log"
+    },
+    "nativeClipboardDiagnostic": {
+      "cases": 18,
+      "log": "artifacts/native-clipboard-delivery-20261008.jsonl",
+      "kind": "independent diagnostic, not 18 conformance passes",
+      "uniquePerCase": true,
+      "chromiumTransfers": 6,
+      "firefoxTransfers": 6,
+      "webkitTransfers": 2,
+      "windowsWebkitEmptyEventAuthoredPayloads": 4
+    },
+    "loadPolicy": "heavy runs sequential; one browser/unit worker, BelowNormal priority, processor affinity 192 (two logical processors)",
+    "stylesheetFinalization": "Only the explanatory CSS comment was shortened after code screenshots/full units; selector and declaration stayed unchanged. Final packaged CSS and original budget passed."
+  },
+  "retainedDiagnostics": [
+    {
+      "log": "artifacts/code-direction-red-runtime-20261008.log",
+      "kind": "Pre-implementation suite failed all 11 cases; two fixed-move fixtures were later corrected to retain valid source-container content, not eleven independent product bugs"
+    },
+    {
+      "log": "artifacts/code-direction-geometry-red-20261008.log",
+      "kind": "computed direction passed but Latin line aligned right instead of native left"
+    },
+    {
+      "log": "artifacts/code-direction-visual-final-20261008.log",
+      "kind": "obsolete packaged stylesheet; run stopped explicitly after confirming it loaded old CSS, not counted as final verification"
+    },
+    {
+      "log": "artifacts/code-direction-final-test-budget-20261008.log",
+      "kind": "CSS exceeded unchanged cap by eight bytes before comment trimming"
+    },
+    {
+      "log": "artifacts/ci-a9af193-browser-20261008.log",
+      "kind": "Linux structural preflight: 55 passes, two WebKit rich restoration failures; full matrix not reached"
+    }
+  ],
+  "priorCloud": {
+    "commit": "a9af193",
+    "ci": "https://github.com/eddolo/fountainjs/actions/runs/37712168602",
+    "status": "completed failure",
+    "verify": "success",
+    "performance": "success",
+    "lean": "success",
+    "browser": "failure",
+    "pages": "https://github.com/eddolo/fountainjs/actions/runs/37712168635",
+    "pagesStatus": "completed success"
+  },
+  "nestedAutoDiagnostic": {
+    "source": "artifacts/nested-auto-boundary-probe-20261008.mjs",
+    "data": "artifacts/nested-auto-boundary-20261008/observations.json",
+    "log": "artifacts/nested-auto-boundary-20261008.log",
+    "kind": "pure-Node commands plus native rendered diagnostic, NOT interactive conformance",
+    "cases": 12,
+    "directionGaps": 6,
+    "directionRetainedControls": 6,
+    "exactUndos": 12,
+    "visuallyReviewedPngs": 24,
+    "gaps": [
+      "nested automatic list lift across parents",
+      "indent automatic child under independently fixed item"
+    ],
+    "notImplemented": "one-child auto wrapping or frozen RTL cannot reproduce the former shared live context"
+  },
+  "limits": [
+    "Current-source complete Linux CI not certified",
+    "Linux WebKit rich clipboard restoration remains open; no new Linux skip or cached-text restoration",
+    "Windows Firefox drops private Fountain JSON while retaining exact standard HTML in these cases; arbitrary metadata and non-default code-property HTML fallback require separate audits",
+    "Native mobile/IME/assistive technology, Word bidi, CSS inheritance, broader bidi/selection and custom-block direction remain open",
+    "Recorded videos/traces exist but were not manually watched",
+    "No npm release or ledger/CommonMark percentage promotion; PROD-04 remains Partial"
+  ],
+  "sources": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "489b737b7d34cea4bc7a2b00024366b233be781a12444207c8be527c36a66a62"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "fb565fd89c67e77fd4963947db27b995e06f7d9b2276cc3b8188195b4b1ee2a4"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "bd23665ee237db4c1051bdf740cfe9afff0b9a77fc49cf3de587c404880231fa"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "8203f8645b6f151f67e857afe254c0aa3512b49fc70df4340d6b101b481cc2a0"
+    },
+    {
+      "path": "scripts/check-browser-clipboard-capability.mjs",
+      "sha256": "3e841a3631d4c07bf6900918c3727d9379e670f7d7e3c403188dc5c8525fa79f"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "e77379f88ae8bf0a17597e364ae71d8c79c2fa6cfec00be8dde065e170672a36"
+    },
+    {
+      "path": "scripts/fixtures/text-direction-check.mjs",
+      "sha256": "8134fe9ec99ce62bc0f60ed12d788851301850f819a3fc1c59881d8deebf5998"
+    },
+    {
+      "path": "src/core/commands.ts",
+      "sha256": "4ef88d5311662d9d7b318a36a8a3ec37f0886da9b39165a356ff62c92f40c0fa"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "74b635e33887ea636404a5ce4a74c698d2c2ada99de69f9dfdecfb98d379f0db"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "3054fe6716e6cfd8b6fa23d9816ffde697970be9378e8c200b1bb93725acea74"
+    },
+    {
+      "path": "src/extensions/nodes/code-block.ts",
+      "sha256": "309cd98c1e56c3ed8d94653ebbe0e4e3b27e3b1d98b4fcb7864c70390bf4879c"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "19fdd51a793de28921f58d1bd4a0b2a7423b66dd7dfd9217680a3660217166f7"
+    },
+    {
+      "path": "src/react/FountainToolbar.tsx",
+      "sha256": "76144626a5f275d8919b0f1495bc485ff261b83a342a0ce3ef49b1f0f983570c"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "7bcaee9be51a99e15b76ad131b0b86bd6ffdc1b23478c53c002fa9a9ce33811e"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "c126e5081ca243ccc88d054d055348d9022187fd56a4b546b5505cc0404a1fb2"
+    },
+    {
+      "path": "tests/browser/list-auto-scope-journey.ts",
+      "sha256": "421f3338d57977431c51df1fcd41a81f3436b28fcd7863dac69d8dcd14c22926"
+    },
+    {
+      "path": "tests/react-toolbar-panels.test.tsx",
+      "sha256": "e43446761836c6f44412171fbfb145865ec3d32db350b4a54e99ca204b519bca"
+    },
+    {
+      "path": "tests/text-direction-dom.test.ts",
+      "sha256": "d34f88ea00079a2028ace2d0c7f71ee2858d03ee0784b9a1cdd57242dff26294"
+    },
+    {
+      "path": "tests/browser/code-direction-journey.ts",
+      "sha256": "35cfa8d68738cf38932d073ab51448a75096138d92bef4e50b4febc779761f2c"
+    },
+    {
+      "path": "tests/code-block-direction.test.ts",
+      "sha256": "617f0c4b233a9bc0a9c2b1f83805d5c5a49dc8c19330fbceef4693525acebec6"
+    },
+    {
+      "path": "artifacts/nested-auto-boundary-probe-20261008.mjs",
+      "sha256": "013db386c93bd0db3be4968cbd065156aeb0013211071a2c5af72d39bbd13138"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-imported.png",
+      "sha256": "e5baa4abe4d4f61fd813e829e472547209ea53be06f07a0d6c5414fd4d362588",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-native.png",
+      "sha256": "2f6019cd31b228650e91bc6599e39584806e5f6a506c2fcd96c2141d3039154b",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-property-controls.png",
+      "sha256": "e5baa4abe4d4f61fd813e829e472547209ea53be06f07a0d6c5414fd4d362588",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-real-newline.png",
+      "sha256": "5db36c7cb8b81b2a77f7d148786fc4a2e9238c9b7e8f8a44d10aebbebd4232a0",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-reopened-editor.png",
+      "sha256": "de92603c25c49636fc9df49756ec6ff16960758f6d194796ad1c46aa86a19027",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-imported.png",
+      "sha256": "997836c6e614181eece4d284425ae6d989e387dc1fbef766c3c547b8d1fc8dab",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-native.png",
+      "sha256": "0fecf4f92d38622c981488b482c4a47d69c87aa8979216546ffcc892a09f6b38",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-property-controls.png",
+      "sha256": "997836c6e614181eece4d284425ae6d989e387dc1fbef766c3c547b8d1fc8dab",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-real-newline.png",
+      "sha256": "3eb0109f951a2a14ab35e183f0cc80315647e2c825aac2b0c2c1a3a0445dc6eb",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-reopened-editor.png",
+      "sha256": "48547211ba191c55e9a929a9245d16a328f65a99b15de1d1851fd5822c076636",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-downloaded-reader.png",
+      "sha256": "b2a229ef5928316c52d4a59d1507f3fc6f9ab204a22bc9bcc2005e02421cc0fb",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-imported.png",
+      "sha256": "6ad026775bc6642360935bc24770b881da450296b9a59786dedb8f3c694606e2",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-native-newline.png",
+      "sha256": "a2d22526f7def026aca214559f62978dba467a4c2e1a985537e91be50e3f601f",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-native.png",
+      "sha256": "76255969d9861d20a5f3d3d02be9fe54dd8c0a05a042cc49ed67248a0cfd2d3f",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-property-controls.png",
+      "sha256": "6ad026775bc6642360935bc24770b881da450296b9a59786dedb8f3c694606e2",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-real-newline.png",
+      "sha256": "6db0d2e5f32e5a825d335d25a17ae43258024d47f07d1a21e0e66d3119cfecff",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-reopened-editor.png",
+      "sha256": "598c7d39e10c8710ee5e6e391a4db7c07b2c7ec54f282bd88b89c499dca70bad",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-imported.png",
+      "sha256": "3771609eda8dc9ffba15ef7321a5c341da890e16996e1a5aba8f67373b291fb9",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-native.png",
+      "sha256": "daac0046edcfa1a602a0eeadb73b7ead5105158df23014c836e5e96ef4cf697b",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-property-controls.png",
+      "sha256": "e5baa4abe4d4f61fd813e829e472547209ea53be06f07a0d6c5414fd4d362588",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-real-newline.png",
+      "sha256": "5db36c7cb8b81b2a77f7d148786fc4a2e9238c9b7e8f8a44d10aebbebd4232a0",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-reopened-editor.png",
+      "sha256": "de92603c25c49636fc9df49756ec6ff16960758f6d194796ad1c46aa86a19027",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-imported.png",
+      "sha256": "fca89d4ec46c0066b6ecbd3a525b6330a050a30a2bc312678d86f23f1b5ecfa9",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-native.png",
+      "sha256": "192f872624da2d80034aebf8e11f67ef140f333966b30178fca7df1b17e0736f",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-property-controls.png",
+      "sha256": "997836c6e614181eece4d284425ae6d989e387dc1fbef766c3c547b8d1fc8dab",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-real-newline.png",
+      "sha256": "3eb0109f951a2a14ab35e183f0cc80315647e2c825aac2b0c2c1a3a0445dc6eb",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-reopened-editor.png",
+      "sha256": "48547211ba191c55e9a929a9245d16a328f65a99b15de1d1851fd5822c076636",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-downloaded-reader.png",
+      "sha256": "b2a229ef5928316c52d4a59d1507f3fc6f9ab204a22bc9bcc2005e02421cc0fb",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-imported.png",
+      "sha256": "8c1ab17d185ebcf3eb5108f90e076388ad807d8a8c12ff69fc9bdf432d84d1c2",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-native-newline.png",
+      "sha256": "a2d22526f7def026aca214559f62978dba467a4c2e1a985537e91be50e3f601f",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-native.png",
+      "sha256": "95ab35e2d387e75dacbcc52d882d2d587b4e879424b1f701d2180ede389333b3",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-property-controls.png",
+      "sha256": "6ad026775bc6642360935bc24770b881da450296b9a59786dedb8f3c694606e2",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-real-newline.png",
+      "sha256": "6db0d2e5f32e5a825d335d25a17ae43258024d47f07d1a21e0e66d3119cfecff",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-reopened-editor.png",
+      "sha256": "598c7d39e10c8710ee5e6e391a4db7c07b2c7ec54f282bd88b89c499dca70bad",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-imported.png",
+      "sha256": "1313177d891e845e680151c545738dced696155d40041ba55a24c60156865366",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-native.png",
+      "sha256": "1edf3c816dccd888000d9d47e1348c8a012e0aed5ba7c39b37d3c64810772493",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-property-controls.png",
+      "sha256": "e5baa4abe4d4f61fd813e829e472547209ea53be06f07a0d6c5414fd4d362588",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-real-newline.png",
+      "sha256": "5db36c7cb8b81b2a77f7d148786fc4a2e9238c9b7e8f8a44d10aebbebd4232a0",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-reopened-editor.png",
+      "sha256": "de92603c25c49636fc9df49756ec6ff16960758f6d194796ad1c46aa86a19027",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-imported.png",
+      "sha256": "c17ee0d211fa678a731f469619deebe5af6007af9b5f7ec11fe3f2cb9d93f9d1",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-native.png",
+      "sha256": "76b235801fa15e46e81de12ee5f72f1e2b65c50ef42fd984f3d7fd936fed3dba",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-property-controls.png",
+      "sha256": "997836c6e614181eece4d284425ae6d989e387dc1fbef766c3c547b8d1fc8dab",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-real-newline.png",
+      "sha256": "3eb0109f951a2a14ab35e183f0cc80315647e2c825aac2b0c2c1a3a0445dc6eb",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-reopened-editor.png",
+      "sha256": "48547211ba191c55e9a929a9245d16a328f65a99b15de1d1851fd5822c076636",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-downloaded-reader.png",
+      "sha256": "b2a229ef5928316c52d4a59d1507f3fc6f9ab204a22bc9bcc2005e02421cc0fb",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-imported.png",
+      "sha256": "c89cfb489f380f1b7d495ad1d8342568ac8af31f2c0a3118fdb5c1cb3099ee41",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-native-newline.png",
+      "sha256": "a2d22526f7def026aca214559f62978dba467a4c2e1a985537e91be50e3f601f",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-native.png",
+      "sha256": "f159e439ced992aba4ef4e3825f4af1f76b42b709972dbb15ed2565b3e6fc626",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-property-controls.png",
+      "sha256": "6ad026775bc6642360935bc24770b881da450296b9a59786dedb8f3c694606e2",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-real-newline.png",
+      "sha256": "6db0d2e5f32e5a825d335d25a17ae43258024d47f07d1a21e0e66d3119cfecff",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-all-lines-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-reopened-editor.png",
+      "sha256": "598c7d39e10c8710ee5e6e391a4db7c07b2c7ec54f282bd88b89c499dca70bad",
+      "review": "exact SHA-256 match to directly inspected visual-built capture"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-external-paste.png",
+      "sha256": "3da8e5f241527c88c8d00cc93712fd8d9c87e6336a4f8f2d04343b34543b926a",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-internal-paste.png",
+      "sha256": "91b44b44097fab52c60c5216e4b34cb2e038f95abbdb4a61efe9b587cedcac9a",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-external-paste.png",
+      "sha256": "8fac81f476de5d173043b6e89b5d403603f38a1add200cb10ed09862f99bd2c9",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-internal-paste.png",
+      "sha256": "d58ea5775909bb97c4962ec457519ce4df5d97b2336b7507288212e70b03716e",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-external-paste.png",
+      "sha256": "ce4d36f9bba11b5d178586882bfdbc1788ccbe45f2fb9306275cdc8b9c44a98b",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-internal-paste.png",
+      "sha256": "836a5996226855e704321e9005601e6ad07e94510ea5fad885cb73af3f24250f",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-external-paste.png",
+      "sha256": "e7a8e1cbb72f387315d4b2ac2ff008663938369403776512125d57bf61c33b4e",
+      "review": "directly inspected"
+    },
+    {
+      "path": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-internal-paste.png",
+      "sha256": "dbbc324ced05d9cfdd0057153a010f2ea482ce6d9314cc265cc01d33f1869105",
+      "review": "directly inspected"
+    }
+  ],
+  "clipboardDelivery": [
+    {
+      "case": "editor-copies-shared-autom-1440d--external-clipboard-convert-chromium",
+      "deliveredTypes": [
+        "text/plain",
+        "text/html",
+        "application/x-fountainjs+json"
+      ],
+      "plainExact": true,
+      "htmlExact": true,
+      "privateJsonExact": true
+    },
+    {
+      "case": "editor-copies-shared-autom-1440d--external-clipboard-convert-firefox",
+      "deliveredTypes": [
+        "text/html",
+        "text/plain"
+      ],
+      "plainExact": true,
+      "htmlExact": true,
+      "privateJsonExact": false
+    },
+    {
+      "case": "editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium",
+      "deliveredTypes": [
+        "text/plain",
+        "text/html",
+        "application/x-fountainjs+json"
+      ],
+      "plainExact": true,
+      "htmlExact": true,
+      "privateJsonExact": true
+    },
+    {
+      "case": "editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox",
+      "deliveredTypes": [
+        "text/html",
+        "text/plain"
+      ],
+      "plainExact": true,
+      "htmlExact": true,
+      "privateJsonExact": false
+    }
+  ]
+}

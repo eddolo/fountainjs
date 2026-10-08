@@ -1,0 +1,24 @@
+[WebServer] (node:24128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:28264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (16.5s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (13.9s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (12.4s)
+(node:9472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (44.8s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (18.3s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (19.4s)
+(node:20216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (26.1s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (26.6s)
+  ok 9 [webkit] › tests\browser\editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (26.3s)
+
+  9 passed (3.8m)

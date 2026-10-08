@@ -881,7 +881,7 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
       if (!selection.isCollapsed && comparePaths(start, end) !== 0
         && comparePaths(path, end) === 0 && selection.to === 0 && selection.endPath.at(-1) === 0) return;
     }
-    if (TEXT_BLOCKS.includes(node.type.name)) {
+    if (TEXT_BLOCKS.includes(node.type.name) || attribute === 'dir' && node.type.name === 'code_block') {
       const explicit = attribute === 'align' && node.type.spec.attrs?.alignExplicit;
       if ((attribute === 'align' || node.type.spec.attrs?.dir)
         && (node.attrs[attribute] !== value || (explicit && node.attrs.alignExplicit !== (value === 'left' ? true : undefined)))) paths.push(path);

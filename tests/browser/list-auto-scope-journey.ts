@@ -97,7 +97,13 @@ export async function listAutoScopeJourney(page: Page, info: TestInfo, action: '
     // Observe, but never manufacture, the native clipboard payload.
     await editor.evaluate(element => element.addEventListener('copy', event => {
       const data = (event as ClipboardEvent).clipboardData;
-      (globalThis as any).__autoScopeCopy = { plain: data?.getData('text/plain'), html: data?.getData('text/html') };
+      (globalThis as any).__autoScopeCopy = { plain: data?.getData('text/plain'), html: data?.getData('text/html'),
+        types: data ? [...data.types] : [], json: data?.getData('application/x-fountainjs+json') };
+    }, { once: true }));
+    await editor.evaluate(element => element.addEventListener('paste', event => {
+      const data = (event as ClipboardEvent).clipboardData;
+      (globalThis as any).__autoScopePaste = { plain: data?.getData('text/plain'), html: data?.getData('text/html'),
+        types: data ? [...data.types] : [], json: data?.getData('application/x-fountainjs+json') };
     }, { once: true }));
     const beforePaste = await editor.locator('p').allTextContents();
     await selected.click();
@@ -115,7 +121,20 @@ export async function listAutoScopeJourney(page: Page, info: TestInfo, action: '
     await expect(editor).toContainText('Temporary replacement');
     await page.keyboard.press('ControlOrMeta+a');
     await page.keyboard.press('ControlOrMeta+v');
+    // Preserve delivered payload and resulting surface before the retention
+    // assertion, including on failure. Copy-event setData is not proof that the
+    // OS/browser subsequently delivers those same formats to a paste target.
+    const deliveryPath = info.outputPath('auto-scope-native-clipboard-delivery.json');
+    await writeFile(deliveryPath, JSON.stringify(await editor.evaluate(element => ({
+      copied: (globalThis as any).__autoScopeCopy, delivered: (globalThis as any).__autoScopePaste,
+      result: element.outerHTML,
+    })), null, 2));
+    await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
     await expect(group).toHaveCount(1);
+    await expect(group.locator(':scope > ol')).toHaveCount(2);
+    expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+    await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+    await expect(group.locator(':scope > p')).toHaveCount(action === 'lift' ? 1 : 0);
     expect(await editor.locator('p').allTextContents()).toEqual(beforePaste);
     expect((await group.locator('p').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).direction))).every(dir => dir === 'ltr')).toBe(true);
     await editor.screenshot({ path: info.outputPath('auto-scope-internal-paste.png') });

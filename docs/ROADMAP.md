@@ -1,5 +1,43 @@
 # FountainJS opportunity roadmap
 
+Current source follow-up (2026-10-08, Unreleased): first-party code buffers gain
+optional owned reading direction, capability-gated author controls, exact source
+retention and browser/server HTML agreement. Pure-Node schema/commands/history,
+fixed-direction moves and Yjs are covered. Real recorded import/edit/download
+journeys now compare rendered Latin-line alignment against native HTML: the
+original computed-direction-only checks missed `dir="auto"` visually aligning
+every code line to the right. A scoped plaintext-bidi CSS fix passes nine
+recorded, retry-free Chromium/Firefox/WebKit journeys, including an independent
+native Hebrew-line reference after Enter. All 63 final PNGs are reviewed directly
+or by exact SHA-256 matches to inspected captures (54 matches / nine new native
+references). The complete single-worker local suite passes 2,807 tests / 212
+files; new-source Linux verification remains required. Recorded videos are not
+manually watched and native mobile/assistive-technology/Word bidi remain open.
+Packed ESM/CJS root/core Node consumers, API (411 declarations), headless
+boundary (99 modules), framework types, unchanged CommonMark profiles, budgets
+and website build pass. Only the measured React/aggregate code allowances grow;
+the stylesheet stays inside its unchanged 86.75 KiB cap after trimming a comment.
+Markdown/DOCX code-direction loss remains reported, not certified fidelity.
+
+`a9af193` Linux CI is terminal: verify/performance/Lean and Pages pass; structural
+browser preflight has 55 passes and two WebKit shared-auto rich-paste failures.
+The full matrix was not run. Delivered clipboard formats and independent native
+delivery controls are now recorded before the restoration assertion; do not
+promote Linux rich-paste or substitute a no-op restoration/skip. Nested automatic
+outdent and indent-under-fixed-parent diagnostics also retain six real direction
+gaps (with six passing controls and twelve exact undos). These remain open.
+The last fully certified checkpoint below is unchanged; PROD-04 stays Partial,
+ledger/CommonMark coverage and npm are unchanged, and this is not full parity.
+Four retry-free Windows Chromium/Firefox restoration journeys also assert the
+shared wrapper, two ordered fragments starting at 0/2, converted bullet versus
+lifted paragraph structure and outbound plain text. Firefox delivers exact HTML
+but drops private Fountain JSON, so arbitrary metadata retention through HTML
+fallback needs a separate audit; these cases do not prove it. Eighteen unique
+native clipboard controls reproduce four empty event-authored-payload cases in
+Windows WebKit. They are diagnostic outcomes, not eighteen conformance passes.
+Evidence: `artifacts/code-direction-verification-20261008.json` and
+`artifacts/nested-auto-boundary-20261008/observations.json`.
+
 Latest fully certified checkpoint (2026-10-08): `0a6948d` passes complete Linux
 CI: 2,768 units / 210 files, 730 browser passes / 16 skips, 45 structural
 preflight journeys, types/package/headless/Markdown, performance and Lean;

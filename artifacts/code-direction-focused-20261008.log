@@ -1,0 +1,40 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/code-block-direction.test.ts (11 tests | 2 failed) 96ms
+   ❯ portable code-block reading direction (11)
+     × retains inherited rtl when code moves into ltr, with exact buffer and undo 10ms
+     × retains inherited ltr when code moves into rtl, with exact buffer and undo 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > retains inherited rtl when code moves into ltr, with exact buffer and undo
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > retains inherited ltr when code moves into rtl, with exact buffer and undo
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  2 failed | 39 passed (41)
+   Start at  02:21:54
+   Duration  18.15s (transform 48%, import 30%, environment 14%, tests 7%)
+
+     Import  191 modules were evaluated 435 times · 4.94s total, 30% of tracked time
+             ~2.77s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/code-block-direction.test.ts:55:39
+     53|     const original = editor.getJSON();
+     54|     const move = { fromPath: [0, 0], toParentPath: [1], toIndex: 1 };
+     55|     expect(canMoveNode(editor, move)).toBe(true); expect(moveNode(edit…
+       |                                       ^
+     56|     const moved = editor.state.doc.child(1).child(1);
+     57|     expect(moved.attrs.dir).toBe(source); expect(moved.textContent).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+

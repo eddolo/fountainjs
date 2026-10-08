@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
+import { codeDirectionJourney } from './code-direction-journey';
 import { listAutoScopeJourney } from './list-auto-scope-journey';
 import { blockDirectionKeyboardJourney, blockDirectionPointerJourney } from './block-direction-reorder-journey';
 import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
@@ -40,6 +41,12 @@ import { autoContainerDirectionJourney } from './auto-container-direction-journe
 import { codeNativeFocusJourney, nativeCodeClickBaseline } from './code-native-focus-journey';
 import { htmlInheritedAlignmentJourney } from './html-inherited-alignment-journey';
 import { htmlStructuralDirectionJourney } from './html-structural-direction-journey';
+
+for (const dir of ['ltr', 'rtl', 'auto'] as const) {
+  test(`retains technical code reading direction through real settings, editing and downloaded HTML: ${dir}`, async ({ page }, info) => {
+    await codeDirectionJourney(page, info, dir);
+  });
+}
 
 for (const action of ['convert', 'lift'] as const) {
   test(`retains shared automatic list scope through real ${action}, typing and downloaded HTML`, async ({ page }, info) => {

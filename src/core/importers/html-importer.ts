@@ -611,6 +611,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     language: element.getAttribute('data-language') || directChild(element, 'code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
     lineNumbers: true,
     ...readParagraphLayout(element),
+    ...(schema.nodes.code_block.spec.attrs?.dir ? readTextDirection(element, schema) : {}),
   }, [schema.text(element.textContent ?? '')])];
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {

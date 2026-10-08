@@ -1,0 +1,12 @@
+chromium nested-lift-auto: direction=KNOWN GAP; dynamic anchor=retained; undo=exact
+chromium nested-lift-fixed-control: direction=retained; dynamic anchor=retained; undo=exact
+chromium indent-under-fixed-item: direction=KNOWN GAP; dynamic anchor=retained; undo=exact
+chromium indent-same-context-control: direction=retained; dynamic anchor=retained; undo=exact
+firefox nested-lift-auto: direction=KNOWN GAP; dynamic anchor=retained; undo=exact
+firefox nested-lift-fixed-control: direction=retained; dynamic anchor=retained; undo=exact
+firefox indent-under-fixed-item: direction=KNOWN GAP; dynamic anchor=retained; undo=exact
+firefox indent-same-context-control: direction=retained; dynamic anchor=retained; undo=exact
+webkit nested-lift-auto: direction=KNOWN GAP; dynamic anchor=retained; undo=exact
+webkit nested-lift-fixed-control: direction=retained; dynamic anchor=retained; undo=exact
+webkit indent-under-fixed-item: direction=KNOWN GAP; dynamic anchor=retained; undo=exact
+webkit indent-same-context-control: direction=retained; dynamic anchor=retained; undo=exact
