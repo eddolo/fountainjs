@@ -1,5 +1,44 @@
 # Whole-document Markdown HTML conversion
 
+## Current remaining CommonMark work (2026-10-08, Unreleased)
+
+The version-12 neutral comparator distinguishes `<a>` (a non-hyperlink
+placeholder) from `<a href="">` (a hyperlink). Three negative guards reject
+conflating these, including empty anchors and an `id` attribute. This follows
+[the HTML anchor contract](https://html.spec.whatwg.org/dev/text-level-semantics.html#the-a-element),
+not a requirement to adopt another parser's AST. All six profile fixtures use
+the same comparator version; their required example ranges are unchanged.
+
+Current semantic results remain **563/652 default**, **579** opt-in HTML,
+**580** source recovery, **601** containers, and **613** comments/anonymous
+flow. Of the strongest profile's 39 differences, 17 have existing explicit
+security, GFM-autolink or editable-caret-host contracts. The other 22 are:
+
+| Examples | Evidence and remaining boundary |
+| --- | --- |
+| 163, 170–173, 176, 178, 201, 491, 524, 536, 617 | Existing explicit inert adapters preserve original element names, attributes and parsed body content as data. New official-corpus tests cover LF/CRLF, exact untouched Markdown, complete JSON reopening and canonical HTML/Markdown reopening. Original scripts/styles/controls and unknown-tag behavior are **not** rendered; these remain semantic mismatches. |
+| 156–158 | Unfinished tags deliberately remain literal editable source with a fallback report rather than letting HTML recovery discard them. This retains source, not the reference renderer's empty fragment. |
+| 181 | A doctype-only source retains its Markdown snapshot, but produces an editable empty paragraph. Doctype metadata/canonical export remain unresolved; this example has not been reclassified as an intentional caret-host divergence. |
+| 150, 613–616, 631 | Mixed unknown wrappers, non-hyperlink anchors/attributes and empty hyperlink structure remain unrepresented in the existing profiles. Link marks cannot represent every empty/transparent HTML anchor. Source snapshots are not a substitute for these model/rendering semantics. |
+
+`tests/commonmark-inert-preservation.test.ts` adds **24 Node-only contracts**
+for the first group. The development-only reference parser must reproduce the
+official HTML before the test compares shared opaque element meaning; neither
+AST is equated with the other. Exported carriers must not install the original
+tags or event-handler attributes on live HTML. The focused regression passes
+**111 tests / five files**; the complete single-worker suite passes **2,855
+tests / 214 files**, and framework type checks pass. No new parser,
+runtime dependency, public API or automatic HTML opt-in is introduced.
+Frozen local evidence: `artifacts/commonmark-inert-verification-20261008.json`.
+
+Reproduce the strict corpus gate with `pnpm test:markdown-conformance`; inspect
+the unresolved representations with `node scripts/check-markdown-conformance.mjs
+--report --document-flow-report --example=150 --example=156 --example=157
+--example=158 --example=181 --example=613 --example=614 --example=615
+--example=616 --example=631`. These are diagnostics, not permission to promote
+scores. Existing inert editing demos and recordings remain separate evidence;
+this follow-up does not claim a new visual or physical-device audit.
+
 ## Explicit saved empty paragraphs (2026-10-06, Unreleased)
 
 Canonical `<p data-fountain-empty="text|block"></p>` markers are now captured

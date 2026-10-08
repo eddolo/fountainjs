@@ -1,7 +1,8 @@
 {
   "version": 1,
   "standard": "CommonMark 0.31.2",
-  "projectionVersion": 11,
+  "projectionVersion": 12,
+  "anchorContract": "Absent href is a retained HTML placeholder, distinct from an empty-href hyperlink; three negative oracle guards enforce this.",
   "profile": "parseHTMLDocument + ServerHTMLImporter.parseTextBlockFlow + HTMLContainerExtension + HTMLCommentExtension",
   "requiredMatchRanges": "1-149,151-155,159-162,164-169,174-175,177,179-180,182-200,202-206,208-217,219-238,241-279,285-314,316-490,492-523,525-535,537-595,597,600,602-607,609-610,618-630,632-652",
   "unresolvedRanges": "150,156-158,163,170-173,176,178,181,201,207,218,239-240,280-284,315,491,524,536,596,598-599,601,608,611-617,631",

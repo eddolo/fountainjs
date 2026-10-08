@@ -101,7 +101,9 @@ function inline(node) {
   if (tag === 'del' || tag === 's') return [['strike', children()]];
   if (tag === 'code') return [['code', textContent(node)]];
   if (tag === 'br') return [['hard-break']];
-  if (tag === 'a') return [[
+  // WHATWG: an anchor without href is a placeholder, not a hyperlink.
+  // Keep its wrapper/attributes instead of inventing current-page navigation.
+  if (tag === 'a' && node.attrs?.some(attr => attr.name === 'href')) return [[
     'link',
     normalizedURL(attribute(node, 'href')),
     attribute(node, 'title') || null,
@@ -229,6 +231,18 @@ function paragraphFormattingScope(node, reference) {
 function semanticProjection(html, reference = new Set()) {
   return blockChildren(parseFragment(html, { sourceCodeLocationInfo: true }).childNodes, reference);
 }
+
+const anchorSensitivityCases = [
+  ['<p><a>Label</a></p>', '<p><a href="">Label</a></p>'],
+  ['<p><a></a></p>', '<p><a href=""></a></p>'],
+  ['<p><a id="target">Label</a></p>', '<p><a href="" id="target">Label</a></p>'],
+];
+for (const [placeholder, hyperlink] of anchorSensitivityCases) {
+  if (JSON.stringify(semanticProjection(placeholder)) === JSON.stringify(semanticProjection(hyperlink))) {
+    throw new Error('Anchor oracle conflates a non-hyperlink placeholder with an empty-href hyperlink.');
+  }
+}
+console.log('Anchor oracle sensitivity: 3 placeholder-vs-hyperlink distinctions retained.');
 
 // Observe the oracle's renderer without changing one byte of its HTML. A raw
 // HTML block can contain identical <pre><code> markup, so neither a regex nor
@@ -400,7 +414,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 11) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 12) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)

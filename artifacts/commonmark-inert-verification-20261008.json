@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-08",
+  "baseCommit": "1e90cde7997243d65aaea7d5e8477495d78d184b",
+  "status": "verified local development-oracle and retention checkpoint; full CommonMark and broader parity remain unfinished",
+  "scope": [
+    "Correct absent-href versus empty-href oracle semantics; 3 negative guards reproduced failure before repair",
+    "All six fixture projection versions advance from 11 to 12; required example ranges unchanged",
+    "24 official LF/CRLF Node-only inert adapter contracts; native AST equality is not used",
+    "No runtime source, public API, dependency, default HTML opt-in or npm version changes"
+  ],
+  "verification": {
+    "officialCorpus": 652,
+    "defaultSemanticMatches": 563,
+    "strongestOptInSemanticMatches": 613,
+    "profileMatches": {
+      "html": 579,
+      "sourceRecovery": 580,
+      "containers": 601,
+      "comments": 613,
+      "anonymousFlow": 613
+    },
+    "officialInertContracts": 24,
+    "focused": {
+      "tests": 111,
+      "files": 5
+    },
+    "fullUnits": {
+      "tests": 2855,
+      "files": 214,
+      "workers": 1,
+      "exitCode": 0,
+      "durationSeconds": 208.72
+    },
+    "types": "TypeScript/Svelte/Angular passed",
+    "website": "Base-path Vite build passed; existing optional large-chunk warning retained",
+    "runtimeMapsWithoutReferenceParser": 148,
+    "visualAudit": "No new browser recording or visual claim for this Node-only follow-up; prior existing inert workshop evidence stays separate",
+    "resources": "BelowNormal priority, two CPU cores, one unit worker"
+  },
+  "retentionContract": [
+    "Development-only CommonMark parser must first reproduce each official HTML exactly",
+    "Shared original opaque tag, attributes and parsed text are compared; AST shapes remain independent",
+    "Untouched LF/CRLF source strings and complete JSON/canonical HTML/canonical Markdown reopening must match",
+    "Original active/unknown tags and event-handler attributes are not installed on exported live HTML"
+  ],
+  "strongestProfileRemaining": {
+    "totalDifferences": 39,
+    "existingIntentionalContracts": 17,
+    "otherCases": 22,
+    "groups": [
+      {
+        "examples": [
+          163,
+          170,
+          171,
+          172,
+          173,
+          176,
+          178,
+          201,
+          491,
+          524,
+          536,
+          617
+        ],
+        "status": "existing explicit inert adapter retention verified; not native HTML rendering or semantic matches"
+      },
+      {
+        "examples": [
+          156,
+          157,
+          158
+        ],
+        "status": "unfinished tags retained as literal source with fallback; reference HTML recovery discards them; not semantic matches"
+      },
+      {
+        "examples": [
+          181
+        ],
+        "status": "doctype-only source snapshot retained; model caret paragraph and canonical doctype representation unresolved"
+      },
+      {
+        "examples": [
+          150,
+          613,
+          614,
+          615,
+          616,
+          631
+        ],
+        "status": "mixed unknown wrappers, non-hyperlink anchors/attributes and empty hyperlink structure unrepresented"
+      }
+    ]
+  },
+  "retainedFailures": {
+    "oracleRed": "Three new distinctions failed before repairing the comparator",
+    "firstTestImport": "First test invocation collected no tests because two guessed import paths were wrong; imports corrected to existing headless exports; first semantic run passed all 24"
+  },
+  "externalState": {
+    "ciRun": 37723568273,
+    "browserJob": 113136493999,
+    "sourceCommit": "1e90cde7997243d65aaea7d5e8477495d78d184b",
+    "verify": "success",
+    "performance": "success",
+    "lean": "success",
+    "pagesRun": 37723568271,
+    "pages": "success",
+    "browser": "confirmed live in remaining headless matrix; strict display clipboard and other preflights passed; not terminal full certification and not verification of these newer development-only edits"
+  },
+  "limitations": [
+    "No full CommonMark/GFM, raw HTML behavior, pixel fidelity or physical-device certification",
+    "Original active HTML remains inert; source retention never counts as rendering semantics",
+    "Nested automatic direction boundary gaps remain open",
+    "Coverage ledger and npm 0.4.0-beta.2 unchanged"
+  ],
+  "hashContract": "SHA-256 of local raw file bytes, including CRLF; Git checkout normalization may change log hashes. Source hashes identify local verified contents.",
+  "sourceHashes": [
+    {
+      "path": "scripts/check-markdown-conformance.mjs",
+      "sha256": "54c3620fb873bcd058f9b02b6fab278002db0b743f532918f2a4d89b8d59a466"
+    },
+    {
+      "path": "tests/commonmark-inert-preservation.test.ts",
+      "sha256": "ecdf153c218b944c327f41fc2abd17067ef15c645d7686c8b2837f14a9fc7ba3"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-semantic-baseline-v1.json",
+      "sha256": "6d9c70f908cae45c70bd0d66dce46629625dffb8bbae7915e20df00c80b37e6d"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json",
+      "sha256": "c097d8ec456a9db9b156aec7a4e60cbe20b54bb85c4f226c5e4e0246d94803e4"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-source-recovery-baseline-v1.json",
+      "sha256": "fca27717104143879962664b87236caa97b9b89792e7df737fc6db480124b3f0"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-document-flow-v1.json",
+      "sha256": "812d5bda7eb6e59bdcd975ac035fc1ce3b6662c7632f4265f22a509e55ae1061"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-comment-flow-v1.json",
+      "sha256": "7df700322b4021d60e950fabfc92d83a38b82daaee53b241df7b1377d6910b9d"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-anonymous-flow-v1.json",
+      "sha256": "c744590d92d6a5d0346f734499aac67d84a34f092ad4c3410b6b7b21a92a7c4e"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "artifacts/commonmark-inert-site-20261008.log",
+      "sha256": "460769f6c196127d53299dec3f042d29d748ffe3dab84b4f79c15a9c9f6673a4"
+    },
+    {
+      "path": "artifacts/commonmark-anchor-oracle-red-20261008.log",
+      "sha256": "03fbee9439d4e25ca876d37ab1e1dc3c57d70ad24cb35337f8a1b9c3d5876e88"
+    },
+    {
+      "path": "artifacts/commonmark-anchor-oracle-fixed-20261008.log",
+      "sha256": "1e353f3b0fcbcf1acafc7a49367041d56b71933e71b2065bf367dacfe71442cb"
+    },
+    {
+      "path": "artifacts/commonmark-inert-corpus-first-semantic-pass-20261008.log",
+      "sha256": "ef5b4c6c480776605063c018bfeb4c1d30ad20f30fc3ba6f1f9ff5cd9f44c051"
+    },
+    {
+      "path": "artifacts/commonmark-inert-corpus-focused-20261008.log",
+      "sha256": "bf7a95f223e9d1f175b81ac2983a7c7d9543f2a67de3a65db2fdd53cdb0d42eb"
+    },
+    {
+      "path": "artifacts/commonmark-inert-corpus-typecheck-20261008.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/commonmark-open-representations-20261008.log",
+      "sha256": "2f209d6880bfecdb898e2bd85165f9603073bb75f6fe87e2b809e93ecd2f90db"
+    },
+    {
+      "path": "artifacts/commonmark-inert-complete-units-20261008.log",
+      "sha256": "7a214e4cb000d76fe6d192d13d25da3f1a6a4e3698e99b8d324f54e815a183f5"
+    },
+    {
+      "path": "artifacts/commonmark-inert-corpus-first-20261008.log",
+      "sha256": "cc09f049d42dad45ba2524b795265b77697b7f6dc486f26249cd4d866989d985"
+    }
+  ]
+}

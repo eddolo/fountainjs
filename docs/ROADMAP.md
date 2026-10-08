@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+CommonMark remaining-work audit (2026-10-08, Unreleased): comparator version 12
+no longer conflates absent-href anchor placeholders with empty-href hyperlinks;
+three negative guards enforce the distinction. Twenty-four official LF/CRLF
+Node contracts verify existing inert adapter data/source/reopening retention,
+not original HTML behavior. Focused tests pass 111 / five files, the complete
+single-worker suite passes 2,855 / 214 files and framework types pass. The
+strongest profile's remaining 22 unclassified cases are now
+split into twelve inert-retention cases, three unfinished-tag source fallbacks,
+one doctype-only representation and six anchor/mixed-wrapper representations.
+All required profile ranges and scores stay unchanged: 563/652 default and
+613/652 strongest opt-in. No delivered row, percentage or npm promotion.
+See [the explicit remaining work](MARKDOWN_DOCUMENT_FLOW.md#current-remaining-commonmark-work-2026-10-08-unreleased).
+Frozen evidence: `artifacts/commonmark-inert-verification-20261008.json`.
+
 Source-aware code contrast follow-up (2026-10-08, current source): strengthening
 the real native-paste journey reproduces two visual failures / one pass. Native
 code controls measure 21:1 contrast; Chromium/WebKit imported code measures only

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Strengthen the development-only CommonMark comparator with three absent-href
+  placeholder versus empty-href hyperlink guards. Add 24 official LF/CRLF
+  Node-only inert-adapter source/data/reopening contracts, keeping native HTML
+  behavior separate from safe retention. All six profile fixtures advance to
+  comparator version 12 without changing required matches or published scores.
+  Document the remaining 22 unclassified strongest-profile cases explicitly;
+  no runtime parser, dependency, API, release or parity-row change.
+
 - Keep imported code readable with a source-aware live default palette, retaining
   original solid colour marks, owned backgrounds, source and history. Explicit
   light/dark host choices still win; unstyled and standalone code remain dark.

@@ -1,0 +1,13 @@
+$ node scripts/check-markdown-conformance.mjs
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-markdown-conformance.mjs:240
+    throw new Error('Anchor oracle conflates a non-hyperlink placeholder with an empty-href hyperlink.');
+          ^
+
+Error: Anchor oracle conflates a non-hyperlink placeholder with an empty-href hyperlink.
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-markdown-conformance.mjs:240:11
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+[ELIFECYCLE] Command failed with exit code 1.

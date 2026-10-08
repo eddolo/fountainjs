@@ -1,5 +1,16 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Official CommonMark retention coverage (2026-10-08)
+
+The existing adapters now have 24 Node-only LF/CRLF contracts drawn from twelve
+official CommonMark examples. They compare retained tag/attribute/body data,
+exact untouched Markdown and complete JSON/HTML/canonical-Markdown reopening,
+and reject live original tags or event-handler attributes in exported carriers.
+These are **inert retention tests, not native HTML behavior or new semantic
+conformance matches**. See [the remaining-work breakdown](MARKDOWN_DOCUMENT_FLOW.md#current-remaining-commonmark-work-2026-10-08-unreleased)
+and `tests/commonmark-inert-preservation.test.ts`. Existing browser recordings
+test author interaction separately; these new tests do not replace them.
+
 ## Visible blank lines in reader and standalone HTML
 
 The next visual audit reproduced a real failure: the editor displayed blank

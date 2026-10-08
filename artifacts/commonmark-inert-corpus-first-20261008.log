@@ -1,0 +1,25 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/commonmark-inert-preservation.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/commonmark-inert-preservation.test.ts [ tests/commonmark-inert-preservation.test.ts ]
+Error: Cannot find module '../src/html/comments' imported from C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/commonmark-inert-preservation.test.ts
+ ❯ tests/commonmark-inert-preservation.test.ts:8:1
+      6| import { CoreSchemaSpec } from '../src/extensions';
+      7| import { HTMLContainerExtension } from '../src/extensions/html-contain…
+      8| import { HTMLCommentExtension } from '../src/html/comments';
+       | ^
+      9| import { HTMLFlowExtension } from '../src/html/flow';
+     10| import { ServerHTMLImporter } from '../src/html/server';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  04:46:08
+   Duration  2.69s (worker 97%, environment 3%)
+
