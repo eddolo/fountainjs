@@ -121,6 +121,13 @@ the declaration; Markdown fences and DOCX cannot represent this code-direction
 contract and report their projection/loss. Custom schemas must explicitly
 declare the capability. No browser direction computation enters the core.
 
+HTML also preserves disabled code line numbers with `data-line-numbers="false"`.
+The default enabled setting emits no extra flag. Both browser and pure-Node
+importers honor the flag; real internal copy/replace/paste checks retain it in
+Firefox's HTML-only fallback. Previously this path silently enabled the gutter.
+This is a code-setting retention contract, not arbitrary-attribute or identical
+reader-theme certification.
+
 For `dir="auto"`, native preformatted HTML resolves each source line's bidi
 paragraph separately. The syntax-decorated block `code` child must also use
 `unicode-bidi: plaintext`; checking only computed direction on `pre` missed a
@@ -137,6 +144,20 @@ rich structure does not survive. Copy-event `setData` alone is not proof of
 native paste delivery. New diagnostics record delivered MIME payloads and use
 an independent native control; no Linux skip or cached-text restoration is added.
 The full browser matrix was not reached.
+
+The subsequent `599deae` Linux run passes all nine code-direction journeys and
+64 structural preflights, but retains the same two WebKit restoration failures.
+All six failure/retry paste events contain exact plain text and no HTML/private
+JSON. Native textarea controls reproduce missing rich MIME, but a textarea is
+not sufficient evidence about contenteditable. The expanded diagnostic compares
+native rich controls as well, preserving delivered formats and rendered bold
+state independently of Fountain. Linux rich-control results remain pending;
+these diagnostics do not count as passing Fountain restoration or justify a skip.
+Windows WebKit's native rich control retains bold and exposes HTML at
+`beforeinput`, despite empty HTML at `paste`. That event handoff needs a direct
+Fountain audit; it is distinct from event-authored clipboard copies, which these
+Windows controls find empty at both events. Do not label all native rich paste
+unsupported based solely on its earlier event payload.
 
 A separate nested-boundary audit finds direction loss when lifting an automatic
 list's child across parents or indenting it under an independently fixed item.

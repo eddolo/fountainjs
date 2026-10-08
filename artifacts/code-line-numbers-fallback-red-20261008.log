@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/code-block-direction.test.ts (12 tests | 1 failed) 68ms
+   ❯ portable code-block reading direction (12)
+     × retains disabled code line numbers through the standard HTML clipboard fallback 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/code-block-direction.test.ts > portable code-block reading direction > retains disabled code line numbers through the standard HTML clipboard fallback
+AssertionError: expected '<pre data-language="python" dir="rtl"…' to contain 'data-line-numbers="false"'
+
+- Expected
++ Received
+
+- data-line-numbers="false"
++ <pre data-language="python" dir="rtl"><code class="language-python"># שלום comment
++ value = &quot;مرحبا&quot;
++ print(value)</code></pre>
+
+ ❯ tests/code-block-direction.test.ts:21:18
+     19|     const before = schema.node('doc', {}, [schema.node('code_block', {…
+     20|     const html = HTMLExporter.export(before, { document: false });
+     21|     expect(html).toContain('data-line-numbers="false"');
+       |                  ^
+     22|     const result = ServerHTMLImporter.parseWithReport(html, schema);
+     23|     expect(result.document.toJSON()).toEqual(before.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  03:23:04
+   Duration  3.11s (import 52%, transform 45%, tests 2%)
+

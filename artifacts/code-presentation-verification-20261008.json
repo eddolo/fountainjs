@@ -1,0 +1,774 @@
+{
+  "date": "2026-10-08",
+  "baseCommit": "599deae9f1ca7e7ab5a7306aaac684259338135b",
+  "status": "bounded local HTML-fallback code-setting fix; new-source Linux verification required; parity goal remains active",
+  "implementation": [
+    "HTML exporter records disabled code line numbers only; default enabled HTML unchanged",
+    "Browser/server import honor data-line-numbers=false; original code source and direction retained",
+    "Packed ESM/CJS direction fixture now includes disabled line numbers",
+    "Independent clipboard controls compare textarea/contenteditable, native and event-authored formats, source replacement, paste and beforeinput payloads and resulting rich DOM",
+    "Real code clipboard MIME evidence saved before restoration assertions and uploaded even when CI fails"
+  ],
+  "verification": {
+    "fullUnits": {
+      "files": 212,
+      "tests": 2808,
+      "workers": 1,
+      "log": "artifacts/code-presentation-full-unit-20261008.log"
+    },
+    "focused": {
+      "files": 4,
+      "tests": 49,
+      "log": "artifacts/code-presentation-focused-20261008.log"
+    },
+    "browser": {
+      "passes": 11,
+      "skips": 1,
+      "platform": "Windows",
+      "workers": 1,
+      "retries": 0,
+      "log": "artifacts/code-presentation-browser-20261008.log",
+      "journey": "real file import, owned/inherited direction, hidden gutter, property controls/history, typing/Enter/Backspace/native line geometry, download/reader/reopen, actual copy/replace/paste"
+    },
+    "deliveryFollowup": {
+      "passes": 2,
+      "retries": 0,
+      "workers": 1,
+      "log": "artifacts/code-presentation-delivery-browser-20261008.log",
+      "captures": 16,
+      "visualReview": "all 16 exact SHA-256 matches to reviewed main-run captures; fresh observers additionally retain trusted paste data before restoration assertions"
+    },
+    "visualReview": {
+      "mainCaptures": 79,
+      "directNewResults": 46,
+      "exactPriorReviewedMatches": 33,
+      "repeatCaptures": 16,
+      "total": 95,
+      "notes": "46 imported/properties/newline/reopened/paste images directly reviewed in 17 comparison boards; 33 native/reader images exact-hash match reviewed preceding captures; videos recorded, not manually watched"
+    },
+    "gates": {
+      "build": "artifacts/code-presentation-build-20261008.log",
+      "package": "artifacts/code-presentation-test-package-20261008.log",
+      "api": "411 declarations; artifacts/code-presentation-test-api-20261008.log",
+      "headless": "99 modules; artifacts/code-presentation-test-headless-20261008.log",
+      "types": "artifacts/code-presentation-typecheck-20261008.log",
+      "markdown": "unchanged scores/projection; artifacts/code-presentation-test-markdown-conformance-20261008.log",
+      "budgets": "unchanged caps; artifacts/code-presentation-test-budget-20261008.log",
+      "site": "artifacts/code-presentation-site-final-20261008.log"
+    }
+  },
+  "nativeWindowsDiagnostics": {
+    "cases": 36,
+    "uniqueBaselines": 36,
+    "log": "artifacts/native-rich-beforeinput-delivery-20261008.jsonl",
+    "summary": [
+      {
+        "group": "chromium, rich",
+        "cases": 6,
+        "textTransferred": 6,
+        "boldRetained": 4,
+        "pasteHTMLAvailable": 4,
+        "beforeInputHTMLAvailable": 4
+      },
+      {
+        "group": "chromium, text",
+        "cases": 6,
+        "textTransferred": 6,
+        "boldRetained": 0,
+        "pasteHTMLAvailable": 2,
+        "beforeInputHTMLAvailable": 0
+      },
+      {
+        "group": "firefox, rich",
+        "cases": 6,
+        "textTransferred": 6,
+        "boldRetained": 4,
+        "pasteHTMLAvailable": 4,
+        "beforeInputHTMLAvailable": 4
+      },
+      {
+        "group": "firefox, text",
+        "cases": 6,
+        "textTransferred": 6,
+        "boldRetained": 0,
+        "pasteHTMLAvailable": 2,
+        "beforeInputHTMLAvailable": 0
+      },
+      {
+        "group": "webkit, rich",
+        "cases": 6,
+        "textTransferred": 2,
+        "boldRetained": 2,
+        "pasteHTMLAvailable": 0,
+        "beforeInputHTMLAvailable": 2
+      },
+      {
+        "group": "webkit, text",
+        "cases": 6,
+        "textTransferred": 2,
+        "boldRetained": 0,
+        "pasteHTMLAvailable": 0,
+        "beforeInputHTMLAvailable": 0
+      }
+    ],
+    "notes": [
+      "Diagnostic outcomes are not 36 conformance passes",
+      "Native rich controls keep bold in all engines",
+      "Windows WebKit native rich paste exposes HTML at beforeinput, not earlier paste event; actual Fountain external-rich handoff needs direct audit",
+      "Windows WebKit event-authored copies fail to deliver the requested text/HTML at either event in these controls",
+      "Firefox drops private JSON; code journey restores actual replaced content with HTML including disabled-gutter flag"
+    ]
+  },
+  "priorCloud": {
+    "commit": "599deae",
+    "ciRun": 37716355135,
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/37716355135",
+    "status": "completed/failure",
+    "verify": "success",
+    "performance": "success",
+    "lean": "success",
+    "pagesRun": 37716355106,
+    "pages": "success",
+    "structural": {
+      "passes": 64,
+      "failures": 2,
+      "codeDirectionPasses": 9,
+      "fullMatrix": "not run"
+    },
+    "log": "artifacts/ci-599deae-failures-20261008.log",
+    "nativeControls": "artifacts/ci-599deae-direction/native-clipboard-capability.jsonl",
+    "clipboardFailures": [
+      {
+        "case": "editor-copies-shared-autom-1440d--external-clipboard-convert-webkit",
+        "copied": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><ul><li><p>English selectedReal new line</p></li></ul><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "types": [
+            "text/plain",
+            "text/html",
+            "application/x-fountainjs+json"
+          ],
+          "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"direction_scope\",\"attrs\":{\"dir\":\"auto\"},\"content\":[{\"type\":\"ordered_list\",\"attrs\":{\"start\":0},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English anchor\"}]}]}]},{\"type\":\"bullet_list\",\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English selected\"},{\"type\":\"text\",\"text\":\"Real new line\"}]}]}]},{\"type\":\"ordered_list\",\"attrs\":{\"start\":2},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English tail\"}]}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"\"}]}]}}"
+        },
+        "delivered": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "",
+          "types": [],
+          "json": ""
+        },
+        "result": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Imported document editor\" spellcheck=\"true\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">0. English anchor</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">- English selectedReal new line</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">2. English tail</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"3\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></div>"
+      },
+      {
+        "case": "editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry1",
+        "copied": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><ul><li><p>English selectedReal new line</p></li></ul><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "types": [
+            "text/plain",
+            "text/html",
+            "application/x-fountainjs+json"
+          ],
+          "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"direction_scope\",\"attrs\":{\"dir\":\"auto\"},\"content\":[{\"type\":\"ordered_list\",\"attrs\":{\"start\":0},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English anchor\"}]}]}]},{\"type\":\"bullet_list\",\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English selected\"},{\"type\":\"text\",\"text\":\"Real new line\"}]}]}]},{\"type\":\"ordered_list\",\"attrs\":{\"start\":2},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English tail\"}]}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"\"}]}]}}"
+        },
+        "delivered": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "",
+          "types": [],
+          "json": ""
+        },
+        "result": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Imported document editor\" spellcheck=\"true\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">0. English anchor</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">- English selectedReal new line</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">2. English tail</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"3\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></div>"
+      },
+      {
+        "case": "editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry2",
+        "copied": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><ul><li><p>English selectedReal new line</p></li></ul><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "types": [
+            "text/plain",
+            "text/html",
+            "application/x-fountainjs+json"
+          ],
+          "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"direction_scope\",\"attrs\":{\"dir\":\"auto\"},\"content\":[{\"type\":\"ordered_list\",\"attrs\":{\"start\":0},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English anchor\"}]}]}]},{\"type\":\"bullet_list\",\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English selected\"},{\"type\":\"text\",\"text\":\"Real new line\"}]}]}]},{\"type\":\"ordered_list\",\"attrs\":{\"start\":2},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English tail\"}]}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"\"}]}]}}"
+        },
+        "delivered": {
+          "plain": "0. English anchor\n- English selectedReal new line\n2. English tail\n",
+          "html": "",
+          "types": [],
+          "json": ""
+        },
+        "result": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Imported document editor\" spellcheck=\"true\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">0. English anchor</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">- English selectedReal new line</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">2. English tail</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"3\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></div>"
+      },
+      {
+        "case": "editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit",
+        "copied": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><p>English selectedReal new line</p><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "types": [
+            "text/plain",
+            "text/html",
+            "application/x-fountainjs+json"
+          ],
+          "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"direction_scope\",\"attrs\":{\"dir\":\"auto\"},\"content\":[{\"type\":\"ordered_list\",\"attrs\":{\"start\":0},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English anchor\"}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English selected\"},{\"type\":\"text\",\"text\":\"Real new line\"}]},{\"type\":\"ordered_list\",\"attrs\":{\"start\":2},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English tail\"}]}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"\"}]}]}}"
+        },
+        "delivered": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "",
+          "types": [],
+          "json": ""
+        },
+        "result": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Imported document editor\" spellcheck=\"true\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">0. English anchor</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">English selectedReal new line</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">2. English tail</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"3\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></div>"
+      },
+      {
+        "case": "editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry1",
+        "copied": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><p>English selectedReal new line</p><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "types": [
+            "text/plain",
+            "text/html",
+            "application/x-fountainjs+json"
+          ],
+          "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"direction_scope\",\"attrs\":{\"dir\":\"auto\"},\"content\":[{\"type\":\"ordered_list\",\"attrs\":{\"start\":0},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English anchor\"}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English selected\"},{\"type\":\"text\",\"text\":\"Real new line\"}]},{\"type\":\"ordered_list\",\"attrs\":{\"start\":2},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English tail\"}]}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"\"}]}]}}"
+        },
+        "delivered": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "",
+          "types": [],
+          "json": ""
+        },
+        "result": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Imported document editor\" spellcheck=\"true\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">0. English anchor</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">English selectedReal new line</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">2. English tail</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"3\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></div>"
+      },
+      {
+        "case": "editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry2",
+        "copied": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "<div data-fountain-direction-scope=\"\" dir=\"auto\"><ol start=\"0\"><li><p>English anchor</p></li></ol><p>English selectedReal new line</p><ol start=\"2\"><li><p>English tail</p></li></ol></div>\n<p></p>",
+          "types": [
+            "text/plain",
+            "text/html",
+            "application/x-fountainjs+json"
+          ],
+          "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"direction_scope\",\"attrs\":{\"dir\":\"auto\"},\"content\":[{\"type\":\"ordered_list\",\"attrs\":{\"start\":0},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English anchor\"}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English selected\"},{\"type\":\"text\",\"text\":\"Real new line\"}]},{\"type\":\"ordered_list\",\"attrs\":{\"start\":2},\"content\":[{\"type\":\"list_item\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"English tail\"}]}]}]}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"\"}]}]}}"
+        },
+        "delivered": {
+          "plain": "0. English anchor\nEnglish selectedReal new line\n2. English tail\n",
+          "html": "",
+          "types": [],
+          "json": ""
+        },
+        "result": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Imported document editor\" spellcheck=\"true\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"0.0\">0. English anchor</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"1\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"1.0\">English selectedReal new line</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"2\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"2.0\">2. English tail</span></p><p data-fountain-node=\"paragraph\" data-fountain-path=\"3\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"3.0\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></div>"
+      }
+    ],
+    "limits": "All six failed WebKit scope attempts deliver exact plain text and no HTML/private JSON. Native textarea alone is insufficient to conclude rich contenteditable capability. Expanded Linux rich controls pending next CI."
+  },
+  "retainedDiagnostics": [
+    "artifacts/code-line-numbers-fallback-red-20261008.log: regression fails before runtime fix; 1 failure/11 passes",
+    "artifacts/code-presentation-site-20261008.log: mistaken nonexistent build:site invocation; corrected authoritative site command pnpm exec vite build --base /fountainjs/ succeeds",
+    "artifacts/native-rich-clipboard-delivery-20261008.jsonl: preceding 36-control diagnostic without beforeinput observer"
+  ],
+  "limits": [
+    "No full new-source Linux certification yet; no new Linux skip or cached-text workaround",
+    "Existing Windows WebKit event-authored clipboard skip remains explicit, not a native Safari claim",
+    "Code-setting retention is not arbitrary metadata/theme/pixel or external-editor fidelity certification",
+    "Nested automatic-context reparenting gaps remain open; native devices/assistive technology/Word bidi remain open",
+    "No budget, dependency or npm version changes; CommonMark projection and parity ledger unchanged",
+    "This does not mark the broad goal complete"
+  ],
+  "sources": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "a100bf8740b993effd498807f1a8a5f378fc312672f887984256859616acb570"
+    },
+    {
+      "path": "artifacts/nested-auto-boundary-probe-20261008.mjs",
+      "sha256": "013db386c93bd0db3be4968cbd065156aeb0013211071a2c5af72d39bbd13138"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "bbab3d84b2956b53807017980938a0d2e99af5a59f5ba612e944524f1899bc42"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "f928d206d4a1bfab766c5e7e27f8d2c7271b0c546217dd9ab419cddb6cfc48f4"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "d61e8e61fb151a9b3f9177f6d3f759ce807eb477b221c57ae27698f37d6628e3"
+    },
+    {
+      "path": "scripts/check-browser-clipboard-capability.mjs",
+      "sha256": "40037ae514a7988f4ee117b158635f65799a2f752623fd825c1d59ea4bcbcb8a"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "e77379f88ae8bf0a17597e364ae71d8c79c2fa6cfec00be8dde065e170672a36"
+    },
+    {
+      "path": "scripts/fixtures/text-direction-check.mjs",
+      "sha256": "64dfc574c955cd4c096cd26ea7593b1c883e2453cae6fc989619c9d4ad7a307f"
+    },
+    {
+      "path": "src/core/commands.ts",
+      "sha256": "4ef88d5311662d9d7b318a36a8a3ec37f0886da9b39165a356ff62c92f40c0fa"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "ae1be58154c3ca932fc5c03d3e4c965fa3b4d248560c6a7525a6b44b252e20d5"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "8c2ac4df50fcad986ca5dbbed31426d794a201b618b02ff77d25488ca7304f5a"
+    },
+    {
+      "path": "src/extensions/nodes/code-block.ts",
+      "sha256": "309cd98c1e56c3ed8d94653ebbe0e4e3b27e3b1d98b4fcb7864c70390bf4879c"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "de378bdcb6edf092bedd3cfb436a63272da37076a48931caab5994ec0b4f2b57"
+    },
+    {
+      "path": "src/react/FountainToolbar.tsx",
+      "sha256": "76144626a5f275d8919b0f1495bc485ff261b83a342a0ce3ef49b1f0f983570c"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "7bcaee9be51a99e15b76ad131b0b86bd6ffdc1b23478c53c002fa9a9ce33811e"
+    },
+    {
+      "path": "tests/browser/code-direction-journey.ts",
+      "sha256": "8b2002f6ecef483e7ab345ba4463387d861f7215f9376a9c8a9b858d6935f93e"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "47cdf5cb736802b1804f613651539f1bc3808b0b1100b1025a3c116f9e55ae69"
+    },
+    {
+      "path": "tests/browser/list-auto-scope-journey.ts",
+      "sha256": "421f3338d57977431c51df1fcd41a81f3436b28fcd7863dac69d8dcd14c22926"
+    },
+    {
+      "path": "tests/code-block-direction.test.ts",
+      "sha256": "5435e7f2a342720624a4519d942979479c6f5cd719cf473fb9ab3289ee8b4743"
+    },
+    {
+      "path": "tests/react-toolbar-panels.test.tsx",
+      "sha256": "e43446761836c6f44412171fbfb145865ec3d32db350b4a54e99ca204b519bca"
+    },
+    {
+      "path": "tests/text-direction-dom.test.ts",
+      "sha256": "ed05f7ba205deb6cefa95bc29adc0fb646b3af1c62b335dda353ea3d69bd5a76"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-imported.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-native.png",
+      "sha256": "2f6019cd31b228650e91bc6599e39584806e5f6a506c2fcd96c2141d3039154b"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-property-controls.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-real-newline.png",
+      "sha256": "da3a6dd5d52ba3718a07e670ddb201f61b829c9055b120f4c3171afa98d186d9"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-chromium/code-direction-reopened-editor.png",
+      "sha256": "28645825ed2c43c57cbc924a55192efe2b4ea15134bd657ecdfb142ac548ac62"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-imported.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-native.png",
+      "sha256": "0fecf4f92d38622c981488b482c4a47d69c87aa8979216546ffcc892a09f6b38"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-property-controls.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-real-newline.png",
+      "sha256": "fd31c70918e91b0649ee4d8dbc114a60b553a771cc89f0067038cefbf15eacd8"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-firefox/code-direction-reopened-editor.png",
+      "sha256": "6de2795f239b789dfb031bb2faa956544322af6c1ccf027b84ab9295a827350c"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-downloaded-reader.png",
+      "sha256": "b2a229ef5928316c52d4a59d1507f3fc6f9ab204a22bc9bcc2005e02421cc0fb"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-imported.png",
+      "sha256": "c05297c0d69c44be7e0cd910b1fb8779a3f0a0c938e64c41df363f1b6ef15119"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-native-newline.png",
+      "sha256": "a2d22526f7def026aca214559f62978dba467a4c2e1a985537e91be50e3f601f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-native.png",
+      "sha256": "76255969d9861d20a5f3d3d02be9fe54dd8c0a05a042cc49ed67248a0cfd2d3f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-property-controls.png",
+      "sha256": "c05297c0d69c44be7e0cd910b1fb8779a3f0a0c938e64c41df363f1b6ef15119"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-real-newline.png",
+      "sha256": "4e4235628be3d8b6eb6d8c398db90d2f5c42d50624b23f05d81ed81aa7036eec"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-04b86-ng-and-downloaded-HTML-auto-webkit/code-direction-reopened-editor.png",
+      "sha256": "5d1768d5d72b0dde92bd1a780bdf005644b3fb0fd4ac3e300f26cd11b80905a7"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-imported.png",
+      "sha256": "115683b5f8f5446420c57c344fcd53ee8ae577e186d76edab07b4d3219114afb"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-internal-paste.png",
+      "sha256": "ab5c76a25b6899f638166dee52243a2245a085870077f6a7cf346fd168b638b1"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native.png",
+      "sha256": "daac0046edcfa1a602a0eeadb73b7ead5105158df23014c836e5e96ef4cf697b"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-property-controls.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-real-newline.png",
+      "sha256": "da3a6dd5d52ba3718a07e670ddb201f61b829c9055b120f4c3171afa98d186d9"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-reopened-editor.png",
+      "sha256": "28645825ed2c43c57cbc924a55192efe2b4ea15134bd657ecdfb142ac548ac62"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-imported.png",
+      "sha256": "57579be9041a1520f07f77050a10dc5baa4420ac927edc13b4aceb3aa078c62f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-internal-paste.png",
+      "sha256": "3aea746104505e0e40a48c3be032dea75d74cfe1d06e2288b448ccf06cf3f6d9"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native.png",
+      "sha256": "192f872624da2d80034aebf8e11f67ef140f333966b30178fca7df1b17e0736f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-property-controls.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-real-newline.png",
+      "sha256": "fd31c70918e91b0649ee4d8dbc114a60b553a771cc89f0067038cefbf15eacd8"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-reopened-editor.png",
+      "sha256": "fe867824d9546fecff94f6642fc714f6b7bfae6c6a695de8afba207ea97fc43d"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-imported.png",
+      "sha256": "115683b5f8f5446420c57c344fcd53ee8ae577e186d76edab07b4d3219114afb"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-native.png",
+      "sha256": "daac0046edcfa1a602a0eeadb73b7ead5105158df23014c836e5e96ef4cf697b"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-property-controls.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-real-newline.png",
+      "sha256": "da3a6dd5d52ba3718a07e670ddb201f61b829c9055b120f4c3171afa98d186d9"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-chromium/code-direction-reopened-editor.png",
+      "sha256": "28645825ed2c43c57cbc924a55192efe2b4ea15134bd657ecdfb142ac548ac62"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-imported.png",
+      "sha256": "57579be9041a1520f07f77050a10dc5baa4420ac927edc13b4aceb3aa078c62f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-native.png",
+      "sha256": "192f872624da2d80034aebf8e11f67ef140f333966b30178fca7df1b17e0736f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-property-controls.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-real-newline.png",
+      "sha256": "fd31c70918e91b0649ee4d8dbc114a60b553a771cc89f0067038cefbf15eacd8"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-firefox/code-direction-reopened-editor.png",
+      "sha256": "6de2795f239b789dfb031bb2faa956544322af6c1ccf027b84ab9295a827350c"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-downloaded-reader.png",
+      "sha256": "b2a229ef5928316c52d4a59d1507f3fc6f9ab204a22bc9bcc2005e02421cc0fb"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-imported.png",
+      "sha256": "077e2ad043f4d3eb65eaad17a4e75f782f138f75efd0d309b96ea27070fd6fda"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-native-newline.png",
+      "sha256": "a2d22526f7def026aca214559f62978dba467a4c2e1a985537e91be50e3f601f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-native.png",
+      "sha256": "95ab35e2d387e75dacbcc52d882d2d587b4e879424b1f701d2180ede389333b3"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-property-controls.png",
+      "sha256": "c05297c0d69c44be7e0cd910b1fb8779a3f0a0c938e64c41df363f1b6ef15119"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-real-newline.png",
+      "sha256": "4e4235628be3d8b6eb6d8c398db90d2f5c42d50624b23f05d81ed81aa7036eec"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-a1ece-ing-and-downloaded-HTML-ltr-webkit/code-direction-reopened-editor.png",
+      "sha256": "5d1768d5d72b0dde92bd1a780bdf005644b3fb0fd4ac3e300f26cd11b80905a7"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-imported.png",
+      "sha256": "f0afdefa2e0ebacc007873c9965a73b2f13bd3b4d5aa0cb98a77fc54b4914132"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-native.png",
+      "sha256": "1edf3c816dccd888000d9d47e1348c8a012e0aed5ba7c39b37d3c64810772493"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-property-controls.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-real-newline.png",
+      "sha256": "da3a6dd5d52ba3718a07e670ddb201f61b829c9055b120f4c3171afa98d186d9"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-chromium/code-direction-reopened-editor.png",
+      "sha256": "28645825ed2c43c57cbc924a55192efe2b4ea15134bd657ecdfb142ac548ac62"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-imported.png",
+      "sha256": "2e401126e50104bc1ab3851288bd7dc28c956a51f6a5cfd18a624df45795fc5b"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-native.png",
+      "sha256": "76b235801fa15e46e81de12ee5f72f1e2b65c50ef42fd984f3d7fd936fed3dba"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-property-controls.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-real-newline.png",
+      "sha256": "fd31c70918e91b0649ee4d8dbc114a60b553a771cc89f0067038cefbf15eacd8"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-firefox/code-direction-reopened-editor.png",
+      "sha256": "6de2795f239b789dfb031bb2faa956544322af6c1ccf027b84ab9295a827350c"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-downloaded-reader.png",
+      "sha256": "b2a229ef5928316c52d4a59d1507f3fc6f9ab204a22bc9bcc2005e02421cc0fb"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-imported.png",
+      "sha256": "2c1541bda52b41e804223a0662dc3bc2cae0922e5dbd93e12af36bea7d41d016"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-native-newline.png",
+      "sha256": "a2d22526f7def026aca214559f62978dba467a4c2e1a985537e91be50e3f601f"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-native.png",
+      "sha256": "f159e439ced992aba4ef4e3825f4af1f76b42b709972dbb15ed2565b3e6fc626"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-property-controls.png",
+      "sha256": "c05297c0d69c44be7e0cd910b1fb8779a3f0a0c938e64c41df363f1b6ef15119"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-real-newline.png",
+      "sha256": "4e4235628be3d8b6eb6d8c398db90d2f5c42d50624b23f05d81ed81aa7036eec"
+    },
+    {
+      "path": "artifacts/code-presentation-recorded-20261008/editor-retains-technical-c-c4986-ing-and-downloaded-HTML-rtl-webkit/code-direction-reopened-editor.png",
+      "sha256": "5d1768d5d72b0dde92bd1a780bdf005644b3fb0fd4ac3e300f26cd11b80905a7"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-imported.png",
+      "sha256": "115683b5f8f5446420c57c344fcd53ee8ae577e186d76edab07b4d3219114afb"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-internal-paste.png",
+      "sha256": "ab5c76a25b6899f638166dee52243a2245a085870077f6a7cf346fd168b638b1"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native.png",
+      "sha256": "daac0046edcfa1a602a0eeadb73b7ead5105158df23014c836e5e96ef4cf697b"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-property-controls.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-real-newline.png",
+      "sha256": "da3a6dd5d52ba3718a07e670ddb201f61b829c9055b120f4c3171afa98d186d9"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-reopened-editor.png",
+      "sha256": "28645825ed2c43c57cbc924a55192efe2b4ea15134bd657ecdfb142ac548ac62"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-imported.png",
+      "sha256": "57579be9041a1520f07f77050a10dc5baa4420ac927edc13b4aceb3aa078c62f"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-internal-paste.png",
+      "sha256": "3aea746104505e0e40a48c3be032dea75d74cfe1d06e2288b448ccf06cf3f6d9"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native.png",
+      "sha256": "192f872624da2d80034aebf8e11f67ef140f333966b30178fca7df1b17e0736f"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-property-controls.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-real-newline.png",
+      "sha256": "fd31c70918e91b0649ee4d8dbc114a60b553a771cc89f0067038cefbf15eacd8"
+    },
+    {
+      "path": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-reopened-editor.png",
+      "sha256": "fe867824d9546fecff94f6642fc714f6b7bfae6c6a695de8afba207ea97fc43d"
+    }
+  ],
+  "clipboardDelivery": [
+    {
+      "case": "editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium",
+      "delivery": {
+        "trusted": true,
+        "types": [
+          "text/plain",
+          "text/html",
+          "application/x-fountainjs+json"
+        ],
+        "plain": "> Inherited technical note\n> # שלום comment\n> value = \"مرحبا\"\n> print(value)\nEnglish # שלום comment\nvalue = \"مرحبا\"\nprint(value)\nAfter the code",
+        "html": "<blockquote dir=\"rtl\"><p>Inherited technical note</p><pre data-language=\"python\"><code class=\"language-python\"># שלום comment\nvalue = &quot;مرحبا&quot;\nprint(value)</code></pre></blockquote>\n<pre data-language=\"python\" data-line-numbers=\"false\" dir=\"auto\"><code class=\"language-python\">English # שלום comment\nvalue = &quot;مرحبا&quot;\nprint(value)</code></pre>\n<p>After the code</p>",
+        "json": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"blockquote\",\"attrs\":{\"dir\":\"rtl\"},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"Inherited technical note\"}]},{\"type\":\"code_block\",\"attrs\":{\"language\":\"python\",\"lineNumbers\":true},\"content\":[{\"type\":\"text\",\"text\":\"# שלום comment\\nvalue = \\\"مرحبا\\\"\\nprint(value)\"}]}]},{\"type\":\"code_block\",\"attrs\":{\"language\":\"python\",\"lineNumbers\":false,\"dir\":\"auto\"},\"content\":[{\"type\":\"text\",\"text\":\"English # שלום comment\\nvalue = \\\"مرحبا\\\"\\nprint(value)\"}]},{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"After the code\"}]}]}}"
+      }
+    },
+    {
+      "case": "editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox",
+      "delivery": {
+        "trusted": true,
+        "types": [
+          "text/html",
+          "text/plain"
+        ],
+        "plain": "> Inherited technical note\n> # שלום comment\n> value = \"مرحبا\"\n> print(value)\nEnglish # שלום comment\nvalue = \"مرحبا\"\nprint(value)\nAfter the code",
+        "html": "<blockquote dir=\"rtl\"><p>Inherited technical note</p><pre data-language=\"python\"><code class=\"language-python\"># שלום comment\nvalue = &quot;مرحبا&quot;\nprint(value)</code></pre></blockquote>\n<pre data-language=\"python\" data-line-numbers=\"false\" dir=\"auto\"><code class=\"language-python\">English # שלום comment\nvalue = &quot;مرحبا&quot;\nprint(value)</code></pre>\n<p>After the code</p>",
+        "json": ""
+      }
+    }
+  ]
+}

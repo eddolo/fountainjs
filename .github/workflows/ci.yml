@@ -128,9 +128,11 @@ jobs:
             native-clipboard-capability.jsonl
             test-results/**/code-direction-*.png
             test-results/**/code-direction-observations.json
+            test-results/**/code-direction-native-clipboard-delivery.json
             test-results/**/auto-scope-native-clipboard-delivery*.json
             structural-direction-preflight-results/**/code-direction-*.png
             structural-direction-preflight-results/**/code-direction-observations.json
+            structural-direction-preflight-results/**/code-direction-native-clipboard-delivery.json
             structural-direction-preflight-results/**/auto-scope-native-clipboard-delivery*.json
             test-results/**/rtl-*.png
             test-results/**/comment-editor-*.png

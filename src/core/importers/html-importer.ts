@@ -609,7 +609,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   }
   if (tag === 'pre') return [schema.node('code_block', {
     language: element.getAttribute('data-language') || directChild(element, 'code')?.className.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
-    lineNumbers: true,
+    lineNumbers: element.getAttribute('data-line-numbers') !== 'false',
     ...readParagraphLayout(element),
     ...(schema.nodes.code_block.spec.attrs?.dir ? readTextDirection(element, schema) : {}),
   }, [schema.text(element.textContent ?? '')])];

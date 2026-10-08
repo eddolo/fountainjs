@@ -35,9 +35,9 @@ async function latinLineAlignment(pre: Locator, reference = 'print(value)'): Pro
 /** Real file import, code-property UI, typing/newlines/history, download/reopen.
  * Browser access observes source and resolved direction; it never sets a caret.
  */
-export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr' | 'rtl' | 'auto'): Promise<void> {
+export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr' | 'rtl' | 'auto', clipboard = false): Promise<void> {
   const raw = '# שלום comment\nvalue = "مرحبا"\nprint(value)';
-  const source = `<blockquote dir="rtl"><p>Inherited technical note</p><pre data-language="python"><code>${raw}</code></pre></blockquote><pre dir="${dir}" data-language="python"><code>${raw}</code></pre><p>After the code</p>`;
+  const source = `<blockquote dir="rtl"><p>Inherited technical note</p><pre data-language="python"><code>${raw}</code></pre></blockquote><pre dir="${dir}" data-language="python" data-line-numbers="false"><code>${raw}</code></pre><p>After the code</p>`;
   const evidence: Record<string, unknown> = { dir, source };
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -58,6 +58,8 @@ export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr
   const editor = workspace.getByRole('textbox', { name: 'Imported document editor', exact: true });
   const inherited = editor.locator('blockquote pre'), owned = editor.locator(':scope > pre');
   await expect(owned).toHaveText(raw);
+  await expect(owned).toHaveAttribute('data-line-numbers', 'false');
+  await expect(owned.locator('.fjs-code-line-number')).toHaveCount(0);
   await expect(inherited).not.toHaveAttribute('dir');
   expect(await editor.locator('pre').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).direction))).toEqual(evidence.nativeDirections);
   expect([await latinLineAlignment(inherited), await latinLineAlignment(owned)]).toEqual(evidence.nativeLatinAlignment);
@@ -68,6 +70,7 @@ export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr
     // code buffer. Its handler lands at source offset zero, not inside a gutter.
     await owned.click({ position: { x: 40, y: 24 } });
     await workspace.getByRole('button', { name: 'Code block and language', exact: true }).click();
+    await expect(workspace.getByRole('checkbox', { name: 'Show code line numbers', exact: true })).not.toBeChecked();
     await workspace.getByRole('combobox', { name: 'Code reading direction', exact: true }).selectOption(value);
     await page.keyboard.press('Escape');
   };
@@ -121,16 +124,38 @@ export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr
     await expect(reader.locator('blockquote pre')).toHaveCSS('direction', 'rtl');
     await expect(reader.locator('body > pre')).toHaveText(`English ${raw}`);
     await expect(reader.locator('body > pre')).toHaveAttribute('dir', 'auto');
+    await expect(reader.locator('body > pre')).toHaveAttribute('data-line-numbers', 'false');
     await expect(reader.locator('body > pre')).toHaveCSS('direction', 'ltr');
     expect(await latinLineAlignment(reader.locator('body > pre'))).toBe('left');
     await reader.locator('body').screenshot({ path: info.outputPath('code-direction-downloaded-reader.png') });
   } finally { await reader.close(); }
+  if (clipboard) {
+    await editor.evaluate(element => element.addEventListener('paste', event => {
+      const data = (event as ClipboardEvent).clipboardData;
+      (globalThis as any).__codePresentationPaste = { trusted: event.isTrusted, types: data ? [...data.types] : [], plain: data?.getData('text/plain'), html: data?.getData('text/html'), json: data?.getData('application/x-fountainjs+json') };
+    }, { once: true }));
+    await owned.click({ position: { x: 40, y: 24 } });
+    await page.keyboard.press('ControlOrMeta+a'); await page.keyboard.press('ControlOrMeta+c');
+    await page.keyboard.insertText('Temporary code replacement');
+    await expect(editor.locator('pre')).toHaveCount(0);
+    await page.keyboard.press('ControlOrMeta+a'); await page.keyboard.press('ControlOrMeta+v');
+    evidence.clipboardDelivery = await page.evaluate(() => (globalThis as any).__codePresentationPaste);
+    // Keep real MIME-delivery evidence even when restoration fails in CI.
+    await writeFile(info.outputPath('code-direction-native-clipboard-delivery.json'), JSON.stringify(evidence.clipboardDelivery ?? null, null, 2));
+    await expect(editor.locator('pre')).toHaveCount(2);
+    await expect(inherited).toHaveText(raw); await expect(inherited).not.toHaveAttribute('dir');
+    await expect(owned).toHaveText(`English ${raw}`); await expect(owned).toHaveAttribute('dir', 'auto');
+    await expect(owned).toHaveAttribute('data-line-numbers', 'false');
+    await expect(owned.locator('.fjs-code-line-number')).toHaveCount(0);
+    await editor.screenshot({ path: info.outputPath('code-direction-internal-paste.png') });
+  }
   const reopenedName = `reopened-${name}`;
   await page.getByLabel('Choose documents').setInputFiles({ name: reopenedName, mimeType: 'text/html', buffer: Buffer.from(html) });
   const reopened = page.getByRole('region', { name: `Conversion workspace: ${reopenedName}`, exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true });
   await expect(reopened.locator('blockquote pre')).toHaveText(raw);
   await expect(reopened.locator(':scope > pre')).toHaveText(`English ${raw}`);
   await expect(reopened.locator(':scope > pre')).toHaveAttribute('dir', 'auto');
+  await expect(reopened.locator(':scope > pre')).toHaveAttribute('data-line-numbers', 'false');
   await expect(reopened.locator(':scope > pre')).toHaveCSS('direction', 'ltr');
   expect(await latinLineAlignment(reopened.locator(':scope > pre'))).toBe('left');
   await reopened.screenshot({ path: info.outputPath('code-direction-reopened-editor.png') });

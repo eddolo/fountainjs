@@ -7,6 +7,19 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve disabled code line numbers through standard HTML export/import and
+  native internal clipboard fallback. Emit the non-default data flag only, so
+  default Markdown/CommonMark HTML stays unchanged. Recorded Windows desktop
+  checks pass 11 journeys / one existing WebKit clipboard skip; all 79 PNGs are
+  visually reviewed or exact-hash matched. Firefox's real HTML-only restoration
+  preserves the tested code settings. `599deae` Linux preflight passes all nine
+  code-direction journeys but retains two shared-auto WebKit paste failures
+  (64 passes / two failures, full matrix not run). Record clipboard delivery
+  before assertions and expand independent controls to native rich-text targets;
+  do not claim full metadata fidelity or mask the Linux failure. The complete
+  single-worker local suite passes 2,808 tests / 212 files; package/API/headless,
+  types, unchanged CommonMark/budgets and website build pass. Npm is unchanged.
+
 - Add optional reading direction to first-party code buffers, capability-gated
   code-property controls, DOM-free/browser HTML agreement and exact source,
   selection, undo and Yjs retention. Code alignment remains unsupported; Markdown

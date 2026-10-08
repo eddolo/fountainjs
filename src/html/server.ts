@@ -1322,7 +1322,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     } else content = [schema.text(element.textContent)];
     return [reportStructuralDirection(element, schema.node('code_block', {
       language: element.getAttribute('data-language') || codeClass.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
-      lineNumbers: true,
+      lineNumbers: element.getAttribute('data-line-numbers') !== 'false',
       ...readParagraphLayout(element),
       ...(schema.nodes.code_block.spec.attrs?.dir ? readTextDirection(element, schema) : {}),
     }, content), context, schema)];

@@ -48,6 +48,11 @@ for (const dir of ['ltr', 'rtl', 'auto'] as const) {
   });
 }
 
+test('retains technical code reading direction and disabled line numbers through native copy and HTML fallback', async ({ page, browserName }, info) => {
+  test.skip(browserName === 'webkit' && process.platform === 'win32', 'Independent native controls reproduce Windows WebKit event-authored clipboard payload loss; actual Safari verification remains open.');
+  await codeDirectionJourney(page, info, 'ltr', true);
+});
+
 for (const action of ['convert', 'lift'] as const) {
   test(`retains shared automatic list scope through real ${action}, typing and downloaded HTML`, async ({ page }, info) => {
     await listAutoScopeJourney(page, info, action);

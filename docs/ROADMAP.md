@@ -1,5 +1,36 @@
 # FountainJS opportunity roadmap
 
+HTML-fallback follow-up (2026-10-08, Unreleased): a code buffer's disabled line
+numbers were silently reset on HTML export/reimport. Export now records only the
+non-default `data-line-numbers="false"`; browser/server import honors it, leaving
+default HTML unchanged. The regression was reproduced before the fix. Four
+focused files / 49 tests, packed ESM/CJS consumers, build/API/headless/types,
+unchanged CommonMark profiles, unchanged budgets and website build pass.
+Recorded Windows desktop journeys pass 11 cases with one existing WebKit
+event-authored-clipboard skip. All 79 PNGs are reviewed directly (46 new results)
+or by exact hashes to reviewed captures (33 matches). Firefox restores actual
+replaced content using HTML with no private JSON and retains the disabled gutter.
+This proves the tested code settings, not arbitrary HTML metadata or pixel fidelity.
+Videos are recorded, not manually watched. The complete single-worker local
+regression passes 2,808 tests / 212 files; new-source Linux verification is pending.
+
+`599deae` Linux CI is terminal: verify/performance/Lean and Pages pass, and all
+nine code-direction journeys pass. Structural preflight totals 64 passes / two
+WebKit shared-auto clipboard failures; the full matrix was not run. All six
+failing scope attempts deliver exact plain text but no HTML/private JSON at the
+paste event. Independent textarea controls show the same missing rich payload,
+but are insufficient evidence about a rich-text target. Diagnostics now compare
+36 unique textarea/contenteditable cases, including native default formatting,
+event-authored formats and source replacement. Windows native rich copies keep
+bold in all engines; event-authored rich data fails in Windows WebKit. Linux rich
+controls still require the next CI run. No new Linux skip, cached-text workaround,
+dependency or budget relaxation is added. Npm/coverage ledger remain unchanged.
+Windows WebKit native rich controls expose HTML in `beforeinput`, not the earlier
+paste event. Actual external-rich Fountain handling needs a direct audit of this
+handoff; native-control success is not editor certification. Event-authored copies
+remain empty even at that later event in these Windows controls.
+Evidence: `artifacts/code-presentation-verification-20261008.json`.
+
 Current source follow-up (2026-10-08, Unreleased): first-party code buffers gain
 optional owned reading direction, capability-gated author controls, exact source
 retention and browser/server HTML agreement. Pure-Node schema/commands/history,

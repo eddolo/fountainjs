@@ -15,6 +15,14 @@ const code = (dir?: string) => schema.node('code_block', { language: 'python', .
 const make = () => createEditor({ schema: CoreSchemaSpec, content: schema.node('doc', {}, [code()]).toJSON(), plugins: [createHistoryPlugin()] });
 
 describe('portable code-block reading direction', () => {
+  it('retains disabled code line numbers through the standard HTML clipboard fallback', () => {
+    const before = schema.node('doc', {}, [schema.node('code_block', { language: 'python', lineNumbers: false, dir: 'rtl' }, [schema.text(raw)])]);
+    const html = HTMLExporter.export(before, { document: false });
+    expect(html).toContain('data-line-numbers="false"');
+    const result = ServerHTMLImporter.parseWithReport(html, schema);
+    expect(result.document.toJSON()).toEqual(before.toJSON());
+    expect(result.issues).toEqual([]);
+  });
   it.each(['ltr', 'rtl', 'auto'] as const)('imports and reopens an owned %s declaration without changing the buffer', dir => {
     expect(typeof globalThis.document).toBe('undefined');
     const imported = ServerHTMLImporter.parse(`<pre dir="${dir.toUpperCase()}" data-language="python"><code>${raw}</code></pre>`, schema);

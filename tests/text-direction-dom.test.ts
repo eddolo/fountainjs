@@ -5,10 +5,11 @@ import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(CoreSchemaSpec);
 it.each(['ltr', 'rtl', 'auto'] as const)('retains %s code direction in browser/server imports and the editable view', async dir => {
-  const html = `<pre dir="${dir}" data-language="python"><code># שלום\nprint("مرحبا")</code></pre>`;
+  const html = `<pre dir="${dir}" data-language="python" data-line-numbers="false"><code># שלום\nprint("مرحبا")</code></pre>`;
   const imported = HTMLImporter.parse(html, schema);
   expect(imported.toJSON()).toEqual(ServerHTMLImporter.parse(html, schema).toJSON());
   expect(imported.child(0).attrs.dir).toBe(dir);
+  expect(imported.child(0).attrs.lineNumbers).toBe(false);
   expect(HTMLImporter.parse(HTMLExporter.export(imported, { document: false }), schema).toJSON()).toEqual(imported.toJSON());
   const editor = createEditor({ schema: CoreSchemaSpec, content: imported.toJSON() });
   const mount = document.createElement('div'); document.body.append(mount);

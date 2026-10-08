@@ -7,7 +7,7 @@ export function checkTextDirection(api, root, serverHTML, docx) {
   assert.equal(typeof api.setTextDirection, 'function');
   assert.equal(typeof api.setTextAlignment, 'function');
   const codeEditor = api.createEditor({ schema: root.CoreSchemaSpec, plugins: [api.createHistoryPlugin()], content: {
-    type: 'doc', content: [{ type: 'code_block', attrs: { language: 'python' }, content: [{ type: 'text', text: '# שלום\nprint("مرحبا")' }] }],
+    type: 'doc', content: [{ type: 'code_block', attrs: { language: 'python', lineNumbers: false }, content: [{ type: 'text', text: '# שלום\nprint("مرحبا")' }] }],
   } });
   try {
     const original = codeEditor.getJSON();
