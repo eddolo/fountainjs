@@ -1,0 +1,28 @@
+[WebServer] (node:24036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:14384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (6.0s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:56:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback (8.5s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:65:3 › copies shared automatic list scope through real internal and external clipboard: convert (6.5s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:65:3 › copies shared automatic list scope through real internal and external clipboard: lift (6.8s)
+(node:11592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (12.3s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:56:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback (12.6s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:65:3 › copies shared automatic list scope through real internal and external clipboard: convert (9.4s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:65:3 › copies shared automatic list scope through real internal and external clipboard: lift (12.3s)
+(node:1748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (14.6s)
+  -  10 [webkit] › tests\browser\editor.spec.ts:56:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback
+  -  11 [webkit] › tests\browser\editor.spec.ts:65:3 › copies shared automatic list scope through real internal and external clipboard: convert
+  -  12 [webkit] › tests\browser\editor.spec.ts:65:3 › copies shared automatic list scope through real internal and external clipboard: lift
+
+  3 skipped
+  9 passed (1.9m)

@@ -1,0 +1,31 @@
+$ node --expose-gc scripts/check-performance-budgets.mjs
+100 blocks: local p50 0.11 ms, p95 0.19 ms; incremental remote p50 0.06 ms, p95 0.13 ms; JSON boundary p50 1.01 ms, p95 1.22 ms
+1,000 blocks: local p50 0.08 ms, p95 0.19 ms; incremental remote p50 0.09 ms, p95 0.21 ms; JSON boundary p50 12.07 ms, p95 51.50 ms
+5,000 blocks: local p50 0.28 ms, p95 0.43 ms; incremental remote p50 0.43 ms, p95 0.50 ms; JSON boundary p50 49.83 ms, p95 80.78 ms
+10,000 blocks: local p50 0.61 ms, p95 1.90 ms; incremental remote p50 0.89 ms, p95 1.58 ms; JSON boundary p50 110.09 ms, p95 158.06 ms
+100 HTML blocks: server parse p50 16.80 ms, p95 93.51 ms
+1,000 HTML blocks: server parse p50 85.24 ms, p95 170.46 ms
+5,000 HTML blocks: server parse p50 435.18 ms, p95 858.75 ms
+10,000 HTML blocks: server parse p50 756.32 ms, p95 1199.26 ms
+server HTML 1,000→10,000 median growth: 8.87x / 15x
+local 1,000→10,000 median growth: 7.26x / 15x
+incremental remote 1,000→10,000 median growth: 9.88x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.06 MiB / 16 MiB
+retained 10,000-block server HTML document: 14.34 MiB / 48 MiB
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:217
+if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);
+                           ^
+
+Error: Performance budget failed:
+- 100-block server HTML p95 93.51 ms exceeds 35 ms
+- 1000-block server HTML p95 170.46 ms exceeds 120 ms
+- 5000-block server HTML p95 858.75 ms exceeds 500 ms
+- 10000-block server HTML p95 1199.26 ms exceeds 900 ms
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:217:28
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+[ELIFECYCLE] Command failed with exit code 1.

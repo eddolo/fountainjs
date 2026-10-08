@@ -1,0 +1,213 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/native-rich-paste.test.ts (8 tests | 6 failed) 347ms
+   ❯ native rich clipboard event handoff (8)
+     × waits for announced HTML at beforeinput and imports it once with exact undo/redo 195ms
+     × falls back to the original line-separated plain payload when late HTML remains unavailable 17ms
+     × uses the bounded plain fallback if the browser never sends beforeinput 14ms
+     × does not apply a queued fallback after the selection changes 18ms
+     × respects beforeinput plugin ownership and cancels the queued fallback 19ms
+     × uses the same sanitization policy for later HTML 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/native-rich-paste.test.ts > native rich clipboard event handoff > waits for announced HTML at beforeinput and imports it once with exact undo/redo
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/native-rich-paste.test.ts:36:36
+     34|     const { editor, reports, event } = setup(); const before = editor.…
+     35|     const paste = event('paste');
+     36|     expect(paste.defaultPrevented).toBe(false);
+       |                                    ^
+     37|     expect(editor.getJSON()).toEqual(before);
+     38|     expect(event('beforeinput', rich).defaultPrevented).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/native-rich-paste.test.ts > native rich clipboard event handoff > falls back to the original line-separated plain payload when late HTML remains unavailable
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/native-rich-paste.test.ts:49:89
+     47|   it('falls back to the original line-separated plain payload when lat…
+     48|     const { editor, reports, event } = setup(); event('paste');
+     49|     expect(event('beforeinput', '', 'Research notebold and emphasis').…
+       |                                                                                         ^
+     50|     expect(editor.state.doc.content.map(node => node.textContent)).toE…
+     51|     expect(reports[0].issues).toContainEqual(expect.objectContaining({…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/native-rich-paste.test.ts > native rich clipboard event handoff > uses the bounded plain fallback if the browser never sends beforeinput
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "rich-html-unavailable",
+  "lossy": true,
+}
+
++ Received:
+[]
+
+ ❯ tests/native-rich-paste.test.ts:58:31
+     56|     expect(editor.state.doc.content.map(node => node.textContent)).toE…
+     57|     expect(reports).toHaveLength(1);
+     58|     expect(reports[0].issues).toContainEqual(expect.objectContaining({…
+       |                               ^
+     59|   });
+     60|   it('keeps ordinary immediate HTML and ordinary plain paste synchrono…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/native-rich-paste.test.ts > native rich clipboard event handoff > does not apply a queued fallback after the selection changes
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -4,11 +4,35 @@
+        "attrs": {
+          "align": "left",
+        },
+        "content": [
+          {
+-           "text": "Before",
++           "text": "Research note",
++           "type": "text",
++         },
++       ],
++       "type": "paragraph",
++     },
++     {
++       "attrs": {
++         "align": "left",
++       },
++       "content": [
++         {
++           "text": "",
++           "type": "text",
++         },
++       ],
++       "type": "paragraph",
++     },
++     {
++       "attrs": {
++         "align": "left",
++       },
++       "content": [
++         {
++           "text": "bold and emphasis",
+            "type": "text",
+          },
+        ],
+        "type": "paragraph",
+      },
+
+ ❯ tests/native-rich-paste.test.ts:71:57
+     69|     const { editor, event } = setup(); const before = editor.getJSON()…
+     70|     editor.dispatch(editor.createTransaction().setSelection(Selection.…
+     71|     vi.runOnlyPendingTimers(); expect(editor.getJSON()).toEqual(before…
+       |                                                         ^
+     72|   });
+     73|   it('lets an explicit paste plugin handle the original event without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/native-rich-paste.test.ts > native rich clipboard event handoff > respects beforeinput plugin ownership and cancels the queued fallback
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -4,11 +4,35 @@
+        "attrs": {
+          "align": "left",
+        },
+        "content": [
+          {
+-           "text": "Before",
++           "text": "Research note",
++           "type": "text",
++         },
++       ],
++       "type": "paragraph",
++     },
++     {
++       "attrs": {
++         "align": "left",
++       },
++       "content": [
++         {
++           "text": "",
++           "type": "text",
++         },
++       ],
++       "type": "paragraph",
++     },
++     {
++       "attrs": {
++         "align": "left",
++       },
++       "content": [
++         {
++           "text": "bold and emphasis",
+            "type": "text",
+          },
+        ],
+        "type": "paragraph",
+      },
+
+ ❯ tests/native-rich-paste.test.ts:83:57
+     81|     const { editor, reports, event } = setup([new Plugin({ props: { ha…
+     82|     const before = editor.getJSON(); event('paste'); event('beforeinpu…
+     83|     vi.runOnlyPendingTimers(); expect(editor.getJSON()).toEqual(before…
+       |                                                         ^
+     84|     expect(handler).toHaveBeenCalledTimes(1);
+     85|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/native-rich-paste.test.ts > native rich clipboard event handoff > uses the same sanitization policy for later HTML
+AssertionError: expected 'Research note\n\nbold and emphasis' to be 'Safe' // Object.is equality
+
+- Expected
++ Received
+
+- Safe
++ Research note
++
++ bold and emphasis
+
+ ❯ tests/native-rich-paste.test.ts:89:30
+     87|     const { editor, reports, event } = setup(); event('paste');
+     88|     event('beforeinput', '<p><strong>Safe</strong><script>throw new Er…
+     89|     expect(editor.getText()).toBe('Safe');
+       |                              ^
+     90|     expect(editor.state.doc.child(0).child(0).marks[0]?.type.name).toB…
+     91|     expect(reports[0].issues).toContainEqual(expect.objectContaining({…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  03:49:51
+   Duration  6.91s (environment 34%, transform 32%, import 28%, tests 5%)
+
+  Transform  transforming modules took 2.07s · 32% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

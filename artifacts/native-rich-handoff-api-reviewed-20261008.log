@@ -1,0 +1,2 @@
+$ node scripts/check-api-surface.mjs "--" "--write"
+Recorded 411 public declaration files in api-surface.json.

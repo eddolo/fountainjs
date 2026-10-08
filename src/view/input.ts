@@ -63,6 +63,13 @@ interface FountainClipboardPayload {
   readonly document: import('../core').NodeJSON;
 }
 
+interface PendingNativeRichPaste {
+  readonly document: Node;
+  readonly selection: AnySelection;
+  readonly text: string | undefined;
+  readonly timeout: ReturnType<typeof setTimeout>;
+}
+
 function clipboardText(node: Node): string {
   if (node.isText) return node.text ?? '';
   const childText = () => node.content.map(clipboardText).join('');
@@ -145,6 +152,7 @@ export class InputManager {
   private shiftEnterPending = false;
   private draggedNodePath?: readonly number[];
   private suppressNativeDragDeleteUntil = 0;
+  private pendingNativeRichPaste?: PendingNativeRichPaste;
 
   get composing(): boolean { return this.composingValue; }
 
@@ -173,6 +181,7 @@ export class InputManager {
   }
 
   destroy(): void {
+    this.clearPendingNativePaste();
     this.composingValue = false;
     this.shiftEnterPending = false;
     this.compositionSelection = undefined;
@@ -197,7 +206,31 @@ export class InputManager {
     this.dom.removeEventListener('click', this.onClick);
   }
 
-  private clearBreakIntent = (): void => { this.shiftEnterPending = false; };
+  private clearBreakIntent = (): void => { this.shiftEnterPending = false; this.clearPendingNativePaste(); };
+
+  private clearPendingNativePaste(): void {
+    if (this.pendingNativeRichPaste) clearTimeout(this.pendingNativeRichPaste.timeout);
+    this.pendingNativeRichPaste = undefined;
+  }
+
+  private pendingPasteIsCurrent(pending: PendingNativeRichPaste): boolean {
+    return !this.editor.isDestroyed && this.editor.editable && this.editor.state.doc === pending.document
+      && this.editor.state.selection.eq(pending.selection);
+  }
+
+  private deferNativeRichPaste(text: string | undefined): void {
+    const pending: PendingNativeRichPaste = {
+      document: this.editor.state.doc, selection: this.editor.state.selection, text,
+      timeout: setTimeout(() => {
+        if (this.pendingNativeRichPaste !== pending) return;
+        this.pendingNativeRichPaste = undefined;
+        if (this.editor.isDestroyed) return;
+        this.selections.capture();
+        if (this.pendingPasteIsCurrent(pending)) this.insertRichClipboard(undefined, pending.text, '', '', null, true);
+      }, 0),
+    };
+    this.pendingNativeRichPaste = pending;
+  }
 
   private focusedCodeRegion(event: Event): HTMLElement | undefined {
     const target = event.target;
@@ -305,6 +338,8 @@ export class InputManager {
   };
 
   private onBeforeInput = (event: InputEvent): void => {
+    const pendingPaste = this.pendingNativeRichPaste;
+    this.clearPendingNativePaste();
     const shiftEnter = this.shiftEnterPending;
     this.shiftEnterPending = false;
     if (this.options.shouldStopEvent?.(event)) return;
@@ -330,6 +365,21 @@ export class InputManager {
         event.preventDefault();
         return;
       }
+    }
+
+    if (event.inputType === 'insertFromPaste' && pendingPaste) {
+      // WebKit can advertise HTML at paste but release its value only here.
+      // Never let native insertion race a second model transaction.
+      if (!event.cancelable) return;
+      event.preventDefault();
+      if (!this.pendingPasteIsCurrent(pendingPaste)) return;
+      const fountain = event.dataTransfer?.getData(FOUNTAIN_CLIPBOARD_MIME) ?? '';
+      const fallback = this.insertFountainClipboard(event, fountain);
+      if (fallback === true) return;
+      const html = event.dataTransfer?.getData('text/html') ?? '';
+      this.insertRichClipboard(event, pendingPaste.text ?? event.dataTransfer?.getData('text/plain'), html,
+        fountain, fallback, !html.trim());
+      return;
     }
 
     if ((event.inputType === 'insertText' || event.inputType === 'insertReplacementText') && event.data !== null) {
@@ -405,6 +455,7 @@ export class InputManager {
   };
 
   private onPaste = (event: ClipboardEvent): void => {
+    this.clearPendingNativePaste();
     this.selections.requestDOMSync();
     if (this.options.shouldStopEvent?.(event)) return;
     if (!this.editor.editable) return;
@@ -412,40 +463,11 @@ export class InputManager {
     if (codeRegion) this.enterCodeRegion(codeRegion);
     this.selections.capture();
     const fountain = event.clipboardData?.getData(FOUNTAIN_CLIPBOARD_MIME) ?? '';
-    let fountainFallback: ExternalPasteIssue | null = null;
-    if (fountain && fountain.length <= MAX_FOUNTAIN_CLIPBOARD_CHARACTERS) {
-      try {
-        const payload = JSON.parse(fountain) as Partial<FountainClipboardPayload>;
-        if (payload.version !== 1 || !payload.document) throw new TypeError('Unsupported Fountain clipboard payload.');
-        const document = this.editor.state.schema.nodeFromJSON(payload.document);
-        if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
-          event.preventDefault();
-          this.reportPaste(createExternalPasteReport(
-            'fountain',
-            'inserted-fountain-document',
-            fountain,
-            fountain,
-          ));
-          return;
-        }
-      } catch { /* The receiving schema can legitimately omit the copied extension. */ }
-      fountainFallback = Object.freeze({
-        code: 'fountain-document-fallback',
-        count: 1,
-        message: 'The exact Fountain document was incompatible with this editor schema; portable HTML or text was used instead.',
-        lossy: true,
-      });
-    } else if (fountain) {
-      fountainFallback = Object.freeze({
-        code: 'fountain-document-fallback',
-        count: 1,
-        message: 'The exact Fountain clipboard document exceeded the safe import limit; portable HTML or text was used instead.',
-        lossy: true,
-      });
-    }
+    const fountainFallback = this.insertFountainClipboard(event, fountain);
+    if (fountainFallback === true) return;
     const clipboardHTML = event.clipboardData?.getData('text/html') ?? '';
-    // Fountain's own rendered HTML is the lossless source of truth. Text paste
-    // rules must not reinterpret it (for example, `$x$` as newly typed math).
+    // Fountain-rendered rich HTML must stay literal. Text paste rules must not
+    // reinterpret it (for example, `$x$` as newly typed math).
     const internalRichPaste = clipboardHTML.includes('data-fountain-');
     if (!internalRichPaste) {
       for (const plugin of this.editor.state.plugins) {
@@ -460,9 +482,7 @@ export class InputManager {
       event.preventDefault();
       this.reportPaste(createExternalPasteReport(
         clipboardHTML ? detectExternalPasteSource(clipboardHTML) : 'plain-text',
-        'inserted-table-grid',
-        text,
-        text,
+        'inserted-table-grid', text, text,
       ));
       return;
     }
@@ -473,8 +493,55 @@ export class InputManager {
       void this.insertFiles(files);
       return;
     }
-    const html = clipboardHTML;
+    if (!clipboardHTML.trim() && !fountain && event.clipboardData?.types?.includes('text/html')) {
+      this.deferNativeRichPaste(text);
+      return;
+    }
+    this.insertRichClipboard(event, text, clipboardHTML, fountain, fountainFallback);
+  };
+
+  private insertFountainClipboard(event: Event, fountain: string): true | ExternalPasteIssue | null {
+    if (fountain && fountain.length <= MAX_FOUNTAIN_CLIPBOARD_CHARACTERS) {
+      try {
+        const payload = JSON.parse(fountain) as Partial<FountainClipboardPayload>;
+        if (payload.version !== 1 || !payload.document) throw new TypeError('Unsupported Fountain clipboard payload.');
+        const document = this.editor.state.schema.nodeFromJSON(payload.document);
+        if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
+          event.preventDefault();
+          this.reportPaste(createExternalPasteReport(
+            'fountain',
+            'inserted-fountain-document',
+            fountain,
+            fountain,
+          ));
+          return true;
+        }
+      } catch { /* The receiving schema can legitimately omit the copied extension. */ }
+      return Object.freeze({
+        code: 'fountain-document-fallback',
+        count: 1,
+        message: 'The exact Fountain document was incompatible with this editor schema; portable HTML or text was used instead.',
+        lossy: true,
+      });
+    } else if (fountain) {
+      return Object.freeze({
+        code: 'fountain-document-fallback',
+        count: 1,
+        message: 'The exact Fountain clipboard document exceeded the safe import limit; portable HTML or text was used instead.',
+        lossy: true,
+      });
+    }
+    return null;
+  }
+
+  private insertRichClipboard(event: Event | undefined, text: string | undefined, html: string,
+    fountain: string, fountainFallback: ExternalPasteIssue | null, missingRichHTML = false): void {
     let richIssues: readonly ExternalPasteIssue[] = fountainFallback ? [fountainFallback] : [];
+    if (missingRichHTML) richIssues = Object.freeze([...richIssues, Object.freeze({
+      code: 'rich-html-unavailable' as const, count: 1,
+      message: 'The browser advertised rich clipboard HTML but did not deliver it; Fountain used the original plain-text representation.',
+      lossy: true,
+    })]);
     let richSource = fountain ? 'fountain' as const : html ? detectExternalPasteSource(html) : 'generic-html' as const;
     let normalizedHTML = html;
     if (html?.trim()) {
@@ -487,7 +554,7 @@ export class InputManager {
         }
         const document = HTMLImporter.parse(normalizedHTML, this.editor.state.schema);
         if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
-          event.preventDefault();
+          event?.preventDefault();
           this.reportPaste(createExternalPasteReport(
             richSource,
             'inserted-rich-html',
@@ -508,7 +575,7 @@ export class InputManager {
       }
     }
     if (text === undefined) return;
-    event.preventDefault();
+    event?.preventDefault();
     this.editor.runCommandBatch(() => insertPlainText(this.editor, text));
     this.reportPaste(createExternalPasteReport(
       html ? richSource : 'plain-text',
@@ -517,7 +584,7 @@ export class InputManager {
       text,
       richIssues,
     ));
-  };
+  }
 
   private reportPaste(report: ExternalPasteReport): void {
     try { this.options.paste?.onReport?.(report); }

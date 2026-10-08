@@ -111,10 +111,13 @@ jobs:
       # an unchanged selected document cannot prove an internal paste occurred.
       - name: Record independent native clipboard delivery
         run: node scripts/check-browser-clipboard-capability.mjs > native-clipboard-capability.jsonl
+      - name: Diagnose headed Linux WebKit clipboard independently
+        continue-on-error: true
+        run: xvfb-run --auto-servernum env FOUNTAIN_CLIPBOARD_HEADED=1 FOUNTAIN_CLIPBOARD_ENGINE=webkit node scripts/check-browser-clipboard-capability.mjs > native-clipboard-headed-capability.jsonl
       # Keep native Linux WebKit colour-input failures visible before the full
       # matrix. Windows WebKit uses a text fallback and cannot certify this.
       - name: Structural direction and native-source preflight
-        run: pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|copies shared automatic list scope|retains technical code reading direction"
+        run: pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|copies shared automatic list scope|retains technical code reading direction|pastes native rich research notes"
       - name: Native control and document focus preflight
         run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
       - name: Firefox native RTL selection preflight
@@ -126,6 +129,11 @@ jobs:
           name: direction-and-document-focus-evidence
           path: |
             native-clipboard-capability.jsonl
+            native-clipboard-headed-capability.jsonl
+            test-results/**/native-rich-paste-*.png
+            test-results/**/native-rich-paste-*.json
+            structural-direction-preflight-results/**/native-rich-paste-*.png
+            structural-direction-preflight-results/**/native-rich-paste-*.json
             test-results/**/code-direction-*.png
             test-results/**/code-direction-observations.json
             test-results/**/code-direction-native-clipboard-delivery.json

@@ -20,7 +20,8 @@ export type ExternalPasteIssueCode =
   | 'tracked-change-rejected'
   | 'tracked-change-metadata-dropped'
   | 'external-comments-not-imported'
-  | 'rich-html-import-failed';
+  | 'rich-html-import-failed'
+  | 'rich-html-unavailable';
 
 export interface ExternalPasteIssue {
   readonly code: ExternalPasteIssueCode;

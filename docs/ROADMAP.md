@@ -1,5 +1,42 @@
 # FountainJS opportunity roadmap
 
+Native rich-paste follow-up (2026-10-08, Unreleased): an independent native
+research-note workflow reproduces a real Windows WebKit bug: the native control
+keeps headings, marks, links, RTL quote, literal code and a table, while Fountain
+previously consumed only plain text before the browser released rich HTML. The
+view now hands announced-but-unavailable HTML to cancelable `beforeinput`, using
+the same sanitized importer and history. Original separated plain text remains
+the bounded fallback, with a new `rich-html-unavailable` report issue. Stale
+document/selection, plugin ownership, read-only state and teardown are guarded;
+the model/engine remains DOM-free. Three retry-free recorded desktop journeys
+pass after the reproduced WebKit failure; nine fixed-run PNGs are directly
+reviewed. The complete guarded local suite passes 2,823 tests / 213 files;
+package/API (411 declarations), headless (99 modules), types and measured budgets
+pass. The only public type change is the added paste-report issue code. Only
+measured aggregate code allowances grow (~1.8 KiB ESM / 1.6 KiB CJS); individual
+entries, CSS, dependencies and performance/heap caps remain unchanged.
+The final guarded-source browser regression passes nine cases with three existing
+Windows WebKit event-authored clipboard skips. Its 33 PNGs are reviewed: 32 exact
+matches to reviewed captures and one newly inspected Chromium editor image.
+Current CommonMark profiles, Node/workerd checks and website build pass. The throttled local
+performance run fails four unchanged server-HTML latency limits; retain that
+failure rather than raising limits or claiming a green performance gate.
+Evidence: `artifacts/native-rich-handoff-verification-20261008.json`.
+Do not call this pixel fidelity:
+Chromium/WebKit copied black code marks remain too dark on the code theme.
+
+`e68e41a` Linux CI is terminal: verify/performance/Lean pass, but structural
+browser preflight has 66 passes / three WebKit clipboard failures (two shared
+scopes plus code). The full matrix was not run. The 36 independent controls now
+prove that native headless Linux WebKit rich destinations themselves lose bold.
+Its later HTML slot contains plain text, not the original markup. This is stronger
+than a textarea-only inference, but does not prove headed Linux or real Safari
+behavior. CI now records twelve separate headed WebKit controls under Xvfb to
+investigate transport rather than skip restoration assertions. The optional
+headed diagnostic is not a conformance gate; functional preflight remains strict.
+Npm, the coverage ledger, CommonMark scores and physical-device certification
+remain unchanged. Keep the prior checkpoint evidence separate.
+
 HTML-fallback follow-up (2026-10-08, Unreleased): a code buffer's disabled line
 numbers were silently reset on HTML export/reimport. Export now records only the
 non-default `data-line-numbers="false"`; browser/server import honors it, leaving

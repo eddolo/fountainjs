@@ -7,6 +7,26 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Fix native rich clipboard handoff when a browser advertises HTML at `paste`
+  but releases its value only at cancelable `beforeinput`. Use the existing
+  sanitized importer and atomic history; keep explicit plugin ownership, original
+  line-separated plain fallback, selection/document guards and teardown cleanup.
+  Add the `rich-html-unavailable` paste-report issue (exhaustive issue-code handlers
+  must account for it). No new functions or runtime dependency. Windows real
+  native research-note paste passes Chromium/Firefox/WebKit after reproducing
+  WebKit's lost headings/marks/RTL quote/code/table. This is structural retention,
+  not pixel fidelity: imported black code marks on a dark theme remain a visible
+  readability gap. Linux headless WebKit native rich controls themselves lose
+  bold; diagnose headed transport separately, without skipping editor assertions.
+  The complete guarded local suite passes 2,823 tests / 213 files. Package/API,
+  headless/types and measured budgets pass; only aggregate code capacity grows,
+  leaving entry/CSS/dependency/performance/heap caps and npm unchanged.
+  Final guarded-source browser regression: nine passes / three existing Windows
+  WebKit event-authored clipboard skips; all 33 PNGs reviewed directly or by exact
+  hashes. CommonMark, Node/workerd and website build pass. The two-core low-priority local
+  performance run fails four unchanged server-HTML latency limits; this remains
+  failed evidence, not a relaxed budget or claimed performance pass.
+
 - Preserve disabled code line numbers through standard HTML export/import and
   native internal clipboard fallback. Emit the non-default data flag only, so
   default Markdown/CommonMark HTML stays unchanged. Recorded Windows desktop

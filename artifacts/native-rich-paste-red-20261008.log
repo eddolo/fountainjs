@@ -1,0 +1,69 @@
+[WebServer] (node:7648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:21588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (10.3s)
+(node:6808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (21.3s)
+(node:6572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo (23.4s)
+
+
+  1) [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: native-rich-destination.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('h2')
+    Expected: "Research note"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: native-rich-destination.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('h2')
+
+
+       at native-rich-paste-journey.ts:56
+
+      54 |       editorEvents: await page.evaluate(() => (globalThis as any).__nativeRichPasteEvents), editorHTML: await editor.innerHTML(), pageErrors: errors }, null, 2));
+      55 |     await expect(editor).not.toContainText('Replace this destination');
+    > 56 |     await expect(editor.locator('h2')).toHaveText('Research note');
+         |                                        ^
+      57 |     await expect(editor.locator('strong')).toHaveText('bold');
+      58 |     await expect(editor.locator('em')).toHaveText('emphasis');
+      59 |     await expect(editor.locator('a')).toHaveAttribute('href', 'https://example.org/reference');
+        at nativeRichPasteJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\native-rich-paste-journey.ts:56:40)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:47:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-rich-paste-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-rich-paste-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-rich-paste-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-rich-paste-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-rich-paste-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-rich-paste-red-20261008\editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\browser\editor.spec.ts:46:1 › pastes native rich research notes with structure, marks, source and undo 
+  2 passed (1.3m)

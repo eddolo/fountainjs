@@ -1,0 +1,501 @@
+browser	Structural direction and native-source preflight	﻿2026-10-08T02:44:06.3016298Z ##[group]Run pnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|copies shared automatic list scope|retains technical code reading direction"
+browser	Structural direction and native-source preflight	2026-10-08T02:44:06.3020133Z ^[[36;1mpnpm exec playwright test --project=chromium --project=firefox --project=webkit --output=structural-direction-preflight-results --grep "retains structural RTL against native source|imports inherited inline alignment|retains a shared automatic section direction|inserts table columns on the physical left|preserves list direction through real transforms|reorders real runbook blocks|retains shared automatic list scope|copies shared automatic list scope|retains technical code reading direction"^[[0m
+browser	Structural direction and native-source preflight	2026-10-08T02:44:06.3083751Z shell: /usr/bin/bash -e {0}
+browser	Structural direction and native-source preflight	2026-10-08T02:44:06.3084021Z env:
+browser	Structural direction and native-source preflight	2026-10-08T02:44:06.3084279Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+browser	Structural direction and native-source preflight	2026-10-08T02:44:06.3084595Z ##[endgroup]
+browser	Structural direction and native-source preflight	2026-10-08T02:44:07.8669783Z [WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+browser	Structural direction and native-source preflight	2026-10-08T02:44:07.8670911Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:44:10.6930114Z [WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+browser	Structural direction and native-source preflight	2026-10-08T02:44:10.6930884Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:44:13.1328828Z [WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+browser	Structural direction and native-source preflight	2026-10-08T02:44:13.1329478Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:44:22.3803352Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:44:22.3804019Z Running 69 tests using 2 workers
+browser	Structural direction and native-source preflight	2026-10-08T02:44:22.3805604Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:44:23.3871063Z [1/69] [chromium] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl
+browser	Structural direction and native-source preflight	2026-10-08T02:44:23.3872879Z [2/69] [chromium] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:44:30.1845078Z [3/69] [chromium] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto
+browser	Structural direction and native-source preflight	2026-10-08T02:44:30.6476408Z [4/69] [chromium] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback
+browser	Structural direction and native-source preflight	2026-10-08T02:44:36.3069359Z [5/69] [chromium] › tests/browser/editor.spec.ts:57:3 › retains shared automatic list scope through real convert, typing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:44:37.5242867Z [6/69] [chromium] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert
+browser	Structural direction and native-source preflight	2026-10-08T02:44:42.2190310Z [7/69] [chromium] › tests/browser/editor.spec.ts:57:3 › retains shared automatic list scope through real lift, typing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:44:43.2941181Z [8/69] [chromium] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift
+browser	Structural direction and native-source preflight	2026-10-08T02:44:47.8525298Z [9/69] [chromium] › tests/browser/editor.spec.ts:67:3 › reorders real runbook blocks with native pointer feedback in ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:44:48.9613701Z [10/69] [chromium] › tests/browser/editor.spec.ts:67:3 › reorders real runbook blocks with native pointer feedback in rtl
+browser	Structural direction and native-source preflight	2026-10-08T02:44:51.6447248Z [11/69] [chromium] › tests/browser/editor.spec.ts:71:1 › reorders real runbook blocks with keyboard structural feedback
+browser	Structural direction and native-source preflight	2026-10-08T02:44:53.0059283Z [12/69] [chromium] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: unwrap
+browser	Structural direction and native-source preflight	2026-10-08T02:44:57.0575291Z [13/69] [chromium] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: indent
+browser	Structural direction and native-source preflight	2026-10-08T02:44:57.9149824Z [14/69] [chromium] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: nested-lift
+browser	Structural direction and native-source preflight	2026-10-08T02:45:01.0510104Z [15/69] [chromium] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: contained
+browser	Structural direction and native-source preflight	2026-10-08T02:45:02.0362618Z [16/69] [chromium] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:45:05.4709749Z [17/69] [chromium] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:45:06.7219584Z [18/69] [chromium] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: auto
+browser	Structural direction and native-source preflight	2026-10-08T02:45:09.9520369Z [19/69] [chromium] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: host-css
+browser	Structural direction and native-source preflight	2026-10-08T02:45:11.1324849Z [20/69] [chromium] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: rtl-spans
+browser	Structural direction and native-source preflight	2026-10-08T02:45:14.3705143Z [21/69] [chromium] › tests/browser/editor.spec.ts:87:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:45:15.7480820Z [22/69] [chromium] › tests/browser/editor.spec.ts:91:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:45:19.4169375Z [23/69] [chromium] › tests/browser/editor.spec.ts:99:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+browser	Structural direction and native-source preflight	2026-10-08T02:45:22.2650738Z [24/69] [firefox] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:45:24.8193646Z [25/69] [firefox] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl
+browser	Structural direction and native-source preflight	2026-10-08T02:45:31.3979687Z [26/69] [firefox] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto
+browser	Structural direction and native-source preflight	2026-10-08T02:45:34.0112426Z [27/69] [firefox] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback
+browser	Structural direction and native-source preflight	2026-10-08T02:45:38.5564454Z [28/69] [firefox] › tests/browser/editor.spec.ts:57:3 › retains shared automatic list scope through real convert, typing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:45:41.4349000Z [29/69] [firefox] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert
+browser	Structural direction and native-source preflight	2026-10-08T02:45:44.0696074Z [30/69] [firefox] › tests/browser/editor.spec.ts:57:3 › retains shared automatic list scope through real lift, typing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:45:47.1260717Z [31/69] [firefox] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift
+browser	Structural direction and native-source preflight	2026-10-08T02:45:49.9227695Z [32/69] [firefox] › tests/browser/editor.spec.ts:67:3 › reorders real runbook blocks with native pointer feedback in ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:45:52.8617818Z [33/69] [firefox] › tests/browser/editor.spec.ts:67:3 › reorders real runbook blocks with native pointer feedback in rtl
+browser	Structural direction and native-source preflight	2026-10-08T02:45:54.3685988Z [34/69] [firefox] › tests/browser/editor.spec.ts:71:1 › reorders real runbook blocks with keyboard structural feedback
+browser	Structural direction and native-source preflight	2026-10-08T02:45:57.3058201Z [35/69] [firefox] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: unwrap
+browser	Structural direction and native-source preflight	2026-10-08T02:46:01.3900029Z [36/69] [firefox] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: indent
+browser	Structural direction and native-source preflight	2026-10-08T02:46:01.8185535Z [37/69] [firefox] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: nested-lift
+browser	Structural direction and native-source preflight	2026-10-08T02:46:06.2652644Z [38/69] [firefox] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: contained
+browser	Structural direction and native-source preflight	2026-10-08T02:46:07.5734008Z [39/69] [firefox] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:46:11.4762871Z [40/69] [firefox] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:46:12.5389129Z [41/69] [firefox] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: auto
+browser	Structural direction and native-source preflight	2026-10-08T02:46:16.1233256Z [42/69] [firefox] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: host-css
+browser	Structural direction and native-source preflight	2026-10-08T02:46:17.2520545Z [43/69] [firefox] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: rtl-spans
+browser	Structural direction and native-source preflight	2026-10-08T02:46:21.7797233Z [44/69] [firefox] › tests/browser/editor.spec.ts:87:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:46:22.7940059Z [45/69] [firefox] › tests/browser/editor.spec.ts:91:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:46:27.0158585Z [46/69] [firefox] › tests/browser/editor.spec.ts:99:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+browser	Structural direction and native-source preflight	2026-10-08T02:46:31.3985713Z [47/69] [webkit] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:46:33.3151593Z [48/69] [webkit] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl
+browser	Structural direction and native-source preflight	2026-10-08T02:46:46.0317117Z [49/69] [webkit] › tests/browser/editor.spec.ts:46:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto
+browser	Structural direction and native-source preflight	2026-10-08T02:46:46.7300859Z [50/69] [webkit] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback
+browser	Structural direction and native-source preflight	2026-10-08T02:46:58.1254808Z [51/69] [webkit] › tests/browser/editor.spec.ts:57:3 › retains shared automatic list scope through real convert, typing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:47:04.7434783Z [52/69] [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert
+browser	Structural direction and native-source preflight	2026-10-08T02:47:05.7314148Z [53/69] (retries) [webkit] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback (retry #1)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:18.1156396Z [54/69] (retries) [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert (retry #1)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:23.2129662Z [55/69] (retries) [webkit] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback (retry #2)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:30.9527517Z [56/69] (retries) [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert (retry #2)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9864564Z   1) [webkit] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9865647Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9865899Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9866155Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9867117Z     Locator:  getByRole('region', { name: 'Conversion workspace: technical-direction-ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9867937Z     Expected: 2
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9868162Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9868375Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9868512Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9868599Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9868873Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9870133Z       - waiting for getByRole('region', { name: 'Conversion workspace: technical-direction-ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9871062Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9871379Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9871565Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9871571Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9871708Z        at code-direction-journey.ts:145
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9871907Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9872159Z       143 |     // Keep real MIME-delivery evidence even when restoration fails in CI.
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9873052Z       144 |     await writeFile(info.outputPath('code-direction-native-clipboard-delivery.json'), JSON.stringify(evidence.clipboardDelivery ?? null, null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9873834Z     > 145 |     await expect(editor.locator('pre')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9874215Z           |                                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9874764Z       146 |     await expect(inherited).toHaveText(raw); await expect(inherited).not.toHaveAttribute('dir');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9875512Z       147 |     await expect(owned).toHaveText(`English ${raw}`); await expect(owned).toHaveAttribute('dir', 'auto');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9876920Z       148 |     await expect(owned).toHaveAttribute('data-line-numbers', 'false');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9878864Z         at codeDirectionJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-direction-journey.ts:145:41)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9879768Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:53:3
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9880102Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9880628Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9881524Z     structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9882454Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9882756Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9883334Z     Error Context: structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9883935Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9884326Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9885162Z     structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9885756Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9885873Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9886489Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9887459Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9887848Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9888174Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9888531Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9888831Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9889013Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9889240Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9889938Z     Locator:  getByRole('region', { name: 'Conversion workspace: technical-direction-ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9890722Z     Expected: 2
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9890931Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9891137Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9891274Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9891360Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9891623Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9892535Z       - waiting for getByRole('region', { name: 'Conversion workspace: technical-direction-ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9893612Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9893929Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9894108Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9894114Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9894244Z        at code-direction-journey.ts:145
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9894438Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9894693Z       143 |     // Keep real MIME-delivery evidence even when restoration fails in CI.
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9895941Z       144 |     await writeFile(info.outputPath('code-direction-native-clipboard-delivery.json'), JSON.stringify(evidence.clipboardDelivery ?? null, null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9897061Z     > 145 |     await expect(editor.locator('pre')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9897493Z           |                                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9898044Z       146 |     await expect(inherited).toHaveText(raw); await expect(inherited).not.toHaveAttribute('dir');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9898804Z       147 |     await expect(owned).toHaveText(`English ${raw}`); await expect(owned).toHaveAttribute('dir', 'auto');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9899464Z       148 |     await expect(owned).toHaveAttribute('data-line-numbers', 'false');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9900191Z         at codeDirectionJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-direction-journey.ts:145:41)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9900924Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:53:3
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9901244Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9901675Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9902577Z     structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry1/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9903515Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9903806Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9904409Z     Error Context: structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry1/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9905047Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9905468Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9906330Z     structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry1/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9907372Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9907496Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9908172Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry1/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9908846Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9909227Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9909533Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9909894Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9910390Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9910567Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9910802Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9911492Z     Locator:  getByRole('region', { name: 'Conversion workspace: technical-direction-ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9912253Z     Expected: 2
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9912458Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9912798Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9912933Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9913018Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9913281Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9914199Z       - waiting for getByRole('region', { name: 'Conversion workspace: technical-direction-ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9915060Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9915376Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9915556Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9915561Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9915698Z        at code-direction-journey.ts:145
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9915892Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9916142Z       143 |     // Keep real MIME-delivery evidence even when restoration fails in CI.
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9917437Z       144 |     await writeFile(info.outputPath('code-direction-native-clipboard-delivery.json'), JSON.stringify(evidence.clipboardDelivery ?? null, null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9918265Z     > 145 |     await expect(editor.locator('pre')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9918646Z           |                                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9919185Z       146 |     await expect(inherited).toHaveText(raw); await expect(inherited).not.toHaveAttribute('dir');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9919931Z       147 |     await expect(owned).toHaveText(`English ${raw}`); await expect(owned).toHaveAttribute('dir', 'auto');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9920579Z       148 |     await expect(owned).toHaveAttribute('data-line-numbers', 'false');
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9921336Z         at codeDirectionJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/code-direction-journey.ts:145:41)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9922063Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:53:3
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9922380Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9922802Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9923706Z     structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry2/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9924641Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9924930Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9925538Z     Error Context: structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry2/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9926166Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9926549Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9927975Z     structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry2/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9928630Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9928747Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9929417Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-webkit-retry2/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9930101Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9930486Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9930791Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:36.9930797Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:37.9713739Z [57/69] [webkit] › tests/browser/editor.spec.ts:57:3 › retains shared automatic list scope through real lift, typing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0275145Z   2) [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0276512Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0278423Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0294101Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0295920Z     Locator:  getByRole('region', { name: 'Conversion workspace: automatic-list-convert.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0298723Z     Expected: 1
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0299310Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0299865Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0300283Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0300670Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0301335Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0303443Z       - waiting for getByRole('region', { name: 'Conversion workspace: automatic-list-convert.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0305626Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0306450Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0307374Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0307533Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0307930Z        at list-auto-scope-journey.ts:133
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0308435Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0308776Z       131 |     })), null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0310083Z       132 |     await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0311432Z     > 133 |     await expect(group).toHaveCount(1);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0313852Z           |                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0314811Z       134 |     await expect(group.locator(':scope > ol')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0316406Z       135 |     expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0318411Z       136 |     await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0320190Z         at listAutoScopeJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/list-auto-scope-journey.ts:133:25)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0321775Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:62:5
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0322628Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0323471Z     attachment #1: auto-scope-native-clipboard-delivery.json (application/json) ────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0325767Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit/attachments/auto-scope-native-clipboard-delivery-json-b47e87792b6e8316d5c4032fd9e4f5c080d27d56.json
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0328096Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0328651Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0329187Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0335929Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0338188Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0338697Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0339725Z     Error Context: structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0341018Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0341713Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0343121Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0344099Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0344278Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0345358Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0346474Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0347385Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0347901Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0348534Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0349051Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0349339Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0349735Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0351062Z     Locator:  getByRole('region', { name: 'Conversion workspace: automatic-list-convert.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0352903Z     Expected: 1
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0353266Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0353606Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0353837Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0353988Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0354511Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0356403Z       - waiting for getByRole('region', { name: 'Conversion workspace: automatic-list-convert.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0358421Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0358961Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0359257Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0359267Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0359518Z        at list-auto-scope-journey.ts:133
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0359846Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0360031Z       131 |     })), null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0361161Z       132 |     await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0362317Z     > 133 |     await expect(group).toHaveCount(1);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0362858Z           |                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0363515Z       134 |     await expect(group.locator(':scope > ol')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0365206Z       135 |     expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0366613Z       136 |     await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0368459Z         at listAutoScopeJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/list-auto-scope-journey.ts:133:25)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0369813Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:62:5
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0370392Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0371187Z     attachment #1: auto-scope-native-clipboard-delivery.json (application/json) ────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0373743Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry1/attachments/auto-scope-native-clipboard-delivery-json-3721b3ad8cba166b3ba37af4482e3ed3bda91b42.json
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0376200Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0377047Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0377807Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0379498Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry1/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0381242Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0382028Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0383196Z     Error Context: structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry1/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0384372Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0385099Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0387126Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry1/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0388359Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0388549Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0389784Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry1/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0391025Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0391687Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0392303Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0392973Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0393503Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0393803Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0394194Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0395688Z     Locator:  getByRole('region', { name: 'Conversion workspace: automatic-list-convert.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0397648Z     Expected: 1
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0397981Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0398317Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0398533Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0398680Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0399124Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0400992Z       - waiting for getByRole('region', { name: 'Conversion workspace: automatic-list-convert.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0402808Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0403343Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0403641Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0403651Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0403881Z        at list-auto-scope-journey.ts:133
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0404226Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0404413Z       131 |     })), null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0405554Z       132 |     await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0406890Z     > 133 |     await expect(group).toHaveCount(1);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0407447Z           |                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0408085Z       134 |     await expect(group.locator(':scope > ol')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0409334Z       135 |     expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0411005Z       136 |     await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0412342Z         at listAutoScopeJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/list-auto-scope-journey.ts:133:25)
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0413703Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:62:5
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0414269Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0415077Z     attachment #1: auto-scope-native-clipboard-delivery.json (application/json) ────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0417914Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry2/attachments/auto-scope-native-clipboard-delivery-json-fbc20f84821f441dc284fc3e7d3c8daadeda6596.json
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0420226Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0420713Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0421434Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0422946Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry2/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0424578Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0425053Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0426101Z     Error Context: structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry2/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0427557Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0428229Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0429661Z     structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry2/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0430742Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0430922Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0432035Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-copies-shared-autom-1440d--external-clipboard-convert-webkit-retry2/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0433160Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0433753Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0434231Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:42.0434241Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:47:43.4909266Z [58/69] [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift
+browser	Structural direction and native-source preflight	2026-10-08T02:47:46.8974037Z [59/69] [webkit] › tests/browser/editor.spec.ts:67:3 › reorders real runbook blocks with native pointer feedback in ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:47:55.0877588Z [60/69] [webkit] › tests/browser/editor.spec.ts:67:3 › reorders real runbook blocks with native pointer feedback in rtl
+browser	Structural direction and native-source preflight	2026-10-08T02:47:58.4739618Z [61/69] (retries) [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift (retry #1)
+browser	Structural direction and native-source preflight	2026-10-08T02:48:02.9008481Z [62/69] [webkit] › tests/browser/editor.spec.ts:71:1 › reorders real runbook blocks with keyboard structural feedback
+browser	Structural direction and native-source preflight	2026-10-08T02:48:13.2143736Z [63/69] [webkit] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: unwrap
+browser	Structural direction and native-source preflight	2026-10-08T02:48:14.2473396Z [64/69] (retries) [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift (retry #2)
+browser	Structural direction and native-source preflight	2026-10-08T02:48:20.2175442Z [65/69] [webkit] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: indent
+browser	Structural direction and native-source preflight	2026-10-08T02:48:25.7479579Z [66/69] [webkit] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: nested-lift
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8564188Z   3) [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8566670Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8567477Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8568141Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8569761Z     Locator:  getByRole('region', { name: 'Conversion workspace: automatic-list-lift.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8571450Z     Expected: 1
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8571939Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8572432Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8572806Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8573124Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8573714Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8575698Z       - waiting for getByRole('region', { name: 'Conversion workspace: automatic-list-lift.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8577871Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8578597Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8579047Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8579202Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8579586Z        at list-auto-scope-journey.ts:133
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8580081Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8580409Z       131 |     })), null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8581666Z       132 |     await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8583974Z     > 133 |     await expect(group).toHaveCount(1);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8607425Z           |                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8609027Z       134 |     await expect(group.locator(':scope > ol')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8610575Z       135 |     expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8612188Z       136 |     await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8613770Z         at listAutoScopeJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/list-auto-scope-journey.ts:133:25)
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8615237Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:62:5
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8615962Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8617179Z     attachment #1: auto-scope-native-clipboard-delivery.json (application/json) ────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8619819Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit/attachments/auto-scope-native-clipboard-delivery-json-b12b9c85a6387c91ce3b29694fa75016e612ee22.json
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8622342Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8623022Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8623891Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8625630Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8627974Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8628655Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8630005Z     Error Context: structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8631402Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8632297Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8634012Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8635317Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8635651Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8637885Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8639264Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8640089Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8640782Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8641758Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8642435Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8642886Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8643433Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8645015Z     Locator:  getByRole('region', { name: 'Conversion workspace: automatic-list-lift.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8647135Z     Expected: 1
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8647650Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8648146Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8648512Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8648797Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8649393Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8651499Z       - waiting for getByRole('region', { name: 'Conversion workspace: automatic-list-lift.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8653456Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8654200Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8654638Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8654786Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8655164Z        at list-auto-scope-journey.ts:133
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8655647Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8655978Z       131 |     })), null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8657454Z       132 |     await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8658873Z     > 133 |     await expect(group).toHaveCount(1);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8659568Z           |                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8660374Z       134 |     await expect(group.locator(':scope > ol')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8661842Z       135 |     expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8663635Z       136 |     await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8665184Z         at listAutoScopeJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/list-auto-scope-journey.ts:133:25)
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8666628Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:62:5
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8667531Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8668510Z     attachment #1: auto-scope-native-clipboard-delivery.json (application/json) ────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8671200Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry1/attachments/auto-scope-native-clipboard-delivery-json-5eec4b4d05ad7715dd33ba5cd375e60e88803872.json
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8673780Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8674467Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8675333Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8677852Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry1/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8679791Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8680465Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8681746Z     Error Context: structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry1/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8683109Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8684053Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8685787Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry1/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8687336Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8687675Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8689067Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry1/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8690463Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8691280Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8691957Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8692846Z     Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8693779Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8694246Z     Error: expect(locator).toHaveCount(expected) failed
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8694792Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8696436Z     Locator:  getByRole('region', { name: 'Conversion workspace: automatic-list-lift.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8698445Z     Expected: 1
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8699170Z     Received: 0
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8699673Z     Timeout:  5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8700049Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8700324Z     Call log:
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8700916Z       - Expect "toHaveCount" with timeout 5000ms
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8702911Z       - waiting for getByRole('region', { name: 'Conversion workspace: automatic-list-lift.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('div[data-fountain-direction-scope]')
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8704719Z         14 × locator resolved to 0 elements
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8705374Z            - unexpected value "0"
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8705726Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8705735Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8706038Z        at list-auto-scope-journey.ts:133
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8706412Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8706639Z       131 |     })), null, 2));
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8708142Z       132 |     await info.attach('auto-scope-native-clipboard-delivery.json', { path: deliveryPath, contentType: 'application/json' });
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8708827Z     > 133 |     await expect(group).toHaveCount(1);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8709157Z           |                         ^
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8709542Z       134 |     await expect(group.locator(':scope > ol')).toHaveCount(2);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8710283Z       135 |     expect(await group.locator(':scope > ol').evaluateAll(nodes => nodes.map(node => node.getAttribute('start')))).toEqual(['0', '2']);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8711085Z       136 |     await expect(group.locator(':scope > ul')).toHaveCount(action === 'convert' ? 1 : 0);
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8711862Z         at listAutoScopeJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/list-auto-scope-journey.ts:133:25)
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8712607Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:62:5
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8712920Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8713386Z     attachment #1: auto-scope-native-clipboard-delivery.json (application/json) ────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8714724Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry2/attachments/auto-scope-native-clipboard-delivery-json-95b2583bd21fc7c690b5073b92c32bacd3482e7c.json
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8716010Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8716301Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8716684Z     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8718638Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry2/test-failed-1.png
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8720620Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8721143Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8722306Z     Error Context: structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry2/error-context.md
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8723480Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8724384Z     attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8725993Z     structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry2/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8727499Z     Usage:
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8727694Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8728922Z         pnpm exec playwright show-trace structural-direction-preflight-results/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-webkit-retry2/trace.zip
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8730138Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8730817Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8731328Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:28.8731337Z 
+browser	Structural direction and native-source preflight	2026-10-08T02:48:30.2719057Z [67/69] [webkit] › tests/browser/editor.spec.ts:76:3 › preserves list direction through real transforms and downloaded HTML: contained
+browser	Structural direction and native-source preflight	2026-10-08T02:48:31.2062528Z [68/69] [webkit] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:48:38.5283217Z [69/69] [webkit] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+browser	Structural direction and native-source preflight	2026-10-08T02:48:39.7485348Z [70/69] [webkit] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: auto
+browser	Structural direction and native-source preflight	2026-10-08T02:48:47.0707585Z [71/69] [webkit] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: host-css
+browser	Structural direction and native-source preflight	2026-10-08T02:48:48.3529001Z [72/69] [webkit] › tests/browser/editor.spec.ts:82:3 › inserts table columns on the physical left and right: rtl-spans
+browser	Structural direction and native-source preflight	2026-10-08T02:48:55.4798953Z [73/69] [webkit] › tests/browser/editor.spec.ts:87:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:48:57.0840838Z [74/69] [webkit] › tests/browser/editor.spec.ts:91:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML
+browser	Structural direction and native-source preflight	2026-10-08T02:49:03.1284261Z [75/69] [webkit] › tests/browser/editor.spec.ts:99:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview
+browser	Structural direction and native-source preflight	2026-10-08T02:49:12.3556495Z   3 failed
+browser	Structural direction and native-source preflight	2026-10-08T02:49:12.3558707Z     [webkit] › tests/browser/editor.spec.ts:51:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback 
+browser	Structural direction and native-source preflight	2026-10-08T02:49:12.3560880Z     [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: convert 
+browser	Structural direction and native-source preflight	2026-10-08T02:49:12.3562402Z     [webkit] › tests/browser/editor.spec.ts:60:3 › copies shared automatic list scope through real internal and external clipboard: lift 
+browser	Structural direction and native-source preflight	2026-10-08T02:49:12.3563014Z   66 passed (5.1m)
+browser	Structural direction and native-source preflight	2026-10-08T02:49:12.7412338Z ##[error]Process completed with exit code 1.

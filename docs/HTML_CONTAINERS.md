@@ -137,6 +137,23 @@ undo/redo and downloaded HTML reopening. This is not general bidi certification.
 
 ### Remaining automatic-scope gaps
 
+Native clipboard handoff: some browsers advertise rich HTML at `paste` but
+provide it only in a subsequent cancelable `beforeinput`. Fountain defers just
+that announced-but-empty case and reuses the sanitized importer; ordinary plain,
+immediate rich, file and table-grid paths remain synchronous. A bounded fallback
+keeps the original separated plain payload if no rich data arrives, reporting
+`rich-html-unavailable`. Pending work is guarded by unchanged document/selection
+and canceled for teardown, focus loss or another input. Explicit paste/beforeinput
+plugin handlers still own their supported events. Non-cancelable native input is
+not duplicated with a model write; that path is not native-device certification.
+Three Windows desktop research-note journeys retain headings, marks, link,
+RTL quote, literal code/table and undo/redo; source/theme pixel identity is not
+promised. Copied black code marks on the dark theme remain a readability gap.
+The final guarded-source regression passes nine cases / three existing Windows
+WebKit event-authored clipboard skips; all 33 PNGs are inspected or exact matches
+to reviewed captures. See `artifacts/native-rich-handoff-verification-20261008.json`
+for the lifecycle, native-browser and remaining performance/transport evidence.
+
 The Linux shared-scope checkpoint `a9af193` passes verification, performance,
 Lean and Pages, but its structural browser preflight fails two WebKit rich-paste
 restorations (55 passes / two failures). Plain text reaches the target; shared
@@ -158,6 +175,13 @@ Windows WebKit's native rich control retains bold and exposes HTML at
 Fountain audit; it is distinct from event-authored clipboard copies, which these
 Windows controls find empty at both events. Do not label all native rich paste
 unsupported based solely on its earlier event payload.
+
+The subsequent `e68e41a` Linux run retains three WebKit clipboard failures
+(66 preflight passes; the new code-copy case also fails). Independent native
+contenteditable controls now lose bold in headless Linux WebKit as well: the
+later HTML value is only the plain baseline. Therefore the Windows event-handoff
+fix is not claimed to recover absent Linux source markup. Headed Xvfb controls
+are a separate pending diagnostic, not a Linux skip or passing editor evidence.
 
 A separate nested-boundary audit finds direction loss when lifting an automatic
 list's child across parents or indenting it under an independently fixed item.

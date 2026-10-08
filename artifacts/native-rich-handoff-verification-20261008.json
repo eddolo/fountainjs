@@ -1,0 +1,521 @@
+{
+  "date": "2026-10-08",
+  "baseCommit": "e68e41a2516908b05c094a2046525905fba253e5",
+  "status": "bounded native rich-paste fix verified locally; Linux transport, code contrast and performance certification remain open; parity goal active",
+  "implementation": [
+    "Only advertised-but-empty rich HTML paste waits for cancelable beforeinput; same sanitizer and atomic history",
+    "Original separated plain text is bounded fallback with rich-html-unavailable issue",
+    "Document/selection/lifecycle/plugin/read-only guards prevent stale queued insertion",
+    "Model/core remain DOM-free; no new dependencies or public functions",
+    "Added paste-report issue-code union requires exhaustive handlers to account for the new code"
+  ],
+  "verification": {
+    "redUnit": {
+      "passes": 2,
+      "tests": 8,
+      "failures": 6
+    },
+    "focusedLifecycle": {
+      "tests": 31,
+      "note": "14 new lifecycle tests plus 17 existing tests; 15th noncancelable case subsequently verified by complete suite",
+      "files": 3
+    },
+    "fullUnits": {
+      "tests": 2823,
+      "exitCode": 0,
+      "workers": 1,
+      "files": 213
+    },
+    "nativeBrowserRed": {
+      "nativeControl": "rich structure intact; Fountain plain only",
+      "passes": 2,
+      "failedEngine": "Windows WebKit",
+      "failures": 1
+    },
+    "nativeBrowserFixed": {
+      "retries": 0,
+      "passes": 3,
+      "workers": 1,
+      "directlyReviewedPNGs": 9
+    },
+    "finalBrowser": {
+      "workers": 1,
+      "note": "Existing Windows WebKit event-authored clipboard skips only; native external rich journey passes all three engines",
+      "platform": "Windows",
+      "skips": 3,
+      "passes": 9,
+      "retries": 0
+    },
+    "finalVisual": {
+      "directNewInspection": 1,
+      "exactReviewedMatches": 32,
+      "captures": 33,
+      "note": "Captured videos not manually watched; direct image reveals black imported code marks on dark theme"
+    },
+    "gates": {
+      "package": "packed consumers passed",
+      "api": "411 declarations passed, two reviewed paste issue union declaration hashes changed",
+      "markdown": "unchanged projection 11: default 563/652, strongest optional 613/652, not full conformance",
+      "build": "passed",
+      "serverRuntimes": "Node and workerd passed",
+      "headless": "99 modules passed",
+      "site": "passed with existing optional large-chunk warning",
+      "types": "passed"
+    },
+    "size": {
+      "note": "Measured browser-view growth only; entry/CSS/dependency/latency/heap allowances unchanged",
+      "aggregateESMCapKiB": 1596.75,
+      "esmKiB": 1596.6,
+      "aggregateCJSCapKiB": 1328.25,
+      "cjsKiB": 1328,
+      "stylesheetBytes": 88814
+    },
+    "performance": {
+      "status": "failed",
+      "failingServerHTMLP95": [
+        {
+          "limitMs": 35,
+          "measuredMs": 93.51,
+          "blocks": 100
+        },
+        {
+          "limitMs": 120,
+          "measuredMs": 170.46,
+          "blocks": 1000
+        },
+        {
+          "limitMs": 500,
+          "measuredMs": 858.75,
+          "blocks": 5000
+        },
+        {
+          "limitMs": 900,
+          "measuredMs": 1199.26,
+          "blocks": 10000
+        }
+      ],
+      "note": "No threshold changes or causal claim from a noisy run; require independent current-source CI evidence",
+      "process": "BelowNormal; affinity 192; two CPU cores"
+    }
+  },
+  "nativeWindowsDiagnostics": {
+    "groups": [
+      {
+        "cases": 6,
+        "boldRetained": 4,
+        "textTransferred": 6,
+        "group": "chromium, rich"
+      },
+      {
+        "cases": 6,
+        "boldRetained": 0,
+        "textTransferred": 6,
+        "group": "chromium, text"
+      },
+      {
+        "cases": 6,
+        "boldRetained": 4,
+        "textTransferred": 6,
+        "group": "firefox, rich"
+      },
+      {
+        "cases": 6,
+        "boldRetained": 0,
+        "textTransferred": 6,
+        "group": "firefox, text"
+      },
+      {
+        "cases": 6,
+        "boldRetained": 2,
+        "textTransferred": 2,
+        "group": "webkit, rich"
+      },
+      {
+        "cases": 6,
+        "boldRetained": 0,
+        "textTransferred": 2,
+        "group": "webkit, text"
+      }
+    ],
+    "cases": 36,
+    "headless": true,
+    "uniqueBaselines": 36
+  },
+  "precedingLinuxCI": {
+    "run": 37719154687,
+    "headedXvfb": "New optional twelve-case diagnostic pending next push; no functional skip or relaxed assertions",
+    "independentControls": {
+      "webkitRichCases": 6,
+      "cases": 36,
+      "webkitRichBoldRetained": 0,
+      "note": "Native rich contenteditable controls lose bold; later HTML slot holds plain baseline, not source markup"
+    },
+    "performance": "passed",
+    "commit": "e68e41a",
+    "lean": "passed",
+    "pages": "passed",
+    "browserPreflight": {
+      "passes": 66,
+      "fullMatrix": "not run",
+      "failures": 3
+    },
+    "terminal": "failure",
+    "verification": "passed, 2808 tests / 212 files"
+  },
+  "remaining": [
+    "Black imported code marks unreadable on dark default theme",
+    "Current-source Linux headed/headless clipboard delivery not yet certified",
+    "Four local server HTML latency failures retained; independent current-source CI required",
+    "Nested shared-auto direction lift/move gaps remain open",
+    "Real Safari/mobile/assistive-technology/Word coverage remains open",
+    "CommonMark not complete; npm 0.4.0-beta.2 and coverage ledger unchanged"
+  ],
+  "sourceHashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "f3e26d1e49ea5050711ef9238c659b877f961ed1a2d6762d55265c9e06430a53"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "199cb7055b0d42869876a5387778af322b8d80b6d4759ef40b6d42add85485e8"
+    },
+    {
+      "path": "api-surface.json",
+      "sha256": "c25f63abf8a7c3c0280b10540d3143c876c2df4c2e802b98dba3ab7c3fa3bd72"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "ad9d1e3b1970d41af00f167dca6553b216480bcb9bc07d790921cd802e37d2ef"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "dd0c8fe32872db5842a976fb774a036b3aa2baab5db5874e09ca4a2a4129b83a"
+    },
+    {
+      "path": "scripts/check-browser-clipboard-capability.mjs",
+      "sha256": "a4e9067d04c2e25010db38bb47b6ac4172ac1231749d69a882242dddf1817b60"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "7a9cc1b6e39b19ce5b0bdc61259d0bf5e37ef20afb60ec998b0c61509e733b3f"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "bd18d47a0aa98b4cd6a2d22ef967893ae79f4c0746d00ed6c926a419e167f236"
+    },
+    {
+      "path": "src/view/paste.ts",
+      "sha256": "588206b6d7c64189e67fd5c6cb69ca9b912a1cbc278d7b989293e78d994ceeb6"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "654e8b5fcdd94bd6af5dc5107ad8a69d02789aef56fbf2a0d3ad31a439cc3889"
+    },
+    {
+      "path": "tests/browser/native-rich-paste-journey.ts",
+      "sha256": "73e897968f1c97053373a399949b31f6de265f459d91c417e6482aaf7f1eef29"
+    },
+    {
+      "path": "tests/native-rich-paste.test.ts",
+      "sha256": "ba7684acda2281d33067289d01bee13390169c6caa9ba7e88db893ed23ccc9f7"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "artifacts/native-rich-handoff-unit-red-20261008.log",
+      "sha256": "9d2ee5d4525d634859553682deedf77d684797b1528b034f9136a5edfe8259a3"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-focused-20261008.log",
+      "sha256": "2e3bbea17ff158e6bf845608eca53cd80e3de899656a9426047f391cf82613ff"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-lifecycle-20261008.log",
+      "sha256": "ffd4e9988ac8e82fe90de701140d6bc85869812790cb19dbddfdf41c7759443a"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-full-unit-20261008.log",
+      "sha256": "232d42288067de879b07c96bc0da8976a463e306d80875c294f3c2b2bd24e115"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-browser-20261008.log",
+      "sha256": "48f244945d4deea34c1b76b6beef6898f9bf2b9fe138d9cce90f61117d25133d"
+    },
+    {
+      "path": "artifacts/native-rich-paste-red-20261008.log",
+      "sha256": "8dacbd31980b37edb8ef3a0aecdc521fe9eccb72510fe6584c2670a595670456"
+    },
+    {
+      "path": "artifacts/native-rich-paste-fixed-20261008.log",
+      "sha256": "1d94b0deab18eeb85a7c266244b3cb0336a18662c7be608340281ad8665fad22"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-guarded-build-20261008.log",
+      "sha256": "49139f2ba9ebd9adb94a23b8a6b7ba88e6a2fa561308616111ca8fbf643da7d4"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-guarded-test-api-20261008.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-guarded-test-budget-20261008.log",
+      "sha256": "934c44e3f9bb6a4ada2bf0462bf98c7ae33d2dcac99f94764ed4cc7279018689"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-guarded-test-headless-20261008.log",
+      "sha256": "b00cfb6c7892c618bf1c7e612a13df0511a2ed939de3c30aa7824e7421f129d3"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-guarded-test-package-20261008.log",
+      "sha256": "c33689638963302d52c0082d00b07df22fe4371603a47df7f3c33aac46139bfa"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-guarded-typecheck-20261008.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-budget-before-review-20261008.log",
+      "sha256": "b1514f8574db201ad0cffcd109b5a62f9cfb3215a6e66b8cff5596c1d19a78de"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-test-api-20261008.log",
+      "sha256": "8135e3be46fc1638f6329edfc5588c070355b6648bf09fa15004d31a752c9e6c"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-api-reviewed-20261008.log",
+      "sha256": "4a66e258514729cf589bb6cddbaf67561d03e19cf9ac892c36e70705240c0ad0"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-test-markdown-conformance-20261008.log",
+      "sha256": "a9cb5dd16b86abade61243cef34ee2c039c00dcfd6905aedd4acd408d51e5658"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-test-server-runtimes-20261008.log",
+      "sha256": "a8bd9f604be4762de7dee020af9c4e89f021122d2247703e11c9608f4480ef00"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-test-performance-20261008.log",
+      "sha256": "013e7e8525ff9ac811b064752a0b1908195c468935d7ef5ea4eab7c42c9ab203"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-site-20261008.log",
+      "sha256": "ffd1810ce0920ee9ffe0eb804cbc8bb78e65e9280b2959d5ecbf34accb817668"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-windows-capability-20261008.jsonl",
+      "sha256": "d22225342c69141f19a9b249a061c98c7e49c30ee1cd36dc6f17356595dc5361"
+    },
+    {
+      "path": "artifacts/ci-e68e41a-failures-20261008.log",
+      "sha256": "10e00f4988d072c8a7e682461f5d27e0bd9d3c88e14f966c47f80e44d9033af2"
+    },
+    {
+      "path": "artifacts/ci-e68e41a-verify-20261008.log",
+      "sha256": "a83f9258374b1e7fad9c11cc74f5de2284e1c8e72de64f1ec12ccf3d1aa651bc"
+    },
+    {
+      "path": "artifacts/ci-e68e41a-direction/native-clipboard-capability.jsonl",
+      "sha256": "eb16a46df5ecc59a5f34f8dc9684cf7be17bd9e341d11d4bca654772040695c8"
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-external-paste.png",
+      "sha256": "3da8e5f241527c88c8d00cc93712fd8d9c87e6336a4f8f2d04343b34543b926a",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-external-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-internal-paste.png",
+      "sha256": "91b44b44097fab52c60c5216e4b34cb2e038f95abbdb4a61efe9b587cedcac9a",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-chromium/auto-scope-internal-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-external-paste.png",
+      "sha256": "8fac81f476de5d173043b6e89b5d403603f38a1add200cb10ed09862f99bd2c9",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-external-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-internal-paste.png",
+      "sha256": "d58ea5775909bb97c4962ec457519ce4df5d97b2336b7507288212e70b03716e",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-1440d--external-clipboard-convert-firefox/auto-scope-internal-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-external-paste.png",
+      "sha256": "ce4d36f9bba11b5d178586882bfdbc1788ccbe45f2fb9306275cdc8b9c44a98b",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-external-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-internal-paste.png",
+      "sha256": "836a5996226855e704321e9005601e6ad07e94510ea5fad885cb73af3f24250f",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-chromium/auto-scope-internal-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-external-paste.png",
+      "sha256": "e7a8e1cbb72f387315d4b2ac2ff008663938369403776512125d57bf61c33b4e",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-external-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-internal-paste.png",
+      "sha256": "dbbc324ced05d9cfdd0057153a010f2ea482ce6d9314cc265cc01d33f1869105",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-direction-clipboard-structure-20261008/editor-copies-shared-autom-e9b51-and-external-clipboard-lift-firefox/auto-scope-internal-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-control.png",
+      "sha256": "ecb1b3502a78816c5548bf8e0c4b03045b720453b91682890e9e334c5257a40b",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-control.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-editor.png",
+      "sha256": "4d1d3a681c4d9bd504bec17562fa0bb523cc11ef833c8f204ade2b72a1af239b",
+      "review": "direct visual inspection",
+      "reviewedReference": null
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-original.png",
+      "sha256": "9ed035620c04a24743b943aac647ba72de1391343d1cd41cc0c7dc219069884b",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-chromium/native-rich-paste-original.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-control.png",
+      "sha256": "4001eae403367b428b23431827afab1bcb052b7147eee59ba5b29756a58c0f13",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-control.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-editor.png",
+      "sha256": "747765c910d77a8f6985c178230886b37943a42d7b36264087116bcca43067a1",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-editor.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-original.png",
+      "sha256": "dae0a751bd3377b6edae8ce2babbb989259f2c01d80a820dc2663afbb93c2450",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-firefox/native-rich-paste-original.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-control.png",
+      "sha256": "78d7ecad4ecfe532f34bca044b55a32609feee3f0f77b5ef2ecf19abe220e0cf",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-control.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-editor.png",
+      "sha256": "35fe70b2a7eb7ec2df8d677ad76df6aa081607de73ffd453c4f4ef9b4982d32a",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-editor.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-original.png",
+      "sha256": "661f646b8136bf58bea9d2274d2ffe2376485274ac8036428fd6b03a6345adc1",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/native-rich-paste-fixed-20261008/editor-pastes-native-rich--d2934-cture-marks-source-and-undo-webkit/native-rich-paste-original.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-downloaded-reader.png",
+      "sha256": "1b2ccda6ccddafce15fd4a2f97c9648954e998ce74f42598ac169a609f7e5116",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-imported.png",
+      "sha256": "115683b5f8f5446420c57c344fcd53ee8ae577e186d76edab07b4d3219114afb",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-imported.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-internal-paste.png",
+      "sha256": "ab5c76a25b6899f638166dee52243a2245a085870077f6a7cf346fd168b638b1",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-internal-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native-newline.png",
+      "sha256": "c0f7b42133c4f424d42a924ca62622e42767b52e865859a4e6ae2c92d66868b7",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native-newline.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native.png",
+      "sha256": "daac0046edcfa1a602a0eeadb73b7ead5105158df23014c836e5e96ef4cf697b",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-native.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-property-controls.png",
+      "sha256": "5d0c57cd246086ef5f8ab80c3089bfda2ef0e23a1b094b8a6681a73ad8005a91",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-property-controls.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-real-newline.png",
+      "sha256": "da3a6dd5d52ba3718a07e670ddb201f61b829c9055b120f4c3171afa98d186d9",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-real-newline.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-reopened-editor.png",
+      "sha256": "28645825ed2c43c57cbc924a55192efe2b4ea15134bd657ecdfb142ac548ac62",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-chromium/code-direction-reopened-editor.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-downloaded-reader.png",
+      "sha256": "16ba650991245f0509febb17512352f53fc2219eab33dc3f5c98f275bd167477",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-downloaded-reader.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-imported.png",
+      "sha256": "57579be9041a1520f07f77050a10dc5baa4420ac927edc13b4aceb3aa078c62f",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-imported.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-internal-paste.png",
+      "sha256": "3aea746104505e0e40a48c3be032dea75d74cfe1d06e2288b448ccf06cf3f6d9",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-internal-paste.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native-newline.png",
+      "sha256": "4a80025cb9a90406086b26374b7d95a107793af1b3cfd7a03d6490344cb0d56a",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native-newline.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native.png",
+      "sha256": "192f872624da2d80034aebf8e11f67ef140f333966b30178fca7df1b17e0736f",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-native.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-property-controls.png",
+      "sha256": "82816a555adf04e94055ca480b3349082a10c59e155b3a875801e9b6c8fbbbaa",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-property-controls.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-real-newline.png",
+      "sha256": "fd31c70918e91b0649ee4d8dbc114a60b553a771cc89f0067038cefbf15eacd8",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-real-newline.png"
+    },
+    {
+      "path": "artifacts/native-rich-handoff-final-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-reopened-editor.png",
+      "sha256": "fe867824d9546fecff94f6642fc714f6b7bfae6c6a695de8afba207ea97fc43d",
+      "review": "exact SHA-256 match to reviewed capture",
+      "reviewedReference": "artifacts/code-presentation-delivery-recorded-20261008/editor-retains-technical-c-565c3-tive-copy-and-HTML-fallback-firefox/code-direction-reopened-editor.png"
+    }
+  ]
+}

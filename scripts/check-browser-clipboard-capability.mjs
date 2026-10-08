@@ -7,14 +7,18 @@ import { chromium, firefox, webkit, expect } from '@playwright/test';
 // Windows Playwright WebKit has transferred native default copies but
 // returns empty payloads after copy-event setData/preventDefault, even with
 // text/plain alone. Keep this separate from real Safari production evidence.
+const headless = process.env.FOUNTAIN_CLIPBOARD_HEADED !== '1';
+const selectedEngine = process.env.FOUNTAIN_CLIPBOARD_ENGINE;
+if (selectedEngine && !['chromium', 'firefox', 'webkit'].includes(selectedEngine)) throw new Error('Unknown clipboard diagnostic engine.');
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  if (selectedEngine && engine !== selectedEngine) continue;
   for (const formats of [null, ['text/plain'], ['text/plain', 'text/html', 'application/x-fountainjs+json']]) {
     for (const replaceSource of [false, true]) {
       for (const surface of ['text', 'rich']) {
         // Unique per case: a previous clipboard value cannot masquerade as a
         // successful copy when a browser ignores an event-authored payload.
-        const baseline = `Native clipboard baseline ${engine}/${formats?.length ?? 0}/${replaceSource}/${surface}`;
-        const browser = await type.launch();
+        const baseline = `Native clipboard baseline ${engine}/${formats?.length ?? 0}/${replaceSource}/${surface}/${headless ? 'headless' : 'headed'}`;
+        const browser = await type.launch({ headless });
         try {
           const page = await browser.newPage();
           const control = (label, content) => surface === 'rich'
@@ -51,7 +55,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
             else await expect(destination).toHaveValue(baseline, { timeout: 1500 });
           }
           catch { transferred = false; }
-          console.log(JSON.stringify({ engine, platform: process.platform, surface, formats: formats ?? 'native-default', replaceSource, baseline, transferred,
+          console.log(JSON.stringify({ engine, platform: process.platform, headless, surface, formats: formats ?? 'native-default', replaceSource, baseline, transferred,
             delivered: await page.evaluate(() => globalThis.__nativeClipboardDelivery ?? null),
             beforeInput: await page.evaluate(() => globalThis.__nativeClipboardBeforeInput ?? null),
             actual: surface === 'rich' ? await destination.textContent() : await destination.inputValue(),
