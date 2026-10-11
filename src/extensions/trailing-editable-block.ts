@@ -10,6 +10,7 @@ import {
   type Transaction,
 } from '../core';
 import { defineExtension, type FountainExtension } from './extension';
+import { markAutomaticTrailingParagraph } from '../core/editing-provenance';
 
 export const TRAILING_EDITABLE_BLOCK_META = 'fountain$trailingEditableBlock';
 
@@ -112,6 +113,11 @@ export function createTrailingEditableBlockTransaction(
   for (const path of paths) {
     const root = nodeAtPath(transaction.doc, path);
     const trailing = createEditableBlock(state.schema, options);
+    // Only the default root caret repair has source-only provenance. Custom
+    // types, attributes and nested repairs remain ordinary authored content.
+    if (!path.length && options.nodeType === 'paragraph' && !Object.keys(options.nodeAttributes).length) {
+      markAutomaticTrailingParagraph(trailing);
+    }
     if (!path.length) transaction.replace(root.childCount, root.childCount, [trailing]);
     else transaction.replaceNode(path, [root.copy([...root.content, trailing])]);
   }

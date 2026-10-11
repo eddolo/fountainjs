@@ -1073,7 +1073,13 @@ for (const [preserveComments, preserveFlow] of [[false, false], [true, false], [
     const source = materializeTabs(example.markdown).replaceAll('\n', ending);
     const expected = referenceOutput(referenceRenderer, referenceParser.parse(source)).projection;
     const fallbacks = [];
-    const options = { parseHTMLDocument: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: issue => fallbacks.push(issue) };
+    const issues = [];
+    const importer = new ServerHTMLImporter();
+    const options = { parseHTMLDocument: (segments, target, context) => {
+      const result = importer.parseTextBlockFlowWithReport(segments, target, context);
+      issues.push(...result.issues);
+      return result.nodes;
+    }, onHTMLFlowFallback: issue => fallbacks.push(issue) };
     const doc = MarkdownImporter.parse(source, documentSchema, options);
     const actual = semanticProjection(HTMLExporter.export(doc, { document: false }));
     const captured = MarkdownImporter.parseWithSource(source, documentSchema, options);
@@ -1081,7 +1087,7 @@ for (const [preserveComments, preserveFlow] of [[false, false], [true, false], [
     retention++;
     const matched = JSON.stringify(actual) === JSON.stringify(expected);
     if (matched) counts.set(example.number, (counts.get(example.number) ?? 0) + 1);
-    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, number: example.number, ending, source, expected, actual, fallbacks, matched } }));
+    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, number: example.number, ending, source, expected, actual, issues, fallbacks, matched } }));
   }
   const matches = [...counts].filter(([, count]) => count === 2).map(([number]) => number);
   console.log(`Whole-document optional-container${preserveComments ? '+comment' : ''}${preserveFlow ? '+anonymous-flow' : ''} profile: ${matches.length}/652; ${retention} separate exact-source checks.`);

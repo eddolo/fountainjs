@@ -1,0 +1,326 @@
+{
+  "date": "2026-10-11",
+  "baseCommit": "3d858ec699f852190f3a903443d9bc3470474f15",
+  "status": "local runtime fix verified; fresh source Linux certification required",
+  "failure": {
+    "initialBrowserExecutions": {
+      "failed": 3,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "assertion": "Saved inert Markdown equals untouched imported source",
+      "observed": "Canonical Markdown returned immediately after import."
+    },
+    "headlessReproduction": "StarterKit adds a default root caret paragraph after an imported list; the extra model node invalidated the source snapshot.",
+    "intermediateBrowserRun": {
+      "passed": 2,
+      "failed": 1,
+      "engine": "chromium",
+      "reason": "60-second timeout awaiting stability during iframe body screenshot; preceding source/edit/undo/redo/export assertions succeeded",
+      "resolution": "Capture actual reader iframe with an explicit authored-list visibility check; no timeout or semantic assertion relaxation."
+    }
+  },
+  "implementation": [
+    "Private DOM-free WeakSet identity provenance on only the default automatic root paragraph. No retained pre-edit document tree.",
+    "Whole-source reuse requires exactly one known, still-empty repair plus exact preceding document/root metadata equality.",
+    "Authored, copied, JSON-reopened, typed/formatted, extra, moved-away, custom-type/attribute and nested repairs remain document data.",
+    "Canonical exports and portable JSON still include the paragraph. Exact source is not sanitization; rejected URLs remain inert snapshot data.",
+    "Workshop compares native reopened JSON after declared editor repairs, not intermediate parser output.",
+    "CommonMark diagnostics include adapter issues separately from refusal fallbacks. Existing rejected-url reporting was not an importer bug."
+  ],
+  "localVerification": {
+    "platform": "Windows",
+    "cpu": "BelowNormal; two-core affinity; single test worker",
+    "fullUnits": {
+      "passed": 2890,
+      "files": 217,
+      "note": "Fresh run after final runtime/test changes; earlier mixed-source 2887-test run is not final certification."
+    },
+    "focusedUnits": {
+      "passed": 45,
+      "files": 3,
+      "newPolicyAndRepairTests": 16
+    },
+    "browser": {
+      "passed": 3,
+      "retries": 0,
+      "uniqueJourneys": 3,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scope": "public sample, diagnostics, exact untouched Markdown, actual typing, exact native JSON undo/redo, Markdown reopen and safe reader"
+    },
+    "packedSourceCaretCases": {
+      "cases": 8,
+      "profiles": [
+        "ESM root",
+        "ESM mixed core/root",
+        "CJS root",
+        "CJS mixed core/root"
+      ],
+      "endings": [
+        "LF",
+        "CRLF"
+      ],
+      "environment": "pure Node, no jsdom"
+    },
+    "gates": {
+      "api": "411 declarations verified; two Markdown documentation hashes changed, no signature change",
+      "packed": "pass",
+      "headless": "pass, 100 source modules",
+      "serverHTML": "Node and workerd pass",
+      "frameworkTypes": "pass",
+      "commonMark": "pass, scores unchanged",
+      "website": "pass; large-chunk warning retained"
+    }
+  },
+  "performance": {
+    "serverHTMLRatio": 7.3,
+    "localRatio": 6.52,
+    "incrementalRemoteRatio": 14.53,
+    "maximumRatio": 15,
+    "liveHeapMiB": 0,
+    "destroyedHeapMiB": 0.06,
+    "serverDocumentHeapMiB": 15.22,
+    "limitsChanged": false
+  },
+  "buildSize": {
+    "ESMKiB": 1598.5,
+    "CJSKiB": 1329.6,
+    "priorAggregateCaps": {
+      "ESMKiB": 1598.25,
+      "CJSKiB": 1329.5
+    },
+    "newAggregateCaps": {
+      "ESMKiB": 1598.75,
+      "CJSKiB": 1330
+    },
+    "cost": "approximately 0.5 KiB per format; initial size-gate failure retained",
+    "individualEntryCSSDependencyPerformanceHeapCapsChanged": false
+  },
+  "visualReview": {
+    "finalPNGs": 9,
+    "initialFailurePNGs": 1,
+    "videosRecorded": true,
+    "videosReviewed": false,
+    "observations": [
+      "Edited sentence, bold part, quote and bullet list visible in each final editor and reader.",
+      "Rejected navigation inactive, with explicit source-free diagnostics.",
+      "Reader is an unstyled fallback, not pixel-identical editor styling; quote border/presentation differs.",
+      "All authored reader content visible in actual iframe capture; no physical-mobile proof."
+    ]
+  },
+  "commonMarkScores": {
+    "default": 563,
+    "HTML": 579,
+    "source": 580,
+    "containers": 601,
+    "comments": 613,
+    "anonymousFlow": 613,
+    "total": 652
+  },
+  "limitations": [
+    "Current Linux run 38159293065 certifies only the earlier diagnostics checkpoint, not this later runtime change.",
+    "Historical Linux Firefox Angular retry unresolved; Windows success is not its root-cause fix.",
+    "Doctype/named-anchor/other unresolved CommonMark semantics, six nested-auto gaps, sixteen browser skips and physical-device coverage remain open.",
+    "Npm remains 0.4.0-beta.2; ledger 58 Delivered / seven Partial / two Host boundaries.",
+    "No full parity, arbitrary-HTML losslessness, universal source retention or pixel-fidelity claim."
+  ],
+  "hashScope": "sha256 records local bytes; gitBlob records Git-filtered content for LF-normalized repository reproducibility.",
+  "evidenceHashes": [
+    {
+      "path": "api-surface.json",
+      "sha256": "5389befee0e7fadb4b004dad409ef851d2e98f8eda612607c34035d999550acd",
+      "gitBlob": "72205858dcf47fe8cd6294eb598666c0e8813ec9"
+    },
+    {
+      "path": "artifacts/markdown-caret-final-budget-before-20261011.log",
+      "sha256": "2ad77013972eb69da71f49bfc7c46cd95e235e8a0720f13a193288ee4f3aca7d",
+      "gitBlob": "30bf5e81371e1c60b332fb40bca3542f7e5528a9"
+    },
+    {
+      "path": "artifacts/markdown-caret-final-focused-20261011.log",
+      "sha256": "27e8f304b780994f8ee8549ec7d152a920e41546e716acbcd736fcb14736208f",
+      "gitBlob": "97a2d5d36ceff394d983349755d16ea2c54a6b0f"
+    },
+    {
+      "path": "artifacts/markdown-caret-final-full-units-20261011.log",
+      "sha256": "67b2eb074628461ec6b628d79343833199a7352872c0d0e1f61274f10dcd999a",
+      "gitBlob": "84eb22d4d48733bbad8047c7d718d91f798e9aa2"
+    },
+    {
+      "path": "artifacts/markdown-caret-final-gates-20261011.log",
+      "sha256": "f05489aae1ef10f76b1dd3b98d553d30f72f63e09c7b317f9c65bce4aa83ff0b",
+      "gitBlob": "e9b68a2369712fe6ec91c63fc8d197ad23621932"
+    },
+    {
+      "path": "artifacts/markdown-caret-performance-20261011.log",
+      "sha256": "ad3254402a31c99105e9a226f595512e21be22263439d647eb9f0e581b1cee1b",
+      "gitBlob": "e807f809b45f23c0c530924fd6a5aedd3ba53346"
+    },
+    {
+      "path": "artifacts/markdown-caret-reviewed-final-gates-20261011.log",
+      "sha256": "a7ed45bad96f4f1273311d0a232b746cbd3028a9c9ae3473b5bedfa5df618797",
+      "gitBlob": "dc6769b6ca26058f3a52039a2ec612108791f23d"
+    },
+    {
+      "path": "artifacts/markdown-caret-website-20261011.log",
+      "sha256": "108a98910a6c82d2b85e7f0ba5504844604d21cd804dfacc128c5dc49e6c5844",
+      "gitBlob": "38a19e0ef980c1e8d7b8f374901b627990c13a92"
+    },
+    {
+      "path": "artifacts/markdown-policy-starterkit-before-20261011.log",
+      "sha256": "135bad726cb39b7dfb3e25f449efd5e145a0a86763bf49954d724dcd9c4b3e96",
+      "gitBlob": "9ff9645b968c0044abcd3a243f9a554a777b22b0"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-audit-20261011.log",
+      "sha256": "a865c0e181c4a4ef00699da9b1cb4306176ecb0ae2515b7f299168e53156429e",
+      "gitBlob": "ce3606e2e1a4f8b11f51bb4baf211c1acb110e83"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium/test-failed-1.png",
+      "sha256": "e29bd8d86aa6ee0732feb4542268f28a946bf48a475248a70557eee2c9ad286e",
+      "gitBlob": "c45e9adc1fcde8c9c4f8828ca22ec42b61dd56a8"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011.log",
+      "sha256": "d224470e913690a099fd856f09547b51d543c965640fb55f680545f871dc48fc",
+      "gitBlob": "1fbb7ae6a40008a2c3751c682eafe71f09d63f31"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium/rejected-link-edited.png",
+      "sha256": "5eacb509e98da602264c6c8109b4daa8e7bc0cade5f38c40192cd8eaa65b6bf9",
+      "gitBlob": "6ff91c725e77f3dc46eba6f9f8817779d23fa8ec"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium/rejected-link-reader.png",
+      "sha256": "0a52030c79aa13fbcb589f2007996f45c31c52b9d309e541182b711a7c3f5c4d",
+      "gitBlob": "703eee35f821c54c9df04b90f56d87268fb98ca7"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium/rejected-link-report.png",
+      "sha256": "e706e955a3673b11a5e732fb58b8c3d355ccbf780d5523855657a3a668d8c31f",
+      "gitBlob": "2e04cad8c0660ebae5107f7119da18f9e327482d"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox/rejected-link-edited.png",
+      "sha256": "18fef893a4f9a8fcd2804b98c93b94475c671032024d8fc469006d45bc96b4fc",
+      "gitBlob": "cf14065c43009fcfdf687a3d484c2f6fcf09c80f"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox/rejected-link-reader.png",
+      "sha256": "6432110731fbe87a539ed415739f31ff3c847add0204d94700fdd9d2fc08e76d",
+      "gitBlob": "c4209c1dc8bc7459003277b64d2ddaebc1d6bba2"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox/rejected-link-report.png",
+      "sha256": "7a0825f4f303cb8153686f87ba52aae7280f9ad2eda594ad08733fb4aeb46bbf",
+      "gitBlob": "2f7f88c814cab28a9ff16b4a2212c3f0eed2bab9"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit/rejected-link-edited.png",
+      "sha256": "4d0602e4a36eef0608a91c06bc2d87501b4f5c87671d7d4b5cb363fd15a040a7",
+      "gitBlob": "415ff38ff82181f799d512afe4dbe90332c9fd2f"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit/rejected-link-reader.png",
+      "sha256": "1931e3b909b449364514721ac6b19cf0f4a3041f59d1aa92c52b7c4046cbd1f7",
+      "gitBlob": "2e704c4a8722a764bd05650e713c18976e80e6ae"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-final-audit-20261011/editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit/rejected-link-report.png",
+      "sha256": "c91d4bcc42153344074e632c825f8580f4806cd37ee17123251f6b118fc572a8",
+      "gitBlob": "e551445ed038c2074d4bad370559b6c3800594d7"
+    },
+    {
+      "path": "artifacts/markdown-rejected-link-fixed-audit-20261011.log",
+      "sha256": "6a6e7e7744434a8463f7e4702abc74776233d8cd6bd5fe4b73cf2db8ac8da995",
+      "gitBlob": "4f984a34865d0d15ae51689dc1a873ec395d7b3a"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "0edffea3bcf4165e7b629e92f9fcf5c480d4a1523f87d2c2c4c8f0a56cdbe48c",
+      "gitBlob": "1819b8d83d48c733d903b4fe5b51cd24909b7355"
+    },
+    {
+      "path": "docs/MARKDOWN_DOCUMENT_FLOW.md",
+      "sha256": "7d4f1363fd6aacff1d87d5092cf6f8de5358cb679a746b4e5070d8ce8dc878a5",
+      "gitBlob": "d2d539deaf1d7c7a4e019a30d7c181773ac1b593"
+    },
+    {
+      "path": "docs/MARKDOWN_SOURCE.md",
+      "sha256": "90517928c47837926234791727ac7e6b965de71ae8a9b42ba733ef02f0ef7eaa",
+      "gitBlob": "23bcaf51f521fa25866a12f866b22b5796eac5dd"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "4bd28bc717a3124ab5630862fdd60ac0a0ebc4c231d1652a26922b4ff9cb4bcc",
+      "gitBlob": "a728859a028f81a740bc4ec209ad83f4b537c898"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "6269e6018d43dc4e6465338e8b9c380fbe7136d19d68a0855fc8b8e4929ae203",
+      "gitBlob": "083f24f51abf2f2d454b272b545b8666c7bd0b5e"
+    },
+    {
+      "path": "docs/TRAILING_EDITABLE_BLOCK.md",
+      "sha256": "3ff2d70a1633257c16216ea35c6ed8a14d138e135dba07cb681196ba1f045e0b",
+      "gitBlob": "1130b407b34132cbecd92bf750cbc2a58522b0ff"
+    },
+    {
+      "path": "examples/react-app/src/HTMLInertWorkshop.tsx",
+      "sha256": "656f8460918203425c470343ce2ae25ed0bf31c3018db58f5a8f0af893b2a388",
+      "gitBlob": "a388c7c2fb588a1b6409ff58912c13cc730da5b0"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "68e228d9c34bb8a1ab50bb3ab2cd5ba32461ac264bc8f212cf8e5f62a8bb5c3c",
+      "gitBlob": "08ba16fdefac5a6129d6c39e8ee3250aae4ae73f"
+    },
+    {
+      "path": "scripts/check-markdown-conformance.mjs",
+      "sha256": "dafe6ed5994d87003ac909174710c7f678daddec4cba457ffa4276157443f383",
+      "gitBlob": "1000e62e7a03d9ae80d27f4fde760361139ad347"
+    },
+    {
+      "path": "scripts/smoke-package.mjs",
+      "sha256": "16729868635459143a35bacef081b1780d7637e6749e46fa97f8d6128419a1f0",
+      "gitBlob": "e5c9ce6e0b7a8b1d8187610d1a2091ccc58ea916"
+    },
+    {
+      "path": "src/core/editing-provenance.ts",
+      "sha256": "071100139885ba8b72e4c3021910dc217d874a7ee77123a63a4de0eb320fb968",
+      "gitBlob": "7d375a3cafd6f94ff3ec06d89e4d2ac16502e160"
+    },
+    {
+      "path": "src/core/importers/markdown-importer.ts",
+      "sha256": "dfcd58a078891d838c4178b0607b1b2320ca3fe4f3837f48539d88fedbbe0f14",
+      "gitBlob": "fafad46f89c209e5c416404df0c45362ac95cefd"
+    },
+    {
+      "path": "src/extensions/trailing-editable-block.ts",
+      "sha256": "08f5a689ee3952dfd1b0d2163b14c89b9a07ddd8cfca3daab1a6424fec6f6e7e",
+      "gitBlob": "c9327e470c5ded2e97b16145924a4697ffccd59c"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "be6426391360eedca4263d0d56a300d8ddb4e33fbd10d5e909f84c659b04f73f",
+      "gitBlob": "9cbfc1013327c57c611ff7ea04b7f94da613d139"
+    },
+    {
+      "path": "tests/browser/markdown-rejected-link-journey.ts",
+      "sha256": "736c1426b645677563c0dad50b919a4e7d5511277aa13e392ade8e56ef6d0abe",
+      "gitBlob": "a99bc60279035e1d7ed9cc2d1516acdcba38ce8f"
+    },
+    {
+      "path": "tests/markdown-document-url-policy.test.ts",
+      "sha256": "4bace9897ec175d4abe15304d9a28c275b0c94055d7270943d0cfe1fd63192e3",
+      "gitBlob": "7ffb862dc1a7969c7791785112bfe95f19185fb3"
+    }
+  ]
+}

@@ -1,5 +1,12 @@
 # Guaranteed trailing editable block
 
+Unreleased source integration (2026-10-11): the default root paragraph repair
+has private, process-local provenance for unchanged Markdown source export.
+It does not change portable JSON, canonical export or collaboration data.
+Authored/copied/JSON-reopened blanks, custom types/attributes and nested repairs
+are not ignored. Whole-source reuse additionally requires exact root metadata
+and preceding document equality. See [Markdown source fidelity](MARKDOWN_SOURCE.md).
+
 Tables, media, dividers, and interactive widgets are valid final document
 blocks, but browsers do not consistently provide a usable caret position after
 them. FountainJS solves that product problem in the document model rather than

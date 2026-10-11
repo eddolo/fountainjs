@@ -1,5 +1,18 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased source-in-editor improvement (2026-10-11): the known default root
+caret repair no longer invalidates untouched Markdown source. Full preceding
+content/root metadata must match; authored/custom/copied/serialized blank
+blocks remain data, and URL policy is unchanged. The public cross-block sample
+passes actual editing, exact undo/redo, source export and safe reader checks in
+all three desktop engines. Nine final PNGs plus the initial failure capture
+are reviewed, not the videos. The final suite passes **2,890 tests / 217 files**;
+packed ESM/CJS root/core, headless, Node/workerd, corpus and framework types pass.
+Unchanged performance/heap gates pass at 7.30x / 6.52x / 14.53x against 15x.
+Evidence: `artifacts/markdown-caret-verification-20261011.json`. This is a
+source-integration fix, not another official CommonMark match or parity row.
+New-source Linux certification is still required; npm/ledger remain unchanged.
+
 Current certified runtime checkpoint (verified 2026-10-11): [`e06c6d8` CI](https://github.com/eddolo/fountainjs/actions/runs/37728688811)
 passes every Linux job and Pages: **2,872 units / 215 files**, **760 clean unique
 browser passes / sixteen skips**, with no reported retries. The 776 unique

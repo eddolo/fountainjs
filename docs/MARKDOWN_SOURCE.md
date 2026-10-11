@@ -1,5 +1,22 @@
 # Markdown semantics and source fidelity
 
+## Automatic caret repair and exact source (2026-10-11, Unreleased)
+
+An untouched import ending in a list, table or other non-editable root block
+can retain its exact source after StarterKit adds its default empty caret
+paragraph. A private, DOM-free weak identity marker identifies that repair;
+the entire preceding document and root metadata must still equal the snapshot.
+This is not a rule for dropping arbitrary empty paragraphs. Typing, formatting,
+moving or copying that node, extra empty blocks, JSON reconstruction, custom
+repair attributes/types and nested repairs do not qualify. Exact undo restores
+eligibility. Provenance does not retain another full document tree.
+
+The paragraph remains ordinary portable document JSON. Canonical exports still
+include it; only unchanged-source export can return the original without the
+automatic repair. Source snapshots remain separate from portable document data,
+and original unsafe HTML URLs can remain in the returned source: exact source
+preservation is **not sanitization**. The live editor/reader still reject them.
+
 Experimental [whole-document HTML conversion](MARKDOWN_DOCUMENT_FLOW.md) now
 handles supported raw HTML scopes across paragraphs and lists in one root pass.
 Its separate combined-container profile requires 599/652 semantic matches;

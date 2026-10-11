@@ -1,0 +1,77 @@
+[WebServer] (node:22728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:13768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:1148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:24828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:20108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (2.0m)
+(node:17796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (12.8s)
+(node:29340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (15.5s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+
+    Test timeout of 60000ms exceeded.
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.screenshot: Test ended.
+    Call log:
+      - taking element screenshot
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        - waiting for element to be stable
+
+
+       at markdown-rejected-link-journey.ts:50
+
+      48 |   await editor.screenshot({ path: info.outputPath('rejected-link-edited.png') });
+      49 |   await diagnostics.screenshot({ path: info.outputPath('rejected-link-report.png') });
+    > 50 |   await reader.locator('body').screenshot({ path: info.outputPath('rejected-link-reader.png') });
+         |                                ^
+      51 |   expect(errors).toEqual([]);
+      52 | }
+      53 |
+        at markdownRejectedLinkJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-rejected-link-journey.ts:50:32)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:53:3
+
+    Error Context: artifacts\markdown-rejected-link-fixed-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-fixed-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-rejected-link-fixed-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+  2 passed (3.4m)

@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+New local source-in-editor fix (2026-10-11, Unreleased): preserve untouched
+Markdown despite StarterKit's automatic empty root caret paragraph; no generic
+blank-block omission or URL relaxation. The public inert workshop now has a
+rejected cross-block link sample. Exact source, native editing, undo/redo and
+reopen pass in three recorded browsers; nine final PNGs and one initial failure
+PNG are reviewed. The final stable-source suite passes **2,890 units / 217
+files**, with packed ESM/CJS root/core, headless, Node/workerd, corpus, types
+and unchanged performance/heap gates. Ratios: 7.30x / 6.52x / 14.53x (limit 15x).
+Keep initial source-loss failures and the intermediate iframe-body screenshot
+timeout visible. This fixes integration fidelity, not CommonMark conformance
+or full parity. Evidence: `artifacts/markdown-caret-verification-20261011.json`.
+Fresh Linux certification, nested-auto, physical devices and other open rows
+remain required; ledger and npm version unchanged.
+
 Completed Linux checkpoint (verified 2026-10-11): `e06c6d8` passes all jobs
 and Pages, **2,872 units / 215 files**, **760 clean unique browser passes /
 16 skips** (748 headless + twelve display clipboard passes). The 67 repeated

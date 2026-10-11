@@ -531,7 +531,10 @@ const limits = Object.freeze({
   // Original colour/background data is retained; no CSS/dependency/performance increase.
   // Omitted-anchor diagnostics and empty mark wrappers add ~0.5 KiB ESM / 0.4 CJS.
   // Measured totals: 1598.0 / 1329.1 KiB; unrelated caps unchanged.
-  'all ESM runtime code': 1598.25 * kibibyte,
+  // Known automatic caret provenance preserves untouched source without
+  // retaining an old document tree. Measured 1598.5 / 1329.6 KiB (+~0.5 each).
+  // Aggregate feature capacity only; entries/CSS/performance/heap unchanged.
+  'all ESM runtime code': 1598.75 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -589,7 +592,7 @@ const limits = Object.freeze({
   // Same code direction boundary: measured 1326.2 KiB.
   // Equivalent native rich handoff adds ~1.6 KiB CJS; same boundaries as ESM.
   // Same palette selection: measured 1328.7 KiB (+~0.7); aggregate only.
-  'all CommonJS runtime code': 1329.5 * kibibyte,
+  'all CommonJS runtime code': 1330 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

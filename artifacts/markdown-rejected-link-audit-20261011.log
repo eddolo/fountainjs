@@ -1,0 +1,230 @@
+[WebServer] (node:2540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:4952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:19612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:18484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:16080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (19.7s)
+(node:7256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (11.8s)
+(node:27440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (9.7s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: locator('#inert-source').getByLabel('Saved inert Markdown', { exact: true })
+    Timeout: 5000ms
+    - Expected  - 3
+    + Received  + 2
+
+    - <a href="\*">First **part**.
+    + First **part**.
+
+      > Second part.
+
+      - Last part.
+
+    - </a>
+    -
+    + <p data-fountain-empty="text"></p>
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for locator('#inert-source').getByLabel('Saved inert Markdown', { exact: true })
+        14 × locator resolved to <textarea readonly rows="5" id="inert-saved-markdown">First **part**.↵↵> Second part.↵↵- Last part.↵↵<p…</textarea>
+           - unexpected value "First **part**.
+    
+    > Second part.
+    
+    - Last part.
+    
+    <p data-fountain-empty="text"></p>"
+
+
+       at markdown-rejected-link-journey.ts:25
+
+      23 |   await workshop.getByRole('button', { name: 'Export Markdown and reopen', exact: true }).click();
+      24 |   await expect(workshop.getByRole('status')).toContainText('Complete native JSON retained.');
+    > 25 |   await expect(workshop.getByLabel('Saved inert Markdown', { exact: true })).toHaveValue(source);
+         |                                                                              ^
+      26 |
+      27 |   await editor.locator('[data-fountain-node="paragraph"]').first().click();
+      28 |   await page.keyboard.press('Control+Home');
+        at markdownRejectedLinkJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-rejected-link-journey.ts:25:78)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:53:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: locator('#inert-source').getByLabel('Saved inert Markdown', { exact: true })
+    Timeout: 5000ms
+    - Expected  - 3
+    + Received  + 2
+
+    - <a href="\*">First **part**.
+    + First **part**.
+
+      > Second part.
+
+      - Last part.
+
+    - </a>
+    -
+    + <p data-fountain-empty="text"></p>
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for locator('#inert-source').getByLabel('Saved inert Markdown', { exact: true })
+        14 × locator resolved to <textarea readonly rows="5" id="inert-saved-markdown">First **part**.↵↵> Second part.↵↵- Last part.↵↵<p…</textarea>
+           - unexpected value "First **part**.
+    
+    > Second part.
+    
+    - Last part.
+    
+    <p data-fountain-empty="text"></p>"
+
+
+       at markdown-rejected-link-journey.ts:25
+
+      23 |   await workshop.getByRole('button', { name: 'Export Markdown and reopen', exact: true }).click();
+      24 |   await expect(workshop.getByRole('status')).toContainText('Complete native JSON retained.');
+    > 25 |   await expect(workshop.getByLabel('Saved inert Markdown', { exact: true })).toHaveValue(source);
+         |                                                                              ^
+      26 |
+      27 |   await editor.locator('[data-fountain-node="paragraph"]').first().click();
+      28 |   await page.keyboard.press('Control+Home');
+        at markdownRejectedLinkJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-rejected-link-journey.ts:25:78)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:53:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: locator('#inert-source').getByLabel('Saved inert Markdown', { exact: true })
+    Timeout: 5000ms
+    - Expected  - 3
+    + Received  + 2
+
+    - <a href="\*">First **part**.
+    + First **part**.
+
+      > Second part.
+
+      - Last part.
+
+    - </a>
+    -
+    + <p data-fountain-empty="text"></p>
+
+    Call log:
+      - Expect "toHaveValue" with timeout 5000ms
+      - waiting for locator('#inert-source').getByLabel('Saved inert Markdown', { exact: true })
+        13 × locator resolved to <textarea readonly rows="5" id="inert-saved-markdown">First **part**.↵↵> Second part.↵↵- Last part.↵↵<p…</textarea>
+           - unexpected value "First **part**.
+    
+    > Second part.
+    
+    - Last part.
+    
+    <p data-fountain-empty="text"></p>"
+
+
+       at markdown-rejected-link-journey.ts:25
+
+      23 |   await workshop.getByRole('button', { name: 'Export Markdown and reopen', exact: true }).click();
+      24 |   await expect(workshop.getByRole('status')).toContainText('Complete native JSON retained.');
+    > 25 |   await expect(workshop.getByLabel('Saved inert Markdown', { exact: true })).toHaveValue(source);
+         |                                                                              ^
+      26 |
+      27 |   await editor.locator('[data-fountain-node="paragraph"]').first().click();
+      28 |   await page.keyboard.press('Control+Home');
+        at markdownRejectedLinkJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-rejected-link-journey.ts:25:78)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:53:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-rejected-link-audit-20261011\editor-reports-rejected-cr-04bdd-e-and-real-Markdown-editing-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+    [firefox] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 
+    [webkit] › tests\browser\editor.spec.ts:52:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing 

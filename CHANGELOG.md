@@ -7,6 +7,25 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve untouched Markdown source when StarterKit adds its default empty
+  root caret paragraph. Private weak provenance plus exact preceding-document
+  and root-metadata comparison prevents generic empty-block omission; authored,
+  copied, JSON-reopened, typed/formatted, custom and nested blanks do not qualify.
+  Canonical exports/portable JSON remain unchanged. Fix the public inert
+  workshop's reopen comparison to inspect initialized editor data, and add a
+  rejected cross-block link workflow with real typing, exact undo/redo, source
+  export and safe reader preview. Three recorded desktop journeys pass; nine
+  PNGs directly reviewed. Keep initial source-loss failures and Chromium's
+  iframe-body capture timeout visible; capture the actual reader frame without
+  raising the timeout. Corpus diagnostics now include adapter issues as well
+  as refusals; CommonMark scores and URL policy remain unchanged. Declaration
+  signatures are unchanged; source-matching documentation is updated.
+  Final local regression: 2,890 tests / 217 files; packed root/core ESM/CJS,
+  Node/workerd, headless, framework types and corpus gates pass. Performance
+  ratios are 7.30x / 6.52x / 14.53x against the unchanged 15x ceilings.
+  Measured aggregate feature cost is ~0.5 KiB per format; individual entry,
+  CSS, dependency, performance and heap ceilings remain unchanged. Unreleased.
+
 - Verify `e06c6d8` Linux CI and Pages: 2,872 units / 215 files, 760 clean
   unique browser passes / sixteen skips across 776 cases; 67 repeated
   preflights are separate. Preserve failed-attempt traces, screenshots and

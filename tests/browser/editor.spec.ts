@@ -35,6 +35,7 @@ import { modelIntegrityJourney } from './model-integrity-journey';
 import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-journey';
 import { htmlRawTextJourney } from './html-raw-text-journey';
 import { htmlLinkControlsJourney } from './html-link-controls-journey';
+import { markdownRejectedLinkJourney } from './markdown-rejected-link-journey';
 import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-block-journey';
 import { htmlBlankLineJourney } from './html-blank-line-journey';
 import { textDirectionJourney } from './text-direction-journey';
@@ -46,6 +47,10 @@ import { htmlStructuralDirectionJourney } from './html-structural-direction-jour
 
 test('pastes native rich research notes with structure, marks, source and undo', async ({ page }, info) => {
   await nativeRichPasteJourney(page, info);
+});
+
+test('reports rejected cross-block HTML links while retaining source and real Markdown editing', async ({ page }, info) => {
+  await markdownRejectedLinkJourney(page, info);
 });
 
 test('reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks', async ({ page }, info) => {

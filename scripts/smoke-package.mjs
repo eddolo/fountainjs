@@ -105,6 +105,27 @@ const esmDOCX = await import('fountainjs-editor/docx');
 assertExports(esmDOCX, docxNames, 'ESM DOCX entry');
 const markdownSource = '\uFEFF---\r\ntitle: Packed source\r\n---\r\n# Exact\r\n';
 const markdownSchema = new esmHeadlessCore.Schema(esmCore.CoreSchemaSpec);
+function checkAutomaticCaretSource(engine, kit, label) {
+  for (const ending of ['\n', '\r\n']) {
+    const source = '## Imported\n\n- Last item\n'.replaceAll('\n', ending);
+    const schema = new engine.Schema(kit.schema);
+    const parsed = engine.MarkdownImporter.parseWithSource(source, schema);
+    const editor = engine.createEditor({ schema: kit.schema, state: engine.EditorState.create({
+      schema, doc: parsed.document, plugins: kit.plugins,
+    }) });
+    try {
+      if (editor.state.doc.childCount !== parsed.document.childCount + 1
+        || engine.MarkdownExporter.exportWithSource(editor.state.doc, parsed.source).markdown !== source) {
+        throw new Error(`${label}: automatic root caret repair changed untouched source.`);
+      }
+      if (parsed.source.matches(schema.nodeFromJSON(editor.getJSON()))) {
+        throw new Error(`${label}: JSON data incorrectly inherited automatic repair provenance.`);
+      }
+    } finally { editor.destroy(); }
+  }
+}
+checkAutomaticCaretSource(esmCore, esmCore.StarterKit, 'ESM root');
+checkAutomaticCaretSource(esmHeadlessCore, esmCore.StarterKit, 'ESM mixed core/root');
 const packedDOCX = esmDOCX.exportDOCX(markdownSchema.node('doc', {}, [
   markdownSchema.node('heading', { level: 2 }, [markdownSchema.text('Packed Word')]),
   markdownSchema.node('paragraph', {}, [markdownSchema.text('Pure Node DOCX')]),
@@ -351,6 +372,8 @@ assertExports(require('fountainjs-editor/ai/generated-media'), aiGeneratedMediaN
 const cjsDOCX = require('fountainjs-editor/docx');
 assertExports(cjsDOCX, docxNames, 'CommonJS DOCX entry');
 const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
+checkAutomaticCaretSource(cjsCore, cjsCore.StarterKit, 'CJS root');
+checkAutomaticCaretSource(cjsHeadlessCore, cjsCore.StarterKit, 'CJS mixed core/root');
 const cjsDOCXRoundTrip = cjsDOCX.importDOCX(cjsDOCX.exportDOCX(cjsMarkdownSchema.node('doc', {}, [
   cjsMarkdownSchema.node('paragraph', {}, [cjsMarkdownSchema.text('CommonJS Word')]),
 ])).bytes, cjsMarkdownSchema);

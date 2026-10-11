@@ -1,0 +1,42 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-document-url-policy.test.ts (13 tests | 1 failed) 69ms
+   ❯ cross-container Markdown HTML link policy and source recovery (13)
+     × keeps untouched source after StarterKit adds its automatic trailing caret paragraph 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-document-url-policy.test.ts > cross-container Markdown HTML link policy and source recovery > keeps untouched source after StarterKit adds its automatic trailing caret paragraph
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  18:31:19
+   Duration  2.62s (transform 49%, import 48%, tests 3%)
+
+AssertionError: expected 'First **part**.\n\n> Second part.\n\n…' to be '<a href="\*">First **part**.\n\n> Sec…' // Object.is equality
+
+- Expected
++ Received
+
+- <a href="\*">First **part**.
++ First **part**.
+
+  > Second part.
+
+  - Last part.
+
+- </a>
+-
++ <p data-fountain-empty="text"></p>
+
+ ❯ tests/markdown-document-url-policy.test.ts:26:93
+     24|       expect(editor.state.doc.content.at(-1)?.type.name).toBe('paragra…
+     25|       expect(editor.state.doc.content.at(-1)?.textContent).toBe('');
+     26|       expect(MarkdownExporter.exportWithSource(editor.state.doc, captu…
+       |                                                                                             ^
+     27|     } finally { editor.destroy(); }
+     28|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

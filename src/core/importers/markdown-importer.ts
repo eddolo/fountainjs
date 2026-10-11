@@ -1,4 +1,5 @@
 import { Mark, Node, type Schema } from '../schema';
+import { matchesWithoutAutomaticTrailingParagraph } from '../editing-provenance';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { needsHTMLLinkSource, restoredHTMLLinkSource, restoredLinkDestination } from '../link-destination';
@@ -237,9 +238,12 @@ export class MarkdownSourceSnapshot {
     Object.freeze(this);
   }
 
-  /** True only while the current immutable document is semantically unchanged. */
+  /** Exact authored content; permits one unchanged default root caret repair
+   * with live provenance. Authored/custom/copied empty blocks are not ignored.
+   */
   matches(document: Node): boolean {
-    return this.originalDocument.eq(document);
+    return this.originalDocument.eq(document)
+      || matchesWithoutAutomaticTrailingParagraph(this.originalDocument, document);
   }
 
   /**

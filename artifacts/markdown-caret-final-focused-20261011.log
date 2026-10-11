@@ -1,0 +1,13 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+
+ Test Files  3 passed (3)
+      Tests  45 passed (45)
+   Start at  18:39:26
+   Duration  15.47s (transform 82%, import 16%, tests 2%)
+
+  Transform  transforming modules took 11.70s · 82% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

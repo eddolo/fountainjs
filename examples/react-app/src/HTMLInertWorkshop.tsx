@@ -17,6 +17,7 @@ const samples = {
   links: '<p>Open <a href="folder\\\nreport">destination</a> after.</p>\n<p><a href="java&#10;script:globalThis.linkPwned=1">Blocked unsafe link</a> remains readable.</p>',
   htmlLinks: '<p><a href="/bar\\/)">HTML backslash path</a></p>\n<p><a href="foo  &#10;bar">HTML whitespace destination</a></p>\n<p><a href="foo\\&#10;bar">HTML mixed destination</a></p>\n<p><a href="folder/&#9;name">HTML tab destination</a></p>\n<p><a href="#note&#13;part">HTML CR destination</a></p>',
   literalLinks: '[Path](foo\\bar)\n\n<https://example.com?find=\\*>\n\n[Reference]\n\n[Reference]: /url\\bar\\*baz "Title"\n\n<https://example.com/\\[\\>\n',
+  rejectedLinkScope: '<a href="\\*">First **part**.\n\n> Second part.\n\n- Last part.\n\n</a>\n',
 };
 const importer = new ServerHTMLImporter({ sourceTokens: true });
 const options = { parseHTMLDocument: importer.parseTextBlockFlow.bind(importer) };
@@ -99,8 +100,10 @@ export function HTMLInertWorkshop() {
       const reopened = format === 'Markdown' ? MarkdownImporter.parse(exported.markdown, editor.state.schema, options)
         : format === 'HTML' ? HTMLImporter.parse(html, editor.state.schema)
           : editor.state.schema.nodeFromJSON(JSON.parse(JSON.stringify(current)));
-      const equal = JSON.stringify(current) === JSON.stringify(reopened.toJSON());
       editor.dispatch(editor.createTransaction().replaceDocument(reopened).setMeta('addToHistory', false));
+      // Compare the actual initialized editor, including its declared trailing
+      // caret repair, not an intermediate pre-plugin parser document.
+      const equal = JSON.stringify(current) === JSON.stringify(editor.getJSON());
       setSaved(exported.markdown); setPreview(html);
       setStatus(`${format}: ${equal ? 'Complete native JSON retained.' : 'Round-trip mismatch — inspect the document.'} Source preservation: ${exported.preservation}.`);
     } catch (error) { setStatus(`Reopen refused: ${error instanceof Error ? error.message : String(error)}`); }
@@ -120,6 +123,7 @@ export function HTMLInertWorkshop() {
       <button onClick={() => load(samples.rawEmpty, 'Markdown')}>Empty inert script sample</button>
       <button onClick={() => load(samples.blocks, 'HTML')}>Structured inert block sample</button>
       <button onClick={() => load(samples.links, 'HTML')}>Safe link destination sample</button>
+      <button onClick={() => load(samples.rejectedLinkScope, 'Markdown')}>Rejected cross-block link sample</button>
       <button onClick={() => load(samples.htmlLinks, 'HTML')}>HTML navigation intent sample</button>
       <button onClick={() => load(samples.literalLinks, 'Markdown')}>Literal Markdown link sample</button>
     </div>

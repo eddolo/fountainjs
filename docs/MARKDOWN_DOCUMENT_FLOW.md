@@ -1,5 +1,22 @@
 # Whole-document Markdown HTML conversion
 
+Unreleased source-in-editor follow-up (2026-10-11): a real public-workshop
+journey exposed whole-source loss when StarterKit appended its default caret
+paragraph after an imported final list. Source matching now recognizes only
+that known, still-empty root repair while requiring exact preceding content
+and root metadata; authored/custom/copied/JSON-reopened blanks are not ignored.
+See [the source contract](MARKDOWN_SOURCE.md#automatic-caret-repair-and-exact-source-2026-10-11-unreleased).
+The workshop compares reopened data after editor initialization, not before its
+declared repairs. Its rejected cross-block link sample demonstrates actual
+typing, exact undo/redo, source export and safe reader preview.
+
+The corpus diagnostic now prints adapter `issues` alongside refusal `fallbacks`.
+An empty fallback list never meant that conversion was lossless: example 631
+already reported `rejected-url` through the adapter's report API. Its unsafe/
+ambiguous navigation stays rejected; its original spelling can survive only in
+the separate source snapshot. No URL-policy relaxation or CommonMark score
+promotion follows from source retention or better diagnostics.
+
 ## Current remaining CommonMark work (2026-10-08, Unreleased)
 
 The version-12 neutral comparator distinguishes `<a>` (a non-hyperlink
