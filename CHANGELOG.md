@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Verify `e06c6d8` Linux CI and Pages: 2,872 units / 215 files, 760 clean
+  unique browser passes / sixteen skips across 776 cases; 67 repeated
+  preflights are separate. Preserve failed-attempt traces, screenshots and
+  context even when CI passes on retry, and isolate every preflight's output
+  directory. Add passive Angular attachment-selection snapshots without
+  changing runtime behavior, timeouts, retries or assertions. Three final
+  recorded Windows journeys and six earlier repeats pass; nine PNGs reviewed.
+  Types, 26 focused units and two workflow retention contracts pass. The older
+  Linux Firefox retry is still unresolved. No npm/parity promotion.
+
 - Record the successful `0928289` Linux checkpoint separately: 2,855 units /
   214 files; 756 clean unique browser passes, one Firefox Angular retry-pass
   and sixteen skips across 773 cases. Keep the retry visible as follow-up work;

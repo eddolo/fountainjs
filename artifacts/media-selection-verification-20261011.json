@@ -1,0 +1,169 @@
+{
+  "date": "2026-10-11",
+  "baseCommit": "e06c6d85ac26057b84eb163303d4d79531137a5f",
+  "status": "diagnostic and CI evidence retention improvement, not a runtime selection fix",
+  "historicalFailure": {
+    "run": 37725304063,
+    "commit": "0928289f323e6b76ee1924c96ef5989381dddf2f",
+    "browser": "Linux Firefox",
+    "symptom": "60-second first-attempt timeout awaiting Selected media attributes after Select attachment; retry #1 passed",
+    "cause": "unresolved",
+    "artifactAudit": "direction-and-document-focus-evidence artifact 11528268125 contains no Angular failed-attempt screenshot/trace; old generic playwright-report upload ran only on job failure"
+  },
+  "changes": [
+    "Upload HTML report, failed-attempt screenshots, context, traces and bounded Angular media event JSON on every browser-job conclusion.",
+    "Give all five test invocations distinct output directories so later runs cannot delete preflight failed attempts.",
+    "Passive native event and DOM-marker recorder; no state/focus/selection writes; maximum 80 native snapshots plus one teardown snapshot.",
+    "No timeout increase, retry change, assertion relaxation or runtime engine edit."
+  ],
+  "localVerification": {
+    "platform": "Windows",
+    "workers": 1,
+    "retries": 0,
+    "cpu": "BelowNormal; inherited two-core affinity",
+    "initialRecordedExecutions": {
+      "passed": 6,
+      "uniqueJourneys": 3,
+      "repeatEach": 2,
+      "note": "Earlier recorder had no final teardown snapshot; not used to claim final recorder coverage."
+    },
+    "finalRecordedExecutions": {
+      "passed": 3,
+      "uniqueJourneys": 3,
+      "repeatEach": 1,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "finalSnapshots": [
+        {
+          "engine": "chromium",
+          "events": 18,
+          "selectedMediaPath": "5",
+          "selectedNodePath": "5",
+          "attributesPresent": true
+        },
+        {
+          "engine": "firefox",
+          "events": 14,
+          "selectedMediaPath": "5",
+          "selectedNodePath": "5",
+          "attributesPresent": true
+        },
+        {
+          "engine": "webkit",
+          "events": 14,
+          "selectedMediaPath": "5",
+          "selectedNodePath": "5",
+          "attributesPresent": true
+        }
+      ]
+    },
+    "focusedUnits": {
+      "passed": 26,
+      "files": 5
+    },
+    "workflowRegression": {
+      "passed": 2,
+      "files": 1
+    },
+    "frameworkTypes": "passed"
+  },
+  "visualReview": {
+    "screenshotsReviewed": 9,
+    "committedFinalScreenshots": 3,
+    "videosRecorded": true,
+    "videosReviewed": false,
+    "observations": [
+      "Actual local PNG displays and edited bold sentence is visible.",
+      "Viewport scrolling/cropping differs by engine; screenshots alone do not establish attachment-panel state.",
+      "Final event snapshots and unchanged fill/update/delete/undo assertions establish attachment controls for these local journeys.",
+      "Unsupported SVG upload intentionally reports rejection; local raster insertion preserves original PNG bytes."
+    ]
+  },
+  "limitations": [
+    "Windows success does not certify the Linux-specific race; passive instrumentation may affect scheduling.",
+    "No historical failing trace was available to identify the root cause.",
+    "No full current-source Linux certification yet; retry evidence upload still needs its first remote run.",
+    "No parity score, CommonMark score, npm version or delivered-row promotion."
+  ],
+  "hashScope": "sha256 records local downloaded bytes; gitBlob records Git-filtered content for LF-normalized repository reproducibility.",
+  "evidenceHashes": [
+    {
+      "path": "artifacts/media-selection-audit-20261011.log",
+      "sha256": "bd2ef2f6cfb1d78848e4dbf324096001d1901f4f0193d0b85b4f7349de04e5a1",
+      "gitBlob": "85e7e5af7d14094828064a1f6edfa5bbe58c8390"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011.log",
+      "sha256": "59e45c1381766b948d3cfe16b01da98557f0444791984a05473bb9adc46ac4c2",
+      "gitBlob": "f848f620e077912ccbdbd3d09a370d2ba98fbe74"
+    },
+    {
+      "path": "artifacts/media-selection-typecheck-20261011.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "gitBlob": "7d7f996b0d05ba3daa04e2474d964589fcb01f11"
+    },
+    {
+      "path": "artifacts/media-selection-units-20261011.log",
+      "sha256": "3e2f08d5287201480650f84c4fb00e3ddf60d78d135074a5f2614ba13f157497",
+      "gitBlob": "453135b25833640abd293780b43a247909d7b50d"
+    },
+    {
+      "path": "artifacts/ci-browser-evidence-units-20261011.log",
+      "sha256": "d4fc53240d740622eb0bcfab1dd6674306a981ca2a2ddc6a209490c5fcd86962",
+      "gitBlob": "7fb6dd86c6a15fb87307bf87cf3e11d14479fb60"
+    },
+    {
+      "path": "tests/browser/media-selection-diagnostics.ts",
+      "sha256": "38cd418ef55b6174651ee79ec7538f76e70be4270eebb3dba84c83f7ca2204c7",
+      "gitBlob": "0f6cf79e20b4f938f0f5f5ec0324b4d37a8c94e5"
+    },
+    {
+      "path": "tests/browser/angular-campaign-journey.ts",
+      "sha256": "fa98fe1d204df2412557318dad22532398266ee13df988a5b7b09b0223195af9",
+      "gitBlob": "79c54df35a495a408ff3e2470dc0205f3fa7f61b"
+    },
+    {
+      "path": "tests/ci-browser-evidence.test.ts",
+      "sha256": "50b2777268155af840db6a20f09534b1528be97980091d31877152132868d9f5",
+      "gitBlob": "8fde5e64a707dfe61ffb71abcc988c401950d930"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "4a483b601417e0e1fc44fa26a4e8b0246568a9446f1ad678cf95ba4c5b4609fe",
+      "gitBlob": "7ab206d4cb6aa3238abc5e5e1438afdfd6d2ac2e"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-chromium/angular-edited-campaign.png",
+      "sha256": "023b3bc0e94af58eb5daf6cf521e2097dedd53a688979a04b96ea43703037112",
+      "gitBlob": "8f9c2e85ece69e22f25c21f8cdc7350b39ae7fc5"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-chromium/media-selection-events.json",
+      "sha256": "62a082532d341c21065ab79555e2870cfeae84ffa6d8bb99ed5eb2a577352ecc",
+      "gitBlob": "9ac8c148e6f5480ac2c927487afac00c5088fb34"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-firefox/angular-edited-campaign.png",
+      "sha256": "e3de6d1418dc975169562a215c368398098c78c05abace599a4fa3fd37fb3fc4",
+      "gitBlob": "a6b6fbf64fed1f2d5e7e670fff8c1a245ae5a097"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-firefox/media-selection-events.json",
+      "sha256": "fa704731242f13f88c2aa70429a120c885d47ece4c9b512fc4a1deea7b59b8df",
+      "gitBlob": "c26628d018cee5c980ac1f9b54c37adafce3e4f6"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-webkit/angular-edited-campaign.png",
+      "sha256": "608b99b03bf313faa2b600985155279243a386d1e7a81c6073e061f1845fd209",
+      "gitBlob": "af761a3b3889d02a247a5d96dc54876cbbf215a1"
+    },
+    {
+      "path": "artifacts/media-selection-final-audit-20261011/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-webkit/media-selection-events.json",
+      "sha256": "5ed7c5fa793ef191bca693331e3198da5e46099caacab5ddc97c462b64bfe4b6",
+      "gitBlob": "daed0a7a978d7dbc2369e65801aeac7ba0781a1c"
+    }
+  ]
+}

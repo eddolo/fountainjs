@@ -127,9 +127,9 @@ jobs:
       - name: Native clipboard workflows on the Linux display
         run: xvfb-run --auto-servernum pnpm exec playwright test --headed --project=chromium --project=firefox --project=webkit --workers=1 --output=structural-direction-clipboard-results --grep "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"
       - name: Native control and document focus preflight
-        run: pnpm exec playwright test --project=webkit --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
+        run: pnpm exec playwright test --project=webkit --output=native-focus-preflight-results --grep "opens and cancels public configuration panels|keeps the public native colour field|preserves inert HTML comments|edits RTL blocks|compares list-first code text-click"
       - name: Firefox native RTL selection preflight
-        run: pnpm exec playwright test --project=firefox --grep "edits RTL blocks|compares list-first code text-click"
+        run: pnpm exec playwright test --project=firefox --output=firefox-selection-preflight-results --grep "edits RTL blocks|compares list-first code text-click"
       - name: Remaining headless browser matrix
         run: pnpm exec playwright test --grep-invert "${FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN}"
       - uses: actions/upload-artifact@v4
@@ -224,9 +224,29 @@ jobs:
             test-results/**/externally-changed-equations.docx
           if-no-files-found: ignore
           retention-days: 7
+      # A retry-pass is still reliability evidence. Keep failed-attempt traces
+      # and screenshots even when the job's final conclusion is success.
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
           name: playwright-report
-          path: playwright-report
+          path: |
+            playwright-report
+            test-results/**/trace.zip
+            test-results/**/test-failed-*.png
+            test-results/**/error-context.md
+            test-results/**/media-selection-events.json
+            structural-direction-preflight-results/**/trace.zip
+            structural-direction-preflight-results/**/test-failed-*.png
+            structural-direction-preflight-results/**/error-context.md
+            structural-direction-clipboard-results/**/trace.zip
+            structural-direction-clipboard-results/**/test-failed-*.png
+            structural-direction-clipboard-results/**/error-context.md
+            native-focus-preflight-results/**/trace.zip
+            native-focus-preflight-results/**/test-failed-*.png
+            native-focus-preflight-results/**/error-context.md
+            firefox-selection-preflight-results/**/trace.zip
+            firefox-selection-preflight-results/**/test-failed-*.png
+            firefox-selection-preflight-results/**/error-context.md
+          if-no-files-found: ignore
           retention-days: 7

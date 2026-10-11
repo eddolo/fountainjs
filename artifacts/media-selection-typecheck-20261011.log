@@ -1,0 +1,7 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+$ pnpm --dir tools/svelte-check exec svelte-check --workspace ../.. --tsconfig tsconfig.svelte.json --fail-on-warnings
+Loading svelte-check in workspace: c:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings
+$ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json --noEmit && pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json --noEmit

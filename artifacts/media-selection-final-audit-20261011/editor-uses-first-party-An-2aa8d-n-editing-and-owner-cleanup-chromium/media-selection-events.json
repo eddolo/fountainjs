@@ -1,0 +1,456 @@
+{
+  "scope": "first attachment selection only; native events and DOM markers; no editor/selection/focus API writes",
+  "maximumNativeEvents": 80,
+  "maximumEvents": 81,
+  "events": [
+    {
+      "event": "installed",
+      "time": 3492,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerdown",
+      "time": 3753.5,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerdown:after",
+      "time": 3753.7000000476837,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mousedown",
+      "time": 3754.399999976158,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mousedown:after",
+      "time": 3754.5,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "focusin",
+      "time": 3755.5,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "focusin:after",
+      "time": 3755.600000023842,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerup",
+      "time": 3758.100000023842,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerup:after",
+      "time": 3758.7999999523163,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mouseup",
+      "time": 3759.399999976158,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mouseup:after",
+      "time": 3759.600000023842,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "click",
+      "time": 3760.100000023842,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "click:after",
+      "time": 3760.2000000476837,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "selectionchange",
+      "time": 3771.399999976158,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": "5",
+      "selectedNodePath": "5",
+      "attributesPresent": true
+    },
+    {
+      "event": "selectionchange:after",
+      "time": 3771.399999976158,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": "5",
+      "selectedNodePath": "5",
+      "attributesPresent": true
+    },
+    {
+      "event": "selectionchange",
+      "time": 3771.7000000476837,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": "5",
+      "selectedNodePath": "5",
+      "attributesPresent": true
+    },
+    {
+      "event": "selectionchange:after",
+      "time": 3771.7000000476837,
+      "active": {
+        "tag": "BUTTON",
+        "className": "fountain-file__select"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": "5",
+      "selectedNodePath": "5",
+      "attributesPresent": true
+    },
+    {
+      "event": "teardown",
+      "time": 5058.600000023842,
+      "selectedMediaPath": "5",
+      "selectedNodePath": "5",
+      "attributesPresent": true
+    }
+  ]
+}

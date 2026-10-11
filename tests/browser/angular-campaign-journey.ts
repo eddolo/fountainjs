@@ -1,4 +1,5 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
+import { recordMediaSelection } from './media-selection-diagnostics';
 
 export async function angularCampaignJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];
@@ -9,8 +10,11 @@ export async function angularCampaignJourney(page: Page, info: TestInfo) {
   await expect(editor).toBeVisible();
   await expect(page.getByLabel('Editor lifecycle', { exact: true })).toHaveText('Created: 1 · Destroyed: 0');
   const attachment = editor.locator('[data-fountain-node="file_attachment"]');
-  await attachment.getByRole('button', { name: 'Select attachment', exact: true }).click();
-  await page.getByRole('group', { name: 'Selected media attributes' }).scrollIntoViewIfNeeded();
+  const stopRecording = await recordMediaSelection(page, info);
+  try {
+    await attachment.getByRole('button', { name: 'Select attachment', exact: true }).click();
+    await page.getByRole('group', { name: 'Selected media attributes' }).scrollIntoViewIfNeeded();
+  } finally { await stopRecording(); }
   await page.getByLabel('Media title or filename', { exact: true }).fill('Reviewed artwork.svg');
   await page.getByLabel('Media caption or description', { exact: true }).fill('Approved preview and downloadable source.');
   await expect(page.getByLabel('Media title or filename', { exact: true })).toHaveValue('Reviewed artwork.svg');

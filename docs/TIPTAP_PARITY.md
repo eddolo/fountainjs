@@ -1,5 +1,22 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Current certified runtime checkpoint (verified 2026-10-11): [`e06c6d8` CI](https://github.com/eddolo/fountainjs/actions/runs/37728688811)
+passes every Linux job and Pages: **2,872 units / 215 files**, **760 clean unique
+browser passes / sixteen skips**, with no reported retries. The 776 unique
+cases partition into 748 headless passes / sixteen skips and twelve display
+clipboard passes; 67 repeated preflights are counted separately. Evidence:
+`artifacts/ci-e06c6d8-verification-20261011.json`.
+
+Unreleased diagnostics now retain failed-attempt browser evidence on retry-pass
+jobs and preserve distinct preflight output folders. Three final Windows
+recorded Angular journeys pass with selected-media controls present; the earlier
+six repeats also pass. Nine PNGs are directly reviewed, not the recorded videos.
+The historical `0928289` Firefox retry remains unexplained: Windows successes
+and one later clean Linux run are not a root-cause fix. Types, 26 focused units
+and two CI retention contracts pass. Evidence:
+`artifacts/media-selection-verification-20261011.json`. Full CommonMark,
+nested-auto, physical devices and wider parity remain open; npm/ledger unchanged.
+
 Current local runtime follow-up (2026-10-08, Unreleased): omitted HTML
 bookmark/anchor identity is now explicitly reported without echoing private
 source values. Empty linked/formatted model runs keep their metadata and

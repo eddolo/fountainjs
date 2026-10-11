@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-11",
+  "sourceCommit": "e06c6d85ac26057b84eb163303d4d79531137a5f",
+  "status": "terminal successful Linux CI; no reported browser retries",
+  "ci": {
+    "run": 37728688811,
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/37728688811",
+    "conclusion": "success",
+    "jobs": {
+      "browser": 113152631561,
+      "verify": 113152631647,
+      "performance": 113152631599,
+      "lean": 113152631399
+    },
+    "allJobs": "success",
+    "pages": {
+      "run": 37728688815,
+      "conclusion": "success"
+    }
+  },
+  "units": {
+    "tests": 2872,
+    "files": 215
+  },
+  "uniqueBrowserMatrix": {
+    "scheduled": 776,
+    "cleanPassed": 760,
+    "retryPassed": 0,
+    "skipped": 16,
+    "headless": {
+      "scheduled": 764,
+      "cleanPassed": 748,
+      "retryPassed": 0,
+      "skipped": 16
+    },
+    "displayClipboard": {
+      "scheduled": 12,
+      "cleanPassed": 12,
+      "workers": 1
+    }
+  },
+  "additionalPreflightExecutions": {
+    "structural": 60,
+    "nativeFocus": 5,
+    "firefoxSelection": 2,
+    "note": "67 repeated subset executions, not additional unique cases"
+  },
+  "performance": {
+    "serverHTMLRatio": 8.68,
+    "localRatio": 9.47,
+    "incrementalRemoteRatio": 8.21,
+    "maximumRatio": 15,
+    "conclusion": "success"
+  },
+  "limitations": [
+    "The historical 0928289 Firefox Angular retry is not diagnosed by one later clean run.",
+    "No new Linux artifact visual certification is claimed here; the e06c6d8 source has separate local anchor-view evidence.",
+    "Six nested-auto diagnostic gaps, sixteen browser skips, physical-device coverage and broader parity remain open.",
+    "This commit does not certify later CI/diagnostic-only changes; npm and parity ledger unchanged."
+  ],
+  "hashScope": "sha256 records local downloaded bytes; gitBlob records Git-filtered content for LF-normalized repository reproducibility.",
+  "evidenceHashes": [
+    {
+      "path": "artifacts/ci-e06c6d8-browser-20261011.log",
+      "sha256": "9877c4a9a915884f862ae80ed13a1fa85262ba7fca05e18645ecf2910f5db109",
+      "gitBlob": "e3075fb2c024b61abb43e136b1c8b2b76f5c2f91"
+    },
+    {
+      "path": "artifacts/ci-e06c6d8-verify-20261011.log",
+      "sha256": "0c54936bf87019bdcf057eea4583bcadd1f0500df8eda385e7e6cba1131aacd9",
+      "gitBlob": "c5a254c8120b0257a7a2a0f564b3f2afeb95df6f"
+    },
+    {
+      "path": "artifacts/ci-e06c6d8-performance-20261011.log",
+      "sha256": "1bde31e7c612ddb275c4d78716ff0faba6f8169bf751928637b2754f866dca25",
+      "gitBlob": "a8b150fd801889867fb3af92449e205e530bf8ca"
+    }
+  ]
+}

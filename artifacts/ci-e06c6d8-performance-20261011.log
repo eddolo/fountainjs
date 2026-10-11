@@ -1,0 +1,437 @@
+performance	UNKNOWN STEP	﻿2026-10-08T04:41:32.3075163Z Current runner version: '2.337.0'
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3099966Z ##[group]Runner Image Provisioner
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3100845Z Hosted Compute Agent
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3101525Z Version: 20261002.596
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3102185Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3102939Z Build Date: 2026-10-02T22:28:27Z
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3103638Z Worker ID: {8e6131eb-e641-43a9-a7ac-660b92b4a330}
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3104365Z Region: westus
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3105000Z Cloud: Azure
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3105536Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3107728Z ##[group]Operating System
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3108402Z Ubuntu
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3108917Z 24.04.5
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3109509Z LTS
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3110024Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3110554Z ##[group]Runner Image
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3111209Z Image: ubuntu-24.04
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3111808Z Version: 20261004.327.1
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3113101Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3114652Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3116001Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3117145Z ##[group]GITHUB_TOKEN Permissions
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3119363Z Contents: read
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3120257Z Metadata: read
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3120908Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3122954Z Secret source: Actions
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3124017Z Cache mode: write
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3124682Z Prepare workflow directory
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3521961Z Prepare all required actions
+performance	UNKNOWN STEP	2026-10-08T04:41:32.3571088Z Getting action download info
+performance	UNKNOWN STEP	2026-10-08T04:41:32.6982008Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+performance	UNKNOWN STEP	2026-10-08T04:41:32.7960251Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+performance	UNKNOWN STEP	2026-10-08T04:41:33.2766274Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+performance	UNKNOWN STEP	2026-10-08T04:41:33.4692194Z Complete job name: performance
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5520729Z ##[group]Run actions/checkout@v4
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5521719Z with:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5522209Z   repository: eddolo/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5526721Z   token: ***
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5527208Z   ssh-strict: true
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5527687Z   ssh-user: git
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5528169Z   persist-credentials: true
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5528694Z   clean: true
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5529180Z   sparse-checkout-cone-mode: true
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5529754Z   fetch-depth: 1
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5530231Z   fetch-tags: false
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5530723Z   show-progress: true
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5531211Z   lfs: false
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5531669Z   submodules: false
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5532161Z   set-safe-directory: true
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5532715Z   allow-unsafe-pr-checkout: false
+performance	UNKNOWN STEP	2026-10-08T04:41:33.5533589Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6516630Z Syncing repository: eddolo/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6518628Z ##[group]Getting Git version info
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6519541Z Working directory is '/home/runner/work/fountainjs/fountainjs'
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6520665Z [command]/usr/bin/git version
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6610509Z git version 2.55.0
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6632764Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6647272Z Temporarily overriding HOME='/home/runner/work/_temp/226c2fc4-a11b-4fb5-9d48-c3f7593cb161' before making global git config changes
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6649860Z Adding repository directory to the temporary git global config as a safe directory
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6652435Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6700473Z Deleting the contents of '/home/runner/work/fountainjs/fountainjs'
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6705391Z ##[group]Initializing the repository
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6709779Z [command]/usr/bin/git init /home/runner/work/fountainjs/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6816384Z hint: Using 'master' as the name for the initial branch. This default branch name
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6818428Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6820052Z hint: to use in all of your new repositories, which will suppress this warning,
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6821725Z hint: call:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6822451Z hint:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6823749Z hint: 	git config --global init.defaultBranch <name>
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6824874Z hint:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6825654Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6827177Z hint: 'development'. The just-created branch can be renamed via this command:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6828127Z hint:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6828710Z hint: 	git branch -m <name>
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6829556Z hint:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6830967Z hint: Disable this message with "git config set advice.defaultBranchName false"
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6832617Z Initialized empty Git repository in /home/runner/work/fountainjs/fountainjs/.git/
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6836235Z [command]/usr/bin/git remote add origin https://github.com/eddolo/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6884175Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6885072Z ##[group]Disabling automatic garbage collection
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6888382Z [command]/usr/bin/git config --local gc.auto 0
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6918624Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6919417Z ##[group]Setting up auth
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6926974Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+performance	UNKNOWN STEP	2026-10-08T04:41:33.6957039Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7326137Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7357738Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7580529Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7613160Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7839118Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7878351Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7887479Z ##[group]Fetching the repository
+performance	UNKNOWN STEP	2026-10-08T04:41:33.7888968Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e06c6d85ac26057b84eb163303d4d79531137a5f:refs/remotes/origin/master
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3763152Z From https://github.com/eddolo/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3766161Z  * [new ref]         e06c6d85ac26057b84eb163303d4d79531137a5f -> origin/master
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3770664Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3771983Z ##[group]Determining the checkout info
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3773531Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3776527Z [command]/usr/bin/git sparse-checkout disable
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3826229Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3854476Z ##[group]Checking out the ref
+performance	UNKNOWN STEP	2026-10-08T04:41:35.3858105Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+performance	UNKNOWN STEP	2026-10-08T04:41:35.7987453Z Reset branch 'master'
+performance	UNKNOWN STEP	2026-10-08T04:41:35.7993183Z branch 'master' set up to track 'origin/master'.
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8017607Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8060663Z [command]/usr/bin/git log -1 --format=%H
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8084769Z e06c6d85ac26057b84eb163303d4d79531137a5f
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8334386Z ##[group]Run pnpm/action-setup@v4
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8334708Z with:
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8334906Z   version: 11.19.0
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8335119Z   dest: ~/setup-pnpm
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8335339Z   run_install: null
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8335554Z   cache: false
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8336266Z   cache_dependency_path: pnpm-lock.yaml
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8336582Z   package_json_file: package.json
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8336838Z   standalone: false
+performance	UNKNOWN STEP	2026-10-08T04:41:35.8337057Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:35.9816325Z ##[group]Running self-installer...
+performance	UNKNOWN STEP	2026-10-08T04:41:36.3879390Z (node:2319) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+performance	UNKNOWN STEP	2026-10-08T04:41:36.3881209Z (Use `node --trace-deprecation ...` to show where the warning was created)
+performance	UNKNOWN STEP	2026-10-08T04:41:36.5087561Z Progress: resolved 1, reused 0, downloaded 0, added 0
+performance	UNKNOWN STEP	2026-10-08T04:41:36.5180513Z Packages: +1
+performance	UNKNOWN STEP	2026-10-08T04:41:36.5181504Z +
+performance	UNKNOWN STEP	2026-10-08T04:41:36.9522226Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+performance	UNKNOWN STEP	2026-10-08T04:41:36.9805251Z 
+performance	UNKNOWN STEP	2026-10-08T04:41:36.9805934Z dependencies:
+performance	UNKNOWN STEP	2026-10-08T04:41:36.9806433Z + pnpm 11.19.0 (12.10.1 is available)
+performance	UNKNOWN STEP	2026-10-08T04:41:36.9806813Z 
+performance	UNKNOWN STEP	2026-10-08T04:41:36.9830186Z Done in 832ms
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1084486Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1085309Z Installation Completed!
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1282989Z ##[group]Run actions/setup-node@v4
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1283308Z with:
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1283511Z   node-version: 24
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1283756Z   cache: pnpm
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1283961Z   always-auth: false
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1284184Z   check-latest: false
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1287244Z   token: ***
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1287485Z env:
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1287751Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	UNKNOWN STEP	2026-10-08T04:41:37.1288075Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:37.2793076Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+performance	UNKNOWN STEP	2026-10-08T04:41:37.2801043Z ##[group]Environment details
+performance	UNKNOWN STEP	2026-10-08T04:41:37.2807675Z (node:2333) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+performance	UNKNOWN STEP	2026-10-08T04:41:37.2808889Z (Use `node --trace-deprecation ...` to show where the warning was created)
+performance	UNKNOWN STEP	2026-10-08T04:41:37.9428474Z node: v24.21.0
+performance	UNKNOWN STEP	2026-10-08T04:41:37.9429375Z npm: 11.19.0
+performance	UNKNOWN STEP	2026-10-08T04:41:37.9429858Z yarn: 1.22.22
+performance	UNKNOWN STEP	2026-10-08T04:41:37.9431644Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:37.9473504Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+performance	UNKNOWN STEP	2026-10-08T04:41:38.5915066Z /home/runner/setup-pnpm/node_modules/.bin/store/v11
+performance	UNKNOWN STEP	2026-10-08T04:41:38.8609488Z Cache hit for: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+performance	UNKNOWN STEP	2026-10-08T04:41:38.8734433Z (node:2333) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+performance	UNKNOWN STEP	2026-10-08T04:41:40.1479435Z Received 0 of 143139869 (0.0%), 0.0 MBs/sec
+performance	UNKNOWN STEP	2026-10-08T04:41:41.1509149Z Received 96468992 of 143139869 (67.4%), 45.9 MBs/sec
+performance	UNKNOWN STEP	2026-10-08T04:41:42.1507321Z Received 130023424 of 143139869 (90.8%), 41.3 MBs/sec
+performance	UNKNOWN STEP	2026-10-08T04:41:43.1511004Z Received 138945565 of 143139869 (97.1%), 33.1 MBs/sec
+performance	UNKNOWN STEP	2026-10-08T04:41:44.1509026Z Received 138945565 of 143139869 (97.1%), 26.5 MBs/sec
+performance	UNKNOWN STEP	2026-10-08T04:41:45.1167040Z Received 143139869 of 143139869 (100.0%), 22.9 MBs/sec
+performance	UNKNOWN STEP	2026-10-08T04:41:45.1168525Z Cache Size: ~137 MB (143139869 B)
+performance	UNKNOWN STEP	2026-10-08T04:41:45.1207692Z [command]/usr/bin/tar -xf /home/runner/work/_temp/c22da212-9c27-4d02-9215-77ac243df589/cache.tzst -P -C /home/runner/work/fountainjs/fountainjs --use-compress-program unzstd
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5303864Z Cache restored successfully
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5374969Z Cache restored from key: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5532249Z ##[group]Run pnpm install --frozen-lockfile
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5532675Z ^[[36;1mpnpm install --frozen-lockfile^[[0m
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5798139Z shell: /usr/bin/bash -e {0}
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5798442Z env:
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5798725Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	UNKNOWN STEP	2026-10-08T04:41:46.5799302Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:47.0421465Z Scope: all 3 workspace projects
+performance	UNKNOWN STEP	2026-10-08T04:41:47.1053023Z ? Verifying lockfile against supply-chain policies (340 entries)...
+performance	UNKNOWN STEP	2026-10-08T04:41:47.1147324Z Lockfile is up to date, resolution step is skipped
+performance	UNKNOWN STEP	2026-10-08T04:41:47.2247379Z Progress: resolved 1, reused 0, downloaded 0, added 0
+performance	UNKNOWN STEP	2026-10-08T04:41:47.2966479Z Packages: +281
+performance	UNKNOWN STEP	2026-10-08T04:41:47.2997028Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+performance	UNKNOWN STEP	2026-10-08T04:41:48.0670155Z Packages are hard linked from the content-addressable store to the virtual store.
+performance	UNKNOWN STEP	2026-10-08T04:41:48.0671863Z   Content-addressable store is at: /home/runner/setup-pnpm/node_modules/.bin/store/v11
+performance	UNKNOWN STEP	2026-10-08T04:41:48.0716721Z   Virtual store is at:             node_modules/.pnpm
+performance	UNKNOWN STEP	2026-10-08T04:41:48.2308864Z Progress: resolved 281, reused 281, downloaded 0, added 10
+performance	UNKNOWN STEP	2026-10-08T04:41:48.8013653Z Progress: resolved 281, reused 281, downloaded 0, added 281, done
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0304552Z ✓ Lockfile passes supply-chain policies (340 entries in 3.9s)
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0902951Z 
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0903775Z devDependencies:
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0904285Z + @angular/common 22.1.5
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0904783Z + @angular/compiler 22.1.5
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0916858Z + @angular/core 22.1.5
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0917549Z + @angular/platform-browser 22.1.5
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0918377Z + @angular/platform-server 22.1.5
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0919315Z + @mathjax/mathjax-tex-font 4.1.3
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0919898Z + @mathjax/src 4.1.3
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0920371Z + @playwright/test 1.62.1
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0920930Z + @sveltejs/vite-plugin-svelte 7.3.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0921495Z + @types/node 26.4.1
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0921933Z + @types/react 19.2.18
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0922378Z + @types/react-dom 19.2.7
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0922864Z + @vitejs/plugin-react 6.1.1
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0923391Z + commonmark 0.31.2
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0923818Z + commonmark-spec 0.31.2
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0924249Z + css-select 7.0.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0924685Z + docx-preview 0.4.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0925091Z + entities 8.0.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0925459Z + fflate 0.8.3
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0926106Z + jsdom 30.0.1
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0926563Z + katex 0.18.6
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0926981Z + miniflare 3.20250718.3
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0927408Z + parse5 8.0.1
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0927912Z + parse5-htmlparser2-tree-adapter 8.0.1
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0928484Z + pdfjs-dist 6.3.289
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0928884Z + react 19.2.8
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0929271Z + react-dom 19.2.8
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0929661Z + rxjs 7.8.2
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0930007Z + svelte 5.57.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0930397Z + typescript 7.0.2
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0930873Z + unicode-emoji-json 0.9.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0931312Z + vite 8.2.2
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0931675Z + vitest 5.0.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0932037Z + vue 3.5.42
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0932394Z + yjs 13.6.32
+performance	UNKNOWN STEP	2026-10-08T04:41:51.0932600Z 
+performance	UNKNOWN STEP	2026-10-08T04:41:51.1317640Z Done in 4.5s using pnpm v11.19.0
+performance	UNKNOWN STEP	2026-10-08T04:41:51.1949918Z ##[group]Run pnpm build
+performance	UNKNOWN STEP	2026-10-08T04:41:51.1950376Z ^[[36;1mpnpm build^[[0m
+performance	UNKNOWN STEP	2026-10-08T04:41:51.2030539Z shell: /usr/bin/bash -e {0}
+performance	UNKNOWN STEP	2026-10-08T04:41:51.2030954Z env:
+performance	UNKNOWN STEP	2026-10-08T04:41:51.2031371Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	UNKNOWN STEP	2026-10-08T04:41:51.2031911Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:51.7149719Z $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+performance	UNKNOWN STEP	2026-10-08T04:41:51.9653548Z ^[[36mvite v8.2.2 ^[[32mbuilding client environment for production...^[[36m^[[39m
+performance	UNKNOWN STEP	2026-10-08T04:41:51.9774484Z transforming...
+performance	UNKNOWN STEP	2026-10-08T04:41:52.1263139Z ✓ 304 modules transformed.
+performance	UNKNOWN STEP	2026-10-08T04:41:52.2137453Z rendering chunks...
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3286910Z computing gzip size...
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3457662Z dist/step-doAGd4iU.js                       0.20 kB │ gzip:  0.18 kB │ map:   0.41 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3459028Z dist/plugin-B0KSKRXJ.js                     0.39 kB │ gzip:  0.28 kB │ map:   3.23 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3460383Z dist/node-spec-Dl5lMC1C.js                  0.64 kB │ gzip:  0.37 kB │ map:   8.05 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3462015Z dist/text-style.js                          0.87 kB │ gzip:  0.39 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3469916Z dist/url-sjMj-efj.js                        1.03 kB │ gzip:  0.52 kB │ map:   2.68 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3471146Z dist/svelte.js                              1.08 kB │ gzip:  0.55 kB │ map:   3.58 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3472393Z dist/useFountain-DQ8gXlvr.js                1.09 kB │ gzip:  0.57 kB │ map:   3.25 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3473729Z dist/command-manager-CSDUCeVE.js            1.32 kB │ gzip:  0.62 kB │ map:   6.46 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3475047Z dist/collaboration-BubriAbK.js              1.44 kB │ gzip:  0.71 kB │ map:   3.60 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3476521Z dist/react-widgets.js                       1.57 kB │ gzip:  0.67 kB │ map:   5.52 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3477677Z dist/vue.js                                 1.72 kB │ gzip:  0.86 kB │ map:   4.53 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3478888Z dist/inline-atom-BLfPalX5.js                1.76 kB │ gzip:  0.78 kB │ map:   5.30 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3480174Z dist/path-B7Cr90vg.js                       1.89 kB │ gzip:  0.89 kB │ map:   5.80 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3481375Z dist/search-CLj2oPC9.js                     1.99 kB │ gzip:  0.95 kB │ map:   6.14 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3482600Z dist/history-CluGKD04.js                    2.71 kB │ gzip:  1.12 kB │ map:   7.84 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3483882Z dist/html-page-settings-C1un4UNO.js         2.80 kB │ gzip:  1.18 kB │ map:   8.40 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3485228Z dist/content-expression-CuobUc-r.js         2.87 kB │ gzip:  1.12 kB │ map:   7.89 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3486755Z dist/input-rules-EH0whXGW.js                2.99 kB │ gzip:  1.31 kB │ map:   9.02 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3488018Z dist/decoration-CuT1b7BC.js                 3.14 kB │ gzip:  1.23 kB │ map:  10.15 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3489269Z dist/extension-Cfbujo9B.js                  3.20 kB │ gzip:  1.27 kB │ map:  10.62 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3490610Z dist/replace-text-range-step-DDj1wpRU.js    3.28 kB │ gzip:  1.21 kB │ map:   9.56 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3491943Z dist/table-map-Du2VwT8u.js                  3.47 kB │ gzip:  1.41 kB │ map:  10.05 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3495309Z dist/mark-range-step-Jo1iPQSu.js            3.48 kB │ gzip:  1.08 kB │ map:  10.32 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3496926Z dist/node-CMohf4dR.js                       3.90 kB │ gzip:  1.36 kB │ map:  10.26 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3498099Z dist/html-flow-BvdNyeD1.js                  4.47 kB │ gzip:  1.85 kB │ map:  11.72 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3499339Z dist/link-destination-BdayfYDr.js           4.56 kB │ gzip:  1.82 kB │ map:  12.96 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3500540Z dist/widgets-dom.js                         4.74 kB │ gzip:  1.67 kB │ map:  13.70 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3501729Z dist/text-style-BYl8otDw.js                 4.82 kB │ gzip:  1.60 kB │ map:  15.05 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3502907Z dist/integrity-dom.js                       5.07 kB │ gzip:  1.98 kB │ map:  14.22 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3504397Z dist/table-of-contents.js                   5.69 kB │ gzip:  2.34 kB │ map:  17.63 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3505581Z dist/html-inert.js                          6.16 kB │ gzip:  2.55 kB │ map:  13.93 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3506922Z dist/testing.js                             6.49 kB │ gzip:  2.31 kB │ map:  18.97 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3508066Z dist/selection-Du4v48EK.js                  6.52 kB │ gzip:  2.21 kB │ map:  19.93 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3509298Z dist/migrations.js                          7.04 kB │ gzip:  2.23 kB │ map:  19.76 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3510479Z dist/react-tracked-changes.js               7.65 kB │ gzip:  2.34 kB │ map:  13.99 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3511623Z dist/details.js                             7.72 kB │ gzip:  2.65 kB │ map:  21.54 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3512750Z dist/mapping-BbhEodcc.js                    7.76 kB │ gzip:  2.66 kB │ map:  24.89 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3513924Z dist/react-integrity.js                     8.09 kB │ gzip:  2.42 kB │ map:  13.31 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3515305Z dist/menu-position-6ofIW78-.js              8.23 kB │ gzip:  3.05 kB │ map:  25.35 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3539370Z dist/node-ids.js                            8.74 kB │ gzip:  3.14 kB │ map:  28.06 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3540511Z dist/widgets.js                             8.78 kB │ gzip:  3.21 kB │ map:  27.94 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3541502Z dist/core.js                                9.07 kB │ gzip:  3.18 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3542613Z dist/table-layout-DqQ0Ldl5.js               9.17 kB │ gzip:  3.19 kB │ map:  27.03 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3543810Z dist/react-comments.js                      9.78 kB │ gzip:  2.75 kB │ map:  17.76 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3544998Z dist/structured-attributes.js              10.03 kB │ gzip:  2.96 kB │ map:  31.46 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3546454Z dist/react-versions.js                     10.06 kB │ gzip:  2.75 kB │ map:  18.26 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3547673Z dist/collaboration-core-B-I53ZbT.js        10.29 kB │ gzip:  3.23 kB │ map:  32.95 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3548906Z dist/ai-generated-media.js                 10.71 kB │ gzip:  3.28 kB │ map:  27.57 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3550017Z dist/ruby.js                               10.92 kB │ gzip:  3.49 kB │ map:  28.83 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3551175Z dist/page-settings-Bqt82pEY.js             11.19 kB │ gzip:  3.73 kB │ map:  32.14 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3552314Z dist/pages.js                              11.27 kB │ gzip:  3.60 kB │ map:  28.76 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3553384Z dist/integrity.js                          11.46 kB │ gzip:  3.63 kB │ map:  30.86 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3554496Z dist/pages-preview.js                      13.47 kB │ gzip:  4.45 kB │ map:  37.18 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3555654Z dist/editor-CMX7ABLq.js                    15.16 kB │ gzip:  4.48 kB │ map:  43.81 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3557068Z dist/ai-conversation.js                    15.96 kB │ gzip:  4.46 kB │ map:  41.86 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3558235Z dist/ai-document-tools.js                  16.83 kB │ gzip:  4.71 kB │ map:  45.73 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3559397Z dist/emoji-DeLc3sks.js                     17.42 kB │ gzip:  5.72 kB │ map:  46.29 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3560595Z dist/link-behavior-C0RYh-uU.js             19.20 kB │ gzip:  7.18 kB │ map:  51.23 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3561816Z dist/presentation-_RsWq19D.js              21.37 kB │ gzip:  6.17 kB │ map:  64.52 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3563010Z dist/document-utilities.js                 23.88 kB │ gzip:  7.49 kB │ map:  67.80 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3564121Z dist/yjs.js                                27.47 kB │ gzip:  7.82 kB │ map:  75.97 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3565211Z dist/tracked-changes.js                    28.57 kB │ gzip:  8.09 kB │ map:  85.58 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3586714Z dist/versions.js                           29.34 kB │ gzip:  7.76 kB │ map:  80.63 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3587977Z dist/comments.js                           29.77 kB │ gzip:  8.57 kB │ map:  87.59 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3589433Z dist/extensions-BOxSevrr.js                34.03 kB │ gzip:  9.57 kB │ map:  89.78 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3590681Z dist/media-FwxHlzWz.js                     42.81 kB │ gzip: 12.13 kB │ map: 110.60 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3591892Z dist/markdown-html-83ZGjqmO.js             43.57 kB │ gzip: 23.96 kB │ map:  74.66 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3593064Z dist/pages-dom.js                          53.72 kB │ gzip: 13.34 kB │ map: 147.72 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3594158Z dist/index.js                              82.82 kB │ gzip: 24.40 kB │ map: 179.78 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3595282Z dist/commands-CbdzHnQ0.js                  86.46 kB │ gzip: 22.47 kB │ map: 249.52 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3596749Z dist/direction-scope-DBvkWtZm.js           87.84 kB │ gzip: 25.58 kB │ map: 268.75 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3597947Z dist/react.js                              94.79 kB │ gzip: 22.13 kB │ map: 187.55 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3599039Z dist/view-DepE2HHn.js                     120.85 kB │ gzip: 29.92 kB │ map: 311.52 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3600136Z dist/docx.js                              188.55 kB │ gzip: 54.10 kB │ map: 518.31 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3601419Z dist/html-server.js                       262.64 kB │ gzip: 59.70 kB │ map: 773.45 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3602524Z dist/emoji-data.js                        331.40 kB │ gzip: 30.88 kB │ map: 467.62 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3603031Z 
+performance	UNKNOWN STEP	2026-10-08T04:41:52.3603203Z transforming...
+performance	UNKNOWN STEP	2026-10-08T04:41:52.5112166Z ✓ 304 modules transformed.
+performance	UNKNOWN STEP	2026-10-08T04:41:52.5979157Z rendering chunks...
+performance	UNKNOWN STEP	2026-10-08T04:41:52.6973924Z computing gzip size...
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7117041Z dist/step-CICBu9Xg.cjs                       0.20 kB │ gzip:  0.18 kB │ map:   0.42 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7118141Z dist/plugin-DlQkwKdU.cjs                     0.48 kB │ gzip:  0.27 kB │ map:   3.21 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7143329Z dist/node-spec-owlJN_nc.cjs                  0.59 kB │ gzip:  0.36 kB │ map:   8.05 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7156895Z dist/rolldown-runtime-Chgba0Kb.cjs           0.77 kB │ gzip:  0.41 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7158205Z dist/text-style.cjs                          0.87 kB │ gzip:  0.36 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7159327Z dist/svelte.cjs                              0.89 kB │ gzip:  0.51 kB │ map:   3.64 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7179125Z dist/url-Co8QRAHd.cjs                        0.92 kB │ gzip:  0.51 kB │ map:   2.68 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7180549Z dist/useFountain-C16zq9TV.cjs                0.96 kB │ gzip:  0.52 kB │ map:   3.30 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7181999Z dist/command-manager-DU4ahU5C.cjs            1.06 kB │ gzip:  0.55 kB │ map:   6.45 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7183314Z dist/collaboration-DHfWMt2l.cjs              1.26 kB │ gzip:  0.63 kB │ map:   3.61 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7200497Z dist/react-widgets.cjs                       1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7201643Z dist/vue.cjs                                 1.45 kB │ gzip:  0.76 kB │ map:   4.76 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7202797Z dist/inline-atom-Cg88XSNe.cjs                1.53 kB │ gzip:  0.70 kB │ map:   5.34 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7204025Z dist/search-Cb5HWhnF.cjs                     1.76 kB │ gzip:  0.87 kB │ map:   6.15 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7205248Z dist/path-DDY3uxw-.cjs                       1.98 kB │ gzip:  0.82 kB │ map:   5.79 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7206732Z dist/content-expression-YXcFdjFU.cjs         2.15 kB │ gzip:  0.98 kB │ map:   7.85 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7208094Z dist/html-page-settings-CYNBUfR_.cjs         2.53 kB │ gzip:  1.05 kB │ map:   8.37 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7210337Z dist/table-map-Dbo_d2TT.cjs                  2.65 kB │ gzip:  1.23 kB │ map:  10.02 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7211604Z dist/input-rules-HXvPuvbc.cjs                2.66 kB │ gzip:  1.16 kB │ map:   9.04 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7212848Z dist/decoration-jVx4B2Pl.cjs                 2.68 kB │ gzip:  1.13 kB │ map:  10.14 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7214138Z dist/replace-text-range-step-VHOaDNVn.cjs    2.69 kB │ gzip:  1.07 kB │ map:   9.63 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7215475Z dist/history-C1iHQbdz.cjs                    2.76 kB │ gzip:  1.03 kB │ map:   7.85 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7217246Z dist/extension-Sb4ErwsF.cjs                  2.86 kB │ gzip:  1.17 kB │ map:  10.59 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7218557Z dist/mark-range-step-DOJDyOsP.cjs            3.02 kB │ gzip:  0.92 kB │ map:  10.34 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7219771Z dist/node-D26sG_e5.cjs                       3.35 kB │ gzip:  1.25 kB │ map:  10.25 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7220887Z dist/widgets-dom.cjs                         4.02 kB │ gzip:  1.53 kB │ map:  13.67 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7222053Z dist/html-flow-BELrbD1b.cjs                  4.18 kB │ gzip:  1.68 kB │ map:  11.78 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7223244Z dist/integrity-dom.cjs                       4.36 kB │ gzip:  1.82 kB │ map:  14.27 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7224502Z dist/link-destination-BqNBOBU2.cjs           4.70 kB │ gzip:  1.53 kB │ map:  13.01 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7226120Z dist/table-of-contents.cjs                   4.75 kB │ gzip:  2.12 kB │ map:  17.66 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7227377Z dist/text-style-BJlG2_Pk.cjs                 5.08 kB │ gzip:  1.44 kB │ map:  15.23 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7228535Z dist/html-inert.cjs                          5.19 kB │ gzip:  2.36 kB │ map:  13.94 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7229864Z dist/testing.cjs                             5.43 kB │ gzip:  2.08 kB │ map:  18.97 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7231052Z dist/selection-DrO1gWsj.cjs                  5.65 kB │ gzip:  1.97 kB │ map:  19.95 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7232272Z dist/react-tracked-changes.cjs               5.71 kB │ gzip:  2.01 kB │ map:  14.60 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7233456Z dist/migrations.cjs                          6.10 kB │ gzip:  2.00 kB │ map:  19.78 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7234594Z dist/react-integrity.cjs                     6.18 kB │ gzip:  2.18 kB │ map:  14.15 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7235933Z dist/details.cjs                             6.35 kB │ gzip:  2.39 kB │ map:  21.62 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7237095Z dist/mapping-LRwd6pqd.cjs                    6.55 kB │ gzip:  2.36 kB │ map:  24.97 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7238269Z dist/react-comments.cjs                      7.05 kB │ gzip:  2.28 kB │ map:  18.76 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7239403Z dist/node-ids.cjs                            7.18 kB │ gzip:  2.82 kB │ map:  28.03 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7240586Z dist/menu-position-BT80F8bN.cjs              7.21 kB │ gzip:  2.71 kB │ map:  25.43 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7241746Z dist/widgets.cjs                             7.33 kB │ gzip:  2.88 kB │ map:  28.00 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7242859Z dist/react-versions.cjs                      7.37 kB │ gzip:  2.35 kB │ map:  19.28 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7243885Z dist/core.cjs                                8.27 kB │ gzip:  2.45 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7244990Z dist/structured-attributes.cjs               8.41 kB │ gzip:  2.71 kB │ map:  31.45 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7246439Z dist/table-layout-y6mT4PpH.cjs               8.87 kB │ gzip:  2.89 kB │ map:  27.01 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7247661Z dist/ai-generated-media.cjs                  9.11 kB │ gzip:  2.97 kB │ map:  27.49 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7248775Z dist/ruby.cjs                                9.18 kB │ gzip:  3.14 kB │ map:  28.80 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7249866Z dist/integrity.cjs                           9.36 kB │ gzip:  3.32 kB │ map:  30.88 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7250987Z dist/pages.cjs                               9.36 kB │ gzip:  3.21 kB │ map:  28.86 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7252175Z dist/collaboration-core-6QLxBCsv.cjs         9.37 kB │ gzip:  2.92 kB │ map:  32.93 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7253451Z dist/page-settings-BTDzBnRH.cjs             10.15 kB │ gzip:  3.43 kB │ map:  32.11 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7254661Z dist/pages-preview.cjs                      11.42 kB │ gzip:  4.09 kB │ map:  37.00 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7256349Z dist/editor-Ce4QfnkJ.cjs                    13.24 kB │ gzip:  4.10 kB │ map:  43.90 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7257589Z dist/ai-conversation.cjs                    13.42 kB │ gzip:  4.04 kB │ map:  41.75 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7258782Z dist/ai-document-tools.cjs                  13.93 kB │ gzip:  4.22 kB │ map:  45.71 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7260196Z dist/emoji-ZL6uQ6Pb.cjs                     14.66 kB │ gzip:  5.12 kB │ map:  46.33 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7261429Z dist/link-behavior-IaGLTBDY.cjs             17.13 kB │ gzip:  6.61 kB │ map:  51.31 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7262681Z dist/presentation-DrPDmb6z.cjs              17.92 kB │ gzip:  5.47 kB │ map:  64.36 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7263900Z dist/document-utilities.cjs                 19.37 kB │ gzip:  6.71 kB │ map:  67.92 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7265020Z dist/yjs.cjs                                22.89 kB │ gzip:  7.13 kB │ map:  75.74 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7266363Z dist/tracked-changes.cjs                    23.66 kB │ gzip:  7.30 kB │ map:  85.59 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7267504Z dist/comments.cjs                           24.18 kB │ gzip:  7.65 kB │ map:  87.59 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7268600Z dist/versions.cjs                           24.36 kB │ gzip:  7.06 kB │ map:  80.44 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7269767Z dist/extensions-BsXZGRdV.cjs                31.59 kB │ gzip:  8.49 kB │ map:  90.24 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7270970Z dist/media-BQIZkruR.cjs                     35.32 kB │ gzip: 10.87 kB │ map: 110.74 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7272368Z dist/markdown-html-DD8ATANg.cjs             41.42 kB │ gzip: 23.40 kB │ map:  74.55 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7273563Z dist/pages-dom.cjs                          44.81 kB │ gzip: 12.13 kB │ map: 147.15 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7274761Z dist/direction-scope-BdkTLAa9.cjs           68.74 kB │ gzip: 22.96 kB │ map: 268.10 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7276164Z dist/index.cjs                              70.15 kB │ gzip: 21.13 kB │ map: 179.78 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7277246Z dist/react.cjs                              71.01 kB │ gzip: 19.12 kB │ map: 196.61 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7278377Z dist/commands-Dr-WPdEG.cjs                  76.43 kB │ gzip: 20.65 kB │ map: 250.60 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7279551Z dist/view-C5a8svu9.cjs                     103.13 kB │ gzip: 27.24 kB │ map: 310.81 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7280649Z dist/docx.cjs                              152.44 kB │ gzip: 48.67 kB │ map: 517.23 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7281746Z dist/html-server.cjs                       213.57 kB │ gzip: 54.49 kB │ map: 770.63 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7282880Z dist/emoji-data.cjs                        274.54 kB │ gzip: 30.25 kB │ map: 451.98 kB
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7283385Z 
+performance	UNKNOWN STEP	2026-10-08T04:41:52.7283959Z ^[[32m✓ built in 749ms^[[39m
+performance	UNKNOWN STEP	2026-10-08T04:41:54.5715664Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+performance	UNKNOWN STEP	2026-10-08T04:41:57.0146154Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+performance	UNKNOWN STEP	2026-10-08T04:41:59.4651165Z ##[group]Run pnpm test:performance
+performance	UNKNOWN STEP	2026-10-08T04:41:59.4651519Z ^[[36;1mpnpm test:performance^[[0m
+performance	UNKNOWN STEP	2026-10-08T04:41:59.4712119Z shell: /usr/bin/bash -e {0}
+performance	UNKNOWN STEP	2026-10-08T04:41:59.4712374Z env:
+performance	UNKNOWN STEP	2026-10-08T04:41:59.4712633Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	UNKNOWN STEP	2026-10-08T04:41:59.4712972Z ##[endgroup]
+performance	UNKNOWN STEP	2026-10-08T04:41:59.9238580Z $ node --expose-gc scripts/check-performance-budgets.mjs
+performance	UNKNOWN STEP	2026-10-08T04:42:00.0616516Z 100 blocks: local p50 0.13 ms, p95 0.29 ms; incremental remote p50 0.09 ms, p95 0.15 ms; JSON boundary p50 1.12 ms, p95 1.47 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:00.1521658Z 1,000 blocks: local p50 0.08 ms, p95 0.12 ms; incremental remote p50 0.09 ms, p95 0.13 ms; JSON boundary p50 8.06 ms, p95 14.29 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:00.5090799Z 5,000 blocks: local p50 0.42 ms, p95 0.63 ms; incremental remote p50 0.42 ms, p95 2.60 ms; JSON boundary p50 30.75 ms, p95 40.27 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:01.3287644Z 10,000 blocks: local p50 0.76 ms, p95 0.97 ms; incremental remote p50 0.76 ms, p95 1.01 ms; JSON boundary p50 77.18 ms, p95 114.36 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:01.4428268Z 100 HTML blocks: server parse p50 12.16 ms, p95 20.00 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:01.9692358Z 1,000 HTML blocks: server parse p50 70.59 ms, p95 81.55 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:04.2337677Z 5,000 HTML blocks: server parse p50 315.93 ms, p95 358.63 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:08.7541295Z 10,000 HTML blocks: server parse p50 612.40 ms, p95 684.07 ms
+performance	UNKNOWN STEP	2026-10-08T04:42:08.7542693Z server HTML 1,000→10,000 median growth: 8.68x / 15x
+performance	UNKNOWN STEP	2026-10-08T04:42:08.7543413Z local 1,000→10,000 median growth: 9.47x / 15x
+performance	UNKNOWN STEP	2026-10-08T04:42:08.7544289Z incremental remote 1,000→10,000 median growth: 8.21x / 15x
+performance	UNKNOWN STEP	2026-10-08T04:42:08.9455186Z 2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+performance	UNKNOWN STEP	2026-10-08T04:42:09.0387484Z destroyed-editor retained heap: 0.06 MiB / 16 MiB
+performance	UNKNOWN STEP	2026-10-08T04:42:09.8606605Z retained 10,000-block server HTML document: 14.32 MiB / 48 MiB
+performance	UNKNOWN STEP	2026-10-08T04:42:09.9383640Z Post job cleanup.
+performance	UNKNOWN STEP	2026-10-08T04:42:10.0566999Z (node:2616) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+performance	UNKNOWN STEP	2026-10-08T04:42:10.0568045Z (Use `node --trace-deprecation ...` to show where the warning was created)
+performance	UNKNOWN STEP	2026-10-08T04:42:10.0571159Z Cache hit occurred on the primary key node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870, not saving cache.
+performance	UNKNOWN STEP	2026-10-08T04:42:10.0674807Z Post job cleanup.
+performance	UNKNOWN STEP	2026-10-08T04:42:10.2197612Z Pruning is unnecessary.
+performance	UNKNOWN STEP	2026-10-08T04:42:10.2336390Z Post job cleanup.
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3305821Z [command]/usr/bin/git version
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3345233Z git version 2.55.0
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3383920Z Temporarily overriding HOME='/home/runner/work/_temp/544bf883-5b68-4d76-ad50-9153c5261100' before making global git config changes
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3385536Z Adding repository directory to the temporary git global config as a safe directory
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3390557Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3426940Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3460229Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3691380Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3715722Z http.https://github.com/.extraheader
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3727835Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3760970Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+performance	UNKNOWN STEP	2026-10-08T04:42:10.3990185Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+performance	UNKNOWN STEP	2026-10-08T04:42:10.4020606Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+performance	UNKNOWN STEP	2026-10-08T04:42:10.4387889Z Cleaning up orphan processes
+performance	UNKNOWN STEP	2026-10-08T04:42:10.4676530Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

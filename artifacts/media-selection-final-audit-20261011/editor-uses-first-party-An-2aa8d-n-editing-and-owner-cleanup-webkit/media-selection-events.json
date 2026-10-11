@@ -1,0 +1,352 @@
+{
+  "scope": "first attachment selection only; native events and DOM markers; no editor/selection/focus API writes",
+  "maximumNativeEvents": 80,
+  "maximumEvents": 81,
+  "events": [
+    {
+      "event": "installed",
+      "time": 2307,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerdown",
+      "time": 2718,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerdown:after",
+      "time": 2719,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mousedown",
+      "time": 2719,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mousedown:after",
+      "time": 2719,
+      "active": {
+        "tag": "BODY",
+        "className": ""
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "focusin",
+      "time": 2720,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "focusin:after",
+      "time": 2720,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerup",
+      "time": 2722,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "pointerup:after",
+      "time": 2723,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mouseup",
+      "time": 2723,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "mouseup:after",
+      "time": 2723,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "click",
+      "time": 2723,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "click:after",
+      "time": 2724,
+      "active": {
+        "tag": "FIGURE",
+        "className": "fountain-media fountain-media--file"
+      },
+      "native": {
+        "collapsed": true,
+        "anchor": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        },
+        "focus": {
+          "tag": null,
+          "path": null,
+          "nodePath": null,
+          "offset": 0
+        }
+      },
+      "selectedMediaPath": null,
+      "selectedNodePath": null,
+      "attributesPresent": false
+    },
+    {
+      "event": "teardown",
+      "time": 4767,
+      "selectedMediaPath": "5",
+      "selectedNodePath": "5",
+      "attributesPresent": true
+    }
+  ]
+}

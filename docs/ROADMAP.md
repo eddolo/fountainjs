@@ -1,5 +1,21 @@
 # FountainJS opportunity roadmap
 
+Completed Linux checkpoint (verified 2026-10-11): `e06c6d8` passes all jobs
+and Pages, **2,872 units / 215 files**, **760 clean unique browser passes /
+16 skips** (748 headless + twelve display clipboard passes). The 67 repeated
+preflight executions are not extra unique coverage. Evidence:
+`artifacts/ci-e06c6d8-verification-20261011.json`.
+
+Retry-evidence follow-up (2026-10-11, Unreleased): always retain failed-attempt
+screenshots/traces/context even after a successful retry; isolate every
+preflight's output folder. A passive Angular media-selection recorder and
+three final recorded Windows journeys pass, with final selected-media markers
+and controls present in each engine. Six earlier repeats also pass; nine PNGs
+are reviewed, not the videos. Types, 26 focused units and two CI retention
+contracts pass. The historical Linux Firefox retry's cause remains unresolved;
+this is diagnostics, not an engine fix or new parity coverage. Evidence:
+`artifacts/media-selection-verification-20261011.json`. No npm/ledger promotion.
+
 Anchor-loss and empty-mark follow-up (2026-10-08, Unreleased): report omitted
 built-in HTML bookmark/anchor identity with bounded, source-free diagnostics;
 accepted custom projections retain ownership. Safe empty links remain in
