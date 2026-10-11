@@ -5,6 +5,7 @@ import { Node, type Attributes } from './schema';
 import { getActiveTableCell } from './table-commands';
 import { TableMap } from './table-map';
 import { getNodeAtPath, getTextLeaves, replaceNodeAtPath, replaceNodeWithNodes } from './transaction/path';
+import { applySharedDirectionOwners, prepareSharedDirection, retainSharedDirection, sharedDirectionIdentity } from './shared-direction';
 
 function ancestorPath(editor: Editor, names: readonly string[]): number[] | null {
   const path = editor.state.selection.path;
@@ -147,6 +148,7 @@ function retainedDirectionScope(editor: Editor, source: Node, content: readonly 
   if (!type?.spec.attrs?.dir) return null;
   try {
     return type.create({ dir: source.attrs.dir,
+      ...(typeof source.attrs.directionGroup === 'string' ? { directionGroup: source.attrs.directionGroup } : {}),
       ...(typeof source.attrs.nodeId === 'string' ? { nodeId: source.attrs.nodeId } : {}),
     }, content);
   } catch { return null; }
@@ -155,6 +157,7 @@ function retainedDirectionScope(editor: Editor, source: Node, content: readonly 
 function scopeFragment(node: Node, source: Node): Node | null {
   try {
     const attrs: Attributes = { ...node.attrs, dir: undefined };
+    delete attrs.directionGroup;
     // The retained context owns the original group's identity; new list
     // fragments must not duplicate it before a stable-ID plugin repairs them.
     if (source.attrs.nodeId !== undefined && attrs.nodeId === source.attrs.nodeId) delete attrs.nodeId;
@@ -185,9 +188,13 @@ export function setNodeAttributes(editor: Editor, path: readonly number[], attrs
   let node: Node;
   try { node = getNodeAtPath(editor.state.doc, path); }
   catch { return false; }
-  try { node.type.create({ ...node.attrs, ...attrs }, node.content, node.text, node.marks); }
+  const next = { ...node.attrs, ...attrs };
+  // An explicit author direction starts an independent context, unless the
+  // caller deliberately supplies a grouping reference in the same patch.
+  if (Object.hasOwn(attrs, 'dir') && !Object.hasOwn(attrs, 'directionGroup')) next.directionGroup = undefined;
+  try { node.type.create(next, node.content, node.text, node.marks); }
   catch { return false; }
-  const transaction = editor.state.createTransaction().setNodeAttrs(path, { ...node.attrs, ...attrs });
+  const transaction = editor.state.createTransaction().setNodeAttrs(path, next);
   editor.dispatch(transaction);
   return true;
 }
@@ -337,10 +344,14 @@ function resolveNodeMove(editor: Editor, move: NodeMove): ResolvedNodeMove | nul
   if (toIndex > maximum) return null;
 
   try {
-    const retained = retainListDirection(node,
+    const prepared = prepareSharedDirection(editor.state.doc, [{ from: fromPath, to: toParentPath }], sharedDirectionIdentity(editor));
+    if (!prepared) return null;
+    node = getNodeAtPath(prepared.document, fromPath);
+    const fixed = retainListDirection(node,
       listDirectionAt(editor.state.doc, fromPath), listDirectionAt(editor.state.doc, toParentPath));
+    const retained = fixed && retainSharedDirection(fixed, prepared.memberships.get(fromPath.join('.')));
     if (!retained) return null;
-    const withoutSource = replaceNodeWithNodes(editor.state.doc, fromPath, []);
+    const withoutSource = replaceNodeWithNodes(prepared.document, fromPath, []);
     const mappedParentPath = pathAfterRemoval(toParentPath, fromPath);
     const parentAfterRemoval = getNodeAtPath(withoutSource, mappedParentPath);
     const content = [...parentAfterRemoval.content];
@@ -401,11 +412,17 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
   const previousPath = [...range.listPath, range.from - 1];
   const destination = listDirectionAt(editor.state.doc, existingNested
     ? [...previousPath, previous.childCount - 1] : previousPath);
-  const moved = range.list.content.slice(range.from, range.to + 1)
+  const prepared = prepareSharedDirection(editor.state.doc, range.list.content.slice(range.from, range.to + 1)
+    .map((_, index) => ({ from: [...range.listPath, range.from + index],
+      to: existingNested ? [...previousPath, previous.childCount - 1] : previousPath })), sharedDirectionIdentity(editor));
+  if (!prepared) return false;
+  const sourceList = getNodeAtPath(prepared.document, range.listPath);
+  const moved = sourceList.content.slice(range.from, range.to + 1)
     .map((item, index) => {
       const converted = convertListItem(editor, item, target.item);
-      return converted && retainListDirection(converted,
+      const fixed = converted && retainListDirection(converted,
         listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
+      return fixed && retainSharedDirection(fixed, prepared.memberships.get([...range.listPath, range.from + index].join('.')));
     });
   if (moved.some((item) => !item)) return false;
   const items = moved as Node[];
@@ -417,16 +434,17 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
     ? [...previous.content.slice(0, -1), nested]
     : [...previous.content, nested];
   const updatedPrevious = previous.copy(previousContent);
-  const updatedList = range.list.copy([
-    ...range.list.content.slice(0, range.from - 1),
+  const updatedList = sourceList.copy([
+    ...sourceList.content.slice(0, range.from - 1),
     updatedPrevious,
-    ...range.list.content.slice(range.to + 1),
+    ...sourceList.content.slice(range.to + 1),
   ]);
   const startRelative = editor.state.selection.path.slice(range.startItemPath.length);
   const endRelative = editor.state.selection.endPath.slice(range.endItemPath.length);
   const nestedPath = [...range.listPath, range.from - 1, previousContent.length - 1];
-  const transaction = editor.state.createTransaction()
-    .replaceNode(range.listPath, [updatedList])
+  const transaction = editor.state.createTransaction();
+  applySharedDirectionOwners(transaction, prepared);
+  transaction.replaceNode(range.listPath, [updatedList])
     .setSelection(rangeSelection(editor, [
       ...nestedPath,
       nestedIndex,
@@ -512,25 +530,39 @@ export function outdentListItem(editor: Editor): boolean {
   const nestedListIndex = range.listPath.at(-1) as number;
   const targetItemName = outerList.type.name === 'task_list' ? 'task_item' : 'list_item';
   const destination = listDirectionAt(editor.state.doc, outerListPath);
-  const lifted = range.list.content.slice(range.from, range.to + 1)
+  const prepared = prepareSharedDirection(editor.state.doc, [
+    ...range.list.content.slice(range.from, range.to + 1)
+      .map((_, index) => ({ from: [...range.listPath, range.from + index], to: outerListPath })),
+    // The unselected suffix is itself a fragment of the old context. Even
+    // when the lifted item owns an independent auto/fixed direction, that
+    // item's new child list must not start choosing direction independently.
+    ...(range.to + 1 < range.list.childCount ? [{ from: range.listPath,
+      to: [...range.listPath, range.to], fragment: true }] : []),
+  ], sharedDirectionIdentity(editor));
+  if (!prepared) return false;
+  const sourceList = getNodeAtPath(prepared.document, range.listPath);
+  const sourceParent = getNodeAtPath(prepared.document, parentItemPath);
+  const lifted = sourceList.content.slice(range.from, range.to + 1)
     .map((item, index) => {
       const converted = convertListItem(editor, item, targetItemName);
-      return converted && retainListDirection(converted,
+      const fixed = converted && retainListDirection(converted,
         listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
+      return fixed && retainSharedDirection(fixed, prepared.memberships.get([...range.listPath, range.from + index].join('.')));
     });
   if (lifted.some((item) => !item)) return false;
   const liftedItems = lifted as Node[];
-  const before = range.list.content.slice(0, range.from);
-  const after = range.list.content.slice(range.to + 1);
-  const updatedParent = parentItem.copy([
-    ...parentItem.content.slice(0, nestedListIndex),
-    ...(before.length ? [copyListSlice(range.list, before)] : []),
-    ...parentItem.content.slice(nestedListIndex + 1),
+  const before = sourceList.content.slice(0, range.from);
+  const after = sourceList.content.slice(range.to + 1);
+  const updatedParent = sourceParent.copy([
+    ...sourceParent.content.slice(0, nestedListIndex),
+    ...(before.length ? [copyListSlice(sourceList, before)] : []),
+    ...sourceParent.content.slice(nestedListIndex + 1),
   ]);
   if (after.length) {
     const last = liftedItems.at(-1) as Node;
-    const suffix = retainListDirection(copyListSlice(range.list, after, range.to + 1),
+    const fixedSuffix = retainListDirection(copyListSlice(sourceList, after, range.to + 1),
       listDirectionAt(editor.state.doc, range.listPath), ownListDirection(last) ?? destination);
+    const suffix = fixedSuffix && retainSharedDirection(fixedSuffix, prepared.memberships.get(range.listPath.join('.')));
     if (!suffix) return false;
     liftedItems[liftedItems.length - 1] = last.copy([
       ...last.content,
@@ -543,8 +575,9 @@ export function outdentListItem(editor: Editor): boolean {
     ...liftedItems,
     ...outerList.content.slice(parentItemIndex + 1),
   ]);
-  const transaction = editor.state.createTransaction()
-    .replaceNode(outerListPath, [updatedOuter])
+  const transaction = editor.state.createTransaction();
+  applySharedDirectionOwners(transaction, prepared);
+  transaction.replaceNode(outerListPath, [updatedOuter])
     .setSelection(rangeSelection(editor,
       [...outerListPath, parentItemIndex + 1, ...startRelative],
       [...outerListPath, parentItemIndex + liftedItems.length, ...endRelative],
@@ -572,6 +605,7 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
     try {
       const converted = targetListType.create({ ...target.attrs,
         ...(!sharedAuto && targetListType.spec.attrs?.dir && range.list.attrs.dir !== undefined ? { dir: range.list.attrs.dir } : {}),
+        ...(!sharedAuto && targetListType.spec.attrs?.directionGroup && range.list.attrs.directionGroup !== undefined ? { directionGroup: range.list.attrs.directionGroup } : {}),
       }, selected as Node[]);
       replacements = [
         ...(before.length ? [copyListSlice(range.list, before)] : []),
@@ -623,6 +657,7 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
         ? block
         : schema.node('paragraph', { align: block.attrs.align ?? 'left',
           ...(schema.nodes.paragraph.spec.attrs?.dir && block.attrs.dir !== undefined ? { dir: block.attrs.dir } : {}),
+          ...(schema.nodes.paragraph.spec.attrs?.directionGroup && block.attrs.directionGroup !== undefined ? { directionGroup: block.attrs.directionGroup } : {}),
           ...(schema.nodes.paragraph.spec.attrs?.alignExplicit && block.attrs.alignExplicit ? { alignExplicit: true } : {}),
         }, block.content);
       return schema.node(target.item, target.item === 'task_item' ? { checked: false } : {}, [paragraph]);

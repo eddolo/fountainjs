@@ -26,7 +26,14 @@ export default defineConfig({
   // lazily. Include their dependencies before first use: discovering these only
   // during an import can re-optimize the graph and reload an active document.
   optimizeDeps: {
-    include: ['@mathjax/src/js/adaptors/liteAdaptor.js', 'rxjs', 'rxjs/operators', 'css-select', 'parse5', 'parse5-htmlparser2-tree-adapter', 'fountainjs-editor/html/inert'],
+    include: [
+      '@mathjax/src/js/adaptors/liteAdaptor.js',
+      // The conversion lab's independent DOCX preview and package-backed
+      // archive/HTML adapters are otherwise discovered after first import.
+      // A cold trace records these three triggering a draft-destroying reload.
+      'docx-preview', 'fflate', 'entities/decode',
+      'rxjs', 'rxjs/operators', 'css-select', 'parse5', 'parse5-htmlparser2-tree-adapter', 'fountainjs-editor/html/inert',
+    ],
     exclude: ['fountainjs-editor/angular', '@angular/core', '@angular/common', '@angular/platform-browser'],
   },
   // This lab explicitly selects the bundled TeX font. Avoid also shipping

@@ -1,0 +1,337 @@
+2026-10-11T19:41:12.357Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:12.364Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:12.364Z pw:webserver Starting WebServer process pnpm build && pnpm exec vite --config vite.input-audit.config.ts --force --host 127.0.0.1 --port 4194 --strictPort...
+2026-10-11T19:41:12.382Z pw:webserver Process started
+2026-10-11T19:41:12.382Z pw:webserver Waiting for availability...
+2026-10-11T19:41:12.382Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:12.384Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:12.384Z pw:webserver Waiting 100ms
+2026-10-11T19:41:12.490Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:12.492Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:12.492Z pw:webserver Waiting 250ms
+2026-10-11T19:41:12.777Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:12.779Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:12.779Z pw:webserver Waiting 500ms
+[WebServer] (node:23096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:11960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] vite v8.2.2 building client environment for production...
+[WebServer] transforming...
+2026-10-11T19:41:13.294Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:13.295Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:13.295Z pw:webserver Waiting 1000ms
+[WebServer] ✓ 309 modules transformed.
+[WebServer] rendering chunks...
+2026-10-11T19:41:14.297Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:14.298Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:14.298Z pw:webserver Waiting 1000ms
+[WebServer] computing gzip size...
+[WebServer] dist/step-doAGd4iU.js                       0.20 kB │ gzip:  0.18 kB │ map:   0.41 kB
+[WebServer] dist/plugin-B0KSKRXJ.js                     0.39 kB │ gzip:  0.28 kB │ map:   3.23 kB
+[WebServer] dist/node-spec-Dl5lMC1C.js                  0.64 kB │ gzip:  0.37 kB │ map:   8.05 kB
+[WebServer] dist/text-style.js                          0.87 kB │ gzip:  0.39 kB
+[WebServer] dist/url-sjMj-efj.js                        1.03 kB │ gzip:  0.52 kB │ map:   2.68 kB
+[WebServer] dist/svelte.js                              1.08 kB │ gzip:  0.55 kB │ map:   3.58 kB
+[WebServer] dist/useFountain-DQ8gXlvr.js                1.09 kB │ gzip:  0.57 kB │ map:   3.25 kB
+[WebServer] dist/command-manager-CSDUCeVE.js            1.32 kB │ gzip:  0.62 kB │ map:   6.46 kB
+[WebServer] dist/collaboration-BubriAbK.js              1.44 kB │ gzip:  0.71 kB │ map:   3.60 kB
+[WebServer] dist/react-widgets.js                       1.57 kB │ gzip:  0.67 kB │ map:   5.52 kB
+[WebServer] dist/vue.js                                 1.72 kB │ gzip:  0.86 kB │ map:   4.53 kB
+[WebServer] dist/inline-atom-BLfPalX5.js                1.76 kB │ gzip:  0.78 kB │ map:   5.30 kB
+[WebServer] dist/path-B7Cr90vg.js                       1.89 kB │ gzip:  0.89 kB │ map:   5.80 kB
+[WebServer] dist/search-CLj2oPC9.js                     1.99 kB │ gzip:  0.95 kB │ map:   6.14 kB
+[WebServer] dist/history-CluGKD04.js                    2.71 kB │ gzip:  1.12 kB │ map:   7.84 kB
+[WebServer] dist/html-page-settings-C1un4UNO.js         2.80 kB │ gzip:  1.18 kB │ map:   8.40 kB
+[WebServer] dist/text-direction-BAy8LwDF.js             2.85 kB │ gzip:  1.10 kB │ map:   8.85 kB
+[WebServer] dist/content-expression-CuobUc-r.js         2.87 kB │ gzip:  1.12 kB │ map:   7.89 kB
+[WebServer] dist/input-rules-EH0whXGW.js                2.99 kB │ gzip:  1.31 kB │ map:   9.02 kB
+[WebServer] dist/decoration-CuT1b7BC.js                 3.14 kB │ gzip:  1.23 kB │ map:  10.15 kB
+[WebServer] dist/extension-Cfbujo9B.js                  3.20 kB │ gzip:  1.27 kB │ map:  10.62 kB
+[WebServer] dist/replace-text-range-step-DDj1wpRU.js    3.28 kB │ gzip:  1.21 kB │ map:   9.56 kB
+[WebServer] dist/table-map-Du2VwT8u.js                  3.47 kB │ gzip:  1.41 kB │ map:  10.05 kB
+[WebServer] dist/mark-range-step-Jo1iPQSu.js            3.48 kB │ gzip:  1.08 kB │ map:  10.32 kB
+[WebServer] dist/node-CMohf4dR.js                       3.90 kB │ gzip:  1.36 kB │ map:  10.26 kB
+[WebServer] dist/link-destination-vNSjB8rM.js           4.56 kB │ gzip:  1.82 kB │ map:  12.96 kB
+[WebServer] dist/html-flow-FU9JGEYv.js                  4.65 kB │ gzip:  1.90 kB │ map:  12.08 kB
+[WebServer] dist/widgets-dom.js                         4.74 kB │ gzip:  1.67 kB │ map:  13.70 kB
+[WebServer] dist/text-style-BuyR1Ncc.js                 4.82 kB │ gzip:  1.60 kB │ map:  15.05 kB
+[WebServer] dist/integrity-dom.js                       5.07 kB │ gzip:  1.98 kB │ map:  14.22 kB
+[WebServer] dist/table-of-contents.js                   5.69 kB │ gzip:  2.34 kB │ map:  17.63 kB
+[WebServer] dist/html-inert.js                          6.16 kB │ gzip:  2.55 kB │ map:  13.93 kB
+[WebServer] dist/testing.js                             6.49 kB │ gzip:  2.31 kB │ map:  18.97 kB
+[WebServer] dist/selection-Du4v48EK.js                  6.52 kB │ gzip:  2.21 kB │ map:  19.93 kB
+[WebServer] dist/migrations.js                          7.04 kB │ gzip:  2.23 kB │ map:  19.76 kB
+[WebServer] dist/table-layout-Dg1bu3Pt.js               7.07 kB │ gzip:  2.55 kB │ map:  19.86 kB
+[WebServer] dist/react-tracked-changes.js               7.65 kB │ gzip:  2.34 kB │ map:  13.99 kB
+[WebServer] dist/details.js                             7.72 kB │ gzip:  2.65 kB │ map:  21.54 kB
+[WebServer] dist/mapping-BbhEodcc.js                    7.76 kB │ gzip:  2.66 kB │ map:  24.89 kB
+[WebServer] dist/react-integrity.js                     8.09 kB │ gzip:  2.42 kB │ map:  13.31 kB
+[WebServer] dist/menu-position-BjRkRcYp.js              8.23 kB │ gzip:  3.05 kB │ map:  25.35 kB
+[WebServer] dist/shared-direction-C2aLm-U4.js           8.58 kB │ gzip:  3.49 kB │ map:  24.75 kB
+[WebServer] dist/node-ids.js                            8.74 kB │ gzip:  3.14 kB │ map:  28.06 kB
+[WebServer] dist/widgets.js                             8.78 kB │ gzip:  3.21 kB │ map:  27.94 kB
+[WebServer] dist/core.js                                9.07 kB │ gzip:  3.18 kB
+[WebServer] dist/react-comments.js                      9.78 kB │ gzip:  2.75 kB │ map:  17.76 kB
+[WebServer] dist/structured-attributes.js              10.03 kB │ gzip:  2.96 kB │ map:  31.46 kB
+[WebServer] dist/react-versions.js                     10.06 kB │ gzip:  2.75 kB │ map:  18.26 kB
+[WebServer] dist/collaboration-core-B-I53ZbT.js        10.29 kB │ gzip:  3.23 kB │ map:  32.95 kB
+[WebServer] dist/ai-generated-media.js                 10.71 kB │ gzip:  3.28 kB │ map:  27.57 kB
+[WebServer] dist/ruby.js                               10.92 kB │ gzip:  3.49 kB │ map:  28.83 kB
+[WebServer] dist/page-settings-Bqt82pEY.js             11.19 kB │ gzip:  3.73 kB │ map:  32.14 kB
+[WebServer] dist/pages.js                              11.27 kB │ gzip:  3.60 kB │ map:  28.76 kB
+[WebServer] dist/integrity.js                          11.46 kB │ gzip:  3.63 kB │ map:  30.86 kB
+[WebServer] dist/pages-preview.js                      13.47 kB │ gzip:  4.45 kB │ map:  37.18 kB
+[WebServer] dist/editor-CMX7ABLq.js                    15.16 kB │ gzip:  4.48 kB │ map:  43.81 kB
+[WebServer] dist/ai-conversation.js                    15.96 kB │ gzip:  4.46 kB │ map:  41.86 kB
+[WebServer] dist/ai-document-tools.js                  16.83 kB │ gzip:  4.71 kB │ map:  45.73 kB
+[WebServer] dist/emoji-ExeX3UmM.js                     17.42 kB │ gzip:  5.72 kB │ map:  46.29 kB
+[WebServer] dist/link-behavior-BkjiPet4.js             19.20 kB │ gzip:  7.18 kB │ map:  51.23 kB
+[WebServer] dist/presentation-_RsWq19D.js              21.37 kB │ gzip:  6.17 kB │ map:  64.52 kB
+[WebServer] dist/document-utilities.js                 23.88 kB │ gzip:  7.49 kB │ map:  67.80 kB
+[WebServer] dist/yjs.js                                27.94 kB │ gzip:  7.95 kB │ map:  77.61 kB
+[WebServer] dist/tracked-changes.js                    28.57 kB │ gzip:  8.09 kB │ map:  85.58 kB
+[WebServer] dist/versions.js                           29.34 kB │ gzip:  7.76 kB │ map:  80.63 kB
+[WebServer] dist/comments.js                           29.77 kB │ gzip:  8.57 kB │ map:  87.59 kB
+[WebServer] dist/extensions-Ljf3AYgG.js                34.52 kB │ gzip:  9.63 kB │ map:  91.57 kB
+[WebServer] dist/media-D4_vSV3P.js                     42.86 kB │ gzip: 12.14 kB │ map: 110.60 kB
+[WebServer] dist/markdown-html-83ZGjqmO.js             43.57 kB │ gzip: 23.96 kB │ map:  74.66 kB
+[WebServer] dist/pages-dom.js                          53.72 kB │ gzip: 13.34 kB │ map: 147.72 kB
+[WebServer] dist/index.js                              82.82 kB │ gzip: 24.40 kB │ map: 179.78 kB
+[WebServer] dist/direction-scope-ChpmBxq0.js           88.51 kB │ gzip: 25.77 kB │ map: 271.12 kB
+[WebServer] dist/commands-BkBIn4O3.js                  88.62 kB │ gzip: 23.02 kB │ map: 256.02 kB
+[WebServer] dist/react.js                              94.79 kB │ gzip: 22.12 kB │ map: 187.55 kB
+[WebServer] dist/view-cDm7WHqP.js                     122.64 kB │ gzip: 30.49 kB │ map: 316.56 kB
+[WebServer] dist/docx.js                              188.55 kB │ gzip: 54.10 kB │ map: 518.31 kB
+[WebServer] dist/html-server.js                       263.00 kB │ gzip: 59.79 kB │ map: 774.04 kB
+[WebServer] dist/emoji-data.js                        331.40 kB │ gzip: 30.88 kB │ map: 467.62 kB
+[WebServer] 
+[WebServer] transforming...
+[WebServer] ✓ 309 modules transformed.
+[WebServer] rendering chunks...
+[WebServer] computing gzip size...
+[WebServer] dist/step-CICBu9Xg.cjs                       0.20 kB │ gzip:  0.18 kB │ map:   0.42 kB
+[WebServer] dist/plugin-DlQkwKdU.cjs                     0.48 kB │ gzip:  0.27 kB │ map:   3.21 kB
+[WebServer] dist/node-spec-owlJN_nc.cjs                  0.59 kB │ gzip:  0.36 kB │ map:   8.05 kB
+[WebServer] dist/rolldown-runtime-Chgba0Kb.cjs           0.77 kB │ gzip:  0.41 kB
+[WebServer] dist/text-style.cjs                          0.87 kB │ gzip:  0.36 kB
+[WebServer] dist/svelte.cjs                              0.89 kB │ gzip:  0.51 kB │ map:   3.64 kB
+[WebServer] dist/url-Co8QRAHd.cjs                        0.92 kB │ gzip:  0.51 kB │ map:   2.68 kB
+[WebServer] dist/useFountain-C16zq9TV.cjs                0.96 kB │ gzip:  0.52 kB │ map:   3.30 kB
+[WebServer] dist/command-manager-DU4ahU5C.cjs            1.06 kB │ gzip:  0.55 kB │ map:   6.45 kB
+[WebServer] dist/collaboration-DHfWMt2l.cjs              1.26 kB │ gzip:  0.63 kB │ map:   3.61 kB
+[WebServer] dist/react-widgets.cjs                       1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+[WebServer] dist/vue.cjs                                 1.45 kB │ gzip:  0.76 kB │ map:   4.76 kB
+[WebServer] dist/inline-atom-Cg88XSNe.cjs                1.53 kB │ gzip:  0.70 kB │ map:   5.34 kB
+[WebServer] dist/search-Cb5HWhnF.cjs                     1.76 kB │ gzip:  0.87 kB │ map:   6.15 kB
+[WebServer] dist/path-DDY3uxw-.cjs                       1.98 kB │ gzip:  0.82 kB │ map:   5.79 kB
+[WebServer] dist/content-expression-YXcFdjFU.cjs         2.15 kB │ gzip:  0.98 kB │ map:   7.85 kB
+[WebServer] dist/html-page-settings-CYNBUfR_.cjs         2.53 kB │ gzip:  1.05 kB │ map:   8.37 kB
+[WebServer] dist/table-map-Dbo_d2TT.cjs                  2.65 kB │ gzip:  1.23 kB │ map:  10.02 kB
+[WebServer] dist/input-rules-HXvPuvbc.cjs                2.66 kB │ gzip:  1.16 kB │ map:   9.04 kB
+[WebServer] dist/decoration-jVx4B2Pl.cjs                 2.68 kB │ gzip:  1.13 kB │ map:  10.14 kB
+[WebServer] dist/replace-text-range-step-VHOaDNVn.cjs    2.69 kB │ gzip:  1.07 kB │ map:   9.63 kB
+[WebServer] dist/history-C1iHQbdz.cjs                    2.76 kB │ gzip:  1.03 kB │ map:   7.85 kB
+[WebServer] dist/extension-Sb4ErwsF.cjs                  2.86 kB │ gzip:  1.17 kB │ map:  10.59 kB
+[WebServer] dist/text-direction-T5Baosqb.cjs             2.89 kB │ gzip:  1.01 kB │ map:   8.85 kB
+[WebServer] dist/mark-range-step-DOJDyOsP.cjs            3.02 kB │ gzip:  0.92 kB │ map:  10.34 kB
+[WebServer] dist/node-D26sG_e5.cjs                       3.35 kB │ gzip:  1.25 kB │ map:  10.25 kB
+[WebServer] dist/widgets-dom.cjs                         4.02 kB │ gzip:  1.53 kB │ map:  13.67 kB
+[WebServer] dist/html-flow-CLseFPNz.cjs                  4.32 kB │ gzip:  1.73 kB │ map:  12.15 kB
+[WebServer] dist/integrity-dom.cjs                       4.36 kB │ gzip:  1.82 kB │ map:  14.27 kB
+[WebServer] dist/link-destination-e49Ncxgh.cjs           4.70 kB │ gzip:  1.53 kB │ map:  13.01 kB
+[WebServer] dist/table-of-contents.cjs                   4.75 kB │ gzip:  2.12 kB │ map:  17.66 kB
+[WebServer] dist/text-style-CWOenMc1.cjs                 5.08 kB │ gzip:  1.44 kB │ map:  15.23 kB
+[WebServer] dist/html-inert.cjs                          5.19 kB │ gzip:  2.36 kB │ map:  13.94 kB
+[WebServer] dist/testing.cjs                             5.43 kB │ gzip:  2.08 kB │ map:  18.97 kB
+[WebServer] dist/selection-DrO1gWsj.cjs                  5.65 kB │ gzip:  1.97 kB │ map:  19.95 kB
+[WebServer] dist/react-tracked-changes.cjs               5.71 kB │ gzip:  2.01 kB │ map:  14.60 kB
+[WebServer] dist/migrations.cjs                          6.10 kB │ gzip:  2.00 kB │ map:  19.78 kB
+[WebServer] dist/react-integrity.cjs                     6.18 kB │ gzip:  2.18 kB │ map:  14.15 kB
+[WebServer] dist/details.cjs                             6.35 kB │ gzip:  2.39 kB │ map:  21.62 kB
+[WebServer] dist/mapping-LRwd6pqd.cjs                    6.55 kB │ gzip:  2.36 kB │ map:  24.97 kB
+[WebServer] dist/table-layout-DclxIB5V.cjs               6.74 kB │ gzip:  2.29 kB │ map:  19.85 kB
+[WebServer] dist/react-comments.cjs                      7.05 kB │ gzip:  2.28 kB │ map:  18.76 kB
+[WebServer] dist/node-ids.cjs                            7.18 kB │ gzip:  2.82 kB │ map:  28.03 kB
+[WebServer] dist/menu-position-BkV8EDcV.cjs              7.21 kB │ gzip:  2.72 kB │ map:  25.43 kB
+[WebServer] dist/widgets.cjs                             7.33 kB │ gzip:  2.88 kB │ map:  28.00 kB
+[WebServer] dist/react-versions.cjs                      7.37 kB │ gzip:  2.35 kB │ map:  19.28 kB
+[WebServer] dist/shared-direction-B7vyClfV.cjs           7.61 kB │ gzip:  3.19 kB │ map:  24.66 kB
+[WebServer] dist/core.cjs                                8.27 kB │ gzip:  2.45 kB
+[WebServer] dist/structured-attributes.cjs               8.41 kB │ gzip:  2.71 kB │ map:  31.45 kB
+[WebServer] dist/ai-generated-media.cjs                  9.11 kB │ gzip:  2.97 kB │ map:  27.49 kB
+[WebServer] dist/ruby.cjs                                9.18 kB │ gzip:  3.14 kB │ map:  28.80 kB
+[WebServer] dist/integrity.cjs                           9.36 kB │ gzip:  3.32 kB │ map:  30.88 kB
+[WebServer] dist/pages.cjs                               9.36 kB │ gzip:  3.21 kB │ map:  28.86 kB
+[WebServer] dist/collaboration-core-6QLxBCsv.cjs         9.37 kB │ gzip:  2.92 kB │ map:  32.93 kB
+[WebServer] dist/page-settings-BTDzBnRH.cjs             10.15 kB │ gzip:  3.43 kB │ map:  32.11 kB
+[WebServer] dist/pages-preview.cjs                      11.42 kB │ gzip:  4.10 kB │ map:  37.00 kB
+[WebServer] dist/editor-Ce4QfnkJ.cjs                    13.24 kB │ gzip:  4.10 kB │ map:  43.90 kB
+[WebServer] dist/ai-conversation.cjs                    13.42 kB │ gzip:  4.04 kB │ map:  41.75 kB
+[WebServer] dist/ai-document-tools.cjs                  13.93 kB │ gzip:  4.22 kB │ map:  45.71 kB
+[WebServer] dist/emoji-BXCSkU1w.cjs                     14.66 kB │ gzip:  5.12 kB │ map:  46.33 kB
+[WebServer] dist/link-behavior-BCUadJDt.cjs             17.13 kB │ gzip:  6.61 kB │ map:  51.31 kB
+[WebServer] dist/presentation-DrPDmb6z.cjs              17.92 kB │ gzip:  5.47 kB │ map:  64.36 kB
+[WebServer] dist/document-utilities.cjs                 19.37 kB │ gzip:  6.71 kB │ map:  67.92 kB
+[WebServer] dist/yjs.cjs                                23.26 kB │ gzip:  7.24 kB │ map:  77.39 kB
+[WebServer] dist/tracked-changes.cjs                    23.66 kB │ gzip:  7.30 kB │ map:  85.59 kB
+[WebServer] dist/comments.cjs                           24.18 kB │ gzip:  7.65 kB │ map:  87.59 kB
+[WebServer] dist/versions.cjs                           24.36 kB │ gzip:  7.06 kB │ map:  80.44 kB
+[WebServer] dist/extensions-t-CNvbT8.cjs                32.00 kB │ gzip:  8.55 kB │ map:  92.10 kB
+[WebServer] dist/media-B1ItJVn_.cjs                     35.37 kB │ gzip: 10.89 kB │ map: 110.74 kB
+[WebServer] dist/markdown-html-DD8ATANg.cjs             41.42 kB │ gzip: 23.40 kB │ map:  74.55 kB
+[WebServer] dist/pages-dom.cjs                          44.81 kB │ gzip: 12.13 kB │ map: 147.15 kB
+[WebServer] dist/direction-scope-CvUSU3Lx.cjs           69.31 kB │ gzip: 23.15 kB │ map: 270.47 kB
+[WebServer] dist/index.cjs                              70.15 kB │ gzip: 21.13 kB │ map: 179.78 kB
+[WebServer] dist/react.cjs                              71.01 kB │ gzip: 19.11 kB │ map: 196.61 kB
+[WebServer] dist/commands-DUvEk7Rf.cjs                  78.25 kB │ gzip: 21.16 kB │ map: 257.17 kB
+[WebServer] dist/view-C6pNi2CM.cjs                     104.61 kB │ gzip: 27.74 kB │ map: 315.85 kB
+[WebServer] dist/docx.cjs                              152.44 kB │ gzip: 48.67 kB │ map: 517.23 kB
+[WebServer] dist/html-server.cjs                       213.90 kB │ gzip: 54.60 kB │ map: 771.22 kB
+[WebServer] dist/emoji-data.cjs                        274.54 kB │ gzip: 30.25 kB │ map: 451.98 kB
+[WebServer] 
+[WebServer] ✓ built in 2.00s
+2026-10-11T19:41:15.307Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:15.308Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:15.308Z pw:webserver Waiting 1000ms
+2026-10-11T19:41:16.352Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:16.353Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:16.353Z pw:webserver Waiting 1000ms
+2026-10-11T19:41:17.358Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:17.365Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:17.365Z pw:webserver Waiting 1000ms
+2026-10-11T19:41:18.373Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:18.374Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:18.375Z pw:webserver Waiting 1000ms
+[WebServer] (node:26364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:22184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-11T19:41:19.389Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:19.390Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:19.390Z pw:webserver Waiting 1000ms
+2026-10-11T19:41:20.399Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:20.429Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:20.429Z pw:webserver Waiting 1000ms
+[WebServer] (node:20648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+2026-10-11T19:41:21.440Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:21.442Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:21.442Z pw:webserver Waiting 1000ms
+[WebServer] (node:22604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-11T19:41:22.443Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:22.444Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:22.444Z pw:webserver Waiting 1000ms
+2026-10-11T19:41:23.456Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:23.466Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:23.466Z pw:webserver Waiting 1000ms
+2026-10-11T19:41:24.472Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:24.474Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:24.474Z pw:webserver Waiting 1000ms
+[WebServer] (node:8836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-11T19:41:25.489Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:25.491Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:25.491Z pw:webserver Waiting 1000ms
+[WebServer] 20:41:26 [vite] (client) Forced re-optimization of dependencies
+[WebServer]   vite:deps (client) removing old cache dir C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps +0ms
+[WebServer] 20:41:26 [vite] (ssr) Forced re-optimization of dependencies
+[WebServer]   vite:deps (ssr) removing old cache dir C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_ssr +1ms
+[WebServer]   vite:deps creating package.json in C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_ssr_temp_0ddc0c15 +93ms
+2026-10-11T19:41:26.493Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:26.494Z pw:webserver Error while checking if http://127.0.0.1:4194/browser-tests.html is available: connect ECONNREFUSED 127.0.0.1:4194
+2026-10-11T19:41:26.494Z pw:webserver Waiting 1000ms
+[WebServer]   vite:deps scanning for dependencies... +0ms
+[WebServer]   vite:deps Crawling dependencies using entries: 
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/index.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/developers.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/conversion-lab.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/workflows.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/task-workflow.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/issue-editor.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/math-renderer.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/math-references.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/block-reordering.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/react-article.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/plain-dom-notes.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/web-component-cms.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/vue-runbook.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/svelte-report.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/angular-media.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/node-markdown.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/python-content-api.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/go-docs-service.html
+[WebServer]   vite:deps   C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/demos/java-approval-workflow.html +0ms
+[WebServer]   vite:deps static imports crawl ended +50ms
+[WebServer]   vite:deps Scan completed in 207.09ms: 
+[WebServer]   vite:deps   @mathjax/mathjax-tex-font/js/svg.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+mathjax-tex-font@4.1.3/node_modules/@mathjax/mathjax-tex-font/mjs/svg.js
+[WebServer]   vite:deps   @mathjax/src/js/adaptors/HTMLAdaptor.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/adaptors/HTMLAdaptor.js
+[WebServer]   vite:deps   @mathjax/src/js/adaptors/liteAdaptor.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/adaptors/liteAdaptor.js
+[WebServer]   vite:deps   @mathjax/src/js/handlers/html/HTMLHandler.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/handlers/html/HTMLHandler.js
+[WebServer]   vite:deps   @mathjax/src/js/input/tex.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/input/tex.js
+[WebServer]   vite:deps   @mathjax/src/js/input/tex/ams/AmsConfiguration.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/input/tex/ams/AmsConfiguration.js
+[WebServer]   vite:deps   @mathjax/src/js/input/tex/base/BaseConfiguration.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/input/tex/base/BaseConfiguration.js
+[WebServer]   vite:deps   @mathjax/src/js/output/svg.js -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/@mathjax+src@4.1.3/node_modules/@mathjax/src/mjs/output/svg.js
+[WebServer]   vite:deps   fountainjs-editor/html/inert -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/html-inert.js
+[WebServer]   vite:deps   katex -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/katex@0.18.6/node_modules/katex/dist/katex.mjs
+[WebServer]   vite:deps   react -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/react@19.2.8/node_modules/react/index.js
+[WebServer]   vite:deps   react-dom/client -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/client.js
+[WebServer]   vite:deps   react/jsx-dev-runtime -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/react@19.2.8/node_modules/react/jsx-dev-runtime.js
+[WebServer]   vite:deps   react/jsx-runtime -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/react@19.2.8/node_modules/react/jsx-runtime.js
+[WebServer]   vite:deps   svelte -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/svelte@5.57.0/node_modules/svelte/src/index-client.js
+[WebServer]   vite:deps   svelte/store -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/svelte@5.57.0/node_modules/svelte/src/store/index-client.js
+[WebServer]   vite:deps   vue -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/vue@3.5.42_typescript@7.0.2/node_modules/vue/dist/vue.runtime.esm-bundler.js
+[WebServer]   vite:deps   yjs -> C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.mjs +192ms
+[WebServer]   vite:deps creating package.json in C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_temp_51efe817 +439ms
+[WebServer]   vite:deps Dependencies bundled in 947.82ms +511ms
+[WebServer]   vite:deps creating _metadata.json in C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_ssr_temp_0ddc0c15 +1ms
+[WebServer]   vite:deps renaming C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_ssr_temp_0ddc0c15 to C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_ssr +11ms
+[WebServer] 
+[WebServer]   VITE v8.2.2  ready in 2301 ms
+[WebServer] 
+[WebServer]   ➜  Local:   http://127.0.0.1:4194/
+2026-10-11T19:41:27.516Z pw:webserver HTTP GET: http://127.0.0.1:4194/browser-tests.html
+2026-10-11T19:41:27.554Z pw:webserver HTTP Status: 200
+2026-10-11T19:41:27.555Z pw:webserver WebServer available
+
+Running 12 tests using 1 worker
+
+[WebServer] 20:41:27 [vite] (client) [optimizer] bundling dependencies...
+[WebServer]   vite:deps Dependencies bundled in 1592.89ms +1s
+[WebServer]   vite:deps using post-scan optimizer result, the scanner found every used dependency +2s
+[WebServer]   vite:deps creating _metadata.json in C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_temp_51efe817 +3ms
+[WebServer]   vite:deps renaming C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps_temp_51efe817 to C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/examples/react-app/node_modules/.vite-input-audit/deps +6ms
+[WebServer]   vite:deps dependencies optimized +24ms
+(node:9020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (5.8s)
+  ok  2 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (4.3s)
+  ok  3 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (4.8s)
+  ok  4 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (4.4s)
+(node:27692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (7.6s)
+  ok  6 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (5.7s)
+  ok  7 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (5.1s)
+  ok  8 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (5.9s)
+(node:8032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (12.8s)
+  ok 10 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (12.1s)
+  ok 11 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (11.5s)
+  ok 12 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (12.0s)
+2026-10-11T19:43:06.506Z pw:webserver Terminating the WebServer
+2026-10-11T19:43:06.730Z pw:webserver Terminated the WebServer
+
+  12 passed (1.9m)

@@ -204,6 +204,10 @@ passes and do not certify native mobile devices.
 
 ### Public nested-direction reproduction (2026-10-11, unresolved)
 
+This section records the **pre-integration** failing checkpoint. Its raw
+evidence is retained; current progress and remaining limits are reported in
+[the integration checkpoint below](#shared-direction-integration-2026-10-11-unreleased).
+
 `pnpm exec playwright test --config playwright.nested-direction-audit.config.ts`
 now reproduces that boundary through actual file import, pointer selection,
 the public Indent/Lift buttons, downloads and native keyboard typing. It runs
@@ -250,6 +254,10 @@ attributes. Its acceptance requirements remain:
 
 ### Portable first-strong foundation (2026-10-11, not integrated)
 
+This is the historical foundation at commit `779aabe`, not a statement that
+the current working tree lacks integration. Its certificate binds that source;
+do not regenerate it against newer code using historical test logs.
+
 The private `src/core/first-strong-direction.ts` module now classifies Unicode
 L/R/AL text without browser globals, normalization or document mutation. A
 reproducible generator pins Unicode 17.0.0 `DerivedBidiClass`; the complete
@@ -281,6 +289,159 @@ six public direction failures above are unchanged. Custom renderer isolation
 still needs its explicit contract. No public API, parity score, npm release or
 production-readiness promotion is implied. Source/evidence inventory:
 `artifacts/first-strong-foundation-verification-20261011.json`.
+
+### Shared-direction integration (2026-10-11, Unreleased)
+
+`src/core/shared-direction.ts` now owns the private portable context boundary.
+Built-in direction-capable node schemas declare the optional, validated
+`directionGroup` attribute. A live member keeps `dir: "auto"` plus its group;
+the Unicode first-strong fold reads current eligible members in document order.
+There is no retained hidden source subtree and no frozen RTL replacement for
+internal moves. Explicitly setting direction detaches that member. A restricted
+host with no capable editable carrier rejects the operation atomically rather
+than silently losing context.
+
+The wiring is concrete:
+
+- `src/core/structure-commands.ts` stages owner/membership changes in the same
+  list or generic-move transaction, preserving the unselected nested suffix.
+- `src/view/shared-direction.ts` refreshes mounted projections, including
+  genuinely reused member DOM when another member changes. It is private and
+  does not add a root/view public export.
+- `src/core/exporters/html-exporter.ts` writes resolved reader direction with
+  validated group/origin markers; `src/core/text-direction.ts` restores live
+  ownership on reopen. `src/html/server.ts` reports unsupported receivers.
+- `src/yjs/index.ts` derives a shared owner's identity from Yjs's public
+  relative-position API, so concurrent first fragmentation does not create
+  different client-local group identities. Cleanup is adapter-lifecycle owned.
+- `src/view/input.ts` remaps complete clipboard groups per paste. A partial
+  copy cannot refer to omitted context: it preserves appearance with an
+  explicit fixed-direction snapshot, reports that detachment on Fountain paste,
+  leaves the source untouched, and never inserts invisible anchor content.
+
+The pre-index local focused evidence is **158 tests / ten files**, including
+independent exhaustive Unicode classification, exact history, restricted
+schemas, reused custom views, full HTML reopen and actual two-peer concurrent
+fragmentation. View unit tests use jsdom only to inspect attributes; they are
+not browser layout evidence. The compact generated Unicode table retains all
+1,123 ranges and the same pinned source/license.
+
+`tests/manual/shared-direction-copy-real.spec.ts` adds trusted keyboard copy
+and paste through the public conversion lab and an independent contenteditable
+destination. Four Chromium/Firefox journeys pass in
+`artifacts/shared-direction-copy-targeted-20261011.log`. Three PNGs from that
+run were inspected directly; videos were recorded, not watched. The first
+partial-copy fixture accidentally clicked the editor's empty trailing paragraph.
+Passive event observations proved an empty selection; the corrected test now
+targets the English paragraph and asserts actual selected text before copying.
+Original failures are retained, not relabeled as passes.
+
+The first background integration batch had **13 passes / five failures**.
+One Chromium case lost its imported workspace after a Vite dependency reload;
+three partial-copy cases used the empty fixture target; WebKit complete-copy
+delivery also failed. A corrected-target confirmation has **15 passes / three
+failures**: cold Chromium reload and both Windows WebKit copy journeys.
+Debug optimizer output identifies late `docx-preview`, `fflate` and
+`entities/decode` discovery as the reload trigger. Preloading these exact
+dependencies now passes all **twelve unchanged nested journeys from a forced
+cold start**, without a warm-up, timeout increase or weaker assertions.
+`artifacts/shared-direction-nested-cold-confirm-20261011.log` also shows no
+optimizer reload. Six final PNGs were directly reviewed; videos were recorded,
+not watched. The isolated
+test server now disables automatic browser opening; browsers remain headless.
+`tests/browser/editor.spec.ts` now imports that unchanged audit, registering its
+twelve desktop cases in the normal matrix. A complete current-source Linux run
+is still required; registration is not a claim that that full matrix has passed.
+The clipboard audit remains isolated and Windows WebKit failures stay visible.
+Fresh independent WebKit controls transfer all four native default copies but
+lose all eight event-authored copies, for both text and rich destinations.
+This is an environment diagnosis, not a passing Fountain or real Safari claim.
+
+At this pre-index checkpoint, remaining boundaries are explicit: Windows WebKit native event-authored
+clipboard delivery and real Safari verification; huge-document incremental
+group resolution (the current fold scans the model once per new immutable
+document); custom renderer isolation; unsupported formats and ancestor-only
+context on node-selected descendant copies. The initial full integration run
+had one strict metadata-read regression, corrected without relaxing its test;
+a fresh full suite now passes **2,963 tests / 220 files**. API verifies 411
+declarations without updating its snapshot; headless verifies 103 modules;
+packed ESM/CommonJS contracts and TypeScript/Svelte/Angular checks pass.
+Aggregate size remains red at **1,613.1 KiB ESM / 1,342.3 KiB CJS** against
+unchanged 1,598.75 / 1,330 KiB caps. No cap increase,
+parity promotion, npm release or general fidelity certification is implied.
+Source/evidence binding is in
+`artifacts/shared-direction-integration-verification-20261011.json`;
+`node scripts/verify-shared-direction-integration.mjs --check` validates its
+recorded pre-index blobs, not later source. It refuses to regenerate an existing
+historical certificate. The index follow-up below supersedes its current-state
+unit/size counts without overwriting those historical observations.
+
+### Immutable shared-direction index follow-up (2026-10-11, Unreleased)
+
+`src/core/shared-direction-index.ts` now caches scalar subtree summaries and
+per-document direction maps in private WeakMaps. Values contain no model nodes,
+old document references, DOM, hidden anchor text or mutable external state.
+The membership accessor must be stable for immutable node data/schema. Changed
+ancestors read cached children; unchanged grouped and unrelated subtrees are
+not re-walked. Homogeneous contexts collapse without changing text order;
+mixed-group branches retain ordered traversal. There is **no constant-time edit
+claim**: wide changed child arrays and mixed-group branches still require work.
+The original full fold remains the separate test oracle, not production's new
+implementation or somebody else's document schema.
+
+`tests/shared-direction-index.test.ts` passes eight contracts, including two
+deterministic regressions that originally re-read 1,000 unchanged nodes, 500
+mixed trees with shared/reused subtrees, explicit/inert exclusions, 10,000-level
+iterative depth and repeated edits across 100,000 blocks. The four-file focused
+set passes 81 tests; fresh full units pass **2,971 / 221 files**. This supplements
+the earlier independent exhaustive Unicode classifier evidence.
+
+The test-only public-API fixture in
+`tests/browser/fixtures/shared-direction-virtual.ts` mounts 100,000 weak-text
+members and an offscreen Hebrew anchor. Its navigation control explicitly
+scrolls to the middle member; mounting alone is not treated as visible evidence.
+`tests/manual/shared-direction-virtual-real.spec.ts` requires that member to be
+in the viewport before and after the host's offscreen update, confirms actual
+DOM reuse/direction, performs native typing and exact relevant-text history, and
+checks the anchor remains unmounted. It is **not** a production large-file import
+test, an IME test, or certification of every large-document interaction.
+
+All three desktop cases and the twelve unchanged public nested journeys pass
+from a forced cold start in `shared-direction-index-native-final-20261011.log`.
+Twelve final PNGs were directly inspected, including the actually visible middle
+fragment; videos were recorded but not watched. The new three cases are imported
+into the regular desktop suite. A full current-source Linux matrix is not yet
+certified. The first fixture URL failed before mounting; that raw diagnostic is
+retained. Earlier screenshots prompted the explicit viewport assertions rather
+than accepting a mounted but offscreen middle member as user-visible evidence.
+Four complete/partial trusted clipboard journeys also pass on this index source
+in Chromium/Firefox (`shared-direction-index-copy-final-20261011.log`), including
+independent external and Fountain destinations. They remain isolated; Windows
+WebKit's known event-authored delivery failure is not relabeled as a pass.
+
+API remains 411 declarations with unchanged snapshot; headless is 104 modules;
+packed ESM/CJS and TypeScript/Svelte/Angular pass. The focused public-export
+memory script performs 2,000 edits/projections across 1,000 shared members without
+an undo plugin: 0.30 MiB retained live under 8 MiB, 0.52 MiB after 40 destroyed
+editors under 16 MiB. It uses existing ceilings and is added to `test:performance`.
+The registered command also passes: 0.34 MiB live / 0.49 MiB destroyed on that run.
+Retained undo history is legitimate and this is not a general browser heap proof.
+The first performance sample failed the 100-block server HTML p95 (39.04/35 ms);
+unchanged-code confirmation passes (28.99 ms), with both logs kept. No threshold
+was increased and confirmation does not erase the initial failure.
+
+Aggregate runtime size remains **red: 1,614.5 KiB ESM / 1,343.2 KiB CJS**, against
+unchanged 1,598.75 / 1,330 KiB caps. Also open: Windows WebKit event-authored
+clipboard and real Safari evidence, custom renderer isolation, inherited
+no-strong fallback auditing, ancestor-only clipboard context, unsupported formats,
+broader latency/heap coverage and the full current-source release matrix.
+PROD-04 stays Partial; npm stays `0.4.0-beta.2`. This is not full parity or a
+production/release certificate.
+
+New immutable source/evidence binding:
+`artifacts/shared-direction-index-verification-20261011.json`, checked by
+`node scripts/verify-shared-direction-index.mjs --check`. The older integration
+binding remains historical and is not regenerated against this later source.
 
 ## What it preserves
 

@@ -1,0 +1,200 @@
+[WebServer] (node:20036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:27580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:30040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:15752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 18 tests using 1 worker
+
+(node:4868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (32.1s)
+(node:29604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (4.7s)
+  ok  3 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (4.0s)
+  ok  4 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (4.3s)
+  ok  5 [chromium] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy (4.9s)
+  ok  6 [chromium] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot (5.7s)
+(node:16224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  7 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (7.7s)
+  ok  8 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (5.7s)
+  ok  9 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (5.7s)
+  ok 10 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (6.0s)
+  ok 11 [firefox] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy (7.3s)
+  ok 12 [firefox] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot (7.3s)
+(node:204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (14.0s)
+  ok 14 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (12.0s)
+  ok 15 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (13.5s)
+  ok 16 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (12.4s)
+  x  17 [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy (11.2s)
+(node:9940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  18 [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot (12.7s)
+
+
+  1) [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ──────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: nested-lift-auto.html', exact: true }).getByRole('combobox', { name: 'Export format', exact: true })
+
+
+      47 |     expect(imported).toEqual(nativeBefore);
+      48 |     const download = async (format: 'json' | 'html') => {
+    > 49 |       await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption(format);
+         |                                                                                     ^
+      50 |       const pending = page.waitForEvent('download');
+      51 |       await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+      52 |       return readFile((await (await pending).path())!, 'utf8');
+        at download (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:49:85)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:54:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-native-confirm-20261011\nested-direction-real-nested-lift-auto-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Native destination')
+    Expected substring: "English member"
+    Received string:    ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Native destination')
+        13 × locator resolved to <div role="textbox" contenteditable="true" aria-label="Native destination"></div>
+           - unexpected value ""
+
+
+      69 |     await native.bringToFront(); await control.click(); await native.keyboard.press('ControlOrMeta+v');
+      70 |     observations.pasteDelivery = await native.evaluate(() => (globalThis as any).__sharedPasteDelivery ?? null);
+    > 71 |     await expect(control).toContainText('English member');
+         |                           ^
+      72 |     await expect(control.locator('blockquote')).toHaveCount(partial ? 1 : 2);
+      73 |     await expect(control.locator('blockquote').last()).toHaveCSS('direction', 'rtl');
+      74 |     observations.nativeHTML = await control.innerHTML();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-copy-real.spec.ts:71:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-952aa-hared-context-complete-copy-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-952aa-hared-context-complete-copy-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-952aa-hared-context-complete-copy-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-952aa-hared-context-complete-copy-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-952aa-hared-context-complete-copy-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-952aa-hared-context-complete-copy-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Native destination')
+    Expected substring: "English member"
+    Received string:    ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Native destination')
+        13 × locator resolved to <div role="textbox" contenteditable="true" aria-label="Native destination"></div>
+           - unexpected value ""
+
+
+      69 |     await native.bringToFront(); await control.click(); await native.keyboard.press('ControlOrMeta+v');
+      70 |     observations.pasteDelivery = await native.evaluate(() => (globalThis as any).__sharedPasteDelivery ?? null);
+    > 71 |     await expect(control).toContainText('English member');
+         |                           ^
+      72 |     await expect(control.locator('blockquote')).toHaveCount(partial ? 1 : 2);
+      73 |     await expect(control.locator('blockquote').last()).toHaveCSS('direction', 'rtl');
+      74 |     observations.nativeHTML = await control.innerHTML();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-copy-real.spec.ts:71:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-67694-ed-context-partial-snapshot-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-67694-ed-context-partial-snapshot-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-67694-ed-context-partial-snapshot-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-67694-ed-context-partial-snapshot-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-67694-ed-context-partial-snapshot-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-native-confirm-20261011\shared-direction-copy-real-67694-ed-context-partial-snapshot-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ───────────────
+    [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy 
+    [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot 
+  15 passed (3.3m)

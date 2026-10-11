@@ -12,7 +12,7 @@ import {
 import { getNodeAtPath } from '../../core/transaction/path';
 import { tableBackground } from '../../core/table-background';
 import { cellAppearanceAttribute, cellAppearanceDOMAttributes } from '../../core/table-appearance';
-import { textDirectionAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
+import { textDirectionAttribute, sharedDirectionGroupAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
 
 const MIN_WIDTH = 40;
 const MAX_WIDTH = 2_000;
@@ -45,7 +45,7 @@ function validColwidth(value: unknown): boolean {
 }
 
 export const tableCellAttributes = {
-  dir: textDirectionAttribute,
+  dir: textDirectionAttribute, directionGroup: sharedDirectionGroupAttribute,
   colspan: { default: 1, validate: (value: unknown) => Number.isInteger(value) && Number(value) >= 1 && Number(value) <= 100 },
   rowspan: { default: 1, validate: (value: unknown) => Number.isInteger(value) && Number(value) >= 1 && Number(value) <= 100 },
   colwidth: { default: null, validate: validColwidth },

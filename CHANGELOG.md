@@ -7,6 +7,33 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Index shared-direction projection with private weakly held scalar subtree
+  summaries: unchanged block contents are reused, with no retained document/node
+  references in cache values. Eight indexing tests cover mixed groups, barriers,
+  inert text, 100k blocks and 10k nesting. Focused set: 81 / four files; full
+  units: 2,971 / 221. Fifteen desktop journeys pass, including native typing,
+  offscreen anchors, viewport checks and history in a 100k virtual view; twelve
+  final PNGs reviewed. Register the three virtual cases in the regular desktop
+  matrix and bounded indexed-retention checks in the performance command. API,
+  headless, packed-package and framework types pass. Keep the initial timing
+  failure, passing confirmation, size overrun and remaining portability/fidelity
+  boundaries explicit; no release or parity-row promotion.
+
+- Integrate private live shared-direction ownership across fragmented list/move
+  transactions, view/HTML projection, history and Yjs stable identity. Give
+  complete clipboard groups fresh identity per paste and report partial-copy
+  direction snapshots without hidden anchors. Focused regression: 158 tests /
+  ten files; four recorded Chromium/Firefox copy journeys pass. Full units pass
+  2,963 / 220 files; API/headless/package/framework types pass. Trace-guided
+  dependency preloading fixes the draft-destroying cold development reload:
+  twelve unchanged nested journeys pass across three desktop engines and now
+  register in the normal matrix. Six final PNGs reviewed. Windows WebKit
+  clipboard, huge-document incremental group
+  resolution and aggregate size remain open. Disable automatic browser opening
+  in isolated test servers. Trace-guided preloading of the conversion lab's
+  preview/archive/entity dependencies is confirmed from a forced cold start.
+  No public API/ledger/npm promotion; retain earlier red evidence.
+
 - Verify completed Linux CI/Pages for the Markdown caret-source runtime fix
   `f457ec3`: 2,890 units / 217 files, 763 clean unique browser passes / 16 skips,
   with 67 repeated preflights counted separately and no reported retry. Retain
@@ -14,7 +41,7 @@ policy on reopen. Native layout certification remains outstanding.
   limits; uploaded artifact contents for this run are not yet reviewed. This
   does not explain the historical Firefox retry or fix shared-auto direction.
 
-- Add a private, DOM-free Unicode first-strong classifier and live fragmented
+- Historical foundation at `779aabe`: add a private, DOM-free Unicode first-strong classifier and live fragmented
   context fold, with pinned Unicode 17 data, reproducible generation and full
   license notices. Thirty-two focused tests include exhaustive classification,
   streaming, deep traversal and shared-context edit/delete/reorder; seventeen

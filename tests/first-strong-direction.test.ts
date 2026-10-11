@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { Schema } from '../src/core/schema';
 import { CoreSchemaSpec } from '../src/extensions';
 import { containedTextDirection, firstStrongDirection, firstStrongDirectionInText, sharedTextDirections, strongDirectionOfCodePoint } from '../src/core/first-strong-direction';
+import { bidiStrongRanges } from '../src/core/bidi-strong-data';
 
 const fixture = readFileSync(new URL('./fixtures/unicode/DerivedBidiClass-17.0.0.txt', import.meta.url));
 
@@ -13,6 +14,20 @@ describe('portable first-strong direction foundation', () => {
   it('pins the official data and generated output', () => {
     expect(createHash('sha256').update(fixture).digest('hex')).toBe('4867b4b7f0731ed1bfcd34cc6251211ff1542541fce0734b6fbda139ee80b3a4');
     expect(execFileSync(process.execPath, ['scripts/generate-bidi-strong.mjs', '--check'], { encoding: 'utf8' })).toContain('verified');
+  });
+
+  it('decodes a frozen, complete, ordered range table', () => {
+    expect(Object.isFrozen(bidiStrongRanges)).toBe(true);
+    expect(bidiStrongRanges.length).toBe(1123 * 2);
+    let previous = -1;
+    for (let index = 0; index < bidiStrongRanges.length; index += 2) {
+      const end = bidiStrongRanges[index];
+      expect(Number.isInteger(end)).toBe(true);
+      expect(end).toBeGreaterThan(previous);
+      expect([0, 1, 2]).toContain(bidiStrongRanges[index + 1]);
+      previous = end;
+    }
+    expect(previous).toBe(0x10ffff);
   });
 
   it('matches all 1,114,112 Unicode code points, including default/unassigned classes', () => {

@@ -29,6 +29,7 @@ import {
   type MountedDocumentNode,
   type MountedNodeView,
 } from './dom-renderer';
+import { refreshSharedDirectionDOM } from './shared-direction';
 import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import { DropCursorManager, type DropCursorOptions } from './drop-cursor';
@@ -342,6 +343,7 @@ export class EditorView {
     } else {
       this.documentNodes = renderDocument(this.dom, document, context);
     }
+    refreshSharedDirectionDOM(this.dom, document);
     const retained = new Set(mounted.map((entry) => entry.nodeView));
     previous.forEach((entry) => {
       if (retained.has(entry.nodeView)) return;

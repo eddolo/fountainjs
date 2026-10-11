@@ -32,6 +32,7 @@ import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { textReplacementSelection } from '../core/text-replacement-selection';
+import { copySharedDirectionGroups, snapshotIncompleteSharedDirections } from '../core/shared-direction';
 import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
   insertAssetFile,
@@ -61,6 +62,13 @@ const MAX_FOUNTAIN_CLIPBOARD_CHARACTERS = 5_000_000;
 interface FountainClipboardPayload {
   readonly version: 1;
   readonly document: import('../core').NodeJSON;
+  readonly directionSnapshots?: number;
+}
+
+function directionSnapshotIssues(count: unknown): readonly ExternalPasteIssue[] {
+  return typeof count === 'number' && Number.isInteger(count) && count > 0 && count <= 100_000
+    ? [Object.freeze({ code: 'source-metadata-removed' as const, count, lossy: true,
+      message: 'Copied fragments omitted part of their automatic context; a direction snapshot preserves their appearance, not the omitted live context.' })] : [];
 }
 
 interface PendingNativeRichPaste {
@@ -505,7 +513,7 @@ export class InputManager {
       try {
         const payload = JSON.parse(fountain) as Partial<FountainClipboardPayload>;
         if (payload.version !== 1 || !payload.document) throw new TypeError('Unsupported Fountain clipboard payload.');
-        const document = this.editor.state.schema.nodeFromJSON(payload.document);
+        const document = copySharedDirectionGroups(this.editor.state.schema.nodeFromJSON(payload.document));
         if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
           event.preventDefault();
           this.reportPaste(createExternalPasteReport(
@@ -513,6 +521,7 @@ export class InputManager {
             'inserted-fountain-document',
             fountain,
             fountain,
+            directionSnapshotIssues(payload.directionSnapshots),
           ));
           return true;
         }
@@ -537,6 +546,8 @@ export class InputManager {
   private insertRichClipboard(event: Event | undefined, text: string | undefined, html: string,
     fountain: string, fountainFallback: ExternalPasteIssue | null, missingRichHTML = false): void {
     let richIssues: readonly ExternalPasteIssue[] = fountainFallback ? [fountainFallback] : [];
+    const snapshotMarker = html.match(/\bdata-fountain-clipboard-direction-snapshots="(\d{1,6})"/);
+    if (snapshotMarker) richIssues = [...richIssues, ...directionSnapshotIssues(Number(snapshotMarker[1]))];
     if (missingRichHTML) richIssues = Object.freeze([...richIssues, Object.freeze({
       code: 'rich-html-unavailable' as const, count: 1,
       message: 'The browser advertised rich clipboard HTML but did not deliver it; Fountain used the original plain-text representation.',
@@ -552,7 +563,7 @@ export class InputManager {
           if (!fountain) richSource = normalized.source;
           richIssues = Object.freeze([...richIssues, ...normalized.issues]);
         }
-        const document = HTMLImporter.parse(normalizedHTML, this.editor.state.schema);
+        const document = copySharedDirectionGroups(HTMLImporter.parse(normalizedHTML, this.editor.state.schema));
         if (this.editor.runCommandBatch(() => insertDocument(this.editor, document))) {
           event?.preventDefault();
           this.reportPaste(createExternalPasteReport(
@@ -621,10 +632,12 @@ export class InputManager {
 
   private writeFountainSelection(event: ClipboardEvent): boolean {
     if (!event.clipboardData) return false;
-    const document = this.selectedFountainDocument();
-    if (!document) return false;
-    const html = HTMLExporter.export(document, { document: false });
-    const payload: FountainClipboardPayload = { version: 1, document: document.toJSON() };
+    const selected = this.selectedFountainDocument();
+    if (!selected) return false;
+    const { document, detached } = snapshotIncompleteSharedDirections(selected, this.editor.state.doc);
+    const fragment = HTMLExporter.export(document, { document: false });
+    const html = detached ? `<div data-fountain-clipboard-direction-snapshots="${detached}">${fragment}</div>` : fragment;
+    const payload: FountainClipboardPayload = { version: 1, document: document.toJSON(), ...(detached ? { directionSnapshots: detached } : {}) };
     let plainText = clipboardText(document);
     const selection = this.editor.state.selection;
     if (!plainText && selection instanceof NodeSelection

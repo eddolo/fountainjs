@@ -1,6 +1,35 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-Private shared-direction foundation (2026-10-11): 32 focused Node tests,
+Unreleased immutable shared-direction indexing (2026-10-11): the focused set
+passes **81 / four files**, including zero repeated child reads of unchanged
+blocks at 1k/100k, mixed-group semantic comparisons and deep nesting. Full units
+pass **2,971 / 221**. Fifteen recorded desktop journeys pass: twelve unchanged
+public nested audits plus three 100k virtual-view integrations with explicit
+viewport checks, offscreen updates and native typing/history. Twelve final PNGs
+reviewed. API 411/headless 104/package/types pass; bounded indexed retention stays
+within existing limits and is registered in the normal performance command.
+An initial server timing failure is retained alongside passing confirmation.
+Aggregate size still fails unchanged caps; full Linux and real Safari evidence
+are incomplete. PROD-04 and npm remain unchanged, not a delivered-row promotion.
+[Detailed boundaries](HTML_CONTAINERS.md#immutable-shared-direction-index-follow-up-2026-10-11-unreleased).
+
+Earlier shared-direction integration (2026-10-11, before the index): live group ownership now
+survives fragmented list/move transforms and is projected by the view/exporter;
+Yjs supplies stable ownership identity for concurrent first fragmentation.
+Focused regression passes **158 tests / ten files**. Four recorded full/partial
+clipboard journeys pass in Chromium/Firefox, with independent native targets
+and complete undo/redo. Current full units pass **2,963 / 220 files**;
+API/headless/package/types pass. The original browser confirmation has 15 passes
+/ three failures; trace-guided dependency preloading then passes all twelve
+unchanged nested journeys from a forced cold start. Six final PNGs reviewed;
+these cases now register in the normal desktop matrix. Windows WebKit clipboard,
+incremental huge-document projection and aggregate size
+remain open. PROD-04 and npm are unchanged. This is not a new delivered row or
+production certification. [Scope and evidence](HTML_CONTAINERS.md#shared-direction-integration-2026-10-11-unreleased).
+Historical binding: `artifacts/shared-direction-integration-verification-20261011.json`;
+checking it against later index source is not expected to pass.
+
+Historical private shared-direction foundation (2026-10-11, commit `779aabe`): 32 focused Node tests,
 exhaustive pinned Unicode classification and 51 bounded native browser checks
 pass; all three final PNGs reviewed. Stable full suite passes 2,922 / 218,
 plus API/package/headless/size/types. The helper is not wired into the editor or
@@ -8,7 +37,7 @@ public API. Six public direction failures remain open, PROD-04 remains Partial,
 and npm/ledger are unchanged. See [scope and remaining integration](HTML_CONTAINERS.md#portable-first-strong-foundation-2026-10-11-not-integrated)
 and `artifacts/first-strong-foundation-verification-20261011.json`.
 
-Live shared-auto audit (2026-10-11): six failing public toolbar/export
+Historical live shared-auto audit (2026-10-11, before integration): six failing public toolbar/export
 journeys and six passing controls across Chromium, Firefox and WebKit confirm
 the nested ownership gap. All twelve complete exact JSON history and native
 typing assertions. Twelve representative screenshots reviewed; recordings not

@@ -1,0 +1,28 @@
+$ node --expose-gc scripts/check-performance-budgets.mjs
+100 blocks: local p50 0.11 ms, p95 0.61 ms; incremental remote p50 0.06 ms, p95 0.09 ms; JSON boundary p50 1.05 ms, p95 1.58 ms
+1,000 blocks: local p50 0.08 ms, p95 0.13 ms; incremental remote p50 0.09 ms, p95 0.15 ms; JSON boundary p50 12.71 ms, p95 19.75 ms
+5,000 blocks: local p50 0.40 ms, p95 0.42 ms; incremental remote p50 0.42 ms, p95 0.49 ms; JSON boundary p50 38.07 ms, p95 49.89 ms
+10,000 blocks: local p50 0.64 ms, p95 1.15 ms; incremental remote p50 0.63 ms, p95 0.69 ms; JSON boundary p50 76.37 ms, p95 99.47 ms
+100 HTML blocks: server parse p50 15.41 ms, p95 39.04 ms
+1,000 HTML blocks: server parse p50 66.78 ms, p95 81.81 ms
+5,000 HTML blocks: server parse p50 252.30 ms, p95 340.37 ms
+10,000 HTML blocks: server parse p50 487.46 ms, p95 730.74 ms
+server HTML 1,000→10,000 median growth: 7.30x / 15x
+local 1,000→10,000 median growth: 8.12x / 15x
+incremental remote 1,000→10,000 median growth: 6.87x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.07 MiB / 16 MiB
+retained 10,000-block server HTML document: 14.16 MiB / 48 MiB
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:217
+if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);
+                           ^
+
+Error: Performance budget failed:
+- 100-block server HTML p95 39.04 ms exceeds 35 ms
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:217:28
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+[ELIFECYCLE] Command failed with exit code 1.

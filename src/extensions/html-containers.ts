@@ -3,6 +3,7 @@ import type { Editor } from '../core/editor';
 import { NodeSelection, Selection } from '../core/selection';
 import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
 import { defineExtension } from './extension';
+import { sharedDirectionGroupAttribute, readSharedDirectionSource } from '../core/text-direction';
 
 const tags = ['div', 'section', 'article', 'aside', 'nav', 'main', 'header', 'footer', 'address'] as const;
 const attributes = { id: 'id', className: 'class', title: 'title', lang: 'lang', dir: 'dir' } as const;
@@ -17,13 +18,16 @@ export const htmlContainer: NodeSpec = {
     tag: { default: 'div', validate: value => tags.includes(value as typeof tags[number]) },
     id: textAttribute(256), className: textAttribute(2048), title: textAttribute(2048), lang: textAttribute(128),
     dir: { default: '', validate: value => typeof value === 'string' && ['', 'ltr', 'rtl', 'auto'].includes(value) },
+    directionGroup: sharedDirectionGroupAttribute,
   },
   parseHTML: tags.map(tag => ({
     tag, priority: 10,
     getAttrs: element => {
       const names = element.getAttributeNames?.();
-      if (!names || names.some(name => !Object.values(attributes).includes(name as typeof attributes[keyof typeof attributes]))) return false;
-      return { tag, ...Object.fromEntries(Object.entries(attributes).map(([name, html]) => [name, element.getAttribute(html) ?? ''])) };
+      if (!names || names.some(name => !Object.values(attributes).includes(name as typeof attributes[keyof typeof attributes])
+        && name !== 'data-fountain-direction-group' && name !== 'data-fountain-direction-origin')) return false;
+      return { tag, ...Object.fromEntries(Object.entries(attributes).map(([name, html]) => [name, element.getAttribute(html) ?? ''])),
+        ...readSharedDirectionSource(element) };
     },
   })),
   toDOM: node => [String(node.attrs.tag), Object.fromEntries(Object.entries(attributes)

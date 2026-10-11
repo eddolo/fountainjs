@@ -3,7 +3,7 @@ import { bidiStrongRanges } from './bidi-strong-data';
 
 type StrongDirection = 'ltr' | 'rtl' | null;
 
-function ownsDirection(node: Node): boolean {
+export function ownsDirection(node: Node): boolean {
   let value = node.attrs.dir;
   // Inert adapters store original element attributes as data, not live DOM
   // attributes. Their explicit source context still excludes their text from

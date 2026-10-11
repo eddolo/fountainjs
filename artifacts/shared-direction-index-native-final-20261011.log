@@ -1,0 +1,49 @@
+[WebServer] (node:16620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:26904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:15784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:12988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:15492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (5.4s)
+  ok  2 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (5.9s)
+  ok  3 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (4.3s)
+  ok  4 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (4.2s)
+  ok  5 [chromium] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (2.7s)
+(node:3196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (7.8s)
+  ok  7 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (6.0s)
+  ok  8 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (5.1s)
+  ok  9 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (5.0s)
+  ok 10 [firefox] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (4.2s)
+(node:18880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (14.1s)
+  ok 12 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (12.7s)
+  ok 13 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (12.4s)
+  ok 14 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (12.3s)
+  ok 15 [webkit] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (6.2s)
+
+  15 passed (2.2m)

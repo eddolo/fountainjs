@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/shared-direction-index.test.ts (3 tests | 1 failed) 25ms
+   ❯ immutable shared-direction indexing (3)
+     × does not traverse unchanged unrelated subtrees again after a text edit 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/shared-direction-index.test.ts > immutable shared-direction indexing > does not traverse unchanged unrelated subtrees again after a text edit
+AssertionError: expected 1000 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1000
+
+ ❯ tests/shared-direction-index.test.ts:24:79
+     22|     try {
+     23|       expect(sharedDirectionDOMAttributes(tail, changed).dir).toBe('lt…
+     24|       expect(calls.mock.instances.filter(node => untouched.has(node)).…
+       |                                                                               ^
+     25|     } finally { calls.mockRestore(); }
+     26|     expect(sharedDirectionDOMAttributes(tail, original).dir).toBe('rtl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  20:49:13
+   Duration  2.21s (transform 51%, import 47%, tests 1%)
+

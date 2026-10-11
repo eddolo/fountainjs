@@ -20,6 +20,7 @@ import {
   type CollaborationUser,
 } from '../extensions/collaboration';
 import type { FountainExtension } from '../extensions/extension';
+import { registerSharedDirectionIdentity } from '../core/shared-direction';
 import {
   YjsStructuredAttributeStore,
   type YjsStructuredAttributesOptions,
@@ -417,6 +418,9 @@ function normalizeLocalUser(user: CollaborationUser | undefined): CollaborationU
   });
 }
 
+// Private adapter lifecycle state does not add members to its public shape.
+const directionIdentityReleases = new WeakMap<YjsCollaborationAdapter, () => void>();
+
 export class YjsCollaborationAdapter implements CollaborationAdapter {
   readonly document: Y.Doc;
   readonly fragment: Y.XmlFragment;
@@ -604,6 +608,20 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
       const selection = this.localSelection ? this.resolveRelativeSelection(this.localSelection, shared) : undefined;
       context.applyRemoteDocument(shared, { selection, origin: 'initial-sync' });
     }
+    directionIdentityReleases.get(this)?.();
+    directionIdentityReleases.set(this, registerSharedDirectionIdentity(context.editor, path => {
+      let element = this.fragment.get(0);
+      if (!isSharedElement(element)) return null;
+      for (const index of path) {
+        const child = element.get(index);
+        if (!isSharedElement(child)) return null;
+        element = child;
+      }
+      // Public relative-position identity, not Yjs private _item internals.
+      // Replicated peers name the same initially unmarked owner consistently.
+      const identity = Y.createRelativePositionFromTypeIndex(element, 0).type;
+      return identity ? `yjs-${identity.client}-${identity.clock}` : null;
+    }));
     if (!this.undoManager) {
       this.undoManager = new Y.UndoManager(
         this.structuredAttributeMap ? [this.fragment, this.structuredAttributeMap] : this.fragment,
@@ -623,6 +641,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   disconnect(): void | Promise<void> {
+    directionIdentityReleases.get(this)?.();
+    directionIdentityReleases.delete(this);
     if (this.observing) {
       this.fragment.unobserveDeep(this.onSharedChange);
       this.structuredAttributeMap?.unobserveDeep(this.onSharedChange);
@@ -691,6 +711,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   stopCapturing(): void { this.undoManager?.stopCapturing(); }
 
   destroy(): void {
+    directionIdentityReleases.get(this)?.();
+    directionIdentityReleases.delete(this);
     const manager = this.undoManager as (Y.UndoManager & { destroy?: () => void }) | undefined;
     manager?.destroy?.();
     this.undoManager = undefined;

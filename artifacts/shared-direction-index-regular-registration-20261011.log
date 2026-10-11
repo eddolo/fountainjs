@@ -1,0 +1,15 @@
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  [chromium] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  [chromium] › ..\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  [firefox] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  [firefox] › ..\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  [webkit] › ..\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  [webkit] › ..\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history

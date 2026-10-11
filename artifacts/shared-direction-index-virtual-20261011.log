@@ -1,0 +1,136 @@
+[WebServer] (node:29000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:2968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:22656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:12460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:28360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (1.7s)
+(node:10056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 21:01:33 [vite] (client) [Unhandled rejection] TypeError: error loading dynamically imported module: http://127.0.0.1:4194/tests/browser/fixtures/shared-direction-virtual.ts
+[WebServer] 
+  x  2 [firefox] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (4.3s)
+(node:19404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (1.9s)
+
+
+  1) [chromium] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history 
+
+    Error: page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:4194/tests/browser/fixtures/shared-direction-virtual.ts
+
+      12 |   page.on('pageerror', error => errors.push(error.message));
+      13 |   await page.goto('/browser-tests.html');
+    > 14 |   await page.evaluate(async () => {
+         |              ^
+      15 |     // Vite test fixture setup, public engine APIs only. This is not evidence
+      16 |     // that a production 100k-file import UI or every large-document flow works.
+      17 |     const fixture = await import('/tests/browser/fixtures/shared-direction-virtual.ts');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-virtual-real.spec.ts:14:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history 
+
+    Error: page.evaluate: error loading dynamically imported module: http://127.0.0.1:4194/tests/browser/fixtures/shared-direction-virtual.ts
+
+      12 |   page.on('pageerror', error => errors.push(error.message));
+      13 |   await page.goto('/browser-tests.html');
+    > 14 |   await page.evaluate(async () => {
+         |              ^
+      15 |     // Vite test fixture setup, public engine APIs only. This is not evidence
+      16 |     // that a production 100k-file import UI or every large-document flow works.
+      17 |     const fixtureURL = '/tests/browser/fixtures/shared-direction-virtual.ts';
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-virtual-real.spec.ts:14:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history 
+
+    Error: page.evaluate: TypeError: Importing a module script failed.
+
+      12 |   page.on('pageerror', error => errors.push(error.message));
+      13 |   await page.goto('/browser-tests.html');
+    > 14 |   await page.evaluate(async () => {
+         |              ^
+      15 |     // Vite test fixture setup, public engine APIs only. This is not evidence
+      16 |     // that a production 100k-file import UI or every large-document flow works.
+      17 |     const fixtureURL = '/tests/browser/fixtures/shared-direction-virtual.ts';
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-virtual-real.spec.ts:14:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-index-virtual-20261011\shared-direction-virtual-r-56a2d--native-editing-and-history-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history 
+    [firefox] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history 
+    [webkit] › tests\manual\shared-direction-virtual-real.spec.ts:9:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history 

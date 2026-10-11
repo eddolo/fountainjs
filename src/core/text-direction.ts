@@ -10,6 +10,12 @@ export const textDirectionAttribute = {
   validate: (value: unknown) => value === undefined || value === 'ltr' || value === 'rtl' || value === 'auto',
 };
 
+/** Optional portable ownership reference, never a cached computed direction. */
+export const sharedDirectionGroupAttribute = {
+  default: undefined,
+  validate: (value: unknown) => value === undefined || typeof value === 'string' && /^[A-Za-z0-9_-]{1,96}$/.test(value),
+};
+
 // Legacy left is the ordinary inherited/default presentation unless the block
 // already owns direction. This marker records an authored physical override.
 export const explicitTextAlignmentAttribute = {
@@ -25,6 +31,14 @@ interface DirectionElement {
   readonly style?: { readonly textAlign?: string };
 }
 
+/** Restore a validated Fountain snapshot projection to its live declaration. */
+export function readSharedDirectionSource(element: DirectionElement): Attributes | null {
+  const group = element.getAttribute('data-fountain-direction-group');
+  return element.getAttribute('data-fountain-direction-origin') === 'auto' && typeof group === 'string'
+    && sharedDirectionGroupAttribute.validate(group) && ['auto', 'ltr', 'rtl'].includes(element.getAttribute('dir')?.toLowerCase() ?? '')
+    ? { dir: 'auto', directionGroup: group } : null;
+}
+
 export function textDirectionDOMAttributes(attrs: Readonly<Attributes>): Attributes {
   return attrs.dir !== undefined && textDirectionAttribute.validate(attrs.dir) ? { dir: attrs.dir } : {};
 }
@@ -38,7 +52,8 @@ function retainedDirectionContainer(element: DirectionElement, schema: Schema): 
   // a retained scope. Fixed inheritance must still reach its visible children.
   const scopeNames = tag === 'div' && element.getAttribute('data-fountain-direction-scope') !== null
     ? element.getAttributeNames?.() : undefined;
-  const name = scopeNames?.every(name => name === 'dir' || name === 'data-fountain-direction-scope') ? 'direction_scope'
+  const name = scopeNames?.every(name => name === 'dir' || name === 'data-fountain-direction-scope'
+    || name === 'data-fountain-direction-group' || name === 'data-fountain-direction-origin') ? 'direction_scope'
     : tag === 'ul' && element.getAttribute('data-type') === 'task-list' ? 'task_list'
     : tag === 'li' && element.parentElement?.getAttribute('data-type') === 'task-list' ? 'task_item' : tag && directionContainers[tag];
   return Boolean(name && schema.nodes[name]?.spec.attrs?.dir);
@@ -58,6 +73,10 @@ export function readTextDirection(element: DirectionElement, schema?: Schema, ch
     // on each child would freeze inheritance when an author changes the parent.
     if ((current !== element || childContext) && schema && retainedDirectionContainer(current, schema)) break;
     const dir = current.getAttribute('dir')?.toLowerCase();
+    if (current === element && (dir === 'auto' || dir === 'ltr' || dir === 'rtl')) {
+      const shared = readSharedDirectionSource(current);
+      if (shared) return shared;
+    }
     if (dir === 'ltr' || dir === 'rtl' || (dir === 'auto' && current === element)) return { dir };
     if (dir === 'auto') break;
   }

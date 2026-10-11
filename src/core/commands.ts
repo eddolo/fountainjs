@@ -851,8 +851,8 @@ export function setTextDirection(editor: Editor, dir: 'ltr' | 'rtl' | 'auto' | u
   if (selection instanceof NodeSelection) {
     const node = getNodeAtPath(editor.state.doc, selection.nodePath);
     if (node.type.spec.attrs?.dir) {
-      if (!editor.editable || node.attrs.dir === dir) return false;
-      const attrs = { ...node.attrs, dir };
+      if (!editor.editable || node.attrs.dir === dir && node.attrs.directionGroup === undefined) return false;
+      const attrs: Attributes = { ...node.attrs, dir, directionGroup: undefined };
       try { node.type.create(attrs, node.content, node.text, node.marks); }
       catch { return false; }
       return editor.dispatch(editor.createTransaction().setNodeAttrs(selection.nodePath, attrs));
@@ -884,7 +884,8 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
     if (TEXT_BLOCKS.includes(node.type.name) || attribute === 'dir' && node.type.name === 'code_block') {
       const explicit = attribute === 'align' && node.type.spec.attrs?.alignExplicit;
       if ((attribute === 'align' || node.type.spec.attrs?.dir)
-        && (node.attrs[attribute] !== value || (explicit && node.attrs.alignExplicit !== (value === 'left' ? true : undefined)))) paths.push(path);
+        && (node.attrs[attribute] !== value || attribute === 'dir' && node.attrs.directionGroup !== undefined
+          || (explicit && node.attrs.alignExplicit !== (value === 'left' ? true : undefined)))) paths.push(path);
       return;
     }
     if (!node.type.spec.atom) node.content.forEach((child, index) => visit(child, [...path, index]));
@@ -898,6 +899,7 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
     paths.forEach(path => {
       const node = getNodeAtPath(state.doc, path);
       const attrs = { ...node.attrs, [attribute]: value };
+      if (attribute === 'dir') attrs.directionGroup = undefined;
       if (attribute === 'align' && node.type.spec.attrs?.alignExplicit) attrs.alignExplicit = value === 'left' ? true : undefined;
       node.type.create(attrs, node.content);
       transaction.setNodeAttrs(path, attrs);
@@ -954,9 +956,10 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
       const emphasis = block.attrs.emphasis === 'explicit' && type.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {};
       const layout = block.attrs.layout !== undefined && type.spec.attrs?.layout ? { layout: block.attrs.layout } : {};
       const direction = block.attrs.dir !== undefined && type.spec.attrs?.dir ? { dir: block.attrs.dir } : {};
+      const sharedDirection = block.attrs.directionGroup !== undefined && type.spec.attrs?.directionGroup ? { directionGroup: block.attrs.directionGroup } : {};
       const alignment = block.attrs.align !== undefined && type.spec.attrs?.align ? { align: block.attrs.align } : {};
       const explicitAlignment = block.attrs.alignExplicit === true && type.spec.attrs?.alignExplicit ? { alignExplicit: true } : {};
-      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...direction, ...alignment, ...explicitAlignment, ...attrs }, block.content)]);
+      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...direction, ...sharedDirection, ...alignment, ...explicitAlignment, ...attrs }, block.content)]);
     }
     state.schema.validate(transaction.doc);
   } catch { return false; }
@@ -1265,6 +1268,7 @@ export function splitBlock(editor: Editor): boolean {
         ...(block.attrs.emphasis === 'explicit' && nextType.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {}),
         ...(block.attrs.layout !== undefined && nextType.spec.attrs?.layout ? { layout: block.attrs.layout } : {}),
         ...(block.attrs.dir !== undefined && nextType.spec.attrs?.dir ? { dir: block.attrs.dir } : {}),
+        ...(block.attrs.directionGroup !== undefined && nextType.spec.attrs?.directionGroup ? { directionGroup: block.attrs.directionGroup } : {}),
         ...(block.attrs.align !== undefined && nextType.spec.attrs?.align ? { align: block.attrs.align } : {}),
         ...(block.attrs.alignExplicit === true && nextType.spec.attrs?.alignExplicit ? { alignExplicit: true } : {}),
       };

@@ -1,0 +1,507 @@
+{
+  "date": "2026-10-11",
+  "baseCommit": "f3444cd98615fd13f6679e4707615013f1cb9b3e",
+  "scope": "Unreleased private immutable subtree index and bounded 100k virtual-view evidence; not parity/release certification",
+  "fullUnits": {
+    "passed": 2971,
+    "files": 221
+  },
+  "focused": {
+    "passed": 81,
+    "files": 4
+  },
+  "indexing": "Eight tests: zero unchanged-block child reads at 1k/100k; 500 mixed-tree oracle comparisons; 10k depth; barriers/raw/attribute exclusions. Changed ancestor arrays and mixed-group branches still require ordered traversal.",
+  "browser": {
+    "passed": 19,
+    "retries": 0,
+    "publicNested": 12,
+    "virtualIntegration": 3,
+    "chromiumFirefoxClipboard": 4,
+    "setup": "100k model supplied by test-only public API fixture, host offscreen edits, native visible typing/history; explicit viewport assertions; not production import or every large-document workflow",
+    "reviewedPNGs": [
+      "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-chromium/virtual-offscreen-anchor-ltr.png",
+      "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-chromium/virtual-restored-rtl.png",
+      "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-nested-lift-auto-chromium/nested-toolbar-transformed.png",
+      "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-indent-under-fixed-item-chromium/nested-anchor-edited.png",
+      "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-firefox/virtual-offscreen-anchor-ltr.png",
+      "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-firefox/virtual-restored-rtl.png",
+      "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-nested-lift-auto-firefox/nested-toolbar-transformed.png",
+      "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-indent-under-fixed-item-firefox/nested-anchor-edited.png",
+      "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-webkit/virtual-offscreen-anchor-ltr.png",
+      "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-webkit/virtual-restored-rtl.png",
+      "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-nested-lift-auto-webkit/nested-toolbar-transformed.png",
+      "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-indent-under-fixed-item-webkit/nested-anchor-edited.png"
+    ],
+    "videos": "Recorded, not watched",
+    "fixtureDiagnostics": "Wrong initial module URL corrected; mounted-only confirmation replaced with explicit viewport assertions and visible screenshots"
+  },
+  "gates": {
+    "apiDeclarations": 411,
+    "headlessModules": 104,
+    "package": "passed",
+    "types": "passed",
+    "performance": "Initial 100-block server HTML timing failed; unchanged-code confirmation passes; both retained",
+    "indexedRetention": {
+      "scope": "Bounded public HTML projection with shared direction; no DOM or history plugin",
+      "edits": 2000,
+      "blocks": 1000,
+      "elapsedMs": 7345.357,
+      "liveGrowthBytes": 313264,
+      "liveLimitBytes": 8388608,
+      "destroyedEditors": 40,
+      "destroyedGrowthBytes": 548440,
+      "destroyedLimitBytes": 16777216
+    },
+    "aggregateSize": "FAILED; caps unchanged"
+  },
+  "open": [
+    "Aggregate size",
+    "Current-source full Linux/release matrix",
+    "Windows WebKit event-authored clipboard and real Safari",
+    "Custom renderer isolation",
+    "No-strong inherited fallback audit",
+    "Ancestor-only clipboard context",
+    "Other format fidelity",
+    "Broader browser latency/heap coverage"
+  ],
+  "unchanged": [
+    "npm 0.4.0-beta.2",
+    "PROD-04 Partial",
+    "Parity ledger",
+    "Public API snapshot",
+    "Original nested assertions",
+    "Performance/size ceilings"
+  ],
+  "hashes": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "4d439ce5b3d3d89722fa7a42bec4f65b9c876b162801bcf60b006337f049bf2d",
+      "gitBlob": "1bc0b9323185b1580ffd32ef2caa63ab32660d36"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "ba74da4f81448d59fa43713bc16ccaca79aed91948fe432632ba716444b3b861",
+      "gitBlob": "0b8c08a4abfd52d0341a526f6fe2332d6fa32870"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "97ce6ed70169e2064938d241f318b94a211b7abd0468f63f61b1943db14cfadd",
+      "gitBlob": "33903441d6fe896c2f2aada9744786dd6699284c"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "3b00a91143ddb3e560efe533a044215a5a6b742f3a7cae822a02c757ec22b2f9",
+      "gitBlob": "1b84c209ba5d0cc78bc229e7947f3162bbc43315"
+    },
+    {
+      "path": "examples/react-app/src/browser-tests.ts",
+      "sha256": "ff976a19c3fd69471c82772ff55c3dea5422f6b05b8e00da0e47ec30fa886672",
+      "gitBlob": "649806233edbc0a4f18ba0bd5b9bc90c1a170476"
+    },
+    {
+      "path": "package.json",
+      "sha256": "f0b6c9ade9fb8a4c6b8515f5ee1d829964affd64ac9bda38425771df5b7b03bf",
+      "gitBlob": "d3238f24bb4fa1d1d9d09c4cf9649b9b6d871502"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "d356f42451d53c2db6a6639f75c18315579d4eb39713ca72487f37f3c7a7d258",
+      "gitBlob": "9f22b42aebb2c7eb21a7febf6fe031eb959f8b4f"
+    },
+    {
+      "path": "scripts/generate-bidi-strong.mjs",
+      "sha256": "4a4f32829dd497bba287a34d6f948fe243a068be3a1dde048593c574148572b7",
+      "gitBlob": "b728c7da42b34e5544734e8c797dde4ebf33d13d"
+    },
+    {
+      "path": "src/core/bidi-strong-data.ts",
+      "sha256": "8c7ab1b9ee7cfe308db4996f9c3969b66c1de79107ea3041d08f809421770622",
+      "gitBlob": "d8109dd84510c2f3bd088fad5b0f589fbac8c77d"
+    },
+    {
+      "path": "src/core/commands.ts",
+      "sha256": "d2a552eefa1f05e589789f5e29a68db654a370cb7b47484ac3b1c56bef1a19bf",
+      "gitBlob": "0fb2314e69e6d32920bf609bc5ce74bf43333e61"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "4f7e0261e1e638567b0037faf962a2efac2bc6479a09d76cde4e849990cf2978",
+      "gitBlob": "75794ab9e87183fdd78c1c814ec8f587de7f0733"
+    },
+    {
+      "path": "src/core/first-strong-direction.ts",
+      "sha256": "2d71b058b68ceb2533681aa483055096a167fe1256cbe616b04ccc9c7371b863",
+      "gitBlob": "476b97c0a9352c110837378b1f95aeb0aaad26d1"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "87f74843a54844bfad35676a8476c9a2b43be46c32e9d266c13118e054f1a447",
+      "gitBlob": "593854c672d99503f8b58eb7c76008dea8ee6b3b"
+    },
+    {
+      "path": "src/core/text-direction.ts",
+      "sha256": "9c52b2b6f475fc7d32bc3b8413e88e2f887bc644899bfcaa4a266e03e778d600",
+      "gitBlob": "926ecda9943536c32d735612dc01cc4d7cb3f535"
+    },
+    {
+      "path": "src/extensions/html-containers.ts",
+      "sha256": "069107238a42791511417cdcb7bb0e784be257e2573301b719d4a20ffce094e9",
+      "gitBlob": "7d1997855c664c0e005d78fd74adc35bd046d1c2"
+    },
+    {
+      "path": "src/extensions/nodes/blockquote.ts",
+      "sha256": "4e243961062db9d29873e39f0e226ab01541b478a266d9b8e000140ff5e143fe",
+      "gitBlob": "412c47f006671b169294e46d94865dd593f325ff"
+    },
+    {
+      "path": "src/extensions/nodes/bullet-list.ts",
+      "sha256": "698d5333d4d3cd9d232e328efea8ff5a3181dbef1aacf994c4f2c686159b2d18",
+      "gitBlob": "9c7d85ca30600e4c91359a9d7a237336dfaaacc7"
+    },
+    {
+      "path": "src/extensions/nodes/code-block.ts",
+      "sha256": "fa00bea1fff689d9e314b2965ea40d888f171d5d8f69436a0c6e8e00a0d2534d",
+      "gitBlob": "24987d105fd46981cfe5e0de559e6ab942d1ffac"
+    },
+    {
+      "path": "src/extensions/nodes/definition-list.ts",
+      "sha256": "6e676dde3db7b7f239e159c0fde3fa40fc02038c3d8ad685f34f6d91c7b2cea9",
+      "gitBlob": "9f24de5da9e314038f8ca8b907e96019edd784a6"
+    },
+    {
+      "path": "src/extensions/nodes/direction-scope.ts",
+      "sha256": "9bde1339a5d62d96786e554da3034b4d0749750dd702cca493123da064bd7def",
+      "gitBlob": "2e5fca7925d59d1712458e003b3721ab1936bbc6"
+    },
+    {
+      "path": "src/extensions/nodes/heading.ts",
+      "sha256": "6b253467f3559142f1fa4fc61fe07d6ee961d27d36f1e9878669f4a0f823b847",
+      "gitBlob": "050cf5e7c614fe074ff048a9d1c27ced26673ca7"
+    },
+    {
+      "path": "src/extensions/nodes/list-item.ts",
+      "sha256": "8dc69f46dc502daf9b0f2bdeb4cf9019f580fef1f1ceb3f77138b61b5f8c52fb",
+      "gitBlob": "760123cb095c4178ef6a84d15585fd1c137d5f4b"
+    },
+    {
+      "path": "src/extensions/nodes/ordered-list.ts",
+      "sha256": "fce6874688907257aaceee0d0477f89542f16d8dbe51d14f177ff7a863c033b6",
+      "gitBlob": "d17db693894317c575a72b79befbeac90b5e823d"
+    },
+    {
+      "path": "src/extensions/nodes/paragraph.ts",
+      "sha256": "82d1364f1bbde1ed63208403e7ce18cbc4e77e4511933061e85b3a41f16a5f09",
+      "gitBlob": "48f07851347345f825f986b018f578a440e8b887"
+    },
+    {
+      "path": "src/extensions/nodes/table-cell-view.ts",
+      "sha256": "0d6395c98c76aa5df1eab9c3547fd17ee07c8b089eb99023418f6b4546f637c0",
+      "gitBlob": "e65fc4977b65fc732dc5bde04cc186e23115b086"
+    },
+    {
+      "path": "src/extensions/nodes/table-row.ts",
+      "sha256": "fe47c986d0463a756f79bc23b92eea0377c8518716e86b075da8a4ed5cc01b75",
+      "gitBlob": "080bc5aa2ec5e6e115e493a2fbad7d4e7c9587bd"
+    },
+    {
+      "path": "src/extensions/nodes/table.ts",
+      "sha256": "00791cca617414f21b9f027b22f0c4714565befb473993bd9772991160902b78",
+      "gitBlob": "f9d532f67046fc6e030f0bf54732e1dfccde9468"
+    },
+    {
+      "path": "src/extensions/nodes/task-item.ts",
+      "sha256": "b0f0f37abc4a4c4538fc623e862a9925c2b888f629fbf8e708f1d3794f517219",
+      "gitBlob": "f6ae286a1b0369ad4f9ed60ccbd52f3576687b00"
+    },
+    {
+      "path": "src/extensions/nodes/task-list.ts",
+      "sha256": "a175ffa914eca4dc9f388c81887e90a2391eb5362a2bbbed48b2d55bac040cbc",
+      "gitBlob": "523be871252dd517b3b0008dea17f67eefb701c0"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "18426c08927bc2f15ddfef8c1dbf9d11631e34ff5e08d89e9211580b90842edb",
+      "gitBlob": "5b125fea2302bbd606476b18b0918c79976b2c2f"
+    },
+    {
+      "path": "src/view/dom-renderer.ts",
+      "sha256": "1c9297a5d7554ec3628bc7ede971c132f1235ff332ead63ead6158cbeb77f163",
+      "gitBlob": "fc3b8ff1b8d9363156624ec6be1d9f04d4487a3d"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "f876a7b0377d277d084a32e4ff6666139705efd47934a63b1edc457b2b384332",
+      "gitBlob": "46232abde9429109c72b1cd2575cfc6c0d66f7f7"
+    },
+    {
+      "path": "src/view/view.ts",
+      "sha256": "bc0b8d7451a430ada8c32a0b9de0bd7520f3f98b71228c99fac48d647f931497",
+      "gitBlob": "a1519a31531ff489165034560d0f496feab36423"
+    },
+    {
+      "path": "src/yjs/index.ts",
+      "sha256": "df2c851c3a6b0e1d919a83d03f95491af924bfa21268d5555d14dce404bcce03",
+      "gitBlob": "1da42d7f10e8adda332df43fce725dc3778fe1a8"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "863ad1e7a75a7d8107877337f0178d885c855bb8c277924be2cb024533a7d79f",
+      "gitBlob": "7bbe74936dc0c3fc13d8a4dd783cac7b8ef06aa3"
+    },
+    {
+      "path": "tests/first-strong-direction.test.ts",
+      "sha256": "7426183cd5d3f3851da29ca711314933d009c9fc69f6767a7474026d7b28ec95",
+      "gitBlob": "1b1158cd3f1ad98781e6eb24fa965fb7bb19970c"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "8414848bb767c887def547b9375fea79c64b36cb1792cdedf404f118aa08ac74",
+      "gitBlob": "0cd78de4555c590cb98b80ca447cdd448f7f50f5"
+    },
+    {
+      "path": "vite.input-audit.config.ts",
+      "sha256": "88e2539f92833a620770e2e9fc62700e88099cc2c9f893f5b19f532dd61efba8",
+      "gitBlob": "89a51460f0501ff597f4d947f6bede203ddf5e71"
+    },
+    {
+      "path": "playwright.shared-direction-audit.config.ts",
+      "sha256": "7343ff88cbd932d74466da2a84877e279b66c6c92849c2ba46e06c3f6119438e",
+      "gitBlob": "8426bc6ebe07d0930c143a7f0d9d45900e6a5aa8"
+    },
+    {
+      "path": "scripts/check-shared-direction-retention.mjs",
+      "sha256": "3c8d3df350d790ac15399ceef4a42b2837512d707d79460ccb7761f41d44ad79",
+      "gitBlob": "e386eb4628b2fbf649e59582b8df8179302c7d28"
+    },
+    {
+      "path": "scripts/verify-shared-direction-index.mjs",
+      "sha256": "2ecc2e06b1f0a0e8022d0aae3a2c7075e6d1a6fb8007239f626846aea8087e8e",
+      "gitBlob": "f37fc1cb26e0fb35e2ce45fc10f1076570b6cbfe"
+    },
+    {
+      "path": "scripts/verify-shared-direction-integration.mjs",
+      "sha256": "90fd35ebba613025c4c62cca60ffbcb57acd84f2eb8af3f06c5116da458df29d",
+      "gitBlob": "06f8b79ade0d56512ff8baaa7da67b4f8e2f54d9"
+    },
+    {
+      "path": "src/core/shared-direction-index.ts",
+      "sha256": "984e12def677cbf4c751931e77520a343d66af817de53fafaac62386fd9561b8",
+      "gitBlob": "eaf0925e78ae47d268edaddca47325ea8e2b8273"
+    },
+    {
+      "path": "src/core/shared-direction.ts",
+      "sha256": "9a2c162e598818103adf2223fffb975b2cfd25bb1b8afa85d068e7931c9f9b89",
+      "gitBlob": "c97594309f9099badf5e8603e913cc6c4d4424ca"
+    },
+    {
+      "path": "src/view/shared-direction.ts",
+      "sha256": "b4e35fa85499d16c743ebd664ee33c07e0ee90c464e260835686534be9ac82b0",
+      "gitBlob": "9eb8e3d67046536272095091089515f3db74b82d"
+    },
+    {
+      "path": "tests/browser/fixtures/shared-direction-virtual.ts",
+      "sha256": "1ac5d4e25a2e5b305abab4d0efdcb84b1325963b45e4f4d5a97bd8ef4ceede33",
+      "gitBlob": "ad23e7734b25881d8b904e5aeabc5f4e952f666a"
+    },
+    {
+      "path": "tests/manual/shared-direction-copy-real.spec.ts",
+      "sha256": "edb3c41e28de33eca3ed02ca01410b0b19e20d6de006f94911fefb5c2f744885",
+      "gitBlob": "a06dc4560244ba02a1fb615d1b3f7d46d9d45c1d"
+    },
+    {
+      "path": "tests/manual/shared-direction-virtual-real.spec.ts",
+      "sha256": "f98fe9140c58fbad1b8c65b394b8b9f9d6d37506956ae94603c4231881d727c9",
+      "gitBlob": "2655e79e6bb20464e60163b0eb2e81f29c1004dd"
+    },
+    {
+      "path": "tests/shared-direction-index.test.ts",
+      "sha256": "2bca1eb8ea92daeac9322bf9764e7e1cd80c22eac4be16b62e7c178211b69785",
+      "gitBlob": "1168583cb0b457fbe3b6a655db69673d577c4ab8"
+    },
+    {
+      "path": "tests/shared-direction-ownership.test.ts",
+      "sha256": "939038bdbc76ae095f344dbfb26d2c61ba4472a3847144c3fa4544a9c24ce042",
+      "gitBlob": "94eed69cdba1e61d9c57eb5eeb394a8d4daa8409"
+    },
+    {
+      "path": "tests/shared-direction-view.test.ts",
+      "sha256": "9e41863519462ea213f948379a606d48343261a6ca2c6dfca55ff00eb03df3ef",
+      "gitBlob": "8d32cc754c2981e19f1bbf511f5547b3ed7e32a5"
+    },
+    {
+      "path": "api-surface.json",
+      "sha256": "5389befee0e7fadb4b004dad409ef851d2e98f8eda612607c34035d999550acd",
+      "gitBlob": "72205858dcf47fe8cd6294eb598666c0e8813ec9"
+    },
+    {
+      "path": "tests/manual/nested-direction-real.spec.ts",
+      "sha256": "69684fdd2346312a1f1b96da813939e71a80752d661298ed17fd14aef370432e",
+      "gitBlob": "e846eb46bb9b95be8f1f5ddabf983f0fbcec1385"
+    },
+    {
+      "path": "artifacts/shared-direction-index-wide-20261011.log",
+      "sha256": "1865e91352487623821d159bf18aea1adf999766089d84c54293f7f0559836b2",
+      "gitBlob": "c5cd49d4fb297d730643cb40f57a43ac625bbd21"
+    },
+    {
+      "path": "artifacts/shared-direction-index-full-20261011.log",
+      "sha256": "162195d9d887ad9a58338806942df3e089aa3927f7966cab469a605cde4ba5a0",
+      "gitBlob": "3ab9405f22d282b776bdd2a4a9b5667c88efa327"
+    },
+    {
+      "path": "artifacts/shared-direction-index-test-api-20261011.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4",
+      "gitBlob": "ecb1916d3b26b8064d84e0f6930e90304c603107"
+    },
+    {
+      "path": "artifacts/shared-direction-index-test-headless-20261011.log",
+      "sha256": "0d40898ed39141ee0d1adf5a82a4ce0ffcabfcc7d4ca950265f95ef81929d466",
+      "gitBlob": "d786003650e2fec8ba5bd816cdd2ecf2d6776405"
+    },
+    {
+      "path": "artifacts/shared-direction-index-package-final-20261011.log",
+      "sha256": "dcccddc9077417964235c5fb084ae9ee0442fbc8241df7d67d3e77e3c017eed2",
+      "gitBlob": "3fc192d14704b51de0d6f015e194bcfb28e234d4"
+    },
+    {
+      "path": "artifacts/shared-direction-index-test-budget-20261011.log",
+      "sha256": "3de4ffb50f36660750b8033214fef41a16f3cff0f3bd218b12a180b764a45b3e",
+      "gitBlob": "524477724211d92310b228fa0f3a00bda39814ba"
+    },
+    {
+      "path": "artifacts/shared-direction-index-types-confirm-20261011.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "gitBlob": "7d7f996b0d05ba3daa04e2474d964589fcb01f11"
+    },
+    {
+      "path": "artifacts/shared-direction-index-test-performance-20261011.log",
+      "sha256": "fc5a9c06828c39b4b9136dc5f3f5cd771d032c066c4b81bfb436a888b1ad87e9",
+      "gitBlob": "2ca1e061ccb253b4dd3db53b9be739d1fd208d41"
+    },
+    {
+      "path": "artifacts/shared-direction-index-performance-confirm-20261011.log",
+      "sha256": "96bbda0271f89ef8e988191ff9e5127c6981340d7175d0f1bb1c0ee8285fb4b8",
+      "gitBlob": "78e34b45efde0aad02cfd5223b58b8afb9038eac"
+    },
+    {
+      "path": "artifacts/shared-direction-index-retention-20261011.log",
+      "sha256": "1c6d1f445406d04e99eae88c5da40f7b3b8e2593721cccbd6348351b39ab338f",
+      "gitBlob": "dd43f0edd192d71111468a94ae5bf05729444d7b"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011.log",
+      "sha256": "fe29bc242f9d3fc03ddda9ac29f22f3109f17471aa8262d422dbc998c073ae99",
+      "gitBlob": "9ec3c126fec53997c776a21297de87f4a2436400"
+    },
+    {
+      "path": "artifacts/shared-direction-index-regular-registration-20261011.log",
+      "sha256": "4cb61871b483f66ea58c8fe327aa141ed22474bae4871b00c45701c292b9b23c",
+      "gitBlob": "ca21710f60f6fcf1fe0742224845bc42b12ba843"
+    },
+    {
+      "path": "artifacts/shared-direction-index-virtual-20261011.log",
+      "sha256": "519fd2669ffd29b0b1e68428138ad6246953b97f04f96ac0757fc284f924ed37",
+      "gitBlob": "3fa3e5ad8c92932eba21b53edd8c21d190cbe9f3"
+    },
+    {
+      "path": "artifacts/shared-direction-index-red-20261011.log",
+      "sha256": "4ca2c65b7caedd5f369e317c394b7198f7a21c29049f8bf5419696cf7fab654e",
+      "gitBlob": "459b363d694cc958c621e00749c549e50afe76ef"
+    },
+    {
+      "path": "artifacts/shared-direction-index-members-red-20261011.log",
+      "sha256": "bcbfc7e1a870d621c5c81eb02aafb890815fbd58db560755b2e95f2b01173865",
+      "gitBlob": "5736b3d5e3ca7f4a219601bc5073f617a18dc5e3"
+    },
+    {
+      "path": "artifacts/shared-direction-index-typecheck-20261011.log",
+      "sha256": "73136a9266b8e3ebb892106f84625924dd44dfe9c1581e255d43fb3fd8f28841",
+      "gitBlob": "b2492b5ceaf965bc6eb64641a209de07dfce869b"
+    },
+    {
+      "path": "artifacts/shared-direction-index-performance-registered-final-20261011.log",
+      "sha256": "078984a987de25ce5c93467c3d147dfd7766cffd00d83d807effb7e4be8c643a",
+      "gitBlob": "b12efebd6f62a7d8a522a1a4e964d9d48de2ba4a"
+    },
+    {
+      "path": "artifacts/shared-direction-index-copy-final-20261011.log",
+      "sha256": "c83e8e61d017bf4d6bd1d41f7181cb257775a4ebfa92b38147d9ed10595f3a4e",
+      "gitBlob": "087dfb5b94288abc0702beffab62eae4c1a67c91"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-chromium/virtual-offscreen-anchor-ltr.png",
+      "sha256": "e0a0206bfdec1cb6acb5106c715a2a0640099581a6711eed4ee574c27aca5bb1",
+      "gitBlob": "fa372a8a2b7ad1cf5865fd72bcf9c18d1127ee95"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-chromium/virtual-restored-rtl.png",
+      "sha256": "0c6c1f9f81d02009f3161ef1a4e4fe6c436217c24142db52dfcd803502dbf305",
+      "gitBlob": "99195a569eae4fadd2d58ac2918d723a44bea566"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-nested-lift-auto-chromium/nested-toolbar-transformed.png",
+      "sha256": "88bb58fd6ac50a2db831969f05577dc76b8720fa47cd08dac359a37bfa49e884",
+      "gitBlob": "4c46c6c174d99a746524eae7c36004fbc63b523a"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-indent-under-fixed-item-chromium/nested-anchor-edited.png",
+      "sha256": "f97c18b34786b45b6c2dc0b1633517cf4586edd40745c57c8422739f34c2ecc0",
+      "gitBlob": "48e6d8eb5789264db6f96a26b6887c16f51f6b62"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-firefox/virtual-offscreen-anchor-ltr.png",
+      "sha256": "73657a4a8ad3f2e30bc7bac16bf0c6aacce4253ad478f1b5018abee25b6fa064",
+      "gitBlob": "2499fce95de2fe8f75557acedc6c55b62e070cc5"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-firefox/virtual-restored-rtl.png",
+      "sha256": "c56eebd85ae08a054f9e88b373eb3c5af2eef697c174adbfaadb18ca708ea90a",
+      "gitBlob": "5073697b958ca7db04f67c83151cb93552bbcf32"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-nested-lift-auto-firefox/nested-toolbar-transformed.png",
+      "sha256": "6b4803776cdebe46ebcda967dfb0990d07fbfb6ecc0b68837f65c368763d80c2",
+      "gitBlob": "f58c8fe6a6858304bd1a1f0f313ca5836d0ae26f"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-indent-under-fixed-item-firefox/nested-anchor-edited.png",
+      "sha256": "7d1217ea8c1b7406cd793cc75511990d92c5606726e41f301144ef4531bb6d0f",
+      "gitBlob": "75b85abcf88951af7fde7ec9a2d900e5d6915caa"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-webkit/virtual-offscreen-anchor-ltr.png",
+      "sha256": "c5ef70b6972c33d21f1debab7517fd49658704ea432ca21c6b9a771e1c1e31b3",
+      "gitBlob": "6d63a74c54fcf4a96d9e4c89a22d52fb62e96e6e"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-webkit/virtual-restored-rtl.png",
+      "sha256": "ded5405f52e705b3fba59a19a1120871537b113df2975a01977d325fadf42379",
+      "gitBlob": "d311eb7bb853f81fbfbe6d69463993b78a3a0227"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-nested-lift-auto-webkit/nested-toolbar-transformed.png",
+      "sha256": "2e9eaa8139895ca1da9c53c176e202a291d5144546b133d9cd18b34ca7815e2c",
+      "gitBlob": "9051fc70a0fecc198482f0756ea1986b55cbe1f0"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/nested-direction-real-indent-under-fixed-item-webkit/nested-anchor-edited.png",
+      "sha256": "5375d92ddbe48f4cd2764d3082deaa3148236e6b80ea2a1c32df4bba7e705b12",
+      "gitBlob": "f1d3ad2ae046201f13fb8fed1b1dae71268d70a8"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-chromium/virtual-direction-observations.json",
+      "sha256": "4dba695b1454eed5b7f5327a9b71a78adc46c25f365a90bcb7f02a9a3439db67",
+      "gitBlob": "c5e1f4daed53f6b1ef3bec23610a622209b79bd9"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-firefox/virtual-direction-observations.json",
+      "sha256": "29f49eeef2bf3d29b956031b435e5abce45adab3f12a237694a570b1d2bdc273",
+      "gitBlob": "eda7a03a17fdc47f34b999297e2a697e9dca392a"
+    },
+    {
+      "path": "artifacts/shared-direction-index-native-final-20261011/shared-direction-virtual-r-56a2d--native-editing-and-history-webkit/virtual-direction-observations.json",
+      "sha256": "35e5510a94cff637651176f747b6147e3517f99c03e830c762f14b68524f342f",
+      "gitBlob": "9e8f37d5825fc10c8b450f3a94c01760ce5cb12e"
+    }
+  ]
+}

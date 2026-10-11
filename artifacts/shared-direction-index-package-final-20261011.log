@@ -1,0 +1,12 @@
+$ node scripts/smoke-package.mjs
+Packed ESM: 486 link normalization/security/history/destination contracts passed.
+Packed ESM root/core: 13/13 anchor loss/privacy/retention contracts passed.
+Packed ESM: 140 native emphasis and partial-schema retention checks passed.
+Packed ESM root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+Packed ESM root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+Packed CommonJS: 486 link normalization/security/history/destination contracts passed.
+Packed CommonJS root/core: 13/13 anchor loss/privacy/retention contracts passed.
+Packed CommonJS: 140 native emphasis and partial-schema retention checks passed.
+Packed CommonJS root/core: 576/576 owned-attribute checks plus immutable snapshots/history passed.
+Packed CommonJS root/core: DOM-free direction/history/HTML/loss-report contracts passed.
+ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.

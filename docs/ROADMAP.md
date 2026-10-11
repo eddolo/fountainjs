@@ -1,6 +1,39 @@
 # FountainJS opportunity roadmap
 
-Internal direction foundation (2026-10-11, not integrated): portable Unicode
+Shared-direction indexing follow-up (2026-10-11, Unreleased): immutable subtree
+summaries avoid re-reading unchanged grouped and unrelated block contents.
+Eight indexing tests include 500 mixed-tree oracle comparisons, 10,000-level
+depth and 100,000 blocks; the focused four-file set passes **81 tests**. Full
+units pass **2,971 / 221 files**. Twelve unchanged public nested journeys and
+three 100k virtual-view journeys pass across desktop engines, with native typing,
+offscreen anchor updates, explicit viewport assertions and history. Twelve final
+PNGs reviewed; videos not watched. API 411, headless 104, packed package and
+framework types pass. A bounded 2,000-edit indexed projection retains 0.30 MiB
+under the existing 8 MiB limit; it is now part of the performance command.
+The first server-HTML timing sample failed; unchanged-code confirmation passes,
+with both retained. Aggregate size remains red, current-source full Linux and
+Safari clipboard evidence remain outstanding. No parity promotion or release.
+See [indexing evidence and boundaries](HTML_CONTAINERS.md#immutable-shared-direction-index-follow-up-2026-10-11-unreleased).
+
+Earlier shared-direction integration (2026-10-11, before the index):
+the private model ownership layer now connects list/move transactions, DOM and
+HTML projections, JSON/history and Yjs. Complete clipboard groups receive fresh
+identity per paste; incomplete groups become explicitly reported fixed-direction
+snapshots, without hidden anchor text. Local focused regression passes **158
+tests / ten files**. Four recorded complete/partial-copy journeys pass in
+Chromium and Firefox, including an independent native destination. Current full
+units pass **2,963 / 220 files**, with API 411, headless 103, packed package and
+framework types passing. The original browser confirmation has 15 passes /
+three failures. Trace-guided dependency preloading now passes all **12 unchanged
+nested journeys from a forced cold start**, with six final PNGs reviewed; they
+are registered in the normal desktop matrix. Windows WebKit clipboard,
+incremental huge-document group projection and the aggregate package-size
+overrun remain open. No release, ledger promotion or claim of full parity.
+See [current integration boundaries](HTML_CONTAINERS.md#shared-direction-integration-2026-10-11-unreleased).
+Historical source/evidence binding: `artifacts/shared-direction-integration-verification-20261011.json`;
+its blob check is for that saved pre-index tree, not the later working tree.
+
+Historical internal direction foundation (2026-10-11, commit `779aabe`, not integrated at that checkpoint): portable Unicode
 first-strong classification and accessor-defined fragmented-context folding
 pass 32 focused Node tests, exhaustive pinned Unicode classification and 51
 bounded native browser comparisons. Three final PNGs reviewed. Stable full
@@ -10,7 +43,7 @@ transform/view/export/collaboration integration are next. No public API, ledger
 promotion or npm change. See [the boundary](HTML_CONTAINERS.md#portable-first-strong-foundation-2026-10-11-not-integrated)
 and `artifacts/first-strong-foundation-verification-20261011.json`.
 
-Live shared-auto follow-up (2026-10-11, unresolved): the isolated public
+Historical live shared-auto reproduction (2026-10-11, before integration): the isolated public
 conversion-lab audit reproduces **six failures / six passing controls** in
 Chromium, Firefox and WebKit, including downloaded HTML. Initial imports,
 complete JSON undo/redo, native first-strong typing and typing undo pass in all

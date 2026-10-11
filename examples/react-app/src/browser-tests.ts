@@ -1760,3 +1760,7 @@ Object.assign(globalThis, { auditSvelteLifecycle: async () => {
   const { auditSvelteLifecycle } = await import('../../../tests/browser/fixtures/svelte-lifecycle');
   return auditSvelteLifecycle();
 } });
+Object.assign(globalThis, { mountSharedVirtualAudit: async () => {
+  const { mountSharedDirectionVirtualFixture } = await import('../../../tests/browser/fixtures/shared-direction-virtual');
+  return mountSharedDirectionVirtualFixture();
+} });

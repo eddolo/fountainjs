@@ -29,7 +29,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow
 import { tableBackground } from '../core/table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../core/explicit-emphasis';
 import { readParagraphLayout } from '../core/paragraph-layout';
-import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../core/text-direction';
+import { readTextAlignmentAttributes, readTextDirection, readContainerDirection, readSharedDirectionSource } from '../core/text-direction';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
 import { importDefinitionList } from '../core/importers/html-definition-list';
@@ -478,6 +478,11 @@ function reportStructuralDirection(element: SourceElement, node: FountainNode, c
   if (dir !== undefined && node.attrs.dir !== dir) reportOnce(context, {
     code: 'block-html-projection',
     message: `${element.tagName} reading direction (${dir}) is not retained on the structural container. Descendant text blocks may retain supported direction, but container layout and a shared automatic context are not preserved.`,
+  });
+  const shared = readSharedDirectionSource(element);
+  if (shared && (!node.type.spec.attrs?.directionGroup || node.attrs.directionGroup !== shared.directionGroup)) reportOnce(context, {
+    code: 'block-html-projection',
+    message: `${element.tagName} shared automatic direction ownership is not supported by the receiving structural schema. The original grouping is not preserved.`,
   });
   return node;
 }

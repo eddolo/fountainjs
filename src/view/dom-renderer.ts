@@ -2,6 +2,7 @@ import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type 
 import { getNodeAtPath } from '../core/transaction/path';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
+import { applySharedDirectionProjection } from './shared-direction';
 
 export interface DOMRenderContext {
   /** Root model document used by context-sensitive node serializers. */
@@ -276,6 +277,7 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   const { dom, contentDOM } = rendered;
   dom.dataset.fountainNode = node.type.name;
   dom.dataset.fountainPath = path.join('.');
+  applySharedDirectionProjection(dom, node, context.document ?? node);
   if (node.type.spec.atom) dom.contentEditable = 'false';
   context.decorations?.find(position, position + node.nodeSize, (decoration) => (
     decoration.type === 'node' && decoration.from === position && decoration.to === position + node.nodeSize
@@ -339,6 +341,7 @@ export function renderDocument(root: HTMLElement, doc: Node, context: DOMRenderC
   root.replaceChildren(fragment);
   return mounted;
 }
+
 
 function rebaseRenderedPath(element: HTMLElement, index: number): void {
   const rebase = (target: HTMLElement, attribute: 'data-fountain-path' | 'data-fountain-text-path') => {

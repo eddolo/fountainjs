@@ -12,6 +12,7 @@ import { readDocumentPageSettings } from '../page-settings';
 import { htmlCommentSource } from '../html-comment';
 import { literalLinkAttributes } from '../link-destination';
 import { textDirectionDOMAttributes } from '../text-direction';
+import { sharedDirectionDOMAttributes } from '../shared-direction';
 
 export interface HTMLExportOptions {
   document?: boolean;
@@ -214,6 +215,17 @@ function mergeAdjacentMarks(value: string): string {
 }
 
 function renderNode(node: Node, document: Node = node, path: readonly number[] = []): string {
+  const rendered = renderNodeContent(node, document, path);
+  const shared = sharedDirectionDOMAttributes(node, document);
+  if (!Object.keys(shared).length) return rendered;
+  // The normal safe serializer owns tags/attributes/escaping. Its first root
+  // opening tag gets a derived direction plus the bounded reopen contract;
+  // child fragments are projected separately against the same whole model.
+  return rendered.replace(/^<[a-z][a-z0-9-]*(?:\s[^>]*)?>/i, opening =>
+    opening.replace(/\sdir="[^"]*"/gi, '').slice(0, -1) + renderDOMAttributes(shared) + '>');
+}
+
+function renderNodeContent(node: Node, document: Node, path: readonly number[]): string {
   if (node.isText) return renderText(node);
   if (node.type.isInline && node.marks.length) {
     return renderMarks(renderNode(node.withMarks([]), document, path), node.marks);

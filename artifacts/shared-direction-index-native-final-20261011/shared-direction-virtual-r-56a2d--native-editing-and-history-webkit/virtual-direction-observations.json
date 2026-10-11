@@ -1,0 +1,53 @@
+{
+  "initial": {
+    "blockCount": 100000,
+    "mountedCount": 10,
+    "anchorMounted": false,
+    "scrollTop": 2399911,
+    "anchorText": "שלום anchor",
+    "memberText": "123 😀 50000",
+    "anchorGroup": "virtual-shared",
+    "memberGroup": "virtual-shared",
+    "timings": []
+  },
+  "afterOffscreenEdit": {
+    "blockCount": 100000,
+    "mountedCount": 10,
+    "anchorMounted": false,
+    "scrollTop": 2399911,
+    "anchorText": "English שלום anchor",
+    "memberText": "123 😀 50000",
+    "anchorGroup": "virtual-shared",
+    "memberGroup": "virtual-shared",
+    "timings": [
+      162
+    ]
+  },
+  "afterNativeEdit": {
+    "blockCount": 100000,
+    "mountedCount": 10,
+    "anchorMounted": false,
+    "scrollTop": 2399911,
+    "anchorText": "שלום anchor",
+    "memberText": "English 123 😀 50000",
+    "anchorGroup": "virtual-shared",
+    "memberGroup": "virtual-shared",
+    "timings": [
+      162
+    ]
+  },
+  "restored": {
+    "blockCount": 100000,
+    "mountedCount": 10,
+    "anchorMounted": false,
+    "scrollTop": 2399911,
+    "anchorText": "שלום anchor",
+    "memberText": "123 😀 50000",
+    "anchorGroup": "virtual-shared",
+    "memberGroup": "virtual-shared",
+    "timings": [
+      162
+    ]
+  },
+  "errors": []
+}
