@@ -248,6 +248,40 @@ attributes. Its acceptance requirements remain:
   expectations, longer timeouts or a looser direction assertion; then add the
   passing journeys to the regular matrix and test restricted host schemas.
 
+### Portable first-strong foundation (2026-10-11, not integrated)
+
+The private `src/core/first-strong-direction.ts` module now classifies Unicode
+L/R/AL text without browser globals, normalization or document mutation. A
+reproducible generator pins Unicode 17.0.0 `DerivedBidiClass`; the complete
+source and Unicode License V3 notice are retained. This follows the
+[HTML first-strong direction rule](https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute),
+not a full bidi layout algorithm. Browser Unicode versions may differ.
+
+The model traversal excludes nested explicit direction contexts, captured raw
+HTML text and host-declared isolated subtrees. It reads actual text leaves, not
+media alt attributes or generated UI labels. The shared-context fold accepts an
+ownership accessor and recomputes from eligible live members in document order,
+including members across separate parents. Unresolved direction remains `null`;
+it is not serialized as an invented fixed LTR/RTL value. Deep traversal is
+iterative. Test-local `testGroup` metadata is **not** a shipped schema contract.
+
+Evidence: 32 focused Node tests, including all 1,114,112 code points against an
+independently parsed pinned reference table, streaming and fragmented-group
+edit/delete/reorder checks; the stable full suite passes 2,922 tests / 218 files.
+Seventeen independent native controls per Chromium/Firefox/WebKit run agree
+with the portable classifier (51 bounded comparisons). All three final PNGs
+were directly reviewed; videos were recorded, not watched. This is **not**
+exhaustive browser Unicode certification or a Fountain editor interaction test.
+API, package, headless boundary, size and framework type checks pass.
+
+No engine, schema, transform, importer, view, exporter or Yjs path uses this
+module yet. Persistent context ownership, copy/paste identity, incremental
+projection and safe reopen/import semantics remain implementation work; the
+six public direction failures above are unchanged. Custom renderer isolation
+still needs its explicit contract. No public API, parity score, npm release or
+production-readiness promotion is implied. Source/evidence inventory:
+`artifacts/first-strong-foundation-verification-20261011.json`.
+
 ## What it preserves
 
 The `html_container` node has `block*` content and a validated `tag` attribute:

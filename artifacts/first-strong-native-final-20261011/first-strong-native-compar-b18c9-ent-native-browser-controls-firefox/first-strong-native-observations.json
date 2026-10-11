@@ -1,0 +1,227 @@
+{
+  "engine": "firefox",
+  "unicodeVersion": "17.0.0",
+  "scope": "17 bounded native oracle cases, not exhaustive browser Unicode conformance or Fountain integration",
+  "samples": [
+    "",
+    "123 .,😀",
+    "ְ́ 123 שלום",
+    "١٢٣ العربية",
+    "١٢٣ English",
+    "😀 𞤀 Adlam",
+    "😀 𝒜 שלום",
+    "‏English",
+    "‎שלום",
+    "‫⁧⁩‬ English",
+    "​﻿שלום",
+    "English שלום",
+    "שלום English",
+    "€٠١٢ --"
+  ],
+  "fixtures": [
+    {
+      "name": "nested fixed context excluded",
+      "html": "<p dir=\"ltr\">Latin excluded</p><p>שלום eligible</p>",
+      "model": {
+        "type": "blockquote",
+        "attrs": {
+          "dir": "auto"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left",
+              "dir": "ltr"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Latin excluded"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "שלום eligible"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "nested independent auto excluded",
+      "html": "<p dir=\"auto\">שלום excluded</p><p>English eligible</p>",
+      "model": {
+        "type": "blockquote",
+        "attrs": {
+          "dir": "auto"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left",
+              "dir": "auto"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "שלום excluded"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "English eligible"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "weak-only subtree with no strong result",
+      "html": "<blockquote><p>123😀</p><p>٠١٢ --</p></blockquote>",
+      "model": {
+        "type": "blockquote",
+        "attrs": {
+          "dir": "auto"
+        },
+        "content": [
+          {
+            "type": "blockquote",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "123😀"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "٠١٢ --"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "expected": [
+    "ltr",
+    "ltr",
+    "rtl",
+    "rtl",
+    "ltr",
+    "rtl",
+    "ltr",
+    "rtl",
+    "ltr",
+    "ltr",
+    "rtl",
+    "ltr",
+    "rtl",
+    "ltr",
+    "rtl",
+    "ltr",
+    "ltr"
+  ],
+  "observed": [
+    {
+      "case": 0,
+      "direction": "ltr"
+    },
+    {
+      "case": 1,
+      "direction": "ltr"
+    },
+    {
+      "case": 2,
+      "direction": "rtl"
+    },
+    {
+      "case": 3,
+      "direction": "rtl"
+    },
+    {
+      "case": 4,
+      "direction": "ltr"
+    },
+    {
+      "case": 5,
+      "direction": "rtl"
+    },
+    {
+      "case": 6,
+      "direction": "ltr"
+    },
+    {
+      "case": 7,
+      "direction": "rtl"
+    },
+    {
+      "case": 8,
+      "direction": "ltr"
+    },
+    {
+      "case": 9,
+      "direction": "ltr"
+    },
+    {
+      "case": 10,
+      "direction": "rtl"
+    },
+    {
+      "case": 11,
+      "direction": "ltr"
+    },
+    {
+      "case": 12,
+      "direction": "rtl"
+    },
+    {
+      "case": 13,
+      "direction": "ltr"
+    },
+    {
+      "case": 14,
+      "direction": "rtl"
+    },
+    {
+      "case": 15,
+      "direction": "ltr"
+    },
+    {
+      "case": 16,
+      "direction": "ltr"
+    }
+  ]
+}

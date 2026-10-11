@@ -1,0 +1,216 @@
+{
+  "date": "2026-10-11",
+  "baseSource": "f61886183d861a029d8bfca7c7854897a228edfc",
+  "scope": "Private first-strong foundation; no editor/model/schema/view/export/Yjs integration or public API change",
+  "standards": [
+    "https://www.unicode.org/Public/17.0.0/ucd/extracted/DerivedBidiClass.txt",
+    "https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute",
+    "https://www.unicode.org/license.txt"
+  ],
+  "unicode": {
+    "version": "17.0.0",
+    "codePoints": 1114112,
+    "disjointRanges": 1123,
+    "sourceSHA256": "4867b4b7f0731ed1bfcd34cc6251211ff1542541fce0734b6fbda139ee80b3a4",
+    "contract": "L/R/AL first-strong only, not full bidi layout or exhaustive browser Unicode conformance"
+  },
+  "focused": {
+    "passed": 32,
+    "files": 1,
+    "fakeDOM": false,
+    "includes": "Independent exhaustive table, streaming, nested exclusions, deep iteration, fragmented live edit/delete/reorder, explicit override detachment"
+  },
+  "stableFull": {
+    "passed": 2922,
+    "files": 218,
+    "sourceFrozenDuringRun": true
+  },
+  "gates": [
+    "API 411 declaration files",
+    "Existing headless boundary 100 modules",
+    "Packed ESM/CommonJS entry contracts",
+    "Existing size budgets unchanged",
+    "TypeScript/Svelte/Angular types"
+  ],
+  "native": {
+    "runs": 3,
+    "comparisons": [
+      {
+        "engine": "chromium",
+        "matched": 17,
+        "cases": [
+          "nested fixed context excluded",
+          "nested independent auto excluded",
+          "weak-only subtree with no strong result"
+        ]
+      },
+      {
+        "engine": "firefox",
+        "matched": 17,
+        "cases": [
+          "nested fixed context excluded",
+          "nested independent auto excluded",
+          "weak-only subtree with no strong result"
+        ]
+      },
+      {
+        "engine": "webkit",
+        "matched": 17,
+        "cases": [
+          "nested fixed context excluded",
+          "nested independent auto excluded",
+          "weak-only subtree with no strong result"
+        ]
+      }
+    ],
+    "boundedCases": 51,
+    "retries": 0,
+    "integration": false,
+    "reviewedPNGs": [
+      "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-chromium/first-strong-native-controls.png",
+      "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-firefox/first-strong-native-controls.png",
+      "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-webkit/first-strong-native-controls.png"
+    ],
+    "videos": "Recorded locally, not watched or committed",
+    "visualNote": "Eligible RTL/LTR and nested exclusions visible; engine UA placement differs, not pixel-equality evidence"
+  },
+  "unresolved": [
+    "Six public nested-direction audit failures unchanged",
+    "Persistent ownership/schema/import identity contract",
+    "List/move/split integration",
+    "Incremental view/virtualized model projection",
+    "HTML/reader/reopen and copy/paste membership",
+    "Yjs integration",
+    "Custom renderer isolation contract"
+  ],
+  "unchanged": [
+    "npm 0.4.0-beta.2",
+    "Parity ledger/PROD-04 Partial",
+    "CommonMark scores",
+    "Public API"
+  ],
+  "initialRuns": "first-strong-direction-focused, first-strong-native, and first-strong-final-full-units logs are intermediate, not final certificates",
+  "hashPolicy": "SHA256 identifies original raw bytes; Git blobs identify LF-normalized checkout content. --check validates Git blobs for cross-platform checkouts.",
+  "hashes": [
+    {
+      "path": "src/core/first-strong-direction.ts",
+      "sha256": "4128be99b0984533ad22b5b426bd722cda4c7fee48977f162958e065a0bdc3ac",
+      "gitBlob": "6f5e302b3ac88e11006d3862403775cf73db6d5e"
+    },
+    {
+      "path": "src/core/bidi-strong-data.ts",
+      "sha256": "7b73e4370ddc73f791dc2fe801da1305b7b6b90c9460d592f11da60abda29eab",
+      "gitBlob": "accc8bab166266a1d087beb0d84e6ad2b54c5e8b"
+    },
+    {
+      "path": "scripts/generate-bidi-strong.mjs",
+      "sha256": "c39d4009eb8863f9c30fd047147e2e779e109d997c0bdddd59f405513fbf539e",
+      "gitBlob": "206af0415783d423f0c10d67b4a33f89a45c5c24"
+    },
+    {
+      "path": "scripts/verify-first-strong-foundation.mjs",
+      "sha256": "6ae188e80aee2b58f735ad1af9b0a0793b85b8e1a49ec4665c6918cd9cf18a06",
+      "gitBlob": "6dc39baf06dedd91a22271605459b7e57cd0aa10"
+    },
+    {
+      "path": "tests/first-strong-direction.test.ts",
+      "sha256": "a9928fee2012f74418405ea332236a67da7e3e5dac6b1b1441acf4b1d12460f9",
+      "gitBlob": "c8a7e0893d6ca1ceccd5812763647fbd25a146ae"
+    },
+    {
+      "path": "tests/manual/first-strong-native.spec.ts",
+      "sha256": "168d1420e91ca1e18e867c86ac29800da47ac24c6c1f531e4561d8188a6fd6d7",
+      "gitBlob": "166514b81c9ed387e0dae41c6fbe7fb8a9b5ad1e"
+    },
+    {
+      "path": "playwright.first-strong-audit.config.ts",
+      "sha256": "bc5caad6841ca82dc88c87d06ecd30a8cbb4a09e89784ecef89a445a30846d9e",
+      "gitBlob": "889a8728c0936ed8ca53e67180f135fdf7b6b638"
+    },
+    {
+      "path": "tests/fixtures/unicode/DerivedBidiClass-17.0.0.txt",
+      "sha256": "4867b4b7f0731ed1bfcd34cc6251211ff1542541fce0734b6fbda139ee80b3a4",
+      "gitBlob": "7ce483d2962de86f4cfe44c287fc2fb8dd0cc896"
+    },
+    {
+      "path": "tests/fixtures/unicode/LICENSE.txt",
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "gitBlob": "56da58912807030b451a4700687d5bd02c72d6ed"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "bd4ccf34b4d8b06d44d117fa4dfcdf97ef78c16645db0be5c4f359ddb3040c19",
+      "gitBlob": "0d13aedd4ed57d302031af86bab5cfcec8956c55"
+    },
+    {
+      "path": "artifacts/first-strong-final-focused-20261011.log",
+      "sha256": "f05ad5d250591590f179ae07bdc48f51ce25eb666cbfb70ca655144c279b0f4f",
+      "gitBlob": "48bdd61a4017ff9b73142171d25a0cf04eea5623"
+    },
+    {
+      "path": "artifacts/first-strong-stable-full-units-20261011.log",
+      "sha256": "83b3c1d59eb7edf5a9e770af1df11811e80b6fa26791b0ba0ad940f6005326df",
+      "gitBlob": "678ffbf6a0f0acf398d24266388a2b7581814e3f"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011.log",
+      "sha256": "f9124f7a734a205b5a5fc016d181fc79b3787bdd5a80dd80ef4e670c7d4df249",
+      "gitBlob": "a0572014e5f7aefeba12e574c8485bd88010201f"
+    },
+    {
+      "path": "artifacts/first-strong-test-api-20261011.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4",
+      "gitBlob": "ecb1916d3b26b8064d84e0f6930e90304c603107"
+    },
+    {
+      "path": "artifacts/first-strong-test-headless-20261011.log",
+      "sha256": "7062d22bed67b04ec99b6a0e36408ce8ad991c8cf602e3bb68d61ff6835119a2",
+      "gitBlob": "fdc607bf3ca63cca85c507c6da75d1eeba02cb7d"
+    },
+    {
+      "path": "artifacts/first-strong-test-budget-20261011.log",
+      "sha256": "14891499807a65e332c8d409b566e570801597bf1bd0514dfebb2a46bbc3a6a7",
+      "gitBlob": "1a861abbbe9cb626fee11667f35f35be35461408"
+    },
+    {
+      "path": "artifacts/first-strong-test-package-20261011.log",
+      "sha256": "dcccddc9077417964235c5fb084ae9ee0442fbc8241df7d67d3e77e3c017eed2",
+      "gitBlob": "3fc192d14704b51de0d6f015e194bcfb28e234d4"
+    },
+    {
+      "path": "artifacts/first-strong-typecheck-20261011.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "gitBlob": "7d7f996b0d05ba3daa04e2474d964589fcb01f11"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-chromium/first-strong-native-controls.png",
+      "sha256": "36b95ce7982b3fdc4887a870c558fd556244afd57c54693a6661fcb67be289dd",
+      "gitBlob": "b7e70646174733ee073c5facdecb13f7e68f90cd"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-firefox/first-strong-native-controls.png",
+      "sha256": "9b608ee955740bc001d95975f3aba34c86cceac797342266e247d71538b0668b",
+      "gitBlob": "9467d9b1fa780975d81c78ef808cd4b916f7a441"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-webkit/first-strong-native-controls.png",
+      "sha256": "b3930269c8cdec79ee348358eceea8fa8d2e317727e5c88d46972cc8ed4256d1",
+      "gitBlob": "f6d68580c2c876ecf9ae340752f91a9757f141eb"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-chromium/first-strong-native-observations.json",
+      "sha256": "e679d9efe127874b1cd15f1483450a84d08bf595151757052a8faf55051613ea",
+      "gitBlob": "bb8257c91ab6a0cc8d8360eeec1bcdaf7369f079"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-firefox/first-strong-native-observations.json",
+      "sha256": "708403729ff507440dfdf35f1939ccfa05b633114c87b8071bf2726dddee001f",
+      "gitBlob": "2885604e24983d89996982088847383ecb6c221b"
+    },
+    {
+      "path": "artifacts/first-strong-native-final-20261011/first-strong-native-compar-b18c9-ent-native-browser-controls-webkit/first-strong-native-observations.json",
+      "sha256": "48b7b888b3bf14cb468cf62c48e25dce85aa134e7ffba11fc0d90738e1d313e3",
+      "gitBlob": "7a151383746b4553c698f54f7b07df5e3ea3b688"
+    }
+  ]
+}

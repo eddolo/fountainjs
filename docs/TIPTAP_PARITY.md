@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Private shared-direction foundation (2026-10-11): 32 focused Node tests,
+exhaustive pinned Unicode classification and 51 bounded native browser checks
+pass; all three final PNGs reviewed. Stable full suite passes 2,922 / 218,
+plus API/package/headless/size/types. The helper is not wired into the editor or
+public API. Six public direction failures remain open, PROD-04 remains Partial,
+and npm/ledger are unchanged. See [scope and remaining integration](HTML_CONTAINERS.md#portable-first-strong-foundation-2026-10-11-not-integrated)
+and `artifacts/first-strong-foundation-verification-20261011.json`.
+
 Live shared-auto audit (2026-10-11): six failing public toolbar/export
 journeys and six passing controls across Chromium, Firefox and WebKit confirm
 the nested ownership gap. All twelve complete exact JSON history and native

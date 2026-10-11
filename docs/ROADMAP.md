@@ -1,5 +1,15 @@
 # FountainJS opportunity roadmap
 
+Internal direction foundation (2026-10-11, not integrated): portable Unicode
+first-strong classification and accessor-defined fragmented-context folding
+pass 32 focused Node tests, exhaustive pinned Unicode classification and 51
+bounded native browser comparisons. Three final PNGs reviewed. Stable full
+suite: **2,922 tests / 218 files**; API/package/headless/size/types pass. This
+does not fix the six public direction failures below: persistent ownership and
+transform/view/export/collaboration integration are next. No public API, ledger
+promotion or npm change. See [the boundary](HTML_CONTAINERS.md#portable-first-strong-foundation-2026-10-11-not-integrated)
+and `artifacts/first-strong-foundation-verification-20261011.json`.
+
 Live shared-auto follow-up (2026-10-11, unresolved): the isolated public
 conversion-lab audit reproduces **six failures / six passing controls** in
 Chromium, Firefox and WebKit, including downloaded HTML. Initial imports,

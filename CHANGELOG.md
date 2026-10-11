@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a private, DOM-free Unicode first-strong classifier and live fragmented
+  context fold, with pinned Unicode 17 data, reproducible generation and full
+  license notices. Thirty-two focused tests include exhaustive classification,
+  streaming, deep traversal and shared-context edit/delete/reorder; seventeen
+  bounded native controls agree in each desktop engine. Three final PNGs
+  reviewed, videos not watched. Stable full suite passes 2,922 / 218. No public
+  API or model/view/export integration yet; six public direction failures stay
+  open and this does not promote parity or publish npm.
+
 - Add a recorded, isolated public nested-direction audit with six explicit
   failures and six passing controls across three desktop engines. It reproduces
   direction loss in Indent/Lift and downloaded HTML while whole-JSON history
