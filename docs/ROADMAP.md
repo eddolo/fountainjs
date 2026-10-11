@@ -27,9 +27,12 @@ repeated preflights separately counted. The downloaded always-upload artifact
 contains all three successful media-selection event files; a retry did not
 occur, so failed-attempt retention after retry remains unproven empirically.
 Evidence: `artifacts/ci-3d858ec-verification-20261011.json`. Historical Firefox
-retry cause, npm version and ledger remain unchanged. The newer `f457ec3`
-browser matrix is separately pending; its verify/performance/Lean jobs and
-Pages already pass.
+retry cause, npm version and ledger remain unchanged. The newer runtime
+`f457ec3` now also completes all jobs and Pages: 2,890 units / 217 files,
+763 clean unique browser passes / 16 skips, plus 67 repeated preflights.
+No retry is reported. Its raw logs and unchanged performance limits are in
+`artifacts/ci-f457ec3-verification-20261011.json`; uploaded artifact contents
+are not yet inspected for this run. Later audit/foundation runs remain separate.
 
 New local source-in-editor fix (2026-10-11, Unreleased): preserve untouched
 Markdown despite StarterKit's automatic empty root caret paragraph; no generic

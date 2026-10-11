@@ -20,7 +20,11 @@ The earlier diagnostics source `3d858ec` now has completed Linux evidence:
 and Pages successful, actual media-event artifact retention verified.
 `artifacts/ci-3d858ec-verification-20261011.json` separates repeated preflights
 and unproven failed-attempt retention from that coverage. The later runtime
-`f457ec3` browser job is still pending; npm and ledger remain unchanged.
+`f457ec3` now completes all jobs and Pages: 2,890 units / 217 files, 763 clean
+unique browser passes / 16 skips, plus 67 repeated preflights, no reported retry.
+Raw logs and performance evidence: `artifacts/ci-f457ec3-verification-20261011.json`.
+Uploaded artifact contents for this run are not inspected. npm and ledger stay
+unchanged; this does not resolve the shared-auto failures.
 
 Unreleased source-in-editor improvement (2026-10-11): the known default root
 caret repair no longer invalidates untouched Markdown source. Full preceding

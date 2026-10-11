@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-11",
+  "source": "f457ec3948394f5c46e9de0b3e3ffcfb100716b1",
+  "run": { "id": 38161215757, "status": "completed", "conclusion": "success", "updatedAt": "2026-10-11T18:26:33Z" },
+  "pages": { "id": 38161215761, "status": "completed", "conclusion": "success" },
+  "jobs": [
+    { "id": 114534348797, "name": "lean-integration", "status": "completed", "conclusion": "success" },
+    { "id": 114534348978, "name": "performance", "status": "completed", "conclusion": "success" },
+    { "id": 114534348980, "name": "verify", "status": "completed", "conclusion": "success" },
+    { "id": 114534349002, "name": "browser", "status": "completed", "conclusion": "success" }
+  ],
+  "units": { "passed": 2890, "files": 217 },
+  "browser": {
+    "headless": { "total": 767, "cleanPassed": 751, "skipped": 16 },
+    "headedClipboard": { "total": 12, "cleanPassed": 12, "workers": 1 },
+    "unique": { "total": 779, "cleanPassed": 763, "skipped": 16 },
+    "reportedRetries": 0,
+    "repeatedPreflights": { "structural": 60, "nativeFocus": 5, "firefoxSelection": 2, "total": 67 },
+    "countPolicy": "Headless grep excludes the headed clipboard pattern. Preflights repeat regular matrix cases and are not added to unique coverage.",
+    "limits": "Linux automation, not physical-device evidence. Historical Firefox retry cause remains unproven; a clean later run does not explain it."
+  },
+  "performance": {
+    "serverHTMLMedianGrowth": 8.91,
+    "localEditMedianGrowth": 10.20,
+    "incrementalRemoteMedianGrowth": 8.48,
+    "growthLimit": 15,
+    "liveSessionHeapMiB": 0,
+    "liveSessionLimitMiB": 8,
+    "destroyedEditorHeapMiB": 0.06,
+    "destroyedEditorLimitMiB": 16,
+    "retainedServerDocumentMiB": 14.33,
+    "retainedServerDocumentLimitMiB": 48
+  },
+  "artifactUpload": {
+    "playwrightReport": { "id": 11711461550, "bytes": 6702567 },
+    "directionEvidence": { "id": 11711720750, "bytes": 31844706 },
+    "scope": "Upload success confirmed in job logs; contents have not been downloaded/reviewed for this run. Earlier 3d858ec actual media-event retention remains separately verified."
+  },
+  "unchanged": ["Six public shared-auto direction failures", "npm 0.4.0-beta.2", "Parity ledger", "CommonMark scores"],
+  "hashPolicy": "Raw SHA256 identifies downloaded bytes; Git blob identifies LF-normalized clone content.",
+  "hashes": [
+    { "path": "artifacts/ci-f457ec3-browser-20261011.log", "sha256": "72c427e86e61740e0bed9c5f5d83a96780475dd9414567b42be62aef34a824c5", "gitBlob": "de6992405724b96cb64e8b3741d3a7581eff28e7" },
+    { "path": "artifacts/ci-f457ec3-verify-20261011.log", "sha256": "68a4baa0c9444c2aa0aabd347ba1531905266486a6ed152d398b8a3a867694fe", "gitBlob": "1fc6237788b8bafc080e1d3017b1573059d8734e" },
+    { "path": "artifacts/ci-f457ec3-performance-20261011.log", "sha256": "07b5b024c682e24a4c1596947e39fe3ef15d334f4efd6c57640bc16f34a0ca79", "gitBlob": "3a08f857aa05d164c029c627bb763897066a33de" }
+  ]
+}

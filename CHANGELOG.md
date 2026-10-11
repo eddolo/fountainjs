@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Verify completed Linux CI/Pages for the Markdown caret-source runtime fix
+  `f457ec3`: 2,890 units / 217 files, 763 clean unique browser passes / 16 skips,
+  with 67 repeated preflights counted separately and no reported retry. Retain
+  raw verify/browser/performance logs. Performance stays within unchanged
+  limits; uploaded artifact contents for this run are not yet reviewed. This
+  does not explain the historical Firefox retry or fix shared-auto direction.
+
 - Add a private, DOM-free Unicode first-strong classifier and live fragmented
   context fold, with pinned Unicode 17 data, reproducible generation and full
   license notices. Thirty-two focused tests include exhaustive classification,
