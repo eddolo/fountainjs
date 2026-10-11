@@ -1,0 +1,387 @@
+{
+  "source": "<ul dir=\"ltr\"><li><p>Outer parent</p><ol dir=\"rtl\" start=\"0\"><li><p>שלום anchor</p></li><li><p>English selected</p></li><li><p>English tail</p></li></ol></li><li><p>Outer after</p></li></ul>",
+  "sample": "nested-lift-fixed-control",
+  "nativeBefore": [
+    {
+      "text": "Outer parent",
+      "direction": "ltr"
+    },
+    {
+      "text": "שלום anchor",
+      "direction": "rtl"
+    },
+    {
+      "text": "English selected",
+      "direction": "rtl"
+    },
+    {
+      "text": "English tail",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "ltr"
+    }
+  ],
+  "nativeAfterAnchorEdit": [
+    {
+      "text": "Outer parent",
+      "direction": "ltr"
+    },
+    {
+      "text": "English שלום anchor",
+      "direction": "rtl"
+    },
+    {
+      "text": "English selected",
+      "direction": "rtl"
+    },
+    {
+      "text": "English tail",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "ltr"
+    }
+  ],
+  "imported": [
+    {
+      "text": "Outer parent",
+      "direction": "ltr"
+    },
+    {
+      "text": "שלום anchor",
+      "direction": "rtl"
+    },
+    {
+      "text": "English selected",
+      "direction": "rtl"
+    },
+    {
+      "text": "English tail",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "ltr"
+    }
+  ],
+  "originalJSON": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "bullet_list",
+        "attrs": {
+          "dir": "ltr"
+        },
+        "content": [
+          {
+            "type": "list_item",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Outer parent"
+                  }
+                ]
+              },
+              {
+                "type": "ordered_list",
+                "attrs": {
+                  "dir": "rtl",
+                  "start": 0
+                },
+                "content": [
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "שלום anchor"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "English selected"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "English tail"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list_item",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Outer after"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      }
+    ]
+  },
+  "transformed": [
+    {
+      "text": "Outer parent",
+      "direction": "ltr"
+    },
+    {
+      "text": "שלום anchor",
+      "direction": "rtl"
+    },
+    {
+      "text": "English selected",
+      "direction": "rtl"
+    },
+    {
+      "text": "English tail",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "ltr"
+    }
+  ],
+  "transformedJSON": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "bullet_list",
+        "attrs": {
+          "dir": "ltr"
+        },
+        "content": [
+          {
+            "type": "list_item",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Outer parent"
+                  }
+                ]
+              },
+              {
+                "type": "ordered_list",
+                "attrs": {
+                  "dir": "rtl",
+                  "start": 0
+                },
+                "content": [
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "שלום anchor"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list_item",
+            "attrs": {
+              "dir": "rtl"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "English selected"
+                  }
+                ]
+              },
+              {
+                "type": "ordered_list",
+                "attrs": {
+                  "dir": "rtl",
+                  "start": 2
+                },
+                "content": [
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "English tail"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list_item",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Outer after"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      }
+    ]
+  },
+  "exportedReader": [
+    {
+      "text": "Outer parent",
+      "direction": "ltr"
+    },
+    {
+      "text": "שלום anchor",
+      "direction": "rtl"
+    },
+    {
+      "text": "English selected",
+      "direction": "rtl"
+    },
+    {
+      "text": "English tail",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "ltr"
+    }
+  ],
+  "afterAnchorEdit": [
+    {
+      "text": "Outer parent",
+      "direction": "ltr"
+    },
+    {
+      "text": "English שלום anchor",
+      "direction": "rtl"
+    },
+    {
+      "text": "English selected",
+      "direction": "rtl"
+    },
+    {
+      "text": "English tail",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "ltr"
+    }
+  ],
+  "pageErrors": []
+}

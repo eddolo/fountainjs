@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a recorded, isolated public nested-direction audit with six explicit
+  failures and six passing controls across three desktop engines. It reproduces
+  direction loss in Indent/Lift and downloaded HTML while whole-JSON history
+  and native typing pass. This is unresolved reliability evidence, not an engine
+  fix, expected-failure test, release-matrix pass or parity promotion. Document
+  shared-ownership requirements and retain twelve reviewed PNGs. Verify the
+  earlier diagnostics commit's Linux checkpoint and actual selection-event
+  artifacts without claiming the historical Firefox retry was fixed.
 - Preserve untouched Markdown source when StarterKit adds its default empty
   root caret paragraph. Private weak provenance plus exact preceding-document
   and root-metadata comparison prevents generic empty-block omission; authored,

@@ -1,0 +1,603 @@
+[WebServer] (node:2988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:18600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:16348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:21344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./vite.config" without a file extension (vite.input-audit.config.ts:2:18). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 12 tests using 1 worker
+
+(node:25620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   1 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (9.0s)
+(node:7456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (4.8s)
+  x   3 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (4.4s)
+(node:20548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  4 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (4.6s)
+(node:24296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   5 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (9.5s)
+(node:25492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (8.2s)
+  x   7 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (6.1s)
+(node:27396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  8 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (8.8s)
+(node:9088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   9 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (15.0s)
+(node:9312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 10 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (13.4s)
+  x  11 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (13.2s)
+(node:19448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 12 [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (13.6s)
+
+
+  1) [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ──────────────
+
+    Error: shared direction must survive toolbar reparenting
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -6,15 +6,15 @@
+        Object {
+          "direction": "rtl",
+          "text": "שלום anchor",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English tail",
+        },
+        Object {
+          "direction": "ltr",
+          "text": "Outer after",
+
+      57 |     await workspace.getByRole('button', { name: sample.action, exact: true }).click();
+      58 |     observations.transformed = await directions(editor);
+    > 59 |     expect.soft(observations.transformed, 'shared direction must survive toolbar reparenting').toEqual(nativeBefore);
+         |                                                                                                ^
+      60 |     await editor.screenshot({ path: info.outputPath('nested-toolbar-transformed.png') });
+      61 |     const transformedJSON = JSON.parse(await download('json'));
+      62 |     observations.transformedJSON = transformedJSON;
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:59:96
+
+    Error: downloaded HTML must retain the source direction
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -6,15 +6,15 @@
+        Object {
+          "direction": "rtl",
+          "text": "שלום anchor",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English tail",
+        },
+        Object {
+          "direction": "ltr",
+          "text": "Outer after",
+
+      69 |     await native.setContent(html);
+      70 |     observations.exportedReader = await directions(native.locator('body'));
+    > 71 |     expect.soft(observations.exportedReader, 'downloaded HTML must retain the source direction').toEqual(nativeBefore);
+         |                                                                                                  ^
+      72 |     await native.locator('body').screenshot({ path: info.outputPath('nested-exported-reader.png') });
+      73 |
+      74 |     const anchor = editor.locator('p').filter({ hasText: 'שלום anchor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:71:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item ───────
+
+    Error: shared direction must survive toolbar reparenting
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        Object {
+          "direction": "ltr",
+          "text": "Parent paragraph",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+          "direction": "rtl",
+          "text": "English tail",
+
+      57 |     await workspace.getByRole('button', { name: sample.action, exact: true }).click();
+      58 |     observations.transformed = await directions(editor);
+    > 59 |     expect.soft(observations.transformed, 'shared direction must survive toolbar reparenting').toEqual(nativeBefore);
+         |                                                                                                ^
+      60 |     await editor.screenshot({ path: info.outputPath('nested-toolbar-transformed.png') });
+      61 |     const transformedJSON = JSON.parse(await download('json'));
+      62 |     observations.transformedJSON = transformedJSON;
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:59:96
+
+    Error: downloaded HTML must retain the source direction
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        Object {
+          "direction": "ltr",
+          "text": "Parent paragraph",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+          "direction": "rtl",
+          "text": "English tail",
+
+      69 |     await native.setContent(html);
+      70 |     observations.exportedReader = await directions(native.locator('body'));
+    > 71 |     expect.soft(observations.exportedReader, 'downloaded HTML must retain the source direction').toEqual(nativeBefore);
+         |                                                                                                  ^
+      72 |     await native.locator('body').screenshot({ path: info.outputPath('nested-exported-reader.png') });
+      73 |
+      74 |     const anchor = editor.locator('p').filter({ hasText: 'שלום anchor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:71:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ───────────────
+
+    Error: shared direction must survive toolbar reparenting
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -6,15 +6,15 @@
+        Object {
+          "direction": "rtl",
+          "text": "שלום anchor",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English tail",
+        },
+        Object {
+          "direction": "ltr",
+          "text": "Outer after",
+
+      57 |     await workspace.getByRole('button', { name: sample.action, exact: true }).click();
+      58 |     observations.transformed = await directions(editor);
+    > 59 |     expect.soft(observations.transformed, 'shared direction must survive toolbar reparenting').toEqual(nativeBefore);
+         |                                                                                                ^
+      60 |     await editor.screenshot({ path: info.outputPath('nested-toolbar-transformed.png') });
+      61 |     const transformedJSON = JSON.parse(await download('json'));
+      62 |     observations.transformedJSON = transformedJSON;
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:59:96
+
+    Error: downloaded HTML must retain the source direction
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -6,15 +6,15 @@
+        Object {
+          "direction": "rtl",
+          "text": "שלום anchor",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English tail",
+        },
+        Object {
+          "direction": "ltr",
+          "text": "Outer after",
+
+      69 |     await native.setContent(html);
+      70 |     observations.exportedReader = await directions(native.locator('body'));
+    > 71 |     expect.soft(observations.exportedReader, 'downloaded HTML must retain the source direction').toEqual(nativeBefore);
+         |                                                                                                  ^
+      72 |     await native.locator('body').screenshot({ path: info.outputPath('nested-exported-reader.png') });
+      73 |
+      74 |     const anchor = editor.locator('p').filter({ hasText: 'שלום anchor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:71:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item ────────
+
+    Error: shared direction must survive toolbar reparenting
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        Object {
+          "direction": "ltr",
+          "text": "Parent paragraph",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+          "direction": "rtl",
+          "text": "English tail",
+
+      57 |     await workspace.getByRole('button', { name: sample.action, exact: true }).click();
+      58 |     observations.transformed = await directions(editor);
+    > 59 |     expect.soft(observations.transformed, 'shared direction must survive toolbar reparenting').toEqual(nativeBefore);
+         |                                                                                                ^
+      60 |     await editor.screenshot({ path: info.outputPath('nested-toolbar-transformed.png') });
+      61 |     const transformedJSON = JSON.parse(await download('json'));
+      62 |     observations.transformedJSON = transformedJSON;
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:59:96
+
+    Error: downloaded HTML must retain the source direction
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        Object {
+          "direction": "ltr",
+          "text": "Parent paragraph",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+          "direction": "rtl",
+          "text": "English tail",
+
+      69 |     await native.setContent(html);
+      70 |     observations.exportedReader = await directions(native.locator('body'));
+    > 71 |     expect.soft(observations.exportedReader, 'downloaded HTML must retain the source direction').toEqual(nativeBefore);
+         |                                                                                                  ^
+      72 |     await native.locator('body').screenshot({ path: info.outputPath('nested-exported-reader.png') });
+      73 |
+      74 |     const anchor = editor.locator('p').filter({ hasText: 'שלום anchor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:71:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ────────────────
+
+    Error: shared direction must survive toolbar reparenting
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -6,15 +6,15 @@
+        Object {
+          "direction": "rtl",
+          "text": "שלום anchor",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English tail",
+        },
+        Object {
+          "direction": "ltr",
+          "text": "Outer after",
+
+      57 |     await workspace.getByRole('button', { name: sample.action, exact: true }).click();
+      58 |     observations.transformed = await directions(editor);
+    > 59 |     expect.soft(observations.transformed, 'shared direction must survive toolbar reparenting').toEqual(nativeBefore);
+         |                                                                                                ^
+      60 |     await editor.screenshot({ path: info.outputPath('nested-toolbar-transformed.png') });
+      61 |     const transformedJSON = JSON.parse(await download('json'));
+      62 |     observations.transformedJSON = transformedJSON;
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:59:96
+
+    Error: downloaded HTML must retain the source direction
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -6,15 +6,15 @@
+        Object {
+          "direction": "rtl",
+          "text": "שלום anchor",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English tail",
+        },
+        Object {
+          "direction": "ltr",
+          "text": "Outer after",
+
+      69 |     await native.setContent(html);
+      70 |     observations.exportedReader = await directions(native.locator('body'));
+    > 71 |     expect.soft(observations.exportedReader, 'downloaded HTML must retain the source direction').toEqual(nativeBefore);
+         |                                                                                                  ^
+      72 |     await native.locator('body').screenshot({ path: info.outputPath('nested-exported-reader.png') });
+      73 |
+      74 |     const anchor = editor.locator('p').filter({ hasText: 'שלום anchor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:71:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-direction-real-20261011\nested-direction-real-nested-lift-auto-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item ─────────
+
+    Error: shared direction must survive toolbar reparenting
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        Object {
+          "direction": "ltr",
+          "text": "Parent paragraph",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+          "direction": "rtl",
+          "text": "English tail",
+
+      57 |     await workspace.getByRole('button', { name: sample.action, exact: true }).click();
+      58 |     observations.transformed = await directions(editor);
+    > 59 |     expect.soft(observations.transformed, 'shared direction must survive toolbar reparenting').toEqual(nativeBefore);
+         |                                                                                                ^
+      60 |     await editor.screenshot({ path: info.outputPath('nested-toolbar-transformed.png') });
+      61 |     const transformedJSON = JSON.parse(await download('json'));
+      62 |     observations.transformedJSON = transformedJSON;
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:59:96
+
+    Error: downloaded HTML must retain the source direction
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,11 +6,11 @@
+        Object {
+          "direction": "ltr",
+          "text": "Parent paragraph",
+        },
+        Object {
+    -     "direction": "rtl",
+    +     "direction": "ltr",
+          "text": "English selected",
+        },
+        Object {
+          "direction": "rtl",
+          "text": "English tail",
+
+      69 |     await native.setContent(html);
+      70 |     observations.exportedReader = await directions(native.locator('body'));
+    > 71 |     expect.soft(observations.exportedReader, 'downloaded HTML must retain the source direction').toEqual(nativeBefore);
+         |                                                                                                  ^
+      72 |     await native.locator('body').screenshot({ path: info.outputPath('nested-exported-reader.png') });
+      73 |
+      74 |     const anchor = editor.locator('p').filter({ hasText: 'שלום anchor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-direction-real.spec.ts:71:98
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-direction-real-20261011\nested-direction-real-indent-under-fixed-item-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ───────────────
+    [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item ────────
+    [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ────────────────
+    [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item ─────────
+    [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto ─────────────────
+    [webkit] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item ──────────
+  6 passed (2.4m)

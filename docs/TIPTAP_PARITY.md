@@ -1,5 +1,19 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Live shared-auto audit (2026-10-11): six failing public toolbar/export
+journeys and six passing controls across Chromium, Firefox and WebKit confirm
+the nested ownership gap. All twelve complete exact JSON history and native
+typing assertions. Twelve representative screenshots reviewed; recordings not
+watched. This deliberately red isolated audit adds no passing parity coverage
+and PROD-04 stays Partial. See [the acceptance contract](HTML_CONTAINERS.md#public-nested-direction-reproduction-2026-10-11-unresolved)
+and `artifacts/nested-direction-real-verification-20261011.json`.
+The earlier diagnostics source `3d858ec` now has completed Linux evidence:
+2,874 units / 216 files, 760 clean unique browser passes / 16 skips, all jobs
+and Pages successful, actual media-event artifact retention verified.
+`artifacts/ci-3d858ec-verification-20261011.json` separates repeated preflights
+and unproven failed-attempt retention from that coverage. The later runtime
+`f457ec3` browser job is still pending; npm and ledger remain unchanged.
+
 Unreleased source-in-editor improvement (2026-10-11): the known default root
 caret repair no longer invalidates untouched Markdown source. Full preceding
 content/root metadata must match; authored/custom/copied/serialized blank

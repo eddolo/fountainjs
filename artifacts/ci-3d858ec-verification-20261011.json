@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-11",
+  "sourceCommit": "3d858ec699f852190f3a903443d9bc3470474f15",
+  "status": "terminal successful Linux CI; no reported browser retries",
+  "ci": {
+    "run": 38159293065,
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/38159293065",
+    "conclusion": "success",
+    "jobs": {
+      "browser": 114528644692,
+      "verify": 114528644735,
+      "performance": 114528644694,
+      "lean": 114528644486
+    },
+    "allJobs": "success",
+    "pages": {
+      "run": 38159293068,
+      "conclusion": "success"
+    }
+  },
+  "units": {
+    "tests": 2874,
+    "files": 216
+  },
+  "uniqueBrowserMatrix": {
+    "scheduled": 776,
+    "cleanPassed": 760,
+    "retryPassed": 0,
+    "skipped": 16,
+    "headless": {
+      "scheduled": 764,
+      "cleanPassed": 748,
+      "retryPassed": 0,
+      "skipped": 16
+    },
+    "displayClipboard": {
+      "scheduled": 12,
+      "cleanPassed": 12,
+      "workers": 1
+    }
+  },
+  "additionalPreflightExecutions": {
+    "structural": 60,
+    "nativeFocus": 5,
+    "firefoxSelection": 2,
+    "note": "67 repeated subset executions, not additional unique cases"
+  },
+  "performance": {
+    "serverHTMLRatio": 9.2,
+    "localRatio": 7.16,
+    "incrementalRemoteRatio": 10.68,
+    "maximumRatio": 15,
+    "liveHeapMiB": 0,
+    "destroyedHeapMiB": 0.06,
+    "retainedServerDocumentHeapMiB": 15.2,
+    "conclusion": "success"
+  },
+  "artifactRetention": {
+    "artifact": 11710601129,
+    "name": "playwright-report",
+    "sizeBytes": 6680633,
+    "downloaded": true,
+    "nativeMediaSelection": [
+      {
+        "path": "artifacts/ci-3d858ec-browser-report-20261011/test-results/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-chromium/media-selection-events.json",
+        "count": 18,
+        "final": {
+          "event": "teardown",
+          "time": 2907.6999999999534,
+          "selectedMediaPath": "5",
+          "selectedNodePath": "5",
+          "attributesPresent": true
+        }
+      },
+      {
+        "path": "artifacts/ci-3d858ec-browser-report-20261011/test-results/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-firefox/media-selection-events.json",
+        "count": 14,
+        "final": {
+          "event": "teardown",
+          "time": 1189,
+          "selectedMediaPath": "5",
+          "selectedNodePath": "5",
+          "attributesPresent": true
+        }
+      },
+      {
+        "path": "artifacts/ci-3d858ec-browser-report-20261011/test-results/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-webkit/media-selection-events.json",
+        "count": 14,
+        "final": {
+          "event": "teardown",
+          "time": 2635,
+          "selectedMediaPath": "5",
+          "selectedNodePath": "5",
+          "attributesPresent": true
+        }
+      }
+    ],
+    "note": "Report and all three successful selection-event files are present in downloaded artifact. No failure occurred here: the presence of failed-attempt traces after a retry is not empirically demonstrated by this run."
+  },
+  "limitations": [
+    "The historical 0928289 Firefox Angular retry remains undiagnosed; this run is not proof of a fix.",
+    "This checkpoint does not certify f457ec3 or later audits.",
+    "Six earlier nested-auto gaps, sixteen skips, physical devices and broad parity remain open.",
+    "No new screenshot/video visual certification from this artifact is claimed; npm and ledger remain unchanged."
+  ],
+  "hashScope": "sha256 records local downloaded bytes; gitBlob records Git-filtered content for repository reproducibility.",
+  "evidenceHashes": [
+    {
+      "path": "artifacts/ci-3d858ec-browser-20261011.log",
+      "sha256": "fb69c13720017198032845ba3a71fb47ad19c23c5508b21348cd0531aa33e06d",
+      "gitBlob": "db8e7cdd1cda6bf0d0eb3f23a8cc0307efc66ff0"
+    },
+    {
+      "path": "artifacts/ci-3d858ec-verify-20261011.log",
+      "sha256": "0f1f8dcfac78a61f5cecb1be3d81422267b36cf735312079e65e1a16f40f4d88",
+      "gitBlob": "83afdec1b56c334a15e173c25b1e3fec759393b3"
+    },
+    {
+      "path": "artifacts/ci-3d858ec-performance-20261011.log",
+      "sha256": "ea952a6025013cbe139df136a82f28000dae53f3907a77049d5e898528c18f5c",
+      "gitBlob": "25f9481f3c26e871b4438910cf4e2576e13c8e00"
+    },
+    {
+      "path": "artifacts/ci-3d858ec-browser-report-20261011/test-results/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-chromium/media-selection-events.json",
+      "sha256": "3a64b2f603a5d660cb2f7a3c08d8f6c0fc92eea4b54b69f14db652dc3c04b3a8",
+      "gitBlob": "ef40e2d27b8558d2c0e06f7252d2fde1a8184cf1"
+    },
+    {
+      "path": "artifacts/ci-3d858ec-browser-report-20261011/test-results/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-firefox/media-selection-events.json",
+      "sha256": "99d198e053409fd2713cd6e7ddc401bcecbf5cadf6b29d8aeadaeb304a93b439",
+      "gitBlob": "d396daee2a21729f76016ffb9a15b6030ff0f6c9"
+    },
+    {
+      "path": "artifacts/ci-3d858ec-browser-report-20261011/test-results/editor-uses-first-party-An-2aa8d-n-editing-and-owner-cleanup-webkit/media-selection-events.json",
+      "sha256": "cd063a1ec3198b33239733bd972f57cce1a1efa59ff1fa6660478d598408d5e5",
+      "gitBlob": "9b465a998c08653d0517cfca85ab63218700967f"
+    }
+  ]
+}

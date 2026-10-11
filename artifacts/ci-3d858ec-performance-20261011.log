@@ -1,0 +1,433 @@
+performance	Set up job	﻿2026-10-11T17:21:22.6343866Z Current runner version: '2.337.0'
+performance	Set up job	2026-10-11T17:21:22.6362797Z ##[group]Runner Image Provisioner
+performance	Set up job	2026-10-11T17:21:22.6363454Z Hosted Compute Agent
+performance	Set up job	2026-10-11T17:21:22.6363886Z Version: 20261002.596
+performance	Set up job	2026-10-11T17:21:22.6364260Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+performance	Set up job	2026-10-11T17:21:22.6364718Z Build Date: 2026-10-02T22:28:27Z
+performance	Set up job	2026-10-11T17:21:22.6365193Z Worker ID: {eceabef4-d5c6-4775-8164-1945a2e154b8}
+performance	Set up job	2026-10-11T17:21:22.6365615Z Region: centralus
+performance	Set up job	2026-10-11T17:21:22.6365984Z Cloud: Azure
+performance	Set up job	2026-10-11T17:21:22.6366309Z ##[endgroup]
+performance	Set up job	2026-10-11T17:21:22.6367087Z ##[group]Operating System
+performance	Set up job	2026-10-11T17:21:22.6367558Z Ubuntu
+performance	Set up job	2026-10-11T17:21:22.6367871Z 24.04.5
+performance	Set up job	2026-10-11T17:21:22.6368211Z LTS
+performance	Set up job	2026-10-11T17:21:22.6368524Z ##[endgroup]
+performance	Set up job	2026-10-11T17:21:22.6368843Z ##[group]Runner Image
+performance	Set up job	2026-10-11T17:21:22.6369277Z Image: ubuntu-24.04
+performance	Set up job	2026-10-11T17:21:22.6369661Z Version: 20261004.327.1
+performance	Set up job	2026-10-11T17:21:22.6370711Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+performance	Set up job	2026-10-11T17:21:22.6371735Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+performance	Set up job	2026-10-11T17:21:22.6372375Z ##[endgroup]
+performance	Set up job	2026-10-11T17:21:22.6373030Z ##[group]GITHUB_TOKEN Permissions
+performance	Set up job	2026-10-11T17:21:22.6374454Z Contents: read
+performance	Set up job	2026-10-11T17:21:22.6375026Z Metadata: read
+performance	Set up job	2026-10-11T17:21:22.6375410Z ##[endgroup]
+performance	Set up job	2026-10-11T17:21:22.6376776Z Secret source: Actions
+performance	Set up job	2026-10-11T17:21:22.6377382Z Cache mode: write
+performance	Set up job	2026-10-11T17:21:22.6377813Z Prepare workflow directory
+performance	Set up job	2026-10-11T17:21:22.6580890Z Prepare all required actions
+performance	Set up job	2026-10-11T17:21:22.6612726Z Getting action download info
+performance	Set up job	2026-10-11T17:21:22.8968070Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+performance	Set up job	2026-10-11T17:21:22.9813738Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+performance	Set up job	2026-10-11T17:21:23.4882525Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+performance	Set up job	2026-10-11T17:21:23.6943559Z Complete job name: performance
+performance	Run actions/checkout@v4	﻿2026-10-11T17:21:23.7419572Z ##[group]Run actions/checkout@v4
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7420072Z with:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7420474Z   repository: eddolo/fountainjs
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7422586Z   token: ***
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7422880Z   ssh-strict: true
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7423140Z   ssh-user: git
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7423411Z   persist-credentials: true
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7423713Z   clean: true
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7424007Z   sparse-checkout-cone-mode: true
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7424310Z   fetch-depth: 1
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7424564Z   fetch-tags: false
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7424828Z   show-progress: true
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7425096Z   lfs: false
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7425364Z   submodules: false
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7425628Z   set-safe-directory: true
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7425928Z   allow-unsafe-pr-checkout: false
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.7426317Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8079992Z Syncing repository: eddolo/fountainjs
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8081452Z ##[group]Getting Git version info
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8081942Z Working directory is '/home/runner/work/fountainjs/fountainjs'
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8082656Z [command]/usr/bin/git version
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8117987Z git version 2.55.0
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8130524Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8139969Z Temporarily overriding HOME='/home/runner/work/_temp/092e3778-d031-4f6f-9f46-669f5314a5d3' before making global git config changes
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8141102Z Adding repository directory to the temporary git global config as a safe directory
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8143649Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8183380Z Deleting the contents of '/home/runner/work/fountainjs/fountainjs'
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8186407Z ##[group]Initializing the repository
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8189341Z [command]/usr/bin/git init /home/runner/work/fountainjs/fountainjs
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8260775Z hint: Using 'master' as the name for the initial branch. This default branch name
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8262235Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8263144Z hint: to use in all of your new repositories, which will suppress this warning,
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8264176Z hint: call:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8264559Z hint:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8265090Z hint: 	git config --global init.defaultBranch <name>
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8265462Z hint:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8265802Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8266356Z hint: 'development'. The just-created branch can be renamed via this command:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8266782Z hint:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8267034Z hint: 	git branch -m <name>
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8267312Z hint:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8267689Z hint: Disable this message with "git config set advice.defaultBranchName false"
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8268468Z Initialized empty Git repository in /home/runner/work/fountainjs/fountainjs/.git/
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8270862Z [command]/usr/bin/git remote add origin https://github.com/eddolo/fountainjs
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8308111Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8310740Z ##[group]Disabling automatic garbage collection
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8311339Z [command]/usr/bin/git config --local gc.auto 0
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8334915Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8335655Z ##[group]Setting up auth
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8339709Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8365169Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8627921Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8653611Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8829523Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.8854532Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.9028404Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.9103430Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.9104025Z ##[group]Fetching the repository
+performance	Run actions/checkout@v4	2026-10-11T17:21:23.9109487Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3d858ec699f852190f3a903443d9bc3470474f15:refs/remotes/origin/master
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5621685Z From https://github.com/eddolo/fountainjs
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5622522Z  * [new ref]         3d858ec699f852190f3a903443d9bc3470474f15 -> origin/master
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5624537Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5625022Z ##[group]Determining the checkout info
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5626838Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5631476Z [command]/usr/bin/git sparse-checkout disable
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5674500Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5700818Z ##[group]Checking out the ref
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.5704113Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.8843301Z Reset branch 'master'
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.8844519Z branch 'master' set up to track 'origin/master'.
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.8857949Z ##[endgroup]
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.8896506Z [command]/usr/bin/git log -1 --format=%H
+performance	Run actions/checkout@v4	2026-10-11T17:21:25.8918387Z 3d858ec699f852190f3a903443d9bc3470474f15
+performance	Run pnpm/action-setup@v4	﻿2026-10-11T17:21:25.9104281Z ##[group]Run pnpm/action-setup@v4
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9104523Z with:
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9104638Z   version: 11.19.0
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9104758Z   dest: ~/setup-pnpm
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9104881Z   run_install: null
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9105003Z   cache: false
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9105310Z   cache_dependency_path: pnpm-lock.yaml
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9105499Z   package_json_file: package.json
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9105643Z   standalone: false
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:25.9105769Z ##[endgroup]
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.0042969Z ##[group]Running self-installer...
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.2622653Z (node:2150) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.2623740Z (Use `node --trace-deprecation ...` to show where the warning was created)
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.5198760Z Progress: resolved 1, reused 0, downloaded 0, added 0
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.5257293Z Packages: +1
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.5260593Z +
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:26.9755616Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.0091245Z 
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.0091852Z dependencies:
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.0092104Z + pnpm 11.19.0 (12.11.2 is available)
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.0092275Z 
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.0113799Z Done in 898ms
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.1265651Z ##[endgroup]
+performance	Run pnpm/action-setup@v4	2026-10-11T17:21:27.1265924Z Installation Completed!
+performance	Run actions/setup-node@v4	﻿2026-10-11T17:21:27.1423578Z ##[group]Run actions/setup-node@v4
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1423752Z with:
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1423867Z   node-version: 24
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1423983Z   cache: pnpm
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1424096Z   always-auth: false
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1424217Z   check-latest: false
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1425418Z   token: ***
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1425530Z env:
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1425686Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.1425863Z ##[endgroup]
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.2412816Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.2414266Z (node:2164) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.2414892Z (Use `node --trace-deprecation ...` to show where the warning was created)
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.2416355Z ##[group]Environment details
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.5119612Z node: v24.21.0
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.5119917Z npm: 11.19.0
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.5120114Z yarn: 1.22.22
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.5121125Z ##[endgroup]
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.5152295Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+performance	Run actions/setup-node@v4	2026-10-11T17:21:27.9093877Z /home/runner/setup-pnpm/node_modules/.bin/store/v11
+performance	Run actions/setup-node@v4	2026-10-11T17:21:28.0719664Z Cache hit for: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+performance	Run actions/setup-node@v4	2026-10-11T17:21:28.0787030Z (node:2164) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+performance	Run actions/setup-node@v4	2026-10-11T17:21:29.2045414Z Received 134217728 of 143139869 (93.8%), 127.9 MBs/sec
+performance	Run actions/setup-node@v4	2026-10-11T17:21:29.3206155Z Received 143139869 of 143139869 (100.0%), 122.2 MBs/sec
+performance	Run actions/setup-node@v4	2026-10-11T17:21:29.3207596Z Cache Size: ~137 MB (143139869 B)
+performance	Run actions/setup-node@v4	2026-10-11T17:21:29.3230915Z [command]/usr/bin/tar -xf /home/runner/work/_temp/3a417caf-780f-4e3a-9373-71ef9b194c1f/cache.tzst -P -C /home/runner/work/fountainjs/fountainjs --use-compress-program unzstd
+performance	Run actions/setup-node@v4	2026-10-11T17:21:30.2330899Z Cache restored successfully
+performance	Run actions/setup-node@v4	2026-10-11T17:21:30.2394212Z Cache restored from key: node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870
+performance	Run pnpm install --frozen-lockfile	﻿2026-10-11T17:21:30.2544672Z ##[group]Run pnpm install --frozen-lockfile
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.2544947Z ^[[36;1mpnpm install --frozen-lockfile^[[0m
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.2753156Z shell: /usr/bin/bash -e {0}
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.2753350Z env:
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.2753513Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.2753700Z ##[endgroup]
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.5563685Z Scope: all 3 workspace projects
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.5940911Z ? Verifying lockfile against supply-chain policies (340 entries)...
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.5988013Z Lockfile is up to date, resolution step is skipped
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.6653190Z Progress: resolved 1, reused 0, downloaded 0, added 0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.6988868Z Packages: +281
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:30.6994375Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:31.1784414Z Packages are hard linked from the content-addressable store to the virtual store.
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:31.1785457Z   Content-addressable store is at: /home/runner/setup-pnpm/node_modules/.bin/store/v11
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:31.1786338Z   Virtual store is at:             node_modules/.pnpm
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:31.6742187Z Progress: resolved 281, reused 281, downloaded 0, added 144
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:31.8209041Z Progress: resolved 281, reused 281, downloaded 0, added 281, done
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.4839433Z ✓ Lockfile passes supply-chain policies (340 entries in 2.8s)
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5833707Z 
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5834403Z devDependencies:
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5834708Z + @angular/common 22.1.5
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5834954Z + @angular/compiler 22.1.5
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5835201Z + @angular/core 22.1.5
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5835506Z + @angular/platform-browser 22.1.5
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5835818Z + @angular/platform-server 22.1.5
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5836095Z + @mathjax/mathjax-tex-font 4.1.3
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5836328Z + @mathjax/src 4.1.3
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5836547Z + @playwright/test 1.62.1
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5836828Z + @sveltejs/vite-plugin-svelte 7.3.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5837096Z + @types/node 26.4.1
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5837443Z + @types/react 19.2.18
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5837769Z + @types/react-dom 19.2.7
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5838409Z + @vitejs/plugin-react 6.1.1
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5838822Z + commonmark 0.31.2
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5839191Z + commonmark-spec 0.31.2
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5839498Z + css-select 7.0.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5839814Z + docx-preview 0.4.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5840203Z + entities 8.0.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5840702Z + fflate 0.8.3
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5841016Z + jsdom 30.0.1
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5841305Z + katex 0.18.6
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5841655Z + miniflare 3.20250718.3
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5842035Z + parse5 8.0.1
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5842404Z + parse5-htmlparser2-tree-adapter 8.0.1
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5842855Z + pdfjs-dist 6.3.289
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5843143Z + react 19.2.8
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5843494Z + react-dom 19.2.8
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5843819Z + rxjs 7.8.2
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5844088Z + svelte 5.57.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5844443Z + typescript 7.0.2
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5844855Z + unicode-emoji-json 0.9.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5845221Z + vite 8.2.2
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5845501Z + vitest 5.0.0
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5845822Z + vue 3.5.42
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5846097Z + yjs 13.6.32
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.5846302Z 
+performance	Run pnpm install --frozen-lockfile	2026-10-11T17:21:33.6049568Z Done in 3.3s using pnpm v11.19.0
+performance	Run pnpm build	﻿2026-10-11T17:21:33.6521270Z ##[group]Run pnpm build
+performance	Run pnpm build	2026-10-11T17:21:33.6521600Z ^[[36;1mpnpm build^[[0m
+performance	Run pnpm build	2026-10-11T17:21:33.6574418Z shell: /usr/bin/bash -e {0}
+performance	Run pnpm build	2026-10-11T17:21:33.6574728Z env:
+performance	Run pnpm build	2026-10-11T17:21:33.6575038Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	Run pnpm build	2026-10-11T17:21:33.6575330Z ##[endgroup]
+performance	Run pnpm build	2026-10-11T17:21:33.9427362Z $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+performance	Run pnpm build	2026-10-11T17:21:34.0882044Z ^[[36mvite v8.2.2 ^[[32mbuilding client environment for production...^[[36m^[[39m
+performance	Run pnpm build	2026-10-11T17:21:34.0962069Z transforming...
+performance	Run pnpm build	2026-10-11T17:21:34.1736475Z ✓ 304 modules transformed.
+performance	Run pnpm build	2026-10-11T17:21:34.2286800Z rendering chunks...
+performance	Run pnpm build	2026-10-11T17:21:34.2820575Z computing gzip size...
+performance	Run pnpm build	2026-10-11T17:21:34.2924744Z dist/step-doAGd4iU.js                       0.20 kB │ gzip:  0.18 kB │ map:   0.41 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2925612Z dist/plugin-B0KSKRXJ.js                     0.39 kB │ gzip:  0.28 kB │ map:   3.23 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2926071Z dist/node-spec-Dl5lMC1C.js                  0.64 kB │ gzip:  0.37 kB │ map:   8.05 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2926643Z dist/text-style.js                          0.87 kB │ gzip:  0.39 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2927116Z dist/url-sjMj-efj.js                        1.03 kB │ gzip:  0.52 kB │ map:   2.68 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2927919Z dist/svelte.js                              1.08 kB │ gzip:  0.55 kB │ map:   3.58 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2928383Z dist/useFountain-DQ8gXlvr.js                1.09 kB │ gzip:  0.57 kB │ map:   3.25 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2928850Z dist/command-manager-CSDUCeVE.js            1.32 kB │ gzip:  0.62 kB │ map:   6.46 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2929357Z dist/collaboration-BubriAbK.js              1.44 kB │ gzip:  0.71 kB │ map:   3.60 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2929780Z dist/react-widgets.js                       1.57 kB │ gzip:  0.67 kB │ map:   5.52 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2930355Z dist/vue.js                                 1.72 kB │ gzip:  0.86 kB │ map:   4.53 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2930800Z dist/inline-atom-BLfPalX5.js                1.76 kB │ gzip:  0.78 kB │ map:   5.30 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2931241Z dist/path-B7Cr90vg.js                       1.89 kB │ gzip:  0.89 kB │ map:   5.80 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2931727Z dist/search-CLj2oPC9.js                     1.99 kB │ gzip:  0.95 kB │ map:   6.14 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2932152Z dist/history-CluGKD04.js                    2.71 kB │ gzip:  1.12 kB │ map:   7.84 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2932647Z dist/html-page-settings-C1un4UNO.js         2.80 kB │ gzip:  1.18 kB │ map:   8.40 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2933102Z dist/content-expression-CuobUc-r.js         2.87 kB │ gzip:  1.12 kB │ map:   7.89 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2933533Z dist/input-rules-EH0whXGW.js                2.99 kB │ gzip:  1.31 kB │ map:   9.02 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2934067Z dist/decoration-CuT1b7BC.js                 3.14 kB │ gzip:  1.23 kB │ map:  10.15 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2934517Z dist/extension-Cfbujo9B.js                  3.20 kB │ gzip:  1.27 kB │ map:  10.62 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2935000Z dist/replace-text-range-step-DDj1wpRU.js    3.28 kB │ gzip:  1.21 kB │ map:   9.56 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2935476Z dist/table-map-Du2VwT8u.js                  3.47 kB │ gzip:  1.41 kB │ map:  10.05 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2936075Z dist/mark-range-step-Jo1iPQSu.js            3.48 kB │ gzip:  1.08 kB │ map:  10.32 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2936524Z dist/node-CMohf4dR.js                       3.90 kB │ gzip:  1.36 kB │ map:  10.26 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2936953Z dist/html-flow-BvdNyeD1.js                  4.47 kB │ gzip:  1.85 kB │ map:  11.72 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2937437Z dist/link-destination-BdayfYDr.js           4.56 kB │ gzip:  1.82 kB │ map:  12.96 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2937862Z dist/widgets-dom.js                         4.74 kB │ gzip:  1.67 kB │ map:  13.70 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2938366Z dist/text-style-BYl8otDw.js                 4.82 kB │ gzip:  1.60 kB │ map:  15.05 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2938784Z dist/integrity-dom.js                       5.07 kB │ gzip:  1.98 kB │ map:  14.22 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2939249Z dist/table-of-contents.js                   5.69 kB │ gzip:  2.34 kB │ map:  17.63 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2939864Z dist/html-inert.js                          6.16 kB │ gzip:  2.55 kB │ map:  13.93 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2940405Z dist/testing.js                             6.49 kB │ gzip:  2.31 kB │ map:  18.97 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2941091Z dist/selection-Du4v48EK.js                  6.52 kB │ gzip:  2.21 kB │ map:  19.93 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2941533Z dist/migrations.js                          7.04 kB │ gzip:  2.23 kB │ map:  19.76 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2942020Z dist/react-tracked-changes.js               7.65 kB │ gzip:  2.34 kB │ map:  13.99 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2942478Z dist/details.js                             7.72 kB │ gzip:  2.65 kB │ map:  21.54 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2942901Z dist/mapping-BbhEodcc.js                    7.76 kB │ gzip:  2.66 kB │ map:  24.89 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2943365Z dist/react-integrity.js                     8.09 kB │ gzip:  2.42 kB │ map:  13.31 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2943830Z dist/menu-position-6ofIW78-.js              8.23 kB │ gzip:  3.05 kB │ map:  25.35 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2944282Z dist/node-ids.js                            8.74 kB │ gzip:  3.14 kB │ map:  28.06 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2944675Z dist/widgets.js                             8.78 kB │ gzip:  3.21 kB │ map:  27.94 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2945261Z dist/core.js                                9.07 kB │ gzip:  3.18 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2945681Z dist/table-layout-DqQ0Ldl5.js               9.17 kB │ gzip:  3.19 kB │ map:  27.03 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2946116Z dist/react-comments.js                      9.78 kB │ gzip:  2.75 kB │ map:  17.76 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2946629Z dist/structured-attributes.js              10.03 kB │ gzip:  2.96 kB │ map:  31.46 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2947094Z dist/react-versions.js                     10.06 kB │ gzip:  2.75 kB │ map:  18.26 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2947512Z dist/collaboration-core-B-I53ZbT.js        10.29 kB │ gzip:  3.23 kB │ map:  32.95 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2947905Z dist/ai-generated-media.js                 10.71 kB │ gzip:  3.28 kB │ map:  27.57 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2948239Z dist/ruby.js                               10.92 kB │ gzip:  3.49 kB │ map:  28.83 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2948578Z dist/page-settings-Bqt82pEY.js             11.19 kB │ gzip:  3.73 kB │ map:  32.14 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2948922Z dist/pages.js                              11.27 kB │ gzip:  3.60 kB │ map:  28.76 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2949248Z dist/integrity.js                          11.46 kB │ gzip:  3.63 kB │ map:  30.86 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2949753Z dist/pages-preview.js                      13.47 kB │ gzip:  4.45 kB │ map:  37.18 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2950411Z dist/editor-CMX7ABLq.js                    15.16 kB │ gzip:  4.48 kB │ map:  43.81 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2950982Z dist/ai-conversation.js                    15.96 kB │ gzip:  4.46 kB │ map:  41.86 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2951570Z dist/ai-document-tools.js                  16.83 kB │ gzip:  4.71 kB │ map:  45.73 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2952168Z dist/emoji-DeLc3sks.js                     17.42 kB │ gzip:  5.72 kB │ map:  46.29 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2952772Z dist/link-behavior-C0RYh-uU.js             19.20 kB │ gzip:  7.18 kB │ map:  51.23 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2953369Z dist/presentation-_RsWq19D.js              21.37 kB │ gzip:  6.17 kB │ map:  64.52 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2953973Z dist/document-utilities.js                 23.88 kB │ gzip:  7.49 kB │ map:  67.80 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2954528Z dist/yjs.js                                27.47 kB │ gzip:  7.82 kB │ map:  75.97 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2955079Z dist/tracked-changes.js                    28.57 kB │ gzip:  8.09 kB │ map:  85.58 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2955728Z dist/versions.js                           29.34 kB │ gzip:  7.76 kB │ map:  80.63 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2956089Z dist/comments.js                           29.77 kB │ gzip:  8.57 kB │ map:  87.59 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2956434Z dist/extensions-BOxSevrr.js                34.03 kB │ gzip:  9.57 kB │ map:  89.78 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2956992Z dist/media-FwxHlzWz.js                     42.81 kB │ gzip: 12.13 kB │ map: 110.60 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2957350Z dist/markdown-html-83ZGjqmO.js             43.57 kB │ gzip: 23.96 kB │ map:  74.66 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2957698Z dist/pages-dom.js                          53.72 kB │ gzip: 13.34 kB │ map: 147.72 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2958033Z dist/index.js                              82.82 kB │ gzip: 24.40 kB │ map: 179.78 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2958367Z dist/commands-CbdzHnQ0.js                  86.46 kB │ gzip: 22.47 kB │ map: 249.52 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2958732Z dist/direction-scope-DBvkWtZm.js           87.84 kB │ gzip: 25.58 kB │ map: 268.75 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2959083Z dist/react.js                              94.79 kB │ gzip: 22.13 kB │ map: 187.55 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2959410Z dist/view-DepE2HHn.js                     120.85 kB │ gzip: 29.92 kB │ map: 311.52 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2959736Z dist/docx.js                              188.55 kB │ gzip: 54.10 kB │ map: 518.31 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2960076Z dist/html-server.js                       262.64 kB │ gzip: 59.70 kB │ map: 773.45 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2960550Z dist/emoji-data.js                        331.40 kB │ gzip: 30.88 kB │ map: 467.62 kB
+performance	Run pnpm build	2026-10-11T17:21:34.2960703Z 
+performance	Run pnpm build	2026-10-11T17:21:34.2991993Z transforming...
+performance	Run pnpm build	2026-10-11T17:21:34.3736081Z ✓ 304 modules transformed.
+performance	Run pnpm build	2026-10-11T17:21:34.4251707Z rendering chunks...
+performance	Run pnpm build	2026-10-11T17:21:34.4781542Z computing gzip size...
+performance	Run pnpm build	2026-10-11T17:21:34.4837879Z dist/step-CICBu9Xg.cjs                       0.20 kB │ gzip:  0.18 kB │ map:   0.42 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4838562Z dist/plugin-DlQkwKdU.cjs                     0.48 kB │ gzip:  0.27 kB │ map:   3.21 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4839141Z dist/node-spec-owlJN_nc.cjs                  0.59 kB │ gzip:  0.36 kB │ map:   8.05 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4839697Z dist/rolldown-runtime-Chgba0Kb.cjs           0.77 kB │ gzip:  0.41 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4840172Z dist/text-style.cjs                          0.87 kB │ gzip:  0.36 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4840643Z dist/svelte.cjs                              0.89 kB │ gzip:  0.51 kB │ map:   3.64 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4840978Z dist/url-Co8QRAHd.cjs                        0.92 kB │ gzip:  0.51 kB │ map:   2.68 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4841419Z dist/useFountain-C16zq9TV.cjs                0.96 kB │ gzip:  0.52 kB │ map:   3.30 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4842027Z dist/command-manager-DU4ahU5C.cjs            1.06 kB │ gzip:  0.55 kB │ map:   6.45 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4842615Z dist/collaboration-DHfWMt2l.cjs              1.26 kB │ gzip:  0.63 kB │ map:   3.61 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4843194Z dist/react-widgets.cjs                       1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4843739Z dist/vue.cjs                                 1.45 kB │ gzip:  0.76 kB │ map:   4.76 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4844302Z dist/inline-atom-Cg88XSNe.cjs                1.53 kB │ gzip:  0.70 kB │ map:   5.34 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4844910Z dist/search-Cb5HWhnF.cjs                     1.76 kB │ gzip:  0.87 kB │ map:   6.15 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4845526Z dist/path-DDY3uxw-.cjs                       1.98 kB │ gzip:  0.82 kB │ map:   5.79 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4846161Z dist/content-expression-YXcFdjFU.cjs         2.15 kB │ gzip:  0.98 kB │ map:   7.85 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4846785Z dist/html-page-settings-CYNBUfR_.cjs         2.53 kB │ gzip:  1.05 kB │ map:   8.37 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4847427Z dist/table-map-Dbo_d2TT.cjs                  2.65 kB │ gzip:  1.23 kB │ map:  10.02 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4848023Z dist/input-rules-HXvPuvbc.cjs                2.66 kB │ gzip:  1.16 kB │ map:   9.04 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4848622Z dist/decoration-jVx4B2Pl.cjs                 2.68 kB │ gzip:  1.13 kB │ map:  10.14 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4849281Z dist/replace-text-range-step-VHOaDNVn.cjs    2.69 kB │ gzip:  1.07 kB │ map:   9.63 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4849916Z dist/history-C1iHQbdz.cjs                    2.76 kB │ gzip:  1.03 kB │ map:   7.85 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4850654Z dist/extension-Sb4ErwsF.cjs                  2.86 kB │ gzip:  1.17 kB │ map:  10.59 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4851427Z dist/mark-range-step-DOJDyOsP.cjs            3.02 kB │ gzip:  0.92 kB │ map:  10.34 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4851785Z dist/node-D26sG_e5.cjs                       3.35 kB │ gzip:  1.25 kB │ map:  10.25 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4852119Z dist/widgets-dom.cjs                         4.02 kB │ gzip:  1.53 kB │ map:  13.67 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4852474Z dist/html-flow-BELrbD1b.cjs                  4.18 kB │ gzip:  1.68 kB │ map:  11.78 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4852823Z dist/integrity-dom.cjs                       4.36 kB │ gzip:  1.82 kB │ map:  14.27 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4853187Z dist/link-destination-BqNBOBU2.cjs           4.70 kB │ gzip:  1.53 kB │ map:  13.01 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4853557Z dist/table-of-contents.cjs                   4.75 kB │ gzip:  2.12 kB │ map:  17.66 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4853942Z dist/text-style-BJlG2_Pk.cjs                 5.08 kB │ gzip:  1.44 kB │ map:  15.23 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4854286Z dist/html-inert.cjs                          5.19 kB │ gzip:  2.36 kB │ map:  13.94 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4854622Z dist/testing.cjs                             5.43 kB │ gzip:  2.08 kB │ map:  18.97 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4854970Z dist/selection-DrO1gWsj.cjs                  5.65 kB │ gzip:  1.97 kB │ map:  19.95 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4855486Z dist/react-tracked-changes.cjs               5.71 kB │ gzip:  2.01 kB │ map:  14.60 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4855836Z dist/migrations.cjs                          6.10 kB │ gzip:  2.00 kB │ map:  19.78 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4856172Z dist/react-integrity.cjs                     6.18 kB │ gzip:  2.18 kB │ map:  14.15 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4856505Z dist/details.cjs                             6.35 kB │ gzip:  2.39 kB │ map:  21.62 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4856846Z dist/mapping-LRwd6pqd.cjs                    6.55 kB │ gzip:  2.36 kB │ map:  24.97 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4857346Z dist/react-comments.cjs                      7.05 kB │ gzip:  2.28 kB │ map:  18.76 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4857887Z dist/node-ids.cjs                            7.18 kB │ gzip:  2.82 kB │ map:  28.03 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4858473Z dist/menu-position-BT80F8bN.cjs              7.21 kB │ gzip:  2.71 kB │ map:  25.43 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4859034Z dist/widgets.cjs                             7.33 kB │ gzip:  2.88 kB │ map:  28.00 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4859594Z dist/react-versions.cjs                      7.37 kB │ gzip:  2.35 kB │ map:  19.28 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4860104Z dist/core.cjs                                8.27 kB │ gzip:  2.45 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4860765Z dist/structured-attributes.cjs               8.41 kB │ gzip:  2.71 kB │ map:  31.45 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4861376Z dist/table-layout-y6mT4PpH.cjs               8.87 kB │ gzip:  2.89 kB │ map:  27.01 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4861977Z dist/ai-generated-media.cjs                  9.11 kB │ gzip:  2.97 kB │ map:  27.49 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4862516Z dist/ruby.cjs                                9.18 kB │ gzip:  3.14 kB │ map:  28.80 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4863028Z dist/integrity.cjs                           9.36 kB │ gzip:  3.32 kB │ map:  30.88 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4863608Z dist/pages.cjs                               9.36 kB │ gzip:  3.21 kB │ map:  28.86 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4864195Z dist/collaboration-core-6QLxBCsv.cjs         9.37 kB │ gzip:  2.92 kB │ map:  32.93 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4864837Z dist/page-settings-BTDzBnRH.cjs             10.15 kB │ gzip:  3.43 kB │ map:  32.11 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4865429Z dist/pages-preview.cjs                      11.42 kB │ gzip:  4.09 kB │ map:  37.00 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4866025Z dist/editor-Ce4QfnkJ.cjs                    13.24 kB │ gzip:  4.10 kB │ map:  43.90 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4866613Z dist/ai-conversation.cjs                    13.42 kB │ gzip:  4.04 kB │ map:  41.75 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4867188Z dist/ai-document-tools.cjs                  13.93 kB │ gzip:  4.22 kB │ map:  45.71 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4867761Z dist/emoji-ZL6uQ6Pb.cjs                     14.66 kB │ gzip:  5.12 kB │ map:  46.33 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4868533Z dist/link-behavior-IaGLTBDY.cjs             17.13 kB │ gzip:  6.61 kB │ map:  51.31 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4869154Z dist/presentation-DrPDmb6z.cjs              17.92 kB │ gzip:  5.47 kB │ map:  64.36 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4869758Z dist/document-utilities.cjs                 19.37 kB │ gzip:  6.71 kB │ map:  67.92 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4870422Z dist/yjs.cjs                                22.89 kB │ gzip:  7.13 kB │ map:  75.74 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4870975Z dist/tracked-changes.cjs                    23.66 kB │ gzip:  7.30 kB │ map:  85.59 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4871536Z dist/comments.cjs                           24.18 kB │ gzip:  7.65 kB │ map:  87.59 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4871887Z dist/versions.cjs                           24.36 kB │ gzip:  7.06 kB │ map:  80.44 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4872230Z dist/extensions-BsXZGRdV.cjs                31.59 kB │ gzip:  8.49 kB │ map:  90.24 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4872647Z dist/media-BQIZkruR.cjs                     35.32 kB │ gzip: 10.87 kB │ map: 110.74 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4873078Z dist/markdown-html-DD8ATANg.cjs             41.42 kB │ gzip: 23.40 kB │ map:  74.55 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4873464Z dist/pages-dom.cjs                          44.81 kB │ gzip: 12.13 kB │ map: 147.15 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4873837Z dist/direction-scope-BdkTLAa9.cjs           68.74 kB │ gzip: 22.96 kB │ map: 268.10 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4874357Z dist/index.cjs                              70.15 kB │ gzip: 21.13 kB │ map: 179.78 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4874693Z dist/react.cjs                              71.01 kB │ gzip: 19.12 kB │ map: 196.61 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4875067Z dist/commands-Dr-WPdEG.cjs                  76.43 kB │ gzip: 20.65 kB │ map: 250.60 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4875436Z dist/view-C5a8svu9.cjs                     103.13 kB │ gzip: 27.24 kB │ map: 310.81 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4875763Z dist/docx.cjs                              152.44 kB │ gzip: 48.67 kB │ map: 517.23 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4876087Z dist/html-server.cjs                       213.57 kB │ gzip: 54.49 kB │ map: 770.63 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4876433Z dist/emoji-data.cjs                        274.54 kB │ gzip: 30.25 kB │ map: 451.98 kB
+performance	Run pnpm build	2026-10-11T17:21:34.4876586Z 
+performance	Run pnpm build	2026-10-11T17:21:34.4877159Z ^[[32m✓ built in 397ms^[[39m
+performance	Run pnpm build	2026-10-11T17:21:35.5369048Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+performance	Run pnpm build	2026-10-11T17:21:37.0358131Z $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+performance	Run pnpm test:performance	﻿2026-10-11T17:21:38.6343425Z ##[group]Run pnpm test:performance
+performance	Run pnpm test:performance	2026-10-11T17:21:38.6343661Z ^[[36;1mpnpm test:performance^[[0m
+performance	Run pnpm test:performance	2026-10-11T17:21:38.6397632Z shell: /usr/bin/bash -e {0}
+performance	Run pnpm test:performance	2026-10-11T17:21:38.6397797Z env:
+performance	Run pnpm test:performance	2026-10-11T17:21:38.6397954Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+performance	Run pnpm test:performance	2026-10-11T17:21:38.6398157Z ##[endgroup]
+performance	Run pnpm test:performance	2026-10-11T17:21:38.9197258Z $ node --expose-gc scripts/check-performance-budgets.mjs
+performance	Run pnpm test:performance	2026-10-11T17:21:39.0241825Z 100 blocks: local p50 0.07 ms, p95 0.11 ms; incremental remote p50 0.04 ms, p95 1.59 ms; JSON boundary p50 0.64 ms, p95 0.84 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:39.0897089Z 1,000 blocks: local p50 0.07 ms, p95 0.11 ms; incremental remote p50 0.04 ms, p95 0.07 ms; JSON boundary p50 6.24 ms, p95 9.05 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:39.3532989Z 5,000 blocks: local p50 0.25 ms, p95 0.32 ms; incremental remote p50 0.38 ms, p95 2.17 ms; JSON boundary p50 27.06 ms, p95 29.08 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:39.9207900Z 10,000 blocks: local p50 0.50 ms, p95 0.98 ms; incremental remote p50 0.46 ms, p95 0.53 ms; JSON boundary p50 54.68 ms, p95 78.02 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:39.9962806Z 100 HTML blocks: server parse p50 6.80 ms, p95 20.41 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:40.3304644Z 1,000 HTML blocks: server parse p50 44.50 ms, p95 52.60 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:41.8201803Z 5,000 HTML blocks: server parse p50 207.10 ms, p95 221.82 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:44.7593445Z 10,000 HTML blocks: server parse p50 409.52 ms, p95 490.54 ms
+performance	Run pnpm test:performance	2026-10-11T17:21:44.7594104Z server HTML 1,000→10,000 median growth: 9.20x / 15x
+performance	Run pnpm test:performance	2026-10-11T17:21:44.7594630Z local 1,000→10,000 median growth: 7.16x / 15x
+performance	Run pnpm test:performance	2026-10-11T17:21:44.7595107Z incremental remote 1,000→10,000 median growth: 10.68x / 15x
+performance	Run pnpm test:performance	2026-10-11T17:21:44.8735578Z 2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+performance	Run pnpm test:performance	2026-10-11T17:21:44.9352473Z destroyed-editor retained heap: 0.06 MiB / 16 MiB
+performance	Run pnpm test:performance	2026-10-11T17:21:45.4543862Z retained 10,000-block server HTML document: 15.20 MiB / 48 MiB
+performance	Post Run actions/setup-node@v4	﻿2026-10-11T17:21:45.5794094Z Post job cleanup.
+performance	Post Run actions/setup-node@v4	2026-10-11T17:21:45.6616781Z (node:2440) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+performance	Post Run actions/setup-node@v4	2026-10-11T17:21:45.6617584Z (Use `node --trace-deprecation ...` to show where the warning was created)
+performance	Post Run actions/setup-node@v4	2026-10-11T17:21:45.6619073Z Cache hit occurred on the primary key node-cache-Linux-x64-pnpm-fd849381c36c47c9fa715e7759caf3b24b3c25e63e57449d26448df099a8c870, not saving cache.
+performance	Post Run pnpm/action-setup@v4	﻿2026-10-11T17:21:45.7590793Z Post job cleanup.
+performance	Post Run pnpm/action-setup@v4	2026-10-11T17:21:45.8525631Z Pruning is unnecessary.
+performance	Post Run actions/checkout@v4	﻿2026-10-11T17:21:45.8797271Z Post job cleanup.
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9349996Z [command]/usr/bin/git version
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9378878Z git version 2.55.0
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9400948Z Temporarily overriding HOME='/home/runner/work/_temp/1f0a88f7-b734-4624-8313-b30b225654d5' before making global git config changes
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9401607Z Adding repository directory to the temporary git global config as a safe directory
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9404308Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/fountainjs/fountainjs
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9933302Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:45.9965987Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:46.0142781Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:46.0162201Z http.https://github.com/.extraheader
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:46.0169011Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:46.0628243Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:46.0805824Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+performance	Post Run actions/checkout@v4	2026-10-11T17:21:46.0828629Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+performance	Complete job	﻿2026-10-11T17:21:46.1114516Z Cleaning up orphan processes
+performance	Complete job	2026-10-11T17:21:46.1306928Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,341 @@
+{
+  "date": "2026-10-11",
+  "baseCommit": "f457ec3948394f5c46e9de0b3e3ffcfb100716b1",
+  "status": "UNRESOLVED: six real public editor/export failures; six passing controls",
+  "command": "pnpm exec playwright test --config playwright.nested-direction-audit.config.ts --workers=1",
+  "exitCode": 1,
+  "run": {
+    "cases": 12,
+    "failures": 6,
+    "passedControls": 6,
+    "retries": 0,
+    "skips": 0,
+    "workers": 1,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "duration": "2.4 minutes"
+  },
+  "scope": "Real public conversion lab file input, native pointer and toolbar actions, JSON downloads and exact transform undo/redo, HTML download and independent native reader, real Home/prefix typing and exact typing undo. No model writes or selection injection in Fountain.",
+  "findings": {
+    "initialImport": "12/12 native source direction matches",
+    "toolbarAndExport": "6/12 direction failures; lifted auto loses moved paragraph and nested suffix; indent under fixed LTR loses moved paragraph",
+    "history": "All 12 complete exact whole-JSON transform undo/redo and typing undo assertions",
+    "nativeTyping": "All 12 first-strong English-prefix edits match independent native source; this agreement after the edit does not repair the earlier mismatch",
+    "pageErrors": 0,
+    "owningLayer": "Model transforms sever shared automatic inheritance; both editor and downloaded reader show loss",
+    "runtimeChange": "None; explicit failing diagnostic and acceptance contract only"
+  },
+  "sourcePaths": [
+    "src/core/structure-commands.ts",
+    "src/extensions/nodes/direction-scope.ts"
+  ],
+  "visual": {
+    "reviewedPNGs": [
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-native-before.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-chromium/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-firefox/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-webkit/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-chromium/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-firefox/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-webkit/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-webkit/nested-toolbar-transformed.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-webkit/nested-exported-reader.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-firefox/nested-native-before.png",
+      "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-anchor-edited.png"
+    ],
+    "reviewedCount": 12,
+    "otherCaptures": "Remaining captures and videos/traces retained locally, not visually reviewed or committed.",
+    "note": "Native UA alignment differs across engines. Evidence proves the reported direction gap, not pixel equality."
+  },
+  "focusedUnits": {
+    "passed": 32,
+    "files": 3,
+    "scope": "Existing fixed list/move direction and CI retention contracts; not new shared-auto coverage"
+  },
+  "cases": [
+    {
+      "case": "nested-direction-real-indent-same-context-control-chromium",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-chromium/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": true,
+      "readerMatchesSource": true,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-indent-same-context-control-firefox",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-firefox/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": true,
+      "readerMatchesSource": true,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-indent-same-context-control-webkit",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-webkit/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": true,
+      "readerMatchesSource": true,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-indent-under-fixed-item-chromium",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-chromium/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": false,
+      "readerMatchesSource": false,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-indent-under-fixed-item-firefox",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-firefox/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": false,
+      "readerMatchesSource": false,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-indent-under-fixed-item-webkit",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-webkit/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": false,
+      "readerMatchesSource": false,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-nested-lift-auto-chromium",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": false,
+      "readerMatchesSource": false,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-nested-lift-auto-firefox",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-firefox/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": false,
+      "readerMatchesSource": false,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-nested-lift-auto-webkit",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-webkit/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": false,
+      "readerMatchesSource": false,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-nested-lift-fixed-control-chromium",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-chromium/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": true,
+      "readerMatchesSource": true,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-nested-lift-fixed-control-firefox",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-firefox/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": true,
+      "readerMatchesSource": true,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    },
+    {
+      "case": "nested-direction-real-nested-lift-fixed-control-webkit",
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-webkit/nested-direction-observations.json",
+      "complete": true,
+      "sourceMatchesImport": true,
+      "transformMatchesSource": true,
+      "readerMatchesSource": true,
+      "anchorEditMatchesNative": true,
+      "pageErrors": 0
+    }
+  ],
+  "requiredFollowup": "Represent shared automatic ownership across non-contiguous tree fragments while retaining explicit overrides, first-strong edits, list/task structure, IDs, selections, history, JSON/Yjs and reader semantics. Then this unmodified audit must pass and enter the regular matrix.",
+  "limits": [
+    "No expected-failure or skip annotations; these failures remain outside the passing release matrix and are not counted as passes.",
+    "No engine fix, performance/timeout cap change, CommonMark or parity score promotion.",
+    "Broader generic moves, member deletion/reordering, restricted schemas, collaboration and physical devices need additional tests alongside the fix.",
+    "npm remains 0.4.0-beta.2; current f457ec3 Linux browser matrix is separately live."
+  ],
+  "hashScope": "sha256 records local bytes; gitBlob records Git-filtered content for repository reproducibility.",
+  "evidenceHashes": [
+    {
+      "path": "playwright.nested-direction-audit.config.ts",
+      "sha256": "fafb9fada6166f900c7756239b067db45bff122e64986855e1f797976416eb85",
+      "gitBlob": "97bccd06525f7df296ca9b985788a3a5f0f58366"
+    },
+    {
+      "path": "tests/manual/nested-direction-real.spec.ts",
+      "sha256": "69684fdd2346312a1f1b96da813939e71a80752d661298ed17fd14aef370432e",
+      "gitBlob": "e846eb46bb9b95be8f1f5ddabf983f0fbcec1385"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "5cfe1c37c3e3575dd517c75b537e1b658f0b1a7f427abb11882343ae4a4b2816",
+      "gitBlob": "e0f8dece0f1482f6d520cf9b893e28312826c378"
+    },
+    {
+      "path": "src/extensions/nodes/direction-scope.ts",
+      "sha256": "5fd56ada0a4475d74d6a2cc134688c6c8273f780583f0cf0c63360ca94cd7831",
+      "gitBlob": "0b83b2b587a9299d4662f2241f601b6afa188681"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011.log",
+      "sha256": "0870c37d2aa3386cd22d892ebfc6ac4d99f0795afaa703b0ae9dfd2aa51a7346",
+      "gitBlob": "b565724fb3b6e8f25ff7667fe823c5f313b65b5a"
+    },
+    {
+      "path": "artifacts/nested-direction-focused-20261011.log",
+      "sha256": "3a0db8ab2916422e39e9b76cc9bfcef239c61c1c15c0cb97173cf849a9723a72",
+      "gitBlob": "ee141bb3fc9b725919da6f43319b6abfb87fd2f3"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-native-before.png",
+      "sha256": "0075476d41d8cb0c131d8b2881cbc16deb5c0b0dff4cf6eeee627eb0fb1d585d",
+      "gitBlob": "89a5bc6ec23c1e73baebdcd18020b84b43765313"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-toolbar-transformed.png",
+      "sha256": "9269931cc358ab224ffd8292d81e27867e6db87ef4342022310a68349191bc51",
+      "gitBlob": "f02bff2fb04518cc6c742f92daaa609935c00cc6"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-chromium/nested-toolbar-transformed.png",
+      "sha256": "88bb58fd6ac50a2db831969f05577dc76b8720fa47cd08dac359a37bfa49e884",
+      "gitBlob": "4c46c6c174d99a746524eae7c36004fbc63b523a"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-firefox/nested-toolbar-transformed.png",
+      "sha256": "0e45608057d5957a974090ce9c7092317baba47eed208edca2a10ea2f2824b82",
+      "gitBlob": "ef718b7be2bdc28cd1d06b9fff11647226a2a2ab"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-webkit/nested-toolbar-transformed.png",
+      "sha256": "e5328b600799239ef3117997c5926dba695694b4304de9d55eb854a0da9983ae",
+      "gitBlob": "e21196e1033f3d7a438b9135b628b41777b113d0"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-chromium/nested-toolbar-transformed.png",
+      "sha256": "1b1b1a8e0ab24e052dfd00632e32bfc2686a6177fec1b96a448c5b18afa1634a",
+      "gitBlob": "da04012770976c327627f4ae106f3a6a17a56536"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-firefox/nested-toolbar-transformed.png",
+      "sha256": "180b7373807272217c0becc8147611d72eedd11e8717a8e888dbbcd02155776d",
+      "gitBlob": "e8655145dd49d255065657b2433b23ed35d7d8d5"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-webkit/nested-toolbar-transformed.png",
+      "sha256": "df0c240b3a472bee00cf06499230da401e11a4af2cb4d60b4b587882e5526266",
+      "gitBlob": "2e6430b13fec1a4883d86306b3728f78d27b51e4"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-webkit/nested-toolbar-transformed.png",
+      "sha256": "39b1318a6263b55672efe8c81d3244413844358a4a6b011de518e7cf647b4d51",
+      "gitBlob": "51d44f3a1b9b0343963276a882449483bff2d2af"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-webkit/nested-exported-reader.png",
+      "sha256": "b717963e463a9503c7c01cb06dfd7c83b96ed14dbf37bdd30b4ab9603e421724",
+      "gitBlob": "4b51025d674faa2e30154147b20aada6108d9b4f"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-firefox/nested-native-before.png",
+      "sha256": "433c5e887b968c2a9959cb533865ba64d23be3dc101200d2b9044fec50a32d37",
+      "gitBlob": "ab7700864230be0b1259e3a1a14dfa08ab1ddec8"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-anchor-edited.png",
+      "sha256": "8cf3cfbfd190af56095176e7d8af77b7d26400f9b01f5ebcaf9d21e0df042d2e",
+      "gitBlob": "71f8ba88dda875cfb6422260847ee4fb8f3201c6"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-chromium/nested-direction-observations.json",
+      "sha256": "aa1ec07960374e7cc932aa9b10a9865edde61c7f9f98b6b02a1c581e30355af1",
+      "gitBlob": "d7a4fd8e09a511dc754963e77354a6135aa65e17"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-firefox/nested-direction-observations.json",
+      "sha256": "aa1ec07960374e7cc932aa9b10a9865edde61c7f9f98b6b02a1c581e30355af1",
+      "gitBlob": "d7a4fd8e09a511dc754963e77354a6135aa65e17"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-same-context-control-webkit/nested-direction-observations.json",
+      "sha256": "aa1ec07960374e7cc932aa9b10a9865edde61c7f9f98b6b02a1c581e30355af1",
+      "gitBlob": "d7a4fd8e09a511dc754963e77354a6135aa65e17"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-chromium/nested-direction-observations.json",
+      "sha256": "246cb063e71d4da305983335171224ef4833680becca2fa4e1fe6bd2e2bc8f34",
+      "gitBlob": "3a5e6a00122f8508a6e1812cba798d481fc162ba"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-firefox/nested-direction-observations.json",
+      "sha256": "246cb063e71d4da305983335171224ef4833680becca2fa4e1fe6bd2e2bc8f34",
+      "gitBlob": "3a5e6a00122f8508a6e1812cba798d481fc162ba"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-indent-under-fixed-item-webkit/nested-direction-observations.json",
+      "sha256": "246cb063e71d4da305983335171224ef4833680becca2fa4e1fe6bd2e2bc8f34",
+      "gitBlob": "3a5e6a00122f8508a6e1812cba798d481fc162ba"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-chromium/nested-direction-observations.json",
+      "sha256": "d35d849522d8344105a939cd7fe41dc82767fd853e26fb2e8d8d95a4e652501a",
+      "gitBlob": "dd954046ca82d5b1292e55c85692beb6aff06bd1"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-firefox/nested-direction-observations.json",
+      "sha256": "d35d849522d8344105a939cd7fe41dc82767fd853e26fb2e8d8d95a4e652501a",
+      "gitBlob": "dd954046ca82d5b1292e55c85692beb6aff06bd1"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-auto-webkit/nested-direction-observations.json",
+      "sha256": "d35d849522d8344105a939cd7fe41dc82767fd853e26fb2e8d8d95a4e652501a",
+      "gitBlob": "dd954046ca82d5b1292e55c85692beb6aff06bd1"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-chromium/nested-direction-observations.json",
+      "sha256": "d9e19385498ef601329be551432add8c941c8abbdf7c8e8450785234ac5bd4b9",
+      "gitBlob": "8e1174110f980d843664d37b843c36fb41fe08fb"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-firefox/nested-direction-observations.json",
+      "sha256": "d9e19385498ef601329be551432add8c941c8abbdf7c8e8450785234ac5bd4b9",
+      "gitBlob": "8e1174110f980d843664d37b843c36fb41fe08fb"
+    },
+    {
+      "path": "artifacts/nested-direction-real-20261011/nested-direction-real-nested-lift-fixed-control-webkit/nested-direction-observations.json",
+      "sha256": "d9e19385498ef601329be551432add8c941c8abbdf7c8e8450785234ac5bd4b9",
+      "gitBlob": "8e1174110f980d843664d37b843c36fb41fe08fb"
+    }
+  ]
+}

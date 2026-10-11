@@ -1,5 +1,26 @@
 # FountainJS opportunity roadmap
 
+Live shared-auto follow-up (2026-10-11, unresolved): the isolated public
+conversion-lab audit reproduces **six failures / six passing controls** in
+Chromium, Firefox and WebKit, including downloaded HTML. Initial imports,
+complete JSON undo/redo, native first-strong typing and typing undo pass in all
+twelve journeys. Twelve representative PNGs are directly reviewed; videos are
+recorded, not watched. This turns the earlier detached-render diagnostic into
+an executable user workflow, not a fix or parity promotion. Shared ownership
+across fragmented ancestors, not independent `auto` or frozen RTL, remains the
+next structural requirement. See [the contract](HTML_CONTAINERS.md#public-nested-direction-reproduction-2026-10-11-unresolved)
+and `artifacts/nested-direction-real-verification-20261011.json`.
+
+Diagnostics Linux checkpoint `3d858ec` now passes all jobs and Pages:
+**2,874 units / 216 files**, **760 clean browser passes / 16 skips**, plus 67
+repeated preflights separately counted. The downloaded always-upload artifact
+contains all three successful media-selection event files; a retry did not
+occur, so failed-attempt retention after retry remains unproven empirically.
+Evidence: `artifacts/ci-3d858ec-verification-20261011.json`. Historical Firefox
+retry cause, npm version and ledger remain unchanged. The newer `f457ec3`
+browser matrix is separately pending; its verify/performance/Lean jobs and
+Pages already pass.
+
 New local source-in-editor fix (2026-10-11, Unreleased): preserve untouched
 Markdown despite StarterKit's automatic empty root caret paragraph; no generic
 blank-block omission or URL relaxation. The public inert workshop now has a

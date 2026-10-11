@@ -202,6 +202,52 @@ Wrapping the moved child alone or freezing RTL would not preserve the original
 group's live first-strong context. These diagnostic cases are not conformance
 passes and do not certify native mobile devices.
 
+### Public nested-direction reproduction (2026-10-11, unresolved)
+
+`pnpm exec playwright test --config playwright.nested-direction-audit.config.ts`
+now reproduces that boundary through actual file import, pointer selection,
+the public Indent/Lift buttons, downloads and native keyboard typing. It runs
+serially on an isolated server and records video/trace. This is a deliberately
+red diagnostic outside the release matrix, not an expected-failure test or a
+new parity pass: **six failures and six passing controls** across Chromium,
+Firefox and WebKit, exit status 1. Twelve representative PNGs were inspected;
+recordings were retained but not watched. Evidence:
+`artifacts/nested-direction-real-verification-20261011.json`.
+
+Every source initially matches that engine's independent native HTML direction.
+The lifted automatic item's English paragraph **and nested suffix** become LTR
+instead of their original shared RTL. Indenting under an explicit LTR item
+changes the moved paragraph alone. Both losses also appear in downloaded HTML,
+so this is not merely the editor's selection decoration or CSS. The fixed-RTL
+lift and same-context indent controls retain direction. All twelve journeys
+complete exact whole-JSON transform undo/redo, real first-strong prefix typing,
+typing undo and zero-page-error assertions. The English prefix happens to make
+the broken examples agree again; that later agreement does not cancel their
+pre-edit failures. Browser UA alignment differences are not pixel fidelity.
+
+The owning code is `src/core/structure-commands.ts`: `retainListDirection`
+deliberately does not freeze `auto`; `indentListItem` moves items under a new
+ancestor, and nested `outdentListItem` copies list fragments under different
+parents. `src/extensions/nodes/direction-scope.ts` can preserve a **contiguous**
+group, but these operations split its eligible members across parents. The
+server importer and live view already retain the input's original group.
+
+The required fix is shared automatic **ownership**, not independent `dir=auto`
+attributes. Its acceptance requirements remain:
+
+- Preserve the original group's eligible first-strong context across fragments,
+  including the unselected suffix, without changing unrelated outer items.
+- Keep explicit child directions independently owned and preserve actual list
+  nesting, ordered starts, task state, IDs, selection and root metadata.
+- Recompute after edits, deletion or reordering of eligible members; do not
+  freeze a browser-computed RTL/LTR value or retain a hidden stale source copy.
+- Carry the same semantics through JSON/history, collaboration and reader/HTML
+  projection, with a DOM-free model contract and explicit unsupported-format
+  reporting. No reader-only visual patch or generic move refusal closes parity.
+- Make this exact audit pass without skips, expected failures, altered source
+  expectations, longer timeouts or a looser direction assertion; then add the
+  passing journeys to the regular matrix and test restricted host schemas.
+
 ## What it preserves
 
 The `html_container` node has `block*` content and a validated `tag` attribute:
