@@ -1,0 +1,9 @@
+
+Running 4 tests using 1 worker
+
+  ok 1 [chromium] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations (3.6s)
+  ok 2 [chromium] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations (2.5s)
+  ok 3 [firefox] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations (7.7s)
+  ok 4 [firefox] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations (5.6s)
+
+  4 passed (1.2m)

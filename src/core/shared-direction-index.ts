@@ -10,12 +10,16 @@ interface Summary {
   readonly combined: Direction;
 }
 const empty: Summary = Object.freeze({ group: null, free: null, inside: null, combined: null });
+interface DirectionIndex {
+  (root: Node): ReadonlyMap<string, Direction>;
+  contained(root: Node): Direction;
+}
 
 /** Private immutable-model index. Membership must be a stable function of
  * immutable node data and the editor-lifetime schema. Cache values contain no
  * nodes, old document references, hidden text, DOM or externally mutable state.
  */
-export function createSharedDirectionIndex(groupOf: (node: Node) => string | null): (root: Node) => ReadonlyMap<string, Direction> {
+export function createSharedDirectionIndex(groupOf: (node: Node) => string | null): DirectionIndex {
   const summaries = new WeakMap<Node, Summary>();
   const documents = new WeakMap<Node, ReadonlyMap<string, Direction>>();
   const frame = (node: Node) => {
@@ -67,7 +71,7 @@ export function createSharedDirectionIndex(groupOf: (node: Node) => string | nul
     return summaries.get(root)!;
   };
 
-  return root => {
+  const resolve = (root: Node): ReadonlyMap<string, Direction> => {
     const known = documents.get(root);
     if (known) return known;
     const groups = new Map<string, Direction>();
@@ -96,4 +100,14 @@ export function createSharedDirectionIndex(groupOf: (node: Node) => string | nul
     documents.set(root, groups);
     return groups;
   };
+  return Object.assign(resolve, { contained(root: Node): Direction {
+    if (root.isText) return firstStrongDirection(root.text!);
+    // The owner's own direction is not a barrier, but each descendant's own
+    // boundary is. The existing free-flow summaries already encode that rule.
+    for (const child of root.content) {
+      const direction = summary(child).free;
+      if (direction) return direction;
+    }
+    return null;
+  } });
 }

@@ -1,0 +1,346 @@
+{
+  "date": "2026-11-02",
+  "baseCommit": "7ad224a0907167574cf07e60c35be91ff574db4a",
+  "scope": "Whole-node model-owned inherited direction in clipboard; not universal clipboard parity or release certification",
+  "units": {
+    "passed": 2988,
+    "files": 222,
+    "focusedPassed": 79,
+    "focusedFiles": 5
+  },
+  "native": {
+    "passed": 4,
+    "retries": 0,
+    "engines": [
+      "chromium",
+      "firefox"
+    ],
+    "fixture": "Public API host consuming built package",
+    "actions": [
+      "copy",
+      "cut"
+    ],
+    "destinations": [
+      "Independent native contenteditable",
+      "Fountain"
+    ],
+    "screenshotsReviewed": [
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-chromium/independent-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-chromium/fountain-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-firefox/independent-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-firefox/fountain-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-chromium/independent-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-chromium/fountain-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-firefox/independent-pasted-child.png",
+      "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-firefox/fountain-pasted-child.png"
+    ],
+    "videos": "Recorded, not watched",
+    "linuxClipboardCasesRegistered": 12,
+    "linuxCurrentSource": "Not yet certified"
+  },
+  "size": {
+    "measuredKiB": {
+      "esm": 1615.65234375,
+      "cjs": 1344.2255859375
+    },
+    "reviewedAggregateCapsKiB": {
+      "esm": 1616,
+      "cjs": 1344.5
+    },
+    "decision": "Explicit capacity for the verified correction, not a size optimization; entry/CSS/performance/heap limits unchanged"
+  },
+  "performance": {
+    "first": "100-block server HTML p95 36.39 ms exceeds unchanged 35 ms ceiling",
+    "unchangedConfirmation": "Passed",
+    "note": "Both retained; not a claim of consistent latency or proof of the variance cause",
+    "retention": {
+      "scope": "Bounded public HTML projection with shared direction; no DOM or history plugin",
+      "edits": 2000,
+      "blocks": 1000,
+      "elapsedMs": 8064.483499999999,
+      "liveGrowthBytes": 326344,
+      "liveLimitBytes": 8388608,
+      "destroyedEditors": 40,
+      "destroyedGrowthBytes": 488624,
+      "destroyedLimitBytes": 16777216
+    }
+  },
+  "gates": {
+    "apiDeclarations": 411,
+    "headlessModules": 104,
+    "types": "passed",
+    "package": "passed"
+  },
+  "open": [
+    "Linux current-source full matrix",
+    "Actual Safari and Windows WebKit event-authored clipboard",
+    "Custom renderer isolation",
+    "Restricted-schema native fallback fidelity",
+    "External Word/Google Docs",
+    "Performance variance",
+    "Remaining parity roadmap"
+  ],
+  "unchanged": [
+    "npm 0.4.0-beta.2",
+    "PROD-04 Partial",
+    "Public API snapshot",
+    "Dependencies"
+  ],
+  "hashes": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "db3abe2c20157907b2d1db97cfcd24c1d6c788420a32d9f7e40afc4436f2e757",
+      "gitBlob": "167b12ac0cf077bb8d69f9b7ea17bdbf7c278339"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "a92a89db3a5be35f928ee6dfb1d2f3c1b811e17477b478ba10d0d0622f573ebc",
+      "gitBlob": "6366e8bb78072a66dc2744c67b8a7ce86e463cda"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "7ed93b19e8af14e0e085e26355140027f8b72bc99df314d8cde0684083430bf5",
+      "gitBlob": "31b4556da5b93186eb53e3d58b77e34a9bfcdf0a"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "d95dae0aa27376b1d45dd0decd0d057cfc6302403b8ebbb9a5bd98452189420d",
+      "gitBlob": "ee729e881c55c49a9bf1bfee05c85b43f97cb4e5"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "bd4cf2a70072954d1cac42d08e9559262ecd933486ac93be98746b8c3655b76b",
+      "gitBlob": "314c30d8695a89c033b6df612c87b5590a9e5d44"
+    },
+    {
+      "path": "examples/react-app/src/browser-tests.ts",
+      "sha256": "da1fcba12ac5f8dc43a818d5e7bb5f0df72c7f834a2acb6d51a952360303d5b0",
+      "gitBlob": "430b3d49c0747e9014cc5b622820abb7fb7b2eeb"
+    },
+    {
+      "path": "playwright.shared-direction-audit.config.ts",
+      "sha256": "caa36063ece145b3a35b246d96a70244f2b74b64ad4fa27c9e3572599ba21300",
+      "gitBlob": "ddbd99db1a39b1a994c6e004a8d19bd48cb10b5d"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "e8381eb8f9f0711201e7c2a407d0babb16cdd1742d9c0977bcbdb8be428af6dd",
+      "gitBlob": "b3cf75d1eca57c0b1d679c5565cdb06068eb5303"
+    },
+    {
+      "path": "src/core/shared-direction-index.ts",
+      "sha256": "6a4a5b045cb1ecf28e9d2d6972cfbcd89a28adbc7d3dc3c4c98fac5eb653c9e4",
+      "gitBlob": "1155e7c683beffdf2575314c707d619859238f18"
+    },
+    {
+      "path": "src/core/shared-direction.ts",
+      "sha256": "7e1ce62c511ef3401a2fc5e17d0a3f51659ad474d846e7c86a496d5632e2794c",
+      "gitBlob": "f9b522e3a2ba7bc2443e3997a3c9ffc415b87043"
+    },
+    {
+      "path": "src/view/input.ts",
+      "sha256": "2fe3d3edd0ffffb36af166c9dfbb46e62461c427cbf53faf1e9fff25ba469fdd",
+      "gitBlob": "0b7e5884181c343b3d435b46f3992bf49a3df401"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "148d59a7895c41f5928bcb554d513678b12a08209cafb42e5b70ca2fc91bbcfd",
+      "gitBlob": "2f71f08628f6ed46ec911724b68ce65ec1534170"
+    },
+    {
+      "path": "tests/shared-direction-index.test.ts",
+      "sha256": "d7df7db65375cc9ebe68cecdd79009a844b9ed7373c737f87089a1548e3eeeff",
+      "gitBlob": "219afb476cf1a0f5ed0f2007822c1f57be8e02d1"
+    },
+    {
+      "path": "tests/shared-direction-view.test.ts",
+      "sha256": "a226fb31b1f575967cf0d1b6e44d8eeab9a3a7782458909312f485fb8dc647ce",
+      "gitBlob": "151b1e660ea544d61a4fa5d0c18bacab8b8eb275"
+    },
+    {
+      "path": "scripts/verify-inherited-clipboard.mjs",
+      "sha256": "6f2ce82481c6f63c90f1889f7d9736708dff753fe183bac4dfe5c5eb852bf5dd",
+      "gitBlob": "63b3dd67d0c3ca640ea283ebf4ff1a4c9f632580"
+    },
+    {
+      "path": "tests/browser/fixtures/inherited-clipboard.ts",
+      "sha256": "4a27e4bf920f8ee6aa0cb8774c3459468ea46c6d3f6828191e57a043c239a3a6",
+      "gitBlob": "95035f94ad51c6c440ad1578cfdd02e5904dade1"
+    },
+    {
+      "path": "tests/inherited-clipboard-direction.test.ts",
+      "sha256": "bf928d53b38e6eb8f0f70059624d9125fe84b2b1f1938633c8adc1af2c8f5e2c",
+      "gitBlob": "3ce7a4ef8212ce733439af781b3b8fe88aa6e68b"
+    },
+    {
+      "path": "tests/manual/inherited-clipboard-real.spec.ts",
+      "sha256": "c9303de1fe9fcab06dae2991357db27bc5152d6651acf08438caa7e6305f90da",
+      "gitBlob": "b88fe41495b4f56c4c7b8afb3c01d1f1fa958066"
+    },
+    {
+      "path": "artifacts/shared-direction-child-copy-red-20261102.log",
+      "sha256": "3102659497e1579593a490b4d247d25fa8581790ab46850a1a82e5e23c36f586",
+      "gitBlob": "de69f9a96ef7b367106cd6fa378cfc4bcde2d3d2"
+    },
+    {
+      "path": "artifacts/shared-direction-child-copy-red-20261102.stderr.log",
+      "sha256": "69aba03a486e57315120dc20f9aac6b19fe790308d498b432c43fbe1aa8ace67",
+      "gitBlob": "2af337030669dcc1dee9c6b02c30e611a92b7440"
+    },
+    {
+      "path": "artifacts/shared-direction-child-copy-focused-20261102.log",
+      "sha256": "982e5845d4bb89923addbdb83380079d2abc5d0c42c2af7cd148003e1b1e4f01",
+      "gitBlob": "cba8ebdc0a8f7e0ee4bad330204e20c8ce656adb"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-native-20261102.log",
+      "sha256": "b3d5d57c71e71344a8ec17c7eb3281e06fc49629ab823eb647ab41ded964defb",
+      "gitBlob": "e3d789538dd217994ae96c00be3c109a3de2a6e2"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-budget-20261102.log",
+      "sha256": "e01703d00a225b6fc0a9510500b73e6710286e41291cfd0b18f9cf41a08430e9",
+      "gitBlob": "85b7d7a8e170dd8cefde667dc18c625f13a33ddc"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-units-20261102.log",
+      "sha256": "3f329f117b15b8f242736894e417a56bcbe54aae4ceeb2633fbac0a0cdaf38af",
+      "gitBlob": "6533bb818310165f12267d886b9e2ef7dc165180"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-index-reuse-20261102.log",
+      "sha256": "68d64f207db0388625c8383dc119408f115bfdd9327506017d6104088ae433b4",
+      "gitBlob": "b9627c1583fba039f1d543a8fd4dbbfd7c4ecaa9"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-build-confirm-20261102.log",
+      "sha256": "c557542b8822f272e426c14a684a46fc883ea76bd1637d4e0c00302114cff19c",
+      "gitBlob": "9411cf75d5105262cdc34cd2f9e85e75b5dbeb6a"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-budget-reuse-20261102.log",
+      "sha256": "11be40d4795cf48c0356dd90d24ab7f67250ea909d87626b996d1c17e658d38c",
+      "gitBlob": "3f45b750490b546141542f1c5eef0c3d80428378"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-budget-reviewed-20261102.log",
+      "sha256": "b65b3d73397160689cd225ebc662805642d97ec5561e3f4929b1be1cca2c7466",
+      "gitBlob": "7cc4d0034ba5f327beefc846bb1257a9b7c860a6"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-api-confirm-20261102.log",
+      "sha256": "50a2359dae96bccedff5379246efaeb883a305541d249a8a6dfc359cfacb01d6",
+      "gitBlob": "9f95a21ce396577f6635110ec016d08b1b6c3df4"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-headless-confirm-20261102.log",
+      "sha256": "0d40898ed39141ee0d1adf5a82a4ce0ffcabfcc7d4ca950265f95ef81929d466",
+      "gitBlob": "d786003650e2fec8ba5bd816cdd2ecf2d6776405"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-types-final-20261102.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "gitBlob": "7d7f996b0d05ba3daa04e2474d964589fcb01f11"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-registration-20261102.log",
+      "sha256": "f419cce9929203f43c34da81e08c1c212da98cb5e753d363bcb815cd6780b749",
+      "gitBlob": "9db2d4405f5f640a6ad12cbb4cb2171050c700ba"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102.log",
+      "sha256": "9fd22e5bba1bc08e5f3ebdaa0efc4101b468f035c91aac6cc127ee1d419899d9",
+      "gitBlob": "4619987e8a8f30adf05b44e64cf6f5c0ef6bd10d"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-performance-20261102.log",
+      "sha256": "2cb8022b399de8f48df973148a1008df53ab8af57cd0685b468bf395c068dbfe",
+      "gitBlob": "f590821b82eca10b69372ad845901f6af56b1d64"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-performance-confirm-20261102.log",
+      "sha256": "9366cd078080fdce1b06b62495ba456c449fb96c2eed34a985ff40c463c6655d",
+      "gitBlob": "9787c954f0232f79ade6fe704413a42e4b792904"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-retention-20261102.log",
+      "sha256": "b1ad40a92e0a053b1646c7a33062e40eaa05b99ceec899777ddfc0597f449bd7",
+      "gitBlob": "49cc4063d973208b52bdc3c9e05ae8479ae0dfe1"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-units-final-20261102.log",
+      "sha256": "9899652cc92623ddc46331731b5d2035a6cc8d8562fddd512ce127e70fe56ff1",
+      "gitBlob": "488eae61438d7096fb9b8f657e1cc1f9c39ba88c"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-contract-20261102.log",
+      "sha256": "b5eb6536141d4d65575b57972068e524cede6de8e1dbee210139039016322ad9",
+      "gitBlob": "a232f755fd654e101abe0b167b779ac93f5ff947"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-chromium/inherited-clipboard-observations.json",
+      "sha256": "e34bbc4c65c8766d98fa9ccd42a180550928a7cbc35cbcb0d8b7632c97a1f895",
+      "gitBlob": "d54c6969d0ccaef84ad980364e54479f746d1803"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-firefox/inherited-clipboard-observations.json",
+      "sha256": "8b249e4027fafe3d9d611c8ca63361ad67c63c03e527c8d77ec1635f547e5acd",
+      "gitBlob": "b0442a0d9c9aa812fecdaa0a1477c5c0e316f6fb"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-chromium/inherited-clipboard-observations.json",
+      "sha256": "f9a75388de13fbd63f95f31fcf727e6ab50295ac7683aef3d3c018ada44a2b96",
+      "gitBlob": "36d5c48869f2b79f69cc9a486a1e33a57f23dd1f"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-firefox/inherited-clipboard-observations.json",
+      "sha256": "e1491df8750eb50c065de688e3e03accd25066a0eb9f15d8b2116da4ad42a2a3",
+      "gitBlob": "5a165fa6582f9a05b951304bece7267520b456fb"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-chromium/independent-pasted-child.png",
+      "sha256": "226efa4e1f042366f73b621a6e1f4b686468b6a29e99d6942df9746ad56a3e0d",
+      "gitBlob": "3aa8676be3dae81365cec017142f546915870575"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-chromium/fountain-pasted-child.png",
+      "sha256": "7ac4e1b9180345b6eb5a798a4ec1d87ddd03bdcaa795bf70dc8e0f5ee1538188",
+      "gitBlob": "2ea5b91e24b2d62d02edca73ace1e1fcf15162b7"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-firefox/independent-pasted-child.png",
+      "sha256": "37f67e36567d510933fdf644d9645fd5a436fa29876fdbdfa441912175022e2e",
+      "gitBlob": "d5e128be4156de9b655b49dc09c97d1416a7a093"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-19868-e-and-Fountain-destinations-firefox/fountain-pasted-child.png",
+      "sha256": "368be5ca6485c0d6f6e2be8ae2d2ba54a8a428ee59b38dddc4f1fefc03771f03",
+      "gitBlob": "97c6a09a9e41c091f9a9415a6079f4a7186d760d"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-chromium/independent-pasted-child.png",
+      "sha256": "226efa4e1f042366f73b621a6e1f4b686468b6a29e99d6942df9746ad56a3e0d",
+      "gitBlob": "3aa8676be3dae81365cec017142f546915870575"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-chromium/fountain-pasted-child.png",
+      "sha256": "7ac4e1b9180345b6eb5a798a4ec1d87ddd03bdcaa795bf70dc8e0f5ee1538188",
+      "gitBlob": "2ea5b91e24b2d62d02edca73ace1e1fcf15162b7"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-firefox/independent-pasted-child.png",
+      "sha256": "37f67e36567d510933fdf644d9645fd5a436fa29876fdbdfa441912175022e2e",
+      "gitBlob": "d5e128be4156de9b655b49dc09c97d1416a7a093"
+    },
+    {
+      "path": "artifacts/inherited-clipboard-package-final-20261102/inherited-clipboard-real-i-1f594-e-and-Fountain-destinations-firefox/fountain-pasted-child.png",
+      "sha256": "368be5ca6485c0d6f6e2be8ae2d2ba54a8a428ee59b38dddc4f1fefc03771f03",
+      "gitBlob": "97c6a09a9e41c091f9a9415a6079f4a7186d760d"
+    },
+    {
+      "path": "scripts/check-performance-budgets.mjs",
+      "sha256": "5cdefd0bf484b80d082911b6a9d161f5d667a2271fab1520c5c70be689c81458",
+      "gitBlob": "f2a6c641ee111f642a2ea9e8205079fc3064e2a2"
+    }
+  ]
+}

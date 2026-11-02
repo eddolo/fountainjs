@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased clipboard inheritance correction (2026-11-02): whole-node child
+copies retain the omitted ancestor's direction without copying hidden text.
+Automatic ownership outside the selection becomes a reported fixed snapshot;
+explicit child direction and physical alignment remain independent. Native
+copy/cut journeys use a visible public-API host and an independent destination;
+the final fixture consumes the built package. Linux display-backed clipboard
+registration is expanded, but its results must be observed before certification.
+This is not universal clipboard parity, a delivered-row promotion or an npm
+release. [Contract and limits](HTML_CONTAINERS.md#whole-node-clipboard-inheritance-2026-11-02-unreleased).
+
 Unreleased weak-text verification and reviewed size envelope (2026-10-11): six
 additional desktop public journeys pass with independent native controls and
 six final screenshots reviewed. The LTR no-strong fallback needs no new engine

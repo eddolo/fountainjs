@@ -96,11 +96,12 @@ jobs:
   browser:
     runs-on: ubuntu-latest
     env:
-      # All four clipboard workflows still run with their unchanged assertions.
+      # Clipboard workflows run with unchanged assertions, including whole-node
+      # inherited context and complete/partial shared-context copies.
       # Independent controls prove headless Linux WebKit loses rich clipboard
       # data while the real Xvfb-backed display retains it. Serialize native
       # clipboard owners; keep the rest of the matrix headless.
-      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy"
+      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -147,6 +148,11 @@ jobs:
             structural-direction-clipboard-results/**/auto-scope-*.png
             structural-direction-clipboard-results/**/auto-scope-observations.json
             structural-direction-clipboard-results/**/auto-scope-native-clipboard-delivery*.json
+            structural-direction-clipboard-results/**/shared-copy-*.png
+            structural-direction-clipboard-results/**/shared-copy-observations.json
+            structural-direction-clipboard-results/**/independent-pasted-child.png
+            structural-direction-clipboard-results/**/fountain-pasted-child.png
+            structural-direction-clipboard-results/**/inherited-clipboard-observations.json
             test-results/**/native-rich-paste-*.png
             test-results/**/native-rich-paste-*.json
             test-results/**/anchor-loss-*.png

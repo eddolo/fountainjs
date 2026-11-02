@@ -1,0 +1,163 @@
+{
+  "action": "copy",
+  "before": {
+    "source": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "blockquote",
+          "attrs": {
+            "dir": "auto",
+            "directionGroup": "outside-anchor"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "שלום anchor"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "blockquote",
+          "attrs": {
+            "dir": "auto",
+            "directionGroup": "outside-anchor"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "English child"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "target": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ]
+        }
+      ]
+    },
+    "reports": [],
+    "sourceSelection": "text",
+    "sourceHTML": "<blockquote dir=\"rtl\" data-fountain-direction-group=\"outside-anchor\" data-fountain-direction-origin=\"auto\"><p>שלום anchor</p></blockquote>\n<blockquote dir=\"rtl\" data-fountain-direction-group=\"outside-anchor\" data-fountain-direction-origin=\"auto\"><p>English child</p></blockquote>"
+  },
+  "delivered": {
+    "trusted": true,
+    "html": "<div data-fountain-clipboard-direction-snapshots=\"1\"><p dir=\"rtl\" style=\"text-align:start\">English child</p></div>",
+    "text": "English child"
+  },
+  "pasted": {
+    "source": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "blockquote",
+          "attrs": {
+            "dir": "auto",
+            "directionGroup": "outside-anchor"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "שלום anchor"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "blockquote",
+          "attrs": {
+            "dir": "auto",
+            "directionGroup": "outside-anchor"
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "English child"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "target": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "start",
+            "dir": "rtl"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "English child"
+            }
+          ]
+        }
+      ]
+    },
+    "reports": [
+      {
+        "source": "fountain",
+        "outcome": "inserted-rich-html",
+        "inputBytes": 114,
+        "outputBytes": 114,
+        "issues": [
+          {
+            "code": "source-metadata-removed",
+            "count": 1,
+            "lossy": true,
+            "message": "Copied fragments omitted part of their automatic context; a direction snapshot preserves their appearance, not the omitted live context."
+          }
+        ]
+      }
+    ],
+    "sourceSelection": "node",
+    "sourceHTML": "<blockquote dir=\"rtl\" data-fountain-direction-group=\"outside-anchor\" data-fountain-direction-origin=\"auto\"><p>שלום anchor</p></blockquote>\n<blockquote dir=\"rtl\" data-fountain-direction-group=\"outside-anchor\" data-fountain-direction-origin=\"auto\"><p>English child</p></blockquote>"
+  },
+  "errors": []
+}

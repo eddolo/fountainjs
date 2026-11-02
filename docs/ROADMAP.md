@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Whole-node clipboard inheritance follow-up (2026-11-02, Unreleased): retain a
+selected child's omitted ancestor direction in standard HTML and Fountain JSON,
+without copying hidden anchor text. Automatic owners become explicitly reported
+fixed snapshots; source state, explicit child direction and authored alignment
+are preserved. The private index also supplies local automatic direction rather
+than adding a second traversal implementation. Restricted schemas without a
+representable boundary fall back to browser copying, not certified fidelity.
+New copy/cut journeys and the earlier complete/partial shared-context journeys
+are registered for serial Linux display-backed testing. No parity promotion or
+npm release. [Contract](HTML_CONTAINERS.md#whole-node-clipboard-inheritance-2026-11-02-unreleased).
+
 Weak-text and size-envelope follow-up (2026-10-11, Unreleased): six recorded
 public import/lift/edit/history/HTML-export journeys verify weak-only automatic
 groups under LTR and RTL parents. RTL arrow selection is compared against an

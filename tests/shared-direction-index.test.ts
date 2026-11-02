@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Node, Schema } from '../src/core/schema';
 import { CoreSchemaSpec } from '../src/extensions';
-import { sharedTextDirections } from '../src/core/first-strong-direction';
+import { containedTextDirection, sharedTextDirections } from '../src/core/first-strong-direction';
 import { sharedDirectionDOMAttributes, sharedDirectionGroup } from '../src/core/shared-direction';
 import { createSharedDirectionIndex } from '../src/core/shared-direction-index';
 
@@ -12,6 +12,21 @@ const member = (group: string, children: Node[]) => schema.node('blockquote', { 
 const document = (children: Node[]) => schema.node('doc', {}, children);
 
 describe('immutable shared-direction indexing', () => {
+  it('reuses free-flow summaries for local automatic owners without changing nested boundaries', () => {
+    const index = createSharedDirectionIndex(sharedDirectionGroup);
+    const roots = [schema.text('שלום'), member('a', [p('123 😀'), p('שלום')]),
+      member('a', [member('b', [p('שלום')]), p('English')]),
+      member('a', [member('a', [p('שלום')]), p('English')]),
+      schema.node('blockquote', { dir: 'auto' }, [p('שלום', { dir: 'auto' }), p('123 😀')]),
+      schema.node('blockquote', { dir: 'auto' }, [p('שלום', { dir: 'rtl' }), p('English')]),
+      schema.node('blockquote', { dir: 'auto' }, []),
+    ];
+    for (const root of roots) expect(index.contained(root)).toBe(containedTextDirection(root));
+    const root = roots[1]!;
+    const calls = vi.spyOn(Node.prototype, 'child');
+    try { expect(index.contained(root)).toBe('rtl'); expect(calls).not.toHaveBeenCalled(); }
+    finally { calls.mockRestore(); }
+  });
   it('does not traverse unchanged unrelated subtrees again after a text edit', () => {
     const unrelated = Array.from({ length: 1000 }, (_, index) => p(`Unrelated ${index}`));
     const anchor = member('shared', [p('שלום')]), tail = member('shared', [p('English')]);

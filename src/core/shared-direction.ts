@@ -116,6 +116,39 @@ export function snapshotIncompleteSharedDirections(document: Node, source: Node)
   return { document: snapshot(document), detached: snapshots.size };
 }
 
+/** A whole-node selection omits its ancestors, unlike a text slice. Preserve
+ * inherited direction without copying their hidden text or their structure.
+ * Automatic context outside the selection becomes a reported fixed snapshot.
+ * A restricted schema must be able to represent that boundary, or the caller
+ * must leave copying to the browser rather than emit misleading Fountain JSON.
+ */
+export function snapshotInheritedNodeDirection(
+  document: Node, source: Node, path: readonly number[],
+): { document: Node; detached: number } | null {
+  const owner = ownerAt(source, path);
+  if (!owner || owner.path.length === path.length) return { document, detached: 0 };
+  const group = sharedDirectionGroup(owner.node);
+  const direction = owner.node.attrs.dir === 'auto'
+    ? (group ? resolvedSharedDirections(source).get(group) : resolvedSharedDirections.contained(owner.node)) ?? 'ltr'
+    : owner.node.attrs.dir;
+  try {
+    const child = document.child(0);
+    let carrier: Node;
+    if (child.type.spec.attrs?.dir) {
+      const attrs: Attributes = { ...child.attrs, dir: direction };
+      if (child.type.spec.attrs.align && attrs.align === 'left' && attrs.alignExplicit !== true) attrs.align = 'start';
+      carrier = child.type.create(attrs, child.content, child.text, child.marks);
+    } else {
+      const type = document.type.schema.nodes.direction_scope;
+      if (!type?.spec.attrs?.dir) return null;
+      carrier = type.create({ dir: direction }, document.content);
+    }
+    const snapshot = document.copy([carrier]);
+    document.type.schema.validate(snapshot);
+    return { document: snapshot, detached: owner.node.attrs.dir === 'auto' ? 1 : 0 };
+  } catch { return null; }
+}
+
 export interface SharedDirectionPreparation {
   readonly document: Node;
   readonly owners: readonly (readonly number[])[];

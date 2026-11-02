@@ -25,6 +25,62 @@ The same `parseHTML` rules work with the browser `HTMLImporter`. You can also
 import the public `htmlContainer` node specification and use it in your own
 schema. The portable core module has no DOM or rendering-service dependency.
 
+## Whole-node clipboard inheritance (2026-11-02, Unreleased)
+
+A whole-node selection omits its ancestors. Copying an English paragraph inside
+an RTL automatic quote therefore previously lost the quote's direction, even
+though copying the quote itself or selecting its text retained that context.
+
+`src/view/input.ts` now asks the private model helper in
+`src/core/shared-direction.ts` to retain the omitted direction boundary before
+writing either Fountain JSON or standard HTML. The nearest declared ancestor
+wins. Shared automatic owners resolve against the complete source document;
+ordinary automatic owners reuse the index's eligible free-text summaries in
+`src/core/shared-direction-index.ts`. No DOM or fake DOM is required by that
+calculation, and no omitted anchor text is added to the clipboard.
+
+The copied block gets an explicit direction, or a neutral `direction_scope`
+wrapper when a custom block cannot carry one itself. A copied block's own
+direction remains independent. Implicit alignment follows start; explicitly
+authored physical alignment stays unchanged. The source document is untouched.
+Cut/paste and their history remain ordinary document transactions.
+
+An omitted automatic context cannot stay live-linked to content that was not
+copied. It is a fixed direction snapshot, explicitly reported on paste—not a
+claim to preserve the unavailable live context. Fixed inherited direction does
+not need that loss report. If a restricted host schema cannot represent the
+boundary, Fountain does not emit misleading internal JSON and leaves the copy
+to the browser. That native fallback is not a certified custom-schema round trip.
+
+The new browser host is a **test fixture**, not a production toolbar: its visible
+button calls the public whole-node selection API. Native copy/cut/paste and an
+independent editable destination test the actual clipboard; the final fixture
+consumes the built package. Reader pixels, Word/Google Docs, custom renderer
+isolation and actual Safari are separate verification requirements. No general
+clipboard or production-readiness parity row is promoted by this fix.
+
+Verification: **2,988 tests / 222 files**, including **79 focused checks / five
+files**. Four recorded package-backed copy/cut journeys pass in Chromium and
+Firefox; eight final destination screenshots were inspected. Videos were
+recorded but not watched. Twelve complete/partial/child clipboard cases are
+registered across the three desktop engines for Linux display-backed testing.
+The current-source Linux result and actual Safari remain unverified.
+
+Runtime output measures **1615.652 KiB ESM / 1344.226 KiB CJS**, an increase of
+1.167 / 0.986 KiB over `7ad224a`. Aggregate capacity is explicitly reviewed at
+1616 / 1344.5 KiB; per-entry, CSS, latency and heap limits are unchanged. The
+initial 100-block server-HTML p95 was **36.39 ms**, above its 35 ms ceiling;
+one unchanged-code confirmation measured **31.41 ms** and passed. Both results
+remain evidence, with the cause of the variance unproven. Indexed projection
+retained 326,344 bytes during 2,000 edits and 488,624 bytes after destroying
+40 editors, within the existing 8/16 MiB limits.
+
+Source/log/observation/screenshot bindings are in
+`artifacts/inherited-clipboard-verification-20261102.json`; check them with
+`node scripts/verify-inherited-clipboard.mjs --check` at the recorded checkpoint.
+This is scoped regression evidence. npm remains `0.4.0-beta.2`, and PROD-04
+remains Partial.
+
 ## Shared automatic direction
 
 To retain `<section dir="auto">`, install this extension before importing. The

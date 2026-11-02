@@ -1,0 +1,23 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/shared-direction-view.test.ts > copies a node-selected child with its omitted ancestor direction (fountain)
+ FAIL  tests/shared-direction-view.test.ts > copies a node-selected child with its omitted ancestor direction (html)
+AssertionError: expected undefined to be 'rtl' // Object.is equality
+
+- Expected:
+"rtl"
+
++ Received:
+undefined
+
+ ❯ tests/shared-direction-view.test.ts:185:43
+    183|     const standalone = ServerHTMLImporter.parse(values.get('text/html'…
+    184|     expect(standalone.child(0).type.name).toBe('paragraph');
+    185|     expect(standalone.child(0).attrs.dir).toBe('rtl');
+       |                                           ^
+    186|     expect(standalone.child(0).attrs.directionGroup).toBeUndefined();
+    187|     expect(values.get('text/html')).not.toContain('שלום anchor');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+

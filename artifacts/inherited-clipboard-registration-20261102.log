@@ -1,0 +1,14 @@
+Listing tests:
+  [chromium] › ..\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy
+  [chromium] › ..\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot
+  [chromium] › ..\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations
+  [chromium] › ..\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations
+  [firefox] › ..\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy
+  [firefox] › ..\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot
+  [firefox] › ..\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations
+  [firefox] › ..\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations
+  [webkit] › ..\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy
+  [webkit] › ..\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot
+  [webkit] › ..\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations
+  [webkit] › ..\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations
+Total: 12 tests in 2 files

@@ -32,7 +32,7 @@ import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { textReplacementSelection } from '../core/text-replacement-selection';
-import { copySharedDirectionGroups, snapshotIncompleteSharedDirections } from '../core/shared-direction';
+import { copySharedDirectionGroups, snapshotIncompleteSharedDirections, snapshotInheritedNodeDirection } from '../core/shared-direction';
 import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
   insertAssetFile,
@@ -632,9 +632,17 @@ export class InputManager {
 
   private writeFountainSelection(event: ClipboardEvent): boolean {
     if (!event.clipboardData) return false;
-    const selected = this.selectedFountainDocument();
+    let selected = this.selectedFountainDocument();
     if (!selected) return false;
-    const { document, detached } = snapshotIncompleteSharedDirections(selected, this.editor.state.doc);
+    let inheritedSnapshots = 0;
+    if (this.editor.state.selection instanceof NodeSelection) {
+      const snapshot = snapshotInheritedNodeDirection(selected, this.editor.state.doc, this.editor.state.selection.nodePath);
+      if (!snapshot) return false;
+      selected = snapshot.document;
+      inheritedSnapshots = snapshot.detached;
+    }
+    const projection = snapshotIncompleteSharedDirections(selected, this.editor.state.doc);
+    const document = projection.document, detached = projection.detached + inheritedSnapshots;
     const fragment = HTMLExporter.export(document, { document: false });
     const html = detached ? `<div data-fountain-clipboard-direction-snapshots="${detached}">${fragment}</div>` : fragment;
     const payload: FountainClipboardPayload = { version: 1, document: document.toJSON(), ...(detached ? { directionSnapshots: detached } : {}) };

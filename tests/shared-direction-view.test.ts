@@ -161,3 +161,41 @@ it.each(['fountain', 'html'])('copies a fragment without its anchor as an explic
     expect(reports.at(-1)?.issues).toContainEqual(expect.objectContaining({ lossy: true, message: expect.stringContaining('direction snapshot') }));
   } finally { sourceView.destroy(); targetView.destroy(); source.destroy(); target.destroy(); sourceMount.remove(); targetMount.remove(); }
 });
+
+it.each(['fountain', 'html'])('copies a node-selected child with its omitted ancestor direction (%s)', format => {
+  const source = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+    { type: 'blockquote', attrs: { dir: 'auto', directionGroup: 'outside-anchor' }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'שלום anchor' }] }] },
+    { type: 'blockquote', attrs: { dir: 'auto', directionGroup: 'outside-anchor' }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'English child' }] }] },
+  ] } });
+  const target = createEditor({ schema: CoreSchemaSpec, plugins: [createHistoryPlugin()] });
+  const sourceMount = document.createElement('div'), targetMount = document.createElement('div');
+  document.body.append(sourceMount, targetMount);
+  const reports: import('../src').ExternalPasteReport[] = [];
+  const sourceView = new EditorView(sourceMount, source), targetView = new EditorView(targetMount, target, { paste: { onReport: report => reports.push(report) } });
+  try {
+    const before = source.getJSON(), values = new Map<string, string>();
+    source.dispatch(source.createTransaction().setSelection(new NodeSelection(source.state.doc, [1, 0])));
+    const copy = new Event('copy', { bubbles: true, cancelable: true });
+    Object.defineProperty(copy, 'clipboardData', { value: { setData: (type: string, value: string) => values.set(type, value) } });
+    sourceView.dom.dispatchEvent(copy);
+    expect(source.getJSON()).toEqual(before);
+    expect(values.get('text/plain')).toBe('English child');
+    const standalone = ServerHTMLImporter.parse(values.get('text/html')!, target.state.schema);
+    expect(standalone.child(0).type.name).toBe('paragraph');
+    expect(standalone.child(0).attrs.dir).toBe('rtl');
+    expect(standalone.child(0).attrs.directionGroup).toBeUndefined();
+    expect(values.get('text/html')).not.toContain('שלום anchor');
+    if (format === 'html') values.delete('application/x-fountainjs+json');
+    target.dispatch(target.createTransaction().setSelection(new AllSelection(target.state.doc)));
+    const targetBefore = target.getJSON();
+    const paste = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(paste, 'clipboardData', { value: { types: [...values.keys()], files: [], getData: (type: string) => values.get(type) ?? '' } });
+    targetView.dom.dispatchEvent(paste);
+    expect(target.state.doc.child(0).attrs.dir).toBe('rtl');
+    expect(target.getText()).toBe('English child');
+    expect(reports.at(-1)?.issues).toContainEqual(expect.objectContaining({ lossy: true, message: expect.stringContaining('direction snapshot') }));
+    const pasted = target.getJSON();
+    expect(undo(target)).toBe(true); expect(target.getJSON()).toEqual(targetBefore);
+    expect(redo(target)).toBe(true); expect(target.getJSON()).toEqual(pasted);
+  } finally { sourceView.destroy(); targetView.destroy(); source.destroy(); target.destroy(); sourceMount.remove(); targetMount.remove(); }
+});

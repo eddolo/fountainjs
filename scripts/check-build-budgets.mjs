@@ -541,7 +541,12 @@ const limits = Object.freeze({
   // Audit confirms unchanged dependencies and each new private module emitted
   // once. Reviewed feature capacity only, ~0.265 KiB headroom. Individual entries,
   // CSS, latency, scaling and heap ceilings remain unchanged; keep prior red logs.
-  'all ESM runtime code': 1614.75 * kibibyte,
+  // Whole-node clipboard copies now retain omitted ancestor direction, with
+  // explicit snapshot reporting and schema validation. Reuse indexed free-flow
+  // summaries instead of shipping a second contained-text walker. Measured
+  // 1615.652 KiB, +1.167 KiB from the previous shipped-source checkpoint; review
+  // that functional capacity explicitly. No entry/CSS/performance/heap increase.
+  'all ESM runtime code': 1616 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -603,7 +608,9 @@ const limits = Object.freeze({
   // 1329.588 KiB. Reviewed feature capacity only, ~0.260 KiB headroom; no dependency,
   // per-entry/CSS/runtime/heap increase. This is not an optimization or a license
   // to call other reliability/fidelity boundaries complete.
-  'all CommonJS runtime code': 1343.5 * kibibyte,
+  // Same clipboard boundary: measured 1344.226 KiB (+0.986 KiB). Aggregate
+  // feature capacity only; preserve both pre-review failures as evidence.
+  'all CommonJS runtime code': 1344.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

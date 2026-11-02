@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain omitted ancestor direction when copying/cutting a whole child node.
+  Standard HTML and Fountain JSON retain fixed inherited direction; automatic
+  contexts become explicitly reported snapshots without hidden source text.
+  Preserve own child direction, authored physical alignment and exact history.
+  Reuse indexed eligible text for local automatic owners; restricted schemas
+  must represent the boundary or defer to native copying. Register native
+  whole-child and complete/partial-context clipboard regression journeys for
+  serial Linux display-backed testing. This does not certify every clipboard,
+  renderer or external application, and does not change the npm version.
+
 - Verify weak-only shared automatic direction through public import, list lift,
   native edits/removal, exact history and HTML export under LTR/RTL parents: six
   desktop journeys pass; independent native RTL arrow selections match. Register

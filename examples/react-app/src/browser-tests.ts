@@ -1764,3 +1764,7 @@ Object.assign(globalThis, { mountSharedVirtualAudit: async () => {
   const { mountSharedDirectionVirtualFixture } = await import('../../../tests/browser/fixtures/shared-direction-virtual');
   return mountSharedDirectionVirtualFixture();
 } });
+Object.assign(globalThis, { mountInheritedClipboardAudit: async () => {
+  const { mountInheritedClipboardFixture } = await import('../../../tests/browser/fixtures/inherited-clipboard');
+  return mountInheritedClipboardFixture();
+} });
