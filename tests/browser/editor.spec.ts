@@ -5,6 +5,7 @@ import '../manual/nested-direction-real.spec';
 // Bounded 100k-model integration with native visible typing and host offscreen
 // updates; not a claim of complete production import/large-document coverage.
 import '../manual/shared-direction-virtual-real.spec';
+import '../manual/shared-direction-weak-real.spec';
 import { codeDirectionJourney } from './code-direction-journey';
 import { nativeRichPasteJourney } from './native-rich-paste-journey';
 import { htmlAnchorLossJourney } from './html-anchor-loss-journey';

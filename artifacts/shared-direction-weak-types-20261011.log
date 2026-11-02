@@ -1,0 +1,4 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+tests/manual/shared-direction-weak-real.spec.ts(66,64): error TS2339: Property 'contentEditable' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'contentEditable' does not exist on type 'SVGElement'.
+[ELIFECYCLE] Command failed with exit code 1.

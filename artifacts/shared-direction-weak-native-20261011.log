@@ -1,0 +1,306 @@
+[WebServer] (node:15716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:19836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:27400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:28844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:14068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent (6.1s)
+(node:20104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent (5.3s)
+(node:24632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent (9.9s)
+(node:30472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent (9.6s)
+(node:25160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [webkit] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent (16.2s)
+(node:8344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [webkit] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent (14.4s)
+
+
+  1) [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 2
+
+    - שלום 
+    +
+    +
+
+      63 |     await anchor.click(); await page.keyboard.press('Home');
+      64 |     for (let index = 0; index < 5; index += 1) await page.keyboard.press('Shift+ArrowRight');
+    > 65 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('שלום ');
+         |                                                                   ^
+      66 |     await page.keyboard.press('Backspace');
+      67 |     await expect(anchor).toHaveText('123 😀');
+      68 |     expect(await directions(editor)).toEqual(weakReference);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-weak-real.spec.ts:65:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - שלום 
+    + rent
+    +
+    +
+
+      63 |     await anchor.click(); await page.keyboard.press('Home');
+      64 |     for (let index = 0; index < 5; index += 1) await page.keyboard.press('Shift+ArrowRight');
+    > 65 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('שלום ');
+         |                                                                   ^
+      66 |     await page.keyboard.press('Backspace');
+      67 |     await expect(anchor).toHaveText('123 😀');
+      68 |     expect(await directions(editor)).toEqual(weakReference);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-weak-real.spec.ts:65:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "שלום "
+    Received: ""
+
+      63 |     await anchor.click(); await page.keyboard.press('Home');
+      64 |     for (let index = 0; index < 5; index += 1) await page.keyboard.press('Shift+ArrowRight');
+    > 65 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('שלום ');
+         |                                                                   ^
+      66 |     await page.keyboard.press('Backspace');
+      67 |     await expect(anchor).toHaveText('123 😀');
+      68 |     expect(await directions(editor)).toEqual(weakReference);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-weak-real.spec.ts:65:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - שלום 
+    + r parent
+    
+    + 
+    
+    +
+
+      63 |     await anchor.click(); await page.keyboard.press('Home');
+      64 |     for (let index = 0; index < 5; index += 1) await page.keyboard.press('Shift+ArrowRight');
+    > 65 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('שלום ');
+         |                                                                   ^
+      66 |     await page.keyboard.press('Backspace');
+      67 |     await expect(anchor).toHaveText('123 😀');
+      68 |     expect(await directions(editor)).toEqual(weakReference);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-weak-real.spec.ts:65:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [webkit] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 2
+
+    - שלום 
+    +
+    +
+
+      63 |     await anchor.click(); await page.keyboard.press('Home');
+      64 |     for (let index = 0; index < 5; index += 1) await page.keyboard.press('Shift+ArrowRight');
+    > 65 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('שלום ');
+         |                                                                   ^
+      66 |     await page.keyboard.press('Backspace');
+      67 |     await expect(anchor).toHaveText('123 😀');
+      68 |     expect(await directions(editor)).toEqual(weakReference);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-weak-real.spec.ts:65:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - שלום 
+    + rent
+    +
+    +
+
+      63 |     await anchor.click(); await page.keyboard.press('Home');
+      64 |     for (let index = 0; index < 5; index += 1) await page.keyboard.press('Shift+ArrowRight');
+    > 65 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('שלום ');
+         |                                                                   ^
+      66 |     await page.keyboard.press('Backspace');
+      67 |     await expect(anchor).toHaveText('123 😀');
+      68 |     expect(await directions(editor)).toEqual(weakReference);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-weak-real.spec.ts:65:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\shared-direction-weak-native-20261011\shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent 
+    [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent 
+    [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent 
+    [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent 
+    [webkit] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent 
+    [webkit] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent 

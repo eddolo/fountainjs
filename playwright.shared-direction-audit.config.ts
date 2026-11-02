@@ -5,7 +5,7 @@ import base from './playwright.input-audit.config';
 // injected clipboard data. Default to background browsers to avoid disrupting
 // the user's desktop. A headed diagnostic requires explicit separate choice.
 // One worker, no retries, fresh private server, and no use of the user's 4173.
-const matches = ['nested-direction-real.spec.ts', 'shared-direction-copy-real.spec.ts', 'shared-direction-virtual-real.spec.ts'];
+const matches = ['nested-direction-real.spec.ts', 'shared-direction-copy-real.spec.ts', 'shared-direction-virtual-real.spec.ts', 'shared-direction-weak-real.spec.ts'];
 export default defineConfig({
   ...base,
   testDir: './tests/manual',

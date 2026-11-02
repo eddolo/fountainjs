@@ -1,0 +1,6 @@
+  [chromium] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  [chromium] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent
+  [firefox] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  [firefox] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent
+  [webkit] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  [webkit] › ..\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent

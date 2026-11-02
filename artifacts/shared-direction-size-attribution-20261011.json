@@ -1,0 +1,1623 @@
+{
+  "baselineCommit": "f3444cd98615fd13f6679e4707615013f1cb9b3e",
+  "currentCommit": "744ac90811d8b88b8cacc46124df4d85701f12b7",
+  "scope": "Same diagnostic build configuration and dependency tree; package runtime code byte-identical to current audit outputs",
+  "excluded": "Source maps, CSS/assets, full emoji data; exactly the existing aggregate runtime definition",
+  "angular": "Unchanged Angular source/build configuration; same generated ESM bytes added to both totals, not rebuilt in archived baseline",
+  "attributionCaveat": "Rollup renderedLength is pre-final-render metadata, not an additive final-byte causal decomposition",
+  "historicalComparison": "The rebuilt ESM baseline is 1600.692 KiB, versus 1598.5 in the earlier frozen log; this variation is not explained or relabeled as a size optimization. Capacity is based on current byte-identical package output, not subtraction from that historical number.",
+  "dependenciesUnchanged": true,
+  "formats": [
+    {
+      "format": "es",
+      "baselineBytes": 1639109,
+      "currentBytes": 1653233,
+      "deltaBytes": 14124,
+      "privateModules": [
+        {
+          "source": "src/core/bidi-strong-data.ts",
+          "length": 3041,
+          "chunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/core/first-strong-direction.ts",
+          "length": 1042,
+          "chunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/core/shared-direction-index.ts",
+          "length": 3292,
+          "chunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/core/shared-direction.ts",
+          "length": 6212,
+          "chunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/view/shared-direction.ts",
+          "length": 1445,
+          "chunks": [
+            "view-D_TqSP0v.js"
+          ]
+        }
+      ],
+      "moduleChanges": [
+        {
+          "source": "src/core/shared-direction.ts",
+          "before": 0,
+          "after": 6212,
+          "delta": 6212,
+          "emittedChunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/core/shared-direction-index.ts",
+          "before": 0,
+          "after": 3292,
+          "delta": 3292,
+          "emittedChunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/core/bidi-strong-data.ts",
+          "before": 0,
+          "after": 3041,
+          "delta": 3041,
+          "emittedChunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/core/structure-commands.ts",
+          "before": 32038,
+          "after": 34471,
+          "delta": 2433,
+          "emittedChunks": [
+            "commands-C-YOS4Hu.js"
+          ]
+        },
+        {
+          "source": "src/view/shared-direction.ts",
+          "before": 0,
+          "after": 1445,
+          "delta": 1445,
+          "emittedChunks": [
+            "view-D_TqSP0v.js"
+          ]
+        },
+        {
+          "source": "src/core/first-strong-direction.ts",
+          "before": 0,
+          "after": 1042,
+          "delta": 1042,
+          "emittedChunks": [
+            "shared-direction-BIYMPEFn.js"
+          ]
+        },
+        {
+          "source": "src/view/input.ts",
+          "before": 33245,
+          "after": 34213,
+          "delta": 968,
+          "emittedChunks": [
+            "view-D_TqSP0v.js"
+          ]
+        },
+        {
+          "source": "src/core/text-direction.ts",
+          "before": 3018,
+          "after": 3862,
+          "delta": 844,
+          "emittedChunks": [
+            "text-direction-BAy8LwDF.js"
+          ]
+        },
+        {
+          "source": "src/yjs/index.ts",
+          "before": 27127,
+          "after": 27883,
+          "delta": 756,
+          "emittedChunks": [
+            "yjs.js"
+          ]
+        },
+        {
+          "source": "src/core/commands.ts",
+          "before": 59192,
+          "after": 59698,
+          "delta": 506,
+          "emittedChunks": [
+            "commands-C-YOS4Hu.js"
+          ]
+        },
+        {
+          "source": "src/core/exporters/html-exporter.ts",
+          "before": 20447,
+          "after": 20835,
+          "delta": 388,
+          "emittedChunks": [
+            "commands-C-YOS4Hu.js"
+          ]
+        },
+        {
+          "source": "src/html/server.ts",
+          "before": 87159,
+          "after": 87544,
+          "delta": 385,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "src/extensions/html-containers.ts",
+          "before": 4277,
+          "after": 4458,
+          "delta": 181,
+          "emittedChunks": [
+            "html-flow-FU9JGEYv.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/direction-scope.ts",
+          "before": 719,
+          "after": 898,
+          "delta": 179,
+          "emittedChunks": [
+            "direction-scope-BvOF-Elm.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/definition-list.ts",
+          "before": 616,
+          "after": 772,
+          "delta": 156,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/view/dom-renderer.ts",
+          "before": 17159,
+          "after": 17229,
+          "delta": 70,
+          "emittedChunks": [
+            "view-D_TqSP0v.js"
+          ]
+        },
+        {
+          "source": "node_modules/fflate/esm/browser.js",
+          "before": 22543,
+          "after": 22490,
+          "delta": -53,
+          "emittedChunks": [
+            "docx.js"
+          ]
+        },
+        {
+          "source": "node_modules/unicode-emoji-json/data-by-emoji.json",
+          "before": 353695,
+          "after": 353642,
+          "delta": -53,
+          "emittedChunks": [
+            "emoji-data.js"
+          ]
+        },
+        {
+          "source": "node_modules/boolbase/dist/index.js",
+          "before": 224,
+          "after": 171,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-what/dist/types.js",
+          "before": 1072,
+          "after": 1019,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-what/dist/parse.js",
+          "before": 12264,
+          "after": 12211,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domelementtype/dist/index.js",
+          "before": 990,
+          "after": 937,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domhandler/dist/node.js",
+          "before": 4976,
+          "after": 4923,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/querying.js",
+          "before": 2009,
+          "after": 1956,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/legacy.js",
+          "before": 2227,
+          "after": 2174,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/escape.js",
+          "before": 1947,
+          "after": 1894,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/dom-serializer/dist/foreign-names.js",
+          "before": 1547,
+          "after": 1494,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/dom-serializer/dist/index.js",
+          "before": 3335,
+          "after": 3282,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/stringify.js",
+          "before": 1102,
+          "after": 1049,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/feeds.js",
+          "before": 3721,
+          "after": 3668,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/helpers.js",
+          "before": 2401,
+          "after": 2348,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/manipulation.js",
+          "before": 2379,
+          "after": 2326,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/traversal.js",
+          "before": 1215,
+          "after": 1162,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/index.js",
+          "before": 1415,
+          "after": 1362,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/attributes.js",
+          "before": 5198,
+          "after": 5145,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/querying.js",
+          "before": 1959,
+          "after": 1906,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/aliases.js",
+          "before": 1592,
+          "after": 1539,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/nth-check/dist/compile.js",
+          "before": 611,
+          "after": 558,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/nth-check/dist/parse.js",
+          "before": 1459,
+          "after": 1406,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/nth-check/dist/index.js",
+          "before": 216,
+          "after": 163,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/cache.js",
+          "before": 947,
+          "after": 894,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/options.js",
+          "before": 268,
+          "after": 215,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/filters.js",
+          "before": 4464,
+          "after": 4411,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/pseudos.js",
+          "before": 2593,
+          "after": 2540,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/selectors.js",
+          "before": 1895,
+          "after": 1842,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/subselects.js",
+          "before": 2108,
+          "after": 2055,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/index.js",
+          "before": 1318,
+          "after": 1265,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/general.js",
+          "before": 3827,
+          "after": 3774,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/compile.js",
+          "before": 2413,
+          "after": 2360,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/index.js",
+          "before": 2345,
+          "after": 2292,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/unicode.js",
+          "before": 2902,
+          "after": 2849,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/error-codes.js",
+          "before": 4713,
+          "after": 4660,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/tokenizer/preprocessor.js",
+          "before": 4351,
+          "after": 4298,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/token.js",
+          "before": 895,
+          "after": 842,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/html.js",
+          "before": 15680,
+          "after": 15627,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/tokenizer/index.js",
+          "before": 63611,
+          "after": 63558,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/parser/open-element-stack.js",
+          "before": 8578,
+          "after": 8525,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/parser/formatting-element-list.js",
+          "before": 3096,
+          "after": 3043,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/tree-adapters/default.js",
+          "before": 4237,
+          "after": 4184,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/doctype.js",
+          "before": 4340,
+          "after": 4287,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/foreign-content.js",
+          "before": 5763,
+          "after": 5710,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/parser/index.js",
+          "before": 77028,
+          "after": 76975,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/serializer/index.js",
+          "before": 517,
+          "after": 464,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/index.js",
+          "before": 524,
+          "after": 471,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+          "before": 5647,
+          "after": 5594,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.js"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/decode-codepoint.js",
+          "before": 755,
+          "after": 702,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-83ZGjqmO.js"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/internal/decode-shared.js",
+          "before": 512,
+          "after": 459,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-83ZGjqmO.js"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/generated/decode-data-html.js",
+          "before": 32422,
+          "after": 32369,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-83ZGjqmO.js"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/internal/bin-trie-flags.js",
+          "before": 511,
+          "after": 458,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-83ZGjqmO.js"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/decode.js",
+          "before": 10386,
+          "after": 10333,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-83ZGjqmO.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/bullet-list.ts",
+          "before": 240,
+          "after": 292,
+          "delta": 52,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/list-item.ts",
+          "before": 215,
+          "after": 267,
+          "delta": 52,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/task-list.ts",
+          "before": 277,
+          "after": 329,
+          "delta": 52,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/blockquote.ts",
+          "before": 374,
+          "after": 423,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/code-block.ts",
+          "before": 754,
+          "after": 803,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/heading.ts",
+          "before": 527,
+          "after": 576,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/ordered-list.ts",
+          "before": 415,
+          "after": 464,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/paragraph.ts",
+          "before": 391,
+          "after": 440,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/table.ts",
+          "before": 296,
+          "after": 345,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/table-row.ts",
+          "before": 358,
+          "after": 407,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/task-item.ts",
+          "before": 649,
+          "after": 698,
+          "delta": 49,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        },
+        {
+          "source": "src/view/view.ts",
+          "before": 26337,
+          "after": 26386,
+          "delta": 49,
+          "emittedChunks": [
+            "view-D_TqSP0v.js"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/table-cell-view.ts",
+          "before": 9687,
+          "after": 9735,
+          "delta": 48,
+          "emittedChunks": [
+            "extensions-CN0LyCwb.js"
+          ]
+        }
+      ]
+    },
+    {
+      "format": "cjs",
+      "baselineBytes": 1361498,
+      "currentBytes": 1375478,
+      "deltaBytes": 13980,
+      "privateModules": [
+        {
+          "source": "src/core/bidi-strong-data.ts",
+          "length": 3041,
+          "chunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/core/first-strong-direction.ts",
+          "length": 1042,
+          "chunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/core/shared-direction-index.ts",
+          "length": 3292,
+          "chunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/core/shared-direction.ts",
+          "length": 6201,
+          "chunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/view/shared-direction.ts",
+          "length": 1444,
+          "chunks": [
+            "view-BzY1ft8Z.cjs"
+          ]
+        }
+      ],
+      "moduleChanges": [
+        {
+          "source": "src/core/shared-direction.ts",
+          "before": 0,
+          "after": 6201,
+          "delta": 6201,
+          "emittedChunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/core/shared-direction-index.ts",
+          "before": 0,
+          "after": 3292,
+          "delta": 3292,
+          "emittedChunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/core/bidi-strong-data.ts",
+          "before": 0,
+          "after": 3041,
+          "delta": 3041,
+          "emittedChunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/core/structure-commands.ts",
+          "before": 32200,
+          "after": 34678,
+          "delta": 2478,
+          "emittedChunks": [
+            "commands-C1NUf0cX.cjs"
+          ]
+        },
+        {
+          "source": "src/view/shared-direction.ts",
+          "before": 0,
+          "after": 1444,
+          "delta": 1444,
+          "emittedChunks": [
+            "view-BzY1ft8Z.cjs"
+          ]
+        },
+        {
+          "source": "src/core/first-strong-direction.ts",
+          "before": 0,
+          "after": 1042,
+          "delta": 1042,
+          "emittedChunks": [
+            "shared-direction-BdLkZdWo.cjs"
+          ]
+        },
+        {
+          "source": "src/view/input.ts",
+          "before": 33562,
+          "after": 34524,
+          "delta": 962,
+          "emittedChunks": [
+            "view-BzY1ft8Z.cjs"
+          ]
+        },
+        {
+          "source": "src/core/text-direction.ts",
+          "before": 3018,
+          "after": 3862,
+          "delta": 844,
+          "emittedChunks": [
+            "text-direction-T5Baosqb.cjs"
+          ]
+        },
+        {
+          "source": "src/yjs/index.ts",
+          "before": 27184,
+          "after": 27937,
+          "delta": 753,
+          "emittedChunks": [
+            "yjs.cjs"
+          ]
+        },
+        {
+          "source": "src/core/commands.ts",
+          "before": 60069,
+          "after": 60579,
+          "delta": 510,
+          "emittedChunks": [
+            "commands-C1NUf0cX.cjs"
+          ]
+        },
+        {
+          "source": "src/html/server.ts",
+          "before": 87411,
+          "after": 87825,
+          "delta": 414,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "src/core/exporters/html-exporter.ts",
+          "before": 20500,
+          "after": 20900,
+          "delta": 400,
+          "emittedChunks": [
+            "commands-C1NUf0cX.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/html-containers.ts",
+          "before": 4341,
+          "after": 4516,
+          "delta": 175,
+          "emittedChunks": [
+            "html-flow-CLseFPNz.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/direction-scope.ts",
+          "before": 719,
+          "after": 892,
+          "delta": 173,
+          "emittedChunks": [
+            "direction-scope-DW5E-D4S.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/definition-list.ts",
+          "before": 604,
+          "after": 757,
+          "delta": 153,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/view/dom-renderer.ts",
+          "before": 17172,
+          "after": 17242,
+          "delta": 70,
+          "emittedChunks": [
+            "view-BzY1ft8Z.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/fflate/esm/browser.js",
+          "before": 22543,
+          "after": 22490,
+          "delta": -53,
+          "emittedChunks": [
+            "docx.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/unicode-emoji-json/data-by-emoji.json",
+          "before": 353695,
+          "after": 353642,
+          "delta": -53,
+          "emittedChunks": [
+            "emoji-data.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/boolbase/dist/index.js",
+          "before": 224,
+          "after": 171,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-what/dist/types.js",
+          "before": 1072,
+          "after": 1019,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-what/dist/parse.js",
+          "before": 12264,
+          "after": 12211,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domelementtype/dist/index.js",
+          "before": 990,
+          "after": 937,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domhandler/dist/node.js",
+          "before": 4976,
+          "after": 4923,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/querying.js",
+          "before": 2009,
+          "after": 1956,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/legacy.js",
+          "before": 2227,
+          "after": 2174,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/escape.js",
+          "before": 1947,
+          "after": 1894,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/dom-serializer/dist/foreign-names.js",
+          "before": 1547,
+          "after": 1494,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/dom-serializer/dist/index.js",
+          "before": 3335,
+          "after": 3282,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/stringify.js",
+          "before": 1102,
+          "after": 1049,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/feeds.js",
+          "before": 3721,
+          "after": 3668,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/helpers.js",
+          "before": 2401,
+          "after": 2348,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/manipulation.js",
+          "before": 2379,
+          "after": 2326,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/traversal.js",
+          "before": 1215,
+          "after": 1162,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/domutils/dist/index.js",
+          "before": 1430,
+          "after": 1377,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/attributes.js",
+          "before": 5198,
+          "after": 5145,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/querying.js",
+          "before": 1959,
+          "after": 1906,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/aliases.js",
+          "before": 1592,
+          "after": 1539,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/nth-check/dist/compile.js",
+          "before": 611,
+          "after": 558,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/nth-check/dist/parse.js",
+          "before": 1459,
+          "after": 1406,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/nth-check/dist/index.js",
+          "before": 216,
+          "after": 163,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/cache.js",
+          "before": 947,
+          "after": 894,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/options.js",
+          "before": 268,
+          "after": 215,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/filters.js",
+          "before": 4464,
+          "after": 4411,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/pseudos.js",
+          "before": 2593,
+          "after": 2540,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/helpers/selectors.js",
+          "before": 1895,
+          "after": 1842,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/subselects.js",
+          "before": 2108,
+          "after": 2055,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/pseudo-selectors/index.js",
+          "before": 1318,
+          "after": 1265,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/general.js",
+          "before": 3827,
+          "after": 3774,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/compile.js",
+          "before": 2413,
+          "after": 2360,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/css-select/dist/index.js",
+          "before": 2345,
+          "after": 2292,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/unicode.js",
+          "before": 2902,
+          "after": 2849,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/error-codes.js",
+          "before": 4713,
+          "after": 4660,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/tokenizer/preprocessor.js",
+          "before": 4351,
+          "after": 4298,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/token.js",
+          "before": 895,
+          "after": 842,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/html.js",
+          "before": 15680,
+          "after": 15627,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/tokenizer/index.js",
+          "before": 63652,
+          "after": 63599,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/parser/open-element-stack.js",
+          "before": 8578,
+          "after": 8525,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/parser/formatting-element-list.js",
+          "before": 3096,
+          "after": 3043,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/tree-adapters/default.js",
+          "before": 4237,
+          "after": 4184,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/doctype.js",
+          "before": 4340,
+          "after": 4287,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/common/foreign-content.js",
+          "before": 5763,
+          "after": 5710,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/parser/index.js",
+          "before": 77028,
+          "after": 76975,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/serializer/index.js",
+          "before": 517,
+          "after": 464,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5/dist/index.js",
+          "before": 524,
+          "after": 471,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+          "before": 5647,
+          "after": 5594,
+          "delta": -53,
+          "emittedChunks": [
+            "html-server.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/decode-codepoint.js",
+          "before": 755,
+          "after": 702,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-DD8ATANg.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/internal/decode-shared.js",
+          "before": 512,
+          "after": 459,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-DD8ATANg.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/generated/decode-data-html.js",
+          "before": 32422,
+          "after": 32369,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-DD8ATANg.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/internal/bin-trie-flags.js",
+          "before": 511,
+          "after": 458,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-DD8ATANg.cjs"
+          ]
+        },
+        {
+          "source": "node_modules/entities/dist/decode.js",
+          "before": 10386,
+          "after": 10333,
+          "delta": -53,
+          "emittedChunks": [
+            "markdown-html-DD8ATANg.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/bullet-list.ts",
+          "before": 236,
+          "after": 287,
+          "delta": 51,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/list-item.ts",
+          "before": 211,
+          "after": 262,
+          "delta": 51,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/task-list.ts",
+          "before": 273,
+          "after": 324,
+          "delta": 51,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/heading.ts",
+          "before": 523,
+          "after": 573,
+          "delta": 50,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/paragraph.ts",
+          "before": 387,
+          "after": 437,
+          "delta": 50,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/view/view.ts",
+          "before": 26435,
+          "after": 26484,
+          "delta": 49,
+          "emittedChunks": [
+            "view-BzY1ft8Z.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/code-block.ts",
+          "before": 744,
+          "after": 792,
+          "delta": 48,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/ordered-list.ts",
+          "before": 411,
+          "after": 459,
+          "delta": 48,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/task-item.ts",
+          "before": 645,
+          "after": 693,
+          "delta": 48,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/table-cell-view.ts",
+          "before": 9706,
+          "after": 9753,
+          "delta": 47,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/blockquote.ts",
+          "before": 376,
+          "after": 422,
+          "delta": 46,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/table.ts",
+          "before": 300,
+          "after": 346,
+          "delta": 46,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/extensions/nodes/table-row.ts",
+          "before": 375,
+          "after": 421,
+          "delta": 46,
+          "emittedChunks": [
+            "extensions-BbvYaHt8.cjs"
+          ]
+        },
+        {
+          "source": "src/core/importers/html-importer.ts",
+          "before": 31973,
+          "after": 32001,
+          "delta": 28,
+          "emittedChunks": [
+            "media-CspQdweh.cjs"
+          ]
+        },
+        {
+          "source": "src/core/explicit-emphasis.ts",
+          "before": 1620,
+          "after": 1624,
+          "delta": 4,
+          "emittedChunks": [
+            "link-destination-e49Ncxgh.cjs"
+          ]
+        },
+        {
+          "source": "src/core/table-layout.ts",
+          "before": 3238,
+          "after": 3234,
+          "delta": -4,
+          "emittedChunks": [
+            "table-layout-DclxIB5V.cjs"
+          ]
+        }
+      ]
+    }
+  ]
+}

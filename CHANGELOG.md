@@ -7,6 +7,17 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Verify weak-only shared automatic direction through public import, list lift,
+  native edits/removal, exact history and HTML export under LTR/RTL parents: six
+  desktop journeys pass; independent native RTL arrow selections match. Register
+  the six cases and review six final screenshots. No engine/fallback rewrite.
+  Audit shared-direction code size with same-config archived builds: dependencies
+  unchanged, private modules emitted once, current outputs byte-identical to the
+  package. Review only aggregate capacity at 1614.75 KiB ESM / 1343.5 KiB CJS for
+  measured 1614.485 / 1343.240 KiB output. Preserve old red logs, baseline variation
+  and all unrelated caps. This is feature capacity, not an optimization. Fresh
+  API/types/performance/size pass; Linux/Safari/remaining parity are not certified.
+
 - Index shared-direction projection with private weakly held scalar subtree
   summaries: unchanged block contents are reused, with no retained document/node
   references in cache values. Eight indexing tests cover mixed groups, barriers,

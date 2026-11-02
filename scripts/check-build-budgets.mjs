@@ -534,7 +534,14 @@ const limits = Object.freeze({
   // Known automatic caret provenance preserves untouched source without
   // retaining an old document tree. Measured 1598.5 / 1329.6 KiB (+~0.5 each).
   // Aggregate feature capacity only; entries/CSS/performance/heap unchanged.
-  'all ESM runtime code': 1598.75 * kibibyte,
+  // Live shared-auto membership, atomic transforms, Unicode classification,
+  // clipboard/Yjs/view/export wiring and immutable subtree indexing now measure
+  // 1614.485 KiB. Same-config archived baseline: 1600.692 KiB; the earlier frozen
+  // log recorded 1598.5 KiB. Retain both rather than claiming an optimization.
+  // Audit confirms unchanged dependencies and each new private module emitted
+  // once. Reviewed feature capacity only, ~0.265 KiB headroom. Individual entries,
+  // CSS, latency, scaling and heap ceilings remain unchanged; keep prior red logs.
+  'all ESM runtime code': 1614.75 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -592,7 +599,11 @@ const limits = Object.freeze({
   // Same code direction boundary: measured 1326.2 KiB.
   // Equivalent native rich handoff adds ~1.6 KiB CJS; same boundaries as ESM.
   // Same palette selection: measured 1328.7 KiB (+~0.7); aggregate only.
-  'all CommonJS runtime code': 1330 * kibibyte,
+  // Equivalent shared-direction graph: 1343.240 KiB, versus rebuilt baseline
+  // 1329.588 KiB. Reviewed feature capacity only, ~0.260 KiB headroom; no dependency,
+  // per-entry/CSS/runtime/heap increase. This is not an optimization or a license
+  // to call other reliability/fidelity boundaries complete.
+  'all CommonJS runtime code': 1343.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

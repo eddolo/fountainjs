@@ -1,0 +1,1715 @@
+{
+  "format": "es",
+  "diagnosticOnly": true,
+  "chunks": [
+    {
+      "file": "ai-conversation.js",
+      "bytes": 15960,
+      "sha256": "7a5ebf9a3ac7a862c8b224558fb699de9ea7404081cab0bf87fb9a425baf48d2",
+      "modules": [
+        {
+          "source": "src/ai/conversation.ts",
+          "renderedLength": 20242
+        }
+      ]
+    },
+    {
+      "file": "ai-document-tools.js",
+      "bytes": 16837,
+      "sha256": "c1a33c6fa86aba90d8eee7ea45d47f62aab3847a929a1cb96da004293d5ff199",
+      "modules": [
+        {
+          "source": "src/ai/document-tools.ts",
+          "renderedLength": 21918
+        }
+      ]
+    },
+    {
+      "file": "ai-generated-media.js",
+      "bytes": 10717,
+      "sha256": "4454170ef27133dc7b597b3a574fa367bc4b49e5c5f4f68f36d40fa58b317d6a",
+      "modules": [
+        {
+          "source": "src/ai/generated-media.ts",
+          "renderedLength": 13124
+        }
+      ]
+    },
+    {
+      "file": "comments.js",
+      "bytes": 29772,
+      "sha256": "8570e66be0ef81b852632396c0c74f59f2443d60e534409958c7cfca4e959675",
+      "modules": [
+        {
+          "source": "src/comments/index.ts",
+          "renderedLength": 42990
+        }
+      ]
+    },
+    {
+      "file": "core.js",
+      "bytes": 9075,
+      "sha256": "20f50040fb2f79110c379ca1458c263f821e51dd189f255347a74f8f9ee5a22f",
+      "modules": [
+        {
+          "source": "src/headless/index.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "details.js",
+      "bytes": 7728,
+      "sha256": "a01a7a37f5f11bb372c9b88f7919da04c21988c3603b66662496d9a705f373ac",
+      "modules": [
+        {
+          "source": "src/details/index.ts",
+          "renderedLength": 10579
+        }
+      ]
+    },
+    {
+      "file": "document-utilities.js",
+      "bytes": 23886,
+      "sha256": "13da3118c44e5455eb119fd27181b453e8838354b7f05ca1639be922aff03a47",
+      "modules": [
+        {
+          "source": "src/extensions/mention.ts",
+          "renderedLength": 7491
+        },
+        {
+          "source": "src/extensions/typography.ts",
+          "renderedLength": 3735
+        },
+        {
+          "source": "src/extensions/character-count.ts",
+          "renderedLength": 8252
+        },
+        {
+          "source": "src/extensions/slash-command.ts",
+          "renderedLength": 11993
+        },
+        {
+          "source": "src/document-utilities.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "docx.js",
+      "bytes": 188558,
+      "sha256": "ba02c53d7e549930e1f4f319334e54a091e041bca81089b4b057669bb96c1da3",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/fflate@0.8.3/node_modules/fflate/esm/browser.js",
+          "renderedLength": 22490
+        },
+        {
+          "source": "src/docx/math.ts",
+          "renderedLength": 6351
+        },
+        {
+          "source": "src/docx/math-parser.ts",
+          "renderedLength": 10902
+        },
+        {
+          "source": "src/docx/theme-fonts.ts",
+          "renderedLength": 2761
+        },
+        {
+          "source": "src/docx/style-cascade.ts",
+          "renderedLength": 10701
+        },
+        {
+          "source": "src/docx/table-style.ts",
+          "renderedLength": 11663
+        },
+        {
+          "source": "src/docx/style-reader.ts",
+          "renderedLength": 13036
+        },
+        {
+          "source": "src/docx/table-text.ts",
+          "renderedLength": 508
+        },
+        {
+          "source": "src/docx/style-projection.ts",
+          "renderedLength": 4798
+        },
+        {
+          "source": "src/docx/xml-parser.ts",
+          "renderedLength": 3046
+        },
+        {
+          "source": "src/docx/paragraph-style.ts",
+          "renderedLength": 5077
+        },
+        {
+          "source": "src/docx/table-appearance.ts",
+          "renderedLength": 6260
+        },
+        {
+          "source": "src/docx/table-width.ts",
+          "renderedLength": 2133
+        },
+        {
+          "source": "src/docx/index.ts",
+          "renderedLength": 146410
+        }
+      ]
+    },
+    {
+      "file": "emoji-data.js",
+      "bytes": 331400,
+      "sha256": "4ff863ecfe3ec372acf3054bd5f05264eb4cb62e0b412fd0056ad497438a26b0",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/unicode-emoji-json@0.9.0/node_modules/unicode-emoji-json/data-by-emoji.json",
+          "renderedLength": 353642
+        },
+        {
+          "source": "src/emoji-data.ts",
+          "renderedLength": 428
+        }
+      ]
+    },
+    {
+      "file": "html-inert.js",
+      "bytes": 6162,
+      "sha256": "49d30a2db0c2fdfdb650bcc211b7e71a252484c3022fce9ada2bd1a2a984f371",
+      "modules": [
+        {
+          "source": "src/html/inert.ts",
+          "renderedLength": 7232
+        }
+      ]
+    },
+    {
+      "file": "html-server.js",
+      "bytes": 263008,
+      "sha256": "8fcd755f7813c7c69e6c19f2de84de824f5fa55d63ff8326c16ee1c10edb6040",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/boolbase@2.0.0/node_modules/boolbase/dist/index.js",
+          "renderedLength": 171
+        },
+        {
+          "source": "node_modules/.pnpm/css-what@8.0.0/node_modules/css-what/dist/types.js",
+          "renderedLength": 1019
+        },
+        {
+          "source": "node_modules/.pnpm/css-what@8.0.0/node_modules/css-what/dist/parse.js",
+          "renderedLength": 12211
+        },
+        {
+          "source": "node_modules/.pnpm/domelementtype@3.0.0/node_modules/domelementtype/dist/index.js",
+          "renderedLength": 937
+        },
+        {
+          "source": "node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+          "renderedLength": 4923
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/querying.js",
+          "renderedLength": 1956
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/legacy.js",
+          "renderedLength": 2174
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/escape.js",
+          "renderedLength": 1894
+        },
+        {
+          "source": "node_modules/.pnpm/dom-serializer@3.1.1/node_modules/dom-serializer/dist/foreign-names.js",
+          "renderedLength": 1494
+        },
+        {
+          "source": "node_modules/.pnpm/dom-serializer@3.1.1/node_modules/dom-serializer/dist/index.js",
+          "renderedLength": 3282
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/stringify.js",
+          "renderedLength": 1049
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/feeds.js",
+          "renderedLength": 3668
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/helpers.js",
+          "renderedLength": 2348
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/manipulation.js",
+          "renderedLength": 2326
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/traversal.js",
+          "renderedLength": 1162
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/index.js",
+          "renderedLength": 1362
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/attributes.js",
+          "renderedLength": 5145
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/querying.js",
+          "renderedLength": 1906
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/aliases.js",
+          "renderedLength": 1539
+        },
+        {
+          "source": "node_modules/.pnpm/nth-check@3.0.1/node_modules/nth-check/dist/compile.js",
+          "renderedLength": 558
+        },
+        {
+          "source": "node_modules/.pnpm/nth-check@3.0.1/node_modules/nth-check/dist/parse.js",
+          "renderedLength": 1406
+        },
+        {
+          "source": "node_modules/.pnpm/nth-check@3.0.1/node_modules/nth-check/dist/index.js",
+          "renderedLength": 163
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/cache.js",
+          "renderedLength": 894
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/options.js",
+          "renderedLength": 215
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/filters.js",
+          "renderedLength": 4411
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/pseudos.js",
+          "renderedLength": 2540
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/selectors.js",
+          "renderedLength": 1842
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/subselects.js",
+          "renderedLength": 2055
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/index.js",
+          "renderedLength": 1265
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/general.js",
+          "renderedLength": 3774
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/compile.js",
+          "renderedLength": 2360
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/index.js",
+          "renderedLength": 2292
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/unicode.js",
+          "renderedLength": 2849
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/error-codes.js",
+          "renderedLength": 4660
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/preprocessor.js",
+          "renderedLength": 4298
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/token.js",
+          "renderedLength": 842
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/html.js",
+          "renderedLength": 15627
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+          "renderedLength": 63558
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/open-element-stack.js",
+          "renderedLength": 8525
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/formatting-element-list.js",
+          "renderedLength": 3043
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tree-adapters/default.js",
+          "renderedLength": 4184
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/doctype.js",
+          "renderedLength": 4287
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/foreign-content.js",
+          "renderedLength": 5710
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+          "renderedLength": 76975
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/serializer/index.js",
+          "renderedLength": 464
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/index.js",
+          "renderedLength": 471
+        },
+        {
+          "source": "node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+          "renderedLength": 5594
+        },
+        {
+          "source": "src/html/server.ts",
+          "renderedLength": 87544
+        }
+      ]
+    },
+    {
+      "file": "index.js",
+      "bytes": 82826,
+      "sha256": "2411c6ba0f69347a393eddb8b72a6563730577bf872c2790936f56f4d8825089",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/paste-rules.ts",
+          "renderedLength": 4047
+        },
+        {
+          "source": "src/extensions/math.ts",
+          "renderedLength": 15995
+        },
+        {
+          "source": "src/lean/diagnostics.ts",
+          "renderedLength": 6701
+        },
+        {
+          "source": "src/lean/controller.ts",
+          "renderedLength": 12900
+        },
+        {
+          "source": "src/lean/info-view.ts",
+          "renderedLength": 7089
+        },
+        {
+          "source": "src/lean/loopback-provider.ts",
+          "renderedLength": 4269
+        },
+        {
+          "source": "src/extensions/lean.ts",
+          "renderedLength": 5035
+        },
+        {
+          "source": "src/extensions/floating-menu.ts",
+          "renderedLength": 5192
+        },
+        {
+          "source": "src/extensions/plugins/mcp-integration.ts",
+          "renderedLength": 6244
+        },
+        {
+          "source": "src/view/web-component.ts",
+          "renderedLength": 5195
+        },
+        {
+          "source": "src/view/generated-media.ts",
+          "renderedLength": 1680
+        },
+        {
+          "source": "src/ai/controller.ts",
+          "renderedLength": 13723
+        },
+        {
+          "source": "src/ai/mcp-adapter.ts",
+          "renderedLength": 813
+        },
+        {
+          "source": "src/index.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "integrity-dom.js",
+      "bytes": 5079,
+      "sha256": "73d2eb213440e9090e5c979d3f08a46bf0438a03f05e88e1ec0d95a4f05f7f55",
+      "modules": [
+        {
+          "source": "src/integrity/dom.ts",
+          "renderedLength": 6466
+        }
+      ]
+    },
+    {
+      "file": "integrity.js",
+      "bytes": 11469,
+      "sha256": "21adc51eceaad53b6b78bcb2574c32f6af1b5d6d7ec7e10f0744446abf87344c",
+      "modules": [
+        {
+          "source": "src/integrity/index.ts",
+          "renderedLength": 14627
+        }
+      ]
+    },
+    {
+      "file": "migrations.js",
+      "bytes": 7048,
+      "sha256": "e833986d61b92254979fd76462d088bc3458170d0c3cb42f6b9c2ece8ef820e8",
+      "modules": [
+        {
+          "source": "src/migrations/index.ts",
+          "renderedLength": 9980
+        }
+      ]
+    },
+    {
+      "file": "node-ids.js",
+      "bytes": 8744,
+      "sha256": "ed4c47b2599d9add1f5a7d7416425ca2673c905ddcb9f400c90eba613c9561d3",
+      "modules": [
+        {
+          "source": "src/node-ids/index.ts",
+          "renderedLength": 12755
+        }
+      ]
+    },
+    {
+      "file": "pages-dom.js",
+      "bytes": 53726,
+      "sha256": "2e671b7a8270c08f5068683324da787eabcbff9c13b1967e2243f7269df2f3fb",
+      "modules": [
+        {
+          "source": "src/pages/dom.ts",
+          "renderedLength": 74396
+        }
+      ]
+    },
+    {
+      "file": "pages-preview.js",
+      "bytes": 13474,
+      "sha256": "2e2567721dcd08635cd16b611c92d48a38cba46858dfb9d986a0d274880235ef",
+      "modules": [
+        {
+          "source": "src/pages/dom-preview.ts",
+          "renderedLength": 19295
+        },
+        {
+          "source": "src/pages/preview.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "pages.js",
+      "bytes": 11277,
+      "sha256": "bd486cc039e8dc1ff41a8ba72e6ff12cb15810cede11a2da2973fe800f697702",
+      "modules": [
+        {
+          "source": "src/pages/settings.ts",
+          "renderedLength": 1392
+        },
+        {
+          "source": "src/pages/index.ts",
+          "renderedLength": 12730
+        }
+      ]
+    },
+    {
+      "file": "react-comments.js",
+      "bytes": 9786,
+      "sha256": "4cf088bfbe760dc65fcae49950168603f06225d3e47662b962ed85caa73020ab",
+      "modules": [
+        {
+          "source": "src/react/FountainComments.tsx",
+          "renderedLength": 11350
+        },
+        {
+          "source": "src/react/comments.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-integrity.js",
+      "bytes": 8094,
+      "sha256": "f8ab17b8b176d2be4968ca3e64c2a897993448868dddefe47c24f47d4412fae9",
+      "modules": [
+        {
+          "source": "src/react/FountainIntegrityInspector.tsx",
+          "renderedLength": 8896
+        },
+        {
+          "source": "src/react/integrity.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-tracked-changes.js",
+      "bytes": 7650,
+      "sha256": "6839afbf078d90b960b10a1a4a51e77b10f56a28f04264a0fdab088b7668980d",
+      "modules": [
+        {
+          "source": "src/react/FountainTrackedChanges.tsx",
+          "renderedLength": 8835
+        },
+        {
+          "source": "src/react/tracked-changes.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-versions.js",
+      "bytes": 10062,
+      "sha256": "72297423e7215eceb2f792ab1d5c1de6ecde30da8fc6791374281c6bd69a88fd",
+      "modules": [
+        {
+          "source": "src/react/FountainVersions.tsx",
+          "renderedLength": 12178
+        },
+        {
+          "source": "src/react/versions.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-widgets.js",
+      "bytes": 1576,
+      "sha256": "68a582728b882a84e61cfbc7ada10173e3c3b62beb714e808019b884a9f1685c",
+      "modules": [
+        {
+          "source": "src/react/widgets.tsx",
+          "renderedLength": 1904
+        }
+      ]
+    },
+    {
+      "file": "react.js",
+      "bytes": 94791,
+      "sha256": "04ba496039cff30e6d854cc9e9edc63efab0941896cd261e865a6421b3851427",
+      "modules": [
+        {
+          "source": "src/react/FountainEditor.tsx",
+          "renderedLength": 1245
+        },
+        {
+          "source": "src/react/ClipboardHistoryMenu.tsx",
+          "renderedLength": 3799
+        },
+        {
+          "source": "src/react/FountainToolbarPrimitives.tsx",
+          "renderedLength": 10931
+        },
+        {
+          "source": "src/react/FountainToolbar.tsx",
+          "renderedLength": 63500
+        },
+        {
+          "source": "src/react/FountainComposer.tsx",
+          "renderedLength": 625
+        },
+        {
+          "source": "src/react/useNavigatorState.ts",
+          "renderedLength": 762
+        },
+        {
+          "source": "src/react/Navigator.tsx",
+          "renderedLength": 1193
+        },
+        {
+          "source": "src/react/FountainAIReview.tsx",
+          "renderedLength": 6145
+        },
+        {
+          "source": "src/react/FountainAIConversation.tsx",
+          "renderedLength": 7089
+        },
+        {
+          "source": "src/react/FountainAIGeneratedMedia.tsx",
+          "renderedLength": 7509
+        },
+        {
+          "source": "src/react/ReactNodeView.tsx",
+          "renderedLength": 2339
+        },
+        {
+          "source": "src/react/FountainSuggestionMenu.tsx",
+          "renderedLength": 5305
+        },
+        {
+          "source": "src/react/FountainCharacterCount.tsx",
+          "renderedLength": 799
+        },
+        {
+          "source": "src/react/FountainSlashCommandMenu.tsx",
+          "renderedLength": 957
+        },
+        {
+          "source": "src/react/FountainFloatingMenu.tsx",
+          "renderedLength": 4730
+        },
+        {
+          "source": "src/react/index.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "ruby.js",
+      "bytes": 10922,
+      "sha256": "ea231c441aacf97a4b7b7767b0e1ede22e3bd8f6ce2ce7a6908fd0003df53ba2",
+      "modules": [
+        {
+          "source": "src/ruby/index.ts",
+          "renderedLength": 14278
+        }
+      ]
+    },
+    {
+      "file": "structured-attributes.js",
+      "bytes": 10036,
+      "sha256": "c3dec6d754c51810627cfa0289e86cc9b95c2ff9f47fe95b19fcf08aa0886da8",
+      "modules": [
+        {
+          "source": "src/structured-attributes/index.ts",
+          "renderedLength": 14096
+        }
+      ]
+    },
+    {
+      "file": "svelte.js",
+      "bytes": 1083,
+      "sha256": "92102ba3cda783f846f9b2f79936124a767b44f8cd6d3f730995adb0faaf1c95",
+      "modules": [
+        {
+          "source": "src/svelte/index.ts",
+          "renderedLength": 1362
+        }
+      ]
+    },
+    {
+      "file": "table-of-contents.js",
+      "bytes": 5695,
+      "sha256": "5f0dc4abe047643b666dd86bf93a188f9d6162b2b4ee44d59c8ec13d7be00964",
+      "modules": [
+        {
+          "source": "src/table-of-contents/index.ts",
+          "renderedLength": 7819
+        }
+      ]
+    },
+    {
+      "file": "testing.js",
+      "bytes": 6494,
+      "sha256": "a5b11bf9c5ab326c6163b2ad0aaffa0d69ac91aafd1250d0b5ff194048250eb8",
+      "modules": [
+        {
+          "source": "src/testing/index.ts",
+          "renderedLength": 8277
+        }
+      ]
+    },
+    {
+      "file": "text-style.js",
+      "bytes": 876,
+      "sha256": "8763df67d9ff09ef1c97ded782d3155cc4fbd52eee62586a6484196e46ffbe31",
+      "modules": []
+    },
+    {
+      "file": "tracked-changes.js",
+      "bytes": 28570,
+      "sha256": "125a39a9b785abc0a4599be69ed00c28a3cd1816c36ac8243a23f07bafd16585",
+      "modules": [
+        {
+          "source": "src/tracked-changes/model.ts",
+          "renderedLength": 25471
+        },
+        {
+          "source": "src/tracked-changes/index.ts",
+          "renderedLength": 16865
+        }
+      ]
+    },
+    {
+      "file": "versions.js",
+      "bytes": 29342,
+      "sha256": "211465c65118910d673ce3335c86981b1ae705d0718a17821735ee93a2a660d7",
+      "modules": [
+        {
+          "source": "src/versions/diff.ts",
+          "renderedLength": 7912
+        },
+        {
+          "source": "src/versions/model.ts",
+          "renderedLength": 12452
+        },
+        {
+          "source": "src/versions/index.ts",
+          "renderedLength": 18481
+        }
+      ]
+    },
+    {
+      "file": "vue.js",
+      "bytes": 1720,
+      "sha256": "d55f1ad1b111b3de4557ea9603455fbc1e54c78e3e1c0b2f477dfe73c9585c0e",
+      "modules": [
+        {
+          "source": "src/vue/index.ts",
+          "renderedLength": 1847
+        }
+      ]
+    },
+    {
+      "file": "widgets-dom.js",
+      "bytes": 4743,
+      "sha256": "9abfcb8796264deaf3214d5e343e7ccf217fae1ac4df51a8aff6abeb43852313",
+      "modules": [
+        {
+          "source": "src/widgets/dom.ts",
+          "renderedLength": 5971
+        }
+      ]
+    },
+    {
+      "file": "widgets.js",
+      "bytes": 8784,
+      "sha256": "1229a4a2faf60eaf23b83ca549bafa20596aaeda85f1663762a585b06827c129",
+      "modules": [
+        {
+          "source": "src/widgets/index.ts",
+          "renderedLength": 12318
+        }
+      ]
+    },
+    {
+      "file": "yjs.js",
+      "bytes": 27944,
+      "sha256": "ba2a56b314d4469fb0b1da506fd999cd75957b8c22e3024078edb16679a13d53",
+      "modules": [
+        {
+          "source": "src/yjs/structured-attributes.ts",
+          "renderedLength": 11118
+        },
+        {
+          "source": "src/yjs/index.ts",
+          "renderedLength": 27883
+        }
+      ]
+    },
+    {
+      "file": "collaboration-BubriAbK.js",
+      "bytes": 1449,
+      "sha256": "987452f81d532c8b5a3e5fb5ca8565c876136aefaa18c0051437722ec73451bb",
+      "modules": [
+        {
+          "source": "src/extensions/collaboration.ts",
+          "renderedLength": 1800
+        }
+      ]
+    },
+    {
+      "file": "collaboration-core-B-I53ZbT.js",
+      "bytes": 10297,
+      "sha256": "97b502f6c659e63278a77cc614894855dfb88dd4ce1dd49d8576f9c7fb37ab22",
+      "modules": [
+        {
+          "source": "src/extensions/collaboration-core.ts",
+          "renderedLength": 15247
+        }
+      ]
+    },
+    {
+      "file": "command-manager-CSDUCeVE.js",
+      "bytes": 1322,
+      "sha256": "8af5df20581f15a6f90479bb1e3993aa2cf3399b0f13046b6b56a7feb34b629b",
+      "modules": [
+        {
+          "source": "src/extensions/command-manager.ts",
+          "renderedLength": 1900
+        }
+      ]
+    },
+    {
+      "file": "commands-C-YOS4Hu.js",
+      "bytes": 88626,
+      "sha256": "8802ed982560518863eca0f2ee6c6f4bc2bc9f9d39fa512781f0c4a02c3abbe8",
+      "modules": [
+        {
+          "source": "src/core/text-replacement-selection.ts",
+          "renderedLength": 840
+        },
+        {
+          "source": "src/core/image.ts",
+          "renderedLength": 1430
+        },
+        {
+          "source": "src/core/exporters/html-exporter.ts",
+          "renderedLength": 20835
+        },
+        {
+          "source": "src/core/table-commands.ts",
+          "renderedLength": 18527
+        },
+        {
+          "source": "src/core/structure-commands.ts",
+          "renderedLength": 34471
+        },
+        {
+          "source": "src/core/commands.ts",
+          "renderedLength": 59698
+        }
+      ]
+    },
+    {
+      "file": "content-expression-CuobUc-r.js",
+      "bytes": 2872,
+      "sha256": "1bb4e92314bba719dba4fea843d2671288fc75387d48aa570a27a38c2d8bd2fe",
+      "modules": [
+        {
+          "source": "src/core/schema/content-expression.ts",
+          "renderedLength": 4044
+        }
+      ]
+    },
+    {
+      "file": "decoration-CuT1b7BC.js",
+      "bytes": 3148,
+      "sha256": "b65b432ee2233c9be66c662802de7878ea6dce1331804d6cb9e94dbc7a08c1aa",
+      "modules": [
+        {
+          "source": "src/core/decoration.ts",
+          "renderedLength": 4411
+        }
+      ]
+    },
+    {
+      "file": "direction-scope-BvOF-Elm.js",
+      "bytes": 88516,
+      "sha256": "eade6b321123e5a8fe4e4dd03ea71827943dedc94d2e8add6ce98992d0cdd40b",
+      "modules": [
+        {
+          "source": "src/core/exporters/json-exporter.ts",
+          "renderedLength": 498
+        },
+        {
+          "source": "src/core/editing-provenance.ts",
+          "renderedLength": 675
+        },
+        {
+          "source": "src/core/markdown-entities.ts",
+          "renderedLength": 1039
+        },
+        {
+          "source": "src/core/unicode-case-fold-data.ts",
+          "renderedLength": 2839
+        },
+        {
+          "source": "src/core/unicode-case-fold.ts",
+          "renderedLength": 283
+        },
+        {
+          "source": "src/core/markdown-tex.ts",
+          "renderedLength": 1997
+        },
+        {
+          "source": "src/core/tex-table.ts",
+          "renderedLength": 3463
+        },
+        {
+          "source": "src/core/importers/markdown-importer.ts",
+          "renderedLength": 85196
+        },
+        {
+          "source": "src/core/exporters/markdown-exporter.ts",
+          "renderedLength": 32828
+        },
+        {
+          "source": "src/core/exporters/text-exporter.ts",
+          "renderedLength": 610
+        },
+        {
+          "source": "src/extensions/nodes/direction-scope.ts",
+          "renderedLength": 898
+        }
+      ]
+    },
+    {
+      "file": "editor-CMX7ABLq.js",
+      "bytes": 15169,
+      "sha256": "4e1fe47fc9d35ca64ba40262cb25d32886fd7052c39fc19fb6e60361de692c0a",
+      "modules": [
+        {
+          "source": "src/core/schema/schema.ts",
+          "renderedLength": 5350
+        },
+        {
+          "source": "src/core/transaction/replace-step.ts",
+          "renderedLength": 844
+        },
+        {
+          "source": "src/core/transaction/replace-document-step.ts",
+          "renderedLength": 733
+        },
+        {
+          "source": "src/core/transaction/replace-node-step.ts",
+          "renderedLength": 974
+        },
+        {
+          "source": "src/core/transaction/insert-text-step.ts",
+          "renderedLength": 195
+        },
+        {
+          "source": "src/core/transaction/set-node-attrs-step.ts",
+          "renderedLength": 462
+        },
+        {
+          "source": "src/core/transaction/transform.ts",
+          "renderedLength": 1807
+        },
+        {
+          "source": "src/core/transaction/transaction.ts",
+          "renderedLength": 1040
+        },
+        {
+          "source": "src/core/state.ts",
+          "renderedLength": 4115
+        },
+        {
+          "source": "src/core/editor.ts",
+          "renderedLength": 4899
+        }
+      ]
+    },
+    {
+      "file": "emoji-xumypY_N.js",
+      "bytes": 17420,
+      "sha256": "7d39ace0efbea6e9a3758ffa4498cd5bdc36a9b2ba92421c6a4d1e9beabf3959",
+      "modules": [
+        {
+          "source": "src/extensions/suggestion.ts",
+          "renderedLength": 8099
+        },
+        {
+          "source": "src/extensions/emoji.ts",
+          "renderedLength": 14297
+        }
+      ]
+    },
+    {
+      "file": "extension-Cfbujo9B.js",
+      "bytes": 3205,
+      "sha256": "b88e5b222e9feda97c096cca511f4380a551228488bdbd2f33c987bb299c4db8",
+      "modules": [
+        {
+          "source": "src/extensions/extension.ts",
+          "renderedLength": 4424
+        }
+      ]
+    },
+    {
+      "file": "extensions-CN0LyCwb.js",
+      "bytes": 34524,
+      "sha256": "0d72bdd9d0a5f11cdb50db867409be215ed063c946d557c2a32ee30bc56411c8",
+      "modules": [
+        {
+          "source": "src/extensions/nodes/blockquote.ts",
+          "renderedLength": 423
+        },
+        {
+          "source": "src/extensions/nodes/bullet-list.ts",
+          "renderedLength": 292
+        },
+        {
+          "source": "src/extensions/nodes/code-block.ts",
+          "renderedLength": 803
+        },
+        {
+          "source": "src/extensions/nodes/doc.ts",
+          "renderedLength": 216
+        },
+        {
+          "source": "src/extensions/nodes/definition-list.ts",
+          "renderedLength": 772
+        },
+        {
+          "source": "src/extensions/nodes/figcaption.ts",
+          "renderedLength": 133
+        },
+        {
+          "source": "src/extensions/nodes/hard-break.ts",
+          "renderedLength": 146
+        },
+        {
+          "source": "src/extensions/nodes/heading.ts",
+          "renderedLength": 576
+        },
+        {
+          "source": "src/extensions/nodes/horizontal-rule.ts",
+          "renderedLength": 140
+        },
+        {
+          "source": "src/extensions/nodes/image-attributes.ts",
+          "renderedLength": 2110
+        },
+        {
+          "source": "src/extensions/nodes/image-node-view.ts",
+          "renderedLength": 12760
+        },
+        {
+          "source": "src/extensions/nodes/image-super.ts",
+          "renderedLength": 804
+        },
+        {
+          "source": "src/extensions/nodes/inline-image.ts",
+          "renderedLength": 386
+        },
+        {
+          "source": "src/extensions/nodes/list-item.ts",
+          "renderedLength": 267
+        },
+        {
+          "source": "src/extensions/nodes/ordered-list.ts",
+          "renderedLength": 464
+        },
+        {
+          "source": "src/extensions/nodes/paragraph.ts",
+          "renderedLength": 440
+        },
+        {
+          "source": "src/extensions/nodes/table.ts",
+          "renderedLength": 345
+        },
+        {
+          "source": "src/extensions/nodes/table-cell-view.ts",
+          "renderedLength": 9735
+        },
+        {
+          "source": "src/extensions/nodes/table-cell.ts",
+          "renderedLength": 255
+        },
+        {
+          "source": "src/extensions/nodes/table-header.ts",
+          "renderedLength": 452
+        },
+        {
+          "source": "src/extensions/nodes/table-row.ts",
+          "renderedLength": 407
+        },
+        {
+          "source": "src/extensions/nodes/task-item.ts",
+          "renderedLength": 698
+        },
+        {
+          "source": "src/extensions/nodes/task-list.ts",
+          "renderedLength": 329
+        },
+        {
+          "source": "src/extensions/nodes/text.ts",
+          "renderedLength": 100
+        },
+        {
+          "source": "src/extensions/marks/code.ts",
+          "renderedLength": 93
+        },
+        {
+          "source": "src/extensions/marks/em.ts",
+          "renderedLength": 87
+        },
+        {
+          "source": "src/extensions/marks/link.ts",
+          "renderedLength": 740
+        },
+        {
+          "source": "src/extensions/marks/strike.ts",
+          "renderedLength": 94
+        },
+        {
+          "source": "src/extensions/marks/strong.ts",
+          "renderedLength": 99
+        },
+        {
+          "source": "src/extensions/marks/subscript.ts",
+          "renderedLength": 102
+        },
+        {
+          "source": "src/extensions/marks/superscript.ts",
+          "renderedLength": 106
+        },
+        {
+          "source": "src/extensions/marks/underline.ts",
+          "renderedLength": 100
+        },
+        {
+          "source": "src/extensions/plugins/markdown-shortcuts.ts",
+          "renderedLength": 1952
+        },
+        {
+          "source": "src/extensions/plugins/table-editing.ts",
+          "renderedLength": 644
+        },
+        {
+          "source": "src/extensions/trailing-editable-block.ts",
+          "renderedLength": 5122
+        },
+        {
+          "source": "src/extensions/index.ts",
+          "renderedLength": 2489
+        }
+      ]
+    },
+    {
+      "file": "history-CluGKD04.js",
+      "bytes": 2715,
+      "sha256": "b12194facf7faf98ad78c73385babe79b44d3667c4c9b19b89975b1186df42b1",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/history.ts",
+          "renderedLength": 3749
+        }
+      ]
+    },
+    {
+      "file": "html-flow-FU9JGEYv.js",
+      "bytes": 4655,
+      "sha256": "e08d6ab03b0467a2c4d7feef7b6c0dc755ec041846a871fab73f888504230157",
+      "modules": [
+        {
+          "source": "src/extensions/html-containers.ts",
+          "renderedLength": 4458
+        },
+        {
+          "source": "src/extensions/html-comments.ts",
+          "renderedLength": 702
+        },
+        {
+          "source": "src/extensions/html-flow.ts",
+          "renderedLength": 616
+        }
+      ]
+    },
+    {
+      "file": "html-page-settings-C1un4UNO.js",
+      "bytes": 2803,
+      "sha256": "381246712bcbfbc27ba5224ed8550a4863db19f3a3580c13827d961f5f8abbd3",
+      "modules": [
+        {
+          "source": "src/core/html-flow.ts",
+          "renderedLength": 599
+        },
+        {
+          "source": "src/core/importers/html-table.ts",
+          "renderedLength": 871
+        },
+        {
+          "source": "src/core/importers/html-list.ts",
+          "renderedLength": 317
+        },
+        {
+          "source": "src/core/importers/html-definition-list.ts",
+          "renderedLength": 1403
+        },
+        {
+          "source": "src/core/importers/html-page-settings.ts",
+          "renderedLength": 497
+        }
+      ]
+    },
+    {
+      "file": "inline-atom-BLfPalX5.js",
+      "bytes": 1760,
+      "sha256": "840723791d2ea8ddc02cdd5769e0e3387f25d0afdf5b48ddc24a18deb92ae25c",
+      "modules": [
+        {
+          "source": "src/extensions/inline-atom.ts",
+          "renderedLength": 2585
+        }
+      ]
+    },
+    {
+      "file": "input-rules-EH0whXGW.js",
+      "bytes": 2995,
+      "sha256": "be5c83ad25c6b59e96cf56f0df8712deb671b8d9f46589854d3878e9ab2086fe",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/input-rules.ts",
+          "renderedLength": 3993
+        }
+      ]
+    },
+    {
+      "file": "link-behavior-xZcP5j6L.js",
+      "bytes": 19203,
+      "sha256": "9640b33628d762810d182afd746a66488982afd93d2cc4760b99a13641be5246",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/syntax-highlight.ts",
+          "renderedLength": 17962
+        },
+        {
+          "source": "src/extensions/link-behavior.ts",
+          "renderedLength": 9971
+        }
+      ]
+    },
+    {
+      "file": "link-destination-vNSjB8rM.js",
+      "bytes": 4567,
+      "sha256": "55082bad619a354ceb09f193a1f8ff66cdd058d4976bbc556feccdc08b0920ab",
+      "modules": [
+        {
+          "source": "\u0000rolldown/runtime.js",
+          "renderedLength": 348
+        },
+        {
+          "source": "src/core/explicit-emphasis.ts",
+          "renderedLength": 1629
+        },
+        {
+          "source": "src/core/image-caption.ts",
+          "renderedLength": 1026
+        },
+        {
+          "source": "src/core/html-comment.ts",
+          "renderedLength": 779
+        },
+        {
+          "source": "src/core/importers/html-link-url.ts",
+          "renderedLength": 630
+        },
+        {
+          "source": "src/core/link-destination.ts",
+          "renderedLength": 1702
+        }
+      ]
+    },
+    {
+      "file": "mapping-BbhEodcc.js",
+      "bytes": 7763,
+      "sha256": "a0d85ce871fef095a03a883f87d426c73c8f57e0298738c995bfcd12eeb22437",
+      "modules": [
+        {
+          "source": "src/core/transaction/mapping.ts",
+          "renderedLength": 12108
+        }
+      ]
+    },
+    {
+      "file": "mark-range-step-Jo1iPQSu.js",
+      "bytes": 3483,
+      "sha256": "97557d3d82937c04e27038efbef1a000cc75e13df305c9a94269b87ace7a1f0a",
+      "modules": [
+        {
+          "source": "src/core/transaction/add-mark-step.ts",
+          "renderedLength": 820
+        },
+        {
+          "source": "src/core/transaction/remove-mark-step.ts",
+          "renderedLength": 821
+        },
+        {
+          "source": "src/core/transaction/mark-range-step.ts",
+          "renderedLength": 3215
+        }
+      ]
+    },
+    {
+      "file": "markdown-html-83ZGjqmO.js",
+      "bytes": 43575,
+      "sha256": "520ffe95eed013795e70ac3f02f3dafa25a9d0d219b996e438a5d33bfff64ded",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/decode-codepoint.js",
+          "renderedLength": 702
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/internal/decode-shared.js",
+          "renderedLength": 459
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/generated/decode-data-html.js",
+          "renderedLength": 32369
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/internal/bin-trie-flags.js",
+          "renderedLength": 458
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/decode.js",
+          "renderedLength": 10333
+        },
+        {
+          "source": "src/core/markdown-html.ts",
+          "renderedLength": 4170
+        }
+      ]
+    },
+    {
+      "file": "media-C9GsdxQT.js",
+      "bytes": 42860,
+      "sha256": "fac4384dba743c5c2fac1bcfa5b13e3da28d32f8dfba210654a8570084c36751",
+      "modules": [
+        {
+          "source": "src/core/importers/html-importer.ts",
+          "renderedLength": 31748
+        },
+        {
+          "source": "src/extensions/media.ts",
+          "renderedLength": 25893
+        }
+      ]
+    },
+    {
+      "file": "menu-position-ZUebX9es.js",
+      "bytes": 8238,
+      "sha256": "8cbf67ff2e89222d7764b885ef9ad04f58e8f49149ca13e743ba67649b3c3f89",
+      "modules": [
+        {
+          "source": "src/extensions/clipboard-history.ts",
+          "renderedLength": 7592
+        },
+        {
+          "source": "src/view/menu-position.ts",
+          "renderedLength": 4580
+        }
+      ]
+    },
+    {
+      "file": "node-CMohf4dR.js",
+      "bytes": 3900,
+      "sha256": "93e39a2610d26eb01b88d1d4908870d896394223346024184be8ac0fd18462b5",
+      "modules": [
+        {
+          "source": "src/core/schema/mark.ts",
+          "renderedLength": 636
+        },
+        {
+          "source": "src/core/schema/node.ts",
+          "renderedLength": 3946
+        }
+      ]
+    },
+    {
+      "file": "node-spec-Dl5lMC1C.js",
+      "bytes": 643,
+      "sha256": "c23f616dd39b1be7a81b0e7f8fab6cd95abd21335ed3bfae0c9debe2768d92af",
+      "modules": [
+        {
+          "source": "src/core/schema/node-spec.ts",
+          "renderedLength": 860
+        }
+      ]
+    },
+    {
+      "file": "page-settings-Bqt82pEY.js",
+      "bytes": 11193,
+      "sha256": "783daac11f2164e1cc7453c9ed6a7062fd71eab9281f0432ef887c224e7cbe78",
+      "modules": [
+        {
+          "source": "src/core/table-background.ts",
+          "renderedLength": 617
+        },
+        {
+          "source": "src/text-style/values.ts",
+          "renderedLength": 3486
+        },
+        {
+          "source": "src/core/paragraph-layout.ts",
+          "renderedLength": 5680
+        },
+        {
+          "source": "src/core/math-expression.ts",
+          "renderedLength": 3734
+        },
+        {
+          "source": "src/core/page-settings.ts",
+          "renderedLength": 1371
+        }
+      ]
+    },
+    {
+      "file": "path-B7Cr90vg.js",
+      "bytes": 1897,
+      "sha256": "25b4e73eea7154749e94810167467038803ef846a0d660e1d7b39222a1a90beb",
+      "modules": [
+        {
+          "source": "src/core/transaction/path.ts",
+          "renderedLength": 2789
+        }
+      ]
+    },
+    {
+      "file": "plugin-B0KSKRXJ.js",
+      "bytes": 392,
+      "sha256": "45088459a05a28a0c243669ebc4813985d48acbe62e88bd6adb133a83b1dd20f",
+      "modules": [
+        {
+          "source": "src/core/plugin.ts",
+          "renderedLength": 424
+        }
+      ]
+    },
+    {
+      "file": "presentation-_RsWq19D.js",
+      "bytes": 21378,
+      "sha256": "7905113ce042a3d3efa3769b5331a6b5c3ca0290c7924605c1a38e88e87dfa9a",
+      "modules": [
+        {
+          "source": "src/pages/templates.ts",
+          "renderedLength": 8488
+        },
+        {
+          "source": "src/pages/layout.ts",
+          "renderedLength": 17833
+        },
+        {
+          "source": "src/pages/presentation.ts",
+          "renderedLength": 4344
+        }
+      ]
+    },
+    {
+      "file": "replace-text-range-step-DDj1wpRU.js",
+      "bytes": 3281,
+      "sha256": "22ca70116251e6939b4ab2ec89a998791f762c4f5dd3922df4f6c915325aae2b",
+      "modules": [
+        {
+          "source": "src/core/transaction/replace-text-step.ts",
+          "renderedLength": 674
+        },
+        {
+          "source": "src/core/transaction/replace-text-range-step.ts",
+          "renderedLength": 3996
+        }
+      ]
+    },
+    {
+      "file": "search-CLj2oPC9.js",
+      "bytes": 1996,
+      "sha256": "61e414c04a98f3b46f90b12b9a467d6cd1856b827501f7ee5e3dfe58186deadc",
+      "modules": [
+        {
+          "source": "src/core/search.ts",
+          "renderedLength": 2796
+        }
+      ]
+    },
+    {
+      "file": "selection-Du4v48EK.js",
+      "bytes": 6529,
+      "sha256": "2e45fba434e94b74f570735ef3708b91dbb3e45a3edd6055fc8c927b6912470f",
+      "modules": [
+        {
+          "source": "src/core/selection.ts",
+          "renderedLength": 9261
+        }
+      ]
+    },
+    {
+      "file": "shared-direction-BIYMPEFn.js",
+      "bytes": 9998,
+      "sha256": "f4a8503279789cea1c9e906ee109f8d0d76dc354c1f390ba56686eb78b4ba16a",
+      "modules": [
+        {
+          "source": "src/core/bidi-strong-data.ts",
+          "renderedLength": 3041
+        },
+        {
+          "source": "src/core/first-strong-direction.ts",
+          "renderedLength": 1042
+        },
+        {
+          "source": "src/core/shared-direction-index.ts",
+          "renderedLength": 3292
+        },
+        {
+          "source": "src/core/shared-direction.ts",
+          "renderedLength": 6212
+        }
+      ]
+    },
+    {
+      "file": "step-doAGd4iU.js",
+      "bytes": 209,
+      "sha256": "721b54ab1aa94768b54c26962c7e99142832a08ff12d57a14fe73141e7871f4f",
+      "modules": [
+        {
+          "source": "src/core/transaction/step.ts",
+          "renderedLength": 117
+        }
+      ]
+    },
+    {
+      "file": "table-layout-Dg1bu3Pt.js",
+      "bytes": 7075,
+      "sha256": "c91c59335b36debe41512766afc7048ddd3c9c76ccae64bf444087455104dc62",
+      "modules": [
+        {
+          "source": "src/core/table-width.ts",
+          "renderedLength": 1455
+        },
+        {
+          "source": "src/core/table-appearance.ts",
+          "renderedLength": 4609
+        },
+        {
+          "source": "src/core/table-layout.ts",
+          "renderedLength": 3227
+        }
+      ]
+    },
+    {
+      "file": "table-map-Du2VwT8u.js",
+      "bytes": 3475,
+      "sha256": "a97dd4574084d3a773410bbb7cf49d408b123664999661a9f2ccb8b1ebe0639f",
+      "modules": [
+        {
+          "source": "src/core/table-map.ts",
+          "renderedLength": 4676
+        }
+      ]
+    },
+    {
+      "file": "text-direction-BAy8LwDF.js",
+      "bytes": 2851,
+      "sha256": "09733327790cdc3c9f03e699f5315bcd8c11e1014a69e604a223d39dfe3ca6b7",
+      "modules": [
+        {
+          "source": "src/core/text-direction.ts",
+          "renderedLength": 3862
+        }
+      ]
+    },
+    {
+      "file": "text-style-7vGPJAqp.js",
+      "bytes": 4822,
+      "sha256": "6ca55c6e4e0828f905074c1c1cb3be4a3d41ab8e72b391982151c537c69ea30b",
+      "modules": [
+        {
+          "source": "src/extensions/marks/font-family.ts",
+          "renderedLength": 511
+        },
+        {
+          "source": "src/extensions/marks/font-size.ts",
+          "renderedLength": 477
+        },
+        {
+          "source": "src/extensions/marks/highlight.ts",
+          "renderedLength": 287
+        },
+        {
+          "source": "src/extensions/marks/line-height.ts",
+          "renderedLength": 518
+        },
+        {
+          "source": "src/extensions/marks/letter-spacing.ts",
+          "renderedLength": 524
+        },
+        {
+          "source": "src/extensions/marks/text-color.ts",
+          "renderedLength": 277
+        },
+        {
+          "source": "src/text-style/commands.ts",
+          "renderedLength": 3567
+        },
+        {
+          "source": "src/text-style/index.ts",
+          "renderedLength": 517
+        }
+      ]
+    },
+    {
+      "file": "url-sjMj-efj.js",
+      "bytes": 1032,
+      "sha256": "ce1519b79eeadc5e10e96f8b8952ee0fc4a7b34a09c772acc155eb020fcb2d2d",
+      "modules": [
+        {
+          "source": "src/core/url.ts",
+          "renderedLength": 1246
+        }
+      ]
+    },
+    {
+      "file": "useFountain-DQ8gXlvr.js",
+      "bytes": 1092,
+      "sha256": "b4385dfe75015c07f26d054ffe89ca8cbf54212858197fb9ce2868414fa02d42",
+      "modules": [
+        {
+          "source": "src/react/useFountain.ts",
+          "renderedLength": 1305
+        }
+      ]
+    },
+    {
+      "file": "view-D_TqSP0v.js",
+      "bytes": 122641,
+      "sha256": "0a7d5c3cf25920c76076d10e91a05c23faae7edb64a8d9c3aaa324a827c8483f",
+      "modules": [
+        {
+          "source": "src/view/shared-direction.ts",
+          "renderedLength": 1445
+        },
+        {
+          "source": "src/view/dom-renderer.ts",
+          "renderedLength": 17229
+        },
+        {
+          "source": "src/view/media.ts",
+          "renderedLength": 16386
+        },
+        {
+          "source": "src/view/block-handles.ts",
+          "renderedLength": 22263
+        },
+        {
+          "source": "src/view/paste.ts",
+          "renderedLength": 14930
+        },
+        {
+          "source": "src/view/input.ts",
+          "renderedLength": 34213
+        },
+        {
+          "source": "src/view/drop-cursor.ts",
+          "renderedLength": 4226
+        },
+        {
+          "source": "src/view/selection-handler.ts",
+          "renderedLength": 15113
+        },
+        {
+          "source": "src/view/table-direction.ts",
+          "renderedLength": 2852
+        },
+        {
+          "source": "src/view/virtual-layout.ts",
+          "renderedLength": 5544
+        },
+        {
+          "source": "src/view/view.ts",
+          "renderedLength": 26386
+        }
+      ]
+    }
+  ]
+}

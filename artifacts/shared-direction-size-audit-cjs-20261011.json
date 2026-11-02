@@ -1,0 +1,1722 @@
+{
+  "format": "cjs",
+  "diagnosticOnly": true,
+  "chunks": [
+    {
+      "file": "ai-conversation.cjs",
+      "bytes": 13425,
+      "sha256": "b51f589d770607016ab95bcb8d891840e2f268cf0e61fd274c21f171dc937ba8",
+      "modules": [
+        {
+          "source": "src/ai/conversation.ts",
+          "renderedLength": 20242
+        }
+      ]
+    },
+    {
+      "file": "ai-document-tools.cjs",
+      "bytes": 13939,
+      "sha256": "f82dff7d70652034039865fd646b383af16395bf1fb20f1537847c8313e5a945",
+      "modules": [
+        {
+          "source": "src/ai/document-tools.ts",
+          "renderedLength": 21921
+        }
+      ]
+    },
+    {
+      "file": "ai-generated-media.cjs",
+      "bytes": 9115,
+      "sha256": "9b91969faf90204baa027f585e8b601351272e911286b969d5ba3d9bd782e7a0",
+      "modules": [
+        {
+          "source": "src/ai/generated-media.ts",
+          "renderedLength": 13124
+        }
+      ]
+    },
+    {
+      "file": "comments.cjs",
+      "bytes": 24184,
+      "sha256": "f1ca6416eee390f7123dd5446e77202bab7139aebcd2a941daacaa7786f0f77a",
+      "modules": [
+        {
+          "source": "src/comments/index.ts",
+          "renderedLength": 43096
+        }
+      ]
+    },
+    {
+      "file": "core.cjs",
+      "bytes": 8271,
+      "sha256": "81537789dabe312d4f88fbc0d677c835658194966fa8fb5deef4b11e0e1eac10",
+      "modules": [
+        {
+          "source": "src/headless/index.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "details.cjs",
+      "bytes": 6355,
+      "sha256": "96d9b6ffc8ecf17193964232748e5dda735dee652a770786398f0633709aa356",
+      "modules": [
+        {
+          "source": "src/details/index.ts",
+          "renderedLength": 10698
+        }
+      ]
+    },
+    {
+      "file": "document-utilities.cjs",
+      "bytes": 19379,
+      "sha256": "b3c9e0ab00b94aaad53c44c409d046636421d198b104f3493f215e8bdc230991",
+      "modules": [
+        {
+          "source": "src/extensions/mention.ts",
+          "renderedLength": 7510
+        },
+        {
+          "source": "src/extensions/typography.ts",
+          "renderedLength": 3766
+        },
+        {
+          "source": "src/extensions/character-count.ts",
+          "renderedLength": 8273
+        },
+        {
+          "source": "src/extensions/slash-command.ts",
+          "renderedLength": 12056
+        },
+        {
+          "source": "src/document-utilities.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "docx.cjs",
+      "bytes": 152444,
+      "sha256": "72cd5155cad7a6157f3a48ebc37b40e7bba7aee51347cc589d8448266473d0cb",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/fflate@0.8.3/node_modules/fflate/esm/browser.js",
+          "renderedLength": 22490
+        },
+        {
+          "source": "src/docx/math.ts",
+          "renderedLength": 6351
+        },
+        {
+          "source": "src/docx/math-parser.ts",
+          "renderedLength": 10902
+        },
+        {
+          "source": "src/docx/theme-fonts.ts",
+          "renderedLength": 2761
+        },
+        {
+          "source": "src/docx/style-cascade.ts",
+          "renderedLength": 10701
+        },
+        {
+          "source": "src/docx/table-style.ts",
+          "renderedLength": 11663
+        },
+        {
+          "source": "src/docx/style-reader.ts",
+          "renderedLength": 13036
+        },
+        {
+          "source": "src/docx/table-text.ts",
+          "renderedLength": 508
+        },
+        {
+          "source": "src/docx/style-projection.ts",
+          "renderedLength": 4798
+        },
+        {
+          "source": "src/docx/xml-parser.ts",
+          "renderedLength": 3046
+        },
+        {
+          "source": "src/docx/paragraph-style.ts",
+          "renderedLength": 5077
+        },
+        {
+          "source": "src/docx/table-appearance.ts",
+          "renderedLength": 6313
+        },
+        {
+          "source": "src/docx/table-width.ts",
+          "renderedLength": 2135
+        },
+        {
+          "source": "src/docx/index.ts",
+          "renderedLength": 146520
+        }
+      ]
+    },
+    {
+      "file": "emoji-data.cjs",
+      "bytes": 274549,
+      "sha256": "08222c467e450ed6990c0f353d432476116ae638cac557cd74f2662f629ac799",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/unicode-emoji-json@0.9.0/node_modules/unicode-emoji-json/data-by-emoji.json",
+          "renderedLength": 353642
+        },
+        {
+          "source": "src/emoji-data.ts",
+          "renderedLength": 423
+        }
+      ]
+    },
+    {
+      "file": "html-inert.cjs",
+      "bytes": 5194,
+      "sha256": "10e37fe6bee0af27c6841a31c5095c8d2d7738523ae1cfc2dbf105dcce1ec98b",
+      "modules": [
+        {
+          "source": "src/html/inert.ts",
+          "renderedLength": 7247
+        }
+      ]
+    },
+    {
+      "file": "html-server.cjs",
+      "bytes": 213909,
+      "sha256": "87b1948c92d9aef4789411724b51e496c0844bbe761e6849c6718e225307fa89",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/boolbase@2.0.0/node_modules/boolbase/dist/index.js",
+          "renderedLength": 171
+        },
+        {
+          "source": "node_modules/.pnpm/css-what@8.0.0/node_modules/css-what/dist/types.js",
+          "renderedLength": 1019
+        },
+        {
+          "source": "node_modules/.pnpm/css-what@8.0.0/node_modules/css-what/dist/parse.js",
+          "renderedLength": 12211
+        },
+        {
+          "source": "node_modules/.pnpm/domelementtype@3.0.0/node_modules/domelementtype/dist/index.js",
+          "renderedLength": 937
+        },
+        {
+          "source": "node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+          "renderedLength": 4923
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/querying.js",
+          "renderedLength": 1956
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/legacy.js",
+          "renderedLength": 2174
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/escape.js",
+          "renderedLength": 1894
+        },
+        {
+          "source": "node_modules/.pnpm/dom-serializer@3.1.1/node_modules/dom-serializer/dist/foreign-names.js",
+          "renderedLength": 1494
+        },
+        {
+          "source": "node_modules/.pnpm/dom-serializer@3.1.1/node_modules/dom-serializer/dist/index.js",
+          "renderedLength": 3282
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/stringify.js",
+          "renderedLength": 1049
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/feeds.js",
+          "renderedLength": 3668
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/helpers.js",
+          "renderedLength": 2348
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/manipulation.js",
+          "renderedLength": 2326
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/traversal.js",
+          "renderedLength": 1162
+        },
+        {
+          "source": "node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/index.js",
+          "renderedLength": 1377
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/attributes.js",
+          "renderedLength": 5145
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/querying.js",
+          "renderedLength": 1906
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/aliases.js",
+          "renderedLength": 1539
+        },
+        {
+          "source": "node_modules/.pnpm/nth-check@3.0.1/node_modules/nth-check/dist/compile.js",
+          "renderedLength": 558
+        },
+        {
+          "source": "node_modules/.pnpm/nth-check@3.0.1/node_modules/nth-check/dist/parse.js",
+          "renderedLength": 1406
+        },
+        {
+          "source": "node_modules/.pnpm/nth-check@3.0.1/node_modules/nth-check/dist/index.js",
+          "renderedLength": 163
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/cache.js",
+          "renderedLength": 894
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/options.js",
+          "renderedLength": 215
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/filters.js",
+          "renderedLength": 4411
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/pseudos.js",
+          "renderedLength": 2540
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/selectors.js",
+          "renderedLength": 1842
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/subselects.js",
+          "renderedLength": 2055
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/pseudo-selectors/index.js",
+          "renderedLength": 1265
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/general.js",
+          "renderedLength": 3774
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/compile.js",
+          "renderedLength": 2360
+        },
+        {
+          "source": "node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/index.js",
+          "renderedLength": 2292
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/unicode.js",
+          "renderedLength": 2849
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/error-codes.js",
+          "renderedLength": 4660
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/preprocessor.js",
+          "renderedLength": 4298
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/token.js",
+          "renderedLength": 842
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/html.js",
+          "renderedLength": 15627
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+          "renderedLength": 63599
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/open-element-stack.js",
+          "renderedLength": 8525
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/formatting-element-list.js",
+          "renderedLength": 3043
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tree-adapters/default.js",
+          "renderedLength": 4184
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/doctype.js",
+          "renderedLength": 4287
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/foreign-content.js",
+          "renderedLength": 5710
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+          "renderedLength": 76975
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/serializer/index.js",
+          "renderedLength": 464
+        },
+        {
+          "source": "node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/index.js",
+          "renderedLength": 471
+        },
+        {
+          "source": "node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+          "renderedLength": 5594
+        },
+        {
+          "source": "src/html/server.ts",
+          "renderedLength": 87825
+        }
+      ]
+    },
+    {
+      "file": "index.cjs",
+      "bytes": 70156,
+      "sha256": "8a4049a5387a24609bfd1cd8e879aa530d697926d771adb829040b0da8915f3b",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/paste-rules.ts",
+          "renderedLength": 4074
+        },
+        {
+          "source": "src/extensions/math.ts",
+          "renderedLength": 16114
+        },
+        {
+          "source": "src/lean/diagnostics.ts",
+          "renderedLength": 6765
+        },
+        {
+          "source": "src/lean/controller.ts",
+          "renderedLength": 12911
+        },
+        {
+          "source": "src/lean/info-view.ts",
+          "renderedLength": 7097
+        },
+        {
+          "source": "src/lean/loopback-provider.ts",
+          "renderedLength": 4269
+        },
+        {
+          "source": "src/extensions/lean.ts",
+          "renderedLength": 5103
+        },
+        {
+          "source": "src/extensions/floating-menu.ts",
+          "renderedLength": 5280
+        },
+        {
+          "source": "src/extensions/plugins/mcp-integration.ts",
+          "renderedLength": 6244
+        },
+        {
+          "source": "src/view/web-component.ts",
+          "renderedLength": 5219
+        },
+        {
+          "source": "src/view/generated-media.ts",
+          "renderedLength": 1678
+        },
+        {
+          "source": "src/ai/controller.ts",
+          "renderedLength": 13729
+        },
+        {
+          "source": "src/ai/mcp-adapter.ts",
+          "renderedLength": 813
+        },
+        {
+          "source": "src/index.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "integrity-dom.cjs",
+      "bytes": 4360,
+      "sha256": "7392808c1741956821da7a089624562d36f13b37e3650147a7385086d21bfc1a",
+      "modules": [
+        {
+          "source": "src/integrity/dom.ts",
+          "renderedLength": 6568
+        }
+      ]
+    },
+    {
+      "file": "integrity.cjs",
+      "bytes": 9367,
+      "sha256": "040b97a4a9b195f87be916aacd099106345fb78d5d1852cc467ef5269efec5bb",
+      "modules": [
+        {
+          "source": "src/integrity/index.ts",
+          "renderedLength": 14640
+        }
+      ]
+    },
+    {
+      "file": "migrations.cjs",
+      "bytes": 6101,
+      "sha256": "6c3dde8d6455dd8f20a26843780f3ac8610c44239fd2f41abdd09ea0615f7436",
+      "modules": [
+        {
+          "source": "src/migrations/index.ts",
+          "renderedLength": 9980
+        }
+      ]
+    },
+    {
+      "file": "node-ids.cjs",
+      "bytes": 7187,
+      "sha256": "56ce575e34a95d53acb8cb30228718ec9f137a0eafef43faee4f11fd1456024d",
+      "modules": [
+        {
+          "source": "src/node-ids/index.ts",
+          "renderedLength": 12754
+        }
+      ]
+    },
+    {
+      "file": "pages-dom.cjs",
+      "bytes": 44811,
+      "sha256": "ccc6e60c8b2bda3139f9502b2eb2acfbdc3693b719f14b54fdf7df9bb9a195cd",
+      "modules": [
+        {
+          "source": "src/pages/dom.ts",
+          "renderedLength": 74418
+        }
+      ]
+    },
+    {
+      "file": "pages-preview.cjs",
+      "bytes": 11421,
+      "sha256": "eac83294094d56a791fd9d8938cabe6ce921f6a8dc7327f9d8fe4f306c7ae78b",
+      "modules": [
+        {
+          "source": "src/pages/dom-preview.ts",
+          "renderedLength": 19297
+        },
+        {
+          "source": "src/pages/preview.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "pages.cjs",
+      "bytes": 9367,
+      "sha256": "9bd0f758ea538a714b93375ab4bd96ec019deadbde528c46ed780b8fc1803c85",
+      "modules": [
+        {
+          "source": "src/pages/settings.ts",
+          "renderedLength": 1398
+        },
+        {
+          "source": "src/pages/index.ts",
+          "renderedLength": 12940
+        }
+      ]
+    },
+    {
+      "file": "react-comments.cjs",
+      "bytes": 7052,
+      "sha256": "99accddc545cae9e776299f3479e2fd62a4a6ecf94a29cd968d8512b268a5107",
+      "modules": [
+        {
+          "source": "src/react/FountainComments.tsx",
+          "renderedLength": 13111
+        },
+        {
+          "source": "src/react/comments.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-integrity.cjs",
+      "bytes": 6183,
+      "sha256": "127a1bc70ffcda24e63d9e5816855c88a69bef9c64b2944c5f9c855daa1a03f3",
+      "modules": [
+        {
+          "source": "src/react/FountainIntegrityInspector.tsx",
+          "renderedLength": 10300
+        },
+        {
+          "source": "src/react/integrity.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-tracked-changes.cjs",
+      "bytes": 5715,
+      "sha256": "cdc15181aadd7d9e412993a4cc248d76d41f26fa178741633c737c71e024f56e",
+      "modules": [
+        {
+          "source": "src/react/FountainTrackedChanges.tsx",
+          "renderedLength": 9893
+        },
+        {
+          "source": "src/react/tracked-changes.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-versions.cjs",
+      "bytes": 7377,
+      "sha256": "d44145d97710d267eabd021d4e9362caaf5286f405b064327ffd167935b50d47",
+      "modules": [
+        {
+          "source": "src/react/FountainVersions.tsx",
+          "renderedLength": 13773
+        },
+        {
+          "source": "src/react/versions.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "react-widgets.cjs",
+      "bytes": 1337,
+      "sha256": "9547d53b819fb2a290fd5e8468897a8887ea295d2b1d499b863f1b625272e471",
+      "modules": [
+        {
+          "source": "src/react/widgets.tsx",
+          "renderedLength": 2032
+        }
+      ]
+    },
+    {
+      "file": "react.cjs",
+      "bytes": 71018,
+      "sha256": "54602bf7cd55db6c5388740b2e6a435f684bb8d577da743866c9d8b307620b77",
+      "modules": [
+        {
+          "source": "src/react/FountainEditor.tsx",
+          "renderedLength": 1327
+        },
+        {
+          "source": "src/react/ClipboardHistoryMenu.tsx",
+          "renderedLength": 4306
+        },
+        {
+          "source": "src/react/FountainToolbarPrimitives.tsx",
+          "renderedLength": 13104
+        },
+        {
+          "source": "src/react/FountainToolbar.tsx",
+          "renderedLength": 70126
+        },
+        {
+          "source": "src/react/FountainComposer.tsx",
+          "renderedLength": 705
+        },
+        {
+          "source": "src/react/useNavigatorState.ts",
+          "renderedLength": 830
+        },
+        {
+          "source": "src/react/Navigator.tsx",
+          "renderedLength": 1322
+        },
+        {
+          "source": "src/react/FountainAIReview.tsx",
+          "renderedLength": 7182
+        },
+        {
+          "source": "src/react/FountainAIConversation.tsx",
+          "renderedLength": 7994
+        },
+        {
+          "source": "src/react/FountainAIGeneratedMedia.tsx",
+          "renderedLength": 8603
+        },
+        {
+          "source": "src/react/ReactNodeView.tsx",
+          "renderedLength": 2383
+        },
+        {
+          "source": "src/react/FountainSuggestionMenu.tsx",
+          "renderedLength": 5670
+        },
+        {
+          "source": "src/react/FountainCharacterCount.tsx",
+          "renderedLength": 873
+        },
+        {
+          "source": "src/react/FountainSlashCommandMenu.tsx",
+          "renderedLength": 1111
+        },
+        {
+          "source": "src/react/FountainFloatingMenu.tsx",
+          "renderedLength": 4906
+        },
+        {
+          "source": "src/react/index.ts",
+          "renderedLength": 0
+        }
+      ]
+    },
+    {
+      "file": "ruby.cjs",
+      "bytes": 9182,
+      "sha256": "3e65d01a6a30b576c3f5d920150493d57603a7f7ff252570051055efbfdd6b45",
+      "modules": [
+        {
+          "source": "src/ruby/index.ts",
+          "renderedLength": 14334
+        }
+      ]
+    },
+    {
+      "file": "structured-attributes.cjs",
+      "bytes": 8417,
+      "sha256": "0ba9e42889df541daef338cb35f8783952053ab788bcda666a23fae72d5337e8",
+      "modules": [
+        {
+          "source": "src/structured-attributes/index.ts",
+          "renderedLength": 14098
+        }
+      ]
+    },
+    {
+      "file": "svelte.cjs",
+      "bytes": 891,
+      "sha256": "b734d53e012c4364ecc4a44c74f53375e9ec0b10099e80414b69edd283805c22",
+      "modules": [
+        {
+          "source": "src/svelte/index.ts",
+          "renderedLength": 1436
+        }
+      ]
+    },
+    {
+      "file": "table-of-contents.cjs",
+      "bytes": 4754,
+      "sha256": "a1307256c89c307006e22e21bd81a453b45439a86d87a96624326213eda72db2",
+      "modules": [
+        {
+          "source": "src/table-of-contents/index.ts",
+          "renderedLength": 7881
+        }
+      ]
+    },
+    {
+      "file": "testing.cjs",
+      "bytes": 5439,
+      "sha256": "7633e0bed423a3e8ccc2be1e0fb90ce81d85e699f391f0316e7c6975c80ed42b",
+      "modules": [
+        {
+          "source": "src/testing/index.ts",
+          "renderedLength": 8311
+        }
+      ]
+    },
+    {
+      "file": "text-style.cjs",
+      "bytes": 878,
+      "sha256": "0e43ae004e824ab73ddb1ae090621f6c6442600f07de4aeab468c96f76317721",
+      "modules": []
+    },
+    {
+      "file": "tracked-changes.cjs",
+      "bytes": 23667,
+      "sha256": "3d564656c0cd510ee9488eb10edbeccf884c0023fa6bc2616984f4389072c030",
+      "modules": [
+        {
+          "source": "src/tracked-changes/model.ts",
+          "renderedLength": 25540
+        },
+        {
+          "source": "src/tracked-changes/index.ts",
+          "renderedLength": 16987
+        }
+      ]
+    },
+    {
+      "file": "versions.cjs",
+      "bytes": 24360,
+      "sha256": "8188dfc203b86820d49b6a7bf2255c3ff016385fdb66f7dabbfdecb7f6c98890",
+      "modules": [
+        {
+          "source": "src/versions/diff.ts",
+          "renderedLength": 7912
+        },
+        {
+          "source": "src/versions/model.ts",
+          "renderedLength": 12456
+        },
+        {
+          "source": "src/versions/index.ts",
+          "renderedLength": 18504
+        }
+      ]
+    },
+    {
+      "file": "vue.cjs",
+      "bytes": 1456,
+      "sha256": "834c8af548f71c4a991d60f8f8f068f8cecab66e7a5652b4cfd39e7387b983b2",
+      "modules": [
+        {
+          "source": "src/vue/index.ts",
+          "renderedLength": 1999
+        }
+      ]
+    },
+    {
+      "file": "widgets-dom.cjs",
+      "bytes": 4029,
+      "sha256": "938b31bd1d106c2f7ded79d1e65ad801b0f400986cee1820e931cec63df1b029",
+      "modules": [
+        {
+          "source": "src/widgets/dom.ts",
+          "renderedLength": 6003
+        }
+      ]
+    },
+    {
+      "file": "widgets.cjs",
+      "bytes": 7337,
+      "sha256": "35739f524736519083627eb9fa7d755a745e776bbc96a9e32710e28462b31a8f",
+      "modules": [
+        {
+          "source": "src/widgets/index.ts",
+          "renderedLength": 12390
+        }
+      ]
+    },
+    {
+      "file": "yjs.cjs",
+      "bytes": 23264,
+      "sha256": "7944f6afd53d866ce7a248554154ec46cba47ed34d3ded19c603df8dec59143b",
+      "modules": [
+        {
+          "source": "src/yjs/structured-attributes.ts",
+          "renderedLength": 11247
+        },
+        {
+          "source": "src/yjs/index.ts",
+          "renderedLength": 27937
+        }
+      ]
+    },
+    {
+      "file": "collaboration-DHfWMt2l.cjs",
+      "bytes": 1264,
+      "sha256": "5063a44d88f1aad8f9a60b30c553c179a6990968444ae4433e3e3c7c14ca6664",
+      "modules": [
+        {
+          "source": "src/extensions/collaboration.ts",
+          "renderedLength": 1830
+        }
+      ]
+    },
+    {
+      "file": "collaboration-core-6QLxBCsv.cjs",
+      "bytes": 9372,
+      "sha256": "03813882e503f76e6ebefbbf47d7f6077296a980b2d727c8248ec17199ea3429",
+      "modules": [
+        {
+          "source": "src/extensions/collaboration-core.ts",
+          "renderedLength": 15265
+        }
+      ]
+    },
+    {
+      "file": "command-manager-DU4ahU5C.cjs",
+      "bytes": 1066,
+      "sha256": "c40db936693f1e1c2790ba70135e1131c78ecabf6e005ce9a960175c40fd06c6",
+      "modules": [
+        {
+          "source": "src/extensions/command-manager.ts",
+          "renderedLength": 1900
+        }
+      ]
+    },
+    {
+      "file": "commands-C1NUf0cX.cjs",
+      "bytes": 78253,
+      "sha256": "d412b0cc8546b18896fd30b7476a850ab8171b1247eb71d53310ded38dbf64ed",
+      "modules": [
+        {
+          "source": "src/core/text-replacement-selection.ts",
+          "renderedLength": 854
+        },
+        {
+          "source": "src/core/image.ts",
+          "renderedLength": 1451
+        },
+        {
+          "source": "src/core/exporters/html-exporter.ts",
+          "renderedLength": 20900
+        },
+        {
+          "source": "src/core/table-commands.ts",
+          "renderedLength": 18674
+        },
+        {
+          "source": "src/core/structure-commands.ts",
+          "renderedLength": 34678
+        },
+        {
+          "source": "src/core/commands.ts",
+          "renderedLength": 60579
+        }
+      ]
+    },
+    {
+      "file": "content-expression-YXcFdjFU.cjs",
+      "bytes": 2151,
+      "sha256": "d656360f123de707e7998de29398ad1d6d6897fbeb4ad1a4d258a57cffa6c0bc",
+      "modules": [
+        {
+          "source": "src/core/schema/content-expression.ts",
+          "renderedLength": 4044
+        }
+      ]
+    },
+    {
+      "file": "decoration-jVx4B2Pl.cjs",
+      "bytes": 2683,
+      "sha256": "bb381f6496b23e7aacf536b8d5e533f4ea52208e5fb0c51101f25baf721451c0",
+      "modules": [
+        {
+          "source": "src/core/decoration.ts",
+          "renderedLength": 4411
+        }
+      ]
+    },
+    {
+      "file": "direction-scope-DW5E-D4S.cjs",
+      "bytes": 69314,
+      "sha256": "a77e45b9b7bf313814f93619f6fedcbec9077e66ed02add702c5874d09574869",
+      "modules": [
+        {
+          "source": "src/core/exporters/json-exporter.ts",
+          "renderedLength": 508
+        },
+        {
+          "source": "src/core/editing-provenance.ts",
+          "renderedLength": 675
+        },
+        {
+          "source": "src/core/markdown-entities.ts",
+          "renderedLength": 1060
+        },
+        {
+          "source": "src/core/unicode-case-fold-data.ts",
+          "renderedLength": 2839
+        },
+        {
+          "source": "src/core/unicode-case-fold.ts",
+          "renderedLength": 283
+        },
+        {
+          "source": "src/core/markdown-tex.ts",
+          "renderedLength": 1997
+        },
+        {
+          "source": "src/core/tex-table.ts",
+          "renderedLength": 3463
+        },
+        {
+          "source": "src/core/importers/markdown-importer.ts",
+          "renderedLength": 85380
+        },
+        {
+          "source": "src/core/exporters/markdown-exporter.ts",
+          "renderedLength": 32867
+        },
+        {
+          "source": "src/core/exporters/text-exporter.ts",
+          "renderedLength": 610
+        },
+        {
+          "source": "src/extensions/nodes/direction-scope.ts",
+          "renderedLength": 892
+        }
+      ]
+    },
+    {
+      "file": "editor-Ce4QfnkJ.cjs",
+      "bytes": 13246,
+      "sha256": "705af461d9ef640da3653e06159419465919661b222a2b44fe71008b2cc81522",
+      "modules": [
+        {
+          "source": "src/core/schema/schema.ts",
+          "renderedLength": 5394
+        },
+        {
+          "source": "src/core/transaction/replace-step.ts",
+          "renderedLength": 866
+        },
+        {
+          "source": "src/core/transaction/replace-document-step.ts",
+          "renderedLength": 763
+        },
+        {
+          "source": "src/core/transaction/replace-node-step.ts",
+          "renderedLength": 994
+        },
+        {
+          "source": "src/core/transaction/insert-text-step.ts",
+          "renderedLength": 213
+        },
+        {
+          "source": "src/core/transaction/set-node-attrs-step.ts",
+          "renderedLength": 470
+        },
+        {
+          "source": "src/core/transaction/transform.ts",
+          "renderedLength": 1888
+        },
+        {
+          "source": "src/core/transaction/transaction.ts",
+          "renderedLength": 1055
+        },
+        {
+          "source": "src/core/state.ts",
+          "renderedLength": 4222
+        },
+        {
+          "source": "src/core/editor.ts",
+          "renderedLength": 4909
+        }
+      ]
+    },
+    {
+      "file": "emoji-BbB5PNNG.cjs",
+      "bytes": 14668,
+      "sha256": "9662bc72897bec137f3f820cfc7bc22551f0d3a59c752cb3058db25abc4eb6dd",
+      "modules": [
+        {
+          "source": "src/extensions/suggestion.ts",
+          "renderedLength": 8116
+        },
+        {
+          "source": "src/extensions/emoji.ts",
+          "renderedLength": 14361
+        }
+      ]
+    },
+    {
+      "file": "extension-Sb4ErwsF.cjs",
+      "bytes": 2867,
+      "sha256": "443582bc2bc0a2037290e4b52af74eb174d4c7e373ace5e8368c67dce3b4bf22",
+      "modules": [
+        {
+          "source": "src/extensions/extension.ts",
+          "renderedLength": 4424
+        }
+      ]
+    },
+    {
+      "file": "extensions-BbvYaHt8.cjs",
+      "bytes": 32004,
+      "sha256": "ad2cd95b02fc114daaf496634a622147eceeef0be9935b23e0f83ded5590e8ef",
+      "modules": [
+        {
+          "source": "src/extensions/nodes/blockquote.ts",
+          "renderedLength": 422
+        },
+        {
+          "source": "src/extensions/nodes/bullet-list.ts",
+          "renderedLength": 287
+        },
+        {
+          "source": "src/extensions/nodes/code-block.ts",
+          "renderedLength": 792
+        },
+        {
+          "source": "src/extensions/nodes/doc.ts",
+          "renderedLength": 217
+        },
+        {
+          "source": "src/extensions/nodes/definition-list.ts",
+          "renderedLength": 757
+        },
+        {
+          "source": "src/extensions/nodes/figcaption.ts",
+          "renderedLength": 133
+        },
+        {
+          "source": "src/extensions/nodes/hard-break.ts",
+          "renderedLength": 146
+        },
+        {
+          "source": "src/extensions/nodes/heading.ts",
+          "renderedLength": 573
+        },
+        {
+          "source": "src/extensions/nodes/horizontal-rule.ts",
+          "renderedLength": 140
+        },
+        {
+          "source": "src/extensions/nodes/image-attributes.ts",
+          "renderedLength": 2118
+        },
+        {
+          "source": "src/extensions/nodes/image-node-view.ts",
+          "renderedLength": 12771
+        },
+        {
+          "source": "src/extensions/nodes/image-super.ts",
+          "renderedLength": 809
+        },
+        {
+          "source": "src/extensions/nodes/inline-image.ts",
+          "renderedLength": 386
+        },
+        {
+          "source": "src/extensions/nodes/list-item.ts",
+          "renderedLength": 262
+        },
+        {
+          "source": "src/extensions/nodes/ordered-list.ts",
+          "renderedLength": 459
+        },
+        {
+          "source": "src/extensions/nodes/paragraph.ts",
+          "renderedLength": 437
+        },
+        {
+          "source": "src/extensions/nodes/table.ts",
+          "renderedLength": 346
+        },
+        {
+          "source": "src/extensions/nodes/table-cell-view.ts",
+          "renderedLength": 9753
+        },
+        {
+          "source": "src/extensions/nodes/table-cell.ts",
+          "renderedLength": 255
+        },
+        {
+          "source": "src/extensions/nodes/table-header.ts",
+          "renderedLength": 452
+        },
+        {
+          "source": "src/extensions/nodes/table-row.ts",
+          "renderedLength": 421
+        },
+        {
+          "source": "src/extensions/nodes/task-item.ts",
+          "renderedLength": 693
+        },
+        {
+          "source": "src/extensions/nodes/task-list.ts",
+          "renderedLength": 324
+        },
+        {
+          "source": "src/extensions/nodes/text.ts",
+          "renderedLength": 100
+        },
+        {
+          "source": "src/extensions/marks/code.ts",
+          "renderedLength": 93
+        },
+        {
+          "source": "src/extensions/marks/em.ts",
+          "renderedLength": 87
+        },
+        {
+          "source": "src/extensions/marks/link.ts",
+          "renderedLength": 756
+        },
+        {
+          "source": "src/extensions/marks/strike.ts",
+          "renderedLength": 94
+        },
+        {
+          "source": "src/extensions/marks/strong.ts",
+          "renderedLength": 99
+        },
+        {
+          "source": "src/extensions/marks/subscript.ts",
+          "renderedLength": 102
+        },
+        {
+          "source": "src/extensions/marks/superscript.ts",
+          "renderedLength": 106
+        },
+        {
+          "source": "src/extensions/marks/underline.ts",
+          "renderedLength": 100
+        },
+        {
+          "source": "src/extensions/plugins/markdown-shortcuts.ts",
+          "renderedLength": 1979
+        },
+        {
+          "source": "src/extensions/plugins/table-editing.ts",
+          "renderedLength": 640
+        },
+        {
+          "source": "src/extensions/trailing-editable-block.ts",
+          "renderedLength": 5126
+        },
+        {
+          "source": "src/extensions/index.ts",
+          "renderedLength": 2909
+        }
+      ]
+    },
+    {
+      "file": "history-C1iHQbdz.cjs",
+      "bytes": 2767,
+      "sha256": "78a503ea1a2648b4893d3c6f66561dc0e8c8acfbcc01d51e8fc809ebb2129107",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/history.ts",
+          "renderedLength": 3766
+        }
+      ]
+    },
+    {
+      "file": "html-flow-CLseFPNz.cjs",
+      "bytes": 4329,
+      "sha256": "11849ed4c7028941b6fd03f8ee2dca197c4f31a37545eefa91acd7cff079a31d",
+      "modules": [
+        {
+          "source": "src/extensions/html-containers.ts",
+          "renderedLength": 4516
+        },
+        {
+          "source": "src/extensions/html-comments.ts",
+          "renderedLength": 715
+        },
+        {
+          "source": "src/extensions/html-flow.ts",
+          "renderedLength": 620
+        }
+      ]
+    },
+    {
+      "file": "html-page-settings-CYNBUfR_.cjs",
+      "bytes": 2535,
+      "sha256": "550f05020b097e4323e41675246f8130b2471dc6885f5386c980a322934d13d9",
+      "modules": [
+        {
+          "source": "src/core/html-flow.ts",
+          "renderedLength": 599
+        },
+        {
+          "source": "src/core/importers/html-table.ts",
+          "renderedLength": 871
+        },
+        {
+          "source": "src/core/importers/html-list.ts",
+          "renderedLength": 317
+        },
+        {
+          "source": "src/core/importers/html-definition-list.ts",
+          "renderedLength": 1403
+        },
+        {
+          "source": "src/core/importers/html-page-settings.ts",
+          "renderedLength": 498
+        }
+      ]
+    },
+    {
+      "file": "inline-atom-Cg88XSNe.cjs",
+      "bytes": 1531,
+      "sha256": "b538d4c7f910824861ea58c6b7412d5b3b443662cbd938d1d514c255e0de79e6",
+      "modules": [
+        {
+          "source": "src/extensions/inline-atom.ts",
+          "renderedLength": 2644
+        }
+      ]
+    },
+    {
+      "file": "input-rules-HXvPuvbc.cjs",
+      "bytes": 2668,
+      "sha256": "0b9aa7104bff9bf4ddf904cc566a0e50885bb7d4332c97688dcc867225399b4a",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/input-rules.ts",
+          "renderedLength": 4031
+        }
+      ]
+    },
+    {
+      "file": "link-behavior-xd3QrfMs.cjs",
+      "bytes": 17135,
+      "sha256": "75b6803e1c7e6a28498e599fe4181291efa27339e2726163871e98d452105be5",
+      "modules": [
+        {
+          "source": "src/extensions/plugins/syntax-highlight.ts",
+          "renderedLength": 18041
+        },
+        {
+          "source": "src/extensions/link-behavior.ts",
+          "renderedLength": 10056
+        }
+      ]
+    },
+    {
+      "file": "link-destination-e49Ncxgh.cjs",
+      "bytes": 4705,
+      "sha256": "abf43607921a37bf6c8396b3a36d39bd0ff64e0cb9078c19eeddf5b2a4029616",
+      "modules": [
+        {
+          "source": "src/core/explicit-emphasis.ts",
+          "renderedLength": 1624
+        },
+        {
+          "source": "src/core/image-caption.ts",
+          "renderedLength": 1024
+        },
+        {
+          "source": "src/core/html-comment.ts",
+          "renderedLength": 779
+        },
+        {
+          "source": "src/core/importers/html-link-url.ts",
+          "renderedLength": 642
+        },
+        {
+          "source": "src/core/link-destination.ts",
+          "renderedLength": 1714
+        }
+      ]
+    },
+    {
+      "file": "mapping-LRwd6pqd.cjs",
+      "bytes": 6550,
+      "sha256": "8468b75b46c8cc25e0d92cd47e34426b26245bffd535a9ddb0cc510f53544358",
+      "modules": [
+        {
+          "source": "src/core/transaction/mapping.ts",
+          "renderedLength": 12267
+        }
+      ]
+    },
+    {
+      "file": "mark-range-step-DOJDyOsP.cjs",
+      "bytes": 3028,
+      "sha256": "8f72eb3f4db1e029eab18045703a3199931a23714c6f7eb3714de4e173463d8d",
+      "modules": [
+        {
+          "source": "src/core/transaction/add-mark-step.ts",
+          "renderedLength": 824
+        },
+        {
+          "source": "src/core/transaction/remove-mark-step.ts",
+          "renderedLength": 825
+        },
+        {
+          "source": "src/core/transaction/mark-range-step.ts",
+          "renderedLength": 3223
+        }
+      ]
+    },
+    {
+      "file": "markdown-html-DD8ATANg.cjs",
+      "bytes": 41420,
+      "sha256": "eadb69c13adc8c79a59637016d70a7c6ba06ac83fcc5818b57b6aa6b14114320",
+      "modules": [
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/decode-codepoint.js",
+          "renderedLength": 702
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/internal/decode-shared.js",
+          "renderedLength": 459
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/generated/decode-data-html.js",
+          "renderedLength": 32369
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/internal/bin-trie-flags.js",
+          "renderedLength": 458
+        },
+        {
+          "source": "node_modules/.pnpm/entities@8.0.0/node_modules/entities/dist/decode.js",
+          "renderedLength": 10333
+        },
+        {
+          "source": "src/core/markdown-html.ts",
+          "renderedLength": 4170
+        }
+      ]
+    },
+    {
+      "file": "media-CspQdweh.cjs",
+      "bytes": 35371,
+      "sha256": "cc740f7eb763e159d0b4259df17317e5a673d3277d411c2bf3326c41f4fbce1e",
+      "modules": [
+        {
+          "source": "src/core/importers/html-importer.ts",
+          "renderedLength": 32001
+        },
+        {
+          "source": "src/extensions/media.ts",
+          "renderedLength": 25956
+        }
+      ]
+    },
+    {
+      "file": "menu-position-lKcDG5KG.cjs",
+      "bytes": 7213,
+      "sha256": "2725c8ccfff34bccbf985f70f55969a4ce1c07132d8c729df5c0091a79bd38ef",
+      "modules": [
+        {
+          "source": "src/extensions/clipboard-history.ts",
+          "renderedLength": 7651
+        },
+        {
+          "source": "src/view/menu-position.ts",
+          "renderedLength": 4615
+        }
+      ]
+    },
+    {
+      "file": "node-D26sG_e5.cjs",
+      "bytes": 3351,
+      "sha256": "834209c77f73358f24d1256e202fd6834cfa805dc158ad63b1c740b8947a4256",
+      "modules": [
+        {
+          "source": "src/core/schema/mark.ts",
+          "renderedLength": 639
+        },
+        {
+          "source": "src/core/schema/node.ts",
+          "renderedLength": 3949
+        }
+      ]
+    },
+    {
+      "file": "node-spec-owlJN_nc.cjs",
+      "bytes": 593,
+      "sha256": "e3be8015183da710140876527eda26ef0b8de6da06af91b7d0d6c93aada05ef0",
+      "modules": [
+        {
+          "source": "src/core/schema/node-spec.ts",
+          "renderedLength": 860
+        }
+      ]
+    },
+    {
+      "file": "page-settings-BTDzBnRH.cjs",
+      "bytes": 10157,
+      "sha256": "9b513fe127e5c939f461efc2f33e9e7078e9f57e6b0eb3cac55875a478fd89d9",
+      "modules": [
+        {
+          "source": "src/core/table-background.ts",
+          "renderedLength": 617
+        },
+        {
+          "source": "src/text-style/values.ts",
+          "renderedLength": 3486
+        },
+        {
+          "source": "src/core/paragraph-layout.ts",
+          "renderedLength": 5680
+        },
+        {
+          "source": "src/core/math-expression.ts",
+          "renderedLength": 3734
+        },
+        {
+          "source": "src/core/page-settings.ts",
+          "renderedLength": 1371
+        }
+      ]
+    },
+    {
+      "file": "path-DDY3uxw-.cjs",
+      "bytes": 1981,
+      "sha256": "21f9f380ad8aa98d20bb6413db0d2bac777d062c015672046738095f8d8c233a",
+      "modules": [
+        {
+          "source": "src/core/transaction/path.ts",
+          "renderedLength": 2789
+        }
+      ]
+    },
+    {
+      "file": "plugin-DlQkwKdU.cjs",
+      "bytes": 482,
+      "sha256": "f1d38bb5e46190ff31d074ffd8842fe60e168ec5759f4cb981d7254cb20cccfd",
+      "modules": [
+        {
+          "source": "src/core/plugin.ts",
+          "renderedLength": 424
+        }
+      ]
+    },
+    {
+      "file": "presentation-DrPDmb6z.cjs",
+      "bytes": 17925,
+      "sha256": "0fe7a9d26ff0142ee4addd1dba0697070e6a0fb00104a53dd60b4468fd928025",
+      "modules": [
+        {
+          "source": "src/pages/templates.ts",
+          "renderedLength": 8515
+        },
+        {
+          "source": "src/pages/layout.ts",
+          "renderedLength": 17833
+        },
+        {
+          "source": "src/pages/presentation.ts",
+          "renderedLength": 4345
+        }
+      ]
+    },
+    {
+      "file": "replace-text-range-step-VHOaDNVn.cjs",
+      "bytes": 2698,
+      "sha256": "6c92dbc70d46c24f70f766ec35a8ba2767f95d944d4127effd99597d2a0b0d6c",
+      "modules": [
+        {
+          "source": "src/core/transaction/replace-text-step.ts",
+          "renderedLength": 689
+        },
+        {
+          "source": "src/core/transaction/replace-text-range-step.ts",
+          "renderedLength": 4002
+        }
+      ]
+    },
+    {
+      "file": "rolldown-runtime-Chgba0Kb.cjs",
+      "bytes": 772,
+      "sha256": "97ace14b1c618063a813c153abc2f2357e9da284c5f87b88ea494c8f00b0b276",
+      "modules": [
+        {
+          "source": "\u0000rolldown/runtime.js",
+          "renderedLength": 1310
+        }
+      ]
+    },
+    {
+      "file": "search-Cb5HWhnF.cjs",
+      "bytes": 1765,
+      "sha256": "4474a0d8e8aa9b464bd3b0e6c74367c97d2ba66654957dab1ce5eca1128a510c",
+      "modules": [
+        {
+          "source": "src/core/search.ts",
+          "renderedLength": 2820
+        }
+      ]
+    },
+    {
+      "file": "selection-DrO1gWsj.cjs",
+      "bytes": 5658,
+      "sha256": "8427635d4177dbe9b9d4a5f69ebae2f197dc9c2de64c571f58dbe131d1a74b75",
+      "modules": [
+        {
+          "source": "src/core/selection.ts",
+          "renderedLength": 9295
+        }
+      ]
+    },
+    {
+      "file": "shared-direction-BdLkZdWo.cjs",
+      "bytes": 8539,
+      "sha256": "f81727344ee4cae3c8075729f0bf4fa7e4910041220fa7d4e349ffe0b914aa05",
+      "modules": [
+        {
+          "source": "src/core/bidi-strong-data.ts",
+          "renderedLength": 3041
+        },
+        {
+          "source": "src/core/first-strong-direction.ts",
+          "renderedLength": 1042
+        },
+        {
+          "source": "src/core/shared-direction-index.ts",
+          "renderedLength": 3292
+        },
+        {
+          "source": "src/core/shared-direction.ts",
+          "renderedLength": 6201
+        }
+      ]
+    },
+    {
+      "file": "step-CICBu9Xg.cjs",
+      "bytes": 202,
+      "sha256": "35f580f634473be222a975ed6e72013e99d5deb16035cddeb96f89e3e377f084",
+      "modules": [
+        {
+          "source": "src/core/transaction/step.ts",
+          "renderedLength": 127
+        }
+      ]
+    },
+    {
+      "file": "table-layout-DclxIB5V.cjs",
+      "bytes": 6748,
+      "sha256": "1140804261a00d385bd6bdfbb649b621837cbe3924c2d6bd63655e06f650dc3f",
+      "modules": [
+        {
+          "source": "src/core/table-width.ts",
+          "renderedLength": 1455
+        },
+        {
+          "source": "src/core/table-appearance.ts",
+          "renderedLength": 4621
+        },
+        {
+          "source": "src/core/table-layout.ts",
+          "renderedLength": 3234
+        }
+      ]
+    },
+    {
+      "file": "table-map-Dbo_d2TT.cjs",
+      "bytes": 2651,
+      "sha256": "31e3b5afbfcecd0121d1108018de98ab86b820922f719f5bc50d943ddc176277",
+      "modules": [
+        {
+          "source": "src/core/table-map.ts",
+          "renderedLength": 4676
+        }
+      ]
+    },
+    {
+      "file": "text-direction-T5Baosqb.cjs",
+      "bytes": 2891,
+      "sha256": "b8aac504d7617a4c9fcfdbc7cbfbabae17617e01e1114cfa14e42ec0f090236a",
+      "modules": [
+        {
+          "source": "src/core/text-direction.ts",
+          "renderedLength": 3862
+        }
+      ]
+    },
+    {
+      "file": "text-style-1rNV2tpW.cjs",
+      "bytes": 5081,
+      "sha256": "63aeddada69722188a9d48c2af2b834e95598f48c271e122e9062f550c788016",
+      "modules": [
+        {
+          "source": "src/extensions/marks/font-family.ts",
+          "renderedLength": 529
+        },
+        {
+          "source": "src/extensions/marks/font-size.ts",
+          "renderedLength": 489
+        },
+        {
+          "source": "src/extensions/marks/highlight.ts",
+          "renderedLength": 287
+        },
+        {
+          "source": "src/extensions/marks/line-height.ts",
+          "renderedLength": 526
+        },
+        {
+          "source": "src/extensions/marks/letter-spacing.ts",
+          "renderedLength": 526
+        },
+        {
+          "source": "src/extensions/marks/text-color.ts",
+          "renderedLength": 277
+        },
+        {
+          "source": "src/text-style/commands.ts",
+          "renderedLength": 3672
+        },
+        {
+          "source": "src/text-style/index.ts",
+          "renderedLength": 521
+        }
+      ]
+    },
+    {
+      "file": "url-Co8QRAHd.cjs",
+      "bytes": 923,
+      "sha256": "0fb4f476f7ae427962fe367260dd2b788dc565022792e543e3be9cc1a784a6b6",
+      "modules": [
+        {
+          "source": "src/core/url.ts",
+          "renderedLength": 1246
+        }
+      ]
+    },
+    {
+      "file": "useFountain-C16zq9TV.cjs",
+      "bytes": 965,
+      "sha256": "c2cf7bd3ee834f8c5cb8733c3cc7fa7cd5f2a8863c1f2e9a2bd0b3eb907f5199",
+      "modules": [
+        {
+          "source": "src/react/useFountain.ts",
+          "renderedLength": 1364
+        }
+      ]
+    },
+    {
+      "file": "view-BzY1ft8Z.cjs",
+      "bytes": 104615,
+      "sha256": "95706d9bfa84897f0054666c10c88c8bb6fb56baca8ab449040411819862239c",
+      "modules": [
+        {
+          "source": "src/view/shared-direction.ts",
+          "renderedLength": 1444
+        },
+        {
+          "source": "src/view/dom-renderer.ts",
+          "renderedLength": 17242
+        },
+        {
+          "source": "src/view/media.ts",
+          "renderedLength": 16420
+        },
+        {
+          "source": "src/view/block-handles.ts",
+          "renderedLength": 22316
+        },
+        {
+          "source": "src/view/paste.ts",
+          "renderedLength": 14930
+        },
+        {
+          "source": "src/view/input.ts",
+          "renderedLength": 34524
+        },
+        {
+          "source": "src/view/drop-cursor.ts",
+          "renderedLength": 4226
+        },
+        {
+          "source": "src/view/selection-handler.ts",
+          "renderedLength": 15203
+        },
+        {
+          "source": "src/view/table-direction.ts",
+          "renderedLength": 2857
+        },
+        {
+          "source": "src/view/virtual-layout.ts",
+          "renderedLength": 5544
+        },
+        {
+          "source": "src/view/view.ts",
+          "renderedLength": 26484
+        }
+      ]
+    }
+  ]
+}

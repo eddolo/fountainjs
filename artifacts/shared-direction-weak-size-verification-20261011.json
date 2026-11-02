@@ -1,0 +1,297 @@
+{
+  "date": "2026-10-11",
+  "baseCommit": "744ac90811d8b88b8cacc46124df4d85701f12b7",
+  "scope": "Bounded weak-text native verification and explicitly reviewed aggregate feature capacity; not complete parity or release certification",
+  "productionRuntimeUnchangedFrom": "744ac90",
+  "previousRuntimeUnits": {
+    "passed": 2971,
+    "files": 221
+  },
+  "native": {
+    "passed": 6,
+    "retries": 0,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "parents": [
+      "ltr",
+      "rtl"
+    ],
+    "coverage": "Public import/lift/exact history/downloaded HTML, adding/removing strong text, independent native RTL arrow selection",
+    "reviewedPNGs": [
+      "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium/weak-fragments-ltr.png",
+      "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium/weak-fragments-restored.png",
+      "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox/weak-fragments-ltr.png",
+      "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox/weak-fragments-restored.png",
+      "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit/weak-fragments-ltr.png",
+      "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit/weak-fragments-restored.png"
+    ],
+    "videos": "Recorded, not watched",
+    "initialFailures": "Six invalid logical-forward assumptions for visual Right-arrow selection; native oracle matches actual Fountain selection"
+  },
+  "gates": {
+    "apiDeclarations": 411,
+    "types": "passed",
+    "performance": "passed; existing ceilings unchanged",
+    "size": "passed after explicit aggregate feature capacity review"
+  },
+  "sizeDecision": {
+    "measuredBytes": [
+      {
+        "format": "es",
+        "bytes": 1653233,
+        "rebuiltBaselineBytes": 1639109
+      },
+      {
+        "format": "cjs",
+        "bytes": 1375478,
+        "rebuiltBaselineBytes": 1361498
+      }
+    ],
+    "aggregateCapsKiB": {
+      "es": 1614.75,
+      "cjs": 1343.5
+    },
+    "previousCapsKiB": {
+      "es": 1598.75,
+      "cjs": 1330
+    },
+    "unchanged": [
+      "Dependencies",
+      "Individual entry ceilings",
+      "CSS",
+      "Latency",
+      "Growth ratios",
+      "Heap"
+    ],
+    "caveat": "The rebuilt ESM baseline is 1600.692 KiB, versus 1598.5 in the earlier frozen log; this variation is not explained or relabeled as a size optimization. Capacity is based on current byte-identical package output, not subtraction from that historical number.",
+    "decision": "Capacity for verified functionality, NOT size optimization; original failed logs retained at 744ac90"
+  },
+  "standards": [
+    "https://html.spec.whatwg.org/multipage/dom.html#the-dir-attribute"
+  ],
+  "open": [
+    "Current-source full Linux/release matrix",
+    "Windows WebKit event-authored clipboard and actual Safari",
+    "Custom renderer isolation",
+    "Ancestor-only clipboard context",
+    "Other format fidelity",
+    "Broader native input/timing/heap coverage",
+    "Remaining parity roadmap"
+  ],
+  "unchanged": [
+    "npm 0.4.0-beta.2",
+    "PROD-04 Partial",
+    "Parity ledger",
+    "Public API snapshot"
+  ],
+  "hashes": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "bdb019ce5d2e764dd00ffe6cf4386c178e634f3329c8a8006ea202a48beb26f2",
+      "gitBlob": "aa5b1bb133dc7fb79bd15f468b8ed0ebc9c8bf42"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "4ce2473065ee557cfeebc796c7b62a3b1e66dd1f877f062f1f02ea286eb44626",
+      "gitBlob": "9ce36b8c12f22ee599fc35fe444699980d009886"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "d9c78f3323644addf18300f045eda3c3992c77e8fc666e7b4dde8e74d143f19c",
+      "gitBlob": "a3e3047a70466ee5260aeb030e0064a4e319e4e7"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "18e8563bfe1c2ef2ff4d79b1a8bb7e3d28cbc7bf575c096766d7e4de13c3b791",
+      "gitBlob": "4fc480c9cd8ea1ab194928dba7ee3b95daaf9f52"
+    },
+    {
+      "path": "playwright.shared-direction-audit.config.ts",
+      "sha256": "00b573c5230fbdd6f623403acee30605d7f20b1a60c2c0c00f2b82cf60098e57",
+      "gitBlob": "3482c522b9eabadd587c931caaaf3173c5701a1e"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "b659459878ef745a6012fa9a58ce8b4dd05bf9b8a07957852b221e9b9a9a23ff",
+      "gitBlob": "3ff8769e0d121d4e05ef2c2de9cb1c3398fa3b3d"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "ed87dc973f43e878aff97cdd8e2d52fcde59c16b8d98135aa4842e5f5cdb4d4e",
+      "gitBlob": "0c7468fa148aa45516fd34decd75d8f1fdde2541"
+    },
+    {
+      "path": "scripts/audit-shared-direction-size.mjs",
+      "sha256": "50ca68a6c6230c11b3f95064bcb45e9a993541c8d8be3238b89dc31b0cf9f1c4",
+      "gitBlob": "e96e2daa3b3e3fb853dc383ad7d23a062ba31b10"
+    },
+    {
+      "path": "scripts/verify-shared-direction-weak-size.mjs",
+      "sha256": "34a42550f35b0d1892f3fe734715a7a6e21532a2b4ff42306caefc00e65538e5",
+      "gitBlob": "1095533abe21313e4d6d2758782b3b4aa732d0b1"
+    },
+    {
+      "path": "tests/manual/shared-direction-weak-real.spec.ts",
+      "sha256": "a3e29aecb660d789915dba3dfbbadef2bcdb0189f2a019e72c3c380977c6b357",
+      "gitBlob": "d8bff0662740b11c003b01e5f1803e3f1ad5a135"
+    },
+    {
+      "path": "vite.size-audit.config.ts",
+      "sha256": "b8683a70deacfb3af50a276ab3a5a6e0629c89b6977db0cbe4d35952aee53d7f",
+      "gitBlob": "4096b8faa015b21b7eb72f5d15485ada531960b2"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-20261011.log",
+      "sha256": "4fcc9c2ed6c95a3188f679700cb8a84a7f056e1939894e03190f7c01539a72cc",
+      "gitBlob": "37e13935f91d6d0f47334504940e823cde479548"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-reference-20261011.log",
+      "sha256": "4b7545f25e67a2ea6d0ff4ba7559c22162f02e0c564b13d9dd8191670a7b6b79",
+      "gitBlob": "36a8556d3f7292ae5b73bc9bd92f4f9a52851a0c"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011.log",
+      "sha256": "e66c42b682978b2985f4d7a02d018324482669c0d69a4d085cfe6f6f9f0b4806",
+      "gitBlob": "77e8d148f652e26063d6114eee0fea357f01b8b6"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-types-20261011.log",
+      "sha256": "95d18aa00e390c3fc1932f4d2a946cf1cc08a64eed355bc93797152885d4a739",
+      "gitBlob": "4400a85eeb8f0870c04c6d48bd2b53ac26a793f5"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-types-confirm-20261011.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1",
+      "gitBlob": "7d7f996b0d05ba3daa04e2474d964589fcb01f11"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-api-20261011.log",
+      "sha256": "3e99e4778e3c74a1146b1d24ddb25e01e65b12dd67cbb53e55b4c40b3907d7a4",
+      "gitBlob": "ecb1916d3b26b8064d84e0f6930e90304c603107"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-registration-20261011.log",
+      "sha256": "f304748031891126318fe5810bd79af3d497858cce8ad60238aa2b7b69842d93",
+      "gitBlob": "6ce4b1b07253c64e58fd9187cc21156a2db1842a"
+    },
+    {
+      "path": "artifacts/shared-direction-size-reviewed-budget-20261011.log",
+      "sha256": "d96bf4c2f8f41db0105f10e1fef7a3bbc6390a1eee6e0bed05a23daa1732ebbd",
+      "gitBlob": "fd114523269dd9e168f0fb3dc2b97b00d6eb43e5"
+    },
+    {
+      "path": "artifacts/shared-direction-size-performance-20261011.log",
+      "sha256": "ee656bfc9042c3fe01f5109f5237fb6d3ef0e45f8f34a0cf78f5be67ca5f35d4",
+      "gitBlob": "da3f4f295188d5b004782df2da6c7d946afb8e19"
+    },
+    {
+      "path": "artifacts/shared-direction-size-audit-current-build-20261011.log",
+      "sha256": "c5980b7e1e3a814b256400931b3e89dc025f558c05ebe7d22dab126eab241467",
+      "gitBlob": "17325aa04df276b2fa377c4115d1c12a4c08e864"
+    },
+    {
+      "path": "artifacts/shared-direction-size-audit-baseline-build-20261011.log",
+      "sha256": "e203363102af26864bda5699bbddd9df406d8e7e73a50031b85ea12bbd0a31ec",
+      "gitBlob": "a6d8be09674f4046c176b3ad4e99ef8e04801beb"
+    },
+    {
+      "path": "artifacts/shared-direction-size-attribution-20261011.log",
+      "sha256": "d19aa1fbda3cf899d22ec6fcc0e0e69c2a977b68ced1fab9d03d799f106166c7",
+      "gitBlob": "7900d945681e9ba60f73694675934c7183a46aa8"
+    },
+    {
+      "path": "artifacts/shared-direction-size-attribution-20261011.json",
+      "sha256": "559e1bedff1d0e3e6a1bdbae01e2c2bc630490d0425c093c6d2c1a78015b879e",
+      "gitBlob": "4c44b41ca84c2d7dddf6980d3a033985a2770762"
+    },
+    {
+      "path": "artifacts/shared-direction-size-audit-es-20261011.json",
+      "sha256": "ff5db815a286c232af4b4f1b1f4cc34a8d8283b08dadc43f2387ef603f4a9c4e",
+      "gitBlob": "776225df29961d42186fa301b5d489bff780ffaa"
+    },
+    {
+      "path": "artifacts/shared-direction-size-baseline-es-20261011.json",
+      "sha256": "9197f9668e42f1d79240c55a28942e805ce4ad59acafcfcc758c0c0d905e939e",
+      "gitBlob": "aa572b65b79553df90ff1bc4d46dcf994933796f"
+    },
+    {
+      "path": "artifacts/shared-direction-size-audit-cjs-20261011.json",
+      "sha256": "dc558641c8a8d93549d647624fd986914f1c81d5336f53b25e539dba1da33bf0",
+      "gitBlob": "d85b27dd8ea0c17a3f270d5dadf107d8b4d4a1de"
+    },
+    {
+      "path": "artifacts/shared-direction-size-baseline-cjs-20261011.json",
+      "sha256": "b116287f1975d491d87b9c71414e9dc799c46d653d8be8db82b3467b11d849a5",
+      "gitBlob": "006ee4d4ffd7c43ef68da99190d7ef43d4a95ad7"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-chromium/weak-direction-observations.json",
+      "sha256": "6dcfb33dd84d49a1bd4e11155bcdc692b8bea09637c759aab545788d6afb5a0b",
+      "gitBlob": "c82b59757fe2641ddc583306bc7048b3ea7fed56"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium/weak-direction-observations.json",
+      "sha256": "9b4ccb2a2d4120db16702e2fadc30777ce408ed90729d072a4b47e684932403e",
+      "gitBlob": "ee05042da54a7acaa31a83279358db2ed71b2d91"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-firefox/weak-direction-observations.json",
+      "sha256": "86d49040c81caef4314eaa63970c16e4009b9181ee2126b4fcfc0869b60fbfc1",
+      "gitBlob": "ab053846e5f30ed4edde1514b181fed560d6162e"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox/weak-direction-observations.json",
+      "sha256": "9d4c484afb788dadfb5cce6656333174c5bfc26f4fbe4e443228bc359dd5be6e",
+      "gitBlob": "559c80b43a18ee74b07c33a41226bb58a67a5145"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-212bb-auto-scope-under-ltr-parent-webkit/weak-direction-observations.json",
+      "sha256": "154f1d30c1d7e51378ca2cc6857c8226316566ac005cd53877c9e3abbc3d295a",
+      "gitBlob": "0979a3b06c2d289dd372aceb8627336ea9e1ab2e"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit/weak-direction-observations.json",
+      "sha256": "57c8afe150bf4219e9ced0e346ae39cd33798dfb4a8ef1344459a3aaa542a2b2",
+      "gitBlob": "b100b18b2714d153d90b43dcce7280a8266a4880"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium/weak-fragments-ltr.png",
+      "sha256": "341490433c53b90c4fe2e9dda4b4260b68911b40bb7b15e9df0acd7c0292594e",
+      "gitBlob": "ad593931cd34c9fcd611817cb6b3235d8241aa55"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-chromium/weak-fragments-restored.png",
+      "sha256": "4dbe5ea71462ed05797da281135c40b863a01b091555c1478e9bf47a2e891d1a",
+      "gitBlob": "618090e1c92d10fb9e85058128aa2622e4ec0b25"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox/weak-fragments-ltr.png",
+      "sha256": "d258f5290c6ca85d6d57e8b9d38a17c523d13726c35da7e1b05897dba34ad73c",
+      "gitBlob": "a3286f284ba91a92bdfe508df3405abc8849c37f"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-firefox/weak-fragments-restored.png",
+      "sha256": "d258f5290c6ca85d6d57e8b9d38a17c523d13726c35da7e1b05897dba34ad73c",
+      "gitBlob": "a3286f284ba91a92bdfe508df3405abc8849c37f"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit/weak-fragments-ltr.png",
+      "sha256": "c0e7641046bc682ee6bf875d33f96d2bbd4f3d2e612920f2a08c8c1fd6a530bf",
+      "gitBlob": "b2b637fa78aec3d5b75aa9186054e6ce03d75662"
+    },
+    {
+      "path": "artifacts/shared-direction-weak-native-final-20261011/shared-direction-weak-real-91294-auto-scope-under-rtl-parent-webkit/weak-fragments-restored.png",
+      "sha256": "c0e7641046bc682ee6bf875d33f96d2bbd4f3d2e612920f2a08c8c1fd6a530bf",
+      "gitBlob": "b2b637fa78aec3d5b75aa9186054e6ce03d75662"
+    },
+    {
+      "path": "scripts/check-performance-budgets.mjs",
+      "sha256": "5cdefd0bf484b80d082911b6a9d161f5d667a2271fab1520c5c70be689c81458",
+      "gitBlob": "f2a6c641ee111f642a2ea9e8205079fc3064e2a2"
+    }
+  ]
+}

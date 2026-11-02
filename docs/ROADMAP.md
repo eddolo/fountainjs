@@ -1,6 +1,20 @@
 # FountainJS opportunity roadmap
 
-Shared-direction indexing follow-up (2026-10-11, Unreleased): immutable subtree
+Weak-text and size-envelope follow-up (2026-10-11, Unreleased): six recorded
+public import/lift/edit/history/HTML-export journeys verify weak-only automatic
+groups under LTR and RTL parents. RTL arrow selection is compared against an
+independent native editor, not assumed to select logical forward characters.
+No production engine change was needed. Six final RTL-parent PNGs reviewed.
+The six cases are registered in the normal desktop matrix. A same-config build
+audit confirms no new dependency or repeated private direction module. Only
+aggregate feature capacity changes to 1614.75 KiB ESM / 1343.5 KiB CJS for measured
+1614.485 / 1343.240 KiB output; entry/CSS/latency/scaling/heap limits stay fixed.
+This is not a size optimization. The historical failed ceilings and rebuilt
+baseline variation remain documented. Fresh API/types/performance/size pass;
+full current-source Linux, Safari clipboard and broader parity remain open.
+See [weak-text and size evidence](HTML_CONTAINERS.md#weak-text-and-reviewed-size-envelope-2026-10-11-unreleased).
+
+Earlier shared-direction indexing follow-up (2026-10-11, source `744ac90`, Unreleased): immutable subtree
 summaries avoid re-reading unchanged grouped and unrelated block contents.
 Eight indexing tests include 500 mixed-tree oracle comparisons, 10,000-level
 depth and 100,000 blocks; the focused four-file set passes **81 tests**. Full

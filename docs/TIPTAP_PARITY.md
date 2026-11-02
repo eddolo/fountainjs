@@ -1,6 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-Unreleased immutable shared-direction indexing (2026-10-11): the focused set
+Unreleased weak-text verification and reviewed size envelope (2026-10-11): six
+additional desktop public journeys pass with independent native controls and
+six final screenshots reviewed. The LTR no-strong fallback needs no new engine
+or provenance attribute. Register the cases in the normal matrix. Byte-identical
+diagnostic output confirms a dependency-neutral feature cost, not duplicated
+private modules. Only aggregate capacity changes to measured footprint plus
+~0.26 KiB headroom per format; individual/CSS/performance/heap ceilings stay put.
+Fresh API/types/performance/size pass. This is not a size optimization, full Linux
+certification, an npm release, or a parity-row promotion. PROD-04 stays Partial.
+[Evidence and boundaries](HTML_CONTAINERS.md#weak-text-and-reviewed-size-envelope-2026-10-11-unreleased).
+
+Earlier immutable shared-direction indexing (2026-10-11, source `744ac90`): the focused set
 passes **81 / four files**, including zero repeated child reads of unchanged
 blocks at 1k/100k, mixed-group semantic comparisons and deep nesting. Full units
 pass **2,971 / 221**. Fifteen recorded desktop journeys pass: twelve unchanged

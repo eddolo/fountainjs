@@ -1,0 +1,207 @@
+{
+  "source": "<ul dir=\"rtl\"><li><p>Outer parent</p><ol dir=\"auto\" start=\"0\"><li><p>123 😀</p></li><li><p>456 😀</p></li><li><p>789 😀</p></li></ol></li><li><p>Outer after</p></li></ul>",
+  "parent": "rtl",
+  "weakReference": [
+    {
+      "text": "Outer parent",
+      "direction": "rtl"
+    },
+    {
+      "text": "123 😀",
+      "direction": "ltr"
+    },
+    {
+      "text": "456 😀",
+      "direction": "ltr"
+    },
+    {
+      "text": "789 😀",
+      "direction": "ltr"
+    },
+    {
+      "text": "Outer after",
+      "direction": "rtl"
+    }
+  ],
+  "strongReference": [
+    {
+      "text": "Outer parent",
+      "direction": "rtl"
+    },
+    {
+      "text": "שלום 123 😀",
+      "direction": "rtl"
+    },
+    {
+      "text": "456 😀",
+      "direction": "rtl"
+    },
+    {
+      "text": "789 😀",
+      "direction": "rtl"
+    },
+    {
+      "text": "Outer after",
+      "direction": "rtl"
+    }
+  ],
+  "transformed": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "bullet_list",
+        "attrs": {
+          "dir": "rtl"
+        },
+        "content": [
+          {
+            "type": "list_item",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Outer parent"
+                  }
+                ]
+              },
+              {
+                "type": "ordered_list",
+                "attrs": {
+                  "dir": "auto",
+                  "directionGroup": "e25582e4-6e3a-4e9e-bab7-eacc2ff0251b",
+                  "start": 0
+                },
+                "content": [
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "123 😀"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list_item",
+            "attrs": {
+              "dir": "auto",
+              "directionGroup": "e25582e4-6e3a-4e9e-bab7-eacc2ff0251b"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "456 😀"
+                  }
+                ]
+              },
+              {
+                "type": "ordered_list",
+                "attrs": {
+                  "dir": "auto",
+                  "directionGroup": "e25582e4-6e3a-4e9e-bab7-eacc2ff0251b",
+                  "start": 2
+                },
+                "content": [
+                  {
+                    "type": "list_item",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "789 😀"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list_item",
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Outer after"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": ""
+          }
+        ]
+      }
+    ]
+  },
+  "nativeArrowSelection": "rent\n\n",
+  "fountainArrowSelection": "rent\n\n",
+  "final": [
+    {
+      "text": "Outer parent",
+      "direction": "rtl"
+    },
+    {
+      "text": "123 😀",
+      "direction": "ltr"
+    },
+    {
+      "text": "456 😀",
+      "direction": "ltr"
+    },
+    {
+      "text": "789 😀",
+      "direction": "ltr"
+    },
+    {
+      "text": "Outer after",
+      "direction": "rtl"
+    }
+  ],
+  "errors": []
+}
