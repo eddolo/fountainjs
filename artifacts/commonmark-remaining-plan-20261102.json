@@ -1,0 +1,289 @@
+{
+  "date": "2026-11-02",
+  "commit": "19973b300bf2cd918c753fb6d346b0677e9c893c",
+  "command": "node scripts/check-markdown-conformance.mjs --report --show-mismatches --document-flow-report",
+  "log": {
+    "path": "artifacts/commonmark-current-gaps-20261102.log",
+    "sha256": "934c48826c6c6783770357e1dcd5aa81422d4ad940fe75f46daa4a76c2e1c917"
+  },
+  "default": {
+    "matched": 563,
+    "pending": 72,
+    "intentional": 17,
+    "total": 652
+  },
+  "strongestExistingProfile": {
+    "matched": 613,
+    "pending": 22,
+    "intentional": 17,
+    "total": 652,
+    "adapters": [
+      "HTMLContainerExtension",
+      "HTMLCommentExtension",
+      "HTMLFlowExtension"
+    ],
+    "exactSourceChecks": 1304
+  },
+  "note": "Existing parser and comparator unchanged. Optional profile counts do not promote the default baseline or prove full CommonMark conformance.",
+  "groups": [
+    {
+      "name": "Inline wrapper identity and placeholder anchors",
+      "examples": [
+        150,
+        163,
+        201,
+        491,
+        524,
+        536,
+        613,
+        614,
+        615,
+        616,
+        617
+      ],
+      "next": "Define safe schema representation for unknown inline wrappers and anchors without href; preserve their data and distinguish them from links. Reuse existing inert adapters where applicable."
+    },
+    {
+      "name": "Raw-text and active-element adapters",
+      "examples": [
+        170,
+        171,
+        172,
+        173,
+        176,
+        178
+      ],
+      "next": "Integrate inert raw-source adapters with whole-document flow. Source must stay non-executable; display/source retention and reference rendering remain distinct contracts."
+    },
+    {
+      "name": "Unfinished HTML tags",
+      "examples": [
+        156,
+        157,
+        158
+      ],
+      "next": "Preserve the currently retained source while specifying a browser-equivalent reader projection for tokens a browser discards. Do not remove source to improve the score."
+    },
+    {
+      "name": "Document declaration",
+      "examples": [
+        181
+      ],
+      "next": "Define portable doctype/declaration metadata and an explicit document-vs-fragment export contract."
+    },
+    {
+      "name": "Literal HTML link destination",
+      "examples": [
+        631
+      ],
+      "next": "Audit the rejected raw backslash destination and its browser navigation meaning before proposing a safe retention policy."
+    }
+  ],
+  "pendingCases": [
+    {
+      "number": 150,
+      "source": " <div>\r\n  *hello*\r\n         <foo><a>\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 156,
+      "source": "<div id=\"foo\"\r\n*hi*\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+      ]
+    },
+    {
+      "number": 157,
+      "source": "<div class\r\nfoo\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+      ]
+    },
+    {
+      "number": 158,
+      "source": "<div *???-&&&-<---\r\n*foo*\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+      ]
+    },
+    {
+      "number": 163,
+      "source": "<Warning>\r\n*bar*\r\n</Warning>\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 170,
+      "source": "<script type=\"text/javascript\">\r\n// JavaScript example\r\n\r\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\r\n</script>\r\nokay\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "Inline HTML <script> requires a block or specialized adapter; literal source retained."
+      ]
+    },
+    {
+      "number": 171,
+      "source": "<textarea>\r\n\r\n*foo*\r\n\r\n_bar_\r\n\r\n</textarea>\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "Inline HTML <textarea> requires a block or specialized adapter; literal source retained."
+      ]
+    },
+    {
+      "number": 172,
+      "source": "<style\r\n  type=\"text/css\">\r\nh1 {color:red;}\r\n\r\np {color:blue;}\r\n</style>\r\nokay\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "Inline HTML <style> requires a block or specialized adapter; literal source retained."
+      ]
+    },
+    {
+      "number": 173,
+      "source": "<style\r\n  type=\"text/css\">\r\n\r\nfoo\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "Inline HTML <style> requires a block or specialized adapter; literal source retained."
+      ]
+    },
+    {
+      "number": 176,
+      "source": "<style>p{color:red;}</style>\r\n*foo*\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "Inline HTML <style> requires a block or specialized adapter; literal source retained."
+      ]
+    },
+    {
+      "number": 178,
+      "source": "<script>\r\nfoo\r\n</script>1. *bar*\r\n",
+      "issueCodes": [],
+      "fallbacks": [
+        "Inline HTML <script> requires a block or specialized adapter; literal source retained."
+      ]
+    },
+    {
+      "number": 181,
+      "source": "<!DOCTYPE html>\r\n",
+      "issueCodes": [
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 201,
+      "source": "[foo]: <bar>(baz)\r\n\r\n[foo]\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 491,
+      "source": "[link](<foo\r\nbar>)\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 524,
+      "source": "[foo <bar attr=\"](baz)\">\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 536,
+      "source": "[foo <bar attr=\"][ref]\">\r\n\r\n[ref]: /uri\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 613,
+      "source": "<a><bab><c2c>\r\n",
+      "issueCodes": [
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 614,
+      "source": "<a/><b2/>\r\n",
+      "issueCodes": [
+        "html-parse-error",
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 615,
+      "source": "<a  /><b2\r\ndata=\"foo\" >\r\n",
+      "issueCodes": [
+        "html-parse-error",
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 616,
+      "source": "<a foo=\"bar\" bam = 'baz <em>\"</em>'\r\n_boolean zoop:33=zoop:33 />\r\n",
+      "issueCodes": [
+        "html-parse-error",
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 617,
+      "source": "Foo <responsive-image src=\"foo.jpg\" />\r\n",
+      "issueCodes": [
+        "html-parse-error",
+        "unmapped-inline-element",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 631,
+      "source": "foo <a href=\"\\*\">\r\n",
+      "issueCodes": [
+        "rejected-url",
+        "inline-html-projection",
+        "text-block-flow-projection"
+      ],
+      "fallbacks": []
+    }
+  ]
+}

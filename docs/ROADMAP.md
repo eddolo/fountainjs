@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+CommonMark follow-up audit (2026-11-02, source `19973b3`): the existing full
+corpus check still reports **563/652 default matches** and **613/652** with the
+optional container/comment/anonymous-flow adapters, with 1,304 separate exact
+source checks per whole-document profile. The 39 remaining optional-profile
+differences split into the existing 17 intentional policies and **22 conversion
+gaps**: 11 inline-wrapper/placeholder-anchor cases, six raw-text/active-element
+adapter cases, three unfinished tags, one document declaration and one literal
+HTML URL. Work through those contracts without discarding source or executing
+imported content. Start with inline wrapper identity and anchors without href;
+then integrate the existing inert raw-source adapters into document flow.
+Detailed case IDs and next actions: `artifacts/commonmark-remaining-plan-20261102.json`.
+The runtime parser, comparator and baseline scores are unchanged by this audit.
+
 Whole-node clipboard inheritance follow-up (2026-11-02, Unreleased): retain a
 selected child's omitted ancestor direction in standard HTML and Fountain JSON,
 without copying hidden anchor text. Automatic owners become explicitly reported
