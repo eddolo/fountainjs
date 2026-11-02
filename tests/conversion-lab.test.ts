@@ -1,10 +1,66 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { detectLabFormat, exportLab, importLab, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
-import { Schema, StarterKit } from 'fountainjs-editor';
+import { createLabContext, detectLabFormat, exportLab, importLab, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
+import { createEditor, EditorState, Schema, StarterKit } from 'fountainjs-editor';
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it('keeps each file’s HTML policy and schema through independent editing and reopening', () => {
+    const settings = { preserveHTMLStructure: true };
+    const context = createLabContext(settings);
+    settings.preserveHTMLStructure = false;
+    const source = '<section id="part"><p>Before <a id="chapter">Chapter</a><a name="empty"></a> after.</p><!--note--></section>';
+    const original = importLab(bytes(source), 'html', context);
+    expect(context.options.preserveHTMLStructure).toBe(true);
+    expect(Object.isFrozen(context.options)).toBe(true);
+    expect(original.issues).toEqual([]);
+    expect(original.document.child(0).type.name).toBe('html_container');
+    const mounted = new Schema(context.kit.schema).nodeFromJSON(original.document.toJSON());
+    for (const format of ['html', 'json', 'markdown'] as const) {
+      const output = exportLab(mounted, format, undefined, context);
+      const reopened = importLab(output.bytes, format, context);
+      expect(sameLabDocument(mounted, reopened.document)).toBe(true);
+    }
+    const standard = importLab(bytes(source), 'html');
+    expect(standard.issues.some(issue => issue.code === 'unmapped-inline-element')).toBe(true);
+    expect(() => exportLab(mounted, 'html')).toThrow();
+    expect(context.policy).not.toBe(createLabContext().policy);
+  });
+
+  it('retains Markdown source while allowing explicit HTML structure conversion', () => {
+    const context = createLabContext({ preserveHTMLStructure: true });
+    const source = '<section id="part">\r\n\r\nBefore <a id="chapter">Chapter</a> **bold**.\r\n\r\n</section>\r\n';
+    const original = importLab(bytes(source), 'markdown', context);
+    expect(original.document.child(0).type.name).toBe('html_container');
+    expect(new TextDecoder().decode(exportLab(original.document, 'markdown', original.source, context).bytes)).toBe(source);
+    expect(importLab(bytes(source), 'markdown').document.textContent).toContain('<section');
+  });
+
+  it('preserves untouched Markdown after the live editor adds an automatic caret paragraph', () => {
+    const context = createLabContext({ preserveHTMLStructure: true });
+    const source = '<section id="part">\n<p>Untouched</p>\n<!--note-->\n</section>\n';
+    const result = importLab(bytes(source), 'markdown', context);
+    const editor = createEditor({ schema: context.kit.schema, state: EditorState.create({
+      schema: context.schema, doc: result.document, plugins: context.kit.plugins,
+    }) });
+    try {
+      expect(editor.state.doc.childCount).toBe(result.document.childCount + 1);
+      expect(new TextDecoder().decode(exportLab(editor.state.doc, 'markdown', result.source, context).bytes)).toBe(source);
+      const serialized = context.schema.nodeFromJSON(editor.getJSON());
+      expect(new TextDecoder().decode(exportLab(serialized, 'markdown', result.source, context).bytes)).not.toBe(source);
+    } finally { editor.destroy(); }
+  });
+
+  it('does not activate scripts or retain unhandled attributes when structure preservation is enabled', () => {
+    const context = createLabContext({ preserveHTMLStructure: true });
+    const source = '<p><a id="chapter" onclick="evil()">Readable</a></p><script>evil()</script>';
+    const result = importLab(bytes(source), 'html', context);
+    expect(result.issues.some(issue => issue.code === 'unmapped-inline-element')).toBe(true);
+    const output = new TextDecoder().decode(exportLab(result.document, 'html', undefined, context).bytes);
+    expect(output).not.toContain('onclick');
+    expect(output).not.toContain('<script');
+    expect(result.document.textContent).toContain('Readable');
+  });
   it.each(['docx', 'html', 'json'] as const)('retains linked editable notes through %s in the lab schema', format => {
     const document = labSchema.node('doc', {}, [
       labSchema.node('paragraph', {}, [labSchema.text('Claim'), labSchema.node('footnote_reference', { id: '7' })]),

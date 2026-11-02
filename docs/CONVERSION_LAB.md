@@ -11,6 +11,56 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+HTML structure follow-up (2026-11-02, Unreleased): select **Preserve supported
+HTML structure** under **Options for the next files**, then choose an HTML or
+Markdown file. The lab installs the optional section, comment, anonymous-flow
+and non-link bookmark adapters. HTML embedded in Markdown is explicitly
+converted in this mode. Scripts and arbitrary styling are not activated, and
+unsupported structure/attributes still produce conversion findings. Standard
+import remains the default.
+
+Each file keeps its own schema and import policy. Changing the checkbox applies
+only to later uploads; existing drafts and their undo history remain mounted.
+Export/reopen checks and reader previews use that file's schema. The diagnostic
+download records `importOptions` and a distinct `policy`; it still omits content
+unless requested. Import the same original again with another setting to compare
+both results without replacing either draft.
+
+Non-link bookmarks inherit ordinary text styling. HTML comment badges are
+visible in the editable source surface and hidden in the reopened reader
+preview; their data remains in the document and round-trip comparison.
+
+The lab now keeps the imported live schema/document through editor creation and
+export. JSON copying had erased the private provenance of an automatically added
+caret paragraph, causing untouched Markdown to be rewritten. Only the existing
+live automatic-repair contract permits exact-source reuse; authored, serialized
+or modified empty paragraphs remain actual content. An untouched source export
+can omit that editor-only caret block, so exact reopened JSON can still differ
+from the live editor. The lab's comparison does not normalize away that difference.
+
+Combining these adapters also exposed a server-import crash for comments nested
+inside configured sections. Speculative child projections now inherit comment
+origin and literal-source context while isolating their diagnostic/visit lists.
+The regression checks both retained and genuinely discarded identical comments;
+retention must not suppress a legitimate loss report.
+
+Verification for this checkpoint: 3,018 tests across 225 files pass, as do six
+recorded public-page journeys (HTML and Markdown in Chromium, Firefox and WebKit).
+The journeys upload files, edit with the keyboard, undo/redo, switch files and
+settings, download untouched Markdown, reopen three export formats and inspect
+the private-by-default diagnostic download. They also check bookmark styling and
+the author/reader comment distinction. Reader screenshots for both input formats
+were inspected across all three engines, along with Markdown author screenshots
+and the Chromium import-options screenshot. Videos/traces were recorded; this
+checkpoint does not claim a frame-by-frame video review or native Word comparison.
+
+API, headless boundary, packed ESM/CommonJS, TypeScript, size budgets and the
+production site build pass. The existing optional math chunk-size warning remains.
+The CommonMark whole-document profiles are unchanged: 563 default, 601 optional
+containers and 613 optional comments/flow/bookmarks out of 652; source-retention
+checks remain separate. Evidence is bound to source and reviewed artifacts in
+`artifacts/lab-html-policy-verification-20261102.json`. No npm version changes.
+
 Local table-text follow-up (2026-10-05, Unreleased): supported inherited/conditional
 font, emphasis, colour, size, spacing and alignment now become editable text and
 paragraph declarations. The actual upload/edit/history/download/reopen workflow

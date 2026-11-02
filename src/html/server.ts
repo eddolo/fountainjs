@@ -704,7 +704,9 @@ function configuredNode(
     for (const candidate of candidates) {
       // Only report losses from the projection actually accepted by the schema.
       // A speculative inline interpretation of block content is not data loss.
-      const branch: ImportContext = { issues: [], issueKeys: new Set(),
+      // Nested projections share source/comment identity and literal-source
+      // policy. Only speculative diagnostics and visit lists are isolated.
+      const branch: ImportContext = { ...context, issues: [], issueKeys: new Set(),
         // A rejected content shape may traverse generated hard breaks. Commit
         // its visit evidence only if this projection is actually accepted.
         inlineSlots: context.inlineSlots ? { ...context.inlineSlots, breakVisits: [], atomVisits: [] } : undefined,

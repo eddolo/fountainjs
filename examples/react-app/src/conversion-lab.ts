@@ -1,5 +1,5 @@
 import katex from 'katex';
-import { HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
+import { HTMLAnchorExtension, HTMLCommentExtension, HTMLContainerExtension, HTMLFlowExtension, HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { PagesExtension } from 'fountainjs-editor/pages';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/docx';
@@ -7,11 +7,23 @@ import { compileTeXForDOCX } from './mathjax-docx';
 
 export type LabFormat = 'markdown' | 'html' | 'docx' | 'json';
 export type LabIssue = { code: string; message: string; path?: readonly number[]; sourcePart?: string };
-export const labKit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
-  renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
-})]);
-export const labSchema = new Schema(labKit.schema);
 export const labPolicy = 'starter-kit-pages-v2; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000';
+export type LabImportOptions = { readonly preserveHTMLStructure?: boolean };
+/** Each imported file owns its schema/policy for editing, export and reopening.
+ * Changing the next-import controls must never reinterpret an existing draft.
+ */
+export function createLabContext(options: LabImportOptions = {}) {
+  const settings = Object.freeze({ preserveHTMLStructure: options.preserveHTMLStructure === true });
+  const kit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
+    renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
+  }), ...(settings.preserveHTMLStructure ? [HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension] : [])]);
+  return Object.freeze({ options: settings, kit, schema: new Schema(kit.schema),
+    policy: settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy });
+}
+export type LabContext = ReturnType<typeof createLabContext>;
+export const defaultLabContext = createLabContext();
+export const labKit = defaultLabContext.kit;
+export const labSchema = defaultLabContext.schema;
 export function labImages(document: Node) {
   const images: { source: string; alt: string; embedded: boolean }[] = [];
   const visit = (node: Node) => {
@@ -46,7 +58,8 @@ function boundedJSON(text: string) {
   visit(value, 0);
   return value;
 }
-export function importLab(bytes: Uint8Array, format: LabFormat): { document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; packageParts?: readonly DOCXPackagePart[] } {
+export function importLab(bytes: Uint8Array, format: LabFormat, context: LabContext = defaultLabContext): { document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; packageParts?: readonly DOCXPackagePart[] } {
+  const labSchema = context.schema;
   if (bytes.byteLength > (format === 'docx' ? 4 : 1) * 1024 * 1024) throw new Error('Lab limit: 1 MiB per text/JSON file; 4 MiB per DOCX.');
   if (format === 'docx') {
     const result = importDOCX(bytes, labSchema, { maxArchiveBytes: 4 * 1024 * 1024, maxExpandedBytes: 24 * 1024 * 1024 });
@@ -60,15 +73,26 @@ export function importLab(bytes: Uint8Array, format: LabFormat): { document: Nod
   if (format === 'json') {
     const document = labSchema.nodeFromJSON(boundedJSON(text));
     if (document.type !== labSchema.topNodeType) throw new Error('Choose a complete Fountain document JSON object with type "doc", not a single node or a workspace bundle.');
-    return { document, issues: [{ code: 'schema-boundary', message: 'Validated against the supplied StarterKit + Pages schema, not every extension schema. Extra data and visual fidelity are not certified; keep the original file.' }] };
+    return { document, issues: [{ code: 'schema-boundary', message: `Validated against this file’s selected lab schema${context.options.preserveHTMLStructure ? ', including supported HTML structure' : ' (StarterKit + Pages)'}, not every extension schema. Extra data and visual fidelity are not certified; keep the original file.` }] };
   }
-  const result = MarkdownImporter.parseWithSource(text, labSchema);
-  return { ...result, issues: [{ code: 'markdown-coverage', message: 'Default Markdown parser: raw HTML stays inert; full CommonMark/dialect conformance and exhaustive import-loss reporting are not available.' }] };
+  const issues: LabIssue[] = [];
+  const result = MarkdownImporter.parseWithSource(text, labSchema, context.options.preserveHTMLStructure ? {
+    parseHTMLDocument: (segments, schema, sourceContext) => {
+      const parsed = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, schema, sourceContext);
+      issues.push(...parsed.issues);
+      return parsed.nodes;
+    },
+    onHTMLFlowFallback: issue => issues.push({ code: 'html-source-fallback', message: issue.message }),
+  } : {});
+  return { ...result, issues: [{ code: 'markdown-coverage', message: context.options.preserveHTMLStructure
+    ? 'HTML conversion is enabled for this file. Supported structure is retained; unsupported HTML can remain literal or lose structure with a report. Full CommonMark/dialect conformance and original layout are not certified.'
+    : 'Default Markdown parser: raw HTML stays inert; full CommonMark/dialect conformance and exhaustive import-loss reporting are not available.' }, ...issues] };
 }
-export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot) {
-  // Each mounted editor has its own Schema instances. Source snapshots belong to
-  // the import schema; recreate the same portable document there before matching.
-  document = labSchema.nodeFromJSON(document.toJSON());
+export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext) {
+  // Keep live import/editing provenance when this file owns the schema. A JSON
+  // copy would turn an automatic caret paragraph into an authored empty block.
+  // Explicit foreign-schema callers still need normal portable reconstruction.
+  if (document.type.schema !== context.schema) document = context.schema.nodeFromJSON(document.toJSON());
   if (format === 'docx') {
     const result = exportDOCX(document, {
       resolveMath: node => compileTeXForDOCX(String(node.attrs.latex), node.type.name === 'math_block'),

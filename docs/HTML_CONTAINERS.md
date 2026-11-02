@@ -30,7 +30,9 @@ schema. The portable core module has no DOM or rendering-service dependency.
 `HTMLAnchorExtension` and its `htmlAnchor` node specification are exported from
 `fountainjs-editor` and `fountainjs-editor/core`. Add the extension to your
 `composeExtensions` list when your application needs to retain HTML bookmarks.
-It is not included in StarterKit or enabled automatically in the conversion lab.
+It is not included in StarterKit. The conversion lab's opt-in **Preserve supported
+HTML structure** setting installs it alongside sections, comments and inline flow
+for subsequently imported files; existing drafts keep their original schema.
 
 The `html_anchor` inline container preserves `<a>` without `href`, including
 empty bookmarks and rich inline text. Supported HTML attributes are `id`,
@@ -65,10 +67,10 @@ journey `tests/manual/html-anchors-real.spec.ts`. The latter imports a real
 HTML file, replaces a word through native selection, deletes an empty bookmark,
 uses undo/redo, and reopens exported HTML. Run it headlessly with one worker:
 `pnpm exec playwright test --config playwright.html-anchors-audit.config.ts`.
-Its fixture is test-only, not a public authoring demo. Native tests for additional
-selection/paste combinations and integration into conversion-lab controls remain
-separate work; no CommonMark score or production-readiness claim follows from
-these scoped checks.
+Its fixture is test-only, not a public bookmark-management demo. The conversion
+lab now offers import/edit/export under the optional profile. Additional native
+selection/paste combinations and bookmark-creation controls remain separate work;
+no CommonMark score or production-readiness claim follows from these scoped checks.
 
 Checkpoint evidence: 3,013 unit tests across 225 files passed; the three native
 browser journeys passed without retries. Reopened screenshots from all three

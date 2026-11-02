@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add per-file HTML structure preservation to the conversion lab. Supported
+  sections, comments, anonymous flow and non-link bookmarks use the same schema
+  through import, editing, export and reader preview. Changing next-import
+  options leaves existing drafts and history intact. Keep live Markdown source
+  provenance instead of erasing automatic-caret identity through JSON copying.
+- Fix nested configured HTML imports losing comment/source context. Preserve
+  comment origins while keeping speculative diagnostics isolated; retain real
+  loss reports for comments that the selected projection cannot represent.
+
 - Add optional `HTMLAnchorExtension` / `htmlAnchor` exports for non-hyperlink
   HTML bookmarks, with browser and server import rules. Preserve absent versus
   empty attributes and distinguish an absent `href` from an empty hyperlink.

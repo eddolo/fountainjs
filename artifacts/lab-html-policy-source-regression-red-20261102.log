@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/conversion-lab.test.ts (17 tests | 1 failed) 131ms
+   ❯ public conversion lab adapters (17)
+     × preserves untouched Markdown after the live editor adds an automatic caret paragraph 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/conversion-lab.test.ts > public conversion lab adapters > preserves untouched Markdown after the live editor adds an automatic caret paragraph
+AssertionError: expected '<section id="part"><p>Untouched</p>&#…' to be '<section id="part">\n<p>Untouched</p>…' // Object.is equality
+
+- Expected
++ Received
+
+- <section id="part">
+- <p>Untouched</p>
+- <!--note-->
+- </section>
++ <section id="part"><p>Untouched</p>&#10;<!--note-->&#10;</section>
+
++ <p data-fountain-empty="text"></p>
+
+ ❯ tests/conversion-lab.test.ts:48:111
+     46|     try {
+     47|       expect(editor.state.doc.childCount).toBe(result.document.childCo…
+     48|       expect(new TextDecoder().decode(exportLab(editor.state.doc, 'mar…
+       |                                                                                                               ^
+     49|       const serialized = context.schema.nodeFromJSON(editor.getJSON());
+     50|       expect(new TextDecoder().decode(exportLab(serialized, 'markdown'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  23:25:42
+   Duration  2.37s (transform 53%, import 41%, tests 6%)

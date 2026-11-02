@@ -1,0 +1,199 @@
+{
+  "date": "2026-11-02",
+  "baseCommit": "f4424595a798c45ade4453269cf30f816b6a881f",
+  "scope": "Per-file HTML structure import policy, live Markdown source retention and nested HTML comment context",
+  "verification": {
+    "unit": {
+      "files": 225,
+      "tests": 3018
+    },
+    "browser": {
+      "tests": 6,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "inputs": [
+        "html",
+        "markdown"
+      ],
+      "headless": true,
+      "workers": 1,
+      "retries": 0,
+      "actions": [
+        "upload",
+        "native keyboard replacement",
+        "undo/redo",
+        "switch files and next-import policy",
+        "exact untouched Markdown download",
+        "HTML/JSON/Markdown export/reopen",
+        "diagnostic download",
+        "bookmark styling",
+        "author/reader comment visibility"
+      ]
+    },
+    "contracts": [
+      "API 413 declaration files",
+      "headless 105 modules and TypeScript",
+      "packed ESM/CommonJS",
+      "size budgets unchanged",
+      "TypeScript noEmit",
+      "production Pages build"
+    ],
+    "commonmark": {
+      "total": 652,
+      "default": 563,
+      "optionalContainers": 601,
+      "optionalCommentsFlow": 613,
+      "optionalAnchorsDiagnostic": 613,
+      "exactSourceChecksPerProfile": 1304
+    }
+  },
+  "visualReview": {
+    "screenshots": [
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/retained-html-reopened.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/retained-html-reopened.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/retained-html-reopened.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/import-options.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/retained-html-editor.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/retained-html-reopened.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/retained-html-editor.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/retained-html-reopened.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/retained-html-editor.png",
+      "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/retained-html-reopened.png"
+    ],
+    "videos": "Recorded locally; not reviewed frame by frame",
+    "nativeApplicationFidelity": "Not certified by these internal round trips"
+  },
+  "logNormalization": "Trailing blank lines removed; trailing whitespace in the site build reporter line removed. Test failures in red regression logs are retained.",
+  "remaining": [
+    "22 optional-profile CommonMark conversion gaps",
+    "17 intentional CommonMark policy differences",
+    "bookmark creation/management UI",
+    "broader native-format visual fidelity"
+  ],
+  "npmVersion": "0.4.0-beta.2 (unchanged)",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "d2e663ffeda5a3514fdab66b387c5103f468141b8f6af2d25ab287494eee96ca"
+    },
+    {
+      "path": "artifacts/html-context-comment-regression-red-20261102.log",
+      "sha256": "ec77561cf6bec1c023a1d18d11d3e0cec6948a922dcbf379e5f2ca887ee477cd"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102.log",
+      "sha256": "f98ef673a90ea21b7bdd4013d5b32f5170eef1aef464101f975135c53d099236"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/retained-html-reopened.png",
+      "sha256": "29c88a069d64f107428140be070629648a9c3c7e563d6bc8c38aa5ef798532fd"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/retained-html-reopened.png",
+      "sha256": "331e375cb906275dad88b60933d81e9bb5a30641484d3bfe92fa216ab4f818e9"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/retained-html-reopened.png",
+      "sha256": "d58fb648c829749f1768fd58d1da89950c08a4870327d106b92821eac672ba5f"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/import-options.png",
+      "sha256": "8c68a9841b58be37ead653cac0d3afe16c7fb081beeb580893550559b2cae628"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/retained-html-editor.png",
+      "sha256": "ecebe5f5ad7461b742a8de978f1eafb8ab0cc54718e2d9def1b8087de119d74f"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/retained-html-reopened.png",
+      "sha256": "34294dfbcfe21c322216b87e89443711a3a8e1376e71bbe616130e1e00224c1f"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/retained-html-editor.png",
+      "sha256": "cc51f04f8924dbec8ed4add18c20607cc41b5b4f5798996b2cc681b553ba7c0d"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/retained-html-reopened.png",
+      "sha256": "96209d404ddaf34aa938945bec85968c37a141d6b3e9e868e1f562007da7d3cf"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/retained-html-editor.png",
+      "sha256": "3f1d3b5a248e0ed6234b3e1f26525090fbcb2f3fc6d98619e7cd22907dc928df"
+    },
+    {
+      "path": "artifacts/lab-html-policy-browser-preview-20261102/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/retained-html-reopened.png",
+      "sha256": "e10949853dd46d49d317da753dc3a5f23dea1c9ace842e2b35990b7cce5c7e48"
+    },
+    {
+      "path": "artifacts/lab-html-policy-conformance-20261102.log",
+      "sha256": "1b71b6e509344bac9be717c88b889fec9423440c5dfccecb7cfef5d0d235309c"
+    },
+    {
+      "path": "artifacts/lab-html-policy-contracts-20261102.log",
+      "sha256": "f166cf4c51d054c728f8f800a51be7796da688bd71ba93fcbd76a526f456a321"
+    },
+    {
+      "path": "artifacts/lab-html-policy-site-build-20261102.log",
+      "sha256": "79f4e25ca3ade874f86c163865d6e32fe0c695bb09b7a25c1e7568adc5812de4"
+    },
+    {
+      "path": "artifacts/lab-html-policy-source-regression-red-20261102.log",
+      "sha256": "88b9bd56bb62dbfcdaa2a88ed2313a9b9fe5b341d772a801c7685ebd07e49e15"
+    },
+    {
+      "path": "artifacts/lab-html-policy-units-full-20261102.log",
+      "sha256": "1cef0df59a7ead7ea311aadb9a29a9d2d182d3af5c982cf3c1aaa9168a69bfdc"
+    },
+    {
+      "path": "docs/CONVERSION_LAB.md",
+      "sha256": "0d85ee4a89666f0a552d5bfe66c99019fb597502cf65398c742fd5aca9e2f41d"
+    },
+    {
+      "path": "docs/HTML_CONTAINERS.md",
+      "sha256": "970158cd3ae761be4386f9a1d1ea87abcb5bc9628e4bd3af6b75e9b1ab6d2232"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "2d3c9f92e5e25d45f7d547e38f5c47877290e0773b2e3563ae96a5e7cfd02108"
+    },
+    {
+      "path": "examples/react-app/src/ConversionLab.tsx",
+      "sha256": "474b951964c5afe90885feca96d16ad2f372088858347c767840c180e2ca4ec4"
+    },
+    {
+      "path": "examples/react-app/src/Developers.tsx",
+      "sha256": "3bd2fe7e41af6de00e817ae4ed42f9663dd4a2590b7ce2253ef786417e3966e4"
+    },
+    {
+      "path": "examples/react-app/src/conversion-lab.css",
+      "sha256": "18aadb9ce8937b084a1a968aeecdf625a9ab0d20a37ba3fad06917e9e50e6050"
+    },
+    {
+      "path": "examples/react-app/src/conversion-lab.ts",
+      "sha256": "bc3973bc055ed6f0ea16fd72e3269e1f195db20de242ef88614cb8c6729c94a1"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "68e774ac31ff0db01add1eeb76b9a437168e9a8fbc8ae8177a4ec78e749daced"
+    },
+    {
+      "path": "tests/browser/conversion-html-policy-journey.ts",
+      "sha256": "93d3d01660f39fe6500583003b5a14b047c3920d6c85355dbafe3183d4bdf64c"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "ded44ebf8438ecd4b32e23a95b9f97634f1e7e08bdb30a866dacf44b462e9f97"
+    },
+    {
+      "path": "tests/conversion-lab.test.ts",
+      "sha256": "0e7e99e013fdd20c7159f4dc07c3d2cdabffe3e094bfab2a5832f94d9c737376"
+    },
+    {
+      "path": "tests/html-comments.test.ts",
+      "sha256": "cc6a65cfcdc23e20e96db696671b8c0989174104b615f7481d3ddb20c10f5cf2"
+    }
+  ]
+}

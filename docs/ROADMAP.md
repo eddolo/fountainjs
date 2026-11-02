@@ -1,11 +1,22 @@
 # FountainJS opportunity roadmap
 
+Conversion-lab follow-up (2026-11-02, Unreleased): authors can opt into supported
+HTML structure for new imports. Each file retains its schema and policy through
+editing, history, export and reopening. Real HTML/Markdown upload journeys
+exposed and fixed nested-comment context loss and unnecessary rewriting of
+untouched Markdown after the editor adds an automatic caret paragraph.
+The option is an import control, not a bookmark creation/management panel.
+The optional CommonMark profile remains **613/652**; this makes existing
+adapters usable in the public lab without claiming the 22 conversion gaps closed.
+See [the lab workflow](CONVERSION_LAB.md#workflow).
+
 Bookmark follow-up (2026-11-02, Unreleased): optional `HTMLAnchorExtension`
 retains named/empty non-link HTML anchors and supported attributes through
 browser/server conversion. A recorded edit/delete/history/reopen journey found
 and fixed Firefox replacement typing escaping an inline content container.
 The journey now passes Chromium, Firefox and WebKit, with reopened screenshots
-inspected. The adapter remains opt-in, with no conversion-lab bookmark UI yet.
+inspected. The adapter remains opt-in; the lab import option above is now available,
+while bookmark creation/management UI remains future work.
 The full corpus diagnostic with the adapter still reports **613/652**, so the
 22-case conversion backlog below is not reduced or relabelled complete.
 Unknown wrappers and unsupported anchor attributes remain next; see the

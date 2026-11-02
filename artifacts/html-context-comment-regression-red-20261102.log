@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-comments.test.ts (28 tests | 1 failed) 80ms
+   ❯ opt-in inert HTML comment retention (28)
+     × retains comment provenance through nested configured containers 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-comments.test.ts > opt-in inert HTML comment retention > retains comment provenance through nested configured containers
+TypeError: Cannot read properties of undefined (reading 'set')
+ ❯ src/html/server.ts:853:33
+    851|       const comment = importHTMLComment(child.data, schema, marks);
+    852|       if (comment) {
+    853|         context.commentOrigins!.set(comment, child.raw);
+       |                                 ^
+    854|         result.push(comment);
+    855|       }
+ ❯ inlineChildren src/html/server.ts:849:21
+ ❯ paragraph src/html/server.ts:1099:19
+ ❯ projectBlock src/html/server.ts:1276:28
+ ❯ block src/html/server.ts:1222:39
+ ❯ src/html/server.ts:1162:22
+ ❯ blockChildren src/html/server.ts:1158:22
+ ❯ candidates src/html/server.ts:699:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 passed (28)
+   Start at  23:22:11
+   Duration  2.65s (transform 52%, import 45%, tests 3%)

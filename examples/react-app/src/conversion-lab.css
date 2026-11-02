@@ -5,7 +5,7 @@
 .conversion-lab footer a { color: #c8bbff; text-decoration: underline; text-underline-offset: .15em; }
 .lab-shell > h1 { font-size: clamp(30px,4vw,52px); line-height: 1.1; letter-spacing: -.04em; margin: 24px 0 12px; }
 .conversion-lab h2 { font-size: 24px; overflow-wrap: anywhere; }.conversion-lab h3 { font-size: 20px; }
-.conversion-lab p,.conversion-lab li { line-height: 1.6; }.conversion-lab a { color: #5140aa; }
+.conversion-lab p,.conversion-lab li { line-height: 1.6; }.conversion-lab a[href] { color: #5140aa; }
 .lab-drop { border: 2px dashed #8576ca; border-radius: 14px; background: #fff; padding: 24px; margin-top: 22px; }
 .conversion-lab label { display: grid; gap: 8px; font-size: 15px; }.lab-drop>label { font-size: 20px; font-weight: 650; }
 .conversion-lab label { min-width: 0; }.conversion-lab input[type=file] { width: 100%; min-width: 0; box-sizing: border-box; font-size: 14px; }.conversion-lab h3,.lab-assets { scroll-margin-top: 100px; }
@@ -15,12 +15,15 @@
 .conversion-lab button:hover { background: #ece7ff; color: #211444; }.conversion-lab button:disabled { opacity: .5; cursor: default; }.conversion-lab :focus-visible { outline: 3px solid #7151e8; outline-offset: 3px; }
 .conversion-lab .lab-primary,.lab-files button[aria-pressed=true] { background: #5940c6; color: white; }.lab-files button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .lab-privacy { font-size: 14px; color: #514b63; }.lab-file { margin-top: 20px; }.lab-file[hidden] { display: none; }
+.lab-import-options { margin: 20px 0; padding: 12px 20px; border: 1px solid #d6d0e3; border-radius: 10px; }.lab-import-options legend { font-weight: 650; }.lab-import-options p,.lab-import-mode { font-size: 14px; color: #514b63; }
 .lab-notice { border-left: 4px solid #9b6926; background: #fff6e5; padding: 16px 22px; margin: 16px 0; overflow-wrap: anywhere; }.lab-notice ul { max-height: 220px; overflow: auto; }
 .lab-columns { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; }.lab-columns>section { min-width: 0; }
 .lab-package { margin: 20px 0; overflow-wrap: anywhere; }.lab-package summary { cursor: pointer; font-weight: 650; }.lab-package ul { max-height: 300px; overflow: auto; }
 .lab-columns pre { white-space: pre-wrap; overflow-wrap: anywhere; overflow: auto; max-height: 240px; padding: 20px; background: #201c33; color: #f4efff; border-radius: 10px; font-size: 14px; line-height: 1.65; }
 .conversion-lab .fountain-editor { min-height: 220px; max-height: 560px; overflow: auto; background: white; }.conversion-lab .fountain-toolbar { flex-wrap: wrap; }.conversion-lab .fountain-editor img { max-width: 100%; }
 .lab-export,.lab-report { background: white; padding: 24px; border: 1px solid #d6d0e3; border-radius: 12px; margin: 24px 0; }.lab-check { margin-top: 18px; overflow-wrap: anywhere; }.lab-check ul { max-height: 200px; overflow: auto; }
+/* Source comments remain inspectable in the author surface, but native HTML comments are invisible to readers. */
+.lab-check .fountain-editor [data-fountain-html-comment] { display: none !important; }
 .lab-footnotes { margin-top: 16px; }.lab-footnotes h2 { margin: 0; font-size: 20px; }.lab-footnotes p { font-size: 14px; }.lab-footnotes ul { padding: 0; list-style: none; }.lab-footnotes li { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 10px 0; }
 .conversion-lab .fountain-page-break { border: 0; border-top: 2px dashed #82739e; margin: 24px 0; height: 12px; cursor: pointer; }
 .lab-page-settings { margin: 20px 0; }.lab-page-settings summary { cursor: pointer; font-weight: 650; }.lab-page-setting-fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; }.lab-page-setting-fields input { min-width: 0; width: 100%; box-sizing: border-box; }

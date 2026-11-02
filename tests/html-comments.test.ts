@@ -15,6 +15,15 @@ function comments(doc: ReturnType<Schema['node']>) {
 }
 
 describe('opt-in inert HTML comment retention', () => {
+  it('retains comment provenance through nested configured containers', () => {
+    const source = '<section><div><p>Before<!-- same -->after</p></div><pre><!-- same -->code</pre></section>';
+    const result = ServerHTMLImporter.parseWithReport(source, schema);
+    expect(comments(result.document)).toEqual([' same ']);
+    expect(result.issues.filter(issue => issue.code === 'discarded-html-comment')).toHaveLength(1);
+    expect(result.document.child(0).type.name).toBe('html_container');
+    const html = HTMLExporter.export(result.document, { document: false });
+    expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(result.document.toJSON());
+  });
   it('runs without a DOM and preserves comment identity, order and inherited marks', () => {
     expect(typeof document).toBe('undefined');
     const result = ServerHTMLImporter.parseWithReport('<p>A<!-- first --><strong>B<!-- second --></strong><!-- first --></p>', schema);

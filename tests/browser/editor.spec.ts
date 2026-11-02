@@ -13,11 +13,16 @@ import '../manual/html-anchors-real.spec';
 import { codeDirectionJourney } from './code-direction-journey';
 import { nativeRichPasteJourney } from './native-rich-paste-journey';
 import { htmlAnchorLossJourney } from './html-anchor-loss-journey';
+import { conversionHTMLPolicyJourney } from './conversion-html-policy-journey';
 import { listAutoScopeJourney } from './list-auto-scope-journey';
 import { blockDirectionKeyboardJourney, blockDirectionPointerJourney } from './block-direction-reorder-journey';
 import { listDirectionCases, listDirectionTransformJourney } from './list-direction-transform-journey';
 import { tableColumnSideCases, tableColumnSideJourney } from './table-column-side-journey';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+
+for (const format of ['html', 'markdown'] as const) test(`keeps per-file HTML conversion settings through ${format} editing and export`, async ({ page }, info) => {
+  await conversionHTMLPolicyJourney(page, info, format);
+});
 import { strFromU8, unzipSync } from 'fflate';
 import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
