@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve authored carriage returns in safe HTML text/attributes using numeric
+  references, including retained raw-source blocks and canonical Markdown HTML
+  carriers. Reopening no longer silently normalizes those CR/CRLF code points.
+
 - Add per-file HTML structure preservation to the conversion lab. Supported
   sections, comments, anonymous flow and non-link bookmarks use the same schema
   through import, editing, export and reader preview. Changing next-import

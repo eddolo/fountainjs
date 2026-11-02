@@ -1,0 +1,149 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-inert-browser.test.ts (9 tests | 1 failed) 367ms
+   ❯ inert source browser/parser boundaries (9)
+     × preserves authored CR/CRLF raw source in DOM and server HTML reopening 32ms
+ ❯ tests/html-inert-raw-text.test.ts (27 tests | 3 failed) 158ms
+   ❯ opt-in inert raw-text HTML (27)
+     × preserves authored CR/CRLF in safe script carriers and canonical Markdown 33ms
+     × preserves authored CR/CRLF in safe style carriers and canonical Markdown 5ms
+     × preserves authored CR/CRLF in safe textarea carriers and canonical Markdown 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-inert-browser.test.ts > inert source browser/parser boundaries > preserves authored CR/CRLF raw source in DOM and server HTML reopening
+AssertionError: expected 'first\nsecond\nthird\nlast & <literal>' to be 'first\r\nsecond\rthird\nlast & <liter…' // Object.is equality
+
+- Expected
++ Received
+
+- first
++ first
+- second
+third
++ second
++ third
+  last & <literal>
+
+ ❯ tests/html-inert-browser.test.ts:17:99
+     15|     const doc = local.node('doc', {}, [local.node('paragraph', {}, [lo…
+     16|     const html = HTMLExporter.export(doc, { document: false });
+     17|     expect(new DOMParser().parseFromString(html, 'text/html').querySel…
+       |                                                                                                   ^
+     18|     expect(HTMLImporter.parse(html, local).toJSON()).toEqual(doc.toJSO…
+     19|     expect(ServerHTMLImporter.parse(html, local).toJSON()).toEqual(doc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/html-inert-raw-text.test.ts > opt-in inert raw-text HTML > preserves authored CR/CRLF in safe script carriers and canonical Markdown
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -11,12 +11,13 @@
+              "tag": "script",
+              "tokens": null,
+            },
+            "content": [
+              {
+-               "text": "first
+- second
+third
++               "text": "first
++ second
++ third
+  last & <literal>",
+                "type": "text",
+              },
+            ],
+            "type": "html_inert_raw_text",
+
+ ❯ tests/html-inert-raw-text.test.ts:28:51
+     26|     const html = HTMLExporter.export(doc, { document: false });
+     27|     expect(html).not.toContain(`<${tag}`);
+     28|     expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON()…
+       |                                                   ^
+     29|     expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema…
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/html-inert-raw-text.test.ts > opt-in inert raw-text HTML > preserves authored CR/CRLF in safe style carriers and canonical Markdown
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -11,12 +11,13 @@
+              "tag": "style",
+              "tokens": null,
+            },
+            "content": [
+              {
+-               "text": "first
+- second
+third
++               "text": "first
++ second
++ third
+  last & <literal>",
+                "type": "text",
+              },
+            ],
+            "type": "html_inert_raw_text",
+
+ ❯ tests/html-inert-raw-text.test.ts:28:51
+     26|     const html = HTMLExporter.export(doc, { document: false });
+     27|     expect(html).not.toContain(`<${tag}`);
+     28|     expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON()…
+       |                                                   ^
+     29|     expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema…
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/html-inert-raw-text.test.ts > opt-in inert raw-text HTML > preserves authored CR/CRLF in safe textarea carriers and canonical Markdown
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -11,12 +11,13 @@
+              "tag": "textarea",
+              "tokens": null,
+            },
+            "content": [
+              {
+-               "text": "first
+- second
+third
++               "text": "first
++ second
++ third
+  last & <literal>",
+                "type": "text",
+              },
+            ],
+            "type": "html_inert_raw_text",
+
+ ❯ tests/html-inert-raw-text.test.ts:28:51
+     26|     const html = HTMLExporter.export(doc, { document: false });
+     27|     expect(html).not.toContain(`<${tag}`);
+     28|     expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON()…
+       |                                                   ^
+     29|     expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema…
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 32 passed (36)
+   Start at  23:40:39
+   Duration  7.87s (import 38%, transform 37%, environment 18%, tests 7%)
+
+     Import  172 modules were evaluated 322 times · 2.77s total, 38% of tracked time
+             ~1.29s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

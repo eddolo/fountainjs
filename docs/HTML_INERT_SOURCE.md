@@ -1,5 +1,68 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Source reconstruction investigation (2026-11-02)
+
+The remaining CommonMark work needs an explicit source-output boundary, not a
+relaxed safe-reader serializer. A pure Node prototype reconstructs the original
+registered element names/attributes around their current children from safe
+carriers. Using the **unchanged neutral comparator**, its experimental source
+profile matches **629/652** reference cases with LF and CRLF, compared with the
+shipped optional profile's **613/652**. The sixteen additional matches concern
+retained wrappers/raw-text elements. They are **not shipped conformance gains**.
+The prototype restores event attributes and script/style source as output bytes;
+it is never inserted into a browser and is not a safe reader export.
+
+The experiment also establishes why this cannot simply become a public option:
+five basic source cases survive, but four edited-model cases fail. Closing
+`</script>` / `</style>` text can escape the intended source element; authored
+CR/CRLF and NUL can change during the intermediate HTML parse/serialization.
+Passing the official corpus alone does not cover those authored states.
+
+The CR case exposed a separate bug in the **existing safe exporter**. Its text
+and attribute escaping now writes a character reference for CR, so reopening
+does not normalize it to LF. Permanent tests cover retained script/style/textarea
+source, canonical Markdown carriers, DOM/server reopening and bookmark attributes.
+This preserves already-authored code points; ordinary imported HTML still follows
+HTML newline normalization. NUL and raw active-element reconstruction are not
+declared solved by this fix.
+
+Verification: 3,023 tests across 225 files pass. A recorded public-workshop
+workflow passes Chromium, Firefox and WebKit with native pointer/keyboard
+editing, undo/redo, complete HTML/Markdown/JSON reopening and reader text checks.
+All six editor/reader screenshots were inspected. They show consistent layouts;
+the lone CR is preserved in data but remains invisible in this ordinary view.
+This is not an invisibles-visualization or native-file pixel-fidelity claim.
+API, packed ESM/CommonJS, headless, TypeScript, existing size budgets and the
+production website build pass. The shipped conformance profiles remain unchanged.
+Evidence: `artifacts/html-source-carriage-verification-20261102.json`.
+
+The smallest proposed production boundary is:
+
+- Keep `HTMLExporter` and live NodeViews on their existing safe-carrier contract.
+- Add a separate optional **source-data exporter**, walking the model with the
+  full document context rather than reparsing safe HTML and losing code points.
+  Its result must distinguish source bytes from renderable/sanitized HTML.
+- Serialize ordinary editable nodes through the existing contextual serializer;
+  use an explicit source projection only for recognized retained-source nodes.
+  Never copy stale opening/closing tokens around edited children blindly.
+- Validate reconstructed structure and report/refuse unrepresentable source
+  states (including closing-token escapes and NUL). Distinguish byte retention
+  from browser HTML normalization; do not report exact model reopening when the
+  target format cannot express it.
+- Exercise edits/history, native JSON persistence, independent parsing and a
+  source inspection/download workflow before exposing it in the public lab.
+  Never promote its reference matches into safe-reader/default parser scores.
+
+Unfinished tags (156–158), declaration metadata (181), unsupported anchor
+attributes (616), and the rejected literal URL (631) remain separate contracts.
+This experiment neither reclassifies those gaps nor changes URL policy.
+
+Reproduce with `node artifacts/run-html-source-conformance-probe-20261102.mjs`
+after building, and `node artifacts/html-source-prototype-boundaries-20261102.mjs`.
+The latter deliberately verifies known prototype failures, not production success.
+The generated harness changes only imports, the experimental adapter set and its
+output source projection; the semantic comparator and baseline fixtures are intact.
+
 ## Official CommonMark retention coverage (2026-10-08)
 
 The existing adapters now have 24 Node-only LF/CRLF contracts drawn from twelve

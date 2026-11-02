@@ -5,6 +5,12 @@ import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(composeExtensions([CoreExtension, HTMLAnchorExtension]).schema);
 
+it('preserves authored carriage returns in bookmark attributes', () => {
+  const anchor = schema.node('html_anchor', { title: 'first\r\nsecond\rthird' }, [schema.text('Bookmark')]);
+  const doc = schema.node('doc', {}, [schema.node('paragraph', {}, [anchor])]);
+  expect(ServerHTMLImporter.parse(HTMLExporter.export(doc, { document: false }), schema).toJSON()).toEqual(doc.toJSON());
+});
+
 it.each(['<a></a>', '<a id=""></a>', '<a id="chapter" name="old-chapter"></a>', '<a title="Note"><strong>Rich</strong> text</a>'])
 ('preserves a non-link anchor through server HTML: %s', source => {
   expect(typeof document).toBe('undefined');

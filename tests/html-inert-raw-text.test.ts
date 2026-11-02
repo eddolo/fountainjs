@@ -19,6 +19,16 @@ const examples = [
 ] as const;
 
 describe('opt-in inert raw-text HTML', () => {
+  it.each(['script', 'style', 'textarea'])('preserves authored CR/CRLF in safe %s carriers and canonical Markdown', tag => {
+    const body = 'first\r\nsecond\rthird\nlast & <literal>';
+    const raw = schema.node('html_inert_raw_text', { tag }, [schema.text(body)]);
+    const doc = schema.node('doc', {}, [schema.node('paragraph', {}, [raw])]);
+    const html = HTMLExporter.export(doc, { document: false });
+    expect(html).not.toContain(`<${tag}`);
+    expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON());
+    expect(MarkdownImporter.parse(MarkdownExporter.export(doc), schema, options).toJSON()).toEqual(doc.toJSON());
+  });
+
   for (const ending of ['\n', '\r\n']) it.each(examples)('retains literal %s source with ' + JSON.stringify(ending), (tag, value, text) => {
     const source = value.replaceAll('\n', ending);
     const fallbacks: unknown[] = [];

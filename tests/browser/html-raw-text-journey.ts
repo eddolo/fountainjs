@@ -1,4 +1,52 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
+import { writeFile } from 'node:fs/promises';
+
+export async function htmlRawCarriageReturnJourney(page: Page, info: TestInfo) {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/demos/node-markdown.html#inert-source');
+  const workshop = page.getByRole('region', { name: 'Inert HTML preservation workshop' });
+  await workshop.getByRole('combobox', { name: 'Inert input format', exact: true }).selectOption('HTML');
+  await workshop.getByLabel('Inert source input', { exact: true }).fill('<p><textarea>first&#13;&#10;second&#13;third&#10;last</textarea></p>');
+  await workshop.getByRole('button', { name: 'Import inert source', exact: true }).click();
+  const editor = workshop.getByRole('textbox', { name: 'Inert HTML source editor', exact: true });
+  const body = editor.locator('code[data-fountain-inert-content]');
+  const original = 'first\r\nsecond\rthird\nlast';
+  await expect.poll(() => body.textContent()).toBe(original);
+  const json = workshop.getByLabel('Inert native document JSON');
+  const before = JSON.parse(await json.inputValue());
+  await body.scrollIntoViewIfNeeded();
+  const point = await body.evaluate(node => {
+    const text = node.ownerDocument.createTreeWalker(node, NodeFilter.SHOW_TEXT).nextNode()!;
+    const offset = text.textContent!.lastIndexOf('last');
+    const range = node.ownerDocument.createRange();
+    range.setStart(text, offset); range.setEnd(text, offset + 1);
+    const rect = range.getBoundingClientRect();
+    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  });
+  await page.mouse.click(point.x, point.y);
+  await page.keyboard.press('End');
+  await page.keyboard.type(' updated');
+  await expect.poll(() => body.textContent()).toBe(original + ' updated');
+  const edited = JSON.parse(await json.inputValue());
+  await workshop.getByRole('button', { name: 'Undo inert edit', exact: true }).click();
+  await expect.poll(async () => JSON.parse(await json.inputValue())).toEqual(before);
+  await workshop.getByRole('button', { name: 'Redo inert edit', exact: true }).click();
+  await expect.poll(async () => JSON.parse(await json.inputValue())).toEqual(edited);
+  for (const format of ['HTML', 'Markdown', 'JSON']) {
+    await workshop.getByRole('button', { name: `Export ${format} and reopen`, exact: true }).click();
+    await expect(workshop.getByRole('status')).toContainText(`${format}: Complete native JSON retained.`);
+    await expect.poll(async () => JSON.parse(await json.inputValue())).toEqual(edited);
+    await expect.poll(() => body.textContent()).toBe(original + ' updated');
+  }
+  const reader = workshop.frameLocator('iframe[title="Inert source reader"]');
+  await expect.poll(() => reader.locator('code[data-fountain-inert-content]').textContent()).toBe(original + ' updated');
+  await editor.screenshot({ path: info.outputPath('carriage-return-editor.png') });
+  await workshop.locator('iframe').scrollIntoViewIfNeeded();
+  await reader.locator('body').screenshot({ path: info.outputPath('carriage-return-reader.png') });
+  await writeFile(info.outputPath('carriage-return-observations.json'), JSON.stringify({ before, edited, text: await body.textContent(), errors }, null, 2));
+  expect(errors).toEqual([]);
+}
 
 export async function htmlRawTextJourney(page: Page, info: TestInfo) {
   const errors: string[] = [], requests: string[] = [];

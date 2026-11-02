@@ -34,6 +34,15 @@ normalization-form facts, bounded/truncated state, and a screen-reader-friendly
 summary. Limits reject unexpectedly large input instead of allocating without
 bounds.
 
+Safe HTML export writes authored carriage returns as `&#13;` in text/attributes
+so HTML tokenization does not silently change them to LF. Retained raw-source
+blocks preserve mixed CR, CRLF and LF through the tested edit/history/export
+workflow. This is code-point retention, not a promise that every control has a
+visible glyph: a lone CR remains visually inconspicuous in the normal code view.
+Use inspection or invisibles decorations to distinguish it. Ordinary HTML input
+still follows HTML newline normalization; this does not reconstruct original
+file bytes or solve every unrepresentable control (such as NUL).
+
 This is a text-integrity API, not a byte-provenance claim. Once an operating
 system, decoder, clipboard, or browser has converted bytes to a JavaScript
 string, the original byte sequence cannot be reconstructed. Products that

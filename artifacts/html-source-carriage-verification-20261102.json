@@ -1,0 +1,204 @@
+{
+  "date": "2026-11-02",
+  "baseCommit": "dc844b9702ce24b4b6b73740a1bbca84aefad0f0",
+  "fix": "Preserve authored CR code points in safe HTML text and attributes",
+  "verification": {
+    "unit": {
+      "tests": 3023,
+      "files": 225
+    },
+    "browser": {
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "tests": 3,
+      "headless": true,
+      "workers": 1,
+      "retries": 0,
+      "scope": "User-visible workshop import, pointer typing, history, full JSON equality after HTML/Markdown/JSON reopen, exact reader text"
+    },
+    "contracts": [
+      "API 413 declarations",
+      "headless 105 modules and TypeScript",
+      "packed ESM/CommonJS",
+      "TypeScript noEmit",
+      "unchanged build budgets",
+      "production site build"
+    ],
+    "commonmark": {
+      "default": 563,
+      "containers": 601,
+      "commentsFlow": 613,
+      "anchorDiagnostic": 613,
+      "total": 652,
+      "exactSourceChecksPerProfile": 1304
+    }
+  },
+  "experiment": {
+    "shipped": false,
+    "matches": 629,
+    "gains": 16,
+    "regressions": 0,
+    "comparatorChanged": false,
+    "boundaryCases": {
+      "retained": 5,
+      "knownFailures": 4
+    },
+    "sourceNotExecuted": true
+  },
+  "visualReview": {
+    "inspected": [
+      "artifacts/html-source-carriage-browser-chromium-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-editor.png",
+      "artifacts/html-source-carriage-browser-chromium-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-reader.png",
+      "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-editor.png",
+      "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-reader.png",
+      "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-editor.png",
+      "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-reader.png"
+    ],
+    "finding": "Editor and reader agree; lone CR is retained but visually inconspicuous. These are not original-format pixel fidelity checks.",
+    "videos": "Recorded locally; not reviewed frame by frame"
+  },
+  "trialNote": "First browser run timed out on an overly exact getByLabel selector and was stopped. The corrected combobox-role locator passes all three engines.",
+  "normalization": "Saved logs have trailing whitespace/blank lines removed; failure content remains in the red unit log.",
+  "npmVersion": "0.4.0-beta.2 unchanged",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "f091feb756970bd02c2b2719268c92c13e82c60604dce3bf7b7dd2414bdac8af"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-chromium-20261102.log",
+      "sha256": "dbbb75585be82d2c007d9add2e3a56958b587cf4eaa0d04ca7c58f7969baab8f"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-chromium-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-editor.png",
+      "sha256": "d009720d204142b9370c64232b1667363bae26ffda6de8c363e5706331c0a51e"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-chromium-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-observations.json",
+      "sha256": "dff04d1c96e53f6def251281bbe66379fe31268a3155d13b32edbc5bedfcd40f"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-chromium-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-reader.png",
+      "sha256": "2fbeb958cb798b2578729fac9326365559861c7ac01fccf53aaa936544aa6d8c"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102.log",
+      "sha256": "e34afaf8e414a256b285aa37d3247e67e1d13199e04bde0701d2591606fe0ccc"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-editor.png",
+      "sha256": "3500bc10fc9692e5344de925ebc9dd7f2b77197218e4f3ec66acd652135095d5"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-observations.json",
+      "sha256": "dff04d1c96e53f6def251281bbe66379fe31268a3155d13b32edbc5bedfcd40f"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-reader.png",
+      "sha256": "e982249131ba0d9c077fd521620eb0122b60693e79b65fae64fb817a9c53f6eb"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-editor.png",
+      "sha256": "acf0e426f790ff90b2de912b4f15c02fb4b3742132814720d1b67c5b6857d6df"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-observations.json",
+      "sha256": "dff04d1c96e53f6def251281bbe66379fe31268a3155d13b32edbc5bedfcd40f"
+    },
+    {
+      "path": "artifacts/html-source-carriage-browser-other-20261102/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-reader.png",
+      "sha256": "207be1bc7d6851e885028cb993eae8a3ed5b3bc6443b97b8ca9df087816a5cad"
+    },
+    {
+      "path": "artifacts/html-source-carriage-conformance-20261102.log",
+      "sha256": "1b71b6e509344bac9be717c88b889fec9423440c5dfccecb7cfef5d0d235309c"
+    },
+    {
+      "path": "artifacts/html-source-carriage-contracts-20261102.log",
+      "sha256": "0e640e84bd29a43522247ab0be1be7340ccd49edcd7a7c3686408c3128d2dc96"
+    },
+    {
+      "path": "artifacts/html-source-carriage-return-focused-20261102.log",
+      "sha256": "ddc2263f1629b0a8a81fe55b0111adeb2083711a2f7ad7dfdfd30f0b2642af88"
+    },
+    {
+      "path": "artifacts/html-source-carriage-return-red-20261102.log",
+      "sha256": "1090d6921a69f3b670db34524bcc6ab6e27a49ef11d507a4527c42244ecbcb9f"
+    },
+    {
+      "path": "artifacts/html-source-carriage-site-20261102.log",
+      "sha256": "a0c39eb7597128a45e6a4988d6a0e81f4d6385a9e824d8fbf28016ad8cd6a909"
+    },
+    {
+      "path": "artifacts/html-source-carriage-units-full-20261102.log",
+      "sha256": "d4782bcdc9f521c4b715850fb03924557e1b0563f2244e48f62c3e4f19ff36a1"
+    },
+    {
+      "path": "artifacts/html-source-prototype-boundaries-20261102.json",
+      "sha256": "6fb603558fcc92f960c1e60ccd1c617684536999214719c856e17a0016c96be4"
+    },
+    {
+      "path": "artifacts/html-source-prototype-boundaries-20261102.mjs",
+      "sha256": "dd3aa9abebf1435e4a12dab00218f21e6413697a81b12eb81993b31b8c077e5e"
+    },
+    {
+      "path": "artifacts/html-source-reconstruction-audit-20261102.json",
+      "sha256": "0aecb23f04d8f46276f7a37ab0880f5fa6036c9bf9d087e68d6e91fe82015123"
+    },
+    {
+      "path": "artifacts/html-source-reconstruction-prototype-20261102.mjs",
+      "sha256": "323386b248bc1c9a829bb367932028ab3e57bafca4671ccc0774083b32b93518"
+    },
+    {
+      "path": "artifacts/run-html-source-conformance-probe-20261102.mjs",
+      "sha256": "ccb0866cc477c3b2de48587b5516299aa4a260e60a704a3a43764a3a0a49df40"
+    },
+    {
+      "path": "docs/HTML_INERT_SOURCE.md",
+      "sha256": "5900f882ad7515e773c66e539b98fadd66453912797daa611f85d5d147e5cdab"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "170aab6a1ec388d3fc7169cbf305b393135e03ecaeeb185767e00c07bf61ef00"
+    },
+    {
+      "path": "docs/TEXT_INTEGRITY.md",
+      "sha256": "86eaa2c36e4e67f3cacba0b7b2c55a8ffe0aacb7063be3aaa73483aa753a3fe1"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "9631e4c68f346b89f8883dc4d5d8ff55c247ee107e96d49443b692f750767550"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "fedf041608a00167f63560cb399749daad8205193f4c1d20d18240118415016c"
+    },
+    {
+      "path": "tests/browser/html-raw-text-journey.ts",
+      "sha256": "67d8aa8e381e65127c95a4dc2b3d4810d55c3488b4e8307e4accc6244c70b3d0"
+    },
+    {
+      "path": "tests/html-anchors.test.ts",
+      "sha256": "5f842544708ae29c43ced9f7d5e5073d4eea4bbc4e2d55317f6ffb61fdeea5d8"
+    },
+    {
+      "path": "tests/html-inert-browser.test.ts",
+      "sha256": "48c20b2d7338880efd255eb542975cb75d02396877db50f0b1dda2fadfd2d2bb"
+    },
+    {
+      "path": "tests/html-inert-raw-text.test.ts",
+      "sha256": "d23882eeca489b9ae75806a4780497588c187c489dfeb3c4d731b435a0025576"
+    },
+    {
+      "path": "scripts/check-markdown-conformance.mjs",
+      "sha256": "8372cad138f33356694da5b148488f7c58d54b6102b5382e527d72fad148334e"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-anonymous-flow-v1.json",
+      "sha256": "c744590d92d6a5d0346f734499aac67d84a34f092ad4c3410b6b7b21a92a7c4e"
+    }
+  ]
+}

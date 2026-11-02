@@ -21,7 +21,9 @@ export interface HTMLExportOptions {
 }
 
 function escapeHTML(value: unknown): string {
-  return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+  // Literal CR/CRLF is normalized by HTML tokenization before text or attribute
+  // values reach an importer. A reference preserves authored CR as a code point.
+  return String(value ?? '').replace(/[&<>"'\r]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '\r': '&#13;' })[char]!);
 }
 
 function safeURL(value: unknown, allowDataImage = false): string {

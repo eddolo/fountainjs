@@ -1,0 +1,191 @@
+{
+  "status": "prototype only; not shippable",
+  "rows": [
+    {
+      "name": "script body",
+      "retained": true,
+      "expected": [
+        {
+          "tag": "script",
+          "body": "const x = \"<tag> & data\";",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "script",
+          "body": "const x = \"<tag> & data\";",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><script>const x = \"<tag> & data\";</script></p>"
+    },
+    {
+      "name": "style body",
+      "retained": true,
+      "expected": [
+        {
+          "tag": "style",
+          "body": "p { color: red; }",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "style",
+          "body": "p { color: red; }",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><style>p { color: red; }</style></p>"
+    },
+    {
+      "name": "textarea leading LF",
+      "retained": true,
+      "expected": [
+        {
+          "tag": "textarea",
+          "body": "\nfirst\nsecond",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "textarea",
+          "body": "\nfirst\nsecond",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><textarea>\n\nfirst\nsecond</textarea></p>"
+    },
+    {
+      "name": "textarea markup",
+      "retained": true,
+      "expected": [
+        {
+          "tag": "textarea",
+          "body": "</textarea><b>literal</b>&",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "textarea",
+          "body": "</textarea><b>literal</b>&",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><textarea>&lt;/textarea&gt;&lt;b&gt;literal&lt;/b&gt;&amp;</textarea></p>"
+    },
+    {
+      "name": "edited script closing token",
+      "retained": false,
+      "expected": [
+        {
+          "tag": "script",
+          "body": "const x = \"</script><p>leaked</p>\";",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "script",
+          "body": "const x = \"",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><script>const x = \"</script><p>leaked</p>\";</script></p>"
+    },
+    {
+      "name": "edited style closing token",
+      "retained": false,
+      "expected": [
+        {
+          "tag": "style",
+          "body": "/* </style><p>leaked</p> */",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "style",
+          "body": "/* ",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><style>/* </style><p>leaked</p> */</style></p>"
+    },
+    {
+      "name": "authored CRLF source",
+      "retained": false,
+      "expected": [
+        {
+          "tag": "script",
+          "body": "first\r\nsecond",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "script",
+          "body": "first\nsecond",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><script>first\r\nsecond</script></p>"
+    },
+    {
+      "name": "authored NUL source",
+      "retained": false,
+      "expected": [
+        {
+          "tag": "textarea",
+          "body": "first\u0000second",
+          "attributes": {}
+        }
+      ],
+      "actual": [
+        {
+          "tag": "textarea",
+          "body": "firstsecond",
+          "attributes": {}
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><textarea>firstsecond</textarea></p>"
+    },
+    {
+      "name": "unknown custom tag",
+      "retained": true,
+      "expected": [
+        {
+          "tag": "lab-widget",
+          "body": "editable",
+          "attributes": {
+            "onclick": "dangerous()",
+            "data-v": "a&b"
+          }
+        }
+      ],
+      "actual": [
+        {
+          "tag": "lab-widget",
+          "body": "editable",
+          "attributes": {
+            "onclick": "dangerous()",
+            "data-v": "a&b"
+          }
+        }
+      ],
+      "issues": [],
+      "sourceHTML": "<p><lab-widget onclick=\"dangerous()\" data-v=\"a&amp;b\">editable</lab-widget></p>"
+    }
+  ]
+}

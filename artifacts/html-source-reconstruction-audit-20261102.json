@@ -1,0 +1,1156 @@
+{
+  "date": "2026-11-02",
+  "kind": "experimental unsanitized source output; not shipped",
+  "defaultChanged": false,
+  "comparatorChanged": false,
+  "referenceTotal": 652,
+  "configuredMatches": 629,
+  "shippedOptionalMatches": 613,
+  "newlyMatching": [
+    150,
+    163,
+    170,
+    171,
+    172,
+    173,
+    176,
+    178,
+    201,
+    491,
+    524,
+    536,
+    613,
+    614,
+    615,
+    617
+  ],
+  "regressions": [],
+  "retentionChecks": 1304,
+  "remaining": [
+    {
+      "number": 156,
+      "expected": [],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<div id=\"foo\""
+            ],
+            [
+              "hard-break"
+            ],
+            [
+              "text",
+              "*hi*"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        },
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ]
+    },
+    {
+      "number": 157,
+      "expected": [],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<div class"
+            ],
+            [
+              "hard-break"
+            ],
+            [
+              "text",
+              "foo"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        },
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ]
+    },
+    {
+      "number": 158,
+      "expected": [],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<div *???-&&&-<---"
+            ],
+            [
+              "hard-break"
+            ],
+            [
+              "text",
+              "*foo*"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        },
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ]
+    },
+    {
+      "number": 181,
+      "expected": [],
+      "actual": [
+        [
+          "paragraph",
+          []
+        ]
+      ],
+      "issues": [
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        },
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        }
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 207,
+      "expected": [],
+      "actual": [
+        [
+          "paragraph",
+          []
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 218,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "/url",
+              null,
+              [
+                [
+                  "text",
+                  "foo"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "blockquote",
+          []
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "/url",
+              null,
+              [
+                [
+                  "text",
+                  "foo"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "blockquote",
+          [
+            [
+              "paragraph",
+              []
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 239,
+      "expected": [
+        [
+          "blockquote",
+          []
+        ]
+      ],
+      "actual": [
+        [
+          "blockquote",
+          [
+            [
+              "paragraph",
+              []
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 240,
+      "expected": [
+        [
+          "blockquote",
+          []
+        ]
+      ],
+      "actual": [
+        [
+          "blockquote",
+          [
+            [
+              "paragraph",
+              []
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 280,
+      "expected": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              []
+            ]
+          ]
+        ],
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "foo"
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  []
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "foo"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 281,
+      "expected": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "foo"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              []
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "bar"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "foo"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  []
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "bar"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 282,
+      "expected": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "foo"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              []
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "bar"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "foo"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  []
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "bar"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 283,
+      "expected": [
+        [
+          "list",
+          "ordered",
+          1,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "foo"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              []
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "bar"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "list",
+          "ordered",
+          1,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "foo"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  []
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "bar"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 284,
+      "expected": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              []
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  []
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 315,
+      "expected": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "a"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              []
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "c"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "list",
+          "bullet",
+          null,
+          [
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "a"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  []
+                ]
+              ]
+            ],
+            [
+              "item",
+              [
+                [
+                  "paragraph",
+                  [
+                    [
+                      "text",
+                      "c"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 596,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "irc://foo.bar:2233/baz",
+              null,
+              [
+                [
+                  "text",
+                  "irc://foo.bar:2233/baz"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<irc://foo.bar:2233/baz>"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 598,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "a+b+c:d",
+              null,
+              [
+                [
+                  "text",
+                  "a+b+c:d"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<a+b+c:d>"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 599,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "made-up-scheme://foo,bar",
+              null,
+              [
+                [
+                  "text",
+                  "made-up-scheme://foo,bar"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<made-up-scheme://foo,bar>"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 601,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "localhost:5001/foo",
+              null,
+              [
+                [
+                  "text",
+                  "localhost:5001/foo"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "<localhost:5001/foo>"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 608,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "< https://foo.bar >"
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "< "
+            ],
+            [
+              "link",
+              "https://foo.bar",
+              null,
+              [
+                [
+                  "text",
+                  "https://foo.bar"
+                ]
+              ]
+            ],
+            [
+              "text",
+              " >"
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 611,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "https://example.com"
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "https://example.com",
+              null,
+              [
+                [
+                  "text",
+                  "https://example.com"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 612,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "foo@bar.example.com"
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "mailto:foo@bar.example.com",
+              null,
+              [
+                [
+                  "text",
+                  "foo@bar.example.com"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "issues": [],
+      "fallbacks": []
+    },
+    {
+      "number": 616,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "html-inline",
+              "a",
+              [
+                [
+                  "_boolean",
+                  ""
+                ],
+                [
+                  "bam",
+                  "baz <em>\"</em>"
+                ],
+                [
+                  "foo",
+                  "bar"
+                ],
+                [
+                  "zoop:33",
+                  "zoop:33"
+                ]
+              ],
+              []
+            ]
+          ]
+        ],
+        [
+          "paragraph",
+          [
+            [
+              "html-inline",
+              "a",
+              [
+                [
+                  "_boolean",
+                  ""
+                ],
+                [
+                  "bam",
+                  "baz <em>\"</em>"
+                ],
+                [
+                  "foo",
+                  "bar"
+                ],
+                [
+                  "zoop:33",
+                  "zoop:33"
+                ]
+              ],
+              []
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          []
+        ]
+      ],
+      "issues": [
+        {
+          "code": "html-parse-error",
+          "message": "HTML parser recovered from non-void-html-element-start-tag-with-trailing-solidus.",
+          "line": 1,
+          "column": 4
+        },
+        {
+          "code": "unmapped-inline-element",
+          "contribution": "element:a",
+          "message": "An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark."
+        },
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        },
+        {
+          "code": "html-parse-error",
+          "message": "HTML parser recovered from non-void-html-element-start-tag-with-trailing-solidus.",
+          "line": 1,
+          "column": 4
+        },
+        {
+          "code": "unmapped-inline-element",
+          "contribution": "element:a",
+          "message": "An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark."
+        },
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        }
+      ],
+      "fallbacks": []
+    },
+    {
+      "number": 631,
+      "expected": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "foo "
+            ],
+            [
+              "link",
+              "\\*",
+              null,
+              []
+            ]
+          ]
+        ],
+        [
+          "paragraph",
+          [
+            [
+              "link",
+              "\\*",
+              null,
+              []
+            ]
+          ]
+        ]
+      ],
+      "actual": [
+        [
+          "paragraph",
+          [
+            [
+              "text",
+              "foo"
+            ]
+          ]
+        ]
+      ],
+      "issues": [
+        {
+          "code": "rejected-url",
+          "message": "Unsafe link URLs were omitted; readable link text was retained."
+        },
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        },
+        {
+          "code": "rejected-url",
+          "message": "Unsafe link URLs were omitted; readable link text was retained."
+        },
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        }
+      ],
+      "fallbacks": []
+    }
+  ],
+  "limitations": [
+    "Seven explicitly registered unknown tags, not wildcard import",
+    "No source reconstruction output executed or inserted into a browser",
+    "Known edited-model failures are demonstrated separately",
+    "Production scores and baseline files are unchanged"
+  ]
+}

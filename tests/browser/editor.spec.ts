@@ -49,7 +49,10 @@ import { webComponentFormJourney } from './web-component-form-journey';
 import { conversionLabJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-journey';
-import { htmlRawTextJourney } from './html-raw-text-journey';
+import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-text-journey';
+test('retains authored carriage returns through raw source editing and reopening', async ({ page }, info) => {
+  await htmlRawCarriageReturnJourney(page, info);
+});
 import { htmlLinkControlsJourney } from './html-link-controls-journey';
 import { markdownRejectedLinkJourney } from './markdown-rejected-link-journey';
 import { htmlEmptyParagraphJourney, htmlInertBlockJourney } from './html-inert-block-journey';

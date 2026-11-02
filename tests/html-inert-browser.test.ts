@@ -9,6 +9,16 @@ import { createInertHTMLBlockExtension, createInertHTMLInlineExtension, createIn
 import { ServerHTMLImporter } from '../src/html/server';
 const schema = new Schema(composeExtensions([CoreExtension, createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'lab.measurement'] })]).schema);
 describe('inert source browser/parser boundaries', () => {
+  it('preserves authored CR/CRLF raw source in DOM and server HTML reopening', () => {
+    const local = new Schema(composeExtensions([CoreExtension, createInertHTMLRawTextExtension({ tags: ['script'] })]).schema);
+    const body = 'first\r\nsecond\rthird\nlast & <literal>';
+    const doc = local.node('doc', {}, [local.node('paragraph', {}, [local.node('html_inert_raw_text', { tag: 'script' }, [local.text(body)])])]);
+    const html = HTMLExporter.export(doc, { document: false });
+    expect(new DOMParser().parseFromString(html, 'text/html').querySelector('code')!.textContent).toBe(body);
+    expect(HTMLImporter.parse(html, local).toJSON()).toEqual(doc.toJSON());
+    expect(ServerHTMLImporter.parse(html, local).toJSON()).toEqual(doc.toJSON());
+  });
+
   it('retains childless paragraphs and never hides source children behind empty markers', () => {
     const doc = schema.node('doc', {}, [schema.node('paragraph', { align: 'center' }, []),
       schema.node('blockquote', {}, [schema.node('paragraph', {}, []), schema.node('paragraph', {}, [schema.text('')])])]);

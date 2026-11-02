@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+HTML-source investigation (2026-11-02, Unreleased): reconstructing retained
+opaque nodes as source data reaches 629/652 in an experimental profile with the
+unchanged comparator, but edited closing tags/control characters expose four
+integrity failures. This is not a shipped score increase. Implement a separate
+validated source-output boundary; do not make safe reader output executable or
+silently normalize authored source. The investigation found and fixes CR loss in
+the existing safe HTML exporter. See [the evidence and proposed boundary](HTML_INERT_SOURCE.md#source-reconstruction-investigation-2026-11-02).
+
 Conversion-lab follow-up (2026-11-02, Unreleased): authors can opt into supported
 HTML structure for new imports. Each file retains its schema and policy through
 editing, history, export and reopening. Real HTML/Markdown upload journeys
