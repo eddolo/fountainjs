@@ -8,7 +8,7 @@ import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
 import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
 import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
 import { checkHTMLLinkControls } from './fixtures/html-link-controls-check.mjs';
-import { checkHTMLAnchorLoss } from './fixtures/html-anchor-loss-check.mjs';
+import { checkHTMLAnchorLoss, checkHTMLAnchorRetention } from './fixtures/html-anchor-loss-check.mjs';
 import { checkTextDirection } from './fixtures/text-direction-check.mjs';
 
 const require = createRequire(import.meta.url);
@@ -267,6 +267,7 @@ assertExports(esmInertHTML, ['createInertHTMLInlineExtension', 'createInertHTMLR
 checkInertHTMLSource(esmCore, esmServerHTML, esmInertHTML);
 console.log(`Packed ESM: ${checkHTMLLinkControls(esmCore, esmServerHTML)} link normalization/security/history/destination contracts passed.`);
 console.log(`Packed ESM root/core: ${checkHTMLAnchorLoss(esmCore, esmServerHTML)}/${checkHTMLAnchorLoss(esmHeadlessCore, esmServerHTML, esmCore.CoreSchemaSpec)} anchor loss/privacy/retention contracts passed.`);
+console.log(`Packed ESM root/core: ${checkHTMLAnchorRetention(esmCore, esmServerHTML)}/${checkHTMLAnchorRetention(esmHeadlessCore, esmServerHTML, esmCore.CoreSchemaSpec)} optional bookmark contracts passed.`);
 checkMarkdownBlockAtoms(esmCore, esmServerHTML);
 console.log(`Packed ESM: ${checkMarkdownEmphasis(esmCore)} native emphasis and partial-schema retention checks passed.`);
 console.log(`Packed ESM root/core: ${checkModelIntegrity(esmCore)}/${checkModelIntegrity(esmHeadlessCore, esmCore.CoreSchemaSpec)} owned-attribute checks plus immutable snapshots/history passed.`);
@@ -411,6 +412,7 @@ assertExports(require('fountainjs-editor/html/inert'), ['createInertHTMLInlineEx
 checkInertHTMLSource(cjsCore, cjsServerHTML, require('fountainjs-editor/html/inert'));
 console.log(`Packed CommonJS: ${checkHTMLLinkControls(cjsCore, cjsServerHTML)} link normalization/security/history/destination contracts passed.`);
 console.log(`Packed CommonJS root/core: ${checkHTMLAnchorLoss(cjsCore, cjsServerHTML)}/${checkHTMLAnchorLoss(cjsHeadlessCore, cjsServerHTML, cjsCore.CoreSchemaSpec)} anchor loss/privacy/retention contracts passed.`);
+console.log(`Packed CommonJS root/core: ${checkHTMLAnchorRetention(cjsCore, cjsServerHTML)}/${checkHTMLAnchorRetention(cjsHeadlessCore, cjsServerHTML, cjsCore.CoreSchemaSpec)} optional bookmark contracts passed.`);
 checkMarkdownBlockAtoms(cjsCore, cjsServerHTML);
 console.log(`Packed CommonJS: ${checkMarkdownEmphasis(cjsCore)} native emphasis and partial-schema retention checks passed.`);
 console.log(`Packed CommonJS root/core: ${checkModelIntegrity(cjsCore)}/${checkModelIntegrity(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} owned-attribute checks plus immutable snapshots/history passed.`);

@@ -11,6 +11,7 @@ import {
   HTMLContainerExtension,
   HTMLCommentExtension,
   HTMLFlowExtension,
+  HTMLAnchorExtension,
   MarkdownImporter,
   MarkdownExporter,
   Schema,
@@ -39,6 +40,7 @@ const htmlPolicyReport = process.argv.includes('--html-policy-report');
 const htmlFlowReport = process.argv.includes('--html-flow-report');
 const sourceFlowReport = process.argv.includes('--source-flow-report');
 const documentFlowReport = process.argv.includes('--document-flow-report');
+const anchorReport = process.argv.includes('--anchor-report');
 const inspectedExamples = new Set(process.argv
   .filter((value) => value.startsWith('--example='))
   .map((value) => Number(value.slice('--example='.length))));
@@ -1054,7 +1056,7 @@ if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip 
   if (errors.length || regressions.length) profileRegressions.push(`Source-recovery corpus regressions: ${[...errors, ...regressions].join(', ')}`);
   if (gains.length && !reportOnly) throw new Error(`Review newly matching source-recovery examples: ${compressRanges(gains)}`);
 }
-for (const [preserveComments, preserveFlow] of [[false, false], [true, false], [true, true]]) {
+for (const [preserveComments, preserveFlow, preserveAnchors] of [[false, false, false], [true, false, false], [true, true, false], ...(anchorReport ? [[true, true, true]] : [])]) {
   const fixture = preserveFlow ? 'commonmark-anonymous-flow-v1.json' : preserveComments ? 'commonmark-comment-flow-v1.json' : 'commonmark-document-flow-v1.json';
   const documentBaseline = JSON.parse(readFileSync(new URL(`../tests/fixtures/markdown/${fixture}`, import.meta.url), 'utf8'));
   if (documentBaseline.projectionVersion !== baseline.projectionVersion) throw new Error('Document-flow comparator version differs from the default.');
@@ -1066,6 +1068,7 @@ for (const [preserveComments, preserveFlow] of [[false, false], [true, false], [
   const documentSchema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...HTMLContainerExtension.nodes,
     ...(preserveComments ? HTMLCommentExtension.nodes : {}),
     ...(preserveFlow ? HTMLFlowExtension.nodes : {}),
+    ...(preserveAnchors ? HTMLAnchorExtension.nodes : {}),
   } });
   const counts = new Map();
   let retention = 0;
@@ -1087,10 +1090,10 @@ for (const [preserveComments, preserveFlow] of [[false, false], [true, false], [
     retention++;
     const matched = JSON.stringify(actual) === JSON.stringify(expected);
     if (matched) counts.set(example.number, (counts.get(example.number) ?? 0) + 1);
-    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, number: example.number, ending, source, expected, actual, issues, fallbacks, matched } }));
+    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, ...(preserveAnchors ? { preserveAnchors: true } : {}), number: example.number, ending, source, expected, actual, issues, fallbacks, matched } }));
   }
   const matches = [...counts].filter(([, count]) => count === 2).map(([number]) => number);
-  console.log(`Whole-document optional-container${preserveComments ? '+comment' : ''}${preserveFlow ? '+anonymous-flow' : ''} profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
+  console.log(`Whole-document optional-container${preserveComments ? '+comment' : ''}${preserveFlow ? '+anonymous-flow' : ''}${preserveAnchors ? '+anchor (diagnostic)' : ''} profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
   if (documentFlowReport) console.log(`Document-flow${preserveComments ? '+comment' : ''} matching ranges: ${compressRanges(matches)}`);
   const regressions = [...required].filter(number => counts.get(number) !== 2);
   if (regressions.length) profileRegressions.push(`Document-flow semantic regressions: ${compressRanges(regressions)}`);

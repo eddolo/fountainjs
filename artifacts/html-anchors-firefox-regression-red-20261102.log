@@ -1,0 +1,29 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/text-replacement-selection.test.ts (5 tests | 1 failed) 10ms
+   × keeps replacement text inside an inline bookmark when Firefox selects from the preceding run end 8ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  23:09:49
+   Duration  2.51s (transform 50%, import 49%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/text-replacement-selection.test.ts > keeps replacement text inside an inline bookmark when Firefox selects from the preceding run end
+AssertionError: expected 'one' to be 'Section one' // Object.is equality
+
+Expected: "Section one"
+Received: "one"
+
+ ❯ tests/text-replacement-selection.test.ts:18:58
+     16|   editor.dispatch(editor.createTransaction().setSelection(Selection.ra…
+     17|   expect(insertText(editor, 'Section ')).toBe(true);
+     18|   expect(editor.state.doc.child(0).child(1).textContent).toBe('Section…
+       |                                                          ^
+     19|   expect(editor.state.doc.child(0).child(0).textContent).toBe('Before …
+     20|   expect(editor.state.selection.path).toEqual([0, 1, 0]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

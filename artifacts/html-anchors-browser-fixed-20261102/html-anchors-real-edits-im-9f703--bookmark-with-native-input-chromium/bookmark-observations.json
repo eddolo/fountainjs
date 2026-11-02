@@ -1,0 +1,2914 @@
+{
+  "before": {
+    "doc": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Before "
+            },
+            {
+              "type": "html_anchor",
+              "attrs": {
+                "id": "chapter",
+                "name": "legacy"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Chapter one"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": " after."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Here "
+            },
+            {
+              "type": "html_anchor",
+              "attrs": {
+                "id": "empty"
+              }
+            },
+            {
+              "type": "text",
+              "text": " tail."
+            }
+          ]
+        }
+      ]
+    },
+    "html": "<p>Before <a id=\"chapter\" name=\"legacy\">Chapter one</a> after.</p>\n<p>Here <a id=\"empty\"></a> tail.</p>",
+    "events": [
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            1,
+            2
+          ],
+          "endPath": [
+            1,
+            2
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        }
+      }
+    ]
+  },
+  "edited": {
+    "doc": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Before "
+            },
+            {
+              "type": "html_anchor",
+              "attrs": {
+                "id": "chapter",
+                "name": "legacy"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Section one"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": " after."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Here "
+            },
+            {
+              "type": "html_anchor",
+              "attrs": {
+                "id": "empty"
+              }
+            },
+            {
+              "type": "text",
+              "text": " tail."
+            }
+          ]
+        }
+      ]
+    },
+    "html": "<p>Before <a id=\"chapter\" name=\"legacy\">Section one</a> after.</p>\n<p>Here <a id=\"empty\"></a> tail.</p>",
+    "events": [
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            1,
+            2
+          ],
+          "endPath": [
+            1,
+            2
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 2,
+          "to": 2,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 0,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "S",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 0,
+          "to": 8,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Chapter one",
+          "offset": 0,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Chapter one</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Chapter one",
+          "offset": 8,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Chapter one</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 1,
+          "to": 1,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "e",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 1,
+          "to": 1,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sone",
+          "offset": 1,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sone",
+          "offset": 1,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Seone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 2,
+          "to": 2,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "c",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 2,
+          "to": 2,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Seone",
+          "offset": 2,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Seone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Seone",
+          "offset": 2,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Seone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Secone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 3,
+          "to": 3,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "t",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 3,
+          "to": 3,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Secone",
+          "offset": 3,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Secone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Secone",
+          "offset": 3,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Secone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 4,
+          "to": 4,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "i",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 4,
+          "to": 4,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectone",
+          "offset": 4,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectone",
+          "offset": 4,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectione"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 5,
+          "to": 5,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "o",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 5,
+          "to": 5,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectione",
+          "offset": 5,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectione</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectione",
+          "offset": 5,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectione</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectioone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "n",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectioone",
+          "offset": 6,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectioone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectioone",
+          "offset": 6,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectioone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectionone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 7,
+          "to": 7,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": " ",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 7,
+          "to": 7,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectionone",
+          "offset": 7,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectionone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectionone",
+          "offset": 7,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectionone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 8,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 0,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 8,
+          "to": 8,
+          "kind": "text"
+        }
+      }
+    ]
+  },
+  "reopened": {
+    "doc": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Before "
+            },
+            {
+              "type": "html_anchor",
+              "attrs": {
+                "id": "chapter",
+                "name": "legacy"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Section one"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": " after."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Here "
+            },
+            {
+              "type": "html_anchor",
+              "attrs": {
+                "id": "empty"
+              }
+            },
+            {
+              "type": "text",
+              "text": " tail."
+            }
+          ]
+        }
+      ]
+    },
+    "html": "<p>Before <a id=\"chapter\" name=\"legacy\">Section one</a> after.</p>\n<p>Here <a id=\"empty\"></a> tail.</p>",
+    "events": [
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            1,
+            2
+          ],
+          "endPath": [
+            1,
+            2
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 2,
+          "to": 2,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 0,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "S",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 0,
+          "to": 8,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Chapter one",
+          "offset": 0,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Chapter one</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Chapter one",
+          "offset": 8,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Chapter one</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 1,
+          "to": 1,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "e",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 1,
+          "to": 1,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sone",
+          "offset": 1,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sone",
+          "offset": 1,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Seone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 2,
+          "to": 2,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "c",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 2,
+          "to": 2,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Seone",
+          "offset": 2,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Seone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Seone",
+          "offset": 2,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Seone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Secone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 3,
+          "to": 3,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "t",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 3,
+          "to": 3,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Secone",
+          "offset": 3,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Secone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Secone",
+          "offset": 3,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Secone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 4,
+          "to": 4,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "i",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 4,
+          "to": 4,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectone",
+          "offset": 4,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectone",
+          "offset": 4,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectione"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 5,
+          "to": 5,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "o",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 5,
+          "to": 5,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectione",
+          "offset": 5,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectione</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectione",
+          "offset": 5,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectione</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectioone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": "n",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 6,
+          "to": 6,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectioone",
+          "offset": 6,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectioone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectioone",
+          "offset": 6,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectioone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Sectionone"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 7,
+          "to": 7,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "beforeinput",
+        "inputType": "insertText",
+        "data": " ",
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 7,
+          "to": 7,
+          "kind": "text"
+        },
+        "anchor": {
+          "node": "#text",
+          "text": "Sectionone",
+          "offset": 7,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectionone</span>"
+        },
+        "focus": {
+          "node": "#text",
+          "text": "Sectionone",
+          "offset": 7,
+          "path": "<span data-fountain-text-path=\"0.1.0\">Sectionone</span>"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 8,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Chapter one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 0,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            0,
+            1,
+            0
+          ],
+          "endPath": [
+            0,
+            1,
+            0
+          ],
+          "from": 8,
+          "to": 8,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            1,
+            2
+          ],
+          "endPath": [
+            1,
+            2
+          ],
+          "from": 0,
+          "to": 0,
+          "kind": "node",
+          "nodePath": [
+            1,
+            1
+          ],
+          "nodeType": "html_anchor",
+          "structuralFrom": 35,
+          "structuralTo": 37
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            1,
+            1
+          ],
+          "endPath": [
+            1,
+            1
+          ],
+          "from": 0,
+          "to": 0,
+          "kind": "text"
+        }
+      },
+      {
+        "event": "state",
+        "doc": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Before "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "chapter",
+                    "name": "legacy"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Section one"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "text": " after."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Here "
+                },
+                {
+                  "type": "html_anchor",
+                  "attrs": {
+                    "id": "empty"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " tail."
+                }
+              ]
+            }
+          ]
+        },
+        "selection": {
+          "path": [
+            1,
+            2
+          ],
+          "endPath": [
+            1,
+            2
+          ],
+          "from": 0,
+          "to": 0,
+          "kind": "node",
+          "nodePath": [
+            1,
+            1
+          ],
+          "nodeType": "html_anchor",
+          "structuralFrom": 35,
+          "structuralTo": 37
+        }
+      }
+    ]
+  },
+  "errors": []
+}

@@ -25,6 +25,68 @@ The same `parseHTML` rules work with the browser `HTMLImporter`. You can also
 import the public `htmlContainer` node specification and use it in your own
 schema. The portable core module has no DOM or rendering-service dependency.
 
+## Optional non-link bookmarks (2026-11-02, Unreleased)
+
+`HTMLAnchorExtension` and its `htmlAnchor` node specification are exported from
+`fountainjs-editor` and `fountainjs-editor/core`. Add the extension to your
+`composeExtensions` list when your application needs to retain HTML bookmarks.
+It is not included in StarterKit or enabled automatically in the conversion lab.
+
+The `html_anchor` inline container preserves `<a>` without `href`, including
+empty bookmarks and rich inline text. Supported HTML attributes are `id`,
+`name`, `title`, `class`, `lang`, and `dir` (`className` is the model attribute).
+Missing and explicitly empty attributes remain distinct. `<a href="">` stays
+on the hyperlink-mark path; it is not an empty bookmark. Hosts own bookmark ID
+uniqueness, link resolution and imported CSS classes. This is a semantic import
+adapter, not a bookmark-management toolbar or a source-layout renderer.
+
+The same rules run in `HTMLImporter` and the DOM-free `ServerHTMLImporter`.
+For Markdown, enable the desired HTML parsing adapters explicitly. Exact
+unchanged-source export uses the existing source sidecar; canonical Markdown
+uses HTML and reports that the destination needs HTML support. Unknown or
+active attributes cause the bookmark wrapper to be declined and reported;
+readable descendants remain available. Keep the original source for recovery.
+
+The node invariant rejects nested bookmarks and link marks within/on a
+bookmark. HTML parsers would otherwise relocate them on save/reopen. Unwrap
+the bookmark before converting its contents into a link. Empty bookmarks have
+no reader-visible glyph, matching HTML; a host can expose whole-node selection
+and deletion through `selectNode`, rather than adding fake document text.
+
+An actual Firefox word-selection journey exposed a replacement boundary bug:
+Firefox can select from the preceding sibling's text end into the bookmark.
+`textReplacementSelection` now starts typing in the first selected inline text
+container when the selection ends inside it. Atoms, empty structural nodes and
+selections extending beyond that container keep their existing behavior.
+
+Tests: `tests/html-anchors.test.ts`, `tests/html-anchors-browser.test.ts`,
+`tests/text-replacement-selection.test.ts`, and the recorded public-package
+journey `tests/manual/html-anchors-real.spec.ts`. The latter imports a real
+HTML file, replaces a word through native selection, deletes an empty bookmark,
+uses undo/redo, and reopens exported HTML. Run it headlessly with one worker:
+`pnpm exec playwright test --config playwright.html-anchors-audit.config.ts`.
+Its fixture is test-only, not a public authoring demo. Native tests for additional
+selection/paste combinations and integration into conversion-lab controls remain
+separate work; no CommonMark score or production-readiness claim follows from
+these scoped checks.
+
+Checkpoint evidence: 3,013 unit tests across 225 files passed; the three native
+browser journeys passed without retries. Reopened screenshots from all three
+engines were inspected (recorded videos were not reviewed). Packed ESM/CJS
+root/core consumers each passed five additional optional-bookmark contracts;
+TypeScript and the 105-module headless boundary passed. `--anchor-report` adds
+an explicit diagnostic corpus profile; it still matches 613/652 examples with
+1,304 separate unchanged-source checks. Existing baseline classifications and
+the 22-case backlog remain unchanged.
+
+The two additive exports and replacement fix cost 1.866 KiB ESM / 1.605 KiB
+CommonJS relative to the preceding source checkpoint. Reviewed aggregate caps
+are 1617.75 / 1346 KiB; the CJS core facade gets 64 additional bytes (measured
+8,329 bytes, nine over its former cap). The pre-review failure is retained in
+`artifacts/html-anchors-budget-before-review-20261102.log`. This is explicit
+feature capacity, not an optimization; no dependency, CSS, latency or heap
+ceiling changes. The version remains `0.4.0-beta.2`; this work is unreleased.
+
 ## Whole-node clipboard inheritance (2026-11-02, Unreleased)
 
 A whole-node selection omits its ancestors. Copying an English paragraph inside

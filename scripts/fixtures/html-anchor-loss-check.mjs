@@ -68,3 +68,24 @@ export function checkHTMLAnchorLoss(core, server, spec = core.CoreSchemaSpec) {
   if (markdown.textContent !== 'Before Section after.') throw new Error('Markdown anchor adapter lost text.');
   return checks + 1;
 }
+
+/** The optional public adapter must also work from packed ESM/CJS/core entries. */
+export function checkHTMLAnchorRetention(core, server, spec = core.CoreSchemaSpec) {
+  if (!core.htmlAnchor || core.HTMLAnchorExtension?.nodes.html_anchor !== core.htmlAnchor) {
+    throw new Error('Optional bookmark exports are missing or inconsistent.');
+  }
+  const schema = new core.Schema({ ...spec, nodes: { ...spec.nodes, ...core.HTMLAnchorExtension.nodes } });
+  for (const source of ['<p><a></a></p>', '<p><a id="" name="chapter"></a></p>', '<p>Before <a id="chapter"><em>Text</em></a> after</p>']) {
+    const result = server.ServerHTMLImporter.parseWithReport(source, schema);
+    if (result.issues.length || core.HTMLExporter.export(result.document, { document: false }) !== source) {
+      throw new Error('Packed bookmark HTML retention failed.');
+    }
+  }
+  for (const href of ['', '/guide']) {
+    const result = server.ServerHTMLImporter.parse(`<p><a href="${href}">Link</a></p>`, schema);
+    if (!result.child(0).child(0).marks.some(mark => mark.type.name === 'link' && mark.attrs.href === href)) {
+      throw new Error('Packed bookmark adapter consumed a hyperlink.');
+    }
+  }
+  return 5;
+}

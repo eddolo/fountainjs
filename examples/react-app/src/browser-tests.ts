@@ -1768,3 +1768,7 @@ Object.assign(globalThis, { mountInheritedClipboardAudit: async () => {
   const { mountInheritedClipboardFixture } = await import('../../../tests/browser/fixtures/inherited-clipboard');
   return mountInheritedClipboardFixture();
 } });
+Object.assign(globalThis, { mountHTMLAnchorAudit: async () => {
+  const { mountHTMLAnchorFixture } = await import('../../../tests/browser/fixtures/html-anchors');
+  return mountHTMLAnchorFixture();
+} });

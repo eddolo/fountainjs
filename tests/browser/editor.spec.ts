@@ -9,6 +9,7 @@ import '../manual/shared-direction-weak-real.spec';
 // Event-authored native clipboard journeys run serially on CI's display.
 import '../manual/shared-direction-copy-real.spec';
 import '../manual/inherited-clipboard-real.spec';
+import '../manual/html-anchors-real.spec';
 import { codeDirectionJourney } from './code-direction-journey';
 import { nativeRichPasteJourney } from './native-rich-paste-journey';
 import { htmlAnchorLossJourney } from './html-anchor-loss-journey';

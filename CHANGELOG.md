@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add optional `HTMLAnchorExtension` / `htmlAnchor` exports for non-hyperlink
+  HTML bookmarks, with browser and server import rules. Preserve absent versus
+  empty attributes and distinguish an absent `href` from an empty hyperlink.
+  Reject nested anchors/link content instead of letting HTML reparsing relocate
+  it. Unsupported attributes still produce conversion losses. This does not
+  enable the extension in StarterKit or certify arbitrary HTML fidelity.
+- Keep replacement typing inside inline content containers when Firefox's
+  native word selection starts at the preceding text run's end. Do not move
+  selections across atoms, empty structural nodes or a whole selected wrapper.
+
 - Retain omitted ancestor direction when copying/cutting a whole child node.
   Standard HTML and Fountain JSON retain fixed inherited direction; automatic
   contexts become explicitly reported snapshots without hidden source text.

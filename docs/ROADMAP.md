@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Bookmark follow-up (2026-11-02, Unreleased): optional `HTMLAnchorExtension`
+retains named/empty non-link HTML anchors and supported attributes through
+browser/server conversion. A recorded edit/delete/history/reopen journey found
+and fixed Firefox replacement typing escaping an inline content container.
+The journey now passes Chromium, Firefox and WebKit, with reopened screenshots
+inspected. The adapter remains opt-in, with no conversion-lab bookmark UI yet.
+The full corpus diagnostic with the adapter still reports **613/652**, so the
+22-case conversion backlog below is not reduced or relabelled complete.
+Unknown wrappers and unsupported anchor attributes remain next; see the
+[bookmark contract](HTML_CONTAINERS.md#optional-non-link-bookmarks-2026-11-02-unreleased).
+
 CommonMark follow-up audit (2026-11-02, source `19973b3`): the existing full
 corpus check still reports **563/652 default matches** and **613/652** with the
 optional container/comment/anonymous-flow adapters, with 1,304 separate exact

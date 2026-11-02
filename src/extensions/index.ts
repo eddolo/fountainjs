@@ -52,6 +52,7 @@ export * from './extension';
 export * from './html-containers';
 export * from './html-comments';
 export * from './html-flow';
+export * from './html-anchors';
 export * from './command-manager';
 export * from './math';
 export * from './lean';
